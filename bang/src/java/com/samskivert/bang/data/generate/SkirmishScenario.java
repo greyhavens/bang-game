@@ -10,6 +10,8 @@ import com.threerings.toybox.data.ToyBoxGameConfig;
 
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.piece.Artillery;
+import com.samskivert.bang.data.piece.Chopper;
+import com.samskivert.bang.data.piece.Marine;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.Tank;
 
@@ -37,6 +39,9 @@ public class SkirmishScenario extends ScenarioGenerator
         // search out from the corner for a valid position
         ArrayList<Piece> placers = new ArrayList<Piece>();
         configureAndAdd(placers, pidx, new Artillery());
+        configureAndAdd(placers, pidx, new Chopper());
+        configureAndAdd(placers, pidx, new Marine());
+        configureAndAdd(placers, pidx, new Marine());
         configureAndAdd(placers, pidx, new Tank());
         configureAndAdd(placers, pidx, new Tank());
 

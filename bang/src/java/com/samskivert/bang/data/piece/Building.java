@@ -29,4 +29,10 @@ public class Building extends BigPiece
     {
         return new BuildingSprite(getWidth(), getHeight());
     }
+
+    @Override // documentation inherited
+    public boolean preventsOverlap (Piece lapper)
+    {
+        return !(lapper instanceof Chopper);
+    }
 }
