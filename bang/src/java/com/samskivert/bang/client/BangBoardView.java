@@ -11,7 +11,6 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -19,7 +18,6 @@ import java.awt.event.MouseMotionListener;
 
 import com.threerings.media.sprite.PathObserver;
 import com.threerings.media.sprite.Sprite;
-import com.threerings.media.util.AStarPathUtil;
 import com.threerings.media.util.LinePath;
 import com.threerings.media.util.MathUtil;
 import com.threerings.media.util.Path;
@@ -129,7 +127,6 @@ public class BangBoardView extends BoardView
         _bangobj.addListener(_ticklist);
 
         _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
-        _tstate = new byte[_bbounds.width*_bbounds.height];
 
         // set up the starting visibility
         adjustBoardVisibility();
@@ -221,16 +218,8 @@ public class BangBoardView extends BoardView
                     dirtyPath(_pendingPath);
                     _pendingPath = null;
                 }
-                List path = AStarPathUtil.getPath(
-                    _tpred, _selection.getStepper(), _selection,
-                    _bbounds.width+_bbounds.height, _selection.x, _selection.y,
-                    mx, my, true);
-                if (path.size() > 1) {
-                    // the first coordinate is the piece's current coordinate
-                    path.remove(0);
-                    _pendingPath = new PiecePath(_selection.pieceId, path);
-                    dirtyPath(_pendingPath);
-                }
+                _pendingPath = _bangobj.board.computePath(_selection, mx, my);
+                dirtyPath(_pendingPath);
             }
             return true;
         }
@@ -445,22 +434,7 @@ public class BangBoardView extends BoardView
         adjustEnemyVisibility();
 
         // recompute the board traversability
-        Arrays.fill(_tstate, (byte)0);
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece piece = (Piece)iter.next();
-            if (piece instanceof BigPiece) {
-                Rectangle pbounds = ((BigPiece)piece).getBounds();
-                for (int yy = pbounds.y, ly = yy + pbounds.height;
-                     yy < ly; yy++) {
-                    for (int xx = pbounds.x, lx = xx + pbounds.width;
-                         xx < lx; xx++) {
-                        _tstate[_bbounds.width*yy+xx] = 1;
-                    }
-                }
-            } else {
-                _tstate[_bbounds.width*piece.y+piece.x] = 2;
-            }
-        }
+        _bangobj.board.updatePathData(_bangobj.pieces);
 
         // create shot handlers for all fired shots
         for (int ii = 0; ii < args.length; ii++) {
@@ -639,21 +613,6 @@ public class BangBoardView extends BoardView
         }
     };
 
-    /** Used when path finding. */
-    protected AStarPathUtil.TraversalPred _tpred =
-        new AStarPathUtil.TraversalPred() {
-        public boolean canTraverse (Object traverser, int x, int y) {
-            if (!_bbounds.contains(x, y)) {
-                return false;
-            }
-            int max = 0;
-            if (traverser instanceof Chopper) {
-                max = 1;
-            }
-            return (_tstate[y*_bbounds.width+x] <= max);
-        }
-    };
-
     protected Piece _selection;
     protected PiecePath _pendingPath;
     protected PointSet _moveSet = new PointSet();
@@ -662,9 +621,6 @@ public class BangBoardView extends BoardView
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
-
-    /** Tracks coordinate traversability. */
-    protected byte[] _tstate;
 
     /** Maps pieceId to path for pieces that have a path configured. */
     protected HashMap<Integer,PiecePath> _paths =
