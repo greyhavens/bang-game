@@ -27,6 +27,7 @@ import com.samskivert.bang.data.BangMarshaller;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.ModifyBoardEvent;
 import com.samskivert.bang.data.PiecePath;
+import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.generate.CompoundGenerator;
 import com.samskivert.bang.data.generate.SkirmishScenario;
@@ -152,8 +153,11 @@ public class BangManager extends GameManager
         try {
             // batch our tick update
             _bangobj.startTransaction();
+
             // these pieces will be updated
             PieceSet updates = new PieceSet();
+            // these shots will be communicated to the client for animation
+            ArrayList<Shot> shots = new ArrayList<Shot>();
 
             // move all of our pieces along any path they have configured
             Iterator<PiecePath> iter = _paths.values().iterator();
@@ -175,11 +179,12 @@ public class BangManager extends GameManager
             // now that everyone has moved
             for (int ii = 0; ii < pieces.length; ii++) {
                 Piece piece = pieces[ii];
-                // skip pieces that were eaten
-                if (!_bangobj.pieces.containsKey(piece.pieceId)) {
+                // skip pieces that were eaten or that have zero energy
+                if (!_bangobj.pieces.containsKey(piece.pieceId) ||
+                    piece.energy == 0) {
                     continue;
                 }
-                piece.react(_bangobj, pieces, updates);
+                piece.react(_bangobj, pieces, updates, shots);
             }
 
             // finally update the pieces that need updating
@@ -193,7 +198,7 @@ public class BangManager extends GameManager
 
             // this lets the clients know the updates are done and gives
             // them a chance to to post-tick processing
-            _bangobj.postMessage("ticked", null);
+            _bangobj.postMessage("ticked", shots.toArray());
 
         } finally {
             _bangobj.commitTransaction();

@@ -4,10 +4,12 @@
 package com.samskivert.bang.data.piece;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.TankSprite;
+import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.util.PieceSet;
 
@@ -32,14 +34,15 @@ public class Tank extends Piece
     }
 
     @Override // documentation inherited
-    public void react (BangObject bangobj, Piece[] pieces, PieceSet updates)
+    public void react (BangObject bangobj, Piece[] pieces, PieceSet updates,
+                       ArrayList<Shot> shots)
     {
         Piece[] targets = getTargets(pieces);
 
         // if there is an enemy piece in our sights, shoot it
         Piece target = targets[turretOrient];
         if (validTarget(target)) {
-            shoot(target);
+            shots.add(shoot(target));
             updates.add(target);
             return;
         }
@@ -50,7 +53,7 @@ public class Tank extends Piece
             validTarget(target = targets[dir = cw])) {
             turretOrient = (short)dir;
             updates.add(this);
-            shoot(target);
+            shots.add(shoot(target));
             updates.add(target);
             return;
         }
@@ -124,11 +127,12 @@ public class Tank extends Piece
     /**
      * Affects the target piece with damage.
      */
-    public void shoot (Piece target)
+    public Shot shoot (Piece target)
     {
         int damage = Math.min(target.energy, target.maximumEnergy()/10);
         log.info("Doing " + damage + " damage to " + target + ".");
         target.energy -= damage;
+        return new Shot(pieceId, target.x, target.y);
     }
 
     /** Returns true if we can and should fire upon this target. */

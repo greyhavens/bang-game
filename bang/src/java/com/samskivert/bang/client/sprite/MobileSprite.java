@@ -22,13 +22,16 @@ public class MobileSprite extends PieceSprite
     @Override // documentation inherited
     public void paint (Graphics2D gfx)
     {
-        // paint our remaining energy
-        int pct = _piece.getPercentEnergy();
-        gfx.setColor(ENERGY_COLORS[pct / 10]);
-        float epix = (_bounds.width-2) * pct / 100f;
-        gfx.fillRect(_bounds.x, _bounds.y, (int)Math.ceil(epix), EBAR_HEIGHT);
-        gfx.setColor(Color.black);
-        gfx.drawRect(_bounds.x, _bounds.y, _bounds.width-1, EBAR_HEIGHT-1);
+        // paint our remaining energy (if we have any)
+        if (_piece.energy > 0) {
+            int pct = _piece.getPercentEnergy();
+            gfx.setColor(ENERGY_COLORS[pct / 10]);
+            float epix = (_bounds.width-2) * pct / 100f;
+            gfx.fillRect(_bounds.x, _bounds.y,
+                         (int)Math.ceil(epix), EBAR_HEIGHT);
+            gfx.setColor(Color.black);
+            gfx.drawRect(_bounds.x, _bounds.y, _bounds.width-1, EBAR_HEIGHT-1);
+        }
     }
 
     protected static final int EBAR_HEIGHT = 4;

@@ -32,7 +32,11 @@ public class TankSprite extends MobileSprite
         int height = _bounds.height - _oyoff;
 
         // first draw a circle
-        gfx.setColor(_piece.owner == 0 ? Color.white : Color.yellow);
+        Color color = _piece.owner == 0 ? Color.white : Color.yellow;
+        if (_piece.energy == 0) {
+            color = Color.gray;
+        }
+        gfx.setColor(color);
         gfx.fillOval(_ox, _oy, width-1, height-1);
 
         // then draw a square back to communicate our orientation

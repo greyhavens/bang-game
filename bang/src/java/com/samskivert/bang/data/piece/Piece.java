@@ -15,6 +15,7 @@ import com.threerings.presents.dobj.DSet;
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangObject;
+import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PointSet;
@@ -294,14 +295,17 @@ public abstract class Piece extends SimpleStreamableObject
      * Allows this piece to react to the state of the board at the
      * termination of the previous turn. It should add itself and any
      * other modified pieces to the updates set (assuming it or another
-     * piece changes as a result of the reaction).
+     * piece changes as a result of the reaction). If the piece fires any
+     * shots, it should create the appropriate shot objects and add them
+     * to the supplied list.
      *
      * <em>Note:<em> it is legal for a piece to remove another piece from
      * the board as a result of its reaction. In that case, it should
      * effect the appropriate removal from the supplied game object
      * directly.
      */
-    public void react (BangObject bangobj, Piece[] pieces, PieceSet updates)
+    public void react (BangObject bangobj, Piece[] pieces, PieceSet updates,
+                       ArrayList<Shot> shots)
     {
     }
 

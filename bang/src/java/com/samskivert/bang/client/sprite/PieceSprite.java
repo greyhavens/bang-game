@@ -85,7 +85,12 @@ public class PieceSprite extends Sprite
         // move ourselves to our new location
         int nx = piece.x * SQUARE + 2, ny = piece.y * SQUARE + 2;
         if (nx != _ox || ny != _oy) {
-            move(new LinePath(_ox, _oy, nx, ny, 250L));
+            if (_mgr != null) {
+                move(new LinePath(_ox, _oy, nx, ny, 250L));
+            } else {
+                // if we're invisible just warp there
+                setLocation(nx, ny);
+            }
         } else {
             invalidate();
         }

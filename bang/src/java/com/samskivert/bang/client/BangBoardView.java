@@ -14,8 +14,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import com.threerings.media.sprite.PathObserver;
 import com.threerings.media.sprite.Sprite;
+import com.threerings.media.util.LinePath;
 import com.threerings.media.util.MathUtil;
+import com.threerings.media.util.Path;
 
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
@@ -23,8 +26,10 @@ import com.threerings.presents.dobj.MessageListener;
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
+import com.samskivert.bang.client.sprite.ShotSprite;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.PiecePath;
+import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.util.PointSet;
 import com.samskivert.bang.util.VisibilityState;
@@ -117,8 +122,9 @@ public class BangBoardView extends BoardView
         _pidx = playerIdx;
         _bangobj.addListener(_ticklist);
 
-        // set everything up for the first time
-        tickFinished();
+        // set up the starting visibility
+        adjustBoardVisibility();
+        adjustEnemyVisibility();
     }
 
     @Override // documentation inherited
@@ -129,7 +135,7 @@ public class BangBoardView extends BoardView
         }
 
         super.endGame();
-        _moveSet.clear();
+        clearSelection();
 
         // allow everything to be visible
         _vstate.reveal();
@@ -207,6 +213,11 @@ public class BangBoardView extends BoardView
     {
         int tx = mx / SQUARE, ty = my / SQUARE;
 
+        // nothing doing if the game is not in play
+        if (_bangobj == null || !_bangobj.isInPlay()) {
+            return;
+        }
+
         // check for a selectable piece under the mouse
         PieceSprite sprite = null;
         Sprite s = _spritemgr.getHighestHitSprite(mx, my);
@@ -275,6 +286,11 @@ public class BangBoardView extends BoardView
     protected void handleRightPress (int mx, int my)
     {
         int tx = mx / SQUARE, ty = my / SQUARE;
+
+        // nothing doing if the game is not in play
+        if (_bangobj == null || !_bangobj.isInPlay()) {
+            return;
+        }
 
         // make sure this is a legal move
         if (!_moveSet.contains(tx, ty)) {
@@ -357,7 +373,22 @@ public class BangBoardView extends BoardView
     /**
      * Called after all updates associated with a tick have come in.
      */
-    protected void tickFinished ()
+    protected void tickFinished (Object[] args)
+    {
+        // adjust the board visibility
+        adjustBoardVisibility();
+
+        // finally adjust the visibility of enemy pieces
+        adjustEnemyVisibility();
+
+        // create shot handlers for all fired shots
+        for (int ii = 0; ii < args.length; ii++) {
+            new ShotHandler((Shot)args[ii]);
+        }
+    }
+
+    /** Adjusts the visibility settings for the tiles of the board. */
+    protected void adjustBoardVisibility ()
     {
         // swap our visibility state to the fresh set
         _vstate.swap();
@@ -392,9 +423,6 @@ public class BangBoardView extends BoardView
                 }
             }
         }
-
-        // finally adjust the visibility of enemy pieces
-        adjustEnemyVisibility();
     }
 
     /** Makes enemy pieces visible or invisible based on _vstate. */
@@ -419,11 +447,107 @@ public class BangBoardView extends BoardView
         }
     }
 
+    /** Waits for all sprites involved in a shot to stop moving and then
+     * animates the fired shot. */
+    protected class ShotHandler
+        implements PathObserver
+    {
+        public ShotHandler (Shot shot) {
+            _shot = shot;
+            _shooter = (Piece)_bangobj.pieces.get(shot.shooterId);
+            if (_shooter == null) {
+                log.warning("Missing shooter? [shot=" + shot + "].");
+                // abandon ship, we're screwed
+                return;
+            }
+
+            // figure out which sprites we need to wait for
+            considerPiece(_shooter);
+            for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
+                Piece p = (Piece)iter.next();
+                if (p == _shooter || !_shot.affects(p.x, p.y)) {
+                    continue;
+                }
+                considerPiece(p);
+            }
+
+            // if no one was managed, it's a shot fired from an invisible
+            // piece at invisible pieces, ignore it
+            if (_managed == 0) {
+                log.info("Tree feel in the woods, no one was around.");
+
+            } else if (_sprites == 0) {
+                // if we're not waiting for any sprites to finish moving,
+                // fire the shot immediately
+                fireShot();
+            }
+        }
+
+        public void pathCompleted (Sprite sprite, Path path, long when) {
+            sprite.removeSpriteObserver(this);
+            if (--_sprites == 0) {
+                fireShot();
+            }
+        }
+
+        public void pathCancelled (Sprite sprite, Path path) {
+            sprite.removeSpriteObserver(this);
+            if (--_sprites == 0) {
+                fireShot();
+            }
+        }
+
+        protected void considerPiece (Piece piece) {
+            PieceSprite sprite = null;
+            if (piece != null) {
+                sprite = _pieces.get(piece.pieceId);
+            }
+            if (sprite == null) {
+                return;
+            }
+            if (isManaged(sprite)) {
+                _managed++;
+                if (sprite.isMoving()) {
+                    sprite.addSpriteObserver(this);
+                    _sprites++;
+                }
+            }
+        }
+
+        protected void fireShot ()
+        {
+            ShotSprite shot = new ShotSprite();
+            shot.addSpriteObserver(_remover);
+            int sx = _shooter.x * SQUARE + SQUARE/2;
+            int sy = _shooter.y * SQUARE + SQUARE/2;
+            int tx = _shot.x * SQUARE + SQUARE/2;
+            int ty = _shot.y * SQUARE + SQUARE/2;
+            int duration = (int)MathUtil.distance(sx, sy, tx, ty) * 2;
+            shot.setLocation(sx, sy);
+            addSprite(shot);
+            shot.move(new LinePath(sx, sy, tx, ty, duration));
+        }
+
+        protected Shot _shot;
+        protected Piece _shooter;
+        protected int _sprites, _managed;
+    }
+
+    /** Used to remove shot sprites when they reach their target. */
+    protected PathObserver _remover = new PathObserver() {
+        public void pathCompleted (Sprite sprite, Path path, long when) {
+            removeSprite(sprite);
+        }
+        public void pathCancelled (Sprite sprite, Path path) {
+            removeSprite(sprite);
+        }
+    };
+
     /** Listens for the "end of tick" indicator. */
     protected MessageListener _ticklist = new MessageListener() {
         public void messageReceived (MessageEvent event) {
             if (event.getName().equals("ticked")) {
-                tickFinished();
+                tickFinished(event.getArgs());
             }
         }
     };
