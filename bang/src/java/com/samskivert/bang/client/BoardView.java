@@ -327,8 +327,10 @@ public class BoardView extends VirtualMediaPanel
 
     protected void dirtyPath (PiecePath path)
     {
-        for (int ii = 0, ll = path.getLength(); ii < ll; ii++) {
-            dirtyTile(path.getX(ii), path.getY(ii));
+        if (path != null) {
+            for (int ii = 0, ll = path.getLength(); ii < ll; ii++) {
+                dirtyTile(path.getX(ii), path.getY(ii));
+            }
         }
     }
 

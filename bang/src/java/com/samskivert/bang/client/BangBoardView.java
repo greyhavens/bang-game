@@ -90,9 +90,9 @@ public class BangBoardView extends BoardView
         // first update our mousely business
         mouseMoved(e);
 
-        // if we have a pending path and are dragging with the right mouse
+        // if we have a selection and are dragging with the right mouse
         // button down, pretend like we right clicked in this location
-        if (_downButton == MouseEvent.BUTTON3 && _pendingPath != null) {
+        if (_downButton == MouseEvent.BUTTON3 && _selection != null) {
             handleRightPress(e.getX(), e.getY());
         }
     }
@@ -111,7 +111,21 @@ public class BangBoardView extends BoardView
         _moveSet.clear();
     }
 
-    // documentation inherited
+    @Override // documentation inherited
+    protected void paintBehind (Graphics2D gfx, Rectangle dirtyRect)
+    {
+        super.paintBehind(gfx, dirtyRect);
+
+        // render all pending paths
+        for (PiecePath path : _paths.values()) {
+            Piece piece = (Piece)_bangobj.pieces.get(path.pieceId);
+            // the piece might not yet know it has a path
+            int pos = (piece.pathPos < 0) ? 0 : piece.pathPos;
+            renderPath(gfx, dirtyRect, Color.gray, pos, path);
+        }
+    }
+
+    @Override // documentation inherited
     protected void paintInFront (Graphics2D gfx, Rectangle dirtyRect)
     {
         super.paintInFront(gfx, dirtyRect);
@@ -123,62 +137,22 @@ public class BangBoardView extends BoardView
 
         // render any currently active path
         if (_pendingPath != null) {
-            Rectangle r = new Rectangle(0, 0, SQUARE, SQUARE);
-            for (int ii = 0, ll = _pendingPath.getLength(); ii < ll; ii++) {
-                int px = _pendingPath.getX(ii), py = _pendingPath.getY(ii);
-                r.x = px * SQUARE;
-                r.y = py * SQUARE;
-                if (dirtyRect.intersects(r)) {
-                    gfx.setColor(Color.pink);
-                    gfx.fillOval(r.x+2, r.y+2, r.width-4, r.height-4);
-                }
-            }
-        }
-
-        // render the path for the highlighted piece
-        if (_highlightPath != null) {
-            Rectangle r = new Rectangle(0, 0, SQUARE, SQUARE);
-            int ll = _highlightPath.getLength();
-            for (int ii = _highlight.pathPos; ii < ll; ii++) {
-                int px = _highlightPath.getX(ii), py = _highlightPath.getY(ii);
-                r.x = px * SQUARE;
-                r.y = py * SQUARE;
-                if (dirtyRect.intersects(r)) {
-                    gfx.setColor(Color.red);
-                    gfx.drawOval(r.x+2, r.y+2, r.width-4, r.height-4);
-                }
-            }
+            renderPath(gfx, dirtyRect, Color.pink, 0, _pendingPath);
         }
     }
 
-    @Override // documentation inherited
-    protected boolean updateMouseTile (int mx, int my)
+    protected void renderPath (Graphics2D gfx, Rectangle dirtyRect,
+                               Color color, int pos, PiecePath path)
     {
-        boolean changed = super.updateMouseTile(mx, my);
-
-        // if we changed location...
-        if (changed) {
-            // clear any previous highlighted path
-            if (_highlightPath != null) {
-                dirtyPath(_highlightPath);
-                _highlightPath = null;
-            }
-
-            // determine whether or not there's a piece under the mouse
-            // and highlight its path if it has one
-            Sprite s = _spritemgr.getHighestHitSprite(
-                mx * SQUARE + SQUARE/2, my * SQUARE + SQUARE/2);
-            if (s instanceof PieceSprite) {
-                PieceSprite sprite = (PieceSprite)s;
-                _highlight = (Piece)_bangobj.pieces.get(sprite.getPieceId());
-                _highlightPath = _paths.get(_highlight.pieceId);
-                if (_highlightPath != null) {
-                    dirtyPath(_highlightPath);
-                }
+        gfx.setColor(color);
+        for (int ii = pos, ll = path.getLength(); ii < ll; ii++) {
+            int px = path.getX(ii), py = path.getY(ii);
+            _pr.x = px * SQUARE;
+            _pr.y = py * SQUARE;
+            if (dirtyRect.intersects(_pr)) {
+                gfx.drawOval(_pr.x+2, _pr.y+2, _pr.width-4, _pr.height-4);
             }
         }
-
-        return changed;
     }
 
     /** Handles a left mouse button click. */
@@ -206,8 +180,15 @@ public class BangBoardView extends BoardView
                 if (!tail) {
                     _pendingPath = _pendingPath.append(tx, ty);
                 }
-                // ...note the path in our cache...
+                // ...erase any old path...
+                dirtyPath(_paths.remove(_pendingPath.pieceId));
+                // ...note the new path in our cache...
                 _paths.put(_pendingPath.pieceId, _pendingPath);
+                // ...override our local piece which may think it's
+                // part-way down some path but is now starting a new one...
+                Piece piece = (Piece)_bangobj.pieces.get(_pendingPath.pieceId);
+                // the next server update will formalize this change
+                piece.pathPos = 0;
                 // ...and ship it off for processing
                 BangController.postAction(
                     this, BangController.SET_PATH, _pendingPath);
@@ -250,7 +231,14 @@ public class BangBoardView extends BoardView
 
         // make sure this is a legal move
         if (!_moveSet.contains(tx, ty)) {
-            // nada
+            if (_selection == null) {
+                // potentially treat this like a left click so that we can
+                // start a path by right clicking on a piece and dragging;
+                // but only if we have no selection as otherwise we'll
+                // auto-cancel the selection we started with the first
+                // right click and drag
+                handleLeftPress(mx, my);
+            }
 
         } else if (_pendingPath != null) {
             // potentiall extend our existing path
@@ -308,30 +296,25 @@ public class BangBoardView extends BoardView
 
         // clear our cached path for this piece if it no longer has a path
         if (!piece.hasPath()) {
-            _paths.remove(piece.pieceId);
+            dirtyPath(_paths.remove(piece.pieceId));
         }
 
-        // clear the highlight if this piece was under the mouse
-        if (_highlight != null && _highlight.pieceId == piece.pieceId) {
-            if (_highlightPath != null) {
-                dirtyPath(_highlightPath);
-            }
-            _highlightPath = null;
-            _highlight = null;
-        }
-
-        // clear and reselect if this piece was the selection
-        if (_selection != null && _selection.pieceId == piece.pieceId) {
+        // clear and reselect if this piece was the selection and it moved
+        if (_selection != null && _selection.pieceId == piece.pieceId &&
+            (_selection.x != piece.x || _selection.y != piece.y)) {
             clearSelection();
             selectPiece(piece);
         }
     }
 
-    protected Piece _selection, _highlight;
-    protected PiecePath _pendingPath, _highlightPath;
+    protected Piece _selection;
+    protected PiecePath _pendingPath;
     protected PointSet _moveSet = new PointSet();
     protected int _pidx;
     protected int _downButton = -1;
+
+    /** Used by {@link #renderPath}. */
+    protected Rectangle _pr = new Rectangle(0, 0, SQUARE, SQUARE);
 
     /** Maps pieceId to path for pieces that have a path configured. */
     protected HashMap<Integer,PiecePath> _paths =
