@@ -18,6 +18,7 @@ import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
+import com.samskivert.bang.data.effect.Effect;
 import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PointSet;
 
@@ -276,9 +277,11 @@ public abstract class Piece extends SimpleStreamableObject
      * method. Depending on the type of interaction, the piece can
      * indicate that it consumed the other piece, was consumed by it
      * (entered), simply interacted with it resulting in both pieces being
-     * changed or did nothing at all.
+     * changed or did nothing at all. If the interaction results in an
+     * effect being produced, the effect should be appended to the
+     * supplied list.
      */
-    public Interaction maybeInteract (Piece other)
+    public Interaction maybeInteract (Piece other, ArrayList<Effect> effects)
     {
         if (other instanceof Fuel && energy < 3*maximumEnergy()/4) {
             Fuel nibbly = (Fuel)other;

@@ -16,23 +16,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.media.sprite.PathObserver;
 import com.threerings.media.sprite.Sprite;
 import com.threerings.media.util.LinePath;
 import com.threerings.media.util.MathUtil;
 import com.threerings.media.util.Path;
 
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.presents.dobj.MessageListener;
-
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.ShotSprite;
-import com.samskivert.util.StringUtil;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Shot;
+import com.samskivert.bang.data.effect.Effect;
 import com.samskivert.bang.data.piece.BigPiece;
 import com.samskivert.bang.data.piece.Chopper;
 import com.samskivert.bang.data.piece.Piece;
@@ -118,7 +117,6 @@ public class BangBoardView extends BoardView
         super.startGame(bangobj, playerIdx);
 
         _pidx = playerIdx;
-        _bangobj.addListener(_ticklist);
 
         _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
 
@@ -130,10 +128,6 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     public void endGame ()
     {
-        if (_bangobj != null) {
-            _bangobj.removeListener(_ticklist);
-        }
-
         super.endGame();
         clearSelection();
 
@@ -395,7 +389,7 @@ public class BangBoardView extends BoardView
     /**
      * Called after all updates associated with a tick have come in.
      */
-    protected void tickFinished (Object[] args)
+    protected void tickFinished (Shot[] shots, Effect[] effects)
     {
         // adjust the board visibility
         adjustBoardVisibility();
@@ -407,9 +401,11 @@ public class BangBoardView extends BoardView
         _bangobj.board.updatePathData(_bangobj.pieces);
 
         // create shot handlers for all fired shots
-        for (int ii = 0; ii < args.length; ii++) {
-            new ShotHandler((Shot)args[ii]);
+        for (int ii = 0; ii < shots.length; ii++) {
+            new ShotHandler(shots[ii]);
         }
+
+        // TODO: display the effects
     }
 
     /** Adjusts the visibility settings for the tiles of the board. */
@@ -516,14 +512,20 @@ public class BangBoardView extends BoardView
 
         public void pathCompleted (Sprite sprite, Path path, long when) {
             sprite.removeSpriteObserver(this);
-            if (--_sprites == 0) {
+            if (sprite == _ssprite) {
+                applyShot();
+                removeSprite(sprite);
+            } else if (--_sprites == 0) {
                 fireShot();
             }
         }
 
         public void pathCancelled (Sprite sprite, Path path) {
             sprite.removeSpriteObserver(this);
-            if (--_sprites == 0) {
+            if (sprite == _ssprite) {
+                applyShot();
+                removeSprite(sprite);
+            } else if (--_sprites == 0) {
                 fireShot();
             }
         }
@@ -547,19 +549,30 @@ public class BangBoardView extends BoardView
 
         protected void fireShot ()
         {
-            ShotSprite shot = new ShotSprite();
-            shot.addSpriteObserver(_remover);
+            _ssprite = new ShotSprite();
             int sx = _shooter.x * SQUARE + SQUARE/2;
             int sy = _shooter.y * SQUARE + SQUARE/2;
             int tx = _shot.x * SQUARE + SQUARE/2;
             int ty = _shot.y * SQUARE + SQUARE/2;
             int duration = (int)MathUtil.distance(sx, sy, tx, ty) * 2;
-            shot.setLocation(sx, sy);
-            addSprite(shot);
-            shot.move(new LinePath(sx, sy, tx, ty, duration));
+            _ssprite.setLocation(sx, sy);
+            _ssprite.addSpriteObserver(this);
+            addSprite(_ssprite);
+            _ssprite.move(new LinePath(sx, sy, tx, ty, duration));
+        }
+
+        protected void applyShot ()
+        {
+            _bangobj.applyShot(_shot);
+            // let the target sprite know its piece has been updated
+            PieceSprite sprite = _pieces.get(_shot.targetId);
+            if (sprite != null) {
+                sprite.updated((Piece)_bangobj.pieces.get(_shot.targetId));
+            }
         }
 
         protected Shot _shot;
+        protected ShotSprite _ssprite;
         protected Piece _shooter;
         protected int _sprites, _managed;
     }
@@ -571,15 +584,6 @@ public class BangBoardView extends BoardView
         }
         public void pathCancelled (Sprite sprite, Path path) {
             removeSprite(sprite);
-        }
-    };
-
-    /** Listens for the "end of tick" indicator. */
-    protected MessageListener _ticklist = new MessageListener() {
-        public void messageReceived (MessageEvent event) {
-            if (event.getName().equals("ticked")) {
-                tickFinished(event.getArgs());
-            }
         }
     };
 

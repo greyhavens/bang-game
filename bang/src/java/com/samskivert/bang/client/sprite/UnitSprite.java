@@ -31,7 +31,7 @@ public class UnitSprite extends MobileSprite
 
         // load our source image and rotate it appropriately
         BufferedImage src = _images[WEST] =
-            ctx.loadImage("media/" + _type + ".png");
+            ctx.loadImage("media/units/" + _type + ".png");
         int width = src.getWidth(), height = src.getHeight();
 
         double theta = Math.PI/2;

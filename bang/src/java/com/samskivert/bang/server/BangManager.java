@@ -16,6 +16,8 @@ import com.threerings.util.RandomUtil;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.dobj.MessageEvent;
+import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
@@ -32,6 +34,7 @@ import com.samskivert.bang.data.ModifyBoardEvent;
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
+import com.samskivert.bang.data.effect.Effect;
 import com.samskivert.bang.data.generate.CompoundGenerator;
 import com.samskivert.bang.data.generate.SkirmishScenario;
 import com.samskivert.bang.data.generate.TestScenario;
@@ -102,6 +105,7 @@ public class BangManager extends GameManager
         _bangobj.setService(
             (BangMarshaller)PresentsServer.invmgr.registerDispatcher(
                 new BangDispatcher(this), false));
+        _bangobj.addListener(_applier);
     }
 
     // documentation inherited
@@ -155,6 +159,12 @@ public class BangManager extends GameManager
             return;
         }
 
+        // these shots will be communicated to the client for animation
+        ArrayList<Shot> shots = new ArrayList<Shot>();
+        // these effects will be communicated to the client and
+        // applied to the board
+        ArrayList<Effect> effects = new ArrayList<Effect>();
+
         try {
             // batch our tick update
             _bangobj.startTransaction();
@@ -169,9 +179,8 @@ public class BangManager extends GameManager
 
             // these pieces will be updated
             PieceSet updates = new PieceSet();
-            // these shots will be communicated to the client for animation
-            ArrayList<Shot> shots = new ArrayList<Shot>();
 
+            // move all of the pieces along their paths
             for (int ii = 0; ii < pieces.length; ii++) {
                 Piece piece = pieces[ii];
                 PiecePath path = _paths.get(piece.pieceId);
@@ -179,7 +188,7 @@ public class BangManager extends GameManager
                     continue;
                 }
 
-                if (tickPath(piece, path, updates)) {
+                if (tickPath(piece, path, updates, effects)) {
                     log.fine("Finished " + path + ".");
                     _paths.remove(piece.pieceId);
                 }
@@ -219,16 +228,6 @@ public class BangManager extends GameManager
                 piece.react(_bangobj, pieces, updates, shots);
             }
 
-            // now apply the shot damage to the pieces in questions
-            for (int ii = 0, ll = shots.size(); ii < ll; ii++) {
-                Shot shot = shots.get(ii);
-                Piece piece = (Piece)_bangobj.pieces.get(shot.targetId);
-                if (piece != null) {
-                    piece.damage = Math.min(100, piece.damage + shot.damage);
-                    updates.add(piece);
-                }
-            }
-
             // finally update the pieces that need updating
             for (Piece piece : updates.values()) {
                 // skip pieces that were eaten
@@ -238,9 +237,51 @@ public class BangManager extends GameManager
                 _bangobj.updatePieces(piece);
             }
 
-            // this lets the clients know the updates are done and gives
-            // them a chance to to post-tick processing
-            _bangobj.postMessage("ticked", shots.toArray());
+        } finally {
+            _bangobj.commitTransaction();
+        }
+
+        // this lets the clients know the updates are done and gives
+        // them a chance to to post-tick processing
+        Object[] args = new Object[] {
+            shots.toArray(new Shot[shots.size()]),
+            effects.toArray(new Effect[effects.size()])
+        };
+        _bangobj.postMessage("ticked", args);
+    }
+
+    /** Applies the effects of shots fired and full-board effects after
+     * the normal tick processing has completed. The client will do this
+     * same processing to its data. */
+    protected void applyEffects (Shot[] shots, Effect[] effects)
+    {
+        // first apply the shots
+        for (int ii = 0; ii < shots.length; ii++) {
+            _bangobj.applyShot(shots[ii]);
+        }
+
+        // optimize for the common case
+        if (effects.length == 0) {
+            return;
+        }
+
+        try {
+            _bangobj.startTransaction();
+
+            // next apply the full board effects
+            ArrayList<Piece> additions = new ArrayList<Piece>();
+            PieceSet removals = new PieceSet();
+            _bangobj.applyEffects(effects, additions, removals);
+
+            // add the additions
+            for (int ii = 0, ll = additions.size(); ii < ll; ii++) {
+                _bangobj.addToPieces(additions.get(ii));
+            }
+
+            // remove the removals
+            for (Piece piece : removals.values()) {
+                _bangobj.removeFromPieces(piece.getKey());
+            }
 
         } finally {
             _bangobj.commitTransaction();
@@ -261,7 +302,8 @@ public class BangManager extends GameManager
      * @return true if the piece reached the final goal on the path, false
      * if not.
      */
-    protected boolean tickPath (Piece piece, PiecePath path, PieceSet updates)
+    protected boolean tickPath (Piece piece, PiecePath path, PieceSet updates,
+                                ArrayList<Effect> effects)
     {
         log.fine("Moving " + path + ".");
         int nx = path.getNextX(piece), ny = path.getNextY(piece);
@@ -278,7 +320,7 @@ public class BangManager extends GameManager
             }
 
             // try moving the piece
-            if (!movePiece(piece, nx, ny, updates)) {
+            if (!movePiece(piece, nx, ny, updates, effects)) {
                 return false;
             }
 
@@ -295,7 +337,6 @@ public class BangManager extends GameManager
             nx = path.getNextX(piece);
             ny = path.getNextY(piece);
             if (!piece.canBonusMove(nx, ny)) {
-                log.info("No bonus... [nx=" + nx + ", ny=" + ny + "].");
                 break;
             }
         }
@@ -310,7 +351,8 @@ public class BangManager extends GameManager
      * @return true if the piece was moved, false if it was not movable
      * for some reason.
      */
-    protected boolean movePiece (Piece piece, int x, int y, PieceSet updates)
+    protected boolean movePiece (Piece piece, int x, int y, PieceSet updates,
+                                 ArrayList<Effect> effects)
     {
         if (x < 0 || y < 0 || x >= _bangobj.board.getWidth() ||
             y >= _bangobj.board.getHeight()) {
@@ -360,7 +402,7 @@ public class BangManager extends GameManager
 
         // interact with any piece occupying our target space
         if (lapper != null) {
-            switch (piece.maybeInteract(lapper)) {
+            switch (piece.maybeInteract(lapper, effects)) {
             case CONSUMED:
                 _bangobj.removeFromPieces(lapper.getKey());
                 break;
@@ -431,6 +473,17 @@ public class BangManager extends GameManager
         public void expired () {
             int nextTick = (_bangobj.tick + 1) % Short.MAX_VALUE;
             _bangobj.setTick((short)nextTick);
+        }
+    };
+
+    /** Applies the shot and effect modifications associated with a tick
+     * after the tick has been processed. */
+    protected MessageListener _applier = new MessageListener() {
+        public void messageReceived (MessageEvent event) {
+            if (event.getName().equals("ticked")) {
+                Object[] args = event.getArgs();
+                applyEffects((Shot[])args[0], (Effect[])args[1]);
+            }
         }
     };
 

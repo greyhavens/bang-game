@@ -9,8 +9,12 @@ import java.util.Iterator;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
 
+import com.samskivert.bang.data.effect.Effect;
 import com.samskivert.bang.data.piece.Piece;
+import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PieceUtil;
+
+import static com.samskivert.bang.Log.log;
 
 /**
  * Contains all distributed information for the game.
@@ -74,6 +78,31 @@ public class BangObject extends GameObject
             }
         }
         return false;
+    }
+
+    /**
+     * Applies a single shot.
+     */
+    public void applyShot (Shot shot)
+    {
+        Piece piece = (Piece)pieces.get(shot.targetId);
+        if (piece != null) {
+//             log.info("Applying " + shot.damage + " to " + piece + ".");
+            piece.damage = Math.min(100, piece.damage + shot.damage);
+        }
+    }
+
+    /**
+     * Applies the supplied board effects.
+     */
+    public void applyEffects (Effect[] effects, ArrayList<Piece> additions,
+                              PieceSet removals)
+    {
+        Piece[] pieces = getPieceArray();
+        for (int ii = 0; ii < effects.length; ii++) {
+            Effect effect = effects[ii];
+            effect.apply(board, pieces, additions, removals);
+        }
     }
 
     // AUTO-GENERATED: METHODS START
