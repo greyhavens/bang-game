@@ -28,6 +28,18 @@ public class BangBoard extends SimpleStreamableObject
     {
     }
 
+    /** Returns the width of the board. */
+    public int getWidth ()
+    {
+        return _width;
+    }
+
+    /** Returns the height of the board. */
+    public int getHeight ()
+    {
+        return _height;
+    }
+
     /** Fills the board with the specified tile. */
     public void fill (Terrain tile)
     {

@@ -3,17 +3,33 @@
 
 package com.samskivert.bang.data;
 
-import com.threerings.presents.dobj.DSet;
+import java.util.ArrayList;
 
+import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
 
 import com.samskivert.bang.data.piece.Piece;
+import com.samskivert.bang.util.PieceUtil;
 
 /**
  * Contains all distributed information for the game.
  */
 public class BangObject extends GameObject
 {
+    // AUTO-GENERATED: FIELDS START
+    /** The field name of the <code>service</code> field. */
+    public static final String SERVICE = "service";
+
+    /** The field name of the <code>tick</code> field. */
+    public static final String TICK = "tick";
+
+    /** The field name of the <code>board</code> field. */
+    public static final String BOARD = "board";
+
+    /** The field name of the <code>pieces</code> field. */
+    public static final String PIECES = "pieces";
+    // AUTO-GENERATED: FIELDS END
+
     /** The invocation service via which the client communicates with the
      * server. */
     public BangMarshaller service;
@@ -33,4 +49,110 @@ public class BangObject extends GameObject
     {
         return (Piece[])pieces.toArray(new Piece[pieces.size()]);
     }
+
+    /**
+     * Returns a list of pieces that overlap the specified piece given its
+     * (hypothetical) current coordinates. If no pieces overlap, null will
+     * be returned.
+     */
+    public ArrayList<Piece> getOverlappers (Piece piece)
+    {
+        return PieceUtil.getOverlappers(pieces.entries(), piece);
+    }
+
+    // AUTO-GENERATED: METHODS START
+    /**
+     * Requests that the <code>service</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setService (BangMarshaller value)
+    {
+        BangMarshaller ovalue = this.service;
+        requestAttributeChange(
+            SERVICE, value, ovalue);
+        this.service = value;
+    }
+
+    /**
+     * Requests that the <code>tick</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setTick (short value)
+    {
+        short ovalue = this.tick;
+        requestAttributeChange(
+            TICK, new Short(value), new Short(ovalue));
+        this.tick = value;
+    }
+
+    /**
+     * Requests that the <code>board</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setBoard (BangBoard value)
+    {
+        BangBoard ovalue = this.board;
+        requestAttributeChange(
+            BOARD, value, ovalue);
+        this.board = value;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>pieces</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToPieces (DSet.Entry elem)
+    {
+        requestEntryAdd(PIECES, pieces, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>pieces</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromPieces (Comparable key)
+    {
+        requestEntryRemove(PIECES, pieces, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>pieces</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updatePieces (DSet.Entry elem)
+    {
+        requestEntryUpdate(PIECES, pieces, elem);
+    }
+
+    /**
+     * Requests that the <code>pieces</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setPieces (DSet value)
+    {
+        requestAttributeChange(PIECES, value, this.pieces);
+        this.pieces = (value == null) ? null : (DSet)value.clone();
+    }
+    // AUTO-GENERATED: METHODS END
 }
