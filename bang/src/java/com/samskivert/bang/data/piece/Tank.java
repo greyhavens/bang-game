@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
-import com.samskivert.bang.client.sprite.TankSprite;
+import com.samskivert.bang.client.sprite.UnitSprite;
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.Shot;
@@ -23,7 +23,7 @@ import static com.samskivert.bang.Log.log;
 public class Tank extends Piece
     implements PlayerPiece
 {
-    /** A tank can fire at a target up to four squares away. */
+    /** A tank can fire at a target up to two squares away. */
     public static final int FIRE_DISTANCE = 2;
 
     /** Indicates the orientation of our turret. */
@@ -32,7 +32,7 @@ public class Tank extends Piece
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new TankSprite();
+        return new UnitSprite("tank");
     }
 
     @Override // documentation inherited
@@ -78,18 +78,14 @@ public class Tank extends Piece
     public void enumerateLegalMoves (int tx, int ty, PointSet moves)
     {
         moves.add(tx, ty-2);
-        moves.add(tx-1, ty-1);
         moves.add(tx, ty-1);
-        moves.add(tx+1, ty-1);
 
         moves.add(tx+2, ty);
         moves.add(tx+1, ty);
         moves.add(tx-1, ty);
         moves.add(tx-2, ty);
 
-        moves.add(tx-1, ty+1);
         moves.add(tx, ty+1);
-        moves.add(tx+1, ty+1);
         moves.add(tx, ty+2);
     }
 
@@ -172,22 +168,20 @@ public class Tank extends Piece
         return ORIENT_CODES[turretOrient];
     }
 
-    /**
-     * Affects the target piece with damage.
-     */
-    public Shot shoot (Piece target)
+    @Override // documentation inherited
+    protected int computeDamage (Piece target)
     {
-        int damage = Math.min(target.energy, target.maximumEnergy()/10);
-        log.info("Doing " + damage + " damage to " + target + ".");
-        target.energy -= damage;
-        return new Shot(pieceId, target.x, target.y);
-    }
-
-    /** Returns true if we can and should fire upon this target. */
-    protected boolean validTarget (Piece target)
-    {
-        return (target != null && target.owner != -1 &&
-                target.owner != owner && target.energy > 0);
+        if (target instanceof Tank) {
+            return 25;
+        } else if (target instanceof Chopper) {
+            return 25;
+        } else if (target instanceof Artillery) {
+            return 25;
+        } else if (target instanceof Marine) {
+            return 50;
+        } else {
+            return super.computeDamage(target);
+        }
     }
 
     /** Used by {@link #getTargets}. */

@@ -15,29 +15,40 @@ public class MobileSprite extends PieceSprite
 {
     public MobileSprite ()
     {
-        super(SQUARE-3, SQUARE-3 + EBAR_HEIGHT + EBAR_GAP);
-        _oyoff = EBAR_HEIGHT + EBAR_GAP;
+        super(SQUARE-3, SQUARE-3 + DBAR_HEIGHT + DBAR_GAP);
+        _oyoff = DBAR_HEIGHT + DBAR_GAP;
     }
 
     @Override // documentation inherited
     public void paint (Graphics2D gfx)
     {
-        // paint our remaining energy (if we have any)
-        if (_piece.energy > 0) {
-            int pct = _piece.getPercentEnergy();
-            gfx.setColor(ENERGY_COLORS[pct / 10]);
+        // paint our damage level
+        if (_piece.damage < 100) {
+            int pct = 100 - _piece.damage;
+            gfx.setColor(DAMAGE_COLORS[pct / 10]);
             float epix = (_bounds.width-2) * pct / 100f;
-            gfx.fillRect(_bounds.x, _bounds.y,
-                         (int)Math.ceil(epix), EBAR_HEIGHT);
+            gfx.fillRect(_bounds.x+1, _bounds.y,
+                         (int)Math.ceil(epix), DBAR_HEIGHT);
             gfx.setColor(Color.black);
-            gfx.drawRect(_bounds.x, _bounds.y, _bounds.width-1, EBAR_HEIGHT-1);
+            gfx.drawRect(_bounds.x, _bounds.y, _bounds.width-1, DBAR_HEIGHT-1);
         }
     }
 
-    protected static final int EBAR_HEIGHT = 4;
-    protected static final int EBAR_GAP = 3;
+    /** Returns the color of this piece. */
+    protected Color getColor ()
+    {
+        Color color = _piece.owner == 0 ? Color.white : Color.yellow;
+        if (_piece.energy <= 0 || _piece.damage >= 100) {
+            color = Color.gray;
+        }
+        return color;
+    }
 
-    protected static final Color[] ENERGY_COLORS = {
+    protected static final int DBAR_HEIGHT = 4;
+    protected static final int DBAR_GAP = 3;
+
+    protected static final Color[] DAMAGE_COLORS = {
         Color.red, Color.red, Color.yellow, Color.yellow, Color.green,
-        Color.green, Color.green, Color.green, Color.green, Color.green };
+        Color.green, Color.green, Color.green, Color.green, Color.green,
+        Color.green.brighter() };
 }

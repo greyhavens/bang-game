@@ -75,7 +75,7 @@ public class BoardView extends VirtualMediaPanel
         dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
 
         // create sprites for all of the pieces
-        for (Iterator iter = bangobj.pieces.entries(); iter.hasNext(); ) {
+        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             // this will trigger the creation, initialization and whatnot
             pieceUpdated(null, (Piece)iter.next());
         }
@@ -305,7 +305,7 @@ public class BoardView extends VirtualMediaPanel
         PieceSprite sprite = _pieces.get(piece.pieceId);
         if (sprite == null) {
             sprite = piece.createSprite();
-            sprite.init(piece);
+            sprite.init(_ctx, piece);
             _pieces.put((int)piece.pieceId, sprite);
             addSprite(sprite);
         }
@@ -316,7 +316,7 @@ public class BoardView extends VirtualMediaPanel
     {
         _attackSet = new PointSet();
         _attentionSet = new PointSet();
-        for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
             PieceSprite sprite = _pieces.get(piece.pieceId);
             if (sprite != null && isManaged(sprite)) {

@@ -392,7 +392,7 @@ public class BangBoardView extends BoardView
         _vstate.swap();
 
         // update the board visibility based on our piece's new position
-        for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
             if (piece.owner == -1 || (_pidx != -1 && _pidx != piece.owner)) {
                 continue; // skip non-player pieces in this pass
@@ -426,7 +426,7 @@ public class BangBoardView extends BoardView
     /** Makes enemy pieces visible or invisible based on _vstate. */
     protected void adjustEnemyVisibility ()
     {
-        for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
             if (piece.owner == -1 || (_pidx == -1 || _pidx == piece.owner)) {
                 continue; // skip unowned and player pieces in this pass
@@ -436,7 +436,7 @@ public class BangBoardView extends BoardView
             if (sprite != null) {
                 boolean viz = _vstate.getVisible(piece.x, piece.y);
                 if (viz && !isManaged(sprite)) {
-                    sprite.init(piece);
+                    sprite.updated(piece);
                     addSprite(sprite);
                 } else if (!viz && isManaged(sprite)) {
                     removeSprite(sprite);
@@ -461,7 +461,7 @@ public class BangBoardView extends BoardView
 
             // figure out which sprites we need to wait for
             considerPiece(_shooter);
-            for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
+            for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
                 Piece p = (Piece)iter.next();
                 if (p == _shooter || !_shot.affects(p.x, p.y)) {
                     continue;

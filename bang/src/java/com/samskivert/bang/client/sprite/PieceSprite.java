@@ -12,6 +12,9 @@ import com.samskivert.swing.Label;
 import com.threerings.media.sprite.Sprite;
 import com.threerings.media.sprite.SpriteManager;
 import com.threerings.media.util.LinePath;
+import com.threerings.media.util.MathUtil;
+
+import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.data.piece.Piece;
 
@@ -62,7 +65,7 @@ public class PieceSprite extends Sprite
      * Called when we are first created and immediately before we are
      * added to the display.
      */
-    public void init (Piece piece)
+    public void init (ToyBoxContext ctx, Piece piece)
     {
         _piece = piece;
 
@@ -86,7 +89,8 @@ public class PieceSprite extends Sprite
         int nx = piece.x * SQUARE + 2, ny = piece.y * SQUARE + 2;
         if (nx != _ox || ny != _oy) {
             if (_mgr != null) {
-                move(new LinePath(_ox, _oy, nx, ny, 250L));
+                long duration = (long)MathUtil.distance(_ox, _oy, nx, ny) * 10;
+                move(new LinePath(_ox, _oy, nx, ny, duration));
             } else {
                 // if we're invisible just warp there
                 setLocation(nx, ny);

@@ -11,6 +11,7 @@ import com.threerings.media.util.MathUtil;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.UnitSprite;
+import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.util.PieceSet;
@@ -19,24 +20,18 @@ import com.samskivert.bang.util.PointSet;
 import static com.samskivert.bang.Log.log;
 
 /**
- * Handles the state and behavior of the artillery piece.
+ * Handles the state and behavior of the chopper piece.
  */
-public class Artillery extends Piece
+public class Chopper extends Piece
     implements PlayerPiece
 {
-    /** A tank can fire at a target up to seven squares away. */
-    public static final int FIRE_DISTANCE = 4;
+    /** A chopper can fire at a target only one square away. */
+    public static final int FIRE_DISTANCE = 1;
 
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new UnitSprite("artillery");
-    }
-
-    @Override // documentation inherited
-    public int getSightDistance ()
-    {
-        return 9;
+        return new UnitSprite("chopper");
     }
 
     @Override // documentation inherited
@@ -67,6 +62,25 @@ public class Artillery extends Piece
     }
 
     @Override // documentation inherited
+    public void enumerateLegalMoves (int tx, int ty, PointSet moves)
+    {
+        moves.add(tx, ty-2);
+        moves.add(tx-1, ty-1);
+        moves.add(tx, ty-1);
+        moves.add(tx+1, ty-1);
+
+        moves.add(tx+2, ty);
+        moves.add(tx+1, ty);
+        moves.add(tx-1, ty);
+        moves.add(tx-2, ty);
+
+        moves.add(tx-1, ty+1);
+        moves.add(tx, ty+1);
+        moves.add(tx+1, ty+1);
+        moves.add(tx, ty+2);
+    }
+
+    @Override // documentation inherited
     public void enumerateAttacks (PointSet set)
     {
         int fdist = FIRE_DISTANCE*FIRE_DISTANCE;
@@ -81,18 +95,24 @@ public class Artillery extends Piece
     }
 
     @Override // documentation inherited
-    protected boolean validTarget (Piece target)
+    public boolean canMoveTo (BangBoard board, int nx, int ny)
     {
-        return super.validTarget(target) && !(target instanceof Chopper);
+        // we can move up to two squares in a turn
+        if (Math.abs(x - nx) + Math.abs(y - ny) > 2) {
+            return false;
+        }
+
+        // and make sure we can traverse our final location
+        return canTraverse(board, nx, ny);
     }
 
     @Override // documentation inherited
     protected int computeDamage (Piece target)
     {
         if (target instanceof Tank) {
-            return 34;
+            return 25;
         } else if (target instanceof Chopper) {
-            return 0;
+            return 20;
         } else if (target instanceof Artillery) {
             return 34;
         } else if (target instanceof Marine) {

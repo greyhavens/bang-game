@@ -120,7 +120,7 @@ public class BangManager extends GameManager
         _bangobj.setPieces(new DSet(pieces.iterator()));
 
         // initialize our pieces
-        for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             ((Piece)iter.next()).init();
         }
 
@@ -138,11 +138,11 @@ public class BangManager extends GameManager
 
         Piece[] pieces = _bangobj.getPieceArray();
 
-        // next check to see whether anyone's pieces have energy remaining
+        // next check to see whether anyone's pieces are still alive
         _havers.clear();
         for (int ii = 0; ii < pieces.length; ii++) {
             if ((pieces[ii] instanceof PlayerPiece) &&
-                pieces[ii].canTakeStep()) {
+                pieces[ii].isAlive()) {
                 _havers.add(pieces[ii].owner);
             }
         }
@@ -184,7 +184,7 @@ public class BangManager extends GameManager
                 PointSet moves = new PointSet();
                 for (int ii = 0; ii < pieces.length; ii++) {
                     Piece p = pieces[ii];
-                    if (p.owner != 1 || p.energy == 0) {
+                    if (p.owner != 1 || !p.isAlive()) {
                         continue;
                     }
                     moves.clear();
@@ -201,9 +201,9 @@ public class BangManager extends GameManager
             // now that everyone has moved
             for (int ii = 0; ii < pieces.length; ii++) {
                 Piece piece = pieces[ii];
-                // skip pieces that were eaten or that have zero energy
+                // skip pieces that were eaten or are fully damaged
                 if (!_bangobj.pieces.containsKey(piece.pieceId) ||
-                    piece.energy == 0) {
+                    piece.damage >= 100) {
                     continue;
                 }
                 piece.react(_bangobj, pieces, updates, shots);

@@ -19,18 +19,18 @@ import com.samskivert.bang.util.PointSet;
 import static com.samskivert.bang.Log.log;
 
 /**
- * Handles the state and behavior of the artillery piece.
+ * Handles the state and behavior of the marine piece.
  */
-public class Artillery extends Piece
+public class Marine extends Piece
     implements PlayerPiece
 {
-    /** A tank can fire at a target up to seven squares away. */
-    public static final int FIRE_DISTANCE = 4;
+    /** A marine can fire at a target up to two squares away. */
+    public static final int FIRE_DISTANCE = 2;
 
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new UnitSprite("artillery");
+        return new UnitSprite("marine");
     }
 
     @Override // documentation inherited
@@ -81,22 +81,16 @@ public class Artillery extends Piece
     }
 
     @Override // documentation inherited
-    protected boolean validTarget (Piece target)
-    {
-        return super.validTarget(target) && !(target instanceof Chopper);
-    }
-
-    @Override // documentation inherited
     protected int computeDamage (Piece target)
     {
         if (target instanceof Tank) {
-            return 34;
+            return 13;
         } else if (target instanceof Chopper) {
-            return 0;
+            return 50;
         } else if (target instanceof Artillery) {
-            return 34;
+            return 25;
         } else if (target instanceof Marine) {
-            return 17;
+            return 20;
         } else {
             return super.computeDamage(target);
         }

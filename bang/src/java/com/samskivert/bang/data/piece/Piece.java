@@ -47,6 +47,9 @@ public abstract class Piece extends SimpleStreamableObject
     /** This piece's orientation. */
     public short orientation;
 
+    /** The percentage damage this piece has taken. */
+    public int damage;
+
     /** The energy level of this piece. */
     public int energy;
 
@@ -60,6 +63,14 @@ public abstract class Piece extends SimpleStreamableObject
     public boolean hasPath ()
     {
         return pathPos >= 0;
+    }
+
+    /**
+     * Returns true if this piece is still active and playable.
+     */
+    public boolean isAlive ()
+    {
+        return (energy > 0) && (damage < 100);
     }
 
     /**
@@ -219,6 +230,20 @@ public abstract class Piece extends SimpleStreamableObject
     public boolean canTakeStep ()
     {
         return energy >= energyPerStep();
+    }
+
+    /**
+     * Affects the target piece with damage.
+     */
+    public Shot shoot (Piece target)
+    {
+        int hurt = computeDamage(target);
+        // scale the damage by our own damage level
+        hurt = (hurt * (100-this.damage)) / 100;
+        log.info("Doing " + hurt + " damage to " + target + ".");
+        // now put the hurt on said piece
+        target.damage = Math.min(100, target.damage + hurt);
+        return new Shot(pieceId, target.x, target.y);
     }
 
     /**
@@ -519,6 +544,25 @@ public abstract class Piece extends SimpleStreamableObject
             }
         }
         return matches == null ? null : (Piece)RandomUtil.pickRandom(matches);
+    }
+
+    /**
+     * Returns the number of percentage points of damage this piece does
+     * to pieces of the specified type.
+     */
+    protected int computeDamage (Piece target)
+    {
+        log.warning(getClass() + " requested to damage " +
+                    target.getClass() + "?");
+        return 10;
+    }
+
+    /** Returns true if we can and should fire upon this target. */
+    protected boolean validTarget (Piece target)
+    {
+        return (target != null && target.owner != -1 &&
+                target.owner != owner && target.energy > 0 &&
+                target.damage < 100);
     }
 
     /**
