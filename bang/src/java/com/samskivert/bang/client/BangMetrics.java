@@ -9,5 +9,5 @@ package com.samskivert.bang.client;
 public class BangMetrics
 {
     /** The length of the edge of one board square. */
-    public static final int SQUARE = 32;
+    public static final int SQUARE = 40;
 }

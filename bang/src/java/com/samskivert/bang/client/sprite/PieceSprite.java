@@ -70,8 +70,7 @@ public class PieceSprite extends Sprite
         _idLabel = new Label("" + piece.pieceId, Color.black, null);
 
         // position ourselves properly
-        setLocation(SQUARE * piece.x[0] + 2,
-                    SQUARE * piece.y[0] + 2);
+        setLocation(SQUARE * piece.x + 2, SQUARE * piece.y + 2);
     }
 
     /**
@@ -84,9 +83,10 @@ public class PieceSprite extends Sprite
         _piece = piece;
 
         // move ourselves to our new location
-        move(new LinePath(_bounds.x, _bounds.y,
-                          piece.x[0] * SQUARE + 2,
-                          piece.y[0] * SQUARE + 2, 250L));
+        int nx = piece.x * SQUARE + 2, ny = piece.y * SQUARE + 2;
+        if (nx != _ox || ny != _oy) {
+            move(new LinePath(_ox, _oy, nx, ny, 250L));
+        }
     }
 
     /**
@@ -107,48 +107,14 @@ public class PieceSprite extends Sprite
         _idLabel.layout(_mgr.getMediaPanel());
     }
 
-    /** Paints an indicator of this piece's remaining energy. */
-    protected void paintEnergy (Graphics2D gfx)
-    {
-        gfx.setColor(Color.orange);
-        if (_piece.energy >= _piece.energyPerStep()) {
-            gfx.fillRect(_bounds.x, _bounds.y, 4, 4);
-        }
-        if (_piece.energy >= 2*_piece.energyPerStep()) {
-            gfx.fillRect(_bounds.x+_bounds.width-4, _bounds.y, 4, 4);
-        }
-        if (_piece.energy >= 3*_piece.energyPerStep()) {
-            gfx.fillRect(_bounds.x+_bounds.width-4,
-                         _bounds.y+_bounds.height-4, 4, 4);
-        }
-        if (_piece.energy >= 4*_piece.energyPerStep()) {
-            gfx.fillRect(_bounds.x, _bounds.y+_bounds.height-4, 4, 4);
-        }
-    }
-
     /**
      * Computes a bounding rectangle around the specifeid piece's various
      * segments. Assumes all segments are 1x1.
-     *
-     * @param ulidx the index of the segment in the upper left.
      */
     protected Rectangle computeBounds (Piece piece)
     {
-        int leftx = piece.x[0], uppery = piece.y[0];
-        Rectangle rect = new Rectangle(SQUARE*piece.x[0], SQUARE*piece.y[0],
-                                       SQUARE, SQUARE);
-        for (int ii = 1; ii < piece.x.length; ii++) {
-            _unit.setLocation(SQUARE*piece.x[ii], SQUARE*piece.y[ii]);
-            rect.add(_unit);
-            if (piece.x[ii] < leftx) {
-                leftx = piece.x[ii];
-            }
-            if (piece.y[ii] < uppery) {
-                uppery = piece.y[ii];
-            }
-        }
-        rect.setLocation(SQUARE * leftx, SQUARE * uppery);
-        return rect;
+        _unit.setLocation(SQUARE*piece.x, SQUARE*piece.y);
+        return _unit;
     }
 
     protected Piece _piece;

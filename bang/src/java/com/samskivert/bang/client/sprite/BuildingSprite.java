@@ -22,13 +22,13 @@ public class BuildingSprite extends PieceSprite
     public void paint (Graphics2D gfx)
     {
         gfx.setColor(BUILDING_BROWN);
-        gfx.fillRect(_bounds.x, _bounds.y, _bounds.width, _bounds.height);
+        gfx.fillRect(_ox, _oy, _bounds.width, _bounds.height);
         gfx.setColor(Color.black);
-        gfx.drawRect(_bounds.x, _bounds.y, _bounds.width, _bounds.height);
+        gfx.drawRect(_ox, _oy, _bounds.width-1, _bounds.height-1);
 
         // TEMP: render our id so I can debug building jiggling
-        int lx = _bounds.x+(_bounds.width-_idLabel.getSize().width)/2;
-        int ly = _bounds.y+(_bounds.height-_idLabel.getSize().height)/2;
+        int lx = _ox+(_bounds.width-_idLabel.getSize().width)/2;
+        int ly = _oy+(_bounds.height-_idLabel.getSize().height)/2;
         _idLabel.render(gfx, lx, ly);
     }
 

@@ -27,6 +27,6 @@ public class Building extends BigPiece
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new BuildingSprite(_width, _height);
+        return new BuildingSprite(getWidth(), getHeight());
     }
 }

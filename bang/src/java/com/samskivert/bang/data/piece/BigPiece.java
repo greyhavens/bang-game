@@ -32,6 +32,12 @@ public abstract class BigPiece extends Piece
     }
 
     @Override // documentation inherited
+    public boolean intersects (Rectangle bounds)
+    {
+        return _bounds.intersects(bounds);
+    }
+
+    @Override // documentation inherited
     public boolean intersects (int tx, int ty)
     {
         return _bounds.contains(tx, ty);
@@ -43,13 +49,20 @@ public abstract class BigPiece extends Piece
         if (other instanceof BigPiece) {
             return _bounds.intersects(((BigPiece)other).getBounds());
         } else {
-            for (int ii = 0; ii < other.x.length; ii++) {
-                if (intersects(other.x[ii], other.y[ii])) {
-                    return true;
-                }
-            }
+            return intersects(other.x, other.y);
         }
-        return false;
+    }
+
+    @Override // documentation inherited
+    public int getWidth ()
+    {
+        return _bounds.width;
+    }
+
+    @Override // documentation inherited
+    public int getHeight ()
+    {
+        return _bounds.height;
     }
 
     @Override // documentation inherited
@@ -91,12 +104,6 @@ public abstract class BigPiece extends Piece
     {
         _width = width;
         _height = height;
-    }
-
-    @Override // documentation inherited
-    protected void createSegments (int sx, int sy)
-    {
-        super.createSegments(sx, sy);
         updateBounds();
     }
 
@@ -112,9 +119,9 @@ public abstract class BigPiece extends Piece
     protected void updateBounds ()
     {
         if (orientation == NORTH || orientation == SOUTH) {
-            _bounds.setBounds(x[0], y[0], _width, _height);
+            _bounds.setBounds(x, y, _width, _height);
         } else {
-            _bounds.setBounds(x[0], y[0], _height, _width);
+            _bounds.setBounds(x, y, _height, _width);
         }
     }
 

@@ -125,7 +125,7 @@ public class BangManager extends GameManager
 //         }
 
         // queue up the board tick
-        _ticker.schedule(5000L, true);
+        _ticker.schedule(2000L, true);
     }
 
     /**
@@ -214,7 +214,7 @@ public class BangManager extends GameManager
         int nx = path.getNextX(piece), ny = path.getNextY(piece);
 
         // make sure the piece has the energy to move that far
-        int steps = Math.abs(piece.x[0]-nx) + Math.abs(piece.y[0]-ny);
+        int steps = Math.abs(piece.x-nx) + Math.abs(piece.y-ny);
         if (piece.energy < steps * piece.energyPerStep()) {
             log.info("Piece out of energy [piece=" + piece + "].");
             piece.pathPos = -1;
@@ -257,7 +257,7 @@ public class BangManager extends GameManager
         }
 
         // calculate the distance we're moving
-        int steps = Math.abs(piece.x[0]-x) + Math.abs(piece.y[0]-y);
+        int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
 
         // clone the piece so that we can investigate the hypothetical
         piece = (Piece)piece.clone();

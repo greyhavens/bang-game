@@ -34,13 +34,13 @@ public abstract class Piece extends SimpleStreamableObject
 
     /** The player index of the owner of this piece or -1 if it is not an
      * owned piece. */
-    public int owner = Integer.MIN_VALUE;
+    public int owner = -1;
 
     /** The current x location of this piece's segments. */
-    public short[] x;
+    public short x;
 
     /** The current y location of this piece's segments. */
-    public short[] y;
+    public short y;
 
     /** This piece's orientation. */
     public short orientation;
@@ -65,12 +65,15 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public boolean intersects (int tx, int ty)
     {
-        for (int ii = 0; ii < x.length; ii++) {
-            if (x[ii] == tx && y[ii] == ty) {
-                return true;
-            }
-        }
-        return false;
+        return (x == tx) && (y == ty);
+    }
+
+    /**
+     * Returns true if this piece intersects the specified region.
+     */
+    public boolean intersects (Rectangle bounds)
+    {
+        return bounds.contains(x, y);
     }
 
     /**
@@ -79,12 +82,19 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public boolean intersects (Piece other)
     {
-        for (int ii = 0; ii < x.length; ii++) {
-            if (other.intersects(x[ii], y[ii])) {
-                return true;
-            }
-        }
-        return false;
+        return other.intersects(x, y);
+    }
+
+    /** Returns the width of this piece. */
+    public int getWidth ()
+    {
+        return 1;
+    }
+
+    /** Returns the height of this piece. */
+    public int getHeight ()
+    {
+        return 1;
     }
 
     /**
@@ -96,7 +106,7 @@ public abstract class Piece extends SimpleStreamableObject
         // set up our starting energy (only if it hasn't been otherwise
         // configured in the editor)
         if (energy == 0) {
-            energy = startingEnergy() * 100;
+            energy = startingEnergy();
         }
     }
 
@@ -107,23 +117,13 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public boolean position (int nx, int ny)
     {
-        if (x == null) {
-            // handle our very first position
-            createSegments(nx, ny);
-
-        } else if ((nx == x[0]) && (ny == y[0])) {
-            // avoid NOOP
-            return false;
-
-        } else {
-            // update a pre-existing position
+        // avoid NOOP
+        if (nx != x || ny != y) {
             updatePosition(nx, ny);
+            pieceMoved();
+            return true;
         }
-
-        // let derived classes know that we've moved
-        pieceMoved();
-
-        return true;
+        return false;
     }
 
     /**
@@ -136,11 +136,6 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public boolean rotate (int direction)
     {
-        // rotation is not supported for pieces longer than one segment
-        if (x.length > 1) {
-            return false;
-        }
-
         // update our orientation
         orientation = (short)((direction == CW) ? ((orientation + 1) % 4) :
                               ((orientation + 3) % 4));
@@ -176,7 +171,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public Point2D getLocusOfAttention ()
     {
-        _locus.setLocation(x[0] + 0.5, y[0] + 0.5);
+        _locus.setLocation(x + 0.5, y + 0.5);
         return _locus;
     }
 
@@ -255,7 +250,7 @@ public abstract class Piece extends SimpleStreamableObject
     {
         // by default, ensure that the location is exactly one unit away
         // from our current location
-        if (Math.abs(x[0] - nx) + Math.abs(y[0] - ny) != 1) {
+        if (Math.abs(x - nx) + Math.abs(y - ny) != 1) {
             return false;
         }
 
@@ -359,6 +354,12 @@ public abstract class Piece extends SimpleStreamableObject
         getKey();
     }
 
+    /** Returns the percentage remaining of this piece's energy. */
+    public int getPercentEnergy ()
+    {
+        return energy * 100 / maximumEnergy();
+    }
+
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
@@ -387,30 +388,17 @@ public abstract class Piece extends SimpleStreamableObject
     public Object clone ()
     {
         try {
-            Piece p = (Piece)super.clone();
-            if (x != null) {
-                p.x = new short[x.length];
-                System.arraycopy(x, 0, p.x, 0, x.length);
-            }
-            if (y != null) {
-                p.y = new short[y.length];
-                System.arraycopy(y, 0, p.y, 0, y.length);
-            }
-            return p;
+            return (Piece)super.clone();
         } catch (CloneNotSupportedException cnse) {
             return null;
         }
     }
 
-    /**
-     * Starts this bug out at the specified coordinates. Creates our
-     * segment position arrays. We will have already been configured with
-     * our starting orientation.
-     */
-    protected void createSegments (int sx, int sy)
+    /** Converts our orientation to a human readable string. */
+    public String orientationToString ()
     {
-        x = new short[] { (short)sx };
-        y = new short[] { (short)sy };
+        return (orientation >= 0) ? ORIENT_CODES[orientation] :
+            ("" + orientation);
     }
 
     /**
@@ -419,7 +407,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     protected int computeOrientation (int nx, int ny)
     {
-        int hx = x[0], hy = y[0];
+        int hx = x, hy = y;
 
         // if it is purely a horizontal or vertical move, simply orient
         // in the direction of the move
@@ -451,15 +439,8 @@ public abstract class Piece extends SimpleStreamableObject
     {
         // determine our new orientation
         orientation = (short)computeOrientation(nx, ny);
-
-        // we assume that we move like a worm, our head occupies the new
-        // position and all other segments move ahead one to catch up
-        for (int ii = x.length-1; ii > 0; ii--) {
-            x[ii] = x[ii-1];
-            y[ii] = y[ii-1];
-        }
-        x[0] = (short)nx;
-        y[0] = (short)ny;
+        x = (short)nx;
+        y = (short)ny;
     }
 
     /**
@@ -482,13 +463,13 @@ public abstract class Piece extends SimpleStreamableObject
     /** Returns the starting energy for pieces of this type. */
     protected int startingEnergy ()
     {
-        return DEFAULT_STARTING_ENERGY;
+        return DEFAULT_STARTING_ENERGY * 100;
     }
 
     /** Returns the maximum energy this piece can possess. */
     protected int maximumEnergy ()
     {
-        return DEFAULT_MAXIMUM_ENERGY;
+        return DEFAULT_MAXIMUM_ENERGY * 100;
     }
 
     /**
@@ -540,8 +521,8 @@ public abstract class Piece extends SimpleStreamableObject
                                 PointSet attack, PointSet attend)
     {
         // compute our translation offsets
-        int offx = x[0] - (msize-psize)/2;
-        int offy = y[0] - (msize-psize)/2;
+        int offx = x - (msize-psize)/2;
+        int offy = y - (msize-psize)/2;
 
         // foreach each element of our sets, properly translate and rotate
         // the coordinate and add it to the appropriate set
@@ -623,4 +604,7 @@ public abstract class Piece extends SimpleStreamableObject
 
     /** Used to move one tile backward from an orientation. */
     protected static final int[] REV_Y_MAP = { 1, 0, -1, 0 };
+
+    /** Used by {@link #orientationToString}. */
+    protected static final String[] ORIENT_CODES = { "N", "E", "S", "W" };
 }

@@ -101,7 +101,7 @@ public class CompoundGenerator extends EnvironmentGenerator
 //                     log.info(bldg.pieceId + " is too close to " +
 //                              neigh.pieceId + ". Adjusting [dx=" + dx +
 //                              ", dy=" + dy + "].");
-                    abldg.position(abldg.x[0] + dx, abldg.y[0] + dy);
+                    abldg.position(abldg.x + dx, abldg.y + dy);
                     adjusted++;
                 }
             }
