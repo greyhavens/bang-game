@@ -100,6 +100,14 @@ public abstract class Piece extends SimpleStreamableObject
         return other.intersects(x, y);
     }
 
+    /**
+     * Returns our combined x and y coordinate.
+     */
+    public int getCoord ()
+    {
+        return coord(x, y);
+    }
+
     /** Returns the width of this piece. */
     public int getWidth ()
     {
@@ -420,6 +428,19 @@ public abstract class Piece extends SimpleStreamableObject
         return energy * 100 / maximumEnergy();
     }
 
+    /**
+     * Creates a new piece that is an exact duplicate of this piece. The
+     * piece will occupy the same location and must be moved before being
+     * added to the game.
+     */
+    public Piece duplicate ()
+    {
+        Piece dup = (Piece)clone();
+        dup.assignPieceId();
+        dup.pathPos = -1;
+        return dup;
+    }
+
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
@@ -638,6 +659,14 @@ public abstract class Piece extends SimpleStreamableObject
                 set.add(offx+tx, offy+ty);
             }
         }
+    }
+
+    /**
+     * Combines the supplied x and y coordintes into a single integer.
+     */
+    public static int coord (short x, short y)
+    {
+        return (x << 16) | y;
     }
 
     public static void main (String[] args)

@@ -98,10 +98,9 @@ public class BangObject extends GameObject
     public void applyEffects (Effect[] effects, ArrayList<Piece> additions,
                               PieceSet removals)
     {
-        Piece[] pieces = getPieceArray();
         for (int ii = 0; ii < effects.length; ii++) {
             Effect effect = effects[ii];
-            effect.apply(board, pieces, additions, removals);
+            effect.apply(this, additions, removals);
         }
     }
 

@@ -408,11 +408,10 @@ public class BangBoardView extends BoardView
         }
 
         // apply (and display) the effects
-        Piece[] pieces = _bangobj.getPieceArray();
         ArrayList<Piece> additions = new ArrayList<Piece>();
         PieceSet removals = new PieceSet();
         for (int ii = 0; ii < effects.length; ii++) {
-            effects[ii].apply(_bangobj.board, pieces, additions, removals);
+            effects[ii].apply(_bangobj, additions, removals);
         }
 
         // we don't need to do anything with the additions and removals as

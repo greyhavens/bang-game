@@ -5,7 +5,7 @@ package com.samskivert.bang.data.effect;
 
 import java.util.ArrayList;
 
-import com.samskivert.bang.data.BangBoard;
+import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.util.PieceSet;
@@ -26,13 +26,12 @@ public class RepairEffect extends Effect
     {
     }
 
-    public void apply (BangBoard board, Piece[] pieces,
-                       ArrayList<Piece> additions, PieceSet removals)
+    public void apply (BangObject bangobj, ArrayList<Piece> additions,
+                       PieceSet removals)
     {
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii].pieceId == pieceId) {
-                pieces[ii].damage = 0;
-            }
+        Piece piece = (Piece)bangobj.pieces.get(pieceId);
+        if (piece != null) {
+            piece.damage = 0;
         }
     }
 }
