@@ -28,6 +28,7 @@ import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
+import com.samskivert.bang.data.piece.Tank;
 
 import static com.samskivert.bang.Log.log;
 
@@ -345,7 +346,15 @@ public class BangManager extends GameManager
         // generate a random board
         int size = (Integer)bconfig.params.get("board_size");
         BangBoard board = new BangBoard(size, size);
-        // TODO: random stuff
+        board.fill(Terrain.DIRT);
+        Tank tank = new Tank();
+        tank.assignPieceId();
+        tank.position(5, 5);
+        pieces.add(tank);
+        tank = new Tank();
+        tank.assignPieceId();
+        tank.position(7, 5);
+        pieces.add(tank);
         return board;
     }
 
