@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import com.samskivert.util.HashIntMap;
+
 import com.threerings.media.image.ImageUtil;
 import com.threerings.toybox.util.ToyBoxContext;
 
@@ -57,7 +59,7 @@ public class UnitSprite extends MobileSprite
     {
         super.paint(gfx);
 
-        BufferedImage image = _images[_piece.orientation];
+        BufferedImage image = getImage(_piece.owner, _piece.orientation);
         int width = _bounds.width - _oxoff, iwidth = image.getWidth();
         int height = _bounds.height - _oyoff, iheight = image.getHeight();
 
@@ -73,6 +75,29 @@ public class UnitSprite extends MobileSprite
         }
     }
 
+    protected BufferedImage getImage (int player, int orient)
+    {
+        BufferedImage[] colored = (BufferedImage[])_outlined.get(player);
+        if (colored == null) {
+            colored = new BufferedImage[_images.length];
+            for (int ii = 0; ii < colored.length; ii++) {
+                colored[ii] = ImageUtil.createCompatibleImage(
+                    _images[ii], _images[ii].getWidth(),
+                    _images[ii].getHeight());
+                ImageUtil.createTracedImage(
+                    _images[ii], colored[ii], PIECE_COLORS[player],
+                    1, 1.0f, 1.0f);
+            }
+            _outlined.put(player, colored);
+        }
+        return colored[orient];
+    }
+
     protected String _type;
     protected BufferedImage[] _images = new BufferedImage[4];
+    protected HashIntMap _outlined = new HashIntMap();
+
+    protected static final Color[] PIECE_COLORS = {
+        Color.blue, Color.red, Color.green, Color.yellow
+    };
 }
