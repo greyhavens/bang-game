@@ -8,6 +8,7 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,6 +36,7 @@ import com.samskivert.bang.data.effect.Effect;
 import com.samskivert.bang.data.piece.BigPiece;
 import com.samskivert.bang.data.piece.Chopper;
 import com.samskivert.bang.data.piece.Piece;
+import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PointSet;
 import com.samskivert.bang.util.VisibilityState;
 
@@ -405,7 +407,16 @@ public class BangBoardView extends BoardView
             new ShotHandler(shots[ii]);
         }
 
-        // TODO: display the effects
+        // apply (and display) the effects
+        Piece[] pieces = _bangobj.getPieceArray();
+        ArrayList<Piece> additions = new ArrayList<Piece>();
+        PieceSet removals = new PieceSet();
+        for (int ii = 0; ii < effects.length; ii++) {
+            effects[ii].apply(_bangobj.board, pieces, additions, removals);
+        }
+
+        // we don't need to do anything with the additions and removals as
+        // the server already applied those to the game object
     }
 
     /** Adjusts the visibility settings for the tiles of the board. */

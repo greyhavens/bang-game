@@ -16,9 +16,9 @@ public abstract class Bonus extends Piece
 {
     /**
      * Called when a piece has landed on this bonus and is activating it,
-     * should perform any modifications to the supplied piece and return
-     * any global board effect that happens as a result or null if no
-     * global effect is needed.
+     * this should return an object indicating the effect that the bonus
+     * has on this piece or the entire board. Those effects will be
+     * processed at the end of the tick.
      */
     public abstract Effect affect (Piece other);
 

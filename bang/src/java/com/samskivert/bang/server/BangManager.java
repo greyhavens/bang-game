@@ -11,6 +11,7 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Interval;
 
+import com.threerings.util.Name;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.data.ClientObject;
@@ -261,11 +262,6 @@ public class BangManager extends GameManager
             _bangobj.applyShot(shots[ii]);
         }
 
-        // optimize for the common case
-        if (effects.length == 0) {
-            return;
-        }
-
         try {
             _bangobj.startTransaction();
 
@@ -453,9 +449,12 @@ public class BangManager extends GameManager
     {
         Piece[] pieces = _bangobj.getPieceArray();
 
+        // TEMP: single player hackery
+        int pcount = Math.max(2, _bangobj.players.length);
+
         // first do some counting
-        int[] alive = new int[_bangobj.players.length];
-        int[] undamage = new int[_bangobj.players.length];
+        int[] alive = new int[pcount];
+        int[] undamage = new int[pcount];
         int bonuses = 0;
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
