@@ -38,6 +38,7 @@ import com.samskivert.bang.data.effect.Effect;
 import com.samskivert.bang.data.generate.CompoundGenerator;
 import com.samskivert.bang.data.generate.SkirmishScenario;
 import com.samskivert.bang.data.generate.TestScenario;
+import com.samskivert.bang.data.piece.Bonus;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
 import com.samskivert.bang.util.PieceSet;
@@ -253,7 +254,7 @@ public class BangManager extends GameManager
     /** Applies the effects of shots fired and full-board effects after
      * the normal tick processing has completed. The client will do this
      * same processing to its data. */
-    protected void applyEffects (Shot[] shots, Effect[] effects)
+    protected void postTick (Shot[] shots, Effect[] effects)
     {
         // first apply the shots
         for (int ii = 0; ii < shots.length; ii++) {
@@ -272,6 +273,10 @@ public class BangManager extends GameManager
             ArrayList<Piece> additions = new ArrayList<Piece>();
             PieceSet removals = new PieceSet();
             _bangobj.applyEffects(effects, additions, removals);
+
+            // now determine whether any new bonuses should be added to
+            // the board
+            addBonuses(additions);
 
             // add the additions
             for (int ii = 0, ll = additions.size(); ii < ll; ii++) {
@@ -440,6 +445,29 @@ public class BangManager extends GameManager
         return true;
     }
 
+    /**
+     * Called following each tick to determine whether or not new
+     * bonuses should be added to the board.
+     */
+    protected void addBonuses (ArrayList<Piece> additions)
+    {
+        Piece[] pieces = _bangobj.getPieceArray();
+
+        // first do some counting
+        int[] alive = new int[_bangobj.players.length];
+        int[] undamage = new int[_bangobj.players.length];
+        int bonuses = 0;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece p = pieces[ii];
+            if (p instanceof Bonus) {
+                bonuses++;
+            } else if (p.isAlive() && p.owner >= 0) {
+                alive[p.owner]++;
+                undamage[p.owner] += (100 - p.damage);
+            }
+        }
+    }
+
     // documentation inherited
     protected void gameDidEnd ()
     {
@@ -482,7 +510,7 @@ public class BangManager extends GameManager
         public void messageReceived (MessageEvent event) {
             if (event.getName().equals("ticked")) {
                 Object[] args = event.getArgs();
-                applyEffects((Shot[])args[0], (Effect[])args[1]);
+                postTick((Shot[])args[0], (Effect[])args[1]);
             }
         }
     };

@@ -16,6 +16,7 @@ import com.threerings.media.util.AStarPathUtil;
 
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.piece.BigPiece;
+import com.samskivert.bang.data.piece.Bonus;
 import com.samskivert.bang.data.piece.Chopper;
 import com.samskivert.bang.data.piece.Piece;
 
@@ -125,7 +126,7 @@ public class BangBoard extends SimpleStreamableObject
                         _tstate[_width*yy+xx] = 1;
                     }
                 }
-            } else {
+            } else if (!(piece instanceof Bonus)) {
                 _tstate[_width*piece.y+piece.x] = 2;
             }
         }

@@ -12,7 +12,7 @@ import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.util.PieceSet;
 
 /**
- * Represents the effect of a piece activating a surprise.
+ * Represents the effect of a piece activating a bonus.
  */
 public abstract class Effect extends SimpleStreamableObject
 {

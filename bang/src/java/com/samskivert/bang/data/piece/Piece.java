@@ -289,7 +289,15 @@ public abstract class Piece extends SimpleStreamableObject
             energy = Math.min(maximumEnergy(), energy + taken);
             return nibbly.energy > 0 ?
                 Interaction.INTERACTED : Interaction.CONSUMED;
+
+        } else if (other instanceof Bonus) {
+            Effect effect = ((Bonus)other).affect(this);
+            if (effect != null) {
+                effects.add(effect);
+            }
+            return Interaction.CONSUMED;
         }
+
         return Interaction.NOTHING;
     }
 

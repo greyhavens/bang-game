@@ -98,7 +98,8 @@ public class BangPanel extends JPanel
         int width = bangobj.board.getWidth() * SQUARE,
             height = bangobj.board.getHeight() * SQUARE;
         if (width > view.getWidth() || height > view.getHeight()) {
-            _rangeModel.setScrollableArea(0, 0, width, height);
+            _rangeModel.setScrollableArea(-SQUARE, -SQUARE,
+                                          width + 2*SQUARE, height + 2*SQUARE);
         } else {
             _scrolly.setVisible(false);
         }

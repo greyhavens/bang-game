@@ -10,6 +10,7 @@ import com.threerings.toybox.data.ToyBoxGameConfig;
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.piece.Artillery;
 import com.samskivert.bang.data.piece.Piece;
+import com.samskivert.bang.data.piece.Repair;
 import com.samskivert.bang.data.piece.Tank;
 
 /**
@@ -35,5 +36,13 @@ public class TestScenario extends ScenarioGenerator
         piece = new Tank();
         piece.position(5, 3);
         configureAndAdd(pieces, 1, piece);
+
+        piece = new Repair();
+        piece.position(0, 5);
+        configureAndAdd(pieces, -1, piece);
+
+        piece = new Repair();
+        piece.position(5, 5);
+        configureAndAdd(pieces, -1, piece);
     }
 }
