@@ -1,0 +1,107 @@
+<!-- build configuration -->
+<project name="bang" default="compile" basedir=".">
+
+  <!-- things you may want to change -->
+  <property name="app.name"         value="bang"/>
+  <property name="doc.packages"     value="com.samskivert.bang.*"/>
+  <property name="copy.holder"      value="Michael Bayne"/>
+
+  <!-- things you probably don't want to change -->
+  <property name="src.dir"      value="src/java"/>
+  <property name="deploy.dir"   value="dist"/>
+  <property name="dist.jar"     value="${app.name}.jar"/>
+  <property name="javadoc.dir"  value="${deploy.dir}/docs"/>
+
+  <!-- declare our classpath -->
+  <path id="classpath">
+    <fileset dir="../lib" includes="**/*.jar"/>
+    <pathelement location="${deploy.dir}/classes"/>
+  </path>
+
+  <!-- generates additional methods for distributed object classes -->
+  <target name="gendobj" depends="prepare">
+    <taskdef name="dobj"
+             classname="com.threerings.presents.tools.GenDObjectTask"
+             classpathref="classpath"/>
+    <!-- make sure the dobject class files are all compiled -->
+    <javac srcdir="src/java" destdir="${deploy.dir}/classes"
+           debug="on" optimize="${build.optimize}" deprecation="on">
+      <classpath refid="classpath"/>
+      <include name="**/*Object.java"/>
+    </javac>
+    <!-- now generate the associated files -->
+    <dobj classpathref="classpath">
+      <fileset dir="src/java" includes="**/*Object.java"/>
+    </dobj>
+  </target>
+
+  <!-- generates marshaller and dispatcher classes for all invocation -->
+  <!-- service declarations -->
+  <target name="genservice"> 
+    <taskdef name="service"
+             classname="com.threerings.presents.tools.GenServiceTask"
+             classpathref="classpath"/>
+    <!-- make sure the service class files are all compiled -->
+    <javac srcdir="src/java" destdir="${deploy.dir}/classes"
+           debug="on" optimize="${build.optimize}" deprecation="on">
+      <classpath refid="classpath"/>
+      <include name="**/*Service.java"/>
+    </javac>
+    <!-- now generate the associated files -->
+    <service header="lib/SOURCE_HEADER" classpathref="classpath">
+      <fileset dir="src/java" includes="**/*Service.java"/>
+    </service>
+  </target>
+
+  <!-- prepares the application directories -->
+  <target name="prepare">
+    <mkdir dir="${deploy.dir}"/>
+    <mkdir dir="${deploy.dir}/classes"/>
+    <mkdir dir="${deploy.dir}/classes/rsrc"/>
+    <mkdir dir="${javadoc.dir}"/>
+    <copy todir="${deploy.dir}/classes">
+      <fileset dir="${src.dir}" includes="**/*.properties"/>
+    </copy>
+    <copy todir="${deploy.dir}/classes/rsrc">
+      <fileset dir="rsrc" includes="**/*"/>
+    </copy>
+  </target>
+
+  <!-- cleans out the installed application -->
+  <target name="clean">
+    <delete dir="${deploy.dir}"/>
+  </target>
+
+  <!-- build the java class files -->
+  <target name="compile" depends="prepare">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
+           debug="on" optimize="off" deprecation="on">
+      <classpath refid="classpath"/>
+      <compilerarg value="-Xlint:unchecked"/>
+    </javac>
+  </target>
+
+  <!-- build the javadoc documentation -->
+  <target name="javadoc" depends="prepare">
+    <javadoc sourcepath="${src.dir}"
+             packagenames="${doc.packages}"
+             windowtitle="${app.name} API"
+             doctitle="${app.name} API"
+             bottom="Copyright &#169; 2005 ${copy.holder}. All Rights Reserved."
+             destdir="${javadoc.dir}"
+             additionalparam="-breakiterator">
+      <classpath refid="classpath"/>
+      <link href="http://java.sun.com/j2se/1.5/docs/api/"/>
+    </javadoc>
+  </target>
+
+  <!-- a target for rebuilding everything -->
+  <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
+
+  <!-- builds our distribution files (war and jar) -->
+  <target name="dist" depends="prepare,compile">
+    <jar file="${deploy.dir}/${dist.jar}"
+         basedir="${deploy.dir}/classes"/>
+  </target>
+
+</project>

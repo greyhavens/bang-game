@@ -1,0 +1,26 @@
+<?xml version="1.0" standalone="yes"?>
+<game>
+  <!-- the string identifier for this game -->
+  <ident>bang</ident>
+
+  <!-- The controller and manager used for our game. -->
+  <controller>com.samskivert.bang.client.BangController</controller>
+  <manager>com.samskivert.bang.server.BangManager</manager>
+
+  <!-- Herein we define how the game is matchmade and configured. -->
+  <match type="table">
+    <!-- Properties configure the match maker, in this case: table. -->
+    <min_seats>2</min_seats>
+    <max_seats>4</max_seats>
+    <start_seats>2</start_seats>
+  </match>
+
+  <!-- Customziation parameters -->
+  <params>
+    <range ident="board_size" minimum="16" maximum="48" start="32"/>
+    <!--
+    <choice ident="rules" choices="standard,hand_of_three" start="standard"/>
+    <toggle ident="monkeys" start="false"/>
+    -->
+  </params>
+</game>
