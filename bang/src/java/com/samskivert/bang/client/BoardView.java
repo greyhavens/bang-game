@@ -116,6 +116,7 @@ public class BoardView extends VirtualMediaPanel
         text.setTargetWidth(300);
         text.layout(this);
         LabelSprite sprite = new LabelSprite(text);
+        sprite.setRenderOrder(100);
         sprite.setLocation(
             _vbounds.x+(_vbounds.width-text.getSize().width)/2,
             _vbounds.y+(_vbounds.height-text.getSize().height)/2);

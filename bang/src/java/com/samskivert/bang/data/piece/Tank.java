@@ -9,9 +9,11 @@ import java.util.Arrays;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.TankSprite;
+import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.util.PieceSet;
+import com.samskivert.bang.util.PointSet;
 
 import static com.samskivert.bang.Log.log;
 
@@ -70,6 +72,37 @@ public class Tank extends Piece
             turretOrient = (short)cw;
         }
         updates.add(this);
+    }
+
+    @Override // documentation inherited
+    public void enumerateLegalMoves (int tx, int ty, PointSet moves)
+    {
+        moves.add(tx, ty-2);
+        moves.add(tx-1, ty-1);
+        moves.add(tx, ty-1);
+        moves.add(tx+1, ty-1);
+
+        moves.add(tx+2, ty);
+        moves.add(tx+1, ty);
+        moves.add(tx-1, ty);
+        moves.add(tx-2, ty);
+
+        moves.add(tx-1, ty+1);
+        moves.add(tx, ty+1);
+        moves.add(tx+1, ty+1);
+        moves.add(tx, ty+2);
+    }
+
+    @Override // documentation inherited
+    public boolean canMoveTo (BangBoard board, int nx, int ny)
+    {
+        // we can move up to two squares in a turn
+        if (Math.abs(x - nx) + Math.abs(y - ny) > 2) {
+            return false;
+        }
+
+        // and make sure we can traverse our final location
+        return canTraverse(board, nx, ny);
     }
 
     /**

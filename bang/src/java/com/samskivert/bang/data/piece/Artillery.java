@@ -53,7 +53,7 @@ public class Artillery extends Piece
                 continue;
             }
             int pdist = MathUtil.distanceSq(x, y, p.x, p.y);
-            if (dist <= fdist && pdist < dist) {
+            if (pdist <= fdist && pdist < dist) {
                 dist = pdist;
                 target = p;
             }
