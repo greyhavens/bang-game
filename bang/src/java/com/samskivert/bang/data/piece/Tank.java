@@ -24,7 +24,7 @@ public class Tank extends Piece
     implements PlayerPiece
 {
     /** A tank can fire at a target up to four squares away. */
-    public static final int FIRE_DISTANCE = 4;
+    public static final int FIRE_DISTANCE = 2;
 
     /** Indicates the orientation of our turret. */
     public short turretOrient;

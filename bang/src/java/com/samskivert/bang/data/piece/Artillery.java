@@ -25,7 +25,7 @@ public class Artillery extends Piece
     implements PlayerPiece
 {
     /** A tank can fire at a target up to seven squares away. */
-    public static final int FIRE_DISTANCE = 7;
+    public static final int FIRE_DISTANCE = 4;
 
     @Override // documentation inherited
     public PieceSprite createSprite ()
