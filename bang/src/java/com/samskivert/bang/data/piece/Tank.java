@@ -9,8 +9,8 @@ import java.util.Arrays;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.TankSprite;
-import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.BangObject;
+import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.util.PieceSet;
 
 import static com.samskivert.bang.Log.log;
@@ -78,10 +78,10 @@ public class Tank extends Piece
     public Piece[] getTargets (Piece[] pieces)
     {
         // configure our target regions
-        _trects[NORTH].setLocation(x, y-FIRE_DISTANCE);
-        _trects[EAST].setLocation(x, y);
-        _trects[SOUTH].setLocation(x, y);
-        _trects[WEST].setLocation(x-FIRE_DISTANCE, y);
+        _trects[NORTH].setLocation(x, y-FIRE_DISTANCE-1);
+        _trects[EAST].setLocation(x+1, y);
+        _trects[SOUTH].setLocation(x, y+1);
+        _trects[WEST].setLocation(x-FIRE_DISTANCE-1, y);
 
         Arrays.fill(_closest, Integer.MAX_VALUE);
         Arrays.fill(_targets, null);
