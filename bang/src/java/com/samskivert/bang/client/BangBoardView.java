@@ -110,12 +110,6 @@ public class BangBoardView extends BoardView
     {
         // first update our mousely business
         mouseMoved(e);
-
-//         // if we have a selection and are dragging with the right mouse
-//         // button down, pretend like we right clicked in this location
-//         if (_downButton == MouseEvent.BUTTON3 && _selection != null) {
-//             handleRightPress(e.getX(), e.getY());
-//         }
     }
 
     @Override // documentation inherited
@@ -343,31 +337,16 @@ public class BangBoardView extends BoardView
                 _remgr.invalidateRegion(_vbounds);
             }
         }
-        
-//         // make sure this is a legal move
-//         if (!_moveSet.contains(tx, ty)) {
-//             if (_selection == null) {
-//                 // potentially treat this like a left click so that we can
-//                 // start a path by right clicking on a piece and dragging;
-//                 // but only if we have no selection as otherwise we'll
-//                 // auto-cancel the selection we started with the first
-//                 // right click and drag
-//                 handleLeftPress(mx, my);
-//             }
 
-//         } else if (_pendingPath != null) {
-//             // potentiall extend our existing path
+        // TODO: allow path-found paths to be "pinned" to the current
+        // location and then extended from there
+
+//         if (_pendingPath != null) {
+//             // potentially extend our existing path
 //             if (!_pendingPath.isTail(tx, ty)) {
 //                 _pendingPath = _pendingPath.append(tx, ty);
 //                 dirtyTile(tx, ty);
-//                 updatePossibleMoves(_selection, tx, ty);
 //             }
-
-//         } else if (_selection != null) {
-//             // start a new path
-//             _pendingPath = new PiecePath(_selection.pieceId, tx, ty);
-//             dirtyPath(_pendingPath);
-//             updatePossibleMoves(_selection, tx, ty);
 //         }
     }
 
@@ -378,7 +357,6 @@ public class BangBoardView extends BoardView
         if (!deselect && piece.isAlive()) {
             _selection = piece;
             getPieceSprite(_selection).setSelected(true);
-            updatePossibleMoves(_selection, _selection.x, _selection.y);
         }
     }
 
@@ -394,14 +372,6 @@ public class BangBoardView extends BoardView
             dirtySet(_moveSet);
             _moveSet.clear();
         }
-    }
-
-    protected void updatePossibleMoves (Piece piece, int x, int y)
-    {
-        dirtySet(_moveSet);
-        _moveSet.clear();
-        piece.enumerateLegalMoves(x, y, _moveSet);
-        dirtySet(_moveSet);
     }
 
     @Override // documentation inherited

@@ -149,7 +149,7 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /** Used when path finding. */
-    protected AStarPathUtil.TraversalPred _tpred =
+    protected transient AStarPathUtil.TraversalPred _tpred =
         new AStarPathUtil.TraversalPred() {
         public boolean canTraverse (Object traverser, int x, int y) {
             if (!_bbounds.contains(x, y)) {
