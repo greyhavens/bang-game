@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Interval;
 
 import com.threerings.presents.data.ClientObject;
@@ -28,9 +29,10 @@ import com.samskivert.bang.data.ModifyBoardEvent;
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.generate.CompoundGenerator;
+import com.samskivert.bang.data.generate.SkirmishScenario;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
-import com.samskivert.bang.data.piece.Tank;
+import com.samskivert.bang.util.PieceSet;
 
 import static com.samskivert.bang.Log.log;
 
@@ -118,12 +120,6 @@ public class BangManager extends GameManager
             ((Piece)iter.next()).init();
         }
 
-//         // fire off messages for each of our goals
-//         for (Iterator iter = _bangobj.goals.entries(); iter.hasNext(); ) {
-//             SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS,
-//                                    ((Goal)iter.next()).getDescription());
-//         }
-
         // queue up the board tick
         _ticker.schedule(2000L, true);
     }
@@ -138,67 +134,73 @@ public class BangManager extends GameManager
 
         Piece[] pieces = _bangobj.getPieceArray();
 
-//         // first, check whether all of our goals have been met or botched
-//         boolean goalsRemain = false;
-//         for (Iterator giter = _bangobj.goals.entries(); giter.hasNext(); ) {
-//             Goal goal = (Goal)giter.next();
-//             if (!goal.isMet(_bangobj.board, pieces) &&
-//                 !goal.isBotched(_bangobj.board, pieces)) {
-//                 // if we have at least one unmet goal we can stop checking
-//                 goalsRemain = true;
-//                 break;
-//             }
-//         }
-
-        // next check to see whether any of our pieces have energy remaining
-        boolean haveEnergy = false;
+        // next check to see whether anyone's pieces have energy remaining
+        _havers.clear();
         for (int ii = 0; ii < pieces.length; ii++) {
             if ((pieces[ii] instanceof PlayerPiece) &&
                 pieces[ii].canTakeStep()) {
-                haveEnergy = true;
-                break;
+                _havers.add(pieces[ii].owner);
             }
         }
 
-        // the game ends when none of our pieces have energy or we've
-        // accomplished or botched all of our goals
-        if (!haveEnergy /* || !goalsRemain */) {
-            // if the piece ran out of energy, let the player know
-            if (/* goalsRemain && */ !haveEnergy) {
-                SpeakProvider.sendInfo(
-                    _bangobj, BangCodes.BANG_MSGS, "m.out_of_energy");
-            }
+        // the game ends when one or zero players are left standing
+        if (_havers.size() < 2) {
             endGame();
             return;
         }
 
-        // move all of our pieces along any path they have configured
-        Iterator<PiecePath> iter = _paths.values().iterator();
-        while (iter.hasNext()) {
-            PiecePath path = iter.next();
-            Piece piece = (Piece)_bangobj.pieces.get(path.pieceId);
-            if (piece == null || tickPath(piece, path)) {
-                log.fine("Finished " + path + ".");
-                // if the piece has gone away, or if we complete our path,
-                // remove it
-                iter.remove();
-            }
-        }
+        try {
+            // batch our tick update
+            _bangobj.startTransaction();
+            // these pieces will be updated
+            PieceSet updates = new PieceSet();
 
-        // recreate our pieces array as pieces may have moved
-        pieces = _bangobj.getPieceArray();
-
-        // then give any piece a chance to react to the state of the board
-        // now that everyone has moved
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece piece = pieces[ii];
-            // skip pieces that were eaten
-            if (!_bangobj.pieces.containsKey(piece.pieceId)) {
-                continue;
+            // move all of our pieces along any path they have configured
+            Iterator<PiecePath> iter = _paths.values().iterator();
+            while (iter.hasNext()) {
+                PiecePath path = iter.next();
+                Piece piece = (Piece)_bangobj.pieces.get(path.pieceId);
+                if (piece == null || tickPath(piece, path, updates)) {
+                    log.fine("Finished " + path + ".");
+                    // if the piece has gone away, or if we complete our path,
+                    // remove it
+                    iter.remove();
+                }
             }
-            if (piece.react(_bangobj, pieces)) {
+
+            // recreate our pieces array; pieces may have been removed
+            pieces = _bangobj.getPieceArray();
+
+            // then give any piece a chance to react to the state of the board
+            // now that everyone has moved
+            for (int ii = 0; ii < pieces.length; ii++) {
+                Piece piece = pieces[ii];
+                // skip pieces that were eaten
+                if (!_bangobj.pieces.containsKey(piece.pieceId)) {
+                    continue;
+                }
+                piece.react(_bangobj, pieces, updates);
+            }
+
+            // finally update the pieces that need updating
+            for (Piece piece : updates.values()) {
+                // skip pieces that were eaten
+                if (!_bangobj.pieces.containsKey(piece.pieceId)) {
+                    continue;
+                }
                 _bangobj.updatePieces(piece);
             }
+
+        } finally {
+            _bangobj.commitTransaction();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void assignWinners (boolean[] winners)
+    {
+        for (int ii = 0; ii < winners.length; ii++) {
+            winners[ii] = _havers.contains(ii);
         }
     }
 
@@ -208,7 +210,7 @@ public class BangManager extends GameManager
      * @return true if the bug reached the final goal on the path, false
      * if not.
      */
-    protected boolean tickPath (Piece piece, PiecePath path)
+    protected boolean tickPath (Piece piece, PiecePath path, PieceSet updates)
     {
         log.fine("Moving " + path + ".");
         int nx = path.getNextX(piece), ny = path.getNextY(piece);
@@ -218,24 +220,23 @@ public class BangManager extends GameManager
         if (piece.energy < steps * piece.energyPerStep()) {
             log.info("Piece out of energy [piece=" + piece + "].");
             piece.pathPos = -1;
-            _bangobj.updatePieces(piece);
+            updates.add(piece);
             return true;
         }
 
         // try moving the piece
-        Piece npiece = movePiece(piece, nx, ny);
-        if (npiece == null) {
+        if (!movePiece(piece, nx, ny, updates)) {
             return false;
         }
 
         // check to see if we've reached the end of our path
-        boolean reachedGoal = path.reachedGoal(npiece);
+        boolean reachedGoal = path.reachedGoal(piece);
         if (reachedGoal) {
-            npiece.pathPos = -1;
+            piece.pathPos = -1;
         }
 
-        // finally broadcast our updated piece
-        _bangobj.updatePieces(npiece);
+        // note that we want to update our piece
+        updates.add(piece);
         return reachedGoal;
     }
 
@@ -243,42 +244,45 @@ public class BangManager extends GameManager
      * Attempts to move the specified piece to the specified coordinates.
      * Various checks are made to ensure that it is a legal move.
      *
-     * @return a new piece at the new location if the piece was moved,
-     * null if it was not movable for some reason.
+     * @return true if the piece was moved, false if it was not movable
+     * for some reason.
      */
-    protected Piece movePiece (Piece piece, int x, int y)
+    protected boolean movePiece (Piece piece, int x, int y, PieceSet updates)
     {
         // validate that the move is legal (proper length, can traverse
         // all tiles along the way, no pieces intervene, etc.)
         if (!piece.canMoveTo(_bangobj.board, x, y)) {
             log.warning("Piece requested illegal move [piece=" + piece +
                         ", x=" + x + ", y=" + y + "].");
-            return null;
+            return false;
         }
 
         // calculate the distance we're moving
         int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
 
         // clone the piece so that we can investigate the hypothetical
-        piece = (Piece)piece.clone();
-        piece.position(x, y);
+        Piece hpiece = (Piece)piece.clone();
+        hpiece.position(x, y);
 
         // ensure that intervening pieces do not block this move; also
         // track any piece that we end up overlapping
-        ArrayList<Piece> lappers = _bangobj.getOverlappers(piece);
+        ArrayList<Piece> lappers = _bangobj.getOverlappers(hpiece);
         Piece lapper = null;
         if (lappers != null) {
             for (Piece p : lappers) {
-                if (p.preventsOverlap(piece)) {
-                    return null;
+                if (p.preventsOverlap(hpiece)) {
+                    return false;
                 } else if (lapper != null) {
-                    log.warning("Multiple overlapping pieces [mover=" + piece +
+                    log.warning("Multiple overlapping pieces [mover=" + hpiece +
                                 ", lap1=" + lapper + ", lap2=" + p + "].");
                 } else {
                     lapper = p;
                 }
             }
         }
+
+        // if we were able to move, go ahead and update our real piece
+        piece.position(x, y);
 
         // consume the energy needed to make this move (we checked that
         // this was possible before we even called movePiece)
@@ -294,17 +298,17 @@ public class BangManager extends GameManager
             case ENTERED:
                 // update the piece we entered as we likely modified it in
                 // doing so
-                _bangobj.updatePieces(lapper);
+                updates.add(lapper);
                 // TODO: generate a special event indicating that the
                 // piece entered so that we can animate it
                 _bangobj.removeFromPieces(piece.getKey());
                 // short-circuit the remaining move processing
-                return piece;
+                return true;
 
             case INTERACTED:
                 // update the piece we interacted with, we'll update
                 // ourselves momentarily
-                _bangobj.updatePieces(lapper);
+                updates.add(lapper);
                 break;
 
             case NOTHING:
@@ -321,7 +325,7 @@ public class BangManager extends GameManager
                 new ModifyBoardEvent(_bangobj.getOid(), x, y, terrain));
         }
 
-        return piece;
+        return true;
     }
 
     // documentation inherited
@@ -331,19 +335,6 @@ public class BangManager extends GameManager
 
         // cancel the board tick
         _ticker.cancel();
-
-//         // report the state of our goals
-//         Piece[] pieces = _bangobj.getPieceArray();
-//         for (Iterator giter = _bangobj.goals.entries(); giter.hasNext(); ) {
-//             Goal goal = (Goal)giter.next();
-//             String msg = "";
-//             if (goal.isMet(_bangobj.board, pieces)) {
-//                 msg = goal.getMetMessage();
-//             } else {
-//                 msg = goal.getBotchedMessage();
-//             }
-//             SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
-//         }
     }
 
     /**
@@ -358,40 +349,11 @@ public class BangManager extends GameManager
         int size = (Integer)bconfig.params.get("board_size");
         BangBoard board = new BangBoard(size, size);
         CompoundGenerator gen = new CompoundGenerator();
-        gen.generate(50, board, pieces);
-
-        Tank tank = new Tank();
-        tank.assignPieceId();
-        tank.position(5, 5);
-        tank.owner = 0;
-        pieces.add(tank);
-        tank = new Tank();
-        tank.assignPieceId();
-        tank.position(7, 5);
-        tank.owner = 1;
-        pieces.add(tank);
-
+        gen.generate(bconfig, board, pieces);
+        SkirmishScenario scen = new SkirmishScenario();
+        scen.generate(bconfig, board, pieces);
         return board;
     }
-
-//     /** Configures our goals for this game. */
-//     protected DSet configureGoals ()
-//     {
-//         ArrayList<Goal> goals = new ArrayList<Goal>();
-//         Piece[] pieces = _bangobj.getPieceArray();
-
-//         // check our various goals to see which should be added
-//         Goal goal = new AntHillGoal();
-//         if (goal.isReachable(_bangobj.board, pieces)) {
-//             goals.add(goal);
-//         }
-//         goal = new PollinateGoal();
-//         if (goal.isReachable(_bangobj.board, pieces)) {
-//             goals.add(goal);
-//         }
-
-//         return new DSet(goals.iterator());
-//     }
 
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
@@ -403,6 +365,9 @@ public class BangManager extends GameManager
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
+
+    /** Used to calculate winners. */
+    protected ArrayIntSet _havers = new ArrayIntSet();
 
     /** Maps pieceId to path for pieces that have a path configured. */
     protected HashMap<Integer,PiecePath> _paths =

@@ -15,7 +15,7 @@ public class BuildingSprite extends PieceSprite
 {
     public BuildingSprite (int width, int height)
     {
-        super(width*SQUARE-4, height*SQUARE-4);
+        super(width*SQUARE-3, height*SQUARE-3);
     }
 
     // documentation inherited

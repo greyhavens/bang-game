@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import com.samskivert.util.IntTuple;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.toybox.data.ToyBoxGameConfig;
+
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.piece.BigPiece;
@@ -24,9 +26,9 @@ import static com.samskivert.bang.Log.log;
  */
 public class CompoundGenerator extends EnvironmentGenerator
 {
-    // documentation inherited
+    @Override // documentation inherited
     public void generate (
-        int difficulty, BangBoard board, ArrayList<Piece> pieces)
+        ToyBoxGameConfig config, BangBoard board, ArrayList<Piece> pieces)
     {
         int width = board.getWidth(), height = board.getHeight();
 

@@ -30,7 +30,7 @@ public class PieceSprite extends Sprite
 
     public PieceSprite ()
     {
-        this(SQUARE-4, SQUARE-4);
+        this(SQUARE-3, SQUARE-3);
     }
 
     /** Returns the id of the piece associated with this sprite. */
@@ -86,6 +86,8 @@ public class PieceSprite extends Sprite
         int nx = piece.x * SQUARE + 2, ny = piece.y * SQUARE + 2;
         if (nx != _ox || ny != _oy) {
             move(new LinePath(_ox, _oy, nx, ny, 250L));
+        } else {
+            invalidate();
         }
     }
 

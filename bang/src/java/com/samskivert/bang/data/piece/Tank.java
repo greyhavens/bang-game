@@ -9,6 +9,7 @@ import java.util.Arrays;
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.TankSprite;
 import com.samskivert.bang.data.BangObject;
+import com.samskivert.bang.util.PieceSet;
 
 import static com.samskivert.bang.Log.log;
 
@@ -31,48 +32,41 @@ public class Tank extends Piece
     }
 
     @Override // documentation inherited
-    public boolean react (BangObject bangobj, Piece[] pieces)
+    public void react (BangObject bangobj, Piece[] pieces, PieceSet updates)
     {
         Piece[] targets = getTargets(pieces);
 
         // if there is an enemy piece in our sights, shoot it
         Piece target = targets[turretOrient];
         if (validTarget(target)) {
-            log.info("Bang! " + this + " -> " + target);
             shoot(target);
-            bangobj.updatePieces(target);
-            return false;
+            updates.add(target);
+            return;
         }
 
-        // if we can rotate our turret one notch and fire on a piece, then
-        // do that
-        int ccw = (turretOrient + 3) % 4, cw = (turretOrient + 1) % 4;
-        if (validTarget(target = targets[ccw])) {
-            log.info("Bang! (ccw) " + this + " -> " + target);
-            turretOrient = (short)ccw;
+        // see if we can rotate our turret one notch and fire on a piece
+        int ccw = (turretOrient + 3) % 4, cw = (turretOrient + 1) % 4, dir;
+        if (validTarget(target = targets[dir = ccw]) ||
+            validTarget(target = targets[dir = cw])) {
+            turretOrient = (short)dir;
+            updates.add(this);
             shoot(target);
-            bangobj.updatePieces(target);
-            return true;
-        }
-        if (validTarget(target = targets[cw])) {
-            log.info("Bang! (cw) " + this + " -> " + target);
-            turretOrient = (short)cw;
-            shoot(target);
-            bangobj.updatePieces(target);
-            return true;
+            updates.add(target);
+            return;
         }
 
-        // otherwise rotate our turrent toward the direction of motion
+        // rotate our turrent toward the direction of motion
         if (turretOrient == orientation) {
-            return false;
-        } else if (ccw == orientation) {
+            return;
+        }
+        if (ccw == orientation) {
             turretOrient = (short)ccw;
         } else if (cw == orientation) {
             turretOrient = (short)cw;
         } else {
             turretOrient = (short)cw;
         }
-        return true;
+        updates.add(this);
     }
 
     /**
@@ -133,13 +127,15 @@ public class Tank extends Piece
     public void shoot (Piece target)
     {
         int damage = Math.min(target.energy, target.maximumEnergy()/10);
+        log.info("Doing " + damage + " damage to " + target + ".");
         target.energy -= damage;
     }
 
     /** Returns true if we can and should fire upon this target. */
     protected boolean validTarget (Piece target)
     {
-        return (target != null && target.owner != -1 && target.owner != owner);
+        return (target != null && target.owner != -1 &&
+                target.owner != owner && target.energy > 0);
     }
 
     /** Used by {@link #getTargets}. */

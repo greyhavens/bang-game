@@ -16,6 +16,7 @@ import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.Terrain;
+import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PointSet;
 
 import static com.samskivert.bang.Log.log;
@@ -285,20 +286,17 @@ public abstract class Piece extends SimpleStreamableObject
 
     /**
      * Allows this piece to react to the state of the board at the
-     * termination of the previous turn.
+     * termination of the previous turn. It should add itself and any
+     * other modified pieces to the updates set (assuming it or another
+     * piece changes as a result of the reaction).
      *
      * <em>Note:<em> it is legal for a piece to remove another piece from
-     * the board as a result of its reaction, or modify the piece. In
-     * either case, it should effect the appropriate modification to the
-     * supplied game object directly.
-     *
-     * @return true if the piece changed its internal state as a result of
-     * this reaction, false otherwise.
+     * the board as a result of its reaction. In that case, it should
+     * effect the appropriate removal from the supplied game object
+     * directly.
      */
-    public boolean react (BangObject bangobj, Piece[] pieces)
+    public void react (BangObject bangobj, Piece[] pieces, PieceSet updates)
     {
-        // nothing by default
-        return false;
     }
 
     /**
@@ -463,13 +461,13 @@ public abstract class Piece extends SimpleStreamableObject
     /** Returns the starting energy for pieces of this type. */
     protected int startingEnergy ()
     {
-        return DEFAULT_STARTING_ENERGY * 100;
+        return DEFAULT_STARTING_ENERGY * 10;
     }
 
     /** Returns the maximum energy this piece can possess. */
     protected int maximumEnergy ()
     {
-        return DEFAULT_MAXIMUM_ENERGY * 100;
+        return DEFAULT_MAXIMUM_ENERGY * 10;
     }
 
     /**
