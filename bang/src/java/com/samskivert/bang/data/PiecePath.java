@@ -5,6 +5,8 @@ package com.samskivert.bang.data;
 
 import com.threerings.io.SimpleStreamableObject;
 
+import com.samskivert.bang.data.piece.Piece;
+
 /**
  * Contains a set of waypoints that will be traveled toward by a
  * particular piece.
@@ -57,15 +59,15 @@ public class PiecePath extends SimpleStreamableObject
     }
 
     /** Returns the x coordinate of our next goal. */
-    public int getNextX ()
+    public int getNextX (Piece piece)
     {
-        return getX(Math.min(_position, getLength()-1));
+        return getX(Math.min(piece.pathPos, getLength()-1));
     }
 
     /** Returns the y coordinate of our next goal. */
-    public int getNextY ()
+    public int getNextY (Piece piece)
     {
-        return getY(Math.min(_position, getLength()-1));
+        return getY(Math.min(piece.pathPos, getLength()-1));
     }
 
     /**
@@ -83,22 +85,17 @@ public class PiecePath extends SimpleStreamableObject
      * @return false if there are yet more goals to reach, true if the
      * path is completed.
      */
-    public boolean reachedGoal ()
+    public boolean reachedGoal (Piece piece)
     {
-        return (++_position >= getLength());
+        return (++piece.pathPos >= getLength());
     }
 
     // documentation inherited
     public String toString ()
     {
-        return "[pid=" + pieceId + ", n=(" + getNextX() + ", " +
-            getNextY() + "), l=" + getLength() + ", pos=" + _position + "]";
+        return "[pid=" + pieceId + ", l=" + getLength() + "]";
     }
 
     /** Contains the coordinates of our various goals. */
     protected int[] _coords;
-
-    /** Records the position of the current coordinates being targeted by
-     * the piece following this path. */
-    protected transient int _position;
 }

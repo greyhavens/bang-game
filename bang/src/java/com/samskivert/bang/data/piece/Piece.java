@@ -48,8 +48,17 @@ public abstract class Piece extends SimpleStreamableObject
     /** The energy level of this piece. */
     public int energy;
 
-    /** True if this piece is currently following a path. */
-    public boolean hasPath;
+    /** -1 if this piece is not on a path or the index into their path if
+     * they are. */
+    public int pathPos = -1;
+
+    /**
+     * Returns true if this piece is on a path.
+     */
+    public boolean hasPath ()
+    {
+        return pathPos >= 0;
+    }
 
     /**
      * Returns true if the specified coordinates intersect this piece.

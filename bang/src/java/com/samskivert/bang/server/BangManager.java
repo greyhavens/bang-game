@@ -63,11 +63,9 @@ public class BangManager extends GameManager
         // register the path in our table
         _paths.put(path.pieceId, path);
 
-        // if the piece did not have a path prior, update it
-        if (!piece.hasPath) {
-            piece.hasPath = true;
-            _bangobj.updatePieces(piece);
-        }
+        // start the piece at the beginning of its path
+        piece.pathPos = 0;
+        _bangobj.updatePieces(piece);
     }
 
     // documentation inherited
@@ -213,13 +211,13 @@ public class BangManager extends GameManager
     protected boolean tickPath (Piece piece, PiecePath path)
     {
         log.fine("Moving " + path + ".");
-        int nx = path.getNextX(), ny = path.getNextY();
+        int nx = path.getNextX(piece), ny = path.getNextY(piece);
 
         // make sure the piece has the energy to move that far
         int steps = Math.abs(piece.x[0]-nx) + Math.abs(piece.y[0]-ny);
         if (piece.energy < steps * piece.energyPerStep()) {
             log.info("Piece out of energy [piece=" + piece + "].");
-            piece.hasPath = false;
+            piece.pathPos = -1;
             _bangobj.updatePieces(piece);
             return true;
         }
@@ -231,9 +229,9 @@ public class BangManager extends GameManager
         }
 
         // check to see if we've reached the end of our path
-        boolean reachedGoal = path.reachedGoal();
+        boolean reachedGoal = path.reachedGoal(npiece);
         if (reachedGoal) {
-            npiece.hasPath = false;
+            npiece.pathPos = -1;
         }
 
         // finally broadcast our updated piece

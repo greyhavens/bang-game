@@ -328,6 +328,12 @@ public class BoardView extends VirtualMediaPanel
         _remgr.invalidateRegion(tx*SQUARE, ty*SQUARE, SQUARE, SQUARE);
     }
 
+    /** Called when a piece is updated in the game object. */
+    protected void pieceUpdated (Piece piece)
+    {
+        getPieceSprite(piece).updated(piece);
+    }        
+
     /** Listens for various different events and does the right thing. */
     protected class BoardEventListener
         implements SetListener, EventListener
@@ -340,8 +346,7 @@ public class BoardView extends VirtualMediaPanel
 
         public void entryUpdated (EntryUpdatedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                Piece piece = (Piece)event.getEntry();
-                getPieceSprite(piece).updated(piece);
+                pieceUpdated((Piece)event.getEntry());
             }
         }
 
