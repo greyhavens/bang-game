@@ -69,7 +69,7 @@ public class BoardView extends VirtualMediaPanel
         // create sprites for all of the pieces
         for (Iterator iter = bangobj.pieces.entries(); iter.hasNext(); ) {
             // this will trigger the creation, initialization and whatnot
-            getPieceSprite((Piece)iter.next());
+            pieceUpdated(null, (Piece)iter.next());
         }
 
         // add the listener that will react to pertinent events
@@ -182,23 +182,23 @@ public class BoardView extends VirtualMediaPanel
         gfx.setColor(Color.black);
         gfx.fill(dirtyRect);
 
-        Rectangle r = new Rectangle(0, 0, SQUARE, SQUARE);
+        _pr.setLocation(0, 0);
         for (int yy = 0, hh = _board.getHeight(); yy < hh; yy++) {
-            r.x = 0;
+            _pr.x = 0;
             for (int xx = 0, ww = _board.getWidth(); xx < ww; xx++) {
-                if (dirtyRect.intersects(r)) {
+                if (dirtyRect.intersects(_pr)) {
                     Color color = getColor(_board.getTile(xx, yy));
                     if (xx == _mouse.x && yy == _mouse.y) {
                         color = color.brighter();
                     }
                     gfx.setColor(color);
-                    gfx.fill(r);
+                    gfx.fill(_pr);
                     gfx.setColor(Color.black);
-                    gfx.draw(r);
+                    gfx.draw(_pr);
                 }
-                r.x += SQUARE;
+                _pr.x += SQUARE;
             }
-            r.y += SQUARE;
+            _pr.y += SQUARE;
         }
     }
 
@@ -236,16 +236,16 @@ public class BoardView extends VirtualMediaPanel
     protected void renderSet (Graphics2D gfx, Rectangle dirtyRect,
                               PointSet set, Color color)
     {
-        Rectangle r = new Rectangle(0, 0, SQUARE, SQUARE);
+        _pr.setLocation(0, 0);
         Composite ocomp = gfx.getComposite();
         gfx.setComposite(SET_ALPHA);
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
-            r.x = set.getX(ii) * SQUARE;
-            r.y = set.getY(ii) * SQUARE;
-            if (dirtyRect.intersects(r)) {
+            _pr.x = set.getX(ii) * SQUARE;
+            _pr.y = set.getY(ii) * SQUARE;
+            if (dirtyRect.intersects(_pr)) {
                 gfx.setColor(color);
                 gfx.fillRoundRect(
-                    r.x+2, r.y+2, r.width-4, r.height-4, 8, 8);
+                    _pr.x+2, _pr.y+2, _pr.width-4, _pr.height-4, 8, 8);
             }
         }
         gfx.setComposite(ocomp);
@@ -347,9 +347,9 @@ public class BoardView extends VirtualMediaPanel
     }
 
     /** Called when a piece is updated in the game object. */
-    protected void pieceUpdated (Piece piece)
+    protected void pieceUpdated (Piece opiece, Piece npiece)
     {
-        getPieceSprite(piece).updated(piece);
+        getPieceSprite(npiece).updated(npiece);
     }        
 
     /** Listens for various different events and does the right thing. */
@@ -364,7 +364,8 @@ public class BoardView extends VirtualMediaPanel
 
         public void entryUpdated (EntryUpdatedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                pieceUpdated((Piece)event.getEntry());
+                pieceUpdated((Piece)event.getOldEntry(),
+                             (Piece)event.getEntry());
             }
         }
 
@@ -402,6 +403,9 @@ public class BoardView extends VirtualMediaPanel
 
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();
+
+    /** Used during rendering. */
+    protected Rectangle _pr = new Rectangle(0, 0, SQUARE, SQUARE);
 
     /** The alpha level used to render a set of pieces. */
     protected static final Composite SET_ALPHA =

@@ -98,6 +98,12 @@ public abstract class Piece extends SimpleStreamableObject
         return 1;
     }
 
+    /** Returns the number of tiles that this piece can "see". */
+    public int getSightDistance ()
+    {
+        return 5;
+    }
+
     /**
      * Allows the piece to do any necessary initialization before the game
      * starts.

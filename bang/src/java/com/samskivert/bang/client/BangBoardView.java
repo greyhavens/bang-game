@@ -4,15 +4,21 @@
 package com.samskivert.bang.client;
 
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import com.threerings.media.sprite.Sprite;
+import com.threerings.media.util.MathUtil;
+
+import com.threerings.presents.dobj.MessageEvent;
+import com.threerings.presents.dobj.MessageListener;
 
 import com.threerings.toybox.util.ToyBoxContext;
 
@@ -21,6 +27,7 @@ import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.util.PointSet;
+import com.samskivert.bang.util.VisibilityState;
 
 import static com.samskivert.bang.Log.log;
 import static com.samskivert.bang.client.BangMetrics.*;
@@ -100,13 +107,27 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     public void startGame (BangObject bangobj, int playerIdx)
     {
+        // we need this before we call super because that will initialize
+        // our pieces and set up the initial visibility set
+        _vstate = new VisibilityState(
+            bangobj.board.getWidth(), bangobj.board.getHeight());
+
         super.startGame(bangobj, playerIdx);
+
         _pidx = playerIdx;
+        _bangobj.addListener(_ticklist);
+
+        // set everything up for the first time
+        tickFinished();
     }
 
     @Override // documentation inherited
     public void endGame ()
     {
+        if (_bangobj != null) {
+            _bangobj.removeListener(_ticklist);
+        }
+
         super.endGame();
         _moveSet.clear();
     }
@@ -138,6 +159,27 @@ public class BangBoardView extends BoardView
         // render any currently active path
         if (_pendingPath != null) {
             renderPath(gfx, dirtyRect, Color.pink, 0, _pendingPath);
+        }
+
+        // render the necessary tiles as dimmed if it is not "visible"
+        if (_board != null) {
+            Composite ocomp = gfx.getComposite();
+            gfx.setComposite(SET_ALPHA);
+            gfx.setColor(Color.black);
+            _pr.setLocation(0, 0);
+            for (int yy = 0, hh = _board.getHeight(); yy < hh; yy++) {
+                _pr.x = 0;
+                int xoff = yy * _board.getWidth();
+                for (int xx = 0, ww = _board.getWidth(); xx < ww; xx++) {
+                    if (!_vstate.getVisible(xoff+xx) &&
+                        dirtyRect.intersects(_pr)) {
+                        gfx.fill(_pr);
+                    }
+                    _pr.x += SQUARE;
+                }
+                _pr.y += SQUARE;
+            }
+            gfx.setComposite(ocomp);
         }
     }
 
@@ -290,22 +332,90 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    protected void pieceUpdated (Piece piece)
+    protected void pieceUpdated (Piece opiece, Piece npiece)
     {
-        super.pieceUpdated(piece);
+        super.pieceUpdated(opiece, npiece);
 
         // clear our cached path for this piece if it no longer has a path
-        if (!piece.hasPath()) {
-            dirtyPath(_paths.remove(piece.pieceId));
+        if (!npiece.hasPath()) {
+            dirtyPath(_paths.remove(npiece.pieceId));
         }
 
         // clear and reselect if this piece was the selection and it moved
-        if (_selection != null && _selection.pieceId == piece.pieceId &&
-            (_selection.x != piece.x || _selection.y != piece.y)) {
+        if (_selection != null && _selection.pieceId == npiece.pieceId &&
+            (_selection.x != npiece.x || _selection.y != npiece.y)) {
             clearSelection();
-            selectPiece(piece);
+            selectPiece(npiece);
         }
     }
+
+    /**
+     * Called after all updates associated with a tick have come in.
+     */
+    protected void tickFinished ()
+    {
+        // swap our visibility state to the fresh set
+        _vstate.swap();
+
+        // update the board visibility based on our piece's new position
+        for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
+            Piece piece = (Piece)iter.next();
+            if (piece.owner == -1 || (_pidx != -1 && _pidx != piece.owner)) {
+                continue; // skip non-player pieces in this pass
+            }
+
+            int dist = piece.getSightDistance(), dist2 = dist * dist;
+            Rectangle rect = new Rectangle(
+                piece.x - dist, piece.y - dist, 2*dist+1, 2*dist+1);
+            rect = rect.intersection(
+                new Rectangle(0, 0, _board.getWidth(), _board.getHeight()));
+            for (int yy = rect.y, ly = yy + rect.height; yy < ly; yy++) {
+                for (int xx = rect.x, lx = xx + rect.width; xx < lx; xx++) {
+                    int tdist = MathUtil.distanceSq(xx, yy, piece.x, piece.y);
+                    if (tdist < dist2) {
+                        _vstate.setVisible(xx, yy);
+                    }
+                }
+            }
+        }
+
+        // now dirty any tiles whose visibility changed
+        for (int yy = 0, ly = _board.getHeight(); yy < ly; yy++) {
+            for (int xx = 0, lx = _board.getHeight(); xx < lx; xx++) {
+                if (_vstate.visibilityChanged(xx, yy)) {
+                    dirtyTile(xx, yy);
+                }
+            }
+        }
+
+        // finally adjust the visibility of enemy pieces
+        for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
+            Piece piece = (Piece)iter.next();
+            if (piece.owner == -1 || (_pidx == -1 || _pidx == piece.owner)) {
+                continue; // skip unowned and player pieces in this pass
+            }
+
+            PieceSprite sprite = _pieces.get(piece.pieceId);
+            if (sprite != null) {
+                boolean viz = _vstate.getVisible(piece.x, piece.y);
+                if (viz && !isManaged(sprite)) {
+                    sprite.init(piece);
+                    addSprite(sprite);
+                } else if (!viz && isManaged(sprite)) {
+                    removeSprite(sprite);
+                }
+            }
+        }
+    }
+
+    /** Listens for the "end of tick" indicator. */
+    protected MessageListener _ticklist = new MessageListener() {
+        public void messageReceived (MessageEvent event) {
+            if (event.getName().equals("ticked")) {
+                tickFinished();
+            }
+        }
+    };
 
     protected Piece _selection;
     protected PiecePath _pendingPath;
@@ -313,8 +423,8 @@ public class BangBoardView extends BoardView
     protected int _pidx;
     protected int _downButton = -1;
 
-    /** Used by {@link #renderPath}. */
-    protected Rectangle _pr = new Rectangle(0, 0, SQUARE, SQUARE);
+    /** Tracks coordinate visibility. */
+    protected VisibilityState _vstate;
 
     /** Maps pieceId to path for pieces that have a path configured. */
     protected HashMap<Integer,PiecePath> _paths =

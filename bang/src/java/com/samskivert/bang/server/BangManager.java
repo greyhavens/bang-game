@@ -191,6 +191,10 @@ public class BangManager extends GameManager
                 _bangobj.updatePieces(piece);
             }
 
+            // this lets the clients know the updates are done and gives
+            // them a chance to to post-tick processing
+            _bangobj.postMessage("ticked", null);
+
         } finally {
             _bangobj.commitTransaction();
         }
