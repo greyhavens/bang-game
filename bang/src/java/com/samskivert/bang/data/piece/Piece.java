@@ -266,7 +266,7 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Returns true if this bug can traverse the board at the specified
+     * Returns true if this piece can traverse the board at the specified
      * coordinates.
      */
     public boolean canTraverse (BangBoard board, int tx, int ty)

@@ -23,7 +23,7 @@ public enum Terrain
     // "constructed" terrain types
     LEAF_BRIDGE (4, "$");
 
-    /** The code used when encoding terrain types in the {@link BugsBoard}. */
+    /** The code used when encoding terrain types in the {@link BangBoard}. */
     public int code;
 
     /** A character that can be used to display this terrain type when

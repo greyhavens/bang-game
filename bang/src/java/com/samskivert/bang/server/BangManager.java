@@ -211,7 +211,7 @@ public class BangManager extends GameManager
     /**
      * Moves the supplied piece further along its configured path.
      *
-     * @return true if the bug reached the final goal on the path, false
+     * @return true if the piece reached the final goal on the path, false
      * if not.
      */
     protected boolean tickPath (Piece piece, PiecePath path, PieceSet updates)
