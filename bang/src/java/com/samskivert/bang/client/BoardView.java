@@ -60,7 +60,7 @@ public class BoardView extends VirtualMediaPanel
      * by the controller when we enter an already started game or the game
      * in which we're involved gets started.
      */
-    public void startGame (BangObject bangobj)
+    public void startGame (BangObject bangobj, int playerIdx)
     {
         _bangobj = bangobj;
         _board = bangobj.board;

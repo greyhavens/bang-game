@@ -32,6 +32,10 @@ public abstract class Piece extends SimpleStreamableObject
     /** Uniquely identifies each piece in the game. */
     public int pieceId;
 
+    /** The player index of the owner of this piece or -1 if it is not an
+     * owned piece. */
+    public int owner = Integer.MIN_VALUE;
+
     /** The current x location of this piece's segments. */
     public short[] x;
 

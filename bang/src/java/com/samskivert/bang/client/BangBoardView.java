@@ -16,6 +16,7 @@ import com.threerings.media.sprite.Sprite;
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
+import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.util.PointSet;
@@ -74,7 +75,9 @@ public class BangBoardView extends BoardView
             Sprite s = _spritemgr.getHighestHitSprite(e.getX(), e.getY());
             if (s instanceof PieceSprite) {
                 sprite = (PieceSprite)s;
-                if (!sprite.isSelectable()) {
+                Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
+                if (_pidx == -1 || piece.owner != _pidx ||
+                    !sprite.isSelectable()) {
                     sprite = null;
                 }
             }
@@ -154,6 +157,13 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
+    public void startGame (BangObject bangobj, int playerIdx)
+    {
+        super.startGame(bangobj, playerIdx);
+        _pidx = playerIdx;
+    }
+
+    @Override // documentation inherited
     public void endGame ()
     {
         super.endGame();
@@ -218,4 +228,5 @@ public class BangBoardView extends BoardView
     protected Piece _selection;
     protected PiecePath _pendingPath;
     protected PointSet _moveSet = new PointSet();
+    protected int _pidx;
 }

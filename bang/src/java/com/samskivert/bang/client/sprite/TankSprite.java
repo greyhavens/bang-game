@@ -25,7 +25,7 @@ public class TankSprite extends PieceSprite
     @Override // documentation inherited
     public void paint (Graphics2D gfx)
     {
-        gfx.setColor(Color.white);
+        gfx.setColor(_piece.owner == 0 ? Color.white : Color.yellow);
         gfx.fill(_bounds);
 
         int dx = SQUARE/2, dy = SQUARE/2;

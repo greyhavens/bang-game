@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import com.samskivert.swing.event.CommandEvent;
 
 import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
@@ -46,9 +47,13 @@ public class BangController extends GameController
         super.willEnterPlace(plobj);
         _bangobj = (BangObject)plobj;
 
+        // determine our player index
+        BodyObject me = (BodyObject)_ctx.getClient().getClientObject();
+        _pidx = _bangobj.getPlayerIndex(me.username);
+
         // we may be returning to an already started game
         if (_bangobj.isInPlay()) {
-            _panel.view.startGame(_bangobj);
+            _panel.view.startGame(_bangobj, _pidx);
         }
     }
 
@@ -80,7 +85,7 @@ public class BangController extends GameController
         super.gameDidStart();
 
         // we may be returning to an already started game
-        _panel.view.startGame(_bangobj);
+        _panel.view.startGame(_bangobj, _pidx);
     }
 
     // documentation inherited
@@ -105,4 +110,7 @@ public class BangController extends GameController
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
+
+    /** Our player index or -1 if we're not a player. */
+    protected int _pidx;
 }

@@ -15,6 +15,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.crowd.data.BodyObject;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.toybox.data.ToyBoxGameConfig;
@@ -26,6 +27,7 @@ import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.ModifyBoardEvent;
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Terrain;
+import com.samskivert.bang.data.generate.CompoundGenerator;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
 import com.samskivert.bang.data.piece.Tank;
@@ -41,9 +43,20 @@ public class BangManager extends GameManager
     // documentation inherited from interface BangProvider
     public void setPath (ClientObject caller, PiecePath path)
     {
+        BodyObject user = (BodyObject)caller;
+
         Piece piece = (Piece)_bangobj.pieces.get(path.pieceId);
         if (piece == null) {
-            log.info("No such piece " + path.pieceId + ".");
+            log.info("No such piece " + path.pieceId +
+                     " [who=" + user.who() + "].");
+            return;
+        }
+
+        // let me ask you this... do I own it?
+        int pidx = _bangobj.getPlayerIndex(user.username);
+        if (pidx != piece.owner) {
+            log.warning("Requested to move not-our piece [who=" + user.who() +
+                        ", piece=" + piece + "].");
             return;
         }
 
@@ -346,15 +359,20 @@ public class BangManager extends GameManager
         // generate a random board
         int size = (Integer)bconfig.params.get("board_size");
         BangBoard board = new BangBoard(size, size);
-        board.fill(Terrain.DIRT);
+        CompoundGenerator gen = new CompoundGenerator();
+        gen.generate(50, board, pieces);
+
         Tank tank = new Tank();
         tank.assignPieceId();
         tank.position(5, 5);
+        tank.owner = 0;
         pieces.add(tank);
         tank = new Tank();
         tank.assignPieceId();
         tank.position(7, 5);
+        tank.owner = 1;
         pieces.add(tank);
+
         return board;
     }
 
