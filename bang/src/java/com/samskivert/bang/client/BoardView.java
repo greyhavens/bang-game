@@ -72,6 +72,7 @@ public class BoardView extends VirtualMediaPanel
         // start afresh
         _bangobj = bangobj;
         _board = bangobj.board;
+        _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
         dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
 
         // create sprites for all of the pieces
@@ -134,18 +135,18 @@ public class BoardView extends VirtualMediaPanel
     // documentation inherited from interface KeyListener
     public void keyPressed (KeyEvent e)
     {
-        if (e.getKeyCode() == KeyEvent.VK_ALT &&
-            _bangobj != null && _bangobj.isInPlay()) {
-            showAttackSet();
-        }
+//         if (e.getKeyCode() == KeyEvent.VK_ALT &&
+//             _bangobj != null && _bangobj.isInPlay()) {
+//             showAttackSet();
+//         }
     }
 
     // documentation inherited from interface KeyListener
     public void keyReleased (KeyEvent e)
     {
-        if (e.getKeyCode() == KeyEvent.VK_ALT) {
-            clearAttackSet();
-        }
+//         if (e.getKeyCode() == KeyEvent.VK_ALT) {
+//             clearAttackSet();
+//         }
     }
 
     // documentation inherited
@@ -403,6 +404,7 @@ public class BoardView extends VirtualMediaPanel
 
     protected BangObject _bangobj;
     protected BangBoard _board;
+    protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
     protected PointSet _attackSet, _attentionSet;

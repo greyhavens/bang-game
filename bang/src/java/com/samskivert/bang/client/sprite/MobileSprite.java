@@ -17,6 +17,7 @@ public class MobileSprite extends PieceSprite
     {
         super(SQUARE-3, SQUARE-3 + DBAR_HEIGHT + DBAR_GAP);
         _oyoff = DBAR_HEIGHT + DBAR_GAP;
+        _renderOrder = 5;
     }
 
     @Override // documentation inherited

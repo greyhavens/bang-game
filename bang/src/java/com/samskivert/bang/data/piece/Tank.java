@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.threerings.media.util.AStarPathUtil;
+
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.UnitSprite;
 import com.samskivert.bang.data.BangBoard;
@@ -28,6 +30,12 @@ public class Tank extends Piece
 
     /** Indicates the orientation of our turret. */
     public short turretOrient;
+
+    @Override // documentation inherited
+    public AStarPathUtil.Stepper getStepper ()
+    {
+        return _tankStepper;
+    }
 
     @Override // documentation inherited
     public PieceSprite createSprite ()
@@ -183,6 +191,22 @@ public class Tank extends Piece
             return super.computeDamage(target);
         }
     }
+
+    /** Handles path finding for tanks. */
+    protected static AStarPathUtil.Stepper _tankStepper =
+        new AStarPathUtil.Stepper() {
+        public void considerSteps (int x, int y)
+        {
+	    considerStep(x, y - 2, 3);
+	    considerStep(x - 2, y, 3);
+	    considerStep(x + 2, y, 3);
+	    considerStep(x, y + 2, 3);
+	    considerStep(x, y - 1, 2);
+	    considerStep(x - 1, y, 2);
+	    considerStep(x + 1, y, 2);
+	    considerStep(x, y + 1, 2);
+        }
+    };
 
     /** Used by {@link #getTargets}. */
     protected static Rectangle[] _trects = new Rectangle[] {

@@ -6,9 +6,12 @@ package com.samskivert.bang.client;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -16,6 +19,7 @@ import java.awt.event.MouseMotionListener;
 
 import com.threerings.media.sprite.PathObserver;
 import com.threerings.media.sprite.Sprite;
+import com.threerings.media.util.AStarPathUtil;
 import com.threerings.media.util.LinePath;
 import com.threerings.media.util.MathUtil;
 import com.threerings.media.util.Path;
@@ -27,9 +31,12 @@ import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.ShotSprite;
+import com.samskivert.util.StringUtil;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Shot;
+import com.samskivert.bang.data.piece.BigPiece;
+import com.samskivert.bang.data.piece.Chopper;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.util.PointSet;
 import com.samskivert.bang.util.VisibilityState;
@@ -102,11 +109,11 @@ public class BangBoardView extends BoardView
         // first update our mousely business
         mouseMoved(e);
 
-        // if we have a selection and are dragging with the right mouse
-        // button down, pretend like we right clicked in this location
-        if (_downButton == MouseEvent.BUTTON3 && _selection != null) {
-            handleRightPress(e.getX(), e.getY());
-        }
+//         // if we have a selection and are dragging with the right mouse
+//         // button down, pretend like we right clicked in this location
+//         if (_downButton == MouseEvent.BUTTON3 && _selection != null) {
+//             handleRightPress(e.getX(), e.getY());
+//         }
     }
 
     @Override // documentation inherited
@@ -117,8 +124,8 @@ public class BangBoardView extends BoardView
         _pidx = playerIdx;
         _bangobj.addListener(_ticklist);
 
-        _vstate = new VisibilityState(
-            bangobj.board.getWidth(), bangobj.board.getHeight());
+        _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
+        _tstate = new byte[_bbounds.width*_bbounds.height];
 
         // set up the starting visibility
         adjustBoardVisibility();
@@ -192,6 +199,33 @@ public class BangBoardView extends BoardView
         }
     }
 
+    @Override // documentation inherited
+    protected boolean updateMouseTile (int mx, int my)
+    {
+        if (super.updateMouseTile(mx, my)) {
+            // if we have a selected piece, path-find a new path to this
+            // location and display it as the pending path
+            if (_selection != null) {
+                if (_pendingPath != null) {
+                    dirtyPath(_pendingPath);
+                    _pendingPath = null;
+                }
+                List path = AStarPathUtil.getPath(
+                    _tpred, _selection.getStepper(), _selection,
+                    _bbounds.width+_bbounds.height, _selection.x, _selection.y,
+                    mx, my, true);
+                if (path.size() > 1) {
+                    // the first coordinate is the piece's current coordinate
+                    path.remove(0);
+                    _pendingPath = new PiecePath(_selection.pieceId, path);
+                    dirtyPath(_pendingPath);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     protected void renderPath (Graphics2D gfx, Rectangle dirtyRect,
                                Color color, int pos, PiecePath path)
     {
@@ -201,7 +235,7 @@ public class BangBoardView extends BoardView
             _pr.x = px * SQUARE;
             _pr.y = py * SQUARE;
             if (dirtyRect.intersects(_pr)) {
-                gfx.drawOval(_pr.x+2, _pr.y+2, _pr.width-4, _pr.height-4);
+                gfx.drawOval(_pr.x+6, _pr.y+6, _pr.width-12, _pr.height-12);
             }
         }
     }
@@ -379,6 +413,24 @@ public class BangBoardView extends BoardView
         // finally adjust the visibility of enemy pieces
         adjustEnemyVisibility();
 
+        // recompute the board traversability
+        Arrays.fill(_tstate, (byte)0);
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
+            Piece piece = (Piece)iter.next();
+            if (piece instanceof BigPiece) {
+                Rectangle pbounds = ((BigPiece)piece).getBounds();
+                for (int yy = pbounds.y, ly = yy + pbounds.height;
+                     yy < ly; yy++) {
+                    for (int xx = pbounds.x, lx = xx + pbounds.width;
+                         xx < lx; xx++) {
+                        _tstate[_bbounds.width*yy+xx] = 1;
+                    }
+                }
+            } else {
+                _tstate[_bbounds.width*piece.y+piece.x] = 2;
+            }
+        }
+
         // create shot handlers for all fired shots
         for (int ii = 0; ii < args.length; ii++) {
             new ShotHandler((Shot)args[ii]);
@@ -550,6 +602,21 @@ public class BangBoardView extends BoardView
         }
     };
 
+    /** Used when path finding. */
+    protected AStarPathUtil.TraversalPred _tpred =
+        new AStarPathUtil.TraversalPred() {
+        public boolean canTraverse (Object traverser, int x, int y) {
+            if (!_bbounds.contains(x, y)) {
+                return false;
+            }
+            int max = 0;
+            if (traverser instanceof Chopper) {
+                max = 1;
+            }
+            return (_tstate[y*_bbounds.width+x] <= max);
+        }
+    };
+
     protected Piece _selection;
     protected PiecePath _pendingPath;
     protected PointSet _moveSet = new PointSet();
@@ -558,6 +625,9 @@ public class BangBoardView extends BoardView
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
+
+    /** Tracks coordinate traversability. */
+    protected byte[] _tstate;
 
     /** Maps pieceId to path for pieces that have a path configured. */
     protected HashMap<Integer,PiecePath> _paths =

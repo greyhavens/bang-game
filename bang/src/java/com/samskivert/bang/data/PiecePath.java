@@ -3,6 +3,9 @@
 
 package com.samskivert.bang.data;
 
+import java.awt.Point;
+import java.util.List;
+
 import com.threerings.io.SimpleStreamableObject;
 
 import com.samskivert.bang.data.piece.Piece;
@@ -21,6 +24,18 @@ public class PiecePath extends SimpleStreamableObject
     {
         this.pieceId = pieceId;
         _coords = new int[] { x, y };
+    }
+
+    /** Creates a piece path with the specified path-found coordinates. */
+    public PiecePath (int pieceId, List points)
+    {
+        this.pieceId = pieceId;
+        _coords = new int[points.size()*2];
+        for (int ii = 0, ll = points.size(); ii < ll; ii++) {
+            Point p = (Point)points.get(ii);
+            _coords[ii*2] = p.x;
+            _coords[ii*2+1] = p.y;
+        }
     }
 
     /** Constructor used for unserialization. */

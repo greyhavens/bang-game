@@ -8,6 +8,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.threerings.io.SimpleStreamableObject;
+import com.threerings.media.util.AStarPathUtil;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.dobj.DSet;
@@ -114,6 +115,12 @@ public abstract class Piece extends SimpleStreamableObject
     public int getSightDistance ()
     {
         return 5;
+    }
+
+    /** Returns the stepper used to compute paths for this type of piece. */
+    public AStarPathUtil.Stepper getStepper ()
+    {
+        return _pieceStepper;
     }
 
     /**
@@ -635,6 +642,19 @@ public abstract class Piece extends SimpleStreamableObject
     protected transient Point2D _locus = new Point2D.Double();
 
     protected static int _nextPieceId;
+
+    /** The default path-finding stepper. Allows movement in one of the
+     * four directions. */
+    protected static AStarPathUtil.Stepper _pieceStepper =
+        new AStarPathUtil.Stepper() {
+        public void considerSteps (int x, int y)
+        {
+	    considerStep(x, y - 1, 1);
+	    considerStep(x - 1, y, 1);
+	    considerStep(x + 1, y, 1);
+	    considerStep(x, y + 1, 1);
+        }
+    };
 
     /** The default quantity of energy consumed to take a step. */
     protected static final int DEFAULT_ENERGY_PER_STEP = 10;

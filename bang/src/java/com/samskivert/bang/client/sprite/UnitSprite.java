@@ -73,12 +73,6 @@ public class UnitSprite extends MobileSprite
         }
     }
 
-    @Override // documentation inherited
-    public int getRenderOrder ()
-    {
-        return 5;
-    }
-
     protected String _type;
     protected BufferedImage[] _images = new BufferedImage[4];
 }
