@@ -257,8 +257,9 @@ public abstract class Piece extends SimpleStreamableObject
         // scale the damage by our own damage level
         hurt = (hurt * (100-this.damage)) / 100;
         hurt = Math.max(1, hurt); // always do at least 1 point of damage
-        log.info(this + " doing " + hurt + " damage to " + target + ".");
-        return new Shot(pieceId, target.pieceId, target.x, target.y, hurt);
+        Shot shot = new Shot(pieceId, target.pieceId, target.x, target.y, hurt);
+        log.info("Bang! " + shot);
+        return shot;
     }
 
     /**
