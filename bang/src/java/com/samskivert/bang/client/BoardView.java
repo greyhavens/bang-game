@@ -113,6 +113,8 @@ public class BoardView extends VirtualMediaPanel
         }
         Label text = new Label(wtext, Color.white,
                                getFont().deriveFont(40f));
+        text.setStyle(Label.OUTLINE);
+        text.setAlternateColor(Color.black);
         text.setTargetWidth(300);
         text.layout(this);
         LabelSprite sprite = new LabelSprite(text);

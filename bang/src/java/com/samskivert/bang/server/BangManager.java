@@ -10,10 +10,12 @@ import java.util.Iterator;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Interval;
 
+import com.threerings.util.RandomUtil;
+
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.server.PresentsServer;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.BodyObject;
@@ -34,6 +36,7 @@ import com.samskivert.bang.data.generate.SkirmishScenario;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
 import com.samskivert.bang.util.PieceSet;
+import com.samskivert.bang.util.PointSet;
 
 import static com.samskivert.bang.Log.log;
 
@@ -175,6 +178,25 @@ public class BangManager extends GameManager
             // recreate our pieces array; pieces may have been removed
             pieces = _bangobj.getPieceArray();
 
+            // TEMPorary HACKery: if this is a one player game, move
+            // player 2s pieces around randomly
+            if (_bangobj.players.length == 1) {
+                PointSet moves = new PointSet();
+                for (int ii = 0; ii < pieces.length; ii++) {
+                    Piece p = pieces[ii];
+                    if (p.owner != 1 || p.energy == 0) {
+                        continue;
+                    }
+                    moves.clear();
+                    p.enumerateLegalMoves(p.x, p.y, moves);
+                    if (moves.size() == 0) {
+                        continue;
+                    }
+                    int idx = RandomUtil.getInt(moves.size());
+                    movePiece(p, moves.getX(idx), moves.getY(idx), updates);
+                }
+            }
+
             // then give any piece a chance to react to the state of the board
             // now that everyone has moved
             for (int ii = 0; ii < pieces.length; ii++) {
@@ -258,6 +280,11 @@ public class BangManager extends GameManager
      */
     protected boolean movePiece (Piece piece, int x, int y, PieceSet updates)
     {
+        if (x < 0 || y < 0 || x >= _bangobj.board.getWidth() ||
+            y >= _bangobj.board.getHeight()) {
+            return false;
+        }
+
         // validate that the move is legal (proper length, can traverse
         // all tiles along the way, no pieces intervene, etc.)
         if (!piece.canMoveTo(_bangobj.board, x, y)) {
