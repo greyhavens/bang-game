@@ -266,29 +266,41 @@ public class BangManager extends GameManager
         log.fine("Moving " + path + ".");
         int nx = path.getNextX(piece), ny = path.getNextY(piece);
 
-        // make sure the piece has the energy to move that far
-        int steps = Math.abs(piece.x-nx) + Math.abs(piece.y-ny);
-        if (piece.energy < steps * piece.energyPerStep()) {
-            log.info("Piece out of energy [piece=" + piece + "].");
-            piece.pathPos = -1;
+        for (int ii = 0; ii < 2; ii++) {
+            // make sure the piece has the energy to move that far and is
+            // not fully damaged
+            int steps = Math.abs(piece.x-nx) + Math.abs(piece.y-ny);
+            int energy = steps * piece.energyPerStep();
+            if (!piece.isAlive() || piece.energy < energy) {
+                piece.pathPos = -1;
+                updates.add(piece);
+                return true;
+            }
+
+            // try moving the piece
+            if (!movePiece(piece, nx, ny, updates)) {
+                return false;
+            }
+
+            // note that we want to update our piece
             updates.add(piece);
-            return true;
+
+            // check to see if we've reached the end of our path
+            if (path.reachedGoal(piece)) {
+                piece.pathPos = -1;
+                return true;
+            }
+
+            // otherwise see if we can make an additional move this turn
+            nx = path.getNextX(piece);
+            ny = path.getNextY(piece);
+            if (!piece.canBonusMove(nx, ny)) {
+                log.info("No bonus... [nx=" + nx + ", ny=" + ny + "].");
+                break;
+            }
         }
 
-        // try moving the piece
-        if (!movePiece(piece, nx, ny, updates)) {
-            return false;
-        }
-
-        // check to see if we've reached the end of our path
-        boolean reachedGoal = path.reachedGoal(piece);
-        if (reachedGoal) {
-            piece.pathPos = -1;
-        }
-
-        // note that we want to update our piece
-        updates.add(piece);
-        return reachedGoal;
+        return false;
     }
 
     /**
@@ -313,43 +325,12 @@ public class BangManager extends GameManager
             return false;
         }
 
-        // calculate the distance we're moving
-        int xsteps = Math.abs(piece.x-x);
-        int ysteps = Math.abs(piece.y-y);
-        int steps = xsteps + ysteps;
+        // calculate the distance we're moving (this should always be one
+        // but we leave this in in case want to change things later)
+        int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
 
         // clone the piece so that we can investigate the hypothetical
         Piece hpiece = (Piece)piece.clone();
-
-        // if there's more than one step, check our intermediate steps to
-        // ensure that nothing is in our way
-        if (steps > 1) {
-            // either we're going two in the y direction
-            if (ysteps > 1) {
-                hpiece.position(x, piece.y + (y-piece.y)/2);
-                if (checkPass(hpiece)) {
-                    return false;
-                }
-
-            // or two in the x direction
-            } else if (xsteps > 1) {
-                hpiece.position(piece.x + (x-piece.x)/2, y);
-                if (checkPass(hpiece)) {
-                    return false;
-                }
-
-            // or one in each direction
-            } else {
-                // try going one route, then the other
-                hpiece.position(piece.x, y);
-                if (checkPass(hpiece)) {
-                    hpiece.position(x, piece.y);
-                    if (checkPass(hpiece)) {
-                        return false;
-                    }
-                }
-            }
-        }
         hpiece.position(x, y);
 
         // ensure that we don't land on a piece that prevents us from
@@ -415,24 +396,6 @@ public class BangManager extends GameManager
         }
 
         return true;
-    }
-
-    /**
-     * Checks to see if any pieces on the board prevent this piece from
-     * passing through them at this coordinate. Returns true if such a
-     * piece exists.
-     */
-    protected boolean checkPass (Piece hpiece)
-    {
-        ArrayList<Piece> lappers = _bangobj.getOverlappers(hpiece);
-        if (lappers != null) {
-            for (Piece p : lappers) {
-                if (p.preventsPass(hpiece)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     // documentation inherited

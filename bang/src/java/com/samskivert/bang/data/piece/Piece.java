@@ -240,6 +240,15 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if this piece can consolidate this additional move
+     * into a single turn, receiving a "bonus" move for that turn.
+     */
+    public boolean canBonusMove (int x, int y)
+    {
+        return false;
+    }
+
+    /**
      * Affects the target piece with damage.
      */
     public Shot shoot (Piece target)
@@ -250,15 +259,6 @@ public abstract class Piece extends SimpleStreamableObject
         hurt = Math.max(1, hurt); // always do at least 1 point of damage
         log.info(this + " doing " + hurt + " damage to " + target + ".");
         return new Shot(pieceId, target.pieceId, target.x, target.y, hurt);
-    }
-
-    /**
-     * Returns true if this piece prevents the specified other piece from
-     * passing "through" it during movement, or false if it is allowed.
-     */
-    public boolean preventsPass (Piece passer)
-    {
-        return !(passer instanceof Chopper);
     }
 
     /**

@@ -36,6 +36,15 @@ public class Tank extends Piece
     }
 
     @Override // documentation inherited
+    public boolean canBonusMove (int tx, int ty)
+    {
+        // if it's in the direction of motion, we can
+        int nx = x + PieceCodes.DX[orientation];
+        int ny = y + PieceCodes.DY[orientation];
+        return (tx == nx && ty == ny);
+    }
+
+    @Override // documentation inherited
     public void react (BangObject bangobj, Piece[] pieces, PieceSet updates,
                        ArrayList<Shot> shots)
     {

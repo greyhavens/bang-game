@@ -35,6 +35,13 @@ public class Chopper extends Piece
     }
 
     @Override // documentation inherited
+    public boolean canBonusMove (int tx, int ty)
+    {
+        // choppers always get a second move
+        return true;
+    }
+
+    @Override // documentation inherited
     public void react (BangObject bangobj, Piece[] pieces, PieceSet updates,
                        ArrayList<Shot> shots)
     {
@@ -77,19 +84,6 @@ public class Chopper extends Piece
         moves.add(tx, ty+1);
         moves.add(tx+1, ty+1);
         moves.add(tx, ty+2);
-    }
-
-    @Override // documentation inherited
-    public boolean preventsPass (Piece passer)
-    {
-        // a live chopper is in the air and only prevents passthrough of
-        // other choppers
-        if (isAlive()) {
-            return (passer instanceof Chopper);
-        } else {
-            // a dead chopper is on the ground and behaves like other pieces
-            return super.preventsPass(passer);
-        }
     }
 
     @Override // documentation inherited
