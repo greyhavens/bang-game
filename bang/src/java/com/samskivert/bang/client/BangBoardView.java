@@ -130,6 +130,11 @@ public class BangBoardView extends BoardView
 
         super.endGame();
         _moveSet.clear();
+
+        // allow everything to be visible
+        _vstate.reveal();
+        adjustEnemyVisibility();
+        dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
     }
 
     @Override // documentation inherited
@@ -389,6 +394,12 @@ public class BangBoardView extends BoardView
         }
 
         // finally adjust the visibility of enemy pieces
+        adjustEnemyVisibility();
+    }
+
+    /** Makes enemy pieces visible or invisible based on _vstate. */
+    protected void adjustEnemyVisibility ()
+    {
         for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
             if (piece.owner == -1 || (_pidx == -1 || _pidx == piece.owner)) {

@@ -62,6 +62,14 @@ public class BoardView extends VirtualMediaPanel
      */
     public void startGame (BangObject bangobj, int playerIdx)
     {
+        // clear out old piece sprites from a previous game
+        for (Iterator<PieceSprite> iter = _pieces.values().iterator();
+             iter.hasNext(); ) {
+            removeSprite(iter.next());
+            iter.remove();
+        }
+
+        // start afresh
         _bangobj = bangobj;
         _board = bangobj.board;
         dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
@@ -84,13 +92,6 @@ public class BoardView extends VirtualMediaPanel
      */
     public void endGame ()
     {
-        // clear out our piece sprites
-        Iterator<PieceSprite> iter = _pieces.values().iterator();
-        while (iter.hasNext()) {
-            removeSprite(iter.next());
-            iter.remove();
-        }
-
         // remove our event listener
         _bangobj.removeListener(_blistener);
 

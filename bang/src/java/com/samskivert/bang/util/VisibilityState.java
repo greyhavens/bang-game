@@ -29,6 +29,11 @@ public class VisibilityState
         Arrays.fill(_state, (byte)0);
     }
 
+    public void reveal ()
+    {
+        Arrays.fill(_state, (byte)1);
+    }
+
     public void setVisible (int tx, int ty)
     {
         _state[ty * _width + tx] = (byte)1;
