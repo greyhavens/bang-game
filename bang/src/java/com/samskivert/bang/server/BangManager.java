@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Interval;
 
 import com.threerings.util.RandomUtil;
@@ -33,6 +34,7 @@ import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.generate.CompoundGenerator;
 import com.samskivert.bang.data.generate.SkirmishScenario;
+import com.samskivert.bang.data.generate.TestScenario;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
 import com.samskivert.bang.util.PieceSet;
@@ -157,21 +159,29 @@ public class BangManager extends GameManager
             // batch our tick update
             _bangobj.startTransaction();
 
+            // randomize the piece array before executing moves to insure
+            // that no one is favored during potential conflicts
+            ArrayUtil.shuffle(pieces);
+
+            // TODO: maybe now sort them by remaining energy or lowest
+            // damage to give players some general idea as to who goes
+            // first
+
             // these pieces will be updated
             PieceSet updates = new PieceSet();
             // these shots will be communicated to the client for animation
             ArrayList<Shot> shots = new ArrayList<Shot>();
 
-            // move all of our pieces along any path they have configured
-            Iterator<PiecePath> iter = _paths.values().iterator();
-            while (iter.hasNext()) {
-                PiecePath path = iter.next();
-                Piece piece = (Piece)_bangobj.pieces.get(path.pieceId);
-                if (piece == null || tickPath(piece, path, updates)) {
+            for (int ii = 0; ii < pieces.length; ii++) {
+                Piece piece = pieces[ii];
+                PiecePath path = _paths.get(piece.pieceId);
+                if (path == null) {
+                    continue;
+                }
+
+                if (tickPath(piece, path, updates)) {
                     log.fine("Finished " + path + ".");
-                    // if the piece has gone away, or if we complete our path,
-                    // remove it
-                    iter.remove();
+                    _paths.remove(piece.pieceId);
                 }
             }
 
@@ -180,22 +190,22 @@ public class BangManager extends GameManager
 
             // TEMPorary HACKery: if this is a one player game, move
             // player 2s pieces around randomly
-            if (_bangobj.players.length == 1) {
-                PointSet moves = new PointSet();
-                for (int ii = 0; ii < pieces.length; ii++) {
-                    Piece p = pieces[ii];
-                    if (p.owner != 1 || !p.isAlive()) {
-                        continue;
-                    }
-                    moves.clear();
-                    p.enumerateLegalMoves(p.x, p.y, moves);
-                    if (moves.size() == 0) {
-                        continue;
-                    }
-                    int idx = RandomUtil.getInt(moves.size());
-                    movePiece(p, moves.getX(idx), moves.getY(idx), updates);
-                }
-            }
+//             if (_bangobj.players.length == 1) {
+//                 PointSet moves = new PointSet();
+//                 for (int ii = 0; ii < pieces.length; ii++) {
+//                     Piece p = pieces[ii];
+//                     if (p.owner != 1 || !p.isAlive()) {
+//                         continue;
+//                     }
+//                     moves.clear();
+//                     p.enumerateLegalMoves(p.x, p.y, moves);
+//                     if (moves.size() == 0) {
+//                         continue;
+//                     }
+//                     int idx = RandomUtil.getInt(moves.size());
+//                     movePiece(p, moves.getX(idx), moves.getY(idx), updates);
+//                 }
+//             }
 
             // then give any piece a chance to react to the state of the board
             // now that everyone has moved
@@ -207,6 +217,16 @@ public class BangManager extends GameManager
                     continue;
                 }
                 piece.react(_bangobj, pieces, updates, shots);
+            }
+
+            // now apply the shot damage to the pieces in questions
+            for (int ii = 0, ll = shots.size(); ii < ll; ii++) {
+                Shot shot = shots.get(ii);
+                Piece piece = (Piece)_bangobj.pieces.get(shot.targetId);
+                if (piece != null) {
+                    piece.damage = Math.min(100, piece.damage + shot.damage);
+                    updates.add(piece);
+                }
             }
 
             // finally update the pieces that need updating
@@ -294,14 +314,47 @@ public class BangManager extends GameManager
         }
 
         // calculate the distance we're moving
-        int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
+        int xsteps = Math.abs(piece.x-x);
+        int ysteps = Math.abs(piece.y-y);
+        int steps = xsteps + ysteps;
 
         // clone the piece so that we can investigate the hypothetical
         Piece hpiece = (Piece)piece.clone();
+
+        // if there's more than one step, check our intermediate steps to
+        // ensure that nothing is in our way
+        if (steps > 1) {
+            // either we're going two in the y direction
+            if (ysteps > 1) {
+                hpiece.position(x, piece.y + (y-piece.y)/2);
+                if (checkPass(hpiece)) {
+                    return false;
+                }
+
+            // or two in the x direction
+            } else if (xsteps > 1) {
+                hpiece.position(piece.x + (x-piece.x)/2, y);
+                if (checkPass(hpiece)) {
+                    return false;
+                }
+
+            // or one in each direction
+            } else {
+                // try going one route, then the other
+                hpiece.position(piece.x, y);
+                if (checkPass(hpiece)) {
+                    hpiece.position(x, piece.y);
+                    if (checkPass(hpiece)) {
+                        return false;
+                    }
+                }
+            }
+        }
         hpiece.position(x, y);
 
-        // ensure that intervening pieces do not block this move; also
-        // track any piece that we end up overlapping
+        // ensure that we don't land on a piece that prevents us from
+        // overlapping it and make a note of any piece that we land on
+        // that does not prevent overlap
         ArrayList<Piece> lappers = _bangobj.getOverlappers(hpiece);
         Piece lapper = null;
         if (lappers != null) {
@@ -364,6 +417,24 @@ public class BangManager extends GameManager
         return true;
     }
 
+    /**
+     * Checks to see if any pieces on the board prevent this piece from
+     * passing through them at this coordinate. Returns true if such a
+     * piece exists.
+     */
+    protected boolean checkPass (Piece hpiece)
+    {
+        ArrayList<Piece> lappers = _bangobj.getOverlappers(hpiece);
+        if (lappers != null) {
+            for (Piece p : lappers) {
+                if (p.preventsPass(hpiece)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // documentation inherited
     protected void gameDidEnd ()
     {
@@ -386,7 +457,8 @@ public class BangManager extends GameManager
         BangBoard board = new BangBoard(size, size);
         CompoundGenerator gen = new CompoundGenerator();
         gen.generate(bconfig, board, pieces);
-        SkirmishScenario scen = new SkirmishScenario();
+//         SkirmishScenario scen = new SkirmishScenario();
+        TestScenario scen = new TestScenario();
         scen.generate(bconfig, board, pieces);
         return board;
     }

@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.threerings.media.util.AStarPathUtil;
 import com.threerings.media.util.MathUtil;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
@@ -28,12 +27,6 @@ public class Chopper extends Piece
 {
     /** A chopper can fire at a target only one square away. */
     public static final int FIRE_DISTANCE = 1;
-
-    @Override // documentation inherited
-    public AStarPathUtil.Stepper getStepper ()
-    {
-        return _chopperStepper;
-    }
 
     @Override // documentation inherited
     public PieceSprite createSprite ()
@@ -64,7 +57,6 @@ public class Chopper extends Piece
 
         if (target != null) {
             shots.add(shoot(target));
-            updates.add(target);
         }
     }
 
@@ -85,6 +77,19 @@ public class Chopper extends Piece
         moves.add(tx, ty+1);
         moves.add(tx+1, ty+1);
         moves.add(tx, ty+2);
+    }
+
+    @Override // documentation inherited
+    public boolean preventsPass (Piece passer)
+    {
+        // a live chopper is in the air and only prevents passthrough of
+        // other choppers
+        if (isAlive()) {
+            return (passer instanceof Chopper);
+        } else {
+            // a dead chopper is on the ground and behaves like other pieces
+            return super.preventsPass(passer);
+        }
     }
 
     @Override // documentation inherited
@@ -128,26 +133,4 @@ public class Chopper extends Piece
             return super.computeDamage(target);
         }
     }
-
-    /** Handles path finding for choppers. */
-    protected static AStarPathUtil.Stepper _chopperStepper =
-        new AStarPathUtil.Stepper() {
-        public void considerSteps (int x, int y)
-        {
-	    considerStep(x, y - 2, 3);
-	    considerStep(x - 2, y, 3);
-	    considerStep(x + 2, y, 3);
-	    considerStep(x, y + 2, 3);
-
-	    considerStep(x - 1, y - 1, 3);
-	    considerStep(x - 1, y + 1, 3);
-	    considerStep(x + 1, y - 1, 3);
-	    considerStep(x + 1, y + 1, 3);
-
-	    considerStep(x, y - 1, 2);
-	    considerStep(x - 1, y, 2);
-	    considerStep(x + 1, y, 2);
-	    considerStep(x, y + 1, 2);
-        }
-    };
 }

@@ -198,15 +198,21 @@ public class BoardView extends VirtualMediaPanel
                     gfx.setColor(Color.black);
                     gfx.draw(_pr);
                     if (xx == _mouse.x && yy == _mouse.y) {
-                        gfx.setColor(Color.white);
-                        gfx.drawOval(
-                            _pr.x+2, _pr.y+2, _pr.width-4, _pr.height-4);
+                        paintMouseTile(gfx, xx, yy);
                     }
                 }
                 _pr.x += SQUARE;
             }
             _pr.y += SQUARE;
         }
+    }
+
+    /** Renders a marker on the tile under the mouse. {@link #_pr} will
+     * already be configured with that tiles coordinates. */
+    protected void paintMouseTile (Graphics2D gfx, int mx, int my)
+    {
+        gfx.setColor(Color.white);
+        gfx.drawOval(_pr.x+2, _pr.y+2, _pr.width-4, _pr.height-4);
     }
 
     // documentation inherited

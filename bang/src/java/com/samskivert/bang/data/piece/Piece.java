@@ -247,10 +247,18 @@ public abstract class Piece extends SimpleStreamableObject
         int hurt = computeDamage(target);
         // scale the damage by our own damage level
         hurt = (hurt * (100-this.damage)) / 100;
-        log.info("Doing " + hurt + " damage to " + target + ".");
-        // now put the hurt on said piece
-        target.damage = Math.min(100, target.damage + hurt);
-        return new Shot(pieceId, target.x, target.y);
+        hurt = Math.max(1, hurt); // always do at least 1 point of damage
+        log.info(this + " doing " + hurt + " damage to " + target + ".");
+        return new Shot(pieceId, target.pieceId, target.x, target.y, hurt);
+    }
+
+    /**
+     * Returns true if this piece prevents the specified other piece from
+     * passing "through" it during movement, or false if it is allowed.
+     */
+    public boolean preventsPass (Piece passer)
+    {
+        return !(passer instanceof Chopper);
     }
 
     /**

@@ -101,35 +101,4 @@ public class SkirmishScenario extends ScenarioGenerator
             rect.grow(1, 1);
         }
     }
-
-    protected void configureAndAdd (
-        ArrayList<Piece> pieces, int pidx, Piece piece)
-    {
-        piece.assignPieceId();
-        piece.owner = pidx;
-        pieces.add(piece);
-    }
-
-    protected boolean tryPlacement (
-        BangBoard board, ArrayList<Piece> pieces, int tx, int ty, Piece piece)
-    {
-        if (tx < 0 || tx >= board.getWidth() ||
-            ty < 0 || ty >= board.getHeight() || tileOccupied(pieces, tx, ty)) {
-            return false;
-        }
-
-        piece.position(tx, ty);
-        pieces.add(piece);
-        return true;
-    }
-
-    protected boolean tileOccupied (ArrayList<Piece> pieces, int tx, int ty)
-    {
-        for (Piece piece : pieces) {
-            if (piece.intersects(tx, ty)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

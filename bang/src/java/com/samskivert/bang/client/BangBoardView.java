@@ -82,6 +82,10 @@ public class BangBoardView extends BoardView
     public void mouseReleased (MouseEvent e)
     {
         _downButton = -1;
+
+        if (_attackSet != null) {
+            clearAttackSet();
+        }
     }
 
     // documentation inherited from interface MouseListener
@@ -156,9 +160,16 @@ public class BangBoardView extends BoardView
         // render all pending paths
         for (PiecePath path : _paths.values()) {
             Piece piece = (Piece)_bangobj.pieces.get(path.pieceId);
-            // the piece might not yet know it has a path
-            int pos = (piece.pathPos < 0) ? 0 : piece.pathPos;
-            renderPath(gfx, dirtyRect, Color.gray, pos, path);
+            renderPath(gfx, dirtyRect, Color.gray, piece, path);
+        }
+    }
+
+    @Override // documentation inherited
+    protected void paintMouseTile (Graphics2D gfx, int mx, int my)
+    {
+        // only highlight the mouse coordinates while we're in play
+        if (_bangobj != null && _bangobj.isInPlay()) {
+            super.paintMouseTile(gfx, mx, my);
         }
     }
 
@@ -174,7 +185,7 @@ public class BangBoardView extends BoardView
 
         // render any currently active path
         if (_pendingPath != null) {
-            renderPath(gfx, dirtyRect, Color.pink, 0, _pendingPath);
+            renderPath(gfx, dirtyRect, Color.pink, _selection, _pendingPath);
         }
 
         // render the necessary tiles as dimmed if it is not "visible"
@@ -227,16 +238,22 @@ public class BangBoardView extends BoardView
     }
 
     protected void renderPath (Graphics2D gfx, Rectangle dirtyRect,
-                               Color color, int pos, PiecePath path)
+                               Color color, Piece piece, PiecePath path)
     {
+        // the piece might not yet know it has a path
+        int pos = (piece.pathPos < 0) ? 0 : piece.pathPos;
         gfx.setColor(color);
+
+        int sx = piece.x * SQUARE + SQUARE/2,
+            sy = piece.y * SQUARE + SQUARE/2;
         for (int ii = pos, ll = path.getLength(); ii < ll; ii++) {
-            int px = path.getX(ii), py = path.getY(ii);
-            _pr.x = px * SQUARE;
-            _pr.y = py * SQUARE;
-            if (dirtyRect.intersects(_pr)) {
-                gfx.drawOval(_pr.x+6, _pr.y+6, _pr.width-12, _pr.height-12);
+            int px = path.getX(ii) * SQUARE + SQUARE/2,
+                py = path.getY(ii) * SQUARE + SQUARE/2;
+            if (dirtyRect.contains(sx, sy) || dirtyRect.contains(px, py)) {
+                gfx.drawLine(sx, sy, px, py);
             }
+            sx = px;
+            sy = py;
         }
     }
 
@@ -324,31 +341,45 @@ public class BangBoardView extends BoardView
             return;
         }
 
-        // make sure this is a legal move
-        if (!_moveSet.contains(tx, ty)) {
-            if (_selection == null) {
-                // potentially treat this like a left click so that we can
-                // start a path by right clicking on a piece and dragging;
-                // but only if we have no selection as otherwise we'll
-                // auto-cancel the selection we started with the first
-                // right click and drag
-                handleLeftPress(mx, my);
+        // if there is a piece under the cursor, show their possible shots
+        PieceSprite sprite = null;
+        Sprite s = _spritemgr.getHighestHitSprite(mx, my);
+        if (s instanceof PieceSprite) {
+            sprite = (PieceSprite)s;
+            Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
+            if (sprite.isSelectable() && piece.isAlive()) {
+                _attackSet = new PointSet();
+                piece.enumerateAttacks(_attackSet);
+                piece.enumerateAttention(_attentionSet);
+                _remgr.invalidateRegion(_vbounds);
             }
-
-        } else if (_pendingPath != null) {
-            // potentiall extend our existing path
-            if (!_pendingPath.isTail(tx, ty)) {
-                _pendingPath = _pendingPath.append(tx, ty);
-                dirtyTile(tx, ty);
-                updatePossibleMoves(_selection, tx, ty);
-            }
-
-        } else if (_selection != null) {
-            // start a new path
-            _pendingPath = new PiecePath(_selection.pieceId, tx, ty);
-            dirtyPath(_pendingPath);
-            updatePossibleMoves(_selection, tx, ty);
         }
+        
+//         // make sure this is a legal move
+//         if (!_moveSet.contains(tx, ty)) {
+//             if (_selection == null) {
+//                 // potentially treat this like a left click so that we can
+//                 // start a path by right clicking on a piece and dragging;
+//                 // but only if we have no selection as otherwise we'll
+//                 // auto-cancel the selection we started with the first
+//                 // right click and drag
+//                 handleLeftPress(mx, my);
+//             }
+
+//         } else if (_pendingPath != null) {
+//             // potentiall extend our existing path
+//             if (!_pendingPath.isTail(tx, ty)) {
+//                 _pendingPath = _pendingPath.append(tx, ty);
+//                 dirtyTile(tx, ty);
+//                 updatePossibleMoves(_selection, tx, ty);
+//             }
+
+//         } else if (_selection != null) {
+//             // start a new path
+//             _pendingPath = new PiecePath(_selection.pieceId, tx, ty);
+//             dirtyPath(_pendingPath);
+//             updatePossibleMoves(_selection, tx, ty);
+//         }
     }
 
     protected void selectPiece (Piece piece)

@@ -7,8 +7,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.threerings.media.util.AStarPathUtil;
-
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.UnitSprite;
 import com.samskivert.bang.data.BangBoard;
@@ -32,12 +30,6 @@ public class Tank extends Piece
     public short turretOrient;
 
     @Override // documentation inherited
-    public AStarPathUtil.Stepper getStepper ()
-    {
-        return _tankStepper;
-    }
-
-    @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new UnitSprite("tank");
@@ -53,7 +45,6 @@ public class Tank extends Piece
         Piece target = targets[turretOrient];
         if (validTarget(target)) {
             shots.add(shoot(target));
-            updates.add(target);
             return;
         }
 
@@ -64,7 +55,6 @@ public class Tank extends Piece
             turretOrient = (short)dir;
             updates.add(this);
             shots.add(shoot(target));
-            updates.add(target);
             return;
         }
 
@@ -100,12 +90,12 @@ public class Tank extends Piece
     @Override // documentation inherited
     public void enumerateAttacks (PointSet set)
     {
-        for (int xx = x - 4; xx <= x + 4; xx++) {
+        for (int xx = x - FIRE_DISTANCE; xx <= x + FIRE_DISTANCE; xx++) {
             if (xx != x) {
                 set.add(xx, y);
             }
         }
-        for (int yy = y - 4; yy <= y + 4; yy++) {
+        for (int yy = y - FIRE_DISTANCE; yy <= y + FIRE_DISTANCE; yy++) {
             if (yy != y) {
                 set.add(x, yy);
             }
@@ -129,12 +119,6 @@ public class Tank extends Piece
      */
     public Piece[] getTargets (Piece[] pieces)
     {
-        // configure our target regions
-        _trects[NORTH].setLocation(x, y-FIRE_DISTANCE-1);
-        _trects[EAST].setLocation(x+1, y);
-        _trects[SOUTH].setLocation(x, y+1);
-        _trects[WEST].setLocation(x-FIRE_DISTANCE-1, y);
-
         Arrays.fill(_closest, Integer.MAX_VALUE);
         Arrays.fill(_targets, null);
 
@@ -144,23 +128,21 @@ public class Tank extends Piece
                 continue;
             }
 
-            // determine whether this piece intersects any of our target
-            // regions and if so, if it is closer than our existing
-            // closest match
+            // determine if this piece is within FIRE_DISTANCE of our
+            // coordinate and on the same axis
             int dist = Integer.MAX_VALUE, index = -1;
-            if (piece.intersects(_trects[NORTH])) {
-                dist = y - piece.y + piece.getHeight();
-                index = NORTH;
-            } else if (piece.intersects(_trects[EAST])) {
-                dist = piece.x - x;
-                index = EAST;
-            } else if (piece.intersects(_trects[SOUTH])) {
-                dist = y - piece.y;
-                index = SOUTH;
-            } else if (piece.intersects(_trects[WEST])) {
-                dist = x - piece.x;
-                index = WEST;
+            if (piece.x == x) {
+                dist = Math.abs(piece.y - y);
+                if (dist <= FIRE_DISTANCE) {
+                    index = (piece.y < y) ? NORTH : SOUTH;
+                }
+            } else if (piece.y == y) {
+                dist = Math.abs(piece.x - x);
+                if (dist <= FIRE_DISTANCE) {
+                    index = (piece.x < x) ? WEST : EAST;
+                }
             }
+
             if (index != -1 && dist < _closest[index]) {
                 _targets[index] = piece;
                 _closest[index] = dist;
@@ -191,29 +173,6 @@ public class Tank extends Piece
             return super.computeDamage(target);
         }
     }
-
-    /** Handles path finding for tanks. */
-    protected static AStarPathUtil.Stepper _tankStepper =
-        new AStarPathUtil.Stepper() {
-        public void considerSteps (int x, int y)
-        {
-	    considerStep(x, y - 2, 3);
-	    considerStep(x - 2, y, 3);
-	    considerStep(x + 2, y, 3);
-	    considerStep(x, y + 2, 3);
-	    considerStep(x, y - 1, 2);
-	    considerStep(x - 1, y, 2);
-	    considerStep(x + 1, y, 2);
-	    considerStep(x, y + 1, 2);
-        }
-    };
-
-    /** Used by {@link #getTargets}. */
-    protected static Rectangle[] _trects = new Rectangle[] {
-        new Rectangle(0, 0, 1, FIRE_DISTANCE), // NORTH
-        new Rectangle(0, 0, FIRE_DISTANCE, 1), // EAST
-        new Rectangle(0, 0, 1, FIRE_DISTANCE), // SOUTH
-        new Rectangle(0, 0, FIRE_DISTANCE, 1) }; // WEST
 
     /** Used by {@link #getTargets}. */
     protected static int[] _closest = new int[4];

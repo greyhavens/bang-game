@@ -13,6 +13,9 @@ public class Shot extends SimpleStreamableObject
     /** The piece id of the shooter. */
     public int shooterId;
 
+    /** The piece id of the target. */
+    public int targetId;
+
     // TODO: add shot type if it becomes necessary
 
     /** The x coordinate of the fired shot. */
@@ -21,12 +24,17 @@ public class Shot extends SimpleStreamableObject
     /** The y coordinate of the fired shot. */
     public short y;
 
+    /** Indicates the points of damage being done by the shot. */
+    public int damage;
+
     /** Creates a shot. */
-    public Shot (int shooterId, short x, short y)
+    public Shot (int shooterId, int targetId, short x, short y, int damage)
     {
         this.shooterId = shooterId;
+        this.targetId = targetId;
         this.x = x;
         this.y = y;
+        this.damage = damage;
     }
 
     /** A constructor for unserialization. */

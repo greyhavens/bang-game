@@ -62,7 +62,6 @@ public class Marine extends Piece
 
         if (target != null) {
             shots.add(shoot(target));
-            updates.add(target);
         }
     }
 
