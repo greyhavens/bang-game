@@ -33,7 +33,16 @@ public class BangObject extends GameObject
 
     /** The field name of the <code>pieces</code> field. */
     public static final String PIECES = "pieces";
+
+    /** The field name of the <code>funds</code> field. */
+    public static final String FUNDS = "funds";
+
+    /** The field name of the <code>reserves</code> field. */
+    public static final String RESERVES = "reserves";
     // AUTO-GENERATED: FIELDS END
+
+    /** A {@link #state} constant indicating the pre-game buying phase. */
+    public static final int PRE_GAME = 4;
 
     /** The invocation service via which the client communicates with the
      * server. */
@@ -47,6 +56,12 @@ public class BangObject extends GameObject
 
     /** Contains information on all pieces on the board. */
     public DSet pieces;
+
+    /** Cash earned by each player this round. */
+    public int[] funds;
+
+    /** Cash held by each player at the start of the round. */
+    public int[] reserves;
 
     /** Returns the {@link #pieces} set as an array to allow for
      * simultaneous iteration and removal. */
@@ -197,6 +212,72 @@ public class BangObject extends GameObject
     {
         requestAttributeChange(PIECES, value, this.pieces);
         this.pieces = (value == null) ? null : (DSet)value.clone();
+    }
+
+    /**
+     * Requests that the <code>funds</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setFunds (int[] value)
+    {
+        int[] ovalue = this.funds;
+        requestAttributeChange(
+            FUNDS, value, ovalue);
+        this.funds = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>funds</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setFundsAt (int value, int index)
+    {
+        int ovalue = this.funds[index];
+        requestElementUpdate(
+            FUNDS, index, new Integer(value), new Integer(ovalue));
+        this.funds[index] = value;
+    }
+
+    /**
+     * Requests that the <code>reserves</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setReserves (int[] value)
+    {
+        int[] ovalue = this.reserves;
+        requestAttributeChange(
+            RESERVES, value, ovalue);
+        this.reserves = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>reserves</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setReservesAt (int value, int index)
+    {
+        int ovalue = this.reserves[index];
+        requestElementUpdate(
+            RESERVES, index, new Integer(value), new Integer(ovalue));
+        this.reserves[index] = value;
     }
     // AUTO-GENERATED: METHODS END
 }

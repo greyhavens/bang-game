@@ -54,6 +54,16 @@ public class BangManager extends GameManager
     implements BangProvider
 {
     // documentation inherited from interface BangProvider
+    public void purchasePiece (ClientObject caller, Piece piece)
+    {
+    }
+
+    // documentation inherited from interface BangProvider
+    public void readyToPlay (ClientObject caller)
+    {
+    }
+
+    // documentation inherited from interface BangProvider
     public void setPath (ClientObject caller, PiecePath path)
     {
         BodyObject user = (BodyObject)caller;
@@ -103,11 +113,17 @@ public class BangManager extends GameManager
     protected void didStartup ()
     {
         super.didStartup();
+
+        // set up the bang object
         _bangobj = (BangObject)_gameobj;
         _bangobj.setService(
             (BangMarshaller)PresentsServer.invmgr.registerDispatcher(
                 new BangDispatcher(this), false));
         _bangobj.addListener(_applier);
+
+        // create our per-player arrays
+        _bangobj.reserves = new int[getPlayerSlots()];
+        _bangobj.funds = new int[getPlayerSlots()];
     }
 
     // documentation inherited
@@ -115,6 +131,30 @@ public class BangManager extends GameManager
     {
         super.didShutdown();
         PresentsServer.invmgr.clearDispatcher(_bangobj.service);
+    }
+
+    // documentation inherited
+    protected void playersAllHere ()
+    {
+        // when the players all arrive, go into pre-game
+//         // start up the game if we're not a party game and if we haven't
+//         // already done so
+//         if (!isPartyGame() &&
+//             _gameobj.state == GameObject.AWAITING_PLAYERS) {
+//             startGame();
+//         }
+
+        startPreGame();
+    }
+
+    /** Starts the pre-game buying phase. */
+    protected void startPreGame ()
+    {
+        // clear out the readiness status of each player
+        _ready.clear();
+
+        // transition to the pre-game buying phase
+        _bangobj.setState(BangObject.PRE_GAME);
     }
 
     // documentation inherited
@@ -514,6 +554,9 @@ public class BangManager extends GameManager
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
+
+    /** Used to indicate when all players are ready. */
+    protected ArrayIntSet _ready = new ArrayIntSet();
 
     /** Used to calculate winners. */
     protected ArrayIntSet _havers = new ArrayIntSet();

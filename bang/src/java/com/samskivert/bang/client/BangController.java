@@ -42,8 +42,8 @@ public class BangController extends GameController
     @Override // documentation inherited
     public void init (CrowdContext ctx, PlaceConfig config)
     {
-        _ctx = (ToyBoxContext)ctx;
         super.init(ctx, config);
+        _ctx = (ToyBoxContext)ctx;
     }
 
     @Override // documentation inherited
@@ -88,9 +88,9 @@ public class BangController extends GameController
     }
 
     @Override // documentation inherited
-    protected PlaceView createPlaceView ()
+    protected PlaceView createPlaceView (CrowdContext ctx)
     {
-        _panel = new BangPanel(_ctx, this);
+        _panel = new BangPanel((ToyBoxContext)ctx, this);
         return _panel;
     }
 
