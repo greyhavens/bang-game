@@ -190,13 +190,15 @@ public class BoardView extends VirtualMediaPanel
             for (int xx = 0, ww = _board.getWidth(); xx < ww; xx++) {
                 if (dirtyRect.intersects(_pr)) {
                     Color color = getColor(_board.getTile(xx, yy));
-                    if (xx == _mouse.x && yy == _mouse.y) {
-                        color = color.brighter();
-                    }
                     gfx.setColor(color);
                     gfx.fill(_pr);
                     gfx.setColor(Color.black);
                     gfx.draw(_pr);
+                    if (xx == _mouse.x && yy == _mouse.y) {
+                        gfx.setColor(Color.white);
+                        gfx.drawOval(
+                            _pr.x+2, _pr.y+2, _pr.width-4, _pr.height-4);
+                    }
                 }
                 _pr.x += SQUARE;
             }
@@ -314,8 +316,11 @@ public class BoardView extends VirtualMediaPanel
         _attentionSet = new PointSet();
         for (Iterator iter = _bangobj.pieces.entries(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
-            piece.enumerateAttacks(_attackSet);
-            piece.enumerateAttention(_attentionSet);
+            PieceSprite sprite = _pieces.get(piece.pieceId);
+            if (sprite != null && isManaged(sprite)) {
+                piece.enumerateAttacks(_attackSet);
+                piece.enumerateAttention(_attentionSet);
+            }
         }
         _remgr.invalidateRegion(_vbounds);
     }

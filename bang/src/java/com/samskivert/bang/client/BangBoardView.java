@@ -112,15 +112,13 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     public void startGame (BangObject bangobj, int playerIdx)
     {
-        // we need this before we call super because that will initialize
-        // our pieces and set up the initial visibility set
-        _vstate = new VisibilityState(
-            bangobj.board.getWidth(), bangobj.board.getHeight());
-
         super.startGame(bangobj, playerIdx);
 
         _pidx = playerIdx;
         _bangobj.addListener(_ticklist);
+
+        _vstate = new VisibilityState(
+            bangobj.board.getWidth(), bangobj.board.getHeight());
 
         // set up the starting visibility
         adjustBoardVisibility();

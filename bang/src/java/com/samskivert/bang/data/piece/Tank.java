@@ -94,6 +94,21 @@ public class Tank extends Piece
     }
 
     @Override // documentation inherited
+    public void enumerateAttacks (PointSet set)
+    {
+        for (int xx = x - 4; xx <= x + 4; xx++) {
+            if (xx != x) {
+                set.add(xx, y);
+            }
+        }
+        for (int yy = y - 4; yy <= y + 4; yy++) {
+            if (yy != y) {
+                set.add(x, yy);
+            }
+        }
+    }
+
+    @Override // documentation inherited
     public boolean canMoveTo (BangBoard board, int nx, int ny)
     {
         // we can move up to two squares in a turn

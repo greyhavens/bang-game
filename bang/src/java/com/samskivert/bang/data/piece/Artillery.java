@@ -14,6 +14,7 @@ import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.util.PieceSet;
+import com.samskivert.bang.util.PointSet;
 
 import static com.samskivert.bang.Log.log;
 
@@ -65,12 +66,26 @@ public class Artillery extends Piece
         }
     }
 
+    @Override // documentation inherited
+    public void enumerateAttacks (PointSet set)
+    {
+        int fdist = FIRE_DISTANCE*FIRE_DISTANCE;
+        for (int yy = y - FIRE_DISTANCE; yy <= y + FIRE_DISTANCE; yy++) {
+            for (int xx = x - FIRE_DISTANCE; xx <= x + FIRE_DISTANCE; xx++) {
+                int pdist = MathUtil.distanceSq(x, y, xx, yy);
+                if ((xx != x || yy != y) && (pdist <= fdist)) {
+                    set.add(xx, yy);
+                }
+            }
+        }
+    }
+
     /**
      * Affects the target piece with damage.
      */
     public Shot shoot (Piece target)
     {
-        int damage = Math.min(target.energy, target.maximumEnergy()/5);
+        int damage = Math.min(target.energy, target.maximumEnergy()/10);
         log.info("Doing " + damage + " damage to " + target + ".");
         target.energy -= damage;
         return new Shot(pieceId, target.x, target.y);

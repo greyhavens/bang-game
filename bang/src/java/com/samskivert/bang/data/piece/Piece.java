@@ -471,13 +471,13 @@ public abstract class Piece extends SimpleStreamableObject
     /** Returns the starting energy for pieces of this type. */
     protected int startingEnergy ()
     {
-        return DEFAULT_STARTING_ENERGY * 10;
+        return DEFAULT_STARTING_ENERGY * 50;
     }
 
     /** Returns the maximum energy this piece can possess. */
     protected int maximumEnergy ()
     {
-        return DEFAULT_MAXIMUM_ENERGY * 10;
+        return DEFAULT_MAXIMUM_ENERGY * 50;
     }
 
     /**
