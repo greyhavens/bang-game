@@ -4,6 +4,7 @@
 package com.samskivert.bang.data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
@@ -58,6 +59,21 @@ public class BangObject extends GameObject
     public ArrayList<Piece> getOverlappers (Piece piece)
     {
         return PieceUtil.getOverlappers(pieces.iterator(), piece);
+    }
+
+    /**
+     * Returns true if the specified player has live pieces, false if they
+     * are totally knocked out.
+     */
+    public boolean hasLivePieces (int pidx)
+    {
+        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            if (p.owner == pidx && p.isAlive()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // AUTO-GENERATED: METHODS START

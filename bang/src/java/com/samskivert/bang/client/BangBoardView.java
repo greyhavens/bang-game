@@ -355,7 +355,7 @@ public class BangBoardView extends BoardView
     {
         boolean deselect = (piece == _selection);
         clearSelection();
-        if (!deselect) {
+        if (!deselect && piece.isAlive()) {
             _selection = piece;
             getPieceSprite(_selection).setSelected(true);
             updatePossibleMoves(_selection, _selection.x, _selection.y);
@@ -440,6 +440,12 @@ public class BangBoardView extends BoardView
     /** Adjusts the visibility settings for the tiles of the board. */
     protected void adjustBoardVisibility ()
     {
+        // if we're out of the game, just reveal everything
+        if (!_bangobj.hasLivePieces(_pidx)) {
+            _vstate.reveal();
+            return;
+        }
+
         // swap our visibility state to the fresh set
         _vstate.swap();
 

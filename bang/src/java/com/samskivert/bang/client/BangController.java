@@ -53,7 +53,7 @@ public class BangController extends GameController
 
         // we may be returning to an already started game
         if (_bangobj.isInPlay()) {
-            _panel.view.startGame(_bangobj, _pidx);
+            _panel.startGame(_bangobj, _pidx);
         }
     }
 
@@ -85,21 +85,21 @@ public class BangController extends GameController
         super.gameDidStart();
 
         // we may be returning to an already started game
-        _panel.view.startGame(_bangobj, _pidx);
+        _panel.startGame(_bangobj, _pidx);
     }
 
     // documentation inherited
     protected void gameWillReset ()
     {
         super.gameWillReset();
-        _panel.view.endGame();
+        _panel.endGame();
     }
 
     // documentation inherited
     protected void gameDidEnd ()
     {
         super.gameDidEnd();
-        _panel.view.endGame();
+        _panel.endGame();
     }
 
     /** A casted reference to our context. */
