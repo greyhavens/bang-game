@@ -25,8 +25,7 @@ public class SkirmishScenario extends ScenarioGenerator
         ToyBoxGameConfig config, BangBoard board, ArrayList<Piece> pieces)
     {
         // each player starts in their own corner
-        int pcount = Math.max(2, config.players.length);
-        for (int ii = 0; ii < pcount; ii++) {
+        for (int ii = 0; ii < config.players.length; ii++) {
             int sx = (ii % 2 == 0) ? 0 : board.getWidth()-1;
             int sy = (ii == 0 || ii == 3) ? 0 : board.getHeight()-1;
             placePlayer(board, pieces, ii, sx, sy);

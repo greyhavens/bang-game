@@ -449,10 +449,8 @@ public class BangManager extends GameManager
     {
         Piece[] pieces = _bangobj.getPieceArray();
 
-        // TEMP: single player hackery
-        int pcount = Math.max(2, _bangobj.players.length);
-
         // first do some counting
+        int pcount = _bangobj.players.length;
         int[] alive = new int[pcount];
         int[] undamage = new int[pcount];
         int bonuses = 0;

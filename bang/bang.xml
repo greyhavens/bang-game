@@ -10,13 +10,15 @@
   <!-- Herein we define how the game is matchmade and configured. -->
   <match type="table">
     <!-- Properties configure the match maker, in this case: table. -->
-    <min_seats>1</min_seats>
+    <min_seats>2</min_seats>
     <max_seats>4</max_seats>
-    <start_seats>1</start_seats>
+    <start_seats>2</start_seats>
   </match>
 
   <!-- Customziation parameters -->
   <params>
+    <ai ident="aicount" maximum="3"/>
+    <choice ident="aitype" choices="still,standard" start="still"/>
     <range ident="board_size" minimum="16" maximum="48" start="20"/>
     <!--
     <choice ident="rules" choices="standard,hand_of_three" start="standard"/>
