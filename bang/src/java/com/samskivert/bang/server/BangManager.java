@@ -581,8 +581,8 @@ public class BangManager extends GameManager
                             " for " + piece.info() + "?");
                 continue;
             }
-            log.info(piece + " is " + ppath.getLength() + " steps from " +
-                     bspot);
+            log.info(piece.info() + " is " + ppath.getLength() +
+                     " steps from " + bspot);
             if (ppath.getLength() < spath) {
                 spath = ppath.getLength();
                 spower = power[piece.owner];

@@ -54,7 +54,7 @@ public class Artillery extends Piece
                 continue;
             }
             int pdist = MathUtil.distanceSq(x, y, p.x, p.y);
-            if (pdist <= fdist && pdist < dist) {
+            if (pdist <= fdist && pdist < dist && pdist > 1) {
                 dist = pdist;
                 target = p;
             }
@@ -72,7 +72,7 @@ public class Artillery extends Piece
         for (int yy = y - FIRE_DISTANCE; yy <= y + FIRE_DISTANCE; yy++) {
             for (int xx = x - FIRE_DISTANCE; xx <= x + FIRE_DISTANCE; xx++) {
                 int pdist = MathUtil.distanceSq(x, y, xx, yy);
-                if ((xx != x || yy != y) && (pdist <= fdist)) {
+                if ((xx != x || yy != y) && (pdist <= fdist) && (pdist > 1)) {
                     set.add(xx, yy);
                 }
             }
