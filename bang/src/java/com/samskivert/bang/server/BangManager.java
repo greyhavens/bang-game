@@ -241,25 +241,6 @@ public class BangManager extends GameManager
             // recreate our pieces array; pieces may have been removed
             pieces = _bangobj.getPieceArray();
 
-            // TEMPorary HACKery: if this is a one player game, move
-            // player 2s pieces around randomly
-//             if (_bangobj.players.length == 1) {
-//                 PointSet moves = new PointSet();
-//                 for (int ii = 0; ii < pieces.length; ii++) {
-//                     Piece p = pieces[ii];
-//                     if (p.owner != 1 || !p.isAlive()) {
-//                         continue;
-//                     }
-//                     moves.clear();
-//                     p.enumerateLegalMoves(p.x, p.y, moves);
-//                     if (moves.size() == 0) {
-//                         continue;
-//                     }
-//                     int idx = RandomUtil.getInt(moves.size());
-//                     movePiece(p, moves.getX(idx), moves.getY(idx), updates);
-//                 }
-//             }
-
             // then give any piece a chance to react to the state of the board
             // now that everyone has moved
             for (int ii = 0; ii < pieces.length; ii++) {
