@@ -590,11 +590,18 @@ public class BangBoardView extends BoardView
 
         protected void applyShot ()
         {
-            _bangobj.applyShot(_shot);
-            // let the target sprite know its piece has been updated
-            PieceSprite sprite = _pieces.get(_shot.targetId);
-            if (sprite != null) {
-                sprite.updated((Piece)_bangobj.pieces.get(_shot.targetId));
+            Piece p = _bangobj.applyShot(_shot);
+            if (p != null && !p.isAlive() && p.removeWhenDead()) {
+                // remove the piece from the board and the display
+                _bangobj.pieces.removeDirect(p);
+                removePieceSprite(p.pieceId);
+
+            } else {
+                // let the target sprite know its piece has been updated
+                PieceSprite sprite = _pieces.get(_shot.targetId);
+                if (sprite != null) {
+                    sprite.updated((Piece)_bangobj.pieces.get(_shot.targetId));
+                }
             }
         }
 

@@ -82,6 +82,15 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Returns whether or not this piece should be removed from the board
+     * when maximally damaged.
+     */
+    public boolean removeWhenDead ()
+    {
+        return false;
+    }
+
+    /**
      * Returns true if the specified coordinates intersect this piece.
      */
     public boolean intersects (int tx, int ty)

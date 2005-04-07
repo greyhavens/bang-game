@@ -314,7 +314,12 @@ public class BangManager extends GameManager
     {
         // first apply the shots
         for (int ii = 0; ii < shots.length; ii++) {
-            _bangobj.applyShot(shots[ii]);
+            Piece p = _bangobj.applyShot(shots[ii]);
+            if (p != null && !p.isAlive() && p.removeWhenDead()) {
+                // this will happen on both the client and server, so we
+                // don't use the distributed mechanism
+                _bangobj.pieces.removeDirect(p);
+            }
         }
 
         // next apply the effects

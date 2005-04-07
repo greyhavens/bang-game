@@ -97,14 +97,17 @@ public class BangObject extends GameObject
 
     /**
      * Applies a single shot.
+     *
+     * @return the affected piece or null if no piece was affected.
      */
-    public void applyShot (Shot shot)
+    public Piece applyShot (Shot shot)
     {
         Piece piece = (Piece)pieces.get(shot.targetId);
         if (piece != null) {
 //             log.info("Applying " + shot.damage + " to " + piece + ".");
             piece.damage = Math.min(100, piece.damage + shot.damage);
         }
+        return piece;
     }
 
     // AUTO-GENERATED: METHODS START

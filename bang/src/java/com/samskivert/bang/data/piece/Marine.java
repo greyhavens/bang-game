@@ -40,6 +40,12 @@ public class Marine extends Piece
     }
 
     @Override // documentation inherited
+    public boolean removeWhenDead ()
+    {
+        return true;
+    }
+
+    @Override // documentation inherited
     public void react (BangObject bangobj, Piece[] pieces, PieceSet updates,
                        ArrayList<Shot> shots)
     {
