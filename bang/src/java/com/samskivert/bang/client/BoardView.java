@@ -319,6 +319,19 @@ public class BoardView extends VirtualMediaPanel
         return sprite;
     }
 
+    /**
+     * Removes the sprite associated with the specified piece.
+     */
+    protected void removePieceSprite (int pieceId)
+    {
+        PieceSprite sprite = _pieces.remove(pieceId);
+        if (sprite != null) {
+            sprite.removed();
+        } else {
+            log.warning("No sprite for removed piece [id=" + pieceId + "].");
+        }
+    }
+
     protected void showAttackSet ()
     {
         _attackSet = new PointSet();
@@ -387,13 +400,7 @@ public class BoardView extends VirtualMediaPanel
 
         public void entryRemoved (EntryRemovedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                PieceSprite sprite = _pieces.remove((Integer)event.getKey());
-                if (sprite != null) {
-                    sprite.removed();
-                } else {
-                    log.warning("No sprite for removed piece " +
-                                "[id=" + event.getKey() + "].");
-                }
+                removePieceSprite((Integer)event.getKey());
             }
         }
 

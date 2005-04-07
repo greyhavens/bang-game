@@ -3,10 +3,16 @@
 
 package com.samskivert.bang.data.piece;
 
+import java.io.IOException;
+
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+
 import com.samskivert.bang.client.sprite.BonusSprite;
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.data.effect.DuplicateEffect;
 import com.samskivert.bang.data.effect.Effect;
+
 import com.samskivert.bang.data.effect.RepairEffect;
 
 /**
@@ -56,7 +62,34 @@ public class Bonus extends Piece
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new BonusSprite("unknown");
+        String type;
+        switch (_type) {
+        case REPAIR: type = "repair"; break;
+        case DUPLICATE: type = "unknown"; break;
+        default:
+        case UNKNOWN: type = "unknown"; break;
+        }
+        return new BonusSprite(type);
+    }
+
+    /**
+     * Extends default behavior to serialize our bonus type.
+     */
+    public void readObject (ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        _type = Type.valueOf(Type.class, in.readUTF());
+    }
+
+    /**
+     * Extends default behavior to serialize our bonus type.
+     */
+    public void writeObject (ObjectOutputStream out)
+        throws IOException
+    {
+        out.defaultWriteObject();
+        out.writeUTF(_type.name());
     }
 
     /** The type of bonus we represent. */

@@ -55,7 +55,7 @@ public class BangObject extends GameObject
     public BangBoard board;
 
     /** Contains information on all pieces on the board. */
-    public DSet pieces;
+    public PieceDSet pieces;
 
     /** Cash earned by each player this round. */
     public int[] funds;
@@ -104,18 +104,6 @@ public class BangObject extends GameObject
         if (piece != null) {
 //             log.info("Applying " + shot.damage + " to " + piece + ".");
             piece.damage = Math.min(100, piece.damage + shot.damage);
-        }
-    }
-
-    /**
-     * Applies the supplied board effects.
-     */
-    public void applyEffects (Effect[] effects, ArrayList<Piece> additions,
-                              PieceSet removals)
-    {
-        for (int ii = 0; ii < effects.length; ii++) {
-            Effect effect = effects[ii];
-            effect.apply(this, additions, removals);
         }
     }
 
@@ -208,10 +196,10 @@ public class BangObject extends GameObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setPieces (DSet value)
+    public void setPieces (PieceDSet value)
     {
         requestAttributeChange(PIECES, value, this.pieces);
-        this.pieces = (value == null) ? null : (DSet)value.clone();
+        this.pieces = (value == null) ? null : (PieceDSet)value.clone();
     }
 
     /**

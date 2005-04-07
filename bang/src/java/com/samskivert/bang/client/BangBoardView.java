@@ -17,8 +17,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import com.samskivert.swing.Label;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.media.animation.SpriteAnimation;
+import com.threerings.media.sprite.LabelSprite;
 import com.threerings.media.sprite.PathObserver;
 import com.threerings.media.sprite.Sprite;
 import com.threerings.media.util.LinePath;
@@ -400,7 +403,8 @@ public class BangBoardView extends BoardView
         adjustEnemyVisibility();
 
         // recompute the board traversability
-        _bangobj.board.updatePathData(_bangobj.pieces);
+        _bangobj.board.prepareShadow();
+        _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
 
         // create shot handlers for all fired shots
         for (int ii = 0; ii < shots.length; ii++) {
@@ -408,14 +412,9 @@ public class BangBoardView extends BoardView
         }
 
         // apply (and display) the effects
-        ArrayList<Piece> additions = new ArrayList<Piece>();
-        PieceSet removals = new PieceSet();
         for (int ii = 0; ii < effects.length; ii++) {
-            effects[ii].apply(_bangobj, additions, removals);
+            effects[ii].apply(_bangobj, _effector);
         }
-
-        // we don't need to do anything with the additions and removals as
-        // the server already applied those to the game object
     }
 
     /** Adjusts the visibility settings for the tiles of the board. */
@@ -482,6 +481,24 @@ public class BangBoardView extends BoardView
                 }
             }
         }
+    }
+
+    /** Called to display something useful when an effect is applied. */
+    protected void createEffectAnimation (Piece piece, String effect)
+    {
+        // currently just update the piece in question immediately
+        Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
+        pieceUpdated(opiece, piece);
+
+        // and create a simple label animation naming the effect
+        Label label = new Label(effect);
+        label.setTextColor(Color.white);
+        label.setAlternateColor(Color.black);
+        label.setStyle(Label.OUTLINE);
+        LabelSprite lsprite = new LabelSprite(label);
+        int px = piece.x * SQUARE, py = piece.y * SQUARE;
+        LinePath path = new LinePath(px, py, px, py - 25, 1000L);
+        addAnimation(new SpriteAnimation(_spritemgr, lsprite, path));
     }
 
     /** Waits for all sprites involved in a shot to stop moving and then
@@ -594,6 +611,22 @@ public class BangBoardView extends BoardView
         }
         public void pathCancelled (Sprite sprite, Path path) {
             removeSprite(sprite);
+        }
+    };
+
+    /** Handles the results of effects. */
+    protected Effect.Observer _effector = new Effect.Observer() {
+        public void pieceAdded (Piece piece) {
+            // this will create and add the sprite to the board
+            getPieceSprite(piece);
+        }
+
+        public void pieceAffected (Piece piece, String effect) {
+            createEffectAnimation(piece, effect);
+        }
+
+        public void pieceRemoved (Piece piece) {
+            removePieceSprite(piece.pieceId);
         }
     };
 

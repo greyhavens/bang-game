@@ -3,6 +3,7 @@
 
 package com.samskivert.bang.server;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,6 +33,7 @@ import com.samskivert.bang.data.BangCodes;
 import com.samskivert.bang.data.BangMarshaller;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.ModifyBoardEvent;
+import com.samskivert.bang.data.PieceDSet;
 import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
@@ -133,19 +135,19 @@ public class BangManager extends GameManager
         PresentsServer.invmgr.clearDispatcher(_bangobj.service);
     }
 
-    // documentation inherited
-    protected void playersAllHere ()
-    {
-        // when the players all arrive, go into pre-game
-//         // start up the game if we're not a party game and if we haven't
-//         // already done so
-//         if (!isPartyGame() &&
-//             _gameobj.state == GameObject.AWAITING_PLAYERS) {
-//             startGame();
-//         }
+//     // documentation inherited
+//     protected void playersAllHere ()
+//     {
+//         // when the players all arrive, go into pre-game
+// //         // start up the game if we're not a party game and if we haven't
+// //         // already done so
+// //         if (!isPartyGame() &&
+// //             _gameobj.state == GameObject.AWAITING_PLAYERS) {
+// //             startGame();
+// //         }
 
-        startPreGame();
-    }
+//         startPreGame();
+//     }
 
     /** Starts the pre-game buying phase. */
     protected void startPreGame ()
@@ -165,7 +167,7 @@ public class BangManager extends GameManager
         // set up the game object
         ArrayList<Piece> pieces = new ArrayList<Piece>();
         _bangobj.setBoard(createBoard(pieces));
-        _bangobj.setPieces(new DSet(pieces.iterator()));
+        _bangobj.setPieces(new PieceDSet(pieces.iterator()));
 
         // initialize our pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
@@ -283,18 +285,31 @@ public class BangManager extends GameManager
             _bangobj.commitTransaction();
         }
 
+        // update our board "shadow"
+        _bangobj.board.prepareShadow();
+        _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
+
+        // now "prepare" the effects which will determine the exact result
+        // of the effects and potentially make intermediate modifications
+        // to our board shadow to ensure that subsequent effects operate
+        // properly
+        Effect[] efvec = new Effect[effects.size()];
+        effects.toArray(efvec);
+        for (int ii = 0; ii < efvec.length; ii++) {
+            efvec[ii].prepare(_bangobj);
+        }
+
         // this lets the clients know the updates are done and gives
         // them a chance to to post-tick processing
         Object[] args = new Object[] {
-            shots.toArray(new Shot[shots.size()]),
-            effects.toArray(new Effect[effects.size()])
+            shots.toArray(new Shot[shots.size()]), efvec
         };
         _bangobj.postMessage("ticked", args);
     }
 
-    /** Applies the effects of shots fired and full-board effects after
-     * the normal tick processing has completed. The client will do this
-     * same processing to its data. */
+    /** Applies the effects of shots fired and effects after the normal
+     * tick processing has completed. The client will do this same
+     * processing to its data. */
     protected void postTick (Shot[] shots, Effect[] effects)
     {
         // first apply the shots
@@ -302,28 +317,15 @@ public class BangManager extends GameManager
             _bangobj.applyShot(shots[ii]);
         }
 
+        // next apply the effects
+        for (int ii = 0; ii < effects.length; ii++) {
+            effects[ii].apply(_bangobj, null);
+        }
+
         try {
             _bangobj.startTransaction();
-
-            // next apply the full board effects
-            ArrayList<Piece> additions = new ArrayList<Piece>();
-            PieceSet removals = new PieceSet();
-            _bangobj.applyEffects(effects, additions, removals);
-
-            // now determine whether any new bonuses should be added to
-            // the board
-            addBonuses(additions);
-
-            // add the additions
-            for (int ii = 0, ll = additions.size(); ii < ll; ii++) {
-                _bangobj.addToPieces(additions.get(ii));
-            }
-
-            // remove the removals
-            for (Piece piece : removals.values()) {
-                _bangobj.removeFromPieces(piece.getKey());
-            }
-
+            // potentially create and add new bonuses
+            addBonuses();
         } finally {
             _bangobj.commitTransaction();
         }
@@ -482,27 +484,123 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Called following each tick to determine whether or not new
-     * bonuses should be added to the board.
+     * Called following each tick to determine whether or not new bonuses
+     * should be added to the board.
      */
-    protected void addBonuses (ArrayList<Piece> additions)
+    protected void addBonuses ()
     {
         Piece[] pieces = _bangobj.getPieceArray();
 
         // first do some counting
-        int pcount = _bangobj.players.length;
-        int[] alive = new int[pcount];
-        int[] undamage = new int[pcount];
-        int bonuses = 0;
+        int pcount = _bangobj.players.length, tpower = 0, bonuses = 0;
+        int[] alive = new int[pcount], power = new int[pcount];
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
             if (p instanceof Bonus) {
                 bonuses++;
             } else if (p.isAlive() && p.owner >= 0) {
                 alive[p.owner]++;
-                undamage[p.owner] += (100 - p.damage);
+                int pp = (100 - p.damage);
+                power[p.owner] += pp;
+                tpower += pp;
             }
         }
+
+        // have a 1 in 20 chance of adding a bonus for each player for
+        // which there is not already a bonus on the board
+        int bprob = (pcount - bonuses), rando = RandomUtil.getInt(200);
+        if (bprob == 0 || rando > bprob*10) {
+//             log.info("No bonus, probability " + bprob + " in 10 (" +
+//                      rando + ").");
+            return;
+        }
+
+//         // determine the player with the lowest power
+//         int lowidx = RandomUtil.getInt(pcount);
+//         // start with a random non-zero power having player
+//         for (int ii = 0; ii < pcount; ii++) {
+//             if (power[lowidx] != 0) {
+//                 break;
+//             } else {
+//                 lowidx = (lowidx + 1) % pcount;
+//             }
+//         }
+//         // then look for anyone with less power
+//         for (int ii = 0; ii < pcount; ii++) {
+//             int ppower = power[ii];
+//             if (ppower > 0 && ppower < power[lowidx]) {
+//                 lowidx = ii;
+//             }
+//         }
+
+//         // if that player has less than 50% 
+//         log.info("Placing bonus near " + _bangobj.players[lowidx] + ".");
+
+//         // now compute the centroid of their live pieces
+//         int ppieces = 0, sumx = 0, sumy = 0;
+//         for (int ii = 0; ii < pieces.length; ii++) {
+//             Piece p = pieces[ii];
+//             if (p.owner == lowidx && p.isAlive()) {
+//                 ppieces++;
+//                 sumx += p.x;
+//                 sumy += p.y;
+//             }
+//         }
+//         int cx = sumx/ppieces, cy = sumy/ppieces;
+
+        int bwid = _bangobj.board.getWidth(), bhei = _bangobj.board.getHeight();
+
+//         // find a position randomly dispersed from there
+//         cx = cx - bwid/10 + RandomUtil.getInt(bwid/5);
+//         cy = cy - bhei/10 + RandomUtil.getInt(bhei/5);
+
+        // pick a random position on the board
+        int cx = RandomUtil.getInt(bwid), cy = RandomUtil.getInt(bhei);
+
+        // locate the nearest spot to that which can be occupied by our piece
+        Point bspot = _bangobj.board.getOccupiableSpot(cx, cy, 3);
+        if (bspot == null) {
+            log.info("Dropping bonus for lack of occupiable location " +
+                     "[cx=" + cx + ", cy=" + cy + "].");
+            return;
+        }
+
+        // now we have a location, determine which player has the shortest
+        // path to this bonus and use that player's power to determine how
+        // powerful a bonus to deploy
+        int spath = Integer.MAX_VALUE, spower = 0;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece piece = pieces[ii];
+            if (piece.owner < 0 || !piece.isAlive()) {
+                continue;
+            }
+            PiecePath ppath = _bangobj.board.computePath(
+                piece, bspot.x, bspot.y);
+            if (ppath == null) {
+                log.warning("Unable to compute path to " + bspot +
+                            " for " + piece.info() + "?");
+                continue;
+            }
+            log.info(piece + " is " + ppath.getLength() + " steps from " +
+                     bspot);
+            if (ppath.getLength() < spath) {
+                spath = ppath.getLength();
+                spower = power[piece.owner];
+            }
+        }
+
+        Piece bonus;
+        if (Math.random() > 1.0 * spower / tpower) {
+            bonus = new Bonus(Bonus.Type.DUPLICATE);
+        } else {
+            bonus = new Bonus(Bonus.Type.REPAIR);
+        }
+        bonus.assignPieceId();
+        bonus.position(bspot.x, bspot.y);
+        _bangobj.addToPieces(bonus);
+
+        log.info("Shortest path: " + spath + ", power: " + spower +
+                 " of " + tpower + " -> " + bonus.info());
     }
 
     // documentation inherited
@@ -527,8 +625,8 @@ public class BangManager extends GameManager
         BangBoard board = new BangBoard(size, size);
         CompoundGenerator gen = new CompoundGenerator();
         gen.generate(bconfig, board, pieces);
-//         SkirmishScenario scen = new SkirmishScenario();
-        TestScenario scen = new TestScenario();
+        SkirmishScenario scen = new SkirmishScenario();
+//         TestScenario scen = new TestScenario();
         scen.generate(bconfig, board, pieces);
         return board;
     }

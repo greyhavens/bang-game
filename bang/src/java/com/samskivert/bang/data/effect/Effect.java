@@ -3,26 +3,80 @@
 
 package com.samskivert.bang.data.effect;
 
-import java.util.ArrayList;
-
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.presents.dobj.DSet;
 
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.piece.Piece;
-import com.samskivert.bang.util.PieceSet;
 
 /**
  * Represents the effect of a piece activating a bonus.
  */
 public abstract class Effect extends SimpleStreamableObject
 {
+    /** Provides a mechanism for observing the individual effects that
+     * take place when applying an effect to the board and pieces. */
+    public static interface Observer
+    {
+        /**
+         * Indicates that the specified piece was added to the board.
+         */
+        public void pieceAdded (Piece piece);
+
+        /**
+         * Indicates that the specified piece was effected with the named
+         * effect.
+         */
+        public void pieceAffected (Piece piece, String effect);
+
+        /**
+         * Indicates that the specified piece was removed from the board.
+         */
+        public void pieceRemoved (Piece piece);
+    }
+
+    /**
+     * Prepares this effect for application. This is executed on the
+     * server before the effect is applied on the server and then
+     * distributed to the client for application there. The effect should
+     * determine which pieces it will impact as well as decide where it
+     * will be placing new pieces (and update the board shadow to reflect
+     * those piece additions, though it should not actually add the pieces
+     * until it is applied).
+     */
+    public abstract void prepare (BangObject bangobj);
+
     /**
      * Applies this effect to the board and pieces. Any modifications to
-     * pieces or the board should be made directly. Newly added pieces
-     * should be added to the supplied array list and pieces to be removed
-     * should be added to the removals set.
+     * pieces or the board should be made directly as this is executed on
+     * both the client and server.
+     *
+     * @param observer an observer to inform of piece additions, updates
+     * and removals (for display purposes on the client). This may be
+     * null.
      */
-    public abstract void apply (BangObject bangobj, ArrayList<Piece> additions,
-                                PieceSet removals);
+    public abstract void apply (BangObject bangobj, Observer observer);
+
+    /** A helper function for reporting a piece addition. */
+    protected void reportAddition (Observer obs, Piece piece)
+    {
+        if (obs != null) {
+            obs.pieceAdded(piece);
+        }
+    }
+
+    /** A helper function for reporting a piece affecting. */
+    protected void reportEffect (Observer obs, Piece piece, String effect)
+    {
+        if (obs != null) {
+            obs.pieceAffected(piece, effect);
+        }
+    }
+
+    /** A helper function for reporting a piece addition. */
+    protected void reportRemoval (Observer obs, Piece piece)
+    {
+        if (obs != null) {
+            obs.pieceRemoved(piece);
+        }
+    }
 }

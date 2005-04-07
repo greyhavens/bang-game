@@ -4,14 +4,9 @@
 package com.samskivert.bang.data.effect;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import com.threerings.util.RandomUtil;
 
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.piece.Piece;
-import com.samskivert.bang.util.PieceSet;
 
 import static com.samskivert.bang.Log.log;
 
@@ -20,7 +15,15 @@ import static com.samskivert.bang.Log.log;
  */
 public class DuplicateEffect extends Effect
 {
+    /** The identifier for the type of effect that we produce. */
+    public static final String DUPLICATED = "duplicated";
+
+    /** Reported when a duplicate could not be placed for lack of room. */
+    public static final String WASTED_DUP = "wasted_dup";
+
     public int pieceId;
+
+    public Piece duplicate;
 
     public DuplicateEffect (int pieceId)
     {
@@ -31,8 +34,7 @@ public class DuplicateEffect extends Effect
     {
     }
 
-    public void apply (BangObject bangobj, ArrayList<Piece> additions,
-                       PieceSet removals)
+    public void prepare (BangObject bangobj)
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
         if (piece == null) {
@@ -40,32 +42,39 @@ public class DuplicateEffect extends Effect
         }
 
         // find a place to put our new piece
-        ArrayList<Point> spots = new ArrayList<Point>();
-        spots.add(new Point(piece.x - 1, piece.y));
-        spots.add(new Point(piece.x + 1, piece.y));
-        spots.add(new Point(piece.x, piece.y - 1));
-        spots.add(new Point(piece.x, piece.y + 1));
-
-        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece bp = (Piece)iter.next();
-            for (int ii = 0, ll = spots.size(); ii < ll; ii++) {
-                Point spot = spots.get(ii);
-                if (bp.intersects(spot.x, spot.y)) {
-                    spots.remove(ii--);
-                    ll--;
-                }
-            }
-        }
-
-        if (spots.size() == 0) {
+        Point spot = bangobj.board.getOccupiableSpot(piece.x, piece.y, 1);
+        if (spot == null) {
             log.info("Dropped duplicate effect. No spots " +
                      "[piece=" + piece + "].");
             return;
         }
 
-        Point spot = (Point)RandomUtil.pickRandom(spots);
-        Piece clone = piece.duplicate();
-        clone.position(spot.x, spot.y);
-        additions.add(clone);
+        // position our new piece
+        duplicate = piece.duplicate();
+        duplicate.position(spot.x, spot.y);
+
+        // update the board shadow to reflect its future existence
+        bangobj.board.shadowPiece(duplicate);
+    }
+
+    public void apply (BangObject bangobj, Observer obs)
+    {
+        Piece piece = (Piece)bangobj.pieces.get(pieceId);
+        if (piece == null) {
+            return;
+        }
+
+        // report wastage if we were unable to place the new piece
+        if (duplicate == null) {
+            reportEffect(obs, piece, WASTED_DUP);
+            return;
+        }
+
+        // inform the observer of our duplication
+        reportEffect(obs, piece, DUPLICATED);
+
+        // and add the new piece, informing the observer again
+        bangobj.pieces.addDirect(duplicate);
+        reportAddition(obs, duplicate);
     }
 }

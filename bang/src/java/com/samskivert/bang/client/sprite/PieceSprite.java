@@ -82,7 +82,6 @@ public class PieceSprite extends Sprite
      */
     public void updated (Piece piece)
     {
-        log.info("updated " + piece);
         // note our new piece
         _piece = piece;
 

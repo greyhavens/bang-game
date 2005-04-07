@@ -30,6 +30,12 @@ import static com.samskivert.bang.Log.log;
 public abstract class Piece extends SimpleStreamableObject
     implements Cloneable, DSet.Entry, PieceCodes
 {
+    /** Used by {@link #checkSet} and other piece considerers. */
+    public static interface Predicate
+    {
+        public boolean matches (Piece piece);
+    }
+
     /** Used by {@link #maybeInteract}. */
     public enum Interaction { CONSUMED, ENTERED, INTERACTED, NOTHING };
 
@@ -124,6 +130,14 @@ public abstract class Piece extends SimpleStreamableObject
     public int getSightDistance ()
     {
         return 5;
+    }
+
+    /** Returns a brief description of this piece. */
+    public String info ()
+    {
+        String cname = getClass().getName();
+        return cname.substring(cname.lastIndexOf(".")+1) + ":" +
+            pieceId + "@" + x + "/" + y;
     }
 
     /** Returns the stepper used to compute paths for this type of piece. */
@@ -559,7 +573,7 @@ public abstract class Piece extends SimpleStreamableObject
      * supplied point set. Returns null if no matching pieces so
      * intersect.
      */
-    protected Piece checkSet (PointSet set, Piece[] pieces, PiecePredicate pred)
+    protected Piece checkSet (PointSet set, Piece[] pieces, Predicate pred)
     {
         // determine our locus of attention for distance computations
         double closest = Double.MAX_VALUE;
@@ -679,12 +693,6 @@ public abstract class Piece extends SimpleStreamableObject
         System.out.println("Theta: " + Math.atan2(-1, -1));
         System.out.println("Theta: " + Math.atan2(-1, 0));
         System.out.println("Theta: " + Math.atan2(-1, 1));
-    }
-
-    /** Used by {@link #checkSet}. */
-    protected static interface PiecePredicate
-    {
-        public boolean matches (Piece piece);
     }
 
     protected transient Integer _key;
