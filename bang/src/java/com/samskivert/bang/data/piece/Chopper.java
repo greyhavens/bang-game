@@ -116,11 +116,11 @@ public class Chopper extends Piece
     protected int computeDamage (Piece target)
     {
         if (target instanceof Tank) {
-            return 25;
+            return 34;
         } else if (target instanceof Chopper) {
             return 20;
         } else if (target instanceof Artillery) {
-            return 34;
+            return 25;
         } else if (target instanceof Marine) {
             return 17;
         } else {
