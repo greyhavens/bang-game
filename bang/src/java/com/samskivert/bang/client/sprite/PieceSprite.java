@@ -65,9 +65,10 @@ public class PieceSprite extends Sprite
      * Called when we are first created and immediately before we are
      * added to the display.
      */
-    public void init (ToyBoxContext ctx, Piece piece)
+    public void init (ToyBoxContext ctx, Piece piece, short tick)
     {
         _piece = piece;
+        _tick = tick;
 
         // create our piece id label if we've not already
         _idLabel = new Label("" + piece.pieceId, Color.black, null);

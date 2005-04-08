@@ -12,6 +12,7 @@ import java.util.List;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Interval;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.Name;
 import com.threerings.util.RandomUtil;
@@ -40,6 +41,7 @@ import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.effect.Effect;
 import com.samskivert.bang.data.effect.ShotEffect;
 import com.samskivert.bang.data.generate.CompoundGenerator;
+import com.samskivert.bang.data.generate.ScenarioGenerator;
 import com.samskivert.bang.data.generate.SkirmishScenario;
 import com.samskivert.bang.data.generate.TestScenario;
 import com.samskivert.bang.data.piece.Bonus;
@@ -375,47 +377,48 @@ public class BangManager extends GameManager
             }
         }
 
-        // have a 1 in 20 chance of adding a bonus for each player for
+        // have a 1 in 15 chance of adding a bonus for each player for
         // which there is not already a bonus on the board
-        int bprob = (pcount - bonuses), rando = RandomUtil.getInt(200);
+        int bprob = (pcount - bonuses), rando = RandomUtil.getInt(150);
         if (bprob == 0 || rando > bprob*10) {
 //             log.info("No bonus, probability " + bprob + " in 10 (" +
 //                      rando + ").");
             return;
         }
 
-//         // determine the player with the lowest power
-//         int lowidx = RandomUtil.getInt(pcount);
-//         // start with a random non-zero power having player
-//         for (int ii = 0; ii < pcount; ii++) {
-//             if (power[lowidx] != 0) {
-//                 break;
-//             } else {
-//                 lowidx = (lowidx + 1) % pcount;
-//             }
-//         }
-//         // then look for anyone with less power
-//         for (int ii = 0; ii < pcount; ii++) {
-//             int ppower = power[ii];
-//             if (ppower > 0 && ppower < power[lowidx]) {
-//                 lowidx = ii;
-//             }
-//         }
+        // determine the player with the lowest power
+        int lowidx = RandomUtil.getInt(pcount);
+        // start with a random non-zero power having player
+        for (int ii = 0; ii < pcount; ii++) {
+            if (power[lowidx] != 0) {
+                break;
+            } else {
+                lowidx = (lowidx + 1) % pcount;
+            }
+        }
+        // then look for anyone with less power
+        for (int ii = 0; ii < pcount; ii++) {
+            int ppower = power[ii];
+            if (ppower > 0 && ppower < power[lowidx]) {
+                lowidx = ii;
+            }
+        }
 
-//         // if that player has less than 50% 
-//         log.info("Placing bonus near " + _bangobj.players[lowidx] + ".");
+        log.info("Placing bonus near " + _bangobj.players[lowidx] +
+                 " [idx=" + lowidx +
+                 ", power=" + StringUtil.toString(power) + "].");
 
-//         // now compute the centroid of their live pieces
-//         int ppieces = 0, sumx = 0, sumy = 0;
-//         for (int ii = 0; ii < pieces.length; ii++) {
-//             Piece p = pieces[ii];
-//             if (p.owner == lowidx && p.isAlive()) {
-//                 ppieces++;
-//                 sumx += p.x;
-//                 sumy += p.y;
-//             }
-//         }
-//         int cx = sumx/ppieces, cy = sumy/ppieces;
+        // now compute the centroid of their live pieces
+        int ppieces = 0, sumx = 0, sumy = 0;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece p = pieces[ii];
+            if (p.owner == lowidx && p.isAlive()) {
+                ppieces++;
+                sumx += p.x;
+                sumy += p.y;
+            }
+        }
+        int cx = sumx/ppieces, cy = sumy/ppieces;
 
         int bwid = _bangobj.board.getWidth(), bhei = _bangobj.board.getHeight();
 
@@ -423,8 +426,8 @@ public class BangManager extends GameManager
 //         cx = cx - bwid/10 + RandomUtil.getInt(bwid/5);
 //         cy = cy - bhei/10 + RandomUtil.getInt(bhei/5);
 
-        // pick a random position on the board
-        int cx = RandomUtil.getInt(bwid), cy = RandomUtil.getInt(bhei);
+//         // pick a random position on the board
+//         int cx = RandomUtil.getInt(bwid), cy = RandomUtil.getInt(bhei);
 
         // locate the nearest spot to that which can be occupied by our piece
         Point bspot = _bangobj.board.getOccupiableSpot(cx, cy, 3);
@@ -494,8 +497,12 @@ public class BangManager extends GameManager
         BangBoard board = new BangBoard(size, size);
         CompoundGenerator gen = new CompoundGenerator();
         gen.generate(bconfig, board, pieces);
-//        SkirmishScenario scen = new SkirmishScenario();
-        TestScenario scen = new TestScenario();
+        ScenarioGenerator scen = null;
+        if (System.getProperty("test") != null) {
+            scen = new TestScenario();
+        } else {
+            scen = new SkirmishScenario();
+        }
         scen.generate(bconfig, board, pieces);
         return board;
     }

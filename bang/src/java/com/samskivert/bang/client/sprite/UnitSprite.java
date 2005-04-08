@@ -25,9 +25,9 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public void init (ToyBoxContext ctx, Piece piece)
+    public void init (ToyBoxContext ctx, Piece piece, short tick)
     {
-        super.init(ctx, piece);
+        super.init(ctx, piece, tick);
 
         // load our source image and rotate it appropriately
         BufferedImage src = _images[WEST] =

@@ -306,7 +306,7 @@ public class BoardView extends VirtualMediaPanel
         PieceSprite sprite = _pieces.get(piece.pieceId);
         if (sprite == null) {
             sprite = piece.createSprite();
-            sprite.init(_ctx, piece);
+            sprite.init(_ctx, piece, _bangobj.tick);
             _pieces.put((int)piece.pieceId, sprite);
             addSprite(sprite);
         }

@@ -213,8 +213,6 @@ public class BangBoardView extends BoardView
             }
         }
 
-        log.info("pressed " + piece);
-
         // if we have a selection
         if (_selection != null) {
             // and we have an attack set

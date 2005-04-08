@@ -37,7 +37,7 @@ public class CompoundGenerator extends EnvironmentGenerator
 
         // pick a reasonable number for a board of this size (1/2 of the
         // average of the width and height)
-        int count = (width+height)/4;
+        int count = 2*(width+height)/5;
 
         // TODO: maybe more buildings at higher difficulty
 
@@ -45,7 +45,7 @@ public class CompoundGenerator extends EnvironmentGenerator
         BigPiece[] bldgs = new BigPiece[count];
         for (int ii = 0; ii < count; ii++) {
             int rando = RandomUtil.getInt(100);
-            if (rando > 90) {
+            if (rando > 95) {
                 bldgs[ii] = new Building(4, 5);
             } else if (rando > 65) {
                 bldgs[ii] = new Building(2, 4);

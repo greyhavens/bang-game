@@ -426,13 +426,13 @@ public abstract class Piece extends SimpleStreamableObject
     /** Returns the frequency with which this piece can move. */
     protected int getTicksPerMove ()
     {
-        return 2;
+        return 4;
     }
 
     /** Returns the frequency with which this piece can fire. */
     protected int getTicksPerFire ()
     {
-        return 2;
+        return 4;
     }
 
     /**

@@ -21,9 +21,9 @@ public class BonusSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    public void init (ToyBoxContext ctx, Piece piece)
+    public void init (ToyBoxContext ctx, Piece piece, short tick)
     {
-        super.init(ctx, piece);
+        super.init(ctx, piece, tick);
         // load our source image
         _image = ctx.loadImage("media/bonuses/" + _type + ".png");
     }
