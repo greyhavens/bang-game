@@ -36,7 +36,6 @@ import com.threerings.toybox.util.ToyBoxContext;
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.ShotSprite;
 import com.samskivert.bang.data.BangObject;
-import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.effect.Effect;
 import com.samskivert.bang.data.piece.BigPiece;
@@ -151,18 +150,6 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    protected void paintBehind (Graphics2D gfx, Rectangle dirtyRect)
-    {
-        super.paintBehind(gfx, dirtyRect);
-
-        // render all pending paths
-        for (PiecePath path : _paths.values()) {
-            Piece piece = (Piece)_bangobj.pieces.get(path.pieceId);
-            renderPath(gfx, dirtyRect, Color.gray, piece, path);
-        }
-    }
-
-    @Override // documentation inherited
     protected void paintMouseTile (Graphics2D gfx, int mx, int my)
     {
         // only highlight the mouse coordinates while we're in play
@@ -227,25 +214,25 @@ public class BangBoardView extends BoardView
 //         return false;
 //     }
 
-    protected void renderPath (Graphics2D gfx, Rectangle dirtyRect,
-                               Color color, Piece piece, PiecePath path)
-    {
-        // the piece might not yet know it has a path
-        int pos = (piece.pathPos < 0) ? 0 : piece.pathPos;
-        gfx.setColor(color);
+//     protected void renderPath (Graphics2D gfx, Rectangle dirtyRect,
+//                                Color color, Piece piece, PiecePath path)
+//     {
+//         // the piece might not yet know it has a path
+//         int pos = (piece.pathPos < 0) ? 0 : piece.pathPos;
+//         gfx.setColor(color);
 
-        int sx = piece.x * SQUARE + SQUARE/2,
-            sy = piece.y * SQUARE + SQUARE/2;
-        for (int ii = pos, ll = path.getLength(); ii < ll; ii++) {
-            int px = path.getX(ii) * SQUARE + SQUARE/2,
-                py = path.getY(ii) * SQUARE + SQUARE/2;
-            if (dirtyRect.contains(sx, sy) || dirtyRect.contains(px, py)) {
-                gfx.drawLine(sx, sy, px, py);
-            }
-            sx = px;
-            sy = py;
-        }
-    }
+//         int sx = piece.x * SQUARE + SQUARE/2,
+//             sy = piece.y * SQUARE + SQUARE/2;
+//         for (int ii = pos, ll = path.getLength(); ii < ll; ii++) {
+//             int px = path.getX(ii) * SQUARE + SQUARE/2,
+//                 py = path.getY(ii) * SQUARE + SQUARE/2;
+//             if (dirtyRect.contains(sx, sy) || dirtyRect.contains(px, py)) {
+//                 gfx.drawLine(sx, sy, px, py);
+//             }
+//             sx = px;
+//             sy = py;
+//         }
+//     }
 
     /** Handles a left mouse button click. */
     protected void handleLeftPress (int mx, int my)
@@ -317,14 +304,14 @@ public class BangBoardView extends BoardView
             }
 
         } else if (_selection != null) {
-            if (_moveSet.contains(tx, ty)) {
-                // create a one move path and send that off
-                BangController.postAction(
-                    this, BangController.SET_PATH,
-                    new PiecePath(_selection.pieceId, tx, ty));
-                // and clear the selection to debounce double clicking, etc.
-                clearSelection();
-            }
+//             if (_moveSet.contains(tx, ty)) {
+//                 // create a one move path and send that off
+//                 BangController.postAction(
+//                     this, BangController.SET_PATH,
+//                     new PiecePath(_selection.pieceId, tx, ty));
+//                 // and clear the selection to debounce double clicking, etc.
+//                 clearSelection();
+//             }
         }
     }
 
@@ -396,11 +383,6 @@ public class BangBoardView extends BoardView
     protected void pieceUpdated (Piece opiece, Piece npiece)
     {
         super.pieceUpdated(opiece, npiece);
-
-        // clear our cached path for this piece if it no longer has a path
-        if (!npiece.hasPath()) {
-            dirtyPath(_paths.remove(npiece.pieceId));
-        }
 
         // clear and reselect if this piece was the selection and it moved
         if (_selection != null && _selection.pieceId == npiece.pieceId &&
@@ -693,15 +675,11 @@ public class BangBoardView extends BoardView
     };
 
     protected Piece _selection;
-    protected PiecePath _pendingPath;
+//     protected PiecePath _pendingPath;
     protected PointSet _moveSet = new PointSet();
     protected int _pidx;
     protected int _downButton = -1;
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
-
-    /** Maps pieceId to path for pieces that have a path configured. */
-    protected HashMap<Integer,PiecePath> _paths =
-        new HashMap<Integer,PiecePath>();
 }

@@ -18,7 +18,6 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.media.util.AStarPathUtil;
 
-import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.piece.BigPiece;
 import com.samskivert.bang.data.piece.Bonus;
 import com.samskivert.bang.data.piece.Chopper;
@@ -112,17 +111,11 @@ public class BangBoard extends SimpleStreamableObject
      * Computes and returns a path for the specified piece to the
      * specified coordinates. Returns null if no path could be found.
      */
-    public PiecePath computePath (Piece piece, int tx, int ty)
+    public List computePath (Piece piece, int tx, int ty)
     {
-        List path = AStarPathUtil.getPath(
+        return AStarPathUtil.getPath(
             _tpred, piece.getStepper(), piece, _width+_height, piece.x, piece.y,
             tx, ty, true);
-        if (path.size() > 1) {
-            // the first coordinate is the piece's current coordinate
-            path.remove(0);
-            return new PiecePath(piece.pieceId, path);
-        }
-        return null;
     }
 
     /**
@@ -180,22 +173,24 @@ public class BangBoard extends SimpleStreamableObject
         }
 
         // now add a shadow for the new piece
-        if (piece instanceof BigPiece) {
-            Rectangle pbounds = ((BigPiece)piece).getBounds();
-            for (int yy = pbounds.y, ly = yy + pbounds.height;
-                 yy < ly; yy++) {
-                for (int xx = pbounds.x, lx = xx + pbounds.width;
-                     xx < lx; xx++) {
-                    _tstate[_width*yy+xx] = 2;
-                    _btstate[_width*yy+xx] = 2;
+        if (piece != null) {
+            if (piece instanceof BigPiece) {
+                Rectangle pbounds = ((BigPiece)piece).getBounds();
+                for (int yy = pbounds.y, ly = yy + pbounds.height;
+                     yy < ly; yy++) {
+                    for (int xx = pbounds.x, lx = xx + pbounds.width;
+                         xx < lx; xx++) {
+                        _tstate[_width*yy+xx] = 2;
+                        _btstate[_width*yy+xx] = 2;
+                    }
                 }
+
+            } else if (piece instanceof Bonus) {
+                _tstate[_width*piece.y+piece.x] = 1;
+
+            } else {
+                _tstate[_width*piece.y+piece.x] = 3;
             }
-
-        } else if (piece instanceof Bonus) {
-            _tstate[_width*piece.y+piece.x] = 1;
-
-        } else {
-            _tstate[_width*piece.y+piece.x] = 3;
         }
     }
 
@@ -241,32 +236,16 @@ public class BangBoard extends SimpleStreamableObject
                  " [mdist=" + mdist + "].");
 
         // start with 10x our movement points at our current coordinate
-        _pgrid[piece.y*_bbounds.width+piece.x] = (byte)(mdist * 10);
+        // (and add one to ensure that we always end up with 1 in our
+        // final coordinate)
+        byte remain = (byte)(mdist * 10 + 1);
+        _pgrid[piece.y*_bbounds.width+piece.x] = remain;
 
-        // compute our remaining movement points at each position in
-        // increasingly large "diamonds" around our starting location
-        for (int dd = 1; dd <= mdist; dd++) {
-            int added = 0;
-            log.info("down right");
-            for (int xx = piece.x, yy = piece.y - dd; yy < piece.y; xx++, yy++) {
-                added += considerMoving(piece, moves, xx, yy);
-            }
-            log.info("down left");
-            for (int xx = piece.x + dd, yy = piece.y; xx > piece.x; xx--, yy++) {
-                added += considerMoving(piece, moves, xx, yy);
-            }
-            log.info("up left");
-            for (int xx = piece.x, yy = piece.y + dd; yy > piece.y; xx--, yy--) {
-                added += considerMoving(piece, moves, xx, yy);
-            }
-            log.info("up right");
-            for (int xx = piece.x - dd, yy = piece.y; xx < piece.x; xx++, yy--) {
-                added += considerMoving(piece, moves, xx, yy);
-            }
-            if (added == 0) {
-                break;
-            }
-        }
+        // now consider each of our four neighbors
+        considerMoving(piece, moves, piece.x+1, piece.y, remain);
+        considerMoving(piece, moves, piece.x-1, piece.y, remain);
+        considerMoving(piece, moves, piece.x, piece.y+1, remain);
+        considerMoving(piece, moves, piece.x, piece.y-1, remain);
     }
 
 //     /**
@@ -315,49 +294,32 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /** Helper function for {@link #recomputeSets}. */
-    protected int considerMoving (Piece piece, PointSet moves, int xx, int yy)
+    protected void considerMoving (
+        Piece piece, PointSet moves, int xx, int yy, byte remain)
     {
         // make sure this coordinate is occupiable
         if (!_bbounds.contains(xx, yy) || !canOccupy(piece, xx, yy)) {
-            return 0;
+            return;
         }
 
-        // determine our highest valued neighbor
-        int maxn = 0;
-        maxn = considerNeighbor(maxn, xx+1, yy);
-        maxn = considerNeighbor(maxn, xx, yy+1);
-        maxn = considerNeighbor(maxn, xx-1, yy);
-        maxn = considerNeighbor(maxn, xx, yy-1);
-        log.info("biggest neighbor " + maxn + " for " + xx + "/" + yy + ".");
-
-        // if no neighbor has any move points, we don't move
-        if (maxn == 0) {
-            return 0;
-        }
-
-        // make sure we have move points enough to get here
-        int cost = piece.traversalCost(getTile(xx, yy));
-        if (cost > maxn) {
-            return 0;
-        }
-
-        // add this coordinate to our moves set
-        moves.add(xx, yy);
-
-        // fill this position in with our remaining energy after moving
-        _pgrid[yy*_bbounds.width+xx] = (byte)(maxn - cost);
-        return 1;
-    }
-
-    /** Helper function for {@link #considerMoving}. */
-    protected final int considerNeighbor (int max, int xx, int yy)
-    {
+        // see if we can move into this square with a higher remaining
+        // point count than has already been accomplished
         int pos = yy*_bbounds.width+xx;
-        if (_bbounds.contains(xx, yy) && _pgrid[pos] > max) {
-            return _pgrid[pos];
-        } else {
-            return max;
+        byte premain = (byte)(remain - piece.traversalCost(getTile(xx, yy)));
+        byte current = _pgrid[pos];
+        if (premain <= current) {
+            return;
         }
+
+        // if so, do it
+        moves.add(xx, yy);
+        _pgrid[pos] = premain;
+
+        // and then check all of our neighbors
+        considerMoving(piece, moves, xx+1, yy, premain);
+        considerMoving(piece, moves, xx-1, yy, premain);
+        considerMoving(piece, moves, xx, yy+1, premain);
+        considerMoving(piece, moves, xx, yy-1, premain);
     }
 
     /** Helper function for {@link #recomputeSets}. */

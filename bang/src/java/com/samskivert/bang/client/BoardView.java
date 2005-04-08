@@ -18,11 +18,9 @@ import java.util.Iterator;
 
 import com.samskivert.swing.Label;
 
-import com.threerings.presents.dobj.DEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.EventListener;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.media.VirtualMediaPanel;
@@ -33,8 +31,6 @@ import com.threerings.toybox.util.ToyBoxContext;
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangObject;
-import com.samskivert.bang.data.ModifyBoardEvent;
-import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.util.PointSet;
@@ -338,15 +334,6 @@ public class BoardView extends VirtualMediaPanel
         }
     }
 
-    protected void dirtyPath (PiecePath path)
-    {
-        if (path != null) {
-            for (int ii = 0, ll = path.getLength(); ii < ll; ii++) {
-                dirtyTile(path.getX(ii), path.getY(ii));
-            }
-        }
-    }
-
     protected void dirtySet (PointSet set)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
@@ -368,7 +355,7 @@ public class BoardView extends VirtualMediaPanel
 
     /** Listens for various different events and does the right thing. */
     protected class BoardEventListener
-        implements SetListener, EventListener
+        implements SetListener
     {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
@@ -388,14 +375,6 @@ public class BoardView extends VirtualMediaPanel
             if (event.getName().equals(BangObject.PIECES)) {
                 removePieceSprite((Integer)event.getKey());
                 pieceUpdated((Piece)event.getOldEntry(), null);
-            }
-        }
-
-        public void eventReceived (DEvent event) {
-            if (event instanceof ModifyBoardEvent) {
-                // dirty the square in question
-                ModifyBoardEvent mevent = (ModifyBoardEvent)event;
-                invalidateTile(mevent.x, mevent.y);
             }
         }
     };

@@ -65,10 +65,11 @@ public class UnitSprite extends MobileSprite
         gfx.drawImage(image, _ox + (width-iwidth)/2,
                       _oy + (height-iheight)/2, null);
 
-        if (_piece.hasPath()) {
-            gfx.setColor(Color.blue);
-            gfx.drawRect(_ox, _oy, width-1, height-1);
-        } else if (_selected) {
+//         if (_piece.hasPath()) {
+//             gfx.setColor(Color.blue);
+//             gfx.drawRect(_ox, _oy, width-1, height-1);
+//         } else
+        if (_selected) {
             gfx.setColor(Color.green);
             gfx.drawRect(_ox, _oy, width-1, height-1);
         }

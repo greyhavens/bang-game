@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
@@ -32,9 +33,7 @@ import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangCodes;
 import com.samskivert.bang.data.BangMarshaller;
 import com.samskivert.bang.data.BangObject;
-import com.samskivert.bang.data.ModifyBoardEvent;
 import com.samskivert.bang.data.PieceDSet;
-import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.effect.Effect;
@@ -65,34 +64,6 @@ public class BangManager extends GameManager
     {
     }
 
-//     // documentation inherited from interface BangProvider
-//     public void setPath (ClientObject caller, PiecePath path)
-//     {
-//         BodyObject user = (BodyObject)caller;
-
-//         Piece piece = (Piece)_bangobj.pieces.get(path.pieceId);
-//         if (piece == null) {
-//             log.info("No such piece " + path.pieceId +
-//                      " [who=" + user.who() + "].");
-//             return;
-//         }
-
-//         // let me ask you this... do I own it?
-//         int pidx = _bangobj.getPlayerIndex(user.username);
-//         if (pidx != piece.owner) {
-//             log.warning("Requested to move not-our piece [who=" + user.who() +
-//                         ", piece=" + piece + "].");
-//             return;
-//         }
-
-//         // register the path in our table
-//         _paths.put(path.pieceId, path);
-
-//         // start the piece at the beginning of its path
-//         piece.pathPos = 0;
-//         _bangobj.updatePieces(piece);
-//     }
-
     // documentation inherited from interface BangProvider
     public void move (ClientObject caller, int pieceId, short x, short y)
     {
@@ -108,21 +79,7 @@ public class BangManager extends GameManager
 
         try {
             _bangobj.startTransaction();
-            _updates.clear();
-            _effects.clear();
-
-            if (movePiece(piece, x, y, _updates, _effects)) {
-                _bangobj.updatePieces(piece);
-                for (Piece up : _updates.values()) {
-                    _bangobj.updatePieces(up);
-                }
-                for (Effect effect : _effects) {
-                    effect.prepare(_bangobj);
-                    effect.apply(_bangobj, null);
-                    _bangobj.setEffect(effect);
-                }
-            }
-
+            movePiece(piece, x, y);
         } finally {
             _bangobj.commitTransaction();
         }
@@ -431,14 +388,8 @@ public class BangManager extends GameManager
      * @return true if the piece was moved, false if it was not movable
      * for some reason.
      */
-    protected boolean movePiece (Piece piece, int x, int y, PieceSet updates,
-                                 ArrayList<Effect> effects)
+    protected boolean movePiece (Piece piece, int x, int y)
     {
-        if (x < 0 || y < 0 || x >= _bangobj.board.getWidth() ||
-            y >= _bangobj.board.getHeight()) {
-            return false;
-        }
-
         // make sure we are alive, have energy and are ready to move
         int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
         int energy = steps * piece.energyPerStep();
@@ -461,21 +412,23 @@ public class BangManager extends GameManager
             return false;
         }
 
-        // clone the piece so that we can investigate the hypothetical
-        Piece hpiece = (Piece)piece.clone();
-        hpiece.position(x, y);
+        // clone and move the piece
+        Piece mpiece = (Piece)piece.clone();
+        mpiece.position(x, y);
+        mpiece.lastMoved = _bangobj.tick;
+        mpiece.consumeEnergy(steps);
 
         // ensure that we don't land on a piece that prevents us from
         // overlapping it and make a note of any piece that we land on
         // that does not prevent overlap
-        ArrayList<Piece> lappers = _bangobj.getOverlappers(hpiece);
+        ArrayList<Piece> lappers = _bangobj.getOverlappers(mpiece);
         Piece lapper = null;
         if (lappers != null) {
             for (Piece p : lappers) {
-                if (p.preventsOverlap(hpiece)) {
+                if (p.preventsOverlap(mpiece)) {
                     return false;
                 } else if (lapper != null) {
-                    log.warning("Multiple overlapping pieces [mover=" + hpiece +
+                    log.warning("Multiple overlapping pieces [mover=" + mpiece +
                                 ", lap1=" + lapper + ", lap2=" + p + "].");
                 } else {
                     lapper = p;
@@ -483,17 +436,12 @@ public class BangManager extends GameManager
             }
         }
 
-        // if we were able to move, go ahead and update our real piece
-        piece.position(x, y);
-        piece.lastMoved = _bangobj.tick;
-
-        // consume the energy needed to make this move (we checked that
-        // this was possible before we even called movePiece)
-        piece.consumeEnergy(steps);
+        // update our board shadow
+        _bangobj.board.updateShadow(piece, mpiece);
 
         // interact with any piece occupying our target space
         if (lapper != null) {
-            switch (piece.maybeInteract(lapper, effects)) {
+            switch (mpiece.maybeInteract(lapper, _effects)) {
             case CONSUMED:
                 _bangobj.removeFromPieces(lapper.getKey());
                 break;
@@ -501,17 +449,17 @@ public class BangManager extends GameManager
             case ENTERED:
                 // update the piece we entered as we likely modified it in
                 // doing so
-                updates.add(lapper);
+                _bangobj.updatePieces(lapper);
                 // TODO: generate a special event indicating that the
                 // piece entered so that we can animate it
-                _bangobj.removeFromPieces(piece.getKey());
+                _bangobj.removeFromPieces(mpiece.getKey());
                 // short-circuit the remaining move processing
                 return true;
 
             case INTERACTED:
                 // update the piece we interacted with, we'll update
                 // ourselves momentarily
-                updates.add(lapper);
+                _bangobj.updatePieces(lapper);
                 break;
 
             case NOTHING:
@@ -519,14 +467,16 @@ public class BangManager extends GameManager
             }
         }
 
-        // allow the piece to modify the board
-        Terrain terrain = piece.modifyBoard(_bangobj.board, x, y);
-        if (terrain != Terrain.NONE) {
-            // update the board immediately and then dispatch the event
-            _bangobj.board.setTile(x, y, terrain);
-            _bangobj.getManager().postEvent(
-                new ModifyBoardEvent(_bangobj.getOid(), x, y, terrain));
+        // update the piece in the distributed set
+        _bangobj.updatePieces(mpiece);
+
+        // finally effect and effects
+        for (Effect effect : _effects) {
+            effect.prepare(_bangobj);
+            effect.apply(_bangobj, null);
+            _bangobj.setEffect(effect);
         }
+        _effects.clear();
 
         return true;
     }
@@ -622,17 +572,17 @@ public class BangManager extends GameManager
             if (piece.owner < 0 || !piece.isAlive()) {
                 continue;
             }
-            PiecePath ppath = _bangobj.board.computePath(
+            List path = _bangobj.board.computePath(
                 piece, bspot.x, bspot.y);
-            if (ppath == null) {
+            if (path == null) {
                 log.warning("Unable to compute path to " + bspot +
                             " for " + piece.info() + "?");
                 continue;
             }
-            log.info(piece.info() + " is " + ppath.getLength() +
+            log.info(piece.info() + " is " + path.size() +
                      " steps from " + bspot);
-            if (ppath.getLength() < spath) {
-                spath = ppath.getLength();
+            if (path.size() < spath) {
+                spath = path.size();
                 spower = power[piece.owner];
             }
         }
@@ -707,17 +657,10 @@ public class BangManager extends GameManager
     /** Used to calculate winners. */
     protected ArrayIntSet _havers = new ArrayIntSet();
 
-    /** Used to track updates during a move. */
-    protected PieceSet _updates = new PieceSet();
-
     /** Used to compute a piece's potential moves when validating a move
      * request. */
     protected PointSet _moves = new PointSet();
 
     /** Used to track effects during a move. */
     protected ArrayList<Effect> _effects = new ArrayList<Effect>();
-
-    /** Maps pieceId to path for pieces that have a path configured. */
-    protected HashMap<Integer,PiecePath> _paths =
-        new HashMap<Integer,PiecePath>();
 }

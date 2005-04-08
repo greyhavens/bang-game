@@ -68,18 +68,6 @@ public abstract class Piece extends SimpleStreamableObject
     /** The energy level of this piece. */
     public int energy;
 
-    /** -1 if this piece is not on a path or the index into their path if
-     * they are. */
-    public int pathPos = -1;
-
-    /**
-     * Returns true if this piece is on a path.
-     */
-    public boolean hasPath ()
-    {
-        return pathPos >= 0;
-    }
-
     /**
      * Returns true if this piece is still active and playable.
      */
@@ -357,19 +345,6 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Allows a piece to modify the board terrain as a result of landing
-     * on it.
-     *
-     * @return {@link Terrain#NONE} if the piece does not wish to modify
-     * the terrain, or the terrain code for the new terrain type if it
-     * does.
-     */
-    public Terrain modifyBoard (BangBoard board, int tx, int ty)
-    {
-        return Terrain.NONE;
-    }
-
-    /**
      * Allows this piece to react to the state of the board at the
      * termination of the previous turn. It should add itself and any
      * other modified pieces to the updates set (assuming it or another
@@ -422,7 +397,6 @@ public abstract class Piece extends SimpleStreamableObject
     {
         Piece dup = (Piece)clone();
         dup.assignPieceId();
-        dup.pathPos = -1;
         return dup;
     }
 

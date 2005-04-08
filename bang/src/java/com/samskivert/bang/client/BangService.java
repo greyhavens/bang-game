@@ -6,7 +6,6 @@ package com.samskivert.bang.client;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
-import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.piece.Piece;
 
 /**
@@ -24,11 +23,6 @@ public interface BangService extends InvocationService
      * buying phase to the main game phase.
      */
     public void readyToPlay (Client client);
-
-//     /**
-//      * Requests that the specified piece be moved along the specified path.
-//      */
-//     public void setPath (Client client, PiecePath path);
 
     /**
      * Requests that a piece be moved to the specified location.
