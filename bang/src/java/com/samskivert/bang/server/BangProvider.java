@@ -4,6 +4,7 @@
 package com.samskivert.bang.server;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
 
 import com.samskivert.bang.client.BangService;
@@ -21,8 +22,7 @@ public interface BangProvider extends InvocationProvider
     public void readyToPlay (ClientObject caller);
 
     /** Handles a {@link BangService#readyToPlay} request. */
-    public void move (ClientObject caller, int pieceId, short x, short y);
-
-    /** Handles a {@link BangService#readyToPlay} request. */
-    public void fire (ClientObject caller, int pieceId, int targetId);
+    public void move (ClientObject caller, int pieceId, short x, short y,
+                      int targetId, BangService.InvocationListener il)
+        throws InvocationException;
 }

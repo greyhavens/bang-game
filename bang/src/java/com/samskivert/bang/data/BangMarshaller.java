@@ -6,6 +6,7 @@ package com.samskivert.bang.data;
 import com.samskivert.bang.client.BangService;
 import com.samskivert.bang.data.piece.Piece;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.dobj.InvocationResponseEvent;
 
@@ -19,30 +20,21 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class BangMarshaller extends InvocationMarshaller
     implements BangService
 {
-    /** The method id used to dispatch {@link #fire} requests. */
-    public static final int FIRE = 1;
-
-    // documentation inherited from interface
-    public void fire (Client arg1, int arg2, int arg3)
-    {
-        sendRequest(arg1, FIRE, new Object[] {
-            new Integer(arg2), new Integer(arg3)
-        });
-    }
-
     /** The method id used to dispatch {@link #move} requests. */
-    public static final int MOVE = 2;
+    public static final int MOVE = 1;
 
     // documentation inherited from interface
-    public void move (Client arg1, int arg2, short arg3, short arg4)
+    public void move (Client arg1, int arg2, short arg3, short arg4, int arg5, InvocationService.InvocationListener arg6)
     {
+        ListenerMarshaller listener6 = new ListenerMarshaller();
+        listener6.listener = arg6;
         sendRequest(arg1, MOVE, new Object[] {
-            new Integer(arg2), new Short(arg3), new Short(arg4)
+            new Integer(arg2), new Short(arg3), new Short(arg4), new Integer(arg5), listener6
         });
     }
 
     /** The method id used to dispatch {@link #purchasePiece} requests. */
-    public static final int PURCHASE_PIECE = 3;
+    public static final int PURCHASE_PIECE = 2;
 
     // documentation inherited from interface
     public void purchasePiece (Client arg1, Piece arg2)
@@ -53,7 +45,7 @@ public class BangMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #readyToPlay} requests. */
-    public static final int READY_TO_PLAY = 4;
+    public static final int READY_TO_PLAY = 3;
 
     // documentation inherited from interface
     public void readyToPlay (Client arg1)

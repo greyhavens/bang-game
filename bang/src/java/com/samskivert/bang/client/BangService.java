@@ -26,11 +26,10 @@ public interface BangService extends InvocationService
 
     /**
      * Requests that a piece be moved to the specified location.
+     *
+     * @param targetId the id of the piece on which to fire after moving
+     * or -1 if no firing is desired.
      */
-    public void move (Client client, int pieceId, short x, short y);
-
-    /**
-     * Requests that the specified piece fire at the specified piece.
-     */
-    public void fire (Client client, int pieceId, int targetId);
+    public void move (Client client, int pieceId, short x, short y,
+                      int targetId, InvocationListener listener);
 }

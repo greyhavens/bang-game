@@ -21,6 +21,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
@@ -29,14 +30,15 @@ import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.toybox.data.ToyBoxGameConfig;
 
+import com.samskivert.bang.client.BangService;
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangCodes;
 import com.samskivert.bang.data.BangMarshaller;
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.PieceDSet;
-import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.effect.Effect;
+import com.samskivert.bang.data.effect.ShotEffect;
 import com.samskivert.bang.data.generate.CompoundGenerator;
 import com.samskivert.bang.data.generate.SkirmishScenario;
 import com.samskivert.bang.data.generate.TestScenario;
@@ -52,7 +54,7 @@ import static com.samskivert.bang.Log.log;
  * Handles the server-side of the game.
  */
 public class BangManager extends GameManager
-    implements BangProvider
+    implements BangCodes, BangProvider
 {
     // documentation inherited from interface BangProvider
     public void purchasePiece (ClientObject caller, Piece piece)
@@ -65,7 +67,9 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void move (ClientObject caller, int pieceId, short x, short y)
+    public void move (ClientObject caller, int pieceId, short x, short y,
+                      int targetId, BangService.InvocationListener il)
+        throws InvocationException
     {
         BodyObject user = (BodyObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.username);
@@ -77,26 +81,32 @@ public class BangManager extends GameManager
             return;
         }
 
+        Piece target = (Piece)_bangobj.pieces.get(targetId);
         try {
             _bangobj.startTransaction();
-            movePiece(piece, x, y);
+
+            // if they specified a non-NOOP move, execute it
+            if (x != piece.x || y != piece.y) {
+                if (!movePiece(piece, x, y)) {
+                    throw new InvocationException(MOVE_BLOCKED);
+                }
+            }
+
+            // if they specified a target, shoot at it
+            if (target != null) {
+                _attacks.clear();
+                _bangobj.board.computeAttacks(piece, x, y, _attacks);
+                if (_attacks.contains(target.x, target.y)) {
+                    ShotEffect effect = piece.shoot(target);
+                    effect.prepare(_bangobj);
+                    _bangobj.setEffect(effect);
+                } else {
+                    throw new InvocationException(TARGET_MOVED);
+                }
+            }
+
         } finally {
             _bangobj.commitTransaction();
-        }
-    }
-
-    // documentation inherited from interface BangProvider
-    public void fire (ClientObject caller, int pieceId, int targetId)
-    {
-        BodyObject user = (BodyObject)caller;
-        int pidx = _bangobj.getPlayerIndex(user.username);
-
-        Piece piece = (Piece)_bangobj.pieces.get(pieceId);
-        Piece target = (Piece)_bangobj.pieces.get(targetId);
-        if (piece == null || piece.owner != pidx || target == null) {
-            log.info("Rejecting fire request [who=" + user.who() +
-                     ", piece=" + piece + ", target=" + target + "].");
-            return;
         }
     }
 
@@ -106,6 +116,9 @@ public class BangManager extends GameManager
         String name = event.getName();
         if (name.equals(BangObject.TICK)) {
             tick(_bangobj.tick);
+
+        } else if (name.equals(BangObject.EFFECT)) {
+            _bangobj.effect.apply(_bangobj, null);
 
         } else {
             super.attributeChanged(event);
@@ -128,7 +141,6 @@ public class BangManager extends GameManager
         _bangobj.setService(
             (BangMarshaller)PresentsServer.invmgr.registerDispatcher(
                 new BangDispatcher(this), false));
-//         _bangobj.addListener(_applier);
 
         // create our per-player arrays
         _bangobj.reserves = new int[getPlayerSlots()];
@@ -211,111 +223,6 @@ public class BangManager extends GameManager
             return;
         }
 
-//         // these shots will be communicated to the client for animation
-//         ArrayList<Shot> shots = new ArrayList<Shot>();
-//         // these effects will be communicated to the client and
-//         // applied to the board
-//         ArrayList<Effect> effects = new ArrayList<Effect>();
-
-//         try {
-//             // batch our tick update
-//             _bangobj.startTransaction();
-
-//             // randomize the piece array before executing moves to insure
-//             // that no one is favored during potential conflicts
-//             ArrayUtil.shuffle(pieces);
-
-//             // TODO: maybe now sort them by remaining energy or lowest
-//             // damage to give players some general idea as to who goes
-//             // first
-
-//             // these pieces will be updated
-//             PieceSet updates = new PieceSet();
-
-//             // move all of the pieces along their paths
-//             for (int ii = 0; ii < pieces.length; ii++) {
-//                 Piece piece = pieces[ii];
-//                 PiecePath path = _paths.get(piece.pieceId);
-//                 if (path == null) {
-//                     continue;
-//                 }
-
-//                 if (tickPath(piece, path, updates, effects)) {
-//                     log.fine("Finished " + path + ".");
-//                     _paths.remove(piece.pieceId);
-//                 }
-//             }
-
-//             // recreate our pieces array; pieces may have been removed
-//             pieces = _bangobj.getPieceArray();
-
-//             // then give any piece a chance to react to the state of the board
-//             // now that everyone has moved
-//             for (int ii = 0; ii < pieces.length; ii++) {
-//                 Piece piece = pieces[ii];
-//                 // skip pieces that were eaten or are fully damaged
-//                 if (!_bangobj.pieces.containsKey(piece.pieceId) ||
-//                     piece.damage >= 100) {
-//                     continue;
-//                 }
-//                 piece.react(_bangobj, pieces, updates, shots);
-//             }
-
-//             // finally update the pieces that need updating
-//             for (Piece piece : updates.values()) {
-//                 // skip pieces that were eaten
-//                 if (!_bangobj.pieces.containsKey(piece.pieceId)) {
-//                     continue;
-//                 }
-//                 _bangobj.updatePieces(piece);
-//             }
-
-//         } finally {
-//             _bangobj.commitTransaction();
-//         }
-
-//         // update our board "shadow"
-//         _bangobj.board.prepareShadow();
-//         _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
-
-//         // now "prepare" the effects which will determine the exact result
-//         // of the effects and potentially make intermediate modifications
-//         // to our board shadow to ensure that subsequent effects operate
-//         // properly
-//         Effect[] efvec = new Effect[effects.size()];
-//         effects.toArray(efvec);
-//         for (int ii = 0; ii < efvec.length; ii++) {
-//             efvec[ii].prepare(_bangobj);
-//         }
-
-//         // this lets the clients know the updates are done and gives
-//         // them a chance to to post-tick processing
-//         Object[] args = new Object[] {
-//             shots.toArray(new Shot[shots.size()]), efvec
-//         };
-//         _bangobj.postMessage("ticked", args);
-//     }
-
-//     /** Applies the effects of shots fired and effects after the normal
-//      * tick processing has completed. The client will do this same
-//      * processing to its data. */
-//     protected void postTick (Shot[] shots, Effect[] effects)
-//     {
-//         // first apply the shots
-//         for (int ii = 0; ii < shots.length; ii++) {
-//             Piece p = _bangobj.applyShot(shots[ii]);
-//             if (p != null && !p.isAlive() && p.removeWhenDead()) {
-//                 // this will happen on both the client and server, so we
-//                 // don't use the distributed mechanism
-//                 _bangobj.pieces.removeDirect(p);
-//             }
-//         }
-
-//         // next apply the effects
-//         for (int ii = 0; ii < effects.length; ii++) {
-//             effects[ii].apply(_bangobj, null);
-//         }
-
         try {
             _bangobj.startTransaction();
             // potentially create and add new bonuses
@@ -332,54 +239,6 @@ public class BangManager extends GameManager
             winners[ii] = _havers.contains(ii);
         }
     }
-
-//     /**
-//      * Moves the supplied piece further along its configured path.
-//      *
-//      * @return true if the piece reached the final goal on the path, false
-//      * if not.
-//      */
-//     protected boolean tickPath (Piece piece, PiecePath path, PieceSet updates,
-//                                 ArrayList<Effect> effects)
-//     {
-//         log.fine("Moving " + path + ".");
-//         int nx = path.getNextX(piece), ny = path.getNextY(piece);
-
-//         for (int ii = 0; ii < 2; ii++) {
-//             // make sure the piece has the energy to move that far and is
-//             // not fully damaged
-//             int steps = Math.abs(piece.x-nx) + Math.abs(piece.y-ny);
-//             int energy = steps * piece.energyPerStep();
-//             if (!piece.isAlive() || piece.energy < energy) {
-//                 piece.pathPos = -1;
-//                 updates.add(piece);
-//                 return true;
-//             }
-
-//             // try moving the piece
-//             if (!movePiece(piece, nx, ny, updates, effects)) {
-//                 return false;
-//             }
-
-//             // note that we want to update our piece
-//             updates.add(piece);
-
-//             // check to see if we've reached the end of our path
-//             if (path.reachedGoal(piece)) {
-//                 piece.pathPos = -1;
-//                 return true;
-//             }
-
-//             // otherwise see if we can make an additional move this turn
-//             nx = path.getNextX(piece);
-//             ny = path.getNextY(piece);
-//             if (!piece.canBonusMove(nx, ny)) {
-//                 break;
-//             }
-//         }
-
-//         return false;
-//     }
 
     /**
      * Attempts to move the specified piece to the specified coordinates.
@@ -473,7 +332,6 @@ public class BangManager extends GameManager
         // finally effect and effects
         for (Effect effect : _effects) {
             effect.prepare(_bangobj);
-            effect.apply(_bangobj, null);
             _bangobj.setEffect(effect);
         }
         _effects.clear();
@@ -637,17 +495,6 @@ public class BangManager extends GameManager
         }
     };
 
-//     /** Applies the shot and effect modifications associated with a tick
-//      * after the tick has been processed. */
-//     protected MessageListener _applier = new MessageListener() {
-//         public void messageReceived (MessageEvent event) {
-//             if (event.getName().equals("ticked")) {
-//                 Object[] args = event.getArgs();
-//                 postTick((Shot[])args[0], (Effect[])args[1]);
-//             }
-//         }
-//     };
-
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
 
@@ -657,9 +504,9 @@ public class BangManager extends GameManager
     /** Used to calculate winners. */
     protected ArrayIntSet _havers = new ArrayIntSet();
 
-    /** Used to compute a piece's potential moves when validating a move
-     * request. */
-    protected PointSet _moves = new PointSet();
+    /** Used to compute a piece's potential moves or attacks when
+     * validating a move request. */
+    protected PointSet _moves = new PointSet(), _attacks = new PointSet();
 
     /** Used to track effects during a move. */
     protected ArrayList<Effect> _effects = new ArrayList<Effect>();

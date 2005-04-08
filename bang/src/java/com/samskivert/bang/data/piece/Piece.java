@@ -17,9 +17,9 @@ import com.threerings.presents.dobj.DSet;
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.data.BangBoard;
 import com.samskivert.bang.data.BangObject;
-import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.Terrain;
 import com.samskivert.bang.data.effect.Effect;
+import com.samskivert.bang.data.effect.ShotEffect;
 import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PointSet;
 
@@ -286,13 +286,16 @@ public abstract class Piece extends SimpleStreamableObject
     /**
      * Affects the target piece with damage.
      */
-    public Shot shoot (Piece target)
+    public ShotEffect shoot (Piece target)
     {
         int hurt = computeDamage(target);
         // scale the damage by our own damage level
         hurt = (hurt * (100-this.damage)) / 100;
         hurt = Math.max(1, hurt); // always do at least 1 point of damage
-        Shot shot = new Shot(pieceId, target.pieceId, target.x, target.y, hurt);
+        ShotEffect shot = new ShotEffect();
+        shot.shooterId = pieceId;
+        shot.targetId = target.pieceId;
+        shot.damage = hurt;
         log.info("Bang! " + shot);
         return shot;
     }
@@ -342,24 +345,6 @@ public abstract class Piece extends SimpleStreamableObject
     public boolean canTraverse (BangBoard board, int tx, int ty)
     {
         return canTraverse(board.getTile(tx, ty));
-    }
-
-    /**
-     * Allows this piece to react to the state of the board at the
-     * termination of the previous turn. It should add itself and any
-     * other modified pieces to the updates set (assuming it or another
-     * piece changes as a result of the reaction). If the piece fires any
-     * shots, it should create the appropriate shot objects and add them
-     * to the supplied list.
-     *
-     * <em>Note:<em> it is legal for a piece to remove another piece from
-     * the board as a result of its reaction. In that case, it should
-     * effect the appropriate removal from the supplied game object
-     * directly.
-     */
-    public void react (BangObject bangobj, Piece[] pieces, PieceSet updates,
-                       ArrayList<Shot> shots)
-    {
     }
 
     /**

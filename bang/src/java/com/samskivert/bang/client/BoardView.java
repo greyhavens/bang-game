@@ -349,7 +349,9 @@ public class BoardView extends VirtualMediaPanel
     /** Called when a piece is updated in the game object. */
     protected void pieceUpdated (Piece opiece, Piece npiece)
     {
-        getPieceSprite(npiece).updated(npiece, _bangobj.tick);
+        if (npiece != null) {
+            getPieceSprite(npiece).updated(npiece, _bangobj.tick);
+        }
         _bangobj.board.updateShadow(opiece, npiece);
     }        
 

@@ -248,30 +248,37 @@ public class BangBoard extends SimpleStreamableObject
         considerMoving(piece, moves, piece.x, piece.y-1, remain);
     }
 
-//     /**
-//      * Computes the supplied piece's attack set based on its current
-//      * ability to move, its location and the state of the board.
-//      */
-//     public void computeAttacks (short tick, Piece piece, PointSet attacks)
-//     {
-//         // now determine where we can fire
-//         int mdist = piece.getMoveDistance();
-//         int fdist = piece.getFireDistance(), tdist = mdist + fdist;
-//         for (int dd = 1; dd <= tdist; dd++) {
-//             for (int xx = piece.x, yy = piece.y - dd; yy < piece.y; xx++, yy++) {
-//                 considerFiring(piece, xx, yy);
-//             }
-//             for (int xx = piece.x + dd, yy = piece.y; xx > piece.x; xx--, yy++) {
-//                 considerFiring(piece, xx, yy);
-//             }
-//             for (int xx = piece.x, yy = piece.y + dd; yy > piece.y; xx--, yy--) {
-//                 considerFiring(piece, xx, yy);
-//             }
-//             for (int xx = piece.x - dd, yy = piece.y; xx < piece.x; xx++, yy--) {
-//                 considerFiring(piece, xx, yy);
-//             }
-//         }
-//     }
+    /**
+     * Computes the supplied piece's attack set based on the specified
+     * location and the state of the board.
+     */
+    public void computeAttacks (Piece piece, int px, int py, PointSet attacks)
+    {
+        // now determine where we can fire
+        int fdist = piece.getFireDistance();
+        for (int dd = 1; dd <= fdist; dd++) {
+            for (int xx = px, yy = py - dd; yy < py; xx++, yy++) {
+                if (_bbounds.contains(xx, yy)) {
+                    attacks.add(xx, yy);
+                }
+            }
+            for (int xx = px + dd, yy = py; xx > px; xx--, yy++) {
+                if (_bbounds.contains(xx, yy)) {
+                    attacks.add(xx, yy);
+                }
+            }
+            for (int xx = px, yy = py + dd; yy > py; xx--, yy--) {
+                if (_bbounds.contains(xx, yy)) {
+                    attacks.add(xx, yy);
+                }
+            }
+            for (int xx = px - dd, yy = py; xx < px; xx++, yy--) {
+                if (_bbounds.contains(xx, yy)) {
+                    attacks.add(xx, yy);
+                }
+            }
+        }
+    }
 
     /** Returns a string representation of this board. */
     public String toString ()
@@ -320,14 +327,6 @@ public class BangBoard extends SimpleStreamableObject
         considerMoving(piece, moves, xx-1, yy, premain);
         considerMoving(piece, moves, xx, yy+1, premain);
         considerMoving(piece, moves, xx, yy-1, premain);
-    }
-
-    /** Helper function for {@link #recomputeSets}. */
-    protected void considerFiring (Piece piece, int xx, int yy)
-    {
-        if (!_bbounds.contains(xx, yy)) {
-            return;
-        }
     }
 
     /** Used when path finding. */

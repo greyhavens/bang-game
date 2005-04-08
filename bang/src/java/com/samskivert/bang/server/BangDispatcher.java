@@ -7,6 +7,7 @@ import com.samskivert.bang.client.BangService;
 import com.samskivert.bang.data.BangMarshaller;
 import com.samskivert.bang.data.piece.Piece;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
@@ -38,17 +39,10 @@ public class BangDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
-        case BangMarshaller.FIRE:
-            ((BangProvider)provider).fire(
-                source,
-                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue()
-            );
-            return;
-
         case BangMarshaller.MOVE:
             ((BangProvider)provider).move(
                 source,
-                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue()
+                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue(), ((Integer)args[3]).intValue(), (InvocationService.InvocationListener)args[4]
             );
             return;
 

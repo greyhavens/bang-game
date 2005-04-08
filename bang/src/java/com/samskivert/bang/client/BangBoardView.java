@@ -36,8 +36,8 @@ import com.threerings.toybox.util.ToyBoxContext;
 import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.client.sprite.ShotSprite;
 import com.samskivert.bang.data.BangObject;
-import com.samskivert.bang.data.Shot;
 import com.samskivert.bang.data.effect.Effect;
+import com.samskivert.bang.data.effect.ShotEffect;
 import com.samskivert.bang.data.piece.BigPiece;
 import com.samskivert.bang.data.piece.Chopper;
 import com.samskivert.bang.data.piece.Piece;
@@ -85,11 +85,10 @@ public class BangBoardView extends BoardView
     // documentation inherited from interface MouseListener
     public void mouseReleased (MouseEvent e)
     {
-        _downButton = -1;
-
-        if (_attackSet != null) {
+        if (_downButton == MouseEvent.BUTTON3) {
             clearAttackSet();
         }
+        _downButton = -1;
     }
 
     // documentation inherited from interface MouseListener
@@ -168,11 +167,6 @@ public class BangBoardView extends BoardView
             renderSet(gfx, dirtyRect, _moveSet, Color.white);
         }
 
-//         // render any currently active path
-//         if (_pendingPath != null) {
-//             renderPath(gfx, dirtyRect, Color.pink, _selection, _pendingPath);
-//         }
-
         // render the necessary tiles as dimmed if it is not "visible"
         if (_board != null) {
             Composite ocomp = gfx.getComposite();
@@ -195,123 +189,83 @@ public class BangBoardView extends BoardView
         }
     }
 
-//     @Override // documentation inherited
-//     protected boolean updateMouseTile (int mx, int my)
-//     {
-//         if (super.updateMouseTile(mx, my)) {
-//             // if we have a selected piece, path-find a new path to this
-//             // location and display it as the pending path
-//             if (_selection != null) {
-//                 if (_pendingPath != null) {
-//                     dirtyPath(_pendingPath);
-//                     _pendingPath = null;
-//                 }
-//                 _pendingPath = _bangobj.board.computePath(_selection, mx, my);
-//                 dirtyPath(_pendingPath);
-//             }
-//             return true;
-//         }
-//         return false;
-//     }
-
-//     protected void renderPath (Graphics2D gfx, Rectangle dirtyRect,
-//                                Color color, Piece piece, PiecePath path)
-//     {
-//         // the piece might not yet know it has a path
-//         int pos = (piece.pathPos < 0) ? 0 : piece.pathPos;
-//         gfx.setColor(color);
-
-//         int sx = piece.x * SQUARE + SQUARE/2,
-//             sy = piece.y * SQUARE + SQUARE/2;
-//         for (int ii = pos, ll = path.getLength(); ii < ll; ii++) {
-//             int px = path.getX(ii) * SQUARE + SQUARE/2,
-//                 py = path.getY(ii) * SQUARE + SQUARE/2;
-//             if (dirtyRect.contains(sx, sy) || dirtyRect.contains(px, py)) {
-//                 gfx.drawLine(sx, sy, px, py);
-//             }
-//             sx = px;
-//             sy = py;
-//         }
-//     }
-
     /** Handles a left mouse button click. */
     protected void handleLeftPress (int mx, int my)
     {
         int tx = mx / SQUARE, ty = my / SQUARE;
 
-        // nothing doing if the game is not in play
-        if (_bangobj == null || !_bangobj.isInPlay()) {
+        // nothing doing if the game is not in play or we're not a player
+        if (_bangobj == null || !_bangobj.isInPlay() || _pidx == -1) {
             return;
         }
 
-        // check for a selectable piece under the mouse
+        // check for a piece under the mouse
         PieceSprite sprite = null;
+        Piece piece = null;
         Sprite s = _spritemgr.getHighestHitSprite(mx, my);
         if (s instanceof PieceSprite) {
             sprite = (PieceSprite)s;
-            Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
-            if (_pidx == -1 || piece.owner != _pidx || !sprite.isSelectable()) {
+            piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
+            // we currently don't do anything with non-player pieces
+            if (piece.owner == -1) {
                 sprite = null;
+                piece = null;
             }
         }
 
-        if (_selection != null && _moveSet.size() > 0 &&
-            _moveSet.contains(tx, ty)) {
-            // request to move the selected piece
-            BangController.postAction(
-                this, BangController.MOVE_PIECE, new int[] {
-                    _selection.pieceId, tx, ty });
-            clearSelection();
+        log.info("pressed " + piece);
 
-//         if (_pendingPath != null) {
-//             // if their final click is a legal move...
-//             boolean tail = _pendingPath.isTail(tx, ty);
-//             if (_moveSet.contains(tx, ty) || tail) {
-//                 // ...add the final node to the path...
-//                 if (!tail) {
-//                     _pendingPath = _pendingPath.append(tx, ty);
-//                 }
-//                 // ...erase any old path...
-//                 dirtyPath(_paths.remove(_pendingPath.pieceId));
-//                 // ...note the new path in our cache...
-//                 _paths.put(_pendingPath.pieceId, _pendingPath);
-//                 // ...override our local piece which may think it's
-//                 // part-way down some path but is now starting a new one...
-//                 Piece piece = (Piece)_bangobj.pieces.get(_pendingPath.pieceId);
-//                 // the next server update will formalize this change
-//                 piece.pathPos = 0;
-//                 // ...and ship it off for processing
-//                 BangController.postAction(
-//                     this, BangController.SET_PATH, _pendingPath);
-//                 clearSelection();
+        // if we have a selection
+        if (_selection != null) {
+            // and we have an attack set
+            if (_attackSet != null) {
+                // and we are clicking a piece to be attacked
+                if (_attackSet.contains(tx, ty) &&
+                    piece != null && piece.owner != _pidx) {
+                    // note the piece we desire to fire upon
+                    _action[3] = piece.pieceId;
+                    executeAction();
+                    return;
 
-//             } else if (sprite != null &&
-//                        sprite.getPieceId() == _selection.pieceId) {
-//                 // if they clicked in an illegal position, allow a
-//                 // click on the original selected piece to reset the
-//                 // path, other clicks we will ignore
-//                 selectPiece(_selection);
-//             }
-
-        } else if (sprite != null) {
-            Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
-            if (piece != null) {
-                selectPiece(piece);
-            } else {
-                log.warning("PieceSprite with no piece!? " +
-                            "[sprite=" + sprite +
-                            ", pieceId=" + sprite.getPieceId() + "].");
+                } else if (tx == _action[1] && ty == _action[2]) {
+                    // or if we're clicking a second time on our desired
+                    // move location, just move there and don't attack
+                    executeAction();
+                    return;
+                }
             }
 
-        } else if (_selection != null) {
-//             if (_moveSet.contains(tx, ty)) {
-//                 // create a one move path and send that off
-//                 BangController.postAction(
-//                     this, BangController.SET_PATH,
-//                     new PiecePath(_selection.pieceId, tx, ty));
-//                 // and clear the selection to debounce double clicking, etc.
-//                 clearSelection();
-//             }
+            // or if we're clicking in our move set or on our selected piece
+            if ((_moveSet.size() > 0 && _moveSet.contains(tx, ty)) ||
+                _selection.x == tx && _selection.y == ty) {
+                // store the coordinates toward which we wish to move
+                _action = new int[] { _selection.pieceId, tx, ty, -1 };
+
+                // clear any previous attack set
+                clearAttackSet();
+
+                // display our potential attacks
+                _attackSet = new PointSet();
+                PointSet attacks = new PointSet();
+                _bangobj.board.computeAttacks(_selection, tx, ty, attacks);
+                for (Iterator iter = _bangobj.pieces.iterator();
+                     iter.hasNext(); ) {
+                    Piece p = (Piece)iter.next();
+                    if (p.owner >= 0 && p.owner != _pidx && p.isAlive() &&
+                        attacks.contains(p.x, p.y)) {
+                        _attackSet.add(p.x, p.y);
+                    }
+                }
+                dirtySet(_attackSet);
+                return;
+            }
+        }
+
+        // select the piece under the mouse if it meets our various and
+        // sundry conditions
+        if (piece != null &&  sprite != null && piece.owner == _pidx &&
+            sprite.isSelectable()) {
+            selectPiece(piece);
         }
     }
 
@@ -336,17 +290,6 @@ public class BangBoardView extends BoardView
                 _remgr.invalidateRegion(_vbounds);
             }
         }
-
-        // TODO: allow path-found paths to be "pinned" to the current
-        // location and then extended from there
-
-//         if (_pendingPath != null) {
-//             // potentially extend our existing path
-//             if (!_pendingPath.isTail(tx, ty)) {
-//                 _pendingPath = _pendingPath.append(tx, ty);
-//                 dirtyTile(tx, ty);
-//             }
-//         }
     }
 
     protected void selectPiece (Piece piece)
@@ -365,18 +308,26 @@ public class BangBoardView extends BoardView
         }
     }
 
+    protected void executeAction ()
+    {
+        // enact the move/fire combination
+        BangController.postAction(this, BangController.MOVE_AND_FIRE, _action);
+        // and clear everything out
+        clearSelection();
+    }
+
     protected void clearSelection ()
     {
-//         if (_pendingPath != null) {
-//             dirtyPath(_pendingPath);
-//             _pendingPath = null;
-//         }
         if (_selection != null) {
             getPieceSprite(_selection).setSelected(false);
             _selection = null;
             dirtySet(_moveSet);
             _moveSet.clear();
         }
+
+        // clear out any pending action
+        _action = null;
+        clearAttackSet();
     }
 
     @Override // documentation inherited
@@ -389,6 +340,12 @@ public class BangBoardView extends BoardView
             (_selection.x != npiece.x || _selection.y != npiece.y)) {
             clearSelection();
             selectPiece(npiece);
+        }
+
+        // update board and enemy visibility
+        if (_vstate != null) {
+            adjustBoardVisibility();
+            adjustEnemyVisibility();
         }
     }
 
@@ -413,34 +370,12 @@ public class BangBoardView extends BoardView
      */
     protected void applyEffect (Effect effect)
     {
-        effect.apply(_bangobj, _effector);
+        if (effect instanceof ShotEffect) {
+            new ShotHandler((ShotEffect)effect);
+        } else {
+            effect.apply(_bangobj, _effector);
+        }
     }
-
-//     /**
-//      * Called after all updates associated with a tick have come in.
-//      */
-//     protected void tickFinished (Shot[] shots, Effect[] effects)
-//     {
-//         // adjust the board visibility
-//         adjustBoardVisibility();
-
-//         // finally adjust the visibility of enemy pieces
-//         adjustEnemyVisibility();
-
-//         // recompute the board traversability
-//         _bangobj.board.prepareShadow();
-//         _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
-
-//         // create shot handlers for all fired shots
-//         for (int ii = 0; ii < shots.length; ii++) {
-//             new ShotHandler(shots[ii]);
-//         }
-
-//         // apply (and display) the effects
-//         for (int ii = 0; ii < effects.length; ii++) {
-//             effects[ii].apply(_bangobj, _effector);
-//         }
-//     }
 
     /** Adjusts the visibility settings for the tiles of the board. */
     protected void adjustBoardVisibility ()
@@ -531,7 +466,7 @@ public class BangBoardView extends BoardView
     protected class ShotHandler
         implements PathObserver
     {
-        public ShotHandler (Shot shot) {
+        public ShotHandler (ShotEffect shot) {
             _shot = shot;
             _shooter = (Piece)_bangobj.pieces.get(shot.shooterId);
             if (_shooter == null) {
@@ -539,16 +474,16 @@ public class BangBoardView extends BoardView
                 // abandon ship, we're screwed
                 return;
             }
+            _target = (Piece)_bangobj.pieces.get(shot.targetId);
+            if (_target == null) {
+                log.warning("Missing target? [shot=" + shot + "].");
+                // abandon ship, we're screwed
+                return;
+            }
 
             // figure out which sprites we need to wait for
             considerPiece(_shooter);
-            for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-                Piece p = (Piece)iter.next();
-                if (p == _shooter || !_shot.affects(p.x, p.y)) {
-                    continue;
-                }
-                considerPiece(p);
-            }
+            considerPiece(_target);
 
             // if no one was managed, it's a shot fired from an invisible
             // piece at invisible pieces, ignore it
@@ -604,8 +539,8 @@ public class BangBoardView extends BoardView
             _ssprite = new ShotSprite();
             int sx = _shooter.x * SQUARE + SQUARE/2;
             int sy = _shooter.y * SQUARE + SQUARE/2;
-            int tx = _shot.x * SQUARE + SQUARE/2;
-            int ty = _shot.y * SQUARE + SQUARE/2;
+            int tx = _target.x * SQUARE + SQUARE/2;
+            int ty = _target.y * SQUARE + SQUARE/2;
             int duration = (int)MathUtil.distance(sx, sy, tx, ty) * 2;
             _ssprite.setLocation(sx, sy);
             _ssprite.addSpriteObserver(this);
@@ -615,25 +550,25 @@ public class BangBoardView extends BoardView
 
         protected void applyShot ()
         {
-            Piece p = _bangobj.applyShot(_shot);
-            if (p != null && !p.isAlive() && p.removeWhenDead()) {
+            // apply the shot
+            _shot.apply(_bangobj, null);
+            if (!_target.isAlive() && _target.removeWhenDead()) {
                 // remove the piece from the board and the display
-                _bangobj.pieces.removeDirect(p);
-                removePieceSprite(p.pieceId);
+                _bangobj.pieces.removeDirect(_target);
+                removePieceSprite(_target.pieceId);
 
             } else {
                 // let the target sprite know its piece has been updated
                 PieceSprite sprite = _pieces.get(_shot.targetId);
                 if (sprite != null) {
-                    sprite.updated((Piece)_bangobj.pieces.get(_shot.targetId),
-                                   _bangobj.tick);
+                    sprite.updated(_target, _bangobj.tick);
                 }
             }
         }
 
-        protected Shot _shot;
+        protected ShotEffect _shot;
         protected ShotSprite _ssprite;
-        protected Piece _shooter;
+        protected Piece _shooter, _target;
         protected int _sprites, _managed;
     }
 
@@ -675,10 +610,11 @@ public class BangBoardView extends BoardView
     };
 
     protected Piece _selection;
-//     protected PiecePath _pendingPath;
     protected PointSet _moveSet = new PointSet();
     protected int _pidx;
     protected int _downButton = -1;
+
+    protected int[] _action;
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
