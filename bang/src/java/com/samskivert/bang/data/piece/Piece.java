@@ -47,11 +47,8 @@ public abstract class Piece extends SimpleStreamableObject
      * owned piece. */
     public int owner = -1;
 
-    /** The tick on which this piece was last moved. */
-    public short lastMoved = -2;
-
-    /** The tick on which this piece last took a shot. */
-    public short lastFired;
+    /** The tick on which this piece last acted. */
+    public short lastActed = -2;
 
     /** The current x location of this piece's segments. */
     public short x;
@@ -82,7 +79,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public short ticksUntilMovable (short tick)
     {
-        return (short)Math.max(0, getTicksPerMove() - (tick-lastMoved));
+        return (short)Math.max(0, getTicksPerMove() - (tick-lastActed));
     }
 
     /**
@@ -91,7 +88,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public short ticksUntilFirable (short tick)
     {
-        return (short)Math.max(0, getTicksPerFire() - (tick-lastFired));
+        return (short)Math.max(0, getTicksPerFire() - (tick-lastActed));
     }
 
     /**

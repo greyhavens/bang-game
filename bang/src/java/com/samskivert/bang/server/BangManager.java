@@ -80,14 +80,21 @@ public class BangManager extends GameManager
                      ", piece=" + piece + "].");
             return;
         }
+        if (piece.ticksUntilMovable(_bangobj.tick) > 0) {
+            log.info("Rejecting premature move/fire request [who=" + user.who() +
+                     ", piece=" + piece.info() + "].");
+            return;
+        }
 
         Piece target = (Piece)_bangobj.pieces.get(targetId);
+        Piece mpiece = null;
         try {
             _bangobj.startTransaction();
 
             // if they specified a non-NOOP move, execute it
             if (x != piece.x || y != piece.y) {
-                if (!movePiece(piece, x, y)) {
+                mpiece = movePiece(piece, x, y);
+                if (mpiece == null) {
                     throw new InvocationException(MOVE_BLOCKED);
                 }
             }
@@ -100,6 +107,12 @@ public class BangManager extends GameManager
                     ShotEffect effect = piece.shoot(target);
                     effect.prepare(_bangobj);
                     _bangobj.setEffect(effect);
+                    // if they did not move in this same action, we need
+                    // to set their last acted tick
+                    if (mpiece == null) {
+                        piece.lastActed = _bangobj.tick;
+                        _bangobj.updatePieces(piece);
+                    }
                 } else {
                     throw new InvocationException(TARGET_MOVED);
                 }
@@ -195,7 +208,7 @@ public class BangManager extends GameManager
         }
 
         // queue up the board tick
-        _ticker.schedule(5000L, true);
+        _ticker.schedule(10000L, true);
     }
 
     /**
@@ -244,10 +257,10 @@ public class BangManager extends GameManager
      * Attempts to move the specified piece to the specified coordinates.
      * Various checks are made to ensure that it is a legal move.
      *
-     * @return true if the piece was moved, false if it was not movable
-     * for some reason.
+     * @return the cloned and moved piece if the piece was moved, null if
+     * it was not movable for some reason.
      */
-    protected boolean movePiece (Piece piece, int x, int y)
+    protected Piece movePiece (Piece piece, int x, int y)
     {
         // make sure we are alive, have energy and are ready to move
         int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
@@ -259,7 +272,7 @@ public class BangManager extends GameManager
                         ", denergy=" + (energy - piece.energy) +
                         ", mticks=" + piece.ticksUntilMovable(_bangobj.tick) +
                         "].");
-            return false;
+            return null;
         }
 
         // validate that the move is legal
@@ -268,13 +281,13 @@ public class BangManager extends GameManager
         if (!_moves.contains(x, y)) {
             log.warning("Piece requested illegal move [piece=" + piece +
                         ", x=" + x + ", y=" + y + "].");
-            return false;
+            return null;
         }
 
         // clone and move the piece
         Piece mpiece = (Piece)piece.clone();
         mpiece.position(x, y);
-        mpiece.lastMoved = _bangobj.tick;
+        mpiece.lastActed = _bangobj.tick;
         mpiece.consumeEnergy(steps);
 
         // ensure that we don't land on a piece that prevents us from
@@ -285,7 +298,7 @@ public class BangManager extends GameManager
         if (lappers != null) {
             for (Piece p : lappers) {
                 if (p.preventsOverlap(mpiece)) {
-                    return false;
+                    return null;
                 } else if (lapper != null) {
                     log.warning("Multiple overlapping pieces [mover=" + mpiece +
                                 ", lap1=" + lapper + ", lap2=" + p + "].");
@@ -313,7 +326,7 @@ public class BangManager extends GameManager
                 // piece entered so that we can animate it
                 _bangobj.removeFromPieces(mpiece.getKey());
                 // short-circuit the remaining move processing
-                return true;
+                return mpiece;
 
             case INTERACTED:
                 // update the piece we interacted with, we'll update
@@ -336,7 +349,7 @@ public class BangManager extends GameManager
         }
         _effects.clear();
 
-        return true;
+        return mpiece;
     }
 
     /**
@@ -481,8 +494,8 @@ public class BangManager extends GameManager
         BangBoard board = new BangBoard(size, size);
         CompoundGenerator gen = new CompoundGenerator();
         gen.generate(bconfig, board, pieces);
-        SkirmishScenario scen = new SkirmishScenario();
-//         TestScenario scen = new TestScenario();
+//        SkirmishScenario scen = new SkirmishScenario();
+        TestScenario scen = new TestScenario();
         scen.generate(bconfig, board, pieces);
         return board;
     }

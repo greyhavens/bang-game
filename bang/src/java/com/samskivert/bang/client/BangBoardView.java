@@ -207,7 +207,7 @@ public class BangBoardView extends BoardView
             sprite = (PieceSprite)s;
             piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
             // we currently don't do anything with non-player pieces
-            if (piece.owner == -1) {
+            if (piece != null && piece.owner == -1) {
                 sprite = null;
                 piece = null;
             }
@@ -256,7 +256,14 @@ public class BangBoardView extends BoardView
                         _attackSet.add(p.x, p.y);
                     }
                 }
-                dirtySet(_attackSet);
+
+                // if there are no valid attacks, assume they're just moving
+                if (_attackSet.size() == 0) {
+                    executeAction();
+                    _attackSet = null;
+                } else {
+                    dirtySet(_attackSet);
+                }
                 return;
             }
         }
@@ -383,6 +390,7 @@ public class BangBoardView extends BoardView
         // if we're out of the game, just reveal everything
         if (!_bangobj.hasLivePieces(_pidx)) {
             _vstate.reveal();
+            dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
             return;
         }
 
