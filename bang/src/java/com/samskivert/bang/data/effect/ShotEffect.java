@@ -13,6 +13,9 @@ import static com.samskivert.bang.Log.log;
  */
 public class ShotEffect extends Effect
 {
+    /** The identifier for the type of effect that we produce. */
+    public static final String DAMAGED = "bang";
+
     public int shooterId;
 
     public int targetId;
@@ -31,6 +34,16 @@ public class ShotEffect extends Effect
             target.damage = Math.min(100, target.damage + damage);
         } else {
             log.warning("Missing shot target " + this + ".");
+        }
+
+        // report that the target was shot
+        reportEffect(observer, target, DAMAGED);
+
+        // if the target is dead and should be removed, do so
+        if (!target.isAlive() && target.removeWhenDead()) {
+            bangobj.pieces.removeDirect(target);
+            bangobj.board.updateShadow(target, null);
+            reportRemoval(observer, target);
         }
     }
 }
