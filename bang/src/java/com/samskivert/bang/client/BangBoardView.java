@@ -28,6 +28,9 @@ import com.threerings.media.util.LinePath;
 import com.threerings.media.util.MathUtil;
 import com.threerings.media.util.Path;
 
+import com.threerings.presents.dobj.AttributeChangeListener;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
@@ -122,8 +125,10 @@ public class BangBoardView extends BoardView
         super.startGame(bangobj, playerIdx);
 
         _pidx = playerIdx;
-
         _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
+
+        // add the listener that will react to pertinent events
+        _bangobj.addListener(_ticker);
 
         // set up the starting visibility
         adjustBoardVisibility();
@@ -135,6 +140,9 @@ public class BangBoardView extends BoardView
     {
         super.endGame();
         clearSelection();
+
+        // remove our event listener
+        _bangobj.removeListener(_ticker);
 
         // allow everything to be visible
         _vstate.reveal();
@@ -173,10 +181,10 @@ public class BangBoardView extends BoardView
             renderSet(gfx, dirtyRect, _moveSet, Color.white);
         }
 
-        // render any currently active path
-        if (_pendingPath != null) {
-            renderPath(gfx, dirtyRect, Color.pink, _selection, _pendingPath);
-        }
+//         // render any currently active path
+//         if (_pendingPath != null) {
+//             renderPath(gfx, dirtyRect, Color.pink, _selection, _pendingPath);
+//         }
 
         // render the necessary tiles as dimmed if it is not "visible"
         if (_board != null) {
@@ -200,24 +208,24 @@ public class BangBoardView extends BoardView
         }
     }
 
-    @Override // documentation inherited
-    protected boolean updateMouseTile (int mx, int my)
-    {
-        if (super.updateMouseTile(mx, my)) {
-            // if we have a selected piece, path-find a new path to this
-            // location and display it as the pending path
-            if (_selection != null) {
-                if (_pendingPath != null) {
-                    dirtyPath(_pendingPath);
-                    _pendingPath = null;
-                }
-                _pendingPath = _bangobj.board.computePath(_selection, mx, my);
-                dirtyPath(_pendingPath);
-            }
-            return true;
-        }
-        return false;
-    }
+//     @Override // documentation inherited
+//     protected boolean updateMouseTile (int mx, int my)
+//     {
+//         if (super.updateMouseTile(mx, my)) {
+//             // if we have a selected piece, path-find a new path to this
+//             // location and display it as the pending path
+//             if (_selection != null) {
+//                 if (_pendingPath != null) {
+//                     dirtyPath(_pendingPath);
+//                     _pendingPath = null;
+//                 }
+//                 _pendingPath = _bangobj.board.computePath(_selection, mx, my);
+//                 dirtyPath(_pendingPath);
+//             }
+//             return true;
+//         }
+//         return false;
+//     }
 
     protected void renderPath (Graphics2D gfx, Rectangle dirtyRect,
                                Color color, Piece piece, PiecePath path)
@@ -255,41 +263,48 @@ public class BangBoardView extends BoardView
         if (s instanceof PieceSprite) {
             sprite = (PieceSprite)s;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
-            if (_pidx == -1 || piece.owner != _pidx ||
-                !sprite.isSelectable()) {
+            if (_pidx == -1 || piece.owner != _pidx || !sprite.isSelectable()) {
                 sprite = null;
             }
         }
 
-        if (_pendingPath != null) {
-            // if their final click is a legal move...
-            boolean tail = _pendingPath.isTail(tx, ty);
-            if (_moveSet.contains(tx, ty) || tail) {
-                // ...add the final node to the path...
-                if (!tail) {
-                    _pendingPath = _pendingPath.append(tx, ty);
-                }
-                // ...erase any old path...
-                dirtyPath(_paths.remove(_pendingPath.pieceId));
-                // ...note the new path in our cache...
-                _paths.put(_pendingPath.pieceId, _pendingPath);
-                // ...override our local piece which may think it's
-                // part-way down some path but is now starting a new one...
-                Piece piece = (Piece)_bangobj.pieces.get(_pendingPath.pieceId);
-                // the next server update will formalize this change
-                piece.pathPos = 0;
-                // ...and ship it off for processing
-                BangController.postAction(
-                    this, BangController.SET_PATH, _pendingPath);
-                clearSelection();
+        if (_selection != null && _moveSet.size() > 0 &&
+            _moveSet.contains(tx, ty)) {
+            // request to move the selected piece
+            BangController.postAction(
+                this, BangController.MOVE_PIECE, new int[] {
+                    _selection.pieceId, tx, ty });
+            clearSelection();
 
-            } else if (sprite != null &&
-                       sprite.getPieceId() == _selection.pieceId) {
-                // if they clicked in an illegal position, allow a
-                // click on the original selected piece to reset the
-                // path, other clicks we will ignore
-                selectPiece(_selection);
-            }
+//         if (_pendingPath != null) {
+//             // if their final click is a legal move...
+//             boolean tail = _pendingPath.isTail(tx, ty);
+//             if (_moveSet.contains(tx, ty) || tail) {
+//                 // ...add the final node to the path...
+//                 if (!tail) {
+//                     _pendingPath = _pendingPath.append(tx, ty);
+//                 }
+//                 // ...erase any old path...
+//                 dirtyPath(_paths.remove(_pendingPath.pieceId));
+//                 // ...note the new path in our cache...
+//                 _paths.put(_pendingPath.pieceId, _pendingPath);
+//                 // ...override our local piece which may think it's
+//                 // part-way down some path but is now starting a new one...
+//                 Piece piece = (Piece)_bangobj.pieces.get(_pendingPath.pieceId);
+//                 // the next server update will formalize this change
+//                 piece.pathPos = 0;
+//                 // ...and ship it off for processing
+//                 BangController.postAction(
+//                     this, BangController.SET_PATH, _pendingPath);
+//                 clearSelection();
+
+//             } else if (sprite != null &&
+//                        sprite.getPieceId() == _selection.pieceId) {
+//                 // if they clicked in an illegal position, allow a
+//                 // click on the original selected piece to reset the
+//                 // path, other clicks we will ignore
+//                 selectPiece(_selection);
+//             }
 
         } else if (sprite != null) {
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
@@ -330,9 +345,7 @@ public class BangBoardView extends BoardView
             sprite = (PieceSprite)s;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
             if (sprite.isSelectable() && piece.isAlive()) {
-                _attackSet = new PointSet();
-                piece.enumerateAttacks(_attackSet);
-                piece.enumerateAttention(_attentionSet);
+//                 _attackSet = piece.getAttacks(_bangobj.board);
                 _remgr.invalidateRegion(_vbounds);
             }
         }
@@ -356,15 +369,21 @@ public class BangBoardView extends BoardView
         if (!deselect && piece.isAlive()) {
             _selection = piece;
             getPieceSprite(_selection).setSelected(true);
+            if (_moveSet.size() > 0) {
+                dirtySet(_moveSet);
+                _moveSet.clear();
+            }
+            _bangobj.board.computeMoves(piece, _moveSet);
+            dirtySet(_moveSet);
         }
     }
 
     protected void clearSelection ()
     {
-        if (_pendingPath != null) {
-            dirtyPath(_pendingPath);
-            _pendingPath = null;
-        }
+//         if (_pendingPath != null) {
+//             dirtyPath(_pendingPath);
+//             _pendingPath = null;
+//         }
         if (_selection != null) {
             getPieceSprite(_selection).setSelected(false);
             _selection = null;
@@ -392,30 +411,54 @@ public class BangBoardView extends BoardView
     }
 
     /**
-     * Called after all updates associated with a tick have come in.
+     * Called every time the board ticks.
      */
-    protected void tickFinished (Shot[] shots, Effect[] effects)
+    protected void ticked (short tick)
     {
-        // adjust the board visibility
-        adjustBoardVisibility();
-
-        // finally adjust the visibility of enemy pieces
-        adjustEnemyVisibility();
-
-        // recompute the board traversability
-        _bangobj.board.prepareShadow();
-        _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
-
-        // create shot handlers for all fired shots
-        for (int ii = 0; ii < shots.length; ii++) {
-            new ShotHandler(shots[ii]);
-        }
-
-        // apply (and display) the effects
-        for (int ii = 0; ii < effects.length; ii++) {
-            effects[ii].apply(_bangobj, _effector);
+        // update all of our piece sprites
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            PieceSprite sprite = _pieces.get(p.pieceId);
+            if (sprite == null) {
+                continue;
+            }
+            sprite.updated(p, tick);
         }
     }
+
+    /**
+     * Called when an effect is applied to the board.
+     */
+    protected void applyEffect (Effect effect)
+    {
+        effect.apply(_bangobj, _effector);
+    }
+
+//     /**
+//      * Called after all updates associated with a tick have come in.
+//      */
+//     protected void tickFinished (Shot[] shots, Effect[] effects)
+//     {
+//         // adjust the board visibility
+//         adjustBoardVisibility();
+
+//         // finally adjust the visibility of enemy pieces
+//         adjustEnemyVisibility();
+
+//         // recompute the board traversability
+//         _bangobj.board.prepareShadow();
+//         _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
+
+//         // create shot handlers for all fired shots
+//         for (int ii = 0; ii < shots.length; ii++) {
+//             new ShotHandler(shots[ii]);
+//         }
+
+//         // apply (and display) the effects
+//         for (int ii = 0; ii < effects.length; ii++) {
+//             effects[ii].apply(_bangobj, _effector);
+//         }
+//     }
 
     /** Adjusts the visibility settings for the tiles of the board. */
     protected void adjustBoardVisibility ()
@@ -474,7 +517,7 @@ public class BangBoardView extends BoardView
             if (sprite != null) {
                 boolean viz = _vstate.getVisible(piece.x, piece.y);
                 if (viz && !isManaged(sprite)) {
-                    sprite.updated(piece);
+                    sprite.updated(piece, _bangobj.tick);
                     addSprite(sprite);
                 } else if (!viz && isManaged(sprite)) {
                     removeSprite(sprite);
@@ -600,7 +643,8 @@ public class BangBoardView extends BoardView
                 // let the target sprite know its piece has been updated
                 PieceSprite sprite = _pieces.get(_shot.targetId);
                 if (sprite != null) {
-                    sprite.updated((Piece)_bangobj.pieces.get(_shot.targetId));
+                    sprite.updated((Piece)_bangobj.pieces.get(_shot.targetId),
+                                   _bangobj.tick);
                 }
             }
         }
@@ -634,6 +678,17 @@ public class BangBoardView extends BoardView
 
         public void pieceRemoved (Piece piece) {
             removePieceSprite(piece.pieceId);
+        }
+    };
+
+    /** Listens for ticks and effects and does the right thing. */
+    protected AttributeChangeListener _ticker = new AttributeChangeListener() {
+        public void attributeChanged (AttributeChangedEvent event) {
+            if (event.getName().equals(BangObject.TICK)) {
+                ticked(_bangobj.tick);
+            } else if (event.getName().equals(BangObject.EFFECT)) {
+                applyEffect((Effect)event.getValue());
+            }
         }
     };
 

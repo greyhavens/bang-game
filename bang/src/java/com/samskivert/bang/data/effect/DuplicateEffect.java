@@ -54,7 +54,7 @@ public class DuplicateEffect extends Effect
         duplicate.position(spot.x, spot.y);
 
         // update the board shadow to reflect its future existence
-        bangobj.board.shadowPiece(duplicate);
+        bangobj.board.updateShadow(null, duplicate);
     }
 
     public void apply (BangObject bangobj, Observer obs)

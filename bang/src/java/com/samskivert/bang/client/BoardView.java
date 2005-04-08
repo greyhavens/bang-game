@@ -72,6 +72,7 @@ public class BoardView extends VirtualMediaPanel
         // start afresh
         _bangobj = bangobj;
         _board = bangobj.board;
+        _board.shadowPieces(_bangobj.pieces.iterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
         dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
 
@@ -220,12 +221,9 @@ public class BoardView extends VirtualMediaPanel
     {
         super.paintInFront(gfx, dirtyRect);
 
-        // render our attack or attention sets
+        // render any attack set
         if (_attackSet != null) {
             renderSet(gfx, dirtyRect, _attackSet, Color.blue);
-        }
-        if (_attentionSet != null) {
-            renderSet(gfx, dirtyRect, _attentionSet, Color.green);
         }
     }
 
@@ -332,26 +330,12 @@ public class BoardView extends VirtualMediaPanel
         }
     }
 
-    protected void showAttackSet ()
-    {
-        _attackSet = new PointSet();
-        _attentionSet = new PointSet();
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece piece = (Piece)iter.next();
-            PieceSprite sprite = _pieces.get(piece.pieceId);
-            if (sprite != null && isManaged(sprite)) {
-                piece.enumerateAttacks(_attackSet);
-                piece.enumerateAttention(_attentionSet);
-            }
-        }
-        _remgr.invalidateRegion(_vbounds);
-    }
-
     protected void clearAttackSet ()
     {
-        _attackSet = null;
-        _attentionSet = null;
-        _remgr.invalidateRegion(_vbounds);
+        if (_attackSet != null) {
+            dirtySet(_attackSet);
+            _attackSet = null;
+        }
     }
 
     protected void dirtyPath (PiecePath path)
@@ -378,7 +362,8 @@ public class BoardView extends VirtualMediaPanel
     /** Called when a piece is updated in the game object. */
     protected void pieceUpdated (Piece opiece, Piece npiece)
     {
-        getPieceSprite(npiece).updated(npiece);
+        getPieceSprite(npiece).updated(npiece, _bangobj.tick);
+        _bangobj.board.updateShadow(opiece, npiece);
     }        
 
     /** Listens for various different events and does the right thing. */
@@ -387,7 +372,8 @@ public class BoardView extends VirtualMediaPanel
     {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                getPieceSprite((Piece)event.getEntry());
+                Piece piece = (Piece)event.getEntry();
+                getPieceSprite(piece);
             }
         }
 
@@ -401,6 +387,7 @@ public class BoardView extends VirtualMediaPanel
         public void entryRemoved (EntryRemovedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
                 removePieceSprite((Integer)event.getKey());
+                pieceUpdated((Piece)event.getOldEntry(), null);
             }
         }
 
@@ -420,7 +407,7 @@ public class BoardView extends VirtualMediaPanel
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected PointSet _attackSet, _attentionSet;
+    protected PointSet _attackSet;
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);

@@ -21,6 +21,12 @@ public interface BangProvider extends InvocationProvider
     /** Handles a {@link BangService#readyToPlay} request. */
     public void readyToPlay (ClientObject caller);
 
-    /** Handles a {@link BangService#setPath} request. */
-    public void setPath (ClientObject caller, PiecePath path);
+//     /** Handles a {@link BangService#setPath} request. */
+//     public void setPath (ClientObject caller, PiecePath path);
+
+    /** Handles a {@link BangService#readyToPlay} request. */
+    public void move (ClientObject caller, int pieceId, short x, short y);
+
+    /** Handles a {@link BangService#readyToPlay} request. */
+    public void fire (ClientObject caller, int pieceId, int targetId);
 }

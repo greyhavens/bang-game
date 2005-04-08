@@ -40,6 +40,12 @@ public class Marine extends Piece
     }
 
     @Override // documentation inherited
+    public int getMoveDistance ()
+    {
+        return 2;
+    }
+
+    @Override // documentation inherited
     public boolean removeWhenDead ()
     {
         return true;
@@ -68,20 +74,6 @@ public class Marine extends Piece
 
         if (target != null) {
             shots.add(shoot(target));
-        }
-    }
-
-    @Override // documentation inherited
-    public void enumerateAttacks (PointSet set)
-    {
-        int fdist = FIRE_DISTANCE*FIRE_DISTANCE;
-        for (int yy = y - FIRE_DISTANCE; yy <= y + FIRE_DISTANCE; yy++) {
-            for (int xx = x - FIRE_DISTANCE; xx <= x + FIRE_DISTANCE; xx++) {
-                int pdist = MathUtil.distanceSq(x, y, xx, yy);
-                if ((xx != x || yy != y) && (pdist <= fdist)) {
-                    set.add(xx, yy);
-                }
-            }
         }
     }
 

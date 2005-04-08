@@ -34,6 +34,12 @@ public class BangObject extends GameObject
     /** The field name of the <code>pieces</code> field. */
     public static final String PIECES = "pieces";
 
+    /** The field name of the <code>surprises</code> field. */
+    public static final String SURPRISES = "surprises";
+
+    /** The field name of the <code>effect</code> field. */
+    public static final String EFFECT = "effect";
+
     /** The field name of the <code>funds</code> field. */
     public static final String FUNDS = "funds";
 
@@ -56,6 +62,12 @@ public class BangObject extends GameObject
 
     /** Contains information on all pieces on the board. */
     public PieceDSet pieces;
+
+    /** Contains information on all available surprises. */
+    public DSet surprises;
+
+    /** A field we use to broadcast applied effects. */
+    public Effect effect;
 
     /** Cash earned by each player this round. */
     public int[] funds;
@@ -203,6 +215,68 @@ public class BangObject extends GameObject
     {
         requestAttributeChange(PIECES, value, this.pieces);
         this.pieces = (value == null) ? null : (PieceDSet)value.clone();
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>surprises</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToSurprises (DSet.Entry elem)
+    {
+        requestEntryAdd(SURPRISES, surprises, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>surprises</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromSurprises (Comparable key)
+    {
+        requestEntryRemove(SURPRISES, surprises, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>surprises</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateSurprises (DSet.Entry elem)
+    {
+        requestEntryUpdate(SURPRISES, surprises, elem);
+    }
+
+    /**
+     * Requests that the <code>surprises</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setSurprises (DSet value)
+    {
+        requestAttributeChange(SURPRISES, value, this.surprises);
+        this.surprises = (value == null) ? null : (DSet)value.clone();
+    }
+
+    /**
+     * Requests that the <code>effect</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setEffect (Effect value)
+    {
+        Effect ovalue = this.effect;
+        requestAttributeChange(
+            EFFECT, value, ovalue);
+        this.effect = value;
     }
 
     /**

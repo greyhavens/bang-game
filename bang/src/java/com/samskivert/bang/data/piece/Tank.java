@@ -36,12 +36,9 @@ public class Tank extends Piece
     }
 
     @Override // documentation inherited
-    public boolean canBonusMove (int tx, int ty)
+    public int getMoveDistance ()
     {
-        // if it's in the direction of motion, we can
-        int nx = x + PieceCodes.DX[orientation];
-        int ny = y + PieceCodes.DY[orientation];
-        return (tx == nx && ty == ny);
+        return 5;
     }
 
     @Override // documentation inherited
@@ -79,48 +76,6 @@ public class Tank extends Piece
             turretOrient = (short)cw;
         }
         updates.add(this);
-    }
-
-    @Override // documentation inherited
-    public void enumerateLegalMoves (int tx, int ty, PointSet moves)
-    {
-        moves.add(tx, ty-2);
-        moves.add(tx, ty-1);
-
-        moves.add(tx+2, ty);
-        moves.add(tx+1, ty);
-        moves.add(tx-1, ty);
-        moves.add(tx-2, ty);
-
-        moves.add(tx, ty+1);
-        moves.add(tx, ty+2);
-    }
-
-    @Override // documentation inherited
-    public void enumerateAttacks (PointSet set)
-    {
-        for (int xx = x - FIRE_DISTANCE; xx <= x + FIRE_DISTANCE; xx++) {
-            if (xx != x) {
-                set.add(xx, y);
-            }
-        }
-        for (int yy = y - FIRE_DISTANCE; yy <= y + FIRE_DISTANCE; yy++) {
-            if (yy != y) {
-                set.add(x, yy);
-            }
-        }
-    }
-
-    @Override // documentation inherited
-    public boolean canMoveTo (BangBoard board, int nx, int ny)
-    {
-        // we can move up to two squares in a turn
-        if (Math.abs(x - nx) + Math.abs(y - ny) > 2) {
-            return false;
-        }
-
-        // and make sure we can traverse our final location
-        return canTraverse(board, nx, ny);
     }
 
     /**

@@ -25,8 +25,18 @@ public interface BangService extends InvocationService
      */
     public void readyToPlay (Client client);
 
+//     /**
+//      * Requests that the specified piece be moved along the specified path.
+//      */
+//     public void setPath (Client client, PiecePath path);
+
     /**
-     * Requests that the specified piece be moved along the specified path.
+     * Requests that a piece be moved to the specified location.
      */
-    public void setPath (Client client, PiecePath path);
+    public void move (Client client, int pieceId, short x, short y);
+
+    /**
+     * Requests that the specified piece fire at the specified piece.
+     */
+    public void fire (Client client, int pieceId, int targetId);
 }

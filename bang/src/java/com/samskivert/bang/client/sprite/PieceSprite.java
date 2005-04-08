@@ -80,10 +80,11 @@ public class PieceSprite extends Sprite
      * Called when we receive an event indicating that our piece was
      * updated in some way.
      */
-    public void updated (Piece piece)
+    public void updated (Piece piece, short tick)
     {
-        // note our new piece
+        // note our new piece and the current tick
         _piece = piece;
+        _tick = tick;
 
         // move ourselves to our new location
         int nx = piece.x * SQUARE + 2, ny = piece.y * SQUARE + 2;
@@ -129,6 +130,8 @@ public class PieceSprite extends Sprite
     }
 
     protected Piece _piece;
+    protected short _tick;
+
     protected boolean _selected;
     protected Label _idLabel;
 

@@ -51,14 +51,13 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     public boolean isSelectable ()
     {
-        return true;
+        return ((_piece.ticksUntilMovable(_tick) == 0) ||
+                (_piece.ticksUntilFirable(_tick) == 0));
     }
 
     @Override // documentation inherited
-    public void paint (Graphics2D gfx)
+    protected void paintPiece (Graphics2D gfx)
     {
-        super.paint(gfx);
-
         BufferedImage image = getImage(_piece.owner, _piece.orientation);
         int width = _bounds.width - _oxoff, iwidth = image.getWidth();
         int height = _bounds.height - _oyoff, iheight = image.getHeight();

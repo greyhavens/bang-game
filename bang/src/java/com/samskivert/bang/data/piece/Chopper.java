@@ -35,10 +35,9 @@ public class Chopper extends Piece
     }
 
     @Override // documentation inherited
-    public boolean canBonusMove (int tx, int ty)
+    public int getMoveDistance ()
     {
-        // choppers always get a second move
-        return true;
+        return 3;
     }
 
     @Override // documentation inherited
@@ -65,51 +64,6 @@ public class Chopper extends Piece
         if (target != null) {
             shots.add(shoot(target));
         }
-    }
-
-    @Override // documentation inherited
-    public void enumerateLegalMoves (int tx, int ty, PointSet moves)
-    {
-        moves.add(tx, ty-2);
-        moves.add(tx-1, ty-1);
-        moves.add(tx, ty-1);
-        moves.add(tx+1, ty-1);
-
-        moves.add(tx+2, ty);
-        moves.add(tx+1, ty);
-        moves.add(tx-1, ty);
-        moves.add(tx-2, ty);
-
-        moves.add(tx-1, ty+1);
-        moves.add(tx, ty+1);
-        moves.add(tx+1, ty+1);
-        moves.add(tx, ty+2);
-    }
-
-    @Override // documentation inherited
-    public void enumerateAttacks (PointSet set)
-    {
-        int fdist = FIRE_DISTANCE*FIRE_DISTANCE;
-        for (int yy = y - FIRE_DISTANCE; yy <= y + FIRE_DISTANCE; yy++) {
-            for (int xx = x - FIRE_DISTANCE; xx <= x + FIRE_DISTANCE; xx++) {
-                int pdist = MathUtil.distanceSq(x, y, xx, yy);
-                if ((xx != x || yy != y) && (pdist <= fdist)) {
-                    set.add(xx, yy);
-                }
-            }
-        }
-    }
-
-    @Override // documentation inherited
-    public boolean canMoveTo (BangBoard board, int nx, int ny)
-    {
-        // we can move up to two squares in a turn
-        if (Math.abs(x - nx) + Math.abs(y - ny) > 2) {
-            return false;
-        }
-
-        // and make sure we can traverse our final location
-        return canTraverse(board, nx, ny);
     }
 
     @Override // documentation inherited

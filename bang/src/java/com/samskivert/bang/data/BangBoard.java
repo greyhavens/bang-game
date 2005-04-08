@@ -38,7 +38,9 @@ public class BangBoard extends SimpleStreamableObject
         _width = width;
         _height = height;
         _tiles = new int[width*height];
+        _btstate = new byte[width*height];
         _tstate = new byte[width*height];
+        _pgrid = new byte[width*height];
         _bbounds = new Rectangle(0, 0, _width, _height);
         fill(Terrain.NONE);
     }
@@ -155,29 +157,29 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
-     * Prepares the "shadow" that we use to compute paths and do other
-     * board calculations with information from the terrain.
-     */
-    public void prepareShadow ()
-    {
-        Arrays.fill(_tstate, (byte)0);
-    }
-
-    /**
-     * Adds the supplied set of pieces to our board "shadow" data.
+     * Adds the supplied set of pieces to our board "shadow" data. This is
+     * done at the start of the game; all subsequent changes are
+     * incremental.
      */
     public void shadowPieces (Iterator iter)
     {
         while (iter.hasNext()) {
-            shadowPiece((Piece)iter.next());
+            updateShadow(null, (Piece)iter.next());
         }
     }
 
     /**
-     * Adds the supplied piece to our board "shadow" data.
+     * Updates the shadow for the specified piece.
      */
-    public void shadowPiece (Piece piece)
+    public void updateShadow (Piece opiece, Piece piece)
     {
+        // unshadow the piece's old position (big pieces never move)
+        if (opiece != null) {
+            int pos = _width*opiece.y+opiece.x;
+            _tstate[pos] = _btstate[pos];
+        }
+
+        // now add a shadow for the new piece
         if (piece instanceof BigPiece) {
             Rectangle pbounds = ((BigPiece)piece).getBounds();
             for (int yy = pbounds.y, ly = yy + pbounds.height;
@@ -185,6 +187,7 @@ public class BangBoard extends SimpleStreamableObject
                 for (int xx = pbounds.x, lx = xx + pbounds.width;
                      xx < lx; xx++) {
                     _tstate[_width*yy+xx] = 2;
+                    _btstate[_width*yy+xx] = 2;
                 }
             }
 
@@ -194,6 +197,22 @@ public class BangBoard extends SimpleStreamableObject
         } else {
             _tstate[_width*piece.y+piece.x] = 3;
         }
+    }
+
+    /**
+     * Returns true if the specified piece can occupy the specified
+     * coordinate.
+     */
+    public boolean canOccupy (Piece piece, int x, int y)
+    {
+        if (!_bbounds.contains(x, y)) {
+            return false;
+        }
+        int max = 1;
+        if (piece instanceof Chopper) {
+            max = 2;
+        }
+        return (_tstate[y*_bbounds.width+x] <= max);
     }
 
     /**
@@ -208,6 +227,73 @@ public class BangBoard extends SimpleStreamableObject
         return (_tstate[y*_bbounds.width+x] <= 0);
     }
 
+    /**
+     * Computes the supplied piece's move sets based on its current
+     * location and the state of the board.
+     */
+    public void computeMoves (Piece piece, PointSet moves)
+    {
+        // clear out the planning grid
+        Arrays.fill(_pgrid, (byte)0);
+
+        int mdist = piece.getMoveDistance();
+        log.info("Recomputing sets for " + piece.info() +
+                 " [mdist=" + mdist + "].");
+
+        // start with 10x our movement points at our current coordinate
+        _pgrid[piece.y*_bbounds.width+piece.x] = (byte)(mdist * 10);
+
+        // compute our remaining movement points at each position in
+        // increasingly large "diamonds" around our starting location
+        for (int dd = 1; dd <= mdist; dd++) {
+            int added = 0;
+            log.info("down right");
+            for (int xx = piece.x, yy = piece.y - dd; yy < piece.y; xx++, yy++) {
+                added += considerMoving(piece, moves, xx, yy);
+            }
+            log.info("down left");
+            for (int xx = piece.x + dd, yy = piece.y; xx > piece.x; xx--, yy++) {
+                added += considerMoving(piece, moves, xx, yy);
+            }
+            log.info("up left");
+            for (int xx = piece.x, yy = piece.y + dd; yy > piece.y; xx--, yy--) {
+                added += considerMoving(piece, moves, xx, yy);
+            }
+            log.info("up right");
+            for (int xx = piece.x - dd, yy = piece.y; xx < piece.x; xx++, yy--) {
+                added += considerMoving(piece, moves, xx, yy);
+            }
+            if (added == 0) {
+                break;
+            }
+        }
+    }
+
+//     /**
+//      * Computes the supplied piece's attack set based on its current
+//      * ability to move, its location and the state of the board.
+//      */
+//     public void computeAttacks (short tick, Piece piece, PointSet attacks)
+//     {
+//         // now determine where we can fire
+//         int mdist = piece.getMoveDistance();
+//         int fdist = piece.getFireDistance(), tdist = mdist + fdist;
+//         for (int dd = 1; dd <= tdist; dd++) {
+//             for (int xx = piece.x, yy = piece.y - dd; yy < piece.y; xx++, yy++) {
+//                 considerFiring(piece, xx, yy);
+//             }
+//             for (int xx = piece.x + dd, yy = piece.y; xx > piece.x; xx--, yy++) {
+//                 considerFiring(piece, xx, yy);
+//             }
+//             for (int xx = piece.x, yy = piece.y + dd; yy > piece.y; xx--, yy--) {
+//                 considerFiring(piece, xx, yy);
+//             }
+//             for (int xx = piece.x - dd, yy = piece.y; xx < piece.x; xx++, yy--) {
+//                 considerFiring(piece, xx, yy);
+//             }
+//         }
+//     }
+
     /** Returns a string representation of this board. */
     public String toString ()
     {
@@ -221,22 +307,72 @@ public class BangBoard extends SimpleStreamableObject
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        _tstate = new byte[_width*_height];
+        int size = _width*_height;
+        _btstate = new byte[size];
+        _tstate = new byte[size];
+        _pgrid = new byte[size];
         _bbounds = new Rectangle(0, 0, _width, _height);
+    }
+
+    /** Helper function for {@link #recomputeSets}. */
+    protected int considerMoving (Piece piece, PointSet moves, int xx, int yy)
+    {
+        // make sure this coordinate is occupiable
+        if (!_bbounds.contains(xx, yy) || !canOccupy(piece, xx, yy)) {
+            return 0;
+        }
+
+        // determine our highest valued neighbor
+        int maxn = 0;
+        maxn = considerNeighbor(maxn, xx+1, yy);
+        maxn = considerNeighbor(maxn, xx, yy+1);
+        maxn = considerNeighbor(maxn, xx-1, yy);
+        maxn = considerNeighbor(maxn, xx, yy-1);
+        log.info("biggest neighbor " + maxn + " for " + xx + "/" + yy + ".");
+
+        // if no neighbor has any move points, we don't move
+        if (maxn == 0) {
+            return 0;
+        }
+
+        // make sure we have move points enough to get here
+        int cost = piece.traversalCost(getTile(xx, yy));
+        if (cost > maxn) {
+            return 0;
+        }
+
+        // add this coordinate to our moves set
+        moves.add(xx, yy);
+
+        // fill this position in with our remaining energy after moving
+        _pgrid[yy*_bbounds.width+xx] = (byte)(maxn - cost);
+        return 1;
+    }
+
+    /** Helper function for {@link #considerMoving}. */
+    protected final int considerNeighbor (int max, int xx, int yy)
+    {
+        int pos = yy*_bbounds.width+xx;
+        if (_bbounds.contains(xx, yy) && _pgrid[pos] > max) {
+            return _pgrid[pos];
+        } else {
+            return max;
+        }
+    }
+
+    /** Helper function for {@link #recomputeSets}. */
+    protected void considerFiring (Piece piece, int xx, int yy)
+    {
+        if (!_bbounds.contains(xx, yy)) {
+            return;
+        }
     }
 
     /** Used when path finding. */
     protected transient AStarPathUtil.TraversalPred _tpred =
         new AStarPathUtil.TraversalPred() {
         public boolean canTraverse (Object traverser, int x, int y) {
-            if (!_bbounds.contains(x, y)) {
-                return false;
-            }
-            int max = 1;
-            if (traverser instanceof Chopper) {
-                max = 2;
-            }
-            return (_tstate[y*_bbounds.width+x] <= max);
+            return canOccupy((Piece)traverser, x, y);
         }
     };
 
@@ -247,7 +383,10 @@ public class BangBoard extends SimpleStreamableObject
     protected int[] _tiles;
 
     /** Tracks coordinate traversability. */
-    protected transient byte[] _tstate;
+    protected transient byte[] _tstate, _btstate;
+
+    /** A temporary array for computing move and fire sets. */
+    protected transient byte[] _pgrid;
 
     /** A rectangle containing our bounds, used when path finding. */
     protected transient Rectangle _bbounds;

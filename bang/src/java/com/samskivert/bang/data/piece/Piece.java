@@ -6,6 +6,7 @@ package com.samskivert.bang.data.piece;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.AStarPathUtil;
@@ -46,6 +47,12 @@ public abstract class Piece extends SimpleStreamableObject
      * owned piece. */
     public int owner = -1;
 
+    /** The tick on which this piece was last moved. */
+    public short lastMoved = -2;
+
+    /** The tick on which this piece last took a shot. */
+    public short lastFired;
+
     /** The current x location of this piece's segments. */
     public short x;
 
@@ -79,6 +86,24 @@ public abstract class Piece extends SimpleStreamableObject
     public boolean isAlive ()
     {
         return (energy > 0) && (damage < 100);
+    }
+
+    /**
+     * Returns the number of ticks that must elapse before this piece can
+     * again be moved.
+     */
+    public short ticksUntilMovable (short tick)
+    {
+        return (short)Math.max(0, getTicksPerMove() - (tick-lastMoved));
+    }
+
+    /**
+     * Returns the number of ticks that must elapse before this piece can
+     * again be fired.
+     */
+    public short ticksUntilFirable (short tick)
+    {
+        return (short)Math.max(0, getTicksPerFire() - (tick-lastFired));
     }
 
     /**
@@ -141,6 +166,31 @@ public abstract class Piece extends SimpleStreamableObject
         return 5;
     }
 
+    /**
+     * Returns the number of tiles that this piece can move.
+     */
+    public int getMoveDistance ()
+    {
+        return 0;
+    }
+
+    /**
+     * Returns the number of tiles away that this piece can fire.
+     */
+    public int getFireDistance ()
+    {
+        return 1;
+    }
+
+    /**
+     * Gets the cost of traversing this terrain in tenths of a movement
+     * point.
+     */
+    public int traversalCost (Terrain terrain)
+    {
+        return 10;
+    }
+
     /** Returns a brief description of this piece. */
     public String info ()
     {
@@ -178,7 +228,7 @@ public abstract class Piece extends SimpleStreamableObject
         // avoid NOOP
         if (nx != x || ny != y) {
             updatePosition(nx, ny);
-            pieceMoved();
+            recomputeBounds();
             return true;
         }
         return false;
@@ -197,10 +247,7 @@ public abstract class Piece extends SimpleStreamableObject
         // update our orientation
         orientation = (short)((direction == CW) ? ((orientation + 1) % 4) :
                               ((orientation + 3) % 4));
-
-        // let derived classes know that we've moved
-        pieceMoved();
-
+        recomputeBounds();
         return true;
     }
 
@@ -222,38 +269,6 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Computes and returns this piece's locus of attention, which is
-     * abstractly the spot between their eyes (in floating point
-     * coordinates). For a segmented piece, this is approximated as the
-     * center of the tile that contains the head.
-     */
-    public Point2D getLocusOfAttention ()
-    {
-        _locus.setLocation(x + 0.5, y + 0.5);
-        return _locus;
-    }
-
-    /**
-     * Returns the orientation we should face to orient toward the
-     * specified piece.
-     */
-    public short computeOrientOrient (Piece other)
-    {
-        Point2D loc = getLocusOfAttention();
-        Point2D oloc = other.getLocusOfAttention();
-        double theta = Math.atan2(oloc.getX() - loc.getX(),
-                                  oloc.getY() - loc.getY());
-        log.info("orienting " + loc + " -> " + oloc + " = " + theta);
-        // atan2() returns a value from -PI to PI, so we add PI to shift
-        // if from 0 to PI and we add PI/4 to shift it a bit further such
-        // that 0 is the start of a NORTH orientation
-        theta += 5 * Math.PI / 4;
-        // then we just scale and truncate
-        short orient = (short)Math.floor((4 * theta / Math.PI) % 4);
-        return orient;
-    }
-
-    /**
      * Instructs this piece to consume the energy needed to take the
      * specified number of steps.
      */
@@ -271,14 +286,14 @@ public abstract class Piece extends SimpleStreamableObject
         return energy >= energyPerStep();
     }
 
-    /**
-     * Returns true if this piece can consolidate this additional move
-     * into a single turn, receiving a "bonus" move for that turn.
-     */
-    public boolean canBonusMove (int x, int y)
-    {
-        return false;
-    }
+//     /**
+//      * Returns true if this piece can consolidate this additional move
+//      * into a single turn, receiving a "bonus" move for that turn.
+//      */
+//     public boolean canBonusMove (int x, int y)
+//     {
+//         return false;
+//     }
 
     /**
      * Affects the target piece with damage.
@@ -333,31 +348,11 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Verifies that a move to the specified location is within the
-     * piece's capabilities (ie. not too far, doesn't turn illegally,
-     * doesn't cross illegal tiles).
-     */
-    public boolean canMoveTo (BangBoard board, int nx, int ny)
-    {
-        // by default, ensure that the location is exactly one unit away
-        // from our current location
-        if (Math.abs(x - nx) + Math.abs(y - ny) != 1) {
-            return false;
-        }
-
-        // and make sure we can traverse our final location
-        return canTraverse(board, nx, ny);
-    }
-
-    /**
      * Returns true if this piece can traverse the board at the specified
      * coordinates.
      */
     public boolean canTraverse (BangBoard board, int tx, int ty)
     {
-        // by default, we assume that our tail always follows our head and
-        // moves to tiles we already occupied, so we only need to
-        // determine whether our head is moving onto a traversable tile
         return canTraverse(board.getTile(tx, ty));
     }
 
@@ -390,39 +385,6 @@ public abstract class Piece extends SimpleStreamableObject
     public void react (BangObject bangobj, Piece[] pieces, PieceSet updates,
                        ArrayList<Shot> shots)
     {
-    }
-
-    /**
-     * Enumerates the coordinates of the legal moves for this piece, given
-     * the specified starting location. These moves need not account for
-     * terrain or other potential blockage.
-     */
-    public void enumerateLegalMoves (int tx, int ty, PointSet moves)
-    {
-        // the default piece can move one in any of the four cardinal
-        // directions
-        moves.add(tx+1, ty);
-        moves.add(tx-1, ty);
-        moves.add(tx, ty+1);
-        moves.add(tx, ty-1);
-    }
-
-    /**
-     * Enumerates the coordinates of the tiles that this piece can attack
-     * from its current location.
-     */
-    public void enumerateAttacks (PointSet set)
-    {
-        // by default, none
-    }
-
-    /**
-     * Enumerates the coordinates of the tiles to which this piece attends
-     * and may response if another piece moves into one of those spaces.
-     */
-    public void enumerateAttention (PointSet set)
-    {
-        // by default, none
     }
 
     /**
@@ -505,6 +467,18 @@ public abstract class Piece extends SimpleStreamableObject
             ("" + orientation);
     }
 
+    /** Returns the frequency with which this piece can move. */
+    protected int getTicksPerMove ()
+    {
+        return 2;
+    }
+
+    /** Returns the frequency with which this piece can fire. */
+    protected int getTicksPerFire ()
+    {
+        return 2;
+    }
+
     /**
      * Computes the new orientation for this piece were it to travel from
      * its current coordinates to the specified coordinates.
@@ -548,9 +522,10 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Called after this piece changes position or orientation.
+     * Called to allow derived classes to update their bounds when the
+     * piece has been repositioned or reoriented.
      */
-    protected void pieceMoved ()
+    protected void recomputeBounds ()
     {
     }
 
@@ -577,47 +552,6 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Returns a random piece from the array of supplied pieces that both
-     * matches the piece predicate and intersects any point in the
-     * supplied point set. Returns null if no matching pieces so
-     * intersect.
-     */
-    protected Piece checkSet (PointSet set, Piece[] pieces, Predicate pred)
-    {
-        // determine our locus of attention for distance computations
-        double closest = Double.MAX_VALUE;
-        Point2D loc = getLocusOfAttention();
-
-        ArrayList<Piece> matches = null;
-        for (int pp = 0; pp < pieces.length; pp++) {
-            Piece piece = pieces[pp];
-            if (!pred.matches(piece)) {
-                continue;
-            }
-
-            // determine if this piece is close enough
-            double dist = loc.distance(piece.getLocusOfAttention());
-            if (dist > closest) {
-                continue;
-            }
-
-            for (int ii = 0, ll = set.size(); ii < ll; ii++) {
-                int tx = set.getX(ii), ty = set.getY(ii);
-                if (piece.intersects(tx, ty)) {
-                    if (matches == null) {
-                        matches = new ArrayList<Piece>();
-                    }
-                    if (dist < closest) {
-                        matches.clear();
-                    }
-                    matches.add(piece);
-                }
-            }
-        }
-        return matches == null ? null : (Piece)RandomUtil.pickRandom(matches);
-    }
-
-    /**
      * Returns the number of percentage points of damage this piece does
      * to pieces of the specified type.
      */
@@ -637,54 +571,6 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Computes an attack and attend set for this piece given the supplied
-     * definition matrix and piece size.
-     */
-    protected void computeSets (int[] matrix, int msize, int psize,
-                                PointSet attack, PointSet attend)
-    {
-        // compute our translation offsets
-        int offx = x - (msize-psize)/2;
-        int offy = y - (msize-psize)/2;
-
-        // foreach each element of our sets, properly translate and rotate
-        // the coordinate and add it to the appropriate set
-        for (int xx = 0; xx < msize; xx++) {
-            for (int yy = 0; yy < msize; yy++) {
-                int tt = matrix[yy * msize + xx];
-                PointSet set = null;
-                if (tt == 1) {
-                    set = attend;
-                } else if (tt == 2) {
-                    set = attack;
-                } else {
-                    continue;
-                }
-
-                // "rotate" the matrix according to our orientation
-                int tx = xx, ty = yy;
-                switch (orientation) {
-                case EAST:
-                    tx = (msize-1-yy);
-                    ty = xx;
-                    break;
-                case SOUTH:
-                    tx = (msize-1-xx);
-                    ty = (msize-1-yy);
-                    break;
-                case WEST:
-                    tx = yy;
-                    ty = (msize-1-xx);
-                    break;
-                }
-
-                // then translate it and add it to the set
-                set.add(offx+tx, offy+ty);
-            }
-        }
-    }
-
-    /**
      * Combines the supplied x and y coordintes into a single integer.
      */
     public static int coord (short x, short y)
@@ -692,21 +578,9 @@ public abstract class Piece extends SimpleStreamableObject
         return (x << 16) | y;
     }
 
-    public static void main (String[] args)
-    {
-        System.out.println("Theta: " + Math.atan2(0, 1));
-        System.out.println("Theta: " + Math.atan2(1, 1));
-        System.out.println("Theta: " + Math.atan2(1, 0));
-        System.out.println("Theta: " + Math.atan2(1, -1));
-        System.out.println("Theta: " + Math.atan2(0, -1));
-        System.out.println("Theta: " + Math.atan2(-1, -1));
-        System.out.println("Theta: " + Math.atan2(-1, 0));
-        System.out.println("Theta: " + Math.atan2(-1, 1));
-    }
-
     protected transient Integer _key;
-    protected transient Point2D _locus = new Point2D.Double();
 
+    /** Used to assign a unique id to each piece. */
     protected static int _nextPieceId;
 
     /** The default path-finding stepper. Allows movement in one of the

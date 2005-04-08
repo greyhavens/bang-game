@@ -33,6 +33,34 @@ public class MobileSprite extends PieceSprite
             gfx.setColor(Color.black);
             gfx.drawRect(_bounds.x, _bounds.y, _bounds.width-1, DBAR_HEIGHT-1);
         }
+
+        // paint the piece itself
+        paintPiece(gfx);
+
+        // now paint an indication of the number of ticks remaining before
+        // this piece can again move
+        int ttm = _piece.ticksUntilMovable(_tick);
+        int ttf = _piece.ticksUntilFirable(_tick);
+        int bx = _bounds.x;
+        gfx.setColor(Color.red);
+        for (int ii = 0; ii < ttf; ii++) {
+            gfx.fillRect(bx, _bounds.y + DBAR_HEIGHT, 4, 4);
+            bx += 5;
+        }
+        gfx.setColor(Color.white);
+        for (int ii = ttf; ii < ttm; ii++) {
+            gfx.fillRect(bx, _bounds.y + DBAR_HEIGHT, 4, 4);
+            bx += 5;
+        }
+    }
+
+    /**
+     * Derives classes should override this method and do their actual
+     * piece painting here so that we can properly decorate their
+     * rendering.
+     */
+    protected  void paintPiece (Graphics2D gfx)
+    {
     }
 
     /** Returns the color of this piece. */

@@ -65,29 +65,6 @@ public abstract class BigPiece extends Piece
         return _bounds.height;
     }
 
-    @Override // documentation inherited
-    public Point2D getLocusOfAttention ()
-    {
-        // a big piece's locus of attention depends on its orientation
-        switch (orientation) {
-        case NORTH:
-            _locus.setLocation(_bounds.x + _bounds.width/2, _bounds.y + 0.5);
-            break;
-        case EAST:
-            _locus.setLocation(_bounds.x + _bounds.width - 0.5,
-                               _bounds.y + _bounds.height/2);
-            break;
-        case SOUTH:
-            _locus.setLocation(_bounds.x + _bounds.width/2,
-                               _bounds.y + _bounds.height - 0.5);
-            break;
-        case WEST:
-            _locus.setLocation(_bounds.x + 0.5, _bounds.y + _bounds.height/2);
-            break;
-        }
-        return _locus;
-    }
-
     /**
      * Extends default behavior to initialize transient members.
      */
@@ -95,7 +72,7 @@ public abstract class BigPiece extends Piece
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        updateBounds();
+        recomputeBounds();
     }
 
     /** Require that our derived classes tell us how big they are (in the
@@ -104,19 +81,11 @@ public abstract class BigPiece extends Piece
     {
         _width = width;
         _height = height;
-        updateBounds();
+        recomputeBounds();
     }
 
     @Override // documentation inherited
-    protected void pieceMoved ()
-    {
-        super.pieceMoved();
-        updateBounds();
-    }
-
-    /** Updates our bounds rectangle based on our position and
-     * orientation. */
-    protected void updateBounds ()
+    protected void recomputeBounds ()
     {
         if (orientation == NORTH || orientation == SOUTH) {
             _bounds.setBounds(x, y, _width, _height);

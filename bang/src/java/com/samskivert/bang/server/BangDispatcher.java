@@ -5,7 +5,6 @@ package com.samskivert.bang.server;
 
 import com.samskivert.bang.client.BangService;
 import com.samskivert.bang.data.BangMarshaller;
-import com.samskivert.bang.data.PiecePath;
 import com.samskivert.bang.data.piece.Piece;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.data.ClientObject;
@@ -39,6 +38,20 @@ public class BangDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case BangMarshaller.FIRE:
+            ((BangProvider)provider).fire(
+                source,
+                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue()
+            );
+            return;
+
+        case BangMarshaller.MOVE:
+            ((BangProvider)provider).move(
+                source,
+                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue()
+            );
+            return;
+
         case BangMarshaller.PURCHASE_PIECE:
             ((BangProvider)provider).purchasePiece(
                 source,
@@ -49,13 +62,6 @@ public class BangDispatcher extends InvocationDispatcher
         case BangMarshaller.READY_TO_PLAY:
             ((BangProvider)provider).readyToPlay(
                 source                
-            );
-            return;
-
-        case BangMarshaller.SET_PATH:
-            ((BangProvider)provider).setPath(
-                source,
-                (PiecePath)args[0]
             );
             return;
 
