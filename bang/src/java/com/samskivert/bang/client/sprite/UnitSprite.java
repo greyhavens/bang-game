@@ -14,6 +14,8 @@ import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.data.piece.Piece;
 
+import static com.samskivert.bang.client.BangMetrics.*;
+
 /**
  * Displays a particular unit.
  */
@@ -38,18 +40,18 @@ public class UnitSprite extends MobileSprite
             ctx.loadImage("media/units/" + _type + ".png");
         int width = src.getWidth(), height = src.getHeight();
 
-        double theta = Math.PI/2;
-        for (int ii = 1; ii < 4; ii++) {
-            BufferedImage dest = _images[(WEST+ii)%4] =
-                ImageUtil.createCompatibleImage(src, width, height);
-            Graphics2D gfx = (Graphics2D)dest.getGraphics();
-            gfx.translate(width/2, height/2);
-            gfx.rotate(theta);
-            gfx.translate(-width/2, -height/2);
-            gfx.drawImage(src, 0, 0, null);
-            gfx.dispose();
-            theta += Math.PI/2;
-        }
+//         double theta = Math.PI/2;
+//         for (int ii = 1; ii < 4; ii++) {
+//             BufferedImage dest = _images[(WEST+ii)%4] =
+//                 ImageUtil.createCompatibleImage(src, width, height);
+//             Graphics2D gfx = (Graphics2D)dest.getGraphics();
+//             gfx.translate(width/2, height/2);
+//             gfx.rotate(theta);
+//             gfx.translate(-width/2, -height/2);
+//             gfx.drawImage(src, 0, 0, null);
+//             gfx.dispose();
+//             theta += Math.PI/2;
+//         }
     }
 
     @Override // documentation inherited
@@ -62,6 +64,9 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected void paintPiece (Graphics2D gfx)
     {
+        gfx.setColor(PIECE_COLORS[_piece.owner]);
+        gfx.fillRect(_ox+1, _oy+1, SQUARE-1, SQUARE-1);
+
         BufferedImage image = getImage(_piece.owner, _piece.orientation);
         int width = _bounds.width - _oxoff, iwidth = image.getWidth();
         int height = _bounds.height - _oyoff, iheight = image.getHeight();
@@ -81,20 +86,21 @@ public class UnitSprite extends MobileSprite
 
     protected BufferedImage getImage (int player, int orient)
     {
-        BufferedImage[] colored = (BufferedImage[])_outlined.get(player);
-        if (colored == null) {
-            colored = new BufferedImage[_images.length];
-            for (int ii = 0; ii < colored.length; ii++) {
-                colored[ii] = ImageUtil.createCompatibleImage(
-                    _images[ii], _images[ii].getWidth(),
-                    _images[ii].getHeight());
-                ImageUtil.createTracedImage(
-                    _images[ii], colored[ii], PIECE_COLORS[player],
-                    1, 1.0f, 1.0f);
-            }
-            _outlined.put(player, colored);
-        }
-        return colored[orient];
+        return _images[WEST];
+//         BufferedImage[] colored = (BufferedImage[])_outlined.get(player);
+//         if (colored == null) {
+//             colored = new BufferedImage[_images.length];
+//             for (int ii = 0; ii < colored.length; ii++) {
+//                 colored[ii] = ImageUtil.createCompatibleImage(
+//                     _images[ii], _images[ii].getWidth(),
+//                     _images[ii].getHeight());
+//                 ImageUtil.createTracedImage(
+//                     _images[ii], colored[ii], PIECE_COLORS[player],
+//                     1, 1.0f, 1.0f);
+//             }
+//             _outlined.put(player, colored);
+//         }
+//         return colored[orient];
     }
 
     protected String _type;

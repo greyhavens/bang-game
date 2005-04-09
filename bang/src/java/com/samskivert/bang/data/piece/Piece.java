@@ -48,7 +48,7 @@ public abstract class Piece extends SimpleStreamableObject
     public int owner = -1;
 
     /** The tick on which this piece last acted. */
-    public short lastActed = -2;
+    public short lastActed = -4;
 
     /** The current x location of this piece's segments. */
     public short x;

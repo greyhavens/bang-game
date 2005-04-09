@@ -74,7 +74,7 @@ public class PieceSprite extends Sprite
         _idLabel = new Label("" + piece.pieceId, Color.black, null);
 
         // position ourselves properly
-        setLocation(SQUARE * piece.x + 2, SQUARE * piece.y + 2);
+        setLocation(SQUARE * piece.x, SQUARE * piece.y);
     }
 
     /**
@@ -88,7 +88,7 @@ public class PieceSprite extends Sprite
         _tick = tick;
 
         // move ourselves to our new location
-        int nx = piece.x * SQUARE + 2, ny = piece.y * SQUARE + 2;
+        int nx = piece.x * SQUARE, ny = piece.y * SQUARE;
         if (nx != _ox || ny != _oy) {
             if (_mgr != null) {
                 long duration = (long)MathUtil.distance(_ox, _oy, nx, ny) * 10;

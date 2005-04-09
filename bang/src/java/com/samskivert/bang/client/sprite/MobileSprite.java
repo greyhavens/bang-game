@@ -15,7 +15,7 @@ public class MobileSprite extends PieceSprite
 {
     public MobileSprite ()
     {
-        super(SQUARE-3, SQUARE-3 + DBAR_HEIGHT + DBAR_GAP);
+        super(40, 40 + DBAR_HEIGHT + DBAR_GAP);
         _oyoff = DBAR_HEIGHT + DBAR_GAP;
         _renderOrder = 5;
     }
@@ -42,13 +42,13 @@ public class MobileSprite extends PieceSprite
         int ttm = _piece.ticksUntilMovable(_tick);
         int ttf = _piece.ticksUntilFirable(_tick);
         int bx = _bounds.x;
-        gfx.setColor(Color.red);
-        for (int ii = 0; ii < ttf; ii++) {
-            gfx.fillRect(bx, _bounds.y + DBAR_HEIGHT, 4, 4);
-            bx += 5;
-        }
+//         gfx.setColor(Color.red);
+//         for (int ii = 0; ii < ttf; ii++) {
+//             gfx.fillRect(bx, _bounds.y + DBAR_HEIGHT, 4, 4);
+//             bx += 5;
+//         }
         gfx.setColor(Color.white);
-        for (int ii = ttf; ii < ttm; ii++) {
+        for (int ii = 0; ii < ttm; ii++) {
             gfx.fillRect(bx, _bounds.y + DBAR_HEIGHT, 4, 4);
             bx += 5;
         }
