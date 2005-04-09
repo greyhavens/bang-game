@@ -229,15 +229,6 @@ public class BangManager extends GameManager
         _bangobj.setPieces(new PieceDSet(pieces.iterator()));
         _bangobj.board.shadowPieces(pieces.iterator());
 
-        // TEMP: add some surprises
-        for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            for (int ss = 0; ss < 3; ss++) {
-                MissileSurprise s = new MissileSurprise();
-                s.init(ii);
-                _bangobj.addToSurprises(s);
-            }
-        }
-
         // initialize our pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             ((Piece)iter.next()).init();
@@ -496,7 +487,10 @@ public class BangManager extends GameManager
         }
 
         Piece bonus;
-        if (Math.random() > 1.0 * spower / tpower) {
+        double pfact = 1.0 * spower / tpower;
+        if (pfact < 0.2) {
+            bonus = new Bonus(Bonus.Type.SURPRISE);
+        } else if (Math.random() > pfact) {
             bonus = new Bonus(Bonus.Type.DUPLICATE);
         } else {
             bonus = new Bonus(Bonus.Type.REPAIR);

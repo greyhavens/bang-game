@@ -12,21 +12,25 @@ import com.samskivert.bang.data.effect.Effect;
  */
 public class MissileSurprise extends Surprise
 {
+    public int power = 60;
+
+    public int radius = 2;
+
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "missile";
+        return "missile" + radius;
     }
 
     @Override // documentation inherited
     public int getRadius ()
     {
-        return 3;
+        return radius;
     }
 
     @Override // documentation inherited
     public Effect activate (int x, int y)
     {
-        return new AreaDamageEffect(80, getRadius(), x, y);
+        return new AreaDamageEffect(power, getRadius(), x, y);
     }
 }

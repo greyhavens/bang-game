@@ -22,11 +22,8 @@ public class AreaDamageEffect extends Effect
     public static final String MISSILED = "howdy";
 
     public int damage;
-
     public int radius;
-
     public short x, y;
-
     public int[] pieces;
 
     public AreaDamageEffect ()
@@ -48,7 +45,8 @@ public class AreaDamageEffect extends Effect
         int r2 = radius * radius;
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
+            if (p.owner >= 0 && p.isAlive() &&
+                MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
                 affected.add(p.pieceId);
             }
         }

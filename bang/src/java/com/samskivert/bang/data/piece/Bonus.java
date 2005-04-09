@@ -13,6 +13,7 @@ import com.samskivert.bang.client.sprite.PieceSprite;
 import com.samskivert.bang.data.effect.DuplicateEffect;
 import com.samskivert.bang.data.effect.Effect;
 
+import com.samskivert.bang.data.effect.GrantSurpriseEffect;
 import com.samskivert.bang.data.effect.RepairEffect;
 
 /**
@@ -23,7 +24,7 @@ import com.samskivert.bang.data.effect.RepairEffect;
 public class Bonus extends Piece
 {
     /** Indicates the type of bonus. */
-    public enum Type { UNKNOWN, REPAIR, DUPLICATE };
+    public enum Type { UNKNOWN, REPAIR, DUPLICATE, SURPRISE };
 
     /** Unserialization constructor. */
     public Bonus ()
@@ -49,6 +50,7 @@ public class Bonus extends Piece
         switch (_type) {
         case REPAIR: return new RepairEffect(other.pieceId);
         case DUPLICATE: return new DuplicateEffect(other.pieceId);
+        case SURPRISE: return new GrantSurpriseEffect(other.owner);
         }
         return null;
     }
@@ -65,6 +67,7 @@ public class Bonus extends Piece
         String type;
         switch (_type) {
         case REPAIR: type = "repair"; break;
+        case SURPRISE: type = "surprise"; break;
         case DUPLICATE: type = "unknown"; break;
         default:
         case UNKNOWN: type = "unknown"; break;

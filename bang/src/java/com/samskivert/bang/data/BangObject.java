@@ -107,6 +107,24 @@ public class BangObject extends GameObject
         return false;
     }
 
+    /**
+     * Returns an array containing the total "undamage" units for each
+     * player (undamage being 100 minus the damage a piece has already
+     * taken). This provides a rough estimate of who has the advantage.
+     */
+    public int[] computePower ()
+    {
+        int[] power = new int[players.length];
+        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            if (p.isAlive() && p.owner >= 0) {
+                int pp = (100 - p.damage);
+                power[p.owner] += pp;
+            }
+        }
+        return power;
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>service</code> field be set to the
