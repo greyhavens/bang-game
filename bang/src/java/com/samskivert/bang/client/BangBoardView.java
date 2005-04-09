@@ -192,7 +192,7 @@ public class BangBoardView extends BoardView
 
         // render our possible moves
         if (_moveSet.size() > 0) {
-            renderSet(gfx, dirtyRect, _moveSet, Color.white);
+            renderSet(gfx, dirtyRect, _moveSet, _whiteRenderer);
         }
 
         // render the necessary tiles as dimmed if it is not "visible"
@@ -406,7 +406,8 @@ public class BangBoardView extends BoardView
         super.pieceUpdated(opiece, npiece);
 
         // clear and reselect if this piece was the selection and it moved
-        if (_selection != null && _selection.pieceId == npiece.pieceId &&
+        if (npiece != null && _selection != null &&
+            _selection.pieceId == npiece.pieceId &&
             (_selection.x != npiece.x || _selection.y != npiece.y)) {
             clearSelection();
             selectPiece(npiece);
@@ -527,6 +528,7 @@ public class BangBoardView extends BoardView
         label.setAlternateColor(Color.black);
         label.setStyle(Label.OUTLINE);
         LabelSprite lsprite = new LabelSprite(label);
+        lsprite.setRenderOrder(100);
         int px = piece.x * SQUARE, py = piece.y * SQUARE;
         LinePath path = new LinePath(px, py, px, py - 25, 1000L);
         addAnimation(new SpriteAnimation(_spritemgr, lsprite, path));

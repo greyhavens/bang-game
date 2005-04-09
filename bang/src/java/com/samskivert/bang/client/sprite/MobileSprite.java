@@ -15,8 +15,7 @@ public class MobileSprite extends PieceSprite
 {
     public MobileSprite ()
     {
-        super(40, 40 + DBAR_HEIGHT + DBAR_GAP);
-        _oyoff = DBAR_HEIGHT + DBAR_GAP;
+        super(SQUARE, SQUARE);
         _renderOrder = 5;
     }
 
@@ -27,11 +26,13 @@ public class MobileSprite extends PieceSprite
         if (_piece.damage < 100) {
             int pct = 100 - _piece.damage;
             gfx.setColor(DAMAGE_COLORS[pct / 10]);
-            float epix = (_bounds.width-2) * pct / 100f;
-            gfx.fillRect(_bounds.x+1, _bounds.y,
-                         (int)Math.ceil(epix), DBAR_HEIGHT);
+            float epix = (_bounds.height-1) * pct / 100f;
+            int height = (int)Math.ceil(epix);
+            int sx = _bounds.x+_bounds.width-DBAR_SIZE;
+            gfx.fillRect(sx, _bounds.y + (_bounds.height-height),
+                         DBAR_SIZE, height);
             gfx.setColor(Color.black);
-            gfx.drawRect(_bounds.x, _bounds.y, _bounds.width-1, DBAR_HEIGHT-1);
+            gfx.drawLine(sx, _bounds.y, sx, _bounds.y+_bounds.height-1);
         }
 
         // paint the piece itself
@@ -40,17 +41,11 @@ public class MobileSprite extends PieceSprite
         // now paint an indication of the number of ticks remaining before
         // this piece can again move
         int ttm = _piece.ticksUntilMovable(_tick);
-        int ttf = _piece.ticksUntilFirable(_tick);
-        int bx = _bounds.x;
-//         gfx.setColor(Color.red);
-//         for (int ii = 0; ii < ttf; ii++) {
-//             gfx.fillRect(bx, _bounds.y + DBAR_HEIGHT, 4, 4);
-//             bx += 5;
-//         }
+        int by = _bounds.y;
         gfx.setColor(Color.white);
         for (int ii = 0; ii < ttm; ii++) {
-            gfx.fillRect(bx, _bounds.y + DBAR_HEIGHT, 4, 4);
-            bx += 5;
+            gfx.fillRect(_bounds.x, by, 4, 4);
+            by += 5;
         }
     }
 
@@ -73,8 +68,7 @@ public class MobileSprite extends PieceSprite
         return color;
     }
 
-    protected static final int DBAR_HEIGHT = 4;
-    protected static final int DBAR_GAP = 3;
+    protected static final int DBAR_SIZE = 4;
 
     protected static final Color[] DAMAGE_COLORS = {
         Color.red, Color.red, Color.yellow, Color.yellow, Color.green,

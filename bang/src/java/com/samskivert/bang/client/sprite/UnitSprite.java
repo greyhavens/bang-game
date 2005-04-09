@@ -62,11 +62,16 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    protected void paintPiece (Graphics2D gfx)
+    public void paint (Graphics2D gfx)
     {
         gfx.setColor(PIECE_COLORS[_piece.owner]);
-        gfx.fillRect(_ox+1, _oy+1, SQUARE-1, SQUARE-1);
+        gfx.fillRect(_ox+1, _oy+1, SQUARE-DBAR_SIZE-1, SQUARE-1);
+        super.paint(gfx);
+    }
 
+    @Override // documentation inherited
+    protected void paintPiece (Graphics2D gfx)
+    {
         BufferedImage image = getImage(_piece.owner, _piece.orientation);
         int width = _bounds.width - _oxoff, iwidth = image.getWidth();
         int height = _bounds.height - _oyoff, iheight = image.getHeight();
