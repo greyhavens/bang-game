@@ -64,7 +64,7 @@ public class BangObject extends GameObject
     public PieceDSet pieces;
 
     /** Contains information on all available surprises. */
-    public DSet surprises;
+    public DSet surprises = new DSet();
 
     /** A field we use to broadcast applied effects. */
     public Effect effect;

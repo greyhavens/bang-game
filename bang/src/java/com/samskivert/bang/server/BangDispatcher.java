@@ -59,6 +59,13 @@ public class BangDispatcher extends InvocationDispatcher
             );
             return;
 
+        case BangMarshaller.SURPRISE:
+            ((BangProvider)provider).surprise(
+                source,
+                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue()
+            );
+            return;
+
         default:
             super.dispatchRequest(source, methodId, args);
         }

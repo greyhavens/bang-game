@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -41,6 +42,7 @@ import com.samskivert.bang.data.effect.ShotEffect;
 import com.samskivert.bang.data.piece.BigPiece;
 import com.samskivert.bang.data.piece.Chopper;
 import com.samskivert.bang.data.piece.Piece;
+import com.samskivert.bang.data.surprise.Surprise;
 import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PointSet;
 import com.samskivert.bang.util.VisibilityState;
@@ -59,6 +61,26 @@ public class BangBoardView extends BoardView
         super(ctx);
         addMouseListener(this);
         addMouseMotionListener(this);
+    }
+
+    /**
+     * Requests that the specified surprise be enabled for placement. The
+     * area of effect of the surprise will be rendered around the cursor
+     * and a left click will activate the surprise at the specified
+     * coordinates while a right click will cancel the placement.
+     */
+    public void placeSurprise (Surprise s)
+    {
+        // clear any current selection
+        clearSelection();
+
+        // set up the display of our surprise attack set
+        _surprise = s;
+        _attackSet = new PointSet();
+        _bangobj.board.computeAttacks(
+            _surprise.getRadius(), _mouse.x, _mouse.y, _attackSet);
+        dirtySet(_attackSet);
+        log.info("Placing " + _surprise);
     }
 
     // documentation inherited from interface MouseListener
@@ -115,6 +137,12 @@ public class BangBoardView extends BoardView
     {
         // first update our mousely business
         mouseMoved(e);
+    }
+
+    @Override // documentation inherited
+    public void keyPressed (KeyEvent e)
+    {
+        super.keyPressed(e);
     }
 
     @Override // documentation inherited
@@ -213,6 +241,17 @@ public class BangBoardView extends BoardView
             }
         }
 
+        // if we are placing a surprise, activate it
+        if (_surprise != null) {
+            log.info("activating " + _surprise);
+            BangController.postAction(
+                this, BangController.ACTIVATE_SURPRISE,
+                new int[] { _surprise.surpriseId, tx, ty });
+            _surprise = null;
+            clearAttackSet();
+            return;
+        }
+
         // if we have a selection
         if (_selection != null) {
             // and we have an attack set
@@ -245,7 +284,8 @@ public class BangBoardView extends BoardView
                 // display our potential attacks
                 _attackSet = new PointSet();
                 PointSet attacks = new PointSet();
-                _bangobj.board.computeAttacks(_selection, tx, ty, attacks);
+                _bangobj.board.computeAttacks(
+                    _selection.getFireDistance(), tx, ty, attacks);
                 for (Iterator iter = _bangobj.pieces.iterator();
                      iter.hasNext(); ) {
                     Piece p = (Piece)iter.next();
@@ -281,6 +321,14 @@ public class BangBoardView extends BoardView
 
         // nothing doing if the game is not in play
         if (_bangobj == null || !_bangobj.isInPlay()) {
+            return;
+        }
+
+        // if we are placing a surprise, clear it out
+        if (_surprise != null) {
+            log.info("Clearing " + _surprise);
+            _surprise = null;
+            clearAttackSet();
             return;
         }
 
@@ -333,6 +381,23 @@ public class BangBoardView extends BoardView
         // clear out any pending action
         _action = null;
         clearAttackSet();
+    }
+
+    @Override // documentation inherited
+    protected boolean updateMouseTile (int mx, int my)
+    {
+        if (super.updateMouseTile(mx, my)) {
+            // if we have an active surprise, update its area of effect
+            if (_surprise != null) {
+                dirtySet(_attackSet);
+                _attackSet.clear();
+                _bangobj.board.computeAttacks(
+                    _surprise.getRadius(), mx, my, _attackSet);
+                dirtySet(_attackSet);
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override // documentation inherited
@@ -609,6 +674,7 @@ public class BangBoardView extends BoardView
     protected int _downButton = -1;
 
     protected int[] _action;
+    protected Surprise _surprise;
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;

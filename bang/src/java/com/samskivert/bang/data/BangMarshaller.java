@@ -55,4 +55,15 @@ public class BangMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #surprise} requests. */
+    public static final int SURPRISE = 4;
+
+    // documentation inherited from interface
+    public void surprise (Client arg1, int arg2, short arg3, short arg4)
+    {
+        sendRequest(arg1, SURPRISE, new Object[] {
+            new Integer(arg2), new Short(arg3), new Short(arg4)
+        });
+    }
+
 }

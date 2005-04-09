@@ -6,6 +6,8 @@ package com.samskivert.bang.data.surprise;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.samskivert.bang.data.effect.Effect;
+
 /**
  * Provides the player with a one-shot crazy thing that they can do during
  * the course of a game. Players can hold some fixed number of surprises
@@ -20,14 +22,30 @@ public abstract class Surprise extends SimpleStreamableObject
     /** The player index of the player that is holding this surprise. */
     public int owner;
 
+    /** Returns the name of the icon image for this surprise. */
+    public abstract String getIconPath ();
+
+    /** Returns the radius that should be used when displaying this
+     * surprise's area of effect. */
+    public abstract int getRadius ();
+
     /**
-     * This is used to assign a new unique id to a surprise when one is
-     * created (on the server).
+     * Activates the specified surprise at the supplied coordinates. The
+     * returned effect will be prepared and effected immediately.
+     *
+     * @return the effect of the surprise activation.
      */
-    public void assignSurpriseId ()
+    public abstract Effect activate (int x, int y);
+
+    /**
+     * This is used to assign the owner and a new unique id to a surprise
+     * when it is created (on the server).
+     */
+    public void init (int owner)
     {
         _key = null;
         surpriseId = 0;
+        this.owner = owner;
         getKey();
     }
 

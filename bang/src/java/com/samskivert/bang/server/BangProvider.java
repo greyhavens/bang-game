@@ -25,4 +25,7 @@ public interface BangProvider extends InvocationProvider
     public void move (ClientObject caller, int pieceId, short x, short y,
                       int targetId, BangService.InvocationListener il)
         throws InvocationException;
+
+    /** Handles a {@link BangService#surprise} request. */
+    public void surprise (ClientObject caller, int surpriseId, short x, short y);
 }

@@ -12,12 +12,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.samskivert.bang.data.BangObject;
 import com.samskivert.swing.Controller;
 import com.samskivert.swing.ControllerProvider;
+import com.samskivert.swing.GroupLayout;
 import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.ScrollBox;
 import com.samskivert.swing.VGroupLayout;
+import com.samskivert.swing.util.SwingUtil;
 
 import com.threerings.media.VirtualRangeModel;
 
@@ -26,6 +27,8 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.toybox.client.ChatPanel;
 import com.threerings.toybox.util.ToyBoxContext;
+
+import com.samskivert.bang.data.BangObject;
 
 import static com.samskivert.bang.client.BangMetrics.*;
 
@@ -46,24 +49,32 @@ public class BangPanel extends JPanel
 	// give ourselves a wee bit of a border
 	setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-	HGroupLayout gl = new HGroupLayout(HGroupLayout.STRETCH);
-	gl.setOffAxisPolicy(HGroupLayout.STRETCH);
+	GroupLayout gl = new HGroupLayout(GroupLayout.STRETCH);
+	gl.setOffAxisPolicy(GroupLayout.STRETCH);
 	setLayout(gl);
 
-        // create the board view
-        add(view = new BangBoardView(ctx));
+        // create the board view and surprise display
+        gl = new VGroupLayout(GroupLayout.STRETCH, GroupLayout.STRETCH,
+                              5, GroupLayout.TOP);
+        JPanel mainPanel = new JPanel(gl);
+        mainPanel.add(view = new BangBoardView(ctx));
+        gl = new HGroupLayout(GroupLayout.STRETCH, GroupLayout.STRETCH,
+                              5, GroupLayout.LEFT);
+        _spanel = new JPanel(gl);
+        mainPanel.add(_spanel, GroupLayout.FIXED);
+        add(mainPanel);
 
         // create our side panel
-        VGroupLayout sgl = new VGroupLayout(VGroupLayout.STRETCH);
-        sgl.setOffAxisPolicy(VGroupLayout.STRETCH);
-        sgl.setJustification(VGroupLayout.TOP);
+        VGroupLayout sgl = new VGroupLayout(GroupLayout.STRETCH);
+        sgl.setOffAxisPolicy(GroupLayout.STRETCH);
+        sgl.setJustification(GroupLayout.TOP);
         JPanel sidePanel = new JPanel(sgl);
 
         // add a big fat label because we love it!
         JLabel vlabel = new JLabel("Bang!");
         vlabel.setFont(new Font("Helvetica", Font.BOLD, 24));
         vlabel.setForeground(Color.black);
-        sidePanel.add(vlabel, VGroupLayout.FIXED);
+        sidePanel.add(vlabel, GroupLayout.FIXED);
 
         // add a chat box
         ChatPanel chat = new ChatPanel(ctx);
@@ -103,6 +114,18 @@ public class BangPanel extends JPanel
         } else {
             _scrolly.setVisible(false);
         }
+
+        // add our surprise panels if necessary
+        if (_spanel.getComponentCount() == 0) {
+            for (int ii = 0; ii < bangobj.players.length; ii++) {
+                SurprisePanel sp = new SurprisePanel(ii, pidx);
+                _spanel.add(sp);
+                // we need to fake a willEnterPlace() because they weren't
+                // around when that happened
+                sp.willEnterPlace(bangobj);
+            }
+            SwingUtil.refresh(_spanel);
+        }
     }
 
     /** Called by the controller when the game ends. */
@@ -135,4 +158,7 @@ public class BangPanel extends JPanel
 
     /** Used to scroll around in our view. */
     protected ScrollBox _scrolly;
+
+    /** Displays our surprise panels. */
+    protected JPanel _spanel;
 }

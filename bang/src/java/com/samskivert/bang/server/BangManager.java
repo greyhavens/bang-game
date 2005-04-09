@@ -47,6 +47,8 @@ import com.samskivert.bang.data.generate.TestScenario;
 import com.samskivert.bang.data.piece.Bonus;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
+import com.samskivert.bang.data.surprise.MissileSurprise;
+import com.samskivert.bang.data.surprise.Surprise;
 import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PointSet;
 
@@ -104,7 +106,8 @@ public class BangManager extends GameManager
             // if they specified a target, shoot at it
             if (target != null) {
                 _attacks.clear();
-                _bangobj.board.computeAttacks(piece, x, y, _attacks);
+                _bangobj.board.computeAttacks(
+                    piece.getFireDistance(), x, y, _attacks);
                 if (_attacks.contains(target.x, target.y)) {
                     ShotEffect effect = piece.shoot(target);
                     effect.prepare(_bangobj);
@@ -123,6 +126,28 @@ public class BangManager extends GameManager
         } finally {
             _bangobj.commitTransaction();
         }
+    }
+
+    // documentation inherited from interface BangProvider
+    public void surprise (ClientObject caller, int surpriseId, short x, short y)
+    {
+        BodyObject user = (BodyObject)caller;
+        Surprise s = (Surprise)_bangobj.surprises.get(surpriseId);
+        if (s == null || s.owner != _bangobj.getPlayerIndex(user.username)) {
+            log.info("Rejecting invalid surprise request [who=" + user.who() +
+                     ", sid=" + surpriseId + ", surprise=" + s + "].");
+            return;
+        }
+
+        log.info("surprise! " + s);
+
+        // remove it from their list
+        _bangobj.removeFromSurprises(surpriseId);
+
+        // and activate it
+        Effect effect = s.activate(x, y);
+        effect.prepare(_bangobj);
+        _bangobj.setEffect(effect);
     }
 
     // documentation inherited
@@ -203,6 +228,15 @@ public class BangManager extends GameManager
         _bangobj.setBoard(createBoard(pieces));
         _bangobj.setPieces(new PieceDSet(pieces.iterator()));
         _bangobj.board.shadowPieces(pieces.iterator());
+
+        // TEMP: add some surprises
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            for (int ss = 0; ss < 3; ss++) {
+                MissileSurprise s = new MissileSurprise();
+                s.init(ii);
+                _bangobj.addToSurprises(s);
+            }
+        }
 
         // initialize our pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {

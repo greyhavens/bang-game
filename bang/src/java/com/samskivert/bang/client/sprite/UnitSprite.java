@@ -19,6 +19,10 @@ import com.samskivert.bang.data.piece.Piece;
  */
 public class UnitSprite extends MobileSprite
 {
+    public static final Color[] PIECE_COLORS = {
+        Color.blue, Color.red, Color.green, Color.yellow
+    };
+
     public UnitSprite (String type)
     {
         _type = type;
@@ -96,8 +100,4 @@ public class UnitSprite extends MobileSprite
     protected String _type;
     protected BufferedImage[] _images = new BufferedImage[4];
     protected HashIntMap _outlined = new HashIntMap();
-
-    protected static final Color[] PIECE_COLORS = {
-        Color.blue, Color.red, Color.green, Color.yellow
-    };
 }

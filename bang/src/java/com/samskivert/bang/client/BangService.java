@@ -32,4 +32,10 @@ public interface BangService extends InvocationService
      */
     public void move (Client client, int pieceId, short x, short y,
                       int targetId, InvocationListener listener);
+
+    /**
+     * Requests that the specified surprise be activated at the specified
+     * location.
+     */
+    public void surprise (Client client, int surpriseId, short x, short y);
 }

@@ -249,14 +249,13 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
-     * Computes the supplied piece's attack set based on the specified
-     * location and the state of the board.
+     * Computes a set of possible attacks given the specified fire
+     * distance.
      */
-    public void computeAttacks (Piece piece, int px, int py, PointSet attacks)
+    public void computeAttacks (
+        int fireDistance, int px, int py, PointSet attacks)
     {
-        // now determine where we can fire
-        int fdist = piece.getFireDistance();
-        for (int dd = 1; dd <= fdist; dd++) {
+        for (int dd = 1; dd <= fireDistance; dd++) {
             for (int xx = px, yy = py - dd; yy < py; xx++, yy++) {
                 if (_bbounds.contains(xx, yy)) {
                     attacks.add(xx, yy);

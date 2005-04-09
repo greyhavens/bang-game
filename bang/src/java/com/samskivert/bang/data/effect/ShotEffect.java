@@ -27,23 +27,35 @@ public class ShotEffect extends Effect
         // nada
     }
 
-    public void apply (BangObject bangobj, Observer observer)
+    public void apply (BangObject bangobj, Observer obs)
     {
         Piece target = (Piece)bangobj.pieces.get(targetId);
-        if (target != null) {
-            target.damage = Math.min(100, target.damage + damage);
-        } else {
+        if (target == null) {
             log.warning("Missing shot target " + this + ".");
+            return;
         }
+        damage(bangobj, obs, target, damage, DAMAGED);
+    }
 
-        // report that the target was shot
-        reportEffect(observer, target, DAMAGED);
+    /**
+     * Damages the supplied piece by the specified amount, properly
+     * removing it from the board if appropriate and reporting the
+     * specified effect.
+     */
+    public static void damage (BangObject bangobj, Observer obs, Piece target,
+                               int damage, String effect)
+    {
+        // effect the actual damage
+        target.damage = Math.min(100, target.damage + damage);
+
+        // report that the target was affected
+        reportEffect(obs, target, effect);
 
         // if the target is dead and should be removed, do so
         if (!target.isAlive() && target.removeWhenDead()) {
             bangobj.pieces.removeDirect(target);
             bangobj.board.updateShadow(target, null);
-            reportRemoval(observer, target);
+            reportRemoval(obs, target);
         }
     }
 }

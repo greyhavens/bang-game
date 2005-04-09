@@ -57,7 +57,7 @@ public abstract class Effect extends SimpleStreamableObject
     public abstract void apply (BangObject bangobj, Observer observer);
 
     /** A helper function for reporting a piece addition. */
-    protected void reportAddition (Observer obs, Piece piece)
+    protected static void reportAddition (Observer obs, Piece piece)
     {
         if (obs != null) {
             obs.pieceAdded(piece);
@@ -65,7 +65,7 @@ public abstract class Effect extends SimpleStreamableObject
     }
 
     /** A helper function for reporting a piece affecting. */
-    protected void reportEffect (Observer obs, Piece piece, String effect)
+    protected static void reportEffect (Observer obs, Piece piece, String effect)
     {
         if (obs != null) {
             obs.pieceAffected(piece, effect);
@@ -73,7 +73,7 @@ public abstract class Effect extends SimpleStreamableObject
     }
 
     /** A helper function for reporting a piece addition. */
-    protected void reportRemoval (Observer obs, Piece piece)
+    protected static void reportRemoval (Observer obs, Piece piece)
     {
         if (obs != null) {
             obs.pieceRemoved(piece);
