@@ -5,6 +5,7 @@ package com.samskivert.bang.data.effect;
 
 import java.util.Iterator;
 
+import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 
 import com.samskivert.bang.data.BangObject;
@@ -29,7 +30,7 @@ public class GrantSurpriseEffect extends Effect
     {
     }
 
-    public void prepare (BangObject bangobj)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         int[] power = bangobj.computePower();
         int tpower = IntListUtil.sum(power);

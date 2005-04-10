@@ -19,6 +19,7 @@ import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.parlor.game.client.GameController;
 
+import com.threerings.toybox.data.ToyBoxGameConfig;
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.data.BangObject;
@@ -50,6 +51,7 @@ public class BangController extends GameController
     {
         super.init(ctx, config);
         _ctx = (ToyBoxContext)ctx;
+        _config = (ToyBoxGameConfig)config;
     }
 
     @Override // documentation inherited
@@ -64,7 +66,7 @@ public class BangController extends GameController
 
         // we may be returning to an already started game
         if (_bangobj.isInPlay()) {
-            _panel.startGame(_bangobj, _pidx);
+            _panel.startGame(_bangobj, _config, _pidx);
         }
     }
 
@@ -132,7 +134,7 @@ public class BangController extends GameController
         super.gameDidStart();
 
         // we may be returning to an already started game
-        _panel.startGame(_bangobj, _pidx);
+        _panel.startGame(_bangobj, _config, _pidx);
     }
 
     @Override // documentation inherited
@@ -151,6 +153,9 @@ public class BangController extends GameController
 
     /** A casted reference to our context. */
     protected ToyBoxContext _ctx;
+
+    /** The configuration of this game. */
+    protected ToyBoxGameConfig _config;
 
     /** Contains our main user interface. */
     protected BangPanel _panel;

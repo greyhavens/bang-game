@@ -6,6 +6,8 @@ package com.samskivert.bang.data;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.samskivert.util.IntListUtil;
+
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
 
@@ -98,13 +100,23 @@ public class BangObject extends GameObject
      */
     public boolean hasLivePieces (int pidx)
     {
+        return countLivePieces(pidx) > 0;
+    }
+
+    /**
+     * Returns the number of live pieces remaining for the specified
+     * player.
+     */
+    public int countLivePieces (int pidx)
+    {
+        int pcount = 0;
         for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (p.owner == pidx && p.isAlive()) {
-                return true;
+                pcount++;
             }
         }
-        return false;
+        return pcount;
     }
 
     /**
@@ -123,6 +135,25 @@ public class BangObject extends GameObject
             }
         }
         return power;
+    }
+
+    /**
+     * Returns the average number of live pieces per player.
+     */
+    public int getAveragePieceCount ()
+    {
+        int[] pcount = new int[players.length];
+        double lcount = 0;
+        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            if (p.isAlive() && p.owner >= 0) {
+                if (pcount[p.owner] == 0) {
+                    lcount++;
+                }
+                pcount[p.owner]++;
+            }
+        }
+        return (int)Math.round(IntListUtil.sum(pcount) / lcount);
     }
 
     // AUTO-GENERATED: METHODS START

@@ -19,10 +19,8 @@
   <params>
     <ai ident="aicount" maximum="3"/>
     <choice ident="aitype" choices="still,standard" start="still"/>
-    <range ident="board_size" minimum="16" maximum="48" start="20"/>
-    <!--
-    <choice ident="rules" choices="standard,hand_of_three" start="standard"/>
-    <toggle ident="monkeys" start="false"/>
-    -->
+    <range ident="board_size" minimum="8" maximum="48" start="15"/>
+    <range ident="density" minimum="1" maximum="10" start="8"/>
+    <toggle ident="fog" start="false"/>
   </params>
 </game>

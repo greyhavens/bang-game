@@ -35,15 +35,15 @@ public class Artillery extends Piece
     }
 
     @Override // documentation inherited
-    public int getFireDistance ()
+    public boolean validTarget (Piece target)
     {
-        return FIRE_DISTANCE;
+        return super.validTarget(target) && !(target instanceof Chopper);
     }
 
     @Override // documentation inherited
-    protected boolean validTarget (Piece target)
+    public int getFireDistance ()
     {
-        return super.validTarget(target) && !(target instanceof Chopper);
+        return FIRE_DISTANCE;
     }
 
     @Override // documentation inherited

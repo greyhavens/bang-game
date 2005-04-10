@@ -3,6 +3,8 @@
 
 package com.samskivert.bang.data.effect;
 
+import com.samskivert.util.IntIntMap;
+
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.piece.Piece;
 
@@ -22,9 +24,14 @@ public class ShotEffect extends Effect
 
     public int damage;
 
-    public void prepare (BangObject bangobj)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // nada
+        Piece target = (Piece)bangobj.pieces.get(targetId);
+        if (target == null) {
+            log.warning("Missing target during apply!? [id=" + targetId + "].");
+        } else {
+            dammap.increment(target.owner, Math.min(damage, 100-target.damage));
+        }
     }
 
     public void apply (BangObject bangobj, Observer obs)
@@ -47,6 +54,8 @@ public class ShotEffect extends Effect
     {
         // effect the actual damage
         target.damage = Math.min(100, target.damage + damage);
+        log.info("Damaging " + target.info() + " by " + damage +
+                 " points, resulting in " + target.damage + ".");
 
         // report that the target was affected
         reportEffect(obs, target, effect);

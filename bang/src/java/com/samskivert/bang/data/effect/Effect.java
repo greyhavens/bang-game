@@ -3,6 +3,8 @@
 
 package com.samskivert.bang.data.effect;
 
+import com.samskivert.util.IntIntMap;
+
 import com.threerings.io.SimpleStreamableObject;
 
 import com.samskivert.bang.data.BangObject;
@@ -42,8 +44,12 @@ public abstract class Effect extends SimpleStreamableObject
      * will be placing new pieces (and update the board shadow to reflect
      * those piece additions, though it should not actually add the pieces
      * until it is applied).
+     *
+     * @param dammap a mapping that should be used to record damage done
+     * to a particular player's units (player index -> accumulated
+     * damage).
      */
-    public abstract void prepare (BangObject bangobj);
+    public abstract void prepare (BangObject bangobj, IntIntMap dammap);
 
     /**
      * Applies this effect to the board and pieces. Any modifications to
@@ -65,7 +71,8 @@ public abstract class Effect extends SimpleStreamableObject
     }
 
     /** A helper function for reporting a piece affecting. */
-    protected static void reportEffect (Observer obs, Piece piece, String effect)
+    protected static void reportEffect (
+        Observer obs, Piece piece, String effect)
     {
         if (obs != null) {
             obs.pieceAffected(piece, effect);

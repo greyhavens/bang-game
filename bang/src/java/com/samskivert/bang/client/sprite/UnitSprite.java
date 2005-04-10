@@ -64,8 +64,10 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     public void paint (Graphics2D gfx)
     {
-        gfx.setColor(PIECE_COLORS[_piece.owner]);
-        gfx.fillRect(_ox+1, _oy+1, SQUARE-DBAR_SIZE-1, SQUARE-1);
+        if (_piece.isAlive()) {
+            gfx.setColor(PIECE_COLORS[_piece.owner]);
+            gfx.fillRect(_ox+1, _oy+1, SQUARE-DBAR_SIZE-1, SQUARE-1);
+        }
         super.paint(gfx);
     }
 

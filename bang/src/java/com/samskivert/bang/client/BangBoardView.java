@@ -32,6 +32,7 @@ import com.threerings.media.util.Path;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.toybox.data.ToyBoxGameConfig;
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
@@ -146,19 +147,19 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    public void startGame (BangObject bangobj, int playerIdx)
+    public void startGame (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
     {
-        super.startGame(bangobj, playerIdx);
+        super.startGame(bangobj, cfg, pidx);
 
-        _pidx = playerIdx;
-        _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
-
-        // add the listener that will react to pertinent events
+        _pidx = pidx;
         _bangobj.addListener(_ticker);
 
-        // set up the starting visibility
-        adjustBoardVisibility();
-        adjustEnemyVisibility();
+        // set up the starting visibility if we're using it
+        if ((Boolean)cfg.params.get("fog")) {
+            _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
+            adjustBoardVisibility();
+            adjustEnemyVisibility();
+        }
     }
 
     @Override // documentation inherited
@@ -171,9 +172,11 @@ public class BangBoardView extends BoardView
         _bangobj.removeListener(_ticker);
 
         // allow everything to be visible
-        _vstate.reveal();
-        adjustEnemyVisibility();
-        dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
+        if (_vstate != null) {
+            _vstate.reveal();
+            adjustEnemyVisibility();
+            dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
+        }
     }
 
     @Override // documentation inherited
@@ -196,7 +199,7 @@ public class BangBoardView extends BoardView
         }
 
         // render the necessary tiles as dimmed if it is not "visible"
-        if (_board != null) {
+        if (_board != null && _vstate != null) {
             Composite ocomp = gfx.getComposite();
             gfx.setComposite(SET_ALPHA);
             gfx.setColor(Color.black);
@@ -289,7 +292,7 @@ public class BangBoardView extends BoardView
                 for (Iterator iter = _bangobj.pieces.iterator();
                      iter.hasNext(); ) {
                     Piece p = (Piece)iter.next();
-                    if (p.owner >= 0 && p.owner != _pidx && p.isAlive() &&
+                    if (_selection.validTarget(p) &&
                         attacks.contains(p.x, p.y)) {
                         _attackSet.add(p.x, p.y);
                     }

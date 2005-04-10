@@ -3,6 +3,8 @@
 
 package com.samskivert.bang.data.effect;
 
+import com.samskivert.util.IntIntMap;
+
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.piece.Piece;
 
@@ -25,7 +27,7 @@ public class RepairEffect extends Effect
     {
     }
 
-    public void prepare (BangObject bangobj)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // nothing doing
     }

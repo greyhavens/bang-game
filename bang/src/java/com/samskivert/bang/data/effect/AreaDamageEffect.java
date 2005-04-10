@@ -6,6 +6,7 @@ package com.samskivert.bang.data.effect;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.IntIntMap;
 import com.threerings.media.util.MathUtil;
 
 import com.samskivert.bang.data.BangObject;
@@ -39,7 +40,7 @@ public class AreaDamageEffect extends Effect
     }
 
     @Override // documentation inherited
-    public void prepare (BangObject bangobj)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         ArrayIntSet affected = new ArrayIntSet();
         int r2 = radius * radius;
@@ -48,6 +49,7 @@ public class AreaDamageEffect extends Effect
             if (p.owner >= 0 && p.isAlive() &&
                 MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
                 affected.add(p.pieceId);
+                dammap.increment(p.owner, Math.min(damage, 100-p.damage));
             }
         }
         pieces = affected.toIntArray();

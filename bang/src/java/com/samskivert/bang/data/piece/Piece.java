@@ -48,7 +48,7 @@ public abstract class Piece extends SimpleStreamableObject
     public int owner = -1;
 
     /** The tick on which this piece last acted. */
-    public short lastActed = -4;
+    public short lastActed;
 
     /** The current x location of this piece's segments. */
     public short x;
@@ -201,6 +201,9 @@ public abstract class Piece extends SimpleStreamableObject
         if (energy == 0) {
             energy = startingEnergy();
         }
+
+        // start with a random last moved tick
+        lastActed = (short)(-1 * RandomUtil.getInt(getTicksPerMove()));
     }
 
     /**
@@ -286,6 +289,8 @@ public abstract class Piece extends SimpleStreamableObject
     public ShotEffect shoot (Piece target)
     {
         int hurt = computeDamage(target);
+        // TEMP: scale all damage up
+        hurt = 5 * hurt / 3;
         // scale the damage by our own damage level
         hurt = (hurt * (100-this.damage)) / 100;
         hurt = Math.max(1, hurt); // always do at least 1 point of damage
@@ -423,6 +428,14 @@ public abstract class Piece extends SimpleStreamableObject
             ("" + orientation);
     }
 
+    /** Returns true if we can and should fire upon this target. */
+    public boolean validTarget (Piece target)
+    {
+        return (target != null && target.owner != -1 &&
+                target.owner != owner && target.energy > 0 &&
+                target.damage < 100);
+    }
+
     /** Returns the frequency with which this piece can move. */
     protected int getTicksPerMove ()
     {
@@ -516,14 +529,6 @@ public abstract class Piece extends SimpleStreamableObject
         log.warning(getClass() + " requested to damage " +
                     target.getClass() + "?");
         return 10;
-    }
-
-    /** Returns true if we can and should fire upon this target. */
-    protected boolean validTarget (Piece target)
-    {
-        return (target != null && target.owner != -1 &&
-                target.owner != owner && target.energy > 0 &&
-                target.damage < 100);
     }
 
     /**

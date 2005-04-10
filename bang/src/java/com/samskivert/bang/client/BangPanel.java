@@ -26,6 +26,7 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.toybox.client.ChatPanel;
+import com.threerings.toybox.data.ToyBoxGameConfig;
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.data.BangObject;
@@ -68,18 +69,18 @@ public class BangPanel extends JPanel
         VGroupLayout sgl = new VGroupLayout(GroupLayout.STRETCH);
         sgl.setOffAxisPolicy(GroupLayout.STRETCH);
         sgl.setJustification(GroupLayout.TOP);
-        JPanel sidePanel = new JPanel(sgl);
+        _sidePanel = new JPanel(sgl);
 
         // add a big fat label because we love it!
         JLabel vlabel = new JLabel("Bang!");
         vlabel.setFont(new Font("Helvetica", Font.BOLD, 24));
         vlabel.setForeground(Color.black);
-        sidePanel.add(vlabel, GroupLayout.FIXED);
+        _sidePanel.add(vlabel, GroupLayout.FIXED);
 
         // add a chat box
         ChatPanel chat = new ChatPanel(ctx);
         chat.removeSendButton();
-        sidePanel.add(chat);
+        _sidePanel.add(chat);
 
         // add a box for scrolling around in our view
         _rangeModel = new VirtualRangeModel(view);
@@ -87,23 +88,23 @@ public class BangPanel extends JPanel
                                  _rangeModel.getVertModel());
         _scrolly.setPreferredSize(new Dimension(100, 100));
         _scrolly.setBorder(BorderFactory.createLineBorder(Color.black));
-        sidePanel.add(_scrolly, VGroupLayout.FIXED);
+        _sidePanel.add(_scrolly, VGroupLayout.FIXED);
 
         // add a "back" button
         JButton back = new JButton("Back to lobby");
         back.setActionCommand(BangController.BACK_TO_LOBBY);
         back.addActionListener(Controller.DISPATCHER);
-        sidePanel.add(back, VGroupLayout.FIXED);
+        _sidePanel.add(back, VGroupLayout.FIXED);
 
         // add our side panel to the main display
-        add(sidePanel, HGroupLayout.FIXED);
+        add(_sidePanel, HGroupLayout.FIXED);
     }
 
     /** Called by the controller when the game starts. */
-    public void startGame (BangObject bangobj, int pidx)
+    public void startGame (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
     {
         // our view needs to know about the start of the game
-        view.startGame(bangobj, pidx);
+        view.startGame(bangobj, cfg, pidx);
 
         // compute the size of the whole board and configure scrolling
         int width = bangobj.board.getWidth() * SQUARE,
@@ -143,6 +144,14 @@ public class BangPanel extends JPanel
     // documentation inherited from interface
     public void willEnterPlace (PlaceObject plobj)
     {
+        BangObject bangobj = (BangObject)plobj;
+
+        // add score panels for each of our players
+        for (int ii = 0; ii < bangobj.players.length; ii++) {
+            _sidePanel.add(
+                new ScorePanel(bangobj, ii), GroupLayout.FIXED, 1+ii);
+        }
+        SwingUtil.refresh(_sidePanel);
     }
 
     // documentation inherited from interface
@@ -158,6 +167,9 @@ public class BangPanel extends JPanel
 
     /** Used to scroll around in our view. */
     protected ScrollBox _scrolly;
+
+    /** Contains all the stuff on the side. */
+    protected JPanel _sidePanel;
 
     /** Displays our surprise panels. */
     protected JPanel _spanel;

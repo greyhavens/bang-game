@@ -12,9 +12,6 @@ import com.samskivert.bang.client.sprite.UnitSprite;
 public class Marine extends Piece
     implements PlayerPiece
 {
-    /** A marine can fire at a target up to two squares away. */
-    public static final int FIRE_DISTANCE = 2;
-
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
@@ -29,6 +26,12 @@ public class Marine extends Piece
 
     @Override // documentation inherited
     public int getMoveDistance ()
+    {
+        return 3;
+    }
+
+    @Override // documentation inherited
+    public int getFireDistance ()
     {
         return 2;
     }

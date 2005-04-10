@@ -5,6 +5,8 @@ package com.samskivert.bang.data.effect;
 
 import java.awt.Point;
 
+import com.samskivert.util.IntIntMap;
+
 import com.samskivert.bang.data.BangObject;
 import com.samskivert.bang.data.piece.Piece;
 
@@ -34,7 +36,7 @@ public class DuplicateEffect extends Effect
     {
     }
 
-    public void prepare (BangObject bangobj)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
         if (piece == null) {

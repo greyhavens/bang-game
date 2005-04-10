@@ -35,9 +35,11 @@ public class CompoundGenerator extends EnvironmentGenerator
         // first fill the board with dirt
         board.fill(Terrain.DIRT);
 
+        int density = 11 - (Integer)config.params.get("density");
+
         // pick a reasonable number for a board of this size (1/2 of the
         // average of the width and height)
-        int count = 2*(width+height)/5;
+        int count = 2*(width+height)/density;
 
         // TODO: maybe more buildings at higher difficulty
 

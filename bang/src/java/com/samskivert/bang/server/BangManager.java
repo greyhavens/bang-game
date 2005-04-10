@@ -11,9 +11,11 @@ import java.util.List;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 import com.threerings.util.RandomUtil;
 
@@ -85,8 +87,8 @@ public class BangManager extends GameManager
             return;
         }
         if (piece.ticksUntilMovable(_bangobj.tick) > 0) {
-            log.info("Rejecting premature move/fire request [who=" + user.who() +
-                     ", piece=" + piece.info() + "].");
+            log.info("Rejecting premature move/fire request " +
+                     "[who=" + user.who() + ", piece=" + piece.info() + "].");
             return;
         }
 
@@ -97,7 +99,7 @@ public class BangManager extends GameManager
 
             // if they specified a non-NOOP move, execute it
             if (x != piece.x || y != piece.y) {
-                mpiece = movePiece(piece, x, y);
+                mpiece = movePiece(user, piece, x, y);
                 if (mpiece == null) {
                     throw new InvocationException(MOVE_BLOCKED);
                 }
@@ -105,21 +107,31 @@ public class BangManager extends GameManager
 
             // if they specified a target, shoot at it
             if (target != null) {
+                // make sure the target is valid
+                if (!piece.validTarget(target)) {
+                    log.info("Target not valid " + target + ".");
+                    // target already dead or something
+                    return;
+                }
+
+                // make sure the target is still within range
                 _attacks.clear();
                 _bangobj.board.computeAttacks(
                     piece.getFireDistance(), x, y, _attacks);
-                if (_attacks.contains(target.x, target.y)) {
-                    ShotEffect effect = piece.shoot(target);
-                    effect.prepare(_bangobj);
-                    _bangobj.setEffect(effect);
-                    // if they did not move in this same action, we need
-                    // to set their last acted tick
-                    if (mpiece == null) {
-                        piece.lastActed = _bangobj.tick;
-                        _bangobj.updatePieces(piece);
-                    }
-                } else {
+                if (!_attacks.contains(target.x, target.y)) {
                     throw new InvocationException(TARGET_MOVED);
+                }
+
+                ShotEffect effect = piece.shoot(target);
+                effect.prepare(_bangobj, _damage);
+                _bangobj.setEffect(effect);
+                recordDamage(user, _damage);
+
+                // if they did not move in this same action, we need to
+                // set their last acted tick
+                if (mpiece == null) {
+                    piece.lastActed = _bangobj.tick;
+                    _bangobj.updatePieces(piece);
                 }
             }
 
@@ -146,8 +158,9 @@ public class BangManager extends GameManager
 
         // and activate it
         Effect effect = s.activate(x, y);
-        effect.prepare(_bangobj);
+        effect.prepare(_bangobj, _damage);
         _bangobj.setEffect(effect);
+        recordDamage(user, _damage);
     }
 
     // documentation inherited
@@ -158,7 +171,7 @@ public class BangManager extends GameManager
             tick(_bangobj.tick);
 
         } else if (name.equals(BangObject.EFFECT)) {
-            _bangobj.effect.apply(_bangobj, null);
+            ((Effect)event.getValue()).apply(_bangobj, null);
 
         } else {
             super.attributeChanged(event);
@@ -235,7 +248,8 @@ public class BangManager extends GameManager
         }
 
         // queue up the board tick
-        _ticker.schedule(10000L, true);
+        int avgPer = _bangobj.getAveragePieceCount();
+        _ticker.schedule(avgPer * 2000L, false);
     }
 
     /**
@@ -287,7 +301,7 @@ public class BangManager extends GameManager
      * @return the cloned and moved piece if the piece was moved, null if
      * it was not movable for some reason.
      */
-    protected Piece movePiece (Piece piece, int x, int y)
+    protected Piece movePiece (BodyObject user, Piece piece, int x, int y)
     {
         // make sure we are alive, have energy and are ready to move
         int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
@@ -371,8 +385,9 @@ public class BangManager extends GameManager
 
         // finally effect and effects
         for (Effect effect : _effects) {
-            effect.prepare(_bangobj);
+            effect.prepare(_bangobj, _damage);
             _bangobj.setEffect(effect);
+            recordDamage(user, _damage);
         }
         _effects.clear();
 
@@ -402,9 +417,17 @@ public class BangManager extends GameManager
             }
         }
 
-        // have a 1 in 15 chance of adding a bonus for each player for
+        // count up the live players
+        int lcount = 0;
+        for (int ii = 0; ii < alive.length; ii++) {
+            if (alive[ii] > 0) {
+                lcount++;
+            }
+        }
+
+        // have a 1 in 5 chance of adding a bonus for each live player for
         // which there is not already a bonus on the board
-        int bprob = (pcount - bonuses), rando = RandomUtil.getInt(150);
+        int bprob = (lcount - bonuses), rando = RandomUtil.getInt(50);
         if (bprob == 0 || rando > bprob*10) {
 //             log.info("No bonus, probability " + bprob + " in 10 (" +
 //                      rando + ").");
@@ -503,6 +526,38 @@ public class BangManager extends GameManager
                  " of " + tpower + " -> " + bonus.info());
     }
 
+    /** Records damage done by the specified user to various pieces. */
+    protected void recordDamage (BodyObject user, IntIntMap damage)
+    {
+        int pidx = _bangobj.getPlayerIndex(user.username);
+        if (pidx < 0) {
+            log.warning("Requested to record damage by non-player!? " +
+                        "[user=" + user.who() + ", damage=" + damage + "].");
+            return;
+        }
+
+        int total = 0;
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            int ddone = damage.get(ii);
+            if (ddone <= 0) {
+                continue;
+            }
+            if (ii == pidx) {
+                // make them lose 150%
+                ddone = -3 * ddone / 2;
+                // report the boochage
+                String msg = MessageBundle.tcompose(
+                    "m.self_damage", user.username);
+                SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
+            }
+            total += ddone;
+        }
+        _bangobj.setFundsAt(_bangobj.funds[pidx] + total, pidx);
+
+        // finally clear out the damage index
+        damage.clear();
+    }
+
     // documentation inherited
     protected void gameDidEnd ()
     {
@@ -540,6 +595,12 @@ public class BangManager extends GameManager
         public void expired () {
             int nextTick = (_bangobj.tick + 1) % Short.MAX_VALUE;
             _bangobj.setTick((short)nextTick);
+            if (_bangobj.isInPlay()) {
+                // queue ourselves up to expire in a time proportional to
+                // the average number of pieces per player
+                int avgPer = _bangobj.getAveragePieceCount();
+                _ticker.schedule(2000L * avgPer);
+            }
         }
     };
 
@@ -551,6 +612,9 @@ public class BangManager extends GameManager
 
     /** Used to calculate winners. */
     protected ArrayIntSet _havers = new ArrayIntSet();
+
+    /** Used to record damage done during an attack. */
+    protected IntIntMap _damage = new IntIntMap();
 
     /** Used to compute a piece's potential moves or attacks when
      * validating a move request. */

@@ -28,6 +28,7 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.media.VirtualMediaPanel;
 import com.threerings.media.sprite.LabelSprite;
 
+import com.threerings.toybox.data.ToyBoxGameConfig;
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.samskivert.bang.client.sprite.PieceSprite;
@@ -58,7 +59,7 @@ public class BoardView extends VirtualMediaPanel
      * by the controller when we enter an already started game or the game
      * in which we're involved gets started.
      */
-    public void startGame (BangObject bangobj, int playerIdx)
+    public void startGame (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
     {
         // clear out old piece sprites from a previous game
         for (Iterator<PieceSprite> iter = _pieces.values().iterator();
