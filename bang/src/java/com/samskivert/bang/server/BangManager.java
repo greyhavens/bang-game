@@ -49,7 +49,7 @@ import com.samskivert.bang.data.generate.TestScenario;
 import com.samskivert.bang.data.piece.Bonus;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
-import com.samskivert.bang.data.surprise.MissileSurprise;
+import com.samskivert.bang.data.surprise.RepairSurprise;
 import com.samskivert.bang.data.surprise.Surprise;
 import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PointSet;
@@ -242,6 +242,13 @@ public class BangManager extends GameManager
         _bangobj.setPieces(new PieceDSet(pieces.iterator()));
         _bangobj.board.shadowPieces(pieces.iterator());
 
+        // TEMP: give everyone a repair surprise to start
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            RepairSurprise s = new RepairSurprise();
+            s.init(ii);
+            _bangobj.addToSurprises(s);
+        }
+
         // initialize our pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             ((Piece)iter.next()).init();
@@ -401,10 +408,12 @@ public class BangManager extends GameManager
     protected void addBonuses ()
     {
         Piece[] pieces = _bangobj.getPieceArray();
+        short prevTick = (short)(_bangobj.tick-1);
 
         // first do some counting
         int pcount = _bangobj.players.length, tpower = 0, bonuses = 0;
         int[] alive = new int[pcount], power = new int[pcount];
+        int[] nonactors = new int[pcount];
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
             if (p instanceof Bonus) {
@@ -414,8 +423,12 @@ public class BangManager extends GameManager
                 int pp = (100 - p.damage);
                 power[p.owner] += pp;
                 tpower += pp;
+                if (p.ticksUntilMovable(prevTick) == 0) {
+                    nonactors[p.owner]++;
+                }
             }
         }
+        log.info("Non-actors: " + StringUtil.toString(nonactors));
 
         // count up the live players
         int lcount = 0;
@@ -434,6 +447,84 @@ public class BangManager extends GameManager
             return;
         }
 
+        // determine whether everyone is within 20% of the average score
+        int avgpower = tpower/lcount;
+        boolean outlier = false;
+        for (int ii = 0; ii < power.length; ii++) {
+            if (power[ii] != 0 && (power[ii] < (avgpower-avgpower/10) ||
+                                   power[ii] > (avgpower+avgpower/10))) {
+                outlier = true;
+                break;
+            }
+        }
+
+        // select an algorithm by which to place the bonus:
+        // - if we are very early in the game, just put it in the middle
+        // of the board
+        // - if the players are mostly even, ?
+        // - if some player is in last place, put it near them
+
+        Point spot;
+        if (outlier) {
+            spot = findSpotNearChuckanut(pieces, pcount, power);
+        } else {
+            spot = new Point(_bangobj.board.getWidth()/2,
+                             _bangobj.board.getHeight()/2);
+        }
+
+        // locate the nearest spot to that which can be occupied by our piece
+        Point bspot = _bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
+        if (bspot == null) {
+            log.info("Dropping bonus for lack of occupiable location " +
+                     spot + ".");
+            return;
+        }
+
+        // now we have a location, determine which player has the shortest
+        // path to this bonus and use that player's power to determine how
+        // powerful a bonus to deploy
+        int spath = Integer.MAX_VALUE, spower = 0;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece piece = pieces[ii];
+            if (piece.owner < 0 || !piece.isAlive()) {
+                continue;
+            }
+            List path = _bangobj.board.computePath(
+                piece, bspot.x, bspot.y);
+            if (path == null) {
+                log.warning("Unable to compute path to " + bspot +
+                            " for " + piece.info() + "?");
+                continue;
+            }
+//             log.info(piece.info() + " is " + path.size() +
+//                      " steps from " + bspot);
+            if (path.size() < spath) {
+                spath = path.size();
+                spower = power[piece.owner];
+            }
+        }
+
+        Piece bonus;
+        double pfact = 1.0 * spower / tpower;
+        if (pfact < 0.2) {
+            bonus = new Bonus(Bonus.Type.SURPRISE);
+        } else if (Math.random() > pfact) {
+            bonus = new Bonus(Bonus.Type.DUPLICATE);
+        } else {
+            bonus = new Bonus(Bonus.Type.REPAIR);
+        }
+        bonus.assignPieceId();
+        bonus.position(bspot.x, bspot.y);
+        _bangobj.addToPieces(bonus);
+
+        log.info("Shortest path: " + spath + ", power: " + spower +
+                 " of " + tpower + " -> " + bonus.info());
+    }
+
+    /** Helper function for {@link #addBonuses}. */
+    protected Point findSpotNearChuckanut (
+        Piece[] pieces, int pcount, int[] power)
+    {
         // determine the player with the lowest power
         int lowidx = RandomUtil.getInt(pcount);
         // start with a random non-zero power having player
@@ -467,64 +558,8 @@ public class BangManager extends GameManager
             }
         }
         int cx = sumx/ppieces, cy = sumy/ppieces;
-
-        int bwid = _bangobj.board.getWidth(), bhei = _bangobj.board.getHeight();
-
-//         // find a position randomly dispersed from there
-//         cx = cx - bwid/10 + RandomUtil.getInt(bwid/5);
-//         cy = cy - bhei/10 + RandomUtil.getInt(bhei/5);
-
-//         // pick a random position on the board
-//         int cx = RandomUtil.getInt(bwid), cy = RandomUtil.getInt(bhei);
-
-        // locate the nearest spot to that which can be occupied by our piece
-        Point bspot = _bangobj.board.getOccupiableSpot(cx, cy, 3);
-        if (bspot == null) {
-            log.info("Dropping bonus for lack of occupiable location " +
-                     "[cx=" + cx + ", cy=" + cy + "].");
-            return;
-        }
-
-        // now we have a location, determine which player has the shortest
-        // path to this bonus and use that player's power to determine how
-        // powerful a bonus to deploy
-        int spath = Integer.MAX_VALUE, spower = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece piece = pieces[ii];
-            if (piece.owner < 0 || !piece.isAlive()) {
-                continue;
-            }
-            List path = _bangobj.board.computePath(
-                piece, bspot.x, bspot.y);
-            if (path == null) {
-                log.warning("Unable to compute path to " + bspot +
-                            " for " + piece.info() + "?");
-                continue;
-            }
-            log.info(piece.info() + " is " + path.size() +
-                     " steps from " + bspot);
-            if (path.size() < spath) {
-                spath = path.size();
-                spower = power[piece.owner];
-            }
-        }
-
-        Piece bonus;
-        double pfact = 1.0 * spower / tpower;
-        if (pfact < 0.2) {
-            bonus = new Bonus(Bonus.Type.SURPRISE);
-        } else if (Math.random() > pfact) {
-            bonus = new Bonus(Bonus.Type.DUPLICATE);
-        } else {
-            bonus = new Bonus(Bonus.Type.REPAIR);
-        }
-        bonus.assignPieceId();
-        bonus.position(bspot.x, bspot.y);
-        _bangobj.addToPieces(bonus);
-
-        log.info("Shortest path: " + spath + ", power: " + spower +
-                 " of " + tpower + " -> " + bonus.info());
-    }
+        return new Point(cx, cy);
+    }        
 
     /** Records damage done by the specified user to various pieces. */
     protected void recordDamage (BodyObject user, IntIntMap damage)

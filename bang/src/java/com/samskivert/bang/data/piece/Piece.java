@@ -203,7 +203,7 @@ public abstract class Piece extends SimpleStreamableObject
         }
 
         // start with a random last moved tick
-        lastActed = (short)(-1 * RandomUtil.getInt(getTicksPerMove()));
+        lastActed = (short)(-1 * RandomUtil.getInt(getTicksPerMove()+1));
     }
 
     /**

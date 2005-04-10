@@ -107,13 +107,16 @@ public class BoardView extends VirtualMediaPanel
             }
         }
         String wtext = "Game Over!\n";
-        if (winners.length() > 0) {
-            wtext += "Winners: " + winners;
+        if (winners.length() > 1) {
+            wtext += "Winner: " + winners;
+        } else if (winners.length() > 0) {
+            wtext += "Winner: " + winners;
         } else {
             wtext += "No winner!";
         }
         Label text = new Label(wtext, Color.white,
                                getFont().deriveFont(40f));
+        text.setAlignment(Label.CENTER);
         text.setStyle(Label.OUTLINE);
         text.setAlternateColor(Color.black);
         text.setTargetWidth(300);

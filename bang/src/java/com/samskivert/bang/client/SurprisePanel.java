@@ -3,8 +3,10 @@
 
 package com.samskivert.bang.client;
 
+import java.awt.Dimension;
 import java.util.Iterator;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.samskivert.swing.CommandButton;
@@ -96,6 +98,14 @@ public class SurprisePanel extends JPanel
                 return;
             }
         }
+    }
+
+    @Override // documentation inherited
+    public Dimension getPreferredSize ()
+    {
+        Dimension d = super.getPreferredSize();
+        d.height = Math.max(d.height, 20);
+        return d;
     }
 
     protected CommandButton createButton (Surprise s)
