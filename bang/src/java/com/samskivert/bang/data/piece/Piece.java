@@ -168,6 +168,14 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Returns the "tile" distance between this and the specified piece.
+     */
+    public int getDistance (Piece other)
+    {
+        return Math.abs(x - other.x) + Math.abs(y - other.y);
+    }
+
+    /**
      * Gets the cost of traversing this terrain in tenths of a movement
      * point.
      */
