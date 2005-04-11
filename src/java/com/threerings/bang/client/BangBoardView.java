@@ -429,6 +429,9 @@ public class BangBoardView extends BoardView
     {
         super.pieceUpdated(opiece, npiece);
 
+        // update the shadow we use to do path finding and whatnot
+        _bangobj.board.updateShadow(opiece, npiece);
+
         // if this piece was inside our attack set or within range to be
         // inside our move set, recompute the selection as it may have
         // changed

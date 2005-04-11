@@ -25,7 +25,11 @@ public class PieceCreator extends JPanel
         _ctx = ctx;
 
         add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.pieces_fixed")));
-        add(createPieceButton("building", new Building()));
+        add(createPieceButton("building", new Building(2, 2)));
+        add(createPieceButton("building", new Building(2, 3)));
+        add(createPieceButton("building", new Building(3, 2)));
+        add(createPieceButton("building", new Building(4, 2)));
+        add(createPieceButton("building", new Building(2, 4)));
 
 //         add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.pieces_player")));
 //         add(createPieceButton("artillery", new Artillery()));

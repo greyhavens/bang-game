@@ -180,8 +180,10 @@ public class BangBoard extends SimpleStreamableObject
                      yy < ly; yy++) {
                     for (int xx = pbounds.x, lx = xx + pbounds.width;
                          xx < lx; xx++) {
-                        _tstate[_width*yy+xx] = 2;
-                        _btstate[_width*yy+xx] = 2;
+                        if (_bbounds.contains(xx, yy)) {
+                            _tstate[_width*yy+xx] = 2;
+                            _btstate[_width*yy+xx] = 2;
+                        }
                     }
                 }
 

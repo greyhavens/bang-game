@@ -371,7 +371,6 @@ public class BoardView extends VirtualMediaPanel
         if (npiece != null) {
             getPieceSprite(npiece).updated(npiece, _bangobj.tick);
         }
-        _bangobj.board.updateShadow(opiece, npiece);
     }        
 
     /** Listens for various different events and does the right thing. */

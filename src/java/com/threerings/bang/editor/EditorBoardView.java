@@ -16,6 +16,7 @@ import com.threerings.toybox.util.ToyBoxContext;
 
 import com.threerings.bang.client.BoardView;
 import com.threerings.bang.client.sprite.PieceSprite;
+import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -33,6 +34,12 @@ public class EditorBoardView extends BoardView
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
+    }
+
+    public void setTile (int tx, int ty, Terrain tile)
+    {
+        _bangobj.board.setTile(tx, ty, tile);
+        invalidateTile(tx, ty);
     }
 
     // documentation inherited from interface MouseListener

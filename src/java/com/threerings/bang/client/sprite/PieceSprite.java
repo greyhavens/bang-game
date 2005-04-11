@@ -16,6 +16,7 @@ import com.threerings.media.util.MathUtil;
 
 import com.threerings.toybox.util.ToyBoxContext;
 
+import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -90,7 +91,7 @@ public class PieceSprite extends Sprite
         // move ourselves to our new location
         int nx = piece.x * SQUARE, ny = piece.y * SQUARE;
         if (nx != _ox || ny != _oy) {
-            if (_mgr != null) {
+            if (_mgr != null && !(_piece instanceof BigPiece)) {
                 long duration = (long)MathUtil.distance(_ox, _oy, nx, ny) * 3;
                 move(new LinePath(_ox, _oy, nx, ny, duration));
             } else {
