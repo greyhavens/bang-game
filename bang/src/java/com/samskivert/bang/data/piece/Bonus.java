@@ -45,12 +45,12 @@ public class Bonus extends Piece
      * has on this piece or the entire board. Those effects will be
      * processed at the end of the tick.
      */
-    public Effect affect (Piece other)
+    public Effect affect (Piece piece)
     {
         switch (_type) {
-        case REPAIR: return new RepairEffect(other.pieceId);
-        case DUPLICATE: return new DuplicateEffect(other.pieceId);
-        case SURPRISE: return new GrantSurpriseEffect(other.owner);
+        case REPAIR: return new RepairEffect(piece.pieceId);
+        case DUPLICATE: return new DuplicateEffect(piece.pieceId);
+        case SURPRISE: return new GrantSurpriseEffect(piece.owner);
         }
         return null;
     }

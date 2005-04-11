@@ -47,6 +47,7 @@ import com.samskivert.bang.data.generate.ScenarioGenerator;
 import com.samskivert.bang.data.generate.SkirmishScenario;
 import com.samskivert.bang.data.generate.TestScenario;
 import com.samskivert.bang.data.piece.Bonus;
+import com.samskivert.bang.data.piece.BonusFactory;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.data.piece.PlayerPiece;
 import com.samskivert.bang.data.surprise.RepairSurprise;
@@ -135,6 +136,9 @@ public class BangManager extends GameManager
                 }
             }
 
+            // finally update our game statistics
+            _bangobj.updateStats();
+
         } finally {
             _bangobj.commitTransaction();
         }
@@ -198,6 +202,10 @@ public class BangManager extends GameManager
         // create our per-player arrays
         _bangobj.reserves = new int[getPlayerSlots()];
         _bangobj.funds = new int[getPlayerSlots()];
+        _bangobj.pstats = new BangObject.PlayerData[getPlayerSlots()];
+        for (int ii = 0; ii < _bangobj.pstats.length; ii++) {
+            _bangobj.pstats[ii] = new BangObject.PlayerData();
+        }
     }
 
     // documentation inherited
@@ -287,7 +295,9 @@ public class BangManager extends GameManager
         try {
             _bangobj.startTransaction();
             // potentially create and add new bonuses
-            addBonuses();
+            if (addBonuses()) {
+                _bangobj.updateStats();
+            }
         } finally {
             _bangobj.commitTransaction();
         }
@@ -404,69 +414,47 @@ public class BangManager extends GameManager
     /**
      * Called following each tick to determine whether or not new bonuses
      * should be added to the board.
+     *
+     * @return true if a bonus was added, false if not.
      */
-    protected void addBonuses ()
+    protected boolean addBonuses ()
     {
         Piece[] pieces = _bangobj.getPieceArray();
-        short prevTick = (short)(_bangobj.tick-1);
 
-        // first do some counting
-        int pcount = _bangobj.players.length, tpower = 0, bonuses = 0;
-        int[] alive = new int[pcount], power = new int[pcount];
-        int[] nonactors = new int[pcount];
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
-            if (p instanceof Bonus) {
-                bonuses++;
-            } else if (p.isAlive() && p.owner >= 0) {
-                alive[p.owner]++;
-                int pp = (100 - p.damage);
-                power[p.owner] += pp;
-                tpower += pp;
-                if (p.ticksUntilMovable(prevTick) == 0) {
-                    nonactors[p.owner]++;
-                }
-            }
-        }
-        log.info("Non-actors: " + StringUtil.toString(nonactors));
-
-        // count up the live players
-        int lcount = 0;
-        for (int ii = 0; ii < alive.length; ii++) {
-            if (alive[ii] > 0) {
-                lcount++;
-            }
-        }
+//         int[] nonactors = new int[pcount];
+//         short prevTick = (short)(_bangobj.tick-1);
+//         for (int ii = 0; ii < pieces.length; ii++) {
+//             Piece p = pieces[ii];
+//             if (p.isAlive() && p.owner >= 0) {
+//                 if (p.ticksUntilMovable(prevTick) == 0) {
+//                     nonactors[p.owner]++;
+//                 }
+//             }
+//         }
+//         log.info("Non-actors: " + StringUtil.toString(nonactors));
 
         // have a 1 in 5 chance of adding a bonus for each live player for
         // which there is not already a bonus on the board
-        int bprob = (lcount - bonuses), rando = RandomUtil.getInt(50);
+        int bprob = (_bangobj.gstats.livePlayers - _bangobj.gstats.bonuses);
+        int rando = RandomUtil.getInt(50);
         if (bprob == 0 || rando > bprob*10) {
 //             log.info("No bonus, probability " + bprob + " in 10 (" +
 //                      rando + ").");
-            return;
+            return false;
         }
 
         // determine whether everyone is within 20% of the average score
-        int avgpower = tpower/lcount;
-        boolean outlier = false;
-        for (int ii = 0; ii < power.length; ii++) {
-            if (power[ii] != 0 && (power[ii] < (avgpower-avgpower/10) ||
-                                   power[ii] > (avgpower+avgpower/10))) {
-                outlier = true;
-                break;
-            }
-        }
+        boolean outlier = _bangobj.havePowerOutlier(0.1);
 
         // select an algorithm by which to place the bonus:
         // - if we are very early in the game, just put it in the middle
-        // of the board
+        //   of the board
         // - if the players are mostly even, ?
         // - if some player is in last place, put it near them
 
         Point spot;
         if (outlier) {
-            spot = findSpotNearChuckanut(pieces, pcount, power);
+            spot = findSpotNearChuckanut(pieces);
         } else {
             spot = new Point(_bangobj.board.getWidth()/2,
                              _bangobj.board.getHeight()/2);
@@ -477,13 +465,13 @@ public class BangManager extends GameManager
         if (bspot == null) {
             log.info("Dropping bonus for lack of occupiable location " +
                      spot + ".");
-            return;
+            return false;
         }
 
         // now we have a location, determine which player has the shortest
         // path to this bonus and use that player's power to determine how
         // powerful a bonus to deploy
-        int spath = Integer.MAX_VALUE, spower = 0;
+        int spath = Integer.MAX_VALUE, spidx = -1;
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece piece = pieces[ii];
             if (piece.owner < 0 || !piece.isAlive()) {
@@ -500,12 +488,12 @@ public class BangManager extends GameManager
 //                      " steps from " + bspot);
             if (path.size() < spath) {
                 spath = path.size();
-                spower = power[piece.owner];
+                spidx = piece.owner;
             }
         }
 
         Piece bonus;
-        double pfact = 1.0 * spower / tpower;
+        double pfact = _bangobj.pstats[spidx].powerFactor;
         if (pfact < 0.2) {
             bonus = new Bonus(Bonus.Type.SURPRISE);
         } else if (Math.random() > pfact) {
@@ -517,37 +505,17 @@ public class BangManager extends GameManager
         bonus.position(bspot.x, bspot.y);
         _bangobj.addToPieces(bonus);
 
-        log.info("Shortest path: " + spath + ", power: " + spower +
-                 " of " + tpower + " -> " + bonus.info());
+        log.info("Placed bonus: " + bonus.info());
+        return true;
     }
 
     /** Helper function for {@link #addBonuses}. */
-    protected Point findSpotNearChuckanut (
-        Piece[] pieces, int pcount, int[] power)
+    protected Point findSpotNearChuckanut (Piece[] pieces)
     {
-        // determine the player with the lowest power
-        int lowidx = RandomUtil.getInt(pcount);
-        // start with a random non-zero power having player
-        for (int ii = 0; ii < pcount; ii++) {
-            if (power[lowidx] != 0) {
-                break;
-            } else {
-                lowidx = (lowidx + 1) % pcount;
-            }
-        }
-        // then look for anyone with less power
-        for (int ii = 0; ii < pcount; ii++) {
-            int ppower = power[ii];
-            if (ppower > 0 && ppower < power[lowidx]) {
-                lowidx = ii;
-            }
-        }
+        int lowidx = _bangobj.getLowestPowerIndex();
+        log.info("Placing bonus near " + _bangobj.players[lowidx] + ".");
 
-        log.info("Placing bonus near " + _bangobj.players[lowidx] +
-                 " [idx=" + lowidx +
-                 ", power=" + StringUtil.toString(power) + "].");
-
-        // now compute the centroid of their live pieces
+        // compute and return the centroid of their live pieces
         int ppieces = 0, sumx = 0, sumy = 0;
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
@@ -557,8 +525,7 @@ public class BangManager extends GameManager
                 sumy += p.y;
             }
         }
-        int cx = sumx/ppieces, cy = sumy/ppieces;
-        return new Point(cx, cy);
+        return new Point(sumx/ppieces, sumy/ppieces);
     }        
 
     /** Records damage done by the specified user to various pieces. */
@@ -641,6 +608,9 @@ public class BangManager extends GameManager
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
+
+    /** This guy is used to determine which bonuses to give out. */
+    protected BonusFactory _bfactory = new BonusFactory();
 
     /** Used to indicate when all players are ready. */
     protected ArrayIntSet _ready = new ArrayIntSet();

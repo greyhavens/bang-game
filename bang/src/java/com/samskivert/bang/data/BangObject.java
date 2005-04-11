@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.samskivert.util.IntListUtil;
+import com.samskivert.util.StringUtil;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
 
 import com.samskivert.bang.data.effect.Effect;
+import com.samskivert.bang.data.piece.Bonus;
 import com.samskivert.bang.data.piece.Piece;
 import com.samskivert.bang.util.PieceSet;
 import com.samskivert.bang.util.PieceUtil;
@@ -23,6 +26,58 @@ import static com.samskivert.bang.Log.log;
  */
 public class BangObject extends GameObject
 {
+    /** Used to track statistics on each player. */
+    public static class PlayerData
+    {
+        /** The number of still-alive pieces controlled by this player. */
+        public int livePieces;
+
+        /** The total power (un-damage) controlled by this player. */
+        public int power;
+
+        /** This player's power divided by the average power. */
+        public double powerFactor;
+
+        /** Clears our accumulator stats in preparation for a recompute. */
+        public void clear () {
+            livePieces = 0;
+            power = 0;
+        }
+
+        /** Generates a string representation of this instance. */
+        public String toString () {
+            return StringUtil.fieldsToString(this);
+        }
+    }
+
+    /** Used to track statistics on the overall game. */
+    public static class GameData
+    {
+        /** The number of live players remaining in the game. */
+        public int livePlayers;
+
+        /** The total power of all players on the board. */
+        public int totalPower;
+
+        /** The average power of the live players. */
+        public double averagePower;
+
+        /** The number of unclaimed bonuses on the board. */
+        public int bonuses;
+
+        /** Clears our accumulator stats in preparation for a recompute. */
+        public void clear () {
+            livePlayers = 0;
+            totalPower = 0;
+            bonuses = 0;
+        }
+
+        /** Generates a string representation of this instance. */
+        public String toString () {
+            return StringUtil.fieldsToString(this);
+        }
+    }
+
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
     public static final String SERVICE = "service";
@@ -51,6 +106,14 @@ public class BangObject extends GameObject
 
     /** A {@link #state} constant indicating the pre-game buying phase. */
     public static final int PRE_GAME = 4;
+
+    /** Contains statistics on the game, updated every time any change is
+     * made to pertinent game state. */
+    public transient GameData gstats = new GameData();
+
+    /** Contains statistics on each player, updated every time any change
+     * is made to pertinent game state. */
+    public transient PlayerData[] pstats;
 
     /** The invocation service via which the client communicates with the
      * server. */
@@ -154,6 +217,87 @@ public class BangObject extends GameObject
             }
         }
         return (int)Math.round(IntListUtil.sum(pcount) / lcount);
+    }
+
+    /**
+     * Returns the index of the player with the least power.
+     */
+    public int getLowestPowerIndex ()
+    {
+        // start randomly in the array and look for the lowest power haver
+        int lpower = Integer.MAX_VALUE, lowidx = -1;
+        int offset = RandomUtil.getInt(pstats.length);
+        for (int ii = 0; ii < pstats.length; ii++) {
+            int pidx = (ii + offset) % pstats.length;
+            if (pstats[pidx].power < lpower) {
+                lowidx = pidx;
+                lpower = pstats[pidx].power;
+            }
+        }
+        return lowidx;
+    }
+
+    /**
+     * Returns true if at least one player exists where the difference
+     * between their power and the average power is greater or less than
+     * the specified factor of the average power.
+     */
+    public boolean havePowerOutlier (double factor)
+    {
+        double range = gstats.averagePower * factor;
+        double low = gstats.averagePower - range;
+        double high = gstats.averagePower + range;
+        for (int ii = 0; ii < pstats.length; ii++) {
+            int power = pstats[ii].power;
+            if (power != 0 && (power < low || power > high)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Updates the {@link #gstats} and {@link #pstats} information.
+     */
+    public void updateStats ()
+    {
+        // first clear out the old stats
+        gstats.clear();
+        for (int ii = 0; ii < pstats.length; ii++) {
+            pstats[ii].clear();
+        }
+
+        Piece[] pieces = getPieceArray();
+        int pcount = players.length;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece p = pieces[ii];
+            if (p instanceof Bonus) {
+                gstats.bonuses++;
+            } else if (p.isAlive() && p.owner >= 0) {
+                pstats[p.owner].livePieces++;
+                int pp = (100 - p.damage);
+                pstats[p.owner].power += pp;
+                gstats.totalPower += pp;
+//                 if (p.ticksUntilMovable(prevTick) == 0) {
+//                     nonactors[p.owner]++;
+//                 }
+            }
+        }
+
+        for (int ii = 0; ii < pstats.length; ii++) {
+            if (pstats[ii].livePieces > 0) {
+                gstats.livePlayers++;
+            }
+        }
+
+        gstats.averagePower = (double)gstats.totalPower / gstats.livePlayers;
+        for (int ii = 0; ii < pstats.length; ii++) {
+            pstats[ii].powerFactor =
+                (double)pstats[ii].power / gstats.averagePower;
+        }
+
+        log.info("Updated stats " + gstats + ": " +
+                 StringUtil.toString(pstats));
     }
 
     // AUTO-GENERATED: METHODS START
