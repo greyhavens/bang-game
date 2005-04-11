@@ -91,7 +91,7 @@ public class PieceSprite extends Sprite
         int nx = piece.x * SQUARE, ny = piece.y * SQUARE;
         if (nx != _ox || ny != _oy) {
             if (_mgr != null) {
-                long duration = (long)MathUtil.distance(_ox, _oy, nx, ny) * 10;
+                long duration = (long)MathUtil.distance(_ox, _oy, nx, ny) * 3;
                 move(new LinePath(_ox, _oy, nx, ny, duration));
             } else {
                 // if we're invisible just warp there

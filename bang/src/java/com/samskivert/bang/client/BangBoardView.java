@@ -22,6 +22,7 @@ import com.samskivert.swing.Label;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.animation.SpriteAnimation;
+import com.threerings.util.RandomUtil;
 import com.threerings.media.sprite.LabelSprite;
 import com.threerings.media.sprite.PathObserver;
 import com.threerings.media.sprite.Sprite;
@@ -269,42 +270,22 @@ public class BangBoardView extends BoardView
 
                 } else if (tx == _action[1] && ty == _action[2]) {
                     // or if we're clicking a second time on our desired
-                    // move location, just move there and don't attack
+                    // move location, select a random target and shoot it
+                    if (_attackSet.size() > 0) {
+                        int idx = RandomUtil.getInt(_attackSet.size());
+                        Piece target = _bangobj.getPlayerPiece(
+                            _attackSet.getX(idx), _attackSet.getY(idx));
+                        if (target != null && _selection.validTarget(target)) {
+                            log.info("randomly targeting " + target.info());
+                            _action[3] = target.pieceId;
+                        }
+                    }
                     executeAction();
                     return;
                 }
             }
 
-            // or if we're clicking in our move set or on our selected piece
-            if ((_moveSet.size() > 0 && _moveSet.contains(tx, ty)) ||
-                _selection.x == tx && _selection.y == ty) {
-                // store the coordinates toward which we wish to move
-                _action = new int[] { _selection.pieceId, tx, ty, -1 };
-
-                // clear any previous attack set
-                clearAttackSet();
-
-                // display our potential attacks
-                _attackSet = new PointSet();
-                PointSet attacks = new PointSet();
-                _bangobj.board.computeAttacks(
-                    _selection.getFireDistance(), tx, ty, attacks);
-                for (Iterator iter = _bangobj.pieces.iterator();
-                     iter.hasNext(); ) {
-                    Piece p = (Piece)iter.next();
-                    if (_selection.validTarget(p) &&
-                        attacks.contains(p.x, p.y)) {
-                        _attackSet.add(p.x, p.y);
-                    }
-                }
-
-                // if there are no valid attacks, assume they're just moving
-                if (_attackSet.size() == 0) {
-                    executeAction();
-                    _attackSet = null;
-                } else {
-                    dirtySet(_attackSet);
-                }
+            if (handleClickToMove(tx, ty)) {
                 return;
             }
         }
@@ -315,6 +296,46 @@ public class BangBoardView extends BoardView
             sprite.isSelectable()) {
             selectPiece(piece);
         }
+    }
+
+    /** Handles a click that should select a potential move location. */
+    protected boolean handleClickToMove (int tx, int ty)
+    {
+        // or if we're clicking in our move set or on our selected piece
+        if (!_moveSet.contains(tx, ty) &&
+            (_selection.x != tx || _selection.y != ty)) {
+            return false;
+        }
+
+        // store the coordinates toward which we wish to move
+        _action = new int[] { _selection.pieceId, tx, ty, -1 };
+
+        // clear any previous attack set
+        clearAttackSet();
+
+        // display our potential attacks
+        _attackSet = new PointSet();
+        PointSet attacks = new PointSet();
+        _bangobj.board.computeAttacks(
+            _selection.getFireDistance(), tx, ty, attacks);
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            if (_selection.validTarget(p) &&
+                attacks.contains(p.x, p.y)) {
+                _attackSet.add(p.x, p.y);
+            }
+        }
+
+        // if there are no valid attacks, assume they're just moving (but
+        // do nothing if they're not even moving)
+        if (_attackSet.size() == 0 &&
+            (_action[0] != _selection.x || _action[1] != _selection.y)) {
+            executeAction();
+            _attackSet = null;
+        } else {
+            dirtySet(_attackSet);
+        }
+        return true;
     }
 
     /** Handles a right mouse button click. */
@@ -408,12 +429,26 @@ public class BangBoardView extends BoardView
     {
         super.pieceUpdated(opiece, npiece);
 
-        // clear and reselect if this piece was the selection and it moved
-        if (npiece != null && _selection != null &&
-            _selection.pieceId == npiece.pieceId &&
-            (_selection.x != npiece.x || _selection.y != npiece.y)) {
-            clearSelection();
-            selectPiece(npiece);
+        // if this piece was inside our attack set or within range to be
+        // inside our move set, recompute the selection as it may have
+        // changed
+        if (_selection != null) {
+            Piece sel = _selection;
+            if ((opiece != null &&
+                 (_attackSet.contains(opiece.x, opiece.y) ||
+                  sel.getDistance(opiece) < sel.getMoveDistance())) ||
+                (npiece != null &&
+                 sel.getDistance(npiece) < sel.getMoveDistance())) {
+                int[] oaction = _action;
+                clearSelection();
+                selectPiece(sel);
+                // if we had already selected a movement, reconfigure that
+                // (it might no longer be valid but handleClickToMove will
+                // ignore us in that case
+                if (oaction != null) {
+                    handleClickToMove(oaction[0], oaction[1]);
+                }
+            }
         }
 
         // update board and enemy visibility

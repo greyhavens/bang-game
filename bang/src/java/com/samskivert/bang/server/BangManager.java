@@ -452,12 +452,15 @@ public class BangManager extends GameManager
         // - if the players are mostly even, ?
         // - if some player is in last place, put it near them
 
+        String type;
         Point spot;
         if (outlier) {
             spot = findSpotNearChuckanut(pieces);
+            type = _bangobj.players[_bangobj.getLowestPowerIndex()].toString();
         } else {
             spot = new Point(_bangobj.board.getWidth()/2,
                              _bangobj.board.getHeight()/2);
+            type = "center";
         }
 
         // locate the nearest spot to that which can be occupied by our piece
@@ -504,6 +507,10 @@ public class BangManager extends GameManager
         bonus.assignPieceId();
         bonus.position(bspot.x, bspot.y);
         _bangobj.addToPieces(bonus);
+
+        String msg = MessageBundle.tcompose(
+            "m.placed_bonus", "" + bspot.x, "" + bspot.y, type);
+        SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
 
         log.info("Placed bonus: " + bonus.info());
         return true;

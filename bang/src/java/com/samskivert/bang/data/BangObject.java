@@ -183,6 +183,21 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Returns the player piece at the specified coordinates or null if no
+     * owned piece exists at those coordinates.
+     */
+    public Piece getPlayerPiece (int tx, int ty)
+    {
+        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            if (p.owner >= 0 && p.x == tx && p.y == ty) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns an array containing the total "undamage" units for each
      * player (undamage being 100 minus the damage a piece has already
      * taken). This provides a rough estimate of who has the advantage.
