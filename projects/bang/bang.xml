@@ -4,8 +4,8 @@
   <ident>bang</ident>
 
   <!-- The controller and manager used for our game. -->
-  <controller>com.samskivert.bang.client.BangController</controller>
-  <manager>com.samskivert.bang.server.BangManager</manager>
+  <controller>com.threerings.bang.client.BangController</controller>
+  <manager>com.threerings.bang.server.BangManager</manager>
 
   <!-- Herein we define how the game is matchmade and configured. -->
   <match type="table">

@@ -3,8 +3,8 @@
 
   <!-- things you may want to change -->
   <property name="app.name"         value="bang"/>
-  <property name="doc.packages"     value="com.samskivert.bang.*"/>
-  <property name="copy.holder"      value="Michael Bayne"/>
+  <property name="doc.packages"     value="com.threerings.bang.*"/>
+  <property name="copy.holder"      value="Three Rings Design, Inc."/>
 
   <!-- things you probably don't want to change -->
   <property name="src.dir"      value="src/java"/>
@@ -14,7 +14,7 @@
 
   <!-- declare our classpath -->
   <path id="classpath">
-    <fileset dir="../lib" includes="**/*.jar"/>
+    <fileset dir="../../lib" includes="**/*.jar"/>
     <pathelement location="${deploy.dir}/classes"/>
   </path>
 
