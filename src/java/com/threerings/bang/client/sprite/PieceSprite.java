@@ -91,7 +91,7 @@ public class PieceSprite extends Sprite
         // move ourselves to our new location
         int nx = piece.x * SQUARE, ny = piece.y * SQUARE;
         if (nx != _ox || ny != _oy) {
-            if (_mgr != null && !(_piece instanceof BigPiece)) {
+            if (_mgr != null && !_editorMode) {
                 long duration = (long)MathUtil.distance(_ox, _oy, nx, ny) * 3;
                 move(new LinePath(_ox, _oy, nx, ny, duration));
             } else {
@@ -131,11 +131,24 @@ public class PieceSprite extends Sprite
         return _unit;
     }
 
+    /**
+     * Called by the editor to make pieces warp to their new locations for
+     * rapid draggability.
+     */
+    public static void setEditorMode (boolean editorMode)
+    {
+        _editorMode = editorMode;
+    }
+
     protected Piece _piece;
     protected short _tick;
 
     protected boolean _selected;
     protected Label _idLabel;
+
+    /** When activated, causes all pieces to warp instead of smoothly
+     * follow a path. */
+    protected static boolean _editorMode;
 
     /** Used by {@link #_computeBounds}. */
     protected static Rectangle _unit = new Rectangle(0, 0, SQUARE, SQUARE);

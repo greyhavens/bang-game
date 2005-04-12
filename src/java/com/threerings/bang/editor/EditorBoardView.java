@@ -17,6 +17,7 @@ import com.threerings.toybox.util.ToyBoxContext;
 import com.threerings.bang.client.BoardView;
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.data.Terrain;
+import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -34,6 +35,9 @@ public class EditorBoardView extends BoardView
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
+
+        // put piece sprites in editor mode
+        PieceSprite.setEditorMode(true);
     }
 
     public void setTile (int tx, int ty, Terrain tile)
@@ -56,10 +60,15 @@ public class EditorBoardView extends BoardView
         // keep track of the press location in case we need it later
         _dragStart.setLocation(tx, ty);
 
-        // if there's a piece under the mouse, generate a ROTATE_PIECE
+        // if there's a piece under the mouse, start to drag or delete it
         _dragPiece = getHitPiece(e.getX(), e.getY());
         if (_dragPiece != null) {
-            _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                _bangobj.removeFromPieces(_dragPiece.getKey());
+                _dragPiece = null;
+            } else {
+                _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
+            }
             return;
         }
 
@@ -118,13 +127,13 @@ public class EditorBoardView extends BoardView
     // documentation inherited from interface MouseWheelListener
     public void mouseWheelMoved (MouseWheelEvent event)
     {
-        // if we're over a piece, rotate it (TEMP: disabled)
+        // if we're over a piece, rotate it
         Piece piece = getHitPiece(event.getX(), event.getY());
-        if (piece != null) {
-//             String cmd = (event.getWheelRotation() > 0) ?
-//                 EditorController.ROTATE_PIECE_CW :
-//                 EditorController.ROTATE_PIECE_CCW;
-//             EditorController.postAction(this, cmd, piece);
+        if (piece != null && !(piece instanceof BigPiece)) {
+            String cmd = (event.getWheelRotation() > 0) ?
+                EditorController.ROTATE_PIECE_CW :
+                EditorController.ROTATE_PIECE_CCW;
+            EditorController.postAction(this, cmd, piece);
 
         } else {
             // otherwise adjust the currently selected terrain type
