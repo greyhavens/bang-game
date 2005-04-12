@@ -5,12 +5,15 @@ package com.threerings.bang.server;
 
 import java.awt.Point;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.apache.commons.io.IOUtils;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
@@ -46,10 +49,7 @@ import com.threerings.bang.data.PieceDSet;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
-import com.threerings.bang.data.generate.CompoundGenerator;
-import com.threerings.bang.data.generate.ScenarioGenerator;
 import com.threerings.bang.data.generate.SkirmishScenario;
-import com.threerings.bang.data.generate.TestScenario;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.BonusFactory;
 import com.threerings.bang.data.piece.Piece;
@@ -588,42 +588,49 @@ public class BangManager extends GameManager
     protected BangBoard createBoard (ArrayList<Piece> pieces)
     {
         ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
-        BangBoard board = null;
+        Tuple tup = null;
 
+        // try loading up the player specified board
         try {
             byte[] bdata = (byte[])bconfig.params.get("board_data");
-            if (bdata != null) {
-                Tuple tup = BoardUtil.loadBoard(bdata);
-                board = (BangBoard)tup.left;
-                Piece[] pvec = (Piece[])tup.right;
-                int maxPieceId = 0;
-                for (int ii = 0; ii < pvec.length; ii++) {
-                    if (pvec[ii].pieceId > maxPieceId) {
-                        maxPieceId = pvec[ii].pieceId;
-                    }
-                }
-                Collections.addAll(pieces, pvec);
-                Piece.setNextPieceId(maxPieceId);
+            if (bdata != null && bdata.length > 0) {
+                tup = BoardUtil.loadBoard(bdata);
             }
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Failed to unserialize board.", ioe);
         }
 
-        // if that failed, generate a random board
-        if (board == null) {
-            int size = (Integer)bconfig.params.get("board_size");
-            board = new BangBoard(size, size);
-            CompoundGenerator gen = new CompoundGenerator();
-            gen.generate(bconfig, board, pieces);
+        // if that failed, load the default board
+        if (tup == null) {
+            try {
+                InputStream in = getClass().getClassLoader().getResourceAsStream(
+                    "rsrc/media/boards/default.board");
+                if (in != null) {
+                    tup = BoardUtil.loadBoard(IOUtils.toByteArray(in));
+                }
+            } catch (IOException ioe) {
+                log.log(Level.WARNING, "Failed to load default board.", ioe);
+            }
+        }
+
+        BangBoard board = null;
+        if (tup != null) {
+            board = (BangBoard)tup.left;
+            Piece[] pvec = (Piece[])tup.right;
+            int maxPieceId = 0;
+            for (int ii = 0; ii < pvec.length; ii++) {
+                if (pvec[ii].pieceId > maxPieceId) {
+                    maxPieceId = pvec[ii].pieceId;
+                }
+            }
+            Collections.addAll(pieces, pvec);
+            Piece.setNextPieceId(maxPieceId);
+        } else {
+            board = new BangBoard(5, 5);
         }
 
         // now add the player pieces
-        ScenarioGenerator scen = null;
-//         if (System.getProperty("test") != null) {
-//             scen = new TestScenario();
-//         } else {
-            scen = new SkirmishScenario();
-//         }
+        SkirmishScenario scen = new SkirmishScenario();
         scen.generate(bconfig, board, pieces);
         return board;
     }
