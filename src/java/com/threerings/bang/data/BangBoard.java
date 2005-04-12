@@ -156,6 +156,21 @@ public class BangBoard extends SimpleStreamableObject
      */
     public void shadowPieces (Iterator iter)
     {
+        // start out with _tstate configured according to the board
+        for (int yy = 0; yy < _height; yy++) {
+            for (int xx = 0; xx < _width; xx++) {
+                byte tvalue;
+                switch (getTile(xx, yy)) {
+                case NONE: tvalue = (byte)3; break;
+                case WATER: tvalue = (byte)2; break;
+                default: tvalue = (byte)0; break;
+                }
+                int pos = _width*yy+xx;
+                _tstate[pos] = tvalue;
+                _btstate[pos] = tvalue;
+            }
+        }
+
         while (iter.hasNext()) {
             updateShadow(null, (Piece)iter.next());
         }
@@ -209,7 +224,7 @@ public class BangBoard extends SimpleStreamableObject
         if (piece instanceof Dirigible) {
             max = 2;
         }
-        return (_tstate[y*_bbounds.width+x] <= max);
+        return (_tstate[y*_width+x] <= max);
     }
 
     /**
@@ -221,7 +236,7 @@ public class BangBoard extends SimpleStreamableObject
         if (!_bbounds.contains(x, y)) {
             return false;
         }
-        return (_tstate[y*_bbounds.width+x] <= 0);
+        return (_tstate[y*_width+x] <= 0);
     }
 
     /**
@@ -241,7 +256,7 @@ public class BangBoard extends SimpleStreamableObject
         // (and add one to ensure that we always end up with 1 in our
         // final coordinate)
         byte remain = (byte)(mdist * 10 + 1);
-        _pgrid[piece.y*_bbounds.width+piece.x] = remain;
+        _pgrid[piece.y*_width+piece.x] = remain;
 
         // now consider each of our four neighbors
         considerMoving(piece, moves, piece.x+1, piece.y, remain);
@@ -312,7 +327,7 @@ public class BangBoard extends SimpleStreamableObject
 
         // see if we can move into this square with a higher remaining
         // point count than has already been accomplished
-        int pos = yy*_bbounds.width+xx;
+        int pos = yy*_width+xx;
         byte premain = (byte)(remain - piece.traversalCost(getTile(xx, yy)));
         byte current = _pgrid[pos];
         if (premain <= current) {
