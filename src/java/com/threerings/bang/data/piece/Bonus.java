@@ -16,6 +16,7 @@ import com.threerings.bang.data.effect.DuplicateEffect;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.GrantSurpriseEffect;
 import com.threerings.bang.data.effect.RepairEffect;
+import com.threerings.bang.data.effect.SaintElmosEffect;
 
 import com.threerings.bang.data.surprise.AreaRepair;
 import com.threerings.bang.data.surprise.DustDevil;
@@ -30,7 +31,7 @@ public class Bonus extends Piece
 {
     /** Indicates the type of bonus. */
     public enum Type { UNKNOWN, REPAIR, DUPLICATE, DEFECT,
-                       MISSILE, AREA_REPAIR, DUST_DEVIL };
+                       MISSILE, AREA_REPAIR, DUST_DEVIL, SAINT_ELMO };
 
     /** Unserialization constructor. */
     public Bonus ()
@@ -62,6 +63,7 @@ public class Bonus extends Piece
         case REPAIR: return new RepairEffect(piece.pieceId);
         case DUPLICATE: return new DuplicateEffect(piece.pieceId);
         case DEFECT: return new DefectEffect(piece.owner);
+        case SAINT_ELMO: return new SaintElmosEffect(piece.owner);
         case MISSILE:
             return new GrantSurpriseEffect(piece.owner, new Missile());
         case AREA_REPAIR:

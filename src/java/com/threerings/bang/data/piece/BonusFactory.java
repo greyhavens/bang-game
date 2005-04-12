@@ -72,6 +72,15 @@ public class BonusFactory
                                      50, // base weight
                                      0.5, // damage affinity
                                      0.0, // many pieces affinity
+                                     0.5, // few pieces affinity
+                                     0.0, // low power affinity
+                                     -0.25, // early-game affinity
+                                     0.4)); // late-game affinity
+
+        _choices.add(new Suitability(new Bonus(Bonus.Type.SAINT_ELMO),
+                                     10, // base weight
+                                     0.5, // damage affinity
+                                     -0.5, // many pieces affinity
                                      0.9, // few pieces affinity
                                      0.0, // low power affinity
                                      0.0, // early-game affinity

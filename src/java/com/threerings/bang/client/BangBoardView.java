@@ -36,6 +36,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.toybox.data.ToyBoxGameConfig;
 import com.threerings.toybox.util.ToyBoxContext;
 
+import com.threerings.bang.client.sprite.MobileSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.ShotSprite;
 import com.threerings.bang.data.BangObject;
@@ -361,9 +362,11 @@ public class BangBoardView extends BoardView
         if (s instanceof PieceSprite) {
             sprite = (PieceSprite)s;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
-            if (sprite.isSelectable() && piece.isAlive()) {
-//                 _attackSet = piece.getAttacks(_bangobj.board);
-                _remgr.invalidateRegion(_vbounds);
+            if (sprite instanceof MobileSprite && piece.isAlive()) {
+                _attackSet = new PointSet();
+                _bangobj.board.computeAttacks(
+                    piece.getFireDistance(), piece.x, piece.y, _attackSet);
+                dirtySet(_attackSet);
             }
         }
     }

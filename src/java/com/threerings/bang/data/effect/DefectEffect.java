@@ -37,9 +37,9 @@ public class DefectEffect extends Effect
 
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // determine the probability with which we swipe units (from 0.1 to 0.6)
+        // determine the probability with which we swipe units (from 0.1 to 0.5)
         double swipeChance =
-            (1.0 - Math.min(bangobj.pstats[owner].powerFactor, 1.0))/2 + 0.1;
+            (0.9 - Math.min(bangobj.pstats[owner].powerFactor, 1.0))/2 + 0.1;
         log.info(bangobj.players[owner] + " swiping with probability " +
                  swipeChance);
 
@@ -48,8 +48,8 @@ public class DefectEffect extends Effect
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (p.isAlive() && p.owner >= 0 && p.owner != owner &&
-                // don't allow a player's last piece to be stolen
-                pcount[p.owner] > 1 && Math.random() < swipeChance) {
+                // don't allow a player's last two pieces to be stolen
+                pcount[p.owner] > 2 && Math.random() < swipeChance) {
                 pieces.add(p.pieceId);
                 pcount[p.owner]--;
             }
