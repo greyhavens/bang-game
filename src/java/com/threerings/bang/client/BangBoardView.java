@@ -438,7 +438,8 @@ public class BangBoardView extends BoardView
         if (_selection != null) {
             Piece sel = _selection;
             if ((opiece != null &&
-                 (_attackSet.contains(opiece.x, opiece.y) ||
+                 ((_attackSet != null &&
+                   _attackSet.contains(opiece.x, opiece.y)) ||
                   sel.getDistance(opiece) < sel.getMoveDistance())) ||
                 (npiece != null &&
                  sel.getDistance(npiece) < sel.getMoveDistance())) {
