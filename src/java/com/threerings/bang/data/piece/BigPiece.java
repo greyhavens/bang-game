@@ -75,6 +75,13 @@ public abstract class BigPiece extends Piece
         recomputeBounds();
     }
 
+    @Override // documentation inherited
+    protected int computeOrientation (int nx, int ny)
+    {
+        // our orientation never changes
+        return orientation;
+    }
+
     /** Require that our derived classes tell us how big they are (in the
      * north/south orientation). */
     protected BigPiece (int width, int height)

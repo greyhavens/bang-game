@@ -619,11 +619,11 @@ public class BangManager extends GameManager
 
         // now add the player pieces
         ScenarioGenerator scen = null;
-        if (System.getProperty("test") != null) {
-            scen = new TestScenario();
-        } else {
+//         if (System.getProperty("test") != null) {
+//             scen = new TestScenario();
+//         } else {
             scen = new SkirmishScenario();
-        }
+//         }
         scen.generate(bconfig, board, pieces);
         return board;
     }

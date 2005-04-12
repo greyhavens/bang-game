@@ -88,6 +88,12 @@ public class EditorPanel extends JPanel
         _scrolly.setBorder(BorderFactory.createLineBorder(Color.black));
         sidePanel.add(_scrolly, VGroupLayout.FIXED);
 
+        // add a "load" button
+        JButton load = new JButton(msgs.get("m.load_board"));
+        load.setActionCommand(EditorController.LOAD_BOARD);
+        load.addActionListener(Controller.DISPATCHER);
+        sidePanel.add(load, VGroupLayout.FIXED);
+
         // add a "save" button
         JButton save = new JButton(msgs.get("m.save_board"));
         save.setActionCommand(EditorController.SAVE_BOARD);

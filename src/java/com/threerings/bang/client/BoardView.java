@@ -68,21 +68,36 @@ public class BoardView extends VirtualMediaPanel
             iter.remove();
         }
 
-        // start afresh
+        // add the listener that will react to pertinent events
         _bangobj = bangobj;
-        _board = bangobj.board;
+        _bangobj.addListener(_blistener);
+
+        // freshen up
+        refreshBoard();
+    }
+
+    /**
+     * Called by the editor when the entire board has changed.
+     */
+    public void refreshBoard ()
+    {
+        // remove any old sprites
+        for (PieceSprite sprite : _pieces.values()) {
+            removeSprite(sprite);
+        }
+        _pieces.clear();
+
+        // start afresh
+        _board = _bangobj.board;
         _board.shadowPieces(_bangobj.pieces.iterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
         dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
 
         // create sprites for all of the pieces
-        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             // this will trigger the creation, initialization and whatnot
             pieceUpdated(null, (Piece)iter.next());
         }
-
-        // add the listener that will react to pertinent events
-        bangobj.addListener(_blistener);
 
         // if the board is smaller than we are, center it in our view
         centerBoard();

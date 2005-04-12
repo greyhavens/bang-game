@@ -21,6 +21,11 @@ public class PieceDSet extends DSet
         super(pieces);
     }
 
+    public PieceDSet (Piece[] pieces)
+    {
+        super(pieces);
+    }
+
     public PieceDSet ()
     {
     }
