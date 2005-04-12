@@ -5,14 +5,18 @@ package com.threerings.bang.data.generate;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 import com.threerings.toybox.data.ToyBoxGameConfig;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Chopper;
 import com.threerings.bang.data.piece.Marine;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.StartMarker;
 import com.threerings.bang.data.piece.Tank;
 
 /**
@@ -24,11 +28,31 @@ public class SkirmishScenario extends ScenarioGenerator
     public void generate (
         ToyBoxGameConfig config, BangBoard board, ArrayList<Piece> pieces)
     {
+        ArrayList<Piece> markers = new ArrayList<Piece>();
+        // extract and remove all player start markers
+        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (p instanceof StartMarker) {
+                markers.add(p);
+                iter.remove();
+            }
+        }
+
+        // if we lack sufficient numbers, create some random ones
+        for (int ii = markers.size(); ii < config.players.length; ii++) {
+            StartMarker p = new StartMarker();
+            p.x = (short)RandomUtil.getInt(board.getWidth());
+            p.y = (short)RandomUtil.getInt(board.getHeight());
+            markers.add(p);
+        }
+
+        // now shuffle the markers and assign the players to their location
+        Collections.shuffle(markers);
+
         // each player starts in their own corner
         for (int ii = 0; ii < config.players.length; ii++) {
-            int sx = (ii % 2 == 0) ? 0 : board.getWidth()-1;
-            int sy = (ii == 0 || ii == 3) ? 0 : board.getHeight()-1;
-            placePlayer(board, pieces, ii, sx, sy);
+            Piece p = markers.remove(0);
+            placePlayer(board, pieces, ii, p.x, p.y);
         }
     }
 
