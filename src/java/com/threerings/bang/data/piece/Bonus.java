@@ -10,11 +10,13 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.client.sprite.BonusSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
+
+import com.threerings.bang.data.effect.DefectEffect;
 import com.threerings.bang.data.effect.DuplicateEffect;
 import com.threerings.bang.data.effect.Effect;
-
 import com.threerings.bang.data.effect.GrantSurpriseEffect;
 import com.threerings.bang.data.effect.RepairEffect;
+
 import com.threerings.bang.data.surprise.MissileSurprise;
 import com.threerings.bang.data.surprise.RepairSurprise;
 
@@ -26,8 +28,8 @@ import com.threerings.bang.data.surprise.RepairSurprise;
 public class Bonus extends Piece
 {
     /** Indicates the type of bonus. */
-    public enum Type { UNKNOWN, REPAIR, DUPLICATE, MISSILE_SURPRISE,
-                       REPAIR_SURPRISE };
+    public enum Type { UNKNOWN, REPAIR, DUPLICATE, DEFECT,
+                       MISSILE_SURPRISE, REPAIR_SURPRISE };
 
     /** Unserialization constructor. */
     public Bonus ()
@@ -58,6 +60,7 @@ public class Bonus extends Piece
         switch (_type) {
         case REPAIR: return new RepairEffect(piece.pieceId);
         case DUPLICATE: return new DuplicateEffect(piece.pieceId);
+        case DEFECT: return new DefectEffect(piece.owner);
         case MISSILE_SURPRISE:
             return new GrantSurpriseEffect(piece.owner, new MissileSurprise());
         case REPAIR_SURPRISE:

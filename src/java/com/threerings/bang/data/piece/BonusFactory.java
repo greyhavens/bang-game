@@ -41,6 +41,15 @@ public class BonusFactory
                                      0.5, // early-game affinity
                                      0.5)); // late-game affinity
 
+        _choices.add(new Suitability(new Bonus(Bonus.Type.DEFECT),
+                                     50, // base weight
+                                     0.0, // damage affinity
+                                     -0.8, // many pieces affinity
+                                     1.0, // few pieces-affinity
+                                     1.0, // low power affinity
+                                     -0.2, // early-game affinity
+                                     0.7)); // late-game affinity
+
         _choices.add(new Suitability(new Bonus(Bonus.Type.MISSILE_SURPRISE),
                                      50, // base weight
                                      0.0, // damage affinity
