@@ -268,7 +268,7 @@ public class BangManager extends GameManager
         // TEMP: give everyone a repair surprise to start
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             RepairSurprise s = new RepairSurprise();
-            s.init(ii);
+            s.init(_bangobj, ii);
             _bangobj.addToSurprises(s);
         }
 
@@ -310,7 +310,7 @@ public class BangManager extends GameManager
         try {
             _bangobj.startTransaction();
             // potentially create and add new bonuses
-            if (addBonuses()) {
+            if (addBonus()) {
                 _bangobj.updateStats();
             }
         } finally {
@@ -432,7 +432,7 @@ public class BangManager extends GameManager
      *
      * @return true if a bonus was added, false if not.
      */
-    protected boolean addBonuses ()
+    protected boolean addBonus ()
     {
         Piece[] pieces = _bangobj.getPieceArray();
 
@@ -448,107 +448,103 @@ public class BangManager extends GameManager
 //         }
 //         log.info("Non-actors: " + StringUtil.toString(nonactors));
 
-        // have a 1 in 5 chance of adding a bonus for each live player for
+        // have a 1 in 4 chance of adding a bonus for each live player for
         // which there is not already a bonus on the board
         int bprob = (_bangobj.gstats.livePlayers - _bangobj.gstats.bonuses);
-        int rando = RandomUtil.getInt(50);
+        int rando = RandomUtil.getInt(40);
         if (bprob == 0 || rando > bprob*10) {
 //             log.info("No bonus, probability " + bprob + " in 10 (" +
 //                      rando + ").");
             return false;
         }
 
-        // determine whether everyone is within 20% of the average score
-        boolean outlier = _bangobj.havePowerOutlier(0.1);
-
-        // select an algorithm by which to place the bonus:
-        // - if we are very early in the game, just put it in the middle
-        //   of the board
-        // - if the players are mostly even, ?
-        // - if some player is in last place, put it near them
-
-        String type;
-        Point spot;
-        if (outlier) {
-            spot = findSpotNearChuckanut(pieces);
-            type = _bangobj.players[_bangobj.getLowestPowerIndex()].toString();
-        } else {
-            int spidx = RandomUtil.getInt(_bonusSpots.size());
-            spot = new Point(_bonusSpots.getX(spidx), _bonusSpots.getY(spidx));
-            type = "spawn_point";
+        // determine (roughly) who can get to bonus spots on this tick
+        int[] weights = new int[_bonusSpots.size()];
+        ArrayIntSet[] reachers = new ArrayIntSet[weights.length];
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece p = pieces[ii];
+            if (p.owner < 0 || !p.isAlive() ||
+                p.ticksUntilMovable(_bangobj.tick) > 0) {
+                continue;
+            }
+            for (int bb = 0; bb < reachers.length; bb++) {
+                int x = _bonusSpots.getX(bb), y = _bonusSpots.getY(bb);
+                if (p.getDistance(x, y) > p.getMoveDistance()) {
+                    continue;
+                }
+                _moves.clear();
+                _bangobj.board.computeMoves(p, _moves);
+                if (!_moves.contains(x, y)) {
+                    continue;
+                }
+                log.info(p.info() + " can reach " + x + "/" + y);
+                if (reachers[bb] == null) {
+                    reachers[bb] = new ArrayIntSet();
+                    reachers[bb].add(p.owner);
+                }
+            }
         }
+
+        // now convert reachability into weightings for each of the spots
+        for (int ii = 0; ii < weights.length; ii++) {
+            if (reachers[ii] == null) {
+                log.info("Spot " + ii + " is a wash.");
+                // if no one can reach it, give it a base probability
+                weights[ii] = 1;
+
+            } else if (reachers[ii].size() == 1) {
+                log.info("Spot " + ii + " is a one man spot.");
+                // if only one player can reach it, give it a probability
+                // inversely proportional to that player's power
+                int pidx = reachers[ii].get(0);
+                double ifactor = 1.0 - _bangobj.pstats[pidx].powerFactor;
+                weights[ii] = (int)Math.round(10 * Math.max(0, ifactor)) + 1;
+
+            } else {
+                // if multiple players can reach it, give it a nudge if
+                // they are of about equal power
+                double avgpow = _bangobj.getAveragePower(reachers[ii]);
+                boolean outlier = false;
+                for (int pp = 0; pp < reachers[ii].size(); pp++) {
+                    int pidx = reachers[ii].get(pp);
+                    double power = _bangobj.pstats[pidx].power;
+                    if (power < 0.9 * avgpow || power > 1.1 * avgpow) {
+                        outlier = true;
+                    }
+                }
+                log.info("Spot " + ii + " is a multi-man spot: " + outlier);
+                weights[ii] = outlier ? 1 : 5;
+            }
+        }
+
+        // now select a spot based on our weightings
+        int spidx = RandomUtil.getWeightedIndex(weights);
+        Point spot = new Point(_bonusSpots.getX(spidx),
+                               _bonusSpots.getY(spidx));
+        log.info("Selecting from " + StringUtil.toString(weights) + ": " +
+                 spidx + " -> " + spot.x + "/" + spot.y + ".");
 
         // locate the nearest spot to that which can be occupied by our piece
         Point bspot = _bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
         if (bspot == null) {
-            log.info("Dropping bonus for lack of occupiable location " +
-                     spot + ".");
+            log.info("Dropping bonus for lack of spot " + spot + ".");
             return false;
         }
 
-        // now we have a location, determine which player has the shortest
-        // path to this bonus and use that player's power to determine how
-        // powerful a bonus to deploy
-        int spath = Integer.MAX_VALUE, spidx = -1;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece piece = pieces[ii];
-            if (piece.owner < 0 || !piece.isAlive()) {
-                continue;
-            }
-            List path = _bangobj.board.computePath(
-                piece, bspot.x, bspot.y);
-            if (path == null) {
-                log.warning("Unable to compute path to " + bspot +
-                            " for " + piece.info() + "?");
-                continue;
-            }
-//             log.info(piece.info() + " is " + path.size() +
-//                      " steps from " + bspot);
-            if (path.size() < spath) {
-                spath = path.size();
-                spidx = piece.owner;
-            }
-        }
-
-        Piece bonus;
-        double pfact = _bangobj.pstats[spidx].powerFactor;
-        if (pfact < 0.2) {
-            bonus = new Bonus(Bonus.Type.SURPRISE);
-        } else if (Math.random() > pfact) {
-            bonus = new Bonus(Bonus.Type.DUPLICATE);
-        } else {
-            bonus = new Bonus(Bonus.Type.REPAIR);
-        }
+        // now turn to the bonus factory for guidance
+        Piece bonus = _bfactory.selectBonus(_bangobj, bspot, reachers[spidx]);
         bonus.assignPieceId();
         bonus.position(bspot.x, bspot.y);
         _bangobj.addToPieces(bonus);
+        _bangobj.board.updateShadow(null, bonus);
 
         String msg = MessageBundle.tcompose(
-            "m.placed_bonus", "" + bspot.x, "" + bspot.y, type);
+            "m.placed_bonus", "" + bspot.x, "" + bspot.y);
         SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
 
         log.info("Placed bonus: " + bonus.info());
         return true;
     }
-
-    /** Helper function for {@link #addBonuses}. */
-    protected Point findSpotNearChuckanut (Piece[] pieces)
-    {
-        int lowidx = _bangobj.getLowestPowerIndex();
-        log.info("Placing bonus near " + _bangobj.players[lowidx] + ".");
-
-        // compute and return the centroid of their live pieces
-        int ppieces = 0, sumx = 0, sumy = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
-            if (p.owner == lowidx && p.isAlive()) {
-                ppieces++;
-                sumx += p.x;
-                sumy += p.y;
-            }
-        }
-        return new Point(sumx/ppieces, sumy/ppieces);
-    }        
 
     /** Records damage done by the specified user to various pieces. */
     protected void recordDamage (BodyObject user, IntIntMap damage)

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.data.surprise;
 
+import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.AreaDamageEffect;
 import com.threerings.bang.data.effect.Effect;
 
@@ -15,6 +16,21 @@ public class MissileSurprise extends Surprise
     public int power = 60;
 
     public int radius = 2;
+
+    @Override // documentation inherited
+    public void init (BangObject bangobj, int owner)
+    {
+        super.init(bangobj, owner);
+
+        // if our player is "in the nooksak", give them a big missile
+        if (bangobj.pstats[owner].power < 30) {
+            power = 100;
+            radius = 4;
+        } else if (bangobj.pstats[owner].powerFactor < 0.34) {
+            power = 80;
+            radius = 3;
+        }
+    }
 
     @Override // documentation inherited
     public String getIconPath ()

@@ -15,6 +15,8 @@ import com.threerings.bang.data.effect.Effect;
 
 import com.threerings.bang.data.effect.GrantSurpriseEffect;
 import com.threerings.bang.data.effect.RepairEffect;
+import com.threerings.bang.data.surprise.MissileSurprise;
+import com.threerings.bang.data.surprise.RepairSurprise;
 
 /**
  * Represents an exciting bonus waiting to be picked up by a player on the
@@ -24,7 +26,8 @@ import com.threerings.bang.data.effect.RepairEffect;
 public class Bonus extends Piece
 {
     /** Indicates the type of bonus. */
-    public enum Type { UNKNOWN, REPAIR, DUPLICATE, SURPRISE };
+    public enum Type { UNKNOWN, REPAIR, DUPLICATE, MISSILE_SURPRISE,
+                       REPAIR_SURPRISE };
 
     /** Unserialization constructor. */
     public Bonus ()
@@ -39,6 +42,11 @@ public class Bonus extends Piece
         _type = type;
     }
 
+    public Type getType ()
+    {
+        return _type;
+    }
+
     /**
      * Called when a piece has landed on this bonus and is activating it,
      * this should return an object indicating the effect that the bonus
@@ -50,7 +58,10 @@ public class Bonus extends Piece
         switch (_type) {
         case REPAIR: return new RepairEffect(piece.pieceId);
         case DUPLICATE: return new DuplicateEffect(piece.pieceId);
-        case SURPRISE: return new GrantSurpriseEffect(piece.owner);
+        case MISSILE_SURPRISE:
+            return new GrantSurpriseEffect(piece.owner, new MissileSurprise());
+        case REPAIR_SURPRISE:
+            return new GrantSurpriseEffect(piece.owner, new RepairSurprise());
         }
         return null;
     }
@@ -67,7 +78,8 @@ public class Bonus extends Piece
         String type;
         switch (_type) {
         case REPAIR: type = "repair"; break;
-        case SURPRISE: type = "surprise"; break;
+        case MISSILE_SURPRISE: type = "surprise"; break;
+        case REPAIR_SURPRISE: type = "surprise"; break;
         case DUPLICATE: type = "unknown"; break;
         default:
         case UNKNOWN: type = "unknown"; break;

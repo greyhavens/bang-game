@@ -172,7 +172,16 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public int getDistance (Piece other)
     {
-        return Math.abs(x - other.x) + Math.abs(y - other.y);
+        return getDistance(other.x, other.y);
+    }
+
+    /**
+     * Returns the "tile" distance between this piece and the specified
+     * location.
+     */
+    public int getDistance (int tx, int ty)
+    {
+        return Math.abs(x - tx) + Math.abs(y - ty);
     }
 
     /**
@@ -188,8 +197,8 @@ public abstract class Piece extends SimpleStreamableObject
     public String info ()
     {
         String cname = getClass().getName();
-        return cname.substring(cname.lastIndexOf(".")+1) + ":" +
-            pieceId + "@" + x + "/" + y;
+        return cname.substring(cname.lastIndexOf(".")+1) + " id:" +
+            pieceId + " o:" + owner + " x:" + x + " y:" + y;
     }
 
     /** Returns the stepper used to compute paths for this type of piece. */

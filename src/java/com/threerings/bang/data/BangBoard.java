@@ -234,8 +234,8 @@ public class BangBoard extends SimpleStreamableObject
         Arrays.fill(_pgrid, (byte)0);
 
         int mdist = piece.getMoveDistance();
-        log.info("Recomputing sets for " + piece.info() +
-                 " [mdist=" + mdist + "].");
+//         log.info("Recomputing sets for " + piece.info() +
+//                  " [mdist=" + mdist + "].");
 
         // start with 10x our movement points at our current coordinate
         // (and add one to ensure that we always end up with 1 in our

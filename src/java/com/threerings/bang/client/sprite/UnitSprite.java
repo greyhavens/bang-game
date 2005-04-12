@@ -22,7 +22,12 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class UnitSprite extends MobileSprite
 {
     public static final Color[] PIECE_COLORS = {
-        Color.blue, Color.red, Color.green, Color.yellow
+        Color.blue.brighter(), Color.red, Color.green, Color.yellow
+    };
+
+    public static final Color[] DARKER_COLORS = {
+        Color.blue.darker().darker(), Color.red.darker(),
+        Color.green.darker(), Color.yellow.darker()
     };
 
     public UnitSprite (String type)
@@ -65,7 +70,9 @@ public class UnitSprite extends MobileSprite
     public void paint (Graphics2D gfx)
     {
         if (_piece.isAlive()) {
-            gfx.setColor(PIECE_COLORS[_piece.owner]);
+            Color color = (_piece.ticksUntilMovable(_tick) > 0) ?
+                DARKER_COLORS[_piece.owner] : PIECE_COLORS[_piece.owner];
+            gfx.setColor(color);
             gfx.fillRect(_ox+1, _oy+1, SQUARE-DBAR_SIZE-1, SQUARE-1);
         }
         super.paint(gfx);

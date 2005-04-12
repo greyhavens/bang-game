@@ -6,6 +6,7 @@ package com.threerings.bang.data.surprise;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.Effect;
 
 /**
@@ -39,9 +40,11 @@ public abstract class Surprise extends SimpleStreamableObject
 
     /**
      * This is used to assign the owner and a new unique id to a surprise
-     * when it is created (on the server).
+     * when it is created (on the server). Derived classes can also
+     * override this method and further configure their surprise based on
+     * the relative strength or weakness of the receiving player.
      */
-    public void init (int owner)
+    public void init (BangObject bangobj, int owner)
     {
         _key = null;
         surpriseId = 0;

@@ -6,9 +6,9 @@ package com.threerings.bang.data;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
@@ -198,77 +198,81 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns an array containing the total "undamage" units for each
-     * player (undamage being 100 minus the damage a piece has already
-     * taken). This provides a rough estimate of who has the advantage.
-     */
-    public int[] computePower ()
-    {
-        int[] power = new int[players.length];
-        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
-            if (p.isAlive() && p.owner >= 0) {
-                int pp = (100 - p.damage);
-                power[p.owner] += pp;
-            }
-        }
-        return power;
-    }
-
-    /**
      * Returns the average number of live pieces per player.
      */
     public int getAveragePieceCount ()
     {
+        int[] pcount = getPieceCount();
+        float tpieces = 0, tcount = 0;
+        for (int ii = 0; ii < pcount.length; ii++) {
+            if (pcount[ii] > 0) {
+                tpieces += pcount[ii];
+                tcount++;
+            }
+        }
+        return (int)Math.round(tpieces / tcount);
+    }
+
+    /**
+     * Returns the average number of live pieces among the specified set
+     * of players.
+     */
+    public int getAveragePieceCount (ArrayIntSet players)
+    {
+        int[] pcount = getPieceCount();
+        float tpieces = 0, tcount = 0;
+        for (int ii = 0; ii < pcount.length; ii++) {
+            if (pcount[ii] > 0 && players.contains(ii)) {
+                tpieces += pcount[ii];
+                tcount++;
+            }
+        }
+        return (int)Math.round(tpieces / tcount);
+    }
+
+    /**
+     * Returns the count of pieces per player.
+     */
+    public int[] getPieceCount ()
+    {
         int[] pcount = new int[players.length];
-        double lcount = 0;
         for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (p.isAlive() && p.owner >= 0) {
-                if (pcount[p.owner] == 0) {
-                    lcount++;
-                }
                 pcount[p.owner]++;
             }
         }
-        return (int)Math.round(IntListUtil.sum(pcount) / lcount);
+        return pcount;
     }
 
     /**
-     * Returns the index of the player with the least power.
+     * Returns the average power of the specified set of players
+     * (referenced by index).
      */
-    public int getLowestPowerIndex ()
+    public double getAveragePower (ArrayIntSet players)
     {
-        // start randomly in the array and look for the lowest power haver
-        int lpower = Integer.MAX_VALUE, lowidx = -1;
-        int offset = RandomUtil.getInt(pstats.length);
-        for (int ii = 0; ii < pstats.length; ii++) {
-            int pidx = (ii + offset) % pstats.length;
-            if (pstats[pidx].power < lpower) {
-                lowidx = pidx;
-                lpower = pstats[pidx].power;
-            }
+        double tpower = 0;
+        for (int ii = 0; ii < players.size(); ii++) {
+            tpower += pstats[players.get(ii)].power;
         }
-        return lowidx;
+        return tpower/players.size();
     }
 
     /**
-     * Returns true if at least one player exists where the difference
-     * between their power and the average power is greater or less than
-     * the specified factor of the average power.
+     * Returns the average damage level of all live pieces owned by the
+     * specified players.
      */
-    public boolean havePowerOutlier (double factor)
+    public int getAveragePieceDamage (ArrayIntSet players)
     {
-        double range = gstats.averagePower * factor;
-        double low = gstats.averagePower - range;
-        double high = gstats.averagePower + range;
-        for (int ii = 0; ii < pstats.length; ii++) {
-            int power = pstats[ii].power;
-            if (power != 0 && (power < low || power > high)) {
-                return true;
+        int pcount = 0, tdamage = 0;
+        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            if (p.isAlive() && players.contains(p.owner)) {
+                pcount++;
+                tdamage += p.damage;
             }
         }
-        return false;
+        return tdamage / pcount;
     }
 
     /**
