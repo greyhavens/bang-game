@@ -92,6 +92,17 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Called on every tick to allow a unit to lose hit points or
+     * regenerate hit points automatically.
+     *
+     * @return true if the unit was updated.
+     */
+    public boolean tick (short tick)
+    {
+        return false;
+    }
+
+    /**
      * Returns whether or not this piece should be removed from the board
      * when maximally damaged.
      */

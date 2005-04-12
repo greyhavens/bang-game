@@ -12,6 +12,14 @@ import com.threerings.bang.client.sprite.UnitSprite;
 public class WindupSlinger extends Gunslinger
 {
     @Override // documentation inherited
+    public boolean tick (short tick)
+    {
+        int odamage = damage;
+        damage = Math.min(100, damage + 5);
+        return (odamage != damage);
+    }
+
+    @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new UnitSprite("windupslinger");

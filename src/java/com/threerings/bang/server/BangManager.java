@@ -56,7 +56,6 @@ import com.threerings.bang.data.piece.BonusMarker;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.PlayerPiece;
 import com.threerings.bang.data.surprise.AreaRepair;
-import com.threerings.bang.data.surprise.DustDevil;
 import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.util.BoardUtil;
 import com.threerings.bang.util.PieceSet;
@@ -268,8 +267,7 @@ public class BangManager extends GameManager
 
         // TEMP: give everyone an area repair to start
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-//            AreaRepair s = new AreaRepair();
-            DustDevil s = new DustDevil();
+            AreaRepair s = new AreaRepair();
             s.init(_bangobj, ii);
             _bangobj.addToSurprises(s);
         }
@@ -294,8 +292,16 @@ public class BangManager extends GameManager
 
         Piece[] pieces = _bangobj.getPieceArray();
 
-        // determine whether any pieces
+        // allow pieces to tick down and possibly die
         for (int ii = 0; ii < pieces.length; ii++) {
+            Piece p = pieces[ii];
+            if (p.isAlive() && p.tick(tick)) {
+                // if they died, possibly remove them from the board
+                if (!p.isAlive() && p.removeWhenDead()) {
+                    _bangobj.pieces.removeDirect(p);
+                    _bangobj.board.updateShadow(p, null);
+                }
+            }
         }
 
         // next check to see whether anyone's pieces are still alive
