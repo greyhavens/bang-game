@@ -50,9 +50,9 @@ public class Gunslinger extends Piece
         } else if (target instanceof Dirigible) {
             return 50;
         } else if (target instanceof Artillery) {
-            return 25;
+            return 35;
         } else if (target instanceof Gunslinger) {
-            return 20;
+            return 25;
         } else {
             return super.computeDamage(target);
         }

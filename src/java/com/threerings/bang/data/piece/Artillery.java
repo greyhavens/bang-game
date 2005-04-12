@@ -53,7 +53,7 @@ public class Artillery extends Piece
         } else if (target instanceof Artillery) {
             return 34;
         } else if (target instanceof Gunslinger) {
-            return 17;
+            return 34;
         } else {
             return super.computeDamage(target);
         }

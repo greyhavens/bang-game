@@ -43,7 +43,7 @@ public class SteamGunman extends Piece
         } else if (target instanceof Dirigible) {
             return 25;
         } else if (target instanceof Artillery) {
-            return 25;
+            return 35;
         } else if (target instanceof Gunslinger) {
             return 50;
         } else {

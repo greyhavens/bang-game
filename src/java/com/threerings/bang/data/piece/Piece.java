@@ -308,8 +308,10 @@ public abstract class Piece extends SimpleStreamableObject
         int hurt = computeDamage(target);
         // TEMP: scale all damage up
         hurt = 5 * hurt / 3;
-        // scale the damage by our own damage level
-        hurt = (hurt * (100-this.damage)) / 100;
+        // scale the damage by our own damage level; but always fire as if
+        // we have at least half hit points
+        int undamage = Math.max(50, 100-damage);
+        hurt = (hurt * undamage) / 100;
         hurt = Math.max(1, hurt); // always do at least 1 point of damage
         ShotEffect shot = new ShotEffect();
         shot.shooterId = pieceId;

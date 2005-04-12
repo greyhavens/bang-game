@@ -30,9 +30,9 @@ public class Dirigible extends Piece
         if (target instanceof SteamGunman) {
             return 34;
         } else if (target instanceof Dirigible) {
-            return 20;
-        } else if (target instanceof Artillery) {
             return 25;
+        } else if (target instanceof Artillery) {
+            return 35;
         } else if (target instanceof Gunslinger) {
             return 17;
         } else {
