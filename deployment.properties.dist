@@ -1,0 +1,15 @@
+#
+# $Id$
+#
+# Configuration for the Bang! client/editor deployment
+
+root_url = http://www.banghowdy.com
+
+#
+# If this deployment will be used to build signed Java Web Start
+# distributions, the password for the signing key can be specified here.
+
+# sign.keystore = /export/threerings/lib/keystore.dat
+# sign.alias = threerings
+# sign.keypass = KEYPASS
+# sign.storepass = STOREPASS

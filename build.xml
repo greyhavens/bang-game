@@ -1,10 +1,13 @@
 <!-- build configuration -->
 <project name="bang" default="compile" basedir=".">
 
-  <!-- things you may want to change -->
+  <!-- define some basic project parameters -->
   <property name="app.name"         value="bang"/>
   <property name="doc.packages"     value="com.threerings.bang.*"/>
   <property name="copy.holder"      value="Three Rings Design, Inc."/>
+
+  <!-- read in our deployment properties -->
+  <property file="deployment.properties"/>
 
   <!-- things you probably don't want to change -->
   <property name="src.dir"      value="src/java"/>
@@ -95,10 +98,31 @@
     </javadoc>
   </target>
 
+  <!-- builds the standalone editor jar -->
+  <target name="editor">
+    <!-- generate the all-in-wonder jar file -->
+    <taskdef resource="proguard/ant/task.properties"
+             classpath="lib/proguard.jar"/>
+    <proguard configuration="etc/bang-editor.pro"/>
+    <copy todir="pages/editor" file="dist/bang-editor.jar"/>
+    <!-- create the JNLP file -->
+    <copy todir="pages/editor">
+      <fileset dir="etc" includes="editor.jnlp"/>
+      <filterset>
+        <filter token="application_uri" value="${root_url}/editor/"/>
+      </filterset>
+    </copy>
+    <!-- sign the jar file -->
+    <signjar keystore="${sign.keystore}" alias="${sign.alias}"
+      storepass="${sign.storepass}" lazy="true">
+      <fileset dir="pages/editor" includes="bang-editor.jar"/>
+    </signjar>
+  </target>
+
   <!-- a target for rebuilding everything -->
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
-  <!-- builds our distribution files (war and jar) -->
+  <!-- builds the main bang jar file -->
   <target name="dist" depends="prepare,compile">
     <jar file="${deploy.dir}/${dist.jar}"
          basedir="${deploy.dir}/classes"/>
