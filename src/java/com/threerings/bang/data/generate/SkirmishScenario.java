@@ -13,11 +13,11 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.piece.Artillery;
-import com.threerings.bang.data.piece.Chopper;
-import com.threerings.bang.data.piece.Marine;
+import com.threerings.bang.data.piece.Dirigible;
+import com.threerings.bang.data.piece.Gunslinger;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.StartMarker;
-import com.threerings.bang.data.piece.Tank;
+import com.threerings.bang.data.piece.SteamGunman;
 
 /**
  * Generates the pieces for our test skirmish scenario.
@@ -62,11 +62,11 @@ public class SkirmishScenario extends ScenarioGenerator
         // search out from the corner for a valid position
         ArrayList<Piece> placers = new ArrayList<Piece>();
         configureAndAdd(placers, pidx, new Artillery());
-        configureAndAdd(placers, pidx, new Chopper());
-        configureAndAdd(placers, pidx, new Marine());
-        configureAndAdd(placers, pidx, new Marine());
-        configureAndAdd(placers, pidx, new Tank());
-        configureAndAdd(placers, pidx, new Tank());
+        configureAndAdd(placers, pidx, new Dirigible());
+        configureAndAdd(placers, pidx, new Gunslinger());
+        configureAndAdd(placers, pidx, new Gunslinger());
+        configureAndAdd(placers, pidx, new SteamGunman());
+        configureAndAdd(placers, pidx, new SteamGunman());
 
         Piece piece = placers.remove(0);
         Rectangle rect = new Rectangle(sx, sy, 1, 1);

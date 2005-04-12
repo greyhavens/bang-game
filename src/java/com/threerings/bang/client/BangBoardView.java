@@ -42,7 +42,6 @@ import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
 import com.threerings.bang.data.piece.BigPiece;
-import com.threerings.bang.data.piece.Chopper;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.util.PieceSet;

@@ -33,6 +33,6 @@ public class Building extends BigPiece
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
-        return !(lapper instanceof Chopper);
+        return !(lapper instanceof Dirigible);
     }
 }

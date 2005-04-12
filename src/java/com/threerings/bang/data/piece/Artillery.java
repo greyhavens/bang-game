@@ -13,9 +13,6 @@ import com.threerings.bang.data.piece.Piece;
 public class Artillery extends Piece
     implements PlayerPiece
 {
-    /** A tank can fire at a target up to seven squares away. */
-    public static final int FIRE_DISTANCE = 4;
-
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
@@ -37,25 +34,25 @@ public class Artillery extends Piece
     @Override // documentation inherited
     public boolean validTarget (Piece target)
     {
-        return super.validTarget(target) && !(target instanceof Chopper);
+        return super.validTarget(target) && !(target instanceof Dirigible);
     }
 
     @Override // documentation inherited
     public int getFireDistance ()
     {
-        return FIRE_DISTANCE;
+        return 4;
     }
 
     @Override // documentation inherited
     protected int computeDamage (Piece target)
     {
-        if (target instanceof Tank) {
+        if (target instanceof SteamGunman) {
             return 34;
-        } else if (target instanceof Chopper) {
+        } else if (target instanceof Dirigible) {
             return 0;
         } else if (target instanceof Artillery) {
             return 34;
-        } else if (target instanceof Marine) {
+        } else if (target instanceof Gunslinger) {
             return 17;
         } else {
             return super.computeDamage(target);

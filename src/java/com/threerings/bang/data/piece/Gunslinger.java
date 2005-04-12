@@ -7,15 +7,15 @@ import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.UnitSprite;
 
 /**
- * Handles the state and behavior of the marine piece.
+ * Handles the state and behavior of the gun slinger piece.
  */
-public class Marine extends Piece
+public class Gunslinger extends Piece
     implements PlayerPiece
 {
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new UnitSprite("marine");
+        return new UnitSprite("gunslinger");
     }
 
     @Override // documentation inherited
@@ -45,13 +45,13 @@ public class Marine extends Piece
     @Override // documentation inherited
     protected int computeDamage (Piece target)
     {
-        if (target instanceof Tank) {
+        if (target instanceof SteamGunman) {
             return 13;
-        } else if (target instanceof Chopper) {
+        } else if (target instanceof Dirigible) {
             return 50;
         } else if (target instanceof Artillery) {
             return 25;
-        } else if (target instanceof Marine) {
+        } else if (target instanceof Gunslinger) {
             return 20;
         } else {
             return super.computeDamage(target);

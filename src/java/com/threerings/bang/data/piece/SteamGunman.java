@@ -8,18 +8,15 @@ import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.Terrain;
 
 /**
- * Handles the state and behavior of the tank piece.
+ * Handles the state and behavior of the steam gunman piece.
  */
-public class Tank extends Piece
+public class SteamGunman extends Piece
     implements PlayerPiece
 {
-    /** A tank can fire at a target up to two squares away. */
-    public static final int FIRE_DISTANCE = 2;
-
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new UnitSprite("tank");
+        return new UnitSprite("steamgunman");
     }
 
     @Override // documentation inherited
@@ -41,13 +38,13 @@ public class Tank extends Piece
     @Override // documentation inherited
     protected int computeDamage (Piece target)
     {
-        if (target instanceof Tank) {
+        if (target instanceof SteamGunman) {
             return 25;
-        } else if (target instanceof Chopper) {
+        } else if (target instanceof Dirigible) {
             return 25;
         } else if (target instanceof Artillery) {
             return 25;
-        } else if (target instanceof Marine) {
+        } else if (target instanceof Gunslinger) {
             return 50;
         } else {
             return super.computeDamage(target);
