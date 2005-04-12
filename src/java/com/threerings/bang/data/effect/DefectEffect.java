@@ -43,12 +43,15 @@ public class DefectEffect extends Effect
         log.info(bangobj.players[owner] + " swiping with probability " +
                  swipeChance);
 
+        int[] pcount = bangobj.getPieceCount();
         ArrayIntSet pieces = new ArrayIntSet();
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (p.isAlive() && p.owner >= 0 && p.owner != owner &&
-                Math.random() < swipeChance) {
+                // don't allow a player's last piece to be stolen
+                pcount[p.owner] > 1 && Math.random() < swipeChance) {
                 pieces.add(p.pieceId);
+                pcount[p.owner]--;
             }
         }
 
