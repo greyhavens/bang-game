@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Updates the various libraries from the version control repository and
+# rebuilds everything used by the Bang! client, server and editor.
+
+if [ "`whoami`" = "root" ]; then
+    echo "Don't run this script as root."
+    exit 255
+fi
+
+ROOT=`dirname $0`/..
+LOCKFILE=/tmp/rebuild-bang.lock
+
+export JAVA_HOME=/usr/local/jdk1.5
+export PATH=$JAVA_HOME/bin:$PATH
+
+# make sure directories are created sanely
+umask 002
+
+# "parse" our arguments
+while [ ! -z "$1" ]; do
+    if [ $1 = "--update" ]; then
+        UPDATE=true
+    fi
+    shift
+done
+
+# make sure we only have one script running at a time
+lockfile -r 0 $LOCKFILE
+if [ $? -ne 0 ] ; then
+    echo "Refusing to run because lockfile ($LOCKFILE) exists."
+    echo "Ensure no stale script is running, delete the file and rerun."
+    exit 255
+fi
+
+# bookkeeping
+echo "*** Starting build in $ROOT at " `date`
+
+if [ ! -z "$UPDATE" ]; then
+    # update the whole enchilada
+    echo "Updating main tree..."
+    cd $ROOT
+    svn update -q
+fi
+
+# rebuild our libraries
+for LIB in samskivert narya toybox ; do
+    if [ -d $ROOT/projects/$LIB ]; then
+        cd $ROOT/projects/$LIB
+        if [ ! -z "$UPDATE" ]; then
+            echo "Updating $LIB..."
+            svn update -q
+        fi
+        echo "Rebuilding $LIB..."
+        ant clean dist
+        ln -sf $ROOT/projects/$LIB/dist/*.jar $ROOT/lib
+    fi
+done
+
+# build the main thang
+ant clean dist
+
+# now build the editor deployment
+ant editor
+
+# remove the lockfile
+rm -f $LOCKFILE
+
+echo "*** Finished build at " `date`
