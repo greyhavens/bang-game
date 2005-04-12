@@ -17,8 +17,9 @@ import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.GrantSurpriseEffect;
 import com.threerings.bang.data.effect.RepairEffect;
 
-import com.threerings.bang.data.surprise.MissileSurprise;
-import com.threerings.bang.data.surprise.RepairSurprise;
+import com.threerings.bang.data.surprise.AreaRepair;
+import com.threerings.bang.data.surprise.DustDevil;
+import com.threerings.bang.data.surprise.Missile;
 
 /**
  * Represents an exciting bonus waiting to be picked up by a player on the
@@ -29,7 +30,7 @@ public class Bonus extends Piece
 {
     /** Indicates the type of bonus. */
     public enum Type { UNKNOWN, REPAIR, DUPLICATE, DEFECT,
-                       MISSILE_SURPRISE, REPAIR_SURPRISE };
+                       MISSILE, AREA_REPAIR, DUST_DEVIL };
 
     /** Unserialization constructor. */
     public Bonus ()
@@ -61,10 +62,12 @@ public class Bonus extends Piece
         case REPAIR: return new RepairEffect(piece.pieceId);
         case DUPLICATE: return new DuplicateEffect(piece.pieceId);
         case DEFECT: return new DefectEffect(piece.owner);
-        case MISSILE_SURPRISE:
-            return new GrantSurpriseEffect(piece.owner, new MissileSurprise());
-        case REPAIR_SURPRISE:
-            return new GrantSurpriseEffect(piece.owner, new RepairSurprise());
+        case MISSILE:
+            return new GrantSurpriseEffect(piece.owner, new Missile());
+        case AREA_REPAIR:
+            return new GrantSurpriseEffect(piece.owner, new AreaRepair());
+        case DUST_DEVIL:
+            return new GrantSurpriseEffect(piece.owner, new DustDevil());
         }
         return null;
     }
@@ -81,8 +84,8 @@ public class Bonus extends Piece
         String type;
         switch (_type) {
         case REPAIR: type = "repair"; break;
-        case MISSILE_SURPRISE: type = "surprise"; break;
-        case REPAIR_SURPRISE: type = "surprise"; break;
+        case MISSILE: type = "surprise"; break;
+        case AREA_REPAIR: type = "surprise"; break;
         case DUPLICATE: type = "unknown"; break;
         default:
         case UNKNOWN: type = "unknown"; break;

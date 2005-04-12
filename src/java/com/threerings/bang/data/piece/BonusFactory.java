@@ -50,7 +50,7 @@ public class BonusFactory
                                      -0.2, // early-game affinity
                                      0.7)); // late-game affinity
 
-        _choices.add(new Suitability(new Bonus(Bonus.Type.MISSILE_SURPRISE),
+        _choices.add(new Suitability(new Bonus(Bonus.Type.MISSILE),
                                      50, // base weight
                                      0.0, // damage affinity
                                      0.5, // many pieces affinity
@@ -59,12 +59,21 @@ public class BonusFactory
                                      0.5, // early-game affinity
                                      1.0)); // late-game affinity
 
-        _choices.add(new Suitability(new Bonus(Bonus.Type.REPAIR_SURPRISE),
+        _choices.add(new Suitability(new Bonus(Bonus.Type.AREA_REPAIR),
                                      50, // base weight
                                      1.0, // damage affinity
                                      0.5, // many pieces affinity
                                      0.0, // few pieces affinity
                                      1.0, // low power affinity
+                                     0.0, // early-game affinity
+                                     0.5)); // late-game affinity
+
+        _choices.add(new Suitability(new Bonus(Bonus.Type.DUST_DEVIL),
+                                     50, // base weight
+                                     0.5, // damage affinity
+                                     0.0, // many pieces affinity
+                                     0.9, // few pieces affinity
+                                     0.0, // low power affinity
                                      0.0, // early-game affinity
                                      0.5)); // late-game affinity
 

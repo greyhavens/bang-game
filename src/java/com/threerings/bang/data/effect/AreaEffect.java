@@ -42,13 +42,19 @@ public abstract class AreaEffect extends Effect
         int r2 = radius * radius;
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (p.owner >= 0 && p.isAlive() &&
-                MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
+            if (affectedPiece(p) && MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
                 affected.add(p.pieceId);
                 noteAffected(p, dammap);
             }
         }
         pieces = affected.toIntArray();
+    }
+
+    /** Indicates whether or not we should affect this piece, assuming it
+     * is in range. */
+    protected boolean affectedPiece (Piece piece)
+    {
+        return (piece.owner >= 0 && piece.isAlive());
     }
 
     @Override // documentation inherited

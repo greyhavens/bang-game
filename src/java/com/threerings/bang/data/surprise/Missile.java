@@ -11,7 +11,7 @@ import com.threerings.bang.data.effect.Effect;
  * A surprise that allows the player to launch a missile that does an area
  * of effect damage.
  */
-public class MissileSurprise extends Surprise
+public class Missile extends Surprise
 {
     public int power = 60;
 

@@ -4,16 +4,15 @@
 package com.threerings.bang.data.surprise;
 
 import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.effect.AreaRepairEffect;
+import com.threerings.bang.data.effect.AreaClearEffect;
 import com.threerings.bang.data.effect.Effect;
 
 /**
- * A surprise that allows the player to repair a group of pieces.
+ * A surprise that allows the player to clear out all dead pieces in an
+ * area.
  */
-public class RepairSurprise extends Surprise
+public class DustDevil extends Surprise
 {
-    public int repair = 60;
-
     public int radius = 2;
 
     @Override // documentation inherited
@@ -21,19 +20,13 @@ public class RepairSurprise extends Surprise
     {
         super.init(bangobj, owner);
 
-        // if our player is "in the nooksak", give them good repair
-        if (bangobj.pstats[owner].power < 30) {
-            repair = 100;
-            radius = 3;
-        } else if (bangobj.pstats[owner].powerFactor < 0.34) {
-            repair = 100;
-        }
+        // TODO: change radius for any reason?
     }
 
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "repair" + radius;
+        return "dust_devil";
     }
 
     @Override // documentation inherited
@@ -45,6 +38,6 @@ public class RepairSurprise extends Surprise
     @Override // documentation inherited
     public Effect activate (int x, int y)
     {
-        return new AreaRepairEffect(repair, getRadius(), x, y);
+        return new AreaClearEffect(getRadius(), x, y);
     }
 }

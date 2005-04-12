@@ -55,7 +55,8 @@ import com.threerings.bang.data.piece.BonusFactory;
 import com.threerings.bang.data.piece.BonusMarker;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.PlayerPiece;
-import com.threerings.bang.data.surprise.RepairSurprise;
+import com.threerings.bang.data.surprise.AreaRepair;
+import com.threerings.bang.data.surprise.DustDevil;
 import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.util.BoardUtil;
 import com.threerings.bang.util.PieceSet;
@@ -265,9 +266,10 @@ public class BangManager extends GameManager
         _bangobj.setPieces(new PieceDSet(pieces.iterator()));
         _bangobj.board.shadowPieces(pieces.iterator());
 
-        // TEMP: give everyone a repair surprise to start
+        // TEMP: give everyone an area repair to start
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            RepairSurprise s = new RepairSurprise();
+//            AreaRepair s = new AreaRepair();
+            DustDevil s = new DustDevil();
             s.init(_bangobj, ii);
             _bangobj.addToSurprises(s);
         }
@@ -291,6 +293,10 @@ public class BangManager extends GameManager
                  ", pcount=" + _bangobj.pieces.size() + "].");
 
         Piece[] pieces = _bangobj.getPieceArray();
+
+        // determine whether any pieces
+        for (int ii = 0; ii < pieces.length; ii++) {
+        }
 
         // next check to see whether anyone's pieces are still alive
         _havers.clear();
@@ -609,10 +615,14 @@ public class BangManager extends GameManager
         // if that failed, load the default board
         if (tup == null) {
             try {
-                InputStream in = getClass().getClassLoader().getResourceAsStream(
+                ClassLoader cl = BangManager.class.getClassLoader();
+                InputStream in = cl.getResourceAsStream(
                     "rsrc/media/boards/default.board");
                 if (in != null) {
                     tup = BoardUtil.loadBoard(IOUtils.toByteArray(in));
+                } else {
+                    log.warning("Unable to load default board! " +
+                                "[cl=" + cl + "].");
                 }
             } catch (IOException ioe) {
                 log.log(Level.WARNING, "Failed to load default board.", ioe);
