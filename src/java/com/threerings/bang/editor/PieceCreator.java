@@ -31,6 +31,15 @@ public class PieceCreator extends JPanel
         add(createPieceButton("building", new Building(4, 2)));
         add(createPieceButton("building", new Building(2, 4)));
 
+        add(createPieceButton("rocks", new Prop("rock_2x2", 2, 2)));
+        add(createPieceButton("rocks", new Prop("rock2_2x2", 2, 2)));
+        add(createPieceButton("rocks", new Prop("rocks_1x1", 1, 1)));
+        add(createPieceButton("rocks", new Prop("rocks_1x2", 2, 1)));
+        add(createPieceButton("rocks", new Prop("rocks2_1x1", 1, 1)));
+
+        add(createPieceButton("cactus", new Prop("cactus_1x1", 1, 1)));
+        add(createPieceButton("cactus", new Prop("cactus2_1x1", 1, 1)));
+
         add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.pieces_marker")));
         add(createPieceButton("start_marker", new StartMarker()));
         add(createPieceButton("bonus_marker", new BonusMarker()));
