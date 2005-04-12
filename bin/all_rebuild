@@ -60,6 +60,7 @@ for LIB in samskivert narya toybox ; do
 done
 
 # build the main thang
+cd $ROOT
 ant clean dist
 
 # now build the editor deployment

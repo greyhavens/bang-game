@@ -52,6 +52,7 @@ import com.threerings.bang.data.effect.ShotEffect;
 import com.threerings.bang.data.generate.SkirmishScenario;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.BonusFactory;
+import com.threerings.bang.data.piece.BonusMarker;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.PlayerPiece;
 import com.threerings.bang.data.surprise.RepairSurprise;
@@ -252,6 +253,15 @@ public class BangManager extends GameManager
         // set up the game object
         ArrayList<Piece> pieces = new ArrayList<Piece>();
         _bangobj.setBoard(createBoard(pieces));
+
+        // extract the bonus spawn markers from the pieces array
+        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (p instanceof BonusMarker) {
+                _bonusSpots.add(p.x, p.y);
+                iter.remove();
+            }
+        }
         _bangobj.setPieces(new PieceDSet(pieces.iterator()));
         _bangobj.board.shadowPieces(pieces.iterator());
 
@@ -463,9 +473,9 @@ public class BangManager extends GameManager
             spot = findSpotNearChuckanut(pieces);
             type = _bangobj.players[_bangobj.getLowestPowerIndex()].toString();
         } else {
-            spot = new Point(_bangobj.board.getWidth()/2,
-                             _bangobj.board.getHeight()/2);
-            type = "center";
+            int spidx = RandomUtil.getInt(_bonusSpots.size());
+            spot = new Point(_bonusSpots.getX(spidx), _bonusSpots.getY(spidx));
+            type = "spawn_point";
         }
 
         // locate the nearest spot to that which can be occupied by our piece
@@ -667,6 +677,9 @@ public class BangManager extends GameManager
     /** Used to compute a piece's potential moves or attacks when
      * validating a move request. */
     protected PointSet _moves = new PointSet(), _attacks = new PointSet();
+
+    /** Used to track the locations of all bonus spawn points. */
+    protected PointSet _bonusSpots = new PointSet();
 
     /** Used to track effects during a move. */
     protected ArrayList<Effect> _effects = new ArrayList<Effect>();
