@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Command line launcher for the Bang! development server
+
+GAMEID=bang
+ROOT=`dirname $0`/..
+GAMEDEF=$ROOT/$GAMEID.xml
+GAMEJAR=$ROOT/dist/$GAMEID.jar
+shift
+if [ ! -f $GAMEDEF ]; then
+    echo "Unable to locate $GAMEDEF."
+    exit -1
+fi
+if [ ! -f $GAMEJAR ]; then
+    echo "Unable to locate $GAMEJAR. Is the game built?"
+    exit -1
+fi
+
+# Create our toybox properties file
+echo "resource_dir = $ROOT/lib" > $ROOT/toybox.properties
+echo "resource_url = file://$ROOT/lib" >> $ROOT/toybox.properties
+
+# Make sure our jar file is symlinked
+ln -sf ../dist/$GAMEID.jar $ROOT/lib/$GAMEID.jar
+GGJAR=/export/gardens/projects/games/client/gg-game.jar
+cp $ROOT/dist/$GAMEID.jar $GGJAR
+
+CLASS=com.threerings.toybox.server.ToyBoxServer
+$ROOT/bin/runjava -- -Dtest=true -Dgame_conf=$GAMEDEF $CLASS
+
+# clean up after ourselves
+rm -f $ROOT/toybox.properties
+rm $ROOT/lib/$GAMEID.jar
+rm $GGJAR

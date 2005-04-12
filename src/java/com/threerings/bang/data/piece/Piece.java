@@ -547,6 +547,15 @@ public abstract class Piece extends SimpleStreamableObject
         return (x << 16) | y;
     }
 
+    /**
+     * Used by the bang manager when loading a serialized board. This
+     * should not be called otherwise.
+     */
+    public static void setNextPieceId (int nextPieceId)
+    {
+        _nextPieceId = nextPieceId;
+    }
+
     protected transient Integer _key;
 
     /** Used to assign a unique id to each piece. */

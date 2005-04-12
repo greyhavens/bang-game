@@ -22,5 +22,6 @@
     <range ident="board_size" minimum="8" maximum="48" start="15"/>
     <range ident="density" minimum="1" maximum="10" start="8"/>
     <toggle ident="fog" start="false"/>
+    <file ident="board_data" binary="true"/>
   </params>
 </game>

@@ -306,7 +306,7 @@ public class BoardView extends VirtualMediaPanel
         Color color = null;
         switch (tile) {
         case DIRT: color = Color.orange.darker(); break;
-        case MOSS: color = Color.green.darker(); break;
+        case ROAD: color = Color.gray; break;
         case TALL_GRASS: color = Color.green; break;
         case WATER: color = Color.blue; break;
         case LEAF_BRIDGE: color = Color.lightGray; break;

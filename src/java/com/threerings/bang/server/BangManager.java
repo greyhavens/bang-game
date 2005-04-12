@@ -4,16 +4,20 @@
 package com.threerings.bang.server;
 
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.Tuple;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -52,6 +56,7 @@ import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.PlayerPiece;
 import com.threerings.bang.data.surprise.RepairSurprise;
 import com.threerings.bang.data.surprise.Surprise;
+import com.threerings.bang.util.BoardUtil;
 import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PointSet;
 
@@ -583,12 +588,36 @@ public class BangManager extends GameManager
     protected BangBoard createBoard (ArrayList<Piece> pieces)
     {
         ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
+        BangBoard board = null;
 
-        // generate a random board
-        int size = (Integer)bconfig.params.get("board_size");
-        BangBoard board = new BangBoard(size, size);
-        CompoundGenerator gen = new CompoundGenerator();
-        gen.generate(bconfig, board, pieces);
+        try {
+            byte[] bdata = (byte[])bconfig.params.get("board_data");
+            if (bdata != null) {
+                Tuple tup = BoardUtil.loadBoard(bdata);
+                board = (BangBoard)tup.left;
+                Piece[] pvec = (Piece[])tup.right;
+                int maxPieceId = 0;
+                for (int ii = 0; ii < pvec.length; ii++) {
+                    if (pvec[ii].pieceId > maxPieceId) {
+                        maxPieceId = pvec[ii].pieceId;
+                    }
+                }
+                Collections.addAll(pieces, pvec);
+                Piece.setNextPieceId(maxPieceId);
+            }
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Failed to unserialize board.", ioe);
+        }
+
+        // if that failed, generate a random board
+        if (board == null) {
+            int size = (Integer)bconfig.params.get("board_size");
+            board = new BangBoard(size, size);
+            CompoundGenerator gen = new CompoundGenerator();
+            gen.generate(bconfig, board, pieces);
+        }
+
+        // now add the player pieces
         ScenarioGenerator scen = null;
         if (System.getProperty("test") != null) {
             scen = new TestScenario();

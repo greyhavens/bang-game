@@ -16,7 +16,7 @@ public enum Terrain
 
     // normal terrain types
     DIRT        (0, "."),
-    MOSS        (1, "*"),
+    ROAD        (1, "="),
     TALL_GRASS  (2, "|"),
     WATER       (3, "^"),
 

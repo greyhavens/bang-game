@@ -118,13 +118,13 @@ public class EditorBoardView extends BoardView
     // documentation inherited from interface MouseWheelListener
     public void mouseWheelMoved (MouseWheelEvent event)
     {
-        // if we're over a piece, rotate it
+        // if we're over a piece, rotate it (TEMP: disabled)
         Piece piece = getHitPiece(event.getX(), event.getY());
         if (piece != null) {
-            String cmd = (event.getWheelRotation() > 0) ?
-                EditorController.ROTATE_PIECE_CW :
-                EditorController.ROTATE_PIECE_CCW;
-            EditorController.postAction(this, cmd, piece);
+//             String cmd = (event.getWheelRotation() > 0) ?
+//                 EditorController.ROTATE_PIECE_CW :
+//                 EditorController.ROTATE_PIECE_CCW;
+//             EditorController.postAction(this, cmd, piece);
 
         } else {
             // otherwise adjust the currently selected terrain type

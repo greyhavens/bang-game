@@ -5,6 +5,7 @@ package com.threerings.bang.data.piece;
 
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.UnitSprite;
+import com.threerings.bang.data.Terrain;
 
 /**
  * Handles the state and behavior of the tank piece.
@@ -25,6 +26,16 @@ public class Tank extends Piece
     public int getMoveDistance ()
     {
         return 5;
+    }
+
+    @Override // documentation inherited
+    public int traversalCost (Terrain terrain)
+    {
+        if (terrain == Terrain.ROAD) {
+            return 5;
+        } else {
+            return 10;
+        }
     }
 
     @Override // documentation inherited
