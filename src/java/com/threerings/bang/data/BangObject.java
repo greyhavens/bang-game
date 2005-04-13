@@ -280,6 +280,11 @@ public class BangObject extends GameObject
      */
     public void updateStats ()
     {
+        // don't do any computation on the client
+        if (pstats == null) {
+            return;
+        }
+
         // first clear out the old stats
         gstats.clear();
         for (int ii = 0; ii < pstats.length; ii++) {

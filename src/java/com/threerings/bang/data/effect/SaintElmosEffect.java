@@ -49,6 +49,9 @@ public class SaintElmosEffect extends Effect
         for (int ii = 0; ii < newPieces.length; ii++) {
             newPieces[ii] = new WindupSlinger();
             newPieces[ii].assignPieceId();
+            newPieces[ii].owner = owner;
+            newPieces[ii].damage = 60;
+            newPieces[ii].init();
         }
     }
 
@@ -62,8 +65,8 @@ public class SaintElmosEffect extends Effect
             }
             bangobj.pieces.removeDirect(p);
             bangobj.board.updateShadow(p, null);
-            reportRemoval(obs, p);
             reportEffect(obs, p, ELMOED);
+            reportRemoval(obs, p);
 
             newPieces[ii].position(p.x, p.y);
             bangobj.pieces.addDirect(newPieces[ii]);
