@@ -11,7 +11,7 @@
     <title>Bang! Board Editor</title>
     <vendor>Three Rings Design, Inc.</vendor>
     <homepage href="/editor/index.html"/>
-    <icon href="/editor/icon.png"/>
+    <icon href="/editor/icon.gif"/>
     <description>Used to build Bang! boards.</description>
     <description kind="short">Used to build Bang! boards.</description>
     <offline-allowed/>
