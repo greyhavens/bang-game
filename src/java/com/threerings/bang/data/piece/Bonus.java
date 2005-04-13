@@ -83,16 +83,7 @@ public class Bonus extends Piece
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        String type;
-        switch (_type) {
-        case REPAIR: type = "repair"; break;
-        case MISSILE: type = "surprise"; break;
-        case AREA_REPAIR: type = "surprise"; break;
-        case DUPLICATE: type = "unknown"; break;
-        default:
-        case UNKNOWN: type = "unknown"; break;
-        }
-        return new BonusSprite(type);
+        return new BonusSprite(_type.toString().toLowerCase());
     }
 
     /**
