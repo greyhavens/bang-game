@@ -40,7 +40,7 @@ public class PieceSprite extends Sprite
 
     public PieceSprite ()
     {
-        this(SQUARE-3, SQUARE-3);
+        this(SQUARE, SQUARE);
     }
 
     /** Returns the id of the piece associated with this sprite. */
