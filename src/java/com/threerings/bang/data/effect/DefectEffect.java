@@ -3,13 +3,15 @@
 
 package com.threerings.bang.data.effect;
 
+import java.util.Iterator;
+
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Piece;
-
-import java.util.Iterator;
 
 import static com.threerings.bang.Log.log;
 
@@ -37,25 +39,42 @@ public class DefectEffect extends Effect
 
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // determine the probability with which we swipe units (from 0.1 to 0.5)
-        double swipeChance =
-            (0.9 - Math.min(bangobj.pstats[owner].powerFactor, 1.0))/2 + 0.1;
-        log.info(bangobj.players[owner] + " swiping with probability " +
-                 swipeChance);
+        // everyone gets to keep the "average" count or at least two
+        // pieces, whichever is higher
+        int save = Math.max(2, bangobj.getAveragePieceCount());
 
+        // subtract off the "reserved" count from each player
         int[] pcount = bangobj.getPieceCount();
-        ArrayIntSet pieces = new ArrayIntSet();
-        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
-            if (p.isAlive() && p.owner >= 0 && p.owner != owner &&
-                // don't allow a player's last two pieces to be stolen
-                pcount[p.owner] > 2 && Math.random() < swipeChance) {
-                pieces.add(p.pieceId);
+        for (int ii = 0; ii < pcount.length; ii++) {
+            pcount[ii] = Math.max(0, pcount[ii] - save);
+        }
+
+        // now steal whatever remains
+        ArrayIntSet pids = new ArrayIntSet();
+        Piece[] pieces = bangobj.getPieceArray();
+        ArrayUtil.shuffle(pieces);
+
+        // make a first pass, trying not to steal artillery
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece p = pieces[ii];
+            if (pcount[p.owner] > 0 && isValidSteal(p, false)) {
                 pcount[p.owner]--;
+                pids.add(p.pieceId);
             }
         }
 
-        pieceIds = pieces.toIntArray();
+        // make a second pass, allowing artillery if we didn't find enough
+        // the first time through
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece p = pieces[ii];
+            if (pcount[p.owner] > 0 && !pids.contains(p.pieceId) &&
+                isValidSteal(p, true)) {
+                pcount[p.owner]--;
+                pids.add(p.pieceId);
+            }
+        }
+
+        pieceIds = pids.toIntArray();
     }
 
     public void apply (BangObject bangobj, Observer obs)
@@ -75,5 +94,11 @@ public class DefectEffect extends Effect
             // the balance of power has shifted, recompute our stats
             bangobj.updateStats();
         }
+    }
+
+    protected boolean isValidSteal (Piece p, boolean allowArtillery)
+    {
+        return p.isAlive() && p.owner != owner &&
+            (allowArtillery || !(p instanceof Artillery));
     }
 }
