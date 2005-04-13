@@ -36,7 +36,7 @@ public class PieceDSet extends DSet
      * exists so that effects (which are "applied") on the client and
      * server can add pieces to the game.
      */
-    public void addDirect (Piece piece)
+    protected void addDirect (Piece piece)
     {
         add(piece);
     }
@@ -47,7 +47,7 @@ public class PieceDSet extends DSet
      * exists so that effects (which are "applied") on the client and
      * server can remove pieces from the game.
      */
-    public boolean removeDirect (Piece piece)
+    protected boolean removeDirect (Piece piece)
     {
         return remove(piece);
     }

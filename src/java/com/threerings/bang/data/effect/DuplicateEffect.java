@@ -76,7 +76,7 @@ public class DuplicateEffect extends Effect
         reportEffect(obs, piece, DUPLICATED);
 
         // and add the new piece, informing the observer again
-        bangobj.pieces.addDirect(duplicate);
+        bangobj.addPieceDirect(duplicate);
         reportAddition(obs, duplicate);
     }
 }

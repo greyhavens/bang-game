@@ -324,29 +324,14 @@ public class BangBoardView extends BoardView
             // if we have not yet selected move coordinates, reverse
             // engineer those from the piece we would like to attack
             if (_action == null) {
-                List path = _bangobj.board.computePath(_selection, tx, ty);
-                if (path == null) {
-                    log.warning("No path from " + _selection.info() +
-                                " to " + piece.info() + ".");
-                    return true;
-                }
-
-                // select the first coordinates we find where we are
-                // within attack range
-                Point spot = null;
-                int fdist = _selection.getFireDistance();
-                for (int ii = 0; ii < path.size(); ii++) {
-                    Point pp = (Point)path.get(ii);
-                    if (piece.getDistance(pp.x, pp.y) <= fdist) {
-                        spot = pp;
-                        break;
-                    }
-                }
+                // locate the position in our move set that has the
+                // smallest move distance but is still within attack range
+                Point spot = _selection.computeShotLocation(piece, _moveSet);
                 if (spot == null) {
-                    log.warning("Unable to locate firable path node? " +
+                    log.warning("Unable to find place from which to shoot? " +
                                 "[piece=" + _selection.info() +
                                 ", target=" + piece.info() +
-                                ", path=" + StringUtil.toString(path) + "].");
+                                ", moveSet=" + _moveSet + "].");
                     return true;
                 }
                 _action = new int[] { _selection.pieceId, spot.x, spot.y, -1 };
@@ -415,6 +400,7 @@ public class BangBoardView extends BoardView
             sprite = (PieceSprite)s;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
             if (sprite instanceof MobileSprite && piece.isAlive()) {
+                clearSelection();
                 PointSet moveSet = new PointSet();
                 _attackSet = new PointSet();
                 _bangobj.board.computeMoves(piece, moveSet, _attackSet);
@@ -536,8 +522,7 @@ public class BangBoardView extends BoardView
             if (p.isAlive() && p.tick(tick)) {
                 // if they died, possibly remove them from the board
                 if (!p.isAlive() && p.removeWhenDead()) {
-                    _bangobj.pieces.removeDirect(p);
-                    _bangobj.board.updateShadow(p, null);
+                    _bangobj.removePieceDirect(p);
                     removePieceSprite(p.pieceId);
                 }
             }

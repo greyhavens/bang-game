@@ -62,8 +62,7 @@ public class ShotEffect extends Effect
 
         // if the target is dead and should be removed, do so
         if (!target.isAlive() && target.removeWhenDead()) {
-            bangobj.pieces.removeDirect(target);
-            bangobj.board.updateShadow(target, null);
+            bangobj.removePieceDirect(target);
             reportRemoval(obs, target);
         }
     }

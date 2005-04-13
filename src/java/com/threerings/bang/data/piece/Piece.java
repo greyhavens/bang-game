@@ -3,6 +3,7 @@
 
 package com.threerings.bang.data.piece;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -310,6 +311,28 @@ public abstract class Piece extends SimpleStreamableObject
 //     {
 //         return false;
 //     }
+
+    /**
+     * Selects the shortest move that puts us within range of firing on
+     * the specified target.
+     */
+    public Point computeShotLocation (Piece target, PointSet moveSet)
+    {
+        int fdist = getFireDistance(), moves = Integer.MAX_VALUE;
+        Point spot = null;
+        for (int ii = 0, ll = moveSet.size(); ii < ll; ii++) {
+            int px = moveSet.getX(ii), py = moveSet.getY(ii);
+            int dist = getDistance(px, py);
+            if (dist < moves && target.getDistance(px, py) <= fdist) {
+                moves = dist;
+                if (spot == null) {
+                    spot = new Point();
+                }
+                spot.setLocation(px, py);
+            }
+        }
+        return spot;
+    }
 
     /**
      * Affects the target piece with damage.

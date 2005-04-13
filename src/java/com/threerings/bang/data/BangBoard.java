@@ -113,9 +113,11 @@ public class BangBoard extends SimpleStreamableObject
      */
     public List computePath (Piece piece, int tx, int ty)
     {
+        log.info("Computing path from " + piece.x + "/" + piece.y + " to " +
+                 tx + "/" + ty + " maxdist:" + piece.getMoveDistance() + ".");
         return AStarPathUtil.getPath(
-            _tpred, piece.getStepper(), piece, _width+_height, piece.x, piece.y,
-            tx, ty, true);
+            _tpred, piece.getStepper(), piece, piece.getMoveDistance(),
+            piece.x, piece.y, tx, ty, true);
     }
 
     /**
@@ -257,6 +259,7 @@ public class BangBoard extends SimpleStreamableObject
         // final coordinate)
         byte remain = (byte)(mdist * 10 + 1);
         _pgrid[piece.y*_width+piece.x] = remain;
+        moves.add(piece.x, piece.y);
 
         // now consider each of our four neighbors
         considerMoving(piece, moves, piece.x+1, piece.y, remain);

@@ -298,8 +298,7 @@ public class BangManager extends GameManager
             if (p.isAlive() && p.tick(tick)) {
                 // if they died, possibly remove them from the board
                 if (!p.isAlive() && p.removeWhenDead()) {
-                    _bangobj.pieces.removeDirect(p);
-                    _bangobj.board.updateShadow(p, null);
+                    _bangobj.removePieceDirect(p);
                 }
             }
         }

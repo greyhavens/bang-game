@@ -63,13 +63,12 @@ public class SaintElmosEffect extends Effect
             if (p == null) {
                 continue;
             }
-            bangobj.pieces.removeDirect(p);
-            bangobj.board.updateShadow(p, null);
+            bangobj.removePieceDirect(p);
             reportEffect(obs, p, ELMOED);
             reportRemoval(obs, p);
 
             newPieces[ii].position(p.x, p.y);
-            bangobj.pieces.addDirect(newPieces[ii]);
+            bangobj.addPieceDirect(newPieces[ii]);
             reportAddition(obs, newPieces[ii]);
         }
 

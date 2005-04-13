@@ -45,8 +45,7 @@ public class AreaClearEffect extends AreaEffect
         reportEffect(obs, piece, CLEARED);
 
         // then actually clear it from the board
-        bangobj.pieces.removeDirect(piece);
-        bangobj.board.updateShadow(piece, null);
+        bangobj.removePieceDirect(piece);
         reportRemoval(obs, piece);
     }
 }
