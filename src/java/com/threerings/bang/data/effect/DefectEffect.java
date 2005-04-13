@@ -57,7 +57,7 @@ public class DefectEffect extends Effect
         // make a first pass, trying not to steal artillery
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (pcount[p.owner] > 0 && isValidSteal(p, false)) {
+            if (isValidSteal(p, false) && pcount[p.owner] > 0) {
                 pcount[p.owner]--;
                 pids.add(p.pieceId);
             }
@@ -67,8 +67,8 @@ public class DefectEffect extends Effect
         // the first time through
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (pcount[p.owner] > 0 && !pids.contains(p.pieceId) &&
-                isValidSteal(p, true)) {
+            if (isValidSteal(p, true) && pcount[p.owner] > 0 &&
+                !pids.contains(p.pieceId)) {
                 pcount[p.owner]--;
                 pids.add(p.pieceId);
             }
@@ -98,7 +98,7 @@ public class DefectEffect extends Effect
 
     protected boolean isValidSteal (Piece p, boolean allowArtillery)
     {
-        return p.isAlive() && p.owner != owner &&
+        return p.owner >= 0 && p.isAlive() && p.owner != owner &&
             (allowArtillery || !(p instanceof Artillery));
     }
 }

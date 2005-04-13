@@ -620,7 +620,7 @@ public class BangManager extends GameManager
         // if that failed, load the default board
         if (tup == null) {
             try {
-                ClassLoader cl = BangManager.class.getClassLoader();
+                ClassLoader cl = getClass().getClassLoader();
                 InputStream in = cl.getResourceAsStream(
                     "rsrc/media/boards/default.board");
                 if (in != null) {
