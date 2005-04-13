@@ -135,7 +135,9 @@ public class PieceSprite extends Sprite
     public void removed ()
     {
         // remove ourselves from the sprite manager and go away
-        ((SpriteManager)_mgr).removeSprite(this);
+        if (_mgr != null) {
+            ((SpriteManager)_mgr).removeSprite(this);
+        }
     }
 
     // documentation inherited
