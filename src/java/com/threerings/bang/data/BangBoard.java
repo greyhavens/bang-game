@@ -243,7 +243,7 @@ public class BangBoard extends SimpleStreamableObject
      * Computes the supplied piece's move sets based on its current
      * location and the state of the board.
      */
-    public void computeMoves (Piece piece, PointSet moves)
+    public void computeMoves (Piece piece, PointSet moves, PointSet attacks)
     {
         // clear out the planning grid
         Arrays.fill(_pgrid, (byte)0);
@@ -263,6 +263,17 @@ public class BangBoard extends SimpleStreamableObject
         considerMoving(piece, moves, piece.x-1, piece.y, remain);
         considerMoving(piece, moves, piece.x, piece.y+1, remain);
         considerMoving(piece, moves, piece.x, piece.y-1, remain);
+
+        // if the attack set is non-null, compute our attacks as well
+        if (attacks != null) {
+            PointSet set = moves;
+            remain = (byte)piece.getFireDistance();
+            considerFiring(attacks, piece.x, piece.y, remain, false);
+            for (int ii = 0, ll = moves.size(); ii < ll; ii++) {
+                int mx = moves.getX(ii), my = moves.getY(ii);
+                considerFiring(attacks, mx, my, remain, false);
+            }
+        }
     }
 
     /**
@@ -316,7 +327,7 @@ public class BangBoard extends SimpleStreamableObject
         _bbounds = new Rectangle(0, 0, _width, _height);
     }
 
-    /** Helper function for {@link #recomputeSets}. */
+    /** Helper function for {@link #computeMoves}. */
     protected void considerMoving (
         Piece piece, PointSet moves, int xx, int yy, byte remain)
     {
@@ -343,6 +354,38 @@ public class BangBoard extends SimpleStreamableObject
         considerMoving(piece, moves, xx-1, yy, premain);
         considerMoving(piece, moves, xx, yy+1, premain);
         considerMoving(piece, moves, xx, yy-1, premain);
+    }
+
+    /** Helper function for {@link #computeMoves}. */
+    protected void considerFiring (PointSet attacks, int xx, int yy, byte remain,
+                                   boolean checkThisSpot)
+    {
+        // make sure this coordinate is on the board
+        if (!_bbounds.contains(xx, yy)) {
+            return;
+        }
+
+        byte premain = remain;
+        if (checkThisSpot) {
+            // if this position is non-zero bail
+            int pos = yy*_width+xx;
+            if (_pgrid[pos] != 0) {
+                return;
+            }
+
+            // otherwise fill it with our current remaining fire distance
+            attacks.add(xx, yy);
+            premain = (byte)(remain - 1);
+            _pgrid[pos] = (byte)(-1 * premain);
+        }
+
+        // and then check all of our neighbors
+        if (premain > 0) {
+            considerFiring(attacks, xx+1, yy, premain, true);
+            considerFiring(attacks, xx-1, yy, premain, true);
+            considerFiring(attacks, xx, yy+1, premain, true);
+            considerFiring(attacks, xx, yy-1, premain, true);
+        }
     }
 
     /** Used when path finding. */

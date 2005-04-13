@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -261,27 +262,7 @@ public class BangBoardView extends BoardView
         if (_selection != null) {
             // and we have an attack set
             if (_attackSet != null) {
-                // and we are clicking a piece to be attacked
-                if (_attackSet.contains(tx, ty) &&
-                    piece != null && piece.owner != _pidx) {
-                    // note the piece we desire to fire upon
-                    _action[3] = piece.pieceId;
-                    executeAction();
-                    return;
-
-                } else if (tx == _action[1] && ty == _action[2]) {
-                    // or if we're clicking a second time on our desired
-                    // move location, select a random target and shoot it
-                    if (_attackSet.size() > 0) {
-                        int idx = RandomUtil.getInt(_attackSet.size());
-                        Piece target = _bangobj.getPlayerPiece(
-                            _attackSet.getX(idx), _attackSet.getY(idx));
-                        if (target != null && _selection.validTarget(target)) {
-                            log.info("randomly targeting " + target.info());
-                            _action[3] = target.pieceId;
-                        }
-                    }
-                    executeAction();
+                if (handleClickToAttack(piece, tx, ty)) {
                     return;
                 }
             }
@@ -304,7 +285,7 @@ public class BangBoardView extends BoardView
     {
         // or if we're clicking in our move set or on our selected piece
         if (!_moveSet.contains(tx, ty) &&
-            (_selection.x != tx || _selection.y != ty)) {
+            (_selection == null || _selection.x != tx || _selection.y != ty)) {
             return false;
         }
 
@@ -315,17 +296,11 @@ public class BangBoardView extends BoardView
         clearAttackSet();
 
         // display our potential attacks
-        _attackSet = new PointSet();
         PointSet attacks = new PointSet();
         _bangobj.board.computeAttacks(
             _selection.getFireDistance(), tx, ty, attacks);
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
-            if (_selection.validTarget(p) &&
-                attacks.contains(p.x, p.y)) {
-                _attackSet.add(p.x, p.y);
-            }
-        }
+        _attackSet = new PointSet();
+        pruneAttackSet(attacks, _attackSet);
 
         // if there are no valid attacks, assume they're just moving (but
         // do nothing if they're not even moving)
@@ -337,6 +312,82 @@ public class BangBoardView extends BoardView
             dirtySet(_attackSet);
         }
         return true;
+    }
+
+    /** Handles a click that indicates the coordinates of a piece we'd
+     * like to attack. */
+    protected boolean handleClickToAttack (Piece piece, int tx, int ty)
+    {
+        // maybe we're clicking on a piece that is in our attack set
+        if (_attackSet.contains(tx, ty) &&
+            piece != null && piece.owner != _pidx) {
+            // if we have not yet selected move coordinates, reverse
+            // engineer those from the piece we would like to attack
+            if (_action == null) {
+                List path = _bangobj.board.computePath(_selection, tx, ty);
+                if (path == null) {
+                    log.warning("No path from " + _selection.info() +
+                                " to " + piece.info() + ".");
+                    return true;
+                }
+
+                // select the first coordinates we find where we are
+                // within attack range
+                Point spot = null;
+                int fdist = _selection.getFireDistance();
+                for (int ii = 0; ii < path.size(); ii++) {
+                    Point pp = (Point)path.get(ii);
+                    if (piece.getDistance(pp.x, pp.y) <= fdist) {
+                        spot = pp;
+                        break;
+                    }
+                }
+                if (spot == null) {
+                    log.warning("Unable to locate firable path node? " +
+                                "[piece=" + _selection.info() +
+                                ", target=" + piece.info() +
+                                ", path=" + StringUtil.toString(path) + "].");
+                    return true;
+                }
+                _action = new int[] { _selection.pieceId, spot.x, spot.y, -1 };
+            }
+            // note the piece we desire to fire upon
+            _action[3] = piece.pieceId;
+            executeAction();
+            return true;
+        }
+
+        // maybe we're clicking a second time on our desired move location
+        if (_action != null && tx == _action[1] && ty == _action[2]) {
+            if (_attackSet.size() > 0) {
+                // select a random target and request to shoot it
+                int idx = RandomUtil.getInt(_attackSet.size());
+                Piece target = _bangobj.getPlayerPiece(
+                    _attackSet.getX(idx), _attackSet.getY(idx));
+                if (target != null && _selection.validTarget(target)) {
+                    log.info("randomly targeting " + target.info());
+                    _action[3] = target.pieceId;
+                }
+            }
+            executeAction();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Adds all positions in the source set that reference a valid attack
+     * target to the supplied destination set.
+     */
+    protected void pruneAttackSet (PointSet source, PointSet dest)
+    {
+        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            if (_selection.validTarget(p) && source.contains(p.x, p.y)) {
+                dest.add(p.x, p.y);
+            }
+        }
     }
 
     /** Handles a right mouse button click. */
@@ -364,9 +415,12 @@ public class BangBoardView extends BoardView
             sprite = (PieceSprite)s;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
             if (sprite instanceof MobileSprite && piece.isAlive()) {
+                PointSet moveSet = new PointSet();
                 _attackSet = new PointSet();
-                _bangobj.board.computeAttacks(
-                    piece.getFireDistance(), piece.x, piece.y, _attackSet);
+                _bangobj.board.computeMoves(piece, moveSet, _attackSet);
+                for (int ii = 0; ii < moveSet.size(); ii++) {
+                    _attackSet.add(moveSet.get(ii));
+                }
                 dirtySet(_attackSet);
             }
         }
@@ -383,8 +437,13 @@ public class BangBoardView extends BoardView
                 dirtySet(_moveSet);
                 _moveSet.clear();
             }
-            _bangobj.board.computeMoves(piece, _moveSet);
+            PointSet attacks = new PointSet();
+            _bangobj.board.computeMoves(piece, _moveSet, attacks);
+            _attackSet = new PointSet();
+            pruneAttackSet(_moveSet, _attackSet);
+            pruneAttackSet(attacks, _attackSet);
             dirtySet(_moveSet);
+            dirtySet(_attackSet);
         }
     }
 

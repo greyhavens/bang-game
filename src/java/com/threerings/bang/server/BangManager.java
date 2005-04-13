@@ -279,7 +279,7 @@ public class BangManager extends GameManager
 
         // queue up the board tick
         int avgPer = _bangobj.getAveragePieceCount();
-        _ticker.schedule(avgPer * 2000L, false);
+        _ticker.schedule(avgPer * getBaseTick(), false);
     }
 
     /**
@@ -362,7 +362,7 @@ public class BangManager extends GameManager
 
         // validate that the move is legal
         _moves.clear();
-        _bangobj.board.computeMoves(piece, _moves);
+        _bangobj.board.computeMoves(piece, _moves, null);
         if (!_moves.contains(x, y)) {
             log.warning("Piece requested illegal move [piece=" + piece +
                         ", x=" + x + ", y=" + y + "].");
@@ -485,7 +485,7 @@ public class BangManager extends GameManager
                     continue;
                 }
                 _moves.clear();
-                _bangobj.board.computeMoves(p, _moves);
+                _bangobj.board.computeMoves(p, _moves, null);
                 if (!_moves.contains(x, y)) {
                     continue;
                 }
@@ -657,6 +657,16 @@ public class BangManager extends GameManager
         return board;
     }
 
+    /** Used to accelerate things when testing. */
+    protected long getBaseTick ()
+    {
+        if (System.getProperty("test") != null) {
+            return 500L;
+        } else {
+            return 2000L;
+        }
+    }
+
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
@@ -666,7 +676,7 @@ public class BangManager extends GameManager
                 // queue ourselves up to expire in a time proportional to
                 // the average number of pieces per player
                 int avgPer = _bangobj.getAveragePieceCount();
-                _ticker.schedule(2000L * avgPer);
+                _ticker.schedule(getBaseTick() * avgPer);
             }
         }
     };
