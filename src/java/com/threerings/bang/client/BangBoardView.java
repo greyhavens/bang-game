@@ -491,7 +491,7 @@ public class BangBoardView extends BoardView
             if (sprite == null) {
                 continue;
             }
-            sprite.updated(p, tick);
+            sprite.updated(_bangobj.board, p, tick);
         }
     }
 
@@ -565,7 +565,7 @@ public class BangBoardView extends BoardView
             if (sprite != null) {
                 boolean viz = _vstate.getVisible(piece.x, piece.y);
                 if (viz && !isManaged(sprite)) {
-                    sprite.updated(piece, _bangobj.tick);
+                    sprite.updated(_bangobj.board, piece, _bangobj.tick);
                     addSprite(sprite);
                 } else if (!viz && isManaged(sprite)) {
                     removeSprite(sprite);

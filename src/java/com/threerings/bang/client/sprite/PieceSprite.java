@@ -5,17 +5,23 @@ package com.threerings.bang.client.sprite;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
+
+import java.util.Iterator;
+import java.util.List;
 
 import com.samskivert.swing.Label;
 
 import com.threerings.media.sprite.Sprite;
 import com.threerings.media.sprite.SpriteManager;
 import com.threerings.media.util.LinePath;
+import com.threerings.media.util.LineSegmentPath;
 import com.threerings.media.util.MathUtil;
 
 import com.threerings.toybox.util.ToyBoxContext;
 
+import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 
@@ -82,22 +88,42 @@ public class PieceSprite extends Sprite
      * Called when we receive an event indicating that our piece was
      * updated in some way.
      */
-    public void updated (Piece piece, short tick)
+    public void updated (BangBoard board, Piece piece, short tick)
     {
         // note our new piece and the current tick
+        Piece opiece = _piece;
         _piece = piece;
         _tick = tick;
 
         // move ourselves to our new location
         int nx = piece.x * SQUARE, ny = piece.y * SQUARE;
         if (nx != _ox || ny != _oy) {
-            if (_mgr != null && !_editorMode) {
-                long duration = (long)MathUtil.distance(_ox, _oy, nx, ny) * 3;
-                move(new LinePath(_ox, _oy, nx, ny, duration));
-            } else {
+            if (_mgr == null || _editorMode) {
                 // if we're invisible just warp there
                 setLocation(nx, ny);
+
+            } else {
+                List path = null;
+                if (board != null) {
+                    path = board.computePath(opiece, piece.x, piece.y);
+                }
+                if (path != null) {
+                    // convert the tile coordinates to screen coordinates
+                    for (Iterator iter = path.iterator(); iter.hasNext(); ) {
+                        Point p = (Point)iter.next();
+                        p.x *= SQUARE;
+                        p.y *= SQUARE;
+                    }
+                    LineSegmentPath lspath = new LineSegmentPath(path);
+                    lspath.setVelocity(1/3f);
+                    move(lspath);
+                } else {
+                    long duration = (long)
+                        MathUtil.distance(_ox, _oy, nx, ny) * 3;
+                    move(new LinePath(_ox, _oy, nx, ny, duration));
+                }
             }
+
         } else {
             invalidate();
         }

@@ -390,7 +390,8 @@ public class BoardView extends VirtualMediaPanel
     protected void pieceUpdated (Piece opiece, Piece npiece)
     {
         if (npiece != null) {
-            getPieceSprite(npiece).updated(npiece, _bangobj.tick);
+            getPieceSprite(npiece).updated(
+                _bangobj.board, npiece, _bangobj.tick);
         }
     }        
 
