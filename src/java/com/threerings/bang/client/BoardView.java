@@ -32,6 +32,7 @@ import com.threerings.toybox.data.ToyBoxGameConfig;
 import com.threerings.toybox.util.ToyBoxContext;
 
 import com.threerings.bang.client.sprite.PieceSprite;
+import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.Terrain;
@@ -74,6 +75,11 @@ public class BoardView extends VirtualMediaPanel
 
         // freshen up
         refreshBoard();
+
+        // set our background color according to our affiliation
+        if (pidx >= 0) {
+            _bgcolor = UnitSprite.DARKER_COLORS[pidx];
+        }
     }
 
     /**
@@ -202,7 +208,7 @@ public class BoardView extends VirtualMediaPanel
         }
 
         // start with a black background
-        gfx.setColor(Color.black);
+        gfx.setColor(_bgcolor);
         gfx.fill(dirtyRect);
 
         _pr.setLocation(0, 0);
@@ -430,6 +436,7 @@ public class BoardView extends VirtualMediaPanel
     protected BoardEventListener _blistener = new BoardEventListener();
 
     protected PointSet _attackSet;
+    protected Color _bgcolor;
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);
