@@ -393,12 +393,12 @@ public class BangManager extends GameManager
                 endGame();
             } else {
                 _bangobj.setState(BangObject.POST_ROUND);
-                // give them 10 seconds to stare at the board then end the round
+                // give them a moment to stare at the board then end the round
                 new Interval(PresentsServer.omgr) {
                     public void expired () {
                         endRound();
                     }
-                }.schedule(10000L);
+                }.schedule(5000L);
             }
 
             // cancel the board tick

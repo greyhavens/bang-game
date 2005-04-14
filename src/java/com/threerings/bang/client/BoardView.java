@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.samskivert.swing.Label;
+import com.samskivert.swing.util.SwingUtil;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;

@@ -3,16 +3,21 @@
 
 package com.threerings.bang.client;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.samskivert.swing.HGroupLayout;
+import com.samskivert.swing.MultiLineLabel;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
 
+import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangObject;
 
 /**
@@ -29,9 +34,20 @@ public class ScorePanel extends JPanel
         _bangobj = bangobj;
         _bangobj.addListener(this);
 
-        add(_name = new JLabel(_bangobj.players[_pidx].toString()),
-            new HGroupLayout.Constraints(1));
-        add(_status = new JLabel(), new HGroupLayout.Constraints(2));
+        _name = new MultiLineLabel(_bangobj.players[_pidx].toString()) {
+            public Dimension getPreferredSize () {
+                Dimension d = super.getPreferredSize();
+                d.width = 80;
+                return d;
+            }
+        };
+        _name.setStyle(MultiLineLabel.OUTLINE);
+        _name.setForeground(UnitSprite.PIECE_COLORS[playerIdx]);
+        _name.setAlternateColor(Color.black);
+        _name.setFont(new Font("Dialog", Font.BOLD, 15));
+        _name.setAlignment(MultiLineLabel.LEFT);
+        add(_name, HGroupLayout.FIXED);
+        add(_status = new JLabel());
     }
 
     @Override // documentation inherited
@@ -59,7 +75,7 @@ public class ScorePanel extends JPanel
     protected void updateStatus ()
     {
         String status = "S: " + _bangobj.points[_pidx];
-        if (_bangobj.state == BangObject.PRE_GAME) {
+        if (_bangobj.state == BangObject.PRE_ROUND) {
             status += " $:" + _bangobj.reserves[_pidx];
         } else {
             status += " P: " + _bangobj.countLivePieces(_pidx) +
@@ -71,5 +87,6 @@ public class ScorePanel extends JPanel
 
     protected int _pidx;
     protected BangObject _bangobj;
-    protected JLabel _name, _status;
+    protected MultiLineLabel _name;
+    protected JLabel _status;
 }

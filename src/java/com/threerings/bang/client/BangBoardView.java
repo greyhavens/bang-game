@@ -24,13 +24,13 @@ import com.samskivert.swing.Label;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.animation.SpriteAnimation;
-import com.threerings.util.RandomUtil;
 import com.threerings.media.sprite.LabelSprite;
 import com.threerings.media.sprite.PathObserver;
 import com.threerings.media.sprite.Sprite;
 import com.threerings.media.util.LinePath;
 import com.threerings.media.util.MathUtil;
 import com.threerings.media.util.Path;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;

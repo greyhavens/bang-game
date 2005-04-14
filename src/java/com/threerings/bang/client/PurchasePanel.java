@@ -158,7 +158,7 @@ public class PurchasePanel extends JPanel
 
         public void setValueAt (Object value, int row, int col) {
             if (col == 2) {
-                _unitCounts[row] = (Integer)value;
+                _unitCounts[row] = (value == null) ? 0 : (Integer)value;
                 fireTableCellUpdated(row, 3);
             } else {
                 throw new UnsupportedOperationException();

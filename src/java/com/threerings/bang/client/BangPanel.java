@@ -17,7 +17,6 @@ import com.samskivert.swing.Controller;
 import com.samskivert.swing.ControllerProvider;
 import com.samskivert.swing.GroupLayout;
 import com.samskivert.swing.HGroupLayout;
-import com.samskivert.swing.ScrollBox;
 import com.samskivert.swing.VGroupLayout;
 import com.samskivert.swing.util.SwingUtil;
 
@@ -46,7 +45,7 @@ public class BangPanel extends JPanel
     /** Creates the main panel and its sub-interfaces. */
     public BangPanel (ToyBoxContext ctx, BangController ctrl)
     {
-        setLayout(new BorderLayout(0, 0));
+        setLayout(new BorderLayout(5, 5));
         _ctx = ctx;
         _ctrl = ctrl;
 
@@ -68,6 +67,7 @@ public class BangPanel extends JPanel
         sgl.setOffAxisPolicy(GroupLayout.STRETCH);
         sgl.setJustification(GroupLayout.TOP);
         _sidePanel = new JPanel(sgl);
+        _sidePanel.setPreferredSize(new Dimension(250, 10));
 
         // add a big fat label because we love it!
         JLabel vlabel = new JLabel("Bang!");
@@ -79,14 +79,6 @@ public class BangPanel extends JPanel
         ChatPanel chat = new ChatPanel(ctx);
         chat.removeSendButton();
         _sidePanel.add(chat);
-
-        // add a box for scrolling around in our view
-        _rangeModel = new VirtualRangeModel(view);
-        _scrolly = new ScrollBox(_rangeModel.getHorizModel(),
-                                 _rangeModel.getVertModel());
-        _scrolly.setPreferredSize(new Dimension(100, 100));
-        _scrolly.setBorder(BorderFactory.createLineBorder(Color.black));
-        _sidePanel.add(_scrolly, VGroupLayout.FIXED);
 
         // add a "back" button
         JButton back = new JButton("Back to lobby");
@@ -102,7 +94,7 @@ public class BangPanel extends JPanel
     public void buyingPhase (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
     {
         // remove the game view and add the purchase panel
-        remove(view);
+        remove(_gamePanel);
         _ppanel = new PurchasePanel(_ctx, cfg, bangobj, pidx);
         add(_ppanel, BorderLayout.CENTER);
         SwingUtil.refresh(this);
@@ -113,21 +105,10 @@ public class BangPanel extends JPanel
     {
         // remove the purchase panel and add the game view
         remove(_ppanel);
-        add(view, BorderLayout.CENTER);
-        SwingUtil.refresh(this);
+        add(_gamePanel, BorderLayout.CENTER);
 
         // our view needs to know about the start of the game
         view.startGame(bangobj, cfg, pidx);
-
-        // compute the size of the whole board and configure scrolling
-        int width = bangobj.board.getWidth() * SQUARE,
-            height = bangobj.board.getHeight() * SQUARE;
-        if (width > view.getWidth() || height > view.getHeight()) {
-            _rangeModel.setScrollableArea(-SQUARE, -SQUARE,
-                                          width + 2*SQUARE, height + 2*SQUARE);
-        } else {
-            _scrolly.setVisible(false);
-        }
 
         // add our surprise panels if necessary
         if (_spanel.getComponentCount() == 0) {
@@ -138,8 +119,8 @@ public class BangPanel extends JPanel
                 // around when that happened
                 sp.willEnterPlace(bangobj);
             }
-            SwingUtil.refresh(_spanel);
         }
+        SwingUtil.refresh(this);
     }
 
     /** Called by the controller when the game ends. */
@@ -177,12 +158,6 @@ public class BangPanel extends JPanel
 
     /** Our game controller. */
     protected BangController _ctrl;
-
-    /** Used to scroll around in our view. */
-    protected VirtualRangeModel _rangeModel;
-
-    /** Used to scroll around in our view. */
-    protected ScrollBox _scrolly;
 
     /** The buying phase purchase panel. */
     protected PurchasePanel _ppanel;
