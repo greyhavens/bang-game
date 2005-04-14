@@ -8,6 +8,7 @@ import java.util.Iterator;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.piece.Artillery;
@@ -39,15 +40,17 @@ public class DefectEffect extends Effect
 
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // everyone gets to keep the "average" count or at least two
-        // pieces, whichever is higher
-        int save = Math.max(2, bangobj.getAveragePieceCount());
-
-        // subtract off the "reserved" count from each player
+        // for each player that has at least three more pieces than we do,
+        // we take one piece out of every three they have in excess
         int[] pcount = bangobj.getPieceCount();
+        int[] scount = new int[pcount.length];
         for (int ii = 0; ii < pcount.length; ii++) {
-            pcount[ii] = Math.max(0, pcount[ii] - save);
+            scount[ii] = Math.max(pcount[ii] - pcount[owner], 0) / 3;
         }
+
+        log.info("Defecting [owner=" + owner +
+                 ", pcount=" + StringUtil.toString(pcount) +
+                 ", scount=" + StringUtil.toString(scount) + "].");
 
         // now steal whatever remains
         ArrayIntSet pids = new ArrayIntSet();
@@ -57,8 +60,8 @@ public class DefectEffect extends Effect
         // make a first pass, trying not to steal artillery
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (isValidSteal(p, false) && pcount[p.owner] > 0) {
-                pcount[p.owner]--;
+            if (isValidSteal(p, false) && scount[p.owner] > 0) {
+                scount[p.owner]--;
                 pids.add(p.pieceId);
             }
         }
@@ -67,9 +70,9 @@ public class DefectEffect extends Effect
         // the first time through
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (isValidSteal(p, true) && pcount[p.owner] > 0 &&
+            if (isValidSteal(p, true) && scount[p.owner] > 0 &&
                 !pids.contains(p.pieceId)) {
-                pcount[p.owner]--;
+                scount[p.owner]--;
                 pids.add(p.pieceId);
             }
         }

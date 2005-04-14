@@ -368,8 +368,8 @@ public class BangObject extends GameObject
                 (double)pstats[ii].power / gstats.averagePower;
         }
 
-        log.info("Updated stats " + gstats + ": " +
-                 StringUtil.toString(pstats));
+//         log.info("Updated stats " + gstats + ": " +
+//                  StringUtil.toString(pstats));
     }
 
     // AUTO-GENERATED: METHODS START

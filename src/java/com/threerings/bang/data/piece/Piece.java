@@ -362,7 +362,7 @@ public abstract class Piece extends SimpleStreamableObject
         shot.shooterId = pieceId;
         shot.targetId = target.pieceId;
         shot.damage = hurt;
-        log.info("Bang! " + shot);
+//         log.info("Bang! " + shot);
         return shot;
     }
 

@@ -89,6 +89,12 @@ public class Bonus extends Piece
         return new BonusSprite(_type.toString().toLowerCase());
     }
 
+    @Override // documentation inherited
+    public String info ()
+    {
+        return super.info() + " t:" + _type;
+    }
+
     /**
      * Extends default behavior to serialize our bonus type.
      */

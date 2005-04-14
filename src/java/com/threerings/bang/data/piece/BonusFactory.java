@@ -130,12 +130,8 @@ public class BonusFactory
         int avgdam = bangobj.getAveragePieceDamage(reachers);
         int avgpieces = bangobj.getAveragePieceCount(reachers);
 
-        log.info("Selecting bonus [turn=" + bangobj.tick +
-                 ", avgpow=" + avgpow + ", avgdam=" + avgdam +
-                 ", avgpc=" + avgpieces +
-                 ", reachers=" + reachers + "].");
-
         // now compute weightings for each of our bonuses
+        StringBuffer buf = new StringBuffer();
         Arrays.fill(_weights, 0);
         for (int ii = 0; ii < _choices.size(); ii++) {
             Suitability s = _choices.get(ii);
@@ -144,8 +140,17 @@ public class BonusFactory
             }
             _weights[ii] = s.getWeight(bangobj, avgpow, avgdam, avgpieces);
             _weights[ii] = Math.max(_weights[ii], 0);
-            log.info(s.bonus.getType() + " weight " + _weights[ii]);
+            // record data for logging
+            if (buf.length() > 0) {
+                buf.append(", ");
+            }
+            buf.append(s.bonus.getType()).append(" ").append(_weights[ii]);
         }
+
+        log.info("Selecting bonus [turn=" + bangobj.tick +
+                 ", avgpow=" + avgpow + ", avgdam=" + avgdam +
+                 ", avgpc=" + avgpieces + ", reachers=" + reachers +
+                 ", weights=(" + buf + ")].");
 
         // and select one at random
         int idx = RandomUtil.getWeightedIndex(_weights);
