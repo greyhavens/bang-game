@@ -394,7 +394,14 @@ public class BangManager extends GameManager
                 for (int ii = 0; ii < getPlayerSlots(); ii++) {
                     int tcash = _bangobj.funds[ii] + _bangobj.reserves[ii];
                     int points = tcash / 250;
-                    _bangobj.setPointsAt(_bangobj.points[ii] + points, ii);
+                    if (points > 0) {
+                        _bangobj.setPointsAt(_bangobj.points[ii] + points, ii);
+                        String msg = MessageBundle.tcompose(
+                            "m.cash_score", _bangobj.players[ii],
+                            "" + points, "" + tcash);
+                        SpeakProvider.sendInfo(
+                            _bangobj, BangCodes.BANG_MSGS, msg);
+                    }
                 }
                 endGame();
             } else {
