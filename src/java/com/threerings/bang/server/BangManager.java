@@ -47,7 +47,6 @@ import com.threerings.bang.data.effect.ShotEffect;
 import com.threerings.bang.data.generate.SkirmishScenario;
 import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Bonus;
-import com.threerings.bang.data.piece.BonusFactory;
 import com.threerings.bang.data.piece.BonusMarker;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.PlayerPiece;
@@ -651,7 +650,7 @@ public class BangManager extends GameManager
         }
 
         // now turn to the bonus factory for guidance
-        Piece bonus = _bfactory.selectBonus(_bangobj, bspot, reachers[spidx]);
+        Piece bonus = Bonus.selectBonus(_bangobj, bspot, reachers[spidx]);
         bonus.assignPieceId();
         bonus.position(bspot.x, bspot.y);
         _bangobj.addToPieces(bonus);
@@ -785,9 +784,6 @@ public class BangManager extends GameManager
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
-
-    /** This guy is used to determine which bonuses to give out. */
-    protected BonusFactory _bfactory = new BonusFactory();
 
     /** The purchases made by players in the buying phase. */
     protected PieceSet _purchases = new PieceSet();

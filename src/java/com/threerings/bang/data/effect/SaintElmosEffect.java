@@ -13,7 +13,7 @@ import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.WindupSlinger;
 
 /**
- * An effect that replaces all dead units with 40% health windup
+ * An effect that replaces all dead units with 60% health windup
  * gunslingers owned by the activating player.
  */
 public class SaintElmosEffect extends Effect
