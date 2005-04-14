@@ -102,7 +102,7 @@ public class PieceSprite extends Sprite
                 // if we're invisible just warp there
                 setLocation(nx, ny);
 
-            } else {
+            } else if (!isMoving()) {
                 List path = null;
                 if (board != null) {
                     path = board.computePath(opiece, piece.x, piece.y);

@@ -216,6 +216,21 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Returns the number of dead pieces on the board.
+     */
+    public int countDeadPieces ()
+    {
+        int pcount = 0;
+        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = (Piece)iter.next();
+            if (p.owner >= 0 && !p.isAlive()) {
+                pcount++;
+            }
+        }
+        return pcount;
+    }
+
+    /**
      * Returns the player piece at the specified coordinates or null if no
      * owned piece exists at those coordinates.
      */

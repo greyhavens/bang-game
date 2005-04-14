@@ -33,7 +33,7 @@ public class BonusFactory
                                      0.5)); // late-game affinity
 
         _choices.add(new Suitability(new Bonus(Bonus.Type.DUPLICATE),
-                                     100, // base weight
+                                     75, // base weight
                                      0.0, // damage affinity
                                      -0.8, // many pieces affinity
                                      1.0, // few pieces-affinity
@@ -75,16 +75,35 @@ public class BonusFactory
                                      0.5, // few pieces affinity
                                      0.0, // low power affinity
                                      -0.25, // early-game affinity
-                                     0.4)); // late-game affinity
+                                     0.4) { // late-game affinity
+            public boolean isValid (BangObject bangobj) {
+                // make sure there are some dead pieces on the board
+                return bangobj.countDeadPieces() > 1;
+            }
+        });
 
         _choices.add(new Suitability(new Bonus(Bonus.Type.SAINT_ELMO),
                                      10, // base weight
                                      0.5, // damage affinity
                                      -0.5, // many pieces affinity
-                                     0.9, // few pieces affinity
+                                     0.6, // few pieces affinity
                                      0.0, // low power affinity
                                      0.0, // early-game affinity
-                                     0.5)); // late-game affinity
+                                     0.5) { // late-game affinity
+            public boolean isValid (BangObject bangobj) {
+                // make sure there are some dead pieces on the board
+                return bangobj.countDeadPieces() > 2;
+            }
+        });
+
+        _choices.add(new Suitability(new Bonus(Bonus.Type.BONUS_POINT),
+                                     25, // base weight
+                                     0.0, // damage affinity
+                                     -0.5, // many pieces affinity
+                                     0.0, // few pieces affinity
+                                     0.0, // low power affinity
+                                     0.5, // early-game affinity
+                                     -0.5)); // late-game affinity
 
         _weights = new int[_choices.size()];
     }
@@ -120,6 +139,9 @@ public class BonusFactory
         Arrays.fill(_weights, 0);
         for (int ii = 0; ii < _choices.size(); ii++) {
             Suitability s = _choices.get(ii);
+            if (!s.isValid(bangobj)) {
+                continue;
+            }
             _weights[ii] = s.getWeight(bangobj, avgpow, avgdam, avgpieces);
             _weights[ii] = Math.max(_weights[ii], 0);
             log.info(s.bonus.getType() + " weight " + _weights[ii]);
@@ -176,26 +198,51 @@ public class BonusFactory
             this.lateGameAffinity = lateGameAffinity;
         }
 
+        public boolean isValid (BangObject bangobj)
+        {
+            return true;
+        }
+
         public int getWeight (BangObject bangobj, double averagePower,
                               int averageDamage, int averagePieces)
         {
             // add contributions from each of our affinities
-            int weight = baseWeight;
-            weight += (int)Math.round(averageDamage * damageAffinity);
+            int eweight = 0, ecount = 0;
+            if (damageAffinity != 0) {
+                eweight += (int)Math.round(averageDamage * damageAffinity);
+                ecount++;
+            }
 
             int maxedAP = Math.min(10, averagePieces);
-            weight += (int)Math.round(10 * maxedAP * manyPiecesAffinity);
-            weight += (int)Math.round(10 * (11-maxedAP) * fewPiecesAffinity);
+            if (manyPiecesAffinity != 0) {
+                eweight += (int)Math.round(10 * maxedAP * manyPiecesAffinity);
+                ecount++;
+            }
+            if (fewPiecesAffinity != 0) {
+                eweight += (int)Math.round(
+                    10 * (11-maxedAP) * fewPiecesAffinity);
+                ecount++;
+            }
 
-            double maxedPower = Math.min(1.0, averagePower);
-            weight += (int)Math.round(
-                100 * (1.0-maxedPower) * lowPowerAffinity);
+            if (lowPowerAffinity != 0) {
+                double maxedPower = Math.min(1.0, averagePower);
+                eweight += (int)Math.round(
+                    100 * (1.0-maxedPower) * lowPowerAffinity);
+                ecount++;
+            }
 
             int scaledTurn = 100 * Math.min(bangobj.tick, 60) / 60;
-            weight += (int)Math.round((100 - scaledTurn) * earlyGameAffinity);
-            weight += (int)Math.round(scaledTurn * lateGameAffinity);
+            if (earlyGameAffinity != 0) {
+                eweight += (int)Math.round(
+                    (100 - scaledTurn) * earlyGameAffinity);
+                ecount++;
+            }
+            if (lateGameAffinity != 0) {
+                eweight += (int)Math.round(scaledTurn * lateGameAffinity);
+                ecount++;
+            }
 
-            return weight;
+            return baseWeight + (eweight / ecount);
         }
     }
 

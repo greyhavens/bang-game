@@ -11,6 +11,7 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.bang.client.sprite.BonusSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
 
+import com.threerings.bang.data.effect.BonusPointEffect;
 import com.threerings.bang.data.effect.DefectEffect;
 import com.threerings.bang.data.effect.DuplicateEffect;
 import com.threerings.bang.data.effect.Effect;
@@ -31,7 +32,8 @@ public class Bonus extends Piece
 {
     /** Indicates the type of bonus. */
     public enum Type { UNKNOWN, REPAIR, DUPLICATE, DEFECT,
-                       MISSILE, AREA_REPAIR, DUST_DEVIL, SAINT_ELMO };
+                       MISSILE, AREA_REPAIR, DUST_DEVIL, SAINT_ELMO,
+                       BONUS_POINT };
 
     /** Unserialization constructor. */
     public Bonus ()
@@ -64,6 +66,7 @@ public class Bonus extends Piece
         case DUPLICATE: return new DuplicateEffect(piece.pieceId);
         case DEFECT: return new DefectEffect(piece.owner);
         case SAINT_ELMO: return new SaintElmosEffect(piece.owner);
+        case BONUS_POINT: return new BonusPointEffect(piece.pieceId);
         case MISSILE:
             return new GrantSurpriseEffect(piece.owner, new Missile());
         case AREA_REPAIR:

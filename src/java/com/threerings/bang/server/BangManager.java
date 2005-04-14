@@ -250,6 +250,7 @@ public class BangManager extends GameManager
 
         // transition to the pre-game buying phase
         _bangobj.setState(BangObject.PRE_ROUND);
+        _bangobj.setTick((short)0);
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
