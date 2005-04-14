@@ -72,9 +72,10 @@ public class PlagueEffect extends Effect
         newPieces = new Piece[pieceIds.length];
         for (int ii = 0; ii < newPieces.length; ii++) {
             newPieces[ii] = new WindupSlinger();
-            newPieces[ii].assignPieceId();
-            newPieces[ii].owner = pieces[ii].owner;
             newPieces[ii].init();
+            newPieces[ii].assignPieceId();
+            newPieces[ii].owner =
+                ((Piece)bangobj.pieces.get(pieceIds[ii])).owner;
             newPieces[ii].damage = 40;
         }
     }

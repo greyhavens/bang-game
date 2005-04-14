@@ -812,6 +812,6 @@ public class BangManager extends GameManager
 
     /** A list of our stock boards. */
     protected static final String[] BOARDS = {
-        "alleys", "highnoon", "ring", "riverside", "road", "square",
+        "alleys", "highnoon", "ring", "riverside", "square",
     };
 }

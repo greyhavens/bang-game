@@ -49,8 +49,8 @@ public class SaintElmosEffect extends Effect
         for (int ii = 0; ii < newPieces.length; ii++) {
             newPieces[ii] = new WindupSlinger();
             newPieces[ii].assignPieceId();
-            newPieces[ii].owner = owner;
             newPieces[ii].init();
+            newPieces[ii].owner = owner;
             newPieces[ii].damage = 60;
         }
     }
