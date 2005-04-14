@@ -58,9 +58,14 @@ public class ScorePanel extends JPanel
 
     protected void updateStatus ()
     {
-        String status = "P: " + _bangobj.countLivePieces(_pidx) +
-            " $:" + _bangobj.funds[_pidx] +
-            " (" + _bangobj.reserves[_pidx] + ")";
+        String status;
+        if (_bangobj.state == BangObject.PRE_GAME) {
+            status = "$:" + _bangobj.reserves[_pidx];
+        } else {
+            status = "P: " + _bangobj.countLivePieces(_pidx) +
+                " $:" + _bangobj.funds[_pidx] +
+                " (" + _bangobj.reserves[_pidx] + ")";
+        }
         _status.setText(status);
     }
 

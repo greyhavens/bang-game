@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +41,19 @@ import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.toybox.data.ToyBoxGameConfig;
 
+import com.threerings.bang.data.effect.Effect;
+import com.threerings.bang.data.effect.ShotEffect;
+import com.threerings.bang.data.generate.SkirmishScenario;
+import com.threerings.bang.data.piece.Artillery;
+import com.threerings.bang.data.piece.Bonus;
+import com.threerings.bang.data.piece.BonusFactory;
+import com.threerings.bang.data.piece.BonusMarker;
+import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.PlayerPiece;
+import com.threerings.bang.data.piece.SteamGunman;
+import com.threerings.bang.data.surprise.AreaRepair;
+import com.threerings.bang.data.surprise.Surprise;
+
 import com.threerings.bang.client.BangService;
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangCodes;
@@ -47,16 +61,6 @@ import com.threerings.bang.data.BangMarshaller;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.PieceDSet;
 import com.threerings.bang.data.Terrain;
-import com.threerings.bang.data.effect.Effect;
-import com.threerings.bang.data.effect.ShotEffect;
-import com.threerings.bang.data.generate.SkirmishScenario;
-import com.threerings.bang.data.piece.Bonus;
-import com.threerings.bang.data.piece.BonusFactory;
-import com.threerings.bang.data.piece.BonusMarker;
-import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.data.piece.PlayerPiece;
-import com.threerings.bang.data.surprise.AreaRepair;
-import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.util.BoardUtil;
 import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PointSet;
@@ -70,13 +74,16 @@ public class BangManager extends GameManager
     implements BangCodes, BangProvider
 {
     // documentation inherited from interface BangProvider
-    public void purchasePiece (ClientObject caller, Piece piece)
+    public void purchasePieces (ClientObject caller, Piece[] pieces)
     {
-    }
-
-    // documentation inherited from interface BangProvider
-    public void readyToPlay (ClientObject caller)
-    {
+        BodyObject user = (BodyObject)caller;
+        int pidx = _bangobj.getPlayerIndex(user.username);
+        if (pidx == -1) {
+            log.warning("Request to purchase pieces by non-player " +
+                        "[who=" + user.who() + "].");
+            return;
+        }
+        purchasePieces(pidx, pieces);
     }
 
     // documentation inherited from interface BangProvider
@@ -205,8 +212,12 @@ public class BangManager extends GameManager
             (BangMarshaller)PresentsServer.invmgr.registerDispatcher(
                 new BangDispatcher(this), false));
 
+        ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
+        int startingCash = (Integer)bconfig.params.get("starting_cash");
+
         // create our per-player arrays
         _bangobj.reserves = new int[getPlayerSlots()];
+        Arrays.fill(_bangobj.reserves, startingCash);
         _bangobj.funds = new int[getPlayerSlots()];
         _bangobj.pstats = new BangObject.PlayerData[getPlayerSlots()];
         for (int ii = 0; ii < _bangobj.pstats.length; ii++) {
@@ -221,28 +232,67 @@ public class BangManager extends GameManager
         PresentsServer.invmgr.clearDispatcher(_bangobj.service);
     }
 
-//     // documentation inherited
-//     protected void playersAllHere ()
-//     {
-//         // when the players all arrive, go into pre-game
-// //         // start up the game if we're not a party game and if we haven't
-// //         // already done so
-// //         if (!isPartyGame() &&
-// //             _gameobj.state == GameObject.AWAITING_PLAYERS) {
-// //             startGame();
-// //         }
-
-//         startPreGame();
-//     }
+    // documentation inherited
+    protected void playersAllHere ()
+    {
+        // when the players all arrive, go into pre-game
+        startPreGame();
+    }
 
     /** Starts the pre-game buying phase. */
     protected void startPreGame ()
     {
         // clear out the readiness status of each player
         _ready.clear();
+        _purchases.clear();
 
         // transition to the pre-game buying phase
         _bangobj.setState(BangObject.PRE_GAME);
+
+        // configure purchases for our AIs
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            if (isAI(ii)) {
+                Piece[] pieces = new Piece[] {
+                    new Artillery(), new SteamGunman() };
+                purchasePieces(ii, pieces);
+            }
+        }
+    }
+
+    /**
+     * Configures the specified player's purchases for this round and
+     * starts the game if they are the last to configure.
+     */
+    protected void purchasePieces (int pidx, Piece[] pieces)
+    {
+        // total up the cost
+        int totalCost = 0;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            totalCost += pieces[ii].getCost();
+        }
+        if (totalCost > _bangobj.reserves[pidx]) {
+            log.warning("Rejecting bogus purchase request " +
+                        "[who=" + _bangobj.players[pidx] +
+                        ", total=" + totalCost +
+                        ", funds=" + _bangobj.reserves[pidx] + "].");
+            return;
+        }
+
+        // initialize and prepare the pieces
+        for (int ii = 0; ii < pieces.length; ii++) {
+            pieces[ii].init();
+            pieces[ii].owner = pidx;
+            _purchases.add(pieces[ii]);
+        }
+
+        // finally decrement their funds
+        _bangobj.setReservesAt(_bangobj.reserves[pidx] - totalCost, pidx);
+
+        // note that this player is ready and potentially fire away
+        _ready.add(pidx);
+        if (_ready.size() == getPlayerSlots()) {
+            startGame();
+        }
     }
 
     // documentation inherited
@@ -651,7 +701,7 @@ public class BangManager extends GameManager
         }
 
         // now add the player pieces
-        SkirmishScenario scen = new SkirmishScenario();
+        SkirmishScenario scen = new SkirmishScenario(_purchases);
         scen.generate(bconfig, board, pieces);
         return board;
     }
@@ -685,6 +735,9 @@ public class BangManager extends GameManager
 
     /** This guy is used to determine which bonuses to give out. */
     protected BonusFactory _bfactory = new BonusFactory();
+
+    /** The purchases made by players in the buying phase. */
+    protected PieceSet _purchases = new PieceSet();
 
     /** Used to indicate when all players are ready. */
     protected ArrayIntSet _ready = new ArrayIntSet();

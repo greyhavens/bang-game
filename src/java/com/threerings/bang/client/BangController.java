@@ -65,8 +65,8 @@ public class BangController extends GameController
         _pidx = _bangobj.getPlayerIndex(me.username);
 
         // we may be returning to an already started game
-        if (_bangobj.isInPlay()) {
-            _panel.startGame(_bangobj, _config, _pidx);
+        if (_bangobj.state != BangObject.AWAITING_PLAYERS) {
+            handleStateChange(_bangobj.state);
         }
     }
 
@@ -126,6 +126,25 @@ public class BangController extends GameController
     {
         _panel = new BangPanel((ToyBoxContext)ctx, this);
         return _panel;
+    }
+
+    @Override // documentation inherited
+    protected boolean handleStateChange (int state)
+    {
+        if (state == BangObject.PRE_GAME) {
+            preGameDidStart();
+            return true;
+        } else {
+            return super.handleStateChange(state);
+        }
+    }
+
+    /**
+     * Called when we enter the pre-game, buying phase.
+     */
+    protected void preGameDidStart ()
+    {
+        _panel.buyingPhase(_bangobj, _config, _pidx);
     }
 
     @Override // documentation inherited

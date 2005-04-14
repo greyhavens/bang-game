@@ -3,6 +3,7 @@
 
 package com.threerings.bang.client;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -45,25 +46,22 @@ public class BangPanel extends JPanel
     /** Creates the main panel and its sub-interfaces. */
     public BangPanel (ToyBoxContext ctx, BangController ctrl)
     {
+        setLayout(new BorderLayout(0, 0));
+        _ctx = ctx;
         _ctrl = ctrl;
 
 	// give ourselves a wee bit of a border
 	setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-	GroupLayout gl = new HGroupLayout(GroupLayout.STRETCH);
-	gl.setOffAxisPolicy(GroupLayout.STRETCH);
-	setLayout(gl);
-
         // create the board view and surprise display
-        gl = new VGroupLayout(GroupLayout.STRETCH, GroupLayout.STRETCH,
-                              5, GroupLayout.TOP);
-        JPanel mainPanel = new JPanel(gl);
-        mainPanel.add(view = new BangBoardView(ctx));
+        GroupLayout gl = new VGroupLayout(
+            GroupLayout.STRETCH, GroupLayout.STRETCH, 5, GroupLayout.TOP);
+        _gamePanel = new JPanel(gl);
+        _gamePanel.add(view = new BangBoardView(ctx));
         gl = new HGroupLayout(GroupLayout.STRETCH, GroupLayout.STRETCH,
                               5, GroupLayout.LEFT);
         _spanel = new JPanel(gl);
-        mainPanel.add(_spanel, GroupLayout.FIXED);
-        add(mainPanel);
+        _gamePanel.add(_spanel, GroupLayout.FIXED);
 
         // create our side panel
         VGroupLayout sgl = new VGroupLayout(GroupLayout.STRETCH);
@@ -97,12 +95,27 @@ public class BangPanel extends JPanel
         _sidePanel.add(back, VGroupLayout.FIXED);
 
         // add our side panel to the main display
-        add(_sidePanel, HGroupLayout.FIXED);
+        add(_sidePanel, BorderLayout.EAST);
+    }
+
+    /** Called by the controller when the buying phase starts. */
+    public void buyingPhase (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
+    {
+        // remove the game view and add the purchase panel
+        remove(view);
+        _ppanel = new PurchasePanel(_ctx, cfg, bangobj, pidx);
+        add(_ppanel, BorderLayout.CENTER);
+        SwingUtil.refresh(this);
     }
 
     /** Called by the controller when the game starts. */
     public void startGame (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
     {
+        // remove the purchase panel and add the game view
+        remove(_ppanel);
+        add(view, BorderLayout.CENTER);
+        SwingUtil.refresh(this);
+
         // our view needs to know about the start of the game
         view.startGame(bangobj, cfg, pidx);
 
@@ -159,6 +172,9 @@ public class BangPanel extends JPanel
     {
     }
 
+    /** Giver of life and context. */
+    protected ToyBoxContext _ctx;
+
     /** Our game controller. */
     protected BangController _ctrl;
 
@@ -167,6 +183,12 @@ public class BangPanel extends JPanel
 
     /** Used to scroll around in our view. */
     protected ScrollBox _scrolly;
+
+    /** The buying phase purchase panel. */
+    protected PurchasePanel _ppanel;
+
+    /** Contains the main game view. */
+    protected JPanel _gamePanel;
 
     /** Contains all the stuff on the side. */
     protected JPanel _sidePanel;

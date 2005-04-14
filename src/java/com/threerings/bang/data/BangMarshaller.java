@@ -33,13 +33,13 @@ public class BangMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #purchasePiece} requests. */
-    public static final int PURCHASE_PIECE = 2;
+    /** The method id used to dispatch {@link #purchasePieces} requests. */
+    public static final int PURCHASE_PIECES = 2;
 
     // documentation inherited from interface
-    public void purchasePiece (Client arg1, Piece arg2)
+    public void purchasePieces (Client arg1, Piece[] arg2)
     {
-        sendRequest(arg1, PURCHASE_PIECE, new Object[] {
+        sendRequest(arg1, PURCHASE_PIECES, new Object[] {
             arg2
         });
     }

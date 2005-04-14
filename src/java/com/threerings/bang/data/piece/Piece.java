@@ -67,6 +67,14 @@ public abstract class Piece extends SimpleStreamableObject
     public int energy;
 
     /**
+     * Returns the cost to purchase this piece.
+     */
+    public int getCost ()
+    {
+        return 100;
+    }
+
+    /**
      * Returns true if this piece is still active and playable.
      */
     public boolean isAlive ()
@@ -230,6 +238,9 @@ public abstract class Piece extends SimpleStreamableObject
         if (energy == 0) {
             energy = startingEnergy();
         }
+
+        // start with zero damage
+        damage = 0;
 
         // start with a random last moved tick
         lastActed = (short)(-1 * RandomUtil.getInt(getTicksPerMove()+1));

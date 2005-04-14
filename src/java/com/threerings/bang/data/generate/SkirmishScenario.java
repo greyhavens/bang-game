@@ -18,12 +18,18 @@ import com.threerings.bang.data.piece.Gunslinger;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.StartMarker;
 import com.threerings.bang.data.piece.SteamGunman;
+import com.threerings.bang.util.PieceSet;
 
 /**
  * Generates the pieces for our test skirmish scenario.
  */
 public class SkirmishScenario extends ScenarioGenerator
 {
+    public SkirmishScenario (PieceSet pieces)
+    {
+        _pieces = pieces;
+    }
+
     @Override // documentation inherited
     public void generate (
         ToyBoxGameConfig config, BangBoard board, ArrayList<Piece> pieces)
@@ -59,15 +65,25 @@ public class SkirmishScenario extends ScenarioGenerator
     protected void placePlayer (
         BangBoard board, ArrayList<Piece> pieces, int pidx, int sx, int sy)
     {
-        // search out from the corner for a valid position
+        // filter out this players pieces
         ArrayList<Piece> placers = new ArrayList<Piece>();
-        configureAndAdd(placers, pidx, new Artillery());
-        configureAndAdd(placers, pidx, new Dirigible());
-        configureAndAdd(placers, pidx, new Gunslinger());
-        configureAndAdd(placers, pidx, new Gunslinger());
-        configureAndAdd(placers, pidx, new SteamGunman());
-        configureAndAdd(placers, pidx, new SteamGunman());
+        for (Iterator<Piece> iter = _pieces.values().iterator();
+             iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (p.owner == pidx) {
+                p.assignPieceId();
+                placers.add(p);
+                iter.remove();
+            }
+        }
+//         configureAndAdd(placers, pidx, new Artillery());
+//         configureAndAdd(placers, pidx, new Dirigible());
+//         configureAndAdd(placers, pidx, new Gunslinger());
+//         configureAndAdd(placers, pidx, new Gunslinger());
+//         configureAndAdd(placers, pidx, new SteamGunman());
+//         configureAndAdd(placers, pidx, new SteamGunman());
 
+        // search out from the starting location for a valid position
         Piece piece = placers.remove(0);
         Rectangle rect = new Rectangle(sx, sy, 1, 1);
         for (int gg = 0; gg < 10; gg++) {
@@ -124,4 +140,6 @@ public class SkirmishScenario extends ScenarioGenerator
             rect.grow(1, 1);
         }
     }
+
+    protected PieceSet _pieces;
 }

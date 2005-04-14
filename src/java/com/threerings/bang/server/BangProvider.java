@@ -16,10 +16,7 @@ import com.threerings.bang.data.piece.Piece;
 public interface BangProvider extends InvocationProvider
 {
     /** Handles a {@link BangService#purchasePiece} request. */
-    public void purchasePiece (ClientObject caller, Piece piece);
-
-    /** Handles a {@link BangService#readyToPlay} request. */
-    public void readyToPlay (ClientObject caller);
+    public void purchasePieces (ClientObject caller, Piece[] pieces);
 
     /** Handles a {@link BangService#readyToPlay} request. */
     public void move (ClientObject caller, int pieceId, short x, short y,

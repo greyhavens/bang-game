@@ -46,10 +46,10 @@ public class BangDispatcher extends InvocationDispatcher
             );
             return;
 
-        case BangMarshaller.PURCHASE_PIECE:
-            ((BangProvider)provider).purchasePiece(
+        case BangMarshaller.PURCHASE_PIECES:
+            ((BangProvider)provider).purchasePieces(
                 source,
-                (Piece)args[0]
+                (Piece[])args[0]
             );
             return;
 

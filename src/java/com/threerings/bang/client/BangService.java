@@ -14,15 +14,9 @@ import com.threerings.bang.data.piece.Piece;
 public interface BangService extends InvocationService
 {
     /**
-     * Used to purchase a piece during the pre-game buying phase.
+     * Used to purchase pieces during the pre-game buying phase.
      */
-    public void purchasePiece (Client client, Piece piece);
-
-    /**
-     * Indicates that the player is ready to proceed from the pre-game
-     * buying phase to the main game phase.
-     */
-    public void readyToPlay (Client client);
+    public void purchasePieces (Client client, Piece[] pieces);
 
     /**
      * Requests that a piece be moved to the specified location.
