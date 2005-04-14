@@ -62,7 +62,10 @@ public class PlagueEffect extends Effect
 
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (p.owner >= 0 && p.isAlive() && pcount[p.owner] > 0) {
+            if (p.owner >= 0 && p.isAlive() && pcount[p.owner] > 0 &&
+                // make sure we don't try to turn a dirigible over a
+                // building or water into a windup gunman
+                bangobj.board.isGroundOccupiable(p.x, p.y)) {
                 pcount[p.owner]--;
                 pids.add(p.pieceId);
             }
