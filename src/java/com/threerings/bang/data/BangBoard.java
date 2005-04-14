@@ -214,6 +214,17 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if the specified location is ground traversable.
+     */
+    public boolean isGroundOccupiable (int x, int y)
+    {
+        if (!_bbounds.contains(x, y)) {
+            return false;
+        }
+        return (_btstate[y*_width+x] < 2);
+    }
+
+    /**
      * Returns true if the specified piece can occupy the specified
      * coordinate.
      */

@@ -40,7 +40,10 @@ public class SaintElmosEffect extends Effect
         ArrayIntSet pieces = new ArrayIntSet();
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (!p.isAlive() && p.owner >= 0) {
+            if (!p.isAlive() && p.owner >= 0 &&
+                // make sure we don't try to turn a dirigible over a
+                // building or water into a windup gunman
+                bangobj.board.isGroundOccupiable(p.x, p.y)) {
                 pieces.add(p.pieceId);
             }
         }

@@ -390,6 +390,12 @@ public class BangManager extends GameManager
             log.info("round " + _bangobj.roundId + ", rounds: " +
                      bconfig.params.get("rounds"));
             if (_bangobj.roundId == (Integer)bconfig.params.get("rounds")) {
+                // assign final points based on total remaining cash
+                for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                    int tcash = _bangobj.funds[ii] + _bangobj.reserves[ii];
+                    int points = tcash / 250;
+                    _bangobj.setPointsAt(_bangobj.points[ii] + points, ii);
+                }
                 endGame();
             } else {
                 _bangobj.setState(BangObject.POST_ROUND);
@@ -656,9 +662,9 @@ public class BangManager extends GameManager
         _bangobj.addToPieces(bonus);
         _bangobj.board.updateShadow(null, bonus);
 
-        String msg = MessageBundle.tcompose(
-            "m.placed_bonus", "" + bspot.x, "" + bspot.y);
-        SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
+//         String msg = MessageBundle.tcompose(
+//             "m.placed_bonus", "" + bspot.x, "" + bspot.y);
+//         SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
 
         log.info("Placed bonus: " + bonus.info());
         return true;
