@@ -266,7 +266,7 @@ public class Bonus extends Piece
                 ecount++;
             }
 
-            return baseWeight + (eweight / ecount);
+            return baseWeight + (ecount > 0 ? (eweight / ecount) : 0);
         }
 
         public abstract Effect affect (Piece piece);
