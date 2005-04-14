@@ -250,13 +250,12 @@ public class BangManager extends GameManager
 
         // transition to the pre-game buying phase
         _bangobj.setState(BangObject.PRE_ROUND);
-        _bangobj.setTick((short)0);
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (isAI(ii)) {
                 Piece[] pieces = new Piece[] {
-                    new Artillery(), new SteamGunman() };
+                    new Artillery(), new SteamGunman(), new SteamGunman() };
                 purchasePieces(ii, pieces);
             }
         }
@@ -336,6 +335,7 @@ public class BangManager extends GameManager
         // queue up the board tick
         int avgPer = _bangobj.getAveragePieceCount();
         _ticker.schedule(avgPer * getBaseTick(), false);
+        _bangobj.tick = (short)0;
     }
 
     /**
