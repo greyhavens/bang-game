@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
@@ -218,6 +219,7 @@ public class BangManager extends GameManager
         // create our per-player arrays
         _bangobj.reserves = new int[getPlayerSlots()];
         Arrays.fill(_bangobj.reserves, startingCash);
+        _bangobj.points = new int[getPlayerSlots()];
         _bangobj.funds = new int[getPlayerSlots()];
         _bangobj.pstats = new BangObject.PlayerData[getPlayerSlots()];
         for (int ii = 0; ii < _bangobj.pstats.length; ii++) {
@@ -235,19 +237,19 @@ public class BangManager extends GameManager
     // documentation inherited
     protected void playersAllHere ()
     {
-        // when the players all arrive, go into pre-game
-        startPreGame();
+        // when the players all arrive, go into the buying phase
+        startRound();
     }
 
     /** Starts the pre-game buying phase. */
-    protected void startPreGame ()
+    protected void startRound ()
     {
         // clear out the readiness status of each player
         _ready.clear();
         _purchases.clear();
 
         // transition to the pre-game buying phase
-        _bangobj.setState(BangObject.PRE_GAME);
+        _bangobj.setState(BangObject.PRE_ROUND);
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
@@ -299,6 +301,9 @@ public class BangManager extends GameManager
     protected void gameWillStart ()
     {
         super.gameWillStart();
+
+        // create a fresh knockout array
+        _knockoutOrder = new int[getPlayerSlots()];
 
         // set up the game object
         ArrayList<Piece> pieces = new ArrayList<Piece>();
@@ -362,9 +367,42 @@ public class BangManager extends GameManager
             }
         }
 
+        // score points for anyone who is knocked out as of this tick
+        int score = IntListUtil.getMaxValue(_knockoutOrder) + 1;
+        for (int ii = 0; ii < _knockoutOrder.length; ii++) {
+            if (_knockoutOrder[ii] == 0 && !_havers.contains(ii)) {
+                _knockoutOrder[ii] = score;
+                _bangobj.setPointsAt(_bangobj.points[ii] + score, ii);
+                String msg = MessageBundle.tcompose(
+                    "m.knocked_out", _bangobj.players[ii]);
+                SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
+            }
+        }
+
         // the game ends when one or zero players are left standing
         if (_havers.size() < 2) {
-            endGame();
+            // score points for the last player standing
+            int winidx = _havers.get(0);
+            _bangobj.setPointsAt(_bangobj.points[winidx] + score + 1, winidx);
+
+            // if this is the last round, end the game
+            ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
+            log.info("round " + _bangobj.roundId + ", rounds: " +
+                     bconfig.params.get("rounds"));
+            if (_bangobj.roundId == (Integer)bconfig.params.get("rounds")) {
+                endGame();
+            } else {
+                _bangobj.setState(BangObject.POST_ROUND);
+                // give them 10 seconds to stare at the board then end the round
+                new Interval(PresentsServer.omgr) {
+                    public void expired () {
+                        endRound();
+                    }
+                }.schedule(10000L);
+            }
+
+            // cancel the board tick
+            _ticker.cancel();
             return;
         }
 
@@ -379,11 +417,30 @@ public class BangManager extends GameManager
         }
     }
 
+    protected void endRound ()
+    {
+        ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
+        int startingCash = (Integer)bconfig.params.get("starting_cash");
+
+        // transfer players winnings to their reserves
+        for (int ii = 0; ii < _bangobj.funds.length; ii++) {
+            _bangobj.reserves[ii] = Math.max(
+                _bangobj.reserves[ii] + _bangobj.funds[ii], startingCash/2);
+            _bangobj.funds[ii] = 0;
+        }
+        _bangobj.setReserves(_bangobj.reserves);
+        _bangobj.setFunds(_bangobj.funds);
+
+        // start the next round
+        startRound();
+    }
+
     @Override // documentation inherited
     protected void assignWinners (boolean[] winners)
     {
-        for (int ii = 0; ii < winners.length; ii++) {
-            winners[ii] = _havers.contains(ii);
+        int[] windexes = IntListUtil.getMaxIndexes(_bangobj.points);
+        for (int ii = 0; ii < windexes.length; ii++) {
+            winners[windexes[ii]] = true;
         }
     }
 
@@ -639,15 +696,6 @@ public class BangManager extends GameManager
         damage.clear();
     }
 
-    // documentation inherited
-    protected void gameDidEnd ()
-    {
-        super.gameDidEnd();
-
-        // cancel the board tick
-        _ticker.cancel();
-    }
-
     /**
      * Creates the bang board based on the game config, filling in the
      * supplied pieces array with the starting pieces.
@@ -744,6 +792,9 @@ public class BangManager extends GameManager
 
     /** Used to calculate winners. */
     protected ArrayIntSet _havers = new ArrayIntSet();
+
+    /** Used to track the order in which players are knocked out. */
+    protected int[] _knockoutOrder;
 
     /** Used to record damage done during an attack. */
     protected IntIntMap _damage = new IntIntMap();

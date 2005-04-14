@@ -110,6 +110,17 @@ public class BoardView extends VirtualMediaPanel
     }
 
     /**
+     * Called by the controller when the round has ended.
+     */
+    public void endRound ()
+    {
+        // remove our event listener
+        _bangobj.removeListener(_blistener);
+
+        createMarquee("Round over!");
+    }
+
+    /**
      * Called by the controller when our game has ended.
      */
     public void endGame ()
@@ -135,19 +146,27 @@ public class BoardView extends VirtualMediaPanel
         } else {
             wtext += "No winner!";
         }
-        Label text = new Label(wtext, Color.white,
-                               getFont().deriveFont(40f));
-        text.setAlignment(Label.CENTER);
-        text.setStyle(Label.OUTLINE);
-        text.setAlternateColor(Color.black);
-        text.setTargetWidth(300);
-        text.layout(this);
-        LabelSprite sprite = new LabelSprite(text);
-        sprite.setRenderOrder(100);
-        sprite.setLocation(
-            _vbounds.x+(_vbounds.width-text.getSize().width)/2,
-            _vbounds.y+(_vbounds.height-text.getSize().height)/2);
-        addSprite(sprite);
+        createMarquee(wtext);
+    }
+
+    /**
+     * Creates a big animation that scrolls up the middle of the board.
+     */
+    protected void createMarquee (String text)
+    {
+        Label label = new Label(text, Color.white, getFont().deriveFont(40f));
+        label.setAlignment(Label.CENTER);
+        label.setStyle(Label.OUTLINE);
+        label.setAlternateColor(Color.black);
+        label.setTargetWidth(300);
+        label.layout(this);
+
+        _marquee = new LabelSprite(label);
+        _marquee.setRenderOrder(100);
+        _marquee.setLocation(
+            _vbounds.x+(_vbounds.width-label.getSize().width)/2,
+            _vbounds.y+(_vbounds.height-label.getSize().height)/2);
+        addSprite(_marquee);
     }
 
     // documentation inherited from interface KeyListener
@@ -195,6 +214,11 @@ public class BoardView extends VirtualMediaPanel
     {
         super.removeNotify();
         _ctx.getKeyDispatcher().removeGlobalKeyListener(this);
+
+        if (_marquee != null) {
+            removeSprite(_marquee);
+            _marquee = null;
+        }
     }
 
     // documentation inherited
@@ -441,6 +465,9 @@ public class BoardView extends VirtualMediaPanel
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);
+
+    /** Displayed over top of the board. */
+    protected LabelSprite _marquee;
 
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();

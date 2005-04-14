@@ -166,6 +166,23 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
+    public void endRound ()
+    {
+        super.endRound();
+        clearSelection();
+
+        // remove our event listener
+        _bangobj.removeListener(_ticker);
+
+        // allow everything to be visible
+        if (_vstate != null) {
+            _vstate.reveal();
+            adjustEnemyVisibility();
+            dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
+        }
+    }
+
+    @Override // documentation inherited
     public void endGame ()
     {
         super.endGame();

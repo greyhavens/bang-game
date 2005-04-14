@@ -97,6 +97,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>effect</code> field. */
     public static final String EFFECT = "effect";
 
+    /** The field name of the <code>points</code> field. */
+    public static final String POINTS = "points";
+
     /** The field name of the <code>funds</code> field. */
     public static final String FUNDS = "funds";
 
@@ -105,7 +108,10 @@ public class BangObject extends GameObject
     // AUTO-GENERATED: FIELDS END
 
     /** A {@link #state} constant indicating the pre-game buying phase. */
-    public static final int PRE_GAME = 4;
+    public static final int PRE_ROUND = 4;
+
+    /** A {@link #state} constant indicating the post-round phase. */
+    public static final int POST_ROUND = 5;
 
     /** Contains statistics on the game, updated every time any change is
      * made to pertinent game state. */
@@ -133,6 +139,9 @@ public class BangObject extends GameObject
 
     /** A field we use to broadcast applied effects. */
     public Effect effect;
+
+    /** Points earned by each player. */
+    public int[] points;
 
     /** Cash earned by each player this round. */
     public int[] funds;
@@ -503,6 +512,39 @@ public class BangObject extends GameObject
         requestAttributeChange(
             EFFECT, value, ovalue);
         this.effect = value;
+    }
+
+    /**
+     * Requests that the <code>points</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setPoints (int[] value)
+    {
+        int[] ovalue = this.points;
+        requestAttributeChange(
+            POINTS, value, ovalue);
+        this.points = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>points</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setPointsAt (int value, int index)
+    {
+        int ovalue = this.points[index];
+        requestElementUpdate(
+            POINTS, index, new Integer(value), new Integer(ovalue));
+        this.points[index] = value;
     }
 
     /**

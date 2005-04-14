@@ -44,19 +44,8 @@ public class BangMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #readyToPlay} requests. */
-    public static final int READY_TO_PLAY = 3;
-
-    // documentation inherited from interface
-    public void readyToPlay (Client arg1)
-    {
-        sendRequest(arg1, READY_TO_PLAY, new Object[] {
-            
-        });
-    }
-
     /** The method id used to dispatch {@link #surprise} requests. */
-    public static final int SURPRISE = 4;
+    public static final int SURPRISE = 3;
 
     // documentation inherited from interface
     public void surprise (Client arg1, int arg2, short arg3, short arg4)

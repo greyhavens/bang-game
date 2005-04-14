@@ -53,12 +53,6 @@ public class BangDispatcher extends InvocationDispatcher
             );
             return;
 
-        case BangMarshaller.READY_TO_PLAY:
-            ((BangProvider)provider).readyToPlay(
-                source                
-            );
-            return;
-
         case BangMarshaller.SURPRISE:
             ((BangProvider)provider).surprise(
                 source,
