@@ -266,7 +266,7 @@ public class BangBoardView extends BoardView
 
         // if we are placing a surprise, activate it
         if (_surprise != null) {
-            log.info("activating " + _surprise);
+//             log.info("activating " + _surprise);
             BangController.postAction(
                 this, BangController.ACTIVATE_SURPRISE,
                 new int[] { _surprise.surpriseId, tx, ty });

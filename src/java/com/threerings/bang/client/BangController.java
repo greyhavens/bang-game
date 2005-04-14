@@ -81,7 +81,7 @@ public class BangController extends GameController
      * {@link #MOVE_AND_FIRE} command. */
     public void handleMoveAndFire (Object source, int[] data)
     {
-        log.info("Requesting move and fire: " + StringUtil.toString(data));
+//         log.info("Requesting move and fire: " + StringUtil.toString(data));
         BangService.InvocationListener il =
             new BangService.InvocationListener() {
             public void requestFailed (String reason) {

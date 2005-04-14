@@ -113,8 +113,8 @@ public class BangBoard extends SimpleStreamableObject
      */
     public List computePath (Piece piece, int tx, int ty)
     {
-        log.info("Computing path from " + piece.x + "/" + piece.y + " to " +
-                 tx + "/" + ty + " maxdist:" + piece.getMoveDistance() + ".");
+//         log.info("Computing path from " + piece.x + "/" + piece.y + " to " +
+//                  tx + "/" + ty + " maxdist:" + piece.getMoveDistance() + ".");
         return AStarPathUtil.getPath(
             _tpred, piece.getStepper(), piece, piece.getMoveDistance(),
             piece.x, piece.y, tx, ty, true);
