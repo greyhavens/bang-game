@@ -30,4 +30,10 @@ public class WindupSlinger extends Gunslinger
     {
         return 1;
     }
+
+    @Override // documentation inherited
+    public boolean canActivateBonus ()
+    {
+        return false;
+    }
 }

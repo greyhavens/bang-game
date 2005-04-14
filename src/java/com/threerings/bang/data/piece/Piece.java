@@ -376,6 +376,14 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Indicates whether or not this piece can activate bonuses.
+     */
+    public boolean canActivateBonus ()
+    {
+        return true;
+    }
+
+    /**
      * Some pieces interact with other pieces, which takes place via this
      * method. Depending on the type of interaction, the piece can
      * indicate that it consumed the other piece, was consumed by it
@@ -393,7 +401,7 @@ public abstract class Piece extends SimpleStreamableObject
             return nibbly.energy > 0 ?
                 Interaction.INTERACTED : Interaction.CONSUMED;
 
-        } else if (other instanceof Bonus) {
+        } else if (other instanceof Bonus && canActivateBonus()) {
             Effect effect = ((Bonus)other).affect(this);
             if (effect != null) {
                 effects.add(effect);
