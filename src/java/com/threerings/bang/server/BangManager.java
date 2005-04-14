@@ -716,12 +716,16 @@ public class BangManager extends GameManager
             log.log(Level.WARNING, "Failed to unserialize board.", ioe);
         }
 
-        // if that failed, load the default board
+        // if that failed, load a stock board
         if (tup == null) {
+            String board = (String)RandomUtil.pickRandom(BOARDS);
+            if (System.getProperty("test") != null) {
+                board = "default";
+            }
             try {
                 ClassLoader cl = getClass().getClassLoader();
                 InputStream in = cl.getResourceAsStream(
-                    "rsrc/media/boards/default.board");
+                    "rsrc/media/boards/" + board + ".board");
                 if (in != null) {
                     tup = BoardUtil.loadBoard(IOUtils.toByteArray(in));
                 } else {
@@ -809,4 +813,9 @@ public class BangManager extends GameManager
 
     /** Used to track effects during a move. */
     protected ArrayList<Effect> _effects = new ArrayList<Effect>();
+
+    /** A list of our stock boards. */
+    protected static final String[] BOARDS = {
+        "alleys", "highnoon", "ring", "riverside", "road", "square",
+    };
 }
