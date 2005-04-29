@@ -20,15 +20,15 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.parlor.game.client.GameController;
-import com.threerings.toybox.data.ToyBoxGameConfig;
-import com.threerings.toybox.util.ToyBoxContext;
 
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.PieceDSet;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BoardUtil;
 
 import static com.threerings.bang.Log.log;
@@ -181,8 +181,8 @@ public class EditorController extends GameController
     public void init (CrowdContext ctx, PlaceConfig config)
     {
         super.init(ctx, config);
-        _ctx = (ToyBoxContext)ctx;
-        _config = (ToyBoxGameConfig)config;
+        _ctx = (BangContext)ctx;
+        _config = (BangConfig)config;
     }
 
     // documentation inherited
@@ -200,7 +200,7 @@ public class EditorController extends GameController
     // documentation inherited
     protected PlaceView createPlaceView (CrowdContext ctx)
     {
-        _panel = new EditorPanel((ToyBoxContext)ctx, this);
+        _panel = new EditorPanel((BangContext)ctx, this);
         return _panel;
     }
 
@@ -234,10 +234,10 @@ public class EditorController extends GameController
     }
 
     /** A casted reference to our context. */
-    protected ToyBoxContext _ctx;
+    protected BangContext _ctx;
 
     /** The configuration of this game. */
-    protected ToyBoxGameConfig _config;
+    protected BangConfig _config;
 
     /** Contains our main user interface. */
     protected EditorPanel _panel;

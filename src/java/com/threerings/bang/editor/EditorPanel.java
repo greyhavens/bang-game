@@ -24,11 +24,10 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-import com.threerings.toybox.util.ToyBoxContext;
-
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -45,7 +44,7 @@ public class EditorPanel extends JPanel
     public TerrainSelector terrain;
 
     /** Creates the main panel and its sub-interfaces. */
-    public EditorPanel (ToyBoxContext ctx, EditorController ctrl)
+    public EditorPanel (BangContext ctx, EditorController ctrl)
     {
         _ctrl = ctrl;
 
@@ -101,7 +100,7 @@ public class EditorPanel extends JPanel
     }
 
     /** Called by the controller when the game starts. */
-    public void startGame (BangObject bangobj, ToyBoxGameConfig cfg)
+    public void startGame (BangObject bangobj, BangConfig cfg)
     {
         // our view needs to know about the start of the game
         view.startGame(bangobj, cfg, 0);

@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import com.samskivert.util.IntTuple;
 import com.threerings.util.RandomUtil;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-
 import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Building;
@@ -28,14 +27,14 @@ public class CompoundGenerator extends EnvironmentGenerator
 {
     @Override // documentation inherited
     public void generate (
-        ToyBoxGameConfig config, BangBoard board, ArrayList<Piece> pieces)
+        BangConfig config, BangBoard board, ArrayList<Piece> pieces)
     {
         int width = board.getWidth(), height = board.getHeight();
 
         // first fill the board with dirt
         board.fill(Terrain.DIRT);
 
-        int density = 11 - (Integer)config.params.get("density");
+        int density = 11 - 5; // config.density;
 
         // pick a reasonable number for a board of this size (1/2 of the
         // average of the width and height)

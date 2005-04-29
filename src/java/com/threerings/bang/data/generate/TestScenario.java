@@ -5,9 +5,8 @@ package com.threerings.bang.data.generate;
 
 import java.util.ArrayList;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-
 import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.Gunslinger;
@@ -20,7 +19,7 @@ public class TestScenario extends ScenarioGenerator
 {
     @Override // documentation inherited
     public void generate (
-        ToyBoxGameConfig config, BangBoard board, ArrayList<Piece> pieces)
+        BangConfig config, BangBoard board, ArrayList<Piece> pieces)
     {
         Piece piece = new Artillery();
         piece.position(0, 0);

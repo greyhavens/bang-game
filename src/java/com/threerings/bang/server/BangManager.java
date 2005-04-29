@@ -40,8 +40,6 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.parlor.game.server.GameManager;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
 import com.threerings.bang.data.generate.SkirmishScenario;
@@ -57,6 +55,7 @@ import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.client.BangService;
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangMarshaller;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.PieceDSet;
@@ -211,13 +210,11 @@ public class BangManager extends GameManager
         _bangobj.setService(
             (BangMarshaller)PresentsServer.invmgr.registerDispatcher(
                 new BangDispatcher(this), false));
-
-        ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
-        int startingCash = (Integer)bconfig.params.get("starting_cash");
+        _bconfig = (BangConfig)_gameconfig;
 
         // create our per-player arrays
         _bangobj.reserves = new int[getPlayerSlots()];
-        Arrays.fill(_bangobj.reserves, startingCash);
+        Arrays.fill(_bangobj.reserves, _bconfig.startingCash);
         _bangobj.points = new int[getPlayerSlots()];
         _bangobj.funds = new int[getPlayerSlots()];
         _bangobj.pstats = new BangObject.PlayerData[getPlayerSlots()];
@@ -386,10 +383,9 @@ public class BangManager extends GameManager
             _bangobj.setPointsAt(_bangobj.points[winidx] + score + 1, winidx);
 
             // if this is the last round, end the game
-            ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
-            log.info("round " + _bangobj.roundId + ", rounds: " +
-                     bconfig.params.get("rounds"));
-            if (_bangobj.roundId == (Integer)bconfig.params.get("rounds")) {
+            log.info("round " + _bangobj.roundId +
+                     ", rounds: " + _bconfig.rounds);
+            if (_bangobj.roundId == _bconfig.rounds) {
                 // assign final points based on total remaining cash
                 for (int ii = 0; ii < getPlayerSlots(); ii++) {
                     int tcash = _bangobj.funds[ii] + _bangobj.reserves[ii];
@@ -432,13 +428,11 @@ public class BangManager extends GameManager
 
     protected void endRound ()
     {
-        ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
-        int startingCash = (Integer)bconfig.params.get("starting_cash");
-
         // transfer players winnings to their reserves
         for (int ii = 0; ii < _bangobj.funds.length; ii++) {
             _bangobj.reserves[ii] = Math.max(
-                _bangobj.reserves[ii] + _bangobj.funds[ii], startingCash/2);
+                _bangobj.reserves[ii] + _bangobj.funds[ii],
+                _bconfig.startingCash/2);
             _bangobj.funds[ii] = 0;
         }
         _bangobj.setReserves(_bangobj.reserves);
@@ -715,12 +709,11 @@ public class BangManager extends GameManager
      */
     protected BangBoard createBoard (ArrayList<Piece> pieces)
     {
-        ToyBoxGameConfig bconfig = (ToyBoxGameConfig)_gameconfig;
         Tuple tup = null;
 
         // try loading up the player specified board
         try {
-            byte[] bdata = (byte[])bconfig.params.get("board_data");
+            byte[] bdata = _bconfig.boardData;
             if (bdata != null && bdata.length > 0) {
                 tup = BoardUtil.loadBoard(bdata);
             }
@@ -767,7 +760,7 @@ public class BangManager extends GameManager
 
         // now add the player pieces
         SkirmishScenario scen = new SkirmishScenario(_purchases);
-        scen.generate(bconfig, board, pieces);
+        scen.generate(_bconfig, board, pieces);
         return board;
     }
 
@@ -794,6 +787,9 @@ public class BangManager extends GameManager
             }
         }
     };
+
+    /** A casted reference to our game configuration. */
+    protected BangConfig _bconfig;
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;

@@ -19,12 +19,11 @@ import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.parlor.game.client.GameController;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-import com.threerings.toybox.util.ToyBoxContext;
-
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.data.effect.Effect;
+import com.threerings.bang.data.surprise.Surprise;
+import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -50,8 +49,8 @@ public class BangController extends GameController
     public void init (CrowdContext ctx, PlaceConfig config)
     {
         super.init(ctx, config);
-        _ctx = (ToyBoxContext)ctx;
-        _config = (ToyBoxGameConfig)config;
+        _ctx = (BangContext)ctx;
+        _config = (BangConfig)config;
     }
 
     @Override // documentation inherited
@@ -104,7 +103,7 @@ public class BangController extends GameController
                         surpriseId + "'.");
         } else {
             // instruct the board view to activate placement mode
-            _panel.view.placeSurprise(s);
+            _view.view.placeSurprise(s);
         }
     }
 
@@ -124,8 +123,8 @@ public class BangController extends GameController
     @Override // documentation inherited
     protected PlaceView createPlaceView (CrowdContext ctx)
     {
-        _panel = new BangPanel((ToyBoxContext)ctx, this);
-        return _panel;
+        _view = new BangView((BangContext)ctx, this);
+        return _view;
     }
 
     @Override // documentation inherited
@@ -147,7 +146,7 @@ public class BangController extends GameController
      */
     protected void roundDidStart ()
     {
-        _panel.buyingPhase(_bangobj, _config, _pidx);
+        _view.buyingPhase(_bangobj, _config, _pidx);
     }
 
     @Override // documentation inherited
@@ -156,7 +155,7 @@ public class BangController extends GameController
         super.gameDidStart();
 
         // we may be returning to an already started game
-        _panel.startGame(_bangobj, _config, _pidx);
+        _view.startGame(_bangobj, _config, _pidx);
     }
 
     /**
@@ -164,31 +163,31 @@ public class BangController extends GameController
      */
     protected void roundDidEnd ()
     {
-        _panel.view.endRound();
+        _view.view.endRound();
     }
 
     @Override // documentation inherited
     protected void gameWillReset ()
     {
         super.gameWillReset();
-        _panel.endGame();
+        _view.endGame();
     }
 
     @Override // documentation inherited
     protected void gameDidEnd ()
     {
         super.gameDidEnd();
-        _panel.endGame();
+        _view.endGame();
     }
 
     /** A casted reference to our context. */
-    protected ToyBoxContext _ctx;
+    protected BangContext _ctx;
 
     /** The configuration of this game. */
-    protected ToyBoxGameConfig _config;
+    protected BangConfig _config;
 
     /** Contains our main user interface. */
-    protected BangPanel _panel;
+    protected BangView _view;
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;

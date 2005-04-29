@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Gunslinger;
@@ -32,7 +32,7 @@ public class SkirmishScenario extends ScenarioGenerator
 
     @Override // documentation inherited
     public void generate (
-        ToyBoxGameConfig config, BangBoard board, ArrayList<Piece> pieces)
+        BangConfig config, BangBoard board, ArrayList<Piece> pieces)
     {
         ArrayList<Piece> markers = new ArrayList<Piece>();
         // extract and remove all player start markers

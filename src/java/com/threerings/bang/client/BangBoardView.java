@@ -35,18 +35,17 @@ import com.threerings.util.RandomUtil;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-import com.threerings.toybox.util.ToyBoxContext;
-
 import com.threerings.bang.client.sprite.MobileSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.ShotSprite;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.surprise.Surprise;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PointSet;
 import com.threerings.bang.util.VisibilityState;
@@ -60,7 +59,7 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class BangBoardView extends BoardView
     implements MouseListener, MouseMotionListener
 {
-    public BangBoardView (ToyBoxContext ctx)
+    public BangBoardView (BangContext ctx)
     {
         super(ctx);
         addMouseListener(this);
@@ -150,7 +149,7 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    public void startGame (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
+    public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
         super.startGame(bangobj, cfg, pidx);
 
@@ -158,7 +157,7 @@ public class BangBoardView extends BoardView
         _bangobj.addListener(_ticker);
 
         // set up the starting visibility if we're using it
-        if ((Boolean)cfg.params.get("fog")) {
+        if (cfg.fog) {
             _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
             adjustBoardVisibility();
             adjustEnemyVisibility();

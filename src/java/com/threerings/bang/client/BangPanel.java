@@ -26,10 +26,10 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.toybox.client.ChatPanel;
-import com.threerings.toybox.data.ToyBoxGameConfig;
-import com.threerings.toybox.util.ToyBoxContext;
 
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -43,7 +43,7 @@ public class BangPanel extends JPanel
     public BangBoardView view;
 
     /** Creates the main panel and its sub-interfaces. */
-    public BangPanel (ToyBoxContext ctx, BangController ctrl)
+    public BangPanel (BangContext ctx, BangController ctrl)
     {
         setLayout(new BorderLayout(5, 5));
         _ctx = ctx;
@@ -76,9 +76,9 @@ public class BangPanel extends JPanel
         _sidePanel.add(vlabel, GroupLayout.FIXED);
 
         // add a chat box
-        ChatPanel chat = new ChatPanel(ctx);
-        chat.removeSendButton();
-        _sidePanel.add(chat);
+//         ChatPanel chat = new ChatPanel(ctx);
+//         chat.removeSendButton();
+//         _sidePanel.add(chat);
 
         // add a "back" button
         JButton back = new JButton("Back to lobby");
@@ -91,7 +91,7 @@ public class BangPanel extends JPanel
     }
 
     /** Called by the controller when the buying phase starts. */
-    public void buyingPhase (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
+    public void buyingPhase (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // remove the game view and add the purchase panel
         remove(_gamePanel);
@@ -101,7 +101,7 @@ public class BangPanel extends JPanel
     }
 
     /** Called by the controller when the game starts. */
-    public void startGame (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
+    public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // remove the purchase panel and add the game view
         remove(_ppanel);
@@ -154,7 +154,7 @@ public class BangPanel extends JPanel
     }
 
     /** Giver of life and context. */
-    protected ToyBoxContext _ctx;
+    protected BangContext _ctx;
 
     /** Our game controller. */
     protected BangController _ctrl;

@@ -23,9 +23,6 @@ import com.samskivert.swing.util.SwingUtil;
 import com.threerings.media.SafeScrollPane;
 import com.threerings.util.MessageBundle;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-import com.threerings.toybox.util.ToyBoxContext;
-
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.SteamGunman;
 import com.threerings.bang.data.piece.Artillery;
@@ -33,7 +30,9 @@ import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Gunslinger;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -43,7 +42,7 @@ import static com.threerings.bang.Log.log;
 public class PurchasePanel extends JPanel
     implements TableModelListener, ActionListener
 {
-    public PurchasePanel (ToyBoxContext ctx, ToyBoxGameConfig config,
+    public PurchasePanel (BangContext ctx, BangConfig config,
                           BangObject bangobj, int pidx)
     {
         setLayout(new VGroupLayout(VGroupLayout.NONE, VGroupLayout.NONE,
@@ -60,13 +59,11 @@ public class PurchasePanel extends JPanel
         _bangobj = bangobj;
         _pidx = pidx;
 
-        int rounds = (Integer)config.params.get("rounds");
-
         // add the header
         JPanel bbox = GroupLayout.makeHStretchBox(5);
         bbox.add(new JLabel(_msgs.get("m.buying_phase")));
         JLabel round = new JLabel(
-            _msgs.get("m.round", ""+_bangobj.roundId, ""+rounds));
+            _msgs.get("m.round", ""+_bangobj.roundId, ""+config.rounds));
         round.setHorizontalAlignment(JLabel.RIGHT);
         bbox.add(round);
         box.add(bbox, VGroupLayout.FIXED);
@@ -166,7 +163,7 @@ public class PurchasePanel extends JPanel
         }
     }
 
-    protected ToyBoxContext _ctx;
+    protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BangObject _bangobj;
     protected int _pidx;

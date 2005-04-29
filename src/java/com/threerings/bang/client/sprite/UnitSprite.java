@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 import com.samskivert.util.HashIntMap;
 
 import com.threerings.media.image.ImageUtil;
-import com.threerings.toybox.util.ToyBoxContext;
 
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -36,7 +36,7 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public void init (ToyBoxContext ctx, Piece piece, short tick)
+    public void init (BangContext ctx, Piece piece, short tick)
     {
         super.init(ctx, piece, tick);
         _image = ctx.loadImage("media/units/" + _type + ".png");

@@ -9,9 +9,8 @@ import javax.swing.JPanel;
 import com.samskivert.swing.CommandButton;
 import com.samskivert.swing.VGroupLayout;
 
-import com.threerings.toybox.util.ToyBoxContext;
-
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.data.piece.*;
 
 /**
@@ -19,7 +18,7 @@ import com.threerings.bang.data.piece.*;
  */
 public class PieceCreator extends JPanel
 {
-    public PieceCreator (ToyBoxContext ctx)
+    public PieceCreator (BangContext ctx)
     {
         setLayout(new VGroupLayout());
         _ctx = ctx;
@@ -63,5 +62,5 @@ public class PieceCreator extends JPanel
         return button;
     }
 
-    protected ToyBoxContext _ctx;
+    protected BangContext _ctx;
 }

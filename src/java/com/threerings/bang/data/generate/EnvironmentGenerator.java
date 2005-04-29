@@ -5,9 +5,8 @@ package com.threerings.bang.data.generate;
 
 import java.util.ArrayList;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-
 import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.piece.Piece;
 
 /**
@@ -23,5 +22,5 @@ public abstract class EnvironmentGenerator
      * @param config the game configuration.
      */
     public abstract void generate (
-        ToyBoxGameConfig config, BangBoard board, ArrayList<Piece> pieces);
+        BangConfig config, BangBoard board, ArrayList<Piece> pieces);
 }

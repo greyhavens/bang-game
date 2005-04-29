@@ -19,9 +19,8 @@ import com.threerings.media.util.LinePath;
 import com.threerings.media.util.LineSegmentPath;
 import com.threerings.media.util.MathUtil;
 
-import com.threerings.toybox.util.ToyBoxContext;
-
 import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 
@@ -72,7 +71,7 @@ public class PieceSprite extends Sprite
      * Called when we are first created and immediately before we are
      * added to the display.
      */
-    public void init (ToyBoxContext ctx, Piece piece, short tick)
+    public void init (BangContext ctx, Piece piece, short tick)
     {
         _piece = piece;
         _tick = tick;

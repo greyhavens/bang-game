@@ -12,11 +12,11 @@ import java.util.logging.Level;
 import com.samskivert.util.Tuple;
 
 import com.threerings.presents.dobj.DSet;
-import com.threerings.toybox.data.ToyBoxGameConfig;
 
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.PieceDSet;
 import com.threerings.bang.data.generate.CompoundGenerator;
@@ -66,7 +66,7 @@ public class EditorManager extends GameManager
     protected BangBoard createBoard (ArrayList<Piece> pieces)
     {
         // first, try loading it from our game configuration
-        ToyBoxGameConfig gconfig = (ToyBoxGameConfig)_gameconfig;
+        BangConfig gconfig = (BangConfig)_gameconfig;
 //         if (gconfig.board != null && gconfig.board.length > 0) {
 //             try {
 //                 Tuple tup = BoardUtil.loadBoard(gconfig.board);
@@ -80,7 +80,7 @@ public class EditorManager extends GameManager
 //         }
 
         // if that doesn't work, generate a random board
-        int size = (Integer)gconfig.params.get("board_size");
+        int size = 16; // gconfig.size;
         BangBoard board = new BangBoard(size, size);
         CompoundGenerator gen = new CompoundGenerator();
         gen.generate(gconfig, board, pieces);

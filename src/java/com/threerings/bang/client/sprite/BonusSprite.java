@@ -6,9 +6,8 @@ package com.threerings.bang.client.sprite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import com.threerings.toybox.util.ToyBoxContext;
-
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.util.BangContext;
 
 /**
  * Displays a bonus piece of some sort.
@@ -21,7 +20,7 @@ public class BonusSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    public void init (ToyBoxContext ctx, Piece piece, short tick)
+    public void init (BangContext ctx, Piece piece, short tick)
     {
         super.init(ctx, piece, tick);
         // load our source image

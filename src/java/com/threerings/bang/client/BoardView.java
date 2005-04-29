@@ -29,15 +29,14 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.media.VirtualMediaPanel;
 import com.threerings.media.sprite.LabelSprite;
 
-import com.threerings.toybox.data.ToyBoxGameConfig;
-import com.threerings.toybox.util.ToyBoxContext;
-
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -50,9 +49,9 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class BoardView extends VirtualMediaPanel
     implements KeyListener
 {
-    public BoardView (ToyBoxContext ctx)
+    public BoardView (BangContext ctx)
     {
-        super(ctx.getFrameManager());
+        super(null /* ctx.getFrameManager() */);
         _ctx = ctx;
     }
 
@@ -61,7 +60,7 @@ public class BoardView extends VirtualMediaPanel
      * by the controller when we enter an already started game or the game
      * in which we're involved gets started.
      */
-    public void startGame (BangObject bangobj, ToyBoxGameConfig cfg, int pidx)
+    public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // clear out old piece sprites from a previous game
         for (Iterator<PieceSprite> iter = _pieces.values().iterator();
@@ -197,7 +196,7 @@ public class BoardView extends VirtualMediaPanel
     public void addNotify ()
     {
         super.addNotify();
-        _ctx.getKeyDispatcher().addGlobalKeyListener(this);
+//         _ctx.getKeyDispatcher().addGlobalKeyListener(this);
     }
 
     // documentation inherited
@@ -214,7 +213,7 @@ public class BoardView extends VirtualMediaPanel
     public void removeNotify ()
     {
         super.removeNotify();
-        _ctx.getKeyDispatcher().removeGlobalKeyListener(this);
+//         _ctx.getKeyDispatcher().removeGlobalKeyListener(this);
 
         if (_marquee != null) {
             removeSprite(_marquee);
@@ -454,8 +453,7 @@ public class BoardView extends VirtualMediaPanel
         public void render (Graphics2D gfx, Rectangle tile);
     }
 
-    protected ToyBoxContext _ctx;
-
+    protected BangContext _ctx;
     protected BangObject _bangobj;
     protected BangBoard _board;
     protected Rectangle _bbounds;
