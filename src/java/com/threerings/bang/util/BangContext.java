@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 
+import com.jme.bui.BLookAndFeel;
+
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
@@ -29,6 +31,9 @@ public abstract class BangContext
 
     /** Returns the message manager used to localize messages. */
     public abstract MessageManager getMessageManager ();
+
+    /** Returns the look and feel used to configure the user interface. */
+    public abstract BLookAndFeel getLookAndFeel ();
 
     /**
      * Translates the specified message using the specified message bundle.

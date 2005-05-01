@@ -33,16 +33,13 @@ public class BangView
         _ctrl = ctrl;
 
         // create a top-level window to contain our chat display
-        BWindow chatwin = new BWindow(
-            BLookAndFeel.getDefaultLookAndFeel(), new BorderLayout());
-
+        BWindow chatwin = new BWindow(ctx.getLookAndFeel(), new BorderLayout());
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
-        chatwin.addChild(_chat, BorderLayout.CENTER);
+        chatwin.add(_chat, BorderLayout.CENTER);
 
         chatwin.setBounds(0, 40, 640, 240);
-        chatwin.layout();
-        _ctx.getRoot().attachChild(chatwin);
         _ctx.getInputDispatcher().addWindow(chatwin);
+        _ctx.getRoot().attachChild(chatwin);
 
 // 	// give ourselves a wee bit of a border
 // 	setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -88,16 +85,22 @@ public class BangView
     /** Called by the controller when the buying phase starts. */
     public void buyingPhase (BangObject bangobj, BangConfig cfg, int pidx)
     {
-//         // remove the game view and add the purchase panel
-//         remove(_gamePanel);
-//         _ppanel = new PurchasePanel(_ctx, cfg, bangobj, pidx);
-//         add(_ppanel, BorderLayout.CENTER);
-//         SwingUtil.refresh(this);
+        // add the purchase view to the display
+        _pview = new PurchaseView(_ctx, cfg, bangobj, pidx);
+        _ctx.getInputDispatcher().addWindow(_pview);
+        _ctx.getRoot().attachChild(_pview);
+        _pview.pack();
+        _pview.setLocation(10, 500);
     }
 
     /** Called by the controller when the game starts. */
     public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
+        // remove the purchase view from the display
+        _ctx.getRoot().detachChild(_pview);
+        _ctx.getInputDispatcher().removeWindow(_pview);
+        _pview = null;
+
 //         // remove the purchase panel and add the game view
 //         remove(_ppanel);
 //         add(_gamePanel, BorderLayout.CENTER);
@@ -153,6 +156,9 @@ public class BangView
 
     /** Displays chat. */
     protected ChatView _chat;
+
+    /** The buying phase purchase view. */
+    protected PurchaseView _pview;
 
 //     /** The buying phase purchase panel. */
 //     protected PurchasePanel _ppanel;

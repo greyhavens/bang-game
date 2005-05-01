@@ -3,6 +3,7 @@
 
 package com.threerings.bang.client;
 
+import com.jme.bui.BLookAndFeel;
 import com.jme.bui.event.InputDispatcher;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
@@ -110,6 +111,7 @@ public class BangClient
         // these manage local client resources
         _rsrcmgr = new ResourceManager("rsrc");
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
+        _lnf = BLookAndFeel.getDefaultLookAndFeel();
 
         // these manage "online" state
         _locdir = new LocationDirector(_ctx);
@@ -189,12 +191,12 @@ public class BangClient
 //             return _app.getContext().getInputHandler();
 //         }
 
-//         public InputHandler getBufferedInputHandler () {
-//             return _app.getContext().getBufferedInputHandler();
-//         }
-
         public InputDispatcher getInputDispatcher () {
             return _app.getContext().getInputDispatcher();
+        }
+
+        public BLookAndFeel getLookAndFeel () {
+            return _lnf;
         }
     }
 
@@ -204,6 +206,7 @@ public class BangClient
 
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;
+    protected BLookAndFeel _lnf;
 
     protected Client _client;
     protected LocationDirector _locdir;
