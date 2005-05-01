@@ -15,22 +15,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import com.jme.bui.event.MouseEvent;
+import com.jme.bui.event.MouseListener;
+import com.jme.bui.event.MouseMotionListener;
+import com.jme.intersection.BoundingPickResults;
+import com.jme.math.Ray;
+import com.jme.math.Vector2f;
+import com.jme.math.Vector3f;
 
 import com.samskivert.swing.Label;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.media.animation.SpriteAnimation;
-import com.threerings.media.sprite.LabelSprite;
-import com.threerings.media.sprite.PathObserver;
-import com.threerings.media.sprite.Sprite;
-import com.threerings.media.util.LinePath;
 import com.threerings.media.util.MathUtil;
-import com.threerings.media.util.Path;
 import com.threerings.util.RandomUtil;
+
+import com.threerings.jme.sprite.Path;
+import com.threerings.jme.sprite.PathObserver;
+import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -59,11 +60,11 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class BangBoardView extends BoardView
     implements MouseListener, MouseMotionListener
 {
-    public BangBoardView (BangContext ctx)
+    public BangBoardView (BangContext ctx, BangController ctrl)
     {
         super(ctx);
-        addMouseListener(this);
-        addMouseMotionListener(this);
+        _ctrl = ctrl;
+        addListener(this);
     }
 
     /**
@@ -82,7 +83,7 @@ public class BangBoardView extends BoardView
         _attackSet = new PointSet();
         _bangobj.board.computeAttacks(
             _surprise.getRadius(), _mouse.x, _mouse.y, _attackSet);
-        dirtySet(_attackSet);
+//         dirtySet(_attackSet);
         log.info("Placing " + _surprise);
     }
 
@@ -131,8 +132,25 @@ public class BangBoardView extends BoardView
     // documentation inherited from interface MouseMotionListener
     public void mouseMoved (MouseEvent e)
     {
-        int mx = e.getX() / SQUARE, my = e.getY() / SQUARE;
-        updateMouseTile(mx, my);
+        // determine which tile the mouse is over
+        Vector2f screenPos = new Vector2f(e.getX(), e.getY());
+        _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
+        _worldMouse.subtractLocal(_ctx.getCamera().getLocation());
+
+        // determine which tile the mouse is over
+        float dist = -1f * _groundNormal.dot(_ctx.getCamera().getLocation()) /
+            _groundNormal.dot(_worldMouse);
+        Vector3f ground = _ctx.getCamera().getLocation().add(
+            _worldMouse.mult(dist));
+        ground.z = 0.1f;
+
+        int tx = (int)Math.floor(ground.x / TILE_SIZE);
+        int ty = (int)Math.floor(ground.y / TILE_SIZE);
+        ground.x = (float)tx *TILE_SIZE + TILE_SIZE/2;
+        ground.y = (float)ty * TILE_SIZE + TILE_SIZE/2;
+//         _cursor.setLocalTranslation(ground);
+
+        updateMouseTile(tx, ty);
     }
 
     // documentation inherited from interface MouseMotionListener
@@ -140,12 +158,6 @@ public class BangBoardView extends BoardView
     {
         // first update our mousely business
         mouseMoved(e);
-    }
-
-    @Override // documentation inherited
-    public void keyPressed (KeyEvent e)
-    {
-        super.keyPressed(e);
     }
 
     @Override // documentation inherited
@@ -177,7 +189,7 @@ public class BangBoardView extends BoardView
         if (_vstate != null) {
             _vstate.reveal();
             adjustEnemyVisibility();
-            dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
+//             dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
         }
     }
 
@@ -194,65 +206,72 @@ public class BangBoardView extends BoardView
         if (_vstate != null) {
             _vstate.reveal();
             adjustEnemyVisibility();
-            dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
+//             dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
         }
     }
 
-    @Override // documentation inherited
-    protected void paintMouseTile (Graphics2D gfx, int mx, int my)
-    {
-        // only highlight the mouse coordinates while we're in play
-        if (_bangobj != null && _bangobj.isInPlay()) {
-            super.paintMouseTile(gfx, mx, my);
-        }
-    }
+//     @Override // documentation inherited
+//     protected void paintMouseTile (Graphics2D gfx, int mx, int my)
+//     {
+//         // only highlight the mouse coordinates while we're in play
+//         if (_bangobj != null && _bangobj.isInPlay()) {
+//             super.paintMouseTile(gfx, mx, my);
+//         }
+//     }
 
-    @Override // documentation inherited
-    protected void paintInFront (Graphics2D gfx, Rectangle dirtyRect)
-    {
-        super.paintInFront(gfx, dirtyRect);
+//     @Override // documentation inherited
+//     protected void paintInFront (Graphics2D gfx, Rectangle dirtyRect)
+//     {
+//         super.paintInFront(gfx, dirtyRect);
 
-        // render our possible moves
-        if (_moveSet.size() > 0) {
-            renderSet(gfx, dirtyRect, _moveSet, _whiteRenderer);
-        }
+//         // render our possible moves
+//         if (_moveSet.size() > 0) {
+//             renderSet(gfx, dirtyRect, _moveSet, _whiteRenderer);
+//         }
 
-        // render the necessary tiles as dimmed if it is not "visible"
-        if (_board != null && _vstate != null) {
-            Composite ocomp = gfx.getComposite();
-            gfx.setComposite(SET_ALPHA);
-            gfx.setColor(Color.black);
-            _pr.setLocation(0, 0);
-            for (int yy = 0, hh = _board.getHeight(); yy < hh; yy++) {
-                _pr.x = 0;
-                int xoff = yy * _board.getWidth();
-                for (int xx = 0, ww = _board.getWidth(); xx < ww; xx++) {
-                    if (!_vstate.getVisible(xoff+xx) &&
-                        dirtyRect.intersects(_pr)) {
-                        gfx.fill(_pr);
-                    }
-                    _pr.x += SQUARE;
-                }
-                _pr.y += SQUARE;
-            }
-            gfx.setComposite(ocomp);
-        }
-    }
+//         // render the necessary tiles as dimmed if it is not "visible"
+//         if (_board != null && _vstate != null) {
+//             Composite ocomp = gfx.getComposite();
+//             gfx.setComposite(SET_ALPHA);
+//             gfx.setColor(Color.black);
+//             _pr.setLocation(0, 0);
+//             for (int yy = 0, hh = _board.getHeight(); yy < hh; yy++) {
+//                 _pr.x = 0;
+//                 int xoff = yy * _board.getWidth();
+//                 for (int xx = 0, ww = _board.getWidth(); xx < ww; xx++) {
+//                     if (!_vstate.getVisible(xoff+xx) &&
+//                         dirtyRect.intersects(_pr)) {
+//                         gfx.fill(_pr);
+//                     }
+//                     _pr.x += SQUARE;
+//                 }
+//                 _pr.y += SQUARE;
+//             }
+//             gfx.setComposite(ocomp);
+//         }
+//     }
 
     /** Handles a left mouse button click. */
     protected void handleLeftPress (int mx, int my)
     {
-        int tx = mx / SQUARE, ty = my / SQUARE;
-
         // nothing doing if the game is not in play or we're not a player
         if (_bangobj == null || !_bangobj.isInPlay() || _pidx == -1) {
             return;
         }
 
+        _pick.clear();
+        _snode.findPick(
+            new Ray(_ctx.getCamera().getLocation(), _worldMouse), _pick);
+        for (int ii = 0; ii < _pick.getNumber(); ii++) {
+            Sprite s = getSprite(_pick.getPickData(ii).getTargetMesh());
+            log.info("Picked " + s);
+        }
+
         // check for a piece under the mouse
         PieceSprite sprite = null;
         Piece piece = null;
-        Sprite s = _spritemgr.getHighestHitSprite(mx, my);
+//         Sprite s = _spritemgr.getHighestHitSprite(mx, my);
+        Sprite s = null; // TODO: get hit sprite
         if (s instanceof PieceSprite) {
             sprite = (PieceSprite)s;
             piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
@@ -266,9 +285,7 @@ public class BangBoardView extends BoardView
         // if we are placing a surprise, activate it
         if (_surprise != null) {
 //             log.info("activating " + _surprise);
-            BangController.postAction(
-                this, BangController.ACTIVATE_SURPRISE,
-                new int[] { _surprise.surpriseId, tx, ty });
+            _ctrl.activateSurprise(_surprise.surpriseId, _mouse.x, _mouse.y);
             _surprise = null;
             clearAttackSet();
             return;
@@ -278,12 +295,12 @@ public class BangBoardView extends BoardView
         if (_selection != null) {
             // and we have an attack set
             if (_attackSet != null) {
-                if (handleClickToAttack(piece, tx, ty)) {
+                if (handleClickToAttack(piece, _mouse.x, _mouse.y)) {
                     return;
                 }
             }
 
-            if (handleClickToMove(tx, ty)) {
+            if (handleClickToMove(_mouse.x, _mouse.y)) {
                 return;
             }
         }
@@ -325,7 +342,7 @@ public class BangBoardView extends BoardView
             executeAction();
             _attackSet = null;
         } else {
-            dirtySet(_attackSet);
+//             dirtySet(_attackSet);
         }
         return true;
     }
@@ -394,8 +411,6 @@ public class BangBoardView extends BoardView
     /** Handles a right mouse button click. */
     protected void handleRightPress (int mx, int my)
     {
-        int tx = mx / SQUARE, ty = my / SQUARE;
-
         // nothing doing if the game is not in play
         if (_bangobj == null || !_bangobj.isInPlay()) {
             return;
@@ -411,7 +426,8 @@ public class BangBoardView extends BoardView
 
         // if there is a piece under the cursor, show their possible shots
         PieceSprite sprite = null;
-        Sprite s = _spritemgr.getHighestHitSprite(mx, my);
+//        Sprite s = _spritemgr.getHighestHitSprite(mx, my);
+        Sprite s = null; // TODO
         if (s instanceof PieceSprite) {
             sprite = (PieceSprite)s;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
@@ -423,7 +439,7 @@ public class BangBoardView extends BoardView
                 for (int ii = 0; ii < moveSet.size(); ii++) {
                     _attackSet.add(moveSet.get(ii));
                 }
-                dirtySet(_attackSet);
+//                 dirtySet(_attackSet);
             }
         }
     }
@@ -436,7 +452,7 @@ public class BangBoardView extends BoardView
             _selection = piece;
             getPieceSprite(_selection).setSelected(true);
             if (_moveSet.size() > 0) {
-                dirtySet(_moveSet);
+//                 dirtySet(_moveSet);
                 _moveSet.clear();
             }
             PointSet attacks = new PointSet();
@@ -444,15 +460,15 @@ public class BangBoardView extends BoardView
             _attackSet = new PointSet();
             pruneAttackSet(_moveSet, _attackSet);
             pruneAttackSet(attacks, _attackSet);
-            dirtySet(_moveSet);
-            dirtySet(_attackSet);
+//             dirtySet(_moveSet);
+//             dirtySet(_attackSet);
         }
     }
 
     protected void executeAction ()
     {
         // enact the move/fire combination
-        BangController.postAction(this, BangController.MOVE_AND_FIRE, _action);
+        _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
         // and clear everything out
         clearSelection();
     }
@@ -462,7 +478,7 @@ public class BangBoardView extends BoardView
         if (_selection != null) {
             getPieceSprite(_selection).setSelected(false);
             _selection = null;
-            dirtySet(_moveSet);
+//             dirtySet(_moveSet);
             _moveSet.clear();
         }
 
@@ -477,11 +493,11 @@ public class BangBoardView extends BoardView
         if (super.updateMouseTile(mx, my)) {
             // if we have an active surprise, update its area of effect
             if (_surprise != null) {
-                dirtySet(_attackSet);
+//                 dirtySet(_attackSet);
                 _attackSet.clear();
                 _bangobj.board.computeAttacks(
                     _surprise.getRadius(), mx, my, _attackSet);
-                dirtySet(_attackSet);
+//                 dirtySet(_attackSet);
             }
             return true;
         }
@@ -573,7 +589,7 @@ public class BangBoardView extends BoardView
         // if we're out of the game, just reveal everything
         if (!_bangobj.hasLivePieces(_pidx)) {
             _vstate.reveal();
-            dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
+//             dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
             return;
         }
 
@@ -602,14 +618,14 @@ public class BangBoardView extends BoardView
             }
         }
 
-        // now dirty any tiles whose visibility changed
-        for (int yy = 0, ly = _board.getHeight(); yy < ly; yy++) {
-            for (int xx = 0, lx = _board.getHeight(); xx < lx; xx++) {
-                if (_vstate.visibilityChanged(xx, yy)) {
-                    dirtyTile(xx, yy);
-                }
-            }
-        }
+//         // now dirty any tiles whose visibility changed
+//         for (int yy = 0, ly = _board.getHeight(); yy < ly; yy++) {
+//             for (int xx = 0, lx = _board.getHeight(); xx < lx; xx++) {
+//                 if (_vstate.visibilityChanged(xx, yy)) {
+//                     dirtyTile(xx, yy);
+//                 }
+//             }
+//         }
     }
 
     /** Makes enemy pieces visible or invisible based on _vstate. */
@@ -637,20 +653,20 @@ public class BangBoardView extends BoardView
     /** Called to display something useful when an effect is applied. */
     protected void createEffectAnimation (Piece piece, String effect)
     {
-        // currently just update the piece in question immediately
-        Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
-        pieceUpdated(opiece, piece);
+//         // currently just update the piece in question immediately
+//         Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
+//         pieceUpdated(opiece, piece);
 
-        // and create a simple label animation naming the effect
-        Label label = new Label(effect);
-        label.setTextColor(Color.white);
-        label.setAlternateColor(Color.black);
-        label.setStyle(Label.OUTLINE);
-        LabelSprite lsprite = new LabelSprite(label);
-        lsprite.setRenderOrder(100);
-        int px = piece.x * SQUARE, py = piece.y * SQUARE;
-        LinePath path = new LinePath(px, py, px, py - 25, 1000L);
-        addAnimation(new SpriteAnimation(_spritemgr, lsprite, path));
+//         // and create a simple label animation naming the effect
+//         Label label = new Label(effect);
+//         label.setTextColor(Color.white);
+//         label.setAlternateColor(Color.black);
+//         label.setStyle(Label.OUTLINE);
+//         LabelSprite lsprite = new LabelSprite(label);
+//         lsprite.setRenderOrder(100);
+//         int px = piece.x * SQUARE, py = piece.y * SQUARE;
+//         LinePath path = new LinePath(px, py, px, py - 25, 1000L);
+//         addAnimation(new SpriteAnimation(_spritemgr, lsprite, path));
     }
 
     /** Waits for all sprites involved in a shot to stop moving and then
@@ -689,8 +705,8 @@ public class BangBoardView extends BoardView
             }
         }
 
-        public void pathCompleted (Sprite sprite, Path path, long when) {
-            sprite.removeSpriteObserver(this);
+        public void pathCompleted (Sprite sprite, Path path) {
+            sprite.removeObserver(this);
             if (sprite == _ssprite) {
                 applyShot();
                 removeSprite(sprite);
@@ -700,7 +716,7 @@ public class BangBoardView extends BoardView
         }
 
         public void pathCancelled (Sprite sprite, Path path) {
-            sprite.removeSpriteObserver(this);
+            sprite.removeObserver(this);
             if (sprite == _ssprite) {
                 applyShot();
                 removeSprite(sprite);
@@ -720,7 +736,7 @@ public class BangBoardView extends BoardView
             if (isManaged(sprite)) {
                 _managed++;
                 if (sprite.isMoving()) {
-                    sprite.addSpriteObserver(this);
+                    sprite.addObserver(this);
                     _sprites++;
                 }
             }
@@ -734,10 +750,10 @@ public class BangBoardView extends BoardView
             int tx = _target.x * SQUARE + SQUARE/2;
             int ty = _target.y * SQUARE + SQUARE/2;
             int duration = (int)MathUtil.distance(sx, sy, tx, ty) * 2;
-            _ssprite.setLocation(sx, sy);
-            _ssprite.addSpriteObserver(this);
+//             _ssprite.setLocation(sx, sy);
+            _ssprite.addObserver(this);
             addSprite(_ssprite);
-            _ssprite.move(new LinePath(sx, sy, tx, ty, duration));
+//             _ssprite.move(new LinePath(sx, sy, tx, ty, duration));
         }
 
         protected void applyShot ()
@@ -754,7 +770,7 @@ public class BangBoardView extends BoardView
 
     /** Used to remove shot sprites when they reach their target. */
     protected PathObserver _remover = new PathObserver() {
-        public void pathCompleted (Sprite sprite, Path path, long when) {
+        public void pathCompleted (Sprite sprite, Path path) {
             removeSprite(sprite);
         }
         public void pathCancelled (Sprite sprite, Path path) {
@@ -789,7 +805,12 @@ public class BangBoardView extends BoardView
         }
     };
 
+    protected BangController _ctrl;
+
+    protected Vector3f _worldMouse;
+    protected BoundingPickResults _pick = new BoundingPickResults();
     protected Piece _selection;
+
     protected PointSet _moveSet = new PointSet();
     protected int _pidx;
     protected int _downButton = -1;
@@ -799,4 +820,7 @@ public class BangBoardView extends BoardView
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
+
+    /** Used when intersecting the ground. */
+    protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
 }

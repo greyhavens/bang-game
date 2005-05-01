@@ -6,8 +6,10 @@ package com.threerings.bang.client;
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.event.InputDispatcher;
 import com.jme.input.InputHandler;
+import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.system.DisplaySystem;
 
 import com.samskivert.util.Config;
 import com.threerings.resource.ResourceManager;
@@ -179,17 +181,29 @@ public class BangClient
             return _msgmgr;
         }
 
+        public DisplaySystem getDisplay () {
+            return _app.getContext().getDisplay();
+        }
+
         public Renderer getRenderer () {
             return _app.getContext().getRenderer();
         }
 
-        public Node getRoot () {
-            return _app.getContext().getRoot();
+        public Camera getCamera () {
+            return _app.getContext().getCamera();
         }
 
-//         public InputHandler getInputHandler () {
-//             return _app.getContext().getInputHandler();
-//         }
+        public Node getGeometry () {
+            return _app.getContext().getGeometry();
+        }
+
+        public Node getInterface () {
+            return _app.getContext().getInterface();
+        }
+
+        public InputHandler getInputHandler () {
+            return _app.getContext().getInputHandler();
+        }
 
         public InputDispatcher getInputDispatcher () {
             return _app.getContext().getInputDispatcher();

@@ -3,8 +3,8 @@
 
 package com.threerings.bang.client;
 
-import com.jme.bui.BWindow;
 import com.jme.bui.BLookAndFeel;
+import com.jme.bui.BWindow;
 import com.jme.bui.layout.BorderLayout;
 
 import com.threerings.crowd.client.PlaceView;
@@ -28,7 +28,6 @@ public class BangView
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
-//         setLayout(new BorderLayout(5, 5));
         _ctx = ctx;
         _ctrl = ctrl;
 
@@ -37,12 +36,14 @@ public class BangView
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
         chatwin.add(_chat, BorderLayout.CENTER);
 
-        chatwin.setBounds(0, 40, 640, 240);
+        int width = _ctx.getDisplay().getWidth();
+        chatwin.setBounds(10, 20, width-20, 100);
         _ctx.getInputDispatcher().addWindow(chatwin);
-        _ctx.getRoot().attachChild(chatwin);
+        _ctx.getInterface().attachChild(chatwin);
 
-// 	// give ourselves a wee bit of a border
-// 	setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        // create our board view and add it to the display
+        view = new BangBoardView(ctx, ctrl);
+        _ctx.getGeometry().attachChild(view);
 
 //         // create the board view and surprise display
 //         GroupLayout gl = new VGroupLayout(
@@ -88,25 +89,24 @@ public class BangView
         // add the purchase view to the display
         _pview = new PurchaseView(_ctx, cfg, bangobj, pidx);
         _ctx.getInputDispatcher().addWindow(_pview);
-        _ctx.getRoot().attachChild(_pview);
+        _ctx.getInterface().attachChild(_pview);
         _pview.pack();
-        _pview.setLocation(10, 500);
+        int width = _ctx.getDisplay().getWidth();
+        int height = _ctx.getDisplay().getHeight();
+        _pview.setLocation((width - _pview.getWidth())/2,
+                           (height - _pview.getHeight())/2);
     }
 
     /** Called by the controller when the game starts. */
     public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // remove the purchase view from the display
-        _ctx.getRoot().detachChild(_pview);
+        _ctx.getInterface().detachChild(_pview);
         _ctx.getInputDispatcher().removeWindow(_pview);
         _pview = null;
 
-//         // remove the purchase panel and add the game view
-//         remove(_ppanel);
-//         add(_gamePanel, BorderLayout.CENTER);
-
-//         // our view needs to know about the start of the game
-//         view.startGame(bangobj, cfg, pidx);
+        // our view needs to know about the start of the game
+        view.startGame(bangobj, cfg, pidx);
 
 //         // add our surprise panels if necessary
 //         if (_spanel.getComponentCount() == 0) {
@@ -159,9 +159,6 @@ public class BangView
 
     /** The buying phase purchase view. */
     protected PurchaseView _pview;
-
-//     /** The buying phase purchase panel. */
-//     protected PurchasePanel _ppanel;
 
 //     /** Contains the main game view. */
 //     protected JPanel _gamePanel;

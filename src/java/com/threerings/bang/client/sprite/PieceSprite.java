@@ -3,21 +3,13 @@
 
 package com.threerings.bang.client.sprite;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 
 import java.util.Iterator;
 import java.util.List;
 
-import com.samskivert.swing.Label;
-
-import com.threerings.media.sprite.Sprite;
-import com.threerings.media.sprite.SpriteManager;
-import com.threerings.media.util.LinePath;
-import com.threerings.media.util.LineSegmentPath;
-import com.threerings.media.util.MathUtil;
+import com.jme.math.Vector3f;
+import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.util.BangContext;
@@ -32,16 +24,6 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class PieceSprite extends Sprite
 {
-    public PieceSprite (int width, int height)
-    {
-        super(width, height);
-    }
-
-    public PieceSprite ()
-    {
-        this(SQUARE, SQUARE);
-    }
-
     /** Returns the id of the piece associated with this sprite. */
     public int getPieceId ()
     {
@@ -54,7 +36,6 @@ public class PieceSprite extends Sprite
     {
         if (_selected != selected) {
             _selected = selected;
-            invalidate();
         }
     }
 
@@ -76,11 +57,16 @@ public class PieceSprite extends Sprite
         _piece = piece;
         _tick = tick;
 
-        // create our piece id label if we've not already
-        _idLabel = new Label("" + piece.pieceId, Color.black, null);
+        // position ourselves properly to start
+        setLocation(piece.x, piece.y);
+    }
 
-        // position ourselves properly
-        setLocation(SQUARE * piece.x, SQUARE * piece.y);
+    /**
+     * Configures this sprite's tile location.
+     */
+    public void setLocation (int tx, int ty)
+    {
+        setLocalTranslation(new Vector3f(TILE_SIZE * tx, TILE_SIZE * ty, 0f));
     }
 
     /**
@@ -95,37 +81,39 @@ public class PieceSprite extends Sprite
         _tick = tick;
 
         // move ourselves to our new location
-        int nx = piece.x * SQUARE, ny = piece.y * SQUARE;
-        if (nx != _ox || ny != _oy) {
-            if (_mgr == null || _editorMode) {
-                // if we're invisible just warp there
-                setLocation(nx, ny);
+        setLocation(_piece.x, _piece.y);
 
-            } else if (!isMoving()) {
-                List path = null;
-                if (board != null) {
-                    path = board.computePath(opiece, piece.x, piece.y);
-                }
-                if (path != null) {
-                    // convert the tile coordinates to screen coordinates
-                    for (Iterator iter = path.iterator(); iter.hasNext(); ) {
-                        Point p = (Point)iter.next();
-                        p.x *= SQUARE;
-                        p.y *= SQUARE;
-                    }
-                    LineSegmentPath lspath = new LineSegmentPath(path);
-                    lspath.setVelocity(1/3f);
-                    move(lspath);
-                } else {
-                    long duration = (long)
-                        MathUtil.distance(_ox, _oy, nx, ny) * 3;
-                    move(new LinePath(_ox, _oy, nx, ny, duration));
-                }
-            }
+//         int nx = piece.x * SQUARE, ny = piece.y * SQUARE;
+//         if (nx != _ox || ny != _oy) {
+//             if (_mgr == null || _editorMode) {
+//                 // if we're invisible just warp there
+//                 setLocation(nx, ny);
 
-        } else {
-            invalidate();
-        }
+//             } else if (!isMoving()) {
+//                 List path = null;
+//                 if (board != null) {
+//                     path = board.computePath(opiece, piece.x, piece.y);
+//                 }
+//                 if (path != null) {
+//                     // convert the tile coordinates to screen coordinates
+//                     for (Iterator iter = path.iterator(); iter.hasNext(); ) {
+//                         Point p = (Point)iter.next();
+//                         p.x *= SQUARE;
+//                         p.y *= SQUARE;
+//                     }
+//                     LineSegmentPath lspath = new LineSegmentPath(path);
+//                     lspath.setVelocity(1/3f);
+//                     move(lspath);
+//                 } else {
+//                     long duration = (long)
+//                         MathUtil.distance(_ox, _oy, nx, ny) * 3;
+//                     move(new LinePath(_ox, _oy, nx, ny, duration));
+//                 }
+//             }
+
+//         } else {
+//             invalidate();
+//         }
     }
 
     /**
@@ -133,30 +121,27 @@ public class PieceSprite extends Sprite
      */
     public void removed ()
     {
-        // remove ourselves from the sprite manager and go away
-        if (_mgr != null) {
-            ((SpriteManager)_mgr).removeSprite(this);
-        }
+//         // remove ourselves from the sprite manager and go away
+//         if (_mgr != null) {
+//             ((SpriteManager)_mgr).removeSprite(this);
+//         }
     }
 
-    // documentation inherited
-    protected void init ()
-    {
-        super.init();
+//     // documentation inherited
+//     protected void init ()
+//     {
+//         super.init();
+//     }
 
-        // lay out our piece id label
-        _idLabel.layout(_mgr.getMediaPanel());
-    }
-
-    /**
-     * Computes a bounding rectangle around the specifeid piece's various
-     * segments. Assumes all segments are 1x1.
-     */
-    protected Rectangle computeBounds (Piece piece)
-    {
-        _unit.setLocation(SQUARE*piece.x, SQUARE*piece.y);
-        return _unit;
-    }
+//     /**
+//      * Computes a bounding rectangle around the specifeid piece's various
+//      * segments. Assumes all segments are 1x1.
+//      */
+//     protected Rectangle computeBounds (Piece piece)
+//     {
+//         _unit.setLocation(SQUARE*piece.x, SQUARE*piece.y);
+//         return _unit;
+//     }
 
     /**
      * Called by the editor to make pieces warp to their new locations for
@@ -171,12 +156,11 @@ public class PieceSprite extends Sprite
     protected short _tick;
 
     protected boolean _selected;
-    protected Label _idLabel;
 
     /** When activated, causes all pieces to warp instead of smoothly
      * follow a path. */
     protected static boolean _editorMode;
 
-    /** Used by {@link #_computeBounds}. */
-    protected static Rectangle _unit = new Rectangle(0, 0, SQUARE, SQUARE);
+//     /** Used by {@link #_computeBounds}. */
+//     protected static Rectangle _unit = new Rectangle(0, 0, SQUARE, SQUARE);
 }

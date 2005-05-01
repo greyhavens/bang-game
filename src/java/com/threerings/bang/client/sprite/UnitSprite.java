@@ -9,6 +9,11 @@ import java.awt.image.BufferedImage;
 
 import com.samskivert.util.HashIntMap;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+import com.jme.scene.shape.Box;
+
 import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.data.piece.Piece;
@@ -33,14 +38,22 @@ public class UnitSprite extends MobileSprite
     public UnitSprite (String type)
     {
         _type = type;
+
+        // create some simple temporary geometry
+        Box box = new Box("box", new Vector3f(1, 1, 0),
+                          new Vector3f(TILE_SIZE-1, TILE_SIZE-1, TILE_SIZE-2));
+        box.setSolidColor(ColorRGBA.blue);
+        box.setModelBound(new BoundingBox());
+        box.updateModelBound();
+        attachChild(box);
     }
 
-    @Override // documentation inherited
-    public void init (BangContext ctx, Piece piece, short tick)
-    {
-        super.init(ctx, piece, tick);
-        _image = ctx.loadImage("media/units/" + _type + ".png");
-    }
+//     @Override // documentation inherited
+//     public void init (BangContext ctx, Piece piece, short tick)
+//     {
+//         super.init(ctx, piece, tick);
+//         _image = ctx.loadImage("media/units/" + _type + ".png");
+//     }
 
     @Override // documentation inherited
     public boolean isSelectable ()
@@ -49,33 +62,33 @@ public class UnitSprite extends MobileSprite
                 (_piece.ticksUntilFirable(_tick) == 0));
     }
 
-    @Override // documentation inherited
-    public void paint (Graphics2D gfx)
-    {
-        if (_piece.isAlive()) {
-            Color color = (_piece.ticksUntilMovable(_tick) > 0) ?
-                DARKER_COLORS[_piece.owner] : PIECE_COLORS[_piece.owner];
-            gfx.setColor(color);
-            gfx.fillRect(_ox+1, _oy+1, SQUARE-DBAR_SIZE-1, SQUARE-1);
-        }
-        super.paint(gfx);
-    }
+//     @Override // documentation inherited
+//     public void paint (Graphics2D gfx)
+//     {
+//         if (_piece.isAlive()) {
+//             Color color = (_piece.ticksUntilMovable(_tick) > 0) ?
+//                 DARKER_COLORS[_piece.owner] : PIECE_COLORS[_piece.owner];
+//             gfx.setColor(color);
+//             gfx.fillRect(_ox+1, _oy+1, SQUARE-DBAR_SIZE-1, SQUARE-1);
+//         }
+//         super.paint(gfx);
+//     }
 
-    @Override // documentation inherited
-    protected void paintPiece (Graphics2D gfx)
-    {
-        int width = _bounds.width - _oxoff, iwidth = _image.getWidth();
-        int height = _bounds.height - _oyoff, iheight = _image.getHeight();
+//     @Override // documentation inherited
+//     protected void paintPiece (Graphics2D gfx)
+//     {
+//         int width = _bounds.width - _oxoff, iwidth = _image.getWidth();
+//         int height = _bounds.height - _oyoff, iheight = _image.getHeight();
 
-        gfx.drawImage(_image, _ox + (width-iwidth)/2,
-                      _oy + (height-iheight)/2, null);
+//         gfx.drawImage(_image, _ox + (width-iwidth)/2,
+//                       _oy + (height-iheight)/2, null);
 
-        if (_selected) {
-            gfx.setColor(Color.green);
-            gfx.drawRect(_ox, _oy, width-1, height-1);
-        }
-    }
+//         if (_selected) {
+//             gfx.setColor(Color.green);
+//             gfx.drawRect(_ox, _oy, width-1, height-1);
+//         }
+//     }
 
     protected String _type;
-    protected BufferedImage _image;
+//     protected BufferedImage _image;
 }

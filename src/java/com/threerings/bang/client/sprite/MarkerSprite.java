@@ -15,17 +15,17 @@ public class MarkerSprite extends PieceSprite
 {
     public MarkerSprite (boolean start)
     {
-        super(SQUARE, SQUARE);
-        _renderOrder = 5;
-        _color = start ? Color.BLUE : Color.YELLOW;
+//         super(SQUARE, SQUARE);
+//         _renderOrder = 5;
+//         _color = start ? Color.BLUE : Color.YELLOW;
     }
 
-    @Override // documentation inherited
-    public void paint (Graphics2D gfx)
-    {
-        gfx.setColor(_color);
-        gfx.drawOval(_bounds.x, _bounds.y, _bounds.width-1, _bounds.height-1);
-    }
+//     @Override // documentation inherited
+//     public void paint (Graphics2D gfx)
+//     {
+//         gfx.setColor(_color);
+//         gfx.drawOval(_bounds.x, _bounds.y, _bounds.width-1, _bounds.height-1);
+//     }
 
-    protected Color _color;
+//     protected Color _color;
 }

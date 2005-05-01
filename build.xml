@@ -81,6 +81,7 @@
            debug="on" optimize="off" deprecation="on">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint:unchecked"/>
+      <exclude name="com/threerings/bang/editor/**"/>
     </javac>
   </target>
 
