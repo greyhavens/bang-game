@@ -17,6 +17,11 @@ import java.util.Iterator;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.bui.BComponent;
+import com.jme.bui.event.MouseEvent;
+import com.jme.bui.event.MouseMotionListener;
+import com.jme.intersection.BoundingPickResults;
+import com.jme.math.Ray;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -49,6 +54,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * create the actual game view as well as the level editor.
  */
 public class BoardView extends BComponent
+    implements MouseMotionListener
 {
     public BoardView (BangContext ctx)
     {
@@ -217,6 +223,67 @@ public class BoardView extends BComponent
         return _snode.hasChild(sprite);
     }
 
+    /**
+     * Returns the sprite that the mouse is "hovering" over (the one
+     * nearest to the camera that is hit by the ray projecting from the
+     * camera to the ground plane at the current mouse coordinates).
+     */
+    public Sprite getHoverSprite ()
+    {
+        Vector3f camloc = _ctx.getCamera().getLocation();
+        _pick.clear();
+        _snode.findPick(new Ray(camloc, _worldMouse), _pick);
+        float dist = Float.MAX_VALUE;
+        Sprite hit = null;
+        for (int ii = 0; ii < _pick.getNumber(); ii++) {
+            Sprite s = getSprite(_pick.getPickData(ii).getTargetMesh());
+            if (s == null) {
+                continue;
+            }
+            float sdist = camloc.distanceSquared(s.getWorldTranslation());
+            if (sdist < dist) {
+                hit = s;
+                dist = sdist;
+            }
+        }
+        return hit;
+    }
+
+    // documentation inherited from interface MouseMotionListener
+    public void mouseMoved (MouseEvent e)
+    {
+        // determine which tile the mouse is over
+        Vector2f screenPos = new Vector2f(e.getX(), e.getY());
+        _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
+        _worldMouse.subtractLocal(_ctx.getCamera().getLocation());
+
+        // determine which tile the mouse is over
+        float dist = -1f * _groundNormal.dot(_ctx.getCamera().getLocation()) /
+            _groundNormal.dot(_worldMouse);
+        Vector3f ground = _ctx.getCamera().getLocation().add(
+            _worldMouse.mult(dist));
+        ground.z = 0.1f;
+
+        int mx = (int)Math.floor(ground.x / TILE_SIZE);
+        int my = (int)Math.floor(ground.y / TILE_SIZE);
+        ground.x = (float)mx *TILE_SIZE + TILE_SIZE/2;
+        ground.y = (float)my * TILE_SIZE + TILE_SIZE/2;
+//         _cursor.setLocalTranslation(ground);
+
+        if (mx != _mouse.x || my != _mouse.y) {
+            _mouse.x = mx;
+            _mouse.y = my;
+            hoverTileChanged(_mouse.x, _mouse.y);
+        }
+    }
+
+    // documentation inherited from interface MouseMotionListener
+    public void mouseDragged (MouseEvent e)
+    {
+        // first update our mousely business
+        mouseMoved(e);
+    }
+
     // documentation inherited
     protected void wasRemoved ()
     {
@@ -259,20 +326,6 @@ public class BoardView extends BComponent
 //     }
 
     /**
-     * This should be called when the mouse moves to update our notion of
-     * which tile the mouse is hovering over.
-     */
-    protected boolean updateMouseTile (int mx, int my)
-    {
-        if (mx != _mouse.x || my != _mouse.y) {
-            _mouse.x = mx;
-            _mouse.y = my;
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Returns (creating if necessary) the piece sprite associated with
      * the supplied piece. A newly created sprite will automatically be
      * initialized with the supplied piece and added to the board view.
@@ -300,6 +353,14 @@ public class BoardView extends BComponent
         } else {
             log.warning("No sprite for removed piece [id=" + pieceId + "].");
         }
+    }
+
+    /**
+     * This is called when the mouse is moved to hover over a different
+     * board tile.
+     */
+    protected void hoverTileChanged (int tx, int ty)
+    {
     }
 
     protected void clearAttackSet ()
@@ -367,14 +428,6 @@ public class BoardView extends BComponent
         }
     };
 
-//     /** Used to render the contents of a point set. */
-//     protected static interface SetRenderer
-//     {
-//         public Composite getComposite ();
-//         public Stroke getStroke ();
-//         public void render (Graphics2D gfx, Rectangle tile);
-//     }
-
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected BangBoard _board;
@@ -382,60 +435,19 @@ public class BoardView extends BComponent
     protected BoardEventListener _blistener = new BoardEventListener();
 
     protected Node _snode, _bnode;
-
-    protected PointSet _attackSet;
+    protected Vector3f _worldMouse;
+    protected BoundingPickResults _pick = new BoundingPickResults();
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);
 
-//     /** Displayed over top of the board. */
-//     protected LabelSprite _marquee;
+    protected PointSet _attackSet;
 
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();
 
-//     /** Used during rendering. */
-//     protected Rectangle _pr = new Rectangle(0, 0, SQUARE, SQUARE);
-
-//     /** Renders a cross-hair over the specified coordinate. */
-//     protected static SetRenderer _crosshairRenderer = new SetRenderer() {
-//         public Composite getComposite () {
-//             return null;
-//         }
-//         public Stroke getStroke () {
-//             return null; // _thick;
-//         }
-//         public void render (Graphics2D gfx, Rectangle tile) {
-//             gfx.setColor(Color.white);
-//             gfx.drawOval(tile.x+2, tile.y+2, tile.width-4, tile.height-4);
-//             gfx.drawOval(tile.x+10, tile.y+10, tile.width-20, tile.height-20);
-//             int cx = tile.x+tile.width/2, cy = tile.y+tile.height/2;
-//             gfx.drawLine(cx, tile.y+5, cx, tile.y+15);
-//             gfx.drawLine(cx, tile.y+tile.height-5, cx, tile.y+tile.height-15);
-//             gfx.drawLine(tile.x+5, cy, tile.x+15, cy);
-//             gfx.drawLine(tile.x+tile.width-5, cy, tile.x+tile.width-15, cy);
-//         }
-//         protected Stroke _thick = new BasicStroke(2);
-//     };
-
-//     /** Renders a white rounded rectangle over the specified coordinate. */
-//     protected static SetRenderer _whiteRenderer = new SetRenderer() {
-//         public Composite getComposite () {
-//             return SET_ALPHA;
-//         }
-//         public Stroke getStroke () {
-//             return null;
-//         }
-//         public void render (Graphics2D gfx, Rectangle tile) {
-//             gfx.setColor(Color.white);
-//             gfx.fillRoundRect(tile.x+2, tile.y+2,
-//                               tile.width-4, tile.height-4, 8, 8);
-//         }
-//     };
-
-//     /** The alpha level used to render a set of pieces. */
-//     protected static final Composite SET_ALPHA =
-//         AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.30f);
+    /** Used when intersecting the ground. */
+    protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
 
     protected static final ColorRGBA DARK =
         new ColorRGBA(0.3f, 0.3f, 0.3f, 1.0f);

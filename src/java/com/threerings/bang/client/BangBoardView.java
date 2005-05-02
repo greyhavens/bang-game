@@ -58,7 +58,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Displays the main game board.
  */
 public class BangBoardView extends BoardView
-    implements MouseListener, MouseMotionListener
+    implements MouseListener
 {
     public BangBoardView (BangContext ctx, BangController ctrl)
     {
@@ -127,37 +127,6 @@ public class BangBoardView extends BoardView
     public void mouseExited (MouseEvent e)
     {
         // nada
-    }
-
-    // documentation inherited from interface MouseMotionListener
-    public void mouseMoved (MouseEvent e)
-    {
-        // determine which tile the mouse is over
-        Vector2f screenPos = new Vector2f(e.getX(), e.getY());
-        _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
-        _worldMouse.subtractLocal(_ctx.getCamera().getLocation());
-
-        // determine which tile the mouse is over
-        float dist = -1f * _groundNormal.dot(_ctx.getCamera().getLocation()) /
-            _groundNormal.dot(_worldMouse);
-        Vector3f ground = _ctx.getCamera().getLocation().add(
-            _worldMouse.mult(dist));
-        ground.z = 0.1f;
-
-        int tx = (int)Math.floor(ground.x / TILE_SIZE);
-        int ty = (int)Math.floor(ground.y / TILE_SIZE);
-        ground.x = (float)tx *TILE_SIZE + TILE_SIZE/2;
-        ground.y = (float)ty * TILE_SIZE + TILE_SIZE/2;
-//         _cursor.setLocalTranslation(ground);
-
-        updateMouseTile(tx, ty);
-    }
-
-    // documentation inherited from interface MouseMotionListener
-    public void mouseDragged (MouseEvent e)
-    {
-        // first update our mousely business
-        mouseMoved(e);
     }
 
     @Override // documentation inherited
@@ -259,19 +228,10 @@ public class BangBoardView extends BoardView
             return;
         }
 
-        _pick.clear();
-        _snode.findPick(
-            new Ray(_ctx.getCamera().getLocation(), _worldMouse), _pick);
-        for (int ii = 0; ii < _pick.getNumber(); ii++) {
-            Sprite s = getSprite(_pick.getPickData(ii).getTargetMesh());
-            log.info("Picked " + s);
-        }
-
         // check for a piece under the mouse
         PieceSprite sprite = null;
         Piece piece = null;
-//         Sprite s = _spritemgr.getHighestHitSprite(mx, my);
-        Sprite s = null; // TODO: get hit sprite
+        Sprite s = getHoverSprite();
         if (s instanceof PieceSprite) {
             sprite = (PieceSprite)s;
             piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
@@ -426,8 +386,7 @@ public class BangBoardView extends BoardView
 
         // if there is a piece under the cursor, show their possible shots
         PieceSprite sprite = null;
-//        Sprite s = _spritemgr.getHighestHitSprite(mx, my);
-        Sprite s = null; // TODO
+        Sprite s = getHoverSprite();
         if (s instanceof PieceSprite) {
             sprite = (PieceSprite)s;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
@@ -446,6 +405,7 @@ public class BangBoardView extends BoardView
 
     protected void selectPiece (Piece piece)
     {
+        log.info("Selecting " + piece);
         boolean deselect = (piece == _selection);
         clearSelection();
         if (!deselect && piece.isAlive()) {
@@ -488,20 +448,14 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    protected boolean updateMouseTile (int mx, int my)
+    protected void hoverTileChanged (int tx, int ty)
     {
-        if (super.updateMouseTile(mx, my)) {
-            // if we have an active surprise, update its area of effect
-            if (_surprise != null) {
-//                 dirtySet(_attackSet);
-                _attackSet.clear();
-                _bangobj.board.computeAttacks(
-                    _surprise.getRadius(), mx, my, _attackSet);
-//                 dirtySet(_attackSet);
-            }
-            return true;
+        // if we have an active surprise, update its area of effect
+        if (_surprise != null) {
+            _attackSet.clear();
+            _bangobj.board.computeAttacks(
+                _surprise.getRadius(), tx, ty, _attackSet);
         }
-        return false;
     }
 
     @Override // documentation inherited
@@ -807,8 +761,6 @@ public class BangBoardView extends BoardView
 
     protected BangController _ctrl;
 
-    protected Vector3f _worldMouse;
-    protected BoundingPickResults _pick = new BoundingPickResults();
     protected Piece _selection;
 
     protected PointSet _moveSet = new PointSet();
@@ -820,7 +772,4 @@ public class BangBoardView extends BoardView
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
-
-    /** Used when intersecting the ground. */
-    protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
 }

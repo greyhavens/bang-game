@@ -10,12 +10,18 @@ import java.awt.image.BufferedImage;
 import com.samskivert.util.HashIntMap;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Quad;
+import com.jme.scene.state.LightState;
+import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 
 import com.threerings.media.image.ImageUtil;
 
+import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
@@ -38,28 +44,98 @@ public class UnitSprite extends MobileSprite
     public UnitSprite (String type)
     {
         _type = type;
-
-        // create some simple temporary geometry
-        Box box = new Box("box", new Vector3f(1, 1, 0),
-                          new Vector3f(TILE_SIZE-1, TILE_SIZE-1, TILE_SIZE-2));
-        box.setSolidColor(ColorRGBA.blue);
-        box.setModelBound(new BoundingBox());
-        box.updateModelBound();
-        attachChild(box);
     }
 
-//     @Override // documentation inherited
-//     public void init (BangContext ctx, Piece piece, short tick)
-//     {
-//         super.init(ctx, piece, tick);
-//         _image = ctx.loadImage("media/units/" + _type + ".png");
-//     }
+    @Override // documentation inherited
+    public void init (BangContext ctx, Piece piece, short tick)
+    {
+        super.init(ctx, piece, tick);
+
+        BufferedImage image = ctx.loadImage("media/units/" + _type + ".png");
+        _dead = createTexture(ctx, image);
+
+        BufferedImage dimage = new BufferedImage(
+            image.getWidth(), image.getHeight(), image.getType());
+        Graphics2D gfx = (Graphics2D)dimage.getGraphics();
+        gfx.setColor(PIECE_COLORS[_piece.owner]);
+        gfx.fillRect(0, 0, image.getWidth(), image.getHeight());
+        gfx.drawImage(image, 0, 0, null);
+        gfx.dispose();
+        _ready = createTexture(ctx, dimage);
+
+        dimage = new BufferedImage(
+            image.getWidth(), image.getHeight(), image.getType());
+        gfx = (Graphics2D)dimage.getGraphics();
+        gfx.setColor(DARKER_COLORS[_piece.owner]);
+        gfx.fillRect(0, 0, image.getWidth(), image.getHeight());
+        gfx.drawImage(image, 0, 0, null);
+        gfx.dispose();
+        _waiting = createTexture(ctx, dimage);
+
+        _selquad = new Quad("selected", TILE_SIZE, TILE_SIZE);
+        _selquad.setLocalTranslation(
+            new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0f));
+        _selquad.setSolidColor(ColorRGBA.green);
+        _selquad.setLightCombineMode(LightState.OFF);
+        attachChild(_selquad);
+        _selquad.setForceCull(true);
+
+        _box = new Box("piece", new Vector3f(1, 1, 0),
+                       new Vector3f(TILE_SIZE-1, TILE_SIZE-1, TILE_SIZE-2));
+        _box.setModelBound(new BoundingBox());
+        _box.updateModelBound();
+        _box.setRenderState(getTextureState(tick));
+        _box.updateRenderState();
+        attachChild(_box);
+    }
+
+    @Override // documentation inherited
+    public void setSelected (boolean selected)
+    {
+        super.setSelected(selected);
+        _selquad.setForceCull(!selected);
+    }
+
+    @Override // documentation inherited
+    public void updated (BangBoard board, Piece piece, short tick)
+    {
+        super.updated(board, piece, tick);
+
+        // make sure we're using the correct texture
+        TextureState state = getTextureState(tick);
+        if (_box.getRenderStateList()[state.getType()] != state) {
+            _box.setRenderState(state);
+            _box.updateRenderState();
+        }
+    }
 
     @Override // documentation inherited
     public boolean isSelectable ()
     {
         return ((_piece.ticksUntilMovable(_tick) == 0) ||
                 (_piece.ticksUntilFirable(_tick) == 0));
+    }
+
+    protected TextureState createTexture (BangContext ctx, BufferedImage image)
+    {
+        Texture texture = TextureManager.loadTexture(
+            image, Texture.MM_LINEAR_LINEAR, Texture.FM_NEAREST, false);
+        TextureState tstate =
+            ctx.getDisplay().getRenderer().createTextureState();
+        tstate.setEnabled(true);
+        tstate.setTexture(texture);
+        return tstate;
+    }
+
+    protected TextureState getTextureState (short tick)
+    {
+        if (!_piece.isAlive()) {
+            return _dead;
+        } else if (_piece.ticksUntilMovable(_tick) > 0) {
+            return _waiting;
+        } else {
+            return _ready;
+        }
     }
 
 //     @Override // documentation inherited
@@ -90,5 +166,7 @@ public class UnitSprite extends MobileSprite
 //     }
 
     protected String _type;
-//     protected BufferedImage _image;
+    protected Box _box;
+    protected Quad _selquad;
+    protected TextureState _ready, _waiting, _dead;
 }
