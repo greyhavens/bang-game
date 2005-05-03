@@ -242,12 +242,22 @@ public class BangBoardView extends BoardView
             }
         }
 
+        log.info("Clicked " + piece);
+
         // if we are placing a surprise, activate it
         if (_surprise != null) {
 //             log.info("activating " + _surprise);
             _ctrl.activateSurprise(_surprise.surpriseId, _mouse.x, _mouse.y);
             _surprise = null;
             clearAttackSet();
+            return;
+        }
+
+        // select the piece under the mouse if it meets our various and
+        // sundry conditions
+        if (piece != null &&  sprite != null && piece.owner == _pidx &&
+            sprite.isSelectable()) {
+            selectPiece(piece);
             return;
         }
 
@@ -263,13 +273,6 @@ public class BangBoardView extends BoardView
             if (handleClickToMove(_mouse.x, _mouse.y)) {
                 return;
             }
-        }
-
-        // select the piece under the mouse if it meets our various and
-        // sundry conditions
-        if (piece != null &&  sprite != null && piece.owner == _pidx &&
-            sprite.isSelectable()) {
-            selectPiece(piece);
         }
     }
 
@@ -411,15 +414,12 @@ public class BangBoardView extends BoardView
         if (!deselect && piece.isAlive()) {
             _selection = piece;
             getPieceSprite(_selection).setSelected(true);
-            if (_moveSet.size() > 0) {
-//                 dirtySet(_moveSet);
-                _moveSet.clear();
-            }
             PointSet attacks = new PointSet();
             _bangobj.board.computeMoves(piece, _moveSet, attacks);
             _attackSet = new PointSet();
             pruneAttackSet(_moveSet, _attackSet);
             pruneAttackSet(attacks, _attackSet);
+            highlightTiles(_moveSet);
 //             dirtySet(_moveSet);
 //             dirtySet(_attackSet);
         }
@@ -433,14 +433,26 @@ public class BangBoardView extends BoardView
         clearSelection();
     }
 
+    protected void clearMoveSet ()
+    {
+        clearHighlights();
+        _moveSet.clear();
+    }
+
+    protected void clearAttackSet ()
+    {
+        if (_attackSet != null) {
+            _attackSet = null;
+        }
+    }
+
     protected void clearSelection ()
     {
         if (_selection != null) {
             getPieceSprite(_selection).setSelected(false);
             _selection = null;
-//             dirtySet(_moveSet);
-            _moveSet.clear();
         }
+        clearMoveSet();
 
         // clear out any pending action
         _action = null;
@@ -764,6 +776,8 @@ public class BangBoardView extends BoardView
     protected Piece _selection;
 
     protected PointSet _moveSet = new PointSet();
+    protected PointSet _attackSet;
+
     protected int _pidx;
     protected int _downButton = -1;
 

@@ -114,6 +114,7 @@ public class BangClient
         _rsrcmgr = new ResourceManager("rsrc");
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _lnf = BLookAndFeel.getDefaultLookAndFeel();
+        _mcache = new ModelCache(_ctx);
 
         // these manage "online" state
         _locdir = new LocationDirector(_ctx);
@@ -181,6 +182,10 @@ public class BangClient
             return _msgmgr;
         }
 
+        public ModelCache getModelCache () {
+            return _mcache;
+        }
+
         public DisplaySystem getDisplay () {
             return _app.getContext().getDisplay();
         }
@@ -221,6 +226,7 @@ public class BangClient
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;
     protected BLookAndFeel _lnf;
+    protected ModelCache _mcache;
 
     protected Client _client;
     protected LocationDirector _locdir;

@@ -9,8 +9,9 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.Rectangle;
+import java.awt.Stroke;
+import java.awt.image.BufferedImage;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +20,7 @@ import com.jme.bounding.BoundingBox;
 import com.jme.bui.BComponent;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseMotionListener;
-import com.jme.intersection.BoundingPickResults;
+import com.jme.intersection.TrianglePickResults;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -28,6 +29,9 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Quad;
+import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.TextureState;
 
 import com.threerings.jme.sprite.Sprite;
 
@@ -45,6 +49,7 @@ import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.PointSet;
+import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -71,22 +76,47 @@ public class BoardView extends BComponent
         for (int yy = 0; yy < 16; yy++) {
             for (int xx = 0; xx < 16; xx++) {
                 int bx = xx * TILE_SIZE, by = yy * TILE_SIZE;
-                Vector3f min = new Vector3f(bx, by, -1);
-                Vector3f max = new Vector3f(bx+TILE_SIZE, by+TILE_SIZE, 0);
-                Box t = new Box("Box", min, max);
-                t.setModelBound(new BoundingBox());
-                t.updateModelBound();
+                Quad t = new Quad("tile", TILE_SIZE, TILE_SIZE);
+                t.setLocalTranslation(
+                    new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
+//                 Vector3f min = new Vector3f(bx, by, -1);
+//                 Vector3f max = new Vector3f(bx+TILE_SIZE, by+TILE_SIZE, 0);
+//                 Box t = new Box("Box", min, max);
+//                 t.setModelBound(new BoundingBox());
+//                 t.updateModelBound();
+
                 t.setSolidColor((xx + yy) % 2 == 0 ? DARK : LIGHT);
+
                 _bnode.attachChild(t);
             }
         }
         _bnode.updateRenderState();
         _bnode.updateGeometricState(0f, true);
 
-        // we'll hang all of our sprites off this node
-        attachChild(_snode = new Node("sprites"));
-        _snode.updateRenderState();
-        _snode.updateGeometricState(0f, true);
+        // the children of this node will display highlighted tiles
+        _bnode.attachChild(_hnode = new Node("highlights"));
+        _hnode.updateRenderState();
+        _hnode.updateGeometricState(0f, true);
+
+        // we'll hang all of our pieces off this node
+        attachChild(_pnode = new Node("pieces"));
+        _pnode.updateRenderState();
+        _pnode.updateGeometricState(0f, true);
+
+        // create our highlight texture and alpha state
+        BufferedImage image = new BufferedImage(
+            10, 10, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D gfx = (Graphics2D)image.getGraphics();
+        gfx.setColor(Color.red);
+        gfx.fillRect(0, 0, 10, 10);
+        gfx.dispose();
+        _hstate = RenderUtil.createTexture(ctx, image);
+
+        _hastate = ctx.getDisplay().getRenderer().createAlphaState();
+        _hastate.setBlendEnabled(true);
+        _hastate.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+        _hastate.setDstFunction(AlphaState.DB_ONE);
+        _hastate.setEnabled(true);
     }
 
     /**
@@ -202,7 +232,7 @@ public class BoardView extends BComponent
      */
     public void addSprite (Sprite sprite)
     {
-        _snode.attachChild(sprite);
+        _pnode.attachChild(sprite);
         sprite.updateRenderState();
         sprite.updateGeometricState(0.0f, true);
     }
@@ -212,7 +242,7 @@ public class BoardView extends BComponent
      */
     public void removeSprite (Sprite sprite)
     {
-        _snode.detachChild(sprite);
+        _pnode.detachChild(sprite);
     }
 
     /**
@@ -220,7 +250,7 @@ public class BoardView extends BComponent
      */
     public boolean isManaged (PieceSprite sprite)
     {
-        return _snode.hasChild(sprite);
+        return _pnode.hasChild(sprite);
     }
 
     /**
@@ -232,7 +262,7 @@ public class BoardView extends BComponent
     {
         Vector3f camloc = _ctx.getCamera().getLocation();
         _pick.clear();
-        _snode.findPick(new Ray(camloc, _worldMouse), _pick);
+        _pnode.findPick(new Ray(camloc, _worldMouse), _pick);
         float dist = Float.MAX_VALUE;
         Sprite hit = null;
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
@@ -363,19 +393,29 @@ public class BoardView extends BComponent
     {
     }
 
-    protected void clearAttackSet ()
+    /** Creates geometry to highlight the supplied set of tiles. */
+    protected void highlightTiles (PointSet set)
     {
-        if (_attackSet != null) {
-            removeSet(_attackSet);
-            _attackSet = null;
+        for (int ii = 0, ll = set.size(); ii < ll; ii++) {
+            int sx = set.getX(ii), sy = set.getY(ii);
+            Quad quad = new Quad("highlight", TILE_SIZE, TILE_SIZE);
+            quad.setRenderState(_hstate);
+            quad.setRenderState(_hastate);
+            quad.setLocalTranslation(
+                new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
+                             sy * TILE_SIZE + TILE_SIZE/2, 0f));
+            quad.updateRenderState();
+            quad.updateGeometricState(0f, true);
+            _hnode.attachChild(quad);
         }
     }
 
-    protected void removeSet (PointSet set)
+    /** Clears out all highlighted tiles. */
+    protected void clearHighlights ()
     {
-        for (int ii = 0, ll = set.size(); ii < ll; ii++) {
-//             dirtyTile(set.getX(ii), set.getY(ii));
-        }
+        _hnode.detachAllChildren();
+        _hnode.updateRenderState();
+        _hnode.updateGeometricState(0f, true);
     }
 
     /** Called when a piece is updated in the game object. */
@@ -434,14 +474,18 @@ public class BoardView extends BComponent
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected Node _snode, _bnode;
+    protected Node _pnode, _bnode, _hnode;
     protected Vector3f _worldMouse;
-    protected BoundingPickResults _pick = new BoundingPickResults();
+    protected TrianglePickResults _pick = new TrianglePickResults();
+
+    /** Used to texture a quad that highlights a tile. */
+    protected TextureState _hstate;
+
+    /** Used to texture a quad that highlights a tile. */
+    protected AlphaState _hastate;
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);
-
-    protected PointSet _attackSet;
 
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();

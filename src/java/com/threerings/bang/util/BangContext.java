@@ -18,6 +18,8 @@ import com.threerings.jme.JmeContext;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.parlor.util.ParlorContext;
 
+import com.threerings.bang.client.ModelCache;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -34,6 +36,9 @@ public abstract class BangContext
 
     /** Returns the look and feel used to configure the user interface. */
     public abstract BLookAndFeel getLookAndFeel ();
+
+    /** Returns the 3D model cache. */
+    public abstract ModelCache getModelCache ();
 
     /**
      * Translates the specified message using the specified message bundle.

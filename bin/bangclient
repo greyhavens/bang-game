@@ -1,3 +1,4 @@
 #!/bin/sh
 
 `dirname $0`/runjava com.threerings.bang.client.BangApp localhost 4007 "$*" secret
+xset r on
