@@ -61,7 +61,7 @@ public class UnitSprite extends MobileSprite
         AlphaState astate = ctx.getDisplay().getRenderer().createAlphaState();
         astate.setBlendEnabled(true);
         astate.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        astate.setDstFunction(AlphaState.DB_ONE);
+        astate.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
         astate.setEnabled(true);
 
         _ownquad = new Quad("selected", TILE_SIZE, TILE_SIZE);
