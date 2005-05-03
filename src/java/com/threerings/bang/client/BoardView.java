@@ -300,6 +300,18 @@ public class BoardView extends BComponent
         ground.y = (float)my * TILE_SIZE + TILE_SIZE/2;
 //         _cursor.setLocalTranslation(ground);
 
+        // update the sprite over which the mouse is hovering
+        Sprite hover = getHoverSprite();
+        if (hover != _hover) {
+            if (_hover instanceof UnitSprite) {
+                ((UnitSprite)_hover).setHovered(false);
+            }
+            _hover = hover;
+            if (_hover instanceof UnitSprite) {
+                ((UnitSprite)_hover).setHovered(true);
+            }
+        }
+
         if (mx != _mouse.x || my != _mouse.y) {
             _mouse.x = mx;
             _mouse.y = my;
@@ -477,6 +489,7 @@ public class BoardView extends BComponent
     protected Node _pnode, _bnode, _hnode;
     protected Vector3f _worldMouse;
     protected TrianglePickResults _pick = new TrianglePickResults();
+    protected Sprite _hover;
 
     /** Used to texture a quad that highlights a tile. */
     protected TextureState _hstate;

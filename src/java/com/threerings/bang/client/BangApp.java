@@ -36,7 +36,7 @@ public class BangApp extends JmeApp
         Vector3f loc = new Vector3f(80, -60, 200);
         _camera.setLocation(loc);
         Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/6, _camera.getLeft());
+        rotm.fromAngleAxis(-FastMath.PI/8, _camera.getLeft());
         rotm.mult(_camera.getDirection(), _camera.getDirection());
         rotm.mult(_camera.getUp(), _camera.getUp());
         rotm.mult(_camera.getLeft(), _camera.getLeft());

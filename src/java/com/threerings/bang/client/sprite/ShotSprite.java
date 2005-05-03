@@ -6,6 +6,7 @@ package com.threerings.bang.client.sprite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import com.jme.scene.shape.Sphere;
 import com.threerings.jme.sprite.Sprite;
 
 /**
@@ -13,6 +14,12 @@ import com.threerings.jme.sprite.Sprite;
  */
 public class ShotSprite extends Sprite
 {
+    public ShotSprite ()
+    {
+        Sphere ball = new Sphere("bullet", 5, 5, 0.5f);
+        attachChild(ball);
+    }
+
 //     public ShotSprite ()
 //     {
 //         super(5, 5);

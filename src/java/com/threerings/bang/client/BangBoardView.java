@@ -29,6 +29,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
@@ -39,6 +40,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.bang.client.sprite.MobileSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.ShotSprite;
+import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.Effect;
@@ -231,9 +233,8 @@ public class BangBoardView extends BoardView
         // check for a piece under the mouse
         PieceSprite sprite = null;
         Piece piece = null;
-        Sprite s = getHoverSprite();
-        if (s instanceof PieceSprite) {
-            sprite = (PieceSprite)s;
+        if (_hover instanceof PieceSprite) {
+            sprite = (PieceSprite)_hover;
             piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
             // we currently don't do anything with non-player pieces
             if (piece != null && piece.owner == -1) {
@@ -242,7 +243,9 @@ public class BangBoardView extends BoardView
             }
         }
 
-        log.info("Clicked " + piece);
+        if (piece != null) {
+            log.info("Clicked " + piece.info());
+        }
 
         // if we are placing a surprise, activate it
         if (_surprise != null) {
@@ -265,7 +268,15 @@ public class BangBoardView extends BoardView
         if (_selection != null) {
             // and we have an attack set
             if (_attackSet != null) {
-                if (handleClickToAttack(piece, _mouse.x, _mouse.y)) {
+                // if they clicked on a piece, use its coordinates,
+                // otherwise use the coordinates over which the mouse is
+                // hovering
+                int ax = _mouse.x, ay = _mouse.y;
+                if (piece != null) {
+                    ax = piece.x;
+                    ay = piece.y;
+                }
+                if (handleClickToAttack(piece, ax, ay)) {
                     return;
                 }
             }
@@ -314,6 +325,10 @@ public class BangBoardView extends BoardView
      * like to attack. */
     protected boolean handleClickToAttack (Piece piece, int tx, int ty)
     {
+        if (piece != null) {
+            log.info("Clicking to attack " + piece.info());
+        }
+
         // maybe we're clicking on a piece that is in our attack set
         if (_attackSet.contains(tx, ty) &&
             piece != null && piece.owner != _pidx) {
@@ -366,6 +381,7 @@ public class BangBoardView extends BoardView
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (_selection.validTarget(p) && source.contains(p.x, p.y)) {
+                ((UnitSprite)getPieceSprite(p)).setTargeted(true);
                 dest.add(p.x, p.y);
             }
         }
@@ -389,9 +405,8 @@ public class BangBoardView extends BoardView
 
         // if there is a piece under the cursor, show their possible shots
         PieceSprite sprite = null;
-        Sprite s = getHoverSprite();
-        if (s instanceof PieceSprite) {
-            sprite = (PieceSprite)s;
+        if (_hover instanceof PieceSprite) {
+            sprite = (PieceSprite)_hover;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
             if (sprite instanceof MobileSprite && piece.isAlive()) {
                 clearSelection();
@@ -408,7 +423,7 @@ public class BangBoardView extends BoardView
 
     protected void selectPiece (Piece piece)
     {
-        log.info("Selecting " + piece);
+        log.info("Selecting " + piece.info());
         boolean deselect = (piece == _selection);
         clearSelection();
         if (!deselect && piece.isAlive()) {
@@ -443,6 +458,11 @@ public class BangBoardView extends BoardView
     {
         if (_attackSet != null) {
             _attackSet = null;
+        }
+        for (PieceSprite s : _pieces.values()) {
+            if (s instanceof UnitSprite) {
+                ((UnitSprite)s).setTargeted(false);
+            }
         }
     }
 
@@ -619,9 +639,9 @@ public class BangBoardView extends BoardView
     /** Called to display something useful when an effect is applied. */
     protected void createEffectAnimation (Piece piece, String effect)
     {
-//         // currently just update the piece in question immediately
-//         Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
-//         pieceUpdated(opiece, piece);
+        // currently just update the piece in question immediately
+        Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
+        pieceUpdated(opiece, piece);
 
 //         // and create a simple label animation naming the effect
 //         Label label = new Label(effect);
@@ -710,16 +730,18 @@ public class BangBoardView extends BoardView
 
         protected void fireShot ()
         {
+            Vector3f start = new Vector3f(_shooter.x * TILE_SIZE + TILE_SIZE/2,
+                                          _shooter.y * TILE_SIZE + TILE_SIZE/2,
+                                          TILE_SIZE/2);
+            Vector3f end = new Vector3f(_target.x * TILE_SIZE + TILE_SIZE/2,
+                                        _target.y * TILE_SIZE + TILE_SIZE/2,
+                                        TILE_SIZE/2);
             _ssprite = new ShotSprite();
-            int sx = _shooter.x * SQUARE + SQUARE/2;
-            int sy = _shooter.y * SQUARE + SQUARE/2;
-            int tx = _target.x * SQUARE + SQUARE/2;
-            int ty = _target.y * SQUARE + SQUARE/2;
-            int duration = (int)MathUtil.distance(sx, sy, tx, ty) * 2;
-//             _ssprite.setLocation(sx, sy);
+            float duration = start.distance(end) / 10f;
+            _ssprite.setLocalTranslation(start);
             _ssprite.addObserver(this);
             addSprite(_ssprite);
-//             _ssprite.move(new LinePath(sx, sy, tx, ty, duration));
+            _ssprite.move(new LinePath(_ssprite, start, end, duration));
         }
 
         protected void applyShot ()

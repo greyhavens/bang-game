@@ -6,6 +6,7 @@ package com.threerings.bang.util;
 import java.awt.image.BufferedImage;
 
 import com.jme.image.Texture;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
@@ -30,4 +31,22 @@ public class RenderUtil
         tstate.setTexture(texture);
         return tstate;
     }
+
+    /**
+     * Returns an alpha state that combines in the standard way: source
+     * plus destination times one minus source.
+     */
+    public static AlphaState getIconAlpha (BangContext ctx)
+    {
+        if (_ialpha == null) {
+            _ialpha = ctx.getDisplay().getRenderer().createAlphaState();
+            _ialpha.setBlendEnabled(true);
+            _ialpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+            _ialpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+            _ialpha.setEnabled(true);
+        }
+        return _ialpha;
+    }
+
+    protected static AlphaState _ialpha;
 }

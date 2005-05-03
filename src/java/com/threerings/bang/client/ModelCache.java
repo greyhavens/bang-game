@@ -71,7 +71,7 @@ public class ModelCache
             jbr.setProperty("bound", "box");
             model = jbr.loadBinaryFormat(
                 new ByteArrayInputStream(bout.toByteArray()));
-            model.setLocalScale(0.1f);
+            model.setLocalScale(0.06f);
             model.setLocalTranslation(
                 new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0f));
 

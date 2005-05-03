@@ -218,7 +218,7 @@ public abstract class Piece extends SimpleStreamableObject
     {
         String cname = getClass().getName();
         return cname.substring(cname.lastIndexOf(".")+1) + " id:" +
-            pieceId + " o:" + owner + " x:" + x + " y:" + y;
+            pieceId + " o:" + owner + " x:" + x + " y:" + y + " d:" + damage;
     }
 
     /** Returns the stepper used to compute paths for this type of piece. */

@@ -67,6 +67,7 @@ public class PieceSprite extends Sprite
     public void setLocation (int tx, int ty)
     {
         setLocalTranslation(new Vector3f(TILE_SIZE * tx, TILE_SIZE * ty, 0f));
+        updateCollisionTree();
     }
 
     /**
