@@ -3,6 +3,8 @@
 
 package com.threerings.bang.client;
 
+import java.util.logging.Level;
+
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
@@ -11,10 +13,13 @@ import com.jme.util.LoggingSystem;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.LoggingLogProvider;
 
-import com.threerings.jme.JmeApp;
 import com.threerings.util.Name;
+
 import com.threerings.presents.client.Client;
 import com.threerings.presents.net.UsernamePasswordCreds;
+
+import com.threerings.jme.JmeApp;
+import com.threerings.jme.input.GodViewHandler;
 
 import static com.threerings.bang.Log.log;
 
@@ -32,11 +37,15 @@ public class BangApp extends JmeApp
         _client = new BangClient();
         _client.init(this);
 
+        // set up our minimum and maximum zoom
+        GodViewHandler ih = (GodViewHandler)_input;
+        ih.setZoomLimits(50f, 200f);
+
         // set up the camera
-        Vector3f loc = new Vector3f(80, -60, 200);
+        Vector3f loc = new Vector3f(80, 40, 150);
         _camera.setLocation(loc);
         Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/8, _camera.getLeft());
+        rotm.fromAngleAxis(-FastMath.PI/15, _camera.getLeft());
         rotm.mult(_camera.getDirection(), _camera.getDirection());
         rotm.mult(_camera.getUp(), _camera.getUp());
         rotm.mult(_camera.getLeft(), _camera.getLeft());
@@ -80,7 +89,7 @@ public class BangApp extends JmeApp
 
     public static void main (String[] args)
     {
-        LoggingSystem.getLogger().setLevel(java.util.logging.Level.OFF);
+        LoggingSystem.getLogger().setLevel(Level.WARNING);
 
         // set up the proper logging services
         com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());

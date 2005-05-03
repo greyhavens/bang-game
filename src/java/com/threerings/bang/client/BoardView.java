@@ -20,6 +20,7 @@ import com.jme.bounding.BoundingBox;
 import com.jme.bui.BComponent;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseMotionListener;
+import com.jme.bui.event.MouseWheelListener;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
@@ -33,6 +34,7 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
 
+import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -59,7 +61,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * create the actual game view as well as the level editor.
  */
 public class BoardView extends BComponent
-    implements MouseMotionListener
+    implements MouseMotionListener, MouseWheelListener
 {
     public BoardView (BangContext ctx)
     {
@@ -324,6 +326,21 @@ public class BoardView extends BComponent
     {
         // first update our mousely business
         mouseMoved(e);
+    }
+
+    // documentation inherited from interface MouseWheelListener
+    public void mouseWheeled (MouseEvent e)
+    {
+        GodViewHandler ih = (GodViewHandler)_ctx.getInputHandler();
+        float zoom = ih.getZoomLevel();
+        if (e.getDelta() > 0) {
+            log.info("Zooming up " + zoom + "/" + e);
+            zoom = Math.max(0f, zoom - 0.1f);
+        } else {
+            log.info("Zooming down " + zoom + "/" + e);
+            zoom = Math.min(1f, zoom + 0.1f);
+        }
+        ih.setZoomLevel(zoom);
     }
 
     // documentation inherited
