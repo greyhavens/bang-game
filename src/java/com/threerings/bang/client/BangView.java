@@ -6,6 +6,7 @@ package com.threerings.bang.client;
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BWindow;
 import com.jme.bui.layout.BorderLayout;
+import com.jme.bui.layout.TableLayout;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
@@ -132,12 +133,16 @@ public class BangView
     {
         BangObject bangobj = (BangObject)plobj;
 
-//         // add score panels for each of our players
-//         for (int ii = 0; ii < bangobj.players.length; ii++) {
-//             _sidePanel.add(
-//                 new ScorePanel(bangobj, ii), GroupLayout.FIXED, 1+ii);
-//         }
-//         SwingUtil.refresh(_sidePanel);
+        // create and position our score display
+        _scores = new ScoreView(_ctx, bangobj);
+        _ctx.getInputDispatcher().addWindow(_scores);
+        _ctx.getInterface().attachChild(_scores);
+        _scores.pack();
+        _scores.setSize(150, _scores.getHeight());
+        int width = _ctx.getDisplay().getWidth();
+        int height = _ctx.getDisplay().getHeight();
+        _scores.setLocation(width - _scores.getWidth() - 10,
+                            height - _scores.getHeight() - 10);
 
         _chat.willEnterPlace(plobj);
     }
@@ -146,6 +151,7 @@ public class BangView
     public void didLeavePlace (PlaceObject plobj)
     {
         _chat.didLeavePlace(plobj);
+        _ctx.getInputDispatcher().removeWindow(_scores);
     }
 
     /** Giver of life and context. */
@@ -153,6 +159,9 @@ public class BangView
 
     /** Our game controller. */
     protected BangController _ctrl;
+
+    /** Contains the score display. */
+    protected ScoreView _scores;
 
     /** Displays chat. */
     protected ChatView _chat;
