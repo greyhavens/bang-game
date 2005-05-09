@@ -36,19 +36,11 @@ public class BangView
         _ctx = ctx;
         _ctrl = ctrl;
 
-        // create a top-level window to contain our chat display
-        BWindow chatwin = new BWindow(ctx.getLookAndFeel(), new BorderLayout());
-        _chat = new ChatView(_ctx, _ctx.getChatDirector());
-        chatwin.add(_chat, BorderLayout.CENTER);
-
-        int width = _ctx.getDisplay().getWidth();
-        chatwin.setBounds(10, 20, width-20, 100);
-        _ctx.getInputDispatcher().addWindow(chatwin);
-        _ctx.getInterface().attachChild(chatwin.getNode());
-
-        // create our board view and add it to the display
+        // create our various displays
         view = new BangBoardView(ctx, ctrl);
-        _ctx.getGeometry().attachChild(view.getNode());
+        _chatwin = new BWindow(ctx.getLookAndFeel(), new BorderLayout());
+        _chat = new ChatView(_ctx, _ctx.getChatDirector());
+        _chatwin.add(_chat, BorderLayout.CENTER);
     }
 
     /** Called by the controller when the buying phase starts. */
@@ -88,6 +80,13 @@ public class BangView
     {
         BangObject bangobj = (BangObject)plobj;
 
+        // add the main bang view
+        _ctx.getGeometry().attachChild(view.getNode());
+        int width = _ctx.getDisplay().getWidth();
+        _chatwin.setBounds(10, 20, width-20, 100);
+        _ctx.getInputDispatcher().addWindow(_chatwin);
+        _ctx.getInterface().attachChild(_chatwin.getNode());
+
         // create and position our player status displays
         int pcount = bangobj.players.length;
         _pstatus = new BWindow(
@@ -111,7 +110,21 @@ public class BangView
     public void didLeavePlace (PlaceObject plobj)
     {
         _chat.didLeavePlace(plobj);
+
+        // remove our displays
         _ctx.getInputDispatcher().removeWindow(_pstatus);
+        _ctx.getGeometry().detachChild(_pstatus.getNode());
+
+        _ctx.getInputDispatcher().removeWindow(_chatwin);
+        _ctx.getGeometry().detachChild(_chatwin.getNode());
+
+        _ctx.getGeometry().detachChild(view.getNode());
+
+        if (_pview != null) {
+            _ctx.getInputDispatcher().removeWindow(_pview);
+            _ctx.getGeometry().detachChild(_pview.getNode());
+            _pview = null;
+        }
     }
 
     /** Giver of life and context. */
@@ -120,8 +133,8 @@ public class BangView
     /** Our game controller. */
     protected BangController _ctrl;
 
-    /** Contains the player status displays. */
-    protected BWindow _pstatus;
+    /** Contain various onscreen displays. */
+    protected BWindow _pstatus, _chatwin;
 
     /** Displays chat. */
     protected ChatView _chat;
