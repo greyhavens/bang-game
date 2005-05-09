@@ -92,6 +92,14 @@ public class UnitSprite extends MobileSprite
         _tgtquad = RenderUtil.createIcon(ctx, "media/textures/crosshair.png");
         attachChild(_tgtquad);
         _tgtquad.setForceCull(true);
+
+        // this will display our damage
+        _damage = new Quad("damage", DBAR_WIDTH, DBAR_HEIGHT);
+        _damage.setLocalTranslation(
+            new Vector3f(DBAR_WIDTH/2+1, DBAR_HEIGHT/2+1, 0));
+        _damage.setSolidColor(ColorRGBA.green);
+        _damage.setLightCombineMode(LightState.OFF);
+        attachChild(_damage);
     }
 
 //     @Override // documentation inherited
@@ -112,6 +120,11 @@ public class UnitSprite extends MobileSprite
         } else {
             _ownquad.setSolidColor(JPIECE_COLORS[_piece.owner]);
         }
+
+        float size = (100 - piece.damage) * DBAR_WIDTH / 100f;
+        _damage.resize(size, DBAR_HEIGHT);
+        _damage.getLocalTranslation().x = size/2 + 1;
+        _damage.updateGeometricState(0, true);
     }
 
     @Override // documentation inherited
@@ -123,5 +136,9 @@ public class UnitSprite extends MobileSprite
 
     protected String _type;
     protected Node _model;
+    protected Quad _damage;
     protected Quad _ownquad, _hovquad, _tgtquad;
+
+    protected static final float DBAR_WIDTH = TILE_SIZE-2;
+    protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
 }
