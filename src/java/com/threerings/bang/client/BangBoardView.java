@@ -18,10 +18,12 @@ import java.util.List;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
 import com.jme.bui.event.MouseMotionListener;
+import com.jme.effects.ParticleManager;
 import com.jme.intersection.BoundingPickResults;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.scene.TriMesh;
 
 import com.samskivert.swing.Label;
 import com.samskivert.util.StringUtil;
@@ -645,6 +647,20 @@ public class BangBoardView extends BoardView
         // currently just update the piece in question immediately
         Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
         pieceUpdated(opiece, piece);
+
+        if (effect.equals("bang")) {
+            PieceSprite sprite = getPieceSprite(piece);
+            ParticleManager manager = ExplosionFactory.getExplosion();
+            TriMesh exp = manager.getParticles();
+            exp.setLocalScale(0.65f);
+            Vector3f spos = sprite.getLocalTranslation();
+            exp.setLocalTranslation(new Vector3f(spos.x + TILE_SIZE/2,
+                                                 spos.y + TILE_SIZE/2,
+                                                 spos.z));
+            manager.forceRespawn();
+            _pnode.attachChild(exp);
+            exp.setForceView(true);
+        }
 
 //         // and create a simple label animation naming the effect
 //         Label label = new Label(effect);
