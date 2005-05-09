@@ -10,11 +10,14 @@ import com.jme.bui.BContainer;
 import com.jme.bui.BLabel;
 import com.jme.bui.BTextField;
 import com.jme.bui.BWindow;
-import com.samskivert.util.StringUtil;
+import com.jme.bui.TintedBackground;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.TableLayout;
+import com.jme.renderer.ColorRGBA;
+
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
@@ -41,6 +44,9 @@ public class PurchaseView extends BWindow
                          BangObject bangobj, int pidx)
     {
         super(ctx.getLookAndFeel(), new BorderLayout(2, 2));
+
+        setBackground(new TintedBackground(
+                          0, 0, 0, 0, new ColorRGBA(0, 0, 0, 0.5f)));
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);

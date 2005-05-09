@@ -39,7 +39,8 @@ public class UnitSprite extends MobileSprite
     };
 
     public static final ColorRGBA[] JPIECE_COLORS = {
-        ColorRGBA.blue, ColorRGBA.red, ColorRGBA.green, new ColorRGBA(1, 1, 0, 0)
+        ColorRGBA.blue, ColorRGBA.red, ColorRGBA.green,
+        new ColorRGBA(1, 1, 0, 0)
     };
 
     public static final ColorRGBA[] DARKER_COLORS = {
@@ -76,42 +77,28 @@ public class UnitSprite extends MobileSprite
         super.init(ctx, piece, tick);
 
         // this icon is displayed when the mouse is hovered over us
-        _hovquad = createIcon(ctx, "media/textures/hovered.png");
+        _hovquad = RenderUtil.createIcon(ctx, "media/textures/hovered.png");
         attachChild(_hovquad);
         _hovquad.setForceCull(true);
 
         // this icon displays who we are
-        _ownquad = createIcon(ctx, "media/textures/circle.png");
+        _ownquad = RenderUtil.createIcon(ctx, "media/textures/circle.png");
         attachChild(_ownquad);
 
         _model = ctx.getModelCache().getModel(_type);
         attachChild(_model);
 
         // this icon is displayed when we're a target
-        _tgtquad = createIcon(ctx, "media/textures/crosshair.png");
+        _tgtquad = RenderUtil.createIcon(ctx, "media/textures/crosshair.png");
         attachChild(_tgtquad);
         _tgtquad.setForceCull(true);
     }
 
-    protected Quad createIcon (BangContext ctx, String path)
-    {
-        Quad icon = new Quad("icon", TILE_SIZE, TILE_SIZE);
-        icon.setLocalTranslation(new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0f));
-        icon.setRenderState(RenderUtil.getIconAlpha(ctx));
-        icon.setLightCombineMode(LightState.OFF);
-        BufferedImage image = ctx.loadImage(path);
-        TextureState tstate = RenderUtil.createTexture(ctx, image);
-        icon.setRenderState(tstate);
-        icon.updateRenderState();
-        return icon;
-    }
-
-    @Override // documentation inherited
-    public void setSelected (boolean selected)
-    {
-        super.setSelected(selected);
-//         _selquad.setForceCull(!selected);
-    }
+//     @Override // documentation inherited
+//     public void setSelected (boolean selected)
+//     {
+//         super.setSelected(selected);
+//     }
 
     @Override // documentation inherited
     public void updated (BangBoard board, Piece piece, short tick)

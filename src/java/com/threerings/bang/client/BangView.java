@@ -3,8 +3,12 @@
 
 package com.threerings.bang.client;
 
+import java.awt.Dimension;
+
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BWindow;
+import com.jme.bui.TintedBackground;
+import com.jme.renderer.ColorRGBA;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.TableLayout;
 
@@ -40,48 +44,11 @@ public class BangView
         int width = _ctx.getDisplay().getWidth();
         chatwin.setBounds(10, 20, width-20, 100);
         _ctx.getInputDispatcher().addWindow(chatwin);
-        _ctx.getInterface().attachChild(chatwin);
+        _ctx.getInterface().attachChild(chatwin.getNode());
 
         // create our board view and add it to the display
         view = new BangBoardView(ctx, ctrl);
-        _ctx.getGeometry().attachChild(view);
-
-//         // create the board view and surprise display
-//         GroupLayout gl = new VGroupLayout(
-//             GroupLayout.STRETCH, GroupLayout.STRETCH, 5, GroupLayout.TOP);
-//         _gamePanel = new JPanel(gl);
-//         _gamePanel.add(view = new BangBoardView(ctx));
-//         gl = new HGroupLayout(GroupLayout.STRETCH, GroupLayout.STRETCH,
-//                               5, GroupLayout.LEFT);
-//         _spanel = new JPanel(gl);
-//         _gamePanel.add(_spanel, GroupLayout.FIXED);
-
-//         // create our side panel
-//         VGroupLayout sgl = new VGroupLayout(GroupLayout.STRETCH);
-//         sgl.setOffAxisPolicy(GroupLayout.STRETCH);
-//         sgl.setJustification(GroupLayout.TOP);
-//         _sidePanel = new JPanel(sgl);
-//         _sidePanel.setPreferredSize(new Dimension(250, 10));
-
-//         // add a big fat label because we love it!
-//         JLabel vlabel = new JLabel("Bang!");
-//         vlabel.setFont(new Font("Helvetica", Font.BOLD, 24));
-//         vlabel.setForeground(Color.black);
-//         _sidePanel.add(vlabel, GroupLayout.FIXED);
-
-//         // add a chat box
-//         ChatPanel chat = new ChatPanel(ctx);
-//         chat.removeSendButton();
-//         _sidePanel.add(chat);
-
-//         // add a "back" button
-//         JButton back = new JButton("Back to lobby");
-//         back.setActionCommand(BangController.BACK_TO_LOBBY);
-//         back.addActionListener(Controller.DISPATCHER);
-//         _sidePanel.add(back, VGroupLayout.FIXED);
-
-//         // add our side panel to the main display
-//         add(_sidePanel, BorderLayout.EAST);
+        _ctx.getGeometry().attachChild(view.getNode());
     }
 
     /** Called by the controller when the buying phase starts. */
@@ -90,7 +57,7 @@ public class BangView
         // add the purchase view to the display
         _pview = new PurchaseView(_ctx, cfg, bangobj, pidx);
         _ctx.getInputDispatcher().addWindow(_pview);
-        _ctx.getInterface().attachChild(_pview);
+        _ctx.getInterface().attachChild(_pview.getNode());
         _pview.pack();
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
@@ -102,24 +69,12 @@ public class BangView
     public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // remove the purchase view from the display
-        _ctx.getInterface().detachChild(_pview);
+        _ctx.getInterface().detachChild(_pview.getNode());
         _ctx.getInputDispatcher().removeWindow(_pview);
         _pview = null;
 
         // our view needs to know about the start of the game
         view.startGame(bangobj, cfg, pidx);
-
-//         // add our surprise panels if necessary
-//         if (_spanel.getComponentCount() == 0) {
-//             for (int ii = 0; ii < bangobj.players.length; ii++) {
-//                 SurprisePanel sp = new SurprisePanel(ii, pidx);
-//                 _spanel.add(sp);
-//                 // we need to fake a willEnterPlace() because they weren't
-//                 // around when that happened
-//                 sp.willEnterPlace(bangobj);
-//             }
-//         }
-//         SwingUtil.refresh(this);
     }
 
     /** Called by the controller when the game ends. */
@@ -133,16 +88,21 @@ public class BangView
     {
         BangObject bangobj = (BangObject)plobj;
 
-        // create and position our score display
-        _scores = new ScoreView(_ctx, bangobj);
-        _ctx.getInputDispatcher().addWindow(_scores);
-        _ctx.getInterface().attachChild(_scores);
-        _scores.pack();
-        _scores.setSize(150, _scores.getHeight());
-        int width = _ctx.getDisplay().getWidth();
+        // create and position our player status displays
+        int pcount = bangobj.players.length;
+        _pstatus = new BWindow(
+            _ctx.getLookAndFeel(),
+            new TableLayout(pcount, 10, 10, TableLayout.STRETCH));
+        _pstatus.setBackground(new TintedBackground(
+                                   0, 0, 0, 0, new ColorRGBA(0, 0, 0, 0.5f)));
+        for (int ii = 0; ii < pcount; ii++) {
+            _pstatus.add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
+        }
+        _ctx.getInputDispatcher().addWindow(_pstatus);
+        _ctx.getInterface().attachChild(_pstatus.getNode());
+        _pstatus.setSize(_ctx.getDisplay().getWidth() - 20, 50);
         int height = _ctx.getDisplay().getHeight();
-        _scores.setLocation(width - _scores.getWidth() - 10,
-                            height - _scores.getHeight() - 10);
+        _pstatus.setLocation(10, height - _pstatus.getHeight() - 10);
 
         _chat.willEnterPlace(plobj);
     }
@@ -151,7 +111,7 @@ public class BangView
     public void didLeavePlace (PlaceObject plobj)
     {
         _chat.didLeavePlace(plobj);
-        _ctx.getInputDispatcher().removeWindow(_scores);
+        _ctx.getInputDispatcher().removeWindow(_pstatus);
     }
 
     /** Giver of life and context. */
@@ -160,21 +120,12 @@ public class BangView
     /** Our game controller. */
     protected BangController _ctrl;
 
-    /** Contains the score display. */
-    protected ScoreView _scores;
+    /** Contains the player status displays. */
+    protected BWindow _pstatus;
 
     /** Displays chat. */
     protected ChatView _chat;
 
     /** The buying phase purchase view. */
     protected PurchaseView _pview;
-
-//     /** Contains the main game view. */
-//     protected JPanel _gamePanel;
-
-//     /** Contains all the stuff on the side. */
-//     protected JPanel _sidePanel;
-
-//     /** Displays our surprise panels. */
-//     protected JPanel _spanel;
 }

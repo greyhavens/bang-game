@@ -88,6 +88,10 @@ public class BangController extends GameController
     /** Handles a request to place a surprise. */
     public void placeSurprise (int surpriseId)
     {
+        if (_bangobj == null || !_bangobj.isInPlay()) {
+            return;
+        }
+
         Surprise s = (Surprise)_bangobj.surprises.get(surpriseId);
         if (s == null) {
             log.warning("Requested to place non-existent surprise '" +

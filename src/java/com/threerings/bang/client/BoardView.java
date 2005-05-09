@@ -71,10 +71,10 @@ public class BoardView extends BComponent
         _ctx.getInputDispatcher().setDefaultMouseTarget(this);
 
         // we don't actually want to render in orthographic mode
-        setRenderQueueMode(Renderer.QUEUE_INHERIT);
+        _node.setRenderQueueMode(Renderer.QUEUE_INHERIT);
 
         // we'll hang the board geometry off this node
-        attachChild(_bnode = new Node("board"));
+        _node.attachChild(_bnode = new Node("board"));
         for (int yy = 0; yy < 16; yy++) {
             for (int xx = 0; xx < 16; xx++) {
                 int bx = xx * TILE_SIZE, by = yy * TILE_SIZE;
@@ -101,7 +101,7 @@ public class BoardView extends BComponent
         _hnode.updateGeometricState(0f, true);
 
         // we'll hang all of our pieces off this node
-        attachChild(_pnode = new Node("pieces"));
+        _node.attachChild(_pnode = new Node("pieces"));
         _pnode.updateRenderState();
         _pnode.updateGeometricState(0f, true);
 
@@ -119,6 +119,10 @@ public class BoardView extends BComponent
         _hastate.setSrcFunction(AlphaState.SB_SRC_ALPHA);
         _hastate.setDstFunction(AlphaState.DB_ONE);
         _hastate.setEnabled(true);
+
+        // this is used to target tiles when deploying a surprise
+        _tgtstate = RenderUtil.createTexture(
+            ctx, ctx.loadImage("media/textures/crosshair.png"));
     }
 
     /**
@@ -439,6 +443,20 @@ public class BoardView extends BComponent
         }
     }
 
+    /** Creates geometry to "target" the supplied set of tiles. */
+    protected void targetTiles (PointSet set)
+    {
+        for (int ii = 0, ll = set.size(); ii < ll; ii++) {
+            int sx = set.getX(ii), sy = set.getY(ii);
+            Quad quad = RenderUtil.createIcon(_ctx, _tgtstate);
+            quad.setLocalTranslation(
+                new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
+                             sy * TILE_SIZE + TILE_SIZE/2, 0f));
+            quad.updateGeometricState(0f, true);
+            _hnode.attachChild(quad);
+        }
+    }
+
     /** Clears out all highlighted tiles. */
     protected void clearHighlights ()
     {
@@ -507,6 +525,9 @@ public class BoardView extends BComponent
     protected Vector3f _worldMouse;
     protected TrianglePickResults _pick = new TrianglePickResults();
     protected Sprite _hover;
+
+    /** Used to texture a quad that "targets" a tile. */
+    protected TextureState _tgtstate;
 
     /** Used to texture a quad that highlights a tile. */
     protected TextureState _hstate;

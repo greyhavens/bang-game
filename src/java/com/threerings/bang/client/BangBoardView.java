@@ -85,7 +85,7 @@ public class BangBoardView extends BoardView
         _attackSet = new PointSet();
         _bangobj.board.computeAttacks(
             _surprise.getRadius(), _mouse.x, _mouse.y, _attackSet);
-//         dirtySet(_attackSet);
+        targetTiles(_attackSet);
         log.info("Placing " + _surprise);
     }
 
@@ -99,7 +99,7 @@ public class BangBoardView extends BoardView
     public void mousePressed (MouseEvent e)
     {
         switch (_downButton = e.getButton()) {
-        case MouseEvent.BUTTON3:
+        case MouseEvent.BUTTON2:
             // button 3 (right button) creates or extends a path
             handleRightPress(e.getX(), e.getY());
             break;
@@ -457,6 +457,7 @@ public class BangBoardView extends BoardView
     protected void clearAttackSet ()
     {
         if (_attackSet != null) {
+            clearHighlights();
             _attackSet = null;
         }
         for (PieceSprite s : _pieces.values()) {
@@ -484,9 +485,11 @@ public class BangBoardView extends BoardView
     {
         // if we have an active surprise, update its area of effect
         if (_surprise != null) {
+            clearHighlights();
             _attackSet.clear();
             _bangobj.board.computeAttacks(
                 _surprise.getRadius(), tx, ty, _attackSet);
+            targetTiles(_attackSet);
         }
     }
 
@@ -737,7 +740,7 @@ public class BangBoardView extends BoardView
                                         _target.y * TILE_SIZE + TILE_SIZE/2,
                                         TILE_SIZE/2);
             _ssprite = new ShotSprite();
-            float duration = start.distance(end) / 10f;
+            float duration = start.distance(end) / 30f;
             _ssprite.setLocalTranslation(start);
             _ssprite.addObserver(this);
             addSprite(_ssprite);

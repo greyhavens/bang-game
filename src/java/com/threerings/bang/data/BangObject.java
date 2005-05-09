@@ -206,10 +206,12 @@ public class BangObject extends GameObject
     public int countLivePieces (int pidx)
     {
         int pcount = 0;
-        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
-            if (p.owner == pidx && p.isAlive()) {
-                pcount++;
+        if (pieces != null) {
+            for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
+                Piece p = (Piece)iter.next();
+                if (p.owner == pidx && p.isAlive()) {
+                    pcount++;
+                }
             }
         }
         return pcount;
