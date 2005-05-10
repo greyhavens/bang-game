@@ -5,7 +5,6 @@ package com.threerings.bang.client;
 
 import java.awt.event.ActionEvent;
 
-import com.samskivert.swing.event.CommandEvent;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.MessageEvent;

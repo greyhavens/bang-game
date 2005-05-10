@@ -25,7 +25,6 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.TriMesh;
 
-import com.samskivert.swing.Label;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.util.MathUtil;

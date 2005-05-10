@@ -57,6 +57,9 @@ public class BangClient
 
         // listen for logon
         _client.addClientObserver(this);
+
+        // create and display the logon view
+        displayLogon();
     }
 
     /**
@@ -71,6 +74,9 @@ public class BangClient
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
+        // remove the logon display
+        clearLogon();
+
         // create a one player game of bang
         BangConfig config = new BangConfig();
         config.players = new Name[] {
@@ -124,6 +130,26 @@ public class BangClient
 
         // warm up the explosion factory
         ExplosionFactory.warmup(_ctx);
+    }
+
+    protected void displayLogon ()
+    {
+        _lview = new LogonView(_ctx);
+        _ctx.getInputDispatcher().addWindow(_lview);
+        _ctx.getInterface().attachChild(_lview.getNode());
+
+        int width = _ctx.getDisplay().getWidth();
+        int height = _ctx.getDisplay().getHeight();
+        _lview.pack();
+        _lview.setLocation((width - _lview.getWidth())/2,
+                           (height - _lview.getHeight())/2);
+    }
+
+    protected void clearLogon ()
+    {
+        _ctx.getInputDispatcher().removeWindow(_lview);
+        _ctx.getInterface().detachChild(_lview.getNode());
+        _lview = null;
     }
 
     /**
@@ -236,6 +262,8 @@ public class BangClient
     protected OccupantDirector _occdir;
     protected ChatDirector _chatdir;
     protected ParlorDirector _pardir;
+
+    protected LogonView _lview;
 
     /** The prefix prepended to localization bundle names before looking
      * them up in the classpath. */
