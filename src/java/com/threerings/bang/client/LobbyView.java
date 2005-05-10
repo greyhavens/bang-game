@@ -13,6 +13,8 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.util.BangContext;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Displays the interface for a Bang! lobby.
  */
@@ -23,6 +25,8 @@ public class LobbyView extends BWindow
     {
         super(ctx.getLookAndFeel(), new BorderLayout());
         _ctx = ctx;
+
+        log.info("Created.");
 
         _chatwin = new BWindow(ctx.getLookAndFeel(), new BorderLayout());
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
