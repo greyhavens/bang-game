@@ -1,4 +1,9 @@
 #!/bin/sh
 
-`dirname $0`/runjava com.threerings.bang.client.BangApp localhost 4007 "$*" secret
+if [ ! -z "$*" ]; then
+    CREDS="$* secret"
+else
+    CREDS=""
+fi
+`dirname $0`/runjava com.threerings.bang.client.BangApp localhost 4007 $CREDS
 xset r on
