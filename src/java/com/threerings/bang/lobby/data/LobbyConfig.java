@@ -1,11 +1,11 @@
 //
 // $Id$
 
-package com.threerings.bang.data;
+package com.threerings.bang.lobby.data;
 
 import com.threerings.crowd.data.PlaceConfig;
 
-import com.threerings.bang.client.LobbyController;
+import com.threerings.bang.lobby.client.LobbyController;
 
 /**
  * Defines the configuration for the Bang! lobby.

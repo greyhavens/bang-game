@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.data;
+package com.threerings.bang.lobby.data;
 
 import com.threerings.presents.dobj.DSet;
 

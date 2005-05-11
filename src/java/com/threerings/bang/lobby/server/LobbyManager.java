@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.server;
+package com.threerings.bang.lobby.server;
 
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.SetAdapter;
@@ -11,8 +11,8 @@ import com.threerings.crowd.server.PlaceManager;
 import com.threerings.parlor.server.TableManager;
 import com.threerings.parlor.server.TableManagerProvider;
 
-import com.threerings.bang.data.LobbyConfig;
-import com.threerings.bang.data.LobbyObject;
+import com.threerings.bang.lobby.data.LobbyConfig;
+import com.threerings.bang.lobby.data.LobbyObject;
 
 /**
  * Takes care of the server side of a Bang! lobby.

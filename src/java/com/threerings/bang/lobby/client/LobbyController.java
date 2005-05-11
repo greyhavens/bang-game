@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.lobby.client;
 
 import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.client.PlaceView;
@@ -9,7 +9,7 @@ import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 
-import com.threerings.bang.data.LobbyConfig;
+import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.util.BangContext;
 
 /**

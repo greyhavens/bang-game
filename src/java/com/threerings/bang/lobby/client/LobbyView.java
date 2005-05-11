@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.lobby.client;
 
 import com.jme.bui.BWindow;
 import com.jme.bui.event.ActionEvent;
@@ -22,6 +22,7 @@ import com.threerings.parlor.data.TableLobbyObject;
 
 import com.threerings.jme.chat.ChatView;
 
+import com.threerings.bang.lobby.data.LobbyObject;
 import com.threerings.bang.util.BangContext;
 
 import java.util.Iterator;
@@ -248,8 +249,8 @@ public class LobbyView extends BWindow
     // documentation inherited from interface SeatednessObserver
     public void seatednessDidChange (boolean isSeated)
     {
-        // update the create table button
-        _create.setEnabled(!isSeated);
+//         // update the create table button
+//         _create.setEnabled(!isSeated);
     }
 
     /**
