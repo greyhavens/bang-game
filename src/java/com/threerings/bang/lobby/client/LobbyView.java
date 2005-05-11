@@ -40,11 +40,8 @@ public class LobbyView extends BWindow
         super(ctx.getLookAndFeel(), new BorderLayout());
         _ctx = ctx;
 
-        log.info("Created.");
-
-        _chatwin = new BWindow(ctx.getLookAndFeel(), new BorderLayout());
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
-        _chatwin.add(_chat, BorderLayout.CENTER);
+        add(_chat, BorderLayout.SOUTH);
 
         MessageBundle msgs =
             ctx.getMessageManager().getBundle("lobby");
@@ -132,16 +129,16 @@ public class LobbyView extends BWindow
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
-        int width = _ctx.getDisplay().getWidth();
-        _chatwin.setBounds(10, 20, width-20, 120);
-        _ctx.getInputDispatcher().addWindow(_chatwin);
-        _ctx.getInterface().attachChild(_chatwin.getNode());
-        _chat.willEnterPlace(plobj);
+        setBounds(0, 0, _ctx.getDisplay().getWidth(),
+                  _ctx.getDisplay().getWidth());
+        _ctx.getInputDispatcher().addWindow(this);
+        _ctx.getInterface().attachChild(getNode());
 
         // switch to a gray background
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-        // pass the good word on to our table director
+        // pass will enter place onto interested parties
+        _chat.willEnterPlace(plobj);
         _tbldtr.willEnterPlace(plobj);
 
         // iterate over the tables already active in this lobby and put
@@ -155,15 +152,14 @@ public class LobbyView extends BWindow
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
+        _tbldtr.didLeavePlace(plobj);
         _chat.didLeavePlace(plobj);
-        _ctx.getInputDispatcher().removeWindow(_chatwin);
-        _ctx.getGeometry().detachChild(_chatwin.getNode());
+
+        _ctx.getInputDispatcher().removeWindow(this);
+        _ctx.getGeometry().detachChild(getNode());
 
         // restore the black background
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
-
-        // pass the good word on to our table director
-        _tbldtr.didLeavePlace(plobj);
 
 //         // clear out our table lists
 //         _matchList.removeAll();
@@ -282,13 +278,6 @@ public class LobbyView extends BWindow
     }
 
     protected BangContext _ctx;
-
-    /** Contain various onscreen displays. */
-    protected BWindow _chatwin;
-
-    /** Displays chat. */
     protected ChatView _chat;
-
-    /** Handles the meat of the table business. */
     protected TableDirector _tbldtr;
 }

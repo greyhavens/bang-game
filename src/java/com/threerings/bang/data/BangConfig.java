@@ -13,6 +13,9 @@ import com.threerings.bang.client.BangController;
  */
 public class BangConfig extends GameConfig
 {
+    /** The number of people playing the game. */
+    public int seats = 2;
+
     /** The number of rounds to play. */
     public int rounds = 3;
 
