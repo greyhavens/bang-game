@@ -21,6 +21,6 @@ public class LobbyConfig extends PlaceConfig
     // documentation inherited
     public String getManagerClassName ()
     {
-        return "com.threerings.bang.server.LobbyManager";
+        return "com.threerings.bang.lobby.server.LobbyManager";
     }
 }
