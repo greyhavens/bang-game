@@ -87,6 +87,7 @@ public class UnitSprite extends MobileSprite
 
         _model = ctx.getModelCache().getModel(_type);
         attachChild(_model);
+        _model.updateRenderState();
 
         // this icon is displayed when we're a target
         _tgtquad = RenderUtil.createIcon(ctx, "media/textures/crosshair.png");
