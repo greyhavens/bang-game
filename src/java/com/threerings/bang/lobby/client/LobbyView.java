@@ -203,7 +203,7 @@ public class LobbyView extends BWindow
         _chat.didLeavePlace(plobj);
 
         _ctx.getInputDispatcher().removeWindow(this);
-        _ctx.getGeometry().detachChild(getNode());
+        _ctx.getInterface().detachChild(getNode());
 
         // restore the black background
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
