@@ -1,0 +1,42 @@
+#
+# $Id: getdown.txt 19918 2005-03-23 20:44:52Z mdb $
+#
+# Bang! development client deployment descriptor
+
+# General information
+appbase = @app_root@/client
+
+# Configure the update UI
+ui.name = Bang! Howdy
+ui.background = background.png
+ui.progress = 32, 211, 361, 15
+ui.progress_bar = C9B612
+ui.progress_text = FBFAD8
+ui.status = 30, 125, 364, 80
+ui.status_text = FFEC48
+
+# Our game code
+code = code/bang-client.jar
+code = code/lwjgl.jar
+
+# Linux specific native libraries
+resource = [linux] native/liblwjgl.so
+resource = [linux] native/libopenal.so
+resource = [windows] native/lwjgl.dll
+resource = [windows] native/lwjglaudio.dll
+resource = [windows] native/lwjgl-fmod3.dll
+
+# Our media resources
+resource = background.png
+
+# Parameters passed to the JVM
+jvmarg = -Xmx128M
+jvmarg = -Djava.library.path=%APPDIR%/native
+jvmarg = -Dappdir=%APPDIR%
+
+# The main Java class
+class = com.threerings.bang.client.BangApp
+
+# Some temporary arguments
+apparg = baltic.sea.earth.threerings.net
+apparg = 4007

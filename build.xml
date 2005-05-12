@@ -120,6 +120,17 @@
     </signjar>
   </target>
 
+  <!-- builds the standalone editor jar -->
+  <target name="client">
+    <!-- generate the all-in-wonder jar file -->
+    <taskdef resource="proguard/ant/task.properties"
+             classpath="lib/proguard.jar"/>
+    <proguard configuration="etc/bang-client.pro"/>
+    <copy todir="pages/client/code" file="dist/bang-client.jar"/>
+    <!-- copy the getdown.txt file into the right place -->
+    <copy todir="pages/client" file="etc/getdown.txt"/>
+  </target>
+
   <!-- a target for rebuilding everything -->
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
