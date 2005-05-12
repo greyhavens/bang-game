@@ -98,22 +98,24 @@ public class BangClient
         // remove the logon display
         clearLogon();
 
-//         // create a one player game of bang
-//         BangConfig config = new BangConfig();
-//         config.players = new Name[] {
-//             _client.getCredentials().getUsername(), new Name("AI") };
-//         config.ais = new GameAI[] { null, new GameAI(0, 50) };
-//         ConfirmListener cl = new ConfirmListener() {
-//             public void requestProcessed () {
-//             }
-//             public void requestFailed (String reason) {
-//                 log.warning("Failed to create game: " + reason);
-//             }
-//         };
-//         _ctx.getParlorDirector().startSolitaire(config, cl);
-
-        // temporary hack: enter our lobby
-        _ctx.getLocationDirector().moveTo(2);
+        if (System.getProperty("test") != null) {
+            // create a one player game of bang
+            BangConfig config = new BangConfig();
+            config.players = new Name[] {
+                _client.getCredentials().getUsername(), new Name("AI") };
+            config.ais = new GameAI[] { null, new GameAI(0, 50) };
+            ConfirmListener cl = new ConfirmListener() {
+                public void requestProcessed () {
+                }
+                public void requestFailed (String reason) {
+                    log.warning("Failed to create game: " + reason);
+                }
+            };
+            _ctx.getParlorDirector().startSolitaire(config, cl);
+        } else {
+            // temporary hack: enter our lobby
+            _ctx.getLocationDirector().moveTo(2);
+        }
     }
 
     // documentation inherited from interface SessionObserver

@@ -32,6 +32,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 
 import com.threerings.jme.input.GodViewHandler;
@@ -74,36 +75,15 @@ public class BoardView extends BComponent
         _node.setRenderQueueMode(Renderer.QUEUE_INHERIT);
 
         // we'll hang the board geometry off this node
-        _node.attachChild(_bnode = new Node("board"));
-        for (int yy = 0; yy < 16; yy++) {
-            for (int xx = 0; xx < 16; xx++) {
-                int bx = xx * TILE_SIZE, by = yy * TILE_SIZE;
-                Quad t = new Quad("tile", TILE_SIZE, TILE_SIZE);
-                t.setLocalTranslation(
-                    new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
-//                 Vector3f min = new Vector3f(bx, by, -1);
-//                 Vector3f max = new Vector3f(bx+TILE_SIZE, by+TILE_SIZE, 0);
-//                 Box t = new Box("Box", min, max);
-//                 t.setModelBound(new BoundingBox());
-//                 t.updateModelBound();
-
-                t.setSolidColor((xx + yy) % 2 == 0 ? DARK : LIGHT);
-
-                _bnode.attachChild(t);
-            }
-        }
-        _bnode.updateRenderState();
-        _bnode.updateGeometricState(0f, true);
+        Node bnode = new Node("board");
+        _node.attachChild(bnode);
+        bnode.attachChild(_tnode = new Node("tiles"));
 
         // the children of this node will display highlighted tiles
-        _bnode.attachChild(_hnode = new Node("highlights"));
-        _hnode.updateRenderState();
-        _hnode.updateGeometricState(0f, true);
+        bnode.attachChild(_hnode = new Node("highlights"));
 
         // we'll hang all of our pieces off this node
         _node.attachChild(_pnode = new Node("pieces"));
-        _pnode.updateRenderState();
-        _pnode.updateGeometricState(0f, true);
 
         // create our highlight texture and alpha state
         BufferedImage image = new BufferedImage(
@@ -152,6 +132,9 @@ public class BoardView extends BComponent
      */
     public void refreshBoard ()
     {
+        // remove all the board tile geometry
+        _tnode.detachAllChildren();
+
         // remove any old sprites
         for (PieceSprite sprite : _pieces.values()) {
             removeSprite(sprite);
@@ -162,6 +145,21 @@ public class BoardView extends BComponent
         _board = _bangobj.board;
         _board.shadowPieces(_bangobj.pieces.iterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
+
+        // create the board tiles
+        for (int yy = 0; yy < _board.getHeight(); yy++) {
+            for (int xx = 0; xx < _board.getWidth(); xx++) {
+                int bx = xx * TILE_SIZE, by = yy * TILE_SIZE;
+                Quad t = new Quad("tile", TILE_SIZE, TILE_SIZE);
+                _tnode.attachChild(t);
+                t.setLocalTranslation(
+                    new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
+                t.setSolidColor(getColor(_board.getTile(xx, yy)));
+            }
+        }
+        _tnode.setLightCombineMode(LightState.OFF);
+        _tnode.updateRenderState();
+        _tnode.updateGeometricState(0, true);
 
         // create sprites for all of the pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
@@ -374,19 +372,19 @@ public class BoardView extends BComponent
 //         setViewLocation(nx, ny);
     }
 
-//     protected Color getColor (Terrain tile)
-//     {
-//         Color color = null;
-//         switch (tile) {
-//         case DIRT: color = Color.orange.darker(); break;
-//         case ROAD: color = Color.gray; break;
-//         case TALL_GRASS: color = Color.green; break;
-//         case WATER: color = Color.blue; break;
-//         case LEAF_BRIDGE: color = Color.lightGray; break;
-//         default: color = Color.black; break;
-//         }
-//         return color;
-//     }
+    protected ColorRGBA getColor (Terrain tile)
+    {
+        ColorRGBA color = null;
+        switch (tile) {
+        case DIRT: color = BROWN; break;
+        case ROAD: color = ColorRGBA.gray; break;
+        case TALL_GRASS: color = ColorRGBA.green; break;
+        case WATER: color = ColorRGBA.blue; break;
+        case LEAF_BRIDGE: color = ColorRGBA.lightGray; break;
+        default: color = ColorRGBA.black; break;
+        }
+        return color;
+    }
 
     /**
      * Returns (creating if necessary) the piece sprite associated with
@@ -521,7 +519,7 @@ public class BoardView extends BComponent
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected Node _pnode, _bnode, _hnode;
+    protected Node _pnode, _tnode, _hnode;
     protected Vector3f _worldMouse;
     protected TrianglePickResults _pick = new TrianglePickResults();
     protected Sprite _hover;
@@ -548,4 +546,6 @@ public class BoardView extends BComponent
         new ColorRGBA(0.3f, 0.3f, 0.3f, 1.0f);
     protected static final ColorRGBA LIGHT =
         new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f);
+    protected static final ColorRGBA BROWN =
+        new ColorRGBA(204/255f, 153/255f, 51/255f, 1.0f);
 }

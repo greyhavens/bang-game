@@ -31,65 +31,6 @@ import static com.threerings.bang.Log.log;
  */
 public class BangApp extends JmeApp
 {
-    // documentation inherited
-    public void init ()
-    {
-        super.init();
-
-        // initialize our client instance
-        _client = new BangClient();
-        _client.init(this);
-
-        // set up our minimum and maximum zoom
-        GodViewHandler ih = (GodViewHandler)_input;
-        ih.setZoomLimits(50f, 200f);
-
-        // set up the camera
-        Vector3f loc = new Vector3f(80, 40, 150);
-        _camera.setLocation(loc);
-        Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/15, _camera.getLeft());
-        rotm.mult(_camera.getDirection(), _camera.getDirection());
-        rotm.mult(_camera.getUp(), _camera.getUp());
-        rotm.mult(_camera.getLeft(), _camera.getLeft());
-        _camera.update();
-
-        // speed up key input
-        _input.setKeySpeed(150f);
-    }
-
-    public void run (String server, int port, String username, String password)
-    {
-        Client client = _client.getContext().getClient();
-
-        // pass them on to the client
-        log.info("Using [server=" + server + ", port=" + port + "].");
-        client.setServer(server, port);
-
-        // configure the client with some credentials and logon
-        if (username != null && password != null) {
-            // create and set our credentials
-            client.setCredentials(
-                new UsernamePasswordCreds(new Name(username), password));
-            client.logon();
-        }
-
-        // now start up the main event loop
-        run();
-    }
-
-    // documentation inherited
-    public void stop ()
-    {
-        // log off before we shutdown
-        Client client = _client.getContext().getClient();
-        if (client.isLoggedOn()) {
-            client.logoff(false);
-        }
-        log.info("Stopping.");
-        super.stop();
-    }
-
     public static void main (String[] args)
     {
         // we do this all in a strange order to avoid logging anything
@@ -137,6 +78,64 @@ public class BangApp extends JmeApp
         BangApp app = new BangApp();
         app.init();
         app.run(server, port, username, password);
+    }
+
+    // documentation inherited
+    public void init ()
+    {
+        super.init();
+
+        // initialize our client instance
+        _client = new BangClient();
+        _client.init(this);
+
+        // set up our minimum and maximum zoom
+        GodViewHandler ih = (GodViewHandler)_input;
+        ih.setZoomLimits(50f, 200f);
+
+        // set up the camera
+        Vector3f loc = new Vector3f(80, 40, 150);
+        _camera.setLocation(loc);
+        Matrix3f rotm = new Matrix3f();
+        rotm.fromAngleAxis(-FastMath.PI/15, _camera.getLeft());
+        rotm.mult(_camera.getDirection(), _camera.getDirection());
+        rotm.mult(_camera.getUp(), _camera.getUp());
+        rotm.mult(_camera.getLeft(), _camera.getLeft());
+        _camera.update();
+
+        // speed up key input
+        _input.setKeySpeed(150f);
+    }
+
+    public void run (String server, int port, String username, String password)
+    {
+        Client client = _client.getContext().getClient();
+
+        // pass them on to the client
+        log.info("Using [server=" + server + ", port=" + port + "].");
+        client.setServer(server, port);
+
+        // configure the client with some credentials and logon
+        if (username != null && password != null) {
+            // create and set our credentials
+            client.setCredentials(
+                new UsernamePasswordCreds(new Name(username), password));
+            client.logon();
+        }
+
+        // now start up the main event loop
+        run();
+    }
+
+    protected void cleanup ()
+    {
+        super.cleanup();
+
+        // log off before we shutdown
+        Client client = _client.getContext().getClient();
+        if (client.isLoggedOn()) {
+            client.logoff(false);
+        }
     }
 
     protected BangClient _client;

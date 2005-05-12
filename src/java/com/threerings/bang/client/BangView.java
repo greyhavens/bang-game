@@ -17,6 +17,7 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.jme.chat.ChatView;
 
+import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.util.BangContext;
@@ -46,6 +47,11 @@ public class BangView
     /** Called by the controller when the buying phase starts. */
     public void buyingPhase (BangObject bangobj, BangConfig cfg, int pidx)
     {
+        // set up the background according to which player we are
+        ColorRGBA color = (pidx == -1) ?
+            ColorRGBA.gray : UnitSprite.JPIECE_COLORS[pidx];
+        _ctx.getRenderer().setBackgroundColor(color);
+
         // add the purchase view to the display
         _pview = new PurchaseView(_ctx, cfg, bangobj, pidx);
         _ctx.getInputDispatcher().addWindow(_pview);
@@ -80,6 +86,8 @@ public class BangView
 
         // add the main bang view
         _ctx.getGeometry().attachChild(view.getNode());
+
+        // add our chat display
         int width = _ctx.getDisplay().getWidth();
         _chatwin.setBounds(10, 20, width-20, 100);
         _ctx.getInputDispatcher().addWindow(_chatwin);
@@ -89,8 +97,8 @@ public class BangView
         _pstatus = new BWindow(
             _ctx.getLookAndFeel(),
             new TableLayout(pcount, 10, 10, TableLayout.STRETCH));
-        _pstatus.setBackground(new TintedBackground(
-                                   0, 0, 0, 0, new ColorRGBA(0, 0, 0, 0.5f)));
+        _pstatus.setBackground(
+            new TintedBackground(0, 0, 0, 0, new ColorRGBA(0, 0, 0, 0.5f)));
         for (int ii = 0; ii < pcount; ii++) {
             _pstatus.add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
         }
