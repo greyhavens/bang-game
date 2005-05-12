@@ -3,10 +3,18 @@
 
 package com.threerings.bang.lobby.client;
 
+import com.jme.bui.BButton;
+import com.jme.bui.BContainer;
+import com.jme.bui.BLabel;
 import com.jme.bui.BWindow;
+import com.jme.bui.util.Dimension;
+import com.jme.bui.border.CompoundBorder;
+import com.jme.bui.border.EmptyBorder;
+import com.jme.bui.border.LineBorder;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
+import com.jme.bui.layout.GroupLayout;
 import com.jme.renderer.ColorRGBA;
 
 import com.threerings.util.MessageBundle;
@@ -18,10 +26,12 @@ import com.threerings.parlor.client.SeatednessObserver;
 import com.threerings.parlor.client.TableDirector;
 import com.threerings.parlor.client.TableObserver;
 import com.threerings.parlor.data.Table;
+import com.threerings.parlor.data.TableConfig;
 import com.threerings.parlor.data.TableLobbyObject;
 
 import com.threerings.jme.chat.ChatView;
 
+import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.lobby.data.LobbyObject;
 import com.threerings.bang.util.BangContext;
 
@@ -37,10 +47,12 @@ public class LobbyView extends BWindow
 {
     public LobbyView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), new BorderLayout());
+        super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
         _ctx = ctx;
 
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
+        _chat.setBorder(new EmptyBorder(5, 0, 5, 5));
+        _chat.setPreferredSize(new Dimension(100, 150));
         add(_chat, BorderLayout.SOUTH);
 
         MessageBundle msgs =
@@ -51,6 +63,27 @@ public class LobbyView extends BWindow
 
         // add ourselves as a seatedness observer
         _tbldtr.addSeatednessObserver(this);
+
+        BContainer top = new BContainer(GroupLayout.makeHStretch());
+        top.setBorder(new EmptyBorder(5, 5, 5, 0));
+
+        BContainer plist = createLabeledList(msgs.get("m.pending_games"));
+        _penders = (BContainer)plist.getComponent(1);
+        _penders.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
+                                              new EmptyBorder(5, 5, 5, 5)));
+        BContainer blist = new BContainer(
+            GroupLayout.makeHoriz(GroupLayout.CENTER));
+        BButton create = new BButton(msgs.get("m.create"), "create");
+        create.addListener(this);
+        blist.add(create);
+        plist.add(blist, BorderLayout.SOUTH);
+        top.add(plist);
+
+        BContainer ilist = createLabeledList(msgs.get("m.in_progress"));
+        _inplay = (BContainer)ilist.getComponent(1);
+        _inplay.setBorder(new LineBorder(ColorRGBA.black));
+        top.add(ilist);
+        add(top, BorderLayout.CENTER);
 
 //         // set up a layout manager
 // 	HGroupLayout gl = new HGroupLayout(HGroupLayout.STRETCH);
@@ -126,11 +159,21 @@ public class LobbyView extends BWindow
 //         add(panel);
     }
 
+    protected BContainer createLabeledList (String label)
+    {
+        BContainer outer = new BContainer(new BorderLayout(5, 5));
+        outer.add(new BLabel(label), BorderLayout.NORTH);
+        GroupLayout vlay = GroupLayout.makeVert(
+            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
+        outer.add(new BContainer(vlay), BorderLayout.CENTER);
+        return outer;
+    }
+
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
         setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                  _ctx.getDisplay().getWidth());
+                  _ctx.getDisplay().getHeight());
         _ctx.getInputDispatcher().addWindow(this);
         _ctx.getInterface().attachChild(getNode());
 
@@ -152,6 +195,10 @@ public class LobbyView extends BWindow
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
+        // clear out our table lists
+        _penders.removeAll();
+        _inplay.removeAll();
+
         _tbldtr.didLeavePlace(plobj);
         _chat.didLeavePlace(plobj);
 
@@ -160,10 +207,6 @@ public class LobbyView extends BWindow
 
         // restore the black background
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
-
-//         // clear out our table lists
-//         _matchList.removeAll();
-//         _playList.removeAll();
     }
 
     // documentation inherited from interface TableObserver
@@ -171,11 +214,10 @@ public class LobbyView extends BWindow
     {
         log.info("Table added [table=" + table + "].");
 
-//         // create a table item for this table and insert it into the
-//         // appropriate list
-//         JPanel panel = table.inPlay() ? _playList : _matchList;
-//         panel.add(new TableItem(_ctx, _tbldtr, table));
-//         SwingUtil.refresh(panel);
+        // create a table item for this table and insert it into the
+        // appropriate list
+        BContainer host = table.inPlay() ? _inplay : _penders;
+        host.add(new TableItem(_ctx, _tbldtr, table));
     }
 
     // documentation inherited from interface TableObserver
@@ -194,14 +236,12 @@ public class LobbyView extends BWindow
         // let the item perform any updates it finds necessary
         item.tableUpdated(table);
 
-//         // and we may need to move the item from the match to the in-play
-//         // list if it just transitioned
-//         if (table.gameOid != -1 && item.getParent() == _matchList) {
-//             _matchList.remove(item);
-//             SwingUtil.refresh(_matchList);
-//             _playList.add(item);
-//             SwingUtil.refresh(_playList);
-//         }
+        // and we may need to move the item from the match to the in-play
+        // list if it just transitioned
+        if (table.gameOid != -1 && item.getParent() == _penders) {
+            _penders.remove(item);
+            _inplay.add(item);
+        }
     }
 
     // documentation inherited from interface TableObserver
@@ -217,10 +257,9 @@ public class LobbyView extends BWindow
             return;
         }
 
-//         // remove this item from the user interface
-//         JPanel panel = (JPanel)item.getParent();
-//         panel.remove(item);
-//         SwingUtil.refresh(panel);
+        // remove this item from the user interface
+        BContainer parent = (BContainer)item.getParent();
+        parent.remove(item);
 
         // let the little fellow know that we gave him the boot
         item.tableRemoved();
@@ -239,7 +278,9 @@ public class LobbyView extends BWindow
 //         // fill in our number of seats configuration
 //         config.setDesiredPlayers(_pslide.getValue());
 
-//         _tbldtr.createTable(config);
+        TableConfig tconfig = new TableConfig();
+        tconfig.desiredPlayerCount = 2;
+        _tbldtr.createTable(tconfig, new BangConfig());
     }
 
     // documentation inherited from interface SeatednessObserver
@@ -255,23 +296,23 @@ public class LobbyView extends BWindow
      */
     protected TableItem getTableItem (int tableId)
     {
-//         // first check the match list
-//         int ccount = _matchList.getComponentCount();
-//         for (int i = 0; i < ccount; i++) {
-//             TableItem child = (TableItem)_matchList.getComponent(i);
-//             if (child.table.getTableId() == tableId) {
-//                 return child;
-//             }
-//         }
+        // first check the pending tables list
+        int ccount = _penders.getComponentCount();
+        for (int i = 0; i < ccount; i++) {
+            TableItem child = (TableItem)_penders.getComponent(i);
+            if (child.table.getTableId() == tableId) {
+                return child;
+            }
+        }
 
-//         // then the inplay list
-//         ccount = _playList.getComponentCount();
-//         for (int i = 0; i < ccount; i++) {
-//             TableItem child = (TableItem)_playList.getComponent(i);
-//             if (child.table.getTableId() == tableId) {
-//                 return child;
-//             }
-//         }
+        // then the inplay list
+        ccount = _inplay.getComponentCount();
+        for (int i = 0; i < ccount; i++) {
+            TableItem child = (TableItem)_inplay.getComponent(i);
+            if (child.table.getTableId() == tableId) {
+                return child;
+            }
+        }
 
         // sorry charlie
         return null;
@@ -280,4 +321,7 @@ public class LobbyView extends BWindow
     protected BangContext _ctx;
     protected ChatView _chat;
     protected TableDirector _tbldtr;
+
+    protected BContainer _penders;
+    protected BContainer _inplay;
 }

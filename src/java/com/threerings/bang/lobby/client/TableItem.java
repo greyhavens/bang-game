@@ -6,6 +6,10 @@ package com.threerings.bang.lobby.client;
 import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
 import com.jme.bui.BLabel;
+import com.jme.bui.border.EmptyBorder;
+import com.jme.bui.border.CompoundBorder;
+import com.jme.bui.border.LineBorder;
+import com.jme.renderer.ColorRGBA;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.TableLayout;
@@ -40,7 +44,10 @@ public class TableItem extends BContainer
      */
     public TableItem (BangContext ctx, TableDirector tdtr, Table table)
     {
-        super(new TableLayout(3, 5, 5));
+        super(new TableLayout(3, 5, 5, TableLayout.STRETCH));
+
+        setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
+                                     new EmptyBorder(5, 5, 5, 5)));
 
         _ctx = ctx;
         _self = ((BodyObject)ctx.getClient().getClientObject()).username;
