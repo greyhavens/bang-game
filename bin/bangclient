@@ -6,5 +6,5 @@ else
     CREDS=""
 fi
 CLASS=com.threerings.bang.client.BangApp
-`dirname $0`/runjava -Dno_log_redir=true $CLASS localhost 4007 $CREDS
+`dirname $0`/runjava -- -Dno_log_redir=true $CLASS localhost 4007 $CREDS
 xset r on
