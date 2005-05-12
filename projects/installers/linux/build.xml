@@ -1,0 +1,73 @@
+<!-- project build configuration -->
+<project name="Bang Linux Installer" default="devclient" basedir=".">
+
+  <!-- load up our configuration information -->
+  <property name="base.dir" value="../../.."/>
+  <property name="web.home" value="${base.dir}/pages"/>
+  <property name="temp.dir" value="bang_install"/>
+  <property file="${base.dir}/deployment.properties"/>
+
+  <!-- creates an install -->
+  <target name="instbuild">
+    <mkdir dir="${temp.dir}"/>
+
+    <copy todir="${temp.dir}">
+      <fileset dir="../data" includes="getdown-pro.jar"/>
+      <fileset dir="../${default_locale}" includes="license.txt"/>
+      <fileset dir="." includes="bang"/>
+      <fileset dir="." includes="desktop.png"/>
+      <fileset dir="${web.home}/${bclient_ident}">
+        <include name="getdown.txt"/>
+        <include name="background.png"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${temp.dir}" overwrite="true" encoding="UTF-8">
+      <fileset dir="." includes="finish_install.sh"/>
+      <filterset>
+        <filter token="client_ident" value="${bclient_ident}"/>
+        <filter token="client_title" value="${bclient_title}"/>
+      </filterset>
+    </copy>
+
+    <exec executable="chmod">
+      <arg line="a+rx"/>
+      <arg line="${temp.dir}/finish_install.sh"/>
+      <arg line="${temp.dir}/bang"/>
+    </exec>
+
+    <exec executable="makeself">
+      <arg line="${temp.dir}"/>
+      <arg line="${web.home}/${bclient_ident}/${installer.name}"/>
+      <arg line="${bclient_ident}"/>
+      <arg line="./finish_install.sh"/>
+      <arg line="$0"/>
+    </exec>
+
+    <delete dir="${temp.dir}"/>
+  </target>
+
+  <!-- creates the devclient installer -->
+  <target name="devprops">
+    <property name="bclient_ident" value="devclient"/>
+    <property name="bclient_title" value="${client_title} Dev"/>
+    <property name="installer.name" value="dev-install.bin"/>
+  </target>
+  <target name="devclient" depends="devprops,instbuild"/>
+
+  <!-- creates the test client installer -->
+  <target name="tprops">
+    <property name="bclient_ident" value="${client_ident}"/>
+    <property name="bclient_title" value="${client_title}"/>
+    <property name="installer.name" value="test-install.bin"/>
+  </target>
+  <target name="tclient" depends="tprops,instbuild"/>
+
+  <!-- creates the main client installer -->
+  <target name="props">
+    <property name="bclient_ident" value="${client_ident}"/>
+    <property name="bclient_title" value="${client_title}"/>
+    <property name="installer.name" value="bang-install.bin"/>
+  </target>
+  <target name="client" depends="props,instbuild"/>
+</project>

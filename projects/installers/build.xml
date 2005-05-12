@@ -1,0 +1,47 @@
+<!-- project build configuration -->
+<project name="Bang Installers" default="devclient" basedir=".">
+
+  <!-- load up our configuration information -->
+  <property name="base.dir" value="../.."/>
+  <property name="web.home" value="${base.dir}/pages"/>
+  <property file="${base.dir}/deployment.properties"/>
+
+  <!-- builds and installs the dev installers -->
+  <target name="devclient">
+    <exec dir="${default_locale}" executable="makensis" failonerror="true">
+      <arg line="-V2"/>
+      <arg line="dev-installer.nsi"/>
+    </exec>
+    <copy todir="${web.home}/devclient/">
+      <fileset dir="${default_locale}" includes="dev-install.exe"/>
+    </copy>
+    <ant target="devclient" dir="linux" antfile="build.xml" inheritAll="no"/>
+  </target>
+
+  <!-- builds and installs the test installers -->
+  <target name="tclient">
+    <exec dir="${default_locale}" executable="makensis" failonerror="true">
+      <arg line="-V2"/>
+      <arg line="test-installer.nsi"/>
+    </exec>
+    <copy todir="${web.home}/aclient/">
+      <fileset dir="${default_locale}" includes="test-install.exe"/>
+      <fileset dir="${default_locale}" includes="test-install.dmg"/>
+    </copy>
+    <ant target="tclient" dir="linux" antfile="build.xml" inheritAll="no"/>
+  </target>
+
+  <!-- builds and installs the production installers -->
+  <target name="client">
+    <exec dir="${default_locale}" executable="makensis" failonerror="true">
+      <arg line="-V2"/>
+      <arg line="bang-installer.nsi"/>
+    </exec>
+    <copy todir="${web.home}/client/">
+      <fileset dir="${default_locale}" includes="bang-install.exe"/>
+      <fileset dir="${default_locale}" includes="bang-install.dmg"/>
+    </copy>
+    <!-- build the Linux installer -->
+    <ant target="client" dir="linux" antfile="build.xml" inheritAll="no"/>
+  </target>
+</project>

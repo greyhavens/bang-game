@@ -1,0 +1,186 @@
+<!-- project build configuration -->
+<project name="Bang Mac Installer" default="devclient" basedir=".">
+
+  <!-- load up our configuration information -->
+  <property name="base.dir" value="../../.."/>
+  <property file="${base.dir}/deployment.properties"/>
+  <property file="${base.dir}/build.properties"/>
+  <property name="web.home" value="${web_dir}/pages"/>
+  <property name="inst.dir" value="dist"/>
+  <property name="jdir" value="Contents/Resources/Java"/>
+
+  <taskdef name="jarbundler"
+    classpath="${base.dir}/lib/jarbundler-1.2.jar"
+    classname="com.loomcom.ant.tasks.jarbundler.JarBundler"/>
+
+  <!-- clean the build -->
+  <target name="clean">
+     <delete dir="${inst.dir}"/>
+  </target>
+
+  <!-- creates the macintosh application -->
+  <target name="app">
+    <mkdir dir="${inst.dir}"/>
+    <copy file="${base.dir}/projects/getdown/dist/getdown-pro.jar"
+          tofile="${inst.dir}/getdown-dop.jar"/>
+
+    <jarbundler dir="${inst.dir}" name="${app_base.name}" 
+      mainclass="com.threerings.getdown.launcher.Getdown" 
+      workingdirectory="$APP_PACKAGE/Contents/Resources/Java"
+      jars="${inst.dir}/getdown-dop.jar"
+      vmoptions="-Dappdir=."
+      version="1.0"
+      infostring="${client_ident} ${version}"
+      icon="desktop.icns"
+      stubfile="JavaApplicationStub"/>
+
+    <copy todir="${inst.dir}/${app.name}/${jdir}/">
+      <fileset dir="../${default_locale}">
+        <include name="background.png"/>
+      </fileset>
+    </copy>
+
+    <echo file="${inst.dir}/${app.name}/${jdir}/getdown.txt"
+      message="appbase = ${client_root_url}/${client_ident}/client/"/>
+
+    <!-- Prepare for imaging -->
+    <mkdir dir="${inst.dir}/imgSrc/.background"/>
+    <copy todir="${inst.dir}/imgSrc/.background/">
+      <fileset dir=".">
+        <include name="ypp_banner.png"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${inst.dir}/imgSrc/">
+       <fileset dir="${inst.dir}">
+         <include name="${app.name}/**"/>
+       </fileset>
+    </copy>
+
+    <!-- Fix permissions, no matter how silly the umask made them -->
+    <exec executable="/bin/chmod">
+      <arg line="-R"/>
+      <arg line="u+w,go-w,a+r"/>
+      <arg line="'${inst.dir}/imgSrc'"/>
+    </exec>
+    <exec executable="/bin/chmod">
+      <arg line="a+x"/>
+      <arg line="'${inst.dir}/imgSrc/${app.name}/Contents/MacOS/JavaApplicationStub'"/>
+    </exec>
+  </target>
+
+  <!-- create a disk image -->
+  <!-- the image will be blank if imgSrc has not been populated! -->
+  <target name="image">
+
+    <!-- Generate Read-Only image -->
+    <exec executable="/usr/bin/hdiutil" failonerror="true">
+      <arg line="create"/>
+      <!-- Image source directory -->
+      <arg line="-srcfolder"/>
+      <arg file="${inst.dir}/imgSrc"/>
+      <!-- Volume name -->
+      <arg line="-volname"/>
+      <arg line="'Puzzle Pirates'"/>
+      <!-- Output File (.dmg extension is automatically added) -->
+      <arg file="${inst.dir}/Puzzle Pirates TMP"/>
+    </exec>
+
+    <exec executable="/usr/bin/hdiutil" failonerror="true">
+      <arg line="convert"/>
+      <arg line="'${inst.dir}/Puzzle Pirates TMP.dmg'"/>
+      <arg line="-format"/>
+      <arg line="UDRW"/>
+      <arg line="-o"/>
+      <arg line="'${inst.dir}/Puzzle Pirates RW'"/>
+    </exec>
+
+    <delete file="${inst.dir}/Puzzle Pirates TMP.dmg"/>
+    <echo message="Read/Write disk image generated at"/>
+    <echo message="${inst.dir}/Puzzle Pirates RW.dmg"/>
+    <echo message="Mounting the image. Add background artwork, position"/>
+    <echo message="(center) and resize (96x96) the application icon, and"/>
+    <echo message="then run the 'image-seal' target."/>
+    <echo message="Be sure to eject the disk image when you're done!"/>
+    <exec executable="/usr/bin/open" failonerror="true">
+      <arg line="'${inst.dir}/Puzzle Pirates RW.dmg'"/>
+    </exec>
+  </target>
+
+  <target name="image-seal">
+    <!-- Generate compressed read-only internet-enabled image from -->
+    <!-- read-write image -->
+    <exec executable="/usr/bin/hdiutil" failonerror="true">
+      <arg line="convert"/>
+      <arg line="'${inst.dir}/Puzzle Pirates RW.dmg'"/>
+      <arg line="-format"/>
+      <arg line="UDRO"/>
+      <arg line="-o"/>
+      <arg line="'${inst.dir}/Puzzle Pirates TMP'"/>
+    </exec>
+
+    <exec executable="/usr/bin/hdiutil" failonerror="true">
+      <arg line="convert"/>
+      <arg line="'${inst.dir}/Puzzle Pirates TMP.dmg'"/>
+      <arg line="-format"/>
+      <arg line="UDZO"/>
+      <arg line="-o"/>
+      <arg line="'${inst.dir}/bang-install'"/>
+    </exec>
+    <delete file="${inst.dir}/Puzzle Pirates TMP.dmg"/>
+
+    <exec executable="/usr/bin/hdiutil" failonerror="true">
+      <arg line="internet-enable"/>
+      <arg line="'${inst.dir}/bang-install.dmg'"/>
+    </exec>
+
+  </target> 
+  
+  <!-- do the additional bits to make the full application -->
+  <target name="makefull">
+    <mkdir dir="${inst.dir}/${app.name}/${jdir}/code"/>
+    <copy todir="${inst.dir}/${app.name}/${jdir}/code"> 
+          <fileset dir="${web.home}/${bclient_ident}/${client_dir}/code"/>
+    </copy>
+    <copy todir="${inst.dir}/${app.name}/${jdir}/rsrc">
+      <fileset dir="${web.home}/${bclient_ident}/${client_dir}/rsrc"/>
+    </copy>
+    <copy overwrite="true" todir="${inst.dir}/${app.name}/${jdir}/">
+        <fileset dir="${web.home}/${bclient_ident}/${client_dir}">
+          <include name="getdown.txt"/>
+          <include name="digest.txt"/>
+          <include name="background.png"/>
+        </fileset>
+    </copy>
+  </target>
+
+  <!-- creates the devclient app -->
+  <target name="devprops">
+    <property name="bclient_ident" value="devclient"/>
+    <property name="client_dir" value="client"/>
+    <property name="app.name" value="Dev Bang Howdy.app"/>
+    <property name="app_base.name" value="Dev Bang Howdy"/>
+  </target>
+  <target name="devclient" depends="devprops,app"/>
+  <target name="devclient_full" depends="devprops,app,makefull"/>
+
+  <!-- creates the client app -->
+  <target name="props">
+    <property name="bclient_ident" value="${client_ident}"/>
+    <property name="client_dir" value="${version}"/>
+    <property name="app.name" value="Bang Howdy.app"/>
+    <property name="app_base.name" value="Bang Howdy"/>
+  </target>
+  <target name="yoclient" depends="props,app"/>
+  <target name="yoclient_full" depends="props,app,makefull"/>
+
+  <!-- creates the tclient installer -->
+  <target name="tprops">
+    <property name="bclient_ident" value="${client_ident}"/>
+    <property name="client_dir" value="${version}"/>
+    <property name="app.name" value="Bang Howdy Test.app"/>
+    <property name="app_base.name" value="Bang Howdy Test"/>
+  </target>
+  <target name="tclient" depends="tprops,app"/>
+
+</project>
