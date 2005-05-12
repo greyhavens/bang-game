@@ -3,6 +3,9 @@
 
 package com.threerings.bang.client;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.logging.Level;
 
 import com.jme.math.FastMath;
@@ -89,6 +92,25 @@ public class BangApp extends JmeApp
 
     public static void main (String[] args)
     {
+        // we do this all in a strange order to avoid logging anything
+        // unti we set up our log formatter but we can't do that until
+        // after we've redirected system out and err
+        String dlog = null;
+        if (System.getProperty("no_log_redir") == null) {
+            dlog = BangClient.localDataDir("bang.log");
+            try {
+                PrintStream logOut = new PrintStream(
+                    new FileOutputStream(dlog), true);
+                System.setOut(logOut);
+                System.setErr(logOut);
+
+            } catch (IOException ioe) {
+                log.warning("Failed to open debug log [path=" + dlog +
+                            ", error=" + ioe + "].");
+                dlog = null;
+            }
+        }
+
         LoggingSystem.getLogger().setLevel(Level.WARNING);
 
         // set up the proper logging services

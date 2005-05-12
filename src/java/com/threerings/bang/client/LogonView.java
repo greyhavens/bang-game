@@ -51,6 +51,9 @@ public class LogonView extends BWindow
         add(cont, BorderLayout.CENTER);
 
         add(_status = new BLabel(""), BorderLayout.SOUTH);
+
+        // add our logon listener
+        _ctx.getClient().addClientObserver(_listener);
     }
 
     // documentation inherited from interface ActionListener

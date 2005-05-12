@@ -3,6 +3,8 @@
 
 package com.threerings.bang.client;
 
+import java.io.File;
+
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.event.InputDispatcher;
 import com.jme.input.InputHandler;
@@ -12,6 +14,8 @@ import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 
 import com.samskivert.util.Config;
+import com.samskivert.util.StringUtil;
+
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
@@ -41,6 +45,23 @@ import static com.threerings.bang.Log.log;
 public class BangClient
     implements SessionObserver
 {
+    /**
+     * Given a subdirectory name (that should correspond to the calling
+     * service), returns a file path that can be used to store local data.
+     */
+    public static String localDataDir (String subdir)
+    {
+        String appdir = System.getProperty("appdir");
+        if (StringUtil.blank(appdir)) {
+            appdir = ".bang";
+            String home = System.getProperty("user.home");
+            if (!StringUtil.blank(home)) {
+                appdir = home + File.separator + appdir;
+            }
+        }
+        return appdir + File.separator + subdir;
+    }
+
     /**
      * Initializes a new client and provides it with a frame in which to
      * display everything.

@@ -19,6 +19,7 @@
 -libraryjars lib/lwjgl.jar
 -libraryjars lib/lwjgl_fmod3.jar
 
+-dontoptimize
 -dontobfuscate
 
 -outjars dist/bang-client.jar
