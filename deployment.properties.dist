@@ -7,6 +7,13 @@ root_url = http://www.banghowdy.com
 server = game.banghowdy.com
 
 #
+# These are used by the installer and game launcher.
+
+client_ident = client
+client_title = Bang! Howdy
+default_locale = en
+
+#
 # If this deployment will be used to build signed Java Web Start
 # distributions, the password for the signing key can be specified here.
 
