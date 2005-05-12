@@ -4,6 +4,7 @@
 # Configuration for the Bang! client/editor deployment
 
 root_url = http://www.banghowdy.com
+server = game.banghowdy.com
 
 #
 # If this deployment will be used to build signed Java Web Start

@@ -38,5 +38,5 @@ jvmarg = -Dappdir=%APPDIR%
 class = com.threerings.bang.client.BangApp
 
 # Some temporary arguments
-apparg = baltic.sea.earth.threerings.net
+apparg = @server@
 apparg = 4007

@@ -120,15 +120,38 @@
     </signjar>
   </target>
 
-  <!-- builds the standalone editor jar -->
-  <target name="client">
+  <!-- builds the client getdown distribution -->
+  <target name="client" depends="dist">
     <!-- generate the all-in-wonder jar file -->
     <taskdef resource="proguard/ant/task.properties"
              classpath="lib/proguard.jar"/>
     <proguard configuration="etc/bang-client.pro"/>
-    <copy todir="pages/client/code" file="dist/bang-client.jar"/>
+    <!-- copy our various bits into the deployment directory -->
+    <copy todir="pages/client/code">
+      <fileset dir="dist" includes="bang-client.jar"/>
+      <fileset dir="lib" includes="lwjgl.jar"/>
+    </copy>
+    <copy todir="pages/client/native">
+      <fileset dir="lib/i686-Linux" includes="*.so"/>
+      <fileset dir="lib/i686-Windows" includes="*.dll"/>
+      <fileset dir="lib/PowerPC-MacOS" includes="*"/>
+    </copy>
     <!-- copy the getdown.txt file into the right place -->
-    <copy todir="pages/client" file="etc/getdown.txt"/>
+    <copy todir="pages/client" overwrite="true" encoding="UTF-8">
+      <fileset dir="etc" includes="getdown.txt"/>
+      <filterset>
+        <filter token="app_root" value="${root_url}"/>
+        <filter token="server" value="${server}"/>
+      </filterset>
+    </copy>
+    <!-- generate the getdown digest file -->
+    <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask">
+     <classpath>
+       <pathelement path="lib/samskivert.jar"/>
+       <pathelement path="lib/getdown.jar"/>
+     </classpath>
+    </taskdef>
+    <digest appdir="pages/client"/>
   </target>
 
   <!-- a target for rebuilding everything -->
