@@ -160,7 +160,6 @@ public class BangClient
     {
         _lview = new LogonView(_ctx);
         _ctx.getInputDispatcher().addWindow(_lview);
-        _ctx.getInterface().attachChild(_lview.getNode());
 
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
@@ -172,7 +171,6 @@ public class BangClient
     protected void clearLogon ()
     {
         _ctx.getInputDispatcher().removeWindow(_lview);
-        _ctx.getInterface().detachChild(_lview.getNode());
         _lview = null;
     }
 

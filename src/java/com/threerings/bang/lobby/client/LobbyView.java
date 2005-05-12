@@ -175,7 +175,6 @@ public class LobbyView extends BWindow
         setBounds(0, 0, _ctx.getDisplay().getWidth(),
                   _ctx.getDisplay().getHeight());
         _ctx.getInputDispatcher().addWindow(this);
-        _ctx.getInterface().attachChild(getNode());
 
         // switch to a gray background
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
@@ -203,7 +202,6 @@ public class LobbyView extends BWindow
         _chat.didLeavePlace(plobj);
 
         _ctx.getInputDispatcher().removeWindow(this);
-        _ctx.getInterface().detachChild(getNode());
 
         // restore the black background
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);

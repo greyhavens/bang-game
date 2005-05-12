@@ -49,7 +49,6 @@ public class BangView
         // add the purchase view to the display
         _pview = new PurchaseView(_ctx, cfg, bangobj, pidx);
         _ctx.getInputDispatcher().addWindow(_pview);
-        _ctx.getInterface().attachChild(_pview.getNode());
         _pview.pack();
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
@@ -61,7 +60,6 @@ public class BangView
     public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // remove the purchase view from the display
-        _ctx.getInterface().detachChild(_pview.getNode());
         _ctx.getInputDispatcher().removeWindow(_pview);
         _pview = null;
 
@@ -85,7 +83,6 @@ public class BangView
         int width = _ctx.getDisplay().getWidth();
         _chatwin.setBounds(10, 20, width-20, 100);
         _ctx.getInputDispatcher().addWindow(_chatwin);
-        _ctx.getInterface().attachChild(_chatwin.getNode());
 
         // create and position our player status displays
         int pcount = bangobj.players.length;
@@ -98,7 +95,6 @@ public class BangView
             _pstatus.add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
         }
         _ctx.getInputDispatcher().addWindow(_pstatus);
-        _ctx.getInterface().attachChild(_pstatus.getNode());
         _pstatus.setSize(_ctx.getDisplay().getWidth() - 20, 50);
         int height = _ctx.getDisplay().getHeight();
         _pstatus.setLocation(10, height - _pstatus.getHeight() - 10);
@@ -113,16 +109,11 @@ public class BangView
 
         // remove our displays
         _ctx.getInputDispatcher().removeWindow(_pstatus);
-        _ctx.getGeometry().detachChild(_pstatus.getNode());
-
         _ctx.getInputDispatcher().removeWindow(_chatwin);
-        _ctx.getGeometry().detachChild(_chatwin.getNode());
-
         _ctx.getGeometry().detachChild(view.getNode());
 
         if (_pview != null) {
             _ctx.getInputDispatcher().removeWindow(_pview);
-            _ctx.getGeometry().detachChild(_pview.getNode());
             _pview = null;
         }
     }
