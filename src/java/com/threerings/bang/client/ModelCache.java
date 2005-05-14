@@ -17,6 +17,8 @@ import java.util.logging.Level;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.util.TextureManager;
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.CloneCreator;
 import com.jme.scene.Geometry;
@@ -24,6 +26,7 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.model.XMLparser.Converters.MaxToJme;
 import com.jme.scene.model.XMLparser.Converters.Md2ToJme;
+import com.jme.scene.model.XMLparser.Converters.Md3ToJme;
 import com.jme.scene.model.XMLparser.Converters.ObjToJme;
 import com.jme.scene.model.XMLparser.JmeBinaryReader;
 import com.jme.scene.shape.Box;
@@ -76,6 +79,9 @@ public class ModelCache
         } else if (name.equals("dirigible")) {
             model = loadMd2Model("media/models/" + name + ".md2");
             model.setLocalScale(0.2f);
+        } else if (name.equals("artillery")) {
+            model = loadMd3Model("media/models/" + name + ".md3");
+            model.setLocalScale(0.06f);
         } else {
             model = load3DSModel("media/models/" + name + ".3ds");
             model.setLocalScale(0.06f);
@@ -102,16 +108,16 @@ public class ModelCache
                         Texture.MM_LINEAR,
                         Texture.FM_LINEAR));
                 model.setRenderState(ts);
-//             } else if (name.equals("steamgunman")) {
-//                 TextureState ts = _ctx.getRenderer().createTextureState();
-//                 ts.setEnabled(true);
-//                 ts.setTexture(
-//                     TextureManager.loadTexture(
-//                         getClass().getClassLoader().getResource(
-//                             "rsrc/media/textures/" + name + ".bmp"),
-//                         Texture.MM_LINEAR,
-//                         Texture.FM_LINEAR));
-//                 model.setRenderState(ts);
+            } else if (name.equals("artillery")) {
+                TextureState ts = _ctx.getRenderer().createTextureState();
+                ts.setEnabled(true);
+                ts.setTexture(
+                    TextureManager.loadTexture(
+                        getClass().getClassLoader().getResource(
+                            "rsrc/media/textures/" + name + ".png"),
+                        Texture.MM_LINEAR,
+                        Texture.FM_LINEAR));
+                model.setRenderState(ts);
             }
 
             model.setLocalTranslation(
@@ -190,6 +196,33 @@ public class ModelCache
             jbr.setProperty("bound", "box");
             return jbr.loadBinaryFormat(
                 new ByteArrayInputStream(bout.toByteArray()));
+
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Error loading model '" + path + "'.", ioe);
+            return null;
+        }
+    }
+
+    protected Node loadMd3Model (String path)
+    {
+        Md3ToJme converter = new Md3ToJme();
+
+        try {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            InputStream min = _ctx.getResourceManager().getResource(path);
+            converter.convert(new BufferedInputStream(min), bout);
+
+            JmeBinaryReader jbr = new JmeBinaryReader();
+            jbr.setProperty("bound", "box");
+            Node model = jbr.loadBinaryFormat(
+                new ByteArrayInputStream(bout.toByteArray()));
+            Quaternion r1 = new Quaternion();
+            r1.fromAngleAxis(-FastMath.PI/2, new Vector3f(-1,0,0));
+            Quaternion r2 = new Quaternion();
+            r2.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
+            r1.multLocal(r2);
+            model.setLocalRotation(r1);
+            return model;
 
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Error loading model '" + path + "'.", ioe);
