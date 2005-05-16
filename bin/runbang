@@ -44,16 +44,8 @@ fi
 # Start with the standard Java classes
 CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
 
-# Make sure some important jar files are available
-for archive in bang-boot bang-code-base ; do
-    if [ ! -f $BANG_HOME/lib/$archive.jar ]; then
-        echo "$0: Missing $archive.jar in $BANG_HOME/lib"
-        exit 255
-    fi
-done
-
 # Add all JAR files in $BANG_HOME/lib to the CLASSPATH
-for jar in $BANG_HOME/lib/*.jar; do
+for jar in $BANG_HOME/lib/*.jar $BANG_HOME/dist/bang.jar; do
     if [ -e $jar ]; then
         CLASSPATH=$jar:$CLASSPATH
     fi
@@ -67,8 +59,6 @@ export CLASSPATH
 # Set up the LD_LIBRARY_PATH to include our shared libraries
 LD_LIBRARY_PATH=$BANG_HOME/lib/`uname -m`-`uname -s`
 export LD_LIBRARY_PATH
-
-BANGLOG=$BANG_HOME/log/stdout.log
 
 # Start up the server
 touch $LOGFILE
@@ -89,17 +79,17 @@ EXIT_CODE=$?
 
 # Mail out some reports
 HOSTNAME=`hostname`
-cat $BANGLOG | /export/tools/bin/sum_invokers | \
-    $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
-cat $BANGLOG | /export/tools/bin/lfilter | \
-    grep -v "Invoker unit" | grep ' ! ' | cut -c 25-80 | sort | uniq -c | \
-    sort -nr | $MAIL -s "$HOSTNAME: $BANG_HOME error summary" $LOG_EMAIL
-cat $BANGLOG | /export/tools/bin/lfilter | \
+# cat $LOGFILE | /export/tools/bin/sum_invokers | \
+#     $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
+# cat $LOGFILE | /export/tools/bin/lfilter | \
+#     grep -v "Invoker unit" | grep ' ! ' | cut -c 25-80 | sort | uniq -c | \
+#     sort -nr | $MAIL -s "$HOSTNAME: $BANG_HOME error summary" $LOG_EMAIL
+cat $LOGFILE | /export/tools/bin/lfilter | \
     $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
 
 # Archive the server log
 NOW=`date "+%F-%H:%M"`
-mv $BANGLOG $BANGLOG.$NOW
+mv $LOGFILE $LOGFILE.$NOW
 
 # Prune old logs
 find $BANG_HOME/log -name 'stdout.log*' -a -mtime +7 | xargs rm -f

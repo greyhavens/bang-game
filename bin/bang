@@ -35,7 +35,7 @@ case "$1" in
 	    exit 1
 	fi
         # Make sure there are no hung Bang server processes
-        RPIDS=`ps auxww | grep YoServer | grep java | \
+        RPIDS=`ps auxww | grep BangServer | grep java | \
             awk '{ print $2 }' | sort -n | head -1`
         if [ ! -z "$RPIDS" ]; then
             echo "WARNING: A Bang server process is currently running."
