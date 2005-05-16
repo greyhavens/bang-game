@@ -106,6 +106,7 @@
              classpath="lib/proguard.jar"/>
     <proguard configuration="etc/bang-editor.pro"/>
     <copy todir="pages/editor" file="dist/bang-editor.jar"/>
+
     <!-- create the JNLP file -->
     <copy todir="pages/editor">
       <fileset dir="etc" includes="editor.jnlp"/>
@@ -113,6 +114,7 @@
         <filter token="application_uri" value="${root_url}/editor/"/>
       </filterset>
     </copy>
+
     <!-- sign the jar file -->
     <signjar keystore="${sign.keystore}" alias="${sign.alias}"
       storepass="${sign.storepass}" lazy="true">
@@ -126,6 +128,7 @@
     <taskdef resource="proguard/ant/task.properties"
              classpath="lib/proguard.jar"/>
     <proguard configuration="etc/bang-client.pro"/>
+
     <!-- copy our various bits into the deployment directory -->
     <copy todir="pages/client/code">
       <fileset dir="dist" includes="bang-client.jar"/>
@@ -136,16 +139,20 @@
       <fileset dir="lib/i686-Windows" includes="*.dll"/>
       <fileset dir="lib/PowerPC-MacOS" includes="*"/>
     </copy>
+
     <!-- copy the getdown.txt file into the right place -->
     <copy todir="pages/client" overwrite="true" encoding="UTF-8">
       <fileset dir="etc" includes="getdown.txt"/>
       <filterset>
         <filter token="app_root" value="${root_url}"/>
-        <filter token="server" value="${server}"/>
+        <filter token="server_host" value="${server_host}"/>
+        <filter token="server_port" value="${server_port}"/>
       </filterset>
     </copy>
+
     <!-- generate the getdown digest file -->
-    <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask">
+    <taskdef name="digest"
+      classname="com.threerings.getdown.tools.DigesterTask">
      <classpath>
        <pathelement path="lib/samskivert.jar"/>
        <pathelement path="lib/getdown.jar"/>

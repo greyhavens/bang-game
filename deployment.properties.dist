@@ -3,8 +3,16 @@
 #
 # Configuration for the Bang! client/editor deployment
 
+#
+# The base URL for downloading and patching the client
+
 root_url = http://www.banghowdy.com
-server = game.banghowdy.com
+
+#
+# The host and port to use when connecting to the server
+
+server_host = game.banghowdy.com
+server_port = 4007
 
 #
 # These are used by the installer and game launcher.

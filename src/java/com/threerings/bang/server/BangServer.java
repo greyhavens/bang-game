@@ -18,7 +18,6 @@ import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.CrowdClient;
 import com.threerings.crowd.server.CrowdServer;
 import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.server.PlaceRegistry;
@@ -41,32 +40,27 @@ public class BangServer extends CrowdServer
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
 
-    /**
-     * Initializes all of the server services and prepares for operation.
-     */
+    @Override // documentation inherited
     public void init ()
         throws Exception
     {
         // do the base server initialization
         super.init();
 
-//         // configure the client manager to use the appropriate client class
-//         clmgr.setClientClass(ToyBoxClient.class);
+        // configure the client manager to use the appropriate client class
+        clmgr.setClientClass(BangClient.class);
 
-//         // configure the client manager to use our resolver
-//         clmgr.setClientResolverClass(ToyBoxClientResolver.class);
+        // configure the client manager to use our resolver
+        clmgr.setClientResolverClass(BangClientResolver.class);
 
-//         // configure the dobject manager with our access controller
-//         omgr.setDefaultAccessController(ToyBoxObjectAccess.DEFAULT);
+        // create our database connection provider
+        conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
 
-//         // create our database connection provider
-//         conprov = new StaticConnectionProvider(ToyBoxConfig.getJDBCConfig());
-
-//         // set up our authenticator
-//         Authenticator auth = ToyBoxConfig.getAuthenticator();
-//         if (auth != null) {
-//             conmgr.setAuthenticator(auth);
-//         }
+        // set up our authenticator
+        Authenticator auth = ServerConfig.getAuthenticator();
+        if (auth != null) {
+            conmgr.setAuthenticator(auth);
+        }
 
         // initialize our managers
         parmgr.init(invmgr, plreg);
@@ -82,14 +76,11 @@ public class BangServer extends CrowdServer
         log.info("Bang server initialized.");
     }
 
-//     /**
-//      * Returns the port on which the connection manager will listen for
-//      * client connections.
-//      */
-//     protected int getListenPort ()
-//     {
-//         return ToyBoxConfig.getServerPort();
-//     }
+    @Override // documentation inherited
+    protected int getListenPort ()
+    {
+        return ServerConfig.getServerPort();
+    }
 
     public static void main (String[] args)
     {

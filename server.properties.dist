@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+# Configuration for a Bang! server installation
+
+#
+# The port on which the server listens for client connections.
+
+server_port = 4007
+
+#
+# Defines the client authenticator used by the server.
+
+server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
+
+#
+# The default database mapping; all other definitions will inherit from
+# this and need only be specified in cases where they differ from the
+# defaults
+
+db.default.driver = com.mysql.jdbc.Driver
+db.default.url = jdbc:mysql://DBHOST:3306/bang
+db.default.username = USERNAME
+db.default.password = PASSWORD
+
+#
+# An example of an overridden database configuration
+
+# db.userdb.username = USERNAME
+# db.userdb.password = PASSWORD
+# db.userdb.url = jdbc:mysql://USERDBHOST:3306/USERDB
