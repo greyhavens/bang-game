@@ -47,6 +47,7 @@ public class LogonView extends BWindow
         cont.add(new BLabel(""));
         cont.add(new BLabel(_msgs.get("m.password")));
         cont.add(_password = new BPasswordField());
+        _password.addListener(this);
 
         BButton logon = new BButton(_msgs.get("m.logon"));
         logon.addListener(this);
@@ -78,7 +79,7 @@ public class LogonView extends BWindow
         }
 
         public void clientFailedToLogon (Client client, Exception cause) {
-            String msg = _msgs.get("m.logon_failed", cause.toString());
+            String msg = _msgs.get("m.logon_failed", cause.getMessage());
             _status.setText(msg);
         }
     };
