@@ -6,4 +6,4 @@
 
 ROOT=`dirname $0`/..
 CLASS=com.threerings.bang.server.BangServer
-$ROOT/bin/runjava -- $CLASS
+$ROOT/bin/runjava -- -Dinstall_config=$ROOT/server.properties $CLASS

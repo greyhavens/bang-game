@@ -29,3 +29,9 @@ db.default.password = PASSWORD
 # db.userdb.username = USERNAME
 # db.userdb.password = PASSWORD
 # db.userdb.url = jdbc:mysql://USERDBHOST:3306/USERDB
+
+#
+# Bits for the OOO authenticator
+
+oooauth.login_url = /account/register.wm?from=%R
+oooauth.access_denied_url = access_denied.wm
