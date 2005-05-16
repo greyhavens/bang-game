@@ -6,14 +6,17 @@ package com.threerings.bang.client;
 import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
 import com.jme.bui.BLabel;
+import com.jme.bui.BPasswordField;
 import com.jme.bui.BTextField;
 import com.jme.bui.BWindow;
 import com.jme.bui.TintedBackground;
-import com.jme.renderer.ColorRGBA;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.TableLayout;
+import com.jme.renderer.ColorRGBA;
+
+import com.samskivert.servlet.user.Password;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -43,7 +46,7 @@ public class LogonView extends BWindow
         _username.setPreferredWidth(150);
         cont.add(new BLabel(""));
         cont.add(new BLabel(_msgs.get("m.password")));
-        cont.add(_password = new BTextField());
+        cont.add(_password = new BPasswordField());
 
         BButton logon = new BButton(_msgs.get("m.logon"));
         logon.addListener(this);
@@ -63,7 +66,9 @@ public class LogonView extends BWindow
         String password = _password.getText();
         _status.setText(_msgs.get("m.logging_on"));
         _ctx.getClient().setCredentials(
-            new UsernamePasswordCreds(new Name(username), password));
+            new UsernamePasswordCreds(
+                new Name(username),
+                Password.makeFromClear(password).getEncrypted()));
         _ctx.getClient().logon();
     }
 
@@ -81,6 +86,6 @@ public class LogonView extends BWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BTextField _username;
-    protected BTextField _password;
+    protected BPasswordField _password;
     protected BLabel _status;
 }
