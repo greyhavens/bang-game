@@ -1,0 +1,95 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Startup script for the Bang! game server. Currently works on Debian and
+# Redhat 9.
+
+# Locate our ocean directory
+BANG_HOME=`dirname $0 | sed s:/bin$::`
+if [ ! -f $BANG_HOME/server.properties ]; then
+    echo "Unable to infer BANG_HOME. No server.properties file?"
+    exit 1
+fi
+
+# Read in our configuration
+. $BANG_HOME/server.conf
+
+# Make sure someone running things as root didn't booch the permissions on
+# the bundles
+chown -R $BANG_USER $BANG_HOME/rsrc
+
+# Let's blow that file descriptor limit wide open baby!
+ulimit -n 4096
+
+DAEMON=$BANG_HOME/bin/bangrespawn
+PIDFILE=/var/run/bangrespawn.pid
+
+# See how we were called
+case "$1" in
+  start)
+        # Make sure bangrespawn is not currently running
+	if [ -f $PIDFILE ]; then
+	    echo "bangrespawn appears to be already running."
+            echo "Run '$0 stop' to stop it first."
+	    exit 1
+	fi
+        # Make sure there are no hung Bang server processes
+        RPIDS=`ps auxww | grep YoServer | grep java | \
+            awk '{ print $2 }' | sort -n | head -1`
+        if [ ! -z "$RPIDS" ]; then
+            echo "WARNING: A Bang server process is currently running."
+            echo "If it has failed and you wish to forcibly restart it, please"
+            echo "execute the following commands:"
+            echo ""
+            echo "% kill -QUIT $RPIDS"
+            echo "% kill -KILL $RPIDS"
+            echo ""
+            echo "And then rerun this script."
+            exit -1
+        fi
+        # Go ahead and start things up
+        echo -n "Starting $DAEMON: "
+        touch $PIDFILE
+        chown $BANG_USER $PIDFILE
+        su - $BANG_USER -c "$DAEMON $PIDFILE" >/dev/null 2>&1 </dev/null &
+        echo "started."
+        ;;
+
+  stop)
+	if [ ! -f $PIDFILE ]; then
+	    echo "No $PIDFILE exists. Is bangrespawn running?"
+	    exit 1
+	fi
+        echo -n "Shutting down bang, "
+        $BANG_HOME/bin/bangrestart
+        echo -n "bangrespawn: "
+        kill `cat $PIDFILE`
+        echo "stopped."
+        rm -f $PIDFILE
+        ;;
+
+  unspawn)
+	if [ ! -f $PIDFILE ]; then
+	    echo "No $PIDFILE exists. Is bangrespawn running?"
+	    exit 1
+	fi
+        echo -n "Shutting down bangrespawn: "
+        kill `cat $PIDFILE`
+        echo "stopped."
+        rm -f $PIDFILE
+        ;;
+
+  restart)
+        echo -n "Restarting bang server: "
+        $BANG_HOME/bin/bangrestart
+        echo "restarted."
+        exit 1
+        ;;
+
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0

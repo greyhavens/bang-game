@@ -1,0 +1,107 @@
+#!/bin/sh
+#
+# $Id$
+#
+# A script to invoke the Bang! server and email the generated logs when it
+# eventually exits.
+
+NAME=bang
+DESC="Bang game server"
+
+BANG_HOME=`dirname $0 | sed s:/bin$::`
+BANG_USER=www-data
+
+LOGFILE=$BANG_HOME/log/stdout.log
+LOG_EMAIL=nightly-logs@threerings.net
+LOGLEVEL=info
+SERVER_MEMORY=384M
+
+# Override settings with those from BANG_HOME/server.conf
+if [ -f $BANG_HOME/server.conf ]; then
+    . $BANG_HOME/server.conf
+else
+    echo "Can't load $BANG_HOME/server.conf; can't run server."
+    exit 255
+fi
+
+CLASS=com.threerings.bang.server.BangServer
+JAVA_ARGS="-server -mx$SERVER_MEMORY \
+    -Dinstall_config=$BANG_HOME/server.properties \
+    -Dresource_dir=$BANG_HOME/rsrc \
+    -Drsrc_cache_dir=/tmp -Dlog_level=$LOGLEVEL"
+
+#    -XX:+UseParNewGC -XX:+UseAdaptiveSizePolicy -XX:MaxNewSize=64m \
+#    -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+PrintHeapAtGC \
+
+umask 002
+
+JAVA_VM="$JAVA_HOME/bin/java"
+if [ ! -e $JAVA_VM ]; then
+    echo "$0: Cannot find JVM in $JAVA_HOME. Exiting."
+    exit 255
+fi
+
+# Start with the standard Java classes
+CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
+
+# Make sure some important jar files are available
+for archive in bang-boot bang-code-base ; do
+    if [ ! -f $BANG_HOME/lib/$archive.jar ]; then
+        echo "$0: Missing $archive.jar in $BANG_HOME/lib"
+        exit 255
+    fi
+done
+
+# Add all JAR files in $BANG_HOME/lib to the CLASSPATH
+for jar in $BANG_HOME/lib/*.jar; do
+    if [ -e $jar ]; then
+        CLASSPATH=$jar:$CLASSPATH
+    fi
+done
+
+# Add the deployment directory to the CLASSPATH (so that $BANG_HOME/rsrc
+# is accessible)
+CLASSPATH=$BANG_HOME:$CLASSPATH
+export CLASSPATH
+
+# Set up the LD_LIBRARY_PATH to include our shared libraries
+LD_LIBRARY_PATH=$BANG_HOME/lib/`uname -m`-`uname -s`
+export LD_LIBRARY_PATH
+
+BANGLOG=$BANG_HOME/log/stdout.log
+
+# Start up the server
+touch $LOGFILE
+WHOAMI=`whoami`
+if [ "$WHOAMI" != "$BANG_USER" ]; then
+    echo "This script must be run as $BANG_USER."
+    exit 255
+fi
+
+echo "Running Bang server:" >>$LOGFILE
+echo " Deployment root: $BANG_HOME" >>$LOGFILE
+echo "         Java VM: $JAVA_VM" >>$LOGFILE
+echo "       Java args: $JAVA_ARGS" >>$LOGFILE
+echo "    Server class: $CLASS" >>$LOGFILE
+
+$JAVA_VM $JAVA_ARGS $CLASS >>$LOGFILE 2>&1
+EXIT_CODE=$?
+
+# Mail out some reports
+HOSTNAME=`hostname`
+cat $BANGLOG | /export/tools/bin/sum_invokers | \
+    $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
+cat $BANGLOG | /export/tools/bin/lfilter | \
+    grep -v "Invoker unit" | grep ' ! ' | cut -c 25-80 | sort | uniq -c | \
+    sort -nr | $MAIL -s "$HOSTNAME: $BANG_HOME error summary" $LOG_EMAIL
+cat $BANGLOG | /export/tools/bin/lfilter | \
+    $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
+
+# Archive the server log
+NOW=`date "+%F-%H:%M"`
+mv $BANGLOG $BANGLOG.$NOW
+
+# Prune old logs
+find $BANG_HOME/log -name 'stdout.log*' -a -mtime +7 | xargs rm -f
+
+exit $EXIT_CODE
