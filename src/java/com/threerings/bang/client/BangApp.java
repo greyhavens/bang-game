@@ -13,8 +13,9 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.util.LoggingSystem;
 
-import com.samskivert.util.OneLineLogFormatter;
+import com.samskivert.servlet.user.Password;
 import com.samskivert.util.LoggingLogProvider;
+import com.samskivert.util.OneLineLogFormatter;
 
 import com.threerings.util.Name;
 
@@ -119,7 +120,9 @@ public class BangApp extends JmeApp
         if (username != null && password != null) {
             // create and set our credentials
             client.setCredentials(
-                new UsernamePasswordCreds(new Name(username), password));
+                new UsernamePasswordCreds(
+                    new Name(username),
+                    Password.makeFromClear(password).getEncrypted()));
             client.logon();
         }
 

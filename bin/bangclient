@@ -1,11 +1,6 @@
 #!/bin/sh
 
-if [ ! -z "$*" ]; then
-    CREDS="$* secret"
-else
-    CREDS=""
-fi
 CLASS=com.threerings.bang.client.BangApp
 `dirname $0`/runjava -- -Dno_log_redir=true -Dtest=true $CLASS \
-  localhost 4007 $CREDS
+  localhost 4007 $*
 xset r on

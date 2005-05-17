@@ -6,7 +6,6 @@ package com.threerings.bang.client;
 import java.net.URL;
 import java.util.ArrayList;
 
-import com.jme.effects.ParticleManager;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -17,6 +16,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
+import com.jmex.effects.ParticleManager;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;

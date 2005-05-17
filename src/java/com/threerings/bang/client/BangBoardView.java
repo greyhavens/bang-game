@@ -18,12 +18,12 @@ import java.util.List;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
 import com.jme.bui.event.MouseMotionListener;
-import com.jme.effects.ParticleManager;
 import com.jme.intersection.BoundingPickResults;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.TriMesh;
+import com.jmex.effects.ParticleManager;
 
 import com.samskivert.util.StringUtil;
 

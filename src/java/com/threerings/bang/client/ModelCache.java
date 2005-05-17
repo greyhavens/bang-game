@@ -16,21 +16,21 @@ import java.util.logging.Level;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
-import com.jme.util.TextureManager;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.scene.CloneCreator;
+import com.jme.renderer.CloneCreator;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import com.jme.scene.model.XMLparser.Converters.MaxToJme;
-import com.jme.scene.model.XMLparser.Converters.Md2ToJme;
-import com.jme.scene.model.XMLparser.Converters.Md3ToJme;
-import com.jme.scene.model.XMLparser.Converters.ObjToJme;
-import com.jme.scene.model.XMLparser.JmeBinaryReader;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
+import com.jmex.model.XMLparser.Converters.MaxToJme;
+import com.jmex.model.XMLparser.Converters.Md2ToJme;
+import com.jmex.model.XMLparser.Converters.Md3ToJme;
+import com.jmex.model.XMLparser.Converters.ObjToJme;
+import com.jmex.model.XMLparser.JmeBinaryReader;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
