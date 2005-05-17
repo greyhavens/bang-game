@@ -3,6 +3,7 @@
 
 package com.threerings.bang.client.sprite;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Box;
@@ -21,6 +22,8 @@ public class BuildingSprite extends PieceSprite
                           new Vector3f(TILE_SIZE*width,
                                        TILE_SIZE*height, TILE_SIZE));
         box.setSolidColor(BUILDING_BROWN);
+        box.setModelBound(new BoundingBox());
+        box.updateModelBound();
         attachChild(box);
     }
 

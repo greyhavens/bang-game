@@ -29,7 +29,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
@@ -73,6 +72,18 @@ public class BoardView extends BComponent
 
         // we don't actually want to render in orthographic mode
         _node.setRenderQueueMode(Renderer.QUEUE_INHERIT);
+
+        // create a sky box
+        _node.attachChild(new SkyNode(ctx));
+
+        Quad floor = new Quad("floor", 10000, 10000);
+        _node.attachChild(floor);
+        floor.setSolidColor(ColorRGBA.gray);
+        floor.setLightCombineMode(LightState.OFF);
+        floor.setLocalTranslation(new Vector3f(0, 0, -10f));
+        floor.updateRenderState();
+        floor.setModelBound(new BoundingBox());
+        floor.updateModelBound();
 
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
