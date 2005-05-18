@@ -38,6 +38,7 @@ public class BangBoard extends SimpleStreamableObject
         _height = height;
         _tiles = new int[width*height];
         _btstate = new byte[width*height];
+        _estate = new byte[width*height];
         _tstate = new byte[width*height];
         _pgrid = new byte[width*height];
         _bbounds = new Rectangle(0, 0, _width, _height);
@@ -200,6 +201,7 @@ public class BangBoard extends SimpleStreamableObject
                         if (_bbounds.contains(xx, yy)) {
                             _tstate[_width*yy+xx] = 2;
                             _btstate[_width*yy+xx] = 2;
+                            _estate[_width*yy+xx] = 1;
                         }
                     }
                 }
@@ -211,6 +213,15 @@ public class BangBoard extends SimpleStreamableObject
                 _tstate[_width*piece.y+piece.x] = 3;
             }
         }
+    }
+
+    /**
+     * Returns the elevation at the specified coordinates (currently only
+     * non-zero when there's a building at that tile location).
+     */
+    public int getElevation (int x, int y)
+    {
+        return _estate[y*_width+x];
     }
 
     /**
@@ -336,6 +347,7 @@ public class BangBoard extends SimpleStreamableObject
         in.defaultReadObject();
         int size = _width*_height;
         _btstate = new byte[size];
+        _estate = new byte[size];
         _tstate = new byte[size];
         _pgrid = new byte[size];
         _bbounds = new Rectangle(0, 0, _width, _height);
@@ -417,7 +429,7 @@ public class BangBoard extends SimpleStreamableObject
     protected int[] _tiles;
 
     /** Tracks coordinate traversability. */
-    protected transient byte[] _tstate, _btstate;
+    protected transient byte[] _tstate, _btstate, _estate;
 
     /** A temporary array for computing move and fire sets. */
     protected transient byte[] _pgrid;

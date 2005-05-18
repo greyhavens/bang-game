@@ -33,6 +33,7 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 
 import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
@@ -78,12 +79,10 @@ public class BoardView extends BComponent
 
         Quad floor = new Quad("floor", 10000, 10000);
         _node.attachChild(floor);
-        floor.setSolidColor(ColorRGBA.gray);
+        floor.setSolidColor(BROWN);
         floor.setLightCombineMode(LightState.OFF);
         floor.setLocalTranslation(new Vector3f(0, 0, -10f));
         floor.updateRenderState();
-        floor.setModelBound(new BoundingBox());
-        floor.updateModelBound();
 
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
@@ -92,6 +91,12 @@ public class BoardView extends BComponent
 
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
+        _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+
+        // we use this to force highlight tiles to use the zbuffer
+        _hzstate = _ctx.getRenderer().createZBufferState();
+        _hzstate.setEnabled(true);
+        _hzstate.setFunction(ZBufferState.CF_LEQUAL);
 
         // we'll hang all of our pieces off this node
         _node.attachChild(_pnode = new Node("pieces"));
@@ -445,9 +450,10 @@ public class BoardView extends BComponent
             quad.setRenderState(_hastate);
             quad.setLocalTranslation(
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
-                             sy * TILE_SIZE + TILE_SIZE/2, 0f));
+                             sy * TILE_SIZE + TILE_SIZE/2,
+                             _bangobj.board.getElevation(sx, sy) * TILE_SIZE));
+            quad.setRenderState(_hzstate);
             quad.updateRenderState();
-            quad.updateGeometricState(0f, true);
             _hnode.attachChild(quad);
         }
     }
@@ -460,8 +466,9 @@ public class BoardView extends BComponent
             Quad quad = RenderUtil.createIcon(_ctx, _tgtstate);
             quad.setLocalTranslation(
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
-                             sy * TILE_SIZE + TILE_SIZE/2, 0f));
-            quad.updateGeometricState(0f, true);
+                             sy * TILE_SIZE + TILE_SIZE/2,
+                             _bangobj.board.getElevation(sx, sy) * TILE_SIZE));
+            quad.setRenderState(_hzstate);
             _hnode.attachChild(quad);
         }
     }
@@ -540,9 +547,8 @@ public class BoardView extends BComponent
 
     /** Used to texture a quad that highlights a tile. */
     protected TextureState _hstate;
-
-    /** Used to texture a quad that highlights a tile. */
     protected AlphaState _hastate;
+    protected ZBufferState _hzstate;
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);

@@ -57,17 +57,31 @@ public class PieceSprite extends Sprite
         _piece = piece;
         _tick = tick;
 
+        // create our sprite geometry
+        createGeometry(ctx);
+
         // position ourselves properly to start
-        setLocation(piece.x, piece.y);
+        setLocation(piece.x, piece.y, 0);
+
+        // ensure that we do this the first time even if the sprite starts
+        // out at zero zero
+        updateCollisionTree();
     }
 
     /**
      * Configures this sprite's tile location.
      */
-    public void setLocation (int tx, int ty)
+    public void setLocation (int tx, int ty, int elevation)
     {
-        setLocalTranslation(new Vector3f(TILE_SIZE * tx, TILE_SIZE * ty, 0f));
-        updateCollisionTree();
+        float nx = TILE_SIZE * tx, ny = TILE_SIZE * ty;
+        float nz = TILE_SIZE * elevation;
+        if (localTranslation == null ||
+            nx != localTranslation.x || ny != localTranslation.y ||
+            nz != localTranslation.z) {
+            log.info("Moving to " + tx + ", " + ty + ", " + elevation);
+            setLocalTranslation(new Vector3f(nx, ny, nz));
+            updateCollisionTree();
+        }
     }
 
     /**
@@ -82,7 +96,8 @@ public class PieceSprite extends Sprite
         _tick = tick;
 
         // move ourselves to our new location
-        setLocation(_piece.x, _piece.y);
+        setLocation(_piece.x, _piece.y,
+                    computeElevation(board, _piece.x, _piece.y));
 
 //         int nx = piece.x * SQUARE, ny = piece.y * SQUARE;
 //         if (nx != _ox || ny != _oy) {
@@ -151,6 +166,22 @@ public class PieceSprite extends Sprite
     public static void setEditorMode (boolean editorMode)
     {
         _editorMode = editorMode;
+    }
+
+    /**
+     * Sprites should create and attach their scene geometry by overriding
+     * this method.
+     */
+    protected void createGeometry (BangContext ctx)
+    {
+    }
+
+    /**
+     * Computes the elevation for this piece at the specified location.
+     */
+    protected int computeElevation (BangBoard board, int tx, int ty)
+    {
+        return 0;
     }
 
     protected Piece _piece;

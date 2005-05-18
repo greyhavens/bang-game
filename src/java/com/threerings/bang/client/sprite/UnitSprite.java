@@ -22,6 +22,7 @@ import com.jme.scene.state.TextureState;
 import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
@@ -71,38 +72,6 @@ public class UnitSprite extends MobileSprite
         _tgtquad.setForceCull(!targeted);
     }
 
-    @Override // documentation inherited
-    public void init (BangContext ctx, Piece piece, short tick)
-    {
-        super.init(ctx, piece, tick);
-
-        // this icon is displayed when the mouse is hovered over us
-        _hovquad = RenderUtil.createIcon(ctx, "media/textures/hovered.png");
-        attachChild(_hovquad);
-        _hovquad.setForceCull(true);
-
-        // this icon displays who we are
-        _ownquad = RenderUtil.createIcon(ctx, "media/textures/circle.png");
-        attachChild(_ownquad);
-
-        _model = ctx.getModelCache().getModel(_type);
-        attachChild(_model);
-        _model.updateRenderState();
-
-        // this icon is displayed when we're a target
-        _tgtquad = RenderUtil.createIcon(ctx, "media/textures/crosshair.png");
-        attachChild(_tgtquad);
-        _tgtquad.setForceCull(true);
-
-        // this will display our damage
-        _damage = new Quad("damage", DBAR_WIDTH, DBAR_HEIGHT);
-        _damage.setLocalTranslation(
-            new Vector3f(DBAR_WIDTH/2+1, DBAR_HEIGHT/2+1, 0));
-        _damage.setSolidColor(ColorRGBA.green);
-        _damage.setLightCombineMode(LightState.OFF);
-        attachChild(_damage);
-    }
-
 //     @Override // documentation inherited
 //     public void setSelected (boolean selected)
 //     {
@@ -133,6 +102,46 @@ public class UnitSprite extends MobileSprite
     {
         return ((_piece.ticksUntilMovable(_tick) == 0) ||
                 (_piece.ticksUntilFirable(_tick) == 0));
+    }
+
+    @Override // documentation inherited
+    protected void createGeometry (BangContext ctx)
+    {
+        // this icon is displayed when the mouse is hovered over us
+        _hovquad = RenderUtil.createIcon(ctx, "media/textures/hovered.png");
+        attachChild(_hovquad);
+        _hovquad.setForceCull(true);
+
+        // this icon displays who we are
+        _ownquad = RenderUtil.createIcon(ctx, "media/textures/circle.png");
+        attachChild(_ownquad);
+
+        _model = ctx.getModelCache().getModel(_type);
+        attachChild(_model);
+        _model.updateRenderState();
+
+        // this icon is displayed when we're a target
+        _tgtquad = RenderUtil.createIcon(ctx, "media/textures/crosshair.png");
+        attachChild(_tgtquad);
+        _tgtquad.setForceCull(true);
+
+        // this will display our damage
+        _damage = new Quad("damage", DBAR_WIDTH, DBAR_HEIGHT);
+        _damage.setLocalTranslation(
+            new Vector3f(DBAR_WIDTH/2+1, DBAR_HEIGHT/2+1, 0));
+        _damage.setSolidColor(ColorRGBA.green);
+        _damage.setLightCombineMode(LightState.OFF);
+        attachChild(_damage);
+    }
+
+    @Override // documentation inherited
+    protected int computeElevation (BangBoard board, int tx, int ty)
+    {
+        int offset = 0;
+        if (_piece instanceof Dirigible) {
+            offset = board.getElevation(tx, ty);
+        }
+        return super.computeElevation(board, tx, ty) + offset;
     }
 
     protected String _type;
