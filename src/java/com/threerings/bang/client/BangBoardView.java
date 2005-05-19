@@ -647,18 +647,27 @@ public class BangBoardView extends BoardView
         Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
         pieceUpdated(opiece, piece);
 
+        ParticleManager pmgr = null;
         if (effect.equals("bang")) {
+            pmgr = ParticleFactory.getExplosion();
+            pmgr.getParticles().setLocalScale(0.65f);
+        } else if (effect.equals("howdy")) {
+            pmgr = ParticleFactory.getSmallExplosion();
+            pmgr.getParticles().setLocalScale(0.65f);
+        } else if (effect.equals("repaired")) {
+            pmgr = ParticleFactory.getGlow();
+            // pmgr.getParticles().setLocalScale(0.65f);
+        }
+
+        if (pmgr != null) {
             PieceSprite sprite = getPieceSprite(piece);
-            ParticleManager manager = ExplosionFactory.getExplosion();
-            TriMesh exp = manager.getParticles();
-            exp.setLocalScale(0.65f);
             Vector3f spos = sprite.getLocalTranslation();
-            exp.setLocalTranslation(new Vector3f(spos.x + TILE_SIZE/2,
-                                                 spos.y + TILE_SIZE/2,
-                                                 spos.z));
-            manager.forceRespawn();
-            _pnode.attachChild(exp);
-            exp.setForceView(true);
+            pmgr.getParticles().setLocalTranslation(
+                new Vector3f(spos.x + TILE_SIZE/2, spos.y + TILE_SIZE/2,
+                             spos.z + TILE_SIZE/2));
+            pmgr.forceRespawn();
+            _pnode.attachChild(pmgr.getParticles());
+            pmgr.getParticles().setForceView(true);
         }
 
 //         // and create a simple label animation naming the effect

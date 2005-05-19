@@ -154,8 +154,8 @@ public class BangClient
         _pardir = new ParlorDirector(_ctx);
         _chatdir = new ChatDirector(_ctx, _msgmgr, null);
 
-        // warm up the explosion factory
-        ExplosionFactory.warmup(_ctx);
+        // warm up the particle factory
+        ParticleFactory.warmup(_ctx);
     }
 
     protected void displayLogon ()

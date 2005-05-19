@@ -95,7 +95,7 @@ public class BangApp extends JmeApp
         ih.setZoomLimits(50f, 200f);
 
         // set up the camera
-        Vector3f loc = new Vector3f(80, 40, 150);
+        Vector3f loc = new Vector3f(80, 40, 200);
         _camera.setLocation(loc);
         Matrix3f rotm = new Matrix3f();
         rotm.fromAngleAxis(-FastMath.PI/15, _camera.getLeft());
