@@ -29,7 +29,7 @@ public class SkyNode extends Node
     {
         super("skynode");
 
-        Skybox box = new Skybox("sky", 5000, 5000, 5000);
+        Skybox box = new Skybox("sky", 1000, 1000, 1000);
         for (int ii = 0; ii < ORIENTS.length; ii++) {
             String path = "rsrc/media/textures/desertday" +
                 SUFFIXES[ii] + ".tga";

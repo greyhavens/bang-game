@@ -7,6 +7,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.math.Vector3f;
+import com.jme.scene.shape.Box;
+
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
@@ -21,6 +25,14 @@ public class PropSprite extends PieceSprite
     {
 //         super(width*SQUARE, height*SQUARE);
         _type = type;
+
+        // create some simple temporary geometry
+        Box box = new Box("box", new Vector3f(0, 0, 0),
+                          new Vector3f(TILE_SIZE*width,
+                                       TILE_SIZE*height, TILE_SIZE));
+        box.setModelBound(new BoundingBox());
+        box.updateModelBound();
+        attachChild(box);
     }
 
 //     @Override // documentation inherited

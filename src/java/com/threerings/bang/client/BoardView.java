@@ -21,6 +21,7 @@ import com.jme.bui.BComponent;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseMotionListener;
 import com.jme.bui.event.MouseWheelListener;
+import com.jme.image.Texture;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
@@ -34,6 +35,7 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
+import com.jme.util.TextureManager;
 
 import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
@@ -77,12 +79,30 @@ public class BoardView extends BComponent
         // create a sky box
         _node.attachChild(new SkyNode(ctx));
 
-        Quad floor = new Quad("floor", 10000, 10000);
-        _node.attachChild(floor);
-        floor.setSolidColor(BROWN);
-        floor.setLightCombineMode(LightState.OFF);
-        floor.setLocalTranslation(new Vector3f(0, 0, -10f));
-        floor.updateRenderState();
+        // create some fake ground
+        Texture texture = TextureManager.loadTexture(
+            getClass().getClassLoader().getResource(
+                "rsrc/media/textures/scrub.jpg"),
+            Texture.MM_LINEAR, Texture.FM_NEAREST, 1.0f, true);
+        TextureState tstate =
+            ctx.getDisplay().getRenderer().createTextureState();
+        tstate.setEnabled(true);
+        tstate.setTexture(texture);
+        int twid = texture.getImage().getWidth()/4;
+        int thei = texture.getImage().getHeight()/4;
+
+        int gsize = 2000, gx = gsize/twid, gy = gsize/thei;
+        for (int yy = -gy/2; yy < gy/2; yy++) {
+            for (int xx = -gx/2; xx < gx/2; xx++) {
+                Quad ground = new Quad("ground", twid, thei);
+                _node.attachChild(ground);
+                ground.setLightCombineMode(LightState.OFF);
+                ground.setLocalTranslation(
+                    new Vector3f(xx*twid + twid/2, yy*thei + thei/2, 0f));
+                ground.setRenderState(tstate);
+                ground.updateRenderState();
+            }
+        }
 
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
