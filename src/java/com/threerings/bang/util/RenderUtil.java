@@ -29,7 +29,7 @@ public class RenderUtil
         BangContext ctx, BufferedImage image)
     {
         Texture texture = TextureManager.loadTexture(
-            image, Texture.MM_LINEAR, Texture.FM_NEAREST, true);
+            image, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
         TextureState tstate =
             ctx.getDisplay().getRenderer().createTextureState();
         tstate.setEnabled(true);
