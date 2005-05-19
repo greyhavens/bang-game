@@ -12,6 +12,7 @@ import java.util.List;
 import com.jme.math.Vector3f;
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
+import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.media.util.MathUtil;
 
@@ -91,15 +92,13 @@ public class PieceSprite extends Sprite
      */
     public void updated (BangBoard board, Piece piece, short tick)
     {
-        int ox = _piece.x, oy = _piece.y;
         // note our new piece and the current tick
         Piece opiece = _piece;
         _piece = piece;
         _tick = tick;
 
         // move ourselves to our new location
-        int nx = piece.x, ny = piece.y;
-        if (nx != ox || ny != oy) {
+        if (piece.x != opiece.x || piece.y != opiece.y) {
             int elev = computeElevation(board, _piece.x, _piece.y);
 
             if (/* _mgr == null || */ _editorMode) {
@@ -108,33 +107,11 @@ public class PieceSprite extends Sprite
 
             // TODO: append an additional path if we're currently moving
             } else if (!isMoving()) {
-                List path = null;
-                if (board != null) {
-                    path = board.computePath(opiece, piece.x, piece.y);
-                }
+                Path path = createPath(board, opiece, piece);
                 if (path != null) {
-                    // create a world coordinate path from the tile
-                    // coordinates
-                    Vector3f[] coords = new Vector3f[path.size()];
-                    float[] durations = new float[path.size()-1];
-                    int ii = 0, elevation = 0; // TODO: handle elevated paths
-                    for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
-                        Point p = (Point)iter.next();
-                        coords[ii] = new Vector3f();
-                        toWorldCoords(p.x, p.y, elevation, coords[ii]);
-                        if (ii > 0) {
-                            durations[ii-1] = 0.1f;
-                        }
-                    }
-                    LineSegmentPath lspath =
-                        new LineSegmentPath(this, coords, durations);
-                    move(lspath);
+                    move(path);
                 } else {
-                    Vector3f start = toWorldCoords(ox, oy, 0, new Vector3f());
-                    Vector3f end = toWorldCoords(nx, ny, 0, new Vector3f());
-                    float duration = (float)
-                        MathUtil.distance(ox, oy, nx, ny) * 3 / 1000f;
-                    move(new LinePath(this, start, end, duration));
+                    setLocation(_piece.x, _piece.y, elev);
                 }
             }
         }
@@ -197,6 +174,43 @@ public class PieceSprite extends Sprite
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
         return 0;
+    }
+
+    /**
+     * Creates a path that will be used to move this piece from the
+     * specified old position to the new one.
+     */
+    protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
+    {
+        List path = null;
+        if (board != null) {
+            path = board.computePath(opiece, npiece.x, npiece.y);
+        }
+
+        if (path != null) {
+            // create a world coordinate path from the tile
+            // coordinates
+            Vector3f[] coords = new Vector3f[path.size()];
+            float[] durations = new float[path.size()-1];
+            int ii = 0, elevation = 0; // TODO: handle elevated paths
+            for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
+                Point p = (Point)iter.next();
+                coords[ii] = new Vector3f();
+                toWorldCoords(p.x, p.y, elevation, coords[ii]);
+                if (ii > 0) {
+                    durations[ii-1] = 0.1f;
+                }
+            }
+            return new LineSegmentPath(this, coords, durations);
+
+        } else {
+            Vector3f start = toWorldCoords(
+                opiece.x, opiece.y, 0, new Vector3f());
+            Vector3f end = toWorldCoords(npiece.x, npiece.y, 0, new Vector3f());
+            float duration = (float)MathUtil.distance(
+                opiece.x, opiece.y, npiece.x, npiece.y) * .003f;
+            return new LinePath(this, start, end, duration);
+        }
     }
 
     /**

@@ -6,6 +6,8 @@ package com.threerings.bang.client.sprite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.samskivert.util.HashIntMap;
 
@@ -19,7 +21,10 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 
+import com.threerings.jme.sprite.LineSegmentPath;
+import com.threerings.jme.sprite.Path;
 import com.threerings.media.image.ImageUtil;
+import com.threerings.media.util.MathUtil;
 
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.piece.Dirigible;
@@ -142,6 +147,34 @@ public class UnitSprite extends MobileSprite
             offset = board.getElevation(tx, ty);
         }
         return super.computeElevation(board, tx, ty) + offset;
+    }
+
+    @Override // documentation inherited
+    protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
+    {
+        if (_piece instanceof Dirigible) {
+            ArrayList<Vector3f> nodes = new ArrayList<Vector3f>();
+            int oelev = computeElevation(board, opiece.x, opiece.y);
+            if (oelev == 0) {
+                nodes.add(toWorldCoords(opiece.x, opiece.y, 0, new Vector3f()));
+            }
+            nodes.add(toWorldCoords(opiece.x, opiece.y, 1, new Vector3f()));
+            nodes.add(toWorldCoords(npiece.x, npiece.y, 1, new Vector3f()));
+            int nelev = computeElevation(board, npiece.x, npiece.y);
+            if (nelev == 0) {
+                nodes.add(toWorldCoords(npiece.x, npiece.y, 0, new Vector3f()));
+            }
+
+            Vector3f[] coords = nodes.toArray(new Vector3f[nodes.size()]);
+            float[] durations = new float[coords.length-1];
+            Arrays.fill(durations, 0.1f);
+            durations[oelev == 0 ? 1 : 0] = (float)MathUtil.distance(
+                opiece.x, opiece.y, npiece.x, npiece.y) * .1f;
+            return new LineSegmentPath(this, coords, durations);
+
+        } else {
+            return super.createPath(board, opiece, npiece);
+        }
     }
 
     protected String _type;
