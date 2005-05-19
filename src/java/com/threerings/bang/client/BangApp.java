@@ -8,9 +8,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.logging.Level;
 
-import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
-import com.jme.math.Vector3f;
+import com.jme.input.InputHandler;
+import com.jme.renderer.Camera;
 import com.jme.util.LoggingSystem;
 
 import com.samskivert.servlet.user.Password;
@@ -23,7 +22,6 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.net.UsernamePasswordCreds;
 
 import com.threerings.jme.JmeApp;
-import com.threerings.jme.input.GodViewHandler;
 
 import static com.threerings.bang.Log.log;
 
@@ -81,7 +79,7 @@ public class BangApp extends JmeApp
         app.run(server, port, username, password);
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     public void init ()
     {
         super.init();
@@ -89,20 +87,6 @@ public class BangApp extends JmeApp
         // initialize our client instance
         _client = new BangClient();
         _client.init(this);
-
-        // set up our minimum and maximum zoom
-        GodViewHandler ih = (GodViewHandler)_input;
-        ih.setZoomLimits(50f, 200f);
-
-        // set up the camera
-        Vector3f loc = new Vector3f(80, 40, 200);
-        _camera.setLocation(loc);
-        Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/15, _camera.getLeft());
-        rotm.mult(_camera.getDirection(), _camera.getDirection());
-        rotm.mult(_camera.getUp(), _camera.getUp());
-        rotm.mult(_camera.getLeft(), _camera.getLeft());
-        _camera.update();
 
         // speed up key input
         _input.setKeySpeed(150f);
@@ -128,6 +112,12 @@ public class BangApp extends JmeApp
 
         // now start up the main event loop
         run();
+    }
+
+    @Override // documentation inherited
+    protected InputHandler createInputHandler (Camera camera, String api)
+    {
+        return new CameraHandler(camera, api);
     }
 
     protected void cleanup ()
