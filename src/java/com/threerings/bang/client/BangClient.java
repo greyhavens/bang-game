@@ -235,6 +235,10 @@ public class BangClient
             return _msgmgr;
         }
 
+        public BangApp getApp () {
+            return _app;
+        }
+
         public ModelCache getModelCache () {
             return _mcache;
         }

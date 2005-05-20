@@ -5,6 +5,7 @@ package com.threerings.bang.client;
 
 import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
+import com.jme.bui.BIcon;
 import com.jme.bui.BLabel;
 import com.jme.bui.BPasswordField;
 import com.jme.bui.BTextField;
@@ -12,7 +13,7 @@ import com.jme.bui.BWindow;
 import com.jme.bui.TintedBackground;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.BorderLayout;
+import com.jme.bui.layout.GroupLayout;
 import com.jme.bui.layout.TableLayout;
 import com.jme.renderer.ColorRGBA;
 
@@ -27,6 +28,8 @@ import com.threerings.presents.net.UsernamePasswordCreds;
 
 import com.threerings.bang.util.BangContext;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Displays a simple user interface for logging in.
  */
@@ -35,9 +38,13 @@ public class LogonView extends BWindow
 {
     public LogonView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
+        super(ctx.getLookAndFeel(), GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;
-        setBackground(new TintedBackground(0, 0, 0, 0, ColorRGBA.darkGray));
+        setBackground(new TintedBackground(10, 10, 10, 10, ColorRGBA.darkGray));
+
+        BLabel title = new BLabel(
+            new BIcon(ctx.loadImage("media/textures/title.png")));
+        add(title);
 
         _msgs = ctx.getMessageManager().getBundle("logon");
         BContainer cont = new BContainer(new TableLayout(3, 5, 5));
@@ -52,9 +59,17 @@ public class LogonView extends BWindow
         BButton logon = new BButton(_msgs.get("m.logon"));
         logon.addListener(this);
         cont.add(logon);
-        add(cont, BorderLayout.CENTER);
+        add(cont);
 
-        add(_status = new BLabel(""), BorderLayout.SOUTH);
+        add(_status = new BLabel(""));
+
+        cont = new BContainer(new TableLayout(2, 5, 5));
+        BButton btn;
+        cont.add(btn = new BButton(_msgs.get("m.options"), "options"));
+        btn.addListener(this);
+        cont.add(btn = new BButton(_msgs.get("m.exit"), "exit"));
+        btn.addListener(this);
+        add(cont);
 
         // add our logon listener
         _ctx.getClient().addClientObserver(_listener);
@@ -63,14 +78,25 @@ public class LogonView extends BWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        String username = _username.getText();
-        String password = _password.getText();
-        _status.setText(_msgs.get("m.logging_on"));
-        _ctx.getClient().setCredentials(
-            new UsernamePasswordCreds(
-                new Name(username),
-                Password.makeFromClear(password).getEncrypted()));
-        _ctx.getClient().logon();
+        if (event.getSource() == _password) {
+            String username = _username.getText();
+            String password = _password.getText();
+            _status.setText(_msgs.get("m.logging_on"));
+            _ctx.getClient().setCredentials(
+                new UsernamePasswordCreds(
+                    new Name(username),
+                    Password.makeFromClear(password).getEncrypted()));
+            _ctx.getClient().logon();
+
+        } else if ("options".equals(event.getAction())) {
+            OptionsView oview = new OptionsView(_ctx);
+            _ctx.getInputDispatcher().addWindow(oview);
+            oview.pack();
+            oview.center();
+
+        } else if ("exit".equals(event.getAction())) {
+            _ctx.getApp().stop();
+        }
     }
 
     protected ClientAdapter _listener = new ClientAdapter() {

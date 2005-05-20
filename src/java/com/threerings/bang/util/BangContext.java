@@ -18,6 +18,7 @@ import com.threerings.jme.JmeContext;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.parlor.util.ParlorContext;
 
+import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.ModelCache;
 
 import static com.threerings.bang.Log.log;
@@ -39,6 +40,9 @@ public abstract class BangContext
 
     /** Returns the 3D model cache. */
     public abstract ModelCache getModelCache ();
+
+    /** Returns a reference to our top-level application. */
+    public abstract BangApp getApp ();
 
     /**
      * Translates the specified message using the specified message bundle.
