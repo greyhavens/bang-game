@@ -84,7 +84,12 @@ public class ModelCache
             model.attachChild(box);
 
         } else {
-            model.setLocalScale(0.05f);
+            // temporary hackery
+            if (name.equals("dirigible")) {
+                model.setLocalScale(0.2f);
+            } else {
+                model.setLocalScale(0.05f);
+            }
             model.setLocalTranslation(
                 new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0f));
         }

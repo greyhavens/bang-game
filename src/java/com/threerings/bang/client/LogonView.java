@@ -10,7 +10,7 @@ import com.jme.bui.BLabel;
 import com.jme.bui.BPasswordField;
 import com.jme.bui.BTextField;
 import com.jme.bui.BWindow;
-import com.jme.bui.TintedBackground;
+import com.jme.bui.background.TintedBackground;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.GroupLayout;

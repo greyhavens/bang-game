@@ -7,10 +7,10 @@ import java.awt.Dimension;
 
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BWindow;
-import com.jme.bui.TintedBackground;
-import com.jme.renderer.ColorRGBA;
+import com.jme.bui.background.TintedBackground;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.TableLayout;
+import com.jme.renderer.ColorRGBA;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;

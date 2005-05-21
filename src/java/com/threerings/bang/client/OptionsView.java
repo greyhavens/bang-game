@@ -6,9 +6,8 @@ package com.threerings.bang.client;
 import com.jme.bui.BButton;
 import com.jme.bui.BCheckBox;
 import com.jme.bui.BContainer;
+import com.jme.bui.BDecoratedWindow;
 import com.jme.bui.BLabel;
-import com.jme.bui.BWindow;
-import com.jme.bui.TintedBackground;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.GroupLayout;
@@ -22,16 +21,16 @@ import com.threerings.bang.util.BangContext;
  * Allows options to be viewed and adjusted. Presently that's just video
  * mode and whether or not we're in full screen mode.
  */
-public class OptionsView extends BWindow
+public class OptionsView extends BDecoratedWindow
     implements ActionListener
 {
     public OptionsView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), GroupLayout.makeVStretch());
+        super(ctx.getLookAndFeel(), null);
+        setLayoutManager(GroupLayout.makeVStretch());
+
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("options");
-
-        setBackground(new TintedBackground(10, 10, 10, 10, ColorRGBA.darkGray));
 
         add(new BLabel(_msgs.get("m.title")));
 

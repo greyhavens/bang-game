@@ -7,10 +7,9 @@ import java.util.ArrayList;
 
 import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
+import com.jme.bui.BDecoratedWindow;
 import com.jme.bui.BLabel;
 import com.jme.bui.BTextField;
-import com.jme.bui.BWindow;
-import com.jme.bui.TintedBackground;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
@@ -37,16 +36,13 @@ import static com.threerings.bang.Log.log;
 /**
  * Displays an interface for purchasing units.
  */
-public class PurchaseView extends BWindow
+public class PurchaseView extends BDecoratedWindow
     implements ActionListener
 {
     public PurchaseView (BangContext ctx, BangConfig config,
                          BangObject bangobj, int pidx)
     {
-        super(ctx.getLookAndFeel(), new BorderLayout(2, 2));
-
-        setBackground(new TintedBackground(
-                          0, 0, 0, 0, new ColorRGBA(0, 0, 0, 0.5f)));
+        super(ctx.getLookAndFeel(), null);
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
