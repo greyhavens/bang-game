@@ -3,6 +3,8 @@
 
 package com.threerings.bang.client;
 
+import java.util.logging.Level;
+
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.Display;
 
@@ -26,7 +28,10 @@ public class BangPrefs
      */
     public static void configureDisplayMode (PropertiesIO props)
     {
-        DisplayMode mode = Display.getDisplayMode();
+        DisplayMode mode = getClosest(1024, 768, 16, 60);
+        if (mode == null) {
+            mode = Display.getDisplayMode();
+        }
         String dwidth = String.valueOf(mode.getWidth());
         props.set("WIDTH", config.getValue("display_width", dwidth));
         String dheight = String.valueOf(mode.getHeight());
@@ -67,5 +72,42 @@ public class BangPrefs
     public static void updateFullscreen (boolean fullscreen)
     {
         config.setValue("display_fullscreen", fullscreen);
+    }
+
+    /**
+     * Returns the closest display mode to our specified default.
+     */
+    protected static DisplayMode getClosest (
+        int width, int height, int depth, int freq)
+    {
+        DisplayMode c = null;
+        try {
+            DisplayMode[] modes = Display.getAvailableDisplayModes();
+            for (int ii = 0; ii < modes.length; ii++) {
+                DisplayMode mode = modes[ii];
+                if (c == null) {
+                    c = mode;
+                } else if (closer(c.getWidth(), mode.getWidth(), width)) {
+                    c = mode;
+                } else if (closer(c.getHeight(), mode.getHeight(), height)) {
+                    c = mode;
+                } else if (closer(c.getBitsPerPixel(), mode.getBitsPerPixel(),
+                                  depth)) {
+                    c = mode;
+                } else if (closer(c.getFrequency(), mode.getFrequency(), freq)) {
+                    c = mode;
+                }
+            }
+            return c;
+
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Unable to enumerate display modes.", e);
+            return null;
+        }
+    }
+
+    protected static boolean closer (int value, int ovalue, int tvalue)
+    {
+        return Math.abs(value-tvalue) > Math.abs(ovalue-tvalue);
     }
 }
