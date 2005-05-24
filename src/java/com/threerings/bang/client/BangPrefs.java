@@ -85,8 +85,8 @@ public class BangPrefs
             DisplayMode[] modes = Display.getAvailableDisplayModes();
             for (int ii = 0; ii < modes.length; ii++) {
                 DisplayMode mode = modes[ii];
-                // apparently LWJGL can't cope with 32 bpp
-                if (mode.getBitsPerPixel() == 32) {
+                // apparently LWJGL can't cope with >24 bpp
+                if (mode.getBitsPerPixel() > 24) {
                     continue;
                 }
                 if (c == null) {
