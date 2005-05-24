@@ -24,6 +24,9 @@ while [ ! -z "$1" ]; do
     if [ $1 = "--update" ]; then
         UPDATE=true
     fi
+    if [ $1 = "--client" ]; then
+        CLIENT=true
+    fi
     shift
 done
 
@@ -62,6 +65,11 @@ done
 # build the main thang
 cd $ROOT
 ant clean dist
+
+# build the client if requested
+if [ ! -z "$CLIENT" ]; then
+    ant client
+fi
 
 # now build the editor deployment
 # ant editor
