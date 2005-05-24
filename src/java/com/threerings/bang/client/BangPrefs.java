@@ -27,9 +27,9 @@ public class BangPrefs
     public static void configureDisplayMode (PropertiesIO props)
     {
         DisplayMode mode = Display.getDisplayMode();
-        String dwidth = String.valueOf(Math.min(1024, mode.getWidth()));
+        String dwidth = String.valueOf(mode.getWidth());
         props.set("WIDTH", config.getValue("display_width", dwidth));
-        String dheight = String.valueOf(Math.min(768, mode.getHeight()));
+        String dheight = String.valueOf(mode.getHeight());
         props.set("HEIGHT", config.getValue("display_height", dheight));
         String dbpp = String.valueOf(mode.getBitsPerPixel());
         props.set("DEPTH", config.getValue("display_bpp", dbpp));
