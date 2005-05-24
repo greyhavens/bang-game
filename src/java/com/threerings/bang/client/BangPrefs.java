@@ -27,6 +27,8 @@ public class BangPrefs
         props.set("HEIGHT", config.getValue("display_height", "768"));
         props.set("DEPTH", config.getValue("display_bpp", "16"));
         props.set("FREQ", config.getValue("display_freq", "60"));
+        props.set("FULLSCREEN", String.valueOf(isFullscreen()));
+        props.set("RENDERER", "LWJGL");
     }
 
     /**

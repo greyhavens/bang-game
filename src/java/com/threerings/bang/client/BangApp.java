@@ -118,7 +118,6 @@ public class BangApp extends JmeApp
     protected void readDisplayConfig ()
     {
         BangPrefs.configureDisplayMode(_properties);
-        _properties.set("RENDERER", "LWJGL");
     }
 
     @Override // documentation inherited
