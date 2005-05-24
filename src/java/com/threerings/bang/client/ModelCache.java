@@ -112,8 +112,9 @@ public class ModelCache
         try {
             JmeBinaryReader jbr = new JmeBinaryReader();
             jbr.setProperty("bound", "box");
-            URL turl =
-                getClass().getClassLoader().getResource("rsrc/media/textures/");
+            // we need to reference a file that exists here
+            URL turl = getClass().getClassLoader().getResource(
+                "rsrc/media/textures/title.png");
             jbr.setProperty("texurl", turl);
             InputStream in =
                 getClass().getClassLoader().getResourceAsStream("rsrc/" + path);
