@@ -23,8 +23,6 @@ import com.jme.math.Vector3f;
 import com.jme.scene.TriMesh;
 import com.jmex.effects.ParticleManager;
 
-import com.jme.bui.event.BEvent;
-import com.jme.bui.event.KeyEvent;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
 import com.jme.bui.event.MouseMotionListener;
@@ -46,6 +44,7 @@ import com.threerings.bang.client.sprite.MobileSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.ShotSprite;
 import com.threerings.bang.client.sprite.UnitSprite;
+import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.Effect;
@@ -72,6 +71,15 @@ public class BangBoardView extends BoardView
         super(ctx);
         _ctrl = ctrl;
         addListener(this);
+
+        addListener(new EscapeListener() {
+            public void escapePressed () {
+                InGameOptionsView oview = new InGameOptionsView(_ctx);
+                _ctx.getInputDispatcher().addWindow(oview);
+                oview.pack();
+                oview.center();
+            }
+        });
     }
 
     /**
@@ -134,23 +142,6 @@ public class BangBoardView extends BoardView
     public void mouseExited (MouseEvent e)
     {
         // nada
-    }
-
-    @Override // documentation inherited
-    public void dispatchEvent (BEvent event)
-    {
-        super.dispatchEvent(event);
-
-        if (event instanceof KeyEvent) {
-            KeyEvent kev = (KeyEvent)event;
-            if (kev.getKeyCode() == KeyInput.KEY_ESCAPE &&
-                kev.getType() == KeyEvent.KEY_PRESSED) {
-                InGameOptionsView oview = new InGameOptionsView(_ctx);
-                _ctx.getInputDispatcher().addWindow(oview);
-                oview.pack();
-                oview.center();
-            }
-        }
     }
 
     @Override // documentation inherited
