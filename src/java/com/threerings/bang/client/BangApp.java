@@ -6,6 +6,7 @@ package com.threerings.bang.client;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import javax.swing.JOptionPane;
 import java.util.logging.Level;
 
 import com.jme.input.InputHandler;
@@ -75,14 +76,19 @@ public class BangApp extends JmeApp
         String password = (args.length > 3) ? args[3] : null;
 
         BangApp app = new BangApp();
-        app.init();
-        app.run(server, port, username, password);
+        if (app.init()) {
+            app.run(server, port, username, password);
+        } else {
+            System.exit(-1);
+        }
     }
 
     @Override // documentation inherited
-    public void init ()
+    public boolean init ()
     {
-        super.init();
+        if (!super.init()) {
+            return false;
+        }
 
         // initialize our client instance
         _client = new BangClient();
@@ -90,6 +96,7 @@ public class BangApp extends JmeApp
 
         // speed up key input
         _input.setKeySpeed(150f);
+        return true;
     }
 
     public void run (String server, int port, String username, String password)
@@ -124,6 +131,12 @@ public class BangApp extends JmeApp
     protected InputHandler createInputHandler (Camera camera, String api)
     {
         return new CameraHandler(camera, api);
+    }
+
+    @Override // documentation inherited
+    protected void reportInitFailure (Exception e)
+    {
+        JOptionPane.showMessageDialog(null, "Initialization failed: " + e);
     }
 
     protected void cleanup ()
