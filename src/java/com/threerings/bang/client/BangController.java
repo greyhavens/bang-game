@@ -80,6 +80,8 @@ public class BangController extends GameController
                 log.info("Thwarted! " + reason);
             }
         };
+        log.info("Requesting move and fire [pid=" + pieceId +
+                 ", to=+" + tx + "+" + ty + ", tid=" + targetId + "].");
         _bangobj.service.move(
             _ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, il);
     }

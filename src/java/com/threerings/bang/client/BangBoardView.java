@@ -262,7 +262,7 @@ public class BangBoardView extends BoardView
 
         // if we are placing a surprise, activate it
         if (_surprise != null) {
-//             log.info("activating " + _surprise);
+            log.info("Activating " + _surprise);
             _ctrl.activateSurprise(_surprise.surpriseId, _mouse.x, _mouse.y);
             _surprise = null;
             clearAttackSet();
@@ -306,6 +306,7 @@ public class BangBoardView extends BoardView
         // or if we're clicking in our move set or on our selected piece
         if (!_moveSet.contains(tx, ty) &&
             (_selection == null || _selection.x != tx || _selection.y != ty)) {
+            log.info("Rejecting move +" + tx + "+" + ty + " moves:" + _moveSet);
             return false;
         }
 
@@ -329,6 +330,7 @@ public class BangBoardView extends BoardView
             executeAction();
             _attackSet = null;
         } else {
+            log.info("Waiting for attack selection (" + tx + ", " + ty + ")");
 //             dirtySet(_attackSet);
         }
         return true;
@@ -340,6 +342,8 @@ public class BangBoardView extends BoardView
     {
         if (piece != null) {
             log.info("Clicking to attack " + piece.info());
+        } else {
+            log.info("Clicking to attack +" + tx + "+" + ty);
         }
 
         // maybe we're clicking on a piece that is in our attack set

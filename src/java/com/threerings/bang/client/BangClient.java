@@ -102,8 +102,10 @@ public class BangClient
             // create a one player game of bang
             BangConfig config = new BangConfig();
             config.players = new Name[] {
-                _client.getCredentials().getUsername(), new Name("AI") };
-            config.ais = new GameAI[] { null, new GameAI(0, 50) };
+                _client.getCredentials().getUsername(), new Name("Larry"),
+                new Name("Moe"), new Name("Curly")  };
+            config.ais = new GameAI[] {
+                null, new GameAI(0, 50), new GameAI(0, 50), new GameAI(0, 50) };
             ConfirmListener cl = new ConfirmListener() {
                 public void requestProcessed () {
                 }
