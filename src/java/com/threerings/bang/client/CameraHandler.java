@@ -20,7 +20,7 @@ public class CameraHandler extends GodViewHandler
         super(cam, api);
 
         // set up limits on zooming and panning
-        setZoomLimits(50f, 200f);
+        setZoomLimits(50f, 250f);
         setPanLimits(-50, -50, 250, 250);
 
         // set up the camera
