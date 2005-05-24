@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.logging.Level;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.util.LoggingSystem;
@@ -120,25 +117,7 @@ public class BangApp extends JmeApp
     @Override // documentation inherited
     protected void readDisplayConfig ()
     {
-        DisplayMode mode = null;
-        try {
-            mode = BangPrefs.getDisplayMode(
-                Display.getAvailableDisplayModes());
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to enumerate display modes.", e);
-        }
-        if (mode != null) {
-            _properties.set("WIDTH", String.valueOf(mode.getWidth()));
-            _properties.set("HEIGHT", String.valueOf(mode.getHeight()));
-            _properties.set("DEPTH", String.valueOf(mode.getBitsPerPixel()));
-            _properties.set("FREQ", String.valueOf(mode.getFrequency()));
-        } else {
-            _properties.set("WIDTH", "1024");
-            _properties.set("HEIGHT", "768");
-            _properties.set("DEPTH", "16");
-            _properties.set("FREQ", "60");
-        }
-        _properties.set("FULLSCREEN", String.valueOf(BangPrefs.isFullscreen()));
+        BangPrefs.configureDisplayMode(_properties);
         _properties.set("RENDERER", "LWJGL");
     }
 

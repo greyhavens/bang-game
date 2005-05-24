@@ -5,6 +5,8 @@ package com.threerings.bang.client;
 
 import org.lwjgl.opengl.DisplayMode;
 
+import com.jme.system.PropertiesIO;
+
 import com.samskivert.util.Config;
 
 /**
@@ -19,21 +21,12 @@ public class BangPrefs
      * Returns the display mode in the supplied list that matches the one
      * configured as our preference, or null if there are no matches.
      */
-    public static DisplayMode getDisplayMode (DisplayMode[] modes)
+    public static void configureDisplayMode (PropertiesIO props)
     {
-        int width = config.getValue("display_width", 1024);
-        int height = config.getValue("display_height", 768);
-        int bpp = config.getValue("display_bpp", 16);
-        int freq = config.getValue("display_freq", 60);
-
-        for (int ii = 0; ii < modes.length; ii++) {
-            DisplayMode mode = modes[ii];
-            if (width == mode.getWidth() && height == mode.getHeight() &&
-                bpp == mode.getBitsPerPixel() && freq == mode.getFrequency()) {
-                return mode;
-            }
-        }
-        return null;
+        props.set("WIDTH", config.getValue("display_width", "1024"));
+        props.set("HEIGHT", config.getValue("display_height", "768"));
+        props.set("DEPTH", config.getValue("display_bpp", "16"));
+        props.set("FREQ", config.getValue("display_freq", "60"));
     }
 
     /**
