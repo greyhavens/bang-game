@@ -36,6 +36,10 @@
     public void writeObject (com.threerings.io.ObjectOutputStream);
 }
 
+-keep public class * extends java.lang.Enum {
+    *;
+}
+
 -keep public class com.threerings.bang.client.BangApp {
     public static void main (java.lang.String[]);
 }
