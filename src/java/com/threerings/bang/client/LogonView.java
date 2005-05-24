@@ -56,7 +56,7 @@ public class LogonView extends BWindow
         cont.add(_password = new BPasswordField());
         _password.addListener(this);
 
-        BButton logon = new BButton(_msgs.get("m.logon"));
+        BButton logon = new BButton(_msgs.get("m.logon"), "logon");
         logon.addListener(this);
         cont.add(logon);
         add(cont);
@@ -78,7 +78,8 @@ public class LogonView extends BWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        if (event.getSource() == _password) {
+        if (event.getSource() == _password ||
+            "logon".equals(event.getAction())) {
             String username = _username.getText();
             String password = _password.getText();
             _status.setText(_msgs.get("m.logging_on"));
