@@ -10,6 +10,8 @@ import com.jme.system.PropertiesIO;
 
 import com.samskivert.util.Config;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Contains client-side preferences.
  */
@@ -35,6 +37,9 @@ public class BangPrefs
         props.set("FREQ", config.getValue("display_freq", dfreq));
         props.set("FULLSCREEN", String.valueOf(isFullscreen()));
         props.set("RENDERER", "LWJGL");
+        log.info("Display mode: " + props.getWidth() + "x" + props.getHeight() +
+                 "x" + props.getDepth() + " " + props.getFreq() + "Hz " +
+                 "(current: " + mode + ").");
     }
 
     /**
