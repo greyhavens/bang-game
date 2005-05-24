@@ -89,7 +89,7 @@ public class LogonView extends BWindow
             _ctx.getClient().logon();
 
         } else if ("options".equals(event.getAction())) {
-            OptionsView oview = new OptionsView(_ctx);
+            OptionsView oview = new OptionsView(_ctx, this);
             _ctx.getInputDispatcher().addWindow(oview);
             oview.pack();
             oview.center();
