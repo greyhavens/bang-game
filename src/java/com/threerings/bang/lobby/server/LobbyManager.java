@@ -55,12 +55,12 @@ public class LobbyManager extends PlaceManager
         }
     }
 
-//     // documentation inherited
-//     protected long idleUnloadPeriod ()
-//     {
-//         // unload our lobbies very quickly after they become empty
-//         return 15 * 1000L;
-//     }
+    // documentation inherited
+    protected long idleUnloadPeriod ()
+    {
+        // we don't want to unload
+        return 0L;
+    }
 
     // documentation inherited
     protected Class getPlaceObjectClass ()
