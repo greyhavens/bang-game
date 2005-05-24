@@ -4,6 +4,7 @@
 package com.threerings.bang.lobby.client;
 
 import com.jme.bui.BButton;
+import com.jme.bui.BComboBox;
 import com.jme.bui.BContainer;
 import com.jme.bui.BLabel;
 import com.jme.bui.BWindow;
@@ -73,6 +74,9 @@ public class LobbyView extends BWindow
                                               new EmptyBorder(5, 5, 5, 5)));
         BContainer blist = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.CENTER));
+        _seats = new BComboBox(SEATS);
+        _seats.selectItem(SEATS[0]);
+        blist.add(_seats);
         BButton create = new BButton(msgs.get("m.create"), "create");
         create.addListener(this);
         blist.add(create);
@@ -277,8 +281,10 @@ public class LobbyView extends BWindow
 //         config.setDesiredPlayers(_pslide.getValue());
 
         TableConfig tconfig = new TableConfig();
-        tconfig.desiredPlayerCount = 2;
-        _tbldtr.createTable(tconfig, new BangConfig());
+        tconfig.desiredPlayerCount = (Integer)_seats.getSelectedItem();
+        BangConfig config = new BangConfig();
+        config.seats = tconfig.desiredPlayerCount;
+        _tbldtr.createTable(tconfig, config);
     }
 
     // documentation inherited from interface SeatednessObserver
@@ -320,6 +326,10 @@ public class LobbyView extends BWindow
     protected ChatView _chat;
     protected TableDirector _tbldtr;
 
+    protected BComboBox _seats;
     protected BContainer _penders;
     protected BContainer _inplay;
+
+    protected static final Integer[] SEATS = new Integer[] {
+        new Integer(2), new Integer(3), new Integer(4) };
 }
