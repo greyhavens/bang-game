@@ -28,8 +28,9 @@ import org.lwjgl.opengl.DisplayMode;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.Log;
 import com.threerings.bang.util.BangContext;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Allows options to be viewed and adjusted. Presently that's just video
@@ -57,6 +58,7 @@ public class OptionsView extends BDecoratedWindow
 
         cont = GroupLayout.makeButtonBox(GroupLayout.LEFT);
         cont.add(_fullscreen = new BCheckBox(_msgs.get("m.fullscreen_mode")));
+        _fullscreen.setChecked(Display.isFullscreen());
         _fullscreen.addListener(_modelist);
         add(cont);
 
@@ -104,7 +106,7 @@ public class OptionsView extends BDecoratedWindow
             _modes.selectItem(current);
 
         } catch (LWJGLException e) {
-            Log.log.log(Level.WARNING, "Failed to obtain display modes", e);
+            log.log(Level.WARNING, "Failed to obtain display modes", e);
         }
     }
 
@@ -115,7 +117,7 @@ public class OptionsView extends BDecoratedWindow
             return;
         }
         if (mode != null) {
-            Log.log.info("Switching to " + mode + " (from " + _mode + ")");
+            log.info("Switching to " + mode + " (from " + _mode + ")");
             _mode = mode;
         }
         _ctx.getDisplay().recreateWindow(
@@ -123,6 +125,8 @@ public class OptionsView extends BDecoratedWindow
             _mode.getFrequency(), _fullscreen.isChecked());
         _parent.center();
         center();
+        BangPrefs.updateDisplayMode(_mode);
+        BangPrefs.updateFullscreen(_fullscreen.isChecked());
     }
 
     protected static class ModeItem implements Comparable
