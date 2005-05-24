@@ -12,6 +12,9 @@
 -injars lib/narya-jme.jar(!META-INF/*,!**/tools/**)
 -injars lib/samskivert.jar(!META-INF/*,!**/velocity/**,!**/xml/**)
 -injars lib/jme.jar(!META-INF/*)
+-injars lib/jme-effects.jar(!META-INF/*)
+-injars lib/jme-model.jar(!META-INF/*)
+-injars lib/jme-terrain.jar(!META-INF/*)
 -injars lib/jme-bui.jar(!META-INF/*)
 -injars dist/bang.jar(!META-INF/*)
 
