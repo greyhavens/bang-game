@@ -134,9 +134,9 @@ public class BangApp extends JmeApp
     }
 
     @Override // documentation inherited
-    protected void reportInitFailure (Exception e)
+    protected void reportInitFailure (Throwable t)
     {
-        JOptionPane.showMessageDialog(null, "Initialization failed: " + e);
+        JOptionPane.showMessageDialog(null, "Initialization failed: " + t);
     }
 
     protected void cleanup ()
