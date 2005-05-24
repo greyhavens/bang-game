@@ -115,6 +115,9 @@ public class BangView
     {
         _chat.didLeavePlace(plobj);
 
+        // shut down the main game view
+        view.shutdown();
+
         // remove our displays
         _ctx.getInputDispatcher().removeWindow(_pstatus);
         _ctx.getInputDispatcher().removeWindow(_chatwin);

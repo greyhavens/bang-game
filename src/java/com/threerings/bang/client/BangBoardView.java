@@ -15,15 +15,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.jme.bui.event.MouseEvent;
-import com.jme.bui.event.MouseListener;
-import com.jme.bui.event.MouseMotionListener;
+import com.jme.input.KeyInput;
 import com.jme.intersection.BoundingPickResults;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.TriMesh;
 import com.jmex.effects.ParticleManager;
+
+import com.jme.bui.event.BEvent;
+import com.jme.bui.event.KeyEvent;
+import com.jme.bui.event.MouseEvent;
+import com.jme.bui.event.MouseListener;
+import com.jme.bui.event.MouseMotionListener;
 
 import com.samskivert.util.StringUtil;
 
@@ -130,6 +134,23 @@ public class BangBoardView extends BoardView
     public void mouseExited (MouseEvent e)
     {
         // nada
+    }
+
+    @Override // documentation inherited
+    public void dispatchEvent (BEvent event)
+    {
+        super.dispatchEvent(event);
+
+        if (event instanceof KeyEvent) {
+            KeyEvent kev = (KeyEvent)event;
+            if (kev.getKeyCode() == KeyInput.KEY_ESCAPE &&
+                kev.getType() == KeyEvent.KEY_PRESSED) {
+                InGameOptionsView oview = new InGameOptionsView(_ctx);
+                _ctx.getInputDispatcher().addWindow(oview);
+                oview.pack();
+                oview.center();
+            }
+        }
     }
 
     @Override // documentation inherited

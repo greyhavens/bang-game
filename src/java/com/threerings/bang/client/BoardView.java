@@ -70,8 +70,8 @@ public class BoardView extends BComponent
     {
         _ctx = ctx;
 
-        // configure ourselves as the default mouse target
-        _ctx.getInputDispatcher().setDefaultMouseTarget(this);
+        // configure ourselves as the default event target
+        _ctx.getInputDispatcher().pushDefaultEventTarget(this);
 
         // we don't actually want to render in orthographic mode
         _node.setRenderQueueMode(Renderer.QUEUE_INHERIT);
@@ -139,6 +139,15 @@ public class BoardView extends BComponent
         // this is used to target tiles when deploying a surprise
         _tgtstate = RenderUtil.createTexture(
             ctx, ctx.loadImage("media/textures/crosshair.png"));
+    }
+
+    /**
+     * Called when we're to be removed from the display.
+     */
+    public void shutdown ()
+    {
+        // clear ourselves as a default event target
+        _ctx.getInputDispatcher().popDefaultEventTarget(this);
     }
 
     /**
