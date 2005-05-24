@@ -6,6 +6,7 @@ package com.threerings.bang.client;
 import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
 import com.jme.bui.BLabel;
+import com.jme.bui.BLookAndFeel;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.TableLayout;
@@ -19,6 +20,7 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.util.BangContext;
@@ -44,7 +46,7 @@ public class PlayerStatusView extends BContainer
         _pidx = pidx;
 
         BContainer top = new BContainer(new TableLayout(3, 5, 5));
-        top.add(new BLabel(_bangobj.players[_pidx].toString()));
+        top.add(_player = new BLabel(_bangobj.players[_pidx].toString()));
         top.add(_status = new BLabel(""));
         add(top);
 
@@ -52,6 +54,15 @@ public class PlayerStatusView extends BContainer
         add(_surprises);
 
         updateStatus();
+    }
+
+    @Override // documentation inherited
+    public void wasAdded ()
+    {
+        BLookAndFeel lnf = getLookAndFeel().deriveLookAndFeel();
+        lnf.setForeground(UnitSprite.JPIECE_COLORS[_pidx]);
+        _player.setLookAndFeel(lnf);
+        super.wasAdded();
     }
 
     // documentation inherited from interface AttributeChangeListener
@@ -141,5 +152,5 @@ public class PlayerStatusView extends BContainer
     protected BangController _ctrl;
     protected int _pidx;
     protected BContainer _surprises;
-    protected BLabel _status;
+    protected BLabel _player, _status;
 }
