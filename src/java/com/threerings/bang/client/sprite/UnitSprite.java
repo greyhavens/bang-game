@@ -46,7 +46,7 @@ public class UnitSprite extends MobileSprite
 
     public static final ColorRGBA[] JPIECE_COLORS = {
         ColorRGBA.blue, ColorRGBA.red, ColorRGBA.green,
-        new ColorRGBA(1, 1, 0, 0)
+        new ColorRGBA(1, 1, 0, 1)
     };
 
     public static final ColorRGBA[] DARKER_COLORS = {
