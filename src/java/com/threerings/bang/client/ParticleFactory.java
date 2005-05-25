@@ -67,7 +67,7 @@ public class ParticleFactory
     {
         int count = 0, index = -1;
         for (int x = 0, tSize = smallExplosions.size(); x < tSize; x++) {
-            ParticleManager e = explosions.get(x);
+            ParticleManager e = smallExplosions.get(x);
             if (!e.isActive()) {
                 return e;
             }

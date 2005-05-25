@@ -5,13 +5,14 @@ package com.threerings.bang.client;
 
 import java.awt.Dimension;
 
+import com.jme.renderer.ColorRGBA;
+
 import com.jme.bui.BDecoratedWindow;
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BWindow;
 import com.jme.bui.background.TintedBackground;
 import com.jme.bui.layout.BorderLayout;
-import com.jme.bui.layout.TableLayout;
-import com.jme.renderer.ColorRGBA;
+import com.jme.bui.layout.GroupLayout;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
@@ -96,8 +97,7 @@ public class BangView
         // create and position our player status displays
         int pcount = bangobj.players.length;
         _pstatus = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
-        _pstatus.setLayoutManager(
-            new TableLayout(pcount, 10, 10, TableLayout.STRETCH));
+        _pstatus.setLayoutManager(GroupLayout.makeHStretch());
         _pstatus.setBackground(
             new TintedBackground(5, 5, 5, 5, ColorRGBA.darkGray));
         for (int ii = 0; ii < pcount; ii++) {

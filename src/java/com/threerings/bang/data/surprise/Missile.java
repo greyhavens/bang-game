@@ -35,7 +35,7 @@ public class Missile extends Surprise
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "missile" + radius;
+        return "missile";
     }
 
     @Override // documentation inherited

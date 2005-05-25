@@ -5,10 +5,12 @@ package com.threerings.bang.client;
 
 import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
+import com.jme.bui.BIcon;
 import com.jme.bui.BLabel;
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
+import com.jme.bui.layout.GroupLayout;
 import com.jme.bui.layout.TableLayout;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -37,7 +39,7 @@ public class PlayerStatusView extends BContainer
     public PlayerStatusView (BangContext ctx, BangObject bangobj,
                              BangController ctrl, int pidx)
     {
-        super(new TableLayout(1, 5, 5));
+        super(GroupLayout.makeHoriz(GroupLayout.LEFT));
 
         _ctx = ctx;
         _bangobj = bangobj;
@@ -45,13 +47,12 @@ public class PlayerStatusView extends BContainer
         _ctrl = ctrl;
         _pidx = pidx;
 
-        BContainer top = new BContainer(new TableLayout(3, 5, 5));
-        top.add(_player = new BLabel(_bangobj.players[_pidx].toString()));
-        top.add(_status = new BLabel(""));
-        add(top);
-
-        _surprises = new BContainer(new TableLayout(3, 5, 5));
-        add(_surprises);
+        BContainer bits = new BContainer(new TableLayout(2, 5, 5));
+        bits.add(_player = new BLabel(_bangobj.players[_pidx].toString()));
+        bits.add(_score = new BLabel(""));
+        bits.add(_cash = new BLabel(""));
+        bits.add(_pieces = new BLabel(""));
+        add(bits);
 
         updateStatus();
     }
@@ -85,7 +86,7 @@ public class PlayerStatusView extends BContainer
         if (event.getName().equals(BangObject.SURPRISES)) {
             Surprise s = (Surprise)event.getEntry();
             if (s.owner == _pidx) {
-                _surprises.add(createButton(s));
+                add(createButton(s));
             }
         }
     }
@@ -107,10 +108,10 @@ public class PlayerStatusView extends BContainer
             return;
         }
         String sid = "" + s.surpriseId;
-        for (int ii = 0; ii < _surprises.getComponentCount(); ii++) {
-            BButton button = (BButton)_surprises.getComponent(ii);
+        for (int ii = 1; ii < getComponentCount(); ii++) {
+            BButton button = (BButton)getComponent(ii);
             if (sid.equals(button.getAction())) {
-                _surprises.remove(button);
+                remove(button);
                 return;
             }
         }
@@ -128,21 +129,22 @@ public class PlayerStatusView extends BContainer
 
     protected void updateStatus ()
     {
-        String status = "S:" + _bangobj.points[_pidx];
+        _score.setText("" + _bangobj.points[_pidx]);
         if (_bangobj.isInPlay() || _bangobj.state == BangObject.POST_ROUND) {
-            status += " P:" + _bangobj.countLivePieces(_pidx) +
-                " $:" + _bangobj.funds[_pidx] +
-                " (" + _bangobj.reserves[_pidx] + ")";
+            _pieces.setText("P" + _bangobj.countLivePieces(_pidx));
+            _cash.setText(
+                "$" + (_bangobj.funds[_pidx] + _bangobj.reserves[_pidx]));
         } else {
-            status += " $:" + _bangobj.reserves[_pidx];
+            _pieces.setText("");
+            _cash.setText("$" + _bangobj.reserves[_pidx]);
         }
-        _status.setText(status);
     }
 
     protected BButton createButton (Surprise s)
     {
-        BButton btn = new BButton(s.getIconPath());
-        btn.setAction("" + s.surpriseId);
+        BIcon icon = new BIcon(
+            _ctx.loadImage("media/bonuses/" + s.getIconPath() + ".png"));
+        BButton btn = new BButton(icon, "" + s.surpriseId);
         btn.addListener(this);
         return btn;
     }
@@ -151,6 +153,5 @@ public class PlayerStatusView extends BContainer
     protected BangObject _bangobj;
     protected BangController _ctrl;
     protected int _pidx;
-    protected BContainer _surprises;
-    protected BLabel _player, _status;
+    protected BLabel _player, _score, _cash, _pieces;
 }

@@ -132,7 +132,7 @@ public class BoardView extends BComponent
 
         // this is used to target tiles when deploying a surprise
         _tgtstate = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/crosshair.png"));
+            ctx, ctx.loadImage("media/textures/ustatus/crosshairs.png"));
     }
 
     /**

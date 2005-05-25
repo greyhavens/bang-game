@@ -33,7 +33,7 @@ public class AreaRepair extends Surprise
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "repair" + radius;
+        return "repair";
     }
 
     @Override // documentation inherited

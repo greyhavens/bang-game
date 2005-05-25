@@ -96,7 +96,7 @@ public class ModelCache
                 new Vector3f(TILE_SIZE/2, TILE_SIZE/2, z));
         }
 
-        dump(model, "");
+//         dump(model, "");
 
         CloneCreator cc = new CloneCreator(model);
         cc.addProperty("colors");
