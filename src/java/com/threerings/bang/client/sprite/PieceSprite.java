@@ -198,7 +198,7 @@ public class PieceSprite extends Sprite
                 coords[ii] = new Vector3f();
                 toWorldCoords(p.x, p.y, elevation, coords[ii]);
                 if (ii > 0) {
-                    durations[ii-1] = 0.1f;
+                    durations[ii-1] = 0.2f;
                 }
             }
             return new LineSegmentPath(this, coords, durations);

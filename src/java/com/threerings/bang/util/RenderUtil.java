@@ -79,7 +79,7 @@ public class RenderUtil
     public static Quad createIcon (TextureState tstate)
     {
         Quad icon = createIcon(TILE_SIZE, TILE_SIZE);
-        icon.setLocalTranslation(new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0f));
+        icon.setLocalTranslation(new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0.1f));
         icon.setRenderState(tstate);
         icon.updateRenderState();
         return icon;

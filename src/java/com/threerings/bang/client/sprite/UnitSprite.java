@@ -14,11 +14,15 @@ import com.samskivert.util.HashIntMap;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
@@ -133,14 +137,14 @@ public class UnitSprite extends MobileSprite
         _hovquad.setForceCull(true);
 
         // this composite of icons combines to display our status
-        _status = new Node("status");
+        _status = new StatusNode();
         _status.setLocalTranslation(
-            new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0));
+            new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0.1f));
         attachChild(_status);
         _ticks = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
         _ticks.setLocalTranslation(new Vector3f(-TILE_SIZE/4, TILE_SIZE/4, 0));
-        int tick = Math.max(0, 4-_piece.ticksUntilMovable(_tick));
-        _ticks.setRenderState(_ticktex[tick]);
+        int tick = _piece.ticksUntilMovable(_tick), tidx = Math.max(0, 4-tick);
+        _ticks.setRenderState(_ticktex[tidx]);
         _ticks.updateRenderState();
         _status.attachChild(_ticks);
         _ticks.setSolidColor(JPIECE_COLORS[_piece.owner]);
@@ -160,6 +164,7 @@ public class UnitSprite extends MobileSprite
         _status.attachChild(_movable);
         attachChild(_status);
         _movable.setSolidColor(JPIECE_COLORS[_piece.owner]);
+        _movable.setForceCull(tick > 0);
 
         _model = ctx.getModelCache().getModel(_type);
         attachChild(_model);
@@ -177,14 +182,6 @@ public class UnitSprite extends MobileSprite
         bbn.attachChild(_tgtquad);
         attachChild(bbn);
         _tgtquad.setForceCull(true);
-
-//         // this will display our damage
-//         _damage = new Quad("damage", DBAR_WIDTH, DBAR_HEIGHT);
-//         _damage.setLocalTranslation(
-//             new Vector3f(DBAR_WIDTH/2+1, DBAR_HEIGHT/2+1, 0));
-//         _damage.setSolidColor(ColorRGBA.green);
-//         _damage.setLightCombineMode(LightState.OFF);
-//         attachChild(_damage);
     }
 
     @Override // documentation inherited
@@ -217,7 +214,7 @@ public class UnitSprite extends MobileSprite
             float[] durations = new float[coords.length-1];
             Arrays.fill(durations, 0.1f);
             durations[oelev == 0 ? 1 : 0] = (float)MathUtil.distance(
-                opiece.x, opiece.y, npiece.x, npiece.y) * .1f;
+                opiece.x, opiece.y, npiece.x, npiece.y) * .2f;
             return new LineSegmentPath(this, coords, durations);
 
         } else {
@@ -272,14 +269,73 @@ public class UnitSprite extends MobileSprite
         _damtex.setEnabled(true);
     }
 
+    /** A node that rotates itself around the up vector as the camera
+     * rotates so as to keep the status textures properly oriented toward
+     * the player. */
+    protected class StatusNode extends Node
+    {
+        public StatusNode () {
+            super("status");
+        }
+
+	public void updateWorldData (float time) {
+            _lastUpdate = time;
+            updateWorldBound();
+	}
+
+	public void draw (Renderer r) {
+            Camera cam = r.getCamera();
+
+            // obtain our current world coordinates
+            worldScale.set(parent.getWorldScale()).multLocal(localScale);
+            parent.getWorldRotation().mult(localRotation, worldRotation);
+            worldTranslation = parent.getWorldRotation().mult(
+                localTranslation, worldTranslation).multLocal(
+                    parent.getWorldScale()).addLocal(
+                        parent.getWorldTranslation());
+
+            // compute the angle from the camera to the center of the board
+            _tvec.x = (cam.getLocation().x - TILE_SIZE*8);
+            _tvec.y = (cam.getLocation().y - TILE_SIZE*8);
+
+            // now rotate ourselves so that we're always facing generally
+            // toward the viewer
+            _tvec.normalizeLocal();
+            float theta = FastMath.acos(_tvec.dot(LEFT));
+            // when y is negative, we need to flip the sign of the angle
+            if (_tvec.y < 0) {
+                theta *= -1f;
+            }
+            // we offset theta by -PI/2 because our "natural" orientation
+            // is a bit sideways
+            _tquat.fromAngleAxis(theta - FastMath.PI/2, UP);
+            worldRotation.multLocal(_tquat);
+
+            // now we can update our children
+            for (int ii = 0, ll = children.size(); ii < ll; ii++) {
+                Spatial child = (Spatial)children.get(ii);
+                if (child != null) {
+                    child.updateGeometricState(_lastUpdate, false);
+                }
+            }
+
+            super.draw(r);
+	}
+
+        protected float _lastUpdate;
+    }
+
     protected String _type;
     protected Node _model;
     protected Quad _hovquad, _tgtquad;
 
-    protected Node _status;
+    protected StatusNode _status;
     protected Quad _ticks, _damage, _movable;
 
     protected int _odamage;
+
+    protected static Vector3f _tvec = new Vector3f();
+    protected static Quaternion _tquat = new Quaternion();
 
     protected static BufferedImage _dfull, _dempty;
     protected static TextureState _hovtex, _tgttex, _movetex, _damtex;
@@ -291,4 +347,7 @@ public class UnitSprite extends MobileSprite
     /** Defines the amount by which the damage arc image is inset from a
      * full quarter circle (on each side): 8 degrees. */
     protected static final float ARC_INSETS = 7;
+
+    protected static final Vector3f LEFT = new Vector3f(1, 0, 0);
+    protected static final Vector3f UP = new Vector3f(0, 0, 1);
 }
