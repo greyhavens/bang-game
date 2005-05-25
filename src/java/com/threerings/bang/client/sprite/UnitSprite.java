@@ -5,6 +5,7 @@ package com.threerings.bang.client.sprite;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import com.samskivert.util.HashIntMap;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -22,6 +24,7 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 
 import com.threerings.jme.sprite.LineSegmentPath;
 import com.threerings.jme.sprite.Path;
@@ -103,12 +106,11 @@ public class UnitSprite extends MobileSprite
             _movable.setForceCull(false);
         }
 
-        // TODO: deal with damage
-
-//         float size = (100 - piece.damage) * DBAR_WIDTH / 100f;
-//         _damage.resize(size, DBAR_HEIGHT);
-//         _damage.getLocalTranslation().x = size/2 + 1;
-//         _damage.updateGeometricState(0, true);
+        // update our damage texture if necessary
+        if (_piece.damage != _odamage) {
+            _damtex.setTexture(createDamageTexture());
+            _damage.updateRenderState();
+        }
     }
 
     @Override // documentation inherited
@@ -145,6 +147,7 @@ public class UnitSprite extends MobileSprite
 
         _damage = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
         _damage.setLocalTranslation(new Vector3f(TILE_SIZE/4, TILE_SIZE/4, 0));
+        _damtex.setTexture(createDamageTexture());
         _damage.setRenderState(_damtex);
         _damage.updateRenderState();
         _status.attachChild(_damage);
@@ -222,6 +225,33 @@ public class UnitSprite extends MobileSprite
         }
     }
 
+    protected Texture createDamageTexture ()
+    {
+        int width = _dempty.getWidth(), height = _dempty.getHeight();
+        BufferedImage comp = new BufferedImage(
+            width, height, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D gfx = (Graphics2D)comp.getGraphics();
+        try {
+            gfx.drawImage(_dempty, 0, 0, null);
+            float percent = (100 - _piece.damage) / 100f;
+            float extent = percent * (90 - 2*ARC_INSETS);
+            // expand the width and height a smidge to avoid funny
+            // business around the edges
+            Arc2D.Float arc = new Arc2D.Float(
+                -5*width/4, -height/4, 10*width/4, 10*height/4,
+                90 - ARC_INSETS - extent, extent, Arc2D.PIE);
+            gfx.setClip(arc);
+            gfx.drawImage(_dfull, 0, 0, null);
+
+        } finally {
+            gfx.dispose();
+        }
+
+        return TextureManager.loadTexture(
+            comp, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+    }
+
     protected static void loadTextures (BangContext ctx)
     {
         _hovtex = RenderUtil.createTexture(
@@ -230,14 +260,16 @@ public class UnitSprite extends MobileSprite
             ctx, ctx.loadImage("media/textures/ustatus/crosshairs.png"));
         _movetex = RenderUtil.createTexture(
             ctx, ctx.loadImage("media/textures/ustatus/tick_ready.png"));
-        _damtex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/ustatus/health_meter_full.png"));
         _ticktex = new TextureState[5];
         for (int ii = 0; ii < 5; ii++) {
             _ticktex[ii] = RenderUtil.createTexture(
                 ctx, ctx.loadImage(
                     "media/textures/ustatus/tick_counter_" + ii + ".png"));
         }
+        _dfull = ctx.loadImage("media/textures/ustatus/health_meter_full.png");
+        _dempty = ctx.loadImage("media/textures/ustatus/health_meter_empty.png");
+        _damtex = ctx.getRenderer().createTextureState();
+        _damtex.setEnabled(true);
     }
 
     protected String _type;
@@ -247,9 +279,16 @@ public class UnitSprite extends MobileSprite
     protected Node _status;
     protected Quad _ticks, _damage, _movable;
 
+    protected int _odamage;
+
+    protected static BufferedImage _dfull, _dempty;
     protected static TextureState _hovtex, _tgttex, _movetex, _damtex;
     protected static TextureState[] _ticktex;
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
+
+    /** Defines the amount by which the damage arc image is inset from a
+     * full quarter circle (on each side): 8 degrees. */
+    protected static final float ARC_INSETS = 7;
 }

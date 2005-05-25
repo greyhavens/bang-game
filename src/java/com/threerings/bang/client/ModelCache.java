@@ -84,16 +84,9 @@ public class ModelCache
             model.attachChild(box);
 
         } else {
-            // temporary hackery
-            float z = 0;
-            if (name.equals("dirigible")) {
-                model.setLocalScale(0.2f);
-                z = 5f;
-            } else {
-                model.setLocalScale(0.05f);
-            }
+            model.setLocalScale(0.05f);
             model.setLocalTranslation(
-                new Vector3f(TILE_SIZE/2, TILE_SIZE/2, z));
+                new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0));
         }
 
 //         dump(model, "");
@@ -124,8 +117,7 @@ public class ModelCache
 
             Node model = jbr.loadBinaryFormat(new BufferedInputStream(in));
             // temporary rotation hackery
-            if (path.indexOf("artillery") != -1 ||
-                path.indexOf("dirigible") != -1) {
+            if (path.indexOf("artillery") != -1) {
                 Quaternion r1 = new Quaternion();
                 r1.fromAngleAxis(-FastMath.PI/2, new Vector3f(-1,0,0));
                 Quaternion r2 = new Quaternion();
