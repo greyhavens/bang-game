@@ -85,13 +85,15 @@ public class ModelCache
 
         } else {
             // temporary hackery
+            float z = 0;
             if (name.equals("dirigible")) {
                 model.setLocalScale(0.2f);
+                z = 5f;
             } else {
                 model.setLocalScale(0.05f);
             }
             model.setLocalTranslation(
-                new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0f));
+                new Vector3f(TILE_SIZE/2, TILE_SIZE/2, z));
         }
 
         dump(model, "");
@@ -119,7 +121,20 @@ public class ModelCache
             InputStream in =
                 getClass().getClassLoader().getResourceAsStream("rsrc/" + path);
             log.info("Loading " + path + " from " + in + ": " + in.available());
-            return jbr.loadBinaryFormat(new BufferedInputStream(in));
+
+            Node model = jbr.loadBinaryFormat(new BufferedInputStream(in));
+            // temporary rotation hackery
+            if (path.indexOf("artillery") != -1 ||
+                path.indexOf("dirigible") != -1) {
+                Quaternion r1 = new Quaternion();
+                r1.fromAngleAxis(-FastMath.PI/2, new Vector3f(-1,0,0));
+                Quaternion r2 = new Quaternion();
+                r2.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
+                r1.multLocal(r2);
+                model.setLocalRotation(r1);
+            }
+
+            return model;
 
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Error loading model '" + path + "'.", ioe);
@@ -222,10 +237,8 @@ public class ModelCache
 
     protected void dump (Spatial spatial, String indent)
     {
-        String extra = "";
-        if (spatial instanceof Geometry) {
-            extra = " (" + ((Geometry)spatial).getModelBound();
-        }
+        spatial.updateWorldBound();
+        String extra = " (" + spatial.getWorldBound() + ")";
         log.info(indent + spatial + extra);
         if (spatial instanceof Node) {
             indent += "  ";
