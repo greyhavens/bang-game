@@ -14,6 +14,8 @@ import com.samskivert.util.HashIntMap;
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
+import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
@@ -88,18 +90,25 @@ public class UnitSprite extends MobileSprite
     {
         super.updated(board, piece, tick);
 
+        int ticks;
         if (!_piece.isAlive()) {
-            _ownquad.setForceCull(true);
-        } else if (_piece.ticksUntilMovable(_tick) > 0) {
-            _ownquad.setSolidColor(DARKER_COLORS[_piece.owner]);
+            _status.setForceCull(true);
+        } else if ((ticks = _piece.ticksUntilMovable(_tick)) > 0) {
+            _ticks.setRenderState(_ticktex[Math.max(0, 4-ticks)]);
+            _ticks.updateRenderState();
+            _movable.setForceCull(true);
         } else {
-            _ownquad.setSolidColor(JPIECE_COLORS[_piece.owner]);
+            _ticks.setRenderState(_ticktex[4]);
+            _ticks.updateRenderState();
+            _movable.setForceCull(false);
         }
 
-        float size = (100 - piece.damage) * DBAR_WIDTH / 100f;
-        _damage.resize(size, DBAR_HEIGHT);
-        _damage.getLocalTranslation().x = size/2 + 1;
-        _damage.updateGeometricState(0, true);
+        // TODO: deal with damage
+
+//         float size = (100 - piece.damage) * DBAR_WIDTH / 100f;
+//         _damage.resize(size, DBAR_HEIGHT);
+//         _damage.getLocalTranslation().x = size/2 + 1;
+//         _damage.updateGeometricState(0, true);
     }
 
     @Override // documentation inherited
@@ -112,31 +121,67 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected void createGeometry (BangContext ctx)
     {
+        if (_hovtex == null) {
+            loadTextures(ctx);
+        }
+
         // this icon is displayed when the mouse is hovered over us
-        _hovquad = RenderUtil.createIcon(ctx, "media/textures/hovered.png");
+        _hovquad = RenderUtil.createIcon(_hovtex);
         attachChild(_hovquad);
         _hovquad.setForceCull(true);
 
-        // this icon displays who we are
-        _ownquad = RenderUtil.createIcon(ctx, "media/textures/circle.png");
-        attachChild(_ownquad);
+        // this composite of icons combines to display our status
+        _status = new Node("status");
+        _status.setLocalTranslation(
+            new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0));
+        attachChild(_status);
+        _ticks = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
+        _ticks.setLocalTranslation(new Vector3f(-TILE_SIZE/4, TILE_SIZE/4, 0));
+        int tick = Math.max(0, 4-_piece.ticksUntilMovable(_tick));
+        _ticks.setRenderState(_ticktex[tick]);
+        _ticks.updateRenderState();
+        _status.attachChild(_ticks);
+        _ticks.setSolidColor(JPIECE_COLORS[_piece.owner]);
+
+        _damage = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
+        _damage.setLocalTranslation(new Vector3f(TILE_SIZE/4, TILE_SIZE/4, 0));
+        _damage.setRenderState(_damtex);
+        _damage.updateRenderState();
+        _status.attachChild(_damage);
+        _damage.setSolidColor(JPIECE_COLORS[_piece.owner]);
+
+        _movable = RenderUtil.createIcon(TILE_SIZE, TILE_SIZE/2);
+        _movable.setLocalTranslation(new Vector3f(0, -TILE_SIZE/4, 0));
+        _movable.setRenderState(_movetex);
+        _movable.updateRenderState();
+        _status.attachChild(_movable);
+        attachChild(_status);
+        _movable.setSolidColor(JPIECE_COLORS[_piece.owner]);
 
         _model = ctx.getModelCache().getModel(_type);
         attachChild(_model);
         _model.updateRenderState();
 
         // this icon is displayed when we're a target
-        _tgtquad = RenderUtil.createIcon(ctx, "media/textures/crosshair.png");
-        attachChild(_tgtquad);
+        _tgtquad = RenderUtil.createIcon(_tgttex);
+        _tgtquad.setLocalTranslation(new Vector3f(0, 0, 0));
+        _tgtquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _tgtquad.setRenderState(RenderUtil.alwaysZBuf);
+        _tgtquad.updateRenderState();
+        BillboardNode bbn = new BillboardNode("target");
+        bbn.setLocalTranslation(
+            new Vector3f(TILE_SIZE/2, TILE_SIZE/2, TILE_SIZE/3));
+        bbn.attachChild(_tgtquad);
+        attachChild(bbn);
         _tgtquad.setForceCull(true);
 
-        // this will display our damage
-        _damage = new Quad("damage", DBAR_WIDTH, DBAR_HEIGHT);
-        _damage.setLocalTranslation(
-            new Vector3f(DBAR_WIDTH/2+1, DBAR_HEIGHT/2+1, 0));
-        _damage.setSolidColor(ColorRGBA.green);
-        _damage.setLightCombineMode(LightState.OFF);
-        attachChild(_damage);
+//         // this will display our damage
+//         _damage = new Quad("damage", DBAR_WIDTH, DBAR_HEIGHT);
+//         _damage.setLocalTranslation(
+//             new Vector3f(DBAR_WIDTH/2+1, DBAR_HEIGHT/2+1, 0));
+//         _damage.setSolidColor(ColorRGBA.green);
+//         _damage.setLightCombineMode(LightState.OFF);
+//         attachChild(_damage);
     }
 
     @Override // documentation inherited
@@ -177,10 +222,33 @@ public class UnitSprite extends MobileSprite
         }
     }
 
+    protected static void loadTextures (BangContext ctx)
+    {
+        _hovtex = RenderUtil.createTexture(
+            ctx, ctx.loadImage("media/textures/ustatus/selected.png"));
+        _tgttex = RenderUtil.createTexture(
+            ctx, ctx.loadImage("media/textures/ustatus/crosshairs.png"));
+        _movetex = RenderUtil.createTexture(
+            ctx, ctx.loadImage("media/textures/ustatus/tick_ready.png"));
+        _damtex = RenderUtil.createTexture(
+            ctx, ctx.loadImage("media/textures/ustatus/health_meter_full.png"));
+        _ticktex = new TextureState[5];
+        for (int ii = 0; ii < 5; ii++) {
+            _ticktex[ii] = RenderUtil.createTexture(
+                ctx, ctx.loadImage(
+                    "media/textures/ustatus/tick_counter_" + ii + ".png"));
+        }
+    }
+
     protected String _type;
     protected Node _model;
-    protected Quad _damage;
-    protected Quad _ownquad, _hovquad, _tgtquad;
+    protected Quad _hovquad, _tgtquad;
+
+    protected Node _status;
+    protected Quad _ticks, _damage, _movable;
+
+    protected static TextureState _hovtex, _tgttex, _movetex, _damtex;
+    protected static TextureState[] _ticktex;
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;

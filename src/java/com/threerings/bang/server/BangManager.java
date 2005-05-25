@@ -46,6 +46,7 @@ import com.threerings.bang.data.generate.SkirmishScenario;
 import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.BonusMarker;
+import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.PlayerPiece;
 import com.threerings.bang.data.piece.SteamGunman;
@@ -249,9 +250,9 @@ public class BangManager extends GameManager
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii)) {
+            if (isAI(ii) || isTest()) {
                 Piece[] pieces = new Piece[] {
-                    new Artillery(), new SteamGunman(), new SteamGunman() };
+                    new Artillery(), new SteamGunman(), new Dirigible() };
                 purchasePieces(ii, pieces);
             }
         }
@@ -724,7 +725,7 @@ public class BangManager extends GameManager
         // if that failed, load a stock board
         if (tup == null) {
             String board = (String)RandomUtil.pickRandom(BOARDS);
-            if (System.getProperty("test") != null) {
+            if (isTest()) {
                 board = "default";
             }
             try {
@@ -767,11 +768,13 @@ public class BangManager extends GameManager
     /** Used to accelerate things when testing. */
     protected long getBaseTick ()
     {
-        if (System.getProperty("test") != null) {
-            return 500L;
-        } else {
-            return 2000L;
-        }
+        return isTest() ? 500L : 2000L;
+    }
+
+    /** Indicates that we're testing and to do wacky stuff. */
+    protected static boolean isTest ()
+    {
+        return (System.getProperty("test") != null);
     }
 
     /** Triggers our board tick once every N seconds. */

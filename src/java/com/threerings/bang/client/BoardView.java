@@ -34,7 +34,6 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
 
 import com.threerings.jme.input.GodViewHandler;
@@ -113,11 +112,6 @@ public class BoardView extends BComponent
         bnode.attachChild(_hnode = new Node("highlights"));
         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 
-        // we use this to force highlight tiles to use the zbuffer
-        _hzstate = _ctx.getRenderer().createZBufferState();
-        _hzstate.setEnabled(true);
-        _hzstate.setFunction(ZBufferState.CF_LEQUAL);
-
         // we'll hang all of our pieces off this node
         _node.attachChild(_pnode = new Node("pieces"));
 
@@ -194,7 +188,7 @@ public class BoardView extends BComponent
         // create the board tiles
         for (int yy = 0; yy < _board.getHeight(); yy++) {
             for (int xx = 0; xx < _board.getWidth(); xx++) {
-                int bx = xx * TILE_SIZE, by = yy * TILE_SIZE;
+                float bx = xx * TILE_SIZE, by = yy * TILE_SIZE;
                 Quad t = new Quad("tile", TILE_SIZE, TILE_SIZE);
                 _tnode.attachChild(t);
                 t.setLocalTranslation(
@@ -481,7 +475,7 @@ public class BoardView extends BComponent
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
                              sy * TILE_SIZE + TILE_SIZE/2,
                              _bangobj.board.getElevation(sx, sy) * TILE_SIZE));
-            quad.setRenderState(_hzstate);
+            quad.setRenderState(RenderUtil.lequalZBuf);
             quad.updateRenderState();
             _hnode.attachChild(quad);
         }
@@ -492,12 +486,12 @@ public class BoardView extends BComponent
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int sx = set.getX(ii), sy = set.getY(ii);
-            Quad quad = RenderUtil.createIcon(_ctx, _tgtstate);
+            Quad quad = RenderUtil.createIcon(_tgtstate);
             quad.setLocalTranslation(
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
                              sy * TILE_SIZE + TILE_SIZE/2,
                              _bangobj.board.getElevation(sx, sy) * TILE_SIZE));
-            quad.setRenderState(_hzstate);
+            quad.setRenderState(RenderUtil.lequalZBuf);
             _hnode.attachChild(quad);
         }
     }
@@ -577,7 +571,6 @@ public class BoardView extends BComponent
     /** Used to texture a quad that highlights a tile. */
     protected TextureState _hstate;
     protected AlphaState _hastate;
-    protected ZBufferState _hzstate;
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);

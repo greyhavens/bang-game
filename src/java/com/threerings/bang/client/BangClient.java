@@ -35,6 +35,7 @@ import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -75,6 +76,9 @@ public class BangClient
 
         // create the directors/managers/etc. provided by the context
         createContextServices(app);
+
+        // create a bunch of standard rendering stuff
+        RenderUtil.init(_ctx);
 
         // listen for logon
         _client.addClientObserver(this);

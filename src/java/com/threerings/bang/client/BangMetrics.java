@@ -12,5 +12,5 @@ public class BangMetrics
     public static final int SQUARE = 40;
 
     /** The dimensions of a single board tile. */
-    public static final int TILE_SIZE = 10;
+    public static final float TILE_SIZE = 10;
 }
