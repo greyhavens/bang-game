@@ -16,10 +16,11 @@ import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.media.util.MathUtil;
 
+import com.threerings.bang.client.effect.EffectViz;
 import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.util.BangContext;
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -115,6 +116,18 @@ public class PieceSprite extends Sprite
                 }
             }
         }
+    }
+
+    /**
+     * Queues up an effect for visualization on this sprite when it has
+     * stopped moving.
+     */
+    public void queueEffect (EffectViz effect)
+    {
+        if (isMoving()) {
+            log.info("Would queue effect...");
+        }
+        effect.display(this);
     }
 
     /**

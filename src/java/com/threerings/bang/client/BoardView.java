@@ -251,6 +251,15 @@ public class BoardView extends BComponent
     }
 
     /**
+     * Returns the node to which our pieces and piece effects are
+     * attached.
+     */
+    public Node getPieceNode ()
+    {
+        return _pnode;
+    }
+
+    /**
      * Creates a big animation that scrolls up the middle of the board.
      */
     protected void createMarquee (String text)
@@ -321,6 +330,18 @@ public class BoardView extends BComponent
         }
         return hit;
     }
+
+    /**
+     * Called when a piece is updated in the game object, though sometimes
+     * not immediately but after various effects have been visualized.
+     */
+    public void pieceUpdated (Piece opiece, Piece npiece)
+    {
+        if (npiece != null) {
+            getPieceSprite(npiece).updated(
+                _bangobj.board, npiece, _bangobj.tick);
+        }
+    }        
 
     // documentation inherited from interface MouseMotionListener
     public void mouseMoved (MouseEvent e)
@@ -503,15 +524,6 @@ public class BoardView extends BComponent
         _hnode.updateRenderState();
         _hnode.updateGeometricState(0f, true);
     }
-
-    /** Called when a piece is updated in the game object. */
-    protected void pieceUpdated (Piece opiece, Piece npiece)
-    {
-        if (npiece != null) {
-            getPieceSprite(npiece).updated(
-                _bangobj.board, npiece, _bangobj.tick);
-        }
-    }        
 
     /**
      * Returns the sprite associated with this spatial or null if the

@@ -40,6 +40,8 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.bang.client.effect.EffectViz;
+import com.threerings.bang.client.effect.ExplosionViz;
 import com.threerings.bang.client.sprite.MobileSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.ShotSprite;
@@ -155,6 +157,44 @@ public class BangBoardView extends BoardView
         // set up the starting visibility if we're using it
         if (cfg.fog) {
             _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
+            adjustBoardVisibility();
+            adjustEnemyVisibility();
+        }
+    }
+
+    @Override // documentation inherited
+    public void pieceUpdated (Piece opiece, Piece npiece)
+    {
+        super.pieceUpdated(opiece, npiece);
+
+        // update the shadow we use to do path finding and whatnot
+        _bangobj.board.updateShadow(opiece, npiece);
+
+        // if this piece was inside our attack set or within range to be
+        // inside our move set, recompute the selection as it may have
+        // changed
+        if (_selection != null) {
+            Piece sel = _selection;
+            if ((opiece != null &&
+                 ((_attackSet != null &&
+                   _attackSet.contains(opiece.x, opiece.y)) ||
+                  sel.getDistance(opiece) < sel.getMoveDistance())) ||
+                (npiece != null &&
+                 sel.getDistance(npiece) < sel.getMoveDistance())) {
+                int[] oaction = _action;
+                clearSelection();
+                selectPiece(sel);
+                // if we had already selected a movement, reconfigure that
+                // (it might no longer be valid but handleClickToMove will
+                // ignore us in that case
+                if (oaction != null) {
+                    handleClickToMove(oaction[0], oaction[1]);
+                }
+            }
+        }
+
+        // update board and enemy visibility
+        if (_vstate != null) {
             adjustBoardVisibility();
             adjustEnemyVisibility();
         }
@@ -510,44 +550,6 @@ public class BangBoardView extends BoardView
         }
     }
 
-    @Override // documentation inherited
-    protected void pieceUpdated (Piece opiece, Piece npiece)
-    {
-        super.pieceUpdated(opiece, npiece);
-
-        // update the shadow we use to do path finding and whatnot
-        _bangobj.board.updateShadow(opiece, npiece);
-
-        // if this piece was inside our attack set or within range to be
-        // inside our move set, recompute the selection as it may have
-        // changed
-        if (_selection != null) {
-            Piece sel = _selection;
-            if ((opiece != null &&
-                 ((_attackSet != null &&
-                   _attackSet.contains(opiece.x, opiece.y)) ||
-                  sel.getDistance(opiece) < sel.getMoveDistance())) ||
-                (npiece != null &&
-                 sel.getDistance(npiece) < sel.getMoveDistance())) {
-                int[] oaction = _action;
-                clearSelection();
-                selectPiece(sel);
-                // if we had already selected a movement, reconfigure that
-                // (it might no longer be valid but handleClickToMove will
-                // ignore us in that case
-                if (oaction != null) {
-                    handleClickToMove(oaction[0], oaction[1]);
-                }
-            }
-        }
-
-        // update board and enemy visibility
-        if (_vstate != null) {
-            adjustBoardVisibility();
-            adjustEnemyVisibility();
-        }
-    }
-
     /**
      * Called every time the board ticks.
      */
@@ -659,32 +661,25 @@ public class BangBoardView extends BoardView
     /** Called to display something useful when an effect is applied. */
     protected void createEffectAnimation (Piece piece, String effect)
     {
-        // currently just update the piece in question immediately
-        Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
-        pieceUpdated(opiece, piece);
-
-        ParticleManager pmgr = null;
+        // create the appropriate effect
+        EffectViz viz = null;
         if (effect.equals("bang")) {
-            pmgr = ParticleFactory.getExplosion();
-            pmgr.getParticles().setLocalScale(0.65f);
+            viz = new ExplosionViz(false);
         } else if (effect.equals("howdy")) {
-            pmgr = ParticleFactory.getSmallExplosion();
-            pmgr.getParticles().setLocalScale(0.65f);
-        } else if (effect.equals("repaired")) {
-            pmgr = ParticleFactory.getGlow();
-            // pmgr.getParticles().setLocalScale(0.65f);
+            viz = new ExplosionViz(true);
+//         } else if (effect.equals("repaired")) {
+//             viz = new RepairViz();
         }
 
-        if (pmgr != null) {
-            PieceSprite sprite = getPieceSprite(piece);
-            Vector3f spos = sprite.getLocalTranslation();
-            pmgr.getParticles().setLocalTranslation(
-                new Vector3f(spos.x + TILE_SIZE/2, spos.y + TILE_SIZE/2,
-                             spos.z + TILE_SIZE/2));
-            pmgr.forceRespawn();
-            _pnode.attachChild(pmgr.getParticles());
-            pmgr.getParticles().setForceView(true);
+        // queue the effect up on the piece sprite
+        if (viz != null) {
+            Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
+            viz.init(_ctx, this, opiece, piece);
+            getPieceSprite(piece).queueEffect(viz);
         }
+
+//         // currently just update the piece in question immediately
+//         pieceUpdated(opiece, piece);
 
 //         // and create a simple label animation naming the effect
 //         Label label = new Label(effect);
