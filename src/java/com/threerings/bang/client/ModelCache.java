@@ -26,10 +26,6 @@ import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
-import com.jmex.model.XMLparser.Converters.MaxToJme;
-import com.jmex.model.XMLparser.Converters.Md2ToJme;
-import com.jmex.model.XMLparser.Converters.Md3ToJme;
-import com.jmex.model.XMLparser.Converters.ObjToJme;
 import com.jmex.model.XMLparser.JmeBinaryReader;
 
 import com.threerings.bang.util.BangContext;
@@ -52,11 +48,12 @@ public class ModelCache
      * Returns a clone of the specified model, loading it into the cache
      * if necessary.
      */
-    public Node getModel (String name)
+    public Node getModel (String type, String name)
     {
-        CloneCreator cc = _models.get(name);
+        String key = type + ":" + name;
+        CloneCreator cc = _models.get(key);
         if (cc == null) {
-            _models.put(name, cc = loadModel(name));
+            _models.put(key, cc = loadModel(type, name));
         }
 
         Node copy = (Node)cc.createCopy();
@@ -69,9 +66,10 @@ public class ModelCache
         return copy;
     }
 
-    protected CloneCreator loadModel (String name)
+    protected CloneCreator loadModel (String type, String name)
     {
-        Node model = loadJmeModel("media/models/" + name + ".jme");
+        Node model = loadJmeModel(
+            "media/models/" + type + "/" + name + "/" + name + ".jme");
 
         if (model == null) {
             model = new Node("error");
@@ -104,16 +102,12 @@ public class ModelCache
 
     protected Node loadJmeModel (String path)
     {
+        ClassLoader loader = getClass().getClassLoader();
         try {
             JmeBinaryReader jbr = new JmeBinaryReader();
             jbr.setProperty("bound", "box");
-            // we need to reference a file that exists here
-            URL turl = getClass().getClassLoader().getResource(
-                "rsrc/media/textures/title.png");
-            jbr.setProperty("texurl", turl);
-            InputStream in =
-                getClass().getClassLoader().getResourceAsStream("rsrc/" + path);
-            log.info("Loading " + path + " from " + in + ": " + in.available());
+            jbr.setProperty("texurl", loader.getResource("rsrc/" + path));
+            InputStream in = loader.getResourceAsStream("rsrc/" + path);
 
             Node model = jbr.loadBinaryFormat(new BufferedInputStream(in));
             // temporary rotation hackery
@@ -133,99 +127,6 @@ public class ModelCache
             return null;
         }
     }
-
-//     protected Node load3DSModel (String path)
-//     {
-//         MaxToJme converter = new MaxToJme();
-
-//         try {
-//             ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//             InputStream min = _ctx.getResourceManager().getResource(path);
-//             converter.convert(new BufferedInputStream(min), bout);
-
-//             JmeBinaryReader jbr = new JmeBinaryReader();
-//             jbr.setProperty("bound", "box");
-//             return jbr.loadBinaryFormat(
-//                 new ByteArrayInputStream(bout.toByteArray()));
-
-//         } catch (IOException ioe) {
-//             log.log(Level.WARNING, "Error loading model '" + path + "'.", ioe);
-//             return null;
-//         }
-//     }
-
-//     protected Node loadOBJModel (String path)
-//     {
-//         ObjToJme converter = new ObjToJme();
-
-//         try {
-//             ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//             URL murl = getClass().getClassLoader().getResource("rsrc/" + path);
-//             converter.setProperty("mtllib", murl);
-
-//             InputStream min = _ctx.getResourceManager().getResource(path);
-//             converter.convert(new BufferedInputStream(min), bout);
-
-//             JmeBinaryReader jbr = new JmeBinaryReader();
-//             jbr.setProperty("bound", "box");
-//             URL turl =
-//                 getClass().getClassLoader().getResource("rsrc/media/textures/");
-//             jbr.setProperty("texurl", turl);
-//             return jbr.loadBinaryFormat(
-//                 new ByteArrayInputStream(bout.toByteArray()));
-
-//         } catch (IOException ioe) {
-//             log.log(Level.WARNING, "Error loading model '" + path + "'.", ioe);
-//             return null;
-//         }
-//     }
-
-//     protected Node loadMd2Model (String path)
-//     {
-//         Md2ToJme converter = new Md2ToJme();
-
-//         try {
-//             ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//             InputStream min = _ctx.getResourceManager().getResource(path);
-//             converter.convert(new BufferedInputStream(min), bout);
-
-//             JmeBinaryReader jbr = new JmeBinaryReader();
-//             jbr.setProperty("bound", "box");
-//             return jbr.loadBinaryFormat(
-//                 new ByteArrayInputStream(bout.toByteArray()));
-
-//         } catch (IOException ioe) {
-//             log.log(Level.WARNING, "Error loading model '" + path + "'.", ioe);
-//             return null;
-//         }
-//     }
-
-//     protected Node loadMd3Model (String path)
-//     {
-//         Md3ToJme converter = new Md3ToJme();
-
-//         try {
-//             ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//             InputStream min = _ctx.getResourceManager().getResource(path);
-//             converter.convert(new BufferedInputStream(min), bout);
-
-//             JmeBinaryReader jbr = new JmeBinaryReader();
-//             jbr.setProperty("bound", "box");
-//             Node model = jbr.loadBinaryFormat(
-//                 new ByteArrayInputStream(bout.toByteArray()));
-//             Quaternion r1 = new Quaternion();
-//             r1.fromAngleAxis(-FastMath.PI/2, new Vector3f(-1,0,0));
-//             Quaternion r2 = new Quaternion();
-//             r2.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
-//             r1.multLocal(r2);
-//             model.setLocalRotation(r1);
-//             return model;
-
-//         } catch (IOException ioe) {
-//             log.log(Level.WARNING, "Error loading model '" + path + "'.", ioe);
-//             return null;
-//         }
-//     }
 
     protected void dump (Spatial spatial, String indent)
     {

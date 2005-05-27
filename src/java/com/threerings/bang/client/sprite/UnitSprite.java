@@ -166,7 +166,7 @@ public class UnitSprite extends MobileSprite
         _movable.setSolidColor(JPIECE_COLORS[_piece.owner]);
         _movable.setForceCull(tick > 0);
 
-        _model = ctx.getModelCache().getModel(_type);
+        _model = ctx.getModelCache().getModel("units", _type);
         attachChild(_model);
         _model.updateRenderState();
 
