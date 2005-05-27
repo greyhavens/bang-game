@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.client.effect;
 
 import java.net.URL;
 import java.util.ArrayList;

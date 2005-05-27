@@ -33,6 +33,7 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.parlor.client.ParlorDirector;
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.client.effect.ParticleFactory;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;

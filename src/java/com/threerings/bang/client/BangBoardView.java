@@ -42,6 +42,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.client.effect.EffectViz;
 import com.threerings.bang.client.effect.ExplosionViz;
+import com.threerings.bang.client.effect.RepairViz;
 import com.threerings.bang.client.sprite.MobileSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.ShotSprite;
@@ -667,8 +668,8 @@ public class BangBoardView extends BoardView
             viz = new ExplosionViz(false);
         } else if (effect.equals("howdy")) {
             viz = new ExplosionViz(true);
-//         } else if (effect.equals("repaired")) {
-//             viz = new RepairViz();
+        } else if (effect.equals("repaired")) {
+            viz = new RepairViz();
         }
 
         // queue the effect up on the piece sprite

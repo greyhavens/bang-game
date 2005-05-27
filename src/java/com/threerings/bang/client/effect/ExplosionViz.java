@@ -5,8 +5,6 @@ package com.threerings.bang.client.effect;
 
 import com.jmex.effects.ParticleManager;
 
-import com.threerings.bang.client.ParticleFactory;
-
 /**
  * Displays an explosion.
  */

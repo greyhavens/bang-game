@@ -3,9 +3,17 @@
 
 package com.threerings.bang.client.effect;
 
+import com.jmex.effects.ParticleManager;
+
 /**
- * Does something extraordinary.
+ * Displays the effect when a unit is repaired.
  */
-public class RepairViz
+public class RepairViz extends ParticleEffectViz
 {
+    protected ParticleManager getParticleManager ()
+    {
+        ParticleManager pmgr = ParticleFactory.getGlow();
+        pmgr.getParticles().setLocalScale(0.65f);
+        return pmgr;
+    }
 }

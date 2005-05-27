@@ -6,6 +6,7 @@ package com.threerings.bang.client.sprite;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,8 +37,9 @@ public class PieceSprite extends Sprite
         return _piece.pieceId;
     }
 
-    /** Indicates to this piece that it is selected by the user. Triggers
-     * a special "selected" rendering mode. */
+    /** Indicates to this piece that it is selected by the user. May
+     * someday trigger a special "selected" rendering mode, but presently
+     * does nothing. */
     public void setSelected (boolean selected)
     {
         if (_selected != selected) {
@@ -125,9 +127,15 @@ public class PieceSprite extends Sprite
     public void queueEffect (EffectViz effect)
     {
         if (isMoving()) {
-            log.info("Would queue effect...");
+            log.info("Queueing effect [piece=" + _piece.info() +
+                     ", effect=" + effect + "].");
+            if (_effects == null) {
+                _effects = new ArrayList<EffectViz>();
+            }
+            _effects.add(effect);
+        } else {
+            effect.display(this);
         }
-        effect.display(this);
     }
 
     /**
@@ -146,6 +154,14 @@ public class PieceSprite extends Sprite
     {
         super.pathCompleted();
         updateCollisionTree();
+
+        // if there are any queued effects, run them
+        if (_effects != null) {
+            for (int ii = 0; ii < _effects.size(); ii++) {
+                _effects.get(ii).display(this);
+            }
+            _effects.clear();
+        }
     }
 
 //     // documentation inherited
@@ -242,6 +258,7 @@ public class PieceSprite extends Sprite
     protected short _tick;
 
     protected boolean _selected;
+    protected ArrayList<EffectViz> _effects;
 
     /** When activated, causes all pieces to warp instead of smoothly
      * follow a path. */
