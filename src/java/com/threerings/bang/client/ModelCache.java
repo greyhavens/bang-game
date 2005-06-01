@@ -3,39 +3,17 @@
 
 package com.threerings.bang.client;
 
-import java.awt.image.BufferedImage;
-import java.net.URL;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
-import java.util.logging.Level;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Texture;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector3f;
-import com.jme.renderer.CloneCreator;
-import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import com.jme.scene.shape.Box;
-import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
-import com.jmex.model.XMLparser.JmeBinaryReader;
 
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
-import static com.threerings.bang.client.BangMetrics.*;
 
 /**
- * Used to load up 3D models.
+ * Maintains a cache of resolved 3D models.
  */
 public class ModelCache
 {
@@ -45,87 +23,16 @@ public class ModelCache
     }
 
     /**
-     * Returns a clone of the specified model, loading it into the cache
-     * if necessary.
+     * Loads up the specified model and all of its associated animations.
      */
-    public Node getModel (String type, String name)
+    public Model getModel (String type, String name)
     {
-        String key = type + ":" + name;
-        CloneCreator cc = _models.get(key);
-        if (cc == null) {
-            _models.put(key, cc = loadModel(type, name));
-        }
-
-        Node copy = (Node)cc.createCopy();
-
-        // random hackery
-        if (copy.getChild(0).getControllers().size() !=0 ) {
-            copy.getChild(0).getController(0).setSpeed(20);
-        }
-
-        return copy;
-    }
-
-    protected CloneCreator loadModel (String type, String name)
-    {
-        Node model = loadJmeModel(
-            "media/models/" + type + "/" + name + "/" + name + ".jme");
-
+        String key = type + "." + name;
+        Model model = _models.get(key);
         if (model == null) {
-            model = new Node("error");
-            Box box = new Box(
-                "error", new Vector3f(1, 1, 0),
-
-                new Vector3f(TILE_SIZE-1, TILE_SIZE-1, TILE_SIZE-2));
-            box.setModelBound(new BoundingBox());
-            box.updateModelBound();
-            model.attachChild(box);
-
-        } else {
-            model.setLocalScale(0.05f);
-            model.setLocalTranslation(
-                new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0));
+            _models.put(key, model = new Model(_ctx, type, name));
         }
-
-//         dump(model, "");
-
-        CloneCreator cc = new CloneCreator(model);
-        cc.addProperty("colors");
-        cc.addProperty("texcoords");
-        cc.addProperty("vertices");
-        cc.addProperty("normals");
-        cc.addProperty("indices");
-        cc.addProperty("spatialcontroller");
-
-        return cc;
-    }
-
-    protected Node loadJmeModel (String path)
-    {
-        ClassLoader loader = getClass().getClassLoader();
-        try {
-            JmeBinaryReader jbr = new JmeBinaryReader();
-            jbr.setProperty("bound", "box");
-            jbr.setProperty("texurl", loader.getResource("rsrc/" + path));
-            InputStream in = loader.getResourceAsStream("rsrc/" + path);
-
-            Node model = jbr.loadBinaryFormat(new BufferedInputStream(in));
-            // temporary rotation hackery
-            if (path.indexOf("artillery") != -1) {
-                Quaternion r1 = new Quaternion();
-                r1.fromAngleAxis(-FastMath.PI/2, new Vector3f(-1,0,0));
-                Quaternion r2 = new Quaternion();
-                r2.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
-                r1.multLocal(r2);
-                model.setLocalRotation(r1);
-            }
-
-            return model;
-
-        } catch (IOException ioe) {
-            log.log(Level.WARNING, "Error loading model '" + path + "'.", ioe);
-            return null;
-        }
+        return model;
     }
 
     protected void dump (Spatial spatial, String indent)
@@ -143,6 +50,5 @@ public class ModelCache
     }
 
     protected BangContext _ctx;
-    protected HashMap<String,CloneCreator> _models =
-        new HashMap<String,CloneCreator>();
+    protected HashMap<String,Model> _models = new HashMap<String,Model>();
 }

@@ -35,6 +35,7 @@ import com.threerings.jme.sprite.Path;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.media.util.MathUtil;
 
+import com.threerings.bang.client.Model;
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Piece;
@@ -167,8 +168,11 @@ public class UnitSprite extends MobileSprite
         _movable.setForceCull(tick > 0);
 
         _model = ctx.getModelCache().getModel("units", _type);
-        attachChild(_model);
-        _model.updateRenderState();
+        Node[] meshes = _model.getMeshes("standing");
+        for (int ii = 0; ii < meshes.length; ii++) {
+            attachChild(meshes[ii]);
+            meshes[ii].updateRenderState();
+        }
 
         // this icon is displayed when we're a target
         _tgtquad = RenderUtil.createIcon(_tgttex);
@@ -326,7 +330,7 @@ public class UnitSprite extends MobileSprite
     }
 
     protected String _type;
-    protected Node _model;
+    protected Model _model;
     protected Quad _hovquad, _tgtquad;
 
     protected StatusNode _status;

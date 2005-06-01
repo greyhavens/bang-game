@@ -67,6 +67,8 @@ public class PieceSprite extends Sprite
 
         // create our sprite geometry
         createGeometry(ctx);
+        setAnimationSpeed(20);
+        setAnimationActive(false);
 
         // position ourselves properly to start
         setLocation(piece.x, piece.y, 0);
@@ -112,6 +114,7 @@ public class PieceSprite extends Sprite
             } else if (!isMoving()) {
                 Path path = createPath(board, opiece, piece);
                 if (path != null) {
+                    setAnimationActive(true);
                     move(path);
                 } else {
                     setLocation(_piece.x, _piece.y, elev);
@@ -154,6 +157,9 @@ public class PieceSprite extends Sprite
     {
         super.pathCompleted();
         updateCollisionTree();
+
+        // turn off our movement animation
+        setAnimationActive(false);
 
         // if there are any queued effects, run them
         if (_effects != null) {

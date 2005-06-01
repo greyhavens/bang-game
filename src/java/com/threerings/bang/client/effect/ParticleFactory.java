@@ -138,8 +138,7 @@ public class ParticleFactory
         int pcount, float speed, float startSize, float endSize)
     {
         DisplaySystem display = DisplaySystem.getDisplaySystem();
-        ParticleManager explosion = new ParticleManager(
-            pcount, display.getRenderer().getCamera());
+        ParticleManager explosion = new ParticleManager(pcount);
         explosion.setGravityForce(new Vector3f(0.0f, 0.0f, 0.0f));
         explosion.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
         explosion.setEmissionMaximumAngle(3.1415927f);
@@ -171,8 +170,7 @@ public class ParticleFactory
     protected static ParticleManager createGlow ()
     {
         DisplaySystem display = DisplaySystem.getDisplaySystem();
-        ParticleManager manager = new ParticleManager(
-            50, display.getRenderer().getCamera());
+        ParticleManager manager = new ParticleManager(50);
         manager.setGravityForce(new Vector3f(0.0f, 0.0f, 0.0f));
         manager.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
         manager.setEmissionMaximumAngle(FastMath.TWO_PI);
