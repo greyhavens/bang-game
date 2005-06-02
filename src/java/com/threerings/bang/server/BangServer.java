@@ -76,6 +76,22 @@ public class BangServer extends CrowdServer
         log.info("Bang server initialized.");
     }
 
+    /**
+     * Loads a message to the general audit log.
+     */
+    public static void generalLog (String message)
+    {
+        // TODO: log this message to an audit log
+    }
+
+    /**
+     * Loads a message to the item audit log.
+     */
+    public static void itemLog (String message)
+    {
+        // TODO: log this message to an audit log
+    }
+
     @Override // documentation inherited
     protected int getListenPort ()
     {
