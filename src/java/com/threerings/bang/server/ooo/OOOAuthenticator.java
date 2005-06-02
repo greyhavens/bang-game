@@ -109,7 +109,8 @@ public class OOOAuthenticator extends Authenticator
             if (user.holdsToken(OOOUser.ADMIN)) {
                 tokens |= TokenRing.ADMIN;
             }
-            rsp.authdata = new TokenRing(tokens);
+            rsp.authdata = new Object[] {
+                user.userId, new TokenRing(tokens) };
 
             log.info("User logged on [user=" + username + "].");
             rdata.code = AuthResponseData.SUCCESS;

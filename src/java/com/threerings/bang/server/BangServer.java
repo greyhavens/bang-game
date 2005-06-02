@@ -25,6 +25,7 @@ import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.parlor.server.ParlorManager;
 
 import com.threerings.bang.lobby.data.LobbyConfig;
+import com.threerings.bang.server.persist.ItemRepository;
 
 import static com.threerings.bang.Log.log;
 
@@ -40,6 +41,9 @@ public class BangServer extends CrowdServer
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
 
+    /** Manages the persistent repository of items. */
+    public static ItemRepository itemrepo;
+
     @Override // documentation inherited
     public void init ()
         throws Exception
@@ -53,8 +57,9 @@ public class BangServer extends CrowdServer
         // configure the client manager to use our resolver
         clmgr.setClientResolverClass(BangClientResolver.class);
 
-        // create our database connection provider
+        // create our database connection provider and repositories
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+        itemrepo = new ItemRepository(conprov);
 
         // set up our authenticator
         Authenticator auth = ServerConfig.getAuthenticator();

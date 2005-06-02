@@ -133,9 +133,8 @@ public abstract class Item
     /**
      * Used by derived classes when an item is newly constructed.
      */
-    protected Item (int itemId, int ownerId)
+    protected Item (int ownerId)
     {
-        _itemId = new Integer(itemId);
         _ownerId = ownerId;
     }
 
