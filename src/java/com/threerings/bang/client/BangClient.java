@@ -119,9 +119,13 @@ public class BangClient
                 }
             };
             _ctx.getParlorDirector().startSolitaire(config, cl);
+
         } else {
-            // temporary hack: enter our lobby
-            _ctx.getLocationDirector().moveTo(2);
+            // display the town view
+            TownView view = new TownView(_ctx);
+            _ctx.getInputDispatcher().addWindow(view);
+            view.pack();
+            view.center();
         }
     }
 
