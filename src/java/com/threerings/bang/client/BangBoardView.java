@@ -50,11 +50,11 @@ import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.data.card.Card;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PointSet;
@@ -86,23 +86,23 @@ public class BangBoardView extends BoardView
     }
 
     /**
-     * Requests that the specified surprise be enabled for placement. The
-     * area of effect of the surprise will be rendered around the cursor
-     * and a left click will activate the surprise at the specified
-     * coordinates while a right click will cancel the placement.
+     * Requests that the specified card be enabled for placement. The area
+     * of effect of the card will be rendered around the cursor and a left
+     * click will activate the card at the specified coordinates while a
+     * right click will cancel the placement.
      */
-    public void placeSurprise (Surprise s)
+    public void placeCard (Card card)
     {
         // clear any current selection
         clearSelection();
 
-        // set up the display of our surprise attack set
-        _surprise = s;
+        // set up the display of our card attack set
+        _card = card;
         _attackSet = new PointSet();
         _bangobj.board.computeAttacks(
-            _surprise.getRadius(), _mouse.x, _mouse.y, _attackSet);
+            _card.getRadius(), _mouse.x, _mouse.y, _attackSet);
         targetTiles(_attackSet);
-        log.info("Placing " + _surprise);
+        log.info("Placing " + _card);
     }
 
     // documentation inherited from interface MouseListener
@@ -301,11 +301,11 @@ public class BangBoardView extends BoardView
             log.info("Clicked " + piece.info());
         }
 
-        // if we are placing a surprise, activate it
-        if (_surprise != null) {
-            log.info("Activating " + _surprise);
-            _ctrl.activateSurprise(_surprise.surpriseId, _mouse.x, _mouse.y);
-            _surprise = null;
+        // if we are placing a card, activate it
+        if (_card != null) {
+            log.info("Activating " + _card);
+            _ctrl.activateCard(_card.cardId, _mouse.x, _mouse.y);
+            _card = null;
             clearAttackSet();
             return;
         }
@@ -453,10 +453,10 @@ public class BangBoardView extends BoardView
             return;
         }
 
-        // if we are placing a surprise, clear it out
-        if (_surprise != null) {
-            log.info("Clearing " + _surprise);
-            _surprise = null;
+        // if we are placing a card, clear it out
+        if (_card != null) {
+            log.info("Clearing " + _card);
+            _card = null;
             clearAttackSet();
             return;
         }
@@ -541,12 +541,12 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     protected void hoverTileChanged (int tx, int ty)
     {
-        // if we have an active surprise, update its area of effect
-        if (_surprise != null) {
+        // if we have an active card, update its area of effect
+        if (_card != null) {
             clearHighlights();
             _attackSet.clear();
             _bangobj.board.computeAttacks(
-                _surprise.getRadius(), tx, ty, _attackSet);
+                _card.getRadius(), tx, ty, _attackSet);
             targetTiles(_attackSet);
         }
     }
@@ -843,7 +843,7 @@ public class BangBoardView extends BoardView
     protected int _downButton = -1;
 
     protected int[] _action;
-    protected Surprise _surprise;
+    protected Card _card;
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;

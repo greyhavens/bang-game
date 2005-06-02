@@ -50,8 +50,8 @@ import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.PlayerPiece;
 import com.threerings.bang.data.piece.SteamGunman;
-import com.threerings.bang.data.surprise.AreaRepair;
-import com.threerings.bang.data.surprise.Surprise;
+import com.threerings.bang.data.card.AreaRepair;
+import com.threerings.bang.data.card.Card;
 
 import com.threerings.bang.client.BangService;
 import com.threerings.bang.data.BangBoard;
@@ -158,23 +158,24 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void surprise (ClientObject caller, int surpriseId, short x, short y)
+    public void playCard (ClientObject caller, int cardId, short x, short y)
     {
         BodyObject user = (BodyObject)caller;
-        Surprise s = (Surprise)_bangobj.surprises.get(surpriseId);
-        if (s == null || s.owner != _bangobj.getPlayerIndex(user.username)) {
-            log.info("Rejecting invalid surprise request [who=" + user.who() +
-                     ", sid=" + surpriseId + ", surprise=" + s + "].");
+        Card card = (Card)_bangobj.cards.get(cardId);
+        if (card == null ||
+            card.owner != _bangobj.getPlayerIndex(user.username)) {
+            log.info("Rejecting invalid card request [who=" + user.who() +
+                     ", sid=" + cardId + ", card=" + card + "].");
             return;
         }
 
-        log.info("surprise! " + s);
+        log.info("Playing card: " + card);
 
         // remove it from their list
-        _bangobj.removeFromSurprises(surpriseId);
+        _bangobj.removeFromCards(cardId);
 
         // and activate it
-        Effect effect = s.activate(x, y);
+        Effect effect = card.activate(x, y);
         effect.prepare(_bangobj, _damage);
         _bangobj.setEffect(effect);
         recordDamage(user, _damage);
@@ -319,9 +320,9 @@ public class BangManager extends GameManager
 
         // TEMP: give everyone an area repair to start
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            AreaRepair s = new AreaRepair();
-            s.init(_bangobj, ii);
-            _bangobj.addToSurprises(s);
+            AreaRepair card = new AreaRepair();
+            card.init(_bangobj, ii);
+            _bangobj.addToCards(card);
         }
 
         // initialize our pieces

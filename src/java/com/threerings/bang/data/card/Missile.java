@@ -1,17 +1,17 @@
 //
 // $Id$
 
-package com.threerings.bang.data.surprise;
+package com.threerings.bang.data.card;
 
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.AreaDamageEffect;
 import com.threerings.bang.data.effect.Effect;
 
 /**
- * A surprise that allows the player to launch a missile that does an area
- * of effect damage.
+ * A card that allows the player to launch a missile that does an area of
+ * effect damage.
  */
-public class Missile extends Surprise
+public class Missile extends Card
 {
     public int power = 60;
 

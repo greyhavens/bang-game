@@ -1,17 +1,16 @@
 //
 // $Id$
 
-package com.threerings.bang.data.surprise;
+package com.threerings.bang.data.card;
 
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.AreaClearEffect;
 import com.threerings.bang.data.effect.Effect;
 
 /**
- * A surprise that allows the player to clear out all dead pieces in an
- * area.
+ * A card that allows the player to clear out all dead pieces in an area.
  */
-public class DustDevil extends Surprise
+public class DustDevil extends Card
 {
     public int radius = 2;
 

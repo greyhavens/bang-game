@@ -46,17 +46,17 @@ public class BangDispatcher extends InvocationDispatcher
             );
             return;
 
+        case BangMarshaller.PLAY_CARD:
+            ((BangProvider)provider).playCard(
+                source,
+                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue()
+            );
+            return;
+
         case BangMarshaller.PURCHASE_PIECES:
             ((BangProvider)provider).purchasePieces(
                 source,
                 (Piece[])args[0]
-            );
-            return;
-
-        case BangMarshaller.SURPRISE:
-            ((BangProvider)provider).surprise(
-                source,
-                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue()
             );
             return;
 

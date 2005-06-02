@@ -91,8 +91,8 @@ public class BangObject extends GameObject
     /** The field name of the <code>pieces</code> field. */
     public static final String PIECES = "pieces";
 
-    /** The field name of the <code>surprises</code> field. */
-    public static final String SURPRISES = "surprises";
+    /** The field name of the <code>cards</code> field. */
+    public static final String CARDS = "cards";
 
     /** The field name of the <code>effect</code> field. */
     public static final String EFFECT = "effect";
@@ -134,8 +134,8 @@ public class BangObject extends GameObject
     /** Contains information on all pieces on the board. */
     public PieceDSet pieces;
 
-    /** Contains information on all available surprises. */
-    public DSet surprises = new DSet();
+    /** Contains information on all available cards. */
+    public DSet cards = new DSet();
 
     /** A field we use to broadcast applied effects. */
     public Effect effect;
@@ -471,36 +471,36 @@ public class BangObject extends GameObject
 
     /**
      * Requests that the specified entry be added to the
-     * <code>surprises</code> set. The set will not change until the event is
+     * <code>cards</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToSurprises (DSet.Entry elem)
+    public void addToCards (DSet.Entry elem)
     {
-        requestEntryAdd(SURPRISES, surprises, elem);
+        requestEntryAdd(CARDS, cards, elem);
     }
 
     /**
      * Requests that the entry matching the supplied key be removed from
-     * the <code>surprises</code> set. The set will not change until the
+     * the <code>cards</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
-    public void removeFromSurprises (Comparable key)
+    public void removeFromCards (Comparable key)
     {
-        requestEntryRemove(SURPRISES, surprises, key);
+        requestEntryRemove(CARDS, cards, key);
     }
 
     /**
      * Requests that the specified entry be updated in the
-     * <code>surprises</code> set. The set will not change until the event is
+     * <code>cards</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateSurprises (DSet.Entry elem)
+    public void updateCards (DSet.Entry elem)
     {
-        requestEntryUpdate(SURPRISES, surprises, elem);
+        requestEntryUpdate(CARDS, cards, elem);
     }
 
     /**
-     * Requests that the <code>surprises</code> field be set to the
+     * Requests that the <code>cards</code> field be set to the
      * specified value. Generally one only adds, updates and removes
      * entries of a distributed set, but certain situations call for a
      * complete replacement of the set value. The local value will be
@@ -509,10 +509,10 @@ public class BangObject extends GameObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setSurprises (DSet value)
+    public void setCards (DSet value)
     {
-        requestAttributeChange(SURPRISES, value, this.surprises);
-        this.surprises = (value == null) ? null : (DSet)value.clone();
+        requestAttributeChange(CARDS, value, this.cards);
+        this.cards = (value == null) ? null : (DSet)value.clone();
     }
 
     /**

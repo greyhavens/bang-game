@@ -23,15 +23,15 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.surprise.Surprise;
+import com.threerings.bang.data.card.Card;
 
 /**
- * Displays the surprises held by a particular player in the game.
+ * Displays the cards held by a particular player in the game.
  */
-public class SurprisePanel extends JPanel
+public class CardPanel extends JPanel
     implements PlaceView, SetListener
 {
-    public SurprisePanel (int playerIdx, int ourIdx)
+    public CardPanel (int playerIdx, int ourIdx)
     {
         super(new HGroupLayout(HGroupLayout.NONE, HGroupLayout.LEFT));
         _pidx = playerIdx;
@@ -46,10 +46,10 @@ public class SurprisePanel extends JPanel
         _bangobj = (BangObject)plobj;
         _bangobj.addListener(this);
 
-        for (Iterator iter = _bangobj.surprises.iterator(); iter.hasNext(); ) {
-            Surprise s = (Surprise)iter.next();
-            if (s.owner == _pidx) {
-                add(createButton(s));
+        for (Iterator iter = _bangobj.cards.iterator(); iter.hasNext(); ) {
+            Card card = (Card)iter.next();
+            if (card.owner == _pidx) {
+                add(createButton(card));
             }
         }
         SwingUtil.refresh(this);
@@ -65,10 +65,10 @@ public class SurprisePanel extends JPanel
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent event)
     {
-        if (event.getName().equals(BangObject.SURPRISES)) {
-            Surprise s = (Surprise)event.getEntry();
-            if (s.owner == _pidx) {
-                add(createButton(s));
+        if (event.getName().equals(BangObject.CARDS)) {
+            Card card = (Card)event.getEntry();
+            if (card.owner == _pidx) {
+                add(createButton(card));
                 SwingUtil.refresh(this);
             }
         }
@@ -83,16 +83,16 @@ public class SurprisePanel extends JPanel
     // documentation inherited from interface SetListener
     public void entryRemoved (EntryRemovedEvent event)
     {
-        if (!event.getName().equals(BangObject.SURPRISES)) {
+        if (!event.getName().equals(BangObject.CARDS)) {
             return;
         }
-        Surprise s = (Surprise)event.getOldEntry();
-        if (s.owner != _pidx) {
+        Card card = (Card)event.getOldEntry();
+        if (card.owner != _pidx) {
             return;
         }
         for (int ii = 0; ii < getComponentCount(); ii++) {
             CommandButton button = (CommandButton)getComponent(ii);
-            if ((Integer)button.getActionArgument() == s.surpriseId) {
+            if ((Integer)button.getActionArgument() == card.cardId) {
                 remove(button);
                 SwingUtil.refresh(this);
                 return;
@@ -108,12 +108,12 @@ public class SurprisePanel extends JPanel
         return d;
     }
 
-    protected CommandButton createButton (Surprise s)
+    protected CommandButton createButton (Card card)
     {
         CommandButton btn = new CommandButton();
-        btn.setText(s.getIconPath());
-        btn.setActionCommand(BangController.PLACE_SURPRISE);
-        btn.setActionArgument(s.surpriseId);
+        btn.setText(card.getIconPath());
+        btn.setActionCommand(BangController.PLACE_CARD);
+        btn.setActionArgument(card.cardId);
         btn.addActionListener(BangController.DISPATCHER);
         btn.setEnabled(_pidx == _oidx);
         return btn;

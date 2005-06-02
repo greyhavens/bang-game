@@ -23,6 +23,6 @@ public interface BangProvider extends InvocationProvider
                       int targetId, BangService.InvocationListener il)
         throws InvocationException;
 
-    /** Handles a {@link BangService#surprise} request. */
-    public void surprise (ClientObject caller, int surpriseId, short x, short y);
+    /** Handles a {@link BangService#playCard} request. */
+    public void playCard (ClientObject caller, int cardId, short x, short y);
 }

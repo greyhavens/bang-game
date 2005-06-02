@@ -20,8 +20,8 @@ import com.threerings.parlor.game.client.GameController;
 
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.data.card.Card;
 import com.threerings.bang.data.effect.Effect;
-import com.threerings.bang.data.surprise.Surprise;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -35,8 +35,8 @@ public class BangController extends GameController
      * the side bar. */
     public static final String BACK_TO_LOBBY = "BackToLobby";
 
-    /** A command that requests to place a surprise. */
-    public static final String PLACE_SURPRISE = "PlaceSurprise";
+    /** A command that requests to place a card. */
+    public static final String PLACE_CARD = "PlaceCard";
 
     @Override // documentation inherited
     public void init (CrowdContext ctx, PlaceConfig config)
@@ -86,32 +86,32 @@ public class BangController extends GameController
             _ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, il);
     }
 
-    /** Handles a request to place a surprise. */
-    public void placeSurprise (int surpriseId)
+    /** Handles a request to place a card. */
+    public void placeCard (int cardId)
     {
         if (_bangobj == null || !_bangobj.isInPlay()) {
             return;
         }
 
-        Surprise s = (Surprise)_bangobj.surprises.get(surpriseId);
-        if (s == null) {
-            log.warning("Requested to place non-existent surprise '" +
-                        surpriseId + "'.");
+        Card card = (Card)_bangobj.cards.get(cardId);
+        if (card == null) {
+            log.warning("Requested to place non-existent card '" +
+                        cardId + "'.");
         } else {
             // instruct the board view to activate placement mode
-            _view.view.placeSurprise(s);
+            _view.view.placeCard(card);
         }
     }
 
-    /** Handles a request to activate a surprise. */
-    public void activateSurprise (int surpriseId, int tx, int ty)
+    /** Handles a request to activate a card. */
+    public void activateCard (int cardId, int tx, int ty)
     {
-        if (_bangobj.surprises.get(surpriseId) == null) {
-            log.warning("Requested to activate expired surprise " +
-                        "[id=" + surpriseId + "].");
+        if (_bangobj.cards.get(cardId) == null) {
+            log.warning("Requested to activate expired card " +
+                        "[id=" + cardId + "].");
         } else {
-            _bangobj.service.surprise(
-                _ctx.getClient(), surpriseId, (short)tx, (short)ty);
+            _bangobj.service.playCard(
+                _ctx.getClient(), cardId, (short)tx, (short)ty);
         }
     }
 

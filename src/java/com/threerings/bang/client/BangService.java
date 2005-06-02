@@ -28,8 +28,8 @@ public interface BangService extends InvocationService
                       int targetId, InvocationListener listener);
 
     /**
-     * Requests that the specified surprise be activated at the specified
+     * Requests that the specified card be activated at the specified
      * location.
      */
-    public void surprise (Client client, int surpriseId, short x, short y);
+    public void playCard (Client client, int cardId, short x, short y);
 }

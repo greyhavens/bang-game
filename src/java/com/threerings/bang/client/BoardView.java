@@ -130,7 +130,7 @@ public class BoardView extends BComponent
         _hastate.setDstFunction(AlphaState.DB_ONE);
         _hastate.setEnabled(true);
 
-        // this is used to target tiles when deploying a surprise
+        // this is used to target tiles when deploying a card
         _tgtstate = RenderUtil.createTexture(
             ctx, ctx.loadImage("media/textures/ustatus/crosshairs.png"));
     }

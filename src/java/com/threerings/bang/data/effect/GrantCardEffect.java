@@ -9,34 +9,34 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 
 import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.surprise.Surprise;
+import com.threerings.bang.data.card.Card;
 
 import static com.threerings.bang.Log.log;
 
 /**
- * Delivers a surprise to the specified player.
+ * Delivers a card to the specified player.
  */
-public class GrantSurpriseEffect extends Effect
+public class GrantCardEffect extends Effect
 {
     public int player;
 
-    public GrantSurpriseEffect (int player, Surprise surprise)
+    public GrantCardEffect (int player, Card card)
     {
         this.player = player;
-        _surprise = surprise;
+        _card = card;
     }
 
-    public GrantSurpriseEffect ()
+    public GrantCardEffect ()
     {
     }
 
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // make sure our player has room for another surprise
+        // make sure our player has room for another card
         int have = 0;
-        for (Iterator iter = bangobj.surprises.iterator(); iter.hasNext(); ) {
-            Surprise s = (Surprise)iter.next();
-            if (s.owner == player) {
+        for (Iterator iter = bangobj.cards.iterator(); iter.hasNext(); ) {
+            Card card = (Card)iter.next();
+            if (card.owner == player) {
                 have++;
             }
         }
@@ -45,8 +45,8 @@ public class GrantSurpriseEffect extends Effect
             return;
         }
 
-        _surprise.init(bangobj, player);
-        bangobj.addToSurprises(_surprise);
+        _card.init(bangobj, player);
+        bangobj.addToCards(_card);
     }
 
     public void apply (BangObject bangobj, Observer obs)
@@ -54,5 +54,5 @@ public class GrantSurpriseEffect extends Effect
         // NOOP
     }
 
-    protected transient Surprise _surprise;
+    protected transient Card _card;
 }

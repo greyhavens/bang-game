@@ -1,16 +1,16 @@
 //
 // $Id$
 
-package com.threerings.bang.data.surprise;
+package com.threerings.bang.data.card;
 
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.effect.AreaRepairEffect;
 import com.threerings.bang.data.effect.Effect;
 
 /**
- * A surprise that allows the player to repair a group of pieces.
+ * A card that allows the player to repair a group of pieces.
  */
-public class AreaRepair extends Surprise
+public class AreaRepair extends Card
 {
     public int repair = 60;
 

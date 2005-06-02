@@ -24,13 +24,13 @@ import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.surprise.Surprise;
+import com.threerings.bang.data.card.Card;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 
 /**
- * Displays the name, score, cash and surprises held by a particular player.
+ * Displays the name, score, cash and cards held by a particular player.
  */
 public class PlayerStatusView extends BContainer
     implements AttributeChangeListener, ElementUpdateListener, SetListener,
@@ -83,10 +83,10 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent event)
     {
-        if (event.getName().equals(BangObject.SURPRISES)) {
-            Surprise s = (Surprise)event.getEntry();
-            if (s.owner == _pidx) {
-                add(createButton(s));
+        if (event.getName().equals(BangObject.CARDS)) {
+            Card card = (Card)event.getEntry();
+            if (card.owner == _pidx) {
+                add(createButton(card));
             }
         }
     }
@@ -100,17 +100,17 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface SetListener
     public void entryRemoved (EntryRemovedEvent event)
     {
-        if (!event.getName().equals(BangObject.SURPRISES)) {
+        if (!event.getName().equals(BangObject.CARDS)) {
             return;
         }
-        Surprise s = (Surprise)event.getOldEntry();
-        if (s.owner != _pidx) {
+        Card card = (Card)event.getOldEntry();
+        if (card.owner != _pidx) {
             return;
         }
-        String sid = "" + s.surpriseId;
+        String cid = "" + card.cardId;
         for (int ii = 1; ii < getComponentCount(); ii++) {
             BButton button = (BButton)getComponent(ii);
-            if (sid.equals(button.getAction())) {
+            if (cid.equals(button.getAction())) {
                 remove(button);
                 return;
             }
@@ -121,9 +121,9 @@ public class PlayerStatusView extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         try {
-            _ctrl.placeSurprise(Integer.parseInt(event.getAction()));
+            _ctrl.placeCard(Integer.parseInt(event.getAction()));
         } catch (Exception e) {
-            log.warning("Bogus surprise '" + event.getAction() + "': " + e);
+            log.warning("Bogus card '" + event.getAction() + "': " + e);
         }
     }
 
@@ -140,11 +140,11 @@ public class PlayerStatusView extends BContainer
         }
     }
 
-    protected BButton createButton (Surprise s)
+    protected BButton createButton (Card card)
     {
         BIcon icon = new BIcon(
-            _ctx.loadImage("media/bonuses/" + s.getIconPath() + ".png"));
-        BButton btn = new BButton(icon, "" + s.surpriseId);
+            _ctx.loadImage("media/bonuses/" + card.getIconPath() + ".png"));
+        BButton btn = new BButton(icon, "" + card.cardId);
         btn.addListener(this);
         return btn;
     }

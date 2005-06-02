@@ -21,14 +21,14 @@ import com.threerings.bang.data.effect.BonusPointEffect;
 import com.threerings.bang.data.effect.DefectEffect;
 import com.threerings.bang.data.effect.DuplicateEffect;
 import com.threerings.bang.data.effect.Effect;
-import com.threerings.bang.data.effect.GrantSurpriseEffect;
+import com.threerings.bang.data.effect.GrantCardEffect;
 import com.threerings.bang.data.effect.PlagueEffect;
 import com.threerings.bang.data.effect.RepairEffect;
 import com.threerings.bang.data.effect.SaintElmosEffect;
 
-import com.threerings.bang.data.surprise.AreaRepair;
-import com.threerings.bang.data.surprise.DustDevil;
-import com.threerings.bang.data.surprise.Missile;
+import com.threerings.bang.data.card.AreaRepair;
+import com.threerings.bang.data.card.DustDevil;
+import com.threerings.bang.data.card.Missile;
 
 import static com.threerings.bang.Log.log;
 
@@ -102,7 +102,7 @@ public class Bonus extends Piece
                 1.0) // late-game affinity
         {
             public Effect affect (Piece piece) {
-                return new GrantSurpriseEffect(piece.owner, new Missile());
+                return new GrantCardEffect(piece.owner, new Missile());
             }
         },
 
@@ -115,7 +115,7 @@ public class Bonus extends Piece
                     0.5) // late-game affinity
         {
             public Effect affect (Piece piece) {
-                return new GrantSurpriseEffect(piece.owner, new AreaRepair());
+                return new GrantCardEffect(piece.owner, new AreaRepair());
             }
         },
 
@@ -133,7 +133,7 @@ public class Bonus extends Piece
             }
 
             public Effect affect (Piece piece) {
-                return new GrantSurpriseEffect(piece.owner, new DustDevil());
+                return new GrantCardEffect(piece.owner, new DustDevil());
             }
         },
 
