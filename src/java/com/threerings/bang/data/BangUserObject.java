@@ -14,6 +14,9 @@ import com.threerings.crowd.data.TokenRing;
 public class BangUserObject extends BodyObject
 {
     // AUTO-GENERATED: FIELDS START
+    /** The field name of the <code>userId</code> field. */
+    public static final String USER_ID = "userId";
+
     /** The field name of the <code>tokens</code> field. */
     public static final String TOKENS = "tokens";
 
@@ -22,6 +25,12 @@ public class BangUserObject extends BodyObject
 
     /** The field name of the <code>townId</code> field. */
     public static final String TOWN_ID = "townId";
+
+    /** The field name of the <code>scrip</code> field. */
+    public static final String SCRIP = "scrip";
+
+    /** The field name of the <code>gold</code> field. */
+    public static final String GOLD = "gold";
     // AUTO-GENERATED: FIELDS END
 
     /** This user's persistent unique id. */
@@ -36,6 +45,12 @@ public class BangUserObject extends BodyObject
     /** Indicates which town this user currently occupies. */
     public String townId;
 
+    /** The amount of game currency this player is carrying. */
+    public int scrip;
+
+    /** The amount of "hard" currency this player is carrying. */
+    public int gold;
+
     @Override // documentation inherited
     public TokenRing getTokens ()
     {
@@ -43,6 +58,22 @@ public class BangUserObject extends BodyObject
     }
 
     // AUTO-GENERATED: METHODS START
+    /**
+     * Requests that the <code>userId</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setUserId (int value)
+    {
+        int ovalue = this.userId;
+        requestAttributeChange(
+            USER_ID, new Integer(value), new Integer(ovalue));
+        this.userId = value;
+    }
+
     /**
      * Requests that the <code>tokens</code> field be set to the
      * specified value. The local value will be updated immediately and an
@@ -119,6 +150,38 @@ public class BangUserObject extends BodyObject
         requestAttributeChange(
             TOWN_ID, value, ovalue);
         this.townId = value;
+    }
+
+    /**
+     * Requests that the <code>scrip</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setScrip (int value)
+    {
+        int ovalue = this.scrip;
+        requestAttributeChange(
+            SCRIP, new Integer(value), new Integer(ovalue));
+        this.scrip = value;
+    }
+
+    /**
+     * Requests that the <code>gold</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setGold (int value)
+    {
+        int ovalue = this.gold;
+        requestAttributeChange(
+            GOLD, new Integer(value), new Integer(ovalue));
+        this.gold = value;
     }
     // AUTO-GENERATED: METHODS END
 }

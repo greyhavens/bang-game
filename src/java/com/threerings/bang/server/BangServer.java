@@ -25,6 +25,7 @@ import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.parlor.server.ParlorManager;
 
 import com.threerings.bang.lobby.data.LobbyConfig;
+import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.server.persist.ItemRepository;
 
 import static com.threerings.bang.Log.log;
@@ -43,6 +44,9 @@ public class BangServer extends CrowdServer
 
     /** Manages the persistent repository of items. */
     public static ItemRepository itemrepo;
+
+    /** Keeps an eye on the ranch, a good man to have around. */
+    public static RanchManager ranchmgr = new RanchManager();
 
     @Override // documentation inherited
     public void init ()
@@ -69,6 +73,7 @@ public class BangServer extends CrowdServer
 
         // initialize our managers
         parmgr.init(invmgr, plreg);
+        ranchmgr.init(invmgr);
 
         // create a lobby
         plreg.createPlace(new LobbyConfig(),

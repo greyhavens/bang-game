@@ -34,27 +34,24 @@ public class RanchView extends BWindow
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("ranch");
 
-        // center panel: tabbed view with big shots, units, recruits
-        _tabs = new BTabbedPane();
-        add(_tabs, BorderLayout.CENTER);
-
         // we'll add this later, but the palettes need to know about it
         _inspector = new UnitInspector(ctx);
 
+        // center panel: tabbed view with big shots, units, recruits
+        _tabs = new BTabbedPane();
+        add(_tabs, BorderLayout.CENTER);
         _bigshots = new UnitPalette(ctx, _inspector);
         _tabs.addTab(_msgs.get("t.bigshots"), _bigshots);
-
         _units = new UnitPalette(ctx, _inspector);
         _units.setUnits(Unit.getUnitTypes(BangCodes.FRONTIER_TOWN));
         _tabs.addTab(_msgs.get("t.units"), _units);
-
         _recruits = new UnitPalette(ctx, _inspector);
         _tabs.addTab(_msgs.get("t.recruits"), _recruits);
 
-        // side panel: unit inspector, unit status, "customize" or
-        // "recruit" and back to town button
+        // side panel: unit inspector, customize/recruit and back button
         BContainer side = new BContainer(GroupLayout.makeVStretch());
         side.add(_inspector, GroupLayout.FIXED);
+        // TODO: add customize/recruit button
         side.add(new BLabel("")); // absorb space
         BButton btn;
         side.add(btn = new BButton(_msgs.get("m.back_to_town"), "back"),
