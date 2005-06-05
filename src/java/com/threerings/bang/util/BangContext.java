@@ -20,6 +20,7 @@ import com.threerings.parlor.util.ParlorContext;
 
 import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.ModelCache;
+import com.threerings.bang.data.BangUserObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -43,6 +44,13 @@ public abstract class BangContext
 
     /** Returns a reference to our top-level application. */
     public abstract BangApp getApp ();
+
+    /** Returns a reference to the current player's user object. Only
+     * valid when we are logged onto the server. */
+    public BangUserObject getUserObject ()
+    {
+        return (BangUserObject)getClient().getClientObject();
+    }
 
     /**
      * Translates the specified message using the specified message bundle.
