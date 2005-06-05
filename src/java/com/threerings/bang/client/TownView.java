@@ -13,6 +13,7 @@ import com.jme.bui.event.ActionListener;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.ranch.client.RanchView;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -27,6 +28,7 @@ public class TownView extends BWindow
     {
         super(ctx.getLookAndFeel(), GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;
+        _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
         _msgs = ctx.getMessageManager().getBundle("town");
 
         // just add a bunch of buttons for now
@@ -50,6 +52,10 @@ public class TownView extends BWindow
             _ctx.getApp().stop();
 
         } else if ("to_ranch".equals(event.getAction())) {
+            RanchView view = new RanchView(_ctx);
+            view.setBounds(0, 0, _ctx.getDisplay().getWidth(),
+                           _ctx.getDisplay().getHeight());
+            _ctx.getInputDispatcher().addWindow(view);
 
         } else if ("to_bank".equals(event.getAction())) {
 

@@ -3,19 +3,16 @@
 
 package com.threerings.bang.data.piece;
 
-import com.threerings.bang.client.sprite.PieceSprite;
-import com.threerings.bang.client.sprite.UnitSprite;
-
 /**
  * Handles the state and behavior of the gun slinger piece.
  */
-public class Gunslinger extends Piece
+public class Gunslinger extends Unit
     implements PlayerPiece
 {
     @Override // documentation inherited
-    public PieceSprite createSprite ()
+    public String getType ()
     {
-        return new UnitSprite("gunslinger");
+        return "gunslinger";
     }
 
     @Override // documentation inherited

@@ -3,12 +3,21 @@
 
 package com.threerings.bang.ranch.client;
 
+import com.jme.bui.BButton;
+import com.jme.bui.BContainer;
+import com.jme.bui.BLabel;
+import com.jme.bui.BTabbedPane;
 import com.jme.bui.BWindow;
+import com.jme.bui.event.ActionEvent;
+import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.GroupLayout;
+import com.jme.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.piece.Unit;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -17,6 +26,7 @@ import com.threerings.bang.util.BangContext;
  * units can also be inspected.
  */
 public class RanchView extends BWindow
+    implements ActionListener
 {
     public RanchView (BangContext ctx)
     {
@@ -25,11 +35,45 @@ public class RanchView extends BWindow
         _msgs = ctx.getMessageManager().getBundle("ranch");
 
         // center panel: tabbed view with big shots, units, recruits
+        _tabs = new BTabbedPane();
+        add(_tabs, BorderLayout.CENTER);
+
+        // we'll add this later, but the palettes need to know about it
+        _inspector = new UnitInspector(ctx);
+
+        _bigshots = new UnitPalette(ctx, _inspector);
+        _tabs.addTab(_msgs.get("t.bigshots"), _bigshots);
+
+        _units = new UnitPalette(ctx, _inspector);
+        _units.setUnits(Unit.getUnitTypes(BangCodes.FRONTIER_TOWN));
+        _tabs.addTab(_msgs.get("t.units"), _units);
+
+        _recruits = new UnitPalette(ctx, _inspector);
+        _tabs.addTab(_msgs.get("t.recruits"), _recruits);
 
         // side panel: unit inspector, unit status, "customize" or
         // "recruit" and back to town button
+        BContainer side = new BContainer(GroupLayout.makeVStretch());
+        side.add(_inspector, GroupLayout.FIXED);
+        side.add(new BLabel("")); // absorb space
+        BButton btn;
+        side.add(btn = new BButton(_msgs.get("m.back_to_town"), "back"),
+                 GroupLayout.FIXED);
+        btn.addListener(this);
+        add(side, BorderLayout.EAST);
+    }
+
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        if ("back".equals(event.getAction())) {
+        }
     }
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
+
+    protected BTabbedPane _tabs;
+    protected UnitPalette _bigshots, _units, _recruits;
+    protected UnitInspector _inspector;
 }

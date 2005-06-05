@@ -3,19 +3,16 @@
 
 package com.threerings.bang.data.piece;
 
-import com.threerings.bang.client.sprite.PieceSprite;
-import com.threerings.bang.client.sprite.UnitSprite;
-
 /**
  * Handles the state and behavior of the dirigible piece.
  */
-public class Dirigible extends Piece
+public class Dirigible extends Unit
     implements PlayerPiece
 {
     @Override // documentation inherited
-    public PieceSprite createSprite ()
+    public String getType ()
     {
-        return new UnitSprite("dirigible");
+        return "dirigible";
     }
 
     @Override // documentation inherited

@@ -3,20 +3,16 @@
 
 package com.threerings.bang.data.piece;
 
-import com.threerings.bang.client.sprite.PieceSprite;
-import com.threerings.bang.client.sprite.UnitSprite;
-import com.threerings.bang.data.piece.Piece;
-
 /**
  * Handles the state and behavior of the artillery piece.
  */
-public class Artillery extends Piece
+public class Artillery extends Unit
     implements PlayerPiece
 {
     @Override // documentation inherited
-    public PieceSprite createSprite ()
+    public String getType ()
     {
-        return new UnitSprite("artillery");
+        return "artillery";
     }
 
     @Override // documentation inherited

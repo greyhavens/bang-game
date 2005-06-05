@@ -3,20 +3,18 @@
 
 package com.threerings.bang.data.piece;
 
-import com.threerings.bang.client.sprite.PieceSprite;
-import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.Terrain;
 
 /**
  * Handles the state and behavior of the steam gunman piece.
  */
-public class SteamGunman extends Piece
+public class SteamGunman extends Unit
     implements PlayerPiece
 {
     @Override // documentation inherited
-    public PieceSprite createSprite ()
+    public String getType ()
     {
-        return new UnitSprite("steamgunman");
+        return "steamgunman";
     }
 
     @Override // documentation inherited
