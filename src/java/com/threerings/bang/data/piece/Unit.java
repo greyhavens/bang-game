@@ -3,83 +3,102 @@
 
 package com.threerings.bang.data.piece;
 
-import java.util.HashMap;
-import java.util.logging.Level;
+import java.io.IOException;
+
+import com.threerings.io.ObjectInputStream;
 
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.UnitSprite;
-import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Terrain;
+import com.threerings.bang.data.UnitConfig;
 
 import static com.threerings.bang.Log.log;
 
 /**
  * A base piece type for player units.
  */
-public abstract class Unit extends Piece
+public class Unit extends Piece
 {
-    /** Returns the type of the unit. */
-    public abstract String getType ();
-
     /**
-     * Returns an array of all unit types available in the specified town.
+     * A blank constructor used for unserialization.
      */
-    public static String[] getUnitTypes (String townId)
+    public Unit ()
     {
-        return _unitTypes.get(townId);
     }
 
     /**
-     * Creates a unit instance of the specified type.
+     * Creates a unit of the specified type.
      */
-    public static Unit createUnit (String type)
+    public Unit (String type)
     {
-        try {
-            return (Unit)_unitMap.get(type).newInstance();
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to instantiate unit '" +
-                    type + "'.", e);
-            return null;
-        }
+        _type = type;
+        _config = UnitConfig.getConfig(type);
+    }
+
+    /** Returns the type of the unit. */
+    public String getType ()
+    {
+        return _type;
+    }
+
+    /** Configures the instance after unserialization. */
+    public void readObject (ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        _config = UnitConfig.getConfig(_type);
+    }
+
+    @Override // documentation inherited
+    public int getSightDistance ()
+    {
+        return _config.sightDistance;
+    }
+
+    @Override // documentation inherited
+    public int getMoveDistance ()
+    {
+        return _config.moveDistance;
+    }
+
+    @Override // documentation inherited
+    public int getFireDistance ()
+    {
+        return _config.fireDistance;
+    }
+
+    @Override // documentation inherited
+    public boolean removeWhenDead ()
+    {
+        return _config.make == UnitConfig.HUMAN;
+    }
+
+    @Override // documentation inherited
+    public boolean isFlyer ()
+    {
+        return _config.mode == UnitConfig.AIR;
     }
 
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new UnitSprite(getType());
+        return new UnitSprite(_type);
     }
 
-    protected static void registerUnit (String townId, Unit proto)
+    @Override // documentation inherited
+    public int traversalCost (Terrain terrain)
     {
-        // add the unit to a town set if appropriate
-        if (townId != null) {
-            String[] units = _unitTypes.get(townId);
-            if (units == null) {
-                units = new String[0];
-            }
-            String[] nunits = new String[units.length+1];
-            System.arraycopy(units, 0, nunits, 0, units.length);
-            nunits[units.length] = proto.getType();
-            _unitTypes.put(townId, nunits);
-        }
-
-        // map the type to the class
-        _unitMap.put(proto.getType(), proto.getClass());
+        // TODO:
+        return 10;
     }
 
-    /** A mapping from town to available units. */
-    protected static HashMap<String,String[]> _unitTypes =
-        new HashMap<String,String[]>();
-
-    /** A mapping from unit type to class. */
-    protected static HashMap<String,Class> _unitMap =
-        new HashMap<String,Class>();
-
-    static {
-        // register the Frontier Town units
-        registerUnit(BangCodes.FRONTIER_TOWN, new Gunslinger());
-        registerUnit(BangCodes.FRONTIER_TOWN, new Dirigible());
-        registerUnit(BangCodes.FRONTIER_TOWN, new Artillery());
-        registerUnit(BangCodes.FRONTIER_TOWN, new SteamGunman());
-        registerUnit(BangCodes.BOOM_TOWN, new WindupSlinger());
+    @Override // documentation inherited
+    protected int computeDamage (Piece target)
+    {
+        // TODO:
+        return 10;
     }
+
+    protected String _type;
+    protected transient UnitConfig _config;
 }

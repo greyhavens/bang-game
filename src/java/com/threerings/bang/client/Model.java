@@ -44,11 +44,11 @@ public class Model
     {
         _key = type + "." + name;
 
-        String path = "media/models/" + type + "/" + name + "/";
+        String path = type + "/" + name + "/";
         Properties props = new Properties();
         try {
             InputStream pin = getClass().getClassLoader().getResourceAsStream(
-                "rsrc/" + path + name + ".properties");
+                "rsrc/" + path + "model.properties");
             if (pin != null) {
                 props.load(new BufferedInputStream(pin));
             } else {
@@ -136,7 +136,8 @@ public class Model
                     new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0));
 
             } catch (IOException ioe) {
-                log.log(Level.WARNING, "Failed to load mesh " + path + ".", ioe);
+                log.log(Level.WARNING,
+                        "Failed to load mesh " + path + ".", ioe);
                 model = new Node("error");
                 Box box = new Box(
                     "error", new Vector3f(1, 1, 0),
