@@ -153,15 +153,6 @@ public class Model
                 model.updateRenderState();
             }
 
-            if (true /* TODO: note rotation in config file */) {
-                Quaternion r1 = new Quaternion();
-                r1.fromAngleAxis(-FastMath.PI/2, new Vector3f(-1,0,0));
-                Quaternion r2 = new Quaternion();
-                r2.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
-                r1.multLocal(r2);
-                model.setLocalRotation(r1);
-            }
-
             cc = new ModelCloneCreator(model);
             cc.addProperty("colors");
             cc.addProperty("texcoords");
