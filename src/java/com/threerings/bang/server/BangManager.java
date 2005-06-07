@@ -48,7 +48,6 @@ import com.threerings.bang.data.generate.SkirmishScenario;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.BonusMarker;
 import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.data.piece.PlayerPiece;
 import com.threerings.bang.data.piece.Unit;
 
 import com.threerings.bang.client.BangService;
@@ -359,7 +358,7 @@ public class BangManager extends GameManager
         // next check to see whether anyone's pieces are still alive
         _havers.clear();
         for (int ii = 0; ii < pieces.length; ii++) {
-            if ((pieces[ii] instanceof PlayerPiece) &&
+            if ((pieces[ii] instanceof Unit) &&
                 pieces[ii].isAlive()) {
                 _havers.add(pieces[ii].owner);
             }
