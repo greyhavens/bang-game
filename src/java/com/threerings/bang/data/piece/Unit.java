@@ -76,7 +76,7 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
-        return _config.make == UnitConfig.HUMAN;
+        return _config.make == UnitConfig.Make.HUMAN;
     }
 
     @Override // documentation inherited
@@ -90,7 +90,7 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean isFlyer ()
     {
-        return _config.mode == UnitConfig.AIR;
+        return _config.mode == UnitConfig.Mode.AIR;
     }
 
     @Override // documentation inherited
