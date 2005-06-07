@@ -20,7 +20,6 @@ import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Bonus;
-import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.PointSet;
 
@@ -245,7 +244,7 @@ public class BangBoard extends SimpleStreamableObject
             return false;
         }
         int max = 1;
-        if (piece instanceof Dirigible) {
+        if (piece.isFlyer()) {
             max = 2;
         }
         return (_tstate[y*_width+x] <= max);

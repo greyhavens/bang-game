@@ -12,12 +12,8 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangConfig;
-import com.threerings.bang.data.piece.Artillery;
-import com.threerings.bang.data.piece.Dirigible;
-import com.threerings.bang.data.piece.Gunslinger;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.StartMarker;
-import com.threerings.bang.data.piece.SteamGunman;
 import com.threerings.bang.util.PieceSet;
 
 /**

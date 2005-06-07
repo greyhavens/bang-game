@@ -20,11 +20,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.piece.Artillery;
-import com.threerings.bang.data.piece.Dirigible;
-import com.threerings.bang.data.piece.Gunslinger;
-import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.data.piece.SteamGunman;
+import com.threerings.bang.data.piece.Unit;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangConfig;
@@ -65,7 +61,7 @@ public class PurchaseView extends BDecoratedWindow
             }
             units.add(new BLabel(col));
         }
-        for (int ii = 0; ii < UNIT_IDENTS.length; ii++) {
+        for (int ii = 0; ii < UNIT_PROTOS.length; ii++) {
             addUnitRow(units, ii);
         }
         add(units, BorderLayout.CENTER);
@@ -83,7 +79,7 @@ public class PurchaseView extends BDecoratedWindow
 
     protected void addUnitRow (BContainer cont, final int index)
     {
-        cont.add(new BLabel(_msgs.get("m." + UNIT_IDENTS[index])));
+        cont.add(new BLabel(_msgs.get("m." + UNIT_PROTOS[index].getType())));
         BLabel cost = new BLabel("" + UNIT_PROTOS[index].getCost());
         cost.setHorizontalAlignment(BLabel.RIGHT);
         cont.add(cost);
@@ -125,13 +121,13 @@ public class PurchaseView extends BDecoratedWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent e)
     {
-        ArrayList<Piece> pieces = new ArrayList<Piece>();
+        ArrayList<Unit> pieces = new ArrayList<Unit>();
         for (int ii = 0; ii < UNIT_PROTOS.length; ii++) {
             for (int pp = 0; pp < _quants[ii]; pp++) {
-                pieces.add((Piece)UNIT_PROTOS[ii].clone());
+                pieces.add((Unit)UNIT_PROTOS[ii].clone());
             }
         }
-        Piece[] pvec = pieces.toArray(new Piece[pieces.size()]);
+        Unit[] pvec = pieces.toArray(new Unit[pieces.size()]);
         _bangobj.service.purchasePieces(_ctx.getClient(), pvec);
     }
 
@@ -140,8 +136,8 @@ public class PurchaseView extends BDecoratedWindow
     protected BangObject _bangobj;
     protected int _pidx;
 
-    protected int[] _quants = new int[UNIT_IDENTS.length];
-    protected BLabel[] _qlabels = new BLabel[UNIT_IDENTS.length];
+    protected int[] _quants = new int[UNIT_PROTOS.length];
+    protected BLabel[] _qlabels = new BLabel[UNIT_PROTOS.length];
     protected int _total;
     protected BLabel _tlabel;
     protected BButton _ready;
@@ -149,10 +145,8 @@ public class PurchaseView extends BDecoratedWindow
     protected static final String[] COLUMNS = {
         "unit", "cost", "count", "", ""
     };
-    protected static final String[] UNIT_IDENTS = {
-        "steamgunman", "artillery", "dirigible", "gunslinger"
-    };
-    protected static final Piece[] UNIT_PROTOS = {
-        new SteamGunman(), new Artillery(), new Dirigible(), new Gunslinger()
+    protected static final Unit[] UNIT_PROTOS = {
+        Unit.getUnit("steamgunman"), Unit.getUnit("artillery"),
+        Unit.getUnit("dirigible"), Unit.getUnit("gunslinger")
     };
 }

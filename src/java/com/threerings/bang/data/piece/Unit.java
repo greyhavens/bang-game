@@ -4,6 +4,7 @@
 package com.threerings.bang.data.piece;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 import com.threerings.io.ObjectInputStream;
 
@@ -20,19 +21,24 @@ import static com.threerings.bang.Log.log;
 public class Unit extends Piece
 {
     /**
-     * A blank constructor used for unserialization.
+     * Instantiates a unit of the specified type.
      */
-    public Unit ()
+    public static Unit getUnit (String type)
     {
-    }
-
-    /**
-     * Creates a unit of the specified type.
-     */
-    public Unit (String type)
-    {
-        _type = type;
-        _config = UnitConfig.getConfig(type);
+        UnitConfig config = UnitConfig.getConfig(type);
+        Unit unit = null;
+        try {
+            if (config.unitClass != null) {
+                unit = (Unit)Class.forName(config.unitClass).newInstance();
+            } else {
+                unit = new Unit();
+            }
+            unit.init(config);
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to create unit [type=" + type +
+                    ", class=" + config.unitClass + "].", e);
+        }
+        return unit;
     }
 
     /** Returns the type of the unit. */
@@ -74,6 +80,14 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public boolean validTarget (Piece target)
+    {
+        boolean valid = super.validTarget(target);
+        // TODO: make sure our damage to the target is >0
+        return valid;
+    }
+
+    @Override // documentation inherited
     public boolean isFlyer ()
     {
         return _config.mode == UnitConfig.AIR;
@@ -90,6 +104,15 @@ public class Unit extends Piece
     {
         // TODO:
         return 10;
+    }
+
+    /**
+     * Provides the unit with its configuration.
+     */
+    protected void init (UnitConfig config)
+    {
+        _config = config;
+        _type = config.type;
     }
 
     @Override // documentation inherited

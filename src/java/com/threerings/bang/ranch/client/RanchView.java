@@ -17,7 +17,7 @@ import com.jme.bui.layout.TableLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.piece.Unit;
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -43,7 +43,7 @@ public class RanchView extends BWindow
         _bigshots = new UnitPalette(ctx, _inspector);
         _tabs.addTab(_msgs.get("t.bigshots"), _bigshots);
         _units = new UnitPalette(ctx, _inspector);
-        _units.setUnits(Unit.getUnitTypes(BangCodes.FRONTIER_TOWN));
+        _units.setUnits(UnitConfig.getTownUnits(BangCodes.FRONTIER_TOWN));
         _tabs.addTab(_msgs.get("t.units"), _units);
         _recruits = new UnitPalette(ctx, _inspector);
         _tabs.addTab(_msgs.get("t.recruits"), _recruits);

@@ -5,6 +5,7 @@ package com.threerings.bang.ranch.client;
 
 import com.jme.bui.BToggleButton;
 
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -13,15 +14,15 @@ import com.threerings.bang.util.BangContext;
  */
 public class UnitIcon extends BToggleButton
 {
-    public UnitIcon (BangContext ctx, String type)
+    public UnitIcon (BangContext ctx, UnitConfig config)
     {
-        super(type);
-        _type = type;
+        super(config.type);
+        _config = config;
     }
 
-    public String getType ()
+    public UnitConfig getUnit ()
     {
-        return _type;
+        return _config;
     }
 
     protected void stateDidChange ()
@@ -32,5 +33,5 @@ public class UnitIcon extends BToggleButton
         }
     }
 
-    protected String _type;
+    protected UnitConfig _config;
 }

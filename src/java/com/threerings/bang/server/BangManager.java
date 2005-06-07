@@ -40,18 +40,16 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.parlor.game.server.GameManager;
 
+import com.threerings.bang.data.card.AreaRepair;
+import com.threerings.bang.data.card.Card;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
 import com.threerings.bang.data.generate.SkirmishScenario;
-import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.BonusMarker;
-import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.PlayerPiece;
-import com.threerings.bang.data.piece.SteamGunman;
-import com.threerings.bang.data.card.AreaRepair;
-import com.threerings.bang.data.card.Card;
+import com.threerings.bang.data.piece.Unit;
 
 import com.threerings.bang.client.BangService;
 import com.threerings.bang.data.BangBoard;
@@ -253,7 +251,8 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (isAI(ii) || isTest()) {
                 Piece[] pieces = new Piece[] {
-                    new Artillery(), new SteamGunman(), new Dirigible() };
+                    Unit.getUnit("artillery"), Unit.getUnit("steamgunman"),
+                    Unit.getUnit("dirigible") };
                 purchasePieces(ii, pieces);
             }
         }

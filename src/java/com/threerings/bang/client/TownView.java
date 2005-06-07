@@ -24,7 +24,7 @@ import com.threerings.bang.util.BangContext;
 public class TownView extends BWindow
     implements ActionListener
 {
-    public TownView (BangContext ctx) // String townId
+    public TownView (BangContext ctx)
     {
         super(ctx.getLookAndFeel(), GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;

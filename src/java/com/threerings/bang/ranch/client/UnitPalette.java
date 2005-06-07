@@ -7,6 +7,7 @@ import com.jme.bui.BContainer;
 import com.jme.bui.layout.TableLayout;
 
 import com.threerings.bang.data.BigShot;
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -23,19 +24,9 @@ public class UnitPalette extends BContainer
     }
 
     /**
-     * Configures the palette to display the specified bigshot units.
+     * Configures the palette to display the specified units.
      */
-    public void setBigShots (BigShot[] units)
-    {
-        for (int ii = 0; ii < units.length; ii++) {
-            add(new UnitIcon(_ctx, units[ii].getType()));
-        }
-    }
-
-    /**
-     * Configures the palette to display the specified normal units.
-     */
-    public void setUnits (String[] units)
+    public void setUnits (UnitConfig[] units)
     {
         for (int ii = 0; ii < units.length; ii++) {
             add(new UnitIcon(_ctx, units[ii]));
@@ -53,7 +44,7 @@ public class UnitPalette extends BContainer
         }
 
         // inspect this unit
-        _inspector.setUnit(icon.getType());
+        _inspector.setUnit(icon.getUnit());
     }
 
     protected BangContext _ctx;

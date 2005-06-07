@@ -10,6 +10,7 @@ import com.jme.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
@@ -35,9 +36,9 @@ public class UnitInspector extends BContainer
     /**
      * Configures the unit we're inspecting.
      */
-    public void setUnit (String type)
+    public void setUnit (UnitConfig config)
     {
-        _name.setText(type);
+        _name.setText(config.type);
     }
 
     protected BangContext _ctx;

@@ -10,7 +10,10 @@ import javax.swing.JOptionPane;
 import java.util.logging.Level;
 
 import com.jme.input.InputHandler;
+import com.jme.light.DirectionalLight;
+import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
+import com.jme.renderer.ColorRGBA;
 import com.jme.util.LoggingSystem;
 
 import com.samskivert.servlet.user.Password;
@@ -131,6 +134,24 @@ public class BangApp extends JmeApp
     protected InputHandler createInputHandler (Camera camera, String api)
     {
         return new CameraHandler(camera, api);
+    }
+
+    @Override // documentation inherited
+    protected void initLighting ()
+    {
+        DirectionalLight light = new DirectionalLight();
+        light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+        light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
+//         light.setLocation(new Vector3f(100, 100, 100));
+        light.setAttenuate(true);
+        light.setConstant(0.25f);
+        light.setEnabled(true);
+        light.setDirection(new Vector3f(-1f, 0f, 0f));
+
+        _lights = _display.getRenderer().createLightState();
+        _lights.setEnabled(true);
+        _lights.attach(light);
+        _geom.setRenderState(_lights);
     }
 
     @Override // documentation inherited

@@ -37,7 +37,6 @@ import com.threerings.media.util.MathUtil;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.data.piece.Dirigible;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
@@ -192,7 +191,7 @@ public class UnitSprite extends MobileSprite
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
         int offset = 0;
-        if (_piece instanceof Dirigible) {
+        if (_piece.isFlyer()) {
             offset = board.getElevation(tx, ty);
         }
         return super.computeElevation(board, tx, ty) + offset;
@@ -201,7 +200,7 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
     {
-        if (_piece instanceof Dirigible) {
+        if (_piece.isFlyer()) {
             ArrayList<Vector3f> nodes = new ArrayList<Vector3f>();
             int oelev = computeElevation(board, opiece.x, opiece.y);
             if (oelev == 0) {

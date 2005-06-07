@@ -7,10 +7,9 @@ import java.util.ArrayList;
 
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangConfig;
-import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Bonus;
-import com.threerings.bang.data.piece.Gunslinger;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.Unit;
 
 /**
  * Generates a quick test scenario.
@@ -21,18 +20,18 @@ public class TestScenario extends ScenarioGenerator
     public void generate (
         BangConfig config, BangBoard board, ArrayList<Piece> pieces)
     {
-        Piece piece = new Artillery();
+        Piece piece = Unit.getUnit("artillery");
         piece.position(0, 0);
         configureAndAdd(pieces, 0, piece);
-        piece = new Gunslinger();
+        piece = Unit.getUnit("gunslinger");
         piece.position(0, 3);
         configureAndAdd(pieces, 0, piece);
 
-        piece = new Artillery();
+        piece = Unit.getUnit("artillery");
         piece.position(5, 0);
         configureAndAdd(pieces, 1, piece);
 
-        piece = new Gunslinger();
+        piece = Unit.getUnit("gunslinger");
         piece.position(5, 3);
         configureAndAdd(pieces, 1, piece);
 

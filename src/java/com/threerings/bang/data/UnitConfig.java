@@ -3,59 +3,49 @@
 
 package com.threerings.bang.data;
 
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Properties;
+import java.util.logging.Level;
+
+import com.samskivert.util.StringUtil;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Loads and manages unit configuration information.
  */
 public class UnitConfig
 {
-    /** The modality for ground units. */
-    public static final int GROUND = 0;
+    /** Defines a unit's modality. */
+    public enum Mode {
+        GROUND, AIR, RANGE
+    };
 
-    /** The modality for air units. */
-    public static final int AIR = 1;
+    /** Defines a unit's make. */
+    public enum Make {
+        HUMAN, STEAM, SPIRIT
+    };
 
-    /** The modality for range units. */
-    public static final int RANGE = 2;
-
-    /** The make of human units. */
-    public static final int HUMAN = 3;
-
-    /** The make of steam units. */
-    public static final int STEAM = 4;
-
-    /** The make of spirit units. */
-    public static final int SPIRIT = 5;
-
-    /** The rank of normal playable units. */
-    public static final int BASE = 0;
-
-    /** The rank of special units that can't be purchased but turn up in
-     * games at special times and can be controlled. */
-    public static final int SPECIAL = 1;
-
-    /** The rank of Big Shot units. */
-    public static final int BIGSHOT = 2;
+   /** Defines a unit's rank. */
+    public enum Rank {
+        NORMAL, SPECIAL, BIGSHOT
+    }
 
     /** The name of this unit type (ie. <code>gunslinger</code>, etc.). */
     public String type;
 
     /** The modality of this unit: {@link #GROUND}, {@link #AIR} or {@link
      * #RANGE}. */
-    public int mode;
+    public Mode mode;
 
     /** The make of this unit: {@link #HUMAN}, {@link #STEAM} or {@link
      * #SPIRIT}. */
-    public int make;
+    public Make make;
 
-    /** The rank of this unit: {@link #BASE}, {@link #SPECIAL} or {@link
+    /** The rank of this unit: {@link #NORMAL}, {@link #SPECIAL} or {@link
      * #BIGSHOT}. */
-    public int rank;
-
-    /** The towns in which this unit is available: {@link
-     * BangCodes#FRONTIER_TOWN}, etc.. */
-    public String[] towns;
+    public Rank rank;
 
     /** The distance this unit can see. */
     public int sightDistance;
@@ -70,10 +60,19 @@ public class UnitConfig
     public int damage;
 
     /** Our damage adjustments versus other modes and makes. */
-    public int[] damageAdjust = new int[6];
+    public int[] damageAdjust = new int[MODE_COUNT + MAKE_COUNT];
 
     /** Our defense adjustments versus other modes and makes. */
-    public int[] defenseAdjust = new int[6];
+    public int[] defenseAdjust = new int[MODE_COUNT + MAKE_COUNT];
+
+    /** A custom class for this unit, if one was specified. */
+    public String unitClass;
+
+    /** Returns a string representation of this instance. */
+    public String toString ()
+    {
+        return StringUtil.fieldsToString(this);
+    }
 
     /**
      * Returns the unit configuration for the specified unit type.
@@ -92,23 +91,124 @@ public class UnitConfig
         return _townMap.get(townId);
     }
 
+    public static void main (String[] args)
+    {
+        for (UnitConfig config : _types.values()) {
+            System.err.println("" + config);
+        }
+    }
+
     protected static void registerUnit (String type)
     {
+        // load up the properties file for this unit
+        Properties props = new Properties();
+        String path = "rsrc/units/" + type + "/unit.properties";
+        try {
+            props.load(
+                UnitConfig.class.getClassLoader().getResourceAsStream(path));
+        } catch (Exception e) {
+            log.log(Level.WARNING, "No config for '" + type + "'?", e);
+            return;
+        }
 
-//         // add the unit to a town set if appropriate
-//         if (townId != null) {
-//             String[] units = _unitTypes.get(townId);
-//             if (units == null) {
-//                 units = new String[0];
-//             }
-//             String[] nunits = new String[units.length+1];
-//             System.arraycopy(units, 0, nunits, 0, units.length);
-//             nunits[units.length] = proto.getType();
-//             _unitTypes.put(townId, nunits);
-//         }
+        // fill in a config instance from the properties file
+        UnitConfig config = new UnitConfig();
+        config.type = type;
+        config.unitClass = props.getProperty("class");
 
-//         // map the type to the class
-//         _unitMap.put(proto.getType(), proto.getClass());
+        String modestr = requireProperty(type, props, "mode").toUpperCase();
+        try {
+            config.mode = Enum.valueOf(Mode.class, modestr);
+        } catch (Exception e) {
+            log.warning("Invalid mode specified [type=" + type +
+                        ", mode=" + modestr + "].");
+        }
+        String makestr = requireProperty(type, props, "make").toUpperCase();
+        try {
+            config.make = Enum.valueOf(Make.class, makestr);
+        } catch (Exception e) {
+            log.warning("Invalid make specified [type=" + type +
+                        ", make=" + makestr + "].");
+        }
+        String rankstr = requireProperty(type, props, "rank").toUpperCase();
+        try {
+            config.rank = Enum.valueOf(Rank.class, rankstr);
+        } catch (Exception e) {
+            log.warning("Invalid rank specified [type=" + type +
+                        ", rank=" + rankstr + "].");
+        }
+
+        config.sightDistance = getIntProperty(type, props, "sight", 5);
+        config.moveDistance = getIntProperty(type, props, "move", 1);
+        config.fireDistance = getIntProperty(type, props, "fire", 1);
+        config.damage = getIntProperty(type, props, "damage", 25);
+
+        int idx = 0;
+        for (Mode mode : EnumSet.allOf(Mode.class)) {
+            String key = mode.toString().toLowerCase();
+            config.damageAdjust[mode.ordinal()] = getIntProperty(
+                type, props, "damage." + key, 0);
+            config.defenseAdjust[mode.ordinal()] = getIntProperty(
+                type, props, "defense." + key, 0);
+        }
+        for (Make make : EnumSet.allOf(Make.class)) {
+            String key = make.toString().toLowerCase();
+            config.damageAdjust[MODE_COUNT + make.ordinal()] = getIntProperty(
+                type, props, "damage." + key, 0);
+            config.defenseAdjust[MODE_COUNT + make.ordinal()] = getIntProperty(
+                type, props, "defense." + key, 0);
+        }
+
+        // map this config into the proper towns
+        String towns = requireProperty(type, props, "towns");
+        boolean andSoOn = false;
+        for (int ii = 0; ii < BangCodes.TOWN_IDS.length; ii++) {
+            String town = BangCodes.TOWN_IDS[ii];
+            if (andSoOn || towns.indexOf(town) != -1) {
+                mapTown(town, config);
+                andSoOn = andSoOn || (towns.indexOf(town + "+") != -1);
+            }
+        }
+
+        // map the type to the config
+        _types.put(type, config);
+    }
+
+    protected static void mapTown (String town, UnitConfig config)
+    {
+        UnitConfig[] configs = _townMap.get(town);
+        if (configs == null) {
+            configs = new UnitConfig[0];
+        }
+        UnitConfig[] nconfigs = new UnitConfig[configs.length+1];
+        System.arraycopy(configs, 0, nconfigs, 0, configs.length);
+        nconfigs[configs.length] = config;
+        _townMap.put(town, nconfigs);
+    }
+
+    protected static String requireProperty (
+        String type, Properties props, String key)
+    {
+        String value = props.getProperty(key);
+        if (value == null) {
+            log.warning("Missing unit config [type=" + type +
+                        ", key=" + key + "].");
+            value = "";
+        }
+        return value;
+    }
+
+    protected static int getIntProperty (
+        String type, Properties props, String key, int defval)
+    {
+        String value = props.getProperty(key);
+        try {
+            return (value != null) ? Integer.parseInt(value) : defval;
+        } catch (Exception e) {
+            log.warning("Invalid unit config [type=" + type + ", key=" + key +
+                        ", value=" + value + "]: " + e);
+            return defval;
+        }
     }
 
     /** A mapping from unit type to its configuration. */
@@ -118,6 +218,12 @@ public class UnitConfig
     /** A mapping from town to all units accessible in that town. */
     protected static HashMap<String,UnitConfig[]> _townMap =
         new HashMap<String,UnitConfig[]>();
+
+    /** The total number of modes. */
+    protected static final int MODE_COUNT = EnumSet.allOf(Mode.class).size();
+
+    /** The total number of makes. */
+    protected static final int MAKE_COUNT = EnumSet.allOf(Make.class).size();
 
     static {
         // register the Frontier Town units

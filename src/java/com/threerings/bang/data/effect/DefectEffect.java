@@ -11,8 +11,8 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.piece.Artillery;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -99,9 +99,11 @@ public class DefectEffect extends Effect
         }
     }
 
+    // TODO: nix this artillery crap
     protected boolean isValidSteal (Piece p, boolean allowArtillery)
     {
         return p.owner >= 0 && p.isAlive() && p.owner != owner &&
-            (allowArtillery || !(p instanceof Artillery));
+            (allowArtillery || !(p instanceof Unit) ||
+             !(((Unit)p).getType().equals("artillery")));
     }
 }
