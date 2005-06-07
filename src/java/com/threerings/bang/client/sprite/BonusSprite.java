@@ -34,7 +34,7 @@ public class BonusSprite extends PieceSprite
     {
         super.init(ctx, piece, tick);
 
-        BufferedImage image = ctx.loadImage("media/bonuses/" + _type + ".png");
+        BufferedImage image = ctx.loadImage("bonuses/" + _type + "/icon.png");
         _disk.setRenderState(RenderUtil.createTexture(ctx, image));
         _disk.updateRenderState();
     }

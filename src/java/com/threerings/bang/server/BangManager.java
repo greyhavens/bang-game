@@ -731,7 +731,7 @@ public class BangManager extends GameManager
             try {
                 ClassLoader cl = getClass().getClassLoader();
                 InputStream in = cl.getResourceAsStream(
-                    "rsrc/media/boards/" + board + ".board");
+                    "rsrc/boards/" + board + ".board");
                 if (in != null) {
                     tup = BoardUtil.loadBoard(IOUtils.toByteArray(in));
                 } else {
