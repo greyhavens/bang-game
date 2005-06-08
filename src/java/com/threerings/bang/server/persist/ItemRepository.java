@@ -33,7 +33,7 @@ import static com.threerings.bang.Log.log;
 
 /**
  * Responsible for the persistent storage of items as well as for
- * transferring items from one user to another.
+ * transferring items from one player to another.
  */
 public class ItemRepository extends SimpleRepository
 {
@@ -57,14 +57,14 @@ public class ItemRepository extends SimpleRepository
     }
 
     /**
-     * Loads the items owned by the specified user.
+     * Loads the items owned by the specified player.
      */
-    public ArrayList<Item> loadItems (final int userId)
+    public ArrayList<Item> loadItems (final int playerId)
         throws PersistenceException
     {
         final ArrayList<Item> items = new ArrayList<Item>();
         final String query = "select ITEM_ID, ITEM_TYPE, ITEM_DATA " +
-            "from ITEMS where OWNER_ID = " + userId;
+            "from ITEMS where OWNER_ID = " + playerId;
         execute(new Operation() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -73,8 +73,8 @@ public class ItemRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        items.add(decodeItem(rs.getInt(1), rs.getInt(2), userId,
-                                             (byte[])rs.getObject(3)));
+                        items.add(decodeItem(rs.getInt(1), rs.getInt(2),
+                                             playerId, (byte[])rs.getObject(3)));
                     }
                 } finally {
                     JDBCUtil.close(stmt);
@@ -196,42 +196,25 @@ public class ItemRepository extends SimpleRepository
     }
 
     /**
-     * Transfers the specified item to the specified user. The database
+     * Transfers the specified item to the specified player. The database
      * will be updated as well as the item's <code>ownerId</code> field.
      */
-    public void transferItem (final Item item, final int newOwnerId)
+    public void transferItem (Item item, int newOwnerId)
         throws PersistenceException
     {
-        execute(new Operation() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                String query = "update ITEMS set OWNER_ID = " + newOwnerId +
-                    " where ITEM_ID = " + item.getItemId();
-                Statement stmt = conn.createStatement();
-                try {
-                    if (stmt.executeUpdate(query) != 0) {
-                        log.warning("Requested to transfer non-persisted item " +
-                                    "[item=" + item +
-                                    ", to=" + newOwnerId + "].");
+        if (update("update ITEMS set OWNER_ID = " + newOwnerId +
+                   " where ITEM_ID = " + item.getItemId()) == 0) {
+            log.warning("Requested to transfer non-persisted item " +
+                        "[item=" + item + ", to=" + newOwnerId + "].");
 
-                    } else {
-                        // update the item's ownerId field
-                        int oldOwnerId = item.getOwnerId();
-                        item.setOwnerId(newOwnerId);
-
-                        // record the transfer
-                        BangServer.itemLog(
-                            "item_transfer id:" + item.getItemId() +
-                            " src:" + oldOwnerId + " dst:" + newOwnerId);
-                    }
-                    return null;
-
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-            }
-        });
+        } else {
+            // update the item's ownerId field
+            int oldOwnerId = item.getOwnerId();
+            item.setOwnerId(newOwnerId);
+            // record the transfer
+            BangServer.itemLog("item_transfer id:" + item.getItemId() +
+                               " src:" + oldOwnerId + " dst:" + newOwnerId);
+        }
     }
 
     /**

@@ -14,7 +14,7 @@ CREATE TABLE ITEMS
     /** The unique identifier for this item. */
     ITEM_ID INTEGER NOT NULL AUTO_INCREMENT,
 
-    /** The user id of the owner of this item. */
+    /** The player id of the owner of this item. */
     OWNER_ID INTEGER NOT NULL,
 
     /** The item type code for this item (maps to derived class). */

@@ -27,6 +27,7 @@ import com.threerings.parlor.server.ParlorManager;
 import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.server.persist.ItemRepository;
+import com.threerings.bang.server.persist.PlayerRepository;
 
 import static com.threerings.bang.Log.log;
 
@@ -41,6 +42,9 @@ public class BangServer extends CrowdServer
 
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
+
+    /** Manages the persistent repository of player data. */
+    public static PlayerRepository playrepo;
 
     /** Manages the persistent repository of items. */
     public static ItemRepository itemrepo;
@@ -63,6 +67,7 @@ public class BangServer extends CrowdServer
 
         // create our database connection provider and repositories
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+        playrepo = new PlayerRepository(conprov);
         itemrepo = new ItemRepository(conprov);
 
         // set up our authenticator
