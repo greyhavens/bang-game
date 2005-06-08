@@ -3,11 +3,15 @@
 
 package com.threerings.bang.ranch.client;
 
+import com.jme.renderer.ColorRGBA;
+
 import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
 import com.jme.bui.BLabel;
 import com.jme.bui.BTabbedPane;
 import com.jme.bui.BWindow;
+import com.jme.bui.border.EmptyBorder;
+import com.jme.bui.border.LineBorder;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
@@ -31,6 +35,7 @@ public class RanchView extends BWindow
     public RanchView (BangContext ctx)
     {
         super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
+        setBorder(new EmptyBorder(5, 5, 5, 5));
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("ranch");
 
@@ -39,6 +44,7 @@ public class RanchView extends BWindow
 
         // center panel: tabbed view with big shots, units, recruits
         _tabs = new BTabbedPane();
+        _tabs.setBorder(new LineBorder(ColorRGBA.black));
         add(_tabs, BorderLayout.CENTER);
         _bigshots = new UnitPalette(ctx, _inspector);
         _tabs.addTab(_msgs.get("t.bigshots"), _bigshots);

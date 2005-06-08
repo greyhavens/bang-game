@@ -32,6 +32,12 @@ public class UnitConfig
         NORMAL, SPECIAL, BIGSHOT
     }
 
+    /** The total number of modes. */
+    public static final int MODE_COUNT = EnumSet.allOf(Mode.class).size();
+
+    /** The total number of makes. */
+    public static final int MAKE_COUNT = EnumSet.allOf(Make.class).size();
+
     /** The name of this unit type (ie. <code>gunslinger</code>, etc.). */
     public String type;
 
@@ -218,12 +224,6 @@ public class UnitConfig
     /** A mapping from town to all units accessible in that town. */
     protected static HashMap<String,UnitConfig[]> _townMap =
         new HashMap<String,UnitConfig[]>();
-
-    /** The total number of modes. */
-    protected static final int MODE_COUNT = EnumSet.allOf(Mode.class).size();
-
-    /** The total number of makes. */
-    protected static final int MAKE_COUNT = EnumSet.allOf(Make.class).size();
 
     static {
         // register the Frontier Town units
