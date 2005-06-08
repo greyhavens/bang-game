@@ -70,6 +70,17 @@
     </copy>
   </target>
 
+  <!-- converts our models into JME format -->
+  <target name="models">
+    <taskdef name="convert" classname="com.threerings.jme.tools.ConvertModelTask"
+             classpathref="classpath"/>
+    <convert>
+      <fileset dir="rsrc" includes="**/*.MD3"/>
+      <fileset dir="rsrc" includes="**/*.obj"/>
+      <fileset dir="rsrc" includes="**/*.3DS"/>
+    </convert>
+  </target>
+
   <!-- cleans out the installed application -->
   <target name="clean">
     <delete dir="${deploy.dir}"/>
