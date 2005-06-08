@@ -1,6 +1,9 @@
 #!/bin/sh
 
 CLASS=com.threerings.bang.client.BangApp
-`dirname $0`/runjava -- -Dno_log_redir=true -Dtest=true $CLASS \
-  localhost 4007 $*
+if [ "$1" == "-test" ]; then
+    TEST="-Dtest=true";
+    shift
+fi
+`dirname $0`/runjava -- -Dno_log_redir=true $TEST $CLASS localhost 4007 $*
 xset r on
