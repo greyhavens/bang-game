@@ -11,6 +11,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.server.persist.Player;
 
 /**
  * Customizes the client resolver to use our {@link BangUserObject}.
@@ -30,8 +31,20 @@ public class BangClientResolver extends CrowdClientResolver
         super.resolveClientData(clobj);
         BangUserObject buser = (BangUserObject)clobj;
 
+        // load up our per-player bits
+        String username = buser.username.toString();
+        Player player = BangServer.playrepo.loadPlayer(username);
+        if (player == null) {
+            // it's their first time, how nice
+            player = new Player(username);
+            BangServer.playrepo.insertPlayer(player);
+            BangServer.generalLog("first_timer " + username);
+        }
+        buser.playerId = player.playerId;
+        buser.scrip = player.scrip;
+
         // load up this player's items
-        ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.userId);
+        ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
         if (items != null) {
             buser.inventory = new DSet(items.iterator());
         } else {

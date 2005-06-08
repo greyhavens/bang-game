@@ -32,4 +32,15 @@ public class Player
 
     /** The time at which the player ended their last session. */
     public Date lastSession;
+
+    /** A blank constructor used when loading records from the database. */
+    public Player ()
+    {
+    }
+
+    /** Constructs a blank player record for the supplied account. */
+    public Player (String accountName)
+    {
+        this.accountName = accountName;
+    }
 }

@@ -20,18 +20,16 @@ public class BangClient extends CrowdClient
     {
         super.sessionWillStart();
 
-        // if we have auth data in the form of a token ring, use it (we
-        // can set things directly here rather than use the setter methods
-        // because the user object is not yet out in the wild)
+        // if we have auth data in the form of a token ring, use it
         BangUserObject user = (BangUserObject)_clobj;
-        if (_authdata instanceof Object[]) {
-            Object[] data = (Object[])_authdata;
-            user.userId = (Integer)data[0];
-            user.tokens = (TokenRing)data[1];
+        if (_authdata instanceof TokenRing) {
+            // we can set things directly here rather than use the setter
+            // methods because the user object is not yet out in the wild
+            user.tokens = (TokenRing)_authdata;
         } else {
-            log.warning("Lacking authdata [who=" + _username + "].");
-            // otherwise give them zero privileges
-            user.userId = -1;
+            log.warning("Missing or bogus authdata [who=" + _username +
+                        ", adata=" + _authdata + "].");
+            // give them zero privileges
             user.tokens = new TokenRing();
         }
     }

@@ -4,6 +4,7 @@
 package com.threerings.bang.server.persist;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 
 import com.samskivert.io.PersistenceException;
@@ -47,18 +48,20 @@ public class PlayerRepository extends JORARepository
     public Player loadPlayer (String accountName)
         throws PersistenceException
     {
-        Player p = new Player();
-        p.accountName = accountName;
-        return (Player)loadByExample(_ptable, p);
+        return (Player)loadByExample(_ptable, new Player(accountName));
     }
 
     /**
      * Insert a new player record into the repository and assigns them a
-     * unique player id in the process.
+     * unique player id in the process. The {@link Player#created} field
+     * will be filled in by this method if it is not already.
      */
     public void insertPlayer (final Player player)
         throws PersistenceException
     {
+        if (player.created == null) {
+            player.created = new Date(System.currentTimeMillis());
+        }
         insert(_ptable, player);
     }
 

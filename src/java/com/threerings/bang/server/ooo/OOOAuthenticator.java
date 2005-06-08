@@ -109,10 +109,14 @@ public class OOOAuthenticator extends Authenticator
             if (user.holdsToken(OOOUser.ADMIN)) {
                 tokens |= TokenRing.ADMIN;
             }
-            rsp.authdata = new Object[] {
-                user.userId, new TokenRing(tokens) };
+            rsp.authdata = new TokenRing(tokens);
 
-            log.info("User logged on [user=" + username + "].");
+            // replace the username in their credentials with the
+            // canonical name in their user record as that username will
+            // later be stuffed into their user object
+            creds.setUsername(new Name(user.username));
+
+            log.info("User logged on [user=" + user.username + "].");
             rdata.code = AuthResponseData.SUCCESS;
 
         } catch (PersistenceException pe) {

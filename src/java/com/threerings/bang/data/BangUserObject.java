@@ -14,8 +14,8 @@ import com.threerings.crowd.data.TokenRing;
 public class BangUserObject extends BodyObject
 {
     // AUTO-GENERATED: FIELDS START
-    /** The field name of the <code>userId</code> field. */
-    public static final String USER_ID = "userId";
+    /** The field name of the <code>playerId</code> field. */
+    public static final String PLAYER_ID = "playerId";
 
     /** The field name of the <code>tokens</code> field. */
     public static final String TOKENS = "tokens";
@@ -34,7 +34,7 @@ public class BangUserObject extends BodyObject
     // AUTO-GENERATED: FIELDS END
 
     /** This user's persistent unique id. */
-    public int userId;
+    public int playerId;
 
     /** Indicates which access control tokens are held by this user. */
     public TokenRing tokens;
@@ -59,19 +59,19 @@ public class BangUserObject extends BodyObject
 
     // AUTO-GENERATED: METHODS START
     /**
-     * Requests that the <code>userId</code> field be set to the
+     * Requests that the <code>playerId</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setUserId (int value)
+    public void setPlayerId (int value)
     {
-        int ovalue = this.userId;
+        int ovalue = this.playerId;
         requestAttributeChange(
-            USER_ID, new Integer(value), new Integer(ovalue));
-        this.userId = value;
+            PLAYER_ID, new Integer(value), new Integer(ovalue));
+        this.playerId = value;
     }
 
     /**
