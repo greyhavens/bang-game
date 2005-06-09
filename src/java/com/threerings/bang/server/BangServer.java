@@ -3,10 +3,12 @@
 
 package com.threerings.bang.server;
 
+import java.io.File;
 import java.util.logging.Level;
 
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
+import com.samskivert.util.AuditLogger;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.StringUtil;
@@ -23,6 +25,9 @@ import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.server.PlaceRegistry;
 
 import com.threerings.parlor.server.ParlorManager;
+
+import com.threerings.coin.server.persist.CoinRepository;
+import com.threerings.user.AccountActionRepository;
 
 import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.ranch.server.RanchManager;
@@ -43,11 +48,19 @@ public class BangServer extends CrowdServer
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
 
+    /** Provides visibility into global OOO account actions. */
+    public static AccountActionRepository actionrepo;
+
     /** Manages the persistent repository of player data. */
     public static PlayerRepository playrepo;
 
     /** Manages the persistent repository of items. */
     public static ItemRepository itemrepo;
+
+    /** Provides micropayment services. (This will need to be turned into
+     * a pluggable interface to support third party micropayment
+     * systems.) */
+    public static CoinRepository coinrepo;
 
     /** Keeps an eye on the ranch, a good man to have around. */
     public static RanchManager ranchmgr = new RanchManager();
@@ -67,8 +80,11 @@ public class BangServer extends CrowdServer
 
         // create our database connection provider and repositories
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+        actionrepo = new AccountActionRepository(conprov);
         playrepo = new PlayerRepository(conprov);
         itemrepo = new ItemRepository(conprov);
+        coinrepo = new CoinRepository(
+            conprov, ServerConfig.serverName, _clog, actionrepo);
 
         // set up our authenticator
         Authenticator auth = ServerConfig.getAuthenticator();
@@ -91,12 +107,23 @@ public class BangServer extends CrowdServer
         log.info("Bang server initialized.");
     }
 
+    @Override // documentation inherited
+    public void shutdown ()
+    {
+        super.shutdown();
+
+        // close our audit logs
+        _glog.close();
+        _ilog.close();
+        _clog.close();
+    }
+
     /**
      * Loads a message to the general audit log.
      */
     public static void generalLog (String message)
     {
-        // TODO: log this message to an audit log
+        _glog.log(message);
     }
 
     /**
@@ -104,13 +131,13 @@ public class BangServer extends CrowdServer
      */
     public static void itemLog (String message)
     {
-        // TODO: log this message to an audit log
+        _ilog.log(message);
     }
 
     @Override // documentation inherited
     protected int getListenPort ()
     {
-        return ServerConfig.getServerPort();
+        return ServerConfig.serverPort;
     }
 
     public static void main (String[] args)
@@ -127,4 +154,9 @@ public class BangServer extends CrowdServer
             log.log(Level.WARNING, "Unable to initialize server.", e);
         }
     }
+
+    protected static File _logdir = new File(ServerConfig.serverRoot, "log");
+    protected static AuditLogger _glog = new AuditLogger(_logdir, "server.log");
+    protected static AuditLogger _ilog = new AuditLogger(_logdir, "item.log");
+    protected static AuditLogger _clog = new AuditLogger(_logdir, "coin.log");
 }

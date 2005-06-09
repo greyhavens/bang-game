@@ -65,6 +65,12 @@ public class UnitConfig
     /** This unit's base damage. */
     public int damage;
 
+    /** The cost of this unit in scrip. */
+    public int scripCost;
+
+    /** The cost of this unit in gold. */
+    public int goldCost;
+
     /** Our damage adjustments versus other modes and makes. */
     public int[] damageAdjust = new int[MODE_COUNT + MAKE_COUNT];
 
@@ -148,6 +154,8 @@ public class UnitConfig
         config.moveDistance = getIntProperty(type, props, "move", 1);
         config.fireDistance = getIntProperty(type, props, "fire", 1);
         config.damage = getIntProperty(type, props, "damage", 25);
+        config.scripCost = getIntProperty(type, props, "scrip_cost", 0);
+        config.goldCost = getIntProperty(type, props, "gold_cost", 0);
 
         int idx = 0;
         for (Mode mode : EnumSet.allOf(Mode.class)) {

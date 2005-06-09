@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -22,6 +23,15 @@ import static com.threerings.bang.Log.log;
  */
 public class ServerConfig
 {
+    /** The name assigned to this server installation. */
+    public static String serverName;
+
+    /** The root directory of the server installation. */
+    public static File serverRoot;
+
+    /** The port on which we are listening for client connections. */
+    public static int serverPort;
+
     /** Provides access to our config properties. <em>Do not</em> modify
      * these properties! */
     public static Config config;
@@ -42,15 +52,11 @@ public class ServerConfig
                     "[path=" + propPath + "].", e);
         }
         config = new Config("server", props);
-    }
 
-    /**
-     * Returns the port on which the game server is listening for client
-     * connections.
-     */
-    public static int getServerPort ()
-    {
-        return config.getValue("server_port", Client.DEFAULT_SERVER_PORT);
+        // fill in our standard properties
+        serverName = config.getValue("server_name", "bang");
+        serverRoot = new File(config.getValue("server_root", "/tmp"));
+        serverPort = config.getValue("server_port", Client.DEFAULT_SERVER_PORT);
     }
 
     /**
@@ -83,6 +89,8 @@ public class ServerConfig
         String propsPath = System.getProperty("install_config");
         if (propsPath != null) {
             init(propsPath);
+        } else {
+            log.warning("Missing 'install_config' system property.");
         }
     }
 }
