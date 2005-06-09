@@ -75,6 +75,51 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
+     * Deducts the specified amount of scrip from the specified player's
+     * account.
+     */
+    public void spendScrip (int playerId, int amount)
+        throws PersistenceException
+    {
+        updateScrip(playerId, amount, "spend");
+    }
+
+    /**
+     * Adds the specified amount of scrip to the specified player's
+     * account.
+     */
+    public void grantScrip (int playerId, int amount)
+        throws PersistenceException
+    {
+        updateScrip(playerId, amount, "grant");
+    }
+
+    /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
+    protected void updateScrip (int playerId, int amount, String type)
+        throws PersistenceException
+    {
+        if (amount <= 0) {
+            throw new PersistenceException(
+                "Illegal scrip " + type + " [pid=" + playerId +
+                ", amount=" + amount + "]");
+        }
+
+        String action = type.equals("grant") ? "+" : "-";
+        String query = "update PLAYERS set SCRIP = SCRIP " + action + " " +
+            amount + " where PLAYER_ID = " + playerId;
+        int mods = update(query);
+        if (mods == 0) {
+            throw new PersistenceException(
+                "Scrip " + type + " modified zero rows [pid=" + playerId +
+                ", amount=" + amount + "]");
+        } else if (mods > 1) {
+            log.warning("Scrip " + type + " modified multiple rows " +
+                        "[pid=" + playerId + ", amount=" + amount +
+                        ", mods=" + mods + "].");
+        }
+    }
+
+    /**
      * Mimics the disabling of deleted players by renaming them to an
      * invalid value that we do in our user management system. This is
      * triggered by us receiving a player action indicating that the

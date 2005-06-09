@@ -3,6 +3,7 @@
 
 package com.threerings.bang.ranch.server;
 
+import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ListUtil;
 
 import com.threerings.presents.data.ClientObject;
@@ -10,10 +11,13 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.BigShot;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.persist.FinancialAction;
+
 import com.threerings.bang.ranch.client.RanchService;
 import com.threerings.bang.ranch.data.RanchCodes;
-import com.threerings.bang.server.BangServer;
 
 import static com.threerings.bang.Log.log;
 
@@ -52,7 +56,37 @@ public class RanchManager
             throw new InvocationException(ACCESS_DENIED);
         }
 
-        // TODO: create a financial action that creates the item, charges
-        // them for it and places the item in their inventory
+        // create and deliver the unit to the player; all the heavy
+        // lifting is handled by the financiial action
+        new RecruitBigShotAction(user, config, listener).start();
+    }
+
+    /** Used to recruit and deliver a big shot to a player. */
+    protected static final class RecruitBigShotAction extends FinancialAction
+    {
+        public RecruitBigShotAction (BangUserObject user, UnitConfig config,
+                                     RanchService.ResultListener listener) {
+            super(user, config.scripCost, config.goldCost);
+            _unit = new BigShot(user.playerId, config.type);
+            _listener = listener;
+        }
+
+        protected void persistentAction () throws PersistenceException {
+            BangServer.itemrepo.insertItem(_unit);
+        }
+        protected void rollbackPersistentAction () throws PersistenceException {
+            BangServer.itemrepo.deleteItem(_unit, "recruit_rollback");
+        }
+
+        protected void actionCompleted () {
+            _user.addToInventory(_unit);
+            _listener.requestProcessed(_unit);
+        }
+        protected void actionFailed () {
+            _listener.requestFailed(INTERNAL_ERROR);
+        }
+
+        protected BigShot _unit;
+        protected RanchService.ResultListener _listener;
     }
 }
