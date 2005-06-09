@@ -4,9 +4,20 @@
 # Configuration for a Bang! server installation
 
 #
+# Defines the name for this server installation.
+
+server_name = bang
+
+#
 # The port on which the server listens for client connections.
 
 server_port = 4007
+
+#
+# The directory from which the server is run. Used to put log files in the
+# proper location and things like that.
+
+server_root = /export/bang
 
 #
 # Defines the client authenticator used by the server.
