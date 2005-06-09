@@ -41,10 +41,30 @@ public class UnitInspector extends BContainer
     }
 
     /**
+     * Returns the item id of the unit being inspected (or -1 if the
+     * inspected unit is not an actual unit).
+     */
+    public int getItemId ()
+    {
+        return _itemId;
+    }
+
+    /**
+     * Returns the configuration of the unit being inspected or null if no
+     * unit is being inspected.
+     */
+    public UnitConfig getConfig ()
+    {
+        return _config;
+    }
+
+    /**
      * Configures the unit we're inspecting.
      */
-    public void setUnit (UnitConfig config)
+    public void setUnit (int itemId, UnitConfig config)
     {
+        _itemId = itemId;
+        _config = config;
         _name.setText(_umsgs.get("m." + config.type));
 
         StringBuffer abuf = new StringBuffer();
@@ -82,6 +102,9 @@ public class UnitInspector extends BContainer
 
     protected BangContext _ctx;
     protected MessageBundle _msgs, _umsgs;
+
+    protected int _itemId = -1;
+    protected UnitConfig _config;
 
     protected BIcon _model;
     protected BLabel _name;

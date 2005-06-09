@@ -14,10 +14,16 @@ import com.threerings.bang.util.BangContext;
  */
 public class UnitIcon extends BToggleButton
 {
-    public UnitIcon (BangContext ctx, UnitConfig config)
+    public UnitIcon (BangContext ctx, int itemId, UnitConfig config)
     {
         super(config.type);
+        _itemId = itemId;
         _config = config;
+    }
+
+    public int getItemId ()
+    {
+        return _itemId;
     }
 
     public UnitConfig getUnit ()
@@ -33,5 +39,6 @@ public class UnitIcon extends BToggleButton
         }
     }
 
+    protected int _itemId;
     protected UnitConfig _config;
 }

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.data;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Properties;
@@ -101,6 +102,22 @@ public class UnitConfig
     public static UnitConfig[] getTownUnits (String townId)
     {
         return _townMap.get(townId);
+    }
+
+    /**
+     * Returns a filtered array of configurations for all unit types
+     * accessible in the specified town of the specified rank.
+     */
+    public static UnitConfig[] getTownUnits (String townId, Rank rank)
+    {
+        UnitConfig[] units = getTownUnits(townId);
+        ArrayList<UnitConfig> list = new ArrayList<UnitConfig>();
+        for (int ii = 0; ii < units.length; ii++) {
+            if (units[ii].rank == rank) {
+                list.add(units[ii]);
+            }
+        }
+        return list.toArray(new UnitConfig[list.size()]);
     }
 
     public static void main (String[] args)
@@ -239,6 +256,9 @@ public class UnitConfig
         registerUnit("dirigible");
         registerUnit("artillery");
         registerUnit("steamgunman");
+
+        // register the Frontier Town Big Shots
+        registerUnit("cavalry");
 
         // register the Boom Town units
         registerUnit("windupslinger");

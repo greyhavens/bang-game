@@ -6,6 +6,7 @@ package com.threerings.bang.server;
 import com.threerings.crowd.data.TokenRing;
 import com.threerings.crowd.server.CrowdClient;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 
 import static com.threerings.bang.Log.log;
@@ -32,5 +33,8 @@ public class BangClient extends CrowdClient
             // give them zero privileges
             user.tokens = new TokenRing();
         }
+
+        // TEMP: start all players in frontier town for now
+        user.townId = BangCodes.FRONTIER_TOWN;
     }
 }

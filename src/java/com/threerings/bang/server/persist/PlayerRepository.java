@@ -61,6 +61,7 @@ public class PlayerRepository extends JORARepository
     {
         if (player.created == null) {
             player.created = new Date(System.currentTimeMillis());
+            player.lastSession = player.created;
         }
         insert(_ptable, player);
     }
