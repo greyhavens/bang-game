@@ -110,7 +110,6 @@ public class UnitPalette extends BContainer
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangUserObject.INVENTORY)) {
                 Object item = event.getEntry();
-                System.err.println("unit added");
                 if (item instanceof BigShot) {
                     addUnit((BigShot)item);
                 }
