@@ -52,9 +52,7 @@ public class RanchManager
             throw new InvocationException(ACCESS_DENIED);
         }
 
-        // make sure they've got the scrip and gold to pay for it
-        if (user.scrip < config.scripCost || user.gold < config.goldCost) {
-            throw new InvocationException(INSUFFICIENT_FUNDS);
-        }
+        // TODO: create a financial action that creates the item, charges
+        // them for it and places the item in their inventory
     }
 }
