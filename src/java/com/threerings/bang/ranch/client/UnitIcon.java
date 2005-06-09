@@ -3,8 +3,7 @@
 
 package com.threerings.bang.ranch.client;
 
-import com.jme.bui.BToggleButton;
-
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -12,11 +11,11 @@ import com.threerings.bang.util.BangContext;
  * Displays a static view of a unit model for use as an icon in interface
  * displays.
  */
-public class UnitIcon extends BToggleButton
+public class UnitIcon extends SelectableIcon
 {
     public UnitIcon (BangContext ctx, int itemId, UnitConfig config)
     {
-        super(config.type);
+        super(null, config.type);
         _itemId = itemId;
         _config = config;
     }
@@ -31,9 +30,11 @@ public class UnitIcon extends BToggleButton
         return _config;
     }
 
+    @Override // documentation inherited
     protected void stateDidChange ()
     {
         super.stateDidChange();
+
         if (_selected && _parent instanceof UnitPalette) {
             ((UnitPalette)_parent).iconSelected(this);
         }

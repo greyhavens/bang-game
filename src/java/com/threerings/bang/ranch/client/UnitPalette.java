@@ -75,6 +75,13 @@ public class UnitPalette extends BContainer
         }
     }
 
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        iconSelected(null);
+    }
+
     protected void addUnit (BigShot unit)
     {
         UnitConfig config = UnitConfig.getConfig(unit.getType());
@@ -102,8 +109,10 @@ public class UnitPalette extends BContainer
             }
         }
 
-        // inspect this unit
-        _inspector.setUnit(icon.getItemId(), icon.getUnit());
+        if (icon != null) {
+            // inspect this unit
+            _inspector.setUnit(icon.getItemId(), icon.getUnit());
+        }
     }
 
     protected SetListener _invlistener = new SetListener() {
