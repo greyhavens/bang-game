@@ -9,7 +9,6 @@ import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
 import com.jme.bui.BLabel;
 import com.jme.bui.BTabbedPane;
-import com.jme.bui.BTextField;
 import com.jme.bui.BWindow;
 import com.jme.bui.border.EmptyBorder;
 import com.jme.bui.border.LineBorder;
@@ -21,6 +20,7 @@ import com.jme.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.TownView;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -82,13 +82,19 @@ public class RanchView extends BWindow
         btn.addListener(this);
         add(side, BorderLayout.EAST);
 
-        add(_status = new BTextField(), BorderLayout.SOUTH);
+        add(_status = new BLabel(""), BorderLayout.SOUTH);
     }
 
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
         if ("back".equals(event.getAction())) {
+            // TODO: put this somewhere useful
+            _ctx.getInputDispatcher().removeWindow(this);
+            TownView view = new TownView(_ctx);
+            _ctx.getInputDispatcher().addWindow(view);
+            view.pack();
+            view.center();
 
         } else if ("recruit".equals(event.getAction())) {
             UnitConfig config = _inspector.getConfig();
@@ -133,5 +139,5 @@ public class RanchView extends BWindow
     protected UnitPalette _bigshots, _units, _recruits;
     protected UnitInspector _inspector;
     protected BButton _uaction;
-    protected BTextField _status;
+    protected BLabel _status;
 }

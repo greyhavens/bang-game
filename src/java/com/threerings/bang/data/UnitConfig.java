@@ -171,8 +171,12 @@ public class UnitConfig
         config.moveDistance = getIntProperty(type, props, "move", 1);
         config.fireDistance = getIntProperty(type, props, "fire", 1);
         config.damage = getIntProperty(type, props, "damage", 25);
+
         config.scripCost = getIntProperty(type, props, "scrip_cost", 0);
         config.goldCost = getIntProperty(type, props, "gold_cost", 0);
+        if (config.scripCost == 0 && config.goldCost == 0) {
+            log.warning("Warning " + type + " has zero cost.");
+        }
 
         int idx = 0;
         for (Mode mode : EnumSet.allOf(Mode.class)) {
