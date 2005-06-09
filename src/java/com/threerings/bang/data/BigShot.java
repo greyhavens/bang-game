@@ -20,6 +20,7 @@ public class BigShot extends Item
      */
     public BigShot (int ownerId, String type)
     {
+        super(ownerId);
         _type = type;
     }
 

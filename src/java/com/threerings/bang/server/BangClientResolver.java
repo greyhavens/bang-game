@@ -45,6 +45,7 @@ public class BangClientResolver extends CrowdClientResolver
 
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
+        System.err.println(buser.playerId + " has " + items.size() + " items.");
         if (items != null) {
             buser.inventory = new DSet(items.iterator());
         } else {

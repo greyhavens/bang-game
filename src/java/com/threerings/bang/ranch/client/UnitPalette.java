@@ -49,6 +49,10 @@ public class UnitPalette extends BContainer
      */
     public void setUser (BangUserObject user)
     {
+        // listen to the user object for inventory additions and deletions
+        _user = user;
+        _user.addListener(_invlistener);
+
         // add icons for all existing big shots
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Object item = iter.next();
@@ -56,10 +60,19 @@ public class UnitPalette extends BContainer
                 addUnit((BigShot)item);
             }
         }
+    }
 
-        // listen to the user object for inventory additions and deletions
-        _user = user;
-        _user.addListener(_invlistener);
+    /**
+     * This must be called when the palette is going away to allow it to
+     * remove its listener registrations.
+     */
+    public void shutdown ()
+    {
+        // remove our listener if we've configured one
+        if (_user != null) {
+            _user.removeListener(_invlistener);
+            _user = null;
+        }
     }
 
     protected void addUnit (BigShot unit)
@@ -93,22 +106,11 @@ public class UnitPalette extends BContainer
         _inspector.setUnit(icon.getItemId(), icon.getUnit());
     }
 
-    @Override // documentation inherited
-    protected void wasRemoved ()
-    {
-        super.wasRemoved();
-
-        // remove our listener if we've configured one
-        if (_user != null) {
-            _user.removeListener(_invlistener);
-            _user = null;
-        }
-    }
-
     protected SetListener _invlistener = new SetListener() {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangUserObject.INVENTORY)) {
                 Object item = event.getEntry();
+                System.err.println("unit added");
                 if (item instanceof BigShot) {
                     addUnit((BigShot)item);
                 }

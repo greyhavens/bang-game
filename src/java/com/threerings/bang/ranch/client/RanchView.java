@@ -100,6 +100,17 @@ public class RanchView extends BWindow
         }
     }
 
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        // shut down our palettes
+        _bigshots.shutdown();
+        _units.shutdown();
+        _recruits.shutdown();
+    }
+
     protected void recruit (UnitConfig config)
     {
         RanchService rsvc = (RanchService)
