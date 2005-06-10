@@ -10,7 +10,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.data.piece.WindupSlinger;
+import com.threerings.bang.data.piece.Unit;
 
 /**
  * An effect that replaces all dead units with 60% health windup
@@ -50,7 +50,7 @@ public class SaintElmosEffect extends Effect
         pieceIds = pieces.toIntArray();
         newPieces = new Piece[pieceIds.length];
         for (int ii = 0; ii < newPieces.length; ii++) {
-            newPieces[ii] = new WindupSlinger();
+            newPieces[ii] = Unit.getUnit("windupslinger");
             newPieces[ii].assignPieceId();
             newPieces[ii].init();
             newPieces[ii].owner = owner;

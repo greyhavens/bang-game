@@ -62,6 +62,10 @@ public class BangView
         int height = _ctx.getDisplay().getHeight();
         _pview.setLocation((width - _pview.getWidth())/2,
                            (height - _pview.getHeight())/2);
+
+        // tell the board view to start the game so that we can see the
+        // board while we're buying pieces
+        view.startGame(bangobj, cfg, pidx);
     }
 
     /** Called by the controller when the game starts. */
@@ -70,9 +74,6 @@ public class BangView
         // remove the purchase view from the display
         _ctx.getInputDispatcher().removeWindow(_pview);
         _pview = null;
-
-        // our view needs to know about the start of the game
-        view.startGame(bangobj, cfg, pidx);
     }
 
     /** Called by the controller when the game ends. */

@@ -72,12 +72,6 @@ public class SkirmishScenario extends ScenarioGenerator
                 iter.remove();
             }
         }
-//         configureAndAdd(placers, pidx, new Artillery());
-//         configureAndAdd(placers, pidx, new Dirigible());
-//         configureAndAdd(placers, pidx, new Gunslinger());
-//         configureAndAdd(placers, pidx, new Gunslinger());
-//         configureAndAdd(placers, pidx, new SteamGunman());
-//         configureAndAdd(placers, pidx, new SteamGunman());
 
         // search out from the starting location for a valid position
         Piece piece = placers.remove(0);

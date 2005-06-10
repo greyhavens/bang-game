@@ -243,18 +243,31 @@ public class BangManager extends GameManager
         _ready.clear();
         _purchases.clear();
 
-        // transition to the pre-game buying phase
-        _bangobj.setState(BangObject.PRE_ROUND);
+        // set up the board so that all can see it while purchasing
+        ArrayList<Piece> pieces = new ArrayList<Piece>();
+        _bangobj.setBoard(createBoard(pieces));
+        // extract the bonus spawn markers from the pieces array
+        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (p instanceof BonusMarker) {
+                _bonusSpots.add(p.x, p.y);
+                iter.remove();
+            }
+        }
+        _bangobj.setPieces(new PieceDSet(pieces.iterator()));
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii) || isTest()) {
-                Piece[] pieces = new Piece[] {
+            if (isAI(ii) /*|| isTest()*/) {
+                Piece[] apieces = new Piece[] {
                     Unit.getUnit("artillery"), Unit.getUnit("steamgunman"),
                     Unit.getUnit("dirigible") };
-                purchasePieces(ii, pieces);
+                purchasePieces(ii, apieces);
             }
         }
+
+        // transition to the pre-game buying phase
+        _bangobj.setState(BangObject.PRE_ROUND);
     }
 
     /**
@@ -301,20 +314,19 @@ public class BangManager extends GameManager
         // create a fresh knockout array
         _knockoutOrder = new int[getPlayerSlots()];
 
-        // set up the game object
+        // now place and add the player pieces
+        SkirmishScenario scen = new SkirmishScenario(_purchases);
         ArrayList<Piece> pieces = new ArrayList<Piece>();
-        _bangobj.setBoard(createBoard(pieces));
-
-        // extract the bonus spawn markers from the pieces array
-        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
-            Piece p = iter.next();
-            if (p instanceof BonusMarker) {
-                _bonusSpots.add(p.x, p.y);
-                iter.remove();
+        scen.generate(_bconfig, _bangobj.board, pieces);
+        try {
+            _bangobj.startTransaction();
+            for (Piece piece : pieces) {
+                _bangobj.addToPieces(piece);
             }
+        } finally {
+            _bangobj.commitTransaction();
         }
-        _bangobj.setPieces(new PieceDSet(pieces.iterator()));
-        _bangobj.board.shadowPieces(pieces.iterator());
+        _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
 
         // TEMP: give everyone an area repair to start
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
@@ -724,9 +736,9 @@ public class BangManager extends GameManager
         // if that failed, load a stock board
         if (tup == null) {
             String board = (String)RandomUtil.pickRandom(BOARDS);
-            if (isTest()) {
-                board = "default";
-            }
+//             if (isTest()) {
+//                 board = "default";
+//             }
             try {
                 ClassLoader cl = getClass().getClassLoader();
                 InputStream in = cl.getResourceAsStream(
@@ -757,10 +769,6 @@ public class BangManager extends GameManager
         } else {
             board = new BangBoard(5, 5);
         }
-
-        // now add the player pieces
-        SkirmishScenario scen = new SkirmishScenario(_purchases);
-        scen.generate(_bconfig, board, pieces);
         return board;
     }
 

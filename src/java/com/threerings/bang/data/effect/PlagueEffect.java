@@ -12,7 +12,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.data.piece.WindupSlinger;
+import com.threerings.bang.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -74,7 +74,7 @@ public class PlagueEffect extends Effect
         pieceIds = pids.toIntArray();
         newPieces = new Piece[pieceIds.length];
         for (int ii = 0; ii < newPieces.length; ii++) {
-            newPieces[ii] = new WindupSlinger();
+            newPieces[ii] = Unit.getUnit("windupslinger");
             newPieces[ii].init();
             newPieces[ii].assignPieceId();
             newPieces[ii].owner =
