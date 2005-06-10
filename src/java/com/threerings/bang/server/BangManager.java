@@ -37,7 +37,6 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
-import com.threerings.crowd.data.BodyObject;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.data.card.AreaRepair;
@@ -56,6 +55,8 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangMarshaller;
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PieceDSet;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.util.BoardUtil;
@@ -71,9 +72,40 @@ public class BangManager extends GameManager
     implements BangCodes, BangProvider
 {
     // documentation inherited from interface BangProvider
+    public void selectStarters (
+        ClientObject caller, int bigShotId, int[] cardIds)
+    {
+        BangUserObject user = (BangUserObject)caller;
+        int pidx = _bangobj.getPlayerIndex(user.username);
+        if (pidx == -1) {
+            log.warning("Request to select starters by non-player " +
+                        "[who=" + user.who() + "].");
+            return;
+        }
+
+        // make sure we haven't already done this
+        if (_bangobj.bigShots[pidx] != null) {
+            log.info("Rejecting repeat starter selection " +
+                     "[who=" + user.who() + "].");
+            return;
+        }
+
+        // fetch the requisite items from their inventory
+        BigShotItem unit = (BigShotItem)user.inventory.get(bigShotId);
+        Card[] cards = null;
+        if (_bangobj.roundId == 0 && cardIds != null) {
+            cards = new Card[cardIds.length];
+            for (int ii = 0; ii < cardIds.length; ii++) {
+                // TODO: convert card items to cards
+            }
+        }
+        selectStarters(pidx, unit, cards);
+    }
+
+    // documentation inherited from interface BangProvider
     public void purchasePieces (ClientObject caller, Piece[] pieces)
     {
-        BodyObject user = (BodyObject)caller;
+        BangUserObject user = (BangUserObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.username);
         if (pidx == -1) {
             log.warning("Request to purchase pieces by non-player " +
@@ -88,7 +120,7 @@ public class BangManager extends GameManager
                       int targetId, BangService.InvocationListener il)
         throws InvocationException
     {
-        BodyObject user = (BodyObject)caller;
+        BangUserObject user = (BangUserObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.username);
 
         Piece piece = (Piece)_bangobj.pieces.get(pieceId);
@@ -157,7 +189,7 @@ public class BangManager extends GameManager
     // documentation inherited from interface BangProvider
     public void playCard (ClientObject caller, int cardId, short x, short y)
     {
-        BodyObject user = (BodyObject)caller;
+        BangUserObject user = (BangUserObject)caller;
         Card card = (Card)_bangobj.cards.get(cardId);
         if (card == null ||
             card.owner != _bangobj.getPlayerIndex(user.username)) {
@@ -256,9 +288,13 @@ public class BangManager extends GameManager
         }
         _bangobj.setPieces(new PieceDSet(pieces.iterator()));
 
+        // clear out the selected big shots array
+        _bangobj.setBigShots(new Unit[getPlayerSlots()]);
+
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (isAI(ii) /*|| isTest()*/) {
+                selectStarters(ii, null, null);
                 Piece[] apieces = new Piece[] {
                     Unit.getUnit("artillery"), Unit.getUnit("steamgunman"),
                     Unit.getUnit("dirigible") };
@@ -266,8 +302,47 @@ public class BangManager extends GameManager
             }
         }
 
-        // transition to the pre-game buying phase
-        _bangobj.setState(BangObject.PRE_ROUND);
+        // transition to the pre-game selection phase
+        _bangobj.setState(BangObject.SELECT_PHASE);
+    }
+
+    /**
+     * Selects the starting configuration for this player.
+     */
+    protected void selectStarters (int pidx, BigShotItem unit, Card[] cards)
+    {
+        try {
+            _bangobj.startTransaction();
+
+            // if they supplied cards, fill those in
+            if (cards != null) {
+                for (int ii = 0; ii < cards.length; ii++) {
+                    cards[ii].init(_bangobj, pidx);
+                    _bangobj.addToCards(cards[ii]);
+                }
+            }
+
+            // if they failed to select a big shot (or are an AI) give
+            // them a default
+            if (unit == null) {
+                unit = new BigShotItem(-1, "cavalry");
+            }
+
+            // configure their big shot selection
+            _bangobj.setBigShotsAt(Unit.getUnit(unit.getType()), pidx);
+            log.info(getPlayerName(pidx) + " selected " + unit + ".");
+
+        } finally {
+            _bangobj.commitTransaction();
+        }
+
+        // if everyone has selected their starters, move to the next phase
+        for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
+            if (_bangobj.bigShots[ii] == null) {
+                return;
+            }
+        }
+        _bangobj.setState(BangObject.BUYING_PHASE);
     }
 
     /**
@@ -470,7 +545,7 @@ public class BangManager extends GameManager
      * @return the cloned and moved piece if the piece was moved, null if
      * it was not movable for some reason.
      */
-    protected Piece movePiece (BodyObject user, Piece piece, int x, int y)
+    protected Piece movePiece (BangUserObject user, Piece piece, int x, int y)
     {
         // make sure we are alive, have energy and are ready to move
         int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
@@ -684,7 +759,7 @@ public class BangManager extends GameManager
     }
 
     /** Records damage done by the specified user to various pieces. */
-    protected void recordDamage (BodyObject user, IntIntMap damage)
+    protected void recordDamage (BangUserObject user, IntIntMap damage)
     {
         int pidx = _bangobj.getPlayerIndex(user.username);
         if (pidx < 0) {
@@ -828,6 +903,10 @@ public class BangManager extends GameManager
 
     /** Used to track effects during a move. */
     protected ArrayList<Effect> _effects = new ArrayList<Effect>();
+
+    /** The item ids of all cards used by players in this game. These will
+     * be destroyed if the game completes normally. */
+    protected ArrayIntSet _usedCards = new ArrayIntSet();
 
     /** A list of our stock boards. */
     protected static final String[] BOARDS = {

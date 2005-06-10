@@ -11,7 +11,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.bang.data.BangUserObject;
-import com.threerings.bang.data.BigShot;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.persist.FinancialAction;
@@ -67,7 +67,7 @@ public class RanchManager
         public RecruitBigShotAction (BangUserObject user, UnitConfig config,
                                      RanchService.ResultListener listener) {
             super(user, config.scripCost, config.goldCost);
-            _unit = new BigShot(user.playerId, config.type);
+            _unit = new BigShotItem(user.playerId, config.type);
             _listener = listener;
         }
 
@@ -86,7 +86,7 @@ public class RanchManager
             _listener.requestFailed(INTERNAL_ERROR);
         }
 
-        protected BigShot _unit;
+        protected BigShotItem _unit;
         protected RanchService.ResultListener _listener;
     }
 }

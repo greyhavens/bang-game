@@ -55,4 +55,15 @@ public class BangMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #selectStarters} requests. */
+    public static final int SELECT_STARTERS = 4;
+
+    // documentation inherited from interface
+    public void selectStarters (Client arg1, int arg2, int[] arg3)
+    {
+        sendRequest(arg1, SELECT_STARTERS, new Object[] {
+            new Integer(arg2), arg3
+        });
+    }
+
 }

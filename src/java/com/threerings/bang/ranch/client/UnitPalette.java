@@ -15,7 +15,7 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.data.BangUserObject;
-import com.threerings.bang.data.BigShot;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -56,10 +56,18 @@ public class UnitPalette extends BContainer
         // add icons for all existing big shots
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Object item = iter.next();
-            if (item instanceof BigShot) {
-                addUnit((BigShot)item);
+            if (item instanceof BigShotItem) {
+                addUnit((BigShotItem)item);
             }
         }
+    }
+
+    /**
+     * Returns the selected unit or null if none is selected.
+     */
+    public UnitIcon getSelectedUnit ()
+    {
+        return _selection;
     }
 
     /**
@@ -82,7 +90,7 @@ public class UnitPalette extends BContainer
         iconSelected(null);
     }
 
-    protected void addUnit (BigShot unit)
+    protected void addUnit (BigShotItem unit)
     {
         UnitConfig config = UnitConfig.getConfig(unit.getType());
         add(new UnitIcon(_ctx, unit.getItemId(), config));
@@ -101,6 +109,9 @@ public class UnitPalette extends BContainer
 
     protected void iconSelected (UnitIcon icon)
     {
+        // note the new selection
+        _selection = icon;
+
         // deselect all other icons
         for (int ii = 0; ii < getComponentCount(); ii++) {
             UnitIcon child = (UnitIcon)getComponent(ii);
@@ -109,7 +120,7 @@ public class UnitPalette extends BContainer
             }
         }
 
-        if (icon != null) {
+        if (icon != null && _inspector != null) {
             // inspect this unit
             _inspector.setUnit(icon.getItemId(), icon.getUnit());
         }
@@ -119,8 +130,8 @@ public class UnitPalette extends BContainer
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangUserObject.INVENTORY)) {
                 Object item = event.getEntry();
-                if (item instanceof BigShot) {
-                    addUnit((BigShot)item);
+                if (item instanceof BigShotItem) {
+                    addUnit((BigShotItem)item);
                 }
             }
         }

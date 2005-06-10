@@ -125,23 +125,21 @@ public class BangController extends GameController
     @Override // documentation inherited
     protected boolean handleStateChange (int state)
     {
-        if (state == BangObject.PRE_ROUND) {
-            roundDidStart();
+        if (state == BangObject.SELECT_PHASE) {
+            _view.selectionPhase(_bangobj, _config, _pidx);
             return true;
+
+        } else if (state == BangObject.BUYING_PHASE) {
+            _view.buyingPhase(_bangobj, _config, _pidx);
+            return true;
+
         } else if (state == BangObject.POST_ROUND) {
-            roundDidEnd();
+            _view.view.endRound();
             return true;
+
         } else {
             return super.handleStateChange(state);
         }
-    }
-
-    /**
-     * Called when the round started, enters the pre-game, buying phase.
-     */
-    protected void roundDidStart ()
-    {
-        _view.buyingPhase(_bangobj, _config, _pidx);
     }
 
     @Override // documentation inherited
@@ -151,14 +149,6 @@ public class BangController extends GameController
 
         // we may be returning to an already started game
         _view.startGame(_bangobj, _config, _pidx);
-    }
-
-    /**
-     * Called when the round ended, prepares to re-enter the buying phase.
-     */
-    protected void roundDidEnd ()
-    {
-        _view.view.endRound();
     }
 
     @Override // documentation inherited

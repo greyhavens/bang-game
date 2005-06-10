@@ -60,6 +60,13 @@ public class BangDispatcher extends InvocationDispatcher
             );
             return;
 
+        case BangMarshaller.SELECT_STARTERS:
+            ((BangProvider)provider).selectStarters(
+                source,
+                ((Integer)args[0]).intValue(), (int[])args[1]
+            );
+            return;
+
         default:
             super.dispatchRequest(source, methodId, args);
         }

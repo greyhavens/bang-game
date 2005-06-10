@@ -16,6 +16,7 @@ import com.threerings.parlor.game.data.GameObject;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.Unit;
 import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PieceUtil;
 
@@ -88,6 +89,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>board</code> field. */
     public static final String BOARD = "board";
 
+    /** The field name of the <code>bigShots</code> field. */
+    public static final String BIG_SHOTS = "bigShots";
+
     /** The field name of the <code>pieces</code> field. */
     public static final String PIECES = "pieces";
 
@@ -107,11 +111,14 @@ public class BangObject extends GameObject
     public static final String RESERVES = "reserves";
     // AUTO-GENERATED: FIELDS END
 
+    /** A {@link #state} constant indicating the pre-game selection phase. */
+    public static final int SELECT_PHASE = 4;
+
     /** A {@link #state} constant indicating the pre-game buying phase. */
-    public static final int PRE_ROUND = 4;
+    public static final int BUYING_PHASE = 5;
 
     /** A {@link #state} constant indicating the post-round phase. */
-    public static final int POST_ROUND = 5;
+    public static final int POST_ROUND = 6;
 
     /** Contains statistics on the game, updated every time any change is
      * made to pertinent game state. */
@@ -130,6 +137,9 @@ public class BangObject extends GameObject
 
     /** Contains the representation of the game board. */
     public BangBoard board;
+
+    /** The big shots selected for use by each player. */
+    public Unit[] bigShots;
 
     /** Contains information on all pieces on the board. */
     public PieceDSet pieces;
@@ -421,6 +431,39 @@ public class BangObject extends GameObject
         requestAttributeChange(
             BOARD, value, ovalue);
         this.board = value;
+    }
+
+    /**
+     * Requests that the <code>bigShots</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setBigShots (Unit[] value)
+    {
+        Unit[] ovalue = this.bigShots;
+        requestAttributeChange(
+            BIG_SHOTS, value, ovalue);
+        this.bigShots = (value == null) ? null : (Unit[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>bigShots</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setBigShotsAt (Unit value, int index)
+    {
+        Unit ovalue = this.bigShots[index];
+        requestElementUpdate(
+            BIG_SHOTS, index, value, ovalue);
+        this.bigShots[index] = value;
     }
 
     /**

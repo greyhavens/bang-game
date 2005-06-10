@@ -67,7 +67,8 @@ public class ScoreView extends BWindow
     {
         for (int ii = 0; ii < _bangobj.players.length; ii++) {
             String status = "S:" + _bangobj.points[ii];
-            if (_bangobj.state == BangObject.PRE_ROUND) {
+            if (_bangobj.state == BangObject.SELECT_PHASE ||
+                _bangobj.state == BangObject.BUYING_PHASE) {
                 status += " $:" + _bangobj.reserves[ii];
             } else {
                 status += " P:" + _bangobj.countLivePieces(ii) +

@@ -6,15 +6,15 @@ package com.threerings.bang.data;
 /**
  * Represents a Big Shot unit owned by a player.
  */
-public class BigShot extends Item
+public class BigShotItem extends Item
 {
     /** A blank constructor used during unserialization. */
-    public BigShot ()
+    public BigShotItem ()
     {
     }
 
     /** Creates a new Big Shot item of the specified type. */
-    public BigShot (int ownerId, String type)
+    public BigShotItem (int ownerId, String type)
     {
         super(ownerId);
         _type = type;

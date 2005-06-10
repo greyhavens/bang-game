@@ -5,9 +5,10 @@ package com.threerings.bang.server;
 
 import com.samskivert.util.HashIntMap;
 
-import java.util.HashMap;
-import com.threerings.bang.data.BigShot;
+import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
+import java.util.HashMap;
 
 import static com.threerings.bang.Log.log;
 
@@ -83,7 +84,8 @@ public class ItemFactory
         _classToType = new HashMap<Class,Integer>();
 
         // register the item classes (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
-        registerItemClass(BigShot.class);
+        registerItemClass(BigShotItem.class);
+        registerItemClass(CardItem.class);
         // end of registeration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 

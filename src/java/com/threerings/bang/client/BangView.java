@@ -46,34 +46,41 @@ public class BangView
         _chatwin.add(_chat, BorderLayout.CENTER);
     }
 
-    /** Called by the controller when the buying phase starts. */
-    public void buyingPhase (BangObject bangobj, BangConfig cfg, int pidx)
+    /** Called by the controller when the big shot and card selection
+     * phase starts. */
+    public void selectionPhase (BangObject bangobj, BangConfig cfg, int pidx)
     {
-        // set up the background according to which player we are
-        ColorRGBA color = (pidx == -1) ?
-            ColorRGBA.gray : UnitSprite.JPIECE_COLORS[pidx];
-        _ctx.getRenderer().setBackgroundColor(color);
-
-        // add the purchase view to the display
-        _pview = new PurchaseView(_ctx, cfg, bangobj, pidx);
-        _ctx.getInputDispatcher().addWindow(_pview);
-        _pview.pack();
-        int width = _ctx.getDisplay().getWidth();
-        int height = _ctx.getDisplay().getHeight();
-        _pview.setLocation((width - _pview.getWidth())/2,
-                           (height - _pview.getHeight())/2);
-
         // tell the board view to start the game so that we can see the
         // board while we're buying pieces
         view.startGame(bangobj, cfg, pidx);
+
+        // add the selection view to the display
+        _oview = new SelectionView(_ctx, cfg, bangobj, pidx);
+        _ctx.getInputDispatcher().addWindow(_oview);
+        _oview.pack();
+        _oview.center();
+    }
+
+    /** Called by the controller when the buying phase starts. */
+    public void buyingPhase (BangObject bangobj, BangConfig cfg, int pidx)
+    {
+        // remove the selection view from the display
+        _ctx.getInputDispatcher().removeWindow(_oview);
+        _oview = null;
+
+        // add the purchase view to the display
+        _oview = new PurchaseView(_ctx, cfg, bangobj, pidx);
+        _ctx.getInputDispatcher().addWindow(_oview);
+        _oview.pack();
+        _oview.center();
     }
 
     /** Called by the controller when the game starts. */
     public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // remove the purchase view from the display
-        _ctx.getInputDispatcher().removeWindow(_pview);
-        _pview = null;
+        _ctx.getInputDispatcher().removeWindow(_oview);
+        _oview = null;
     }
 
     /** Called by the controller when the game ends. */
@@ -125,9 +132,9 @@ public class BangView
         _ctx.getInputDispatcher().removeWindow(_chatwin);
         _ctx.getGeometry().detachChild(view.getNode());
 
-        if (_pview != null) {
-            _ctx.getInputDispatcher().removeWindow(_pview);
-            _pview = null;
+        if (_oview != null) {
+            _ctx.getInputDispatcher().removeWindow(_oview);
+            _oview = null;
         }
     }
 
@@ -143,6 +150,6 @@ public class BangView
     /** Displays chat. */
     protected ChatView _chat;
 
-    /** The buying phase purchase view. */
-    protected PurchaseView _pview;
+    /** Any window currently overlayed on the board. */
+    protected BWindow _oview;
 }
