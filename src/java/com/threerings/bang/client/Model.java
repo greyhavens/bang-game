@@ -155,7 +155,6 @@ public class Model
                 all.attachChild(meshes[ii]);
             }
 
-            // Setup our params for the depth buffer
             ZBufferState buf = ctx.getRenderer().createZBufferState();
             buf.setEnabled(true);
             buf.setFunction(ZBufferState.CF_LEQUAL);
@@ -165,6 +164,10 @@ public class Model
             all.updateRenderState();
 
             trenderer.render(all, _icon);
+            trenderer.cleanup();
+
+            // restore the normal view camera
+            ctx.getCamera().update();
         }
     }
 

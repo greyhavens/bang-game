@@ -9,6 +9,7 @@ import com.jme.bui.BContainer;
 import com.jme.bui.BIcon;
 import com.jme.bui.BLabel;
 import com.jme.bui.border.EmptyBorder;
+import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
@@ -25,15 +26,14 @@ public class UnitInspector extends BContainer
 {
     public UnitInspector (BangContext ctx)
     {
-        super(GroupLayout.makeVStretch());
+        super(GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("ranch");
         _umsgs = ctx.getMessageManager().getBundle("units");
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        // TODO: create texture renderer
-//         add(_model = new BIcon());
+        add(_model = new BContainer(new BorderLayout()));
         add(_name = new BLabel(""));
         add(_descrip = new BLabel(""));
         add(_astats = new BLabel(""));
@@ -66,6 +66,9 @@ public class UnitInspector extends BContainer
         _itemId = itemId;
         _config = config;
         _name.setText(_umsgs.get("m." + config.type));
+
+        _model.removeAll();
+        _model.add(new UnitIcon(_ctx, itemId, config), BorderLayout.CENTER);
 
         StringBuffer abuf = new StringBuffer();
         StringBuffer dbuf = new StringBuffer();
@@ -106,7 +109,7 @@ public class UnitInspector extends BContainer
     protected int _itemId = -1;
     protected UnitConfig _config;
 
-    protected BIcon _model;
+    protected BContainer _model;
     protected BLabel _name;
     protected BLabel _descrip;
     protected BLabel _astats, _dstats;
