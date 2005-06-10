@@ -309,7 +309,7 @@ public class BangManager extends GameManager
     /**
      * Selects the starting configuration for this player.
      */
-    protected void selectStarters (int pidx, BigShotItem unit, Card[] cards)
+    protected void selectStarters (int pidx, BigShotItem item, Card[] cards)
     {
         try {
             _bangobj.startTransaction();
@@ -324,13 +324,16 @@ public class BangManager extends GameManager
 
             // if they failed to select a big shot (or are an AI) give
             // them a default
-            if (unit == null) {
-                unit = new BigShotItem(-1, "cavalry");
+            if (item == null) {
+                item = new BigShotItem(-1, "cavalry");
             }
 
             // configure their big shot selection
-            _bangobj.setBigShotsAt(Unit.getUnit(unit.getType()), pidx);
-            log.info(getPlayerName(pidx) + " selected " + unit + ".");
+            Unit unit = Unit.getUnit(item.getType());
+            unit.init();
+            unit.owner = pidx;
+            _bangobj.setBigShotsAt(unit, pidx);
+            log.info(getPlayerName(pidx) + " selected " + item + ".");
 
         } finally {
             _bangobj.commitTransaction();
@@ -388,6 +391,13 @@ public class BangManager extends GameManager
 
         // create a fresh knockout array
         _knockoutOrder = new int[getPlayerSlots()];
+
+        // add the selected big shots to the purchases
+        for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
+            if (_bangobj.bigShots[ii] != null) {
+                _purchases.add(_bangobj.bigShots[ii]);
+            }
+        }
 
         // now place and add the player pieces
         SkirmishScenario scen = new SkirmishScenario(_purchases);
