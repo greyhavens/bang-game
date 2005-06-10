@@ -14,13 +14,21 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingSphere;
+import com.jme.light.PointLight;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
+import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.CloneCreator;
+import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
+import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Node;
+import com.jme.scene.state.LightState;
 import com.jme.scene.shape.Box;
+import com.jme.scene.state.ZBufferState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 import com.jmex.model.ModelCloneCreator;
@@ -37,6 +45,9 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class Model
 {
+    /** The size along each axis of the model icon. */
+    public static final int ICON_SIZE = 128;
+
     /**
      * Creates the model and loads up all of its consituent animations.
      */
@@ -82,6 +93,87 @@ public class Model
                 _anims.put(aname, models);
             }
         }
+
+        // create the icon image for this model if it's a unit
+        if (type.equals("units")) {
+            TextureRenderer trenderer =
+                ctx.getDisplay().createTextureRenderer(
+                    ICON_SIZE, ICON_SIZE, false, true, false, false,
+                    TextureRenderer.RENDER_TEXTURE_2D, 0);
+            trenderer.setBackgroundColor(new ColorRGBA(.667f, .667f, .851f, 0f));
+
+            Vector3f loc = new Vector3f(TILE_SIZE, -TILE_SIZE/2, TILE_SIZE);
+            trenderer.getCamera().setLocation(loc);
+            Matrix3f rotm = new Matrix3f();
+            rotm.fromAngleAxis(-FastMath.PI/2, trenderer.getCamera().getLeft());
+            rotm.mult(trenderer.getCamera().getDirection(),
+                      trenderer.getCamera().getDirection());
+            rotm.mult(trenderer.getCamera().getUp(),
+                      trenderer.getCamera().getUp());
+            rotm.mult(trenderer.getCamera().getLeft(),
+                      trenderer.getCamera().getLeft());
+            rotm.fromAngleAxis(FastMath.PI/6, trenderer.getCamera().getUp());
+            rotm.mult(trenderer.getCamera().getDirection(),
+                      trenderer.getCamera().getDirection());
+            rotm.mult(trenderer.getCamera().getUp(),
+                      trenderer.getCamera().getUp());
+            rotm.mult(trenderer.getCamera().getLeft(),
+                      trenderer.getCamera().getLeft());
+            rotm.fromAngleAxis(FastMath.PI/6, trenderer.getCamera().getLeft());
+            rotm.mult(trenderer.getCamera().getDirection(),
+                      trenderer.getCamera().getDirection());
+            rotm.mult(trenderer.getCamera().getUp(),
+                      trenderer.getCamera().getUp());
+            rotm.mult(trenderer.getCamera().getLeft(),
+                      trenderer.getCamera().getLeft());
+            trenderer.getCamera().update();
+
+            _icon = trenderer.setupTexture();
+            _icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
+
+            Node all = new Node("all");
+            all.setRenderQueueMode(Renderer.QUEUE_SKIP);
+
+            all.attachChild(new Box("origin", new Vector3f(0.01f, .01f, .01f),
+                                    new Vector3f(.02f, .02f, .02f)));
+
+            PointLight light = new PointLight();
+            light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+            light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
+            light.setLocation(new Vector3f(100, 100, 100));
+            light.setAttenuate(true);
+            light.setConstant(0.25f);
+            light.setEnabled(true);
+
+            LightState lights = ctx.getRenderer().createLightState();
+            lights.setEnabled(true);
+            lights.attach(light);
+            all.setRenderState(lights);
+
+            Node[] meshes = getMeshes("standing");
+            for (int ii = 0; ii < meshes.length; ii++) {
+                all.attachChild(meshes[ii]);
+            }
+
+            // Setup our params for the depth buffer
+            ZBufferState buf = ctx.getRenderer().createZBufferState();
+            buf.setEnabled(true);
+            buf.setFunction(ZBufferState.CF_LEQUAL);
+            all.setRenderState(buf);
+
+            all.updateGeometricState(0, true);
+            all.updateRenderState();
+
+            trenderer.render(all, _icon);
+        }
+    }
+
+    /**
+     * Returns a pre-rendered icon version of this model.
+     */
+    public Texture getIcon ()
+    {
+        return _icon;
     }
 
     public Node[] getMeshes (String action)
@@ -182,6 +274,7 @@ public class Model
     }
 
     protected String _key;
+    protected Texture _icon;
 
     protected HashMap<String,CloneCreator> _meshes =
         new HashMap<String,CloneCreator>();

@@ -23,7 +23,7 @@ public class SelectableIcon extends BToggleButton
 {
     public SelectableIcon (BIcon icon, String text)
     {
-        super(text, "");
+        super(icon, "");
         setBorder(_unborder);
     }
 
