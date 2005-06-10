@@ -88,7 +88,7 @@ public class Model
                         texture = props.getProperty("texture");
                     }
                     models[ii] = loadModel(
-                        ctx, path + "/" + mesh + ".jme", path + "/" + texture);
+                        ctx, path + mesh + ".jme", path + texture);
                 }
                 _anims.put(aname, models);
             }
