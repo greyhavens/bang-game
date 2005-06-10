@@ -3,7 +3,7 @@
 
 package com.threerings.bang.data;
 
-import com.threerings.parlor.client.GameConfigurator;
+import com.threerings.parlor.game.client.GameConfigurator;
 import com.threerings.parlor.game.data.GameConfig;
 
 import com.threerings.bang.client.BangController;
