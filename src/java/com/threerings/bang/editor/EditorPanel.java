@@ -58,7 +58,7 @@ public class EditorPanel extends JPanel
 	setLayout(gl);
 
         // create the board view
-        add(view = new EditorBoardView(ctx));
+//         add(view = new EditorBoardView(ctx, this));
 
         // create our side panel
         VGroupLayout sgl = new VGroupLayout(VGroupLayout.STRETCH);

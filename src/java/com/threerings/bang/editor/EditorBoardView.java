@@ -5,11 +5,8 @@ package com.threerings.bang.editor;
 
 import java.awt.Point;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import com.jme.bui.event.MouseListener;
+import com.jme.bui.event.MouseEvent;
 
 import com.threerings.media.sprite.Sprite;
 
@@ -27,14 +24,13 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Displays the board when in editor mode.
  */
 public class EditorBoardView extends BoardView
-    implements MouseListener, MouseMotionListener, MouseWheelListener
+    implements MouseListener
 {
-    public EditorBoardView (BangContext ctx)
+    public EditorBoardView (BangContext ctx, EditorPanel panel)
     {
         super(ctx);
-        addMouseListener(this);
-        addMouseMotionListener(this);
-        addMouseWheelListener(this);
+        _panel = panel;
+        addListener(this);
 
         // put piece sprites in editor mode
         PieceSprite.setEditorMode(true);
@@ -43,7 +39,7 @@ public class EditorBoardView extends BoardView
     public void setTile (int tx, int ty, Terrain tile)
     {
         _bangobj.board.setTile(tx, ty, tile);
-        invalidateTile(tx, ty);
+//         invalidateTile(tx, ty);
     }
 
     // documentation inherited from interface MouseListener
@@ -61,7 +57,7 @@ public class EditorBoardView extends BoardView
         _dragStart.setLocation(tx, ty);
 
         // if there's a piece under the mouse, start to drag or delete it
-        _dragPiece = getHitPiece(e.getX(), e.getY());
+        _dragPiece = getHoverPiece();
         if (_dragPiece != null) {
             if (e.getButton() == MouseEvent.BUTTON3) {
                 _bangobj.removeFromPieces(_dragPiece.getKey());
@@ -69,20 +65,18 @@ public class EditorBoardView extends BoardView
             } else {
                 _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
             }
-            return;
-        }
 
-        // otherwise generate a PAINT_TERRAIN or CLEAR_TERRAIN
-        _dragCommand = (e.getButton() == MouseEvent.BUTTON3) ?
-            EditorController.CLEAR_TERRAIN : EditorController.PAINT_TERRAIN;
-        EditorController.postAction(this, _dragCommand, new Point(tx, ty));
+        } else {
+            // otherwise generate a PAINT_TERRAIN or CLEAR_TERRAIN
+            handleMousePress(_dragButton = e.getButton(), tx, ty);
+        }
     }
 
     // documentation inherited from interface MouseListener
     public void mouseReleased (MouseEvent e)
     {
         _dragPiece = null;
-        _dragCommand = null;
+        _dragButton = -1;
     }
 
     // documentation inherited from interface MouseListener
@@ -97,66 +91,59 @@ public class EditorBoardView extends BoardView
         // nada
     }
 
-    // documentation inherited from interface MouseMotionListener
-    public void mouseMoved (MouseEvent e)
+    protected void hoverTileChanged (int tx, int ty)
     {
-        int mx = e.getX() / SQUARE, my = e.getY() / SQUARE;
-        updateMouseTile(mx, my);
-    }
+        // if we are dragging a piece, move that feller around
+        if (_dragPiece != null) {
+            _dragPiece.position(tx - _dragOffset.x, ty - _dragOffset.y);
+            _bangobj.updatePieces(_dragPiece);
+        }
 
-    // documentation inherited from interface MouseMotionListener
-    public void mouseDragged (MouseEvent e)
-    {
-        int mx = e.getX() / SQUARE, my = e.getY() / SQUARE;
-        if (updateMouseTile(mx, my)) {
-            // if we are dragging a piece, move that feller around
-            if (_dragPiece != null) {
-                _dragPiece.position(mx - _dragOffset.x, my - _dragOffset.y);
-                _bangobj.updatePieces(_dragPiece);
-            }
-
-            // if we have a drag command and the mouse coordinates
-            // changed, fire off another instance of the same command
-            if (_dragCommand != null) {
-                EditorController.postAction(
-                    this, _dragCommand, new Point(mx, my));
-            }
+        // if we have a drag command and the mouse coordinates
+        // changed, "paint" on the board
+        if (_dragButton != -1) {
+            handleMousePress(_dragButton, tx, ty);
         }
     }
 
     // documentation inherited from interface MouseWheelListener
-    public void mouseWheelMoved (MouseWheelEvent event)
+    public void mouseWheeled (MouseEvent e)
     {
         // if we're over a piece, rotate it
-        Piece piece = getHitPiece(event.getX(), event.getY());
+        Piece piece = getHoverPiece();
         if (piece != null && !(piece instanceof BigPiece)) {
-            String cmd = (event.getWheelRotation() > 0) ?
-                EditorController.ROTATE_PIECE_CW :
-                EditorController.ROTATE_PIECE_CCW;
-            EditorController.postAction(this, cmd, piece);
+            int direction = (e.getDelta() > 0) ? Piece.CW : Piece.CCW;
+            if (piece.rotate(direction)) {
+                _bangobj.updatePieces(piece);
+            }
 
         } else {
             // otherwise adjust the currently selected terrain type
-            EditorController.postAction(
-                this, EditorController.ROLL_TERRAIN_SELECTION,
-                event.getWheelRotation());
+            _panel.terrain.rollSelection(e.getDelta());
         }
     }
 
-    /** Returns the piece associated with the sprite at the specified
-     * screen coordinates or null if no piece sprite contains that
-     * pixel. */
-    protected Piece getHitPiece (int mx, int my)
+    protected void handleMousePress (int button, int tx, int ty)
     {
-        Sprite s = _spritemgr.getHighestHitSprite(mx, my);
-        if (s != null) {
-            if (s instanceof PieceSprite) {
-                int pieceId = ((PieceSprite)s).getPieceId();
-                return (Piece)_bangobj.pieces.get(pieceId);
-            }
+        if (button == MouseEvent.BUTTON2) {
+            setTile(tx, ty, Terrain.NONE);
+        } else {
+            setTile(tx, ty, _panel.terrain.getSelectedTerrain());
         }
-        return null;
     }
+
+    /** Returns the piece associated with the sprite under the mouse, if
+     * there is one and if it is a piece sprite. Returns null otherwise. */
+    protected Piece getHoverPiece ()
+    {
+        int pid = (_hover instanceof PieceSprite) ?
+            ((PieceSprite)_hover).getPieceId() : -1;
+        return (Piece)_bangobj.pieces.get(pid);
+    }
+
+    /** The panel that contains additional interface elements with which
+     * we interact. */
+    protected EditorPanel _panel;
 
     /** The point at which our last drag took place. */
     protected Point _dragStart = new Point();
@@ -167,6 +154,6 @@ public class EditorBoardView extends BoardView
     /** The offset into the piece from which we're dragging it. */
     protected Point _dragOffset = new Point();
 
-    /** The command we generate if we're dragging the mouse. */
-    protected String _dragCommand;
+    /** The button that started our drag or -1. */
+    protected int _dragButton = -1;
 }

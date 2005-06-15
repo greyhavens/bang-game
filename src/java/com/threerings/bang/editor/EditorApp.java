@@ -3,6 +3,7 @@
 
 package com.threerings.bang.editor;
 
+import java.io.IOException;
 import java.util.logging.Level;
 
 import com.samskivert.util.LoggingLogProvider;
@@ -17,41 +18,36 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.net.BootstrapData;
 import com.threerings.presents.server.ClientResolutionListener;
 
-import com.threerings.toybox.client.ToyBoxApp;
-import com.threerings.toybox.data.GameDefinition;
-import com.threerings.toybox.data.Parameter;
-import com.threerings.toybox.data.RangeParameter;
-import com.threerings.toybox.data.TableMatchConfig;
-import com.threerings.toybox.data.ToyBoxBootstrapData;
-import com.threerings.toybox.data.ToyBoxGameConfig;
-import com.threerings.toybox.util.ToyBoxContext;
+import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 
 /**
  * Sets up the necessary business for the Bang! editor.
  */
-public class EditorApp extends ToyBoxApp
-    implements SessionObserver
+public class EditorApp
 {
+    public EditorApp ()
+    {
+//         // create a frame
+//         _frame = new ToyBoxFrame("...", gameId, username);
+
+        // create and initialize our client instance
+        _client = new EditorClient();
+    }
+
     public void logon ()
     {
-        // keep a handle on this for later
-        _ctx = (ToyBoxContext)_client.getContext();
-        _ctx.getClient().addClientObserver(this);
-
         // create our client object
         ClientResolutionListener clr = new ClientResolutionListener() {
             public void clientResolved (Name username, ClientObject clobj) {
-                // fake up a bootstrap; I need to expose the mechanisms in
-                // Presents that create it in a network environment
-                ToyBoxBootstrapData data = new ToyBoxBootstrapData();
+                // fake up a bootstrap...
+                BootstrapData data = new BootstrapData();
                 data.clientOid = clobj.getOid();
                 data.services = EditorServer.invmgr.bootlist;
-                data.resourceURL = "file:///";
 
-                // and configure the client to operate using the server's
-                // distributed object manager
+                // ...and configure the client to operate using the
+                // server's distributed object manager
                 _client.getContext().getClient().gotBootstrap(
                     data, EditorServer.omgr);
             }
@@ -63,56 +59,6 @@ public class EditorApp extends ToyBoxApp
             }
         };
         EditorServer.clmgr.resolveClientObject(new Name("editor"), clr);
-    }
-
-    // documentation inherited from interface SessionObserver
-    public void clientDidLogon (Client client)
-    {
-        ToyBoxGameConfig config = new ToyBoxGameConfig(0, createEditorGameDef());
-        _ctx.getParlorDirector().startSolitaire(
-            config, new InvocationService.ConfirmListener() {
-                public void requestProcessed () {
-                    // yay! nothing to do here
-                }
-                public void requestFailed (String cause) {
-                    log.warning("Failed to create editor: " + cause);
-                }
-            });
-    }
-
-    // documentation inherited from interface SessionObserver
-    public void clientObjectDidChange (Client client)
-    {
-        // NADA
-    }
-
-    // documentation inherited from interface SessionObserver
-    public void clientDidLogoff (Client client)
-    {
-        // NADA
-    }
-
-    protected GameDefinition createEditorGameDef ()
-    {
-        GameDefinition gdef = new GameDefinition();
-        gdef.ident = "editor";
-        gdef.controller = EditorController.class.getName();
-        gdef.manager = EditorManager.class.getName();
-        gdef.match = new TableMatchConfig();
-        gdef.params = new Parameter[] { createRange("board_size", 8, 16, 48),
-                                        createRange("density", 0, 8, 10) };
-        return gdef;
-    }
-
-    protected RangeParameter createRange (
-        String ident, int min, int start, int max)
-    {
-        RangeParameter param = new RangeParameter();
-        param.ident = ident;
-        param.minimum = min;
-        param.start = start;
-        param.maximum = max;
-        return param;
     }
 
     public static void main (String[] args)
@@ -133,10 +79,8 @@ public class EditorApp extends ToyBoxApp
         // let the BangClientController know we're in editor mode
         System.setProperty("editor", "true");
 
-        // now we create the client: we aren't actually logging in so we
-        // don't need or want a server or username or whatnot
+        // this is the entry point for all the "client-side" stuff
         final EditorApp app = new EditorApp();
-        start(app, "localhost", -1, null, null);
 
         // post a runnable that will get executed after everything is
         // initialized and happy
@@ -147,5 +91,5 @@ public class EditorApp extends ToyBoxApp
         });
     }
 
-    protected ToyBoxContext _ctx;
+    protected EditorClient _client;
 }
