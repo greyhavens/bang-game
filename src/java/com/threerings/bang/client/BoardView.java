@@ -367,7 +367,6 @@ public class BoardView extends BComponent
         // update the sprite over which the mouse is hovering
         Sprite hover = getHoverSprite();
         if (hover != _hover) {
-            log.info("Hovering " + hover);
             if (_hover instanceof UnitSprite) {
                 ((UnitSprite)_hover).setHovered(false);
             }
@@ -397,10 +396,8 @@ public class BoardView extends BComponent
         GodViewHandler ih = (GodViewHandler)_ctx.getInputHandler();
         float zoom = ih.getZoomLevel();
         if (e.getDelta() > 0) {
-            log.info("Zooming up " + zoom + "/" + e);
             zoom = Math.max(0f, zoom - 0.1f);
         } else {
-            log.info("Zooming down " + zoom + "/" + e);
             zoom = Math.min(1f, zoom + 0.1f);
         }
         ih.setZoomLevel(zoom);

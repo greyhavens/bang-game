@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import com.samskivert.util.StringUtil;
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -130,36 +130,32 @@ public class UnitConfig
     protected static void registerUnit (String type)
     {
         // load up the properties file for this unit
-        Properties props = new Properties();
-        String path = "rsrc/units/" + type + "/unit.properties";
-        try {
-            props.load(
-                UnitConfig.class.getClassLoader().getResourceAsStream(path));
-        } catch (Exception e) {
-            log.log(Level.WARNING, "No config for '" + type + "'?", e);
-            return;
-        }
+        Properties props = BangUtil.resourceToProperties(
+            "rsrc/units/" + type + "/unit.properties");
 
         // fill in a config instance from the properties file
         UnitConfig config = new UnitConfig();
         config.type = type;
         config.unitClass = props.getProperty("class");
 
-        String modestr = requireProperty(type, props, "mode").toUpperCase();
+        String modestr =
+            BangUtil.requireProperty(type, props, "mode").toUpperCase();
         try {
             config.mode = Enum.valueOf(Mode.class, modestr);
         } catch (Exception e) {
             log.warning("Invalid mode specified [type=" + type +
                         ", mode=" + modestr + "].");
         }
-        String makestr = requireProperty(type, props, "make").toUpperCase();
+        String makestr =
+            BangUtil.requireProperty(type, props, "make").toUpperCase();
         try {
             config.make = Enum.valueOf(Make.class, makestr);
         } catch (Exception e) {
             log.warning("Invalid make specified [type=" + type +
                         ", make=" + makestr + "].");
         }
-        String rankstr = requireProperty(type, props, "rank").toUpperCase();
+        String rankstr =
+            BangUtil.requireProperty(type, props, "rank").toUpperCase();
         try {
             config.rank = Enum.valueOf(Rank.class, rankstr);
         } catch (Exception e) {
@@ -167,13 +163,13 @@ public class UnitConfig
                         ", rank=" + rankstr + "].");
         }
 
-        config.sightDistance = getIntProperty(type, props, "sight", 5);
-        config.moveDistance = getIntProperty(type, props, "move", 1);
-        config.fireDistance = getIntProperty(type, props, "fire", 1);
-        config.damage = getIntProperty(type, props, "damage", 25);
+        config.sightDistance = BangUtil.getIntProperty(type, props, "sight", 5);
+        config.moveDistance = BangUtil.getIntProperty(type, props, "move", 1);
+        config.fireDistance = BangUtil.getIntProperty(type, props, "fire", 1);
+        config.damage = BangUtil.getIntProperty(type, props, "damage", 25);
 
-        config.scripCost = getIntProperty(type, props, "scrip_cost", 0);
-        config.goldCost = getIntProperty(type, props, "gold_cost", 0);
+        config.scripCost = BangUtil.getIntProperty(type, props, "scrip_cost", 0);
+        config.goldCost = BangUtil.getIntProperty(type, props, "gold_cost", 0);
         if (config.scripCost == 0 && config.goldCost == 0) {
             log.warning("Warning " + type + " has zero cost.");
         }
@@ -181,21 +177,21 @@ public class UnitConfig
         int idx = 0;
         for (Mode mode : EnumSet.allOf(Mode.class)) {
             String key = mode.toString().toLowerCase();
-            config.damageAdjust[mode.ordinal()] = getIntProperty(
+            config.damageAdjust[mode.ordinal()] = BangUtil.getIntProperty(
                 type, props, "damage." + key, 0);
-            config.defenseAdjust[mode.ordinal()] = getIntProperty(
+            config.defenseAdjust[mode.ordinal()] = BangUtil.getIntProperty(
                 type, props, "defense." + key, 0);
         }
         for (Make make : EnumSet.allOf(Make.class)) {
             String key = make.toString().toLowerCase();
-            config.damageAdjust[MODE_COUNT + make.ordinal()] = getIntProperty(
-                type, props, "damage." + key, 0);
-            config.defenseAdjust[MODE_COUNT + make.ordinal()] = getIntProperty(
-                type, props, "defense." + key, 0);
+            config.damageAdjust[MODE_COUNT + make.ordinal()] =
+                BangUtil.getIntProperty(type, props, "damage." + key, 0);
+            config.defenseAdjust[MODE_COUNT + make.ordinal()] =
+                BangUtil.getIntProperty(type, props, "defense." + key, 0);
         }
 
         // map this config into the proper towns
-        String towns = requireProperty(type, props, "towns");
+        String towns = BangUtil.requireProperty(type, props, "towns");
         boolean andSoOn = false;
         for (int ii = 0; ii < BangCodes.TOWN_IDS.length; ii++) {
             String town = BangCodes.TOWN_IDS[ii];
@@ -221,31 +217,6 @@ public class UnitConfig
         _townMap.put(town, nconfigs);
     }
 
-    protected static String requireProperty (
-        String type, Properties props, String key)
-    {
-        String value = props.getProperty(key);
-        if (value == null) {
-            log.warning("Missing unit config [type=" + type +
-                        ", key=" + key + "].");
-            value = "";
-        }
-        return value;
-    }
-
-    protected static int getIntProperty (
-        String type, Properties props, String key, int defval)
-    {
-        String value = props.getProperty(key);
-        try {
-            return (value != null) ? Integer.parseInt(value) : defval;
-        } catch (Exception e) {
-            log.warning("Invalid unit config [type=" + type + ", key=" + key +
-                        ", value=" + value + "]: " + e);
-            return defval;
-        }
-    }
-
     /** A mapping from unit type to its configuration. */
     protected static HashMap<String,UnitConfig> _types =
         new HashMap<String,UnitConfig>();
@@ -255,16 +226,10 @@ public class UnitConfig
         new HashMap<String,UnitConfig[]>();
 
     static {
-        // register the Frontier Town units
-        registerUnit("gunslinger");
-        registerUnit("dirigible");
-        registerUnit("artillery");
-        registerUnit("steamgunman");
-
-        // register the Frontier Town Big Shots
-        registerUnit("cavalry");
-
-        // register the Boom Town units
-        registerUnit("windupslinger");
+        // register our units
+        String[] units = BangUtil.resourceToStrings("rsrc/units/units.txt");
+        for (int ii = 0; ii < units.length; ii++) {
+            registerUnit(units[ii]);
+        }
     }
 }

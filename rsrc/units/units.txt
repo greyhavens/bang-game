@@ -1,0 +1,6 @@
+artillery
+cavalry
+dirigible
+gunslinger
+steamgunman
+windupslinger
