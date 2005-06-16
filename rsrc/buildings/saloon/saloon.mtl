@@ -9,7 +9,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd wall.png
 #
 newmtl wood
 Ka  0.0 0.0 0.0
@@ -18,7 +17,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd wood.png
 #
 newmtl window
 Ka  0.0 0.0 0.0
@@ -27,7 +25,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd window.png
 #
 newmtl door
 Ka  0.0 0.0 0.0
@@ -36,7 +33,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd door.png
 #
 newmtl deck
 Ka  0.0 0.0 0.0
@@ -45,7 +41,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd deck.png
 #
 newmtl sign
 Ka  0.0 0.0 0.0
@@ -54,7 +49,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd sign.png
 #
 newmtl roof
 Ka  0.0 0.0 0.0
@@ -63,7 +57,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd roof.png
 #
 newmtl swingdoor
 Ka  0.0 0.0 0.0
@@ -72,7 +65,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd swingdoor.png
 #
 newmtl railing
 Ka  0.0 0.0 0.0
@@ -81,7 +73,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd railing.png
 #
 newmtl Material__2965
 Ka  0.0 0.0 0.0
@@ -132,7 +123,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd wall.png
 #
 newmtl wood
 Ka  0.0 0.0 0.0
@@ -141,7 +131,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd wood.png
 #
 newmtl window
 Ka  0.0 0.0 0.0
@@ -150,7 +139,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd window.png
 #
 newmtl door
 Ka  0.0 0.0 0.0
@@ -159,7 +147,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd door.png
 #
 newmtl deck
 Ka  0.0 0.0 0.0
@@ -168,7 +155,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd deck.png
 #
 newmtl sign
 Ka  0.0 0.0 0.0
@@ -177,7 +163,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd sign.png
 #
 newmtl roof
 Ka  0.0 0.0 0.0
@@ -186,7 +171,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd roof.png
 #
 newmtl swingdoor
 Ka  0.0 0.0 0.0
@@ -195,7 +179,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd swingdoor.png
 #
 newmtl railing
 Ka  0.0 0.0 0.0
@@ -204,7 +187,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd railing.png
 #
 newmtl Material__2965
 Ka  0.0 0.0 0.0
@@ -227,7 +209,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd wall.png
 #
 newmtl wood
 Ka  0.0 0.0 0.0
@@ -236,7 +217,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd wood.png
 #
 newmtl window
 Ka  0.0 0.0 0.0
@@ -245,7 +225,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd window.png
 #
 newmtl door
 Ka  0.0 0.0 0.0
@@ -254,7 +233,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd door.png
 #
 newmtl deck
 Ka  0.0 0.0 0.0
@@ -263,7 +241,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd deck.png
 #
 newmtl sign
 Ka  0.0 0.0 0.0
@@ -272,7 +249,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd sign.png
 #
 newmtl roof
 Ka  0.0 0.0 0.0
@@ -281,7 +257,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd roof.png
 #
 newmtl swingdoor
 Ka  0.0 0.0 0.0
@@ -290,7 +265,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd swingdoor.png
 #
 newmtl railing
 Ka  0.0 0.0 0.0
@@ -299,7 +273,6 @@ Ks  0.9 0.9 0.9
 d  1.0
 Ns  0.0
 illum 2
-map_Kd railing.png
 #
 newmtl Material__2965
 Ka  0.0 0.0 0.0
