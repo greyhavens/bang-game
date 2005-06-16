@@ -53,7 +53,7 @@ public class EditorBoardView extends BoardView
     // documentation inherited from interface MouseListener
     public void mousePressed (MouseEvent e)
     {
-        int tx = e.getX() / SQUARE, ty = e.getY() / SQUARE;
+        int tx = _mouse.x, ty = _mouse.y;
 
         // keep track of the press location in case we need it later
         _dragStart.setLocation(tx, ty);
@@ -97,8 +97,9 @@ public class EditorBoardView extends BoardView
     {
         // if we are dragging a piece, move that feller around
         if (_dragPiece != null) {
-            _dragPiece.position(tx - _dragOffset.x, ty - _dragOffset.y);
-            _bangobj.updatePieces(_dragPiece);
+            Piece p = (Piece)_dragPiece.clone();
+            p.position(tx - _dragOffset.x, ty - _dragOffset.y);
+            _bangobj.updatePieces(p);
         }
 
         // if we have a drag command and the mouse coordinates
