@@ -18,6 +18,7 @@ import com.samskivert.swing.GroupLayout;
 import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
 
+import com.threerings.jme.JmeCanvasApp;
 import com.threerings.media.SafeScrollPane;
 import com.threerings.util.MessageBundle;
 
@@ -25,7 +26,6 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.util.BangContext;
 
@@ -46,6 +46,7 @@ public class EditorPanel extends JPanel
     /** Creates the main panel and its sub-interfaces. */
     public EditorPanel (BangContext ctx, EditorController ctrl)
     {
+        _ctx = ctx;
         _ctrl = ctrl;
 
 	// give ourselves a wee bit of a border
@@ -58,7 +59,7 @@ public class EditorPanel extends JPanel
 	setLayout(gl);
 
         // create the board view
-//         add(view = new EditorBoardView(ctx, this));
+        view = new EditorBoardView(ctx, this);
 
         // create our side panel
         VGroupLayout sgl = new VGroupLayout(VGroupLayout.STRETCH);
@@ -100,7 +101,7 @@ public class EditorPanel extends JPanel
     }
 
     /** Called by the controller when the game starts. */
-    public void startGame (BangObject bangobj, BangConfig cfg)
+    public void startGame (BangObject bangobj, EditorConfig cfg)
     {
         // our view needs to know about the start of the game
         view.startGame(bangobj, cfg, 0);
@@ -121,12 +122,18 @@ public class EditorPanel extends JPanel
     // documentation inherited from interface
     public void willEnterPlace (PlaceObject plobj)
     {
+        // add the main bang view
+        _ctx.getGeometry().attachChild(view.getNode());
     }
 
     // documentation inherited from interface
     public void didLeavePlace (PlaceObject plobj)
     {
+        _ctx.getGeometry().detachChild(view.getNode());
     }
+
+    /** Giver of life and context. */
+    protected BangContext _ctx;
 
     /** Our game controller. */
     protected EditorController _ctrl;

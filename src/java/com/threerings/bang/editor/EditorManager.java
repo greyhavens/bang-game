@@ -16,7 +16,6 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.PieceDSet;
 import com.threerings.bang.data.generate.CompoundGenerator;
@@ -66,7 +65,7 @@ public class EditorManager extends GameManager
     protected BangBoard createBoard (ArrayList<Piece> pieces)
     {
         // first, try loading it from our game configuration
-        BangConfig gconfig = (BangConfig)_gameconfig;
+        EditorConfig gconfig = (EditorConfig)_gameconfig;
 //         if (gconfig.board != null && gconfig.board.length > 0) {
 //             try {
 //                 Tuple tup = BoardUtil.loadBoard(gconfig.board);
@@ -83,7 +82,7 @@ public class EditorManager extends GameManager
         int size = 16; // gconfig.size;
         BangBoard board = new BangBoard(size, size);
         CompoundGenerator gen = new CompoundGenerator();
-        gen.generate(gconfig, board, pieces);
+        gen.generate(board, pieces);
         return board;
     }
 

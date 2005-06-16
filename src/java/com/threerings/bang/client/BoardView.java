@@ -367,6 +367,7 @@ public class BoardView extends BComponent
         // update the sprite over which the mouse is hovering
         Sprite hover = getHoverSprite();
         if (hover != _hover) {
+            log.info("Hovering " + hover);
             if (_hover instanceof UnitSprite) {
                 ((UnitSprite)_hover).setHovered(false);
             }

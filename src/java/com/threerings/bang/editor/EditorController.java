@@ -23,7 +23,6 @@ import com.threerings.parlor.game.client.GameController;
 
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.PieceDSet;
 import com.threerings.bang.data.Terrain;
@@ -127,7 +126,7 @@ public class EditorController extends GameController
     {
         super.init(ctx, config);
         _ctx = (BangContext)ctx;
-        _config = (BangConfig)config;
+        _config = (EditorConfig)config;
     }
 
     // documentation inherited
@@ -182,7 +181,7 @@ public class EditorController extends GameController
     protected BangContext _ctx;
 
     /** The configuration of this game. */
-    protected BangConfig _config;
+    protected EditorConfig _config;
 
     /** Contains our main user interface. */
     protected EditorPanel _panel;

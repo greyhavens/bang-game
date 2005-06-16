@@ -3,10 +3,12 @@
 
 package com.threerings.bang.editor;
 
+import java.awt.Canvas;
 import java.awt.Point;
 
-import com.jme.bui.event.MouseListener;
 import com.jme.bui.event.MouseEvent;
+import com.jme.bui.event.MouseListener;
+import com.threerings.jme.JmeCanvasApp;
 
 import com.threerings.media.sprite.Sprite;
 

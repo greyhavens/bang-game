@@ -16,6 +16,7 @@ import com.jme.system.DisplaySystem;
 import com.samskivert.util.Config;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.jme.JmeApp;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
@@ -249,7 +250,7 @@ public class BangClient
             return _msgmgr;
         }
 
-        public BangApp getApp () {
+        public JmeApp getApp () {
             return _app;
         }
 

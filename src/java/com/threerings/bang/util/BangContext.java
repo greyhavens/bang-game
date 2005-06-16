@@ -14,6 +14,7 @@ import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
+import com.threerings.jme.JmeApp;
 import com.threerings.jme.JmeContext;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.parlor.util.ParlorContext;
@@ -43,7 +44,7 @@ public abstract class BangContext
     public abstract ModelCache getModelCache ();
 
     /** Returns a reference to our top-level application. */
-    public abstract BangApp getApp ();
+    public abstract JmeApp getApp ();
 
     /** Returns a reference to the current player's user object. Only
      * valid when we are logged onto the server. */

@@ -20,6 +20,7 @@ import com.samskivert.servlet.user.Password;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 
+import com.threerings.bang.util.RenderUtil;
 import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
@@ -139,18 +140,8 @@ public class BangApp extends JmeApp
     @Override // documentation inherited
     protected void initLighting ()
     {
-        PointLight light = new PointLight();
-        light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-        light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
-        light.setLocation(new Vector3f(100, 100, 100));
-        light.setAttenuate(true);
-        light.setConstant(0.25f);
-        light.setEnabled(true);
-
-        _lights = _display.getRenderer().createLightState();
-        _lights.setEnabled(true);
-        _lights.attach(light);
-        _geom.setRenderState(_lights);
+        _geom.setRenderState(
+            _lights = RenderUtil.createDaylight(_client.getContext()));
     }
 
     @Override // documentation inherited

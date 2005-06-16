@@ -6,6 +6,8 @@ package com.threerings.bang.util;
 import java.awt.image.BufferedImage;
 
 import com.jme.image.Texture;
+import com.jme.renderer.ColorRGBA;
+import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
@@ -96,5 +98,21 @@ public class RenderUtil
         icon.setRenderState(iconAlpha);
         icon.setLightCombineMode(LightState.OFF);
         return icon;
+    }
+
+    public static LightState createDaylight (BangContext ctx)
+    {
+        PointLight light = new PointLight();
+        light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+        light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
+        light.setLocation(new Vector3f(100, 100, 100));
+        light.setAttenuate(true);
+        light.setConstant(0.25f);
+        light.setEnabled(true);
+
+        LightState lights = ctx.getRenderer().createLightState();
+        lights.setEnabled(true);
+        lights.attach(light);
+        return lights;
     }
 }

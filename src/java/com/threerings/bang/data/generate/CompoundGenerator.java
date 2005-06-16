@@ -10,7 +10,6 @@ import com.samskivert.util.IntTuple;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Building;
@@ -26,8 +25,7 @@ import static com.threerings.bang.Log.log;
 public class CompoundGenerator extends EnvironmentGenerator
 {
     @Override // documentation inherited
-    public void generate (
-        BangConfig config, BangBoard board, ArrayList<Piece> pieces)
+    public void generate (BangBoard board, ArrayList<Piece> pieces)
     {
         int width = board.getWidth(), height = board.getHeight();
 

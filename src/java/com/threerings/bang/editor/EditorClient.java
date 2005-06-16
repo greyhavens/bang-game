@@ -3,8 +3,13 @@
 
 package com.threerings.bang.editor;
 
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.io.File;
+import javax.swing.JFrame;
 
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.event.InputDispatcher;
@@ -18,12 +23,13 @@ import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.jme.JmeApp;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.InvocationService.ConfirmListener;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.SessionObserver;
 import com.threerings.presents.dobj.DObjectManager;
 
@@ -37,10 +43,8 @@ import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.ModelCache;
-import com.threerings.bang.client.effect.ParticleFactory;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -52,19 +56,18 @@ public class EditorClient
     implements RunQueue, SessionObserver
 {
     /** Initializes the editor client and prepares it for operation. */
-    public EditorClient ()
+    public EditorClient (EditorApp app, JFrame frame)
     {
         // create our context
         _ctx = new BangContextImpl();
+        _app = app;
+        _frame = frame;
 
         // create the directors/managers/etc. provided by the context
         createContextServices();
 
         // listen for logon/logoff
         _ctx.getClient().addClientObserver(this);
-
-        // create a bunch of standard rendering stuff
-        RenderUtil.init(_ctx);
     }
 
     /**
@@ -79,16 +82,16 @@ public class EditorClient
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
-//         ToyBoxGameConfig config = new ToyBoxGameConfig(0, createEditorGameDef());
-//         _ctx.getParlorDirector().startSolitaire(
-//             config, new InvocationService.ConfirmListener() {
-//                 public void requestProcessed () {
-//                     // yay! nothing to do here
-//                 }
-//                 public void requestFailed (String cause) {
-//                     log.warning("Failed to create editor: " + cause);
-//                 }
-//             });
+        EditorConfig config = new EditorConfig();
+        _ctx.getParlorDirector().startSolitaire(
+            config, new InvocationService.ConfirmListener() {
+                public void requestProcessed () {
+                    // yay! nothing to do here
+                }
+                public void requestFailed (String cause) {
+                    log.warning("Failed to create editor: " + cause);
+                }
+            });
     }
 
     // documentation inherited from interface SessionObserver
@@ -138,9 +141,6 @@ public class EditorClient
         _occdir = new OccupantDirector(_ctx);
         _pardir = new ParlorDirector(_ctx);
         _chatdir = new ChatDirector(_ctx, _msgmgr, null);
-
-        // warm up the particle factory
-        ParticleFactory.warmup(_ctx);
     }
 
     /**
@@ -187,11 +187,19 @@ public class EditorClient
         }
 
         public void setPlaceView (PlaceView view) {
-            // TBD
+            log.info("setting place view " + view);
+            Container pane = _frame.getContentPane();
+            if (pane.getComponentCount() > 1) {
+                pane.remove(1);
+            }
+            pane.add((Component)view, BorderLayout.EAST);
         }
 
         public void clearPlaceView (PlaceView view) {
-            // we'll just let the next place view replace our old one
+            Container pane = _frame.getContentPane();
+            if (pane.getComponentCount() > 1) {
+                pane.remove(1);
+            }
         }
 
         public ResourceManager getResourceManager () {
@@ -202,8 +210,8 @@ public class EditorClient
             return _msgmgr;
         }
 
-        public BangApp getApp () {
-            return null;
+        public JmeApp getApp () {
+            return _app;
         }
 
         public ModelCache getModelCache () {
@@ -211,37 +219,31 @@ public class EditorClient
         }
 
         public DisplaySystem getDisplay () {
-//             return _app.getContext().getDisplay();
-            return null;
+            return _app.getContext().getDisplay();
         }
 
         public Renderer getRenderer () {
-//             return _app.getContext().getRenderer();
-            return null;
+            return _app.getContext().getRenderer();
         }
 
         public Camera getCamera () {
-//             return _app.getContext().getCamera();
-            return null;
+            return _app.getContext().getCamera();
         }
 
         public Node getGeometry () {
-//             return _app.getContext().getGeometry();
-            return null;
+            return _app.getContext().getGeometry();
         }
 
         public Node getInterface () {
-//             return _app.getContext().getInterface();
-            return null;
+            return _app.getContext().getInterface();
         }
 
         public InputHandler getInputHandler () {
-//             return _app.getContext().getInputHandler();
-            return null;
+            return _app.getContext().getInputHandler();
         }
 
         public InputDispatcher getInputDispatcher () {
-            return null;
+            return _app.getContext().getInputDispatcher();
         }
 
         public BLookAndFeel getLookAndFeel () {
@@ -250,6 +252,8 @@ public class EditorClient
     }
 
     protected BangContext _ctx;
+    protected EditorApp _app;
+    protected JFrame _frame;
     protected Config _config = new Config("editor");
 
     protected MessageManager _msgmgr;
