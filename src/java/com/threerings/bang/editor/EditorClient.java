@@ -8,8 +8,10 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
-import java.io.File;
 import javax.swing.JFrame;
+
+import java.io.File;
+import java.util.logging.Level;
 
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.event.InputDispatcher;
@@ -31,7 +33,10 @@ import com.threerings.util.Name;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.SessionObserver;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObjectManager;
+import com.threerings.presents.net.BootstrapData;
+import com.threerings.presents.server.ClientResolutionListener;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
@@ -77,6 +82,30 @@ public class EditorClient
     public BangContext getContext ()
     {
         return _ctx;
+    }
+
+    public void logon ()
+    {
+        // create our client object
+        ClientResolutionListener clr = new ClientResolutionListener() {
+            public void clientResolved (Name username, ClientObject clobj) {
+                // fake up a bootstrap...
+                BootstrapData data = new BootstrapData();
+                data.clientOid = clobj.getOid();
+                data.services = EditorServer.invmgr.bootlist;
+
+                // ...and configure the client to operate using the
+                // server's distributed object manager
+                _ctx.getClient().gotBootstrap(data, EditorServer.omgr);
+            }
+
+            public void resolutionFailed (Name username, Exception reason) {
+                log.log(Level.WARNING, "Failed to resolve client [who=" +
+                        username + "].", reason);
+                // TODO: display this error
+            }
+        };
+        EditorServer.clmgr.resolveClientObject(new Name("editor"), clr);
     }
 
     // documentation inherited from interface SessionObserver

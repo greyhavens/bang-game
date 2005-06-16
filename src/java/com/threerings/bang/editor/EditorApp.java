@@ -20,13 +20,6 @@ import com.samskivert.util.OneLineLogFormatter;
 import com.threerings.jme.JmeCanvasApp;
 import com.threerings.util.Name;
 
-import com.threerings.presents.client.Client;
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.client.SessionObserver;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.net.BootstrapData;
-import com.threerings.presents.server.ClientResolutionListener;
-
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
@@ -59,18 +52,25 @@ public class EditorApp extends JmeCanvasApp
         System.setProperty("editor", "true");
 
         // this is the entry point for all the "client-side" stuff
-        final EditorApp app = new EditorApp();
+        EditorApp app = new EditorApp();
         app.create();
-
-        // post a runnable that will get executed after everything is
-        // initialized and happy
-        EditorServer.omgr.postRunnable(new Runnable() {
-            public void run () {
-                app.logon();
-            }
-        });
-
         app.run();
+    }
+
+    @Override // documentation inherited
+    public boolean init ()
+    {
+        if (super.init()) {
+            // post a runnable that will get executed after everything is
+            // initialized and happy
+            EditorServer.omgr.postRunnable(new Runnable() {
+                public void run () {
+                    _client.logon();
+                }
+            });
+            return true;
+        }
+        return false;
     }
 
     public void create ()
@@ -86,31 +86,6 @@ public class EditorApp extends JmeCanvasApp
         // display the GL canvas to start so that it initializes everything
         _frame.getContentPane().add(_canvas, BorderLayout.CENTER);
         _frame.setVisible(true);
-    }
-
-    public void logon ()
-    {
-        // create our client object
-        ClientResolutionListener clr = new ClientResolutionListener() {
-            public void clientResolved (Name username, ClientObject clobj) {
-                // fake up a bootstrap...
-                BootstrapData data = new BootstrapData();
-                data.clientOid = clobj.getOid();
-                data.services = EditorServer.invmgr.bootlist;
-
-                // ...and configure the client to operate using the
-                // server's distributed object manager
-                _client.getContext().getClient().gotBootstrap(
-                    data, EditorServer.omgr);
-            }
-
-            public void resolutionFailed (Name username, Exception reason) {
-                log.log(Level.WARNING, "Failed to resolve client [who=" +
-                        username + "].", reason);
-                // TODO: display this error
-            }
-        };
-        EditorServer.clmgr.resolveClientObject(new Name("editor"), clr);
     }
 
     protected EditorApp ()
