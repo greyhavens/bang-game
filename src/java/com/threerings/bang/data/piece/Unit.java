@@ -52,7 +52,7 @@ public class Unit extends Piece
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        _config = UnitConfig.getConfig(_type);
+        init(UnitConfig.getConfig(_type));
     }
 
     @Override // documentation inherited

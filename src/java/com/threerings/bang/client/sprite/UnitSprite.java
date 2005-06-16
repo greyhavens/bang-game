@@ -166,9 +166,13 @@ public class UnitSprite extends MobileSprite
         _movable.setSolidColor(JPIECE_COLORS[_piece.owner]);
         _movable.setForceCull(tick > 0);
 
+        // our models are centered at the origin, but we need to shift
+        // them to the center of the tile
+        Vector3f offset = new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0);
         _model = ctx.getModelCache().getModel("units", _type);
         Node[] meshes = _model.getMeshes("standing");
         for (int ii = 0; ii < meshes.length; ii++) {
+            meshes[ii].setLocalTranslation(offset);
             attachChild(meshes[ii]);
             meshes[ii].updateRenderState();
         }

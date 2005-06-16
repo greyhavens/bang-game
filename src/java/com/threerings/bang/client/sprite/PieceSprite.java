@@ -85,8 +85,9 @@ public class PieceSprite extends Sprite
     {
         toWorldCoords(tx, ty, elevation, _temp);
         if (!_temp.equals(localTranslation)) {
-            log.info("Moving to " + tx + ", " + ty + ", " + elevation);
             setLocalTranslation(new Vector3f(_temp));
+//             log.info("Moving to " + tx + ", " + ty + ", " + elevation +
+//                      ": " + _temp);
             updateCollisionTree();
         }
     }

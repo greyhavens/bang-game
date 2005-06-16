@@ -87,8 +87,10 @@ public class Model
                     if (texture == null) {
                         texture = props.getProperty("texture");
                     }
-                    models[ii] = loadModel(
-                        ctx, path + mesh + ".jme", path + texture);
+                    if (texture != null) {
+                        texture = path + texture;
+                    }
+                    models[ii] = loadModel(ctx, path + mesh + ".jme", texture);
                 }
                 _anims.put(aname, models);
             }
@@ -218,17 +220,14 @@ public class Model
         if (cc == null) {
             JmeBinaryReader jbr = new JmeBinaryReader();
             jbr.setProperty("bound", "box");
-            jbr.setProperty("texurl", loader.getResource("rsrc/" + texpath));
+            jbr.setProperty("texurl", loader.getResource("rsrc/" + path));
             InputStream in = loader.getResourceAsStream("rsrc/" + path);
 
             Node model;
             try {
                 model = jbr.loadBinaryFormat(new BufferedInputStream(in));
-
-                // TODO: put these bits in the config file
+                // TODO: put this in the model config file
                 model.setLocalScale(0.05f);
-                model.setLocalTranslation(
-                    new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0));
 
             } catch (IOException ioe) {
                 log.log(Level.WARNING,
@@ -242,10 +241,12 @@ public class Model
                 model.attachChild(box);
             }
 
-            TextureState ts = getTexture(ctx, texpath);
-            if (ts != null) {
-                model.setRenderState(ts);
-                model.updateRenderState();
+            if (texpath != null) {
+                TextureState ts = getTexture(ctx, texpath);
+                if (ts != null) {
+                    model.setRenderState(ts);
+                    model.updateRenderState();
+                }
             }
 
             cc = new ModelCloneCreator(model);

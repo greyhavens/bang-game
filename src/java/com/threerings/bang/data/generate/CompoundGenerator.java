@@ -19,8 +19,7 @@ import com.threerings.bang.util.PieceUtil;
 import static com.threerings.bang.Log.log;
 
 /**
- * Scatters buildings haphazardly around to create some sort of military
- * compound.
+ * Scatters buildings haphazardly around to create a random board.
  */
 public class CompoundGenerator extends EnvironmentGenerator
 {
@@ -45,11 +44,11 @@ public class CompoundGenerator extends EnvironmentGenerator
         for (int ii = 0; ii < count; ii++) {
             int rando = RandomUtil.getInt(100);
             if (rando > 95) {
-                bldgs[ii] = new Building(4, 5);
+                bldgs[ii] = Building.getBuilding("saloon");
             } else if (rando > 65) {
-                bldgs[ii] = new Building(2, 4);
+                bldgs[ii] = Building.getBuilding("saloon");
             } else {
-                bldgs[ii] = new Building(2, 2);
+                bldgs[ii] = Building.getBuilding("saloon");
             }
             BigPiece bldg = bldgs[ii];
             bldg.assignPieceId();

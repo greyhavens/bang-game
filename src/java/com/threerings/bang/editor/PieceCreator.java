@@ -10,8 +10,13 @@ import com.samskivert.swing.CommandButton;
 import com.samskivert.swing.VGroupLayout;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BuildingConfig;
+import com.threerings.bang.data.piece.BonusMarker;
+import com.threerings.bang.data.piece.Building;
+import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.Prop;
+import com.threerings.bang.data.piece.StartMarker;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.data.piece.*;
 
 /**
  * Provides buttons for adding pieces of various types to the board.
@@ -24,31 +29,21 @@ public class PieceCreator extends JPanel
         _ctx = ctx;
 
         add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.pieces_fixed")));
-        add(createPieceButton("building", new Building(2, 2)));
-        add(createPieceButton("building", new Building(2, 3)));
-        add(createPieceButton("building", new Building(3, 2)));
-        add(createPieceButton("building", new Building(4, 2)));
-        add(createPieceButton("building", new Building(2, 4)));
+
+        // TODO: deal with town selection
+        BuildingConfig[] bldgs = BuildingConfig.getTownBuildings(
+            BangCodes.FRONTIER_TOWN);
+        for (int ii = 0; ii < bldgs.length; ii++) {
+            String type = bldgs[ii].type;
+            add(createPieceButton(type, Building.getBuilding(type)));
+        }
 
         add(createPieceButton("rocks", new Prop("rock_2x2", 2, 2)));
-        add(createPieceButton("rocks", new Prop("rock2_2x2", 2, 2)));
-        add(createPieceButton("rocks", new Prop("rocks_1x1", 1, 1)));
-        add(createPieceButton("rocks", new Prop("rocks_1x2", 2, 1)));
-        add(createPieceButton("rocks", new Prop("rocks2_1x1", 1, 1)));
-
-        add(createPieceButton("cactus", new Prop("cactus_1x1", 1, 1)));
         add(createPieceButton("cactus", new Prop("cactus2_1x1", 1, 1)));
 
         add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.pieces_marker")));
         add(createPieceButton("start_marker", new StartMarker()));
         add(createPieceButton("bonus_marker", new BonusMarker()));
-
-//         add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.pieces_player")));
-//         add(createPieceButton("artillery", new Artillery()));
-//         add(createPieceButton("bee", new Bee()));
-//         add(createPieceButton("beetle", new Beetle()));
-//         add(createPieceButton("caterpillar", new Caterpillar()));
-//         add(createPieceButton("termite", new Termite()));
     }
 
     protected CommandButton createPieceButton (String type, Piece piece)
