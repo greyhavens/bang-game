@@ -122,7 +122,7 @@ public class EditorApp extends JmeCanvasApp
     protected void initLighting ()
     {
         _geom.setRenderState(
-            _lights = RenderUtil.createDaylight(_client.getContext()));
+            _lights = RenderUtil.createDaylight(_display.getRenderer()));
     }
 
     protected JFrame _frame;

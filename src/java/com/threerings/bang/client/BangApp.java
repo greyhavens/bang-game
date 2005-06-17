@@ -141,12 +141,13 @@ public class BangApp extends JmeApp
     protected void initLighting ()
     {
         _geom.setRenderState(
-            _lights = RenderUtil.createDaylight(_client.getContext()));
+            _lights = RenderUtil.createDaylight(_display.getRenderer()));
     }
 
     @Override // documentation inherited
     protected void reportInitFailure (Throwable t)
     {
+        t.printStackTrace(System.err);
         JOptionPane.showMessageDialog(null, "Initialization failed: " + t);
     }
 

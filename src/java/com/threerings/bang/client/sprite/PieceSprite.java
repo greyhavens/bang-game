@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
@@ -31,6 +33,15 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class PieceSprite extends Sprite
 {
+    /**
+     * Called by the editor to make pieces warp to their new locations for
+     * rapid draggability.
+     */
+    public static void setEditorMode (boolean editorMode)
+    {
+        _editorMode = editorMode;
+    }
+
     /** Returns the id of the piece associated with this sprite. */
     public int getPieceId ()
     {
@@ -72,6 +83,7 @@ public class PieceSprite extends Sprite
 
         // position ourselves properly to start
         setLocation(piece.x, piece.y, 0);
+        setOrientation(piece.orientation);
 
         // ensure that we do this the first time even if the sprite starts
         // out at zero zero
@@ -90,6 +102,16 @@ public class PieceSprite extends Sprite
 //                      ": " + _temp);
             updateCollisionTree();
         }
+    }
+
+    /**
+     * Configures this sprite's orientation.
+     */
+    public void setOrientation (int orientation)
+    {
+        Quaternion quat = new Quaternion();
+        quat.fromAngleAxis(ROTATIONS[orientation], UP);
+        setLocalRotation(quat);
     }
 
     /**
@@ -121,6 +143,15 @@ public class PieceSprite extends Sprite
                     setLocation(_piece.x, _piece.y, elev);
                 }
             }
+        }
+
+        // if we're rotated (which only happens in the editor), we need to
+        // rotate our model
+        if (opiece.orientation != piece.orientation) {
+            setOrientation(piece.orientation);
+            // now reset our location and it will adjust our centering
+            int elev = computeElevation(board, _piece.x, _piece.y);
+            setLocation(piece.x, piece.y, elev);
         }
     }
 
@@ -169,31 +200,6 @@ public class PieceSprite extends Sprite
             }
             _effects.clear();
         }
-    }
-
-//     // documentation inherited
-//     protected void init ()
-//     {
-//         super.init();
-//     }
-
-//     /**
-//      * Computes a bounding rectangle around the specifeid piece's various
-//      * segments. Assumes all segments are 1x1.
-//      */
-//     protected Rectangle computeBounds (Piece piece)
-//     {
-//         _unit.setLocation(SQUARE*piece.x, SQUARE*piece.y);
-//         return _unit;
-//     }
-
-    /**
-     * Called by the editor to make pieces warp to their new locations for
-     * rapid draggability.
-     */
-    public static void setEditorMode (boolean editorMode)
-    {
-        _editorMode = editorMode;
     }
 
     /**
@@ -249,16 +255,22 @@ public class PieceSprite extends Sprite
         }
     }
 
-    /**
-     * Converts tile coordinates plus elevation into (3D) world
-     * coordinates.
-     */
+    /** Converts tile coordinates plus elevation into (3D) world
+     * coordinates. */
     protected Vector3f toWorldCoords (int tx, int ty, int elev, Vector3f target)
     {
         target.x = tx * TILE_SIZE;
         target.y = ty * TILE_SIZE;
         target.z = elev * TILE_SIZE;
+        centerWorldCoords(target);
         return target;
+    }
+
+    /** Adjusts the coordinates to the center of the piece's footprint. */
+    protected void centerWorldCoords (Vector3f coords)
+    {
+        coords.x += TILE_SIZE/2;
+        coords.y += TILE_SIZE/2;
     }
 
     protected Piece _piece;
@@ -274,6 +286,12 @@ public class PieceSprite extends Sprite
     /** Used for temporary calculations. */
     protected static Vector3f _temp = new Vector3f();
 
-//     /** Used by {@link #_computeBounds}. */
-//     protected static Rectangle _unit = new Rectangle(0, 0, SQUARE, SQUARE);
+    protected static float[] ROTATIONS = {
+        0, // NORTH
+        FastMath.PI/2, // EAST
+        FastMath.PI, // SOUTH
+        3*FastMath.PI/2 }; // WEST
+
+    protected static final Vector3f LEFT = new Vector3f(1, 0, 0);
+    protected static final Vector3f UP = new Vector3f(0, 0, 1);
 }

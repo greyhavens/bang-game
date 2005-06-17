@@ -41,8 +41,7 @@ public abstract class ParticleEffectViz extends EffectViz
         // position and fire up the particle manager
         Vector3f spos = target.getLocalTranslation();
         _pmgr.getParticles().setLocalTranslation(
-            new Vector3f(spos.x + TILE_SIZE/2, spos.y + TILE_SIZE/2,
-                         spos.z + TILE_SIZE/2));
+            new Vector3f(spos.x, spos.y, spos.z + TILE_SIZE/2));
         _pmgr.forceRespawn();
         _view.getPieceNode().attachChild(_pmgr.getParticles());
         _pmgr.getParticles().setForceView(true);

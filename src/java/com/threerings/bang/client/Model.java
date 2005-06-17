@@ -19,7 +19,6 @@ import com.jme.light.PointLight;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
@@ -104,7 +103,7 @@ public class Model
                     TextureRenderer.RENDER_TEXTURE_2D, 0);
             trenderer.setBackgroundColor(new ColorRGBA(.667f, .667f, .851f, 0f));
 
-            Vector3f loc = new Vector3f(TILE_SIZE, -TILE_SIZE/2, TILE_SIZE);
+            Vector3f loc = new Vector3f(TILE_SIZE/2, -TILE_SIZE, TILE_SIZE);
             trenderer.getCamera().setLocation(loc);
             Matrix3f rotm = new Matrix3f();
             rotm.fromAngleAxis(-FastMath.PI/2, trenderer.getCamera().getLeft());

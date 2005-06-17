@@ -138,8 +138,7 @@ public class UnitSprite extends MobileSprite
 
         // this composite of icons combines to display our status
         _status = new StatusNode();
-        _status.setLocalTranslation(
-            new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0.1f));
+        _status.setLocalTranslation(new Vector3f(0, 0, 0.1f));
         attachChild(_status);
         _ticks = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
         _ticks.setLocalTranslation(new Vector3f(-TILE_SIZE/4, TILE_SIZE/4, 0));
@@ -168,11 +167,9 @@ public class UnitSprite extends MobileSprite
 
         // our models are centered at the origin, but we need to shift
         // them to the center of the tile
-        Vector3f offset = new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0);
         _model = ctx.getModelCache().getModel("units", _type);
         Node[] meshes = _model.getMeshes("standing");
         for (int ii = 0; ii < meshes.length; ii++) {
-            meshes[ii].setLocalTranslation(offset);
             attachChild(meshes[ii]);
             meshes[ii].updateRenderState();
         }
@@ -184,8 +181,7 @@ public class UnitSprite extends MobileSprite
         _tgtquad.setRenderState(RenderUtil.alwaysZBuf);
         _tgtquad.updateRenderState();
         BillboardNode bbn = new BillboardNode("target");
-        bbn.setLocalTranslation(
-            new Vector3f(TILE_SIZE/2, TILE_SIZE/2, TILE_SIZE/3));
+        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
         bbn.attachChild(_tgtquad);
         attachChild(bbn);
         _tgtquad.setForceCull(true);
@@ -354,7 +350,4 @@ public class UnitSprite extends MobileSprite
     /** Defines the amount by which the damage arc image is inset from a
      * full quarter circle (on each side): 8 degrees. */
     protected static final float ARC_INSETS = 7;
-
-    protected static final Vector3f LEFT = new Vector3f(1, 0, 0);
-    protected static final Vector3f UP = new Vector3f(0, 0, 1);
 }

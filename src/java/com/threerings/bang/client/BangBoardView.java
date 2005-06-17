@@ -21,7 +21,6 @@ import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.scene.TriMesh;
-import com.jmex.effects.ParticleManager;
 
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;

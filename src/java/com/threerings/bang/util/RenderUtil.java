@@ -6,9 +6,10 @@ package com.threerings.bang.util;
 import java.awt.image.BufferedImage;
 
 import com.jme.image.Texture;
-import com.jme.renderer.ColorRGBA;
 import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
@@ -81,7 +82,7 @@ public class RenderUtil
     public static Quad createIcon (TextureState tstate)
     {
         Quad icon = createIcon(TILE_SIZE, TILE_SIZE);
-        icon.setLocalTranslation(new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0.1f));
+        icon.setLocalTranslation(new Vector3f(0, 0, 0.1f));
         icon.setRenderState(tstate);
         icon.updateRenderState();
         return icon;
@@ -100,7 +101,7 @@ public class RenderUtil
         return icon;
     }
 
-    public static LightState createDaylight (BangContext ctx)
+    public static LightState createDaylight (Renderer renderer)
     {
         PointLight light = new PointLight();
         light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
@@ -110,7 +111,7 @@ public class RenderUtil
         light.setConstant(0.25f);
         light.setEnabled(true);
 
-        LightState lights = ctx.getRenderer().createLightState();
+        LightState lights = renderer.createLightState();
         lights.setEnabled(true);
         lights.attach(light);
         return lights;

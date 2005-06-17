@@ -42,7 +42,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\wall.png"
+				*BITMAP "wall.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -78,7 +78,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\wood.png"
+				*BITMAP "wood.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -114,7 +114,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\window.png"
+				*BITMAP "window.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -150,7 +150,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\door.png"
+				*BITMAP "door.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -186,7 +186,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\deck.png"
+				*BITMAP "deck.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -222,7 +222,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\sign.png"
+				*BITMAP "sign.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -258,7 +258,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\roof.png"
+				*BITMAP "roof.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -294,7 +294,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\swingdoor.png"
+				*BITMAP "swingdoor.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -330,7 +330,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\railing.png"
+				*BITMAP "railing.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -457,7 +457,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\wall.png"
+					*BITMAP "wall.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -493,7 +493,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\wood.png"
+					*BITMAP "wood.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -529,7 +529,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\window.png"
+					*BITMAP "window.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -565,7 +565,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\door.png"
+					*BITMAP "door.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -601,7 +601,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\deck.png"
+					*BITMAP "deck.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -637,7 +637,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\sign.png"
+					*BITMAP "sign.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -673,7 +673,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\roof.png"
+					*BITMAP "roof.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -709,7 +709,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\swingdoor.png"
+					*BITMAP "swingdoor.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -745,7 +745,7 @@
 					*MAP_CLASS "Bitmap"
 					*MAP_SUBNO 1
 					*MAP_AMOUNT 1.0000
-					*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\railing.png"
+					*BITMAP "railing.png"
 					*MAP_TYPE Screen
 					*UVW_U_OFFSET 0.0000
 					*UVW_V_OFFSET 0.0000
@@ -810,7 +810,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\wall.png"
+				*BITMAP "wall.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -846,7 +846,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\wood.png"
+				*BITMAP "wood.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -882,7 +882,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\window.png"
+				*BITMAP "window.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -918,7 +918,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\door.png"
+				*BITMAP "door.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -954,7 +954,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\deck.png"
+				*BITMAP "deck.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -990,7 +990,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\sign.png"
+				*BITMAP "sign.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -1026,7 +1026,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\roof.png"
+				*BITMAP "roof.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -1062,7 +1062,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\swingdoor.png"
+				*BITMAP "swingdoor.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000
@@ -1098,7 +1098,7 @@
 				*MAP_CLASS "Bitmap"
 				*MAP_SUBNO 1
 				*MAP_AMOUNT 1.0000
-				*BITMAP "C:\Documents and Settings\rick\Desktop\yoart\designs\bang howdy\models\buildings\railing.png"
+				*BITMAP "railing.png"
 				*MAP_TYPE Screen
 				*UVW_U_OFFSET 0.0000
 				*UVW_V_OFFSET 0.0000

@@ -8,6 +8,7 @@ import java.awt.Point;
 
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
+import com.jme.bui.event.MouseWheelListener;
 import com.threerings.jme.JmeCanvasApp;
 
 import com.threerings.media.sprite.Sprite;
@@ -26,7 +27,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Displays the board when in editor mode.
  */
 public class EditorBoardView extends BoardView
-    implements MouseListener
+    implements MouseListener, MouseWheelListener
 {
     public EditorBoardView (BangContext ctx, EditorPanel panel)
     {
@@ -114,9 +115,9 @@ public class EditorBoardView extends BoardView
     {
         // if we're over a piece, rotate it
         Piece piece = getHoverPiece();
-        if (piece != null && !(piece instanceof BigPiece)) {
-            int direction = (e.getDelta() > 0) ? Piece.CW : Piece.CCW;
-            if (piece.rotate(direction)) {
+        if (piece != null) {
+            piece = (Piece)piece.clone();
+            if (piece.rotate(e.getDelta() > 0 ? Piece.CW : Piece.CCW)) {
                 _bangobj.updatePieces(piece);
             }
 
