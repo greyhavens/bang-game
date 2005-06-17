@@ -1,287 +1,103 @@
-# Max2Mtl Version 4.0 Mar 10th, 2001
-#
-# Multi/Sub Material__3003 (15) to come 
-#
+# 3D Studio MAX to Alias/WaveFront MTL Exporter
+# Version 1.2 [5/27/2003]
+# Author: Dion Picco
+# Email: d_picco@hotmail.com
+
+# Start of New Material
 newmtl Wall
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
-newmtl wood
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
+map_Kd wall.png
+
+# Start of New Material
 newmtl window
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
-newmtl door
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
+map_Kd window.png
+
+# Start of New Material
 newmtl deck
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
-newmtl sign
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl roof
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl swingdoor
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl railing
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl Material__2965
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl Material__2967
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl Material__2968
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl Material__2969
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl Material__2970
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-# Multi/Sub Saloon (10) to come 
-#
-newmtl Wall
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
+map_Kd deck.png
+
+# Start of New Material
 newmtl wood
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
-newmtl window
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl door
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl deck
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl sign
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl roof
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
+map_Kd wood.png
+
+# Start of New Material
 newmtl swingdoor
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
-newmtl railing
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl Material__2965
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-# Multi/Sub Saloon done 
-#
-# Multi/Sub Material__3003 done 
-#
-# Multi/Sub Saloon (10) to come 
-#
-newmtl Wall
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl wood
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl window
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
+map_Kd swingdoor.png
+
+# Start of New Material
 newmtl door
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
-newmtl deck
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-newmtl sign
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
+map_Kd door.png
+
+# Start of New Material
 newmtl roof
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
-newmtl swingdoor
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+map_Kd roof.png
+
+# Start of New Material
+newmtl sign
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
+map_Kd sign.png
+
+# Start of New Material
 newmtl railing
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
+Ka 0.00000000 0.00000000 0.00000000
+Kd 0.58800000 0.58800000 0.58800000
+Ks 0.89999998 0.89999998 0.89999998
+d 1.00000000
+Ns 1.00000001
+Ni 1.50000000
 illum 2
-#
-newmtl Material__2965
-Ka  0.0 0.0 0.0
-Kd  0.6 0.6 0.6
-Ks  0.9 0.9 0.9
-d  1.0
-Ns  0.0
-illum 2
-#
-# Multi/Sub Saloon done 
-#
-# EOF
+map_Kd railing.png
