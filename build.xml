@@ -78,6 +78,7 @@
       <fileset dir="rsrc" includes="**/*.MD3"/>
       <fileset dir="rsrc" includes="**/*.obj"/>
       <fileset dir="rsrc" includes="**/*.3DS"/>
+      <fileset dir="rsrc" includes="**/*.ASE"/>
     </convert>
   </target>
 
