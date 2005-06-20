@@ -6,11 +6,17 @@ package com.threerings.bang.editor;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import com.samskivert.swing.Controller;
 import com.samskivert.swing.ControllerProvider;
@@ -27,7 +33,6 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangObject;
-import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -44,7 +49,7 @@ public class EditorPanel extends JPanel
     public TerrainSelector terrain;
 
     /** Creates the main panel and its sub-interfaces. */
-    public EditorPanel (BangContext ctx, EditorController ctrl)
+    public EditorPanel (EditorContext ctx, EditorController ctrl)
     {
         _ctx = ctx;
         _ctrl = ctrl;
@@ -52,8 +57,7 @@ public class EditorPanel extends JPanel
 	// give ourselves a wee bit of a border
 	setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        MessageBundle msgs = ctx.getMessageManager().getBundle(
-            BangCodes.BANG_MSGS);
+        MessageBundle msgs = ctx.getMessageManager().getBundle("editor");
 	HGroupLayout gl = new HGroupLayout(HGroupLayout.STRETCH);
 	gl.setOffAxisPolicy(HGroupLayout.STRETCH);
 	setLayout(gl);
@@ -78,23 +82,37 @@ public class EditorPanel extends JPanel
         pc.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         sidePanel.add(new SafeScrollPane(pc));
 
-        // add a "load" button
-        JButton load = new JButton(msgs.get("m.load_board"));
-        load.setActionCommand(EditorController.LOAD_BOARD);
-        load.addActionListener(Controller.DISPATCHER);
-        sidePanel.add(load, VGroupLayout.FIXED);
+        // TODO: translate menu accelerators and short cuts
+        JMenuBar menubar = _ctx.getFrame().getJMenuBar();
 
-        // add a "save" button
-        JButton save = new JButton(msgs.get("m.save_board"));
-        save.setActionCommand(EditorController.SAVE_BOARD);
-        save.addActionListener(Controller.DISPATCHER);
-        sidePanel.add(save, VGroupLayout.FIXED);
+        JMenu file = new JMenu(msgs.get("m.menu_file"));
+        file.setMnemonic(KeyEvent.VK_F);
+        menubar.add(file);
 
-        // add a "back" button
-        JButton back = new JButton(msgs.get("m.back_to_lobby"));
-        back.setActionCommand(EditorController.BACK_TO_LOBBY);
-        back.addActionListener(Controller.DISPATCHER);
-        sidePanel.add(back, VGroupLayout.FIXED);
+        createMenuItem(file, msgs.get("m.menu_load"), KeyEvent.VK_O,
+                       KeyEvent.VK_O, EditorController.LOAD_BOARD);
+        createMenuItem(file, msgs.get("m.menu_save"), KeyEvent.VK_S,
+                       KeyEvent.VK_S, EditorController.SAVE_BOARD);
+        createMenuItem(file, msgs.get("m.menu_quit"), KeyEvent.VK_Q,
+                       KeyEvent.VK_Q, EditorController.EXIT);
+
+//         // add a "load" button
+//         JButton load = new JButton(msgs.get("m.load_board"));
+//         load.setActionCommand(EditorController.LOAD_BOARD);
+//         load.addActionListener(ctrl);
+//         sidePanel.add(load, VGroupLayout.FIXED);
+
+//         // add a "save" button
+//         JButton save = new JButton(msgs.get("m.save_board"));
+//         save.setActionCommand(EditorController.SAVE_BOARD);
+//         save.addActionListener(ctrl);
+//         sidePanel.add(save, VGroupLayout.FIXED);
+
+//         // add a "back" button
+//         JButton back = new JButton(msgs.get("m.back_to_lobby"));
+//         back.setActionCommand(EditorController.BACK_TO_LOBBY);
+//         back.addActionListener(ctrl);
+//         sidePanel.add(back, VGroupLayout.FIXED);
 
         // add our side panel to the main display
         add(sidePanel, HGroupLayout.FIXED);
@@ -132,8 +150,28 @@ public class EditorPanel extends JPanel
         _ctx.getGeometry().detachChild(view.getNode());
     }
 
+    @Override // documentation inherited
+    public Dimension getPreferredSize ()
+    {
+        Dimension d = super.getPreferredSize();
+        d.width = 200;
+        return d;
+    }
+
+    protected void createMenuItem (JMenu menu, String label, int accelerator,
+                                   int mnemonic, String command)
+    {
+        JMenuItem item = new JMenuItem(label);
+        item.setAccelerator(KeyStroke.getKeyStroke(
+                                accelerator, ActionEvent.CTRL_MASK));
+        item.setMnemonic(mnemonic);
+        item.setActionCommand(command);
+        item.addActionListener(_ctrl);
+        menu.add(item);
+    }
+
     /** Giver of life and context. */
-    protected BangContext _ctx;
+    protected EditorContext _ctx;
 
     /** Our game controller. */
     protected EditorController _ctrl;

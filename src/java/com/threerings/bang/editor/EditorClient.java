@@ -9,6 +9,9 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JPopupMenu;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -49,7 +52,6 @@ import com.threerings.parlor.game.data.GameAI;
 import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.ModelCache;
 import com.threerings.bang.data.BangConfig;
-import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -64,9 +66,16 @@ public class EditorClient
     public EditorClient (EditorApp app, JFrame frame)
     {
         // create our context
-        _ctx = new BangContextImpl();
+        _ctx = new EditorContextImpl();
         _app = app;
         _frame = frame;
+        _frame.setJMenuBar(new JMenuBar());
+        _frame.getContentPane().add(
+            _status = new JLabel(" "), BorderLayout.SOUTH);
+
+        // we can't use lightweight popups because our OpenGL display is a
+        // heavyweight component
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
         // create the directors/managers/etc. provided by the context
         createContextServices();
@@ -79,7 +88,7 @@ public class EditorClient
      * Returns a reference to the context in effect for this client. This
      * reference is valid for the lifetime of the application.
      */
-    public BangContext getContext ()
+    public EditorContext getContext ()
     {
         return _ctx;
     }
@@ -176,7 +185,7 @@ public class EditorClient
      * The context implementation. This provides access to all of the
      * objects and services that are needed by the operating client.
      */
-    protected class BangContextImpl extends BangContext
+    protected class EditorContextImpl extends EditorContext
     {
         /**
          * Apparently the default constructor has default access, rather
@@ -184,7 +193,7 @@ public class EditorClient
          * protected. Why, I don't know, but we need to be able to extend
          * this class elsewhere, so we need this.
          */
-        protected BangContextImpl () {
+        protected EditorContextImpl () {
         }
 
         public Client getClient () {
@@ -216,10 +225,9 @@ public class EditorClient
         }
 
         public void setPlaceView (PlaceView view) {
-            log.info("setting place view " + view);
             Container pane = _frame.getContentPane();
-            if (pane.getComponentCount() > 1) {
-                pane.remove(1);
+            if (pane.getComponentCount() > 2) {
+                pane.remove(2);
             }
             pane.add((Component)view, BorderLayout.EAST);
             pane.validate();
@@ -242,6 +250,18 @@ public class EditorClient
 
         public JmeApp getApp () {
             return _app;
+        }
+
+        public void setWindowTitle (String title) {
+            _frame.setTitle(title);
+        }
+
+        public void displayStatus (String status) {
+            _status.setText(status);
+        }
+
+        public JFrame getFrame () {
+            return _frame;
         }
 
         public ModelCache getModelCache () {
@@ -281,10 +301,12 @@ public class EditorClient
         }
     }
 
-    protected BangContext _ctx;
+    protected EditorContext _ctx;
     protected EditorApp _app;
-    protected JFrame _frame;
     protected Config _config = new Config("editor");
+
+    protected JFrame _frame;
+    protected JLabel _status;
 
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;

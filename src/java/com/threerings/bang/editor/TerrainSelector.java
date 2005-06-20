@@ -24,7 +24,7 @@ public class TerrainSelector extends JPanel
         _ctx = ctx;
         setLayout(new HGroupLayout(HGroupLayout.STRETCH));
 
-        add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.terrain_select")),
+        add(new JLabel(_ctx.xlate("editor", "m.terrain_select")),
             HGroupLayout.FIXED);
 
         TerrainSelection[] choices =
@@ -60,7 +60,7 @@ public class TerrainSelector extends JPanel
         public String toString ()
         {
             String msg = "m.terrain_" + terrain.toString().toLowerCase();
-            return _ctx.xlate(BangCodes.BANG_MSGS, msg);
+            return _ctx.xlate("editor", msg);
         }
     }
 

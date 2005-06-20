@@ -31,8 +31,13 @@ import static com.threerings.bang.Log.log;
  */
 public class EditorApp extends JmeCanvasApp
 {
+    public static String[] appArgs;
+
     public static void main (String[] args)
     {
+        // save these for later
+        appArgs = args;
+
         // set up the proper logging services
         com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
         OneLineLogFormatter.configureDefaultHandler();
@@ -77,7 +82,7 @@ public class EditorApp extends JmeCanvasApp
     {
         // create a frame
         _frame = new JFrame("Bang Editor");
-        _frame.setSize(new Dimension(800, 600));
+        _frame.setSize(new Dimension(1224, 768));
         _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // create and initialize our client instance
@@ -90,7 +95,7 @@ public class EditorApp extends JmeCanvasApp
 
     protected EditorApp ()
     {
-        super(800, 600);
+        super(1024, 768);
     }
 
     @Override // documentation inherited

@@ -28,7 +28,7 @@ public class PieceCreator extends JPanel
         setLayout(new VGroupLayout());
         _ctx = ctx;
 
-        add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.pieces_fixed")));
+        add(new JLabel(_ctx.xlate("editor", "m.pieces_fixed")));
 
         // TODO: deal with town selection
         BuildingConfig[] bldgs = BuildingConfig.getTownBuildings(
@@ -41,14 +41,14 @@ public class PieceCreator extends JPanel
         add(createPieceButton("rocks", new Prop("rock_2x2", 2, 2)));
         add(createPieceButton("cactus", new Prop("cactus2_1x1", 1, 1)));
 
-        add(new JLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.pieces_marker")));
+        add(new JLabel(_ctx.xlate("editor", "m.pieces_marker")));
         add(createPieceButton("start_marker", new StartMarker()));
         add(createPieceButton("bonus_marker", new BonusMarker()));
     }
 
     protected CommandButton createPieceButton (String type, Piece piece)
     {
-        String name = _ctx.xlate(BangCodes.BANG_MSGS, "m.piece_" + type);
+        String name = _ctx.xlate("editor", "m.piece_" + type);
         CommandButton button = new CommandButton();
         button.setText(name);
         button.setActionCommand(EditorController.CREATE_PIECE);
