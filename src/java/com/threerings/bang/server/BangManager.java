@@ -43,10 +43,10 @@ import com.threerings.bang.data.card.AreaRepair;
 import com.threerings.bang.data.card.Card;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
-import com.threerings.bang.data.generate.SkirmishScenario;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.BonusMarker;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.StartMarker;
 import com.threerings.bang.data.piece.Unit;
 
 import com.threerings.bang.client.BangService;
@@ -278,7 +278,27 @@ public class BangManager extends GameManager
         // set up the board so that all can see it while purchasing
         ArrayList<Piece> pieces = new ArrayList<Piece>();
         _bangobj.setBoard(createBoard(pieces));
+
+        // extract and remove all player start markers
+        _markers.clear();
+        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (p instanceof StartMarker) {
+                _markers.add(p);
+                iter.remove();
+            }
+        }
+        // if we lack sufficient numbers, create some random ones
+        for (int ii = _markers.size(); ii < getPlayerSlots(); ii++) {
+            StartMarker p = new StartMarker();
+            p.x = (short)RandomUtil.getInt(_bangobj.board.getWidth());
+            p.y = (short)RandomUtil.getInt(_bangobj.board.getHeight());
+            _markers.add(p);
+        }
+        Collections.shuffle(_markers);
+
         // extract the bonus spawn markers from the pieces array
+        _bonusSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (p instanceof BonusMarker) {
@@ -287,6 +307,9 @@ public class BangManager extends GameManager
             }
         }
         _bangobj.setPieces(new PieceDSet(pieces.iterator()));
+
+        // create our initial board "shadow"
+        _bangobj.board.shadowPieces(pieces.iterator());
 
         // clear out the selected big shots array
         _bangobj.setBigShots(new Unit[getPlayerSlots()]);
@@ -400,18 +423,34 @@ public class BangManager extends GameManager
         }
 
         // now place and add the player pieces
-        SkirmishScenario scen = new SkirmishScenario(_purchases);
-        ArrayList<Piece> pieces = new ArrayList<Piece>();
-        scen.generate(_bconfig, _bangobj.board, pieces);
         try {
             _bangobj.startTransaction();
-            for (Piece piece : pieces) {
-                _bangobj.addToPieces(piece);
+
+            for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                // first filter out this player's pieces
+                ArrayList<Piece> ppieces = new ArrayList<Piece>();
+                for (Piece piece : _purchases.values()) {
+                    if (piece.owner == ii) {
+                        ppieces.add(piece);
+                    }
+                }
+
+                // now position each of them
+                Piece p = _markers.remove(0);
+                ArrayList<Point> spots = _bangobj.board.getOccupiableSpots(
+                    ppieces.size(), p.x, p.y, 4);
+                while (spots.size() > 0 && ppieces.size() > 0) {
+                    Point spot = spots.remove(0);
+                    Piece piece = ppieces.remove(0);
+                    piece.position(spot.x, spot.y);
+                    _bangobj.addToPieces(piece);
+                    _bangobj.board.updateShadow(null, piece);
+                }
             }
+
         } finally {
             _bangobj.commitTransaction();
         }
-        _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
 
         // TEMP: give everyone an area repair to start
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
@@ -910,6 +949,9 @@ public class BangManager extends GameManager
 
     /** Used to track the locations of all bonus spawn points. */
     protected PointSet _bonusSpots = new PointSet();
+
+    /** Used to track the locations where players are started. */
+    protected ArrayList<Piece> _markers = new ArrayList<Piece>();
 
     /** Used to track effects during a move. */
     protected ArrayList<Effect> _effects = new ArrayList<Effect>();
