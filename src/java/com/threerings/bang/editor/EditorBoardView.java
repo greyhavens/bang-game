@@ -42,7 +42,7 @@ public class EditorBoardView extends BoardView
     public void setTile (int tx, int ty, Terrain tile)
     {
         _bangobj.board.setTile(tx, ty, tile);
-//         invalidateTile(tx, ty);
+        refreshTile(tx, ty);
     }
 
     // documentation inherited from interface MouseListener
@@ -62,7 +62,7 @@ public class EditorBoardView extends BoardView
         // if there's a piece under the mouse, start to drag or delete it
         _dragPiece = getHoverPiece();
         if (_dragPiece != null) {
-            if (e.getButton() == MouseEvent.BUTTON3) {
+            if (e.getButton() == MouseEvent.BUTTON2) {
                 _bangobj.removeFromPieces(_dragPiece.getKey());
                 _dragPiece = null;
             } else {
@@ -117,7 +117,7 @@ public class EditorBoardView extends BoardView
         Piece piece = getHoverPiece();
         if (piece != null) {
             piece = (Piece)piece.clone();
-            if (piece.rotate(e.getDelta() > 0 ? Piece.CW : Piece.CCW)) {
+            if (piece.rotate(e.getDelta() > 0 ? Piece.CCW : Piece.CW)) {
                 _bangobj.updatePieces(piece);
             }
 

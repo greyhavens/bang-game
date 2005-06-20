@@ -222,6 +222,7 @@ public class EditorClient
                 pane.remove(1);
             }
             pane.add((Component)view, BorderLayout.EAST);
+            pane.validate();
         }
 
         public void clearPlaceView (PlaceView view) {

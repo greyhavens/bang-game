@@ -105,7 +105,8 @@ public class RenderUtil
     {
         PointLight light = new PointLight();
         light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-        light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
+        // light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
+        light.setAmbient(new ColorRGBA(0.25f, 0.25f, 0.55f, 1.0f));
         light.setLocation(new Vector3f(100, 100, 100));
         light.setAttenuate(true);
         light.setConstant(0.25f);

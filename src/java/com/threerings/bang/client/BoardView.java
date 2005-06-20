@@ -260,26 +260,6 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Creates a big animation that scrolls up the middle of the board.
-     */
-    protected void createMarquee (String text)
-    {
-//         Label label = new Label(text, Color.white, getFont().deriveFont(40f));
-//         label.setAlignment(Label.CENTER);
-//         label.setStyle(Label.OUTLINE);
-//         label.setAlternateColor(Color.black);
-//         label.setTargetWidth(300);
-//         label.layout(this);
-
-//         _marquee = new LabelSprite(label);
-//         _marquee.setRenderOrder(100);
-//         _marquee.setLocation(
-//             _vbounds.x+(_vbounds.width-label.getSize().width)/2,
-//             _vbounds.y+(_vbounds.height-label.getSize().height)/2);
-//         addSprite(_marquee);
-    }
-
-    /**
      * Adds a sprite to the active view.
      */
     public void addSprite (Sprite sprite)
@@ -428,6 +408,37 @@ public class BoardView extends BComponent
 //             ny = (height - _vbounds.height) / 2;
 //         }
 //         setViewLocation(nx, ny);
+    }
+
+    /**
+     * Creates a big animation that scrolls up the middle of the board.
+     */
+    protected void createMarquee (String text)
+    {
+//         Label label = new Label(text, Color.white, getFont().deriveFont(40f));
+//         label.setAlignment(Label.CENTER);
+//         label.setStyle(Label.OUTLINE);
+//         label.setAlternateColor(Color.black);
+//         label.setTargetWidth(300);
+//         label.layout(this);
+
+//         _marquee = new LabelSprite(label);
+//         _marquee.setRenderOrder(100);
+//         _marquee.setLocation(
+//             _vbounds.x+(_vbounds.width-label.getSize().width)/2,
+//             _vbounds.y+(_vbounds.height-label.getSize().height)/2);
+//         addSprite(_marquee);
+    }
+
+    /**
+     * Recolors a board tile based on the (presumably updated) underlying
+     * terrain value.
+     */
+    protected void refreshTile (int tx, int ty)
+    {
+        Quad t = (Quad)_tnode.getChild(ty * _board.getHeight() + tx);
+        t.setSolidColor(getColor(_board.getTile(tx, ty)));
+        t.updateRenderState();
     }
 
     protected ColorRGBA getColor (Terrain tile)

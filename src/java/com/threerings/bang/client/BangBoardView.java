@@ -115,7 +115,6 @@ public class BangBoardView extends BoardView
     {
         switch (_downButton = e.getButton()) {
         case MouseEvent.BUTTON2:
-            // button 3 (right button) creates or extends a path
             handleRightPress(e.getX(), e.getY());
             break;
 
