@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import com.samskivert.util.StringUtil;
+import com.threerings.bang.data.Terrain;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -38,6 +39,9 @@ public class UnitConfig
 
     /** The total number of makes. */
     public static final int MAKE_COUNT = EnumSet.allOf(Make.class).size();
+
+    /** The total number of terrain types. */
+    public static final int TERRAIN_COUNT = EnumSet.allOf(Terrain.class).size();
 
     /** The name of this unit type (ie. <code>gunslinger</code>, etc.). */
     public String type;
@@ -78,8 +82,31 @@ public class UnitConfig
     /** Our defense adjustments versus other modes and makes. */
     public int[] defenseAdjust = new int[MODE_COUNT + MAKE_COUNT];
 
+    /** The cost of movement over each type of terrain. */
+    public int[] movementCost = new int[TERRAIN_COUNT];
+
     /** A custom class for this unit, if one was specified. */
     public String unitClass;
+
+    /**
+     * Computes and returns the damage adjustment to be used when a unit
+     * of this type attacks a unit of the specified type.
+     */
+    public int getDamageAdjust (UnitConfig target)
+    {
+        return damageAdjust[target.mode.ordinal()] +
+            damageAdjust[MODE_COUNT + target.make.ordinal()];
+    }
+
+    /**
+     * Computes and returns the defense adjustment to be used when a unit
+     * of this type is attacked by a unit of the specified type.
+     */
+    public int getDefenseAdjust (UnitConfig attacker)
+    {
+        return defenseAdjust[attacker.mode.ordinal()] +
+            defenseAdjust[MODE_COUNT + attacker.make.ordinal()];
+    }
 
     /** Returns a string representation of this instance. */
     public String toString ()
@@ -188,6 +215,12 @@ public class UnitConfig
                 BangUtil.getIntProperty(type, props, "damage." + key, 0);
             config.defenseAdjust[MODE_COUNT + make.ordinal()] =
                 BangUtil.getIntProperty(type, props, "defense." + key, 0);
+        }
+
+        for (Terrain terrain : EnumSet.allOf(Terrain.class)) {
+            String key = terrain.toString().toLowerCase();
+            config.movementCost[terrain.ordinal()] =
+                BangUtil.getIntProperty(type, props, "movement." + key, 10);
         }
 
         // map this config into the proper towns

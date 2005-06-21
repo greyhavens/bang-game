@@ -47,6 +47,12 @@ public class Unit extends Piece
         return _type;
     }
 
+    /** Returns our unit configuration. */
+    public UnitConfig getConfig ()
+    {
+        return _config;
+    }
+
     /** Configures the instance after unserialization. */
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
@@ -82,9 +88,8 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean validTarget (Piece target)
     {
-        boolean valid = super.validTarget(target);
-        // TODO: make sure our damage to the target is >0
-        return valid;
+        // if we do no damage to this type of target, it is not valid
+        return super.validTarget(target) && (computeDamage(target) > 0);
     }
 
     @Override // documentation inherited
@@ -102,8 +107,7 @@ public class Unit extends Piece
     @Override // documentation inherited
     public int traversalCost (Terrain terrain)
     {
-        // TODO:
-        return 10;
+        return _config.movementCost[terrain.ordinal()];
     }
 
     /**
@@ -118,8 +122,17 @@ public class Unit extends Piece
     @Override // documentation inherited
     protected int computeDamage (Piece target)
     {
-        // TODO:
-        return 10;
+        // start with the baseline
+        int damage = _config.damage;
+
+        // now account for our damage  and their defense adjustments
+        if (target instanceof Unit) {
+            Unit utarget = (Unit)target;
+            damage += _config.getDamageAdjust(utarget.getConfig());
+            damage -= utarget.getConfig().getDefenseAdjust(_config);
+        }
+
+        return damage;
     }
 
     protected String _type;

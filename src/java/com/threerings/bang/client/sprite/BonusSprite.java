@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
-import com.jme.scene.shape.Cylinder;
+import com.jme.scene.shape.Dome;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.data.piece.Piece;
@@ -35,12 +35,11 @@ public class BonusSprite extends PieceSprite
         Model model = ctx.getModelCache().getModel("bonuses", _type);
         Node[] meshes = model.getMeshes("standing");
         // TEMP: cope with bonuses for which we yet have no model
-        if (meshes[0].getName().equals("error")) {
+        if (meshes[0].getName().startsWith("error")) {
             System.err.println("Using error geom for " + _type + ".");
             // create some simple temporary geometry
-            Cylinder geom =
-                new Cylinder("bonus", 10, 10, TILE_SIZE/2, TILE_SIZE/2);
-            geom.setLocalTranslation(new Vector3f(TILE_SIZE/2, TILE_SIZE/2, 0f));
+            Dome geom =
+                new Dome("bonus", 10, 10, TILE_SIZE/2);
             attachChild(geom);
             BufferedImage image =
                 ctx.loadImage("bonuses/" + _type + "/icon.png");

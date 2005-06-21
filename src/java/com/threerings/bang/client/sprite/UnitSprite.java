@@ -86,12 +86,6 @@ public class UnitSprite extends MobileSprite
         _tgtquad.setForceCull(!targeted);
     }
 
-//     @Override // documentation inherited
-//     public void setSelected (boolean selected)
-//     {
-//         super.setSelected(selected);
-//     }
-
     @Override // documentation inherited
     public void updated (BangBoard board, Piece piece, short tick)
     {
@@ -206,8 +200,8 @@ public class UnitSprite extends MobileSprite
             if (oelev == 0) {
                 nodes.add(toWorldCoords(opiece.x, opiece.y, 0, new Vector3f()));
             }
-            nodes.add(toWorldCoords(opiece.x, opiece.y, 1, new Vector3f()));
-            nodes.add(toWorldCoords(npiece.x, npiece.y, 1, new Vector3f()));
+            nodes.add(toWorldCoords(opiece.x, opiece.y, 2, new Vector3f()));
+            nodes.add(toWorldCoords(npiece.x, npiece.y, 2, new Vector3f()));
             int nelev = computeElevation(board, npiece.x, npiece.y);
             if (nelev == 0) {
                 nodes.add(toWorldCoords(npiece.x, npiece.y, 0, new Vector3f()));

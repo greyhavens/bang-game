@@ -6,6 +6,7 @@ package com.threerings.bang.client.sprite;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.AlphaState;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.data.BangBoard;
@@ -29,6 +30,15 @@ public class BuildingSprite extends PieceSprite
     @Override // documentation inherited
     protected void createGeometry (BangContext ctx)
     {
+        // create our alpha state if need be
+        if (_alpha == null) {
+            _alpha = ctx.getRenderer().createAlphaState();
+            _alpha.setBlendEnabled(true);
+            _alpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+            _alpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+            _alpha.setEnabled(true);
+        }
+
         // our models are centered at the origin, but we need to shift
         // them to the center of the building's footprint
         _model = ctx.getModelCache().getModel("buildings", _config.type);
@@ -43,6 +53,9 @@ public class BuildingSprite extends PieceSprite
             attachChild(new Quad("footprint", TILE_SIZE*_config.width,
                                  TILE_SIZE*_config.height));
         }
+
+        setRenderState(_alpha);
+        updateRenderState();
     }
 
     @Override // documentation inherited
@@ -55,4 +68,6 @@ public class BuildingSprite extends PieceSprite
 
     protected BuildingConfig _config;
     protected Model _model;
+
+    protected static AlphaState _alpha;
 }

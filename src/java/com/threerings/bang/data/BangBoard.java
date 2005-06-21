@@ -218,7 +218,7 @@ public class BangBoard extends SimpleStreamableObject
                         if (_bbounds.contains(xx, yy)) {
                             _tstate[_width*yy+xx] = 2;
                             _btstate[_width*yy+xx] = 2;
-                            _estate[_width*yy+xx] = 1;
+                            _estate[_width*yy+xx] = 2;
                         }
                     }
                 }

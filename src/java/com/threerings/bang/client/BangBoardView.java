@@ -280,12 +280,18 @@ public class BangBoardView extends BoardView
         if (!super.isHoverable(sprite)) {
             return false;
         }
-        if (_attackSet == null) {
-            return ((sprite instanceof UnitSprite) &&
-                    ((UnitSprite)sprite).getPiece().owner == _pidx);
-        } else {
-            return (sprite instanceof UnitSprite);
+        if (!(sprite instanceof UnitSprite)) {
+            return false;
         }
+        UnitSprite usprite = (UnitSprite)sprite;
+        Piece piece = usprite.getPiece();
+        if (!piece.isAlive()) {
+            return false;
+        }
+        if (_attackSet == null) {
+            return (piece.owner == _pidx) && usprite.isSelectable();
+        }
+        return true;
     }
 
     /** Handles a left mouse button click. */

@@ -59,6 +59,12 @@ public class PropSprite extends PieceSprite
 // //         _idLabel.render(gfx, lx, ly);
 //     }
 
+    protected void centerWorldCoords (Vector3f coords)
+    {
+//         coords.x += TILE_SIZE/2;
+//         coords.y += TILE_SIZE/2;
+    }
+
     protected String _type;
 //     protected BufferedImage _image;
 }
