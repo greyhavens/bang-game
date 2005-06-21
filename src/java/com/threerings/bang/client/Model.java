@@ -52,7 +52,7 @@ public class Model
      */
     public Model (BangContext ctx, String type, String name)
     {
-        _key = type + "." + name;
+        _key = type + "/" + name;
 
         String path = type + "/" + name + "/";
         Properties props = new Properties();
@@ -63,8 +63,9 @@ public class Model
                 props.load(new BufferedInputStream(pin));
             } else {
                 log.info("Faking model info file for " + _key + ".");
-                props.setProperty("standing.meshes", name);
-                props.setProperty("walking.meshes", name);
+                String mname = name.substring(name.lastIndexOf("/")+1);
+                props.setProperty("standing.meshes", mname);
+                props.setProperty("walking.meshes", mname);
             }
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Failed to load model info " +

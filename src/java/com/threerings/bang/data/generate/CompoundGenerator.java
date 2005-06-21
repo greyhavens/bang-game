@@ -12,14 +12,14 @@ import com.threerings.util.RandomUtil;
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.BigPiece;
-import com.threerings.bang.data.piece.Building;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.Prop;
 import com.threerings.bang.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
 
 /**
- * Scatters buildings haphazardly around to create a random board.
+ * Scatters props haphazardly around to create a random board.
  */
 public class CompoundGenerator extends EnvironmentGenerator
 {
@@ -37,18 +37,18 @@ public class CompoundGenerator extends EnvironmentGenerator
         // average of the width and height)
         int count = 2*(width+height)/density;
 
-        // TODO: maybe more buildings at higher difficulty
+        // TODO: maybe more props at higher difficulty
 
-        // now scatter some buildings around; first place them randomly
+        // now scatter some props around; first place them randomly
         BigPiece[] bldgs = new BigPiece[count];
         for (int ii = 0; ii < count; ii++) {
             int rando = RandomUtil.getInt(100);
             if (rando > 95) {
-                bldgs[ii] = Building.getBuilding("saloon");
+                bldgs[ii] = Prop.getProp("buildings/saloon");
             } else if (rando > 65) {
-                bldgs[ii] = Building.getBuilding("saloon");
+                bldgs[ii] = Prop.getProp("buildings/saloon");
             } else {
-                bldgs[ii] = Building.getBuilding("saloon");
+                bldgs[ii] = Prop.getProp("buildings/saloon");
             }
             BigPiece bldg = bldgs[ii];
             bldg.assignPieceId();
@@ -71,7 +71,7 @@ public class CompoundGenerator extends EnvironmentGenerator
         }
 
         // then move them around a bit to resolve overlaps and ensure
-        // sufficient space between each building (at least room for an ant)
+        // sufficient space between each prop (at least room for an ant)
         for (int cc = 0; cc < 10*count; cc++) {
             int adjusted = 0;
             for (int ii = 0; ii < count; ii++) {
@@ -111,7 +111,7 @@ public class CompoundGenerator extends EnvironmentGenerator
             }
         }
 
-        // finally add all the buildings that are still fully on the board
+        // finally add all the props that are still fully on the board
         Rectangle rect = new Rectangle(0, 0, width, height);
         for (int ii = 0; ii < count; ii++) {
             if (rect.contains(bldgs[ii].getBounds())) {

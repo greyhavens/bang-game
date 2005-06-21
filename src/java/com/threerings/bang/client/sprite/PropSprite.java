@@ -3,17 +3,18 @@
 
 package com.threerings.bang.client.sprite;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
-import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
-import com.jme.scene.shape.Box;
+import com.jme.scene.Node;
+import com.jme.scene.shape.Quad;
+import com.jme.scene.state.AlphaState;
 
+import com.threerings.bang.client.Model;
+import com.threerings.bang.data.BangBoard;
+import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
+import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -21,50 +22,52 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class PropSprite extends PieceSprite
 {
-    public PropSprite (String type, int width, int height)
+    public PropSprite (String type)
     {
-//         super(width*SQUARE, height*SQUARE);
-        _type = type;
-
-        // create some simple temporary geometry
-        Box box = new Box("box", new Vector3f(0, 0, 0),
-                          new Vector3f(TILE_SIZE*width,
-                                       TILE_SIZE*height, TILE_SIZE));
-        box.setModelBound(new BoundingBox());
-        box.updateModelBound();
-        attachChild(box);
+        _config = PropConfig.getConfig(type);
     }
 
-//     @Override // documentation inherited
-//     public void init (BangContext ctx, Piece piece, short tick)
-//     {
-//         super.init(ctx, piece, tick);
+    @Override // documentation inherited
+    protected void createGeometry (BangContext ctx)
+    {
+        // create our alpha state if need be
+        if (_alpha == null) {
+            _alpha = ctx.getRenderer().createAlphaState();
+            _alpha.setBlendEnabled(true);
+            _alpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+            _alpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+            _alpha.setEnabled(true);
+        }
 
-//         // load our source image and rotate it appropriately
-//         _image = ctx.loadImage("media/props/" + _type + ".png");
-//     }
+        // our models are centered at the origin, but we need to shift
+        // them to the center of the prop's footprint
+        _model = ctx.getModelCache().getModel("props", _config.type);
+        Node[] meshes = _model.getMeshes("standing");
+        for (int ii = 0; ii < meshes.length; ii++) {
+            attachChild(meshes[ii]);
+            meshes[ii].updateRenderState();
+        }
 
-//     // documentation inherited
-//     public void paint (Graphics2D gfx)
-//     {
-//         int width = _bounds.width - _oxoff, iwidth = _image.getWidth();
-//         int height = _bounds.height - _oyoff, iheight = _image.getHeight();
+        // draw a footprint if we're in editor mode
+        if (_editorMode) {
+            attachChild(new Quad("footprint", TILE_SIZE*_config.width,
+                                 TILE_SIZE*_config.height));
+        }
 
-//         gfx.drawImage(_image, _ox + (width-iwidth)/2,
-//                       _oy + (height-iheight)/2, null);
+        setRenderState(_alpha);
+        updateRenderState();
+    }
 
-// //         // TEMP: render our id so I can debug prop jiggling
-// //         int lx = _ox+(width-_idLabel.getSize().width)/2;
-// //         int ly = _oy+(height-_idLabel.getSize().height)/2;
-// //         _idLabel.render(gfx, lx, ly);
-//     }
-
+    @Override // documentation inherited
     protected void centerWorldCoords (Vector3f coords)
     {
-//         coords.x += TILE_SIZE/2;
-//         coords.y += TILE_SIZE/2;
+        // the piece width and height account for rotation
+        coords.x += (TILE_SIZE*_piece.getWidth())/2;
+        coords.y += (TILE_SIZE*_piece.getHeight())/2;
     }
 
-    protected String _type;
-//     protected BufferedImage _image;
+    protected PropConfig _config;
+    protected Model _model;
+
+    protected static AlphaState _alpha;
 }

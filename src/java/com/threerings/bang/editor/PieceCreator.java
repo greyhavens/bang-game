@@ -8,11 +8,11 @@ import javax.swing.JPanel;
 
 import com.samskivert.swing.CommandButton;
 import com.samskivert.swing.VGroupLayout;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BuildingConfig;
+import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.data.piece.BonusMarker;
-import com.threerings.bang.data.piece.Building;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.Prop;
 import com.threerings.bang.data.piece.StartMarker;
@@ -28,18 +28,15 @@ public class PieceCreator extends JPanel
         setLayout(new VGroupLayout());
         _ctx = ctx;
 
-        add(new JLabel(_ctx.xlate("editor", "m.pieces_fixed")));
+        add(new JLabel(_ctx.xlate("editor", "m.pieces_props")));
 
         // TODO: deal with town selection
-        BuildingConfig[] bldgs = BuildingConfig.getTownBuildings(
+        PropConfig[] props = PropConfig.getTownProps(
             BangCodes.FRONTIER_TOWN);
-        for (int ii = 0; ii < bldgs.length; ii++) {
-            String type = bldgs[ii].type;
-            add(createPieceButton(type, Building.getBuilding(type)));
+        for (int ii = 0; ii < props.length; ii++) {
+            String type = props[ii].type;
+            add(createPieceButton(type, Prop.getProp(type)));
         }
-
-        add(createPieceButton("rocks", new Prop("rock_2x2", 2, 2)));
-        add(createPieceButton("cactus", new Prop("cactus2_1x1", 1, 1)));
 
         add(new JLabel(_ctx.xlate("editor", "m.pieces_marker")));
         add(createPieceButton("start_marker", new StartMarker()));
@@ -48,7 +45,8 @@ public class PieceCreator extends JPanel
 
     protected CommandButton createPieceButton (String type, Piece piece)
     {
-        String name = _ctx.xlate("editor", "m.piece_" + type);
+        String key = StringUtil.replace(type, "/", "_");
+        String name = _ctx.xlate("editor", "m.piece_" + key);
         CommandButton button = new CommandButton();
         button.setText(name);
         button.setActionCommand(EditorController.CREATE_PIECE);

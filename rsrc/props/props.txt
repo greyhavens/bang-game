@@ -1,0 +1,4 @@
+buildings/saloon
+natural/cactus1
+natural/cactus2
+natural/rocks1
