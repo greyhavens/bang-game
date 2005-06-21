@@ -33,6 +33,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
@@ -193,8 +194,13 @@ public class BoardView extends BComponent
                 _tnode.attachChild(t);
                 t.setLocalTranslation(
                     new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
-                t.setRenderState(
-                    RenderUtil.groundTexs.get(_board.getTile(xx, yy)));
+                TextureState tstate = RenderUtil.groundTexs.get(
+                    _board.getTile(xx, yy));
+                if (tstate != null) {
+                    t.setRenderState(tstate);
+                } else {
+                    t.setSolidColor(ColorRGBA.black);
+                }
             }
         }
         _tnode.setLightCombineMode(LightState.OFF);
@@ -444,22 +450,14 @@ public class BoardView extends BComponent
     protected void refreshTile (int tx, int ty)
     {
         Quad t = (Quad)_tnode.getChild(ty * _board.getHeight() + tx);
-        t.setRenderState(RenderUtil.groundTexs.get(_board.getTile(tx, ty)));
-        t.updateRenderState();
-    }
-
-    protected ColorRGBA getColor (Terrain tile)
-    {
-        ColorRGBA color = null;
-        switch (tile) {
-        case DIRT: color = BROWN; break;
-        case ROAD: color = ColorRGBA.gray; break;
-        case TALL_GRASS: color = ColorRGBA.green; break;
-        case WATER: color = ColorRGBA.blue; break;
-        case LEAF_BRIDGE: color = ColorRGBA.lightGray; break;
-        default: color = ColorRGBA.black; break;
+        TextureState tstate = RenderUtil.groundTexs.get(_board.getTile(tx, ty));
+        if (tstate != null) {
+            t.setRenderState(tstate);
+        } else {
+            t.clearRenderState(RenderState.RS_TEXTURE);
+            t.setSolidColor(ColorRGBA.black);
         }
-        return color;
+        t.updateRenderState();
     }
 
     /**
