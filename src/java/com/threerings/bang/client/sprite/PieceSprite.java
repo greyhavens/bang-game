@@ -42,6 +42,12 @@ public class PieceSprite extends Sprite
         _editorMode = editorMode;
     }
 
+    /** Returns the piece associated with this sprite. */
+    public Piece getPiece ()
+    {
+        return _piece;
+    }
+
     /** Returns the id of the piece associated with this sprite. */
     public int getPieceId ()
     {

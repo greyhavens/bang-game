@@ -274,6 +274,20 @@ public class BangBoardView extends BoardView
 //         }
 //     }
 
+    @Override // documentation inherited
+    protected boolean isHoverable (Sprite sprite)
+    {
+        if (!super.isHoverable(sprite)) {
+            return false;
+        }
+        if (_attackSet == null) {
+            return ((sprite instanceof UnitSprite) &&
+                    ((UnitSprite)sprite).getPiece().owner == _pidx);
+        } else {
+            return (sprite instanceof UnitSprite);
+        }
+    }
+
     /** Handles a left mouse button click. */
     protected void handleLeftPress (int mx, int my)
     {
@@ -774,7 +788,7 @@ public class BangBoardView extends BoardView
                                         _target.y * TILE_SIZE + TILE_SIZE/2,
                                         TILE_SIZE/2);
             _ssprite = new ShotSprite();
-            float duration = start.distance(end) / 30f;
+            float duration = start.distance(end) / 100f;
             _ssprite.setLocalTranslation(start);
             _ssprite.addObserver(this);
             addSprite(_ssprite);

@@ -299,7 +299,7 @@ public class BoardView extends BComponent
         Sprite hit = null;
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
             Sprite s = getSprite(_pick.getPickData(ii).getTargetMesh());
-            if (s == null) {
+            if (!isHoverable(s)) {
                 continue;
             }
             float sdist = camloc.distanceSquared(s.getWorldTranslation());
@@ -392,6 +392,12 @@ public class BoardView extends BComponent
 //             removeSprite(_marquee);
 //             _marquee = null;
 //         }
+    }
+
+    /** Helper function for {@link #getHoverSprite}. */
+    protected boolean isHoverable (Sprite sprite)
+    {
+        return (sprite != null);
     }
 
     /** Relocates our virtual view to center the board iff it is smaller
