@@ -193,7 +193,8 @@ public class BoardView extends BComponent
                 _tnode.attachChild(t);
                 t.setLocalTranslation(
                     new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
-                t.setSolidColor(getColor(_board.getTile(xx, yy)));
+                t.setRenderState(
+                    RenderUtil.groundTexs.get(_board.getTile(xx, yy)));
             }
         }
         _tnode.setLightCombineMode(LightState.OFF);
@@ -443,7 +444,7 @@ public class BoardView extends BComponent
     protected void refreshTile (int tx, int ty)
     {
         Quad t = (Quad)_tnode.getChild(ty * _board.getHeight() + tx);
-        t.setSolidColor(getColor(_board.getTile(tx, ty)));
+        t.setRenderState(RenderUtil.groundTexs.get(_board.getTile(tx, ty)));
         t.updateRenderState();
     }
 

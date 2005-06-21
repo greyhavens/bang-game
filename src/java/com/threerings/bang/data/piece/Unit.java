@@ -107,7 +107,8 @@ public class Unit extends Piece
     @Override // documentation inherited
     public int traversalCost (Terrain terrain)
     {
-        return _config.movementCost[terrain.ordinal()];
+        return super.traversalCost(terrain) +
+            _config.movementAdjust[terrain.ordinal()];
     }
 
     /**

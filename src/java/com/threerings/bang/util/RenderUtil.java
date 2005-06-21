@@ -4,6 +4,9 @@
 package com.threerings.bang.util;
 
 import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.util.EnumSet;
+import java.util.HashMap;
 
 import com.jme.image.Texture;
 import com.jme.light.PointLight;
@@ -17,6 +20,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
 
+import com.threerings.bang.data.Terrain;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -31,6 +35,9 @@ public class RenderUtil
     public static ZBufferState alwaysZBuf;
 
     public static ZBufferState lequalZBuf;
+
+    public static HashMap<Terrain,TextureState> groundTexs =
+        new HashMap<Terrain,TextureState>();
 
     /**
      * Initializes our commonly used render states.
@@ -50,6 +57,19 @@ public class RenderUtil
         lequalZBuf = ctx.getRenderer().createZBufferState();
         lequalZBuf.setEnabled(true);
         lequalZBuf.setFunction(ZBufferState.CF_LEQUAL);
+
+        ClassLoader loader = ctx.getClass().getClassLoader();
+        for (Terrain terrain : Terrain.STARTERS) {
+            URL texpath = loader.getResource(
+                "rsrc/media/textures/ground/" +
+                terrain.toString().toLowerCase() + ".png");
+            Texture texture = TextureManager.loadTexture(
+                texpath, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+            TextureState tstate = ctx.getRenderer().createTextureState();
+            tstate.setEnabled(true);
+            tstate.setTexture(texture);
+            groundTexs.put(terrain, tstate);
+        }
     }
 
     /**

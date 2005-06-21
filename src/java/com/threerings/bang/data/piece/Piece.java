@@ -210,7 +210,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public int traversalCost (Terrain terrain)
     {
-        return 10;
+        return terrain.traversalCost;
     }
 
     /** Returns a brief description of this piece. */
@@ -576,8 +576,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     protected boolean canTraverse (Terrain terrain)
     {
-        return (terrain == Terrain.DIRT ||
-                terrain == Terrain.LEAF_BRIDGE);
+        return (terrain.traversalCost > 0);
     }
 
     /** Returns the starting energy for pieces of this type. */

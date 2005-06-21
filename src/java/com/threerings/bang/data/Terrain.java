@@ -12,27 +12,25 @@ import java.util.HashMap;
 public enum Terrain
 {
     // indicates a non-playable tile
-    NONE        (-1, " "),
+    NONE        (-1, -1),
 
     // normal terrain types
-    DIRT        (0, "."),
-    ROAD        (1, "="),
-    TALL_GRASS  (2, "|"),
-    WATER       (3, "^"),
-
-    // "constructed" terrain types
-    LEAF_BRIDGE (4, "$");
+    DIRT        (0, 10),
+    ROAD        (1, 10),
+    TALL_GRASS  (2, 10),
+    WATER       (3, -1),
+    ROCKY       (4, 15),
+    SAND        (5, 20);
 
     /** The code used when encoding terrain types in the {@link BangBoard}. */
     public int code;
 
-    /** A character that can be used to display this terrain type when
-     * dumping a board to the console. */
-    public String glyph;
+    /** The normal traversal cost for this terrain. */
+    public int traversalCost;
 
     /** The set of terrain types that can be used when building boards. */
     public static EnumSet<Terrain> STARTERS = EnumSet.complementOf(
-        EnumSet.of(NONE, LEAF_BRIDGE));
+        EnumSet.of(NONE));
 
     /** Converts an integer code back to the appropriate {@link Terrain}
      * enum value. */
@@ -41,10 +39,10 @@ public enum Terrain
         return _map.get(code);
     }
 
-    Terrain (int code, String glyph)
+    Terrain (int code, int traversalCost)
     {
         this.code = code;
-        this.glyph = glyph;
+        this.traversalCost = traversalCost;
         map(this);
     }
 

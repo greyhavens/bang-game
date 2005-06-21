@@ -83,7 +83,7 @@ public class UnitConfig
     public int[] defenseAdjust = new int[MODE_COUNT + MAKE_COUNT];
 
     /** The cost of movement over each type of terrain. */
-    public int[] movementCost = new int[TERRAIN_COUNT];
+    public int[] movementAdjust = new int[TERRAIN_COUNT];
 
     /** A custom class for this unit, if one was specified. */
     public String unitClass;
@@ -219,8 +219,8 @@ public class UnitConfig
 
         for (Terrain terrain : EnumSet.allOf(Terrain.class)) {
             String key = terrain.toString().toLowerCase();
-            config.movementCost[terrain.ordinal()] =
-                BangUtil.getIntProperty(type, props, "movement." + key, 10);
+            config.movementAdjust[terrain.ordinal()] =
+                BangUtil.getIntProperty(type, props, "movement." + key, 0);
         }
 
         // map this config into the proper towns
