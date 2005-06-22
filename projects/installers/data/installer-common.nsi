@@ -270,6 +270,11 @@ Section "Install" InstStuff
                  "$R8\bin\javaw.exe" "-jar getdown-pro.jar ." \
                  "$INSTDIR\app_icon.ico" "" "" "" "$(shortcut_hint)"
 
+  ; Create the editor launcher "shortcut"
+  CreateShortCut "$INSTDIR\$(editor_shortcut_name).lnk" \
+                 "$R8\bin\javaw.exe" "-jar getdown-pro.jar . editor" \
+                 "$INSTDIR\app_icon.ico" "" "" "" "$(shortcut_hint)"
+
   ; Create the links to the home page and manual
   WriteINIStr "$INSTDIR\$(homepage_name).url" \
               "InternetShortcut" "URL" "${HOST}"

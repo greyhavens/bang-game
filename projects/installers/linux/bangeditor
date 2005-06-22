@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# $Id: yohoho 19786 2005-03-18 02:38:14Z ray $
+#
+# Runs the Bang! Howdy game updater/launcher.
+
+INSTDIR=`dirname $0`
+
+# do our best to locate the appropriate version of Java
+JAVA=java
+if [ -x $INSTDIR/java/bin/java ]; then
+    JAVA=$INSTDIR/java/bin/java
+elif [ -x $JAVA_HOME/bin/java ]; then
+    JAVA=$JAVA_HOME/bin/java
+fi
+
+# run the updater/launcher
+$JAVA $* -jar $INSTDIR/getdown-pro.jar $INSTDIR editor

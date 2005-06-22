@@ -46,6 +46,7 @@ LangString jre_error ${LANG_ENGLISH} \
   Please click OK to exit the installer."
 
 LangString shortcut_name ${LANG_ENGLISH} "Play ${NAME}"
+LangString editor_shortcut_name ${LANG_ENGLISH} "${NAME} Editor"
 LangString shortcut_hint ${LANG_ENGLISH} "Play ${NAME}"
 LangString homepage_name ${LANG_ENGLISH} "${NAME} Home Page"
 LangString manual_name ${LANG_ENGLISH} "Online Manual"

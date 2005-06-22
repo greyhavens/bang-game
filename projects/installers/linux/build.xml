@@ -15,6 +15,7 @@
       <fileset dir="../data" includes="getdown-pro.jar"/>
       <fileset dir="../${default_locale}" includes="license.txt"/>
       <fileset dir="." includes="bang"/>
+      <fileset dir="." includes="bangeditor"/>
       <fileset dir="." includes="desktop.png"/>
       <fileset dir="${web.home}/${bclient_ident}">
         <include name="getdown.txt"/>
@@ -27,6 +28,7 @@
       <filterset>
         <filter token="client_ident" value="${bclient_ident}"/>
         <filter token="client_title" value="${bclient_title}"/>
+        <filter token="editor_title" value="${beditor_title}"/>
       </filterset>
     </copy>
 
@@ -34,6 +36,7 @@
       <arg line="a+rx"/>
       <arg line="${temp.dir}/finish_install.sh"/>
       <arg line="${temp.dir}/bang"/>
+      <arg line="${temp.dir}/bangeditor"/>
     </exec>
 
     <exec executable="makeself">
@@ -50,7 +53,8 @@
   <!-- creates the devclient installer -->
   <target name="devprops">
     <property name="bclient_ident" value="devclient"/>
-    <property name="bclient_title" value="${client_title} Dev"/>
+    <property name="bclient_title" value="${client_title} (Dev)"/>
+    <property name="beditor_title" value="${editor_title} (Dev)"/>
     <property name="installer.name" value="dev-install.bin"/>
   </target>
   <target name="devclient" depends="devprops,instbuild"/>
@@ -59,6 +63,7 @@
   <target name="tprops">
     <property name="bclient_ident" value="${client_ident}"/>
     <property name="bclient_title" value="${client_title}"/>
+    <property name="beditor_title" value="${editor_title}"/>
     <property name="installer.name" value="test-install.bin"/>
   </target>
   <target name="tclient" depends="tprops,instbuild"/>
@@ -67,6 +72,7 @@
   <target name="props">
     <property name="bclient_ident" value="${client_ident}"/>
     <property name="bclient_title" value="${client_title}"/>
+    <property name="beditor_title" value="${editor_title}"/>
     <property name="installer.name" value="bang-install.bin"/>
   </target>
   <target name="client" depends="props,instbuild"/>

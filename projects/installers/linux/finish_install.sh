@@ -129,6 +129,17 @@ Type=Application
 Categories=Application;
 EOF
 
+cat > "$DESKTOP/@editor_title@.desktop" <<EOF
+[Desktop Entry]
+Name=@editor_title@
+Exec=$INSTALLDIR/bangeditor
+Icon=$INSTALLDIR/desktop.png
+Terminal=false
+MultipleArgs=false
+Type=Application
+Categories=Application;
+EOF
+
 echo
 echo "-------------------------------------------------------------------------"
 echo "@client_title@ has been successfully installed!"
