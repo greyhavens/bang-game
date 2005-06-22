@@ -110,29 +110,6 @@
     </javadoc>
   </target>
 
-  <!-- builds the standalone editor jar -->
-  <target name="editor">
-    <!-- generate the all-in-wonder jar file -->
-    <taskdef resource="proguard/ant/task.properties"
-             classpath="lib/proguard.jar"/>
-    <proguard configuration="etc/bang-editor.pro"/>
-    <copy todir="pages/editor" file="dist/bang-editor.jar"/>
-
-    <!-- create the JNLP file -->
-    <copy todir="pages/editor">
-      <fileset dir="etc" includes="editor.jnlp"/>
-      <filterset>
-        <filter token="application_uri" value="${root_url}/editor/"/>
-      </filterset>
-    </copy>
-
-    <!-- sign the jar file -->
-    <signjar keystore="${sign.keystore}" alias="${sign.alias}"
-      storepass="${sign.storepass}" lazy="true">
-      <fileset dir="pages/editor" includes="bang-editor.jar"/>
-    </signjar>
-  </target>
-
   <!-- builds the client getdown distribution -->
   <target name="client" depends="dist">
     <!-- generate the all-in-wonder jar file -->

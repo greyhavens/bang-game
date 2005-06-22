@@ -43,3 +43,7 @@
 -keep public class com.threerings.bang.client.BangApp {
     public static void main (java.lang.String[]);
 }
+
+-keep public class com.threerings.bang.editor.EditorApp {
+    public static void main (java.lang.String[]);
+}
