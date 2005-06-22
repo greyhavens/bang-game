@@ -66,7 +66,12 @@
       <fileset dir="${src.dir}" includes="**/*.properties"/>
     </copy>
     <copy todir="${deploy.dir}/classes/rsrc">
-      <fileset dir="rsrc" includes="**/*"/>
+      <fileset dir="rsrc">
+       <include name="**/*"/>
+       <exclude name="**/*.MD3"/>
+       <exclude name="**/*.obj"/>
+       <exclude name="**/*.mtl"/>
+      </fileset>
     </copy>
   </target>
 
