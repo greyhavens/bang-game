@@ -292,7 +292,7 @@ public class BangBoardView extends BoardView
         if (!piece.isAlive()) {
             return false;
         }
-        if (_attackSet == null) {
+        if (_attackSet == null || _attackSet.size() == 0) {
             return (piece.owner == _pidx) && usprite.isSelectable();
         }
         return true;

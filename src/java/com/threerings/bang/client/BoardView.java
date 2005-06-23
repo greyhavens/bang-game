@@ -38,6 +38,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
 import com.threerings.jme.input.GodViewHandler;
+import com.threerings.util.RandomUtil;
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -194,7 +195,7 @@ public class BoardView extends BComponent
                 _tnode.attachChild(t);
                 t.setLocalTranslation(
                     new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
-                TextureState tstate = RenderUtil.groundTexs.get(
+                TextureState tstate = RenderUtil.getGroundTexture(
                     _board.getTile(xx, yy));
                 if (tstate != null) {
                     t.setRenderState(tstate);
@@ -450,7 +451,8 @@ public class BoardView extends BComponent
     protected void refreshTile (int tx, int ty)
     {
         Quad t = (Quad)_tnode.getChild(ty * _board.getHeight() + tx);
-        TextureState tstate = RenderUtil.groundTexs.get(_board.getTile(tx, ty));
+        TextureState tstate =
+            RenderUtil.getGroundTexture(_board.getTile(tx, ty));
         if (tstate != null) {
             t.setRenderState(tstate);
         } else {

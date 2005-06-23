@@ -7,6 +7,7 @@ import java.awt.Dimension;
 
 import com.jme.renderer.ColorRGBA;
 
+import com.jme.bui.BComponent;
 import com.jme.bui.BDecoratedWindow;
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BWindow;
@@ -41,7 +42,12 @@ public class BangView
 
         // create our various displays
         view = new BangBoardView(ctx, ctrl);
-        _chatwin = new BWindow(ctx.getLookAndFeel(), new BorderLayout());
+        _chatwin = new BWindow(ctx.getLookAndFeel(), new BorderLayout()) {
+            // we never want the chat window to accept clicks
+            public BComponent getHitComponent (int mx, int my) {
+                return null;
+            }
+        };
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
         _chatwin.add(_chat, BorderLayout.CENTER);
     }

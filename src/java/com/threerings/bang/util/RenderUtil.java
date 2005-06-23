@@ -5,6 +5,7 @@ package com.threerings.bang.util;
 
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 
@@ -19,6 +20,8 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
+
+import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.util.BangContext;
@@ -35,9 +38,6 @@ public class RenderUtil
     public static ZBufferState alwaysZBuf;
 
     public static ZBufferState lequalZBuf;
-
-    public static HashMap<Terrain,TextureState> groundTexs =
-        new HashMap<Terrain,TextureState>();
 
     /**
      * Initializes our commonly used render states.
@@ -60,16 +60,35 @@ public class RenderUtil
 
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.STARTERS) {
-            URL texpath = loader.getResource(
-                "rsrc/media/textures/ground/" +
-                terrain.toString().toLowerCase() + ".png");
-            Texture texture = TextureManager.loadTexture(
-                texpath, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-            TextureState tstate = ctx.getRenderer().createTextureState();
-            tstate.setEnabled(true);
-            tstate.setTexture(texture);
-            groundTexs.put(terrain, tstate);
+            for (int ii = 1; ii <= 3; ii++) {
+                URL texpath = loader.getResource(
+                    "rsrc/media/textures/ground/" +
+                    terrain.toString().toLowerCase() + ii + ".png");
+                if (texpath == null) {
+                    continue;
+                }
+                Texture texture = TextureManager.loadTexture(
+                    texpath, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+                TextureState tstate = ctx.getRenderer().createTextureState();
+                tstate.setEnabled(true);
+                tstate.setTexture(texture);
+                ArrayList<TextureState> texs = _groundTexs.get(terrain);
+                if (texs == null) {
+                    _groundTexs.put(
+                        terrain, texs = new ArrayList<TextureState>());
+                }
+                texs.add(tstate);
+            }
         }
+    }
+
+    /**
+     * Returns a randomly selected ground texture for the specified
+     * terrain type.
+     */
+    public static TextureState getGroundTexture (Terrain terrain)
+    {
+        return (TextureState)RandomUtil.pickRandom(_groundTexs.get(terrain));
     }
 
     /**
@@ -137,4 +156,7 @@ public class RenderUtil
         lights.attach(light);
         return lights;
     }
+
+    protected static HashMap<Terrain,ArrayList<TextureState>> _groundTexs =
+        new HashMap<Terrain,ArrayList<TextureState>>();
 }
