@@ -72,6 +72,9 @@ public class Model
                     "[path=" + path + "].", ioe);
         }
 
+        // TODO: use a whole different system for non-animating models
+        // that uses a SharedMesh
+
         Enumeration kenum = props.propertyNames();
         while (kenum.hasMoreElements()) {
             String pkey = (String)kenum.nextElement();
@@ -250,13 +253,10 @@ public class Model
             }
 
             cc = new ModelCloneCreator(model);
+            // these define what we want to "shallow" copy
             cc.addProperty("colors");
             cc.addProperty("texcoords");
-            cc.addProperty("vertices");
-            cc.addProperty("normals");
             cc.addProperty("indices");
-            cc.addProperty("spatialcontroller");
-            cc.addProperty("jointcontroller");
             _meshes.put(path, cc);
         }
         return cc;

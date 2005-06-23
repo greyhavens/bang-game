@@ -21,6 +21,7 @@ import com.jme.bui.BComponent;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseMotionListener;
 import com.jme.bui.event.MouseWheelListener;
+import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.math.Ray;
@@ -84,7 +85,8 @@ public class BoardView extends BComponent
         Texture texture = TextureManager.loadTexture(
             getClass().getClassLoader().getResource(
                 "rsrc/media/textures/scrub.jpg"),
-            Texture.MM_LINEAR, Texture.FM_NEAREST, 1.0f, true);
+            Texture.MM_LINEAR, Texture.FM_NEAREST, Image.GUESS_FORMAT_NO_S3TC,
+            1.0f, true);
         TextureState tstate =
             ctx.getDisplay().getRenderer().createTextureState();
         tstate.setEnabled(true);

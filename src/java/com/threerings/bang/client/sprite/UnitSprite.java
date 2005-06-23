@@ -132,6 +132,8 @@ public class UnitSprite extends MobileSprite
 
         // this composite of icons combines to display our status
         _status = new StatusNode();
+        _status.setRenderState(RenderUtil.iconAlpha);
+        _status.updateRenderState();
         _status.setLocalTranslation(new Vector3f(0, 0, 0.1f));
         attachChild(_status);
         _ticks = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
@@ -266,11 +268,14 @@ public class UnitSprite extends MobileSprite
 
             // obtain our current world coordinates
             worldScale.set(parent.getWorldScale()).multLocal(localScale);
-            parent.getWorldRotation().mult(localRotation, worldRotation);
             worldTranslation = parent.getWorldRotation().mult(
                 localTranslation, worldTranslation).multLocal(
                     parent.getWorldScale()).addLocal(
                         parent.getWorldTranslation());
+            // we don't want our parent's world rotation, which would
+            // normally by obtained like so:
+            // parent.getWorldRotation().mult(localRotation, worldRotation);
+            worldRotation.set(localRotation);
 
             // project the camera forward vector onto the "ground":
             // camdir - (camdir . UP) * UP
@@ -287,9 +292,9 @@ public class UnitSprite extends MobileSprite
             if (_tvec.y < 0) {
                 theta *= -1f;
             }
-            // we offset theta by -PI/2 because our "natural" orientation
+            // we offset theta by PI/2 because our "natural" orientation
             // is a bit sideways
-            _tquat.fromAngleAxis(theta - FastMath.PI/2, UP);
+            _tquat.fromAngleAxis(theta + FastMath.PI/2, UP);
             worldRotation.multLocal(_tquat);
 
             // now we can update our children

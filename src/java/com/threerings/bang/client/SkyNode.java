@@ -3,11 +3,12 @@
 
 package com.threerings.bang.client;
 
+import com.jme.image.Image;
 import com.jme.image.Texture;
-import com.jme.renderer.ColorRGBA;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
 import com.jme.scene.shape.Box;
@@ -28,14 +29,15 @@ public class SkyNode extends Node
     public SkyNode (BangContext ctx)
     {
         super("skynode");
-
+    
         Skybox box = new Skybox("sky", 1000, 1000, 1000);
         for (int ii = 0; ii < ORIENTS.length; ii++) {
             String path = "rsrc/media/textures/desertday" +
                 SUFFIXES[ii] + ".tga";
             Texture texture = TextureManager.loadTexture(
                 getClass().getClassLoader().getResource(path),
-                Texture.MM_LINEAR, Texture.FM_LINEAR);
+                Texture.MM_LINEAR, Texture.FM_LINEAR,
+                Image.GUESS_FORMAT_NO_S3TC, 1.0f, true);
             box.setTexture(ORIENTS[ii], texture);
         }
         box.preloadTextures();
