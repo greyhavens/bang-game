@@ -5,6 +5,7 @@ package com.threerings.bang.client.sprite;
 
 import java.awt.image.BufferedImage;
 
+import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Dome;
@@ -24,6 +25,7 @@ public class BonusSprite extends PieceSprite
     public BonusSprite (String type)
     {
         _type = type;
+        addController(new Spinner(this, FastMath.PI/2));
     }
 
     @Override // documentation inherited
