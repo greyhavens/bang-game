@@ -93,49 +93,63 @@ public class Bonus extends Piece
             }
         },
 
-        MISSILE(50, // base weight
-                0.0, // damage affinity
-                0.5, // many pieces affinity
-                1.0, // few pieces affinity
-                1.0, // low power affinity
-                0.5, // early-game affinity
-                1.0) // late-game affinity
+        // TODO: tune these weights
+        CARD(50, // base weight
+             0.0, // damage affinity
+             0.5, // many pieces affinity
+             1.0, // few pieces affinity
+             1.0, // low power affinity
+             0.5, // early-game affinity
+             1.0) // late-game affinity
         {
             public Effect affect (Piece piece) {
-                return new GrantCardEffect(piece.owner, new Missile());
+                return new GrantCardEffect(piece.owner);
             }
         },
 
-        AREA_REPAIR(50, // base weight
-                    1.0, // damage affinity
-                    0.5, // many pieces affinity
-                    0.0, // few pieces affinity
-                    1.0, // low power affinity
-                    0.0, // early-game affinity
-                    0.5) // late-game affinity
-        {
-            public Effect affect (Piece piece) {
-                return new GrantCardEffect(piece.owner, new AreaRepair());
-            }
-        },
+//         MISSILE(50, // base weight
+//                 0.0, // damage affinity
+//                 0.5, // many pieces affinity
+//                 1.0, // few pieces affinity
+//                 1.0, // low power affinity
+//                 0.5, // early-game affinity
+//                 1.0) // late-game affinity
+//         {
+//             public Effect affect (Piece piece) {
+//                 return new GrantCardEffect(piece.owner, new Missile());
+//             }
+//         },
 
-        DUST_DEVIL(50, // base weight
-                   0.5, // damage affinity
-                   0.0, // many pieces affinity
-                   0.5, // few pieces affinity
-                   0.0, // low power affinity
-                   -0.25, // early-game affinity
-                   0.4) // late-game affinity
-        {
-            public boolean isValid (BangObject bangobj) {
-                // make sure there are some dead pieces on the board
-                return bangobj.countDeadPieces() > 1;
-            }
+//         AREA_REPAIR(50, // base weight
+//                     1.0, // damage affinity
+//                     0.5, // many pieces affinity
+//                     0.0, // few pieces affinity
+//                     1.0, // low power affinity
+//                     0.0, // early-game affinity
+//                     0.5) // late-game affinity
+//         {
+//             public Effect affect (Piece piece) {
+//                 return new GrantCardEffect(piece.owner, new AreaRepair());
+//             }
+//         },
 
-            public Effect affect (Piece piece) {
-                return new GrantCardEffect(piece.owner, new DustDevil());
-            }
-        },
+//         DUST_DEVIL(50, // base weight
+//                    0.5, // damage affinity
+//                    0.0, // many pieces affinity
+//                    0.5, // few pieces affinity
+//                    0.0, // low power affinity
+//                    -0.25, // early-game affinity
+//                    0.4) // late-game affinity
+//         {
+//             public boolean isValid (BangObject bangobj) {
+//                 // make sure there are some dead pieces on the board
+//                 return bangobj.countDeadPieces() > 1;
+//             }
+
+//             public Effect affect (Piece piece) {
+//                 return new GrantCardEffect(piece.owner, new DustDevil());
+//             }
+//         },
 
         SAINT_ELMO(10, // base weight
                    0.5, // damage affinity

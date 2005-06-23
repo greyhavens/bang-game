@@ -9,7 +9,11 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.data.card.AreaRepair;
 import com.threerings.bang.data.card.Card;
+import com.threerings.bang.data.card.DustDevil;
+import com.threerings.bang.data.card.Missile;
+import com.threerings.util.RandomUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -20,10 +24,9 @@ public class GrantCardEffect extends Effect
 {
     public int player;
 
-    public GrantCardEffect (int player, Card card)
+    public GrantCardEffect (int player)
     {
         this.player = player;
-        _card = card;
     }
 
     public GrantCardEffect ()
@@ -45,14 +48,20 @@ public class GrantCardEffect extends Effect
             return;
         }
 
-        _card.init(bangobj, player);
-        bangobj.addToCards(_card);
+        // TODO: select the card more sophisticatedly
+        Card card;
+        switch (RandomUtil.getInt(3)) {
+        default: case 0: card = new Missile(); break;
+        case 1: card = new AreaRepair(); break;
+        case 2: card = new DustDevil(); break;
+        }
+
+        card.init(bangobj, player);
+        bangobj.addToCards(card);
     }
 
     public void apply (BangObject bangobj, Observer obs)
     {
         // NOOP
     }
-
-    protected transient Card _card;
 }
