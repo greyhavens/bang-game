@@ -314,9 +314,12 @@ public class BangManager extends GameManager
         // clear out the selected big shots array
         _bangobj.setBigShots(new Unit[getPlayerSlots()]);
 
+        // transition to the pre-game selection phase
+        _bangobj.setState(BangObject.SELECT_PHASE);
+
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii) /*|| isTest()*/) {
+            if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
                 Piece[] apieces = new Piece[] {
                     Unit.getUnit("artillery"), Unit.getUnit("steamgunman"),
@@ -324,9 +327,6 @@ public class BangManager extends GameManager
                 purchasePieces(ii, apieces);
             }
         }
-
-        // transition to the pre-game selection phase
-        _bangobj.setState(BangObject.SELECT_PHASE);
     }
 
     /**
