@@ -78,9 +78,11 @@ public class BangView
     /** Called by the controller when the game starts. */
     public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
-        // remove the purchase view from the display
-        _ctx.getInputDispatcher().removeWindow(_oview);
-        _oview = null;
+        // remove the purchase (or in test mode, selection) view
+        if (_oview != null) {
+            _ctx.getInputDispatcher().removeWindow(_oview);
+            _oview = null;
+        }
     }
 
     /** Called by the controller when the game ends. */

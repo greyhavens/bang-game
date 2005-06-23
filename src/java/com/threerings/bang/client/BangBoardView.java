@@ -17,6 +17,8 @@ import java.util.List;
 
 import com.jme.input.KeyInput;
 import com.jme.intersection.BoundingPickResults;
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -31,7 +33,9 @@ import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.LinePath;
+import com.threerings.jme.sprite.OrientingBallisticPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
@@ -793,12 +797,40 @@ public class BangBoardView extends BoardView
             Vector3f end = new Vector3f(_target.x * TILE_SIZE + TILE_SIZE/2,
                                         _target.y * TILE_SIZE + TILE_SIZE/2,
                                         TILE_SIZE/2);
-            _ssprite = new ShotSprite();
-            float duration = start.distance(end) / 100f;
+            _ssprite = new ShotSprite(_ctx);
+            Vector3f velvec = end.subtract(start);
+            float distance = velvec.length();
+
+            float angle = -3*FastMath.PI/8;
+            float velocity = FastMath.sqrt(
+                distance * GRAVITY / FastMath.sin(2*angle));
+            float duration = BallisticPath.computeFlightTime(
+                distance, velocity, angle);
+
+            // normalize the velocity vector and scale it to the velocity
+            velvec.normalizeLocal();
+            velvec.multLocal(velocity);
+
+            // rotate the velocity vector up by the computed angle (around
+            // the axis made by crossing the velocity vector with the up
+            // vector)
+            Vector3f axis = UP.cross(velvec);
+            axis.normalizeLocal();
+            Quaternion rot = new Quaternion();
+            rot.fromAngleAxis(angle, axis);
+            rot.multLocal(velvec);
+
+//             log.info("Distance " + distance + " angle " + angle +
+//                      " velocity " + velocity + " duration " + duration +
+//                      " axis " + axis +
+//                      " velvec " + velvec + " (" + velvec.length() + ")");
+
             _ssprite.setLocalTranslation(start);
             _ssprite.addObserver(this);
             addSprite(_ssprite);
-            _ssprite.move(new LinePath(_ssprite, start, end, duration));
+            _ssprite.move(new OrientingBallisticPath(
+                              _ssprite, new Vector3f(1, 0, 0), start, velvec,
+                              GRAVVEC, duration));
         }
 
         protected void applyShot ()
@@ -865,4 +897,7 @@ public class BangBoardView extends BoardView
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
+
+    protected static final float GRAVITY = 10*BallisticPath.G;
+    protected static final Vector3f GRAVVEC = new Vector3f(0, 0, GRAVITY);
 }

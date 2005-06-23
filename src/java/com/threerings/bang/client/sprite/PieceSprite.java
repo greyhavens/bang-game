@@ -297,7 +297,4 @@ public class PieceSprite extends Sprite
         FastMath.PI/2, // EAST
         FastMath.PI, // SOUTH
         3*FastMath.PI/2 }; // WEST
-
-    protected static final Vector3f LEFT = new Vector3f(1, 0, 0);
-    protected static final Vector3f UP = new Vector3f(0, 0, 1);
 }
