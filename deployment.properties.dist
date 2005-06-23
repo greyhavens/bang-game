@@ -19,6 +19,7 @@ server_port = 4007
 
 client_ident = client
 client_title = Bang! Howdy
+editor_title = Bang! Howdy Editor
 default_locale = en
 
 #
