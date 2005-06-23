@@ -560,8 +560,7 @@ public class BoardView extends BComponent
     {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                Piece piece = (Piece)event.getEntry();
-                getPieceSprite(piece);
+                pieceUpdated(null, (Piece)event.getEntry());
             }
         }
 

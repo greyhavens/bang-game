@@ -115,9 +115,13 @@ public class PieceSprite extends Sprite
      */
     public void setOrientation (int orientation)
     {
-        Quaternion quat = new Quaternion();
-        quat.fromAngleAxis(ROTATIONS[orientation], UP);
-        setLocalRotation(quat);
+        // if we're moving, assume the path will do the right thing when
+        // we arrive
+        if (!isMoving()) {
+            Quaternion quat = new Quaternion();
+            quat.fromAngleAxis(ROTATIONS[orientation], UP);
+            getLocalRotation().set(quat);
+        }
     }
 
     /**
@@ -249,7 +253,7 @@ public class PieceSprite extends Sprite
                     durations[ii-1] = 0.2f;
                 }
             }
-            return new LineSegmentPath(this, coords, durations);
+            return new LineSegmentPath(this, UP, FORWARD, coords, durations);
 
         } else {
             Vector3f start = toWorldCoords(
@@ -296,5 +300,6 @@ public class PieceSprite extends Sprite
         0, // NORTH
         FastMath.PI/2, // EAST
         FastMath.PI, // SOUTH
-        3*FastMath.PI/2 }; // WEST
+        3*FastMath.PI/2, // WEST
+    };
 }

@@ -21,4 +21,8 @@ public class BangMetrics
 
     /** Our definition of the up vector. */
     public static final Vector3f UP = new Vector3f(0, 0, 1);
+
+    /** The direction our models are facing (this has nothing to do with
+     * the coordinate system or the up and left vectors). */
+    public static final Vector3f FORWARD = new Vector3f(0, -1, 0);
 }

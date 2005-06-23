@@ -191,32 +191,13 @@ public class UnitSprite extends MobileSprite
         return super.computeElevation(board, tx, ty) + offset;
     }
 
-    @Override // documentation inherited
-    protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
+    /** Converts tile coordinates plus elevation into (3D) world
+     * coordinates. */
+    protected Vector3f toWorldCoords (int tx, int ty, int elev, Vector3f target)
     {
-        if (_piece.isFlyer()) {
-            ArrayList<Vector3f> nodes = new ArrayList<Vector3f>();
-            int oelev = computeElevation(board, opiece.x, opiece.y);
-            if (oelev == 0) {
-                nodes.add(toWorldCoords(opiece.x, opiece.y, 0, new Vector3f()));
-            }
-            nodes.add(toWorldCoords(opiece.x, opiece.y, 2, new Vector3f()));
-            nodes.add(toWorldCoords(npiece.x, npiece.y, 2, new Vector3f()));
-            int nelev = computeElevation(board, npiece.x, npiece.y);
-            if (nelev == 0) {
-                nodes.add(toWorldCoords(npiece.x, npiece.y, 0, new Vector3f()));
-            }
-
-            Vector3f[] coords = nodes.toArray(new Vector3f[nodes.size()]);
-            float[] durations = new float[coords.length-1];
-            Arrays.fill(durations, 0.1f);
-            durations[oelev == 0 ? 1 : 0] = (float)MathUtil.distance(
-                opiece.x, opiece.y, npiece.x, npiece.y) * .2f;
-            return new LineSegmentPath(this, coords, durations);
-
-        } else {
-            return super.createPath(board, opiece, npiece);
-        }
+        // flyers are always up in the air
+        elev = _piece.isFlyer() ? 2 : elev;
+        return super.toWorldCoords(tx, ty, elev, target);
     }
 
     protected Texture createDamageTexture ()
@@ -291,12 +272,15 @@ public class UnitSprite extends MobileSprite
                     parent.getWorldScale()).addLocal(
                         parent.getWorldTranslation());
 
-            // compute the angle from the camera to the center of the board
-            _tvec.x = (cam.getLocation().x - TILE_SIZE*8);
-            _tvec.y = (cam.getLocation().y - TILE_SIZE*8);
+            // project the camera forward vector onto the "ground":
+            // camdir - (camdir . UP) * UP
+            Vector3f camdir = cam.getDirection();
+            UP.mult(camdir.dot(UP), _tvec);
+            camdir.subtract(_tvec, _tvec);
+            _tvec.normalizeLocal();
 
-            // now rotate ourselves so that we're always facing generally
-            // toward the viewer
+            // compute the angle between LEFT and the camera direction to
+            // find the camera rotation around the up vector
             _tvec.normalizeLocal();
             float theta = FastMath.acos(_tvec.dot(LEFT));
             // when y is negative, we need to flip the sign of the angle
