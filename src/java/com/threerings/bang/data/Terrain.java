@@ -15,12 +15,12 @@ public enum Terrain
     NONE        (-1, -1),
 
     // normal terrain types
-    DIRT        (0, 10),
-    ROAD        (1, 10),
-    TALL_GRASS  (2, 10),
+    DIRT        (0, BangBoard.BASE_TRAVERSAL),
+    ROAD        (1, BangBoard.BASE_TRAVERSAL),
+    TALL_GRASS  (2, BangBoard.BASE_TRAVERSAL),
     WATER       (3, -1),
-    ROCKY       (4, 15),
-    SAND        (5, 20);
+    ROCKY       (4, 3*BangBoard.BASE_TRAVERSAL/2),
+    SAND        (5, 2*BangBoard.BASE_TRAVERSAL);
 
     /** The code used when encoding terrain types in the {@link BangBoard}. */
     public int code;

@@ -30,6 +30,9 @@ import static com.threerings.bang.Log.log;
  */
 public class BangBoard extends SimpleStreamableObject
 {
+    /** The basic traversal cost. */
+    public static final int BASE_TRAVERSAL = 10;
+
     /** Creates a board with the specified dimensions. */
     public BangBoard (int width, int height)
     {
@@ -295,7 +298,7 @@ public class BangBoard extends SimpleStreamableObject
         // start with 10x our movement points at our current coordinate
         // (and add one to ensure that we always end up with 1 in our
         // final coordinate)
-        byte remain = (byte)(mdist * 10 + 1);
+        byte remain = (byte)(mdist * BASE_TRAVERSAL + 1);
         _pgrid[piece.y*_width+piece.x] = remain;
         moves.add(piece.x, piece.y);
 

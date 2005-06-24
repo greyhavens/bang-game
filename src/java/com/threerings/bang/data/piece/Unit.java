@@ -10,6 +10,7 @@ import com.threerings.io.ObjectInputStream;
 
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.UnitSprite;
+import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.UnitConfig;
 
@@ -107,8 +108,13 @@ public class Unit extends Piece
     @Override // documentation inherited
     public int traversalCost (Terrain terrain)
     {
-        return super.traversalCost(terrain) +
-            _config.movementAdjust[terrain.ordinal()];
+        // flyers are unaffected by terrain adjustments
+        if (isFlyer()) {
+            return BangBoard.BASE_TRAVERSAL;
+        } else {
+            return super.traversalCost(terrain) +
+                _config.movementAdjust[terrain.ordinal()];
+        }
     }
 
     /**

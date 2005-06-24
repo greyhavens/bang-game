@@ -375,7 +375,6 @@ public class BangBoardView extends BoardView
             _attackSet = null;
         } else {
             log.info("Waiting for attack selection (" + tx + ", " + ty + ")");
-//             dirtySet(_attackSet);
         }
         return true;
     }
@@ -477,7 +476,6 @@ public class BangBoardView extends BoardView
                 for (int ii = 0; ii < moveSet.size(); ii++) {
                     _attackSet.add(moveSet.get(ii));
                 }
-//                 dirtySet(_attackSet);
             }
         }
     }
@@ -496,8 +494,6 @@ public class BangBoardView extends BoardView
             pruneAttackSet(_moveSet, _attackSet);
             pruneAttackSet(attacks, _attackSet);
             highlightTiles(_moveSet);
-//             dirtySet(_moveSet);
-//             dirtySet(_attackSet);
         }
     }
 
