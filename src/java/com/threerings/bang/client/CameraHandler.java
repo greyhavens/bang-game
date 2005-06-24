@@ -68,4 +68,14 @@ public class CameraHandler extends GodViewHandler
         _camera.setUp(up);
         _camera.update();
     }
+
+    protected void addPanActions (Camera cam)
+    {
+        // no panning
+    }
+
+    protected void addRollActions (Camera cam)
+    {
+        // no rolling
+    }
 }
