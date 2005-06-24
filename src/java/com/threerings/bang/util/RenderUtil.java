@@ -6,7 +6,6 @@ package com.threerings.bang.util;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
 
 import com.jme.image.Texture;

@@ -3,8 +3,6 @@
 
 package com.threerings.bang.editor;
 
-import com.threerings.parlor.game.client.GameConfigurator;
-
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.editor.EditorController;
 

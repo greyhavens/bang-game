@@ -6,7 +6,6 @@ package com.threerings.bang.ranch.client;
 import java.util.EnumSet;
 
 import com.jme.bui.BContainer;
-import com.jme.bui.BIcon;
 import com.jme.bui.BLabel;
 import com.jme.bui.border.EmptyBorder;
 import com.jme.bui.layout.BorderLayout;
@@ -15,7 +14,6 @@ import com.jme.bui.layout.GroupLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
 /**

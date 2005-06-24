@@ -3,20 +3,15 @@
 
 package com.threerings.bang.editor;
 
-import java.awt.Canvas;
 import java.awt.Point;
 
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
 import com.jme.bui.event.MouseWheelListener;
-import com.threerings.jme.JmeCanvasApp;
-
-import com.threerings.media.sprite.Sprite;
 
 import com.threerings.bang.client.BoardView;
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.data.Terrain;
-import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 

@@ -8,9 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.samskivert.swing.HGroupLayout;
-import com.samskivert.swing.VGroupLayout;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.util.BangContext;
 

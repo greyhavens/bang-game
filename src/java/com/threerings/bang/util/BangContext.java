@@ -19,7 +19,6 @@ import com.threerings.jme.JmeContext;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.parlor.util.ParlorContext;
 
-import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.ModelCache;
 import com.threerings.bang.data.BangUserObject;
 

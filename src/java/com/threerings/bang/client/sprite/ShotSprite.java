@@ -3,10 +3,6 @@
 
 package com.threerings.bang.client.sprite;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-
-import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.threerings.jme.sprite.Sprite;
 

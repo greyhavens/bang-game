@@ -8,13 +8,8 @@ import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
-import com.jme.scene.shape.Box;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
 import com.threerings.bang.util.BangContext;

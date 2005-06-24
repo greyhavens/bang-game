@@ -3,7 +3,6 @@
 
 package com.threerings.bang;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

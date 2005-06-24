@@ -20,18 +20,15 @@ import javax.swing.KeyStroke;
 
 import com.samskivert.swing.Controller;
 import com.samskivert.swing.ControllerProvider;
-import com.samskivert.swing.GroupLayout;
 import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
 
-import com.threerings.jme.JmeCanvasApp;
 import com.threerings.media.SafeScrollPane;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangObject;
 
 import static com.threerings.bang.client.BangMetrics.*;

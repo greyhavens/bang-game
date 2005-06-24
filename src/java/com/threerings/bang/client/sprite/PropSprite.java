@@ -9,9 +9,7 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 
 import com.threerings.bang.client.Model;
-import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.PropConfig;
-import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;

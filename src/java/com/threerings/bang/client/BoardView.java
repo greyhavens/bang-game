@@ -3,20 +3,15 @@
 
 package com.threerings.bang.client;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.jme.bounding.BoundingBox;
 import com.jme.bui.BComponent;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseMotionListener;
@@ -39,7 +34,6 @@ import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
 import com.threerings.jme.input.GodViewHandler;
-import com.threerings.util.RandomUtil;
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -52,7 +46,6 @@ import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.PointSet;

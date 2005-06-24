@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 
-import com.jme.renderer.ColorRGBA;
-
 import com.jme.bui.BButton;
 import com.jme.bui.BCheckBox;
 import com.jme.bui.BComboBox;

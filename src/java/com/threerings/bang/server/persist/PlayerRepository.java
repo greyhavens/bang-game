@@ -3,15 +3,11 @@
 
 package com.threerings.bang.server.persist;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.SQLException;
 
 import com.samskivert.io.PersistenceException;
-import com.samskivert.util.StringUtil;
 
 import com.samskivert.jdbc.ConnectionProvider;
-import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.Session;

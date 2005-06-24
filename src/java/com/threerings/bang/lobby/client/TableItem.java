@@ -15,7 +15,6 @@ import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
 import com.threerings.crowd.data.BodyObject;

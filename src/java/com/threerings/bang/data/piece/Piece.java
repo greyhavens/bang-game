@@ -5,9 +5,7 @@ package com.threerings.bang.data.piece;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.AStarPathUtil;
@@ -17,11 +15,9 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
-import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PointSet;
 
 import static com.threerings.bang.Log.log;

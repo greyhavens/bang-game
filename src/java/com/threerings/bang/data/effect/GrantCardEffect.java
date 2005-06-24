@@ -6,7 +6,6 @@ package com.threerings.bang.data.effect;
 import java.util.Iterator;
 
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.IntListUtil;
 
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.card.AreaRepair;

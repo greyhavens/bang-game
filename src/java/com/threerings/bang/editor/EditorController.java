@@ -3,8 +3,6 @@
 
 package com.threerings.bang.editor;
 
-import java.awt.Point;
-import java.util.ArrayList;
 import javax.swing.JFileChooser;
 
 import java.io.File;
@@ -23,10 +21,8 @@ import com.threerings.crowd.util.CrowdContext;
 import com.threerings.parlor.game.client.GameController;
 
 import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.PieceDSet;
-import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BoardUtil;
 

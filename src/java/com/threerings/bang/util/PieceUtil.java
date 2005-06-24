@@ -3,7 +3,6 @@
 
 package com.threerings.bang.util;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 

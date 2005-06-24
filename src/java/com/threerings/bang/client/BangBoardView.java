@@ -9,33 +9,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-
-import com.jme.input.KeyInput;
-import com.jme.intersection.BoundingPickResults;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Ray;
-import com.jme.math.Vector2f;
-import com.jme.math.Vector3f;
-import com.jme.scene.TriMesh;
 
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
-import com.jme.bui.event.MouseMotionListener;
-
-import com.samskivert.util.StringUtil;
 
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
 
-import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.LinePath;
-import com.threerings.jme.sprite.OrientingBallisticPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
@@ -48,7 +30,6 @@ import com.threerings.bang.client.effect.ExplosionViz;
 import com.threerings.bang.client.effect.RepairViz;
 import com.threerings.bang.client.sprite.MobileSprite;
 import com.threerings.bang.client.sprite.PieceSprite;
-import com.threerings.bang.client.sprite.ShotSprite;
 import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.BangConfig;
@@ -56,10 +37,8 @@ import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.card.Card;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
-import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PointSet;
 import com.threerings.bang.util.VisibilityState;
 
@@ -608,10 +587,16 @@ public class BangBoardView extends BoardView
     protected void applyEffect (Effect effect)
     {
         if (effect instanceof ShotEffect) {
-            new ShotHandler((ShotEffect)effect);
+            new ShotHandler(_ctx, _bangobj, this, (ShotEffect)effect);
         } else {
             effect.apply(_bangobj, _effector);
         }
+    }
+
+    protected void applyShot (ShotEffect shot)
+    {
+        // apply the shot
+        shot.apply(_bangobj, _effector);
     }
 
     /** Adjusts the visibility settings for the tiles of the board. */
@@ -716,135 +701,6 @@ public class BangBoardView extends BoardView
 //         addAnimation(new SpriteAnimation(_spritemgr, lsprite, path));
     }
 
-    /** Waits for all sprites involved in a shot to stop moving and then
-     * animates the fired shot. */
-    protected class ShotHandler
-        implements PathObserver
-    {
-        public ShotHandler (ShotEffect shot) {
-            _shot = shot;
-            _shooter = (Piece)_bangobj.pieces.get(shot.shooterId);
-            if (_shooter == null) {
-                log.warning("Missing shooter? [shot=" + shot + "].");
-                // abandon ship, we're screwed
-                return;
-            }
-            _target = (Piece)_bangobj.pieces.get(shot.targetId);
-            if (_target == null) {
-                log.warning("Missing target? [shot=" + shot + "].");
-                // abandon ship, we're screwed
-                return;
-            }
-
-            // figure out which sprites we need to wait for
-            considerPiece(_shooter);
-            considerPiece(_target);
-
-            // if no one was managed, it's a shot fired from an invisible
-            // piece at invisible pieces, ignore it
-            if (_managed == 0) {
-                log.info("Tree feel in the woods, no one was around.");
-
-            } else if (_sprites == 0) {
-                // if we're not waiting for any sprites to finish moving,
-                // fire the shot immediately
-                fireShot();
-            }
-        }
-
-        public void pathCompleted (Sprite sprite, Path path) {
-            sprite.removeObserver(this);
-            if (sprite == _ssprite) {
-                applyShot();
-                removeSprite(sprite);
-            } else if (--_sprites == 0) {
-                fireShot();
-            }
-        }
-
-        public void pathCancelled (Sprite sprite, Path path) {
-            sprite.removeObserver(this);
-            if (sprite == _ssprite) {
-                applyShot();
-                removeSprite(sprite);
-            } else if (--_sprites == 0) {
-                fireShot();
-            }
-        }
-
-        protected void considerPiece (Piece piece) {
-            PieceSprite sprite = null;
-            if (piece != null) {
-                sprite = _pieces.get(piece.pieceId);
-            }
-            if (sprite == null) {
-                return;
-            }
-            if (isManaged(sprite)) {
-                _managed++;
-                if (sprite.isMoving()) {
-                    sprite.addObserver(this);
-                    _sprites++;
-                }
-            }
-        }
-
-        protected void fireShot ()
-        {
-            Vector3f start = new Vector3f(_shooter.x * TILE_SIZE + TILE_SIZE/2,
-                                          _shooter.y * TILE_SIZE + TILE_SIZE/2,
-                                          TILE_SIZE/2);
-            Vector3f end = new Vector3f(_target.x * TILE_SIZE + TILE_SIZE/2,
-                                        _target.y * TILE_SIZE + TILE_SIZE/2,
-                                        TILE_SIZE/2);
-            _ssprite = new ShotSprite(_ctx);
-            Vector3f velvec = end.subtract(start);
-            float distance = velvec.length();
-
-            float angle = -3*FastMath.PI/8;
-            float velocity = FastMath.sqrt(
-                distance * GRAVITY / FastMath.sin(2*angle));
-            float duration = BallisticPath.computeFlightTime(
-                distance, velocity, angle);
-
-            // normalize the velocity vector and scale it to the velocity
-            velvec.normalizeLocal();
-            velvec.multLocal(velocity);
-
-            // rotate the velocity vector up by the computed angle (around
-            // the axis made by crossing the velocity vector with the up
-            // vector)
-            Vector3f axis = UP.cross(velvec);
-            axis.normalizeLocal();
-            Quaternion rot = new Quaternion();
-            rot.fromAngleAxis(angle, axis);
-            rot.multLocal(velvec);
-
-//             log.info("Distance " + distance + " angle " + angle +
-//                      " velocity " + velocity + " duration " + duration +
-//                      " axis " + axis +
-//                      " velvec " + velvec + " (" + velvec.length() + ")");
-
-            _ssprite.setLocalTranslation(start);
-            _ssprite.addObserver(this);
-            addSprite(_ssprite);
-            _ssprite.move(new OrientingBallisticPath(
-                              _ssprite, new Vector3f(1, 0, 0), start, velvec,
-                              GRAVVEC, duration));
-        }
-
-        protected void applyShot ()
-        {
-            // apply the shot
-            _shot.apply(_bangobj, _effector);
-        }
-
-        protected ShotEffect _shot;
-        protected ShotSprite _ssprite;
-        protected Piece _shooter, _target;
-        protected int _sprites, _managed;
-    }
-
     /** Used to remove shot sprites when they reach their target. */
     protected PathObserver _remover = new PathObserver() {
         public void pathCompleted (Sprite sprite, Path path) {
@@ -897,7 +753,4 @@ public class BangBoardView extends BoardView
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
-
-    protected static final float GRAVITY = 10*BallisticPath.G;
-    protected static final Vector3f GRAVVEC = new Vector3f(0, 0, GRAVITY);
 }

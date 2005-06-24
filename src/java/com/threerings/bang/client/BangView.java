@@ -3,13 +3,10 @@
 
 package com.threerings.bang.client;
 
-import java.awt.Dimension;
-
 import com.jme.renderer.ColorRGBA;
 
 import com.jme.bui.BComponent;
 import com.jme.bui.BDecoratedWindow;
-import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BWindow;
 import com.jme.bui.background.TintedBackground;
 import com.jme.bui.layout.BorderLayout;
@@ -20,7 +17,6 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.jme.chat.ChatView;
 
-import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.util.BangContext;

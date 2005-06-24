@@ -4,7 +4,6 @@
 package com.threerings.bang.client.sprite;
 
 import java.awt.Point;
-import java.awt.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,7 +20,6 @@ import com.threerings.media.util.MathUtil;
 
 import com.threerings.bang.client.effect.EffectViz;
 import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 

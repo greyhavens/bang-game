@@ -16,7 +16,6 @@ import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.GroupLayout;
-import com.jme.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 

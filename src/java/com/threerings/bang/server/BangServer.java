@@ -11,14 +11,9 @@ import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
-import com.samskivert.util.StringUtil;
 
-import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.Authenticator;
-import com.threerings.presents.server.InvocationManager;
 
-import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.CrowdServer;
 import com.threerings.crowd.server.PlaceManager;

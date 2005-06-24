@@ -14,7 +14,6 @@ import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.BigPiece;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.Prop;
-import com.threerings.bang.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
 

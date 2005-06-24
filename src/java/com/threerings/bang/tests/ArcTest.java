@@ -6,7 +6,6 @@ package com.threerings.bang.tests;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import java.io.FileInputStream;
@@ -16,8 +15,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
-import com.jme.math.FastMath;
 
 /**
  * A simple class for testing the damage arc clipping routines.

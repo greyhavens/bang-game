@@ -16,7 +16,6 @@ import com.samskivert.util.ArrayUtil;
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.presents.dobj.DSet;
 import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.bang.data.piece.BigPiece;

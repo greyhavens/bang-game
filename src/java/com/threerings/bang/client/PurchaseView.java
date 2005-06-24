@@ -9,12 +9,10 @@ import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
 import com.jme.bui.BDecoratedWindow;
 import com.jme.bui.BLabel;
-import com.jme.bui.BTextField;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.TableLayout;
-import com.jme.renderer.ColorRGBA;
 
 import com.samskivert.util.StringUtil;
 

@@ -6,12 +6,10 @@ package com.threerings.bang.client.sprite;
 import java.awt.image.BufferedImage;
 
 import com.jme.math.FastMath;
-import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Dome;
 
 import com.threerings.bang.client.Model;
-import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
 

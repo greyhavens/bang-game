@@ -9,15 +9,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
 
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
@@ -25,14 +22,10 @@ import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsServer;
 
@@ -58,7 +51,6 @@ import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PieceDSet;
-import com.threerings.bang.data.Terrain;
 import com.threerings.bang.util.BoardUtil;
 import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PointSet;

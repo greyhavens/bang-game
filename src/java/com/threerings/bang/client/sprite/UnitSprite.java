@@ -7,12 +7,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-import com.samskivert.util.HashIntMap;
-
-import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -23,17 +18,9 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
-import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
-
-import com.threerings.jme.sprite.LineSegmentPath;
-import com.threerings.jme.sprite.Path;
-import com.threerings.media.image.ImageUtil;
-import com.threerings.media.util.MathUtil;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.data.BangBoard;

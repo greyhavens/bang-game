@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 
-import java.io.File;
 import java.util.logging.Level;
 
 import com.jme.bui.BLookAndFeel;
@@ -26,7 +25,6 @@ import com.jme.system.DisplaySystem;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.resource.ResourceManager;
@@ -47,11 +45,8 @@ import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.parlor.client.ParlorDirector;
-import com.threerings.parlor.game.data.GameAI;
 
-import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.ModelCache;
-import com.threerings.bang.data.BangConfig;
 
 import static com.threerings.bang.Log.log;
 

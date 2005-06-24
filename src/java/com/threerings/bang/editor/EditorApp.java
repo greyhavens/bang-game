@@ -5,7 +5,6 @@ package com.threerings.bang.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.IOException;
 import java.util.logging.Level;
 import javax.swing.JFrame;
 
@@ -18,10 +17,8 @@ import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 
 import com.threerings.jme.JmeCanvasApp;
-import com.threerings.util.Name;
 
 import com.threerings.bang.client.BangPrefs;
-import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;

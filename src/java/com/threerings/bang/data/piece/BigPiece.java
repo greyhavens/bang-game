@@ -4,7 +4,6 @@
 package com.threerings.bang.data.piece;
 
 import java.awt.Rectangle;
-import java.awt.geom.Point2D;
 
 import java.io.IOException;
 

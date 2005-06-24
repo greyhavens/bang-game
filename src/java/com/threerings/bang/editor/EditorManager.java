@@ -11,8 +11,6 @@ import java.util.logging.Level;
 
 import com.samskivert.util.Tuple;
 
-import com.threerings.presents.dobj.DSet;
-
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.data.BangBoard;

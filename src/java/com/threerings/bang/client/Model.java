@@ -14,7 +14,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
 import com.jme.light.PointLight;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;

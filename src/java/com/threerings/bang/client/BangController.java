@@ -3,13 +3,6 @@
 
 package com.threerings.bang.client;
 
-import java.awt.event.ActionEvent;
-
-import com.samskivert.util.StringUtil;
-
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.presents.dobj.MessageListener;
-
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceConfig;
@@ -21,7 +14,6 @@ import com.threerings.parlor.game.client.GameController;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
 import com.threerings.bang.data.card.Card;
-import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;

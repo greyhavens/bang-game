@@ -10,10 +10,7 @@ import javax.swing.JOptionPane;
 import java.util.logging.Level;
 
 import com.jme.input.InputHandler;
-import com.jme.light.PointLight;
-import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
-import com.jme.renderer.ColorRGBA;
 import com.jme.util.LoggingSystem;
 
 import com.samskivert.servlet.user.Password;

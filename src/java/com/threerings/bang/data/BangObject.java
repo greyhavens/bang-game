@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.DSet;
@@ -17,7 +16,6 @@ import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.piece.Bonus;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.data.piece.Unit;
-import com.threerings.bang.util.PieceSet;
 import com.threerings.bang.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
