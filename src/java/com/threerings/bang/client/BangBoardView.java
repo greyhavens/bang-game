@@ -591,11 +591,13 @@ public class BangBoardView extends BoardView
         if (effect instanceof ShotEffect) {
             ShotEffect seffect = (ShotEffect)effect;
             Unit shooter = (Unit)_bangobj.pieces.get(seffect.shooterId);
+            ShotHandler handler;
             if (shooter.getConfig().mode == UnitConfig.Mode.RANGE) {
-                new BallisticShotHandler(_ctx, _bangobj, this, seffect);
+                handler = new BallisticShotHandler();
             } else {
-//                 new InstantShotHandler(_ctx, _bangobj, this, seffect);
+                handler = new InstantShotHandler();
             }
+            handler.init(_ctx, _bangobj, this, seffect);
 
         } else {
             effect.apply(_bangobj, _effector);
