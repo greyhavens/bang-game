@@ -19,6 +19,7 @@ import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.GroupLayout;
 
 import com.samskivert.util.CollectionUtil;
+import com.samskivert.util.RunAnywhere;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
@@ -89,13 +90,22 @@ public class OptionsView extends BDecoratedWindow
     protected void refreshDisplayModes ()
     {
         try {
-            ArrayList modes = new ArrayList();
+            ArrayList<DisplayMode> modes = new ArrayList<DisplayMode>();
             CollectionUtil.addAll(modes, Display.getAvailableDisplayModes());
-            for (Iterator iter = modes.iterator(); iter.hasNext(); ) {
-                DisplayMode mode = (DisplayMode)iter.next();
+            for (Iterator<DisplayMode> iter = modes.iterator();
+                 iter.hasNext(); ) {
+                DisplayMode mode = iter.next();
                 if (mode.getWidth() < 800 || mode.getHeight() < 600) {
                     iter.remove();
                 }
+            }
+
+            // if there is only one display mode, and we're on Linux, it's
+            // probably because of Xinerama wackiness, so slip in a couple
+            // of sensible modes for use in non-fullscreen mode
+            if (RunAnywhere.isLinux() && modes.size() < 2) {
+                modes.add(new DisplayMode(1024, 768));
+                modes.add(new DisplayMode(1280, 1024));
             }
 
             ModeItem current = null;
