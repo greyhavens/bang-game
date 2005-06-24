@@ -852,9 +852,9 @@ public class BangManager extends GameManager
         // if that failed, load a stock board
         if (tup == null) {
             String board = (String)RandomUtil.pickRandom(BOARDS);
-            if (isTest()) {
+//             if (isTest()) {
                 board = "default";
-            }
+//             }
             try {
                 ClassLoader cl = getClass().getClassLoader();
                 InputStream in = cl.getResourceAsStream(
