@@ -112,15 +112,7 @@ public class BoardView extends BComponent
         // we'll hang all of our pieces off this node
         _node.attachChild(_pnode = new Node("pieces"));
 
-        // create our highlight texture and alpha state
-        BufferedImage image = new BufferedImage(
-            10, 10, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D gfx = (Graphics2D)image.getGraphics();
-        gfx.setColor(Color.red);
-        gfx.fillRect(0, 0, 10, 10);
-        gfx.dispose();
-        _hstate = RenderUtil.createTexture(ctx, image);
-
+        // create our highlight alpha state
         _hastate = ctx.getDisplay().getRenderer().createAlphaState();
         _hastate.setBlendEnabled(true);
         _hastate.setSrcFunction(AlphaState.SB_SRC_ALPHA);
@@ -496,17 +488,20 @@ public class BoardView extends BComponent
     }
 
     /** Creates geometry to highlight the supplied set of tiles. */
-    protected void highlightTiles (PointSet set)
+    protected void highlightTiles (PointSet set, boolean forFlyer)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int sx = set.getX(ii), sy = set.getY(ii);
-            Quad quad = new Quad("highlight", TILE_SIZE, TILE_SIZE);
-            quad.setRenderState(_hstate);
+            float size = TILE_SIZE - TILE_SIZE/10;
+            Quad quad = new Quad("highlight", size, size);
+            quad.setSolidColor(_hcolor);
+            quad.setLightCombineMode(LightState.OFF);
             quad.setRenderState(_hastate);
+            int elev = forFlyer ? 2 : 0;
             quad.setLocalTranslation(
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
                              sy * TILE_SIZE + TILE_SIZE/2,
-                             _bangobj.board.getElevation(sx, sy) * TILE_SIZE));
+                             elev * TILE_SIZE + 0.1f));
             quad.setRenderState(RenderUtil.lequalZBuf);
             quad.updateRenderState();
             _hnode.attachChild(quad);
@@ -591,7 +586,7 @@ public class BoardView extends BComponent
     protected TextureState _tgtstate;
 
     /** Used to texture a quad that highlights a tile. */
-    protected TextureState _hstate;
+    protected ColorRGBA _hcolor = new ColorRGBA(1, 1, 0, 0.5f);
     protected AlphaState _hastate;
 
     /** The current tile coordinates of the mouse. */
