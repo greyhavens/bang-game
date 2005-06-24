@@ -34,10 +34,12 @@ import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.data.card.Card;
 import com.threerings.bang.data.effect.Effect;
 import com.threerings.bang.data.effect.ShotEffect;
 import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.data.piece.Unit;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.PointSet;
 import com.threerings.bang.util.VisibilityState;
@@ -587,7 +589,14 @@ public class BangBoardView extends BoardView
     protected void applyEffect (Effect effect)
     {
         if (effect instanceof ShotEffect) {
-            new ShotHandler(_ctx, _bangobj, this, (ShotEffect)effect);
+            ShotEffect seffect = (ShotEffect)effect;
+            Unit shooter = (Unit)_bangobj.pieces.get(seffect.shooterId);
+            if (shooter.getConfig().mode == UnitConfig.Mode.RANGE) {
+                new BallisticShotHandler(_ctx, _bangobj, this, seffect);
+            } else {
+//                 new InstantShotHandler(_ctx, _bangobj, this, seffect);
+            }
+
         } else {
             effect.apply(_bangobj, _effector);
         }

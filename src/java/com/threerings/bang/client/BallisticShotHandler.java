@@ -27,11 +27,12 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Waits for all sprites involved in a shot to stop moving and then
  * animates the fired shot.
  */
-public class ShotHandler
+public class BallisticShotHandler
     implements PathObserver
 {
-    public ShotHandler (BangContext ctx, BangObject bangobj, BangBoardView view,
-                        ShotEffect shot) {
+    public BallisticShotHandler (BangContext ctx, BangObject bangobj,
+                                 BangBoardView view, ShotEffect shot)
+    {
         _ctx = ctx;
         _bangobj = bangobj;
         _view = view;
@@ -66,7 +67,9 @@ public class ShotHandler
         }
     }
 
-    public void pathCompleted (Sprite sprite, Path path) {
+    // documentation inherited from interface PathObserver
+    public void pathCompleted (Sprite sprite, Path path)
+    {
         sprite.removeObserver(this);
         if (sprite == _ssprite) {
             _view.applyShot(_shot);
@@ -76,7 +79,9 @@ public class ShotHandler
         }
     }
 
-    public void pathCancelled (Sprite sprite, Path path) {
+    // documentation inherited from interface PathObserver
+    public void pathCancelled (Sprite sprite, Path path)
+    {
         sprite.removeObserver(this);
         if (sprite == _ssprite) {
             _view.applyShot(_shot);
@@ -86,7 +91,8 @@ public class ShotHandler
         }
     }
 
-    protected void considerPiece (Piece piece) {
+    protected void considerPiece (Piece piece)
+    {
         PieceSprite sprite = null;
         if (piece != null) {
             sprite = _view.getPieceSprite(piece);
