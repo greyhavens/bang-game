@@ -20,6 +20,7 @@ import com.jme.bui.event.MouseWheelListener;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.intersection.TrianglePickResults;
+import com.jme.math.FastMath;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -356,13 +357,19 @@ public class BoardView extends BComponent
     public void mouseWheeled (MouseEvent e)
     {
         GodViewHandler ih = (GodViewHandler)_ctx.getInputHandler();
-        float zoom = ih.getZoomLevel();
-        if (e.getDelta() > 0) {
-            zoom = Math.max(0f, zoom - 0.1f);
+//         float zoom = ih.getZoomLevel();
+//         if (e.getDelta() > 0) {
+//             zoom = Math.max(0f, zoom - 0.1f);
+//         } else {
+//             zoom = Math.min(1f, zoom + 0.1f);
+//         }
+//         ih.setZoomLevel(zoom);
+        if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0) {
+            // TODO: zoom in and out
         } else {
-            zoom = Math.min(1f, zoom + 0.1f);
+            ih.rotateCamera((e.getDelta() > 0) ?
+                            -FastMath.PI/8 : FastMath.PI/8);
         }
-        ih.setZoomLevel(zoom);
     }
 
     // documentation inherited

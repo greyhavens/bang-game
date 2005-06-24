@@ -41,13 +41,12 @@ public class CameraHandler extends GodViewHandler
      */
     public void setBoardDimens (float breadth, float depth)
     {
-        float cx = breadth/2, cy = depth/2;
-        // TODO: compute desired height based on board size
         float height = Math.max(breadth, depth);
         float angle = FastMath.PI/3; // 60 degree angle view
         float recede = height / FastMath.tan(angle);
 
         // position the camera
+        float cx = breadth/2, cy = depth/2;
         Vector3f pos = new Vector3f(cx, cy-recede, height);
         _camera.setLocation(pos);
         log.info("Board " + breadth + "x" + depth + ", position " + pos + ".");
@@ -61,6 +60,8 @@ public class CameraHandler extends GodViewHandler
         rotm.mult(forward, forward);
         rotm.mult(left, left);
         rotm.mult(up, up);
+
+        // TODO: compute a rotation based on which player we are
 
         _camera.setDirection(forward);
         _camera.setLeft(left);
