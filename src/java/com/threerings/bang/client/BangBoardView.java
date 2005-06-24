@@ -82,7 +82,7 @@ public class BangBoardView extends BoardView
 
         // set up the display of our card attack set
         _card = card;
-        _attackSet = new PointSet();
+        _attackSet.clear();
         _bangobj.board.computeAttacks(
             _card.getRadius(), _mouse.x, _mouse.y, _attackSet);
         targetTiles(_attackSet);
@@ -160,8 +160,7 @@ public class BangBoardView extends BoardView
         if (_selection != null) {
             Piece sel = _selection;
             if ((opiece != null &&
-                 ((_attackSet != null &&
-                   _attackSet.contains(opiece.x, opiece.y)) ||
+                 (_attackSet.contains(opiece.x, opiece.y) ||
                   sel.getDistance(opiece) < sel.getMoveDistance())) ||
                 (npiece != null &&
                  sel.getDistance(npiece) < sel.getMoveDistance())) {
@@ -273,7 +272,7 @@ public class BangBoardView extends BoardView
         if (!piece.isAlive()) {
             return false;
         }
-        if (_attackSet == null || _attackSet.size() == 0) {
+        if (_attackSet.size() == 0) {
             return (piece.owner == _pidx) && usprite.isSelectable();
         }
         return true;
@@ -324,7 +323,7 @@ public class BangBoardView extends BoardView
         // if we have a selection
         if (_selection != null) {
             // and we have an attack set
-            if (_attackSet != null) {
+            if (_attackSet.size() > 0) {
                 // if they clicked on a piece, use its coordinates,
                 // otherwise use the coordinates over which the mouse is
                 // hovering
@@ -364,7 +363,7 @@ public class BangBoardView extends BoardView
         PointSet attacks = new PointSet();
         _bangobj.board.computeAttacks(
             _selection.getFireDistance(), tx, ty, attacks);
-        _attackSet = new PointSet();
+        _attackSet.clear();
         pruneAttackSet(attacks, _attackSet);
 
         // if there are no valid attacks, assume they're just moving (but
@@ -372,7 +371,7 @@ public class BangBoardView extends BoardView
         if (_attackSet.size() == 0 &&
             (_action[0] != _selection.x || _action[1] != _selection.y)) {
             executeAction();
-            _attackSet = null;
+            _attackSet.clear();
         } else {
             log.info("Waiting for attack selection (" + tx + ", " + ty + ")");
         }
@@ -471,7 +470,7 @@ public class BangBoardView extends BoardView
             if (sprite instanceof MobileSprite && piece.isAlive()) {
                 clearSelection();
                 PointSet moveSet = new PointSet();
-                _attackSet = new PointSet();
+                _attackSet.clear();
                 _bangobj.board.computeMoves(piece, moveSet, _attackSet);
                 for (int ii = 0; ii < moveSet.size(); ii++) {
                     _attackSet.add(moveSet.get(ii));
@@ -490,7 +489,7 @@ public class BangBoardView extends BoardView
             getPieceSprite(_selection).setSelected(true);
             PointSet attacks = new PointSet();
             _bangobj.board.computeMoves(piece, _moveSet, attacks);
-            _attackSet = new PointSet();
+            _attackSet.clear();
             pruneAttackSet(_moveSet, _attackSet);
             pruneAttackSet(attacks, _attackSet);
             highlightTiles(_moveSet, piece.isFlyer());
@@ -513,9 +512,9 @@ public class BangBoardView extends BoardView
 
     protected void clearAttackSet ()
     {
-        if (_attackSet != null) {
+        if (_attackSet.size() > 0) {
             clearHighlights();
-            _attackSet = null;
+            _attackSet.clear();
         }
         for (PieceSprite s : _pieces.values()) {
             if (s instanceof UnitSprite) {
@@ -750,7 +749,7 @@ public class BangBoardView extends BoardView
     protected Piece _selection;
 
     protected PointSet _moveSet = new PointSet();
-    protected PointSet _attackSet;
+    protected PointSet _attackSet = new PointSet();
 
     protected int _pidx;
     protected int _downButton = -1;

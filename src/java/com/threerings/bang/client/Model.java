@@ -230,7 +230,11 @@ public class Model
                 try {
                     model = jbr.loadBinaryFormat(new BufferedInputStream(in));
                     // TODO: put this in the model config file
-                    model.setLocalScale(0.05f);
+                    if (path.indexOf("units") != -1) {
+                        model.setLocalScale(0.04f);
+                    } else {
+                        model.setLocalScale(0.05f);
+                    }
 
                 } catch (IOException ioe) {
                     log.log(Level.WARNING,

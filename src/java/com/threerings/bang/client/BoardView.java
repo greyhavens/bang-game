@@ -547,7 +547,7 @@ public class BoardView extends BComponent
             quad.setSolidColor(_hcolor);
             quad.setLightCombineMode(LightState.OFF);
             quad.setRenderState(_hastate);
-            int elev = forFlyer ? 2 : 0;
+            int elev = _board.getElevation(sx, sy);
             quad.setLocalTranslation(
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
                              sy * TILE_SIZE + TILE_SIZE/2,
