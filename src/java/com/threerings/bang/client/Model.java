@@ -225,15 +225,22 @@ public class Model
             jbr.setProperty("texurl", loader.getResource("rsrc/" + path));
             InputStream in = loader.getResourceAsStream("rsrc/" + path);
 
-            Node model;
-            try {
-                model = jbr.loadBinaryFormat(new BufferedInputStream(in));
-                // TODO: put this in the model config file
-                model.setLocalScale(0.05f);
+            Node model = null;
+            if (in != null) {
+                try {
+                    model = jbr.loadBinaryFormat(new BufferedInputStream(in));
+                    // TODO: put this in the model config file
+                    model.setLocalScale(0.05f);
 
-            } catch (IOException ioe) {
-                log.log(Level.WARNING,
-                        "Failed to load mesh " + path + ".", ioe);
+                } catch (IOException ioe) {
+                    log.log(Level.WARNING,
+                            "Failed to load mesh " + path + ".", ioe);
+                }
+            } else {
+                log.warning("Missing model " + path + ".");
+            }
+
+            if (model == null) {
                 model = new Node("error");
                 Box box = new Box(
                     "error", new Vector3f(1, 1, 0),

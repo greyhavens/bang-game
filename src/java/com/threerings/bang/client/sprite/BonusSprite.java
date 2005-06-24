@@ -6,6 +6,7 @@ package com.threerings.bang.client.sprite;
 import java.awt.image.BufferedImage;
 
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Dome;
 
@@ -34,17 +35,21 @@ public class BonusSprite extends PieceSprite
         // load up the model for this bonus
         Model model = ctx.getModelCache().getModel("bonuses", _type);
         Node[] meshes = model.getMeshes("standing");
+
         // TEMP: cope with bonuses for which we yet have no model
         if (meshes[0].getName().startsWith("error")) {
-            System.err.println("Using error geom for " + _type + ".");
             // create some simple temporary geometry
             Dome geom =
                 new Dome("bonus", 10, 10, TILE_SIZE/2);
             attachChild(geom);
+            Quaternion rotate = new Quaternion();
+            rotate.fromAngleAxis(FastMath.PI/2, LEFT);
+            geom.setLocalRotation(rotate);
             BufferedImage image =
                 ctx.loadImage("bonuses/" + _type + "/icon.png");
             geom.setRenderState(RenderUtil.createTexture(ctx, image));
             geom.updateRenderState();
+
         } else {
             for (int ii = 0; ii < meshes.length; ii++) {
                 attachChild(meshes[0]);
