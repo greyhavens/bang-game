@@ -10,6 +10,8 @@ import com.jme.renderer.Camera;
 
 import com.threerings.jme.input.GodViewHandler;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Provides camera handling.
  */
@@ -24,13 +26,45 @@ public class CameraHandler extends GodViewHandler
         setPanLimits(-50, -50, 250, 250);
 
         // set up the camera
-        Vector3f loc = new Vector3f(80, 40, 200);
+        Vector3f loc = new Vector3f(50, -100, 200);
         cam.setLocation(loc);
         Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/15, cam.getLeft());
+        rotm.fromAngleAxis(-FastMath.PI/4, cam.getLeft());
         rotm.mult(cam.getDirection(), cam.getDirection());
         rotm.mult(cam.getUp(), cam.getUp());
         rotm.mult(cam.getLeft(), cam.getLeft());
         cam.update();
+    }
+
+    /**
+     * Configures the camera according to the supplied board dimensions.
+     */
+    public void setBoardDimens (float breadth, float depth)
+    {
+        float cx = breadth/2, cy = depth/2;
+        // TODO: compute desired height based on board size
+        float height = Math.max(breadth, depth);
+        float angle = FastMath.PI/3; // 60 degree angle view
+        float recede = height / FastMath.tan(angle);
+
+        // position the camera
+        Vector3f pos = new Vector3f(cx, cy-recede, height);
+        _camera.setLocation(pos);
+        log.info("Board " + breadth + "x" + depth + ", position " + pos + ".");
+
+        // orient the camera
+        Vector3f left = new Vector3f(-1, 0, 0);
+        Vector3f up = new Vector3f(0, 1, 0);
+        Vector3f forward = new Vector3f(0, 0, -1);
+        Matrix3f rotm = new Matrix3f();
+        rotm.fromAngleAxis(angle-FastMath.PI/2, left);
+        rotm.mult(forward, forward);
+        rotm.mult(left, left);
+        rotm.mult(up, up);
+
+        _camera.setDirection(forward);
+        _camera.setLeft(left);
+        _camera.setUp(up);
+        _camera.update();
     }
 }

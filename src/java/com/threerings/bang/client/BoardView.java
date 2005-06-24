@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.bui.BComponent;
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseMotionListener;
@@ -24,6 +25,7 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
@@ -150,6 +152,11 @@ public class BoardView extends BComponent
         // add the listener that will react to pertinent events
         _bangobj = bangobj;
         _bangobj.addListener(_blistener);
+
+        // reset the camera for this board
+        ((CameraHandler)_ctx.getInputHandler()).setBoardDimens(
+            TILE_SIZE * _bangobj.board.getWidth(),
+            TILE_SIZE * _bangobj.board.getHeight());
 
         // freshen up
         refreshBoard();
@@ -281,32 +288,6 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Returns the sprite that the mouse is "hovering" over (the one
-     * nearest to the camera that is hit by the ray projecting from the
-     * camera to the ground plane at the current mouse coordinates).
-     */
-    public Sprite getHoverSprite ()
-    {
-        Vector3f camloc = _ctx.getCamera().getLocation();
-        _pick.clear();
-        _pnode.findPick(new Ray(camloc, _worldMouse), _pick);
-        float dist = Float.MAX_VALUE;
-        Sprite hit = null;
-        for (int ii = 0; ii < _pick.getNumber(); ii++) {
-            Sprite s = getSprite(_pick.getPickData(ii).getTargetMesh());
-            if (!isHoverable(s)) {
-                continue;
-            }
-            float sdist = camloc.distanceSquared(s.getWorldTranslation());
-            if (sdist < dist) {
-                hit = s;
-                dist = sdist;
-            }
-        }
-        return hit;
-    }
-
-    /**
      * Called when a piece is updated in the game object, though sometimes
      * not immediately but after various effects have been visualized.
      */
@@ -340,7 +321,7 @@ public class BoardView extends BComponent
 //         _cursor.setLocalTranslation(ground);
 
         // update the sprite over which the mouse is hovering
-        Sprite hover = getHoverSprite();
+        Sprite hover = updateHoverSprite();
         if (hover != _hover) {
             if (_hover instanceof UnitSprite) {
                 ((UnitSprite)_hover).setHovered(false);
@@ -349,6 +330,12 @@ public class BoardView extends BComponent
             if (_hover instanceof UnitSprite) {
                 ((UnitSprite)_hover).setHovered(true);
             }
+        }
+
+        // if we have highlight tiles, determine which of those the mouse
+        // is over
+        if (_hnode.getQuantity() > 0) {
+            updateHighlightHover();
         }
 
         if (mx != _mouse.x || my != _mouse.y) {
@@ -387,12 +374,6 @@ public class BoardView extends BComponent
 //             removeSprite(_marquee);
 //             _marquee = null;
 //         }
-    }
-
-    /** Helper function for {@link #getHoverSprite}. */
-    protected boolean isHoverable (Sprite sprite)
-    {
-        return (sprite != null);
     }
 
     /** Relocates our virtual view to center the board iff it is smaller
@@ -480,6 +461,68 @@ public class BoardView extends BComponent
     }
 
     /**
+     * Returns the sprite that the mouse is "hovering" over (the one
+     * nearest to the camera that is hit by the ray projecting from the
+     * camera to the ground plane at the current mouse coordinates). This
+     * method also recomputes the "highlight tile" over which the mouse is
+     * hovering as those can differ from the "hover" tile due to their
+     * elevation.
+     */
+    protected Sprite updateHoverSprite ()
+    {
+        Vector3f camloc = _ctx.getCamera().getLocation();
+        _pick.clear();
+        _pnode.findPick(new Ray(camloc, _worldMouse), _pick);
+        float dist = Float.MAX_VALUE;
+        Sprite hit = null;
+        for (int ii = 0; ii < _pick.getNumber(); ii++) {
+            Sprite s = getSprite(_pick.getPickData(ii).getTargetMesh());
+            if (!isHoverable(s)) {
+                continue;
+            }
+            float sdist = camloc.distanceSquared(s.getWorldTranslation());
+            if (sdist < dist) {
+                hit = s;
+                dist = sdist;
+            }
+        }
+        return hit;
+    }
+
+    /** Helper function for {@link #updateHoverSprite}. */
+    protected boolean isHoverable (Sprite sprite)
+    {
+        return (sprite != null);
+    }
+
+    /**
+     * Determine which of the highlight tiles the mouse is hovering over
+     * and records that tile's coordinates in {@link #_high}.
+     */
+    protected void updateHighlightHover ()
+    {
+        Vector3f camloc = _ctx.getCamera().getLocation();
+        _pick.clear();
+        _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
+        for (int ii = 0; ii < _pick.getNumber(); ii++) {
+            Geometry tmesh = _pick.getPickData(ii).getTargetMesh();
+            Vector3f loc = tmesh.getLocalTranslation();
+            int ohx = _high.x, ohy = _high.y;
+            _high.x = (int)((loc.x - TILE_SIZE/2) / TILE_SIZE);
+            _high.y = (int)((loc.y - TILE_SIZE/2) / TILE_SIZE);
+            if (ohx != _high.x || ohy != _high.y) {
+                log.info("Updating highlight " + _high + ".");
+            }
+            return;
+        }
+        if (_high.x != -1 || _high.y != -1) {
+            log.info("Clearing highlight.");
+            _high.x = -1;
+            _high.y = -1;
+        }
+    }
+
+    /**
      * This is called when the mouse is moved to hover over a different
      * board tile.
      */
@@ -502,6 +545,8 @@ public class BoardView extends BComponent
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
                              sy * TILE_SIZE + TILE_SIZE/2,
                              elev * TILE_SIZE + 0.1f));
+            quad.setModelBound(new BoundingBox());
+            quad.updateModelBound();
             quad.setRenderState(RenderUtil.lequalZBuf);
             quad.updateRenderState();
             _hnode.attachChild(quad);
@@ -591,6 +636,10 @@ public class BoardView extends BComponent
 
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);
+
+    /** The tile coordinates of the highlight tile that the mouse is
+     * hovering over or (-1, -1). */
+    protected Point _high = new Point(-1, -1);
 
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();

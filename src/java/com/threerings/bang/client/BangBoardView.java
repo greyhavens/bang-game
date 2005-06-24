@@ -338,7 +338,7 @@ public class BangBoardView extends BoardView
                 }
             }
 
-            if (handleClickToMove(_mouse.x, _mouse.y)) {
+            if (handleClickToMove(_high.x, _high.y)) {
                 return;
             }
         }
