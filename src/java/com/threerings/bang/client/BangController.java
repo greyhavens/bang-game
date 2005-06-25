@@ -62,7 +62,7 @@ public class BangController extends GameController
     }
 
     /** Handles a request to move a piece. */
-    public void moveAndFire (int pieceId, int tx, int ty, int targetId)
+    public void moveAndFire (int pieceId, int tx, int ty, final int targetId)
     {
         BangService.InvocationListener il =
             new BangService.InvocationListener() {
@@ -70,6 +70,11 @@ public class BangController extends GameController
                 // TODO: play a sound or highlight the piece that failed
                 // to move
                 log.info("Thwarted! " + reason);
+
+                // clear any pending shot indicator
+                if (targetId != -1) {
+                    _view.view.shotFailed(targetId);
+                }
             }
         };
         log.info("Requesting move and fire [pid=" + pieceId +

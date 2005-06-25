@@ -89,6 +89,21 @@ public class BangBoardView extends BoardView
         log.info("Placing " + _card);
     }
 
+    /**
+     * Called by the controller if we requested to take a shot at another
+     * piece but it was rejected because the piece moved or something else
+     * prevented it.
+     */
+    public void shotFailed (int targetId)
+    {
+        // for now just clear the target indicator but perhaps display
+        // something fancier in the future
+        Piece piece = (Piece)_bangobj.pieces.get(targetId);
+        if (piece != null) {
+            getUnitSprite(piece).setPendingShot(false);
+        }
+    }
+
     // documentation inherited from interface MouseListener
     public void mouseClicked (MouseEvent e)
     {
@@ -408,7 +423,7 @@ public class BangBoardView extends BoardView
             }
             // note the piece we desire to fire upon
             _action[3] = piece.pieceId;
-            ((UnitSprite)getPieceSprite(piece)).setPendingShot(true);
+            getUnitSprite(piece).setPendingShot(true);
             executeAction();
             return true;
         }
@@ -423,7 +438,7 @@ public class BangBoardView extends BoardView
                 if (target != null && _selection.validTarget(target)) {
                     log.info("randomly targeting " + target.info());
                     _action[3] = target.pieceId;
-                    ((UnitSprite)getPieceSprite(target)).setPendingShot(true);
+                    getUnitSprite(target).setPendingShot(true);
                 }
             }
             executeAction();
@@ -442,7 +457,7 @@ public class BangBoardView extends BoardView
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (_selection.validTarget(p) && source.contains(p.x, p.y)) {
-                ((UnitSprite)getPieceSprite(p)).setTargeted(true);
+                getUnitSprite(p).setTargeted(true);
                 dest.add(p.x, p.y);
             }
         }
@@ -479,6 +494,15 @@ public class BangBoardView extends BoardView
                 }
             }
         }
+    }
+
+    /**
+     * Convenience method for getting the sprite for a piece we know to be
+     * a unit.
+     */
+    protected UnitSprite getUnitSprite (Piece piece)
+    {
+        return (UnitSprite)getPieceSprite(piece);
     }
 
     protected void selectPiece (Unit piece)
