@@ -136,8 +136,12 @@ public class OptionsView extends BDecoratedWindow
             log.info("Switching to " + mode + " (from " + _mode + ")");
             _mode = mode;
         }
+        // we fake up non-full screen display modes above, but there's no
+        // way to set the bit depth to anything but zero, so we have to
+        // adjust that here so that JME doesn't freak out
+        int bpp = Math.max(16, _mode.getBitsPerPixel());
         _ctx.getDisplay().recreateWindow(
-            _mode.getWidth(), _mode.getHeight(), _mode.getBitsPerPixel(),
+            _mode.getWidth(), _mode.getHeight(), bpp,
             _mode.getFrequency(), _fullscreen.isChecked());
         _parent.center();
         center();
