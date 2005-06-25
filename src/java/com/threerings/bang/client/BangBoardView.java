@@ -408,6 +408,7 @@ public class BangBoardView extends BoardView
             }
             // note the piece we desire to fire upon
             _action[3] = piece.pieceId;
+            ((UnitSprite)getPieceSprite(piece)).setPendingShot(true);
             executeAction();
             return true;
         }
@@ -422,6 +423,7 @@ public class BangBoardView extends BoardView
                 if (target != null && _selection.validTarget(target)) {
                     log.info("randomly targeting " + target.info());
                     _action[3] = target.pieceId;
+                    ((UnitSprite)getPieceSprite(target)).setPendingShot(true);
                 }
             }
             executeAction();
@@ -689,7 +691,13 @@ public class BangBoardView extends BoardView
         if (viz != null) {
             Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
             viz.init(_ctx, this, opiece, piece);
-            getPieceSprite(piece).queueEffect(viz);
+            PieceSprite sprite = getPieceSprite(piece);
+            sprite.queueEffect(viz);
+
+            // if they just got shot, clear any pending shot
+            if (effect.equals("bang")) {
+                ((UnitSprite)sprite).setPendingShot(false);
+            }
         }
 
 //         // currently just update the piece in question immediately

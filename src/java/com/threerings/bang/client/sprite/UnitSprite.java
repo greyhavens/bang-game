@@ -70,7 +70,23 @@ public class UnitSprite extends MobileSprite
      */
     public void setTargeted (boolean targeted)
     {
-        _tgtquad.setForceCull(!targeted);
+        if (!_pendingShot) {
+            _tgtquad.setSolidColor(ColorRGBA.white);
+            _tgtquad.setForceCull(!targeted);
+        }
+    }
+
+    /**
+     * Indicates that we have requested to shoot this piece but it is not
+     * yet confirmed by the server.
+     */
+    public void setPendingShot (boolean pending)
+    {
+        if (_pendingShot != pending) {
+            _pendingShot = pending;
+            _tgtquad.setSolidColor(ColorRGBA.red);
+            _tgtquad.setForceCull(!pending);
+        }
     }
 
     @Override // documentation inherited
@@ -306,6 +322,7 @@ public class UnitSprite extends MobileSprite
     protected Quad _ticks, _damage, _movable;
 
     protected int _odamage;
+    protected boolean _pendingShot;
 
     protected static Vector3f _tvec = new Vector3f();
     protected static Quaternion _tquat = new Quaternion();
