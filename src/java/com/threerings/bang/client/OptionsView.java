@@ -158,8 +158,12 @@ public class OptionsView extends BDecoratedWindow
         }
 
         public String toString () {
-            return mode.getWidth() + "x" + mode.getHeight() + "x" +
-                mode.getBitsPerPixel() + " " + mode.getFrequency() + "Hz";
+            String text = mode.getWidth() + "x" + mode.getHeight();
+            if (mode.getBitsPerPixel() > 0) {
+                text += ("x" + mode.getBitsPerPixel() + " " +
+                         mode.getFrequency() + "Hz");
+            }
+            return text;
         }
 
         public int compareTo (Object other) {
