@@ -111,6 +111,7 @@ public class UnitSprite extends MobileSprite
         if (_piece.damage != _odamage) {
             _damtex.setTexture(createDamageTexture());
             _damage.updateRenderState();
+            _odamage = _piece.damage;
         }
     }
 
