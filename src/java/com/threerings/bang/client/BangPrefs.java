@@ -62,7 +62,8 @@ public class BangPrefs
     {
         config.setValue("display_width", mode.getWidth());
         config.setValue("display_height", mode.getHeight());
-        config.setValue("display_bpp", mode.getBitsPerPixel());
+        // see OptionsView for explanation for this hackery
+        config.setValue("display_bpp", Math.max(mode.getBitsPerPixel(), 16));
         config.setValue("display_freq", mode.getFrequency());
     }
 
