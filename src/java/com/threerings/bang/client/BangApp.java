@@ -32,14 +32,14 @@ import static com.threerings.bang.Log.log;
  */
 public class BangApp extends JmeApp
 {
-    public static void main (String[] args)
+    public static void configureLog (String file)
     {
         // we do this all in a strange order to avoid logging anything
         // unti we set up our log formatter but we can't do that until
         // after we've redirected system out and err
         String dlog = null;
         if (System.getProperty("no_log_redir") == null) {
-            dlog = BangClient.localDataDir("bang.log");
+            dlog = BangClient.localDataDir(file);
             try {
                 PrintStream logOut = new PrintStream(
                     new FileOutputStream(dlog), true);
@@ -53,11 +53,18 @@ public class BangApp extends JmeApp
             }
         }
 
+        // turn off JME's verbose logging
         LoggingSystem.getLogger().setLevel(Level.WARNING);
 
         // set up the proper logging services
         com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
         OneLineLogFormatter.configureDefaultHandler();
+    }
+
+    public static void main (String[] args)
+    {
+        // configure our debug log
+        configureLog("bang.log");
 
         String server = "localhost";
         if (args.length > 0) {

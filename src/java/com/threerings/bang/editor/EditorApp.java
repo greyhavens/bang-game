@@ -11,13 +11,10 @@ import javax.swing.JFrame;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
-import com.jme.util.LoggingSystem;
-
-import com.samskivert.util.LoggingLogProvider;
-import com.samskivert.util.OneLineLogFormatter;
 
 import com.threerings.jme.JmeCanvasApp;
 
+import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.RenderUtil;
 
@@ -32,14 +29,11 @@ public class EditorApp extends JmeCanvasApp
 
     public static void main (String[] args)
     {
+        // configure our debug log
+        BangApp.configureLog("editor.log");
+
         // save these for later
         appArgs = args;
-
-        // set up the proper logging services
-        com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
-        OneLineLogFormatter.configureDefaultHandler();
-
-        LoggingSystem.getLogger().setLevel(Level.WARNING);
 
         // create our editor server which we're going to run in the same
         // JVM with the client

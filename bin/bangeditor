@@ -1,3 +1,4 @@
 #!/bin/sh
 
-`dirname $0`/runjava com.threerings.bang.editor.EditorApp "$*"
+`dirname $0`/runjava -- -Dno_log_redir=true \
+  com.threerings.bang.editor.EditorApp "$*"

@@ -155,9 +155,12 @@ public class BoardView extends BComponent
         _bangobj.addListener(_blistener);
 
         // reset the camera for this board
-        ((CameraHandler)_ctx.getInputHandler()).setBoardDimens(
-            TILE_SIZE * _bangobj.board.getWidth(),
-            TILE_SIZE * _bangobj.board.getHeight());
+        CameraHandler ch = (CameraHandler)_ctx.getInputHandler();
+        if (ch != null) {
+            ch.setBoardDimens(
+                TILE_SIZE * _bangobj.board.getWidth(),
+                TILE_SIZE * _bangobj.board.getHeight());
+        }
 
         // freshen up
         refreshBoard();
