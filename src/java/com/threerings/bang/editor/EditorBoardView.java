@@ -36,8 +36,10 @@ public class EditorBoardView extends BoardView
 
     public void setTile (int tx, int ty, Terrain tile)
     {
-        _bangobj.board.setTile(tx, ty, tile);
-        refreshTile(tx, ty);
+        if (_bangobj.board.getBounds().contains(tx, ty) &&
+            _bangobj.board.setTile(tx, ty, tile)) {
+            refreshTile(tx, ty);
+        }
     }
 
     // documentation inherited from interface MouseListener

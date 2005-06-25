@@ -98,16 +98,18 @@ public class BangBoard extends SimpleStreamableObject
     /**
      * Updates the tile value at the specified x and y coordinate.
      */
-    public void setTile (int xx, int yy, Terrain tile)
+    public boolean setTile (int xx, int yy, Terrain tile)
     {
         int index = yy * _width + xx;
-        if (index >= _tiles.length) {
+        if (index < 0 || index >= _tiles.length) {
             log.warning("Requested to set OOB tile [x=" + xx + ", y=" + yy +
                         ", tile=" + tile + "].");
             Thread.dumpStack();
-        } else {
+        } else if (_tiles[index] != tile.code) {
             _tiles[index] = tile.code;
+            return true;
         }
+        return false;
     }
 
     /**
