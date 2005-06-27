@@ -512,16 +512,16 @@ public class BoardView extends BComponent
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
             Geometry tmesh = _pick.getPickData(ii).getTargetMesh();
             Vector3f loc = tmesh.getLocalTranslation();
-            int ohx = _high.x, ohy = _high.y;
+//             int ohx = _high.x, ohy = _high.y;
             _high.x = (int)((loc.x - TILE_SIZE/2) / TILE_SIZE);
             _high.y = (int)((loc.y - TILE_SIZE/2) / TILE_SIZE);
-            if (ohx != _high.x || ohy != _high.y) {
-                log.info("Updating highlight " + _high + ".");
-            }
+//             if (ohx != _high.x || ohy != _high.y) {
+//                 log.info("Updating highlight " + _high + ".");
+//             }
             return;
         }
         if (_high.x != -1 || _high.y != -1) {
-            log.info("Clearing highlight.");
+//             log.info("Clearing highlight.");
             _high.x = -1;
             _high.y = -1;
         }

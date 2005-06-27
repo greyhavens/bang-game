@@ -131,12 +131,14 @@ public class UnitSprite extends MobileSprite
 
         // this icon is displayed when the mouse is hovered over us
         _hovquad = RenderUtil.createIcon(_hovtex);
+        _hovquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         attachChild(_hovquad);
         _hovquad.setForceCull(true);
 
         // this composite of icons combines to display our status
         _status = new StatusNode();
         _status.setRenderState(RenderUtil.iconAlpha);
+        _status.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _status.updateRenderState();
         _status.setLocalTranslation(new Vector3f(0, 0, 0.1f));
         attachChild(_status);
@@ -185,6 +187,16 @@ public class UnitSprite extends MobileSprite
         bbn.attachChild(_tgtquad);
         attachChild(bbn);
         _tgtquad.setForceCull(true);
+
+        // we display a simple shadow texture on the ground beneath us
+        _shadow = RenderUtil.createIcon(TILE_SIZE, TILE_SIZE);
+        _shadow.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        float height = _piece.isFlyer() ? -2 * TILE_SIZE : 0;
+        height += 0.1f;
+        _shadow.setLocalTranslation(new Vector3f(0, 0, height));
+        _shadow.setRenderState(_shadtex);
+        _shadow.updateRenderState();
+        attachChild(_shadow);
     }
 
     @Override // documentation inherited
@@ -241,6 +253,8 @@ public class UnitSprite extends MobileSprite
             ctx, ctx.loadImage("media/textures/ustatus/crosshairs.png"));
         _movetex = RenderUtil.createTexture(
             ctx, ctx.loadImage("media/textures/ustatus/tick_ready.png"));
+        _shadtex = RenderUtil.createTexture(
+            ctx, ctx.loadImage("media/textures/ustatus/shadow.png"));
         _ticktex = new TextureState[5];
         for (int ii = 0; ii < 5; ii++) {
             _ticktex[ii] = RenderUtil.createTexture(
@@ -317,7 +331,7 @@ public class UnitSprite extends MobileSprite
 
     protected String _type;
     protected Model _model;
-    protected Quad _hovquad, _tgtquad;
+    protected Quad _hovquad, _tgtquad, _shadow;
 
     protected StatusNode _status;
     protected Quad _ticks, _damage, _movable;
@@ -329,7 +343,7 @@ public class UnitSprite extends MobileSprite
     protected static Quaternion _tquat = new Quaternion();
 
     protected static BufferedImage _dfull, _dempty;
-    protected static TextureState _hovtex, _tgttex, _movetex, _damtex;
+    protected static TextureState _hovtex, _tgttex, _movetex, _damtex, _shadtex;
     protected static TextureState[] _ticktex;
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
