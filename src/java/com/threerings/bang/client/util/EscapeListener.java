@@ -11,16 +11,13 @@ import com.jme.input.KeyInput;
 /**
  * Listens for the escape key to be pressed and does something.
  */
-public abstract class EscapeListener implements EventListener
+public abstract class EscapeListener extends KeyListener
 {
-    public void eventDispatched (BEvent event)
+    @Override // documentation inherited
+    public void keyPressed (int keyCode)
     {
-        if (event instanceof KeyEvent) {
-            KeyEvent kev = (KeyEvent)event;
-            if (kev.getKeyCode() == KeyInput.KEY_ESCAPE &&
-                kev.getType() == KeyEvent.KEY_PRESSED) {
-                escapePressed();
-            }
+        if (keyCode == KeyInput.KEY_ESCAPE) {
+            escapePressed();
         }
     }
 

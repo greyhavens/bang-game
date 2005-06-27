@@ -13,6 +13,7 @@ import java.util.Iterator;
 
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
+import com.jme.input.KeyInput;
 
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
@@ -60,6 +61,15 @@ public class BangBoardView extends BoardView
         addListener(this);
 
         addListener(new EscapeListener() {
+            public void keyPressed (int keyCode) {
+                switch (keyCode) {
+                case KeyInput.KEY_SPACE:
+                    _ctrl.startChat();
+                    break;
+                default:
+                    super.keyPressed(keyCode);
+                }
+            }
             public void escapePressed () {
                 InGameOptionsView oview = new InGameOptionsView(_ctx);
                 _ctx.getInputDispatcher().addWindow(oview);

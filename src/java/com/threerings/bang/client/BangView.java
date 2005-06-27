@@ -30,6 +30,9 @@ public class BangView
     /** Displays our board. */
     public BangBoardView view;
 
+    /** Our chat display. */
+    public ChatView chat;
+
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
@@ -44,8 +47,27 @@ public class BangView
                 return null;
             }
         };
-        _chat = new ChatView(_ctx, _ctx.getChatDirector());
-        _chatwin.add(_chat, BorderLayout.CENTER);
+        chat = new ChatView(_ctx, _ctx.getChatDirector()) {
+            public void wasAdded () {
+                super.wasAdded();
+                _text.getBackground().getNode().setForceCull(true);
+                _input.getBackground().getNode().setForceCull(true);
+            }
+            public void requestFocus () {
+                super.requestFocus();
+                _input.getBackground().getNode().setForceCull(false);
+            }
+            protected boolean handleInput (String text) {
+                boolean chatted = super.handleInput(text);
+                // relinquish the focus when we're done chatting
+                if (chatted) {
+                    _ctx.getInputDispatcher().requestFocus(null);
+                    _input.getBackground().getNode().setForceCull(true);
+                }
+                return chatted;
+            }
+        };
+        _chatwin.add(chat, BorderLayout.CENTER);
     }
 
     /** Called by the controller when the big shot and card selection
@@ -120,13 +142,13 @@ public class BangView
         int height = _ctx.getDisplay().getHeight();
         _pstatus.setLocation(10, height - _pstatus.getHeight() - 10);
 
-        _chat.willEnterPlace(plobj);
+        chat.willEnterPlace(plobj);
     }
 
     // documentation inherited from interface
     public void didLeavePlace (PlaceObject plobj)
     {
-        _chat.didLeavePlace(plobj);
+        chat.didLeavePlace(plobj);
 
         // shut down the main game view
         view.shutdown();
@@ -150,9 +172,6 @@ public class BangView
 
     /** Contain various onscreen displays. */
     protected BWindow _pstatus, _chatwin;
-
-    /** Displays chat. */
-    protected ChatView _chat;
 
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;

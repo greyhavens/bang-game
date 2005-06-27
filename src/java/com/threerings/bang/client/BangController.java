@@ -61,6 +61,13 @@ public class BangController extends GameController
         _ctx.getLocationDirector().moveBack();
     }
 
+    /** Called when we desire to start chatting. Focuses the chat input
+     * field. */
+    public void startChat ()
+    {
+        _view.chat.requestFocus();
+    }
+
     /** Handles a request to move a piece. */
     public void moveAndFire (int pieceId, int tx, int ty, final int targetId)
     {
