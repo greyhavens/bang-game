@@ -326,6 +326,13 @@ public abstract class Piece extends SimpleStreamableObject
     public Point computeShotLocation (Piece target, PointSet moveSet)
     {
         int fdist = getFireDistance(), moves = Integer.MAX_VALUE;
+
+        // first check if we can fire without moving
+        if (target.getDistance(x, y) <= fdist) {
+            return new Point(x, y);
+        }
+
+        // next search the move set for the closest location
         Point spot = null;
         for (int ii = 0, ll = moveSet.size(); ii < ll; ii++) {
             int px = moveSet.getX(ii), py = moveSet.getY(ii);
@@ -338,6 +345,7 @@ public abstract class Piece extends SimpleStreamableObject
                 spot.setLocation(px, py);
             }
         }
+
         return spot;
     }
 

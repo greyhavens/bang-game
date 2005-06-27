@@ -38,6 +38,8 @@ public class RenderUtil
 
     public static ZBufferState lequalZBuf;
 
+    public static ZBufferState overlayZBuf;
+
     /**
      * Initializes our commonly used render states.
      */
@@ -50,12 +52,18 @@ public class RenderUtil
         iconAlpha.setEnabled(true);
 
         alwaysZBuf = ctx.getRenderer().createZBufferState();
+        alwaysZBuf.setWritable(true);
         alwaysZBuf.setEnabled(true);
         alwaysZBuf.setFunction(ZBufferState.CF_ALWAYS);
 
         lequalZBuf = ctx.getRenderer().createZBufferState();
         lequalZBuf.setEnabled(true);
         lequalZBuf.setFunction(ZBufferState.CF_LEQUAL);
+
+        overlayZBuf = ctx.getRenderer().createZBufferState();
+        overlayZBuf.setEnabled(true);
+        overlayZBuf.setWritable(false);
+        overlayZBuf.setFunction(ZBufferState.CF_LEQUAL);
 
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.STARTERS) {
@@ -135,6 +143,7 @@ public class RenderUtil
     {
         Quad icon = new Quad("icon", width, height);
         icon.setRenderState(iconAlpha);
+        icon.setRenderState(overlayZBuf);
         icon.setLightCombineMode(LightState.OFF);
         return icon;
     }

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.client;
 
+import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
@@ -22,7 +23,7 @@ public class CameraHandler extends GodViewHandler
         super(cam, api);
 
         // set up limits on zooming and panning
-        setZoomLimits(50f, 200f);
+        setZoomLimits(100f, 200f);
         setPanLimits(-50, -50, 250, 250);
 
         // set up the camera
@@ -70,6 +71,15 @@ public class CameraHandler extends GodViewHandler
 
         // set the pan limits based on the board size
         setPanLimits(-50, -50, breadth+50, depth+50);
+    }
+
+    protected void setKeyBindings (String api)
+    {
+        super.setKeyBindings(api);
+
+        // additional key bindings for the zoom actions
+        keyboard.set("zoomIn", KeyInput.KEY_E);
+        keyboard.set("zoomOut", KeyInput.KEY_Q);
     }
 
 //     protected void addPanActions (Camera cam)

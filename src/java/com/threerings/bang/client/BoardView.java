@@ -335,15 +335,14 @@ public class BoardView extends BComponent
     public void mouseWheeled (MouseEvent e)
     {
         GodViewHandler ih = (GodViewHandler)_ctx.getInputHandler();
-//         float zoom = ih.getZoomLevel();
-//         if (e.getDelta() > 0) {
-//             zoom = Math.max(0f, zoom - 0.1f);
-//         } else {
-//             zoom = Math.min(1f, zoom + 0.1f);
-//         }
-//         ih.setZoomLevel(zoom);
         if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0) {
-            // TODO: zoom in and out
+            float zoom = ih.getZoomLevel();
+            if (e.getDelta() > 0) {
+                zoom = Math.max(0f, zoom - 0.1f);
+            } else {
+                zoom = Math.min(1f, zoom + 0.1f);
+            }
+            ih.setZoomLevel(zoom);
         } else {
             ih.rotateCamera((e.getDelta() > 0) ?
                             -FastMath.PI/8 : FastMath.PI/8);
@@ -542,7 +541,7 @@ public class BoardView extends BComponent
                              elev * TILE_SIZE + 0.1f));
             quad.setModelBound(new BoundingBox());
             quad.updateModelBound();
-            quad.setRenderState(RenderUtil.lequalZBuf);
+            quad.setRenderState(RenderUtil.overlayZBuf);
             quad.updateRenderState();
             _hnode.attachChild(quad);
         }
@@ -558,7 +557,7 @@ public class BoardView extends BComponent
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
                              sy * TILE_SIZE + TILE_SIZE/2,
                              _bangobj.board.getElevation(sx, sy) * TILE_SIZE));
-            quad.setRenderState(RenderUtil.lequalZBuf);
+            quad.setRenderState(RenderUtil.overlayZBuf);
             _hnode.attachChild(quad);
         }
     }

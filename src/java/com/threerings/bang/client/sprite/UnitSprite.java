@@ -129,6 +129,14 @@ public class UnitSprite extends MobileSprite
             loadTextures(ctx);
         }
 
+        // we display a simple shadow texture on the ground beneath us
+        _shadow = RenderUtil.createIcon(_shadtex);
+        _shadow.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        float height = _piece.isFlyer() ? -2 * TILE_SIZE : 0;
+        height += 0.1f;
+        _shadow.setLocalTranslation(new Vector3f(0, 0, height));
+        attachChild(_shadow);
+
         // this icon is displayed when the mouse is hovered over us
         _hovquad = RenderUtil.createIcon(_hovtex);
         _hovquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -188,16 +196,6 @@ public class UnitSprite extends MobileSprite
         bbn.attachChild(_tgtquad);
         attachChild(bbn);
         _tgtquad.setForceCull(true);
-
-        // we display a simple shadow texture on the ground beneath us
-        _shadow = RenderUtil.createIcon(TILE_SIZE, TILE_SIZE);
-        _shadow.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        float height = _piece.isFlyer() ? -2 * TILE_SIZE : 0;
-        height += 0.1f;
-        _shadow.setLocalTranslation(new Vector3f(0, 0, height));
-        _shadow.setRenderState(_shadtex);
-        _shadow.updateRenderState();
-        attachChild(_shadow);
     }
 
     @Override // documentation inherited
