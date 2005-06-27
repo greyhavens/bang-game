@@ -211,7 +211,6 @@ public class BangBoardView extends BoardView
         if (_vstate != null) {
             _vstate.reveal();
             adjustEnemyVisibility();
-//             dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
         }
     }
 
@@ -228,50 +227,8 @@ public class BangBoardView extends BoardView
         if (_vstate != null) {
             _vstate.reveal();
             adjustEnemyVisibility();
-//             dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
         }
     }
-
-//     @Override // documentation inherited
-//     protected void paintMouseTile (Graphics2D gfx, int mx, int my)
-//     {
-//         // only highlight the mouse coordinates while we're in play
-//         if (_bangobj != null && _bangobj.isInPlay()) {
-//             super.paintMouseTile(gfx, mx, my);
-//         }
-//     }
-
-//     @Override // documentation inherited
-//     protected void paintInFront (Graphics2D gfx, Rectangle dirtyRect)
-//     {
-//         super.paintInFront(gfx, dirtyRect);
-
-//         // render our possible moves
-//         if (_moveSet.size() > 0) {
-//             renderSet(gfx, dirtyRect, _moveSet, _whiteRenderer);
-//         }
-
-//         // render the necessary tiles as dimmed if it is not "visible"
-//         if (_board != null && _vstate != null) {
-//             Composite ocomp = gfx.getComposite();
-//             gfx.setComposite(SET_ALPHA);
-//             gfx.setColor(Color.black);
-//             _pr.setLocation(0, 0);
-//             for (int yy = 0, hh = _board.getHeight(); yy < hh; yy++) {
-//                 _pr.x = 0;
-//                 int xoff = yy * _board.getWidth();
-//                 for (int xx = 0, ww = _board.getWidth(); xx < ww; xx++) {
-//                     if (!_vstate.getVisible(xoff+xx) &&
-//                         dirtyRect.intersects(_pr)) {
-//                         gfx.fill(_pr);
-//                     }
-//                     _pr.x += SQUARE;
-//                 }
-//                 _pr.y += SQUARE;
-//             }
-//             gfx.setComposite(ocomp);
-//         }
-//     }
 
     @Override // documentation inherited
     protected boolean isHoverable (Sprite sprite)
@@ -287,10 +244,12 @@ public class BangBoardView extends BoardView
         if (!piece.isAlive()) {
             return false;
         }
-        if (_attackSet.size() == 0) {
-            return (piece.owner == _pidx) && usprite.isSelectable();
+        boolean oursAndMovable =
+            (piece.owner == _pidx) && usprite.isSelectable();
+        if (_attackSet.size() > 0) {
+            return _attackSet.contains(piece.x, piece.y) || oursAndMovable;
         }
-        return true;
+        return oursAndMovable;
     }
 
     /** Handles a left mouse button click. */
@@ -637,7 +596,6 @@ public class BangBoardView extends BoardView
         // if we're out of the game, just reveal everything
         if (!_bangobj.hasLivePieces(_pidx)) {
             _vstate.reveal();
-//             dirtyScreenRect(new Rectangle(0, 0, getWidth(), getHeight()));
             return;
         }
 
@@ -665,15 +623,6 @@ public class BangBoardView extends BoardView
                 }
             }
         }
-
-//         // now dirty any tiles whose visibility changed
-//         for (int yy = 0, ly = _board.getHeight(); yy < ly; yy++) {
-//             for (int xx = 0, lx = _board.getHeight(); xx < lx; xx++) {
-//                 if (_vstate.visibilityChanged(xx, yy)) {
-//                     dirtyTile(xx, yy);
-//                 }
-//             }
-//         }
     }
 
     /** Makes enemy pieces visible or invisible based on _vstate. */
@@ -723,20 +672,6 @@ public class BangBoardView extends BoardView
                 ((UnitSprite)sprite).setPendingShot(false);
             }
         }
-
-//         // currently just update the piece in question immediately
-//         pieceUpdated(opiece, piece);
-
-//         // and create a simple label animation naming the effect
-//         Label label = new Label(effect);
-//         label.setTextColor(Color.white);
-//         label.setAlternateColor(Color.black);
-//         label.setStyle(Label.OUTLINE);
-//         LabelSprite lsprite = new LabelSprite(label);
-//         lsprite.setRenderOrder(100);
-//         int px = piece.x * SQUARE, py = piece.y * SQUARE;
-//         LinePath path = new LinePath(px, py, px, py - 25, 1000L);
-//         addAnimation(new SpriteAnimation(_spritemgr, lsprite, path));
     }
 
     /** Used to remove shot sprites when they reach their target. */

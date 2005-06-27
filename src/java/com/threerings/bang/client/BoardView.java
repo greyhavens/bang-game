@@ -49,6 +49,7 @@ import com.threerings.bang.client.sprite.UnitSprite;
 import com.threerings.bang.data.BangBoard;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.data.BangObject;
+import com.threerings.bang.data.Terrain;
 import com.threerings.bang.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.PointSet;
@@ -369,26 +370,15 @@ public class BoardView extends BComponent
         Node gnode = new Node("ground");
         _node.attachChild(gnode);
 
-        Texture texture = TextureManager.loadTexture(
-            getClass().getClassLoader().getResource(
-                "rsrc/media/textures/scrub.jpg"),
-            Texture.MM_LINEAR, Texture.FM_NEAREST, Image.GUESS_FORMAT_NO_S3TC,
-            1.0f, true);
-        TextureState tstate =
-            ctx.getDisplay().getRenderer().createTextureState();
-        tstate.setEnabled(true);
-        tstate.setTexture(texture);
-        int twid = texture.getImage().getWidth()/6;
-        int thei = texture.getImage().getHeight()/6;
-
-        int gsize = 1000, gx = gsize/twid, gy = gsize/thei;
+        int gsize = 1000, tsize = 64, gx = gsize/tsize, gy = gsize/tsize;
         for (int yy = -gy/2; yy < gy/2; yy++) {
             for (int xx = -gx/2; xx < gx/2; xx++) {
-                Quad ground = new Quad("ground", twid-5, thei-5);
+                Quad ground = new Quad("ground", tsize, tsize);
                 gnode.attachChild(ground);
                 ground.setLocalTranslation(
-                    new Vector3f(xx*twid + twid/2, yy*thei + thei/2, 0f));
-                ground.setRenderState(tstate);
+                    new Vector3f(xx*tsize + tsize/2, yy*tsize + tsize/2, 0f));
+                ground.setRenderState(
+                    RenderUtil.getGroundTexture(Terrain.SAND));
                 ground.updateRenderState();
             }
         }

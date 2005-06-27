@@ -302,7 +302,6 @@ public class BangBoard extends SimpleStreamableObject
         // final coordinate)
         byte remain = (byte)(mdist * BASE_TRAVERSAL + 1);
         _pgrid[piece.y*_width+piece.x] = remain;
-        moves.add(piece.x, piece.y);
 
         // now consider each of our four neighbors
         considerMoving(piece, moves, piece.x+1, piece.y, remain);

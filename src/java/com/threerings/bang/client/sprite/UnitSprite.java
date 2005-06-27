@@ -132,6 +132,7 @@ public class UnitSprite extends MobileSprite
         // this icon is displayed when the mouse is hovered over us
         _hovquad = RenderUtil.createIcon(_hovtex);
         _hovquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _hovquad.setLocalTranslation(new Vector3f(0, 0, 0.2f));
         attachChild(_hovquad);
         _hovquad.setForceCull(true);
 
