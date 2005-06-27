@@ -78,30 +78,7 @@ public class BoardView extends BComponent
         _node.attachChild(new SkyNode(ctx));
 
         // create some fake ground
-        Texture texture = TextureManager.loadTexture(
-            getClass().getClassLoader().getResource(
-                "rsrc/media/textures/scrub.jpg"),
-            Texture.MM_LINEAR, Texture.FM_NEAREST, Image.GUESS_FORMAT_NO_S3TC,
-            1.0f, true);
-        TextureState tstate =
-            ctx.getDisplay().getRenderer().createTextureState();
-        tstate.setEnabled(true);
-        tstate.setTexture(texture);
-        int twid = texture.getImage().getWidth()/4;
-        int thei = texture.getImage().getHeight()/4;
-
-        int gsize = 2000, gx = gsize/twid, gy = gsize/thei;
-        for (int yy = -gy/2; yy < gy/2; yy++) {
-            for (int xx = -gx/2; xx < gx/2; xx++) {
-                Quad ground = new Quad("ground", twid, thei);
-                _node.attachChild(ground);
-                ground.setLightCombineMode(LightState.OFF);
-                ground.setLocalTranslation(
-                    new Vector3f(xx*twid + twid/2, yy*thei + thei/2, 0f));
-                ground.setRenderState(tstate);
-                ground.updateRenderState();
-            }
-        }
+        createGround(ctx);
 
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
@@ -211,9 +188,6 @@ public class BoardView extends BComponent
             // this will trigger the creation, initialization and whatnot
             pieceUpdated(null, (Piece)iter.next());
         }
-
-        // if the board is smaller than we are, center it in our view
-        centerBoard();
     }
 
     /**
@@ -386,20 +360,41 @@ public class BoardView extends BComponent
 //         }
     }
 
-    /** Relocates our virtual view to center the board iff it is smaller
-     * than the viewport. */
-    protected void centerBoard ()
+    /**
+     * Creates the geometry that defines the ground around and behind the
+     * board.
+     */
+    protected void createGround (BangContext ctx)
     {
-//         int width = _board.getWidth() * SQUARE,
-//             height = _board.getHeight() * SQUARE;
-//         int nx = _vbounds.x, ny = _vbounds.y;
-//         if (width < _vbounds.width) {
-//             nx = (width - _vbounds.width) / 2;
-//         }
-//         if (height < _vbounds.height) {
-//             ny = (height - _vbounds.height) / 2;
-//         }
-//         setViewLocation(nx, ny);
+        Node gnode = new Node("ground");
+        _node.attachChild(gnode);
+
+        Texture texture = TextureManager.loadTexture(
+            getClass().getClassLoader().getResource(
+                "rsrc/media/textures/scrub.jpg"),
+            Texture.MM_LINEAR, Texture.FM_NEAREST, Image.GUESS_FORMAT_NO_S3TC,
+            1.0f, true);
+        TextureState tstate =
+            ctx.getDisplay().getRenderer().createTextureState();
+        tstate.setEnabled(true);
+        tstate.setTexture(texture);
+        int twid = texture.getImage().getWidth()/6;
+        int thei = texture.getImage().getHeight()/6;
+
+        int gsize = 1000, gx = gsize/twid, gy = gsize/thei;
+        for (int yy = -gy/2; yy < gy/2; yy++) {
+            for (int xx = -gx/2; xx < gx/2; xx++) {
+                Quad ground = new Quad("ground", twid-5, thei-5);
+                gnode.attachChild(ground);
+                ground.setLocalTranslation(
+                    new Vector3f(xx*twid + twid/2, yy*thei + thei/2, 0f));
+                ground.setRenderState(tstate);
+                ground.updateRenderState();
+            }
+        }
+
+        gnode.setLightCombineMode(LightState.OFF);
+        gnode.updateRenderState();
     }
 
     /**

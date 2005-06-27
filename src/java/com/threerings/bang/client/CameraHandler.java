@@ -22,7 +22,7 @@ public class CameraHandler extends GodViewHandler
         super(cam, api);
 
         // set up limits on zooming and panning
-        setZoomLimits(50f, 250f);
+        setZoomLimits(50f, 200f);
         setPanLimits(-50, -50, 250, 250);
 
         // set up the camera
@@ -67,12 +67,15 @@ public class CameraHandler extends GodViewHandler
         _camera.setLeft(left);
         _camera.setUp(up);
         _camera.update();
+
+        // set the pan limits based on the board size
+        setPanLimits(-50, -50, breadth+50, depth+50);
     }
 
-    protected void addPanActions (Camera cam)
-    {
-        // no panning
-    }
+//     protected void addPanActions (Camera cam)
+//     {
+//         // no panning
+//     }
 
     protected void addRollActions (Camera cam)
     {
