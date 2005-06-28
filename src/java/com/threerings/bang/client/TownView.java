@@ -3,19 +3,26 @@
 
 package com.threerings.bang.client;
 
-import com.jme.renderer.ColorRGBA;
+import java.awt.Polygon;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.logging.Level;
 
 import com.jme.bui.BButton;
 import com.jme.bui.BWindow;
 import com.jme.bui.background.ScaledBackground;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
+import com.jme.bui.event.MouseAdapter;
+import com.jme.bui.event.MouseEvent;
 import com.jme.bui.layout.GroupLayout;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.ranch.client.RanchView;
 import com.threerings.bang.util.BangContext;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Displays the main "town" menu interface where a player can navigate to
@@ -23,52 +30,90 @@ import com.threerings.bang.util.BangContext;
  * and wherever else we might dream up.
  */
 public class TownView extends BWindow
-    implements ActionListener
 {
     public TownView (BangContext ctx)
     {
         super(ctx.getLookAndFeel(), GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;
-        _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
         _msgs = ctx.getMessageManager().getBundle("town");
+
+        int width = ctx.getDisplay().getWidth();
+        int height = ctx.getDisplay().getHeight();
 
         // TODO: unhack
         String tpath = "rsrc/menu/frontier";
+        ClassLoader loader = getClass().getClassLoader();
         setBackground(new ScaledBackground(
-                          getClass().getClassLoader().getResource(
-                              tpath + "/town.png"), 0, 0, 0, 0));
+                          loader.getResource(tpath + "/town.png"), 0, 0, 0, 0));
 
-        // just add a bunch of buttons for now
-        BButton btn;
-        add(btn = new BButton(_msgs.get("m.to_ranch"), "to_ranch"));
-        btn.addListener(this);
-        add(btn = new BButton(_msgs.get("m.to_bank"), "to_bank"));
-        btn.addListener(this);
-        add(btn = new BButton(_msgs.get("m.to_store"), "to_store"));
-        btn.addListener(this);
-        add(btn = new BButton(_msgs.get("m.to_saloon"), "to_saloon"));
-        btn.addListener(this);
-        add(btn = new BButton(_msgs.get("m.logoff"), "logoff"));
-        btn.addListener(this);
+        // load up the polygons
+        Properties props = new Properties();
+        try {
+            props.load(loader.getResourceAsStream(tpath + "/menu.properties"));
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to load menu properties " +
+                    "[path=" + tpath + "/menu.properties].", e);
+        }
+        Enumeration iter = props.propertyNames();
+        while (iter.hasMoreElements()) {
+            String command = (String)iter.nextElement();
+            float[] coords = StringUtil.parseFloatArray(
+                props.getProperty(command));
+            if (coords == null || coords.length % 2 != 0 || coords.length < 6) {
+                log.warning("Rejecting malformed command [command=" + command +
+                            ", coords=" + props.getProperty(command) + "].");
+                continue;
+            }
+            Polygon poly = new Polygon();
+            for (int ii = 0; ii < coords.length; ii += 2) {
+                poly.addPoint(Math.round(width * coords[ii]),
+                              Math.round(height * coords[ii+1]));
+            }
+            _polys.add(poly);
+            _commands.add(command);
+        }
+
+        addListener(new MouseAdapter() { 
+            public void mousePressed (MouseEvent event) {
+                String cmd = getCommand(event.getX(), event.getY());
+                if (cmd != null) {
+                    fireCommand(cmd);
+                }
+            }
+            public void mouseMoved (MouseEvent event) {
+                // TODO: display highlights when we mouse over a region
+            }
+       });
     }
 
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
+    protected String getCommand (int mx, int my)
     {
-        if ("logoff".equals(event.getAction())) {
+        for (int ii = 0, ll = _polys.size(); ii < ll; ii++) {
+            if (_polys.get(ii).contains(mx, my)) {
+                return _commands.get(ii);
+            }
+        }
+        return null;
+    }
+
+    protected void fireCommand (String command)
+    {
+        if ("logoff".equals(command)) {
             _ctx.getApp().stop();
 
-        } else if ("to_ranch".equals(event.getAction())) {
+        } else if ("to_ranch".equals(command)) {
             RanchView view = new RanchView(_ctx);
             view.setBounds(0, 0, _ctx.getDisplay().getWidth(),
                            _ctx.getDisplay().getHeight());
             _ctx.getInputDispatcher().addWindow(view);
 
-        } else if ("to_bank".equals(event.getAction())) {
+        } else if ("to_bank".equals(command)) {
+            return; // TODO
 
-        } else if ("to_store".equals(event.getAction())) {
+        } else if ("to_store".equals(command)) {
+            return; // TODO
 
-        } else if ("to_saloon".equals(event.getAction())) {
+        } else if ("to_saloon".equals(command)) {
             _ctx.getLocationDirector().moveTo(2);
         }
 
@@ -78,4 +123,7 @@ public class TownView extends BWindow
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
+
+    protected ArrayList<Polygon> _polys = new ArrayList<Polygon>();
+    protected ArrayList<String> _commands = new ArrayList<String>();
 }
