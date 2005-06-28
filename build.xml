@@ -87,6 +87,15 @@
     </convert>
   </target>
 
+  <!-- creates the serialized fringe config -->
+  <target name="fringe">
+    <taskdef name="conffringe"
+      classname="com.threerings.jme.tile.tools.CompileFringeConfigurationTask"
+      classpathref="classpath"/>
+    <conffringe config="rsrc/tiles/fringe/config.xml"
+                target="rsrc/tiles/fringe/config.dat"/>
+  </target>
+
   <!-- cleans out the installed application -->
   <target name="clean">
     <delete dir="${deploy.dir}"/>
