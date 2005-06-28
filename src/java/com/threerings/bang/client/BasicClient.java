@@ -92,7 +92,7 @@ public class BasicClient
         // these manage local client resources
         _rsrcmgr = new ResourceManager("rsrc");
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
-        _lnf = BLookAndFeel.getDefaultLookAndFeel();
+        _lnf = new BangLookAndFeel();
         _mcache = new ModelCache(_ctx);
 
         // load up our fringe configuration

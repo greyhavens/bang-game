@@ -39,6 +39,7 @@ public class TownView extends BWindow
 
         int width = ctx.getDisplay().getWidth();
         int height = ctx.getDisplay().getHeight();
+        setBounds(0, 0, width, height);
 
         // TODO: unhack
         String tpath = "rsrc/menu/frontier";

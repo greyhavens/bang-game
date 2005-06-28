@@ -10,11 +10,12 @@ import com.jme.bui.BLabel;
 import com.jme.bui.BPasswordField;
 import com.jme.bui.BTextField;
 import com.jme.bui.BWindow;
-import com.jme.bui.background.TintedBackground;
+import com.jme.bui.background.ScaledBackground;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.GroupLayout;
 import com.jme.bui.layout.TableLayout;
+import com.jme.bui.util.Dimension;
 import com.jme.renderer.ColorRGBA;
 
 import com.samskivert.servlet.user.Password;
@@ -40,11 +41,12 @@ public class LogonView extends BWindow
     {
         super(ctx.getLookAndFeel(), GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;
-        setBackground(new TintedBackground(10, 10, 10, 10, ColorRGBA.darkGray));
+        _ctx.getRenderer().setBackgroundColor(ColorRGBA.white);
 
-        BLabel title = new BLabel(
-            new BIcon(ctx.loadImage("media/textures/title.png")));
-        add(title);
+        ClassLoader loader = getClass().getClassLoader();
+        setBackground(new ScaledBackground(
+                          loader.getResource("rsrc/menu/logon.png"),
+                          0, 300, 50, 0)); // magic!
 
         _msgs = ctx.getMessageManager().getBundle("logon");
         BContainer cont = new BContainer(new TableLayout(3, 5, 5));
@@ -98,6 +100,12 @@ public class LogonView extends BWindow
         } else if ("exit".equals(event.getAction())) {
             _ctx.getApp().stop();
         }
+    }
+
+    @Override // documentation inherited
+    public Dimension getPreferredSize ()
+    {
+        return _background.getPreferredSize();
     }
 
     protected ClientAdapter _listener = new ClientAdapter() {

@@ -106,10 +106,7 @@ public class BangClient extends BasicClient
 
         } else {
             // display the town view
-            TownView view = new TownView(_ctx);
-            _ctx.getInputDispatcher().addWindow(view);
-            view.setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                           _ctx.getDisplay().getHeight());
+            _ctx.getInputDispatcher().addWindow(new TownView(_ctx));
         }
     }
 

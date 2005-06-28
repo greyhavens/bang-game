@@ -39,6 +39,7 @@ public class RanchView extends BWindow
         super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
         setBorder(new EmptyBorder(5, 5, 5, 5));
         _ctx = ctx;
+        _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
         _msgs = ctx.getMessageManager().getBundle("ranch");
 
         // we'll add this later, but the palettes need to know about it
@@ -88,12 +89,8 @@ public class RanchView extends BWindow
     public void actionPerformed (ActionEvent event)
     {
         if ("back".equals(event.getAction())) {
-            // TODO: put this somewhere useful
             _ctx.getInputDispatcher().removeWindow(this);
-            TownView view = new TownView(_ctx);
-            _ctx.getInputDispatcher().addWindow(view);
-            view.pack();
-            view.center();
+            _ctx.getInputDispatcher().addWindow(new TownView(_ctx));
 
         } else if ("recruit".equals(event.getAction())) {
             UnitConfig config = _inspector.getConfig();
