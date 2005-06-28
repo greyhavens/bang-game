@@ -14,7 +14,10 @@
   <tile type="SAND" priority="40">
     <fringe name="mask1.png" mask="true"/>
   </tile>
-  <tile type="WATER" priority="50">
+  <tile type="ROAD" priority="50">
+    <fringe name="mask1.png" mask="true"/>
+  </tile>
+  <tile type="WATER" priority="60">
     <fringe name="mask1.png" mask="true"/>
   </tile>
 </fringe>
