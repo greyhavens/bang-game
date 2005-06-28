@@ -7,9 +7,10 @@ import com.jme.renderer.ColorRGBA;
 
 import com.jme.bui.BButton;
 import com.jme.bui.BWindow;
-import com.jme.bui.layout.GroupLayout;
+import com.jme.bui.background.ScaledBackground;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
+import com.jme.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
@@ -30,6 +31,12 @@ public class TownView extends BWindow
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
         _msgs = ctx.getMessageManager().getBundle("town");
+
+        // TODO: unhack
+        String tpath = "rsrc/menu/frontier";
+        setBackground(new ScaledBackground(
+                          getClass().getClassLoader().getResource(
+                              tpath + "/town.png"), 0, 0, 0, 0));
 
         // just add a bunch of buttons for now
         BButton btn;
