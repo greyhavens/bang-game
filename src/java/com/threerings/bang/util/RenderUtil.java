@@ -66,7 +66,7 @@ public class RenderUtil
         overlayZBuf.setFunction(ZBufferState.CF_LEQUAL);
 
         ClassLoader loader = ctx.getClass().getClassLoader();
-        for (Terrain terrain : Terrain.STARTERS) {
+        for (Terrain terrain : Terrain.RENDERABLE) {
             for (int ii = 1; ii <= MAX_TILE_VARIANT; ii++) {
                 String path = "tiles/ground/" +
                     terrain.toString().toLowerCase() + ii + ".png";

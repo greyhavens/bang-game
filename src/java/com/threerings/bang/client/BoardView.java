@@ -375,7 +375,7 @@ public class BoardView extends BComponent
                 ground.setLocalTranslation(
                     new Vector3f(xx*tsize + tsize/2, yy*tsize + tsize/2, 0f));
                 ground.setRenderState(
-                    RenderUtil.getGroundTexture(Terrain.SAND));
+                    RenderUtil.getGroundTexture(Terrain.OUTER));
                 ground.updateRenderState();
             }
         }

@@ -20,7 +20,10 @@ public enum Terrain
     TALL_GRASS  (2, BangBoard.BASE_TRAVERSAL),
     WATER       (3, -1),
     ROCKY       (4, 3*BangBoard.BASE_TRAVERSAL/2),
-    SAND        (5, 2*BangBoard.BASE_TRAVERSAL);
+    SAND        (5, 2*BangBoard.BASE_TRAVERSAL),
+
+    // special "outside the board" tile
+    OUTER       (-1, -1);
 
     /** The code used when encoding terrain types in the {@link BangBoard}. */
     public int code;
@@ -28,9 +31,13 @@ public enum Terrain
     /** The normal traversal cost for this terrain. */
     public int traversalCost;
 
-    /** The set of terrain types that can be used when building boards. */
-    public static EnumSet<Terrain> STARTERS = EnumSet.complementOf(
+    /** The set of terrain types that can be used when displaying boards. */
+    public static EnumSet<Terrain> RENDERABLE = EnumSet.complementOf(
         EnumSet.of(NONE));
+
+    /** The set of terrain types that can be used when creating boards. */
+    public static EnumSet<Terrain> USABLE = EnumSet.complementOf(
+        EnumSet.of(NONE, OUTER));
 
     /** Converts an integer code back to the appropriate {@link Terrain}
      * enum value. */

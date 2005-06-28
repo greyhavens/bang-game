@@ -26,9 +26,9 @@ public class TerrainSelector extends JPanel
             HGroupLayout.FIXED);
 
         TerrainSelection[] choices =
-            new TerrainSelection[Terrain.STARTERS.size()];
+            new TerrainSelection[Terrain.USABLE.size()];
         int ii = 0;
-        for (Terrain terrain : Terrain.STARTERS) {
+        for (Terrain terrain : Terrain.USABLE) {
             choices[ii++] = new TerrainSelection(terrain);
         }
         add(_selector = new JComboBox(choices));
