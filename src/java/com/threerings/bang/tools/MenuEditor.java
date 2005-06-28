@@ -4,7 +4,6 @@
 package com.threerings.bang.tools;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -13,7 +12,6 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -59,7 +57,6 @@ public class MenuEditor extends JFrame
             return;
         }
         _status.setText(_status.getText() + ", " + x + ", " + (1-y));
-        _points.add(new Point2D.Float(x, y));
         _poly.addPoint(Math.round(_image.getWidth() * x),
                        Math.round(_image.getHeight() * y));
         repaint();
@@ -75,7 +72,6 @@ public class MenuEditor extends JFrame
         try {
             MenuEditor editor = new MenuEditor(ImageIO.read(new File(args[0])));
             editor.setVisible(true);
-
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -113,7 +109,6 @@ public class MenuEditor extends JFrame
 
     protected BufferedImage _image;
     protected JTextField _status;
-    protected ArrayList<Point2D.Float> _points = new ArrayList<Point2D.Float>();
     protected Polygon _poly;
     protected Mousey _listener = new Mousey();
 }
