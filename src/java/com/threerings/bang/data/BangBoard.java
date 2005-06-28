@@ -85,7 +85,7 @@ public class BangBoard extends SimpleStreamableObject
     public Terrain getTile (int xx, int yy)
     {
         int index = yy * _width + xx;
-        if (index >= _tiles.length) {
+        if (index < 0 || index >= _tiles.length) {
             log.warning("Requested to get OOB tile " +
                         "[x=" + xx + ", y=" + yy + "].");
             Thread.dumpStack();

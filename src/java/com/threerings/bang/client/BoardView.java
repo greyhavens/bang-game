@@ -38,6 +38,7 @@ import com.jme.util.TextureManager;
 
 import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.jme.tile.TileFringer;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
@@ -71,6 +72,9 @@ public class BoardView extends BComponent
 
         // configure ourselves as the default event target
         _ctx.getInputDispatcher().pushDefaultEventTarget(this);
+
+        // create a fringer
+        _fringer = new TileFringer(_ctx.getFringeConfig(), _tfisrc);
 
         // we don't actually want to render in orthographic mode
         _node.setRenderQueueMode(Renderer.QUEUE_INHERIT);
@@ -171,13 +175,7 @@ public class BoardView extends BComponent
                 _tnode.attachChild(t);
                 t.setLocalTranslation(
                     new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
-                TextureState tstate = RenderUtil.getGroundTexture(
-                    _board.getTile(xx, yy));
-                if (tstate != null) {
-                    t.setRenderState(tstate);
-                } else {
-                    t.setSolidColor(ColorRGBA.black);
-                }
+                refreshTile(xx, yy);
             }
         }
         _tnode.setLightCombineMode(LightState.OFF);
@@ -413,13 +411,22 @@ public class BoardView extends BComponent
     protected void refreshTile (int tx, int ty)
     {
         Quad t = (Quad)_tnode.getChild(ty * _board.getHeight() + tx);
-        TextureState tstate =
-            RenderUtil.getGroundTexture(_board.getTile(tx, ty));
-        if (tstate != null) {
-            t.setRenderState(tstate);
+        // determine whether we need a fringe tile
+        BufferedImage img =
+            _fringer.getFringeTile(_tftsrc, tx, ty, _fmasks);
+        if (img != null) {
+            t.setRenderState(RenderUtil.createTexture(_ctx, img));
         } else {
-            t.clearRenderState(RenderState.RS_TEXTURE);
-            t.setSolidColor(ColorRGBA.black);
+            // otherwise use a straight up ground tile
+            TextureState tstate = RenderUtil.getGroundTexture(
+                _board.getTile(tx, ty));
+            if (tstate != null) {
+                t.setRenderState(tstate);
+            } else {
+                // or black if all else fails
+                t.clearRenderState(RenderState.RS_TEXTURE);
+                t.setSolidColor(ColorRGBA.black);
+            }
         }
         t.updateRenderState();
     }
@@ -610,11 +617,44 @@ public class BoardView extends BComponent
         }
     };
 
+    protected TileFringer.ImageSource _tfisrc = new TileFringer.ImageSource() {
+        public BufferedImage createImage (int width, int height, int trans) {
+            return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        }
+        public BufferedImage getTileSource (String type) {
+            return RenderUtil.getGroundTile(Terrain.valueOf(type));
+        }
+        public BufferedImage getFringeSource (String name) {
+            // TODO: incorporate this into some larger image cache?
+            BufferedImage frimg = _frimgs.get(name);
+            if (frimg == null) {
+                _frimgs.put(
+                    name, frimg = _ctx.loadImage("tiles/fringe/" + name));
+            }
+            return frimg;
+        }
+        protected HashMap<String,BufferedImage> _frimgs =
+            new HashMap<String,BufferedImage>();
+    };
+
+    protected TileFringer.TileSource _tftsrc = new TileFringer.TileSource() {
+        public String getTileType (int x, int y) {
+            return _board.getBounds().contains(x, y) ? 
+                _board.getTile(x, y).toString() : null;
+        }
+        public String getDefaultType () {
+            return Terrain.DIRT.toString();
+        }
+    };
+
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected BangBoard _board;
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
+
+    protected TileFringer _fringer;
+    protected HashMap _fmasks = new HashMap();
 
     protected Node _pnode, _tnode, _hnode;
     protected Vector3f _worldMouse;

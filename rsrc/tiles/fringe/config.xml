@@ -2,19 +2,19 @@
 <!-- $Id$ -->
 <!-- Defines the fringing rules for the various ground tiles. -->
 <fringe>
-  <tile type="dirt" priority="10">
+  <tile type="DIRT" priority="10">
     <fringe name="mask1.png" mask="true"/>
   </tile>
-  <tile type="brush" priority="20">
+  <tile type="BRUSH" priority="20">
     <fringe name="mask1.png" mask="true"/>
   </tile>
-  <tile type="rocky" priority="30">
+  <tile type="ROCKY" priority="30">
     <fringe name="mask1.png" mask="true"/>
   </tile>
-  <tile type="sand" priority="40">
+  <tile type="SAND" priority="40">
     <fringe name="mask1.png" mask="true"/>
   </tile>
-  <tile type="water" priority="50">
+  <tile type="WATER" priority="50">
     <fringe name="mask1.png" mask="true"/>
   </tile>
 </fringe>

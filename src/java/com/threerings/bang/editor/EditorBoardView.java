@@ -38,7 +38,15 @@ public class EditorBoardView extends BoardView
     {
         if (_bangobj.board.getBounds().contains(tx, ty) &&
             _bangobj.board.setTile(tx, ty, tile)) {
-            refreshTile(tx, ty);
+            // refresh this tile and the eight tiles around it as they all
+            // may need refringing
+            for (int yy = ty-1; yy <= ty+1; yy++) {
+                for (int xx = tx-1; xx <= tx+1; xx++) {
+                    if (_bangobj.board.getBounds().contains(xx, yy)) {
+                        refreshTile(xx, yy);
+                    }
+                }
+            }
         }
     }
 

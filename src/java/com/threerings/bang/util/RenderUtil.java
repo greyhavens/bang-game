@@ -68,14 +68,15 @@ public class RenderUtil
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.STARTERS) {
             for (int ii = 1; ii <= MAX_TILE_VARIANT; ii++) {
-                URL texpath = loader.getResource(
-                    "rsrc/tiles/ground/" +
-                    terrain.toString().toLowerCase() + ii + ".png");
+                String path = "tiles/ground/" +
+                    terrain.toString().toLowerCase() + ii + ".png";
+                URL texpath = loader.getResource("rsrc/" + path);
                 if (texpath == null) {
                     continue;
                 }
+                BufferedImage teximg = ctx.loadImage(path);
                 Texture texture = TextureManager.loadTexture(
-                    texpath, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+                    teximg, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
                 TextureState tstate = ctx.getRenderer().createTextureState();
                 tstate.setEnabled(true);
                 tstate.setTexture(texture);
@@ -85,6 +86,12 @@ public class RenderUtil
                         terrain, texs = new ArrayList<TextureState>());
                 }
                 texs.add(tstate);
+                ArrayList<BufferedImage> tiles = _groundTiles.get(terrain);
+                if (tiles == null) {
+                    _groundTiles.put(
+                        terrain, tiles = new ArrayList<BufferedImage>());
+                }
+                tiles.add(teximg);
             }
         }
     }
@@ -95,7 +102,20 @@ public class RenderUtil
      */
     public static TextureState getGroundTexture (Terrain terrain)
     {
-        return (TextureState)RandomUtil.pickRandom(_groundTexs.get(terrain));
+        ArrayList<TextureState> texs = _groundTexs.get(terrain);
+        return (texs == null) ? null : 
+            (TextureState)RandomUtil.pickRandom(texs);
+    }
+
+    /**
+     * Returns a randomly selected ground tile for the specified terrain
+     * type.
+     */
+    public static BufferedImage getGroundTile (Terrain terrain)
+    {
+        ArrayList<BufferedImage> tiles = _groundTiles.get(terrain);
+        return (tiles == null) ? null : 
+            (BufferedImage)RandomUtil.pickRandom(tiles);
     }
 
     /**
@@ -164,6 +184,9 @@ public class RenderUtil
         lights.attach(light);
         return lights;
     }
+
+    protected static HashMap<Terrain,ArrayList<BufferedImage>> _groundTiles =
+        new HashMap<Terrain,ArrayList<BufferedImage>>();
 
     protected static HashMap<Terrain,ArrayList<TextureState>> _groundTexs =
         new HashMap<Terrain,ArrayList<TextureState>>();
