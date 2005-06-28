@@ -8,6 +8,7 @@ import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BToggleButton;
 import com.jme.bui.background.BBackground;
 import com.jme.bui.background.TiledBackground;
+import com.jme.bui.border.BBorder;
 
 /**
  * Handles the custom look and feel for the Bang! Howdy BUI user interface.
@@ -24,17 +25,45 @@ public class BangLookAndFeel extends BLookAndFeel
         String path;
         int dx = 0, dy = 0;
         switch (state) {
+        case BToggleButton.SELECTED:
         case BButton.DOWN:
             path = "rsrc/ui/button_down.png";
             dx = -1;
             dy = -1;
             break;
         case BButton.OVER: path = "rsrc/ui/button_up.png"; break;
-        case BToggleButton.SELECTED: return super.createButtonBack(state);
         default:
         case BButton.UP: path = "rsrc/ui/button_up.png"; break;
         }
         return new TiledBackground(getResource(path),
                                    5 + dx, 4 + dy, 5 - dx, 2 - dy);
+    }
+
+    public BBackground createPopupBackground ()
+    {
+        return new TiledBackground(
+            getResource("rsrc/ui/button_up.png"), 5, 4, 5, 2);
+    }
+
+    public BBorder createPopupBorder ()
+    {
+        return null;
+    }
+
+    public BBackground createComboBoxBackground ()
+    {
+        return new TiledBackground(
+            getResource("rsrc/ui/button_up.png"), 5, 4, 5, 2);
+    }
+
+    public BBackground createWindowBackground ()
+    {
+        return new TiledBackground(
+            getResource("rsrc/ui/window_background.png"), 15, 15, 15, 15);
+    }
+
+    public BBorder createWindowBorder ()
+    {
+        return null;
     }
 }
