@@ -4,6 +4,8 @@
 package com.threerings.bang.client;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.event.InputDispatcher;
@@ -14,10 +16,13 @@ import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 
 import com.samskivert.util.Config;
+import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.jme.JmeApp;
+import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.resource.ResourceManager;
+import com.threerings.util.CompiledConfig;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
@@ -45,42 +50,17 @@ import static com.threerings.bang.Log.log;
  * Takes care of instantiating all of the proper managers and loading up
  * all of the necessary configuration and getting the client bootstrapped.
  */
-public class BangClient
+public class BangClient extends BasicClient
     implements SessionObserver
 {
-    /**
-     * Given a subdirectory name (that should correspond to the calling
-     * service), returns a file path that can be used to store local data.
-     */
-    public static String localDataDir (String subdir)
-    {
-        String appdir = System.getProperty("appdir");
-        if (StringUtil.blank(appdir)) {
-            appdir = ".bang";
-            String home = System.getProperty("user.home");
-            if (!StringUtil.blank(home)) {
-                appdir = home + File.separator + appdir;
-            }
-        }
-        return appdir + File.separator + subdir;
-    }
-
     /**
      * Initializes a new client and provides it with a frame in which to
      * display everything.
      */
     public void init (BangApp app)
     {
-        _app = app;
-
-        // create our context
         _ctx = new BangContextImpl();
-
-        // create the directors/managers/etc. provided by the context
-        createContextServices(app);
-
-        // create a bunch of standard rendering stuff
-        RenderUtil.init(_ctx);
+        initClient(_ctx, app, app);
 
         // listen for logon
         _client.addClientObserver(this);
@@ -145,29 +125,10 @@ public class BangClient
         System.exit(0);
     }
 
-    /**
-     * Creates and initializes the various services that are provided by
-     * the context. Derived classes that provide an extended context
-     * should override this method and create their own extended
-     * services. They should be sure to call
-     * <code>super.createContextServices</code>.
-     */
-    protected void createContextServices (BangApp app)
+    @Override // documentation inherited
+    protected void createContextServices (RunQueue rqueue)
     {
-        // create the handles on our various services
-        _client = new Client(null, app);
-
-        // these manage local client resources
-        _rsrcmgr = new ResourceManager("rsrc");
-        _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
-        _lnf = BLookAndFeel.getDefaultLookAndFeel();
-        _mcache = new ModelCache(_ctx);
-
-        // these manage "online" state
-        _locdir = new LocationDirector(_ctx);
-        _occdir = new OccupantDirector(_ctx);
-        _pardir = new ParlorDirector(_ctx);
-        _chatdir = new ChatDirector(_ctx, _msgmgr, null);
+        super.createContextServices(rqueue);
 
         // warm up the particle factory
         ParticleFactory.warmup(_ctx);
@@ -191,47 +152,19 @@ public class BangClient
         _lview = null;
     }
 
-    /**
-     * The context implementation. This provides access to all of the
-     * objects and services that are needed by the operating client.
-     */
-    protected class BangContextImpl extends BangContext
+    /** The context implementation. This provides access to all of the
+     * objects and services that are needed by the operating client. */
+    protected class BangContextImpl extends BasicContextImpl
     {
-        /**
-         * Apparently the default constructor has default access, rather
+        /** Apparently the default constructor has default access, rather
          * than protected access, even though this class is declared to be
          * protected. Why, I don't know, but we need to be able to extend
-         * this class elsewhere, so we need this.
-         */
+         * this class elsewhere, so we need this. */
         protected BangContextImpl () {
-        }
-
-        public Client getClient () {
-            return _client;
-        }
-
-        public DObjectManager getDObjectManager () {
-            return _client.getDObjectManager();
         }
 
         public Config getConfig () {
             return _config;
-        }
-
-        public LocationDirector getLocationDirector () {
-            return _locdir;
-        }
-
-        public OccupantDirector getOccupantDirector () {
-            return _occdir;
-        }
-
-        public ChatDirector getChatDirector () {
-            return _chatdir;
-        }
-
-        public ParlorDirector getParlorDirector () {
-            return _pardir;
         }
 
         public void setPlaceView (PlaceView view) {
@@ -241,70 +174,10 @@ public class BangClient
         public void clearPlaceView (PlaceView view) {
             // we'll just let the next place view replace our old one
         }
-
-        public ResourceManager getResourceManager () {
-            return _rsrcmgr;
-        }
-
-        public MessageManager getMessageManager () {
-            return _msgmgr;
-        }
-
-        public JmeApp getApp () {
-            return _app;
-        }
-
-        public ModelCache getModelCache () {
-            return _mcache;
-        }
-
-        public DisplaySystem getDisplay () {
-            return _app.getContext().getDisplay();
-        }
-
-        public Renderer getRenderer () {
-            return _app.getContext().getRenderer();
-        }
-
-        public Camera getCamera () {
-            return _app.getContext().getCamera();
-        }
-
-        public Node getGeometry () {
-            return _app.getContext().getGeometry();
-        }
-
-        public Node getInterface () {
-            return _app.getContext().getInterface();
-        }
-
-        public InputHandler getInputHandler () {
-            return _app.getContext().getInputHandler();
-        }
-
-        public InputDispatcher getInputDispatcher () {
-            return _app.getContext().getInputDispatcher();
-        }
-
-        public BLookAndFeel getLookAndFeel () {
-            return _lnf;
-        }
     }
 
     protected BangContext _ctx;
-    protected BangApp _app;
     protected Config _config = new Config("bang");
-
-    protected MessageManager _msgmgr;
-    protected ResourceManager _rsrcmgr;
-    protected BLookAndFeel _lnf;
-    protected ModelCache _mcache;
-
-    protected Client _client;
-    protected LocationDirector _locdir;
-    protected OccupantDirector _occdir;
-    protected ChatDirector _chatdir;
-    protected ParlorDirector _pardir;
 
     protected LogonView _lview;
 

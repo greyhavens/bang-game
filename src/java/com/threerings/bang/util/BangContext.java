@@ -16,6 +16,7 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.JmeContext;
+import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.parlor.util.ParlorContext;
 
@@ -41,6 +42,9 @@ public abstract class BangContext
 
     /** Returns the 3D model cache. */
     public abstract ModelCache getModelCache ();
+
+    /** Provides access to the tile fringing configuration. */
+    public abstract FringeConfiguration getFringeConfig ();
 
     /** Returns a reference to our top-level application. */
     public abstract JmeApp getApp ();

@@ -57,6 +57,9 @@ public class EditorApp extends JmeCanvasApp
     public boolean init ()
     {
         if (super.init()) {
+            // create and initialize our client instance
+            _client = new EditorClient(this, _frame);
+
             // post a runnable that will get executed after everything is
             // initialized and happy
             EditorServer.omgr.postRunnable(new Runnable() {
@@ -75,9 +78,6 @@ public class EditorApp extends JmeCanvasApp
         _frame = new JFrame("Bang Editor");
         _frame.setSize(new Dimension(1224, 768));
         _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // create and initialize our client instance
-        _client = new EditorClient(this, _frame);
 
         // display the GL canvas to start so that it initializes everything
         _frame.getContentPane().add(_canvas, BorderLayout.CENTER);
@@ -99,9 +99,6 @@ public class EditorApp extends JmeCanvasApp
     protected void initRoot ()
     {
         super.initRoot();
-
-        // create a bunch of standard rendering stuff
-        RenderUtil.init(_client.getContext());
 
         // set up the camera
         Vector3f loc = new Vector3f(80, 40, 200);

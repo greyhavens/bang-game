@@ -26,10 +26,12 @@ import com.jme.system.DisplaySystem;
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 
-import com.threerings.jme.JmeApp;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
+
+import com.threerings.jme.JmeApp;
+import com.threerings.jme.tile.FringeConfiguration;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -46,6 +48,7 @@ import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.parlor.client.ParlorDirector;
 
+import com.threerings.bang.client.BasicClient;
 import com.threerings.bang.client.ModelCache;
 
 import static com.threerings.bang.Log.log;
@@ -54,7 +57,7 @@ import static com.threerings.bang.Log.log;
  * Takes care of instantiating all of the proper managers and loading up
  * all of the necessary configuration and getting the client bootstrapped.
  */
-public class EditorClient
+public class EditorClient extends BasicClient
     implements RunQueue, SessionObserver
 {
     /** Initializes the editor client and prepares it for operation. */
@@ -62,7 +65,6 @@ public class EditorClient
     {
         // create our context
         _ctx = new EditorContextImpl();
-        _app = app;
         _frame = frame;
         _frame.setJMenuBar(new JMenuBar());
         _frame.getContentPane().add(
@@ -72,8 +74,7 @@ public class EditorClient
         // heavyweight component
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
-        // create the directors/managers/etc. provided by the context
-        createContextServices();
+        initClient(_ctx, app, this);
 
         // listen for logon/logoff
         _ctx.getClient().addClientObserver(this);
@@ -153,30 +154,6 @@ public class EditorClient
     }
 
     /**
-     * Creates and initializes the various services that are provided by
-     * the context. Derived classes that provide an extended context
-     * should override this method and create their own extended
-     * services. They should be sure to call
-     * <code>super.createContextServices</code>.
-     */
-    protected void createContextServices ()
-    {
-        // create the handles on our various services
-        _client = new Client(null, this);
-
-        // these manage local client resources
-        _rsrcmgr = new ResourceManager("rsrc");
-        _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
-        _mcache = new ModelCache(_ctx);
-
-        // these manage "online" state
-        _locdir = new LocationDirector(_ctx);
-        _occdir = new OccupantDirector(_ctx);
-        _pardir = new ParlorDirector(_ctx);
-        _chatdir = new ChatDirector(_ctx, _msgmgr, null);
-    }
-
-    /**
      * The context implementation. This provides access to all of the
      * objects and services that are needed by the operating client.
      */
@@ -199,10 +176,6 @@ public class EditorClient
             return _client.getDObjectManager();
         }
 
-        public Config getConfig () {
-            return _config;
-        }
-
         public LocationDirector getLocationDirector () {
             return _locdir;
         }
@@ -219,22 +192,6 @@ public class EditorClient
             return _pardir;
         }
 
-        public void setPlaceView (PlaceView view) {
-            Container pane = _frame.getContentPane();
-            if (pane.getComponentCount() > 2) {
-                pane.remove(2);
-            }
-            pane.add((Component)view, BorderLayout.EAST);
-            _frame.validate();
-        }
-
-        public void clearPlaceView (PlaceView view) {
-            Container pane = _frame.getContentPane();
-            if (pane.getComponentCount() > 1) {
-                pane.remove(1);
-            }
-        }
-
         public ResourceManager getResourceManager () {
             return _rsrcmgr;
         }
@@ -247,20 +204,12 @@ public class EditorClient
             return _app;
         }
 
-        public void setWindowTitle (String title) {
-            _frame.setTitle(title);
-        }
-
-        public void displayStatus (String status) {
-            _status.setText(status);
-        }
-
-        public JFrame getFrame () {
-            return _frame;
-        }
-
         public ModelCache getModelCache () {
             return _mcache;
+        }
+
+        public FringeConfiguration getFringeConfig () {
+            return _fringeconf;
         }
 
         public DisplaySystem getDisplay () {
@@ -292,28 +241,45 @@ public class EditorClient
         }
 
         public BLookAndFeel getLookAndFeel () {
-            return null;
+            return _lnf;
+        }
+
+        public Config getConfig () {
+            return _config;
+        }
+
+        public void setPlaceView (PlaceView view) {
+            Container pane = _frame.getContentPane();
+            if (pane.getComponentCount() > 2) {
+                pane.remove(2);
+            }
+            pane.add((Component)view, BorderLayout.EAST);
+            _frame.validate();
+        }
+
+        public void clearPlaceView (PlaceView view) {
+            Container pane = _frame.getContentPane();
+            if (pane.getComponentCount() > 1) {
+                pane.remove(1);
+            }
+        }
+
+        public void setWindowTitle (String title) {
+            _frame.setTitle(title);
+        }
+
+        public void displayStatus (String status) {
+            _status.setText(status);
+        }
+
+        public JFrame getFrame () {
+            return _frame;
         }
     }
 
     protected EditorContext _ctx;
-    protected EditorApp _app;
     protected Config _config = new Config("editor");
 
     protected JFrame _frame;
     protected JLabel _status;
-
-    protected MessageManager _msgmgr;
-    protected ResourceManager _rsrcmgr;
-    protected ModelCache _mcache;
-
-    protected Client _client;
-    protected LocationDirector _locdir;
-    protected OccupantDirector _occdir;
-    protected ChatDirector _chatdir;
-    protected ParlorDirector _pardir;
-
-    /** The prefix prepended to localization bundle names before looking
-     * them up in the classpath. */
-    protected static final String MESSAGE_MANAGER_PREFIX = "rsrc.i18n";
 }

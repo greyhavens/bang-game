@@ -23,6 +23,7 @@ import com.jme.bui.event.InputDispatcher;
 import com.jme.bui.layout.BorderLayout;
 
 import com.threerings.jme.JmeApp;
+import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.resource.ResourceManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageManager;
@@ -122,6 +123,10 @@ public class ModelIconTest extends JmeApp
         }
 
         public ParlorDirector getParlorDirector () {
+            return null;
+        }
+
+        public FringeConfiguration getFringeConfig () {
             return null;
         }
 
