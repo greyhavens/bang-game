@@ -71,6 +71,7 @@
        <exclude name="**/*.MD3"/>
        <exclude name="**/*.obj"/>
        <exclude name="**/*.mtl"/>
+       <exclude name="tiles/fringe/config.xml"/>
       </fileset>
     </copy>
   </target>
@@ -167,7 +168,7 @@
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
   <!-- builds the main bang jar file -->
-  <target name="dist" depends="prepare,compile">
+  <target name="dist" depends="prepare,compile,fringe">
     <jar file="${deploy.dir}/${dist.jar}"
          basedir="${deploy.dir}/classes"/>
   </target>
