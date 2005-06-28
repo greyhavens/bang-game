@@ -67,9 +67,9 @@ public class RenderUtil
 
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.STARTERS) {
-            for (int ii = 1; ii <= 3; ii++) {
+            for (int ii = 1; ii <= MAX_TILE_VARIANT; ii++) {
                 URL texpath = loader.getResource(
-                    "rsrc/media/textures/ground/" +
+                    "rsrc/tiles/ground/" +
                     terrain.toString().toLowerCase() + ii + ".png");
                 if (texpath == null) {
                     continue;
@@ -167,4 +167,8 @@ public class RenderUtil
 
     protected static HashMap<Terrain,ArrayList<TextureState>> _groundTexs =
         new HashMap<Terrain,ArrayList<TextureState>>();
+
+    /** The maximum number of different variations we might have for a
+     * particular ground tile. */
+    protected static final int MAX_TILE_VARIANT = 4;
 }
