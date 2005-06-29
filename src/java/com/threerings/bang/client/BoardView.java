@@ -168,13 +168,20 @@ public class BoardView extends BComponent
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
 
         // create the board tiles
-        for (int yy = 0; yy < _board.getHeight(); yy++) {
-            for (int xx = 0; xx < _board.getWidth(); xx++) {
+        for (int yy = -1; yy < _board.getHeight()+1; yy++) {
+            for (int xx = -1; xx < _board.getWidth()+1; xx++) {
                 float bx = xx * TILE_SIZE, by = yy * TILE_SIZE;
                 Quad t = new Quad("tile", TILE_SIZE, TILE_SIZE);
                 _tnode.attachChild(t);
                 t.setLocalTranslation(
                     new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
+
+                // tiles on the "rim" need to be transparent
+                if (!_board.getBounds().contains(xx, yy)) {
+                    // TODO: rename _hastate
+                    t.setRenderState(RenderUtil.iconAlpha);
+                }
+
                 refreshTile(xx, yy);
             }
         }
@@ -410,7 +417,7 @@ public class BoardView extends BComponent
      */
     protected void refreshTile (int tx, int ty)
     {
-        Quad t = (Quad)_tnode.getChild(ty * _board.getHeight() + tx);
+        Quad t = (Quad)_tnode.getChild((ty+1) * (_board.getHeight()+2) + tx + 1);
         // determine whether we need a fringe tile
         BufferedImage img =
             _fringer.getFringeTile(_tftsrc, tx, ty, _fmasks);
@@ -643,7 +650,7 @@ public class BoardView extends BComponent
                 _board.getTile(x, y).toString() : null;
         }
         public String getDefaultType () {
-            return Terrain.DIRT.toString();
+            return Terrain.RIM.toString();
         }
     };
 

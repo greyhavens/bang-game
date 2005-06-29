@@ -94,6 +94,11 @@ public class RenderUtil
                 tiles.add(teximg);
             }
         }
+
+        // put in a special blank tile image for the rim
+        ArrayList<BufferedImage> tiles = new ArrayList<BufferedImage>();
+        tiles.add(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+        _groundTiles.put(Terrain.RIM, tiles);
     }
 
     /**
