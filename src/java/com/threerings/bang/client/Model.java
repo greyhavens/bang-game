@@ -217,6 +217,7 @@ public class Model
     protected CloneCreator loadModel (
         BangContext ctx, String path, String texpath)
     {
+        path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
         CloneCreator cc = _meshes.get(path);
         if (cc == null) {
@@ -274,6 +275,7 @@ public class Model
 
     protected TextureState getTexture (BangContext ctx, String texpath)
     {
+        texpath = cleanPath(texpath);
         TextureState ts = _textures.get(texpath);
         if (ts == null) {
             ts = ctx.getRenderer().createTextureState();
@@ -285,6 +287,13 @@ public class Model
             _textures.put(texpath, ts);
         }
         return ts;
+    }
+
+    protected String cleanPath (String path)
+    {
+        // non-file URLs don't handle blah/foo/../bar so we make those
+        // path adjustments by hand
+        return path.replaceAll("/[^/]+/\\.\\.", "");
     }
 
     protected String _key;
