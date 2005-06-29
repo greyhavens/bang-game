@@ -859,8 +859,9 @@ public class BangManager extends GameManager
         if (tup == null) {
             String board = (String)RandomUtil.pickRandom(BOARDS);
 //             if (isTest()) {
-                board = "default";
+//                 board = "default";
 //             }
+            log.info("Using: " + board);
             try {
                 ClassLoader cl = getClass().getClassLoader();
                 InputStream in = cl.getResourceAsStream(
@@ -960,6 +961,7 @@ public class BangManager extends GameManager
 
     /** A list of our stock boards. */
     protected static final String[] BOARDS = {
-        "alleys", "highnoon", "ring", "riverside", "square",
+        "buildingblocks", "cityblocks", "coast", "doublenoon", "oasis",
+        "outskirts",
     };
 }
