@@ -27,11 +27,13 @@ public class DuplicateEffect extends Effect
 
     public Piece duplicate;
 
+    @Override // documentation inherited
     public void init (Piece piece)
     {
         pieceId = piece.pieceId;
     }
 
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
@@ -55,6 +57,7 @@ public class DuplicateEffect extends Effect
         bangobj.board.updateShadow(null, duplicate);
     }
 
+    @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);

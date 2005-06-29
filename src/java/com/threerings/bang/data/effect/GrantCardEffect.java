@@ -24,11 +24,13 @@ public class GrantCardEffect extends Effect
 {
     public int player;
 
+    @Override // documentation inherited
     public void init (Piece piece)
     {
         player = piece.owner;
     }
 
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // make sure our player has room for another card
@@ -56,6 +58,7 @@ public class GrantCardEffect extends Effect
         bangobj.addToCards(card);
     }
 
+    @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
         // NOOP

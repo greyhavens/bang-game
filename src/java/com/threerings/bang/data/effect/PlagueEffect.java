@@ -27,11 +27,13 @@ public class PlagueEffect extends Effect
     public int[] pieceIds;
     public Piece[] newPieces;
 
+    @Override // documentation inherited
     public void init (Piece piece)
     {
         owner = piece.owner;
     }
 
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // everyone gets to keep the "average" count or at least two
@@ -77,6 +79,7 @@ public class PlagueEffect extends Effect
         }
     }
 
+    @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
         // remove the old pieces and add new windup gun slingers instead

@@ -27,11 +27,13 @@ public class DefectEffect extends Effect
 
     public int[] pieceIds;
 
+    @Override // documentation inherited
     public void init (Piece piece)
     {
         owner = piece.owner;
     }
 
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // for each player that has at least three more pieces than we do,
@@ -74,6 +76,7 @@ public class DefectEffect extends Effect
         pieceIds = pids.toIntArray();
     }
 
+    @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
         // swipe away!

@@ -24,6 +24,7 @@ public class ShotEffect extends Effect
 
     public int damage;
 
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         Piece target = (Piece)bangobj.pieces.get(targetId);
@@ -34,6 +35,7 @@ public class ShotEffect extends Effect
         }
     }
 
+    @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
         Piece target = (Piece)bangobj.pieces.get(targetId);

@@ -18,16 +18,19 @@ public class RepairEffect extends Effect
 
     public int pieceId;
 
+    @Override // documentation inherited
     public void init (Piece piece)
     {
         pieceId = piece.pieceId;
     }
 
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // nothing doing
     }
 
+    @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
