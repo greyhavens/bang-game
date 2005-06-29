@@ -62,6 +62,10 @@ public class CameraHandler extends GodViewHandler
         rotm.mult(left, left);
         rotm.mult(up, up);
 
+        // recompute the panning vectors
+        _rxdir.set(1, 0, 0);
+        _rydir.set(0, 1, 0);
+
         // TODO: compute a rotation based on which player we are
 
         _camera.setDirection(forward);
