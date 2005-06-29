@@ -32,6 +32,8 @@ import com.threerings.parlor.data.TableLobbyObject;
 
 import com.threerings.jme.chat.ChatView;
 
+import com.threerings.bang.client.EscapeMenuView;
+import com.threerings.bang.client.TownView;
 import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.lobby.data.LobbyObject;
 import com.threerings.bang.util.BangContext;
@@ -50,6 +52,27 @@ public class LobbyView extends BWindow
     {
         super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
         _ctx = ctx;
+
+        // display a simple menu when the player presses escape
+        setModal(true);
+        EscapeMenuView oview = new EscapeMenuView(_ctx) {
+            public void actionPerformed (ActionEvent event) {
+                String action = event.getAction();
+                if ("back_to_town".equals(action)) {
+                    if (_ctx.getLocationDirector().leavePlace()) {
+                        dismiss();
+                    }
+                } else {
+                    super.actionPerformed(event);
+                }
+            }
+            protected void addButtons () {
+                add(createButton("m.resume", "dismiss"));
+                add(createButton("m.back_to_town", "back_to_town"));
+                super.addButtons();
+            }
+        };
+        oview.bind(this);
 
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
         _chat.setBorder(new EmptyBorder(5, 0, 5, 5));
@@ -173,16 +196,30 @@ public class LobbyView extends BWindow
         return outer;
     }
 
-    // documentation inherited from interface PlaceView
-    public void willEnterPlace (PlaceObject plobj)
+    @Override // documentation inherited
+    public void wasAdded ()
     {
+        super.wasAdded();
+
         setBounds(0, 0, _ctx.getDisplay().getWidth(),
                   _ctx.getDisplay().getHeight());
-        _ctx.getInputDispatcher().addWindow(this);
 
         // switch to a gray background
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
+    }
 
+    @Override // documentation inherited
+    public void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        // restore the black background
+        _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
+    }
+
+    // documentation inherited from interface PlaceView
+    public void willEnterPlace (PlaceObject plobj)
+    {
         // pass will enter place onto interested parties
         _chat.willEnterPlace(plobj);
         _tbldtr.willEnterPlace(plobj);
@@ -204,11 +241,6 @@ public class LobbyView extends BWindow
 
         _tbldtr.didLeavePlace(plobj);
         _chat.didLeavePlace(plobj);
-
-        _ctx.getInputDispatcher().removeWindow(this);
-
-        // restore the black background
-        _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
     }
 
     // documentation inherited from interface TableObserver

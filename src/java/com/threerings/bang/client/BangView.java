@@ -24,7 +24,7 @@ import com.threerings.bang.util.BangContext;
 /**
  * Manages the primary user interface during the game.
  */
-public class BangView
+public class BangView extends BWindow
     implements PlaceView
 {
     /** Displays our board. */
@@ -36,6 +36,8 @@ public class BangView
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
+        super(ctx.getLookAndFeel(), new BorderLayout());
+
         _ctx = ctx;
         _ctrl = ctrl;
 

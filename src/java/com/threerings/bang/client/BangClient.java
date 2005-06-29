@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import com.jme.bui.BLookAndFeel;
+import com.jme.bui.BWindow;
 import com.jme.bui.event.InputDispatcher;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
@@ -106,7 +107,8 @@ public class BangClient extends BasicClient
 
         } else {
             // display the town view
-            _ctx.getInputDispatcher().addWindow(new TownView(_ctx));
+            _tview = new TownView(_ctx);
+            _ctx.getInputDispatcher().addWindow(_tview);
         }
     }
 
@@ -165,18 +167,35 @@ public class BangClient extends BasicClient
         }
 
         public void setPlaceView (PlaceView view) {
-            // TBD
+            if (_pview != null) {
+                _ctx.getInputDispatcher().removeWindow(_pview);
+            } else if (_tview != null) {
+                _ctx.getInputDispatcher().removeWindow(_tview);
+            }
+            _ctx.getInputDispatcher().addWindow(_pview = (BWindow)view);
         }
 
         public void clearPlaceView (PlaceView view) {
-            // we'll just let the next place view replace our old one
+            if (_pview != view) {
+                log.warning("Requested to clear non-current place view " +
+                            "[have=" + _pview + ", got=" + view + "].");
+                // try to cope
+                if (_pview != null) {
+                    _ctx.getInputDispatcher().removeWindow(_pview);
+                }
+            }
+            _ctx.getInputDispatcher().removeWindow((BWindow)view);
+            _pview = null;
+            _ctx.getInputDispatcher().addWindow(_tview);
         }
     }
 
     protected BangContext _ctx;
     protected Config _config = new Config("bang");
 
+    protected BWindow _pview;
     protected LogonView _lview;
+    protected TownView _tview;
 
     /** The prefix prepended to localization bundle names before looking
      * them up in the classpath. */

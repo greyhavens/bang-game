@@ -17,6 +17,8 @@ import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.GroupLayout;
 
+import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.TownView;
@@ -32,7 +34,7 @@ import static com.threerings.bang.Log.log;
  * units can also be inspected.
  */
 public class RanchView extends BWindow
-    implements ActionListener
+    implements ActionListener, PlaceView
 {
     public RanchView (BangContext ctx)
     {
@@ -41,6 +43,10 @@ public class RanchView extends BWindow
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
         _msgs = ctx.getMessageManager().getBundle("ranch");
+
+        // we cover the whole screen
+        setBounds(0, 0, ctx.getDisplay().getWidth(),
+                  ctx.getDisplay().getHeight());
 
         // we'll add this later, but the palettes need to know about it
         _inspector = new UnitInspector(ctx);
@@ -89,8 +95,7 @@ public class RanchView extends BWindow
     public void actionPerformed (ActionEvent event)
     {
         if ("back".equals(event.getAction())) {
-            _ctx.getInputDispatcher().removeWindow(this);
-            _ctx.getInputDispatcher().addWindow(new TownView(_ctx));
+            _ctx.clearPlaceView(this);
 
         } else if ("recruit".equals(event.getAction())) {
             UnitConfig config = _inspector.getConfig();
@@ -100,6 +105,18 @@ public class RanchView extends BWindow
                 recruit(config);
             }
         }
+    }
+
+    // documentation inherited from interface PlaceView
+    public void willEnterPlace (PlaceObject plobj)
+    {
+        // this is never actually called; the ranch is not a real place
+    }
+
+    // documentation inherited from interface PlaceView
+    public void didLeavePlace (PlaceObject plobj)
+    {
+        // this is never actually called; the ranch is not a real place
     }
 
     @Override // documentation inherited

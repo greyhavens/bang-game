@@ -37,6 +37,16 @@ public class TownView extends BWindow
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("town");
 
+        // display a simple menu when the player presses escape
+        setModal(true);
+        EscapeMenuView oview = new EscapeMenuView(_ctx) {
+            protected void addButtons () {
+                add(createButton("m.resume", "dismiss"));
+                super.addButtons();
+            }
+        };
+        oview.bind(this);
+
         int width = ctx.getDisplay().getWidth();
         int height = ctx.getDisplay().getHeight();
         setBounds(0, 0, width, height);
@@ -103,10 +113,7 @@ public class TownView extends BWindow
             _ctx.getApp().stop();
 
         } else if ("to_ranch".equals(command)) {
-            RanchView view = new RanchView(_ctx);
-            view.setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                           _ctx.getDisplay().getHeight());
-            _ctx.getInputDispatcher().addWindow(view);
+            _ctx.setPlaceView(new RanchView(_ctx));
 
         } else if ("to_bank".equals(command)) {
             return; // TODO
@@ -117,9 +124,6 @@ public class TownView extends BWindow
         } else if ("to_saloon".equals(command)) {
             _ctx.getLocationDirector().moveTo(2);
         }
-
-        // in any case, we're outta here
-        _ctx.getInputDispatcher().removeWindow(this);
     }
 
     protected BangContext _ctx;

@@ -3,66 +3,37 @@
 
 package com.threerings.bang.client;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BDecoratedWindow;
 import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.GroupLayout;
 
-import com.threerings.util.MessageBundle;
-
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.util.BangContext;
 
 /**
  * Displays options while a player is in a game.
  */
-public class InGameOptionsView extends BDecoratedWindow
-    implements ActionListener
+public class InGameOptionsView extends EscapeMenuView
 {
     public InGameOptionsView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), null);
-        setLayoutManager(GroupLayout.makeVStretch());
-
-        _modal = true;
-        _ctx = ctx;
-        _msgs = ctx.getMessageManager().getBundle("options");
-
-        add(createButton("resume_game"));
-        add(createButton("leave_game"));
-        add(createButton("quit"));
-
-        addListener(new EscapeListener() {
-            public void escapePressed() {
-                dismiss();
-            }
-        });
+        super(ctx);
     }
 
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
         String action = event.getAction();
-        if ("resume_game".equals(action)) {
-            dismiss();
-
-        } else if ("leave_game".equals(action)) {
+        if ("leave_game".equals(action)) {
             _ctx.getLocationDirector().moveBack();
             dismiss();
 
-        } else if ("quit".equals(action)) {
-            _ctx.getApp().stop();
+        } else {
+            super.actionPerformed(event);
         }
     }
 
-    protected BButton createButton (String action)
+    protected void addButtons ()
     {
-        BButton btn = new BButton(_msgs.get("m." + action), action);
-        btn.addListener(this);
-        return btn;
+        add(createButton("resume_game", "dismiss"));
+        add(createButton("leave_game"));
+        super.addButtons();
     }
-
-    protected BangContext _ctx;
-    protected MessageBundle _msgs;
 }
