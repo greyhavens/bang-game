@@ -67,8 +67,8 @@
 ;--------------------------------
 ;Data
 
-  !define REQUIRED_JREVERSION "1.4.2"
-  !define JREVERSION "1.4.2"
+  !define REQUIRED_JREVERSION "1.5.0"
+  !define JREVERSION "1.5.0"
   !define JREZIP "java.zip"
 
   AutoCloseWindow true  ; close the window when the install is done
