@@ -280,7 +280,7 @@ public class Model
             ts.setTexture(
                 TextureManager.loadTexture(
                     getClass().getClassLoader().getResource("rsrc/" + texpath),
-                    Texture.MM_LINEAR, Texture.FM_LINEAR));
+                    Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
             ts.setEnabled(true);
             _textures.put(texpath, ts);
         }

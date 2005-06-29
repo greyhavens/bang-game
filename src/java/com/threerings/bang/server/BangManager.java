@@ -317,8 +317,8 @@ public class BangManager extends GameManager
             if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
                 Piece[] apieces = new Piece[] {
-                    Unit.getUnit("gunslinger"), Unit.getUnit("steamgunman"),
-                    Unit.getUnit("dirigible") };
+                    Unit.getUnit("dirigible"), Unit.getUnit("steamgunman"),
+                    Unit.getUnit("artillery") };
                 purchasePieces(ii, apieces);
             }
         }

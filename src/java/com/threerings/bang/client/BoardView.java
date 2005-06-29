@@ -424,9 +424,10 @@ public class BoardView extends BComponent
         if (img != null) {
             t.setRenderState(RenderUtil.createTexture(_ctx, img));
         } else {
-            // otherwise use a straight up ground tile
-            TextureState tstate = RenderUtil.getGroundTexture(
-                _board.getTile(tx, ty));
+            // otherwise use the unadorned ground tile
+            Terrain tile = _board.getBounds().contains(tx, ty) ?
+                _board.getTile(tx, ty) : Terrain.RIM;
+            TextureState tstate = RenderUtil.getGroundTexture(tile);
             if (tstate != null) {
                 t.setRenderState(tstate);
             } else {

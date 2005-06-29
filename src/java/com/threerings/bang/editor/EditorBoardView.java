@@ -42,9 +42,7 @@ public class EditorBoardView extends BoardView
             // may need refringing
             for (int yy = ty-1; yy <= ty+1; yy++) {
                 for (int xx = tx-1; xx <= tx+1; xx++) {
-                    if (_bangobj.board.getBounds().contains(xx, yy)) {
-                        refreshTile(xx, yy);
-                    }
+                    refreshTile(xx, yy);
                 }
             }
         }
