@@ -104,4 +104,21 @@ public class BangUtil
             return defval;
         }
     }
+
+    /**
+     * Extracts and converts a float property from a properties instance,
+     * logging a warning if it is missing or invalid.
+     */
+    public static float getFloatProperty (
+        String type, Properties props, String key, float defval)
+    {
+        String value = props.getProperty(key);
+        try {
+            return (value != null) ? Float.parseFloat(value) : defval;
+        } catch (Exception e) {
+            log.warning("Invalid config [type=" + type +
+                        ", key=" + key + ", value=" + value + "]: " + e);
+            return defval;
+        }
+    }
 }

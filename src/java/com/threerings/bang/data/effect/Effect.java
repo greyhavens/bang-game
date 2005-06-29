@@ -36,6 +36,12 @@ public abstract class Effect extends SimpleStreamableObject
         public void pieceRemoved (Piece piece);
     }
 
+    /** Initializes this effect (called only on the server) with the piece
+     * that activated the bonus. */
+    public void init (Piece piece)
+    {
+    }
+
     /**
      * Prepares this effect for application. This is executed on the
      * server before the effect is applied on the server and then

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.client.sprite.PieceSprite;
 import com.threerings.bang.client.sprite.UnitSprite;
@@ -45,7 +46,7 @@ public class Unit extends Piece
     /** Returns the type of the unit. */
     public String getType ()
     {
-        return _type;
+        return _config.type;
     }
 
     /** Returns our unit configuration. */
@@ -59,7 +60,15 @@ public class Unit extends Piece
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        init(UnitConfig.getConfig(_type));
+        init(UnitConfig.getConfig(in.readUTF()));
+    }
+
+    /** Writes some custom information for this piece. */
+    public void writeObject (ObjectOutputStream out)
+        throws IOException
+    {
+        out.defaultWriteObject();
+        out.writeUTF(_config.type);
     }
 
     @Override // documentation inherited
@@ -102,7 +111,7 @@ public class Unit extends Piece
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new UnitSprite(_type);
+        return new UnitSprite(_config.type);
     }
 
     @Override // documentation inherited
@@ -123,7 +132,6 @@ public class Unit extends Piece
     protected void init (UnitConfig config)
     {
         _config = config;
-        _type = config.type;
     }
 
     @Override // documentation inherited
@@ -142,6 +150,5 @@ public class Unit extends Piece
         return damage;
     }
 
-    protected String _type;
     protected transient UnitConfig _config;
 }

@@ -1,0 +1,7 @@
+bonus_point
+card
+defect
+duplicate
+plague
+repair
+saint_elmo

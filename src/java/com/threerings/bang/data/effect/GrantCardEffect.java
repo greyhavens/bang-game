@@ -12,6 +12,7 @@ import com.threerings.bang.data.card.AreaRepair;
 import com.threerings.bang.data.card.Card;
 import com.threerings.bang.data.card.DustDevil;
 import com.threerings.bang.data.card.Missile;
+import com.threerings.bang.data.piece.Piece;
 import com.threerings.util.RandomUtil;
 
 import static com.threerings.bang.Log.log;
@@ -23,13 +24,9 @@ public class GrantCardEffect extends Effect
 {
     public int player;
 
-    public GrantCardEffect (int player)
+    public void init (Piece piece)
     {
-        this.player = player;
-    }
-
-    public GrantCardEffect ()
-    {
+        player = piece.owner;
     }
 
     public void prepare (BangObject bangobj, IntIntMap dammap)

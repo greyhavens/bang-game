@@ -27,13 +27,9 @@ public class PlagueEffect extends Effect
     public int[] pieceIds;
     public Piece[] newPieces;
 
-    public PlagueEffect (int owner)
+    public void init (Piece piece)
     {
-        this.owner = owner;
-    }
-
-    public PlagueEffect ()
-    {
+        owner = piece.owner;
     }
 
     public void prepare (BangObject bangobj, IntIntMap dammap)

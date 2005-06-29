@@ -18,13 +18,9 @@ public class BonusPointEffect extends Effect
 
     public int pieceId;
 
-    public BonusPointEffect (int pieceId)
+    public void init (Piece piece)
     {
-        this.pieceId = pieceId;
-    }
-
-    public BonusPointEffect ()
-    {
+        pieceId = piece.pieceId;
     }
 
     public void prepare (BangObject bangobj, IntIntMap dammap)

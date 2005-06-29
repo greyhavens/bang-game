@@ -235,6 +235,9 @@ public class BangManager extends GameManager
                 new BangDispatcher(this), false));
         _bconfig = (BangConfig)_gameconfig;
 
+        // TODO: get the town info from somewhere
+        _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
+
         // create our per-player arrays
         _bangobj.reserves = new int[getPlayerSlots()];
         Arrays.fill(_bangobj.reserves, _bconfig.startingCash);
@@ -786,16 +789,19 @@ public class BangManager extends GameManager
 
         // now turn to the bonus factory for guidance
         Piece bonus = Bonus.selectBonus(_bangobj, bspot, reachers[spidx]);
-        bonus.assignPieceId();
-        bonus.position(bspot.x, bspot.y);
-        _bangobj.addToPieces(bonus);
-        _bangobj.board.updateShadow(null, bonus);
+        if (bonus != null) {
+            bonus.assignPieceId();
+            bonus.position(bspot.x, bspot.y);
+            _bangobj.addToPieces(bonus);
+            _bangobj.board.updateShadow(null, bonus);
 
 //         String msg = MessageBundle.tcompose(
 //             "m.placed_bonus", "" + bspot.x, "" + bspot.y);
 //         SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
 
-        log.info("Placed bonus: " + bonus.info());
+            log.info("Placed bonus: " + bonus.info());
+        }
+
         return true;
     }
 

@@ -27,13 +27,9 @@ public class DuplicateEffect extends Effect
 
     public Piece duplicate;
 
-    public DuplicateEffect (int pieceId)
+    public void init (Piece piece)
     {
-        this.pieceId = pieceId;
-    }
-
-    public DuplicateEffect ()
-    {
+        pieceId = piece.pieceId;
     }
 
     public void prepare (BangObject bangobj, IntIntMap dammap)

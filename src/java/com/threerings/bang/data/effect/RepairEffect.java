@@ -18,13 +18,9 @@ public class RepairEffect extends Effect
 
     public int pieceId;
 
-    public RepairEffect (int pieceId)
+    public void init (Piece piece)
     {
-        this.pieceId = pieceId;
-    }
-
-    public RepairEffect ()
-    {
+        pieceId = piece.pieceId;
     }
 
     public void prepare (BangObject bangobj, IntIntMap dammap)

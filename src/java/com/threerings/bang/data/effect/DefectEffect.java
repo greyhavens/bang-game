@@ -27,13 +27,9 @@ public class DefectEffect extends Effect
 
     public int[] pieceIds;
 
-    public DefectEffect (int owner)
+    public void init (Piece piece)
     {
-        this.owner = owner;
-    }
-
-    public DefectEffect ()
-    {
+        owner = piece.owner;
     }
 
     public void prepare (BangObject bangobj, IntIntMap dammap)
