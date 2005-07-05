@@ -18,9 +18,9 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.BangContext;
 
@@ -38,7 +38,7 @@ public class PurchaseView extends BDecoratedWindow
         super(ctx.getLookAndFeel(), null);
 
         _ctx = ctx;
-        _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
+        _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         _bangobj = bangobj;
         _pidx = pidx;
 

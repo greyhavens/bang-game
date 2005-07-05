@@ -37,15 +37,9 @@ public class TownView extends BWindow
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("town");
 
-        // display a simple menu when the player presses escape
+        // display the status view when the player presses escape
         setModal(true);
-        EscapeMenuView oview = new EscapeMenuView(_ctx) {
-            protected void addButtons () {
-                add(createButton("m.resume", "dismiss"));
-                super.addButtons();
-            }
-        };
-        oview.bind(this);
+        new StatusView(_ctx).bind(this);
 
         int width = ctx.getDisplay().getWidth();
         int height = ctx.getDisplay().getHeight();

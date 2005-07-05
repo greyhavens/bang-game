@@ -36,6 +36,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
 
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.AreaRepair;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
@@ -62,7 +63,7 @@ import static com.threerings.bang.Log.log;
  * Handles the server-side of the game.
  */
 public class BangManager extends GameManager
-    implements BangCodes, BangProvider
+    implements GameCodes, BangProvider
 {
     // documentation inherited from interface BangProvider
     public void selectStarters (
@@ -504,7 +505,7 @@ public class BangManager extends GameManager
                 _bangobj.setPointsAt(_bangobj.points[ii] + score, ii);
                 String msg = MessageBundle.tcompose(
                     "m.knocked_out", _bangobj.players[ii]);
-                SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
+                SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
             }
         }
 
@@ -527,8 +528,7 @@ public class BangManager extends GameManager
                         String msg = MessageBundle.tcompose(
                             "m.cash_score", _bangobj.players[ii],
                             "" + points, "" + tcash);
-                        SpeakProvider.sendInfo(
-                            _bangobj, BangCodes.BANG_MSGS, msg);
+                        SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
                     }
                 }
                 endGame();
@@ -798,7 +798,7 @@ public class BangManager extends GameManager
 
 //         String msg = MessageBundle.tcompose(
 //             "m.placed_bonus", "" + bspot.x, "" + bspot.y);
-//         SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
+//         SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
 
             log.info("Placed bonus: " + bonus.info());
         }
@@ -828,7 +828,7 @@ public class BangManager extends GameManager
                 // report the boochage
                 String msg = MessageBundle.tcompose(
                     "m.self_damage", user.username);
-                SpeakProvider.sendInfo(_bangobj, BangCodes.BANG_MSGS, msg);
+                SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
             }
             total += ddone;
         }

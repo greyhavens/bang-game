@@ -32,7 +32,7 @@ import com.threerings.parlor.data.TableLobbyObject;
 
 import com.threerings.jme.chat.ChatView;
 
-import com.threerings.bang.client.EscapeMenuView;
+import com.threerings.bang.client.StatusView;
 import com.threerings.bang.client.TownView;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.lobby.data.LobbyObject;
@@ -55,24 +55,7 @@ public class LobbyView extends BWindow
 
         // display a simple menu when the player presses escape
         setModal(true);
-        EscapeMenuView oview = new EscapeMenuView(_ctx) {
-            public void actionPerformed (ActionEvent event) {
-                String action = event.getAction();
-                if ("back_to_town".equals(action)) {
-                    if (_ctx.getLocationDirector().leavePlace()) {
-                        dismiss();
-                    }
-                } else {
-                    super.actionPerformed(event);
-                }
-            }
-            protected void addButtons () {
-                add(createButton("m.resume", "dismiss"));
-                add(createButton("m.back_to_town", "back_to_town"));
-                super.addButtons();
-            }
-        };
-        oview.bind(this);
+        new StatusView(_ctx).bind(this);
 
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
         _chat.setBorder(new EmptyBorder(5, 0, 5, 5));
