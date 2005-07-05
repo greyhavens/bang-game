@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import com.samskivert.util.StringUtil;
-import com.threerings.bang.data.Terrain;
+
+import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;

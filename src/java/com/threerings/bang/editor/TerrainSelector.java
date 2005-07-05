@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import com.samskivert.swing.HGroupLayout;
 
-import com.threerings.bang.data.Terrain;
+import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.util.BangContext;
 
 /**

@@ -12,10 +12,10 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PropConfig;
-import com.threerings.bang.data.piece.BonusMarker;
-import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.data.piece.Prop;
-import com.threerings.bang.data.piece.StartMarker;
+import com.threerings.bang.game.data.piece.BonusMarker;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Prop;
+import com.threerings.bang.game.data.piece.StartMarker;
 import com.threerings.bang.util.BangContext;
 
 /**

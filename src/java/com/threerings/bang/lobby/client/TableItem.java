@@ -23,7 +23,7 @@ import com.threerings.parlor.client.SeatednessObserver;
 import com.threerings.parlor.client.TableDirector;
 import com.threerings.parlor.data.Table;
 
-import com.threerings.bang.data.BangConfig;
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;

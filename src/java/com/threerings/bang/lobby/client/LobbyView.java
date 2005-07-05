@@ -34,7 +34,7 @@ import com.threerings.jme.chat.ChatView;
 
 import com.threerings.bang.client.EscapeMenuView;
 import com.threerings.bang.client.TownView;
-import com.threerings.bang.data.BangConfig;
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.lobby.data.LobbyObject;
 import com.threerings.bang.util.BangContext;
 

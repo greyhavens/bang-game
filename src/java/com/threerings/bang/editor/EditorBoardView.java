@@ -9,10 +9,10 @@ import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
 import com.jme.bui.event.MouseWheelListener;
 
-import com.threerings.bang.client.BoardView;
-import com.threerings.bang.client.sprite.PieceSprite;
-import com.threerings.bang.data.Terrain;
-import com.threerings.bang.data.piece.Piece;
+import com.threerings.bang.game.client.BoardView;
+import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.data.Terrain;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;

@@ -29,7 +29,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.bang.data.BangObject;
+import com.threerings.bang.game.data.BangObject;
 
 import static com.threerings.bang.client.BangMetrics.*;
 

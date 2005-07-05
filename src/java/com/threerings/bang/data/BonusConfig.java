@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import com.samskivert.util.StringUtil;
+
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;

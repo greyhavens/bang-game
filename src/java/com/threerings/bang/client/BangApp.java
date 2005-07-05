@@ -17,6 +17,7 @@ import com.samskivert.servlet.user.Password;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 
+import com.threerings.bang.game.client.CameraHandler;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.util.Name;
 

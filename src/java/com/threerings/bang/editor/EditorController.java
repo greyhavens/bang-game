@@ -20,11 +20,11 @@ import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.parlor.game.client.GameController;
 
-import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.PieceDSet;
-import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.util.BoardUtil;
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.util.BoardUtil;
 
 import static com.threerings.bang.Log.log;
 

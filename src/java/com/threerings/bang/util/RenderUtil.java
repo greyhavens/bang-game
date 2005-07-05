@@ -22,7 +22,7 @@ import com.jme.util.TextureManager;
 
 import com.threerings.util.RandomUtil;
 
-import com.threerings.bang.data.Terrain;
+import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.client.BangMetrics.*;

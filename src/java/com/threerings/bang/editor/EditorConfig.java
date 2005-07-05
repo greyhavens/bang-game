@@ -3,8 +3,8 @@
 
 package com.threerings.bang.editor;
 
-import com.threerings.bang.data.BangConfig;
 import com.threerings.bang.editor.EditorController;
+import com.threerings.bang.game.data.BangConfig;
 
 /**
  * Used to configure the Bang! editor.

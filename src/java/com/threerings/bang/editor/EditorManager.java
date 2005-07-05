@@ -13,12 +13,12 @@ import com.samskivert.util.Tuple;
 
 import com.threerings.parlor.game.server.GameManager;
 
-import com.threerings.bang.data.BangBoard;
-import com.threerings.bang.data.BangObject;
-import com.threerings.bang.data.PieceDSet;
-import com.threerings.bang.data.generate.CompoundGenerator;
-import com.threerings.bang.data.piece.Piece;
-import com.threerings.bang.util.BoardUtil;
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.generate.CompoundGenerator;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.util.BoardUtil;
 
 import static com.threerings.bang.Log.log;
 
