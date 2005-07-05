@@ -69,9 +69,20 @@ public class BoardUtil
         throws IOException
     {
         ObjectInputStream oin = new ObjectInputStream(input);
+
+        // temporary translations from an old packaging scheme
+        for (int ii = 0; ii < XLATE.length; ii++) {
+            oin.addTranslation("com.threerings.bang." + XLATE[ii],
+                               "com.threerings.bang.game." + XLATE[ii]);
+        }
+        oin.addTranslation("[Lcom.threerings.bang.data.piece.Piece;",
+                           "[Lcom.threerings.bang.game.data.piece.Piece;");
+
         // if we're running in Game Gardens, we need to configure the
         // appropriate class loader
         oin.setClassLoader(BoardUtil.class.getClassLoader());
+
+        // now read in the board and pieces
         Tuple tuple = new Tuple();
         try {
             tuple.left = oin.readObject();
@@ -83,4 +94,8 @@ public class BoardUtil
         }
         return tuple;
     }
+
+    protected static final String[] XLATE = {
+        "data.BangBoard", "data.piece.BonusMarker", "data.piece.Prop",
+        "data.piece.StartMarker" };
 }

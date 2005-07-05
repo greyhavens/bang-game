@@ -49,6 +49,6 @@ public class BangConfig extends GameConfig
     @Override // documentation inherited
     public String getManagerClassName ()
     {
-        return "com.threerings.bang.server.BangManager";
+        return "com.threerings.bang.game.server.BangManager";
     }
 }
