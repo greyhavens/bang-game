@@ -2,5 +2,7 @@ artillery
 cavalry
 dirigible
 gunslinger
+sharpshooter
+shotgunner
 steamgunman
 windupslinger

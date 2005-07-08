@@ -8,8 +8,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
+
+import com.samskivert.util.StringUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -55,7 +58,22 @@ public class BangUtil
      */
     public static Properties resourceToProperties (String path)
     {
+        return resourceToProperties(path, new ArrayList<String>());
+    }
+
+    /** Helper function for {@link #resourceToProperties}. */
+    protected static Properties resourceToProperties (
+        String path, ArrayList<String> history)
+    {
         Properties props = new Properties();
+        if (history.contains(path)) {
+            log.warning("Detected loop in properties inheritance " +
+                        "[path=" + path +
+                        ", history=" + StringUtil.toString(history) + "].");
+            return props;
+        }
+        history.add(path);
+
         try {
             InputStream in =
                 BangUtil.class.getClassLoader().getResourceAsStream(path);
@@ -69,6 +87,21 @@ public class BangUtil
             log.log(Level.WARNING, "Failed to read resource file " +
                     "[path=" + path + "].", e);
         }
+
+        // if this properties file extends another file, load it up and
+        // overlay it onto this file
+        String ppath = props.getProperty("extends");
+        if (!StringUtil.blank(ppath)) {
+            Properties parent = resourceToProperties(ppath, history);
+            Enumeration iter = parent.propertyNames();
+            while (iter.hasMoreElements()) {
+                String key = (String)iter.nextElement();
+                if (props.getProperty(key) == null) {
+                    props.setProperty(key, parent.getProperty(key));
+                }
+            }
+        }
+
         return props;
     }
 

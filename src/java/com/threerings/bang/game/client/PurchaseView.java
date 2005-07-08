@@ -144,6 +144,7 @@ public class PurchaseView extends BDecoratedWindow
     };
     protected static final Unit[] UNIT_PROTOS = {
         Unit.getUnit("steamgunman"), Unit.getUnit("artillery"),
-        Unit.getUnit("dirigible"), Unit.getUnit("gunslinger")
+        Unit.getUnit("dirigible"), Unit.getUnit("gunslinger"),
+        Unit.getUnit("sharpshooter"), Unit.getUnit("shotgunner")
     };
 }
