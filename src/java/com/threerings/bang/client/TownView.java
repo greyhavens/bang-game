@@ -20,6 +20,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.ranch.client.RanchView;
+import com.threerings.bang.store.client.StoreView;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -113,7 +114,7 @@ public class TownView extends BWindow
             return; // TODO
 
         } else if ("to_store".equals(command)) {
-            return; // TODO
+            _ctx.setPlaceView(new StoreView(_ctx));
 
         } else if ("to_saloon".equals(command)) {
             _ctx.getLocationDirector().moveTo(2);
