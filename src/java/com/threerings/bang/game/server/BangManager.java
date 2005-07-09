@@ -318,8 +318,8 @@ public class BangManager extends GameManager
             if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
                 Piece[] apieces = new Piece[] {
-                    Unit.getUnit("dirigible"), Unit.getUnit("sharpshooter"),
-                    Unit.getUnit("shotgunner") };
+                    Unit.getUnit("dirigible"), Unit.getUnit("steamgunman"),
+                    Unit.getUnit("gunslinger") };
                 purchasePieces(ii, apieces);
             }
         }
@@ -476,6 +476,9 @@ public class BangManager extends GameManager
                 // if they died, possibly remove them from the board
                 if (!p.isAlive() && p.removeWhenDead()) {
                     _bangobj.removePieceDirect(p);
+                } else {
+                    // otherwise update them as they somehow changed
+                    _bangobj.updatePieces(p);
                 }
             }
         }

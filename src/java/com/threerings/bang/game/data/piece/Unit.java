@@ -22,6 +22,9 @@ import static com.threerings.bang.Log.log;
  */
 public class Unit extends Piece
 {
+    /** Any influence currently acting on this unit. */
+    public Influence influence;
+
     /**
      * Instantiates a unit of the specified type.
      */
@@ -41,6 +44,15 @@ public class Unit extends Piece
                     ", class=" + config.unitClass + "].", e);
         }
         return unit;
+    }
+
+    /**
+     * Configures this piece with a new influence.
+     */
+    public void setInfluence (Influence influence, short tick)
+    {
+        influence.init(tick);
+        this.influence = influence;
     }
 
     /** Returns the type of the unit. */
@@ -72,21 +84,42 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public boolean tick (short tick)
+    {
+        if (influence != null && influence.isExpired(tick)) {
+            log.info("Expiring " + influence + ".");
+            influence = null;
+            return true;
+        }
+        return false;
+    }
+
+    @Override // documentation inherited
+    protected int getTicksPerMove ()
+    {
+        return (influence == null) ? super.getTicksPerMove() :
+            influence.adjustTicksPerMove(super.getTicksPerMove());
+    }
+
+    @Override // documentation inherited
     public int getSightDistance ()
     {
-        return _config.sightDistance;
+        return (influence == null) ? _config.sightDistance :
+            influence.adjustSightDistance(_config.sightDistance);
     }
 
     @Override // documentation inherited
     public int getMoveDistance ()
     {
-        return _config.moveDistance;
+        return (influence == null) ? _config.moveDistance :
+            influence.adjustMoveDistance(_config.moveDistance);
     }
 
     @Override // documentation inherited
     public int getFireDistance ()
     {
-        return _config.fireDistance;
+        return (influence == null) ? _config.fireDistance :
+            influence.adjustFireDistance(_config.fireDistance);
     }
 
     @Override // documentation inherited
@@ -117,13 +150,18 @@ public class Unit extends Piece
     @Override // documentation inherited
     public int traversalCost (Terrain terrain)
     {
+        int cost;
         // flyers are unaffected by terrain adjustments
         if (isFlyer()) {
-            return BangBoard.BASE_TRAVERSAL;
+            cost = BangBoard.BASE_TRAVERSAL;
         } else {
-            return super.traversalCost(terrain) +
+            cost = super.traversalCost(terrain) +
                 _config.movementAdjust[terrain.ordinal()];
         }
+        if (influence != null) {
+            cost = influence.adjustTraversalCost(terrain, cost);
+        }
+        return cost;
     }
 
     /**

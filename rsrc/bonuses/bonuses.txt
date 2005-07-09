@@ -2,6 +2,8 @@ bonus_point
 card
 defect
 duplicate
+hustle
 plague
+ramblin
 repair
 saint_elmo
