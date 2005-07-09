@@ -20,9 +20,9 @@ public interface BangService extends InvocationService
     public void selectStarters (Client client, int bigShotId, int[] cardIds);
 
     /**
-     * Used to purchase pieces during the pre-game buying phase.
+     * Used to purchase units during the pre-game buying phase.
      */
-    public void purchasePieces (Client client, Piece[] pieces);
+    public void purchaseUnits (Client client, String[] units);
 
     /**
      * Requests that a piece be moved to the specified location.

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import com.samskivert.util.StringUtil;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.util.BangUtil;
@@ -107,6 +108,12 @@ public class UnitConfig
     {
         return defenseAdjust[attacker.mode.ordinal()] +
             defenseAdjust[MODE_COUNT + attacker.make.ordinal()];
+    }
+
+    /** Returns a translatable name for this unit. */
+    public String getName ()
+    {
+        return MessageBundle.qualify("units", "m." + type);
     }
 
     /** Returns a string representation of this instance. */

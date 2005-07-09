@@ -18,10 +18,10 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -58,7 +58,7 @@ public class PurchaseView extends BDecoratedWindow
             }
             units.add(new BLabel(col));
         }
-        for (int ii = 0; ii < UNIT_PROTOS.length; ii++) {
+        for (int ii = 0; ii < UNIT_CONFIGS.length; ii++) {
             addUnitRow(units, ii);
         }
         add(units, BorderLayout.CENTER);
@@ -76,8 +76,8 @@ public class PurchaseView extends BDecoratedWindow
 
     protected void addUnitRow (BContainer cont, final int index)
     {
-        cont.add(new BLabel(_msgs.get("m." + UNIT_PROTOS[index].getType())));
-        BLabel cost = new BLabel("" + UNIT_PROTOS[index].getCost());
+        cont.add(new BLabel(_msgs.xlate(UNIT_CONFIGS[index].getName())));
+        BLabel cost = new BLabel("" + UNIT_CONFIGS[index].scripCost);
         cost.setHorizontalAlignment(BLabel.RIGHT);
         cont.add(cost);
         cont.add(_qlabels[index] = new BLabel("0"));
@@ -110,7 +110,7 @@ public class PurchaseView extends BDecoratedWindow
     {
         _total = 0;
         for (int ii = 0; ii < _quants.length; ii++) {
-            _total += _quants[ii] * UNIT_PROTOS[ii].getCost();
+            _total += _quants[ii] * UNIT_CONFIGS[ii].scripCost;
         }
         _tlabel.setText(_msgs.get("m.total_cost", "" + _total));
     }
@@ -118,14 +118,14 @@ public class PurchaseView extends BDecoratedWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent e)
     {
-        ArrayList<Unit> pieces = new ArrayList<Unit>();
-        for (int ii = 0; ii < UNIT_PROTOS.length; ii++) {
+        ArrayList<String> units = new ArrayList<String>();
+        for (int ii = 0; ii < UNIT_CONFIGS.length; ii++) {
             for (int pp = 0; pp < _quants[ii]; pp++) {
-                pieces.add((Unit)UNIT_PROTOS[ii].clone());
+                units.add(UNIT_CONFIGS[ii].type);
             }
         }
-        Unit[] pvec = pieces.toArray(new Unit[pieces.size()]);
-        _bangobj.service.purchasePieces(_ctx.getClient(), pvec);
+        String[] uvec = units.toArray(new String[units.size()]);
+        _bangobj.service.purchaseUnits(_ctx.getClient(), uvec);
     }
 
     protected BangContext _ctx;
@@ -133,8 +133,8 @@ public class PurchaseView extends BDecoratedWindow
     protected BangObject _bangobj;
     protected int _pidx;
 
-    protected int[] _quants = new int[UNIT_PROTOS.length];
-    protected BLabel[] _qlabels = new BLabel[UNIT_PROTOS.length];
+    protected int[] _quants = new int[UNIT_CONFIGS.length];
+    protected BLabel[] _qlabels = new BLabel[UNIT_CONFIGS.length];
     protected int _total;
     protected BLabel _tlabel;
     protected BButton _ready;
@@ -142,9 +142,9 @@ public class PurchaseView extends BDecoratedWindow
     protected static final String[] COLUMNS = {
         "unit", "cost", "count", "", ""
     };
-    protected static final Unit[] UNIT_PROTOS = {
-        Unit.getUnit("steamgunman"), Unit.getUnit("artillery"),
-        Unit.getUnit("dirigible"), Unit.getUnit("gunslinger"),
-        Unit.getUnit("sharpshooter"), Unit.getUnit("shotgunner")
+    protected static final UnitConfig[] UNIT_CONFIGS = {
+        UnitConfig.getConfig("steamgunman"), UnitConfig.getConfig("artillery"),
+        UnitConfig.getConfig("dirigible"), UnitConfig.getConfig("gunslinger"),
+        UnitConfig.getConfig("sharpshooter"), UnitConfig.getConfig("shotgunner")
     };
 }

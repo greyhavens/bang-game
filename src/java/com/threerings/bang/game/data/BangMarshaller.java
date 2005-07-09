@@ -4,7 +4,6 @@
 package com.threerings.bang.game.data;
 
 import com.threerings.bang.game.client.BangService;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -44,13 +43,13 @@ public class BangMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #purchasePieces} requests. */
-    public static final int PURCHASE_PIECES = 3;
+    /** The method id used to dispatch {@link #purchaseUnits} requests. */
+    public static final int PURCHASE_UNITS = 3;
 
     // documentation inherited from interface
-    public void purchasePieces (Client arg1, Piece[] arg2)
+    public void purchaseUnits (Client arg1, String[] arg2)
     {
-        sendRequest(arg1, PURCHASE_PIECES, new Object[] {
+        sendRequest(arg1, PURCHASE_UNITS, new Object[] {
             arg2
         });
     }

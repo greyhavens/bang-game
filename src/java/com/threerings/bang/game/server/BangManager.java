@@ -96,16 +96,16 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void purchasePieces (ClientObject caller, Piece[] pieces)
+    public void purchaseUnits (ClientObject caller, String[] units)
     {
         BangUserObject user = (BangUserObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.username);
         if (pidx == -1) {
-            log.warning("Request to purchase pieces by non-player " +
+            log.warning("Request to purchase units by non-player " +
                         "[who=" + user.who() + "].");
             return;
         }
-        purchasePieces(pidx, pieces);
+        purchaseUnits(pidx, units);
     }
 
     // documentation inherited from interface BangProvider
@@ -317,10 +317,9 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
-                Piece[] apieces = new Piece[] {
-                    Unit.getUnit("dirigible"), Unit.getUnit("steamgunman"),
-                    Unit.getUnit("gunslinger") };
-                purchasePieces(ii, apieces);
+                String[] units = new String[] {
+                    "dirigible", "steamgunman", "gunslinger" };
+                purchaseUnits(ii, units);
             }
         }
     }
@@ -371,12 +370,18 @@ public class BangManager extends GameManager
      * Configures the specified player's purchases for this round and
      * starts the game if they are the last to configure.
      */
-    protected void purchasePieces (int pidx, Piece[] pieces)
+    protected void purchaseUnits (int pidx, String[] types)
     {
+        // create an array of units from the requested types
+        Unit[] units = new Unit[types.length];
+        for (int ii = 0; ii < units.length; ii++) {
+            units[ii] = Unit.getUnit(types[ii]);
+        }
+
         // total up the cost
         int totalCost = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            totalCost += pieces[ii].getCost();
+        for (int ii = 0; ii < units.length; ii++) {
+            totalCost += units[ii].getCost();
         }
         if (totalCost > _bangobj.reserves[pidx]) {
             log.warning("Rejecting bogus purchase request " +
@@ -386,11 +391,11 @@ public class BangManager extends GameManager
             return;
         }
 
-        // initialize and prepare the pieces
-        for (int ii = 0; ii < pieces.length; ii++) {
-            pieces[ii].init();
-            pieces[ii].owner = pidx;
-            _purchases.add(pieces[ii]);
+        // initialize and prepare the units
+        for (int ii = 0; ii < units.length; ii++) {
+            units[ii].init();
+            units[ii].owner = pidx;
+            _purchases.add(units[ii]);
         }
 
         // finally decrement their funds

@@ -5,7 +5,6 @@ package com.threerings.bang.game.server;
 
 import com.threerings.bang.game.client.BangService;
 import com.threerings.bang.game.data.BangMarshaller;
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -53,10 +52,10 @@ public class BangDispatcher extends InvocationDispatcher
             );
             return;
 
-        case BangMarshaller.PURCHASE_PIECES:
-            ((BangProvider)provider).purchasePieces(
+        case BangMarshaller.PURCHASE_UNITS:
+            ((BangProvider)provider).purchaseUnits(
                 source,
-                (Piece[])args[0]
+                (String[])args[0]
             );
             return;
 
