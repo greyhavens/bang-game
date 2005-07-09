@@ -33,7 +33,7 @@ public class InGameOptionsView extends EscapeMenuView
 
     protected void addButtons ()
     {
-        add(createButton("resume_game", "dismiss"));
+        add(createButton("m.resume_game", "dismiss"));
         add(createButton("leave_game"));
         super.addButtons();
     }

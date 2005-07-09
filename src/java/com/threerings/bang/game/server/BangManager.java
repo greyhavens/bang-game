@@ -37,7 +37,6 @@ import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
 
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.card.AreaRepair;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
@@ -447,13 +446,6 @@ public class BangManager extends GameManager
 
         } finally {
             _bangobj.commitTransaction();
-        }
-
-        // TEMP: give everyone an area repair to start
-        for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            AreaRepair card = new AreaRepair();
-            card.init(_bangobj, ii);
-            _bangobj.addToCards(card);
         }
 
         // initialize our pieces

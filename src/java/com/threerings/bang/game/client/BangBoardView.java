@@ -681,6 +681,10 @@ public class BangBoardView extends BoardView
             if (effect.equals("bang")) {
                 ((UnitSprite)sprite).setPendingShot(false);
             }
+
+        } else {
+            // update the sprite to reflect its change
+            pieceUpdated(null, piece);
         }
     }
 

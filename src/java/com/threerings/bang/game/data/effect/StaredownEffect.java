@@ -25,6 +25,10 @@ public class StaredownEffect extends Effect
     /** The piece that we will be affecting. */
     public int pieceId;
 
+    public StaredownEffect ()
+    {
+    }
+
     public StaredownEffect (int x, int y)
     {
         this.x = (short)x;
