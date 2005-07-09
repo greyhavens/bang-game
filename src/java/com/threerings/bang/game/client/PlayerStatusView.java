@@ -143,7 +143,7 @@ public class PlayerStatusView extends BContainer
     protected BButton createButton (Card card)
     {
         BIcon icon = new BIcon(
-            _ctx.loadImage("bonuses/" + card.getIconPath() + "/icon.png"));
+            _ctx.loadImage("cards/" + card.getIconPath() + "/icon.png"));
         BButton btn = new BButton(icon, "" + card.cardId);
         btn.addListener(this);
         return btn;
