@@ -1,5 +1,6 @@
 artillery
 cavalry
+codger
 dirigible
 gunslinger
 sharpshooter
