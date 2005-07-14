@@ -71,13 +71,13 @@ public class BoardView extends BComponent
         _ctx = ctx;
 
         // configure ourselves as the default event target
-        _ctx.getInputDispatcher().pushDefaultEventTarget(this);
+        _ctx.getRootNode().pushDefaultEventTarget(this);
 
         // create a fringer
         _fringer = new TileFringer(_ctx.getFringeConfig(), _tfisrc);
 
-        // we don't actually want to render in orthographic mode
-        _node.setRenderQueueMode(Renderer.QUEUE_INHERIT);
+        // create our top-level node
+        _node = new Node("board_view");
 
         // create a sky box
         _node.attachChild(new SkyNode(ctx));
@@ -110,12 +110,20 @@ public class BoardView extends BComponent
     }
 
     /**
+     * Returns our top-level geometry node.
+     */
+    public Node getNode ()
+    {
+        return _node;
+    }
+
+    /**
      * Called when we're to be removed from the display.
      */
     public void shutdown ()
     {
         // clear ourselves as a default event target
-        _ctx.getInputDispatcher().popDefaultEventTarget(this);
+        _ctx.getRootNode().popDefaultEventTarget(this);
     }
 
     /**
@@ -664,7 +672,7 @@ public class BoardView extends BComponent
     protected TileFringer _fringer;
     protected HashMap _fmasks = new HashMap();
 
-    protected Node _pnode, _tnode, _hnode;
+    protected Node _node, _pnode, _tnode, _hnode;
     protected Vector3f _worldMouse;
     protected TrianglePickResults _pick = new TrianglePickResults();
     protected Sprite _hover;

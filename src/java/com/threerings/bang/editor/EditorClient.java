@@ -16,7 +16,7 @@ import javax.swing.JPopupMenu;
 import java.util.logging.Level;
 
 import com.jme.bui.BLookAndFeel;
-import com.jme.bui.event.InputDispatcher;
+import com.jme.bui.BRootNode;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
@@ -236,8 +236,8 @@ public class EditorClient extends BasicClient
             return _app.getContext().getInputHandler();
         }
 
-        public InputDispatcher getInputDispatcher () {
-            return _app.getContext().getInputDispatcher();
+        public BRootNode getRootNode () {
+            return _app.getContext().getRootNode();
         }
 
         public BLookAndFeel getLookAndFeel () {

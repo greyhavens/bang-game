@@ -9,7 +9,7 @@ import java.util.logging.Level;
 
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BWindow;
-import com.jme.bui.event.InputDispatcher;
+import com.jme.bui.BRootNode;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
@@ -108,7 +108,7 @@ public class BangClient extends BasicClient
         } else {
             // display the town view
             _tview = new TownView(_ctx);
-            _ctx.getInputDispatcher().addWindow(_tview);
+            _ctx.getRootNode().addWindow(_tview);
         }
     }
 
@@ -136,7 +136,7 @@ public class BangClient extends BasicClient
     protected void displayLogon ()
     {
         _lview = new LogonView(_ctx);
-        _ctx.getInputDispatcher().addWindow(_lview);
+        _ctx.getRootNode().addWindow(_lview);
 
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
@@ -147,7 +147,7 @@ public class BangClient extends BasicClient
 
     protected void clearLogon ()
     {
-        _ctx.getInputDispatcher().removeWindow(_lview);
+        _ctx.getRootNode().removeWindow(_lview);
         _lview = null;
     }
 
@@ -168,11 +168,11 @@ public class BangClient extends BasicClient
 
         public void setPlaceView (PlaceView view) {
             if (_pview != null) {
-                _ctx.getInputDispatcher().removeWindow(_pview);
+                _ctx.getRootNode().removeWindow(_pview);
             } else if (_tview != null) {
-                _ctx.getInputDispatcher().removeWindow(_tview);
+                _ctx.getRootNode().removeWindow(_tview);
             }
-            _ctx.getInputDispatcher().addWindow(_pview = (BWindow)view);
+            _ctx.getRootNode().addWindow(_pview = (BWindow)view);
         }
 
         public void clearPlaceView (PlaceView view) {
@@ -181,12 +181,12 @@ public class BangClient extends BasicClient
                             "[have=" + _pview + ", got=" + view + "].");
                 // try to cope
                 if (_pview != null) {
-                    _ctx.getInputDispatcher().removeWindow(_pview);
+                    _ctx.getRootNode().removeWindow(_pview);
                 }
             }
-            _ctx.getInputDispatcher().removeWindow((BWindow)view);
+            _ctx.getRootNode().removeWindow((BWindow)view);
             _pview = null;
-            _ctx.getInputDispatcher().addWindow(_tview);
+            _ctx.getRootNode().addWindow(_tview);
         }
     }
 

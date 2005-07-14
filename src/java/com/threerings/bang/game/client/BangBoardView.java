@@ -72,7 +72,7 @@ public class BangBoardView extends BoardView
             }
             public void escapePressed () {
                 InGameOptionsView oview = new InGameOptionsView(_ctx);
-                _ctx.getInputDispatcher().addWindow(oview);
+                _ctx.getRootNode().addWindow(oview);
                 oview.pack();
                 oview.center();
             }

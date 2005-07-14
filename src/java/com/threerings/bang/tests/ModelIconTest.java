@@ -19,7 +19,7 @@ import com.jme.bui.BDecoratedWindow;
 import com.jme.bui.BIcon;
 import com.jme.bui.BLabel;
 import com.jme.bui.BLookAndFeel;
-import com.jme.bui.event.InputDispatcher;
+import com.jme.bui.BRootNode;
 import com.jme.bui.layout.BorderLayout;
 
 import com.threerings.jme.JmeApp;
@@ -70,7 +70,7 @@ public class ModelIconTest extends JmeApp
 
         BDecoratedWindow window = new BDecoratedWindow(_lnf, "Test");
         createInterface(window);
-        _ctx.getInputDispatcher().addWindow(window);
+        _ctx.getRootNode().addWindow(window);
         window.pack();
         window.center();
     }
@@ -78,8 +78,7 @@ public class ModelIconTest extends JmeApp
     protected void createInterface (BDecoratedWindow window)
     {
         Model model = _mcache.getModel("units", "windupslinger");
-        BIcon icon =
-            new BIcon(model.getIcon(), Model.ICON_SIZE, Model.ICON_SIZE);
+        BIcon icon = new BIcon(model.getIcon());
         window.add(new BLabel(icon), BorderLayout.CENTER);
     }
 
@@ -178,8 +177,8 @@ public class ModelIconTest extends JmeApp
             return getContext().getInputHandler();
         }
 
-        public InputDispatcher getInputDispatcher () {
-            return getContext().getInputDispatcher();
+        public BRootNode getRootNode () {
+            return getContext().getRootNode();
         }
 
         public BLookAndFeel getLookAndFeel () {

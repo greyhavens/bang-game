@@ -80,7 +80,7 @@ public class StatusView extends BDecoratedWindow
     {
         host.addListener(new EscapeListener() {
             public void escapePressed () {
-                _ctx.getInputDispatcher().addWindow(StatusView.this);
+                _ctx.getRootNode().addWindow(StatusView.this);
                 setSize(500, 500);
                 center();
             }

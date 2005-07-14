@@ -17,6 +17,7 @@ import com.jme.bui.layout.GroupLayout;
 import com.jme.bui.layout.TableLayout;
 import com.jme.bui.util.Dimension;
 import com.jme.renderer.ColorRGBA;
+import com.jme.util.TextureManager;
 
 import com.samskivert.servlet.user.Password;
 
@@ -45,7 +46,7 @@ public class LogonView extends BWindow
 
         ClassLoader loader = getClass().getClassLoader();
         setBackground(new ScaledBackground(
-                          loader.getResource("rsrc/menu/logon.png"),
+                          TextureManager.loadImage(loader.getResource("rsrc/menu/logon.png"), true),
                           0, 300, 50, 0)); // magic!
 
         _msgs = ctx.getMessageManager().getBundle("logon");
@@ -93,7 +94,7 @@ public class LogonView extends BWindow
 
         } else if ("options".equals(event.getAction())) {
             OptionsView oview = new OptionsView(_ctx, this);
-            _ctx.getInputDispatcher().addWindow(oview);
+            _ctx.getRootNode().addWindow(oview);
             oview.pack();
             oview.center();
 
@@ -105,7 +106,7 @@ public class LogonView extends BWindow
     @Override // documentation inherited
     public Dimension getPreferredSize ()
     {
-        return _background.getPreferredSize();
+        return ((ScaledBackground)_background).getNaturalSize();
     }
 
     protected ClientAdapter _listener = new ClientAdapter() {

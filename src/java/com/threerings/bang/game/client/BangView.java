@@ -8,6 +8,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.bui.BComponent;
 import com.jme.bui.BDecoratedWindow;
 import com.jme.bui.BWindow;
+import com.jme.bui.background.BBackground;
 import com.jme.bui.background.TintedBackground;
 import com.jme.bui.layout.BorderLayout;
 import com.jme.bui.layout.GroupLayout;
@@ -52,22 +53,24 @@ public class BangView extends BWindow
         chat = new ChatView(_ctx, _ctx.getChatDirector()) {
             public void wasAdded () {
                 super.wasAdded();
-                _text.getBackground().getNode().setForceCull(true);
-                _input.getBackground().getNode().setForceCull(true);
+                _text.setBackground(null);
+                _inputbg = _input.getBackground();
+                _input.setBackground(null);
             }
             public void requestFocus () {
                 super.requestFocus();
-                _input.getBackground().getNode().setForceCull(false);
+                _input.setBackground(_inputbg);
             }
             protected boolean handleInput (String text) {
                 boolean chatted = super.handleInput(text);
                 // relinquish the focus when we're done chatting
                 if (chatted) {
-                    _ctx.getInputDispatcher().requestFocus(null);
-                    _input.getBackground().getNode().setForceCull(true);
+                    _ctx.getRootNode().requestFocus(null);
+                    _input.setBackground(null);
                 }
                 return chatted;
             }
+            protected BBackground _inputbg;
         };
         _chatwin.add(chat, BorderLayout.CENTER);
     }
@@ -82,7 +85,7 @@ public class BangView extends BWindow
 
         // add the selection view to the display
         _oview = new SelectionView(_ctx, cfg, bangobj, pidx);
-        _ctx.getInputDispatcher().addWindow(_oview);
+        _ctx.getRootNode().addWindow(_oview);
         _oview.pack();
         _oview.center();
     }
@@ -91,12 +94,12 @@ public class BangView extends BWindow
     public void buyingPhase (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // remove the selection view from the display
-        _ctx.getInputDispatcher().removeWindow(_oview);
+        _ctx.getRootNode().removeWindow(_oview);
         _oview = null;
 
         // add the purchase view to the display
         _oview = new PurchaseView(_ctx, cfg, bangobj, pidx);
-        _ctx.getInputDispatcher().addWindow(_oview);
+        _ctx.getRootNode().addWindow(_oview);
         _oview.pack();
         _oview.center();
     }
@@ -106,7 +109,7 @@ public class BangView extends BWindow
     {
         // remove the purchase (or in test mode, selection) view
         if (_oview != null) {
-            _ctx.getInputDispatcher().removeWindow(_oview);
+            _ctx.getRootNode().removeWindow(_oview);
             _oview = null;
         }
     }
@@ -128,18 +131,18 @@ public class BangView extends BWindow
         // add our chat display
         int width = _ctx.getDisplay().getWidth();
         _chatwin.setBounds(10, 20, width-20, 100);
-        _ctx.getInputDispatcher().addWindow(_chatwin);
+        _ctx.getRootNode().addWindow(_chatwin);
 
         // create and position our player status displays
         int pcount = bangobj.players.length;
         _pstatus = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
         _pstatus.setLayoutManager(GroupLayout.makeHStretch());
         _pstatus.setBackground(
-            new TintedBackground(5, 5, 5, 5, ColorRGBA.darkGray));
+            new TintedBackground(ColorRGBA.darkGray, 5, 5, 5, 5));
         for (int ii = 0; ii < pcount; ii++) {
             _pstatus.add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
         }
-        _ctx.getInputDispatcher().addWindow(_pstatus);
+        _ctx.getRootNode().addWindow(_pstatus);
         _pstatus.setSize(_ctx.getDisplay().getWidth() - 20, 50);
         int height = _ctx.getDisplay().getHeight();
         _pstatus.setLocation(10, height - _pstatus.getHeight() - 10);
@@ -156,12 +159,12 @@ public class BangView extends BWindow
         view.shutdown();
 
         // remove our displays
-        _ctx.getInputDispatcher().removeWindow(_pstatus);
-        _ctx.getInputDispatcher().removeWindow(_chatwin);
+        _ctx.getRootNode().removeWindow(_pstatus);
+        _ctx.getRootNode().removeWindow(_chatwin);
         _ctx.getGeometry().detachChild(view.getNode());
 
         if (_oview != null) {
-            _ctx.getInputDispatcher().removeWindow(_oview);
+            _ctx.getRootNode().removeWindow(_oview);
             _oview = null;
         }
     }

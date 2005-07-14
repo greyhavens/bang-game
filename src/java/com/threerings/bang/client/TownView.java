@@ -17,6 +17,8 @@ import com.jme.bui.event.MouseEvent;
 import com.jme.bui.layout.GroupLayout;
 import com.samskivert.util.StringUtil;
 
+import com.jme.util.TextureManager;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.ranch.client.RanchView;
@@ -50,7 +52,9 @@ public class TownView extends BWindow
         String tpath = "rsrc/menu/frontier";
         ClassLoader loader = getClass().getClassLoader();
         setBackground(new ScaledBackground(
-                          loader.getResource(tpath + "/town.png"), 0, 0, 0, 0));
+                          TextureManager.loadImage(
+                              loader.getResource(tpath + "/town.png"), true),
+                          0, 0, 0, 0));
 
         // load up the polygons
         Properties props = new Properties();

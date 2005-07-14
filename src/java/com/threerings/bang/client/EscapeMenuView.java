@@ -48,7 +48,7 @@ public class EscapeMenuView extends BDecoratedWindow
     {
         host.addListener(new EscapeListener() {
             public void escapePressed () {
-                _ctx.getInputDispatcher().addWindow(EscapeMenuView.this);
+                _ctx.getRootNode().addWindow(EscapeMenuView.this);
                 pack();
                 center();
             }
