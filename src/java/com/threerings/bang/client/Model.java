@@ -14,8 +14,8 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.light.PointLight;
 import com.jme.image.Texture;
+import com.jme.light.PointLight;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
@@ -24,13 +24,16 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Node;
-import com.jme.scene.state.LightState;
 import com.jme.scene.shape.Box;
-import com.jme.scene.state.ZBufferState;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
 import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
+
+import com.jme.bui.BIcon;
+import com.jme.bui.BTextureIcon;
 
 import com.threerings.bang.util.BangContext;
 
@@ -178,9 +181,9 @@ public class Model
     /**
      * Returns a pre-rendered icon version of this model.
      */
-    public Texture getIcon ()
+    public BIcon getIcon ()
     {
-        return _icon;
+        return new BTextureIcon(_icon, ICON_SIZE, ICON_SIZE);
     }
 
     public Node[] getMeshes (String action)

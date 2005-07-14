@@ -16,7 +16,6 @@ import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 
 import com.jme.bui.BDecoratedWindow;
-import com.jme.bui.BIcon;
 import com.jme.bui.BLabel;
 import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BRootNode;
@@ -78,8 +77,7 @@ public class ModelIconTest extends JmeApp
     protected void createInterface (BDecoratedWindow window)
     {
         Model model = _mcache.getModel("units", "windupslinger");
-        BIcon icon = new BIcon(model.getIcon());
-        window.add(new BLabel(icon), BorderLayout.CENTER);
+        window.add(new BLabel(model.getIcon()), BorderLayout.CENTER);
     }
 
     /**
