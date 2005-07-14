@@ -1,5 +1,6 @@
-buildings/saloon
+buildings/general_store
 buildings/outhouse
+buildings/saloon
 natural/cactus1
 natural/cactus2
 natural/rocks1
