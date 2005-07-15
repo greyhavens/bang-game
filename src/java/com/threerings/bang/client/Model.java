@@ -285,9 +285,13 @@ public class Model
             Texture tex = TextureManager.loadTexture(
                 getClass().getClassLoader().getResource("rsrc/" + texpath),
                 Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-            tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
-            ts.setTexture(tex);
-            ts.setEnabled(true);
+            if (tex == null) {
+                log.warning("Failed to load texture [path=" + texpath + "].");
+            } else {
+                tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
+                ts.setTexture(tex);
+                ts.setEnabled(true);
+            }
             _textures.put(texpath, ts);
         }
         return ts;
