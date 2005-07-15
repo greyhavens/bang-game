@@ -6,9 +6,9 @@ package com.threerings.bang.game.client;
 import com.jme.bui.BButton;
 import com.jme.bui.BContainer;
 import com.jme.bui.BIcon;
-import com.jme.bui.BImageIcon;
 import com.jme.bui.BLabel;
 import com.jme.bui.BLookAndFeel;
+import com.jme.bui.ImageIcon;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.GroupLayout;
@@ -143,7 +143,7 @@ public class PlayerStatusView extends BContainer
 
     protected BButton createButton (Card card)
     {
-        BIcon icon = new BImageIcon(
+        BIcon icon = new ImageIcon(
             _ctx.loadImage("cards/" + card.getIconPath() + "/icon.png"));
         BButton btn = new BButton(icon, "" + card.cardId);
         btn.addListener(this);

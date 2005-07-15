@@ -40,7 +40,8 @@ import com.threerings.parlor.client.ParlorDirector;
 import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.ModelCache;
-
+import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -76,8 +77,12 @@ public class ModelIconTest extends JmeApp
 
     protected void createInterface (BDecoratedWindow window)
     {
-        Model model = _mcache.getModel("units", "windupslinger");
-        window.add(new BLabel(model.getIcon()), BorderLayout.CENTER);
+        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("steamgunman")),
+                   BorderLayout.WEST);
+        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("gunslinger")),
+                   BorderLayout.CENTER);
+        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("dirigible")),
+                   BorderLayout.EAST);
     }
 
     /**

@@ -33,7 +33,7 @@ import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
 
 import com.jme.bui.BIcon;
-import com.jme.bui.BTextureIcon;
+import com.jme.bui.TextureIcon;
 
 import com.threerings.bang.util.BangContext;
 
@@ -107,7 +107,7 @@ public class Model
                 ctx.getDisplay().createTextureRenderer(
                     ICON_SIZE, ICON_SIZE, false, true, false, false,
                     TextureRenderer.RENDER_TEXTURE_2D, 0);
-            trenderer.setBackgroundColor(new ColorRGBA(.667f, .667f, .851f, 0f));
+            trenderer.setBackgroundColor(new ColorRGBA(0f, 1f, 1f, 0f));
 
             Vector3f loc = new Vector3f(TILE_SIZE/2, -TILE_SIZE, TILE_SIZE);
             trenderer.getCamera().setLocation(loc);
@@ -183,7 +183,7 @@ public class Model
      */
     public BIcon getIcon ()
     {
-        return new BTextureIcon(_icon, ICON_SIZE, ICON_SIZE);
+        return new TextureIcon(_icon, ICON_SIZE, ICON_SIZE);
     }
 
     public Node[] getMeshes (String action)
