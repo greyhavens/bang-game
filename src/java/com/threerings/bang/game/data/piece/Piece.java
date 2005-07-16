@@ -59,9 +59,6 @@ public abstract class Piece extends SimpleStreamableObject
     /** The percentage damage this piece has taken. */
     public int damage;
 
-    /** The energy level of this piece. */
-    public int energy;
-
     /**
      * Returns the cost to purchase this piece.
      */
@@ -75,7 +72,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public boolean isAlive ()
     {
-        return (energy > 0) && (damage < 100);
+        return (damage < 100);
     }
 
     /**
@@ -229,12 +226,6 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public void init ()
     {
-        // set up our starting energy (only if it hasn't been otherwise
-        // configured in the editor)
-        if (energy == 0) {
-            energy = startingEnergy();
-        }
-
         // start with zero damage
         damage = 0;
 
@@ -282,32 +273,6 @@ public abstract class Piece extends SimpleStreamableObject
     public boolean isFlyer ()
     {
         return false;
-    }
-
-    /**
-     * Returns the energy consumed per step taken by this piece.
-     */
-    public int energyPerStep ()
-    {
-        return DEFAULT_ENERGY_PER_STEP;
-    }
-
-    /**
-     * Instructs this piece to consume the energy needed to take the
-     * specified number of steps.
-     */
-    public void consumeEnergy (int steps)
-    {
-        energy -= energyPerStep() * steps;
-    }
-
-    /**
-     * Returns true if this piece has at least enough energy to take one
-     * step, false if not.
-     */
-    public boolean canTakeStep ()
-    {
-        return energy >= energyPerStep();
     }
 
 //     /**
@@ -398,14 +363,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public Interaction maybeInteract (Piece other, ArrayList<Effect> effects)
     {
-        if (other instanceof Fuel && energy < 3*maximumEnergy()/4) {
-            Fuel nibbly = (Fuel)other;
-            int taken = nibbly.takeEnergy(this);
-            energy = Math.min(maximumEnergy(), energy + taken);
-            return nibbly.energy > 0 ?
-                Interaction.INTERACTED : Interaction.CONSUMED;
-
-        } else if (other instanceof Bonus && canActivateBonus()) {
+        if (other instanceof Bonus && canActivateBonus()) {
             Effect effect = ((Bonus)other).affect(this);
             if (effect != null) {
                 effects.add(effect);
@@ -443,12 +401,6 @@ public abstract class Piece extends SimpleStreamableObject
         _key = null;
         pieceId = 0;
         getKey();
-    }
-
-    /** Returns the percentage remaining of this piece's energy. */
-    public int getPercentEnergy ()
-    {
-        return energy * 100 / maximumEnergy();
     }
 
     /**
@@ -508,8 +460,7 @@ public abstract class Piece extends SimpleStreamableObject
     public boolean validTarget (Piece target)
     {
         return (target != null && target.owner != -1 &&
-                target.owner != owner && target.energy > 0 &&
-                target.damage < 100);
+                target.owner != owner && target.damage < 100);
     }
 
     /** Returns the frequency with which this piece can move. */
@@ -583,18 +534,6 @@ public abstract class Piece extends SimpleStreamableObject
         return (terrain.traversalCost > 0);
     }
 
-    /** Returns the starting energy for pieces of this type. */
-    protected int startingEnergy ()
-    {
-        return DEFAULT_STARTING_ENERGY * 50;
-    }
-
-    /** Returns the maximum energy this piece can possess. */
-    protected int maximumEnergy ()
-    {
-        return DEFAULT_MAXIMUM_ENERGY * 50;
-    }
-
     /**
      * Returns the number of percentage points of damage this piece does
      * to pieces of the specified type.
@@ -640,15 +579,6 @@ public abstract class Piece extends SimpleStreamableObject
 	    considerStep(x, y + 1, 1);
         }
     };
-
-    /** The default quantity of energy consumed to take a step. */
-    protected static final int DEFAULT_ENERGY_PER_STEP = 10;
-
-    /** The default starting quantity of energy. */
-    protected static final int DEFAULT_STARTING_ENERGY = 100;
-
-    /** The default maximum quantity of energy. */
-    protected static final int DEFAULT_MAXIMUM_ENERGY = 250;
 
     /** Used to move one tile forward from an orientation. */
     protected static final int[] FWD_X_MAP = { 0, 1, 0, -1 };

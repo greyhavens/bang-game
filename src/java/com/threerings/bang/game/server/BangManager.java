@@ -592,14 +592,11 @@ public class BangManager extends GameManager
      */
     protected Piece movePiece (BangUserObject user, Piece piece, int x, int y)
     {
-        // make sure we are alive, have energy and are ready to move
+        // make sure we are alive, and are ready to move
         int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
-        int energy = steps * piece.energyPerStep();
-        if (!piece.isAlive() || piece.energy < energy ||
-            piece.ticksUntilMovable(_bangobj.tick) > 0) {
+        if (!piece.isAlive() || piece.ticksUntilMovable(_bangobj.tick) > 0) {
             log.warning("Piece requested illegal move [piece=" + piece +
                         ", alive=" + piece.isAlive() +
-                        ", denergy=" + (energy - piece.energy) +
                         ", mticks=" + piece.ticksUntilMovable(_bangobj.tick) +
                         "].");
             return null;
@@ -618,7 +615,6 @@ public class BangManager extends GameManager
         Piece mpiece = (Piece)piece.clone();
         mpiece.position(x, y);
         mpiece.lastActed = _bangobj.tick;
-        mpiece.consumeEnergy(steps);
 
         // ensure that we don't land on a piece that prevents us from
         // overlapping it and make a note of any piece that we land on
