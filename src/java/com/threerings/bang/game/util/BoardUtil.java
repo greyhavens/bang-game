@@ -18,7 +18,10 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.piece.BonusMarker;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Prop;
+import com.threerings.bang.game.data.piece.StartMarker;
 
 /**
  * Bang board related utility routines.
@@ -34,7 +37,10 @@ public class BoardUtil
         ObjectOutputStream oos = new ObjectOutputStream(
             new BufferedOutputStream(new FileOutputStream(target)));
         oos.writeObject(board);
-        oos.writeObject(pieces);
+        oos.writeInt(pieces.length);
+        for (int ii = 0; ii < pieces.length; ii++) {
+            writePiece(oos, pieces[ii]);
+        }
         oos.flush();
     }
 
@@ -78,33 +84,61 @@ public class BoardUtil
         throws IOException
     {
         ObjectInputStream oin = new ObjectInputStream(input);
-
-        // temporary translations from an old packaging scheme
-        for (int ii = 0; ii < XLATE.length; ii++) {
-            oin.addTranslation("com.threerings.bang." + XLATE[ii],
-                               "com.threerings.bang.game." + XLATE[ii]);
-        }
-        oin.addTranslation("[Lcom.threerings.bang.data.piece.Piece;",
-                           "[Lcom.threerings.bang.game.data.piece.Piece;");
-
-        // if we're running in Game Gardens, we need to configure the
-        // appropriate class loader
-        oin.setClassLoader(BoardUtil.class.getClassLoader());
-
-        // now read in the board and pieces
         Tuple tuple = new Tuple();
         try {
             tuple.left = oin.readObject();
-            tuple.right = oin.readObject();
         } catch (ClassNotFoundException cnfe) {
             IOException ioe = new IOException("Missing class?");
             ioe.initCause(cnfe);
             throw ioe;
         }
+        int pcount = oin.readInt();
+        Piece[] pieces = new Piece[pcount];
+        for (int ii = 0; ii < pieces.length; ii++) {
+            pieces[ii] = readPiece(oin);
+        }
+        tuple.right = pieces;
         return tuple;
     }
 
-    protected static final String[] XLATE = {
-        "data.BangBoard", "data.piece.BonusMarker", "data.piece.Prop",
-        "data.piece.StartMarker" };
+    /** Helper method. */
+    protected static void writePiece (ObjectOutputStream oout, Piece piece)
+        throws IOException
+    {
+        if (piece instanceof Prop) {
+            oout.writeUTF(((Prop)piece).getType());
+        } else if (piece instanceof StartMarker) {
+            oout.writeUTF("__start__");
+        } else if (piece instanceof BonusMarker) {
+            oout.writeUTF("__bonus__");
+        } else {
+            throw new IOException("Unknown piece type " +
+                                  "[type=" + piece.getClass().getName() +
+                                  ", piece=" + piece + "].");
+        }
+        oout.writeInt(piece.pieceId);
+        oout.writeShort(piece.x);
+        oout.writeShort(piece.y);
+        oout.writeShort(piece.orientation);
+    }
+
+    /** Helper method. */
+    protected static Piece readPiece (ObjectInputStream oin)
+        throws IOException
+    {
+        String type = oin.readUTF();
+        Piece piece;
+        if (type.equals("__start__")) {
+            piece = new StartMarker();
+        } else if (type.equals("__bonus__")) {
+            piece = new BonusMarker();
+        } else {
+            piece = Prop.getProp(type);
+        }
+        piece.pieceId = oin.readInt();
+        piece.x = oin.readShort();
+        piece.y = oin.readShort();
+        piece.orientation = oin.readShort();
+        return piece;
+    }
 }
