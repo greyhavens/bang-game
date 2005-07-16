@@ -275,15 +275,6 @@ public abstract class Piece extends SimpleStreamableObject
         return false;
     }
 
-//     /**
-//      * Returns true if this piece can consolidate this additional move
-//      * into a single turn, receiving a "bonus" move for that turn.
-//      */
-//     public boolean canBonusMove (int x, int y)
-//     {
-//         return false;
-//     }
-
     /**
      * Selects the shortest move that puts us within range of firing on
      * the specified target.

@@ -21,9 +21,9 @@ import com.jme.bui.border.LineBorder;
  */
 public class SelectableIcon extends BToggleButton
 {
-    public SelectableIcon (BIcon icon, String text)
+    public SelectableIcon ()
     {
-        super(icon, "");
+        super(null);
         setBorder(_unborder);
     }
 

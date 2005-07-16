@@ -64,6 +64,15 @@ public class BoardUtil
         return loadBoard(new ByteArrayInputStream(source));
     }
 
+    public static void main (String[] args)
+    {
+        try {
+            loadBoard(new File(args[0]));
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
     /** Helper for the two load board methods. */
     protected static Tuple loadBoard (InputStream input)
         throws IOException

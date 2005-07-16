@@ -3,6 +3,7 @@
 
 package com.threerings.bang.ranch.client;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.UnitConfig;
@@ -16,8 +17,7 @@ public class UnitIcon extends SelectableIcon
 {
     public UnitIcon (BangContext ctx, int itemId, UnitConfig config)
     {
-        super(ctx.getModelCache().getModel("units", config.type).getIcon(),
-              config.type);
+        BangUI.configUnitLabel(_label, config);
         _itemId = itemId;
         _config = config;
     }
