@@ -315,7 +315,7 @@ public class BangManager extends GameManager
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii) || isTest()) {
+            if (isAI(ii) /*|| isTest()*/) {
                 selectStarters(ii, null, null);
                 String[] units = new String[] {
                     "dirigible", "steamgunman", "gunslinger" };

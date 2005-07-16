@@ -129,6 +129,9 @@ public class BangClient extends BasicClient
     {
         super.createContextServices(rqueue);
 
+        // initialize our user interface helper
+        BangUI.init(_ctx);
+
         // warm up the particle factory
         ParticleFactory.warmup(_ctx);
     }

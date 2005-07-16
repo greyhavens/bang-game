@@ -20,4 +20,8 @@ public interface GameCodes extends InvocationCodes
     /** An error message delivered when a shot fails due the target having
      * moved out of range. */
     public static final String TARGET_MOVED = "m.target_moved";
+
+    /** Defines the maximum number of units (not counting ones big shot)
+     * that can be recruited at the start of a round. */
+    public static final int MAX_TEAM_SIZE = 6;
 }
