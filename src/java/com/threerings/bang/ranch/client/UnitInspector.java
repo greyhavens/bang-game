@@ -13,6 +13,7 @@ import com.jme.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -31,8 +32,8 @@ public class UnitInspector extends BContainer
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        add(_model = new BContainer(new BorderLayout()));
-        add(_name = new BLabel(""));
+        add(_unit = BangUI.createUnitLabel(null));
+        _unit.setText("");
         add(_descrip = new BLabel(""));
         add(_astats = new BLabel(""));
         add(_dstats = new BLabel(""));
@@ -63,10 +64,8 @@ public class UnitInspector extends BContainer
     {
         _itemId = itemId;
         _config = config;
-        _name.setText(_umsgs.get("m." + config.type));
 
-        _model.removeAll();
-        _model.add(new UnitIcon(_ctx, itemId, config), BorderLayout.CENTER);
+        BangUI.configUnitLabel(_unit, config);
 
         StringBuffer abuf = new StringBuffer();
         StringBuffer dbuf = new StringBuffer();
@@ -107,8 +106,7 @@ public class UnitInspector extends BContainer
     protected int _itemId = -1;
     protected UnitConfig _config;
 
-    protected BContainer _model;
-    protected BLabel _name;
+    protected BLabel _unit;
     protected BLabel _descrip;
     protected BLabel _astats, _dstats;
 }
