@@ -9,6 +9,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -36,21 +37,20 @@ public class DuplicateEffect extends Effect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        Piece piece = (Piece)bangobj.pieces.get(pieceId);
-        if (piece == null) {
+        Unit unit = (Unit)bangobj.pieces.get(pieceId);
+        if (unit == null) {
             return;
         }
 
-        // find a place to put our new piece
-        Point spot = bangobj.board.getOccupiableSpot(piece.x, piece.y, 1);
+        // find a place to put our new unit
+        Point spot = bangobj.board.getOccupiableSpot(unit.x, unit.y, 1);
         if (spot == null) {
-            log.info("Dropped duplicate effect. No spots " +
-                     "[piece=" + piece + "].");
+            log.info("Dropped duplicate effect. No spots [unit=" + unit + "].");
             return;
         }
 
-        // position our new piece
-        duplicate = piece.duplicate();
+        // position our new unit
+        duplicate = unit.duplicate();
         duplicate.position(spot.x, spot.y);
 
         // update the board shadow to reflect its future existence

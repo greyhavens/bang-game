@@ -72,6 +72,9 @@ public class UnitConfig
     /** This unit's base damage. */
     public int damage;
 
+    /** The type of unit this unit duplicates into. */
+    public String dupeType;
+
     /** The cost of this unit in scrip. */
     public int scripCost;
 
@@ -202,6 +205,8 @@ public class UnitConfig
         config.moveDistance = BangUtil.getIntProperty(type, props, "move", 1);
         config.fireDistance = BangUtil.getIntProperty(type, props, "fire", 1);
         config.damage = BangUtil.getIntProperty(type, props, "damage", 25);
+
+        config.dupeType = props.getProperty("dupe_type", type);
 
         config.scripCost = BangUtil.getIntProperty(type, props, "scrip_cost", 0);
         config.goldCost = BangUtil.getIntProperty(type, props, "gold_cost", 0);

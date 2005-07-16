@@ -403,18 +403,6 @@ public abstract class Piece extends SimpleStreamableObject
         getKey();
     }
 
-    /**
-     * Creates a new piece that is an exact duplicate of this piece. The
-     * piece will occupy the same location and must be moved before being
-     * added to the game.
-     */
-    public Piece duplicate ()
-    {
-        Piece dup = (Piece)clone();
-        dup.assignPieceId();
-        return dup;
-    }
-
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {

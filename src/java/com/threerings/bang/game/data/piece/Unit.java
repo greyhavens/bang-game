@@ -67,6 +67,22 @@ public class Unit extends Piece
         return _config;
     }
 
+    /**
+     * Creates a new unit that is an exact duplicate of this unit, unless
+     * this unit is a Big Shot in which case a suitable substitute type is
+     * created. The unit will occupy a default location and must be moved
+     * before being added to the game.
+     */
+    public Unit duplicate ()
+    {
+        Unit dup = getUnit(_config.dupeType);
+        dup.owner = owner;
+        dup.lastActed = lastActed;
+        dup.damage = damage;
+        dup.assignPieceId();
+        return dup;
+    }
+
     /** Configures the instance after unserialization. */
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
