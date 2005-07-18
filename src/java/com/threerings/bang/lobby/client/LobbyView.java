@@ -35,6 +35,7 @@ import com.threerings.jme.chat.ChatView;
 import com.threerings.bang.client.StatusView;
 import com.threerings.bang.client.TownView;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.lobby.data.LobbyObject;
 import com.threerings.bang.util.BangContext;
 
@@ -78,11 +79,26 @@ public class LobbyView extends BWindow
         _penders = (BContainer)plist.getComponent(1);
         _penders.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
                                               new EmptyBorder(5, 5, 5, 5)));
+
+        // add our various configuration options
         BContainer blist = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.CENTER));
+        blist.add(new BLabel(msgs.get("m.player_count")));
         _seats = new BComboBox(SEATS);
-        _seats.selectItem(SEATS[0]);
         blist.add(_seats);
+        blist.add(new BLabel(msgs.get("m.rounds")));
+        _rounds = new BComboBox(ROUNDS);
+        blist.add(_rounds);
+        blist.add(new BLabel(msgs.get("m.team_size")));
+        _tsize = new BComboBox(TEAM_SIZE);
+        blist.add(_tsize);
+
+        // configure the controls with the defaults
+        BangConfig defconf = new BangConfig();
+        _seats.selectItem(Integer.valueOf(defconf.seats));
+        _rounds.selectItem(Integer.valueOf(defconf.rounds));
+        _tsize.selectItem(Integer.valueOf(defconf.teamSize));
+
         BButton create = new BButton(msgs.get("m.create"), "create");
         create.addListener(this);
         blist.add(create);
@@ -299,6 +315,8 @@ public class LobbyView extends BWindow
         tconfig.desiredPlayerCount = (Integer)_seats.getSelectedItem();
         BangConfig config = new BangConfig();
         config.seats = tconfig.desiredPlayerCount;
+        config.rounds = (Integer)_rounds.getSelectedItem();
+        config.teamSize = (Integer)_tsize.getSelectedItem();
         _tbldtr.createTable(tconfig, config);
     }
 
@@ -341,10 +359,28 @@ public class LobbyView extends BWindow
     protected ChatView _chat;
     protected TableDirector _tbldtr;
 
-    protected BComboBox _seats;
+    protected BComboBox _seats, _tsize, _rounds;
     protected BContainer _penders;
     protected BContainer _inplay;
 
     protected static final Integer[] SEATS = new Integer[] {
-        new Integer(2), new Integer(3), new Integer(4) };
+        Integer.valueOf(2), Integer.valueOf(3), Integer.valueOf(4) };
+
+    protected static final Integer[] ROUNDS = new Integer[] {
+        Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(3),
+        Integer.valueOf(4), Integer.valueOf(5) };
+
+    protected static final int DEFAULT_ROUNDS_INDEX = 2;
+
+    protected static Integer[] TEAM_SIZE;
+    protected static int DEFAULT_TEAM_SIZE_INDEX;
+    static {
+        TEAM_SIZE = new Integer[GameCodes.MAX_TEAM_SIZE-
+                                GameCodes.MIN_TEAM_SIZE+1];
+        for (int ii = GameCodes.MIN_TEAM_SIZE;
+             ii <= GameCodes.MAX_TEAM_SIZE; ii++) {
+            TEAM_SIZE[ii-GameCodes.MIN_TEAM_SIZE] = Integer.valueOf(ii);
+        }
+        DEFAULT_TEAM_SIZE_INDEX = TEAM_SIZE.length/2;
+    };
 }

@@ -19,6 +19,9 @@ public class BangConfig extends GameConfig
     /** The number of rounds to play. */
     public int rounds = 3;
 
+    /** The size of each player's team (not including their Big Shot). */
+    public int teamSize = 4;
+
     /** The amount of with which to start the game. */
     public int startingCash = 300;
 

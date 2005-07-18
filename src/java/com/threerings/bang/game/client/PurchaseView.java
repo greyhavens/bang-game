@@ -74,7 +74,7 @@ public class PurchaseView extends BDecoratedWindow
 
         team.add(new BLabel(_msgs.get("m.pv_bigshot")));
         team.add(new BLabel(_msgs.get("m.pv_team")));
-        for (int ii = 1; ii < GameCodes.MAX_TEAM_SIZE; ii++) {
+        for (int ii = 1; ii < config.teamSize; ii++) {
             team.add(new BLabel(""));
         }
 
@@ -82,13 +82,15 @@ public class PurchaseView extends BDecoratedWindow
         team.add(BangUI.createUnitLabel(_bangobj.bigShots[_pidx].getConfig()));
 
         // display slots for each potential team member
-        for (int ii = 0; ii < GameCodes.MAX_TEAM_SIZE; ii++) {
+        _team = new BLabel[config.teamSize];
+        _tconfigs = new UnitConfig[config.teamSize];
+        for (int ii = 0; ii < _team.length; ii++) {
             team.add(_team[ii] = BangUI.createUnitLabel(null));
         }
 
         // add delete buttons
         team.add(new BLabel("")); // none for the big shot
-        for (int ii = 0; ii < GameCodes.MAX_TEAM_SIZE; ii++) {
+        for (int ii = 0; ii < config.teamSize; ii++) {
             // TODO: make this an icon
             BButton delete = new BButton(_msgs.get("m.pv_delete"));
             delete.setAction("delete");
@@ -177,8 +179,8 @@ public class PurchaseView extends BDecoratedWindow
     protected BLabel _tlabel;
     protected BButton _ready;
 
-    protected BLabel[] _team = new BLabel[GameCodes.MAX_TEAM_SIZE];
-    protected UnitConfig[] _tconfigs = new UnitConfig[GameCodes.MAX_TEAM_SIZE];
+    protected BLabel[] _team;
+    protected UnitConfig[] _tconfigs;
 
     protected static final String[] COLUMNS = {
         "unit", "cost", "count", "", ""

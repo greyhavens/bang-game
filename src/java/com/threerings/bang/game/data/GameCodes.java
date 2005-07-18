@@ -21,7 +21,9 @@ public interface GameCodes extends InvocationCodes
      * moved out of range. */
     public static final String TARGET_MOVED = "m.target_moved";
 
-    /** Defines the maximum number of units (not counting ones big shot)
-     * that can be recruited at the start of a round. */
+    /** Defines the minimum team size (not counting one's big shot). */
+    public static final int MIN_TEAM_SIZE = 2;
+
+    /** Defines the maximum team size (not counting one's big shot). */
     public static final int MAX_TEAM_SIZE = 6;
 }
