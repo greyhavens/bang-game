@@ -23,7 +23,7 @@ public class BangConfig extends GameConfig
     public int teamSize = 4;
 
     /** The amount of with which to start the game. */
-    public int startingCash = 300;
+    public int startingCash = 0;
 
     /** Whether or not fog of war is activated. */
     public boolean fog = false;

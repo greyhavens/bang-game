@@ -4,6 +4,8 @@
 package com.threerings.bang.game.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import com.jme.bui.BButton;
 import com.jme.bui.BComponent;
@@ -58,18 +60,30 @@ public class PurchaseView extends BDecoratedWindow
         BContainer ulist = new BContainer(new TableLayout(7, 5, 5));
         add(ulist);
 
-        // add a palette of buttons for each available unit type
+        // sort our units by cost
         UnitConfig[] units = UnitConfig.getTownUnits(_bangobj.townId);
+        Arrays.sort(units, new Comparator<UnitConfig>() {
+            public int compare (UnitConfig u1, UnitConfig u2) {
+                if (u1.scripCost == u2.scripCost) {
+                    return u1.type.compareTo(u2.type);
+                } else {
+                    return u1.scripCost - u2.scripCost;
+                }
+            }
+        });
+
+        // add a palette of buttons for each available unit type
         for (int ii = 0; ii < units.length; ii++) {
             UnitConfig uc = units[ii];
             // skip bigshots and unrecruitable special units
-            if (uc.rank == UnitConfig.Rank.BIGSHOT || uc.scripCost == 0) {
+            if (uc.rank == UnitConfig.Rank.BIGSHOT || uc.scripCost < 0) {
                 continue;
             }
             ulist.add(createRecruitButton(uc));
         }
 
-        BContainer team = new BContainer(new TableLayout(7, 3, 10));
+        BContainer team = new BContainer(
+            new TableLayout(1 + config.teamSize, 3, 10));
         add(team, GroupLayout.FIXED);
 
         team.add(new BLabel(_msgs.get("m.pv_bigshot")));
@@ -103,7 +117,7 @@ public class PurchaseView extends BDecoratedWindow
         glay.setGap(25);
         BContainer footer = new BContainer(glay);
         add(footer, GroupLayout.FIXED);
-        String cmsg =  _msgs.get("m.pv_cash", "" + _bangobj.reserves[_pidx]);
+        String cmsg =  _msgs.get("m.pv_cash", "" + _bangobj.funds[_pidx]);
         footer.add(new BLabel(cmsg), GroupLayout.FIXED);
         footer.add(_tlabel = new BLabel(_msgs.get("m.pv_cost", "0")));
 
@@ -120,6 +134,7 @@ public class PurchaseView extends BDecoratedWindow
         button.setAction("buy");
         button.addListener(this);
         button.setProperty("unit", unit);
+        button.setText(button.getText() + " $" + unit.scripCost);
         return button;
     }
 

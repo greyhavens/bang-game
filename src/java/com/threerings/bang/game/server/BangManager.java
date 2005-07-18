@@ -245,10 +245,8 @@ public class BangManager extends GameManager
         _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
 
         // create our per-player arrays
-        _bangobj.reserves = new int[getPlayerSlots()];
-        Arrays.fill(_bangobj.reserves, _bconfig.startingCash);
-        _bangobj.points = new int[getPlayerSlots()];
         _bangobj.funds = new int[getPlayerSlots()];
+        Arrays.fill(_bangobj.funds, _bconfig.startingCash);
         _bangobj.pstats = new BangObject.PlayerData[getPlayerSlots()];
         for (int ii = 0; ii < _bangobj.pstats.length; ii++) {
             _bangobj.pstats[ii] = new BangObject.PlayerData();
@@ -381,6 +379,12 @@ public class BangManager extends GameManager
         Unit[] units = new Unit[types.length];
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = Unit.getUnit(types[ii]);
+            if (units[ii].getCost() < 0) {
+                log.warning("Player requested to purchase illegal unit " +
+                            "[who=" + _bangobj.players[pidx] +
+                            ", unit=" + types[ii] + "].");
+                return; // nothing doing
+            }
         }
 
         // total up the cost
@@ -388,11 +392,11 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < units.length; ii++) {
             totalCost += units[ii].getCost();
         }
-        if (totalCost > _bangobj.reserves[pidx]) {
+        if (totalCost > _bangobj.funds[pidx]) {
             log.warning("Rejecting bogus purchase request " +
                         "[who=" + _bangobj.players[pidx] +
                         ", total=" + totalCost +
-                        ", funds=" + _bangobj.reserves[pidx] + "].");
+                        ", funds=" + _bangobj.funds[pidx] + "].");
             return;
         }
 
@@ -404,7 +408,7 @@ public class BangManager extends GameManager
         }
 
         // finally decrement their funds
-        _bangobj.setReservesAt(_bangobj.reserves[pidx] - totalCost, pidx);
+        _bangobj.setFundsAt(_bangobj.funds[pidx] - totalCost, pidx);
 
         // note that this player is ready and potentially fire away
         _ready.add(pidx);
@@ -528,16 +532,6 @@ public class BangManager extends GameManager
 
     protected void endRound ()
     {
-        // transfer players winnings to their reserves
-        for (int ii = 0; ii < _bangobj.funds.length; ii++) {
-            _bangobj.reserves[ii] = Math.max(
-                _bangobj.reserves[ii] + _bangobj.funds[ii],
-                _bconfig.startingCash/2);
-            _bangobj.funds[ii] = 0;
-        }
-        _bangobj.setReserves(_bangobj.reserves);
-        _bangobj.setFunds(_bangobj.funds);
-
         // start the next round
         startRound();
     }
@@ -546,25 +540,12 @@ public class BangManager extends GameManager
     protected void gameWillEnd ()
     {
         super.gameWillEnd();
-
-        // assign final points based on total remaining cash
-        for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            int tcash = _bangobj.funds[ii] + _bangobj.reserves[ii];
-            int points = tcash / 250;
-            if (points > 0) {
-                _bangobj.setPointsAt(_bangobj.points[ii] + points, ii);
-                String msg = MessageBundle.tcompose(
-                    "m.cash_score", _bangobj.players[ii],
-                    "" + points, "" + tcash);
-                SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
-            }
-        }
     }
 
     @Override // documentation inherited
     protected void assignWinners (boolean[] winners)
     {
-        int[] windexes = IntListUtil.getMaxIndexes(_bangobj.points);
+        int[] windexes = IntListUtil.getMaxIndexes(_bangobj.funds);
         for (int ii = 0; ii < windexes.length; ii++) {
             winners[windexes[ii]] = true;
         }

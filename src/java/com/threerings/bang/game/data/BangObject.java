@@ -102,14 +102,8 @@ public class BangObject extends GameObject
     /** The field name of the <code>effect</code> field. */
     public static final String EFFECT = "effect";
 
-    /** The field name of the <code>points</code> field. */
-    public static final String POINTS = "points";
-
     /** The field name of the <code>funds</code> field. */
     public static final String FUNDS = "funds";
-
-    /** The field name of the <code>reserves</code> field. */
-    public static final String RESERVES = "reserves";
     // AUTO-GENERATED: FIELDS END
 
     /** A {@link #state} constant indicating the pre-game selection phase. */
@@ -154,14 +148,8 @@ public class BangObject extends GameObject
     /** A field we use to broadcast applied effects. */
     public Effect effect;
 
-    /** Points earned by each player. */
-    public int[] points;
-
-    /** Cash earned by each player this round. */
+    /** Total cash earned by each player. */
     public int[] funds;
-
-    /** Cash held by each player at the start of the round. */
-    public int[] reserves;
 
     /** Returns the {@link #pieces} set as an array to allow for
      * simultaneous iteration and removal. */
@@ -595,39 +583,6 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Requests that the <code>points</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setPoints (int[] value)
-    {
-        int[] ovalue = this.points;
-        requestAttributeChange(
-            POINTS, value, ovalue);
-        this.points = (value == null) ? null : (int[])value.clone();
-    }
-
-    /**
-     * Requests that the <code>index</code>th element of
-     * <code>points</code> field be set to the specified value.
-     * The local value will be updated immediately and an event will be
-     * propagated through the system to notify all listeners that the
-     * attribute did change. Proxied copies of this object (on clients)
-     * will apply the value change when they received the attribute
-     * changed notification.
-     */
-    public void setPointsAt (int value, int index)
-    {
-        int ovalue = this.points[index];
-        requestElementUpdate(
-            POINTS, index, new Integer(value), new Integer(ovalue));
-        this.points[index] = value;
-    }
-
-    /**
      * Requests that the <code>funds</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
@@ -658,39 +613,6 @@ public class BangObject extends GameObject
         requestElementUpdate(
             FUNDS, index, new Integer(value), new Integer(ovalue));
         this.funds[index] = value;
-    }
-
-    /**
-     * Requests that the <code>reserves</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setReserves (int[] value)
-    {
-        int[] ovalue = this.reserves;
-        requestAttributeChange(
-            RESERVES, value, ovalue);
-        this.reserves = (value == null) ? null : (int[])value.clone();
-    }
-
-    /**
-     * Requests that the <code>index</code>th element of
-     * <code>reserves</code> field be set to the specified value.
-     * The local value will be updated immediately and an event will be
-     * propagated through the system to notify all listeners that the
-     * attribute did change. Proxied copies of this object (on clients)
-     * will apply the value change when they received the attribute
-     * changed notification.
-     */
-    public void setReservesAt (int value, int index)
-    {
-        int ovalue = this.reserves[index];
-        requestElementUpdate(
-            RESERVES, index, new Integer(value), new Integer(ovalue));
-        this.reserves[index] = value;
     }
     // AUTO-GENERATED: METHODS END
 }

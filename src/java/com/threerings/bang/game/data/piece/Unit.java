@@ -100,6 +100,12 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public int getCost ()
+    {
+        return _config.scripCost;
+    }
+
+    @Override // documentation inherited
     public boolean tick (short tick)
     {
         if (influence != null && influence.isExpired(tick)) {

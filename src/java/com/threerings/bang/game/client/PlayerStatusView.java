@@ -50,7 +50,6 @@ public class PlayerStatusView extends BContainer
 
         BContainer bits = new BContainer(new TableLayout(2, 5, 5));
         bits.add(_player = new BLabel(_bangobj.players[_pidx].toString()));
-        bits.add(_score = new BLabel(""));
         bits.add(_cash = new BLabel(""));
         bits.add(_pieces = new BLabel(""));
         add(bits);
@@ -130,15 +129,12 @@ public class PlayerStatusView extends BContainer
 
     protected void updateStatus ()
     {
-        _score.setText("" + _bangobj.points[_pidx]);
         if (_bangobj.isInPlay() || _bangobj.state == BangObject.POST_ROUND) {
             _pieces.setText("P" + _bangobj.countLivePieces(_pidx));
-            _cash.setText(
-                "$" + (_bangobj.funds[_pidx] + _bangobj.reserves[_pidx]));
         } else {
             _pieces.setText("");
-            _cash.setText("$" + _bangobj.reserves[_pidx]);
         }
+        _cash.setText("$" + _bangobj.funds[_pidx]);
     }
 
     protected BButton createButton (Card card)
@@ -154,5 +150,5 @@ public class PlayerStatusView extends BContainer
     protected BangObject _bangobj;
     protected BangController _ctrl;
     protected int _pidx;
-    protected BLabel _player, _score, _cash, _pieces;
+    protected BLabel _player, _cash, _pieces;
 }

@@ -31,8 +31,8 @@ public class BonusPointEffect extends Effect
         if (piece == null) {
             return;
         }
-        // grant a bonus point to the activating player
-        bangobj.setPointsAt(bangobj.points[piece.owner] + 1, piece.owner);
+        // grant some cash to the activating player
+        bangobj.setFundsAt(bangobj.funds[piece.owner] + BONUS_CASH, piece.owner);
     }
 
     @Override // documentation inherited
@@ -44,4 +44,6 @@ public class BonusPointEffect extends Effect
         }
         reportEffect(obs, piece, BONUS_POINT);
     }
+
+    protected static final int BONUS_CASH = 50;
 }
