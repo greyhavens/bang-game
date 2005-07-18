@@ -52,6 +52,8 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.server.scenario.Scenario;
+import com.threerings.bang.game.server.scenario.Shootout;
 import com.threerings.bang.game.util.BoardUtil;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
@@ -236,6 +238,9 @@ public class BangManager extends GameManager
                 new BangDispatcher(this), false));
         _bconfig = (BangConfig)_gameconfig;
 
+        // TODO: pick the proper scenario
+        _scenario = new Shootout();
+
         // TODO: get the town info from somewhere
         _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
 
@@ -413,8 +418,8 @@ public class BangManager extends GameManager
     {
         super.gameWillStart();
 
-        // create a fresh knockout array
-        _knockoutOrder = new int[getPlayerSlots()];
+        // let the scenario know that we're about to start
+        _scenario.gameWillStart(_bangobj);
 
         // add the selected big shots to the purchases
         for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
@@ -488,49 +493,12 @@ public class BangManager extends GameManager
             }
         }
 
-        // next check to see whether anyone's pieces are still alive
-        _havers.clear();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if ((pieces[ii] instanceof Unit) &&
-                pieces[ii].isAlive()) {
-                _havers.add(pieces[ii].owner);
-            }
-        }
-
-        // score points for anyone who is knocked out as of this tick
-        int score = IntListUtil.getMaxValue(_knockoutOrder) + 1;
-        for (int ii = 0; ii < _knockoutOrder.length; ii++) {
-            if (_knockoutOrder[ii] == 0 && !_havers.contains(ii)) {
-                _knockoutOrder[ii] = score;
-                _bangobj.setPointsAt(_bangobj.points[ii] + score, ii);
-                String msg = MessageBundle.tcompose(
-                    "m.knocked_out", _bangobj.players[ii]);
-                SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
-            }
-        }
-
-        // the game ends when one or zero players are left standing
-        if (_havers.size() < 2) {
-            // score points for the last player standing
-            int winidx = _havers.get(0);
-            _bangobj.setPointsAt(_bangobj.points[winidx] + score + 1, winidx);
-
-            // if this is the last round, end the game
+        // tick the scenario and determine whether we should end the game
+        if (_scenario.tick(_bangobj, tick)) {
             log.info("round " + _bangobj.roundId +
                      ", rounds: " + _bconfig.rounds);
+            // if this is the last round, end the game
             if (_bangobj.roundId == _bconfig.rounds) {
-                // assign final points based on total remaining cash
-                for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                    int tcash = _bangobj.funds[ii] + _bangobj.reserves[ii];
-                    int points = tcash / 250;
-                    if (points > 0) {
-                        _bangobj.setPointsAt(_bangobj.points[ii] + points, ii);
-                        String msg = MessageBundle.tcompose(
-                            "m.cash_score", _bangobj.players[ii],
-                            "" + points, "" + tcash);
-                        SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
-                    }
-                }
                 endGame();
             } else {
                 _bangobj.setState(BangObject.POST_ROUND);
@@ -572,6 +540,25 @@ public class BangManager extends GameManager
 
         // start the next round
         startRound();
+    }
+
+    @Override // documentation inherited
+    protected void gameWillEnd ()
+    {
+        super.gameWillEnd();
+
+        // assign final points based on total remaining cash
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            int tcash = _bangobj.funds[ii] + _bangobj.reserves[ii];
+            int points = tcash / 250;
+            if (points > 0) {
+                _bangobj.setPointsAt(_bangobj.points[ii] + points, ii);
+                String msg = MessageBundle.tcompose(
+                    "m.cash_score", _bangobj.players[ii],
+                    "" + points, "" + tcash);
+                SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -924,17 +911,14 @@ public class BangManager extends GameManager
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
 
+    /** Implements our gameplay scenario. */
+    protected Scenario _scenario;
+
     /** The purchases made by players in the buying phase. */
     protected PieceSet _purchases = new PieceSet();
 
     /** Used to indicate when all players are ready. */
     protected ArrayIntSet _ready = new ArrayIntSet();
-
-    /** Used to calculate winners. */
-    protected ArrayIntSet _havers = new ArrayIntSet();
-
-    /** Used to track the order in which players are knocked out. */
-    protected int[] _knockoutOrder;
 
     /** Used to record damage done during an attack. */
     protected IntIntMap _damage = new IntIntMap();
