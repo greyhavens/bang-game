@@ -107,6 +107,9 @@ public class UnitSprite extends PieceSprite
             _movable.setForceCull(false);
         }
 
+        // update our colors in the event that our owner changes
+        configureOwnerColors();
+
         // update our damage texture if necessary
         if (_piece.damage != _odamage) {
             _damtex.setTexture(createDamageTexture());
@@ -157,7 +160,6 @@ public class UnitSprite extends PieceSprite
         _ticks.setRenderState(_ticktex[tidx]);
         _ticks.updateRenderState();
         _status.attachChild(_ticks);
-        _ticks.setSolidColor(JPIECE_COLORS[_piece.owner]);
 
         _damage = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
         _damage.setLocalTranslation(new Vector3f(TILE_SIZE/4, TILE_SIZE/4, 0));
@@ -165,7 +167,6 @@ public class UnitSprite extends PieceSprite
         _damage.setRenderState(_damtex);
         _damage.updateRenderState();
         _status.attachChild(_damage);
-        _damage.setSolidColor(JPIECE_COLORS[_piece.owner]);
 
         _movable = RenderUtil.createIcon(TILE_SIZE, TILE_SIZE/2);
         _movable.setLocalTranslation(new Vector3f(0, -TILE_SIZE/4, 0));
@@ -173,8 +174,10 @@ public class UnitSprite extends PieceSprite
         _movable.updateRenderState();
         _status.attachChild(_movable);
         attachChild(_status);
-        _movable.setSolidColor(JPIECE_COLORS[_piece.owner]);
         _movable.setForceCull(tick > 0);
+
+        // configure our colors
+        configureOwnerColors();
 
         // our models are centered at the origin, but we need to shift
         // them to the center of the tile
@@ -206,6 +209,17 @@ public class UnitSprite extends PieceSprite
             offset = board.getElevation(tx, ty);
         }
         return super.computeElevation(board, tx, ty) + offset;
+    }
+
+    /** Sets up our colors according to our owning player. */
+    protected void configureOwnerColors ()
+    {
+        _ticks.setSolidColor(JPIECE_COLORS[_piece.owner]);
+        _ticks.updateRenderState();
+        _damage.setSolidColor(JPIECE_COLORS[_piece.owner]);
+        _damage.updateRenderState();
+        _movable.setSolidColor(JPIECE_COLORS[_piece.owner]);
+        _movable.updateRenderState();
     }
 
     /** Converts tile coordinates plus elevation into (3D) world
