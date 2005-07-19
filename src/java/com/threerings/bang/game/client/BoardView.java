@@ -186,8 +186,7 @@ public class BoardView extends BComponent
 
                 // tiles on the "rim" need to be transparent
                 if (!_board.getBounds().contains(xx, yy)) {
-                    // TODO: rename _hastate
-                    t.setRenderState(RenderUtil.iconAlpha);
+                    t.setRenderState(RenderUtil.blendAlpha);
                 }
 
                 refreshTile(xx, yy);
@@ -682,6 +681,7 @@ public class BoardView extends BComponent
 
     /** Used to texture a quad that highlights a tile. */
     protected ColorRGBA _hcolor = new ColorRGBA(1, 1, 0, 0.5f);
+    // TODO: rename _hastate
     protected AlphaState _hastate;
 
     /** The current tile coordinates of the mouse. */

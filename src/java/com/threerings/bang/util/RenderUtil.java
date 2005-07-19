@@ -3,6 +3,11 @@
 
 package com.threerings.bang.util;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,6 +15,7 @@ import java.util.HashMap;
 
 import com.jme.image.Texture;
 import com.jme.light.PointLight;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -32,7 +38,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class RenderUtil
 {
-    public static AlphaState iconAlpha;
+    public static AlphaState blendAlpha;
 
     public static ZBufferState alwaysZBuf;
 
@@ -45,11 +51,11 @@ public class RenderUtil
      */
     public static void init (BangContext ctx)
     {
-        iconAlpha = ctx.getRenderer().createAlphaState();
-        iconAlpha.setBlendEnabled(true);
-        iconAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        iconAlpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-        iconAlpha.setEnabled(true);
+        blendAlpha = ctx.getRenderer().createAlphaState();
+        blendAlpha.setBlendEnabled(true);
+        blendAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+        blendAlpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        blendAlpha.setEnabled(true);
 
         alwaysZBuf = ctx.getRenderer().createZBufferState();
         alwaysZBuf.setWritable(true);
@@ -101,6 +107,13 @@ public class RenderUtil
         _groundTiles.put(Terrain.RIM, tiles);
     }
 
+    /** Rounds the supplied value up to a power of two. */
+    public static int nextPOT (int value)
+    {
+        return (Integer.bitCount(value) > 1) ?
+            (Integer.highestOneBit(value) << 1) : value;
+    }
+
     /**
      * Returns a randomly selected ground texture for the specified
      * terrain type.
@@ -121,6 +134,62 @@ public class RenderUtil
         ArrayList<BufferedImage> tiles = _groundTiles.get(terrain);
         return (tiles == null) ? null : 
             (BufferedImage)RandomUtil.pickRandom(tiles);
+    }
+
+    /**
+     * Renders the specified text into an image (which will be sized
+     * appropriately for the text) and creates a texture from it.
+     *
+     * @param tcoords should be a four element array which will be filled
+     * in with the appropriate texture coordinates to only display the
+     * text.
+     */
+    public static Texture createTextTexture (
+        Font font, Color color, String text, Vector2f[] tcoords)
+    {
+        Graphics2D gfx = _scratch.createGraphics();
+        TextLayout layout;
+        try {
+            gfx.setFont(font);
+            gfx.setColor(color);
+            layout = new TextLayout(text, font, gfx.getFontRenderContext());
+        } finally {
+            gfx.dispose();
+        }
+
+        // determine the size of our rendered text
+        // TODO: do the Mac hack to get the real bounds
+        Rectangle2D bounds = layout.getBounds();
+        int width = (int)(Math.max(bounds.getX(), 0) + bounds.getWidth());
+        int height = (int)(layout.getLeading() + layout.getAscent() +
+                           layout.getDescent());
+
+        // now determine the size of our texture image which must be
+        // square and a power of two (yay!)
+        int tsize = nextPOT(Math.max(width, Math.max(height, 1)));
+
+        // render the text into the image
+        BufferedImage image = new BufferedImage(
+            tsize, tsize, BufferedImage.TYPE_4BYTE_ABGR);
+        gfx = image.createGraphics();
+        try {
+            gfx.setColor(BLANK);
+            gfx.fillRect(0, 0, tsize, tsize);
+            gfx.setColor(color);
+            layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());
+        } finally {
+            gfx.dispose();
+        }
+
+        // fill in the texture coordinates
+        float tsf = tsize;
+        tcoords[0] = new Vector2f(0, 0);
+        tcoords[1] = new Vector2f(0, height/tsf);
+        tcoords[2] = new Vector2f(width/tsf, height/tsf);
+        tcoords[3] = new Vector2f(width/tsf, 0);
+
+        return TextureManager.loadTexture(
+            image, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, false);
     }
 
     /**
@@ -167,7 +236,7 @@ public class RenderUtil
     public static Quad createIcon (float width, float height)
     {
         Quad icon = new Quad("icon", width, height);
-        icon.setRenderState(iconAlpha);
+        icon.setRenderState(blendAlpha);
         icon.setRenderState(overlayZBuf);
         icon.setLightCombineMode(LightState.OFF);
         return icon;
@@ -199,4 +268,12 @@ public class RenderUtil
     /** The maximum number of different variations we might have for a
      * particular ground tile. */
     protected static final int MAX_TILE_VARIANT = 4;
+
+    /** Used to obtain a graphics context for measuring text before we
+     * create the real image. */
+    protected static BufferedImage _scratch =
+        new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+
+    /** Used to fill an image with transparency. */
+    protected static Color BLANK = new Color(1.0f, 1.0f, 1.0f, 0f);
 }

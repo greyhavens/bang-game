@@ -3,6 +3,8 @@
 
 package com.threerings.bang.client;
 
+import java.awt.Font;
+
 import com.jme.bui.BButton;
 import com.jme.bui.BLabel;
 import com.jme.bui.BlankIcon;
@@ -18,6 +20,9 @@ import com.threerings.bang.util.BangContext;
  */
 public class BangUI
 {
+    /** A font used to render counters in the game. */
+    public static Font COUNTER_FONT = new Font("Helvetica", Font.BOLD, 24);
+
     /**
      * Configures the UI singleton with a context reference.
      */

@@ -149,7 +149,7 @@ public class UnitSprite extends PieceSprite
 
         // this composite of icons combines to display our status
         _status = new StatusNode();
-        _status.setRenderState(RenderUtil.iconAlpha);
+        _status.setRenderState(RenderUtil.blendAlpha);
         _status.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _status.updateRenderState();
         _status.setLocalTranslation(new Vector3f(0, 0, 0.1f));
