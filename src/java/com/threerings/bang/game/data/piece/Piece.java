@@ -438,7 +438,7 @@ public abstract class Piece extends SimpleStreamableObject
     /** Returns true if we can and should fire upon this target. */
     public boolean validTarget (Piece target)
     {
-        return (target != null && target.owner != -1 &&
+        return (target instanceof Unit && target.owner != -1 &&
                 target.owner != owner && target.damage < 100);
     }
 

@@ -126,6 +126,19 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
+     * Dumps the board's occupiability state to stderr.
+     */
+    public void dumpOccupiability ()
+    {
+        for (int yy = getHeight()-1; yy >= 0; yy--) {
+            for (int xx = 0; xx < getWidth()-1; xx++) {
+                System.err.print("" + _tstate[_width*yy+xx]);
+            }
+            System.err.println("");
+        }
+    }
+
+    /**
      * Returns a set of coordinates for locations near to the specified
      * coordinates into which a piece can be spawned. First the
      * coordinates immediately surrounding the location are searched, then

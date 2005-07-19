@@ -136,9 +136,9 @@ public class BoardUtil
             piece = Prop.getProp(type);
         }
         piece.pieceId = oin.readInt();
-        piece.x = oin.readShort();
-        piece.y = oin.readShort();
+        short x = oin.readShort(), y = oin.readShort();
         piece.orientation = oin.readShort();
+        piece.position(x, y);
         return piece;
     }
 }

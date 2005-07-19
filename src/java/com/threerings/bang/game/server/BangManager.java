@@ -52,6 +52,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.server.scenario.ClaimJumping;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.Shootout;
 import com.threerings.bang.game.util.BoardUtil;
@@ -119,26 +120,27 @@ public class BangManager extends GameManager
         int pidx = _bangobj.getPlayerIndex(user.username);
 
         Piece piece = (Piece)_bangobj.pieces.get(pieceId);
-        if (piece == null || piece.owner != pidx) {
-            log.info("Rejecting move request [who=" + user.who() +
+        if (piece == null || !(piece instanceof Unit) || piece.owner != pidx) {
+            log.info("Rejecting illegal move request [who=" + user.who() +
                      ", piece=" + piece + "].");
             return;
         }
-        if (piece.ticksUntilMovable(_bangobj.tick) > 0) {
+        Unit unit = (Unit)piece;
+        if (unit.ticksUntilMovable(_bangobj.tick) > 0) {
             log.info("Rejecting premature move/fire request " +
-                     "[who=" + user.who() + ", piece=" + piece.info() + "].");
+                     "[who=" + user.who() + ", piece=" + unit.info() + "].");
             return;
         }
 
         Piece target = (Piece)_bangobj.pieces.get(targetId);
-        Piece mpiece = null;
+        Piece munit = null;
         try {
             _bangobj.startTransaction();
 
             // if they specified a non-NOOP move, execute it
-            if (x != piece.x || y != piece.y) {
-                mpiece = movePiece(user, piece, x, y);
-                if (mpiece == null) {
+            if (x != unit.x || y != unit.y) {
+                munit = moveUnit(user, unit, x, y);
+                if (munit == null) {
                     throw new InvocationException(MOVE_BLOCKED);
                 }
             }
@@ -146,7 +148,7 @@ public class BangManager extends GameManager
             // if they specified a target, shoot at it
             if (target != null) {
                 // make sure the target is valid
-                if (!piece.validTarget(target)) {
+                if (!unit.validTarget(target)) {
                     log.info("Target not valid " + target + ".");
                     // target already dead or something
                     return;
@@ -155,21 +157,21 @@ public class BangManager extends GameManager
                 // make sure the target is still within range
                 _attacks.clear();
                 _bangobj.board.computeAttacks(
-                    piece.getFireDistance(), x, y, _attacks);
+                    unit.getFireDistance(), x, y, _attacks);
                 if (!_attacks.contains(target.x, target.y)) {
                     throw new InvocationException(TARGET_MOVED);
                 }
 
-                ShotEffect effect = piece.shoot(target);
+                ShotEffect effect = unit.shoot(target);
                 effect.prepare(_bangobj, _damage);
                 _bangobj.setEffect(effect);
                 recordDamage(user, _damage);
 
                 // if they did not move in this same action, we need to
                 // set their last acted tick
-                if (mpiece == null) {
-                    piece.lastActed = _bangobj.tick;
-                    _bangobj.updatePieces(piece);
+                if (munit == null) {
+                    unit.lastActed = _bangobj.tick;
+                    _bangobj.updatePieces(unit);
                 }
             }
 
@@ -239,7 +241,7 @@ public class BangManager extends GameManager
         _bconfig = (BangConfig)_gameconfig;
 
         // TODO: pick the proper scenario
-        _scenario = new Shootout();
+        _scenario = new ClaimJumping();
 
         // TODO: get the town info from somewhere
         _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
@@ -423,7 +425,14 @@ public class BangManager extends GameManager
         super.gameWillStart();
 
         // let the scenario know that we're about to start
-        _scenario.gameWillStart(_bangobj);
+        String errmsg = _scenario.init(_bangobj, _markers);
+        if (errmsg != null) {
+            log.warning("Scenario initialization failed [game=" + where() +
+                        ", error=" + errmsg + "].");
+            SpeakProvider.sendAttention(_bangobj, GAME_MSGS, errmsg);
+            // TODO: cancel the round (or let the scenario cancel it on
+            // the first tick?)
+        }
 
         // add the selected big shots to the purchases
         for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
@@ -558,43 +567,44 @@ public class BangManager extends GameManager
      * @return the cloned and moved piece if the piece was moved, null if
      * it was not movable for some reason.
      */
-    protected Piece movePiece (BangUserObject user, Piece piece, int x, int y)
+    protected Unit moveUnit (BangUserObject user, Unit unit, int x, int y)
     {
         // make sure we are alive, and are ready to move
-        int steps = Math.abs(piece.x-x) + Math.abs(piece.y-y);
-        if (!piece.isAlive() || piece.ticksUntilMovable(_bangobj.tick) > 0) {
-            log.warning("Piece requested illegal move [piece=" + piece +
-                        ", alive=" + piece.isAlive() +
-                        ", mticks=" + piece.ticksUntilMovable(_bangobj.tick) +
+        int steps = Math.abs(unit.x-x) + Math.abs(unit.y-y);
+        if (!unit.isAlive() || unit.ticksUntilMovable(_bangobj.tick) > 0) {
+            log.warning("Unit requested illegal move [unit=" + unit +
+                        ", alive=" + unit.isAlive() +
+                        ", mticks=" + unit.ticksUntilMovable(_bangobj.tick) +
                         "].");
             return null;
         }
 
         // validate that the move is legal
         _moves.clear();
-        _bangobj.board.computeMoves(piece, _moves, null);
+        _bangobj.board.computeMoves(unit, _moves, null);
         if (!_moves.contains(x, y)) {
-            log.warning("Piece requested illegal move [piece=" + piece +
+            log.warning("Unit requested illegal move [unit=" + unit +
                         ", x=" + x + ", y=" + y + "].");
+            _bangobj.board.dumpOccupiability();
             return null;
         }
 
-        // clone and move the piece
-        Piece mpiece = (Piece)piece.clone();
-        mpiece.position(x, y);
-        mpiece.lastActed = _bangobj.tick;
+        // clone and move the unit
+        Unit munit = (Unit)unit.clone();
+        munit.position(x, y);
+        munit.lastActed = _bangobj.tick;
 
         // ensure that we don't land on a piece that prevents us from
         // overlapping it and make a note of any piece that we land on
         // that does not prevent overlap
-        ArrayList<Piece> lappers = _bangobj.getOverlappers(mpiece);
+        ArrayList<Piece> lappers = _bangobj.getOverlappers(munit);
         Piece lapper = null;
         if (lappers != null) {
             for (Piece p : lappers) {
-                if (p.preventsOverlap(mpiece)) {
+                if (p.preventsOverlap(munit)) {
                     return null;
                 } else if (lapper != null) {
-                    log.warning("Multiple overlapping pieces [mover=" + mpiece +
+                    log.warning("Multiple overlapping pieces [mover=" + munit +
                                 ", lap1=" + lapper + ", lap2=" + p + "].");
                 } else {
                     lapper = p;
@@ -603,11 +613,11 @@ public class BangManager extends GameManager
         }
 
         // update our board shadow
-        _bangobj.board.updateShadow(piece, mpiece);
+        _bangobj.board.updateShadow(unit, munit);
 
         // interact with any piece occupying our target space
         if (lapper != null) {
-            switch (mpiece.maybeInteract(lapper, _effects)) {
+            switch (munit.maybeInteract(lapper, _effects)) {
             case CONSUMED:
                 _bangobj.removeFromPieces(lapper.getKey());
                 break;
@@ -617,10 +627,10 @@ public class BangManager extends GameManager
                 // doing so
                 _bangobj.updatePieces(lapper);
                 // TODO: generate a special event indicating that the
-                // piece entered so that we can animate it
-                _bangobj.removeFromPieces(mpiece.getKey());
+                // unit entered so that we can animate it
+                _bangobj.removeFromPieces(munit.getKey());
                 // short-circuit the remaining move processing
-                return mpiece;
+                return munit;
 
             case INTERACTED:
                 // update the piece we interacted with, we'll update
@@ -633,8 +643,11 @@ public class BangManager extends GameManager
             }
         }
 
-        // update the piece in the distributed set
-        _bangobj.updatePieces(mpiece);
+        // let the scenario know that the unit moved
+        _scenario.unitMoved(_bangobj, munit);
+
+        // update the unit in the distributed set
+        _bangobj.updatePieces(munit);
 
         // finally effect and effects
         for (Effect effect : _effects) {
@@ -644,7 +657,7 @@ public class BangManager extends GameManager
         }
         _effects.clear();
 
-        return mpiece;
+        return munit;
     }
 
     /**
@@ -796,6 +809,7 @@ public class BangManager extends GameManager
             }
             total += ddone;
         }
+        total /= 10; // you get $1 for each 10 points of damage
         _bangobj.setFundsAt(_bangobj.funds[pidx] + total, pidx);
 
         // finally clear out the damage index

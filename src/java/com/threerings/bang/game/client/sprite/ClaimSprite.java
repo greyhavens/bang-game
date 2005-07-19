@@ -40,10 +40,10 @@ public class ClaimSprite extends PropSprite
 
         // recompute and display our nugget count
         Claim claim = (Claim)piece;
-        if (_dnuggets != claim.nuggets) {
+        if (_piece.owner >= 0 && _dnuggets != claim.nuggets) {
             Vector2f[] tcoords = new Vector2f[4];
             Texture tex = RenderUtil.createTextTexture(
-                BangUI.COUNTER_FONT, Color.red,
+                BangUI.COUNTER_FONT, UnitSprite.JPIECE_COLORS[_piece.owner],
                 String.valueOf(claim.nuggets), tcoords);
             _counter.setTextures(tcoords);
             // resize our quad to accomodate the text
@@ -51,6 +51,7 @@ public class ClaimSprite extends PropSprite
             _tstate.setTexture(tex);
             _counter.updateRenderState();
             _dnuggets = claim.nuggets;
+            _counter.setForceCull(false);
         }
     }
 
@@ -72,6 +73,7 @@ public class ClaimSprite extends PropSprite
         // TODO: account properly for the height of the claim model
         bbn.setLocalTranslation(new Vector3f(0, 0, 3*TILE_SIZE/2));
         attachChild(bbn);
+        _counter.setForceCull(true);
     }
 
     protected Quad _counter;

@@ -21,7 +21,7 @@ import com.threerings.bang.util.BangContext;
 public class BangUI
 {
     /** A font used to render counters in the game. */
-    public static Font COUNTER_FONT = new Font("Helvetica", Font.BOLD, 24);
+    public static Font COUNTER_FONT = new Font("Helvetica", Font.BOLD, 48);
 
     /**
      * Configures the UI singleton with a context reference.

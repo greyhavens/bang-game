@@ -25,6 +25,7 @@ import com.jme.util.TextureManager;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -94,10 +95,11 @@ public class UnitSprite extends PieceSprite
     {
         super.updated(board, piece, tick);
 
+        Unit unit = (Unit)piece;
         int ticks;
-        if (!_piece.isAlive()) {
+        if (!unit.isAlive()) {
             _status.setForceCull(true);
-        } else if ((ticks = _piece.ticksUntilMovable(_tick)) > 0) {
+        } else if ((ticks = unit.ticksUntilMovable(_tick)) > 0) {
             _ticks.setRenderState(_ticktex[Math.max(0, 4-ticks)]);
             _ticks.updateRenderState();
             _movable.setForceCull(true);
@@ -111,10 +113,20 @@ public class UnitSprite extends PieceSprite
         configureOwnerColors();
 
         // update our damage texture if necessary
-        if (_piece.damage != _odamage) {
+        if (unit.damage != _odamage) {
+            System.err.println("New damage " + unit);
             _damtex.setTexture(createDamageTexture());
             _damage.updateRenderState();
-            _odamage = _piece.damage;
+            _odamage = unit.damage;
+        }
+
+        // update our icon if necessary
+        if (unit.benuggeted && _icon.isForceCulled()) {
+            _icon.setRenderState(_nugtex);
+            _icon.updateRenderState();
+            _icon.setForceCull(false);
+        } else if (!unit.benuggeted && !_icon.isForceCulled()) {
+            _icon.setForceCull(true);
         }
     }
 
@@ -163,6 +175,8 @@ public class UnitSprite extends PieceSprite
 
         _damage = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
         _damage.setLocalTranslation(new Vector3f(TILE_SIZE/4, TILE_SIZE/4, 0));
+        _damtex = ctx.getRenderer().createTextureState();
+        _damtex.setEnabled(true);
         _damtex.setTexture(createDamageTexture());
         _damage.setRenderState(_damtex);
         _damage.updateRenderState();
@@ -199,6 +213,19 @@ public class UnitSprite extends PieceSprite
         bbn.attachChild(_tgtquad);
         attachChild(bbn);
         _tgtquad.setForceCull(true);
+
+        // this icon is displayed when we are modified in some way (we're
+        // carrying a nugget, for example)
+        _icon = RenderUtil.createIcon(10, 10);
+        _icon.setLocalTranslation(new Vector3f(0, 0, 0));
+        _icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _icon.setRenderState(RenderUtil.alwaysZBuf);
+        _icon.updateRenderState();
+        bbn = new BillboardNode("icon");
+        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
+        bbn.attachChild(_icon);
+        attachChild(bbn);
+        _icon.setForceCull(true);
     }
 
     @Override // documentation inherited
@@ -268,6 +295,8 @@ public class UnitSprite extends PieceSprite
             ctx, ctx.loadImage("media/textures/ustatus/tick_ready.png"));
         _shadtex = RenderUtil.createTexture(
             ctx, ctx.loadImage("media/textures/ustatus/shadow.png"));
+        _nugtex = RenderUtil.createTexture(
+            ctx, ctx.loadImage("media/textures/ustatus/nugget.png"));
         _ticktex = new TextureState[5];
         for (int ii = 0; ii < 5; ii++) {
             _ticktex[ii] = RenderUtil.createTexture(
@@ -276,8 +305,6 @@ public class UnitSprite extends PieceSprite
         }
         _dfull = ctx.loadImage("media/textures/ustatus/health_meter_full.png");
         _dempty = ctx.loadImage("media/textures/ustatus/health_meter_empty.png");
-        _damtex = ctx.getRenderer().createTextureState();
-        _damtex.setEnabled(true);
     }
 
     /** A node that rotates itself around the up vector as the camera
@@ -347,7 +374,8 @@ public class UnitSprite extends PieceSprite
     protected Quad _hovquad, _tgtquad, _shadow;
 
     protected StatusNode _status;
-    protected Quad _ticks, _damage, _movable;
+    protected Quad _ticks, _damage, _movable, _icon;
+    protected TextureState _damtex;
 
     protected int _odamage;
     protected boolean _pendingShot;
@@ -356,7 +384,8 @@ public class UnitSprite extends PieceSprite
     protected static Quaternion _tquat = new Quaternion();
 
     protected static BufferedImage _dfull, _dempty;
-    protected static TextureState _hovtex, _tgttex, _movetex, _damtex, _shadtex;
+    protected static TextureState _hovtex, _tgttex, _movetex;
+    protected static TextureState _shadtex, _nugtex;
     protected static TextureState[] _ticktex;
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;

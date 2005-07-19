@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import java.util.ArrayList;
+
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 
@@ -20,10 +22,11 @@ import com.threerings.bang.game.data.piece.Unit;
 public class Shootout extends Scenario
 {
     @Override // documentation inherited
-    public void gameWillStart (BangObject bangobj)
+    public String init (BangObject bangobj, ArrayList<Piece> markers)
     {
         // create a fresh knockout array
         _knockoutOrder = new int[bangobj.players.length];
+        return null;
     }
 
     @Override // documentation inherited

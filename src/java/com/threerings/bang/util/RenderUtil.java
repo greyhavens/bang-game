@@ -145,13 +145,14 @@ public class RenderUtil
      * text.
      */
     public static Texture createTextTexture (
-        Font font, Color color, String text, Vector2f[] tcoords)
+        Font font, ColorRGBA color, String text, Vector2f[] tcoords)
     {
         Graphics2D gfx = _scratch.createGraphics();
+        Color acolor = new Color(color.r, color.g, color.b, color.a);
         TextLayout layout;
         try {
             gfx.setFont(font);
-            gfx.setColor(color);
+            gfx.setColor(acolor);
             layout = new TextLayout(text, font, gfx.getFontRenderContext());
         } finally {
             gfx.dispose();
@@ -175,7 +176,7 @@ public class RenderUtil
         try {
             gfx.setColor(BLANK);
             gfx.fillRect(0, 0, tsize, tsize);
-            gfx.setColor(color);
+            gfx.setColor(acolor);
             layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());
         } finally {
             gfx.dispose();

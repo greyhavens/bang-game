@@ -12,7 +12,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 public class Claim extends Prop
 {
     /** The number of nuggets left in this claim. */
-    public int nuggets = 5;
+    public int nuggets;
 
     @Override // documentation inherited
     public PieceSprite createSprite ()
