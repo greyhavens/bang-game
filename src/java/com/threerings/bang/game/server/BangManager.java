@@ -899,17 +899,13 @@ public class BangManager extends GameManager
     /** Used to accelerate things when testing. */
     protected long getBaseTick ()
     {
-        // start out with a base tick of two seconds
-        long base = 2000L;
-        // over the course of ten minutes, lower the base tick speed using
-        // a segment of the inverse square curve (from 1 to 2) which means
-        // that after ten minutes, our tick duration will be 25% of the
-        // starting duration
+        // start out with a base tick of two seconds and scale it down as
+        // the game progresses; cap it at ten minutes
         long delta = System.currentTimeMillis() - _startStamp;
-        float time = 1f + Math.min((delta / (10f*60*1000)), 1f);
-        long abase = (long)Math.round(base / (time*time));
-//         log.info("Schedulde tick [base=" + base + ", delta=" + delta +
-//                  ", time=" + time + ", abase=" + abase + "].");
+        delta = Math.min(delta, TIME_SCALE_CAP);
+        // scale from 1/1 to 1/2 over the course of ten minutes
+        float factor = 1f + 1f * delta / TIME_SCALE_CAP;
+        long abase = (long)Math.round(BASE_TICK_TIME / factor);
         return isTest() ? 500L : abase;
     }
 
@@ -992,4 +988,10 @@ public class BangManager extends GameManager
         "buildingblocks", "cityblocks", "coast", "doublenoon", "oasis",
         "outskirts",
     };
+
+    /** Our starting base tick time. */
+    protected static final long BASE_TICK_TIME = 2000L;
+
+    /** We stop reducing the tick time after ten minutes. */
+    protected static final long TIME_SCALE_CAP = 10 * 60 * 1000L;
 }
