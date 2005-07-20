@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 
-import com.threerings.util.MessageBundle;
 import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.presents.server.InvocationException;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
@@ -22,20 +23,21 @@ import com.threerings.bang.game.data.piece.Unit;
 public class Shootout extends Scenario
 {
     @Override // documentation inherited
-    public String init (BangObject bangobj, ArrayList<Piece> markers)
+    public void init (BangObject bangobj, ArrayList<Piece> markers)
+        throws InvocationException
     {
         // create a fresh knockout array
         _knockoutOrder = new int[bangobj.players.length];
-        return null;
     }
 
     @Override // documentation inherited
     public boolean tick (BangObject bangobj, short tick)
     {
-        Piece[] pieces = bangobj.getPieceArray();
+        super.tick(bangobj, tick);
 
         // check to see whether anyone's pieces are still alive
         _havers.clear();
+        Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if ((pieces[ii] instanceof Unit) &&
                 pieces[ii].isAlive()) {

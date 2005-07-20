@@ -398,6 +398,8 @@ public class BangManager extends GameManager
             }
         }
 
+        // TODO: make sure they didn't request too many pieces
+
         // total up the cost
         int totalCost = 0;
         for (int ii = 0; ii < units.length; ii++) {
@@ -434,11 +436,12 @@ public class BangManager extends GameManager
         super.gameWillStart();
 
         // let the scenario know that we're about to start
-        String errmsg = _scenario.init(_bangobj, _markers);
-        if (errmsg != null) {
+        try {
+            _scenario.init(_bangobj, _markers);
+        } catch (InvocationException ie) {
             log.warning("Scenario initialization failed [game=" + where() +
-                        ", error=" + errmsg + "].");
-            SpeakProvider.sendAttention(_bangobj, GAME_MSGS, errmsg);
+                        ", error=" + ie.getMessage() + "].");
+            SpeakProvider.sendAttention(_bangobj, GAME_MSGS, ie.getMessage());
             // TODO: cancel the round (or let the scenario cancel it on
             // the first tick?)
         }
@@ -449,12 +452,6 @@ public class BangManager extends GameManager
                 _purchases.add(_bangobj.bigShots[ii]);
             }
         }
-
-        // clear our respawn queue
-        _respawns.clear();
-
-        // this will contain the starting spot for each player
-        _startSpots = new Point[getPlayerSlots()];
 
         // now place and add the player pieces
         try {
@@ -471,15 +468,15 @@ public class BangManager extends GameManager
 
                 // now position each of them
                 Piece p = _markers.remove(0);
-                _startSpots[ii] = new Point(p.x, p.y);
                 ArrayList<Point> spots = _bangobj.board.getOccupiableSpots(
                     ppieces.size(), p.x, p.y, 4);
                 while (spots.size() > 0 && ppieces.size() > 0) {
                     Point spot = spots.remove(0);
                     Piece piece = ppieces.remove(0);
                     piece.position(spot.x, spot.y);
-                    // this unit will be respawnable
+                    // mark this unit as respawnable
                     ((Unit)piece).setRespawnTick((short)0);
+                    ((Unit)piece).benuggeted = true;
                     _bangobj.addToPieces(piece);
                     _bangobj.board.updateShadow(null, piece);
                 }
@@ -519,53 +516,14 @@ public class BangManager extends GameManager
                     if (p.removeWhenDead()) {
                         _bangobj.removePieceDirect(p);
                     }
-                    maybeQueueForRespawn(p, tick);
+                    _scenario.pieceWasKilled(_bangobj, p);
+                    p.wasKilled();
 
                 } else {
                     // otherwise update them as they somehow changed
                     _bangobj.updatePieces(p);
                 }
             }
-        }
-
-        // respawn new pieces
-        while (_respawns.size() > 0) {
-            if (_respawns.get(0).getRespawnTick() > tick) {
-                break;
-            }
-
-            Unit unit = _respawns.remove(0);
-            log.info("Respawning " + unit + ".");
-
-            // figure out where to put this guy
-            Point spot = _startSpots[unit.owner];
-            Point bspot = _bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
-            if (bspot == null) {
-                log.warning("Unable to locate spawn spot for to-be-respawned " +
-                            "unit [unit=" + unit + ", spot=" + spot + "].");
-                // stick him back on the queue for a few ticks later
-                unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
-                _respawns.add(unit);
-                continue;
-            }
-
-            // reset him, position him, and add him back in (if necessary)
-            unit.damage = 0;
-            unit.influence = null;
-            unit.setRespawnTick((short)0);
-
-            if (_bangobj.pieces.containsKey(unit.getKey())) {
-                // clear the shadow at its old location
-                _bangobj.board.updateShadow(unit, null);
-                unit.position(bspot.x, bspot.y);
-                _bangobj.updatePieces(unit);
-            } else {
-                unit.position(bspot.x, bspot.y);
-                _bangobj.addToPieces(unit);
-            }
-
-            // shadow the unit at its new location
-            _bangobj.board.updateShadow(null, unit);
         }
 
         // tick the scenario and determine whether we should end the game
@@ -845,24 +803,6 @@ public class BangManager extends GameManager
         return true;
     }
 
-    /**
-     * Called when a piece "dies" to potentially queue it up for
-     * respawning (assuming it's a unit and that it's marked for respawn.
-     */
-    protected void maybeQueueForRespawn (Piece piece, short tick)
-    {
-        // if this unit should be respawned, queue it up
-        if (!(piece instanceof Unit)) {
-            return;
-        }
-        Unit unit = (Unit)piece;
-        if (unit.getRespawnTick() == 0) {
-            unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
-            _respawns.add(unit);
-            log.info("Queued for respawn " + unit + ".");
-        }
-    }
-
     /** Records damage done by the specified user to various pieces. */
     protected void recordDamage (BangUserObject user, IntIntMap damage)
     {
@@ -987,7 +927,8 @@ public class BangManager extends GameManager
 
         public void pieceAffected (Piece piece, String effect) {
             if (!piece.isAlive()) {
-                maybeQueueForRespawn(piece, _bangobj.tick);
+                _scenario.pieceWasKilled(_bangobj, piece);
+                piece.wasKilled();
             }
         }
 
@@ -1020,9 +961,6 @@ public class BangManager extends GameManager
     /** Used to track the locations of all bonus spawn points. */
     protected PointSet _bonusSpots = new PointSet();
 
-    /** Used to track the locations where players are started. */
-    protected Point[] _startSpots;
-
     /** Used to track the locations where players can start. */
     protected ArrayList<Piece> _markers = new ArrayList<Piece>();
 
@@ -1033,15 +971,9 @@ public class BangManager extends GameManager
      * be destroyed if the game completes normally. */
     protected ArrayIntSet _usedCards = new ArrayIntSet();
 
-    /** A list of units waiting to be respawned. */
-    protected ArrayList<Unit> _respawns = new ArrayList<Unit>();
-
     /** A list of our stock boards. */
     protected static final String[] BOARDS = {
         "buildingblocks", "cityblocks", "coast", "doublenoon", "oasis",
         "outskirts",
     };
-
-    /** The number of ticks that must elapse before a unit is respawned. */
-    protected static final int RESPAWN_TICKS = 8;
 }

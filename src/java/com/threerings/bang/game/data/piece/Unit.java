@@ -212,6 +212,13 @@ public class Unit extends Piece
         return cost;
     }
 
+    @Override // documentation inherited
+    public void wasKilled ()
+    {
+        super.wasKilled();
+        benuggeted = false;
+    }
+
     /**
      * Provides the unit with its configuration.
      */

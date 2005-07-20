@@ -3,11 +3,16 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import java.awt.Point;
 import java.util.ArrayList;
+
+import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Implements a particular gameplay scenario.
@@ -17,11 +22,23 @@ public abstract class Scenario
     /**
      * Called when a round is about to start.
      *
-     * @return null if all is well, or a translatable string indicating
-     * why the scenario is booched which will be displayed to the players
-     * and the game will be cancelled.
+     * @throws InvocationException containing a translatable string
+     * indicating why the scenario is booched, which will be displayed to
+     * the players and the game will be cancelled.
      */
-    public abstract String init (BangObject bangobj, ArrayList<Piece> markers);
+    public void init (BangObject bangobj, ArrayList<Piece> markers)
+        throws InvocationException
+    {
+        // clear our respawn queue
+        _respawns.clear();
+
+        // this will contain the starting spot for each player
+        _startSpots = new Point[bangobj.players.length];
+        for (int ii = 0; ii < _startSpots.length; ii++) {
+            Piece p = markers.get(ii);
+            _startSpots[ii] = new Point(p.x, p.y);
+        }
+    }
 
     /**
      * Called at the start of every game tick to allow the scenario to
@@ -30,7 +47,50 @@ public abstract class Scenario
      *
      * @return true if the game should be ended, false if not.
      */
-    public abstract boolean tick (BangObject bangobj, short tick);
+    public boolean tick (BangObject bangobj, short tick)
+    {
+        // respawn new pieces
+        while (_respawns.size() > 0) {
+            if (_respawns.get(0).getRespawnTick() > tick) {
+                break;
+            }
+
+            Unit unit = _respawns.remove(0);
+            log.info("Respawning " + unit + ".");
+
+            // figure out where to put this guy
+            Point spot = _startSpots[unit.owner];
+            Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
+            if (bspot == null) {
+                log.warning("Unable to locate spawn spot for to-be-respawned " +
+                            "unit [unit=" + unit + ", spot=" + spot + "].");
+                // stick him back on the queue for a few ticks later
+                unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
+                _respawns.add(unit);
+                continue;
+            }
+
+            // reset him, position him, and add him back in (if necessary)
+            unit.damage = 0;
+            unit.influence = null;
+            unit.setRespawnTick((short)0);
+
+            if (bangobj.pieces.containsKey(unit.getKey())) {
+                // clear the shadow at its old location
+                bangobj.board.updateShadow(unit, null);
+                unit.position(bspot.x, bspot.y);
+                bangobj.updatePieces(unit);
+            } else {
+                unit.position(bspot.x, bspot.y);
+                bangobj.addToPieces(unit);
+            }
+
+            // shadow the unit at its new location
+            bangobj.board.updateShadow(null, unit);
+        }
+
+        return false;
+    }
 
     /**
      * Called when a unit makes a move in the game but before the
@@ -41,4 +101,51 @@ public abstract class Scenario
     public void unitMoved (BangObject bangobj, Unit unit)
     {
     }
+
+    /**
+     * Called when a piece was killed. The scenario can choose to respawn
+     * the piece later, and do whatever else is appropriate.
+     */
+    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    {
+        if (respawnPieces()) {
+            maybeQueueForRespawn(piece, bangobj.tick);
+        }
+    }
+
+    /**
+     * If a scenario wishes for pieces to respawn, it should override this
+     * method and return true.
+     */
+    protected boolean respawnPieces ()
+    {
+        return false;
+    }
+
+    /**
+     * Called when a piece "dies" to potentially queue it up for
+     * respawning (assuming it's a unit and that it's marked for respawn.
+     */
+    protected void maybeQueueForRespawn (Piece piece, short tick)
+    {
+        // if this unit should be respawned, queue it up
+        if (!(piece instanceof Unit)) {
+            return;
+        }
+        Unit unit = (Unit)piece;
+        if (unit.getRespawnTick() == 0) {
+            unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
+            _respawns.add(unit);
+            log.info("Queued for respawn " + unit + ".");
+        }
+    }
+
+    /** Used to track the locations where players are started. */
+    protected Point[] _startSpots;
+
+    /** A list of units waiting to be respawned. */
+    protected ArrayList<Unit> _respawns = new ArrayList<Unit>();
+
+    /** The number of ticks that must elapse before a unit is respawned. */
+    protected static final int RESPAWN_TICKS = 8;
 }

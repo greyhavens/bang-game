@@ -105,6 +105,13 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Called on a piece when it has been maximally damaged.
+     */
+    public void wasKilled ()
+    {
+    }
+
+    /**
      * Returns whether or not this piece should be removed from the board
      * when maximally damaged.
      */

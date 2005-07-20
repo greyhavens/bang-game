@@ -3,14 +3,10 @@
 
 package com.threerings.bang.game.data.effect;
 
-import java.awt.Point;
 import com.samskivert.util.IntIntMap;
 
-import com.threerings.bang.data.BonusConfig;
-import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -28,8 +24,6 @@ public class ShotEffect extends Effect
 
     public int damage;
 
-    public Piece drop;
-
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -39,41 +33,15 @@ public class ShotEffect extends Effect
         } else {
             dammap.increment(target.owner, Math.min(damage, 100-target.damage));
         }
-
-        // if this piece is benuggeted, force it to drop its nugget
-        if (target instanceof Unit && ((Unit)target).benuggeted) {
-            // find a place to drop our nugget
-            Point spot = bangobj.board.getOccupiableSpot(target.x, target.y, 3);
-            if (spot == null) {
-                log.info("Can't find anywhere to drop nugget " +
-                         "[target=" + target + "].");
-            } else {
-                drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
-                drop.assignPieceId();
-                drop.position(spot.x, spot.y);
-                bangobj.board.updateShadow(null, drop);
-            }
-        }
     }
 
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
-        // add our dropped piece if we have one
-        if (drop != null) {
-            bangobj.addPieceDirect(drop);
-            reportAddition(obs, drop);
-        }
-
-        // damage our target
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target == null) {
             log.warning("Missing shot target " + this + ".");
             return;
-        }
-        if (drop != null && target instanceof Unit) {
-            // note that it dropped its nugget
-            ((Unit)target).benuggeted = false;
         }
         damage(bangobj, obs, target, damage, DAMAGED);
     }

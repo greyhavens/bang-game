@@ -706,6 +706,9 @@ public class BangBoardView extends BoardView
         }
 
         public void pieceAffected (Piece piece, String effect) {
+            if (!piece.isAlive()) {
+                piece.wasKilled();
+            }
             createEffectAnimation(piece, effect);
         }
 

@@ -3,13 +3,16 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import com.samskivert.util.ArrayIntSet;
 
-import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
+
+import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -18,6 +21,8 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * A gameplay scenario wherein:
@@ -43,8 +48,11 @@ public class ClaimJumping extends Scenario
     public static final int NUGGET_COUNT = 3;
 
     @Override // documentation inherited
-    public String init (BangObject bangobj, ArrayList<Piece> markers)
+    public void init (BangObject bangobj, ArrayList<Piece> markers)
+        throws InvocationException
     {
+        super.init(bangobj, markers);
+
         _claims = new ArrayList<Claim>();
         _gameOverTick = -1;
 
@@ -58,7 +66,7 @@ public class ClaimJumping extends Scenario
                 // determine which marker to which it is nearest
                 int midx = getNearestMarker(claim, markers);
                 if (midx == -1 || assigned.contains(midx)) {
-                    return "m.no_start_marker_for_claim";
+                    throw new InvocationException("m.no_start_marker_for_claim");
                 }
                 // if we have a player in the game associated with this
                 // start marker, configure this claim for play
@@ -71,13 +79,13 @@ public class ClaimJumping extends Scenario
                 }
             }
         }
-
-        return null;
     }
 
     @Override // documentation inherited
     public boolean tick (BangObject bangobj, short tick)
     {
+        super.tick(bangobj, tick);
+
         // check to see if there are empty claims
         boolean empty = false;
         for (Claim claim : _claims) {
@@ -156,6 +164,34 @@ public class ClaimJumping extends Scenario
             unit.benuggeted = true;
             bangobj.updatePieces(claim);
         }
+    }
+
+    @Override // documentation inherited
+    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    {
+        super.pieceWasKilled(bangobj, piece);
+
+        // if this piece is benuggeted, force it to drop its nugget
+        if (piece instanceof Unit && ((Unit)piece).benuggeted) {
+            // find a place to drop our nugget
+            Point spot = bangobj.board.getOccupiableSpot(piece.x, piece.y, 3);
+            if (spot == null) {
+                log.info("Can't find anywhere to drop nugget " +
+                         "[piece=" + piece + "].");
+            } else {
+                Bonus drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
+                drop.assignPieceId();
+                drop.position(spot.x, spot.y);
+                bangobj.board.updateShadow(null, drop);
+                bangobj.addToPieces(drop);
+            }
+        }
+    }
+
+    @Override // documentation inherited
+    protected boolean respawnPieces ()
+    {
+        return true;
     }
 
     protected int getNearestMarker (Claim claim, ArrayList<Piece> markers)
