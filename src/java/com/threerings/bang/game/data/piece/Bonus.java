@@ -119,8 +119,8 @@ public class Bonus extends Piece
 
         // now compute some information on the reachers
         double avgpow = bangobj.getAveragePower(reachers);
-        int avgdam = bangobj.getAveragePieceDamage(reachers);
-        int avgpieces = bangobj.getAveragePieceCount(reachers);
+        int avgdam = bangobj.getAverageUnitDamage(reachers);
+        int avgunits = bangobj.getAverageUnitCount(reachers);
 
         // now compute weightings for each of our bonuses
         StringBuffer buf = new StringBuffer();
@@ -131,7 +131,7 @@ public class Bonus extends Piece
 //             if (!config.isValid(bangobj)) {
 //                 continue;
 //             }
-            weights[ii] = config.getWeight(bangobj, avgpow, avgdam, avgpieces);
+            weights[ii] = config.getWeight(bangobj, avgpow, avgdam, avgunits);
             weights[ii] = Math.max(weights[ii], 0);
             // record data for logging
             if (buf.length() > 0) {
@@ -142,7 +142,7 @@ public class Bonus extends Piece
 
         log.info("Selecting bonus [turn=" + bangobj.tick +
                  ", avgpow=" + avgpow + ", avgdam=" + avgdam +
-                 ", avgpc=" + avgpieces + ", reachers=" + reachers +
+                 ", avgpc=" + avgunits + ", reachers=" + reachers +
                  ", weights=(" + buf + ")].");
 
         // and select one at random

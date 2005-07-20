@@ -435,6 +435,9 @@ public class BangManager extends GameManager
     {
         super.gameWillStart();
 
+        // note the time at which we started
+        _startStamp = System.currentTimeMillis();
+
         // let the scenario know that we're about to start
         try {
             _scenario.init(_bangobj, _markers);
@@ -491,7 +494,7 @@ public class BangManager extends GameManager
         }
 
         // queue up the board tick
-        int avgPer = _bangobj.getAveragePieceCount();
+        int avgPer = _bangobj.getAverageUnitCount();
         _ticker.schedule(avgPer * getBaseTick(), false);
         _bangobj.tick = (short)0;
     }
@@ -896,7 +899,18 @@ public class BangManager extends GameManager
     /** Used to accelerate things when testing. */
     protected long getBaseTick ()
     {
-        return isTest() ? 500L : 2000L;
+        // start out with a base tick of two seconds
+        long base = 2000L;
+        // over the course of ten minutes, lower the base tick speed using
+        // a segment of the inverse square curve (from 1 to 2) which means
+        // that after ten minutes, our tick duration will be 25% of the
+        // starting duration
+        long delta = System.currentTimeMillis() - _startStamp;
+        float time = 1f + Math.min((delta / (10f*60*1000)), 1f);
+        long abase = (long)Math.round(base / (time*time));
+//         log.info("Schedulde tick [base=" + base + ", delta=" + delta +
+//                  ", time=" + time + ", abase=" + abase + "].");
+        return isTest() ? 500L : abase;
     }
 
     /** Indicates that we're testing and to do wacky stuff. */
@@ -913,7 +927,7 @@ public class BangManager extends GameManager
             if (_bangobj.isInPlay()) {
                 // queue ourselves up to expire in a time proportional to
                 // the average number of pieces per player
-                int avgPer = _bangobj.getAveragePieceCount();
+                int avgPer = _bangobj.getAverageUnitCount();
                 _ticker.schedule(getBaseTick() * avgPer);
             }
         }
@@ -943,6 +957,9 @@ public class BangManager extends GameManager
 
     /** Implements our gameplay scenario. */
     protected Scenario _scenario;
+
+    /** The time at which the round started. */
+    protected long _startStamp;
 
     /** The purchases made by players in the buying phase. */
     protected PieceSet _purchases = new PieceSet();

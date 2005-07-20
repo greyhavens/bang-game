@@ -604,7 +604,7 @@ public class BangBoardView extends BoardView
     protected void adjustBoardVisibility ()
     {
         // if we're out of the game, just reveal everything
-        if (!_bangobj.hasLivePieces(_pidx)) {
+        if (!_bangobj.hasLiveUnits(_pidx)) {
             _vstate.reveal();
             return;
         }

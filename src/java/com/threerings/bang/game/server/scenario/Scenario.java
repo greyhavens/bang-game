@@ -147,5 +147,5 @@ public abstract class Scenario
     protected ArrayList<Unit> _respawns = new ArrayList<Unit>();
 
     /** The number of ticks that must elapse before a unit is respawned. */
-    protected static final int RESPAWN_TICKS = 8;
+    protected static final int RESPAWN_TICKS = 12;
 }

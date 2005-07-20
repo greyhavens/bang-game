@@ -11,6 +11,7 @@ import com.threerings.media.util.MathUtil;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -54,7 +55,7 @@ public abstract class AreaEffect extends Effect
      * is in range. */
     protected boolean affectedPiece (Piece piece)
     {
-        return (piece.owner >= 0 && piece.isAlive());
+        return (piece instanceof Unit && piece.owner >= 0 && piece.isAlive());
     }
 
     @Override // documentation inherited

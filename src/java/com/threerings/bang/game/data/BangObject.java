@@ -28,8 +28,8 @@ public class BangObject extends GameObject
     /** Used to track statistics on each player. */
     public static class PlayerData
     {
-        /** The number of still-alive pieces controlled by this player. */
-        public int livePieces;
+        /** The number of still-alive units controlled by this player. */
+        public int liveUnits;
 
         /** The total power (un-damage) controlled by this player. */
         public int power;
@@ -39,7 +39,7 @@ public class BangObject extends GameObject
 
         /** Clears our accumulator stats in preparation for a recompute. */
         public void clear () {
-            livePieces = 0;
+            liveUnits = 0;
             power = 0;
         }
 
@@ -196,22 +196,22 @@ public class BangObject extends GameObject
      * Returns true if the specified player has live pieces, false if they
      * are totally knocked out.
      */
-    public boolean hasLivePieces (int pidx)
+    public boolean hasLiveUnits (int pidx)
     {
-        return countLivePieces(pidx) > 0;
+        return countLiveUnits(pidx) > 0;
     }
 
     /**
-     * Returns the number of live pieces remaining for the specified
+     * Returns the number of live units remaining for the specified
      * player.
      */
-    public int countLivePieces (int pidx)
+    public int countLiveUnits (int pidx)
     {
         int pcount = 0;
         if (pieces != null) {
             for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
                 Piece p = (Piece)iter.next();
-                if (p.owner == pidx && p.isAlive()) {
+                if (p.owner == pidx && p instanceof Unit && p.isAlive()) {
                     pcount++;
                 }
             }
@@ -220,14 +220,14 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the number of dead pieces on the board.
+     * Returns the number of dead units on the board.
      */
-    public int countDeadPieces ()
+    public int countDeadUnits ()
     {
         int pcount = 0;
         for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (p.owner >= 0 && !p.isAlive()) {
+            if (p.owner >= 0 && p instanceof Unit && !p.isAlive()) {
                 pcount++;
             }
         }
@@ -250,47 +250,47 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the average number of live pieces per player.
+     * Returns the average number of live units per player.
      */
-    public int getAveragePieceCount ()
+    public int getAverageUnitCount ()
     {
-        int[] pcount = getPieceCount();
-        float tpieces = 0, tcount = 0;
+        int[] pcount = getUnitCount();
+        float tunits = 0, tcount = 0;
         for (int ii = 0; ii < pcount.length; ii++) {
             if (pcount[ii] > 0) {
-                tpieces += pcount[ii];
+                tunits += pcount[ii];
                 tcount++;
             }
         }
-        return (int)Math.round(tpieces / tcount);
+        return (int)Math.round(tunits / tcount);
     }
 
     /**
-     * Returns the average number of live pieces among the specified set
+     * Returns the average number of live units among the specified set
      * of players.
      */
-    public int getAveragePieceCount (ArrayIntSet players)
+    public int getAverageUnitCount (ArrayIntSet players)
     {
-        int[] pcount = getPieceCount();
-        float tpieces = 0, tcount = 0;
+        int[] pcount = getUnitCount();
+        float tunits = 0, tcount = 0;
         for (int ii = 0; ii < pcount.length; ii++) {
             if (pcount[ii] > 0 && players.contains(ii)) {
-                tpieces += pcount[ii];
+                tunits += pcount[ii];
                 tcount++;
             }
         }
-        return (int)Math.round(tpieces / tcount);
+        return (int)Math.round(tunits / tcount);
     }
 
     /**
-     * Returns the count of pieces per player.
+     * Returns the count of units per player.
      */
-    public int[] getPieceCount ()
+    public int[] getUnitCount ()
     {
         int[] pcount = new int[players.length];
         for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (p.isAlive() && p.owner >= 0) {
+            if (p instanceof Unit && p.isAlive() && p.owner >= 0) {
                 pcount[p.owner]++;
             }
         }
@@ -311,15 +311,15 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the average damage level of all live pieces owned by the
+     * Returns the average damage level of all live units owned by the
      * specified players.
      */
-    public int getAveragePieceDamage (ArrayIntSet players)
+    public int getAverageUnitDamage (ArrayIntSet players)
     {
         int pcount = 0, tdamage = 0;
         for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (p.isAlive() && players.contains(p.owner)) {
+            if (p instanceof Unit && p.isAlive() && players.contains(p.owner)) {
                 pcount++;
                 tdamage += p.damage;
             }
@@ -350,7 +350,7 @@ public class BangObject extends GameObject
             if (p instanceof Bonus) {
                 gstats.bonuses++;
             } else if (p.isAlive() && p.owner >= 0) {
-                pstats[p.owner].livePieces++;
+                pstats[p.owner].liveUnits++;
                 int pp = (100 - p.damage);
                 pstats[p.owner].power += pp;
                 gstats.totalPower += pp;
@@ -361,7 +361,7 @@ public class BangObject extends GameObject
         }
 
         for (int ii = 0; ii < pstats.length; ii++) {
-            if (pstats[ii].livePieces > 0) {
+            if (pstats[ii].liveUnits > 0) {
                 gstats.livePlayers++;
             }
         }

@@ -36,16 +36,16 @@ public class DefectEffect extends Effect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // for each player that has at least three more pieces than we do,
-        // we take one piece out of every three they have in excess
-        int[] pcount = bangobj.getPieceCount();
-        int[] scount = new int[pcount.length];
-        for (int ii = 0; ii < pcount.length; ii++) {
-            scount[ii] = Math.max(pcount[ii] - pcount[owner], 0) / 3;
+        // for each player that has at least three more units than we do,
+        // we take one unit out of every three they have in excess
+        int[] ucount = bangobj.getUnitCount();
+        int[] scount = new int[ucount.length];
+        for (int ii = 0; ii < ucount.length; ii++) {
+            scount[ii] = Math.max(ucount[ii] - ucount[owner], 0) / 3;
         }
 
         log.info("Defecting [owner=" + owner +
-                 ", pcount=" + StringUtil.toString(pcount) +
+                 ", ucount=" + StringUtil.toString(ucount) +
                  ", scount=" + StringUtil.toString(scount) + "].");
 
         // now steal whatever remains

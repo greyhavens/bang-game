@@ -130,7 +130,7 @@ public class PlayerStatusView extends BContainer
     protected void updateStatus ()
     {
         if (_bangobj.isInPlay() || _bangobj.state == BangObject.POST_ROUND) {
-            _pieces.setText("P" + _bangobj.countLivePieces(_pidx));
+            _pieces.setText("P" + _bangobj.countLiveUnits(_pidx));
         } else {
             _pieces.setText("");
         }

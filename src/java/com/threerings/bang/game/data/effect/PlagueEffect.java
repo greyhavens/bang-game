@@ -38,17 +38,17 @@ public class PlagueEffect extends Effect
     {
         // everyone gets to keep the "average" count or at least two
         // pieces, whichever is higher
-        int save = Math.max(2, bangobj.getAveragePieceCount());
+        int save = Math.max(2, bangobj.getAverageUnitCount());
 
         // subtract off the "reserved" count from each player
-        int[] pcount = bangobj.getPieceCount();
-        for (int ii = 0; ii < pcount.length; ii++) {
-            pcount[ii] = Math.max(0, pcount[ii] - save);
+        int[] ucount = bangobj.getUnitCount();
+        for (int ii = 0; ii < ucount.length; ii++) {
+            ucount[ii] = Math.max(0, ucount[ii] - save);
         }
 
         log.info("Plaguing [avg=" + save +
-                 ", pcount=" + StringUtil.toString(pcount) +
-                 ", ocount=" + StringUtil.toString(bangobj.getPieceCount()) +
+                 ", ucount=" + StringUtil.toString(ucount) +
+                 ", ocount=" + StringUtil.toString(bangobj.getUnitCount()) +
                  "].");
 
         // determine which pieces will be affected
@@ -58,11 +58,11 @@ public class PlagueEffect extends Effect
 
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (p.owner >= 0 && p.isAlive() && pcount[p.owner] > 0 &&
+            if (p.owner >= 0 && p.isAlive() && ucount[p.owner] > 0 &&
                 // make sure we don't try to turn a dirigible over a
                 // building or water into a windup gunman
                 bangobj.board.isGroundOccupiable(p.x, p.y)) {
-                pcount[p.owner]--;
+                ucount[p.owner]--;
                 pids.add(p.pieceId);
             }
         }
