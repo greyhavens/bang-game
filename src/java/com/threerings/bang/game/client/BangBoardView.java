@@ -557,7 +557,7 @@ public class BangBoardView extends BoardView
                 // if they died, possibly remove them from the board
                 if (!p.isAlive() && p.removeWhenDead()) {
                     _bangobj.removePieceDirect(p);
-                    removePieceSprite(p.pieceId);
+                    removePieceSprite(p.pieceId, "tickedToDeath");
                 }
             }
         }
@@ -713,7 +713,7 @@ public class BangBoardView extends BoardView
         }
 
         public void pieceRemoved (Piece piece) {
-            removePieceSprite(piece.pieceId);
+            removePieceSprite(piece.pieceId, "deathByEffect");
         }
     };
 

@@ -114,7 +114,6 @@ public class UnitSprite extends PieceSprite
 
         // update our damage texture if necessary
         if (unit.damage != _odamage) {
-            System.err.println("New damage " + unit);
             _damtex.setTexture(createDamageTexture());
             _damage.updateRenderState();
             _odamage = unit.damage;

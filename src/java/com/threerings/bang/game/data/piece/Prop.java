@@ -79,6 +79,13 @@ public class Prop extends BigPiece
         recomputeBounds();
     }
 
+    @Override // documentation inherited
+    protected void toString (StringBuffer buf)
+    {
+        buf.append(_type).append(", ");
+        super.toString(buf);
+    }
+
     protected String _type;
     protected transient PropConfig _config;
 }

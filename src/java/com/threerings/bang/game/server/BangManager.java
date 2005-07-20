@@ -608,17 +608,9 @@ public class BangManager extends GameManager
             log.warning("Unit requested illegal move [unit=" + unit +
                         ", x=" + x + ", y=" + y + ", moves=" + _moves + "].");
             Piece[] pvec = _bangobj.getPieceArray();
-            StringBuffer buf = new StringBuffer();
             for (int ii = 0; ii < pvec.length; ii++) {
-                if (ii > 0) {
-                    buf.append(", ");
-                }
-                Piece p = pvec[ii];
-                buf.append(p.pieceId).append(":");
-                buf.append(p.getWidth()).append("x").append(p.getHeight());
-                StringUtil.coordsToString(buf, p.x, p.y);
+                System.err.println(pvec[ii]);
             }
-            log.warning("Pieces [" + buf + "].");
             _bangobj.board.dumpOccupiability(_moves);
 
             // reshadow all the pieces to try to correct the error

@@ -13,6 +13,7 @@ import com.threerings.parlor.game.client.GameController;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.util.BangContext;
 
@@ -71,12 +72,15 @@ public class BangController extends GameController
     /** Handles a request to move a piece. */
     public void moveAndFire (int pieceId, int tx, int ty, final int targetId)
     {
+        final PointSet moves = new PointSet();
+        moves.add(tx, ty);
         BangService.InvocationListener il =
             new BangService.InvocationListener() {
             public void requestFailed (String reason) {
                 // TODO: play a sound or highlight the piece that failed
                 // to move
                 log.info("Thwarted! " + reason);
+                _bangobj.board.dumpOccupiability(moves);
 
                 // clear any pending shot indicator
                 if (targetId != -1) {

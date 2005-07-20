@@ -243,6 +243,13 @@ public class Unit extends Piece
         return damage;
     }
 
+    @Override // documentation inherited
+    protected void toString (StringBuffer buf)
+    {
+        buf.append(_config.type).append(", ");
+        super.toString(buf);
+    }
+
     protected transient UnitConfig _config;
     protected transient short _respawnTick = -1;
 }

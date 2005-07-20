@@ -463,6 +463,7 @@ public class BoardView extends BComponent
         if (sprite == null) {
             sprite = piece.createSprite();
             sprite.init(_ctx, piece, _bangobj.tick);
+            log.info("Creating sprite for " + piece + ".");
             _pieces.put((int)piece.pieceId, sprite);
             addSprite(sprite);
         }
@@ -472,13 +473,15 @@ public class BoardView extends BComponent
     /**
      * Removes the sprite associated with the specified piece.
      */
-    protected void removePieceSprite (int pieceId)
+    protected void removePieceSprite (int pieceId, String why)
     {
         PieceSprite sprite = _pieces.remove(pieceId);
         if (sprite != null) {
+            log.info("Removing sprite [id=" + pieceId + ", why=" + why + "].");
             removeSprite(sprite);
         } else {
-            log.warning("No sprite for removed piece [id=" + pieceId + "].");
+            log.warning("No sprite for removed piece [id=" + pieceId +
+                        ", why=" + why + "].");
         }
     }
 
@@ -632,7 +635,7 @@ public class BoardView extends BComponent
 
         public void entryRemoved (EntryRemovedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                removePieceSprite((Integer)event.getKey());
+                removePieceSprite((Integer)event.getKey(), "pieceRemoved");
                 pieceUpdated((Piece)event.getOldEntry(), null);
             }
         }
