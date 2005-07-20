@@ -178,11 +178,11 @@ public class ClaimJumping extends Scenario
             return true;
 
         } else if (_warnStage < TIME_WARNINGS.length &&
-            remain < TIME_WARNINGS[_warnStage]) {
-            _warnStage++;
+                   remain < TIME_WARNINGS[_warnStage]) {
             String msg = MessageBundle.tcompose(
-                "m.round_ends_in", "" + (remain/1000L));
+                "m.round_ends_in", "" + (TIME_WARNINGS[_warnStage]/1000L));
             SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
+            _warnStage++;
         }
 
         // check to see if there are empty claims
