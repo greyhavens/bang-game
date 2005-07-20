@@ -7,7 +7,9 @@ import java.awt.Font;
 
 import com.jme.bui.BButton;
 import com.jme.bui.BLabel;
+import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BlankIcon;
+import com.jme.bui.text.AWTTextFactory;
 
 import com.threerings.util.MessageBundle;
 
@@ -23,6 +25,9 @@ public class BangUI
     /** A font used to render counters in the game. */
     public static Font COUNTER_FONT = new Font("Helvetica", Font.BOLD, 48);
 
+    /** A look and feel for big splash text. */
+    public static BLookAndFeel marqueeLNF;
+
     /**
      * Configures the UI singleton with a context reference.
      */
@@ -30,6 +35,9 @@ public class BangUI
     {
         _ctx = ctx;
         _umsgs = _ctx.getMessageManager().getBundle("units");
+
+        marqueeLNF = new BangLookAndFeel();
+        marqueeLNF.setTextFactory(new AWTTextFactory(COUNTER_FONT));
     }
 
     /**

@@ -13,10 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.bui.BComponent;
-import com.jme.bui.event.MouseEvent;
-import com.jme.bui.event.MouseMotionListener;
-import com.jme.bui.event.MouseWheelListener;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.intersection.TrianglePickResults;
@@ -36,6 +32,14 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
+import com.jme.bui.BComponent;
+import com.jme.bui.BDecoratedWindow;
+import com.jme.bui.BLabel;
+import com.jme.bui.event.MouseEvent;
+import com.jme.bui.event.MouseMotionListener;
+import com.jme.bui.event.MouseWheelListener;
+import com.jme.bui.layout.BorderLayout;
+
 import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.tile.TileFringer;
@@ -45,6 +49,7 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -154,6 +159,9 @@ public class BoardView extends BComponent
 
         // freshen up
         refreshBoard();
+
+        // clear any previous round's marquee
+        clearMarquee();
     }
 
     /**
@@ -366,10 +374,7 @@ public class BoardView extends BComponent
     {
         super.wasRemoved();
 
-//         if (_marquee != null) {
-//             removeSprite(_marquee);
-//             _marquee = null;
-//         }
+        clearMarquee();
     }
 
     /**
@@ -399,23 +404,29 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Creates a big animation that scrolls up the middle of the board.
+     * Creates a big text marquee in the middle of the screen.
      */
     protected void createMarquee (String text)
     {
-//         Label label = new Label(text, Color.white, getFont().deriveFont(40f));
-//         label.setAlignment(Label.CENTER);
-//         label.setStyle(Label.OUTLINE);
-//         label.setAlternateColor(Color.black);
-//         label.setTargetWidth(300);
-//         label.layout(this);
+        if (_marquee != null) {
+            clearMarquee();
+        }
+        _marquee = new BDecoratedWindow(BangUI.marqueeLNF, null);
+        _marquee.add(new BLabel(text), BorderLayout.CENTER);
+        _ctx.getRootNode().addWindow(_marquee);
+        _marquee.pack();
+        _marquee.center();
+    }
 
-//         _marquee = new LabelSprite(label);
-//         _marquee.setRenderOrder(100);
-//         _marquee.setLocation(
-//             _vbounds.x+(_vbounds.width-label.getSize().width)/2,
-//             _vbounds.y+(_vbounds.height-label.getSize().height)/2);
-//         addSprite(_marquee);
+    /**
+     * Clears our marquee display.
+     */
+    protected void clearMarquee ()
+    {
+        if (_marquee != null) {
+            _ctx.getRootNode().removeWindow(_marquee);
+            _marquee = null;
+        }
     }
 
     /**
@@ -667,6 +678,8 @@ public class BoardView extends BComponent
     protected BangBoard _board;
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
+
+    protected BDecoratedWindow _marquee;
 
     protected TileFringer _fringer;
     protected HashMap _fmasks = new HashMap();
