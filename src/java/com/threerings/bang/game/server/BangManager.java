@@ -889,7 +889,7 @@ public class BangManager extends GameManager
         // if that failed, load a stock board
         int pcount = _bconfig.players.length;
         if (tup == null) {
-            String board = (String)RandomUtil.pickRandom(BOARDS[pcount]);
+            String board = (String)RandomUtil.pickRandom(BOARDS[pcount-2]);
             if (isTest()) {
                 board = "default" + pcount;
             }
