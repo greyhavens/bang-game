@@ -40,7 +40,7 @@ public class ClaimJumping extends Scenario
     implements GameCodes
 {
     /** The number of nuggets in each claim. TODO: put in BangConfig. */
-    public static final int NUGGET_COUNT = 1;
+    public static final int NUGGET_COUNT = 3;
 
     @Override // documentation inherited
     public String init (BangObject bangobj, ArrayList<Piece> markers)
