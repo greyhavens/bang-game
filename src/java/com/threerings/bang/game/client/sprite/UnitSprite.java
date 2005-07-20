@@ -216,7 +216,7 @@ public class UnitSprite extends PieceSprite
 
         // this icon is displayed when we are modified in some way (we're
         // carrying a nugget, for example)
-        _icon = RenderUtil.createIcon(10, 10);
+        _icon = RenderUtil.createIcon(5, 5);
         _icon.setLocalTranslation(new Vector3f(0, 0, 0));
         _icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _icon.setRenderState(RenderUtil.alwaysZBuf);
