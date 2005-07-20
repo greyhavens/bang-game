@@ -301,7 +301,8 @@ public class Model
     {
         // non-file URLs don't handle blah/foo/../bar so we make those
         // path adjustments by hand
-        return path.replaceAll("[^/]+/\\.\\./", "");
+        String npath = path.replaceAll(PATH_DOTDOT, "");
+        return npath.replaceAll(PATH_DOTDOT, "");
     }
 
     protected String _key;
@@ -315,4 +316,6 @@ public class Model
 
     protected HashMap<String,CloneCreator[]> _anims =
         new HashMap<String,CloneCreator[]>();
+
+    protected static final String PATH_DOTDOT = "[^/]+/\\.\\./";
 }
