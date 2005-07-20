@@ -107,8 +107,9 @@ public abstract class Piece extends SimpleStreamableObject
     /**
      * Called on a piece when it has been maximally damaged.
      */
-    public void wasKilled ()
+    public void wasKilled (short tick)
     {
+        lastActed = tick;
     }
 
     /**
@@ -118,6 +119,14 @@ public abstract class Piece extends SimpleStreamableObject
     public boolean removeWhenDead ()
     {
         return false;
+    }
+
+    /**
+     * By default we expire wreckage after some number of turns.
+     */
+    public boolean expireWreckage (short tick)
+    {
+        return (tick - lastActed > 4);
     }
 
     /**

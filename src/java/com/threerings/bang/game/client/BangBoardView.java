@@ -549,19 +549,6 @@ public class BangBoardView extends BoardView
      */
     protected void ticked (short tick)
     {
-        // allow pieces to tick down and possibly die
-        Piece[] pieces = _bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
-            if (p.isAlive() && p.tick(tick)) {
-                // if they died, possibly remove them from the board
-                if (!p.isAlive() && p.removeWhenDead()) {
-                    _bangobj.removePieceDirect(p);
-                    removePieceSprite(p.pieceId, "tickedToDeath");
-                }
-            }
-        }
-
         // update all of our piece sprites
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
@@ -706,9 +693,6 @@ public class BangBoardView extends BoardView
         }
 
         public void pieceAffected (Piece piece, String effect) {
-            if (!piece.isAlive()) {
-                piece.wasKilled();
-            }
             createEffectAnimation(piece, effect);
         }
 

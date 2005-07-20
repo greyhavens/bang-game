@@ -213,9 +213,9 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public void wasKilled ()
+    public void wasKilled (short tick)
     {
-        super.wasKilled();
+        super.wasKilled(tick);
         benuggeted = false;
     }
 

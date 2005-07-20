@@ -512,17 +512,30 @@ public class BangManager extends GameManager
         // allow pieces to tick down and possibly die
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (p.isAlive() && p.tick(tick)) {
-                // if they died, possibly remove them from the board
+            if (!p.isAlive()) {
+                if (p.expireWreckage(tick)) {
+                    log.info("Expiring wreckage " + p.pieceId +
+                             " l:" + p.lastActed + " t:" + tick);
+                    _bangobj.removeFromPieces(p.getKey());
+                    _bangobj.board.updateShadow(p, null);
+                }
+                continue;
+            }
+
+            if (p.tick(tick)) {
+                boolean removed = false;
                 if (!p.isAlive()) {
                     if (p.removeWhenDead()) {
-                        _bangobj.removePieceDirect(p);
+                        _bangobj.removeFromPieces(p.getKey());
+                        _bangobj.board.updateShadow(p, null);
+                        removed = true;
                     }
                     _scenario.pieceWasKilled(_bangobj, p);
-                    p.wasKilled();
+                    p.wasKilled(tick);
+                }
 
-                } else {
-                    // otherwise update them as they somehow changed
+                if (!removed) {
+                    // the piece changed in some way so update it
                     _bangobj.updatePieces(p);
                 }
             }
@@ -954,7 +967,7 @@ public class BangManager extends GameManager
         public void pieceAffected (Piece piece, String effect) {
             if (!piece.isAlive()) {
                 _scenario.pieceWasKilled(_bangobj, piece);
-                piece.wasKilled();
+                piece.wasKilled(_bangobj.tick);
             }
         }
 
