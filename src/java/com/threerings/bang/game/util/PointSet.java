@@ -6,6 +6,7 @@ package com.threerings.bang.game.util;
 import java.awt.Rectangle;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.StringUtil;
 
 /**
  * Provides an efficient way of "noting" a set of tiles.
@@ -65,6 +66,19 @@ public class PointSet extends ArrayIntSet
         for (int xx = minx; xx <= maxx; xx++) {
             addIf(bounds, xx, sy + dist);
         }
+    }
+
+    /** Generates a string representation of this instance. */
+    public String toString ()
+    {
+        StringBuffer buf = new StringBuffer("(");
+        for (int ii = 0, ll = size(); ii < ll; ii++) {
+            if (ii > 0) {
+                buf.append(", ");
+            }
+            StringUtil.coordsToString(buf, getX(ii), getY(ii));
+        }
+        return buf.append(")").toString();
     }
 
     protected void addIf (Rectangle bounds, int x, int y)

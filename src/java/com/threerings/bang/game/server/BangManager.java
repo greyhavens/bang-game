@@ -320,7 +320,7 @@ public class BangManager extends GameManager
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii) /*|| isTest()*/) {
+            if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
                 String[] units = new String[] {
                     "dirigible", "steamgunman", "gunslinger" };
@@ -606,9 +606,34 @@ public class BangManager extends GameManager
         _bangobj.board.computeMoves(unit, _moves, null);
         if (!_moves.contains(x, y)) {
             log.warning("Unit requested illegal move [unit=" + unit +
-                        ", x=" + x + ", y=" + y + "].");
-            _bangobj.board.dumpOccupiability();
-            return null;
+                        ", x=" + x + ", y=" + y + ", moves=" + _moves + "].");
+            Piece[] pvec = _bangobj.getPieceArray();
+            StringBuffer buf = new StringBuffer();
+            for (int ii = 0; ii < pvec.length; ii++) {
+                if (ii > 0) {
+                    buf.append(", ");
+                }
+                Piece p = pvec[ii];
+                buf.append(p.pieceId).append(":");
+                buf.append(p.getWidth()).append("x").append(p.getHeight());
+                StringUtil.coordsToString(buf, p.x, p.y);
+            }
+            log.warning("Pieces [" + buf + "].");
+            _bangobj.board.dumpOccupiability(_moves);
+
+            // reshadow all the pieces to try to correct the error
+            _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
+            log.warning("Reshadowed dump:");
+            _bangobj.board.dumpOccupiability(_moves);
+
+            // now try the whole process again
+            _moves.clear();
+            _bangobj.board.computeMoves(unit, _moves, null);
+            if (!_moves.contains(x, y)) {
+                log.warning("Move still illegal: ");
+                _bangobj.board.dumpOccupiability(_moves);
+                return null;
+            }
         }
 
         // clone and move the unit

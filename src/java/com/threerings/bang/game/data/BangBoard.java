@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.StringUtil;
+import com.samskivert.util.TermUtil;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.SimpleStreamableObject;
@@ -128,14 +130,34 @@ public class BangBoard extends SimpleStreamableObject
     /**
      * Dumps the board's occupiability state to stderr.
      */
-    public void dumpOccupiability ()
+    public void dumpOccupiability (PointSet moves)
     {
         for (int yy = getHeight()-1; yy >= 0; yy--) {
+            System.err.print(StringUtil.prepad(String.valueOf(yy), 2) + ":");
             for (int xx = 0; xx < getWidth()-1; xx++) {
-                System.err.print("" + _tstate[_width*yy+xx]);
+                String spot = String.valueOf(_tstate[_width*yy+xx]);
+                if (moves.contains(xx, yy)) {
+                    spot = TermUtil.makeBold(spot);
+                }
+                System.err.print(" " + spot);
             }
             System.err.println("");
         }
+        System.err.print("   ");
+        for (int xx = 0; xx < getWidth()-1; xx++) {
+            System.err.print(" -");
+        }
+        System.err.println("");
+        System.err.print("   ");
+        for (int xx = 0; xx < getWidth()-1; xx++) {
+            System.err.print(" " + (xx/10));
+        }
+        System.err.println("");
+        System.err.print("   ");
+        for (int xx = 0; xx < getWidth()-1; xx++) {
+            System.err.print(" " + (xx%10));
+        }
+        System.err.println("");
     }
 
     /**
