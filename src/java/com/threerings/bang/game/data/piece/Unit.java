@@ -86,6 +86,23 @@ public class Unit extends Piece
         return dup;
     }
 
+    /**
+     * Returns the tick on which this unit should respawn or -1 if it
+     * should not be respawned.
+     */
+    public short getRespawnTick ()
+    {
+        return _respawnTick;
+    }
+
+    /**
+     * Configures this unit with a respawn tick.
+     */
+    public void setRespawnTick (short tick)
+    {
+        _respawnTick = tick;
+    }
+
     /** Configures the instance after unserialization. */
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
@@ -100,6 +117,12 @@ public class Unit extends Piece
     {
         out.defaultWriteObject();
         out.writeUTF(_config.type);
+    }
+
+    @Override // documentation inherited
+    public boolean canActivateBonus (Bonus bonus)
+    {
+        return bonus.getConfig().type.equals("nugget") ? !benuggeted : true;
     }
 
     @Override // documentation inherited
@@ -214,4 +237,5 @@ public class Unit extends Piece
     }
 
     protected transient UnitConfig _config;
+    protected transient short _respawnTick = -1;
 }

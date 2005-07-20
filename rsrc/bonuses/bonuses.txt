@@ -3,6 +3,7 @@ card
 defect
 duplicate
 hustle
+nugget
 plague
 ramblin
 repair

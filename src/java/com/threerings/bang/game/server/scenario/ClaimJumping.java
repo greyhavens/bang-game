@@ -11,8 +11,10 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -149,7 +151,7 @@ public class ClaimJumping extends Scenario
             bangobj.updatePieces(claim);
 
         } else if (claim.owner != unit.owner && claim.nuggets > 0 &&
-                   !unit.benuggeted) {
+                   unit.canActivateBonus(_nuggetBonus)) {
             claim.nuggets--;
             unit.benuggeted = true;
             bangobj.updatePieces(claim);
@@ -176,6 +178,11 @@ public class ClaimJumping extends Scenario
 
     /** Indicates the tick on whcih we will end the game. */
     protected short _gameOverTick = -1;
+
+    /** A prototype nugget bonus used to ensure that pieces can be
+     * benuggeted. */
+    protected Bonus _nuggetBonus =
+        Bonus.createBonus(BonusConfig.getConfig("nugget"));
 
     /** The number of ticks after which we end the game while at least one
      * claim is empty. */

@@ -17,7 +17,7 @@ public class WindupSlinger extends Unit
     }
 
     @Override // documentation inherited
-    public boolean canActivateBonus ()
+    public boolean canActivateBonus (Bonus bonus)
     {
         return false;
     }

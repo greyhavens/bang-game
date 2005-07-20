@@ -97,9 +97,9 @@ public class UnitSprite extends PieceSprite
 
         Unit unit = (Unit)piece;
         int ticks;
-        if (!unit.isAlive()) {
-            _status.setForceCull(true);
-        } else if ((ticks = unit.ticksUntilMovable(_tick)) > 0) {
+
+        _status.setForceCull(!unit.isAlive());
+        if ((ticks = unit.ticksUntilMovable(_tick)) > 0) {
             _ticks.setRenderState(_ticktex[Math.max(0, 4-ticks)]);
             _ticks.updateRenderState();
             _movable.setForceCull(true);

@@ -146,7 +146,14 @@ public class Bonus extends Piece
                  ", weights=(" + buf + ")].");
 
         // and select one at random
-        BonusConfig config = configs[RandomUtil.getWeightedIndex(weights)];
+        return createBonus(configs[RandomUtil.getWeightedIndex(weights)]);
+    }
+
+    /**
+     * Creates a bonus of the specified type.
+     */
+    public static Bonus createBonus (BonusConfig config)
+    {
         try {
             Bonus bonus;
             if (config.bonusClass != null) {

@@ -338,7 +338,7 @@ public abstract class Piece extends SimpleStreamableObject
     /**
      * Indicates whether or not this piece can activate bonuses.
      */
-    public boolean canActivateBonus ()
+    public boolean canActivateBonus (Bonus bonus)
     {
         return true;
     }
@@ -354,7 +354,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public Interaction maybeInteract (Piece other, ArrayList<Effect> effects)
     {
-        if (other instanceof Bonus && canActivateBonus()) {
+        if (other instanceof Bonus && canActivateBonus((Bonus)other)) {
             Effect effect = ((Bonus)other).affect(this);
             if (effect != null) {
                 effects.add(effect);
