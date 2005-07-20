@@ -129,6 +129,9 @@ public class BoardView extends BComponent
     {
         // clear ourselves as a default event target
         _ctx.getRootNode().popDefaultEventTarget(this);
+
+        // clear any marquee we have up
+        clearMarquee();
     }
 
     /**
@@ -367,14 +370,6 @@ public class BoardView extends BComponent
             ih.rotateCamera((e.getDelta() > 0) ?
                             -FastMath.PI/8 : FastMath.PI/8);
         }
-    }
-
-    // documentation inherited
-    protected void wasRemoved ()
-    {
-        super.wasRemoved();
-
-        clearMarquee();
     }
 
     /**

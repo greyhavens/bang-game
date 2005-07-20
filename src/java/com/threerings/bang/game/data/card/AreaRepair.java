@@ -33,7 +33,7 @@ public class AreaRepair extends Card
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "repair";
+        return "area_repair";
     }
 
     @Override // documentation inherited
