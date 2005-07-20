@@ -55,6 +55,8 @@ public class ClaimJumping extends Scenario
 
         _claims = new ArrayList<Claim>();
         _gameOverTick = -1;
+        _startStamp = System.currentTimeMillis();
+        _warnStage = 0;
 
         // locate all the claims, assign them to players and fill them
         // with nuggets
@@ -86,51 +88,17 @@ public class ClaimJumping extends Scenario
     {
         super.tick(bangobj, tick);
 
-        // check to see if there are empty claims
-        boolean empty = false;
-        for (Claim claim : _claims) {
-            if (claim.nuggets == 0) {
-                empty = true;
-                break;
-            }
-        }
-
-        // if we have no timer and one or more claims are empty; start it
-        if (_gameOverTick < 0 && empty) {
-            _gameOverTick = (short)(tick + END_GAME_TIMER);
-            String msg = MessageBundle.tcompose(
-                "m.starting_timer", "" + END_GAME_TIMER);
-            SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
-        }
-
-        // if we have a timer started...
-        if (_gameOverTick > 0) {
-            // ...and no empty claims, stop it
-            if (!empty) {
-                _gameOverTick = -1;
-                SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.timer_stopped");
-
-            } else if (tick >= _gameOverTick) {
-                // end the game if the timer expires
-                SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.timer_expired");
-
-                // score cash for all nuggets in each player's claim
-                for (Claim claim : _claims) {
-                    if (claim.nuggets <= 0) {
-                        continue;
-                    }
-                    int ncash = bangobj.funds[claim.owner] +
-                        CASH_PER_NUGGET * (claim.nuggets);
-                    bangobj.setFundsAt(ncash, claim.owner);
+        if (checkRoundOver(bangobj, tick)) {
+            // score cash for all nuggets in each player's claim
+            for (Claim claim : _claims) {
+                if (claim.nuggets <= 0) {
+                    continue;
                 }
-                return true;
-
-            } else if ((_gameOverTick - tick) % 10 == 5) {
-                int ticks = _gameOverTick - tick;
-                String msg = MessageBundle.tcompose(
-                    "m.ticking_timer", "" + ticks);
-                SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
+                int ncash = bangobj.funds[claim.owner] +
+                    CASH_PER_NUGGET * (claim.nuggets);
+                bangobj.setFundsAt(ncash, claim.owner);
             }
+            return true;
         }
 
         return false;
@@ -194,6 +162,69 @@ public class ClaimJumping extends Scenario
         return true;
     }
 
+    /**
+     * Determines whether or not the round should be ended on this tick.
+     * Handles starting timers as appropriate and informing the players of
+     * their progress.
+     */
+    protected boolean checkRoundOver (BangObject bangobj, short tick)
+    {
+        // check to see if we should end the scenario due to time, or warn
+        // that we're going to
+        long now = System.currentTimeMillis();
+        long remain = MAX_SCENARIO_TIME - (now - _startStamp);
+        if (remain <= 0L) {
+            SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.round_time_up");
+            return true;
+
+        } else if (_warnStage < TIME_WARNINGS.length &&
+            remain < TIME_WARNINGS[_warnStage]) {
+            _warnStage++;
+            String msg = MessageBundle.tcompose(
+                "m.round_ends_in", "" + (remain/1000L));
+            SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
+        }
+
+        // check to see if there are empty claims
+        boolean empty = false;
+        for (Claim claim : _claims) {
+            if (claim.nuggets == 0) {
+                empty = true;
+                break;
+            }
+        }
+
+        // if we have no timer and one or more claims are empty; start it
+        if (_gameOverTick < 0 && empty) {
+            _gameOverTick = (short)(tick + END_GAME_TIMER);
+            String msg = MessageBundle.tcompose(
+                "m.starting_timer", "" + END_GAME_TIMER);
+            SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
+        }
+
+        // if we have a timer started...
+        if (_gameOverTick > 0) {
+            // ...and no empty claims, stop it
+            if (!empty) {
+                _gameOverTick = -1;
+                SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.timer_stopped");
+
+            } else if (tick >= _gameOverTick) {
+                // end the game if the timer expires
+                SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.timer_expired");
+                return true;
+
+            } else if ((_gameOverTick - tick) % 10 == 5) {
+                int ticks = _gameOverTick - tick;
+                String msg = MessageBundle.tcompose(
+                    "m.ticking_timer", "" + ticks);
+                SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
+            }
+        }
+
+        return false;
+    }
+
     protected int getNearestMarker (Claim claim, ArrayList<Piece> markers)
     {
         int mindist2 = Integer.MAX_VALUE, idx = -1;
@@ -215,6 +246,12 @@ public class ClaimJumping extends Scenario
     /** Indicates the tick on whcih we will end the game. */
     protected short _gameOverTick = -1;
 
+    /** The time at which the current round started. */
+    protected long _startStamp;
+
+    /** Used to track when we've warned about the end of the round. */
+    protected int _warnStage = -1;
+
     /** A prototype nugget bonus used to ensure that pieces can be
      * benuggeted. */
     protected Bonus _nuggetBonus =
@@ -226,4 +263,12 @@ public class ClaimJumping extends Scenario
 
     /** The amount of cash earned per nugget at the end of the game. */
     protected static final int CASH_PER_NUGGET = 50;
+
+    /** The amount of time after which we stick a fork in the round. */
+    protected static final long MAX_SCENARIO_TIME = 7 * 60 * 1000L;
+
+    /** A set of times (in seconds prior to the end of the round) at which
+     * we warn the players. */
+    protected static final long[] TIME_WARNINGS = {
+        60*1000L, 30*1000L, 10*1000L };
 }
