@@ -887,10 +887,11 @@ public class BangManager extends GameManager
         }
 
         // if that failed, load a stock board
+        int pcount = _bconfig.players.length;
         if (tup == null) {
-            String board = (String)RandomUtil.pickRandom(BOARDS);
+            String board = (String)RandomUtil.pickRandom(BOARDS[pcount]);
             if (isTest()) {
-                board = "default";
+                board = "default" + pcount;
             }
             log.info("Using: " + board);
             try {
@@ -1014,9 +1015,10 @@ public class BangManager extends GameManager
     protected ArrayIntSet _usedCards = new ArrayIntSet();
 
     /** A list of our stock boards. */
-    protected static final String[] BOARDS = {
-        "buildingblocks", "cityblocks", "coast", "doublenoon", "oasis",
-        "outskirts",
+    protected static final String[][] BOARDS = {
+        { "default2", }, // 2 player boards
+        { "default3", }, // 3 player boards
+        { "default4", }, // 4 player boards
     };
 
     /** Our starting base tick time. */
