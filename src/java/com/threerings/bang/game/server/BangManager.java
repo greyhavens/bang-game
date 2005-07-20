@@ -476,7 +476,6 @@ public class BangManager extends GameManager
                     piece.position(spot.x, spot.y);
                     // mark this unit as respawnable
                     ((Unit)piece).setRespawnTick((short)0);
-                    ((Unit)piece).benuggeted = true;
                     _bangobj.addToPieces(piece);
                     _bangobj.board.updateShadow(null, piece);
                 }
