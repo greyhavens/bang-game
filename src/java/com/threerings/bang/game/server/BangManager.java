@@ -389,6 +389,15 @@ public class BangManager extends GameManager
             }
         }
 
+        // make sure they haven't already purchased units
+        for (Piece piece : _purchases.values()) {
+            if (piece.owner == pidx) {
+                log.warning("Rejecting repeat purchase request " +
+                            "[who=" + _bangobj.players[pidx] + "].");
+                return;
+            }
+        }
+
         // total up the cost
         int totalCost = 0;
         for (int ii = 0; ii < units.length; ii++) {
