@@ -12,7 +12,7 @@ root_url = http://www.banghowdy.com
 # The host and port to use when connecting to the server
 
 server_host = game.banghowdy.com
-server_port = 4007
+# server_port = 47624
 
 #
 # These are used by the installer and game launcher.
