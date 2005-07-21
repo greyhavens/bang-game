@@ -6,11 +6,14 @@ package com.threerings.bang.game.server.scenario;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import com.samskivert.util.IntIntMap;
+
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -28,7 +31,7 @@ public abstract class Scenario
      * the players and the game will be cancelled.
      */
     public void init (BangObject bangobj, ArrayList<Piece> markers,
-                      PointSet bonusSpots)
+                      PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
         // clear our respawn queue
@@ -39,6 +42,13 @@ public abstract class Scenario
         for (int ii = 0; ii < _startSpots.length; ii++) {
             Piece p = markers.get(ii);
             _startSpots[ii] = new Point(p.x, p.y);
+        }
+
+        // note the starting owner for all the purchased pieces; only
+        // starting pieces are respawnable and they are returned to their
+        // original owner when they respawn
+        for (Piece piece : purchases.values()) {
+            _startingOwners.put(piece.pieceId, piece.owner);
         }
     }
 
@@ -76,6 +86,7 @@ public abstract class Scenario
             unit.damage = 0;
             unit.influence = null;
             unit.setRespawnTick((short)0);
+            unit.owner = _startingOwners.get(unit.pieceId);
 
             if (bangobj.pieces.containsKey(unit.getKey())) {
                 // clear the shadow at its old location
@@ -130,20 +141,21 @@ public abstract class Scenario
      */
     protected void maybeQueueForRespawn (Piece piece, short tick)
     {
-        // if this unit should be respawned, queue it up
-        if (!(piece instanceof Unit)) {
+        if (!_startingOwners.contains(piece.pieceId) ||
+            !(piece instanceof Unit)) {
             return;
         }
         Unit unit = (Unit)piece;
-        if (unit.getRespawnTick() == 0) {
-            unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
-            _respawns.add(unit);
-            log.info("Queued for respawn " + unit + ".");
-        }
+        unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
+        _respawns.add(unit);
+        log.info("Queued for respawn " + unit + ".");
     }
 
     /** Used to track the locations where players are started. */
     protected Point[] _startSpots;
+
+    /** Used to note the starting owner for the starting pieces. */
+    protected IntIntMap _startingOwners = new IntIntMap();
 
     /** A list of units waiting to be respawned. */
     protected ArrayList<Unit> _respawns = new ArrayList<Unit>();

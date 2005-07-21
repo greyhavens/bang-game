@@ -438,22 +438,22 @@ public class BangManager extends GameManager
         // note the time at which we started
         _startStamp = System.currentTimeMillis();
 
+        // add the selected big shots to the purchases
+        for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
+            if (_bangobj.bigShots[ii] != null) {
+                _purchases.add(_bangobj.bigShots[ii]);
+            }
+        }
+
         // let the scenario know that we're about to start
         try {
-            _scenario.init(_bangobj, _markers, _bonusSpots);
+            _scenario.init(_bangobj, _markers, _bonusSpots, _purchases);
         } catch (InvocationException ie) {
             log.warning("Scenario initialization failed [game=" + where() +
                         ", error=" + ie.getMessage() + "].");
             SpeakProvider.sendAttention(_bangobj, GAME_MSGS, ie.getMessage());
             // TODO: cancel the round (or let the scenario cancel it on
             // the first tick?)
-        }
-
-        // add the selected big shots to the purchases
-        for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
-            if (_bangobj.bigShots[ii] != null) {
-                _purchases.add(_bangobj.bigShots[ii]);
-            }
         }
 
         // now place and add the player pieces
@@ -477,8 +477,6 @@ public class BangManager extends GameManager
                     Point spot = spots.remove(0);
                     Piece piece = ppieces.remove(0);
                     piece.position(spot.x, spot.y);
-                    // mark this unit as respawnable
-                    ((Unit)piece).setRespawnTick((short)0);
                     _bangobj.addToPieces(piece);
                     _bangobj.board.updateShadow(null, piece);
                 }

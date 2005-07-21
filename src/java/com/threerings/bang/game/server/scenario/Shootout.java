@@ -16,6 +16,8 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.util.PieceSet;
+import com.threerings.bang.game.util.PointSet;
 
 /**
  * A gameplay scenario where the last player standing is the winner.
@@ -23,9 +25,12 @@ import com.threerings.bang.game.data.piece.Unit;
 public class Shootout extends Scenario
 {
     @Override // documentation inherited
-    public void init (BangObject bangobj, ArrayList<Piece> markers)
+    public void init (BangObject bangobj, ArrayList<Piece> markers,
+                      PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
+        super.init(bangobj, markers, bonusSpots, purchases);
+
         // create a fresh knockout array
         _knockoutOrder = new int[bangobj.players.length];
     }

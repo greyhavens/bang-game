@@ -17,11 +17,12 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.util.PieceSet;
+import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 
@@ -50,10 +51,10 @@ public class ClaimJumping extends Scenario
 
     @Override // documentation inherited
     public void init (BangObject bangobj, ArrayList<Piece> markers,
-                      PointSet bonusSpots)
+                      PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.init(bangobj, markers, bonusSpots);
+        super.init(bangobj, markers, bonusSpots, purchases);
 
         _claims = new ArrayList<Claim>();
         _gameOverTick = -1;
