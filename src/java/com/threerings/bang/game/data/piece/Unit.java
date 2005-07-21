@@ -13,7 +13,9 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Terrain;
+import com.threerings.bang.game.data.effect.ShotEffect;
 
 import static com.threerings.bang.Log.log;
 
@@ -129,6 +131,30 @@ public class Unit extends Piece
     public int getCost ()
     {
         return _config.scripCost;
+    }
+
+    @Override // documentation inherited
+    public ShotEffect[] collateralDamage (BangObject bangobj, Piece target)
+    {
+        return null;
+    }
+
+    @Override // documentation inherited
+    public ShotEffect returnFire (Piece shooter, int damage)
+    {
+        ShotEffect shot = null;
+        int odamage = this.damage;
+        if (_config.returnFire > 0 && (odamage + damage < 100) &&
+            targetInRange(shooter.x, shooter.y)) {
+            // temporarily account for the shooter's damage when
+            // calculating our shot; it will be applied properly later
+            this.damage += damage;
+            shot = shoot(shooter);
+            this.damage -= damage;
+            // scale the damage down
+            shot.damage = (_config.returnFire * shot.damage) / 100;
+        }
+        return shot;
     }
 
     @Override // documentation inherited

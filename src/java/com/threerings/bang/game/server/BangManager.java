@@ -133,7 +133,7 @@ public class BangManager extends GameManager
         }
 
         Piece target = (Piece)_bangobj.pieces.get(targetId);
-        Piece munit = null;
+        Piece munit = null, shooter = unit;
         try {
             _bangobj.startTransaction();
 
@@ -143,25 +143,37 @@ public class BangManager extends GameManager
                 if (munit == null) {
                     throw new InvocationException(MOVE_BLOCKED);
                 }
+                shooter = munit;
             }
 
             // if they specified a target, shoot at it
             if (target != null) {
                 // make sure the target is valid
-                if (!munit.validTarget(target)) {
+                if (!shooter.validTarget(target)) {
                     // target already dead or something
                     throw new InvocationException(TARGET_NO_LONGER_VALID);
                 }
 
                 // make sure the target is still within range
-                if (!munit.targetInRange(target.x, target.y)) {
+                if (!shooter.targetInRange(target.x, target.y)) {
                     throw new InvocationException(TARGET_MOVED);
                 }
 
-                ShotEffect effect = unit.shoot(target);
+                // effect the initial shot
+                ShotEffect effect = shooter.shoot(target);
                 effect.prepare(_bangobj, _damage);
                 _bangobj.setEffect(effect);
-                recordDamage(user, _damage);
+                recordDamage(munit.owner, _damage);
+
+                // effect any collateral damage
+
+                // allow the target to return fire
+                effect = target.returnFire(shooter, effect.damage);
+                if (effect != null) {
+                    effect.prepare(_bangobj, _damage);
+                    _bangobj.setEffect(effect);
+                    recordDamage(target.owner, _damage);
+                }
 
                 // if they did not move in this same action, we need to
                 // set their last acted tick
@@ -200,7 +212,7 @@ public class BangManager extends GameManager
         Effect effect = card.activate(x, y);
         effect.prepare(_bangobj, _damage);
         _bangobj.setEffect(effect);
-        recordDamage(user, _damage);
+        recordDamage(card.owner, _damage);
     }
 
     // documentation inherited
@@ -697,11 +709,11 @@ public class BangManager extends GameManager
         // update the unit in the distributed set
         _bangobj.updatePieces(munit);
 
-        // finally effect and effects
+        // finally effect the effects
         for (Effect effect : _effects) {
             effect.prepare(_bangobj, _damage);
             _bangobj.setEffect(effect);
-            recordDamage(user, _damage);
+            recordDamage(unit.owner, _damage);
         }
         _effects.clear();
 
@@ -832,28 +844,17 @@ public class BangManager extends GameManager
     }
 
     /** Records damage done by the specified user to various pieces. */
-    protected void recordDamage (BangUserObject user, IntIntMap damage)
+    protected void recordDamage (int pidx, IntIntMap damage)
     {
-        int pidx = _bangobj.getPlayerIndex(user.username);
-        if (pidx < 0) {
-            log.warning("Requested to record damage by non-player!? " +
-                        "[user=" + user.who() + ", damage=" + damage + "].");
-            return;
-        }
-
         int total = 0;
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             int ddone = damage.get(ii);
             if (ddone <= 0) {
                 continue;
             }
+            // deduct 150% if you shoot yourself
             if (ii == pidx) {
-                // make them lose 150%
                 ddone = -3 * ddone / 2;
-                // report the boochage
-                String msg = MessageBundle.tcompose(
-                    "m.self_damage", user.username);
-                SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
             }
             total += ddone;
         }

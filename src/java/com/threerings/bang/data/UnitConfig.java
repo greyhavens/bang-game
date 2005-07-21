@@ -72,6 +72,10 @@ public class UnitConfig
     /** The maximum distance this unit can shoot. */
     public int maxFireDistance;
 
+    /** The percentage at which this unit deals a returning fire shot to
+     * the shooting unit when fired upon. */
+    public int returnFire;
+
     /** This unit's base damage. */
     public int damage;
 
@@ -210,6 +214,8 @@ public class UnitConfig
             BangUtil.getIntProperty(type, props, "min_fire", 1);
         config.maxFireDistance =
             BangUtil.getIntProperty(type, props, "max_fire", 1);
+        config.returnFire =
+            BangUtil.getIntProperty(type, props, "return_fire", 0);
         config.damage = BangUtil.getIntProperty(type, props, "damage", 25);
 
         config.dupeType = props.getProperty("dupe_type", type);

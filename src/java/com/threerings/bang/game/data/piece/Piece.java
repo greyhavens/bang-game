@@ -15,6 +15,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
@@ -358,6 +359,28 @@ public abstract class Piece extends SimpleStreamableObject
         shot.targetId = target.pieceId;
         shot.damage = hurt;
         return shot;
+    }
+
+    /**
+     * When a unit shoots another piece, the unit may also do collateral
+     * damage to nearby units. This method should return shot effects
+     * indicating such damage.
+     */
+    public ShotEffect[] collateralDamage (BangObject bangobj, Piece target)
+    {
+        return null;
+    }
+
+    /**
+     * If a target returns fire when shot, this method should return the
+     * appropriate shot effect to enforce that.
+     *
+     * @param damage the amount of damage done by the initial shooter (the
+     * piece may or may not account for this when returning fire).
+     */
+    public ShotEffect returnFire (Piece shooter, int damage)
+    {
+        return null;
     }
 
     /**
