@@ -11,7 +11,7 @@ server_name = bang
 #
 # The port on which the server listens for client connections.
 
-server_port = 4007
+# server_ports = 47624, 443
 
 #
 # The directory from which the server is run. Used to put log files in the

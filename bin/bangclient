@@ -5,5 +5,5 @@ if [ "$1" == "-test" ]; then
     TEST="-Dtest=true";
     shift
 fi
-`dirname $0`/runjava -- -Dno_log_redir=true $TEST $CLASS localhost 4007 $*
+`dirname $0`/runjava -- -Dno_log_redir=true $TEST $CLASS localhost 47624 $*
 xset r on

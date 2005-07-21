@@ -130,9 +130,9 @@ public class BangServer extends CrowdServer
     }
 
     @Override // documentation inherited
-    protected int getListenPort ()
+    protected int[] getListenPorts ()
     {
-        return ServerConfig.serverPort;
+        return ServerConfig.serverPorts;
     }
 
     public static void main (String[] args)

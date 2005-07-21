@@ -189,11 +189,29 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Returns the number of tiles away that this piece can fire.
+     * Returns the minimum number of tiles away that this piece can fire.
      */
-    public int getFireDistance ()
+    public int getMinFireDistance ()
     {
         return 1;
+    }
+
+    /**
+     * Returns the maximum number of tiles away that this piece can fire.
+     */
+    public int getMaxFireDistance ()
+    {
+        return 1;
+    }
+
+    /**
+     * Returns true if the specified target is in range of attack of this
+     * piece.
+     */
+    public boolean targetInRange (int x, int y)
+    {
+        int dist = getDistance(x, y);
+        return (dist >= getMinFireDistance() && dist <= getMaxFireDistance());
     }
 
     /**
@@ -297,10 +315,12 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public Point computeShotLocation (Piece target, PointSet moveSet)
     {
-        int fdist = getFireDistance(), moves = Integer.MAX_VALUE;
+        int minfdist = getMinFireDistance(), maxfdist = getMaxFireDistance();
+        int moves = Integer.MAX_VALUE;
 
         // first check if we can fire without moving
-        if (target.getDistance(x, y) <= fdist) {
+        int tdist = target.getDistance(x, y);
+        if (tdist >= minfdist && tdist <= maxfdist) {
             return new Point(x, y);
         }
 
@@ -309,7 +329,8 @@ public abstract class Piece extends SimpleStreamableObject
         for (int ii = 0, ll = moveSet.size(); ii < ll; ii++) {
             int px = moveSet.getX(ii), py = moveSet.getY(ii);
             int dist = getDistance(px, py);
-            if (dist < moves && target.getDistance(px, py) <= fdist) {
+            tdist = target.getDistance(px, py);
+            if (dist < moves && tdist >= minfdist && tdist <= maxfdist) {
                 moves = dist;
                 if (spot == null) {
                     spot = new Point();
@@ -451,7 +472,10 @@ public abstract class Piece extends SimpleStreamableObject
             ("" + orientation);
     }
 
-    /** Returns true if we can and should fire upon this target. */
+    /**
+     * Returns true if we can and should fire upon this target. Note that
+     * this does not check to see whether the target is in range.
+     */
     public boolean validTarget (Piece target)
     {
         return (target instanceof Unit && target.owner != -1 &&

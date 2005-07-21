@@ -66,8 +66,11 @@ public class UnitConfig
     /** The distance this unit can move. */
     public int moveDistance;
 
-    /** The distance this unit can shoot. */
-    public int fireDistance;
+    /** The minimum distance this unit can shoot. */
+    public int minFireDistance;
+
+    /** The maximum distance this unit can shoot. */
+    public int maxFireDistance;
 
     /** This unit's base damage. */
     public int damage;
@@ -203,7 +206,10 @@ public class UnitConfig
 
         config.sightDistance = BangUtil.getIntProperty(type, props, "sight", 5);
         config.moveDistance = BangUtil.getIntProperty(type, props, "move", 1);
-        config.fireDistance = BangUtil.getIntProperty(type, props, "fire", 1);
+        config.minFireDistance =
+            BangUtil.getIntProperty(type, props, "min_fire", 1);
+        config.maxFireDistance =
+            BangUtil.getIntProperty(type, props, "max_fire", 1);
         config.damage = BangUtil.getIntProperty(type, props, "damage", 25);
 
         config.dupeType = props.getProperty("dupe_type", type);

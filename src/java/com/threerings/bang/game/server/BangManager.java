@@ -148,17 +148,13 @@ public class BangManager extends GameManager
             // if they specified a target, shoot at it
             if (target != null) {
                 // make sure the target is valid
-                if (!unit.validTarget(target)) {
-                    log.info("Target not valid " + target + ".");
+                if (!munit.validTarget(target)) {
                     // target already dead or something
-                    return;
+                    throw new InvocationException(TARGET_NO_LONGER_VALID);
                 }
 
                 // make sure the target is still within range
-                _attacks.clear();
-                _bangobj.board.computeAttacks(
-                    unit.getFireDistance(), x, y, _attacks);
-                if (!_attacks.contains(target.x, target.y)) {
+                if (!munit.targetInRange(target.x, target.y)) {
                     throw new InvocationException(TARGET_MOVED);
                 }
 
@@ -551,7 +547,9 @@ public class BangManager extends GameManager
                 // give them a moment to stare at the board then end the round
                 new Interval(PresentsServer.omgr) {
                     public void expired () {
-                        endRound();
+                        if (_bangobj.isInPlay()) {
+                            endRound();
+                        }
                     }
                 }.schedule(5000L);
             }

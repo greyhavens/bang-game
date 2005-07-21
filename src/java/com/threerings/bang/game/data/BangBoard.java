@@ -321,7 +321,10 @@ public class BangBoard extends SimpleStreamableObject
 
     /**
      * Computes the supplied piece's move sets based on its current
-     * location and the state of the board.
+     * location and the state of the board. A set of attackable locations
+     * is also computed, but note that these do not take into account a
+     * piece's minimum fire distance. Targets made unfirable due to being
+     * too close must be pruned by the caller.
      */
     public void computeMoves (Piece piece, PointSet moves, PointSet attacks)
     {
@@ -347,7 +350,7 @@ public class BangBoard extends SimpleStreamableObject
         // if the attack set is non-null, compute our attacks as well
         if (attacks != null) {
             PointSet set = moves;
-            remain = (byte)piece.getFireDistance();
+            remain = (byte)piece.getMaxFireDistance();
             considerFiring(attacks, piece.x, piece.y, remain, false);
             for (int ii = 0, ll = moves.size(); ii < ll; ii++) {
                 int mx = moves.getX(ii), my = moves.getY(ii);
@@ -360,10 +363,10 @@ public class BangBoard extends SimpleStreamableObject
      * Computes a set of possible attacks given the specified fire
      * distance.
      */
-    public void computeAttacks (
-        int fireDistance, int px, int py, PointSet attacks)
+    public void computeAttacks (int minFireDistance, int maxFireDistance,
+                                int px, int py, PointSet attacks)
     {
-        for (int dd = 1; dd <= fireDistance; dd++) {
+        for (int dd = minFireDistance; dd <= maxFireDistance; dd++) {
             for (int xx = px, yy = py - dd; yy < py; xx++, yy++) {
                 if (_bbounds.contains(xx, yy)) {
                     attacks.add(xx, yy);

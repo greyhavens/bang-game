@@ -94,7 +94,7 @@ public class BangBoardView extends BoardView
         _card = card;
         _attackSet.clear();
         _bangobj.board.computeAttacks(
-            _card.getRadius(), _mouse.x, _mouse.y, _attackSet);
+            0, _card.getRadius(), _mouse.x, _mouse.y, _attackSet);
         targetTiles(_attackSet);
         log.info("Placing " + _card);
     }
@@ -343,12 +343,18 @@ public class BangBoardView extends BoardView
         // clear any previous attack set
         clearAttackSet();
 
+        // reduce the highlighted move tiles to just the selected tile
+        PointSet moves = new PointSet();
+        moves.add(tx, ty);
+        highlightTiles(moves, _selection.isFlyer());
+
         // display our potential attacks
         PointSet attacks = new PointSet();
-        _bangobj.board.computeAttacks(
-            _selection.getFireDistance(), tx, ty, attacks);
+        _bangobj.board.computeAttacks(_selection.getMinFireDistance(),
+                                      _selection.getMaxFireDistance(),
+                                      tx, ty, attacks);
         _attackSet.clear();
-        pruneAttackSet(attacks, _attackSet);
+        pruneAttackSet(attacks, moves, _attackSet);
 
         // if there are no valid attacks, assume they're just moving (but
         // do nothing if they're not even moving)
@@ -418,14 +424,16 @@ public class BangBoardView extends BoardView
     }
 
     /**
-     * Adds all positions in the source set that reference a valid attack
-     * target to the supplied destination set.
+     * Scans all pieces that are in the specified range set and those to
+     * which we can compute a valid firing location adds to the supplied
+     * destination set, and marks their sprite as being targeted as well.
      */
-    protected void pruneAttackSet (PointSet source, PointSet dest)
+    protected void pruneAttackSet (PointSet range, PointSet moves, PointSet dest)
     {
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (_selection.validTarget(p) && source.contains(p.x, p.y)) {
+            if (range.contains(p.x, p.y) && _selection.validTarget(p) && 
+                _selection.computeShotLocation(p, moves) != null) {
                 getUnitSprite(p).setTargeted(true);
                 dest.add(p.x, p.y);
             }
@@ -485,8 +493,8 @@ public class BangBoardView extends BoardView
             PointSet attacks = new PointSet();
             _bangobj.board.computeMoves(piece, _moveSet, attacks);
             _attackSet.clear();
-            pruneAttackSet(_moveSet, _attackSet);
-            pruneAttackSet(attacks, _attackSet);
+            pruneAttackSet(_moveSet, _moveSet, _attackSet);
+            pruneAttackSet(attacks, _moveSet, _attackSet);
             highlightTiles(_moveSet, piece.isFlyer());
         }
     }
@@ -539,7 +547,7 @@ public class BangBoardView extends BoardView
             clearHighlights();
             _attackSet.clear();
             _bangobj.board.computeAttacks(
-                _card.getRadius(), tx, ty, _attackSet);
+                0, _card.getRadius(), tx, ty, _attackSet);
             targetTiles(_attackSet);
         }
     }

@@ -21,6 +21,11 @@ public interface GameCodes extends InvocationCodes
      * moved out of range. */
     public static final String TARGET_MOVED = "m.target_moved";
 
+    /** An error message delivered when a shot fails due the target having
+     * become invalid (by dying for example). */
+    public static final String TARGET_NO_LONGER_VALID =
+        "m.target_no_longer_valid";
+
     /** Defines the minimum team size (not counting one's big shot). */
     public static final int MIN_TEAM_SIZE = 2;
 

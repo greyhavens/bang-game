@@ -164,10 +164,17 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public int getFireDistance ()
+    public int getMinFireDistance ()
     {
-        return (influence == null) ? _config.fireDistance :
-            influence.adjustFireDistance(_config.fireDistance);
+        return (influence == null) ? _config.minFireDistance :
+            influence.adjustMinFireDistance(_config.minFireDistance);
+    }
+
+    @Override // documentation inherited
+    public int getMaxFireDistance ()
+    {
+        return (influence == null) ? _config.maxFireDistance :
+            influence.adjustMaxFireDistance(_config.maxFireDistance);
     }
 
     @Override // documentation inherited

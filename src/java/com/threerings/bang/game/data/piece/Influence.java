@@ -37,9 +37,19 @@ public abstract class Influence extends SimpleStreamableObject
     }
 
     /**
-     * Adjusts a piece's fire distance. The default is no adjustment.
+     * Adjusts a piece's minimum fire distance. The default is no
+     * adjustment.
      */
-    public int adjustFireDistance (int fireDistance)
+    public int adjustMinFireDistance (int fireDistance)
+    {
+        return fireDistance;
+    }
+
+    /**
+     * Adjusts a piece's maximum fire distance. The default is no
+     * adjustment.
+     */
+    public int adjustMaxFireDistance (int fireDistance)
     {
         return fireDistance;
     }

@@ -29,8 +29,8 @@ public class ServerConfig
     /** The root directory of the server installation. */
     public static File serverRoot;
 
-    /** The port on which we are listening for client connections. */
-    public static int serverPort;
+    /** The ports on which we are listening for client connections. */
+    public static int[] serverPorts;
 
     /** Provides access to our config properties. <em>Do not</em> modify
      * these properties! */
@@ -56,7 +56,8 @@ public class ServerConfig
         // fill in our standard properties
         serverName = config.getValue("server_name", "bang");
         serverRoot = new File(config.getValue("server_root", "/tmp"));
-        serverPort = config.getValue("server_port", Client.DEFAULT_SERVER_PORT);
+        serverPorts = config.getValue(
+            "server_ports", new int[] { Client.DEFAULT_SERVER_PORT });
     }
 
     /**
