@@ -440,7 +440,7 @@ public class BangManager extends GameManager
 
         // let the scenario know that we're about to start
         try {
-            _scenario.init(_bangobj, _markers);
+            _scenario.init(_bangobj, _markers, _bonusSpots);
         } catch (InvocationException ie) {
             log.warning("Scenario initialization failed [game=" + where() +
                         ", error=" + ie.getMessage() + "].");

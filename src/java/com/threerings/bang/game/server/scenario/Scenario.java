@@ -11,6 +11,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 
@@ -26,7 +27,8 @@ public abstract class Scenario
      * indicating why the scenario is booched, which will be displayed to
      * the players and the game will be cancelled.
      */
-    public void init (BangObject bangobj, ArrayList<Piece> markers)
+    public void init (BangObject bangobj, ArrayList<Piece> markers,
+                      PointSet bonusSpots)
         throws InvocationException
     {
         // clear our respawn queue

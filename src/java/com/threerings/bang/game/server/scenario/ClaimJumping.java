@@ -17,6 +17,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
@@ -45,13 +46,14 @@ public class ClaimJumping extends Scenario
     implements GameCodes
 {
     /** The number of nuggets in each claim. TODO: put in BangConfig. */
-    public static final int NUGGET_COUNT = 3;
+    public static final int NUGGET_COUNT = 2;
 
     @Override // documentation inherited
-    public void init (BangObject bangobj, ArrayList<Piece> markers)
+    public void init (BangObject bangobj, ArrayList<Piece> markers,
+                      PointSet bonusSpots)
         throws InvocationException
     {
-        super.init(bangobj, markers);
+        super.init(bangobj, markers, bonusSpots);
 
         _claims = new ArrayList<Claim>();
         _gameOverTick = -1;
@@ -80,6 +82,11 @@ public class ClaimJumping extends Scenario
                     assigned.add(midx);
                 }
             }
+        }
+
+        // start with a nugget on each of the bonus spots
+        for (int ii = 0; ii < bonusSpots.size(); ii++) {
+            dropNugget(bangobj, bonusSpots.getX(ii), bonusSpots.getY(ii));
         }
     }
 
@@ -147,11 +154,7 @@ public class ClaimJumping extends Scenario
                 log.info("Can't find anywhere to drop nugget " +
                          "[piece=" + piece + "].");
             } else {
-                Bonus drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
-                drop.assignPieceId();
-                drop.position(spot.x, spot.y);
-                bangobj.board.updateShadow(null, drop);
-                bangobj.addToPieces(drop);
+                dropNugget(bangobj, spot.x, spot.y);
             }
         }
     }
@@ -223,6 +226,18 @@ public class ClaimJumping extends Scenario
         }
 
         return false;
+    }
+
+    /**
+     * Drops a nugget at the specified location.
+     */
+    protected void dropNugget (BangObject bangobj, int x, int y)
+    {
+        Bonus drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
+        drop.assignPieceId();
+        drop.position(x, y);
+        bangobj.board.updateShadow(null, drop);
+        bangobj.addToPieces(drop);
     }
 
     protected int getNearestMarker (Claim claim, ArrayList<Piece> markers)
