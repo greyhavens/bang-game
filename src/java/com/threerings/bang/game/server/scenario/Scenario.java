@@ -70,6 +70,9 @@ public abstract class Scenario
             Unit unit = _respawns.remove(0);
             log.info("Respawning " + unit + ".");
 
+            // reassign the unit to its original owner
+            unit.owner = _startingOwners.get(unit.pieceId);
+
             // figure out where to put this guy
             Point spot = _startSpots[unit.owner];
             Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
@@ -86,7 +89,6 @@ public abstract class Scenario
             unit.damage = 0;
             unit.influence = null;
             unit.setRespawnTick((short)0);
-            unit.owner = _startingOwners.get(unit.pieceId);
 
             if (bangobj.pieces.containsKey(unit.getKey())) {
                 // clear the shadow at its old location
