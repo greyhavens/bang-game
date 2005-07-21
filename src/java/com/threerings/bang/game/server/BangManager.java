@@ -163,9 +163,17 @@ public class BangManager extends GameManager
                 ShotEffect effect = shooter.shoot(target);
                 effect.prepare(_bangobj, _damage);
                 _bangobj.setEffect(effect);
-                recordDamage(munit.owner, _damage);
+                recordDamage(shooter.owner, _damage);
 
                 // effect any collateral damage
+                ShotEffect[] ceffects =
+                    shooter.collateralDamage(_bangobj, target);
+                int ccount = (ceffects == null) ? 0 : ceffects.length;
+                for (int ii = 0; ii < ccount; ii++) {
+                    ceffects[ii].prepare(_bangobj, _damage);
+                    _bangobj.setEffect(ceffects[ii]);
+                    recordDamage(shooter.owner, _damage);
+                }
 
                 // allow the target to return fire
                 effect = target.returnFire(shooter, effect.damage);
@@ -331,7 +339,7 @@ public class BangManager extends GameManager
             if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
                 String[] units = new String[] {
-                    "dirigible", "steamgunman", "gunslinger" };
+                    "dirigible", "steamgunman", "sharpshooter" };
                 purchaseUnits(ii, units);
             }
         }

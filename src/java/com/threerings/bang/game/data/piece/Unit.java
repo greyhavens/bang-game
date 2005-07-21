@@ -134,12 +134,6 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public ShotEffect[] collateralDamage (BangObject bangobj, Piece target)
-    {
-        return null;
-    }
-
-    @Override // documentation inherited
     public ShotEffect returnFire (Piece shooter, int damage)
     {
         ShotEffect shot = null;
