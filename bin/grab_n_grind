@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# $Id: grab_n_grind.sh 789 2005-02-19 21:47:29Z mdb $
+#
+# Downloads the logs from the web servers and grinds 'em.
+
+BIN=`dirname $0`
+# first we download 'em
+/export/tools/bin/slurp_logs -q $BIN/../logs bang bang
+# then we grind 'em
+$BIN/grind_logs > /dev/null
