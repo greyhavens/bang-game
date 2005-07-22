@@ -579,7 +579,7 @@ public class BangManager extends GameManager
                 // give them a moment to stare at the board then end the round
                 new Interval(PresentsServer.omgr) {
                     public void expired () {
-                        if (_bangobj.isInPlay()) {
+                        if (_bangobj.isActive()) {
                             endRound();
                         }
                     }
