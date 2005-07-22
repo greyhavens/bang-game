@@ -143,21 +143,25 @@ public class ClaimJumping extends Scenario
     }
 
     @Override // documentation inherited
-    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    public boolean pieceWasKilled (BangObject bangobj, Piece piece)
     {
-        super.pieceWasKilled(bangobj, piece);
+        boolean update = super.pieceWasKilled(bangobj, piece);
 
         // if this piece is benuggeted, force it to drop its nugget
         if (piece instanceof Unit && ((Unit)piece).benuggeted) {
-            // find a place to drop our nugget
             Point spot = bangobj.board.getOccupiableSpot(piece.x, piece.y, 3);
             if (spot == null) {
                 log.info("Can't find anywhere to drop nugget " +
                          "[piece=" + piece + "].");
             } else {
+                Unit unit = (Unit)piece;
+                unit.benuggeted = false;
+                update = true;
                 dropNugget(bangobj, spot.x, spot.y);
             }
         }
+
+        return update;
     }
 
     @Override // documentation inherited

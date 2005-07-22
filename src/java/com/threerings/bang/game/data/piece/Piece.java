@@ -363,10 +363,11 @@ public abstract class Piece extends SimpleStreamableObject
 
     /**
      * When a unit shoots another piece, the unit may also do collateral
-     * damage to nearby units. This method should return shot effects
+     * damage to nearby units. This method should return effects
      * indicating such damage.
      */
-    public ShotEffect[] collateralDamage (BangObject bangobj, Piece target)
+    public Effect[] collateralDamage (
+        BangObject bangobj, Piece target, int damage)
     {
         return null;
     }

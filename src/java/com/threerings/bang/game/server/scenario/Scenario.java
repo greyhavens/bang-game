@@ -120,12 +120,16 @@ public abstract class Scenario
     /**
      * Called when a piece was killed. The scenario can choose to respawn
      * the piece later, and do whatever else is appropriate.
+     *
+     * @return true if the piece should be updated as a result of changes
+     * made by the scenario.
      */
-    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    public boolean pieceWasKilled (BangObject bangobj, Piece piece)
     {
         if (respawnPieces()) {
             maybeQueueForRespawn(piece, bangobj.tick);
         }
+        return false;
     }
 
     /**

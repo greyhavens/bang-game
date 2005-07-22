@@ -166,8 +166,8 @@ public class BangManager extends GameManager
                 recordDamage(shooter.owner, _damage);
 
                 // effect any collateral damage
-                ShotEffect[] ceffects =
-                    shooter.collateralDamage(_bangobj, target);
+                Effect[] ceffects =
+                    shooter.collateralDamage(_bangobj, target, effect.damage);
                 int ccount = (ceffects == null) ? 0 : ceffects.length;
                 for (int ii = 0; ii < ccount; ii++) {
                     ceffects[ii].prepare(_bangobj, _damage);
@@ -539,16 +539,15 @@ public class BangManager extends GameManager
             if (p.tick(tick)) {
                 boolean removed = false;
                 if (!p.isAlive()) {
+                    p.wasKilled(tick);
+                    _scenario.pieceWasKilled(_bangobj, p);
                     if (p.removeWhenDead()) {
                         _bangobj.removeFromPieces(p.getKey());
                         _bangobj.board.updateShadow(p, null);
-                        removed = true;
                     }
-                    _scenario.pieceWasKilled(_bangobj, p);
-                    p.wasKilled(tick);
                 }
 
-                if (!removed) {
+                if (!p.removeWhenDead()) {
                     // the piece changed in some way so update it
                     _bangobj.updatePieces(p);
                 }
@@ -972,8 +971,12 @@ public class BangManager extends GameManager
 
         public void pieceAffected (Piece piece, String effect) {
             if (!piece.isAlive()) {
-                _scenario.pieceWasKilled(_bangobj, piece);
                 piece.wasKilled(_bangobj.tick);
+                // if the scenario modifies the killed piece, broadcast
+                // those modifications to the clients
+                if (_scenario.pieceWasKilled(_bangobj, piece)) {
+                    _bangobj.updatePieces(piece);
+                }
             }
         }
 
@@ -1022,7 +1025,7 @@ public class BangManager extends GameManager
     /** A list of our stock boards. */
     protected static final String[][] BOARDS = {
         { "default2", }, // 2 player boards
-        { "default3", }, // 3 player boards
+        { "default3", "tripleclaim", "tripleflight" }, // 3 player boards
         { "default4", }, // 4 player boards
     };
 

@@ -28,7 +28,7 @@ public class Unit extends Piece
     public Influence influence;
 
     /** Indicates whether this unit is carrying a nugget. */
-    public boolean benuggeted;
+    public boolean benuggeted = true;
 
     /**
      * Instantiates a unit of the specified type.
@@ -237,13 +237,6 @@ public class Unit extends Piece
             cost = influence.adjustTraversalCost(terrain, cost);
         }
         return cost;
-    }
-
-    @Override // documentation inherited
-    public void wasKilled (short tick)
-    {
-        super.wasKilled(tick);
-        benuggeted = false;
     }
 
     /**

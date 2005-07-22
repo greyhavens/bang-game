@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
 /**
@@ -15,10 +16,11 @@ import com.threerings.bang.game.data.effect.ShotEffect;
 public class Shotgunner extends Unit
 {
     @Override // documentation inherited
-    public ShotEffect[] collateralDamage (BangObject bangobj, Piece target)
+    public Effect[] collateralDamage (
+        BangObject bangobj, Piece target, int damage)
     {
         // we damage pieces to the left and right of the one we're shooting
-        ArrayList<ShotEffect> shots = new ArrayList<ShotEffect>();
+        ArrayList<Effect> shots = new ArrayList<Effect>();
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (target.getDistance(p) == 1 && validTarget(p) &&
@@ -31,6 +33,6 @@ public class Shotgunner extends Unit
             }
         }
         return (shots.size() == 0) ? null :
-            shots.toArray(new ShotEffect[shots.size()]);
+            shots.toArray(new Effect[shots.size()]);
     }
 }
