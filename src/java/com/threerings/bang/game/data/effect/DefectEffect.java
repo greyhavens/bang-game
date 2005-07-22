@@ -58,7 +58,7 @@ public class DefectEffect extends Effect
             return;
         }
 
-        // now steal a random non-bigshot unit from this player
+        // now steal a random non-bigshot, non-nuggeted unit from this player
         Piece[] pieces = bangobj.getPieceArray();
         ArrayUtil.shuffle(pieces);
         for (int ii = 0; ii < pieces.length; ii++) {
@@ -66,7 +66,8 @@ public class DefectEffect extends Effect
                 continue;
             }
             Unit unit = (Unit)pieces[ii];
-            if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT ||
+                unit.benuggeted) {
                 continue;
             }
             pieceIds = new int[] { unit.pieceId };
