@@ -79,6 +79,10 @@ public class UnitConfig
     /** This unit's base damage. */
     public int damage;
 
+    /** The number of ticks into the past to record as this piece's first
+     * move, thereby making them available for play sooner. */
+    public int initiative;
+
     /** The type of unit this unit duplicates into. */
     public String dupeType;
 
@@ -217,6 +221,9 @@ public class UnitConfig
         config.returnFire =
             BangUtil.getIntProperty(type, props, "return_fire", 0);
         config.damage = BangUtil.getIntProperty(type, props, "damage", 25);
+
+        config.initiative =
+            BangUtil.getIntProperty(type, props, "initiative", 0);
 
         config.dupeType = props.getProperty("dupe_type", type);
 

@@ -122,6 +122,15 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public void init ()
+    {
+        super.init();
+
+        // configure our last acted tick according to our initiative
+        lastActed = (short)(-1 * _config.initiative);
+    }
+
+    @Override // documentation inherited
     public boolean canActivateBonus (Bonus bonus)
     {
         return bonus.getConfig().type.equals("nugget") ? !benuggeted : true;

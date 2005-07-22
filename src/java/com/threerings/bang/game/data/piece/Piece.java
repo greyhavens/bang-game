@@ -263,9 +263,6 @@ public abstract class Piece extends SimpleStreamableObject
     {
         // start with zero damage
         damage = 0;
-
-        // start with a random last moved tick
-        lastActed = (short)(-1 * RandomUtil.getInt(getTicksPerMove()+1));
     }
 
     /**
