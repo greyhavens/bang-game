@@ -143,7 +143,7 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public ShotEffect returnFire (Piece shooter, int damage)
+    public ShotEffect returnFire (BangObject bangobj, Piece shooter, int damage)
     {
         ShotEffect shot = null;
         int odamage = this.damage;
@@ -152,7 +152,7 @@ public class Unit extends Piece
             // temporarily account for the shooter's damage when
             // calculating our shot; it will be applied properly later
             this.damage += damage;
-            shot = shoot(shooter);
+            shot = shoot(bangobj, shooter);
             this.damage -= damage;
             // scale the damage down
             shot.damage = (_config.returnFire * shot.damage) / 100;

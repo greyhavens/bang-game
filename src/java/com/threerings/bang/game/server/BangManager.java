@@ -139,7 +139,7 @@ public class BangManager extends GameManager
 
             // if they specified a non-NOOP move, execute it
             if (x != unit.x || y != unit.y) {
-                munit = moveUnit(user, unit, x, y);
+                munit = moveUnit(unit, x, y);
                 if (munit == null) {
                     throw new InvocationException(MOVE_BLOCKED);
                 }
@@ -160,7 +160,7 @@ public class BangManager extends GameManager
                 }
 
                 // effect the initial shot
-                ShotEffect effect = shooter.shoot(target);
+                ShotEffect effect = shooter.shoot(_bangobj, target);
                 effect.prepare(_bangobj, _damage);
                 _bangobj.setEffect(effect);
                 recordDamage(shooter.owner, _damage);
@@ -176,7 +176,7 @@ public class BangManager extends GameManager
                 }
 
                 // allow the target to return fire
-                effect = target.returnFire(shooter, effect.damage);
+                effect = target.returnFire(_bangobj, shooter, effect.damage);
                 if (effect != null) {
                     effect.prepare(_bangobj, _damage);
                     _bangobj.setEffect(effect);
@@ -364,7 +364,7 @@ public class BangManager extends GameManager
             // if they failed to select a big shot (or are an AI) give
             // them a default
             if (item == null) {
-                item = new BigShotItem(-1, "cavalry");
+                item = new BigShotItem(-1, "codger");
             }
 
             // configure their big shot selection
@@ -554,6 +554,19 @@ public class BangManager extends GameManager
             }
         }
 
+        // move our AI pieces randomly
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii] instanceof Unit && pieces[ii].isAlive() &&
+                isAI(pieces[ii].owner) &&
+                pieces[ii].ticksUntilMovable(tick) == 0) {
+                Unit unit = (Unit)pieces[ii];
+                _moves.clear();
+                _bangobj.board.computeMoves(unit, _moves, null);
+                int midx = RandomUtil.getInt(_moves.size());
+                moveUnit(unit, _moves.getX(midx), _moves.getY(midx));
+            }
+        }
+
         // tick the scenario and determine whether we should end the game
         if (_scenario.tick(_bangobj, tick)) {
             log.info("round " + _bangobj.roundId +
@@ -617,7 +630,7 @@ public class BangManager extends GameManager
      * @return the cloned and moved piece if the piece was moved, null if
      * it was not movable for some reason.
      */
-    protected Unit moveUnit (BangUserObject user, Unit unit, int x, int y)
+    protected Unit moveUnit (Unit unit, int x, int y)
     {
         // make sure we are alive, and are ready to move
         int steps = Math.abs(unit.x-x) + Math.abs(unit.y-y);

@@ -334,7 +334,7 @@ public abstract class Piece extends SimpleStreamableObject
     /**
      * Affects the target piece with damage.
      */
-    public ShotEffect shoot (Piece target)
+    public ShotEffect shoot (BangObject bangobj, Piece target)
     {
         int hurt = computeDamage(target);
         // scale the damage by our own damage level; but always fire as if
@@ -363,7 +363,7 @@ public abstract class Piece extends SimpleStreamableObject
      * @param damage the amount of damage done by the initial shooter (the
      * piece may or may not account for this when returning fire).
      */
-    public ShotEffect returnFire (Piece shooter, int damage)
+    public ShotEffect returnFire (BangObject bagnobj, Piece shooter, int damage)
     {
         return null;
     }

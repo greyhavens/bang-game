@@ -27,7 +27,7 @@ public class Shotgunner extends Unit
                 // if it's not in line with us but is in line with the
                 // target, then it's properly perpendicular
                 (p.x != x && p.y != y) && (p.x == target.x || p.y == target.y)) {
-                ShotEffect shot = shoot(p);
+                ShotEffect shot = shoot(bangobj, p);
                 shot.damage /= 2; // our collateral damage is 50%
                 shots.add(shot);
             }
