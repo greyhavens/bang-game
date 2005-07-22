@@ -13,7 +13,11 @@ import com.threerings.bang.game.data.piece.Piece;
  */
 public class AreaRepairEffect extends AreaEffect
 {
-    public int repair;
+    /** The base amount by which to repair pieces. */
+    public int baseRepair;
+
+    /** The updated damage for the affected pieces. */
+    public int[] newDamage;
 
     public AreaRepairEffect ()
     {
@@ -22,24 +26,34 @@ public class AreaRepairEffect extends AreaEffect
     public AreaRepairEffect (int repair, int radius, int x, int y)
     {
         super(radius, x, y);
-        this.repair = repair;
+        baseRepair = repair;
     }
 
     @Override // documentation inherited
-    protected void noteAffected (Piece piece, IntIntMap dammap)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
+    {
+        super.prepare(bangobj, dammap);
+
+        // compute the new total damage for each affected piece
+        newDamage = new int[pieces.length];
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
+            int prepair = baseRepair / target.getDistance(x, y);
+            newDamage[ii] = Math.max(0, target.damage - prepair);
+        }
+    }
+
+    @Override // documentation inherited
+    protected void noteAffected (Piece piece, IntIntMap dammap, int dist)
     {
         // NOOP
     }
 
     @Override // documentation inherited
     protected void apply (
-        BangObject bangobj, Observer obs, Piece piece, int dist)
+        BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {
-        int prepair = repair;
-        for (int dd = 0; dd < dist; dd++) {
-            prepair /= 2;
-        }
-        piece.damage = Math.max(0, piece.damage - repair);
+        piece.damage = newDamage[pidx];
         reportEffect(obs, piece, RepairEffect.REPAIRED);
     }
 }

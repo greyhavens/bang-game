@@ -22,9 +22,6 @@ public class BangConfig extends GameConfig
     /** The size of each player's team (not including their Big Shot). */
     public int teamSize = 4;
 
-    /** The amount of with which to start the game. */
-    public int startingCash;
-
     /** Whether or not fog of war is activated. */
     public boolean fog = false;
 

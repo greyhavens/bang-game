@@ -16,6 +16,7 @@ public class RepairEffect extends Effect
     /** The identifier for the type of effect that we produce. */
     public static final String REPAIRED = "repaired";
 
+    /** The identifier of the piece to be repaired. */
     public int pieceId;
 
     @Override // documentation inherited

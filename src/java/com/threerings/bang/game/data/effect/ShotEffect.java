@@ -18,11 +18,31 @@ public class ShotEffect extends Effect
     /** The identifier for the type of effect that we produce. */
     public static final String DAMAGED = "bang";
 
+    /** The piece id of the shooter. */
     public int shooterId;
 
+    /** The piece id of the target. */
     public int targetId;
 
+    /** The new total damage to assign to the target. */
     public int damage;
+
+    /** Constructor used when unserializing. */
+    public ShotEffect ()
+    {
+    }
+
+    /**
+     * Constructor used when creating an effect.
+     *
+     * @param damage the amount by which to increase the target's damage.
+     */
+    public ShotEffect (Piece shooter, Piece target, int damage)
+    {
+        shooterId = shooter.pieceId;
+        targetId = target.pieceId;
+        this.damage = Math.min(100, target.damage + damage);
+    }
 
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
@@ -31,7 +51,7 @@ public class ShotEffect extends Effect
         if (target == null) {
             log.warning("Missing target during apply!? [id=" + targetId + "].");
         } else {
-            dammap.increment(target.owner, Math.min(damage, 100-target.damage));
+            dammap.increment(target.owner, damage - target.damage);
         }
     }
 
@@ -50,14 +70,15 @@ public class ShotEffect extends Effect
      * Damages the supplied piece by the specified amount, properly
      * removing it from the board if appropriate and reporting the
      * specified effect.
+     *
+     * @param damage the new total damage to assign to the damaged piece.
      */
     public static void damage (BangObject bangobj, Observer obs, Piece target,
                                int damage, String effect)
     {
         // effect the actual damage
-        target.damage = Math.min(100, target.damage + damage);
-        log.info("Damaging " + target.info() + " by " + damage +
-                 " points, resulting in " + target.damage + ".");
+        log.info("Damaging " + target.info() + " -> " + damage + ".");
+        target.damage = damage;
 
         // report that the target was affected
         reportEffect(obs, target, effect);

@@ -16,7 +16,11 @@ public class AreaDamageEffect extends AreaEffect
     /** The identifier for the type of effect that we produce. */
     public static final String MISSILED = "howdy";
 
-    public int damage;
+    /** The base damage for this effect. */
+    public int baseDamage;
+
+    /** The updated damage for the affected pieces. */
+    public int[] newDamage;
 
     public AreaDamageEffect ()
     {
@@ -25,23 +29,34 @@ public class AreaDamageEffect extends AreaEffect
     public AreaDamageEffect (int damage, int radius, int x, int y)
     {
         super(radius, x, y);
-        this.damage = damage;
+        this.baseDamage = damage;
     }
 
     @Override // documentation inherited
-    protected void noteAffected (Piece piece, IntIntMap dammap)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
+        // we already computed the damage for each piece in noteAffected()
+        // so we can just look it up again here
+        newDamage = new int[pieces.length];
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
+            newDamage[ii] = target.damage + dammap.get(pieces[ii]);
+        }
+    }
+
+    @Override // documentation inherited
+    protected void noteAffected (Piece piece, IntIntMap dammap, int dist)
+    {
+        int damage = baseDamage / dist;
         dammap.increment(piece.owner, Math.min(damage, 100-piece.damage));
     }
 
     @Override // documentation inherited
     protected void apply (
-        BangObject bangobj, Observer obs, Piece piece, int dist)
+        BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {
-        int pdamage = damage;
-        for (int dd = 0; dd < dist; dd++) {
-            pdamage /= 2;
-        }
-        ShotEffect.damage(bangobj, obs, piece, pdamage, MISSILED);
+        ShotEffect.damage(bangobj, obs, piece, newDamage[pidx], MISSILED);
     }
 }

@@ -41,9 +41,6 @@ public class DefectEffect extends Effect
         // of their pieces
         int maxpower = Integer.MIN_VALUE, pidx = -1;
         for (int ii = 0; ii < bangobj.pstats.length; ii++) {
-            if (ii == activator) {
-                continue;
-            }
             if (bangobj.pstats[ii].power > maxpower) {
                 pidx = ii;
                 maxpower = bangobj.pstats[ii].power;
@@ -53,6 +50,11 @@ public class DefectEffect extends Effect
             log.warning("Failed to find player for defect " +
                         "[activator=" + activator + ", pstats=" +
                         StringUtil.toString(bangobj.pstats) + "].");
+            return;
+        }
+
+        // if the activator is the most powerful player, do nothing
+        if (pidx == activator) {
             return;
         }
 

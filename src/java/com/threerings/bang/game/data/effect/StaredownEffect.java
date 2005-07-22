@@ -25,6 +25,9 @@ public class StaredownEffect extends Effect
     /** The piece that we will be affecting. */
     public int pieceId;
 
+    /** The new last acted time to assign to this piece. */
+    public short newLastActed;
+
     public StaredownEffect ()
     {
     }
@@ -42,6 +45,7 @@ public class StaredownEffect extends Effect
             Piece p = (Piece)iter.next();
             if (p.x == x && p.y == y && p.isAlive()) {
                 pieceId = p.pieceId;
+                newLastActed = (short)(p.lastActed+1);
                 break;
             }
         }
@@ -51,11 +55,9 @@ public class StaredownEffect extends Effect
     public void apply (BangObject bangobj, Observer observer)
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
-        if (piece == null) {
-            return;
+        if (piece != null) {
+            piece.lastActed = newLastActed;
+            reportEffect(observer, piece, STARED_DOWN);
         }
-
-        piece.lastActed++;
-        reportEffect(observer, piece, STARED_DOWN);
     }
 }

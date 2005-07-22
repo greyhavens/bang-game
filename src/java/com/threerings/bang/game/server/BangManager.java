@@ -264,7 +264,7 @@ public class BangManager extends GameManager
 
         // create our per-player arrays
         _bangobj.funds = new int[getPlayerSlots()];
-        Arrays.fill(_bangobj.funds, _bconfig.startingCash);
+        Arrays.fill(_bangobj.funds, isTest() ? 300 : 0);
         _bangobj.pstats = new BangObject.PlayerData[getPlayerSlots()];
         for (int ii = 0; ii < _bangobj.pstats.length; ii++) {
             _bangobj.pstats[ii] = new BangObject.PlayerData();
@@ -339,7 +339,7 @@ public class BangManager extends GameManager
             if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
                 String[] units = new String[] {
-                    "dirigible", "steamgunman", "sharpshooter" };
+                    "dirigible", "steamgunman", "gunslinger" };
                 purchaseUnits(ii, units);
             }
         }

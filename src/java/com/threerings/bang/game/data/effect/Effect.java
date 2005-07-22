@@ -60,7 +60,14 @@ public abstract class Effect extends SimpleStreamableObject
     /**
      * Applies this effect to the board and pieces. Any modifications to
      * pieces or the board should be made directly as this is executed on
-     * both the client and server.
+     * both the client and server. <em>Note:</em> effects should always
+     * compute and store the final result of their effects in {@link
+     * #prepare} and then simply apply those results in {@link #apply}
+     * rather than do any computation in {@link #apply} as we cannot rely
+     * on the values in the piece during the apply to be the same as they
+     * would be on the server when the effect is applied. The only truly
+     * safe time to inspect the condition of the affected pieces is during
+     * {@link #prepare}.
      *
      * @param observer an observer to inform of piece additions, updates
      * and removals (for display purposes on the client). This may be

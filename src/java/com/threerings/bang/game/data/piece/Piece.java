@@ -354,11 +354,7 @@ public abstract class Piece extends SimpleStreamableObject
         int undamage = Math.max(50, 100-damage);
         hurt = (hurt * undamage) / 100;
         hurt = Math.max(1, hurt); // always do at least 1 point of damage
-        ShotEffect shot = new ShotEffect();
-        shot.shooterId = pieceId;
-        shot.targetId = target.pieceId;
-        shot.damage = hurt;
-        return shot;
+        return new ShotEffect(this, target, hurt);
     }
 
     /**

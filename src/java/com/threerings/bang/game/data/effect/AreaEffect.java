@@ -45,7 +45,7 @@ public abstract class AreaEffect extends Effect
             Piece p = (Piece)iter.next();
             if (affectedPiece(p) && MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
                 affected.add(p.pieceId);
-                noteAffected(p, dammap);
+                noteAffected(p, dammap, p.getDistance(x, y));
             }
         }
         pieces = affected.toIntArray();
@@ -68,8 +68,7 @@ public abstract class AreaEffect extends Effect
                             ", effect=" + this + "].");
                 continue;
             }
-            int dist = Math.abs(target.x - x) + Math.abs(target.y - y);
-            apply(bangobj, obs, target, dist);
+            apply(bangobj, obs, ii, target, target.getDistance(x, y));
         }
     }
 
@@ -77,11 +76,12 @@ public abstract class AreaEffect extends Effect
      * Called for every piece that is noted as being affected by {@link
      * #prepare}.
      */
-    protected abstract void noteAffected (Piece piece, IntIntMap dammap);
+    protected abstract void noteAffected (
+        Piece piece, IntIntMap dammap, int dist);
 
     /**
      * Called for every piece to be affected by {@link #apply}.
      */
     protected abstract void apply (BangObject bangobj, Observer obs,
-                                   Piece piece, int dist);
+                                   int pidx, Piece piece, int dist);
 }

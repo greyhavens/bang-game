@@ -26,7 +26,7 @@ public class AreaClearEffect extends AreaEffect
     }
 
     @Override // documentation inherited
-    protected void noteAffected (Piece piece, IntIntMap dammap)
+    protected void noteAffected (Piece piece, IntIntMap dammap, int dist)
     {
         // NOOP
     }
@@ -39,7 +39,7 @@ public class AreaClearEffect extends AreaEffect
 
     @Override // documentation inherited
     protected void apply (
-        BangObject bangobj, Observer obs, Piece piece, int dist)
+        BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {
         // first report that the piece is being cleared
         reportEffect(obs, piece, CLEARED);
