@@ -28,7 +28,7 @@ public class Unit extends Piece
     public Influence influence;
 
     /** Indicates whether this unit is carrying a nugget. */
-    public boolean benuggeted = true;
+    public boolean benuggeted;
 
     /**
      * Instantiates a unit of the specified type.
