@@ -132,8 +132,7 @@ public class UnitSprite extends PieceSprite
     @Override // documentation inherited
     public boolean isSelectable ()
     {
-        return ((_piece.ticksUntilMovable(_tick) == 0) ||
-                (_piece.ticksUntilFirable(_tick) == 0));
+        return (_piece.ticksUntilMovable(_tick) == 0);
     }
 
     @Override // documentation inherited

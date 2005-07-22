@@ -86,15 +86,6 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Returns the number of ticks that must elapse before this piece can
-     * again be fired.
-     */
-    public short ticksUntilFirable (short tick)
-    {
-        return (short)Math.max(0, getTicksPerFire() - (tick-lastActed));
-    }
-
-    /**
      * Called on every tick to allow a unit to lose hit points or
      * regenerate hit points automatically.
      *
@@ -498,12 +489,6 @@ public abstract class Piece extends SimpleStreamableObject
 
     /** Returns the frequency with which this piece can move. */
     protected int getTicksPerMove ()
-    {
-        return 4;
-    }
-
-    /** Returns the frequency with which this piece can fire. */
-    protected int getTicksPerFire ()
     {
         return 4;
     }
