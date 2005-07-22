@@ -28,7 +28,7 @@ public class ShotEffect extends Effect
     public int damage;
 
     /** An adjusted last acted time to apply to the target. */
-    public short newLastActed;
+    public short newLastActed = -1;
 
     /** Constructor used when unserializing. */
     public ShotEffect ()
@@ -45,7 +45,6 @@ public class ShotEffect extends Effect
         shooterId = shooter.pieceId;
         targetId = target.pieceId;
         this.damage = Math.min(100, target.damage + damage);
-        this.newLastActed = target.lastActed;
     }
 
     @Override // documentation inherited
@@ -67,7 +66,9 @@ public class ShotEffect extends Effect
             log.warning("Missing shot target " + this + ".");
             return;
         }
-        target.lastActed = newLastActed;
+        if (newLastActed != -1) {
+            target.lastActed = newLastActed;
+        }
         damage(bangobj, obs, target, damage, DAMAGED);
     }
 
