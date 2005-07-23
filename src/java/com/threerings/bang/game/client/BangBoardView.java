@@ -106,7 +106,12 @@ public class BangBoardView extends BoardView
      */
     public void shotFailed (int targetId)
     {
-        // display something fancy or play a noise or something
+        // for now just clear the target indicator but perhaps display
+        // something fancier in the future
+        Piece piece = (Piece)_bangobj.pieces.get(targetId);
+        if (piece != null) {
+            getUnitSprite(piece).setPendingShot(false);
+        }
     }
 
     // documentation inherited from interface MouseListener
@@ -393,7 +398,7 @@ public class BangBoardView extends BoardView
             }
             // note the piece we desire to fire upon
             _action[3] = piece.pieceId;
-            getUnitSprite(piece).setPendingShot();
+            getUnitSprite(piece).setPendingShot(true);
             executeAction();
             return true;
         }
@@ -406,9 +411,9 @@ public class BangBoardView extends BoardView
                 Piece target = _bangobj.getPlayerPiece(
                     _attackSet.getX(idx), _attackSet.getY(idx));
                 if (target != null && _selection.validTarget(target, false)) {
-                    log.info("randomly targeting " + target.info());
+                    log.info("Randomly targeting " + target.info());
                     _action[3] = target.pieceId;
-                    getUnitSprite(target).setPendingShot();
+                    getUnitSprite(target).setPendingShot(true);
                 }
             }
             executeAction();
@@ -666,6 +671,11 @@ public class BangBoardView extends BoardView
             viz.init(_ctx, this, opiece, piece);
             PieceSprite sprite = getPieceSprite(piece);
             sprite.queueEffect(viz);
+
+            // if they just got shot, clear any pending shot
+            if (effect.equals("bang")) {
+                ((UnitSprite)sprite).setPendingShot(false);
+            }
 
         } else {
             // update the sprite to reflect its change

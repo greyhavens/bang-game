@@ -81,13 +81,17 @@ public class UnitSprite extends PieceSprite
      * Indicates that we have requested to shoot this piece but it is not
      * yet confirmed by the server.
      */
-    public void setPendingShot ()
+    public void setPendingShot (boolean pending)
     {
-        if (_pendingTick == -1) {
-            _tgtquad.setSolidColor(ColorRGBA.red);
-            _tgtquad.setForceCull(false);
+        if (pending) {
+            if (_pendingTick == -1) {
+                _tgtquad.setSolidColor(ColorRGBA.red);
+            }
+            _pendingTick = _tick;
+        } else {
+            _pendingTick = -1;
         }
-        _pendingTick = _tick;
+        _tgtquad.setForceCull(!pending);
     }
 
     @Override // documentation inherited
@@ -100,8 +104,7 @@ public class UnitSprite extends PieceSprite
 
         // clear our pending shot once we've been ticked
         if (_pendingTick != -1 && tick > _pendingTick) {
-            _pendingTick = -1;
-            _tgtquad.setForceCull(true);
+            setPendingShot(false);
         }
 
         // update our status display
