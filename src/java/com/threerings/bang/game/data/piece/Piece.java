@@ -118,7 +118,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public boolean expireWreckage (short tick)
     {
-        return (tick - lastActed > 4);
+        return (tick - lastActed > WRECKAGE_EXPIRY);
     }
 
     /**
@@ -629,6 +629,9 @@ public abstract class Piece extends SimpleStreamableObject
 	    considerStep(x, y + 1, 1);
         }
     };
+
+    /** The number of ticks until wreckage expires. */
+    protected static final int WRECKAGE_EXPIRY = 6;
 
     /** Used to move one tile forward from an orientation. */
     protected static final int[] FWD_X_MAP = { 0, 1, 0, -1 };
