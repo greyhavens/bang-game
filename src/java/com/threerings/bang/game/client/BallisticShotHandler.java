@@ -23,14 +23,14 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class BallisticShotHandler extends ShotHandler
 {
-    protected void fireShot ()
+    protected void fireShot (int sx, int sy, int tx, int ty)
     {
-        Vector3f start = new Vector3f(_shooter.x * TILE_SIZE + TILE_SIZE/2,
-                                      _shooter.y * TILE_SIZE + TILE_SIZE/2,
-                                      TILE_SIZE/2);
-        Vector3f end = new Vector3f(_target.x * TILE_SIZE + TILE_SIZE/2,
-                                    _target.y * TILE_SIZE + TILE_SIZE/2,
-                                    TILE_SIZE/2);
+        Vector3f start = new Vector3f(
+            sx * TILE_SIZE + TILE_SIZE/2, sy * TILE_SIZE + TILE_SIZE/2,
+            TILE_SIZE/2);
+        Vector3f end = new Vector3f(
+            tx * TILE_SIZE + TILE_SIZE/2, ty * TILE_SIZE + TILE_SIZE/2,
+            TILE_SIZE/2);
         _ssprite = new ShotSprite(_ctx);
         Vector3f velvec = end.subtract(start);
         float distance = velvec.length();
@@ -72,8 +72,10 @@ public class BallisticShotHandler extends ShotHandler
     {
         if (sprite == _ssprite) {
             sprite.removeObserver(this);
-            _view.applyShot(_shot);
             _view.removeSprite(sprite);
+            if (!fireNextSegment()) {
+                _view.applyShot(_shot);
+            }
         } else {
             super.pathCompleted(sprite, path);
         }
@@ -84,8 +86,8 @@ public class BallisticShotHandler extends ShotHandler
     {
         if (sprite == _ssprite) {
             sprite.removeObserver(this);
-            _view.applyShot(_shot);
             _view.removeSprite(sprite);
+            _view.applyShot(_shot);
         } else {
             super.pathCancelled(sprite, path);
         }

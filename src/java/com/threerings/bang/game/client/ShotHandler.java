@@ -37,16 +37,18 @@ public abstract class ShotHandler
             // abandon ship, we're screwed
             return;
         }
-        _target = (Piece)_bangobj.pieces.get(shot.targetId);
-        if (_target == null) {
-            log.warning("Missing target? [shot=" + shot + "].");
-            // abandon ship, we're screwed
-            return;
+        if (shot.targetId != -1) {
+            _target = (Piece)_bangobj.pieces.get(shot.targetId);
+            if (_target == null) {
+                log.warning("Missing target? [shot=" + shot + "].");
+            }
         }
 
         // figure out which sprites we need to wait for
         considerPiece(_shooter);
-        considerPiece(_target);
+        if (_target != null) {
+            considerPiece(_target);
+        }
 
         // if no one was managed, it's a shot fired from an invisible
         // piece at invisible pieces, ignore it
@@ -96,7 +98,34 @@ public abstract class ShotHandler
         }
     }
 
-    protected abstract void fireShot ();
+    protected void fireShot ()
+    {
+        if (_sidx == 0) {
+            fireShot(_shooter.x, _shooter.y,
+                     _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
+        } else {
+            fireShot(_shot.xcoords[_sidx-1], _shot.ycoords[_sidx-1],
+                     _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
+        }
+    }
+
+    /**
+     * Determines whether our shot has followed all the segments it needs
+     * to, in which case false is returned. Otherwise the next shot
+     * segment is started and true is returned.
+     */
+    protected boolean fireNextSegment ()
+    {
+        if (_sidx == _shot.xcoords.length-1) {
+            return false;
+        } else {
+            _sidx++;
+            fireShot();
+            return true;
+        }
+    }
+
+    protected abstract void fireShot (int sx, int sy, int tx, int ty);
 
     protected BangContext _ctx;
     protected BangBoardView _view;
@@ -104,5 +133,5 @@ public abstract class ShotHandler
     protected ShotEffect _shot;
 
     protected Piece _shooter, _target;
-    protected int _sprites, _managed;
+    protected int _sprites, _managed, _sidx;
 }

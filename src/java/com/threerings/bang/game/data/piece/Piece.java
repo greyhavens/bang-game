@@ -332,17 +332,29 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Affects the target piece with damage.
+     * Creates an effect that will "shoot" the specified target piece.
      */
     public ShotEffect shoot (BangObject bangobj, Piece target)
     {
-        int hurt = computeDamage(target);
-        // scale the damage by our own damage level; but always fire as if
-        // we have at least half hit points
-        int undamage = Math.max(50, 100-damage);
-        hurt = (hurt * undamage) / 100;
-        hurt = Math.max(1, hurt); // always do at least 1 point of damage
-        return new ShotEffect(this, target, hurt);
+        // create a basic shot effect
+        ShotEffect shot = new ShotEffect(
+            this, target, computeScaledDamage(target));
+        // give the target a chance to deflect the shot
+        return target.deflect(bangobj, this, shot);
+    }
+
+    /**
+     * Gives a unit a chance to "deflect" a shot, by replacing a normal
+     * shot effect with one deflected to a different location.
+     *
+     * @return the original effect if no deflection is desired or a new
+     * shot effect that has been properly deflected.
+     */
+    public ShotEffect deflect (
+        BangObject bangobj, Piece shooter, ShotEffect effect)
+    {
+        // default is no deflection
+        return effect;
     }
 
     /**
@@ -481,10 +493,14 @@ public abstract class Piece extends SimpleStreamableObject
      * Returns true if we can and should fire upon this target. Note that
      * this does not check to see whether the target is in range.
      */
-    public boolean validTarget (Piece target)
+    public boolean validTarget (Piece target, boolean allowSelf)
     {
-        return (target instanceof Unit && target.owner != -1 &&
-                target.owner != owner && target.damage < 100);
+        boolean valid = (target instanceof Unit && target.owner != -1 &&
+                         target.damage < 100);
+        if (!allowSelf) {
+            valid = (target.owner != owner) && valid;
+        }
+        return valid;
     }
 
     /** Returns the frequency with which this piece can move. */
@@ -550,6 +566,22 @@ public abstract class Piece extends SimpleStreamableObject
     protected boolean canTraverse (Terrain terrain)
     {
         return (terrain.traversalCost > 0);
+    }
+
+    /**
+     * Computes the actual damage done if this piece were to fire on the
+     * specified target, accounting for this piece's current damage level
+     * and other limiting factors.
+     */
+    protected int computeScaledDamage (Piece target)
+    {
+        int ddamage = computeDamage(target);
+        // scale the damage by our own damage level; but always fire as if
+        // we have at least half hit points
+        int undamage = Math.max(50, 100-damage);
+        ddamage = (ddamage * undamage) / 100;
+        ddamage = Math.max(1, ddamage); // always do at least 1 point of damage
+        return ddamage;
     }
 
     /**

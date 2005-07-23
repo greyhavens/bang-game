@@ -143,19 +143,20 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public ShotEffect returnFire (BangObject bangobj, Piece shooter, int damage)
+    public ShotEffect returnFire (
+        BangObject bangobj, Piece shooter, int newDamage)
     {
         ShotEffect shot = null;
-        int odamage = this.damage;
-        if (_config.returnFire > 0 && (odamage + damage < 100) &&
+        int oldDamage = this.damage;
+        if (_config.returnFire > 0 && newDamage < 100 &&
             targetInRange(shooter.x, shooter.y)) {
             // temporarily account for the shooter's damage when
             // calculating our shot; it will be applied properly later
-            this.damage += damage;
+            this.damage = newDamage;
             shot = shoot(bangobj, shooter);
-            this.damage -= damage;
-            // scale the damage down
-            shot.damage = (_config.returnFire * shot.damage) / 100;
+            this.damage = oldDamage;
+            // scale the damage down appropriately
+            shot.newDamage = (_config.returnFire * shot.newDamage) / 100;
         }
         return shot;
     }
@@ -213,10 +214,11 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public boolean validTarget (Piece target)
+    public boolean validTarget (Piece target, boolean allowSelf)
     {
         // if we do no damage to this type of target, it is not valid
-        return super.validTarget(target) && (computeDamage(target) > 0);
+        return super.validTarget(target, allowSelf) &&
+            (computeDamage(target) > 0);
     }
 
     @Override // documentation inherited

@@ -71,7 +71,7 @@ public class UnitSprite extends PieceSprite
      */
     public void setTargeted (boolean targeted)
     {
-        if (!_pendingShot) {
+        if (_pendingTick == -1) {
             _tgtquad.setSolidColor(ColorRGBA.white);
             _tgtquad.setForceCull(!targeted);
         }
@@ -81,13 +81,13 @@ public class UnitSprite extends PieceSprite
      * Indicates that we have requested to shoot this piece but it is not
      * yet confirmed by the server.
      */
-    public void setPendingShot (boolean pending)
+    public void setPendingShot ()
     {
-        if (_pendingShot != pending) {
-            _pendingShot = pending;
+        if (_pendingTick == -1) {
             _tgtquad.setSolidColor(ColorRGBA.red);
-            _tgtquad.setForceCull(!pending);
+            _tgtquad.setForceCull(false);
         }
+        _pendingTick = _tick;
     }
 
     @Override // documentation inherited
@@ -98,6 +98,13 @@ public class UnitSprite extends PieceSprite
         Unit unit = (Unit)piece;
         int ticks;
 
+        // clear our pending shot once we've been ticked
+        if (_pendingTick != -1 && tick > _pendingTick) {
+            _pendingTick = -1;
+            _tgtquad.setForceCull(true);
+        }
+
+        // update our status display
         _status.setForceCull(!unit.isAlive());
         if ((ticks = unit.ticksUntilMovable(_tick)) > 0) {
             _ticks.setRenderState(_ticktex[Math.max(0, 4-ticks)]);
@@ -376,7 +383,7 @@ public class UnitSprite extends PieceSprite
     protected TextureState _damtex;
 
     protected int _odamage;
-    protected boolean _pendingShot;
+    protected short _pendingTick = -1;
 
     protected static Vector3f _tvec = new Vector3f();
     protected static Quaternion _tquat = new Quaternion();

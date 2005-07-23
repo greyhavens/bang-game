@@ -149,7 +149,7 @@ public class BangManager extends GameManager
             // if they specified a target, shoot at it
             if (target != null) {
                 // make sure the target is valid
-                if (!shooter.validTarget(target)) {
+                if (!shooter.validTarget(target, false)) {
                     // target already dead or something
                     throw new InvocationException(TARGET_NO_LONGER_VALID);
                 }
@@ -166,8 +166,8 @@ public class BangManager extends GameManager
                 recordDamage(shooter.owner, _damage);
 
                 // effect any collateral damage
-                Effect[] ceffects =
-                    shooter.collateralDamage(_bangobj, target, effect.damage);
+                Effect[] ceffects = shooter.collateralDamage(
+                    _bangobj, target, effect.newDamage);
                 int ccount = (ceffects == null) ? 0 : ceffects.length;
                 for (int ii = 0; ii < ccount; ii++) {
                     ceffects[ii].prepare(_bangobj, _damage);
@@ -176,7 +176,7 @@ public class BangManager extends GameManager
                 }
 
                 // allow the target to return fire
-                effect = target.returnFire(_bangobj, shooter, effect.damage);
+                effect = target.returnFire(_bangobj, shooter, effect.newDamage);
                 if (effect != null) {
                     effect.prepare(_bangobj, _damage);
                     _bangobj.setEffect(effect);
@@ -339,7 +339,7 @@ public class BangManager extends GameManager
             if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
                 String[] units = new String[] {
-                    "dirigible", "steamgunman", "gunslinger" };
+                    "dirigible", "steamgunman", "artillery" };
                 purchaseUnits(ii, units);
             }
         }
@@ -364,7 +364,7 @@ public class BangManager extends GameManager
             // if they failed to select a big shot (or are an AI) give
             // them a default
             if (item == null) {
-                item = new BigShotItem(-1, "codger");
+                item = new BigShotItem(-1, "tactitian");
             }
 
             // configure their big shot selection

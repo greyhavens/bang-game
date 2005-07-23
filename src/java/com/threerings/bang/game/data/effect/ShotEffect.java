@@ -25,10 +25,30 @@ public class ShotEffect extends Effect
     public int targetId;
 
     /** The new total damage to assign to the target. */
-    public int damage;
+    public int newDamage;
 
     /** An adjusted last acted time to apply to the target. */
     public short newLastActed = -1;
+
+    /** The x coordinates of the path this shot takes before finally
+     * arriving at its target (not including the starting coordinate). */
+    public short[] xcoords;
+
+    /** The y coordinates of the path this shot takes before finally
+     * arriving at its target (not including the starting coordinate). */
+    public short[] ycoords;
+
+    /**
+     * Constructor used when creating a new shot effect.
+     *
+     * @param damage the amount by which to increase the target's damage.
+     * This will be capped and converted to an absolute value.
+     */
+    public ShotEffect (Piece shooter, Piece target, int damage)
+    {
+        shooterId = shooter.pieceId;
+        setTarget(target, damage);
+    }
 
     /** Constructor used when unserializing. */
     public ShotEffect ()
@@ -36,31 +56,57 @@ public class ShotEffect extends Effect
     }
 
     /**
-     * Constructor used when creating an effect.
+     * Configures this shot effect with a target and a damage amount. Any
+     * previous target will be overridden and the new target's coordinates
+     * will be added onto the shot's path.
      *
      * @param damage the amount by which to increase the target's damage.
+     * This will be capped and converted to an absolute value.
      */
-    public ShotEffect (Piece shooter, Piece target, int damage)
+    public void setTarget (Piece target, int damage)
     {
-        shooterId = shooter.pieceId;
         targetId = target.pieceId;
-        this.damage = Math.min(100, target.damage + damage);
+        newDamage = Math.min(100, target.damage + damage);
+        xcoords = append(xcoords, target.x);
+        ycoords = append(ycoords, target.y);
+    }
+
+    /**
+     * Deflects this shot away from its original target, clearing out the
+     * target information and appending the specified coordinates onto the
+     * shot's path. It is assumed that there is no piece at those
+     * coordinates.
+     */
+    public void deflectShot (short x, short y)
+    {
+        targetId = -1;
+        newDamage = 0;
+        xcoords = append(xcoords, x);
+        ycoords = append(ycoords, y);
     }
 
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        if (targetId == -1) { // we were deflected into la la land, no problem
+            return;
+        }
+
         Piece target = (Piece)bangobj.pieces.get(targetId);
-        if (target == null) {
-            log.warning("Missing target during apply!? [id=" + targetId + "].");
+        if (target != null) {
+            dammap.increment(target.owner, newDamage - target.damage);
         } else {
-            dammap.increment(target.owner, damage - target.damage);
+            log.warning("Shot effect missing target [id=" + targetId + "].");
         }
     }
 
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        if (targetId == -1) { // we were deflected into la la land, no problem
+            return;
+        }
+
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target == null) {
             log.warning("Missing shot target " + this + ".");
@@ -69,7 +115,21 @@ public class ShotEffect extends Effect
         if (newLastActed != -1) {
             target.lastActed = newLastActed;
         }
-        damage(bangobj, obs, target, damage, DAMAGED);
+        damage(bangobj, obs, target, newDamage, DAMAGED);
+    }
+
+    /** Helper function for setting targets. */
+    protected short[] append (short[] array, short value)
+    {
+        short[] narray;
+        if (array == null) {
+            narray = new short[] { value };
+        } else {
+            narray = new short[array.length+1];
+            System.arraycopy(array, 0, narray, 0, array.length);
+            narray[array.length] = value;
+        }
+        return narray;
     }
 
     /**
@@ -77,14 +137,14 @@ public class ShotEffect extends Effect
      * removing it from the board if appropriate and reporting the
      * specified effect.
      *
-     * @param damage the new total damage to assign to the damaged piece.
+     * @param newDamage the new total damage to assign to the damaged piece.
      */
     public static void damage (BangObject bangobj, Observer obs, Piece target,
-                               int damage, String effect)
+                               int newDamage, String effect)
     {
         // effect the actual damage
-        log.info("Damaging " + target.info() + " -> " + damage + ".");
-        target.damage = damage;
+        log.info("Damaging " + target.info() + " -> " + newDamage + ".");
+        target.damage = newDamage;
 
         // report that the target was affected
         reportEffect(obs, target, effect);
