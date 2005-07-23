@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server;
 
 import java.awt.Point;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
@@ -35,6 +37,7 @@ import com.threerings.parlor.game.server.GameManager;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.server.ServerConfig;
 
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
@@ -252,6 +255,11 @@ public class BangManager extends GameManager
     protected void didStartup ()
     {
         super.didStartup();
+
+        // load up our board information if we have not yet done so
+        if (_boards == null) {
+            loadBoardData();
+        }
 
         // set up the bang object
         _bangobj = (BangObject)_gameobj;
@@ -910,9 +918,10 @@ public class BangManager extends GameManager
         // if that failed, load a stock board
         int pcount = _bconfig.players.length;
         if (tup == null) {
-            String board = (String)RandomUtil.pickRandom(BOARDS[pcount-2]);
+            ArrayList boards = (ArrayList)_boards.get(pcount);
+            String board = (String)RandomUtil.pickRandom(boards);
             if (isTest()) {
-                board = "default" + pcount;
+                board = "default";
             }
             log.info("Using: " + board);
             try {
@@ -965,6 +974,32 @@ public class BangManager extends GameManager
     protected static boolean isTest ()
     {
         return (System.getProperty("test") != null);
+    }
+
+    /**
+     * Scans the boards directory and determines what boards are
+     * available.
+     */
+    protected static void loadBoardData ()
+    {
+        _boards = new HashIntMap();
+        for (int pp = 2; pp <= 4; pp++) {
+            ArrayList<String> boards = new ArrayList<String>();
+            File bdir = new File(ServerConfig.serverRoot + "/rsrc/boards/" + pp);
+            log.info("Loading board data " + bdir);
+            String[] files = bdir.list();
+            int fcount = (files == null) ? 0 : files.length;
+            for (int ii = 0; ii < fcount; ii++) {
+                if (files[ii].endsWith(".board")) {
+                    log.info("Adding " + files[ii] + " to " + pp);
+                    boards.add(files[ii].substring(0, files[ii].length()-6));
+                }
+            }
+            if (boards.size() == 0) {
+                log.warning("No boards for " + pp + " players!");
+            }
+            _boards.put(pp, boards);
+        }
     }
 
     /** Triggers our board tick once every N seconds. */
@@ -1039,12 +1074,9 @@ public class BangManager extends GameManager
      * be destroyed if the game completes normally. */
     protected ArrayIntSet _usedCards = new ArrayIntSet();
 
-    /** A list of our stock boards. */
-    protected static final String[][] BOARDS = {
-        { "default", "alley"}, // 2 player boards
-        { "default", "tripleclaim", "tripleflight" }, // 3 player boards
-        { "default", }, // 4 player boards
-    };
+    /** A mapping from player count to an array list of boards available
+     * for that many players. */
+    protected static HashIntMap _boards;
 
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;
