@@ -49,7 +49,7 @@ public class AreaDamageEffect extends AreaEffect
     @Override // documentation inherited
     protected void noteAffected (Piece piece, IntIntMap dammap, int dist)
     {
-        int damage = baseDamage / dist;
+        int damage = baseDamage / (dist+1);
         dammap.increment(piece.owner, Math.min(damage, 100-piece.damage));
     }
 

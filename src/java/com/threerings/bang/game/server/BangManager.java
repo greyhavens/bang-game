@@ -121,14 +121,18 @@ public class BangManager extends GameManager
 
         Piece piece = (Piece)_bangobj.pieces.get(pieceId);
         if (piece == null || !(piece instanceof Unit) || piece.owner != pidx) {
-            log.info("Rejecting illegal move request [who=" + user.who() +
-                     ", piece=" + piece + "].");
+            log.warning("Rejecting illegal move request [who=" + user.who() +
+                        ", piece=" + piece + "].");
             return;
         }
         Unit unit = (Unit)piece;
-        if (unit.ticksUntilMovable(_bangobj.tick) > 0) {
-            log.info("Rejecting premature move/fire request " +
-                     "[who=" + user.who() + ", piece=" + unit.info() + "].");
+        int ticksTilMove = unit.ticksUntilMovable(_bangobj.tick);
+        if (ticksTilMove > 0) {
+            log.warning("Rejecting premature move/fire request " +
+                        "[who=" + user.who() + ", piece=" + unit.info() +
+                        ", ticksTilMove=" + ticksTilMove +
+                        ", tick=" + _bangobj.tick +
+                        ", lastActed=" + unit.lastActed + "].");
             return;
         }
 
@@ -206,8 +210,8 @@ public class BangManager extends GameManager
         Card card = (Card)_bangobj.cards.get(cardId);
         if (card == null ||
             card.owner != _bangobj.getPlayerIndex(user.username)) {
-            log.info("Rejecting invalid card request [who=" + user.who() +
-                     ", sid=" + cardId + ", card=" + card + "].");
+            log.warning("Rejecting invalid card request [who=" + user.who() +
+                        ", sid=" + cardId + ", card=" + card + "].");
             return;
         }
 
