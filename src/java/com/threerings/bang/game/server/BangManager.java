@@ -918,7 +918,7 @@ public class BangManager extends GameManager
             try {
                 ClassLoader cl = getClass().getClassLoader();
                 InputStream in = cl.getResourceAsStream(
-                    "rsrc/boards/" + board + ".board");
+                    "rsrc/boards/" + pcount + "/" + board + ".board");
                 if (in != null) {
                     tup = BoardUtil.loadBoard(IOUtils.toByteArray(in));
                 } else {
@@ -1041,9 +1041,9 @@ public class BangManager extends GameManager
 
     /** A list of our stock boards. */
     protected static final String[][] BOARDS = {
-        { "default2", }, // 2 player boards
-        { "default3", "tripleclaim", "tripleflight" }, // 3 player boards
-        { "default4", }, // 4 player boards
+        { "default", "alley"}, // 2 player boards
+        { "default", "tripleclaim", "tripleflight" }, // 3 player boards
+        { "default", }, // 4 player boards
     };
 
     /** Our starting base tick time. */
