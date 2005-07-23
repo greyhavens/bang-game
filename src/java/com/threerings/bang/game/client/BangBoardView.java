@@ -196,7 +196,7 @@ public class BangBoardView extends BoardView
                 // (it might no longer be valid but handleClickToMove will
                 // ignore us in that case
                 if (oaction != null) {
-                    handleClickToMove(oaction[0], oaction[1]);
+                    handleClickToMove(oaction[1], oaction[2]);
                 }
             }
         }
@@ -359,7 +359,7 @@ public class BangBoardView extends BoardView
         // if there are no valid attacks, assume they're just moving (but
         // do nothing if they're not even moving)
         if (_attackSet.size() == 0 &&
-            (_action[0] != _selection.x || _action[1] != _selection.y)) {
+            (_action[1] != _selection.x || _action[2] != _selection.y)) {
             executeAction();
             _attackSet.clear();
         } else {
