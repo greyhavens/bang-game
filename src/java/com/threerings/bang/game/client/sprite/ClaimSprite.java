@@ -43,7 +43,7 @@ public class ClaimSprite extends PropSprite
         if (_piece.owner >= 0 && _dnuggets != claim.nuggets) {
             Vector2f[] tcoords = new Vector2f[4];
             Texture tex = RenderUtil.createTextTexture(
-                BangUI.COUNTER_FONT, UnitSprite.JPIECE_COLORS[_piece.owner],
+                BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
                 String.valueOf(claim.nuggets), tcoords);
             _counter.setTextures(tcoords);
             // resize our quad to accomodate the text

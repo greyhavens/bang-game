@@ -32,7 +32,7 @@ public class BangView extends BWindow
     public BangBoardView view;
 
     /** Our chat display. */
-    public ChatView chat;
+    public OverlayChatView chat;
 
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
@@ -44,35 +44,7 @@ public class BangView extends BWindow
 
         // create our various displays
         view = new BangBoardView(ctx, ctrl);
-        _chatwin = new BWindow(ctx.getLookAndFeel(), new BorderLayout()) {
-            // we never want the chat window to accept clicks
-            public BComponent getHitComponent (int mx, int my) {
-                return null;
-            }
-        };
-        chat = new ChatView(_ctx, _ctx.getChatDirector()) {
-            public void wasAdded () {
-                super.wasAdded();
-                _text.setBackground(null);
-                _inputbg = _input.getBackground();
-                _input.setBackground(null);
-            }
-            public void requestFocus () {
-                super.requestFocus();
-                _input.setBackground(_inputbg);
-            }
-            protected boolean handleInput (String text) {
-                boolean chatted = super.handleInput(text);
-                // relinquish the focus when we're done chatting
-                if (chatted) {
-                    _ctx.getRootNode().requestFocus(null);
-                    _input.setBackground(null);
-                }
-                return chatted;
-            }
-            protected BBackground _inputbg;
-        };
-        _chatwin.add(chat, BorderLayout.CENTER);
+        chat = new OverlayChatView(ctx);
     }
 
     /** Called by the controller when the big shot and card selection
@@ -130,8 +102,10 @@ public class BangView extends BWindow
 
         // add our chat display
         int width = _ctx.getDisplay().getWidth();
-        _chatwin.setBounds(10, 20, width-20, 100);
-        _ctx.getRootNode().addWindow(_chatwin);
+        _ctx.getRootNode().addWindow(chat);
+        chat.pack();
+        System.err.println("Chat size " + chat.getBounds());
+        chat.setBounds(10, 20, width-20, chat.getHeight());
 
         // create and position our player status displays
         int pcount = bangobj.players.length;
@@ -160,7 +134,7 @@ public class BangView extends BWindow
 
         // remove our displays
         _ctx.getRootNode().removeWindow(_pstatus);
-        _ctx.getRootNode().removeWindow(_chatwin);
+        _ctx.getRootNode().removeWindow(chat);
         _ctx.getGeometry().detachChild(view.getNode());
 
         if (_oview != null) {
@@ -176,7 +150,7 @@ public class BangView extends BWindow
     protected BangController _ctrl;
 
     /** Contain various onscreen displays. */
-    protected BWindow _pstatus, _chatwin;
+    protected BWindow _pstatus;
 
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;

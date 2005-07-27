@@ -37,22 +37,6 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class UnitSprite extends PieceSprite
 {
-    public static final Color[] PIECE_COLORS = {
-        Color.blue.brighter(), Color.red, Color.green, Color.yellow
-    };
-
-    public static final ColorRGBA[] JPIECE_COLORS = {
-        ColorRGBA.blue, ColorRGBA.red, ColorRGBA.green,
-        new ColorRGBA(1, 1, 0, 1)
-    };
-
-    public static final ColorRGBA[] DARKER_COLORS = {
-        ColorRGBA.blue.mult(ColorRGBA.darkGray),
-        ColorRGBA.red.mult(ColorRGBA.darkGray),
-        ColorRGBA.green.mult(ColorRGBA.darkGray),
-        new ColorRGBA(1, 1, 0, 0).mult(ColorRGBA.darkGray)
-    };
-
     public UnitSprite (String type)
     {
         _type = type;

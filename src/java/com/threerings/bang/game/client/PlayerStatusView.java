@@ -23,12 +23,12 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
-import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays the name, score, cash and cards held by a particular player.
@@ -61,7 +61,7 @@ public class PlayerStatusView extends BContainer
     public void wasAdded ()
     {
         BLookAndFeel lnf = getLookAndFeel().deriveLookAndFeel();
-        lnf.setForeground(UnitSprite.JPIECE_COLORS[_pidx]);
+        lnf.setForeground(JPIECE_COLORS[_pidx]);
         _player.setLookAndFeel(lnf);
         super.wasAdded();
     }
