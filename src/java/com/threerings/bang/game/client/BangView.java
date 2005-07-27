@@ -104,7 +104,6 @@ public class BangView extends BWindow
         int width = _ctx.getDisplay().getWidth();
         _ctx.getRootNode().addWindow(chat);
         chat.pack();
-        System.err.println("Chat size " + chat.getBounds());
         chat.setBounds(10, 20, width-20, chat.getHeight());
 
         // create and position our player status displays
