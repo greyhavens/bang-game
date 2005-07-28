@@ -1,14 +1,9 @@
-h1, h2, h3, h4 { 
-  font-family:	Arial, Helvetica, sans-serif;
-  margin-bottom: 5px;
-}
-
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Times New Roman, Times, serif;
 }
 
 td {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Times New Roman, Times, serif;
 }
 
 .fancy {
@@ -17,13 +12,8 @@ td {
 }
 
 .small {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Times New Roman, Times, serif;
   font-size: 11px;
-}
-
-.sans {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px
 }
 
 li {
