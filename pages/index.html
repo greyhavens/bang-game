@@ -1,7 +1,13 @@
 <html>
 <head>
-  <title>Bang! Howdy &trade;</title>
-  <link rel="stylesheet" type="text/css" href="/style.css">
+<title>Bang! Howdy &trade;</title>
+<link rel="stylesheet" type="text/css" href="/style.css">
+<script language="JavaScript">
+function view_unit(unit) {
+  window.open(unit + ".html", "unit",
+    "resizable=no,status=no,width=500,height=700,dependent=yes")
+}
+</script>
 </head>
 <body>
 
@@ -69,8 +75,8 @@ train comes rollin' down the line!
 <li> Sabotage your opponents in the tunnels of a mineshaft or play horse
 hockey on the Steam Mustang Factory floor!
 
-<li> Recover wrecked units with the tinkerer and blow them up again with
-the prospector!
+<li> Recover wrecked units with the Tinkerer and blow them up again with
+the Prospector!
 
 <li> ...
 
@@ -83,21 +89,40 @@ Village</b>, the <b>Ghost Town</b> and the <b>City of Gold</b>!</td></tr>
 
 <p>
 <table cellpadding=2>
-<tr><td colspan="7" align=center>Check out these fine units:</td></tr>
+<tr><td width=100 rowspan="2">
+<td colspan="7" align=center>Meet some of the hands that'll help ya work
+yer ranch:</td></tr>
 
-<tr><td style="border: 1px solid" width=100 height=100>Gunslinger</td>
+<tr>
+<td align="center"><a href="javascript:view_unit('gunslinger')">
+<img border=0 src="images/gunslinger_sm.png"></a>
+<div class="small">The Gunslinger</a></td>
 
-<td style="border: 1px solid" width=100 height=100>Steam Gunman</td>
+<td align="center"><a href="javascript:view_unit('steamgunman')">
+<img border=0 src="images/steamgunman_sm.png"></a>
+<div class="small">The Steam Gunman</div></td>
 
-<td style="border: 1px solid" width=100 height=100>Dirigible</td>
+<td align="center"><a href="javascript:view_unit('dirigible')">
+<img border=0 src="images/dirigible_sm.png"></a>
+<div class="small">The Dirigible</div></td>
 
-<td style="border: 1px solid" width=100 height=100>Artillery</td>
+<td align="center"><a href="javascript:view_unit('artillery')">
+<img border=0 src="images/cavalry_sm.png"></a>
+<div class="small">The Artillery</div></td>
 
-<td style="border: 1px solid" width=100 height=100>Cavalry</td>
+<td align="center"><a href="javascript:view_unit('cavalry')">
+<img border=0 src="images/cavalry_sm.png"></a>
+<div class="small">The Cavalry</div></td>
 
-<td style="border: 1px solid" width=100 height=100>Tactitian</td>
+<!--
+<td align="center"><a href="javascript:view_unit('tactitian')">
+<img border=0 src="images/cavalry_sm.png"></a>
+<div class="small">The Tactitian</div></td>
+-->
 
-<td style="border: 1px solid" width=100 height=100>Old Codger</td>
+<td align="center"><a href="javascript:view_unit('codger')">
+<img border=0 src="images/cavalry_sm.png"></a>
+<div class="small">The Old Codger</div></td>
 
 </tr>
 </table>
