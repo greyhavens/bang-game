@@ -35,11 +35,11 @@ import static com.threerings.bang.client.BangMetrics.*;
 /**
  * Displays a particular unit.
  */
-public class UnitSprite extends PieceSprite
+public class UnitSprite extends MobileSprite
 {
     public UnitSprite (String type)
     {
-        _type = type;
+        super("unit", type);
     }
 
     /**
@@ -136,14 +136,6 @@ public class UnitSprite extends PieceSprite
             loadTextures(ctx);
         }
 
-        // we display a simple shadow texture on the ground beneath us
-        _shadow = RenderUtil.createIcon(_shadtex);
-        _shadow.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        float height = _piece.isFlyer() ? -2 * TILE_SIZE : 0;
-        height += 0.1f;
-        _shadow.setLocalTranslation(new Vector3f(0, 0, height));
-        attachChild(_shadow);
-
         // this icon is displayed when the mouse is hovered over us
         _hovquad = RenderUtil.createIcon(_hovtex);
         _hovquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -185,14 +177,8 @@ public class UnitSprite extends PieceSprite
         // configure our colors
         configureOwnerColors();
 
-        // our models are centered at the origin, but we need to shift
-        // them to the center of the tile
-        _model = ctx.getModelCache().getModel("units", _type);
-        Node[] meshes = _model.getMeshes("standing");
-        for (int ii = 0; ii < meshes.length; ii++) {
-            attachChild(meshes[ii]);
-            meshes[ii].updateRenderState();
-        }
+        // load up our model
+        super.createGeometry(ctx);
 
         // this icon is displayed when we're a target
         _tgtquad = RenderUtil.createIcon(_tgttex);
@@ -285,8 +271,6 @@ public class UnitSprite extends PieceSprite
             ctx, ctx.loadImage("media/textures/ustatus/crosshairs.png"));
         _movetex = RenderUtil.createTexture(
             ctx, ctx.loadImage("media/textures/ustatus/tick_ready.png"));
-        _shadtex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/ustatus/shadow.png"));
         _nugtex = RenderUtil.createTexture(
             ctx, ctx.loadImage("media/textures/ustatus/nugget.png"));
         _ticktex = new TextureState[5];
@@ -361,9 +345,7 @@ public class UnitSprite extends PieceSprite
         protected float _lastUpdate;
     }
 
-    protected String _type;
-    protected Model _model;
-    protected Quad _hovquad, _tgtquad, _shadow;
+    protected Quad _hovquad, _tgtquad;
 
     protected StatusNode _status;
     protected Quad _ticks, _damage, _movable, _icon;
@@ -376,8 +358,7 @@ public class UnitSprite extends PieceSprite
     protected static Quaternion _tquat = new Quaternion();
 
     protected static BufferedImage _dfull, _dempty;
-    protected static TextureState _hovtex, _tgttex, _movetex;
-    protected static TextureState _shadtex, _nugtex;
+    protected static TextureState _hovtex, _tgttex, _movetex, _nugtex;
     protected static TextureState[] _ticktex;
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;

@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.awt.Point;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -135,22 +133,7 @@ public class PieceSprite extends Sprite
 
         // move ourselves to our new location
         if (piece.x != opiece.x || piece.y != opiece.y) {
-            int elev = computeElevation(board, _piece.x, _piece.y);
-
-            if (/* _mgr == null || */ _editorMode) {
-                // if we're invisible or in the editor just warp there
-                setLocation(_piece.x, _piece.y, elev);
-
-            // TODO: append an additional path if we're currently moving
-            } else if (!isMoving()) {
-                Path path = createPath(board, opiece, piece);
-                if (path != null) {
-                    setAnimationActive(true);
-                    move(path);
-                } else {
-                    setLocation(_piece.x, _piece.y, elev);
-                }
-            }
+            moveSprite(board, opiece, piece);
         }
 
         // if we're rotated (which only happens in the editor), we need to
@@ -227,40 +210,15 @@ public class PieceSprite extends Sprite
     }
 
     /**
-     * Creates a path that will be used to move this piece from the
-     * specified old position to the new one.
+     * Called when a sprite has been updated with a new location. The
+     * default implementation simply relocates the sprite instantly but
+     * derived classes will want to compute a path and animate the sprite
+     * traveling between its old and new locations.
      */
-    protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
+    protected void moveSprite (BangBoard board, Piece opiece, Piece npiece)
     {
-        List path = null;
-        if (board != null) {
-            path = board.computePath(opiece, npiece.x, npiece.y);
-        }
-
-        if (path != null) {
-            // create a world coordinate path from the tile
-            // coordinates
-            Vector3f[] coords = new Vector3f[path.size()];
-            float[] durations = new float[path.size()-1];
-            int ii = 0, elevation = 0; // TODO: handle elevated paths
-            for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
-                Point p = (Point)iter.next();
-                coords[ii] = new Vector3f();
-                toWorldCoords(p.x, p.y, elevation, coords[ii]);
-                if (ii > 0) {
-                    durations[ii-1] = 0.2f;
-                }
-            }
-            return new LineSegmentPath(this, UP, FORWARD, coords, durations);
-
-        } else {
-            Vector3f start = toWorldCoords(
-                opiece.x, opiece.y, 0, new Vector3f());
-            Vector3f end = toWorldCoords(npiece.x, npiece.y, 0, new Vector3f());
-            float duration = (float)MathUtil.distance(
-                opiece.x, opiece.y, npiece.x, npiece.y) * .003f;
-            return new LinePath(this, start, end, duration);
-        }
+        int elev = computeElevation(board, npiece.x, npiece.y);
+        setLocation(npiece.x, npiece.y, elev);
     }
 
     /** Converts tile coordinates plus elevation into (3D) world
