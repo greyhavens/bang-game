@@ -89,9 +89,13 @@ public abstract class Piece extends SimpleStreamableObject
      * Called on every tick to allow a unit to lose hit points or
      * regenerate hit points automatically.
      *
+     * @param tick the current game tick.
+     * @param board the current board.
+     * @param pieces all the pieces on the board in easily accessible form.
+     *
      * @return true if the unit was updated.
      */
-    public boolean tick (short tick)
+    public boolean tick (short tick, BangBoard board, Piece[] pieces)
     {
         return false;
     }
@@ -177,7 +181,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public int getMoveDistance ()
     {
-        return 0;
+        return 1;
     }
 
     /**

@@ -162,7 +162,7 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public boolean tick (short tick)
+    public boolean tick (short tick, BangBoard board, Piece[] pieces)
     {
         if (influence != null && influence.isExpired(tick)) {
             log.info("Expiring " + influence + ".");

@@ -13,6 +13,7 @@ import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
 
+import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 
 import com.threerings.jme.sprite.LinePath;
@@ -113,6 +114,12 @@ public class MobileSprite extends PieceSprite
         }
 
         if (path != null) {
+            if (path.size() < 2) {
+                log.warning("Created short path? [opiece=" + opiece.info() +
+                            ", npiece=" + npiece.info() +
+                            ", path=" + StringUtil.toString(path) + "].");
+                return null;
+            }
             // create a world coordinate path from the tile
             // coordinates
             Vector3f[] coords = new Vector3f[path.size()];

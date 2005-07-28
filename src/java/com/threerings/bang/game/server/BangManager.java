@@ -55,7 +55,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
-import com.threerings.bang.game.server.scenario.ClaimJumping;
+import com.threerings.bang.game.server.scenario.CattleHerding;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.Shootout;
 import com.threerings.bang.game.util.BoardUtil;
@@ -269,7 +269,7 @@ public class BangManager extends GameManager
         _bconfig = (BangConfig)_gameconfig;
 
         // TODO: pick the proper scenario
-        _scenario = new ClaimJumping();
+        _scenario = new CattleHerding();
 
         // TODO: get the town info from somewhere
         _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
@@ -473,20 +473,21 @@ public class BangManager extends GameManager
             }
         }
 
-        // let the scenario know that we're about to start
-        try {
-            _scenario.init(_bangobj, _markers, _bonusSpots, _purchases);
-        } catch (InvocationException ie) {
-            log.warning("Scenario initialization failed [game=" + where() +
-                        ", error=" + ie.getMessage() + "].");
-            SpeakProvider.sendAttention(_bangobj, GAME_MSGS, ie.getMessage());
-            // TODO: cancel the round (or let the scenario cancel it on
-            // the first tick?)
-        }
-
         // now place and add the player pieces
         try {
             _bangobj.startTransaction();
+
+            // let the scenario know that we're about to start
+            try {
+                _scenario.init(_bangobj, _markers, _bonusSpots, _purchases);
+            } catch (InvocationException ie) {
+                log.warning("Scenario initialization failed [game=" + where() +
+                            ", error=" + ie.getMessage() + "].");
+                SpeakProvider.sendAttention(
+                    _bangobj, GAME_MSGS, ie.getMessage());
+                // TODO: cancel the round (or let the scenario cancel it
+                // on the first tick?)
+            }
 
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 // first filter out this player's pieces
@@ -548,7 +549,7 @@ public class BangManager extends GameManager
                 continue;
             }
 
-            if (p.tick(tick)) {
+            if (p.tick(tick, _bangobj.board, pieces)) {
                 boolean removed = false;
                 if (!p.isAlive()) {
                     p.wasKilled(tick);
