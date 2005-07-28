@@ -7,10 +7,12 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.samskivert.util.IntIntMap;
+import com.threerings.media.util.MathUtil;
 
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceSet;
@@ -24,13 +26,28 @@ import static com.threerings.bang.Log.log;
 public abstract class Scenario
 {
     /**
+     * Allows a scenario to filter out custom marker pieces prior to the
+     * start of the round. <em>Note:</em> this is called before {@link
+     * #init}.
+     *
+     * @param bangobj the game object.
+     * @param starts a list of start markers for all the players.
+     * @param pieces the remaining pieces on the board.
+     */
+    public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
+                               ArrayList<Piece> pieces)
+    {
+        // nothing to do by default
+    }
+
+    /**
      * Called when a round is about to start.
      *
      * @throws InvocationException containing a translatable string
      * indicating why the scenario is booched, which will be displayed to
      * the players and the game will be cancelled.
      */
-    public void init (BangObject bangobj, ArrayList<Piece> markers,
+    public void init (BangObject bangobj, ArrayList<Piece> starts,
                       PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
@@ -40,7 +57,7 @@ public abstract class Scenario
         // this will contain the starting spot for each player
         _startSpots = new Point[bangobj.players.length];
         for (int ii = 0; ii < _startSpots.length; ii++) {
-            Piece p = markers.get(ii);
+            Piece p = starts.get(ii);
             _startSpots[ii] = new Point(p.x, p.y);
         }
 
@@ -108,13 +125,17 @@ public abstract class Scenario
     }
 
     /**
-     * Called when a unit makes a move in the game but before the
-     * associated update for that unit is broadcast. The scenario can make
-     * further adjustments to the unit and modify other game data as
+     * Called when a piece makes a move in the game but before the
+     * associated update for that piece is broadcast. The scenario can
+     * make further adjustments to the piece and modify other game data as
      * appropriate.
+     *
+     * @return null if nothing happens to this piece as a result of the
+     * move or an effect to apply to the piece.
      */
-    public void unitMoved (BangObject bangobj, Unit unit)
+    public Effect pieceMoved (BangObject bangobj, Piece piece)
     {
+        return null;
     }
 
     /**
@@ -155,6 +176,29 @@ public abstract class Scenario
         unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
         _respawns.add(unit);
         log.info("Queued for respawn " + unit + ".");
+    }
+
+    /**
+     * Helper function useful when initializing scenarios. Determines the
+     * player whose start marker is closest to the specified piece and is
+     * therefore the <em>owner</em> of that piece.
+     *
+     * @return -1 if no start markers exist at all or the player index of
+     * the closest marker.
+     */
+    protected int getOwner (Piece target, ArrayList<Piece> starts)
+    {
+        int mindist2 = Integer.MAX_VALUE, idx = -1;
+        for (int ii = 0, ll = starts.size(); ii < ll; ii++) {
+            Piece start = starts.get(ii);
+            int dist2 = MathUtil.distanceSq(
+                target.x, target.y, start.x, start.y);
+            if (dist2 < mindist2) {
+                mindist2 = dist2;
+                idx = ii;
+            }
+        }
+        return idx;
     }
 
     /** Used to track the locations where players are started. */

@@ -12,10 +12,9 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PropConfig;
-import com.threerings.bang.game.data.piece.BonusMarker;
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
-import com.threerings.bang.game.data.piece.StartMarker;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -39,8 +38,9 @@ public class PieceCreator extends JPanel
         }
 
         add(new JLabel(_ctx.xlate("editor", "m.pieces_marker")));
-        add(createPieceButton("start_marker", new StartMarker()));
-        add(createPieceButton("bonus_marker", new BonusMarker()));
+        add(createPieceButton("start_marker", new Marker(Marker.START)));
+        add(createPieceButton("bonus_marker", new Marker(Marker.BONUS)));
+        add(createPieceButton("corral_marker", new Marker(Marker.CORRAL)));
     }
 
     protected CommandButton createPieceButton (String type, Piece piece)

@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.awt.Point;
+
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -15,6 +17,9 @@ import static com.threerings.bang.Log.log;
  */
 public class Cow extends Piece
 {
+    /** Indicates whether or not this cow has been corralled. */
+    public boolean corralled;
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
@@ -24,31 +29,37 @@ public class Cow extends Piece
     @Override // documentation inherited
     public boolean tick (short tick, BangBoard board, Piece[] pieces)
     {
-        int nx = x, ny = y;
+        // if we're corralled, stop moving
+        if (corralled) {
+            return false;
+        }
+
+        _spot.setLocation(x, y);
 
         // if there is a unit on any side of us, adjust our coordinates
         // accordingly
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
             if (p instanceof Unit) {
-                if (p.y == y) {
-                    int cx = nx + adjust(p.x, x);
-                    if (board.canOccupy(this, cx, ny)) {
-                        nx = cx;
-                    }
-                }
-                if (p.x == x) {
-                    int cy = ny + adjust(p.y, y);
-                    if (board.canOccupy(this, nx, cy)) {
-                        ny = cy;
-                    }
-                }
+                avoid(board, _spot, p.x, p.y);
             }
         }
 
-        if (nx != x || ny != y) {
+        // if we're on the edge of the board, shy away from that as well
+        if (x == board.getWidth()-1) {
+            avoid(board, _spot, board.getWidth(), y);
+        } else if (x == 0) {
+            avoid(board, _spot, -1, y);
+        }
+        if (y == board.getHeight()-1) {
+            avoid(board, _spot, x, board.getHeight());
+        } else if (y == 0) {
+            avoid(board, _spot, x, -1);
+        }
+
+        if (_spot.x != x || _spot.y != y) {
             board.updateShadow(this, null);
-            position(nx, ny);
+            position(_spot.x, _spot.y);
             board.updateShadow(null, this);
             return true;
         }
@@ -56,9 +67,28 @@ public class Cow extends Piece
     }
 
     /** Helper function for {@link #tick}. */
+    protected void avoid (BangBoard board, Point spot, int x, int y)
+    {
+        if (spot.y == y) {
+            int cx = spot.x + adjust(x, spot.x);
+            if (board.canOccupy(this, cx, spot.y)) {
+                spot.x = cx;
+            }
+        }
+        if (spot.x == x) {
+            int cy = spot.y + adjust(y, spot.y);
+            if (board.canOccupy(this, spot.x, cy)) {
+                spot.y = cy;
+            }
+        }
+    }
+
+    /** Helper function for {@link #avoid}. */
     protected int adjust (int a, int b)
     {
         int dv = a - b;
         return (dv == -1) ? 1 : ((dv == 1) ? -1 : 0);
     }
+
+    protected transient Point _spot = new Point();
 }

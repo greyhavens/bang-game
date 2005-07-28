@@ -16,14 +16,20 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class MarkerSprite extends PieceSprite
 {
-    public MarkerSprite (boolean start)
+    public MarkerSprite (int type)
     {
-        Sphere sphere = new Sphere("marker", new Vector3f(0, 0, TILE_SIZE/2),
-                                   10, 10, TILE_SIZE/2);
-        sphere.setSolidColor(start ? ColorRGBA.blue : ColorRGBA.green);
+        Sphere sphere = new Sphere(
+            "marker", new Vector3f(0, 0, TILE_SIZE/2), 10, 10, TILE_SIZE/2);
+        sphere.setSolidColor(COLORS[type]);
         sphere.setModelBound(new BoundingBox());
         sphere.updateModelBound();
         sphere.setLightCombineMode(LightState.OFF);
         attachChild(sphere);
     }
+
+    protected static final ColorRGBA[] COLORS = {
+        ColorRGBA.blue, // START
+        ColorRGBA.green, // BONUS
+        ColorRGBA.red, // CORRAL
+    };
 }

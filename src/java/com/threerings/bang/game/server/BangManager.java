@@ -44,9 +44,8 @@ import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.BonusMarker;
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.StartMarker;
 import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.client.BangService;
@@ -168,26 +167,20 @@ public class BangManager extends GameManager
 
                 // effect the initial shot
                 ShotEffect effect = shooter.shoot(_bangobj, target);
-                effect.prepare(_bangobj, _damage);
-                _bangobj.setEffect(effect);
-                recordDamage(shooter.owner, _damage);
+                deployEffect(shooter.owner, effect);
 
                 // effect any collateral damage
                 Effect[] ceffects = shooter.collateralDamage(
                     _bangobj, target, effect.newDamage);
                 int ccount = (ceffects == null) ? 0 : ceffects.length;
                 for (int ii = 0; ii < ccount; ii++) {
-                    ceffects[ii].prepare(_bangobj, _damage);
-                    _bangobj.setEffect(ceffects[ii]);
-                    recordDamage(shooter.owner, _damage);
+                    deployEffect(shooter.owner, ceffects[ii]);
                 }
 
                 // allow the target to return fire
                 effect = target.returnFire(_bangobj, shooter, effect.newDamage);
                 if (effect != null) {
-                    effect.prepare(_bangobj, _damage);
-                    _bangobj.setEffect(effect);
-                    recordDamage(target.owner, _damage);
+                    deployEffect(target.owner, effect);
                 }
 
                 // if they did not move in this same action, we need to
@@ -225,9 +218,7 @@ public class BangManager extends GameManager
 
         // and activate it
         Effect effect = card.activate(x, y);
-        effect.prepare(_bangobj, _damage);
-        _bangobj.setEffect(effect);
-        recordDamage(card.owner, _damage);
+        deployEffect(card.owner, effect);
     }
 
     // documentation inherited
@@ -309,33 +300,36 @@ public class BangManager extends GameManager
         _bangobj.setBoard(createBoard(pieces));
 
         // extract and remove all player start markers
-        _markers.clear();
+        _starts.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (p instanceof StartMarker) {
-                _markers.add(p);
+            if (Marker.isMarker(p, Marker.START)) {
+                _starts.add(p);
                 iter.remove();
             }
         }
         // if we lack sufficient numbers, create some random ones
-        for (int ii = _markers.size(); ii < getPlayerSlots(); ii++) {
-            StartMarker p = new StartMarker();
+        for (int ii = _starts.size(); ii < getPlayerSlots(); ii++) {
+            Marker p = new Marker(Marker.START);
             p.x = (short)RandomUtil.getInt(_bangobj.board.getWidth());
             p.y = (short)RandomUtil.getInt(_bangobj.board.getHeight());
-            _markers.add(p);
+            _starts.add(p);
         }
-        Collections.shuffle(_markers);
+        Collections.shuffle(_starts);
 
         // extract the bonus spawn markers from the pieces array
         _bonusSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (p instanceof BonusMarker) {
+            if (Marker.isMarker(p, Marker.BONUS)) {
                 _bonusSpots.add(p.x, p.y);
                 iter.remove();
             }
         }
         _bangobj.setPieces(new PieceDSet(pieces.iterator()));
+
+        // give the scenario a shot at its own custom markers
+        _scenario.filterMarkers(_bangobj, _starts, pieces);
 
         // create our initial board "shadow"
         _bangobj.board.shadowPieces(pieces.iterator());
@@ -479,7 +473,7 @@ public class BangManager extends GameManager
 
             // let the scenario know that we're about to start
             try {
-                _scenario.init(_bangobj, _markers, _bonusSpots, _purchases);
+                _scenario.init(_bangobj, _starts, _bonusSpots, _purchases);
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
                             ", error=" + ie.getMessage() + "].");
@@ -499,7 +493,7 @@ public class BangManager extends GameManager
                 }
 
                 // now position each of them
-                Piece p = _markers.remove(0);
+                Piece p = _starts.remove(0);
                 ArrayList<Point> spots = _bangobj.board.getOccupiableSpots(
                     ppieces.size(), p.x, p.y, 4);
                 while (spots.size() > 0 && ppieces.size() > 0) {
@@ -549,8 +543,11 @@ public class BangManager extends GameManager
                 continue;
             }
 
+            int ox = p.x, oy = p.y;
             if (p.tick(tick, _bangobj.board, pieces)) {
-                boolean removed = false;
+                Effect effect = null;
+
+                // if the piece died, make a note and maybe remove it
                 if (!p.isAlive()) {
                     p.wasKilled(tick);
                     _scenario.pieceWasKilled(_bangobj, p);
@@ -558,11 +555,22 @@ public class BangManager extends GameManager
                         _bangobj.removeFromPieces(p.getKey());
                         _bangobj.board.updateShadow(p, null);
                     }
+
+                // if the piece moved, let the scenario know about it
+                } else if (p.x != ox || p.y != oy) {
+                    effect = _scenario.pieceMoved(_bangobj, p);
                 }
 
-                if (!p.removeWhenDead()) {
-                    // the piece changed in some way so update it
+                // if the piece didn't die, update it
+                if (_bangobj.pieces.containsKey(p.getKey())) {
                     _bangobj.updatePieces(p);
+                }
+
+                // after the piece has been updated, we can safely apply
+                // any effects to it
+                if (effect != null) {
+                    effect.init(p);
+                    deployEffect(-1, effect);
                 }
             }
         }
@@ -737,20 +745,35 @@ public class BangManager extends GameManager
         }
 
         // let the scenario know that the unit moved
-        _scenario.unitMoved(_bangobj, munit);
+        Effect meffect = _scenario.pieceMoved(_bangobj, munit);
+        if (meffect != null) {
+            meffect.init(munit);
+            _effects.add(meffect);
+        }
 
         // update the unit in the distributed set
         _bangobj.updatePieces(munit);
 
         // finally effect the effects
         for (Effect effect : _effects) {
-            effect.prepare(_bangobj, _damage);
-            _bangobj.setEffect(effect);
-            recordDamage(unit.owner, _damage);
+            deployEffect(unit.owner, effect);
         }
         _effects.clear();
 
         return munit;
+    }
+
+    /**
+     * Prepares an effect and posts it to the game object, recording
+     * damage done in the process.
+     */
+    protected void deployEffect (int effector, Effect effect)
+    {
+        effect.prepare(_bangobj, _damage);
+        _bangobj.setEffect(effect);
+        if (effector != -1) {
+            recordDamage(effector, _damage);
+        }
     }
 
     /**
@@ -1066,7 +1089,7 @@ public class BangManager extends GameManager
     protected PointSet _bonusSpots = new PointSet();
 
     /** Used to track the locations where players can start. */
-    protected ArrayList<Piece> _markers = new ArrayList<Piece>();
+    protected ArrayList<Piece> _starts = new ArrayList<Piece>();
 
     /** Used to track effects during a move. */
     protected ArrayList<Effect> _effects = new ArrayList<Effect>();

@@ -17,6 +17,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
@@ -50,11 +51,11 @@ public class ClaimJumping extends Scenario
     public static final int NUGGET_COUNT = 2;
 
     @Override // documentation inherited
-    public void init (BangObject bangobj, ArrayList<Piece> markers,
+    public void init (BangObject bangobj, ArrayList<Piece> starts,
                       PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.init(bangobj, markers, bonusSpots, purchases);
+        super.init(bangobj, starts, bonusSpots, purchases);
 
         _claims = new ArrayList<Claim>();
         _gameOverTick = -1;
@@ -68,8 +69,8 @@ public class ClaimJumping extends Scenario
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Claim) {
                 Claim claim = (Claim)pieces[ii];
-                // determine which marker to which it is nearest
-                int midx = getNearestMarker(claim, markers);
+                // determine which start marker to which it is nearest
+                int midx = getOwner(claim, starts);
                 if (midx == -1 || assigned.contains(midx)) {
                     throw new InvocationException("m.no_start_marker_for_claim");
                 }
@@ -113,8 +114,13 @@ public class ClaimJumping extends Scenario
     }
 
     @Override // documentation inherited
-    public void unitMoved (BangObject bangobj, Unit unit)
+    public Effect pieceMoved (BangObject bangobj, Piece piece)
     {
+        if (!(piece instanceof Unit)) {
+            return null;
+        }
+        Unit unit = (Unit)piece;
+
         // if this unit landed next to one of the claims, do some stuff
         Claim claim = null;
         for (Claim c : _claims) {
@@ -124,10 +130,11 @@ public class ClaimJumping extends Scenario
             }
         }
         if (claim == null) {
-            return;
+            return null;
         }
 
-        // deposit or withdraw a nugget as appropriate
+        // deposit or withdraw a nugget as appropriate (TODO: turn these
+        // into effects)
         if (claim.owner == unit.owner && unit.benuggeted) {
             // TODO: create an effect to animate the nugget
             claim.nuggets++;
@@ -140,6 +147,8 @@ public class ClaimJumping extends Scenario
             unit.benuggeted = true;
             bangobj.updatePieces(claim);
         }
+
+        return null;
     }
 
     @Override // documentation inherited
@@ -243,21 +252,6 @@ public class ClaimJumping extends Scenario
         drop.position(x, y);
         bangobj.board.updateShadow(null, drop);
         bangobj.addToPieces(drop);
-    }
-
-    protected int getNearestMarker (Claim claim, ArrayList<Piece> markers)
-    {
-        int mindist2 = Integer.MAX_VALUE, idx = -1;
-        for (int ii = 0, ll = markers.size(); ii < ll; ii++) {
-            Piece marker = markers.get(ii);
-            int dist2 = MathUtil.distanceSq(
-                claim.x, claim.y, marker.x, marker.y);
-            if (dist2 < mindist2) {
-                mindist2 = dist2;
-                idx = ii;
-            }
-        }
-        return idx;
     }
 
     /** A list of the active claims. */

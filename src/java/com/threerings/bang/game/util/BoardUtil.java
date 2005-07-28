@@ -18,10 +18,9 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.piece.BonusMarker;
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
-import com.threerings.bang.game.data.piece.StartMarker;
 
 /**
  * Bang board related utility routines.
@@ -107,10 +106,9 @@ public class BoardUtil
     {
         if (piece instanceof Prop) {
             oout.writeUTF(((Prop)piece).getType());
-        } else if (piece instanceof StartMarker) {
-            oout.writeUTF("__start__");
-        } else if (piece instanceof BonusMarker) {
-            oout.writeUTF("__bonus__");
+        } else if (piece instanceof Marker) {
+            oout.writeUTF("__marker__");
+            oout.writeInt(((Marker)piece).getType());
         } else {
             throw new IOException("Unknown piece type " +
                                   "[type=" + piece.getClass().getName() +
@@ -128,10 +126,12 @@ public class BoardUtil
     {
         String type = oin.readUTF();
         Piece piece;
-        if (type.equals("__start__")) {
-            piece = new StartMarker();
+        if (type.equals("__marker__")) {
+            piece = new Marker(oin.readInt());
+        } else if (type.equals("__start__")) {
+            piece = new Marker(Marker.START); // legacy format
         } else if (type.equals("__bonus__")) {
-            piece = new BonusMarker();
+            piece = new Marker(Marker.BONUS); // legacy format
         } else {
             piece = Prop.getProp(type);
         }
