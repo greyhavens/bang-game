@@ -43,7 +43,7 @@ public class CattleHerding extends Scenario
     /** The ratio of cattle to the size of the board (width x height). Can
      * also be considered the probability that a cow will be spawned in a
      * particular square. */
-    public static final float CATTLE_RATIO = 0.02f;
+    public static final float CATTLE_RATIO = 0.04f;
 
     /** Cash earned for each corralled cow. */
     public static final int CASH_PER_COW = 50;

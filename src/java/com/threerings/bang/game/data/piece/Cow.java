@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
 
+import com.threerings.util.RandomUtil;
+
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -45,16 +47,34 @@ public class Cow extends Piece
             }
         }
 
-        // if we're on the edge of the board, shy away from that as well
-        if (x == board.getWidth()-1) {
-            avoid(board, _spot, board.getWidth(), y);
-        } else if (x == 0) {
-            avoid(board, _spot, -1, y);
-        }
-        if (y == board.getHeight()-1) {
-            avoid(board, _spot, x, board.getHeight());
-        } else if (y == 0) {
-            avoid(board, _spot, x, -1);
+//         // if we're on the edge of the board, shy away from that as well
+//         if (x == board.getWidth()-1) {
+//             avoid(board, _spot, board.getWidth(), y);
+//         } else if (x == 0) {
+//             avoid(board, _spot, -1, y);
+//         }
+//         if (y == board.getHeight()-1) {
+//             avoid(board, _spot, x, board.getHeight());
+//         } else if (y == 0) {
+//             avoid(board, _spot, x, -1);
+//         }
+
+        // if we haven't moved due to a unit scaring us off, randomly
+        // continue moving some percentage of the time
+        if (_spot.x == x && _spot.y == y && RandomUtil.getInt(100) < 50) {
+            // pick a set of candidate movements
+            int[] dorient = DORIENTS[RandomUtil.getInt(DORIENTS.length)];
+            // go down the list looking for one that works
+            for (int ii = 0; ii < dorient.length; ii++) {
+                int norient = (orientation + dorient[ii] + 4) % 4;
+                int nx = x + FWD_X_MAP[norient];
+                int ny = y + FWD_Y_MAP[norient];
+                if (board.canOccupy(this, nx, ny)) {
+                    _spot.x = nx;
+                    _spot.y = ny;
+                    break;
+                }
+            }
         }
 
         if (_spot.x != x || _spot.y != y) {
@@ -91,4 +111,13 @@ public class Cow extends Piece
     }
 
     protected transient Point _spot = new Point();
+
+    protected static final int[][] DORIENTS = {
+        { 0, 1, -1 }, // foward, right, left
+        { 0, -1, 1 }, // foward, left, right
+        { 0, 1, -1 }, // foward, right, left
+        { 0, -1, 1 }, // foward, left, right
+        { 1, -1, 0 }, // right, left, forward
+        { -1, 1, 0 }, // left, right, forward
+    };
 }
