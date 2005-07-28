@@ -46,6 +46,8 @@ public class MobileSprite extends PieceSprite
     @Override // documentation inherited
     protected void createGeometry (BangContext ctx)
     {
+        super.createGeometry(ctx);
+
         if (_shadtex == null) {
             loadTextures(ctx);
         }
@@ -60,7 +62,7 @@ public class MobileSprite extends PieceSprite
 
         // our models are centered at the origin, but we need to shift
         // them to the center of the tile
-        _model = ctx.getModelCache().getModel(_name, _type);
+        _model = ctx.getModelCache().getModel(_type, _name);
         Node[] meshes = _model.getMeshes(getRestPose());
         for (int ii = 0; ii < meshes.length; ii++) {
             attachChild(meshes[ii]);

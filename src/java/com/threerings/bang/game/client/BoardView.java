@@ -463,7 +463,7 @@ public class BoardView extends BComponent
         if (sprite == null) {
             sprite = piece.createSprite();
             sprite.init(_ctx, piece, _bangobj.tick);
-            log.info("Creating sprite for " + piece + ".");
+            log.fine("Creating sprite for " + piece + ".");
             _pieces.put((int)piece.pieceId, sprite);
             addSprite(sprite);
         }
@@ -477,7 +477,7 @@ public class BoardView extends BComponent
     {
         PieceSprite sprite = _pieces.remove(pieceId);
         if (sprite != null) {
-            log.info("Removing sprite [id=" + pieceId + ", why=" + why + "].");
+            log.fine("Removing sprite [id=" + pieceId + ", why=" + why + "].");
             removeSprite(sprite);
         } else {
             log.warning("No sprite for removed piece [id=" + pieceId +

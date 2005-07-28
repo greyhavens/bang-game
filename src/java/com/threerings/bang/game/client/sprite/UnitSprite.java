@@ -39,7 +39,7 @@ public class UnitSprite extends MobileSprite
 {
     public UnitSprite (String type)
     {
-        super("unit", type);
+        super("units", type);
     }
 
     /**
