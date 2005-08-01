@@ -35,6 +35,8 @@ import com.jmex.model.XMLparser.JmeBinaryReader;
 import com.jme.bui.BIcon;
 import com.jme.bui.TextureIcon;
 
+import com.threerings.util.RandomUtil;
+
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -85,96 +87,39 @@ public class Model
             if ((midx = pkey.indexOf(".meshes")) != -1) {
                 String aname = pkey.substring(0, midx);
                 StringTokenizer tok = new StringTokenizer(pval, ", ");
-                CloneCreator[] models = new CloneCreator[tok.countTokens()];
-                for (int ii = 0; ii < models.length; ii++) {
+                Part[] parts = new Part[tok.countTokens()];
+                for (int ii = 0; ii < parts.length; ii++) {
+                    Part part = (parts[ii] = new Part());
+
+                    // load up the part's 3D model
                     String mesh = tok.nextToken();
+                    part.creator = loadModel(ctx, path + mesh + ".jme");
+
+                    // load up any texture information
                     String texture = props.getProperty(mesh + ".texture");
                     if (texture == null) {
                         texture = props.getProperty("texture");
                     }
-                    if (texture != null) {
-                        texture = path + texture;
+                    if (texture == null) {
+                        continue;
                     }
-                    models[ii] = loadModel(ctx, path + mesh + ".jme", texture);
+
+                    // the model may have multiple textures from which we
+                    // select at random
+                    StringTokenizer ttok = new StringTokenizer(texture, ", ");
+                    part.tstates = new TextureState[ttok.countTokens()];
+                    for (int tt = 0; tt < part.tstates.length; tt++) {
+                        part.tstates[tt] =
+                            getTexture(ctx, path + ttok.nextToken());
+                    }
                 }
-                _anims.put(aname, models);
+                _anims.put(aname, parts);
             }
         }
 
         // create the icon image for this model if it's a unit
         if (type.equals("units")) {
-            TextureRenderer trenderer =
-                ctx.getDisplay().createTextureRenderer(
-                    ICON_SIZE, ICON_SIZE, false, true, false, false,
-                    TextureRenderer.RENDER_TEXTURE_2D, 0);
-            trenderer.setBackgroundColor(new ColorRGBA(0f, 1f, 1f, 0f));
-
-            Vector3f loc = new Vector3f(TILE_SIZE/2, -TILE_SIZE, TILE_SIZE);
-            trenderer.getCamera().setLocation(loc);
-            Matrix3f rotm = new Matrix3f();
-            rotm.fromAngleAxis(-FastMath.PI/2, trenderer.getCamera().getLeft());
-            rotm.mult(trenderer.getCamera().getDirection(),
-                      trenderer.getCamera().getDirection());
-            rotm.mult(trenderer.getCamera().getUp(),
-                      trenderer.getCamera().getUp());
-            rotm.mult(trenderer.getCamera().getLeft(),
-                      trenderer.getCamera().getLeft());
-            rotm.fromAngleAxis(FastMath.PI/6, trenderer.getCamera().getUp());
-            rotm.mult(trenderer.getCamera().getDirection(),
-                      trenderer.getCamera().getDirection());
-            rotm.mult(trenderer.getCamera().getUp(),
-                      trenderer.getCamera().getUp());
-            rotm.mult(trenderer.getCamera().getLeft(),
-                      trenderer.getCamera().getLeft());
-            rotm.fromAngleAxis(FastMath.PI/6, trenderer.getCamera().getLeft());
-            rotm.mult(trenderer.getCamera().getDirection(),
-                      trenderer.getCamera().getDirection());
-            rotm.mult(trenderer.getCamera().getUp(),
-                      trenderer.getCamera().getUp());
-            rotm.mult(trenderer.getCamera().getLeft(),
-                      trenderer.getCamera().getLeft());
-            trenderer.getCamera().update();
-
-            _icon = trenderer.setupTexture();
-            _icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-
-            Node all = new Node("all");
-            all.setRenderQueueMode(Renderer.QUEUE_SKIP);
-
-            all.attachChild(new Box("origin", new Vector3f(0.01f, .01f, .01f),
-                                    new Vector3f(.02f, .02f, .02f)));
-
-            PointLight light = new PointLight();
-            light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-            light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
-            light.setLocation(new Vector3f(100, 100, 100));
-            light.setAttenuate(true);
-            light.setConstant(0.25f);
-            light.setEnabled(true);
-
-            LightState lights = ctx.getRenderer().createLightState();
-            lights.setEnabled(true);
-            lights.attach(light);
-            all.setRenderState(lights);
-
-            Node[] meshes = getMeshes("standing");
-            for (int ii = 0; ii < meshes.length; ii++) {
-                all.attachChild(meshes[ii]);
-            }
-
-            ZBufferState buf = ctx.getRenderer().createZBufferState();
-            buf.setEnabled(true);
-            buf.setFunction(ZBufferState.CF_LEQUAL);
-            all.setRenderState(buf);
-
-            all.updateGeometricState(0, true);
-            all.updateRenderState();
-
-            trenderer.render(all, _icon);
-            trenderer.cleanup();
-
-            // restore the normal view camera
-            ctx.getCamera().update();
+            createIconImage(ctx);
         }
     }
 
@@ -188,15 +133,22 @@ public class Model
 
     public Node[] getMeshes (String action)
     {
-        CloneCreator[] cc = _anims.get(action);
-        if (cc == null) {
+        Part[] parts = _anims.get(action);
+        if (parts == null) {
             log.warning("Requested unknown action [model=" + _key +
                         ", action=" + action + "].");
             return new Node[0];
         }
-        Node[] nodes = new Node[cc.length];
-        for (int ii = 0; ii < cc.length; ii++) {
-            nodes[ii] = (Node)cc[ii].createCopy();
+        Node[] nodes = new Node[parts.length];
+        for (int ii = 0; ii < parts.length; ii++) {
+            nodes[ii] = (Node)parts[ii].creator.createCopy();
+            // select a random texture state
+            if (parts[ii].tstates != null) {
+                TextureState tstate = (TextureState)
+                    RandomUtil.pickRandom(parts[ii].tstates);
+                nodes[ii].setRenderState(tstate);
+                nodes[ii].updateRenderState();
+            }
         }
         return nodes;
     }
@@ -217,8 +169,7 @@ public class Model
             " a:" + _anims.size() + ")";
     }
 
-    protected CloneCreator loadModel (
-        BangContext ctx, String path, String texpath)
+    protected CloneCreator loadModel (BangContext ctx, String path)
     {
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
@@ -258,14 +209,6 @@ public class Model
                 model.attachChild(box);
             }
 
-            if (texpath != null) {
-                TextureState ts = getTexture(ctx, texpath);
-                if (ts != null) {
-                    model.setRenderState(ts);
-                    model.updateRenderState();
-                }
-            }
-
             cc = new ModelCloneCreator(model);
             // these define what we want to "shallow" copy
             cc.addProperty("colors");
@@ -274,6 +217,82 @@ public class Model
             _meshes.put(path, cc);
         }
         return cc;
+    }
+
+    protected void createIconImage (BangContext ctx)
+    {
+        TextureRenderer trenderer =
+            ctx.getDisplay().createTextureRenderer(
+                ICON_SIZE, ICON_SIZE, false, true, false, false,
+                TextureRenderer.RENDER_TEXTURE_2D, 0);
+        trenderer.setBackgroundColor(new ColorRGBA(0f, 1f, 1f, 0f));
+
+        Vector3f loc = new Vector3f(TILE_SIZE/2, -TILE_SIZE, TILE_SIZE);
+        trenderer.getCamera().setLocation(loc);
+        Matrix3f rotm = new Matrix3f();
+        rotm.fromAngleAxis(-FastMath.PI/2, trenderer.getCamera().getLeft());
+        rotm.mult(trenderer.getCamera().getDirection(),
+                  trenderer.getCamera().getDirection());
+        rotm.mult(trenderer.getCamera().getUp(),
+                  trenderer.getCamera().getUp());
+        rotm.mult(trenderer.getCamera().getLeft(),
+                  trenderer.getCamera().getLeft());
+        rotm.fromAngleAxis(FastMath.PI/6, trenderer.getCamera().getUp());
+        rotm.mult(trenderer.getCamera().getDirection(),
+                  trenderer.getCamera().getDirection());
+        rotm.mult(trenderer.getCamera().getUp(),
+                  trenderer.getCamera().getUp());
+        rotm.mult(trenderer.getCamera().getLeft(),
+                  trenderer.getCamera().getLeft());
+        rotm.fromAngleAxis(FastMath.PI/6, trenderer.getCamera().getLeft());
+        rotm.mult(trenderer.getCamera().getDirection(),
+                  trenderer.getCamera().getDirection());
+        rotm.mult(trenderer.getCamera().getUp(),
+                  trenderer.getCamera().getUp());
+        rotm.mult(trenderer.getCamera().getLeft(),
+                  trenderer.getCamera().getLeft());
+        trenderer.getCamera().update();
+
+        _icon = trenderer.setupTexture();
+        _icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
+
+        Node all = new Node("all");
+        all.setRenderQueueMode(Renderer.QUEUE_SKIP);
+
+        all.attachChild(new Box("origin", new Vector3f(0.01f, .01f, .01f),
+                                new Vector3f(.02f, .02f, .02f)));
+
+        PointLight light = new PointLight();
+        light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+        light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
+        light.setLocation(new Vector3f(100, 100, 100));
+        light.setAttenuate(true);
+        light.setConstant(0.25f);
+        light.setEnabled(true);
+
+        LightState lights = ctx.getRenderer().createLightState();
+        lights.setEnabled(true);
+        lights.attach(light);
+        all.setRenderState(lights);
+
+        Node[] meshes = getMeshes("standing");
+        for (int ii = 0; ii < meshes.length; ii++) {
+            all.attachChild(meshes[ii]);
+        }
+
+        ZBufferState buf = ctx.getRenderer().createZBufferState();
+        buf.setEnabled(true);
+        buf.setFunction(ZBufferState.CF_LEQUAL);
+        all.setRenderState(buf);
+
+        all.updateGeometricState(0, true);
+        all.updateRenderState();
+
+        trenderer.render(all, _icon);
+        trenderer.cleanup();
+
+        // restore the normal view camera
+        ctx.getCamera().update();
     }
 
     protected TextureState getTexture (BangContext ctx, String texpath)
@@ -305,6 +324,16 @@ public class Model
         return npath.replaceAll(PATH_DOTDOT, "");
     }
 
+    /** Contains information on one part of a model. */
+    protected static class Part
+    {
+        /** Used to create a clone of the model. */
+        public CloneCreator creator;
+
+        /** A list of texture states from which to select randomly. */
+        public TextureState[] tstates;
+    }
+
     protected String _key;
     protected Texture _icon;
 
@@ -314,8 +343,7 @@ public class Model
     protected HashMap<String,TextureState> _textures =
         new HashMap<String,TextureState>();
 
-    protected HashMap<String,CloneCreator[]> _anims =
-        new HashMap<String,CloneCreator[]>();
+    protected HashMap<String,Part[]> _anims = new HashMap<String,Part[]>();
 
     protected static final String PATH_DOTDOT = "[^/]+/\\.\\./";
 }
