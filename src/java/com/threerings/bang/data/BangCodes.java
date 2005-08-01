@@ -37,4 +37,9 @@ public interface BangCodes extends InvocationCodes
     /** An error code reported when a financial transaction cannot complete. */
     public static final String INSUFFICIENT_FUNDS =
         MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");
+
+    /** The highest number of players we will allow in a game (currently
+     * we only support four but we'll probably get crazy and try larger
+     * numbers at some point). */
+    public static final int MAX_PLAYERS = 8;
 }

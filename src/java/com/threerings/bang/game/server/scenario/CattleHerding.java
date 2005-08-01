@@ -40,6 +40,9 @@ import static com.threerings.bang.Log.log;
  */
 public class CattleHerding extends Scenario
 {
+    /** The identifier for this scenario. */
+    public static final String IDENT = "ch";
+
     /** The ratio of cattle to the size of the board (width x height). Can
      * also be considered the probability that a cow will be spawned in a
      * particular square. */

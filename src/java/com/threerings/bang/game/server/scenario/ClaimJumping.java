@@ -47,6 +47,9 @@ import static com.threerings.bang.Log.log;
 public class ClaimJumping extends Scenario
     implements GameCodes
 {
+    /** The identifier for this scenario. */
+    public static final String IDENT = "cj";
+
     /** The number of nuggets in each claim. TODO: put in BangConfig. */
     public static final int NUGGET_COUNT = 2;
 

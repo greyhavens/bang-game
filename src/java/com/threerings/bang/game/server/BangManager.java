@@ -55,7 +55,6 @@ import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.server.scenario.CattleHerding;
-import com.threerings.bang.game.server.scenario.ClaimJumping;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.Shootout;
 import com.threerings.bang.game.util.BoardUtil;
@@ -261,8 +260,7 @@ public class BangManager extends GameManager
         _bconfig = (BangConfig)_gameconfig;
 
         // TODO: pick the proper scenario
-//        _scenario = new CattleHerding();
-        _scenario = new ClaimJumping();
+        _scenario = new CattleHerding();
 
         // TODO: get the town info from somewhere
         _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
