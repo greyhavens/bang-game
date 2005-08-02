@@ -25,9 +25,6 @@ public class BangConfig extends GameConfig
     /** Whether or not fog of war is activated. */
     public boolean fog = false;
 
-    /** A serialized representation of the board to be used. */
-    public byte[] boardData;
-
     @Override // documentation inherited
     public String getBundleName ()
     {

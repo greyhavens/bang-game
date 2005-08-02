@@ -66,7 +66,8 @@ public class EditorBoardView extends BoardView
         _dragPiece = getHoverPiece();
         if (_dragPiece != null) {
             if (e.getButton() == MouseEvent.BUTTON2) {
-                _bangobj.removeFromPieces(_dragPiece.getKey());
+                EditorController.postAction(
+                    _panel, EditorController.REMOVE_PIECE, _dragPiece.getKey());
                 _dragPiece = null;
             } else {
                 _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);

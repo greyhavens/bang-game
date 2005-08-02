@@ -38,6 +38,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.persist.BoardRecord;
 
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
@@ -57,7 +58,6 @@ import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.server.scenario.CattleHerding;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.Shootout;
-import com.threerings.bang.game.util.BoardUtil;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -927,57 +927,48 @@ public class BangManager extends GameManager
      */
     protected BangBoard createBoard (ArrayList<Piece> pieces)
     {
-        Tuple tup = null;
-
-        // try loading up the player specified board
-        try {
-            byte[] bdata = _bconfig.boardData;
-            if (bdata != null && bdata.length > 0) {
-                tup = BoardUtil.loadBoard(bdata);
-            }
-        } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failed to unserialize board.", ioe);
-        }
-
-        // if that failed, load a stock board
         int pcount = _bconfig.players.length;
-        if (tup == null) {
-            ArrayList boards = (ArrayList)_boards.get(pcount);
-            String board = (String)RandomUtil.pickRandom(boards);
-            if (isTest()) {
-                board = "default";
-            }
-            log.info("Using: " + board);
-            try {
-                ClassLoader cl = getClass().getClassLoader();
-                InputStream in = cl.getResourceAsStream(
-                    "rsrc/boards/" + pcount + "/" + board + ".board");
-                if (in != null) {
-                    tup = BoardUtil.loadBoard(IOUtils.toByteArray(in));
-                } else {
-                    log.warning("Unable to load default board! " +
-                                "[cl=" + cl + "].");
-                }
-            } catch (IOException ioe) {
-                log.log(Level.WARNING, "Failed to load default board.", ioe);
-            }
+        ArrayList boards = (ArrayList)_boards.get(pcount);
+        String bname = (String)RandomUtil.pickRandom(boards);
+        if (isTest()) {
+            bname = "default";
         }
+        log.info("Using: " + bname);
 
         BangBoard board = null;
-        if (tup != null) {
-            board = (BangBoard)tup.left;
-            Piece[] pvec = (Piece[])tup.right;
-            int maxPieceId = 0;
-            for (int ii = 0; ii < pvec.length; ii++) {
-                if (pvec[ii].pieceId > maxPieceId) {
-                    maxPieceId = pvec[ii].pieceId;
-                }
+        Piece[] pvec = null;
+        try {
+            ClassLoader cl = getClass().getClassLoader();
+            InputStream in = cl.getResourceAsStream(
+                "rsrc/boards/" + pcount + "/" + bname + ".board");
+            if (in != null) {
+                BoardRecord brec = new BoardRecord();
+                brec.load(in);
+                board = brec.getBoard();
+                pvec = brec.getPieces();
+            } else {
+                log.warning("Unable to load default board! " +
+                            "[cl=" + cl + "].");
             }
-            Collections.addAll(pieces, pvec);
-            Piece.setNextPieceId(maxPieceId);
-        } else {
-            board = new BangBoard(5, 5);
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Failed to load default board.", ioe);
         }
+
+        if (board == null) {
+            // TODO: fail
+            board = new BangBoard(5, 5);
+            pvec = new Piece[0];
+        }
+
+        int maxPieceId = 0;
+        for (int ii = 0; ii < pvec.length; ii++) {
+            if (pvec[ii].pieceId > maxPieceId) {
+                maxPieceId = pvec[ii].pieceId;
+            }
+        }
+        Collections.addAll(pieces, pvec);
+        Piece.setNextPieceId(maxPieceId);
+
         return board;
     }
 

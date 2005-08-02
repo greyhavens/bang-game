@@ -42,6 +42,9 @@ public class EditorPanel extends JPanel
     /** Displays our board. */
     public EditorBoardView view;
 
+    /** Displays board metadata. */
+    public BoardInfo info;
+
     /** Allows the selection of terrain. */
     public TerrainSelector terrain;
 
@@ -73,7 +76,8 @@ public class EditorPanel extends JPanel
         vlabel.setForeground(Color.black);
         sidePanel.add(vlabel, VGroupLayout.FIXED);
 
-        // add the terrain selector and piece creator
+        // add the various control panels
+        sidePanel.add(info = new BoardInfo(ctx), VGroupLayout.FIXED);
         sidePanel.add(terrain = new TerrainSelector(ctx), VGroupLayout.FIXED);
         PieceCreator pc = new PieceCreator(ctx);
         pc.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));

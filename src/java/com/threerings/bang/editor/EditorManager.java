@@ -18,7 +18,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.data.generate.CompoundGenerator;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.util.BoardUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -62,21 +61,6 @@ public class EditorManager extends GameManager
      */
     protected BangBoard createBoard (ArrayList<Piece> pieces)
     {
-        // first, try loading it from our game configuration
-        EditorConfig gconfig = (EditorConfig)_gameconfig;
-//         if (gconfig.board != null && gconfig.board.length > 0) {
-//             try {
-//                 Tuple tup = BoardUtil.loadBoard(gconfig.board);
-//                 BangBoard board = (BangBoard)tup.left;
-//                 Piece[] pvec = (Piece[])tup.right;
-//                 Collections.addAll(pieces, pvec);
-//                 return board;
-//             } catch (IOException ioe) {
-//                 log.log(Level.WARNING, "Failed to unserialize board.", ioe);
-//             }
-//         }
-
-        // if that doesn't work, generate a random board
         int size = 16; // gconfig.size;
         BangBoard board = new BangBoard(size, size);
         CompoundGenerator gen = new CompoundGenerator();
