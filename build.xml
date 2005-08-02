@@ -88,6 +88,16 @@
     </convert>
   </target>
 
+  <!-- loads our boards into the database -->
+  <target name="boards">
+    <taskdef name="loadboard"
+      classname="com.threerings.bang.tools.LoadBoardTask"
+      classpathref="classpath"/>
+    <loadboard props="server.properties">
+      <fileset dir="rsrc/boards" includes="**/*.board"/>
+    </loadboard>
+  </target>
+
   <!-- creates the serialized fringe config -->
   <target name="fringe">
     <taskdef name="conffringe"

@@ -77,7 +77,7 @@ public class BoardRepository extends JORARepository
         throws PersistenceException
     {
         FieldMask mask = _btable.getFieldMask();
-        mask.setModified("NAME");
+        mask.setModified("name");
         BoardRecord orecord = (BoardRecord)loadByExample(_btable, mask, record);
         if (orecord != null) {
             record.boardId = orecord.boardId;

@@ -66,7 +66,6 @@ public class ScenarioFactory
             _townmap.put(town, townids = new ArrayList<String>());
         }
         townids.add(ident);
-        log.info("added " + ident);
     }
 
     /** A mapping from scenario identifier to {@link Scenario} class. */
