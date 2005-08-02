@@ -18,11 +18,17 @@ public class ScenarioFactory
 {
     /** Lists all scenarios available in all towns up to and including the
      * specified town. */
-    public String[] getScenarios (String town)
+    public static String[] getScenarios (String town)
     {
         ArrayList<String> scenarios = new ArrayList<String>();
         for (int ii = 0; ii < BangCodes.TOWN_IDS.length; ii++) {
-            scenarios.addAll(_townmap.get(BangCodes.TOWN_IDS[ii]));
+            ArrayList<String> tscens = _townmap.get(BangCodes.TOWN_IDS[ii]);
+            if (tscens != null) {
+                scenarios.addAll(tscens);
+            }
+            if (town.equals(BangCodes.TOWN_IDS[ii])) {
+                break;
+            }
         }
         return scenarios.toArray(new String[scenarios.size()]);
     }
@@ -55,11 +61,12 @@ public class ScenarioFactory
         _scenmap.put(ident, sclass);
 
         // map it by town
-        ArrayList<String> townids = _townmap.get(ident);
+        ArrayList<String> townids = _townmap.get(town);
         if (townids == null) {
-            _townmap.put(ident, townids = new ArrayList<String>());
+            _townmap.put(town, townids = new ArrayList<String>());
         }
         townids.add(ident);
+        log.info("added " + ident);
     }
 
     /** A mapping from scenario identifier to {@link Scenario} class. */

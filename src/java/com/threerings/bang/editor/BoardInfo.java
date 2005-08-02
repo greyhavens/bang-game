@@ -3,14 +3,22 @@
 
 package com.threerings.bang.editor;
 
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.samskivert.swing.VGroupLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.util.BangContext;
 
@@ -25,6 +33,7 @@ public class BoardInfo extends JPanel
                                    5, VGroupLayout.TOP));
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("editor");
+        MessageBundle gmsgs = ctx.getMessageManager().getBundle("game");
 
         add(new JLabel(_msgs.get("m.board_name")));
         add(_name = new JTextField());
@@ -33,6 +42,32 @@ public class BoardInfo extends JPanel
         updatePlayers(0);
 
         add(new JLabel(_msgs.get("m.scenarios")));
+        JPanel spanel = new JPanel(
+            new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH,
+                             2, VGroupLayout.TOP));
+        String[] scids = ScenarioFactory.getScenarios(
+            BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1]);
+        for (int ii = 0; ii < scids.length; ii++) {
+            JCheckBox box = new JCheckBox(gmsgs.get("m.scenario_" + scids[ii]));
+            _sboxes.put(scids[ii], box);
+            spanel.add(box);
+        }
+        add(new JScrollPane(spanel) {
+            public Dimension getPreferredSize () {
+                Dimension d = super.getPreferredSize();
+                d.height = Math.min(d.height, 200);
+                return d;
+            }
+        });
+    }
+
+    /**
+     * Updates the "number of players" count displayed for this board.
+     */
+    public void updatePlayers (int players)
+    {
+        _players = players;
+        _pcount.setText(_msgs.get("m.players", "" + players));
     }
 
     /**
@@ -43,6 +78,16 @@ public class BoardInfo extends JPanel
     {
         _name.setText(board.name);
         updatePlayers(board.players);
+
+        // first turn off all the scenario check boxes
+        for (String scid : _sboxes.keySet()) {
+            _sboxes.get(scid).setSelected(false);
+        }
+        // then turn on the ones that are valid for this board
+        String[] scids = board.getScenarios();
+        for (int ii = 0; ii < scids.length; ii++) {
+            _sboxes.get(scids[ii]).setSelected(true);
+        }
     }
 
     /**
@@ -53,12 +98,13 @@ public class BoardInfo extends JPanel
     {
         board.name = _name.getText();
         board.players = _players;
-    }
-
-    public void updatePlayers (int players)
-    {
-        _players = players;
-        _pcount.setText(_msgs.get("m.players", "" + players));
+        ArrayList<String> scenids = new ArrayList<String>();
+        for (String scid : _sboxes.keySet()) {
+            if (_sboxes.get(scid).isSelected()) {
+                scenids.add(scid);
+            }
+        }
+        board.setScenarios(scenids.toArray(new String[scenids.size()]));
     }
 
     protected BangContext _ctx;
@@ -67,4 +113,7 @@ public class BoardInfo extends JPanel
     protected JTextField _name;
     protected JLabel _pcount;
     protected int _players;
+
+    protected HashMap<String,JCheckBox> _sboxes =
+        new HashMap<String,JCheckBox>();
 }

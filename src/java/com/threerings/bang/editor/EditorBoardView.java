@@ -3,17 +3,22 @@
 
 package com.threerings.bang.editor;
 
+import java.awt.Cursor;
 import java.awt.Point;
 
 import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
 import com.jme.bui.event.MouseWheelListener;
 
+import com.threerings.jme.sprite.Sprite;
+
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
+
+import com.threerings.bang.editor.EditorContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -98,6 +103,24 @@ public class EditorBoardView extends BoardView
         // nada
     }
 
+    // documentation inherited from interface MouseWheelListener
+    public void mouseWheeled (MouseEvent e)
+    {
+        // if we're over a piece, rotate it
+        Piece piece = getHoverPiece();
+        if (piece != null) {
+            piece = (Piece)piece.clone();
+            if (piece.rotate(e.getDelta() > 0 ? Piece.CCW : Piece.CW)) {
+                _bangobj.updatePieces(piece);
+            }
+
+        } else {
+            // otherwise adjust the currently selected terrain type
+            _panel.terrain.rollSelection(e.getDelta());
+        }
+    }
+
+    @Override // documentation inherited
     protected void hoverTileChanged (int tx, int ty)
     {
         // if we are dragging a piece, move that feller around
@@ -114,21 +137,15 @@ public class EditorBoardView extends BoardView
         }
     }
 
-    // documentation inherited from interface MouseWheelListener
-    public void mouseWheeled (MouseEvent e)
+    @Override // documentation inherited
+    protected void hoverSpriteChanged (Sprite hover)
     {
-        // if we're over a piece, rotate it
-        Piece piece = getHoverPiece();
-        if (piece != null) {
-            piece = (Piece)piece.clone();
-            if (piece.rotate(e.getDelta() > 0 ? Piece.CCW : Piece.CW)) {
-                _bangobj.updatePieces(piece);
-            }
+        super.hoverSpriteChanged(hover);
 
-        } else {
-            // otherwise adjust the currently selected terrain type
-            _panel.terrain.rollSelection(e.getDelta());
-        }
+        // update the cursor when we're hovering over a piece
+        ((EditorContext)_ctx).getFrame().setCursor(
+            hover == null ? Cursor.getDefaultCursor() :
+            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     protected void handleMousePress (int button, int tx, int ty)

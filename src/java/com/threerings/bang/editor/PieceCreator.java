@@ -3,6 +3,7 @@
 
 package com.threerings.bang.editor;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -24,7 +25,9 @@ public class PieceCreator extends JPanel
 {
     public PieceCreator (BangContext ctx)
     {
-        setLayout(new VGroupLayout());
+        setLayout(new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH,
+                                   5, VGroupLayout.TOP));
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         _ctx = ctx;
 
         add(new JLabel(_ctx.xlate("editor", "m.pieces_props")));

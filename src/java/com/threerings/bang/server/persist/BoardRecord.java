@@ -45,7 +45,7 @@ public class BoardRecord
     public String creator;
 
     /** A comma separated list of scenarios for which this board is
-     * usable. */
+     * usable. Use {@link #setScenarios} and {@link #getScenarios}. */
     public String scenarios;
 
     /** The number of players for which this board is appropriate. */
@@ -106,6 +106,24 @@ public class BoardRecord
             decodeData();
         }
         return _pieces;
+    }
+
+    /**
+     * Returns an array of all scenarios for which this board is
+     * applicable.
+     */
+    public String[] getScenarios ()
+    {
+        return (scenarios == null) ? new String[0] :
+            StringUtil.split(scenarios, ",");
+    }
+
+    /**
+     * Configures this board record with a set of valid scenarios.
+     */
+    public void setScenarios (String[] scenids)
+    {
+        scenarios = StringUtil.join(scenids, ",");
     }
 
     /** Returns a string representation of this instance. */

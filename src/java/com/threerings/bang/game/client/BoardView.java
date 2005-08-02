@@ -325,13 +325,7 @@ public class BoardView extends BComponent
         // update the sprite over which the mouse is hovering
         Sprite hover = updateHoverSprite();
         if (hover != _hover) {
-            if (_hover instanceof UnitSprite) {
-                ((UnitSprite)_hover).setHovered(false);
-            }
-            _hover = hover;
-            if (_hover instanceof UnitSprite) {
-                ((UnitSprite)_hover).setHovered(true);
-            }
+            hoverSpriteChanged(hover);
         }
 
         // if we have highlight tiles, determine which of those the mouse
@@ -553,6 +547,21 @@ public class BoardView extends BComponent
      */
     protected void hoverTileChanged (int tx, int ty)
     {
+    }
+
+    /**
+     * This is called when the mouse is moved to hover over a different
+     * sprite (or none at all).
+     */
+    protected void hoverSpriteChanged (Sprite hover)
+    {
+        if (_hover instanceof UnitSprite) {
+            ((UnitSprite)_hover).setHovered(false);
+        }
+        _hover = hover;
+        if (_hover instanceof UnitSprite) {
+            ((UnitSprite)_hover).setHovered(true);
+        }
     }
 
     /** Creates geometry to highlight the supplied set of tiles. */

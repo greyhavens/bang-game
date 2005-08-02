@@ -16,6 +16,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
 import com.samskivert.swing.Controller;
@@ -23,7 +24,6 @@ import com.samskivert.swing.ControllerProvider;
 import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
 
-import com.threerings.media.SafeScrollPane;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.client.PlaceView;
@@ -79,9 +79,7 @@ public class EditorPanel extends JPanel
         // add the various control panels
         sidePanel.add(info = new BoardInfo(ctx), VGroupLayout.FIXED);
         sidePanel.add(terrain = new TerrainSelector(ctx), VGroupLayout.FIXED);
-        PieceCreator pc = new PieceCreator(ctx);
-        pc.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-        sidePanel.add(new SafeScrollPane(pc));
+        sidePanel.add(new JScrollPane(new PieceCreator(ctx)));
 
         // TODO: translate menu accelerators and short cuts
         JMenuBar menubar = _ctx.getFrame().getJMenuBar();
