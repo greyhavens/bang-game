@@ -10,15 +10,18 @@ import com.jme.bui.BLabel;
 import com.jme.bui.event.ActionEvent;
 import com.jme.bui.event.ActionListener;
 import com.jme.bui.layout.BorderLayout;
+import com.jme.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
-
-import com.threerings.bang.ranch.client.UnitIcon;
-import com.threerings.bang.ranch.client.UnitPalette;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+
+import com.threerings.bang.ranch.client.UnitIcon;
+import com.threerings.bang.ranch.client.UnitPalette;
+
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -28,6 +31,25 @@ import com.threerings.bang.util.BangContext;
 public class SelectionView extends BDecoratedWindow
     implements ActionListener
 {
+    /**
+     * Creates a nice header to display on pre-game dialogs.
+     */
+    public static BContainer createRoundHeader (
+        BangContext ctx, BangConfig config, BangObject bangobj)
+    {
+        BContainer header = new BContainer(new BorderLayout(10, 0));
+        header.setLookAndFeel(BangUI.dtitleLNF);
+        MessageBundle msgs =
+            ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
+        String title = bangobj.boardName + ": " +
+            msgs.get("m.scenario_" + bangobj.scenarioId);
+        header.add(new BLabel(title), BorderLayout.WEST);
+        String rmsg = msgs.get("m.round", "" + (bangobj.roundId + 1),
+                               "" + config.getRounds());
+        header.add(new BLabel(rmsg), BorderLayout.EAST);
+        return header;
+    }
+
     public SelectionView (BangContext ctx, BangConfig config,
                           BangObject bangobj, int pidx)
     {
@@ -38,24 +60,21 @@ public class SelectionView extends BDecoratedWindow
         _bangobj = bangobj;
         _pidx = pidx;
 
-        BContainer header = new BContainer(new BorderLayout(10, 0));
-        header.add(new BLabel(_msgs.get("m.select_phase")), BorderLayout.WEST);
-        String rmsg = _msgs.get(
-            "m.round", ""+_bangobj.roundId, ""+config.rounds);
-        header.add(new BLabel(rmsg), BorderLayout.EAST);
-        add(header, BorderLayout.NORTH);
+        setLayoutManager(GroupLayout.makeVStretch());
+        add(createRoundHeader(ctx, config, bangobj), GroupLayout.FIXED);
+        add(new BLabel(_msgs.get("m.select_bigshot")), GroupLayout.FIXED);
 
         // create the big shots display
         _units = new UnitPalette(ctx, null);
         _units.setUser(_ctx.getUserObject());
-        add(_units, BorderLayout.CENTER);
+        add(_units);
 
         BContainer footer = new BContainer(new BorderLayout(10, 0));
         _ready = new BButton(_msgs.get("m.ready"));
         _ready.addListener(this);
 //         _ready.setEnabled(false);
         footer.add(_ready, BorderLayout.EAST);
-        add(footer, BorderLayout.SOUTH);
+        add(footer, GroupLayout.FIXED);
     }
 
     // documentation inherited from interface ActionListener

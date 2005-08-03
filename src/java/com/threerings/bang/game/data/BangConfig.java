@@ -16,14 +16,20 @@ public class BangConfig extends GameConfig
     /** The number of people playing the game. */
     public int seats = 2;
 
-    /** The number of rounds to play. */
-    public int rounds = 3;
-
     /** The size of each player's team (not including their Big Shot). */
     public int teamSize = 4;
 
+    /** The desired scenarios for each round (implies the number of rounds). */
+    public String[] scenarios;
+
     /** Whether or not fog of war is activated. */
     public boolean fog = false;
+
+    /** Returns the desired number of rounds. */
+    public int getRounds ()
+    {
+        return scenarios.length;
+    }
 
     @Override // documentation inherited
     public String getBundleName ()

@@ -25,8 +25,14 @@ public class BangUI
     /** A font used to render counters in the game. */
     public static Font COUNTER_FONT = new Font("Helvetica", Font.BOLD, 48);
 
+    /** A font used to render dialog titles. */
+    public static Font DTITLE_FONT = new Font("Dialog", Font.BOLD, 16);
+
     /** A look and feel for big splash text. */
     public static BLookAndFeel marqueeLNF;
+
+    /** A look and feel for dialog title text. */
+    public static BLookAndFeel dtitleLNF;
 
     /**
      * Configures the UI singleton with a context reference.
@@ -38,6 +44,9 @@ public class BangUI
 
         marqueeLNF = new BangLookAndFeel();
         marqueeLNF.setTextFactory(new AWTTextFactory(COUNTER_FONT));
+
+        dtitleLNF = new BangLookAndFeel();
+        dtitleLNF.setTextFactory(new AWTTextFactory(DTITLE_FONT));
     }
 
     /**

@@ -24,6 +24,7 @@ import com.threerings.parlor.server.ParlorManager;
 import com.threerings.coin.server.persist.CoinRepository;
 import com.threerings.user.AccountActionRepository;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.server.persist.ItemRepository;
@@ -60,6 +61,9 @@ public class BangServer extends CrowdServer
     /** Keeps an eye on the ranch, a good man to have around. */
     public static RanchManager ranchmgr = new RanchManager();
 
+    /** Manages our selection of game boards. */
+    public static BoardManager boardmgr = new BoardManager();
+
     @Override // documentation inherited
     public void init ()
         throws Exception
@@ -90,10 +94,12 @@ public class BangServer extends CrowdServer
         // initialize our managers
         parmgr.init(invmgr, plreg);
         ranchmgr.init(invmgr);
+        boardmgr.init(conprov);
 
-        // create a lobby
-        plreg.createPlace(new LobbyConfig(),
-                          new PlaceRegistry.CreationObserver() {
+        // create a lobby (TODO: redo all this)
+        LobbyConfig lconfig = new LobbyConfig();
+        lconfig.townId = BangCodes.FRONTIER_TOWN;
+        plreg.createPlace(lconfig, new PlaceRegistry.CreationObserver() {
             public void placeCreated (PlaceObject place, PlaceManager pmgr) {
                 log.info("Created " + pmgr.where() + ".");
             }

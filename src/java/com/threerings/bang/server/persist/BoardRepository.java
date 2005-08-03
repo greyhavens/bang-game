@@ -12,6 +12,7 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JORARepository;
+import com.samskivert.jdbc.jora.Cursor;
 import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Session;
 import com.samskivert.jdbc.jora.Table;
@@ -53,7 +54,13 @@ public class BoardRepository extends JORARepository
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
-                return (BoardList)_btable.select("").toArrayList();
+                BoardList blist = new BoardList();
+                Cursor c = _btable.select("");
+                BoardRecord brec;
+                while ((brec = (BoardRecord)c.next()) != null) {
+                    blist.add(brec);
+                }
+                return blist;
             }
         });
     }

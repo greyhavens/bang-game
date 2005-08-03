@@ -4,16 +4,10 @@
 package com.threerings.bang.game.server;
 
 import java.awt.Point;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.logging.Level;
-
-import org.apache.commons.io.IOUtils;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
@@ -37,6 +31,7 @@ import com.threerings.parlor.game.server.GameManager;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
 
@@ -57,6 +52,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.server.scenario.CattleHerding;
 import com.threerings.bang.game.server.scenario.Scenario;
+import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.game.server.scenario.Shootout;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
@@ -247,11 +243,6 @@ public class BangManager extends GameManager
     {
         super.didStartup();
 
-        // load up our board information if we have not yet done so
-        if (_boards == null) {
-            loadBoardData();
-        }
-
         // set up the bang object
         _bangobj = (BangObject)_gameobj;
         _bangobj.setService(
@@ -259,8 +250,9 @@ public class BangManager extends GameManager
                 new BangDispatcher(this), false));
         _bconfig = (BangConfig)_gameconfig;
 
-        // TODO: pick the proper scenario
-        _scenario = new CattleHerding();
+        // select the boards we'll use for each round
+        _boards = BangServer.boardmgr.selectBoards(
+            _bconfig.players.length, _bconfig.scenarios);
 
         // TODO: get the town info from somewhere
         _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
@@ -291,13 +283,28 @@ public class BangManager extends GameManager
     /** Starts the pre-game buying phase. */
     protected void startRound ()
     {
+        // create the appropriate scenario to handle this round
+        _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);
+        _scenario = ScenarioFactory.createScenario(_bangobj.scenarioId);
+
         // clear out the readiness status of each player
         _ready.clear();
         _purchases.clear();
 
-        // set up the board so that all can see it while purchasing
+        // set up the board and pieces so it's visible while purchasing
+        BoardRecord brec = _boards[_bangobj.roundId];
+        _bangobj.setBoardName(brec.name);
+        _bangobj.setBoard(brec.getBoard());
         ArrayList<Piece> pieces = new ArrayList<Piece>();
-        _bangobj.setBoard(createBoard(pieces));
+        Piece[] pvec = brec.getPieces();
+        int maxPieceId = 0;
+        for (int ii = 0; ii < pvec.length; ii++) {
+            if (pvec[ii].pieceId > maxPieceId) {
+                maxPieceId = pvec[ii].pieceId;
+            }
+        }
+        Collections.addAll(pieces, pvec);
+        Piece.setNextPieceId(maxPieceId);
 
         // extract and remove all player start markers
         _starts.clear();
@@ -326,12 +333,20 @@ public class BangManager extends GameManager
                 iter.remove();
             }
         }
-        _bangobj.setPieces(new PieceDSet(pieces.iterator()));
 
         // give the scenario a shot at its own custom markers
         _scenario.filterMarkers(_bangobj, _starts, pieces);
 
-        // create our initial board "shadow"
+        // now remove any remaining marker pieces
+        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (p instanceof Marker) {
+                iter.remove();
+            }
+        }
+
+        // configure the game object and board with the pieces
+        _bangobj.setPieces(new PieceDSet(pieces.iterator()));
         _bangobj.board.shadowPieces(pieces.iterator());
 
         // clear out the selected big shots array
@@ -342,7 +357,7 @@ public class BangManager extends GameManager
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii) || isTest()) {
+            if (isAI(ii) /* || isTest() */) {
                 selectStarters(ii, null, null);
                 String[] units = new String[] {
                     "dirigible", "steamgunman", "artillery" };
@@ -591,9 +606,9 @@ public class BangManager extends GameManager
         // tick the scenario and determine whether we should end the game
         if (_scenario.tick(_bangobj, tick)) {
             log.info("round " + _bangobj.roundId +
-                     ", rounds: " + _bconfig.rounds);
+                     ", rounds: " + _bconfig.getRounds());
             // if this is the last round, end the game
-            if (_bangobj.roundId == _bconfig.rounds) {
+            if (_bangobj.roundId == _bconfig.getRounds()) {
                 endGame();
             } else {
                 _bangobj.setState(BangObject.POST_ROUND);
@@ -921,57 +936,6 @@ public class BangManager extends GameManager
         damage.clear();
     }
 
-    /**
-     * Creates the bang board based on the game config, filling in the
-     * supplied pieces array with the starting pieces.
-     */
-    protected BangBoard createBoard (ArrayList<Piece> pieces)
-    {
-        int pcount = _bconfig.players.length;
-        ArrayList boards = (ArrayList)_boards.get(pcount);
-        String bname = (String)RandomUtil.pickRandom(boards);
-        if (isTest()) {
-            bname = "default";
-        }
-        log.info("Using: " + bname);
-
-        BangBoard board = null;
-        Piece[] pvec = null;
-        try {
-            ClassLoader cl = getClass().getClassLoader();
-            InputStream in = cl.getResourceAsStream(
-                "rsrc/boards/" + pcount + "/" + bname + ".board");
-            if (in != null) {
-                BoardRecord brec = new BoardRecord();
-                brec.load(in);
-                board = brec.getBoard();
-                pvec = brec.getPieces();
-            } else {
-                log.warning("Unable to load default board! " +
-                            "[cl=" + cl + "].");
-            }
-        } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failed to load default board.", ioe);
-        }
-
-        if (board == null) {
-            // TODO: fail
-            board = new BangBoard(5, 5);
-            pvec = new Piece[0];
-        }
-
-        int maxPieceId = 0;
-        for (int ii = 0; ii < pvec.length; ii++) {
-            if (pvec[ii].pieceId > maxPieceId) {
-                maxPieceId = pvec[ii].pieceId;
-            }
-        }
-        Collections.addAll(pieces, pvec);
-        Piece.setNextPieceId(maxPieceId);
-
-        return board;
-    }
-
     /** Used to accelerate things when testing. */
     protected long getBaseTick ()
     {
@@ -989,32 +953,6 @@ public class BangManager extends GameManager
     protected static boolean isTest ()
     {
         return (System.getProperty("test") != null);
-    }
-
-    /**
-     * Scans the boards directory and determines what boards are
-     * available.
-     */
-    protected static void loadBoardData ()
-    {
-        _boards = new HashIntMap();
-        for (int pp = 2; pp <= 4; pp++) {
-            ArrayList<String> boards = new ArrayList<String>();
-            File bdir = new File(ServerConfig.serverRoot + "/rsrc/boards/" + pp);
-            log.info("Loading board data " + bdir);
-            String[] files = bdir.list();
-            int fcount = (files == null) ? 0 : files.length;
-            for (int ii = 0; ii < fcount; ii++) {
-                if (files[ii].endsWith(".board")) {
-                    log.info("Adding " + files[ii] + " to " + pp);
-                    boards.add(files[ii].substring(0, files[ii].length()-6));
-                }
-            }
-            if (boards.size() == 0) {
-                log.warning("No boards for " + pp + " players!");
-            }
-            _boards.put(pp, boards);
-        }
     }
 
     /** Triggers our board tick once every N seconds. */
@@ -1057,6 +995,9 @@ public class BangManager extends GameManager
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
 
+    /** Contains information on our selection of boards. */
+    protected BoardRecord[] _boards;
+
     /** Implements our gameplay scenario. */
     protected Scenario _scenario;
 
@@ -1088,10 +1029,6 @@ public class BangManager extends GameManager
     /** The item ids of all cards used by players in this game. These will
      * be destroyed if the game completes normally. */
     protected ArrayIntSet _usedCards = new ArrayIntSet();
-
-    /** A mapping from player count to an array list of boards available
-     * for that many players. */
-    protected static HashIntMap _boards;
 
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;

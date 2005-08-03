@@ -84,14 +84,20 @@ public class BangObject extends GameObject
     /** The field name of the <code>townId</code> field. */
     public static final String TOWN_ID = "townId";
 
-    /** The field name of the <code>tick</code> field. */
-    public static final String TICK = "tick";
+    /** The field name of the <code>scenarioId</code> field. */
+    public static final String SCENARIO_ID = "scenarioId";
+
+    /** The field name of the <code>boardName</code> field. */
+    public static final String BOARD_NAME = "boardName";
 
     /** The field name of the <code>board</code> field. */
     public static final String BOARD = "board";
 
     /** The field name of the <code>bigShots</code> field. */
     public static final String BIG_SHOTS = "bigShots";
+
+    /** The field name of the <code>tick</code> field. */
+    public static final String TICK = "tick";
 
     /** The field name of the <code>pieces</code> field. */
     public static final String PIECES = "pieces";
@@ -130,14 +136,20 @@ public class BangObject extends GameObject
     /** The id of the town in which this game is being played. */
     public String townId;
 
-    /** The curent board tick count. */
-    public short tick;
+    /** The identifier for the current scenario. */
+    public String scenarioId;
+
+    /** The name of the current board. */
+    public String boardName;
 
     /** Contains the representation of the game board. */
     public BangBoard board;
 
     /** The big shots selected for use by each player. */
     public Unit[] bigShots;
+
+    /** The curent board tick count. */
+    public short tick;
 
     /** Contains information on all pieces on the board. */
     public PieceDSet pieces;
@@ -410,19 +422,35 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Requests that the <code>tick</code> field be set to the
+     * Requests that the <code>scenarioId</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setTick (short value)
+    public void setScenarioId (String value)
     {
-        short ovalue = this.tick;
+        String ovalue = this.scenarioId;
         requestAttributeChange(
-            TICK, new Short(value), new Short(ovalue));
-        this.tick = value;
+            SCENARIO_ID, value, ovalue);
+        this.scenarioId = value;
+    }
+
+    /**
+     * Requests that the <code>boardName</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setBoardName (String value)
+    {
+        String ovalue = this.boardName;
+        requestAttributeChange(
+            BOARD_NAME, value, ovalue);
+        this.boardName = value;
     }
 
     /**
@@ -472,6 +500,22 @@ public class BangObject extends GameObject
         requestElementUpdate(
             BIG_SHOTS, index, value, ovalue);
         this.bigShots[index] = value;
+    }
+
+    /**
+     * Requests that the <code>tick</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setTick (short value)
+    {
+        short ovalue = this.tick;
+        requestAttributeChange(
+            TICK, new Short(value), new Short(ovalue));
+        this.tick = value;
     }
 
     /**

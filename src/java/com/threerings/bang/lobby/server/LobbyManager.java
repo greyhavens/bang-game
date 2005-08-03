@@ -11,6 +11,8 @@ import com.threerings.crowd.server.PlaceManager;
 import com.threerings.parlor.server.TableManager;
 import com.threerings.parlor.server.TableManagerProvider;
 
+import com.threerings.bang.game.server.scenario.ScenarioFactory;
+
 import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.lobby.data.LobbyObject;
 
@@ -41,7 +43,8 @@ public class LobbyManager extends PlaceManager
 
         _lobobj = (LobbyObject)_plobj;
         _lobobj.addListener(_emptyListener);
-
+        _lobobj.setTownId(_lconfig.townId);
+        _lobobj.setScenarios(ScenarioFactory.getScenarios(_lconfig.townId));
         _tablemgr = new TableManager(this);
     }
 

@@ -48,13 +48,8 @@ public class PurchaseView extends BDecoratedWindow
         _pidx = pidx;
 
         setLayoutManager(GroupLayout.makeVStretch());
-
-        String rstr =
-            _msgs.get("m.round", ""+_bangobj.roundId, ""+config.rounds);
-        BLabel rtitle = new BLabel(rstr);
-        rtitle.setHorizontalAlignment(BLabel.CENTER);
-        add(rtitle, GroupLayout.FIXED);
-
+        add(SelectionView.createRoundHeader(ctx, config, bangobj),
+            GroupLayout.FIXED);
         add(new BLabel(_msgs.get("m.pv_assemble")), GroupLayout.FIXED);
 
         BContainer ulist = new BContainer(new TableLayout(7, 5, 5));

@@ -19,6 +19,7 @@ import com.jme.bui.layout.GroupLayout;
 import com.jme.renderer.ColorRGBA;
 
 import com.threerings.util.MessageBundle;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
@@ -36,6 +37,7 @@ import com.threerings.bang.client.StatusView;
 import com.threerings.bang.client.TownView;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.lobby.data.LobbyObject;
 import com.threerings.bang.util.BangContext;
 
@@ -96,7 +98,7 @@ public class LobbyView extends BWindow
         // configure the controls with the defaults
         BangConfig defconf = new BangConfig();
         _seats.selectItem(Integer.valueOf(defconf.seats));
-        _rounds.selectItem(Integer.valueOf(defconf.rounds));
+        _rounds.selectItem(Integer.valueOf(3));
         _tsize.selectItem(Integer.valueOf(defconf.teamSize));
 
         BButton create = new BButton(msgs.get("m.create"), "create");
@@ -219,6 +221,8 @@ public class LobbyView extends BWindow
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
+        _lobobj = (LobbyObject)plobj;
+
         // pass will enter place onto interested parties
         _chat.willEnterPlace(plobj);
         _tbldtr.willEnterPlace(plobj);
@@ -315,7 +319,11 @@ public class LobbyView extends BWindow
         tconfig.desiredPlayerCount = (Integer)_seats.getSelectedItem();
         BangConfig config = new BangConfig();
         config.seats = tconfig.desiredPlayerCount;
-        config.rounds = (Integer)_rounds.getSelectedItem();
+        config.scenarios = new String[(Integer)_rounds.getSelectedItem()];
+        for (int ii = 0; ii < config.scenarios.length; ii++) {
+            config.scenarios[ii] = (String)
+                RandomUtil.pickRandom(_lobobj.scenarios);
+        }
         config.teamSize = (Integer)_tsize.getSelectedItem();
         _tbldtr.createTable(tconfig, config);
     }
@@ -356,6 +364,7 @@ public class LobbyView extends BWindow
     }
 
     protected BangContext _ctx;
+    protected LobbyObject _lobobj;
     protected ChatView _chat;
     protected TableDirector _tbldtr;
 

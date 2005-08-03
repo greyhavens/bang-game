@@ -34,15 +34,16 @@ public class ScenarioFactory
     }
 
     /**
-     * Creates the specified named scenario.
+     * Creates the specified scenario.
      */
-    public static Scenario createScenario (String name)
+    public static Scenario createScenario (String ident)
     {
         try {
-            return _scenmap.get(name).newInstance();
+            return _scenmap.get(ident).newInstance();
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to instantiate scenario " +
-                    "[name=" + name + ", class=" + _scenmap.get(name) + "]", t);
+                    "[ident=" + ident +
+                    ", class=" + _scenmap.get(ident) + "]", t);
             return new Shootout();
         }
     }

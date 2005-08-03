@@ -25,6 +25,7 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
+import com.threerings.bang.game.server.scenario.ScenarioFactory;
 
 import static com.threerings.bang.Log.log;
 
