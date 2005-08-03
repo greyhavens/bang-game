@@ -15,9 +15,11 @@ ui.progress_text = FBFAD8
 ui.status = 30, 125, 364, 80
 ui.status_text = FFEC48
 
-# Our game code
-code = code/bang-client.jar
+# These all go into the classpath
+code = code/bang-pcode.jar
 code = code/lwjgl.jar
+code = media/bang-media.jar
+code = media/bang-sounds.jar
 
 # Linux specific native libraries
 resource = [linux] native/liblwjgl.so

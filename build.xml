@@ -12,7 +12,6 @@
   <!-- things you probably don't want to change -->
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
-  <property name="dist.jar"     value="${app.name}.jar"/>
   <property name="javadoc.dir"  value="${deploy.dir}/docs"/>
 
   <!-- declare our classpath -->
@@ -144,8 +143,11 @@
 
     <!-- copy our various bits into the deployment directory -->
     <copy todir="pages/client/code">
-      <fileset dir="dist" includes="bang-client.jar"/>
+      <fileset dir="dist" includes="bang-pcode.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
+    </copy>
+    <copy todir="pages/client/media">
+      <fileset dir="dist" includes="bang-*.jar" excludes="bang-*code.jar"/>
     </copy>
     <copy todir="pages/client/native">
       <fileset dir="lib/i686-Linux" includes="*.so"/>
@@ -179,8 +181,13 @@
 
   <!-- builds the main bang jar file -->
   <target name="dist" depends="prepare,compile,fringe">
-    <jar file="${deploy.dir}/${dist.jar}"
-         basedir="${deploy.dir}/classes"/>
+    <jar file="${deploy.dir}/${app.name}-code.jar"
+         basedir="${deploy.dir}/classes" includes="com/**"/>
+    <jar file="${deploy.dir}/${app.name}-media.jar"
+         basedir="${deploy.dir}/classes" includes="rsrc/**"
+         excludes="rsrc/sounds/**"/>
+    <jar file="${deploy.dir}/${app.name}-sounds.jar"
+         basedir="${deploy.dir}/classes" includes="rsrc/sounds/**"/>
   </target>
 
 </project>

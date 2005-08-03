@@ -16,7 +16,7 @@
 -injars lib/jme-model.jar(!META-INF/*)
 -injars lib/jme-terrain.jar(!META-INF/*)
 -injars lib/jme-bui.jar(!META-INF/*)
--injars dist/bang.jar(!META-INF/*)
+-injars dist/bang-code.jar(!META-INF/*,!**/tools/**)
 
 -libraryjars <java.home>/lib/rt.jar
 -libraryjars lib/lwjgl.jar
@@ -25,7 +25,7 @@
 -dontoptimize
 -dontobfuscate
 
--outjars dist/bang-client.jar
+-outjars dist/bang-pcode.jar
 
 -keep public class * extends com.threerings.presents.dobj.DObject {
     !static !transient <fields>;
