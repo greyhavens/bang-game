@@ -45,7 +45,8 @@ fi
 CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
 
 # Add all JAR files in $BANG_HOME/lib to the CLASSPATH
-for jar in $BANG_HOME/lib/*.jar $BANG_HOME/dist/bang.jar; do
+for jar in $BANG_HOME/lib/*.jar $BANG_HOME/dist/bang-code.jar \
+    $BANG_HOME/dist/bang-media.jar; do
     if [ -e $jar ]; then
         CLASSPATH=$jar:$CLASSPATH
     fi
