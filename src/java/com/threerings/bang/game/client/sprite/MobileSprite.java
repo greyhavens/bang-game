@@ -148,7 +148,7 @@ public class MobileSprite extends PieceSprite
     protected static void loadTextures (BangContext ctx)
     {
         _shadtex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/ustatus/shadow.png"));
+            ctx, ctx.loadImage("textures/ustatus/shadow.png"));
     }
 
     protected String _type, _name;

@@ -266,21 +266,21 @@ public class UnitSprite extends MobileSprite
     protected static void loadTextures (BangContext ctx)
     {
         _hovtex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/ustatus/selected.png"));
+            ctx, ctx.loadImage("textures/ustatus/selected.png"));
         _tgttex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/ustatus/crosshairs.png"));
+            ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
         _movetex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/ustatus/tick_ready.png"));
+            ctx, ctx.loadImage("textures/ustatus/tick_ready.png"));
         _nugtex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/ustatus/nugget.png"));
+            ctx, ctx.loadImage("textures/ustatus/nugget.png"));
         _ticktex = new TextureState[5];
         for (int ii = 0; ii < 5; ii++) {
             _ticktex[ii] = RenderUtil.createTexture(
                 ctx, ctx.loadImage(
-                    "media/textures/ustatus/tick_counter_" + ii + ".png"));
+                    "textures/ustatus/tick_counter_" + ii + ".png"));
         }
-        _dfull = ctx.loadImage("media/textures/ustatus/health_meter_full.png");
-        _dempty = ctx.loadImage("media/textures/ustatus/health_meter_empty.png");
+        _dfull = ctx.loadImage("textures/ustatus/health_meter_full.png");
+        _dempty = ctx.loadImage("textures/ustatus/health_meter_empty.png");
     }
 
     /** A node that rotates itself around the up vector as the camera

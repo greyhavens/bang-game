@@ -76,7 +76,7 @@ public class ArcTest
         }
     }
 
-    protected static final String PATH = "rsrc/media/textures/ustatus/";
+    protected static final String PATH = "rsrc/textures/ustatus/";
 
     /** Defines the amount by which the damage arc image is inset from a
      * full quarter circle (on each side): 8 degrees. */

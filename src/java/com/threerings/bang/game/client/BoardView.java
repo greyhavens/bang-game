@@ -111,7 +111,7 @@ public class BoardView extends BComponent
 
         // this is used to target tiles when deploying a card
         _tgtstate = RenderUtil.createTexture(
-            ctx, ctx.loadImage("media/textures/ustatus/crosshairs.png"));
+            ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
     }
 
     /**
