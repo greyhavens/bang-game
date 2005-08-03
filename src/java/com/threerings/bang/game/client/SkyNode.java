@@ -27,7 +27,8 @@ public class SkyNode extends Node
     
         Skybox box = new Skybox("sky", 1000, 1000, 1000);
         for (int ii = 0; ii < ORIENTS.length; ii++) {
-            String path = "rsrc/textures/desertday" + SUFFIXES[ii] + ".tga";
+            String path = "rsrc/textures/environ/desertday" +
+                SUFFIXES[ii] + ".tga";
             Texture texture = TextureManager.loadTexture(
                 getClass().getClassLoader().getResource(path),
                 Texture.MM_LINEAR, Texture.FM_LINEAR,
