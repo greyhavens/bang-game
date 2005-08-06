@@ -145,6 +145,7 @@
     <copy todir="pages/client/code">
       <fileset dir="dist" includes="bang-pcode.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
+      <fileset dir="lib" includes="lwjgl_util.jar"/>
     </copy>
     <copy todir="pages/client/media">
       <fileset dir="dist" includes="bang-*.jar" excludes="bang-*code.jar"/>

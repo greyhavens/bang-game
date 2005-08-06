@@ -18,6 +18,7 @@ ui.status_text = FFEC48
 # These all go into the classpath
 code = code/bang-pcode.jar
 code = code/lwjgl.jar
+code = code/lwjgl_util.jar
 code = media/bang-media.jar
 code = media/bang-sounds.jar
 
