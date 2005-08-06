@@ -301,15 +301,22 @@ public class Model
         TextureState ts = _textures.get(texpath);
         if (ts == null) {
             ts = ctx.getRenderer().createTextureState();
-            Texture tex = TextureManager.loadTexture(
-                getClass().getClassLoader().getResource("rsrc/" + texpath),
-                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-            if (tex == null) {
-                log.warning("Failed to load texture [path=" + texpath + "].");
-            } else {
-                tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
-                ts.setTexture(tex);
-                ts.setEnabled(true);
+            Texture tex = null;
+            try {
+                tex = TextureManager.loadTexture(
+                    getClass().getClassLoader().getResource("rsrc/" + texpath),
+                    Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+                if (tex == null) {
+                    log.warning("Missing texture [path=" + texpath + "].");
+                } else {
+                    tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
+                    ts.setTexture(tex);
+                    ts.setEnabled(true);
+                }
+
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Failure loading texture " +
+                        "[path=" + texpath + "].", e);
             }
             _textures.put(texpath, ts);
         }

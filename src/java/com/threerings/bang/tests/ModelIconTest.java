@@ -23,6 +23,7 @@ import com.jme.bui.layout.BorderLayout;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.tile.FringeConfiguration;
+import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageManager;
@@ -149,6 +150,10 @@ public class ModelIconTest extends JmeApp
         }
 
         public BangApp getApp () {
+            return null;
+        }
+
+        public SoundManager getSoundManager () {
             return null;
         }
 

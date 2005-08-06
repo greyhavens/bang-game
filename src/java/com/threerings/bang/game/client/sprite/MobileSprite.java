@@ -15,6 +15,8 @@ import com.jme.scene.state.TextureState;
 
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
+import com.threerings.openal.Sound;
+import com.threerings.openal.SoundGroup;
 
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
@@ -45,6 +47,15 @@ public class MobileSprite extends PieceSprite
     }
 
     @Override // documentation inherited
+    public void pathCompleted ()
+    {
+        super.pathCompleted();
+
+        // stop our movement sound
+        _moveSound.stop();
+    }
+
+    @Override // documentation inherited
     protected void createGeometry (BangContext ctx)
     {
         super.createGeometry(ctx);
@@ -72,6 +83,16 @@ public class MobileSprite extends PieceSprite
     }
 
     @Override // documentation inherited
+    protected void createSounds (SoundGroup sounds)
+    {
+        super.createSounds(sounds);
+
+        // load up our movement sounds
+        _moveSound = sounds.getSound(
+            "rsrc/sounds/" + _type + "/" + _name + "/move.wav");
+    }
+
+    @Override // documentation inherited
     protected void moveSprite (BangBoard board, Piece opiece, Piece npiece)
     {
         // no animating when we're in the editor
@@ -85,6 +106,8 @@ public class MobileSprite extends PieceSprite
             Path path = createPath(board, opiece, npiece);
             if (path != null) {
                 setAnimationActive(true);
+                // start looping our movement sound
+                _moveSound.loop(false);
                 move(path);
             } else {
                 int elev = computeElevation(board, npiece.x, npiece.y);
@@ -154,6 +177,7 @@ public class MobileSprite extends PieceSprite
     protected String _type, _name;
     protected Model _model;
     protected Quad _shadow;
+    protected Sound _moveSound;
 
     protected static TextureState _shadtex;
 }

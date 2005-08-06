@@ -582,7 +582,7 @@ public class BangBoardView extends BoardView
             } else {
                 handler = new InstantShotHandler();
             }
-            handler.init(_ctx, _bangobj, this, seffect);
+            handler.init(_ctx, _bangobj, this, _sounds, seffect);
 
         } else {
             effect.apply(_bangobj, _effector);

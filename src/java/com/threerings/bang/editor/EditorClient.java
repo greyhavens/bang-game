@@ -32,6 +32,7 @@ import com.threerings.util.Name;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.tile.FringeConfiguration;
+import com.threerings.openal.SoundManager;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -202,6 +203,10 @@ public class EditorClient extends BasicClient
 
         public JmeApp getApp () {
             return _app;
+        }
+
+        public SoundManager getSoundManager () {
+            return _soundmgr;
         }
 
         public ModelCache getModelCache () {

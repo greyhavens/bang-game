@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import java.awt.Font;
+import java.io.IOException;
 
 import com.jme.bui.BButton;
 import com.jme.bui.BLabel;
@@ -11,6 +12,8 @@ import com.jme.bui.BLookAndFeel;
 import com.jme.bui.BlankIcon;
 import com.jme.bui.text.AWTTextFactory;
 
+import com.threerings.openal.ClipProvider;
+import com.threerings.openal.WaveDataClipProvider;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.UnitConfig;
@@ -33,6 +36,9 @@ public class BangUI
 
     /** A look and feel for dialog title text. */
     public static BLookAndFeel dtitleLNF;
+
+    /** Used to load sounds from the classpath. */
+    public static ClipProvider clipprov = new WaveDataClipProvider();
 
     /**
      * Configures the UI singleton with a context reference.

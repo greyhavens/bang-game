@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import com.jme.bui.BLookAndFeel;
 
+import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
@@ -48,6 +49,9 @@ public abstract class BangContext
 
     /** Returns a reference to our top-level application. */
     public abstract JmeApp getApp ();
+
+    /** Returns a reference to our sound manager. */
+    public abstract SoundManager getSoundManager ();
 
     /** Returns a reference to the current player's user object. Only
      * valid when we are logged onto the server. */

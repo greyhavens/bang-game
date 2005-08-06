@@ -19,6 +19,7 @@ import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.CompiledConfig;
 import com.threerings.util.MessageManager;
@@ -95,6 +96,9 @@ public class BasicClient
         _lnf = new BangLookAndFeel();
         _mcache = new ModelCache(_ctx);
 
+        // create our sound manager
+        _soundmgr = SoundManager.createSoundManager(rqueue);
+
         // load up our fringe configuration
         try {
             _fringeconf = (FringeConfiguration)
@@ -160,6 +164,10 @@ public class BasicClient
             return _app;
         }
 
+        public SoundManager getSoundManager () {
+            return _soundmgr;
+        }
+
         public ModelCache getModelCache () {
             return _mcache;
         }
@@ -206,6 +214,7 @@ public class BasicClient
 
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;
+    protected SoundManager _soundmgr;
     protected BLookAndFeel _lnf;
     protected ModelCache _mcache;
     protected FringeConfiguration _fringeconf;

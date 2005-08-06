@@ -6,11 +6,14 @@ package com.threerings.bang.game.client;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.openal.Sound;
+import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -24,7 +27,7 @@ public abstract class ShotHandler
     implements PathObserver
 {
     public void init (BangContext ctx, BangObject bangobj,
-                      BangBoardView view, ShotEffect shot)
+                      BangBoardView view, SoundGroup sounds, ShotEffect shot)
     {
         _ctx = ctx;
         _bangobj = bangobj;
@@ -42,6 +45,14 @@ public abstract class ShotHandler
             if (_target == null) {
                 log.warning("Missing target? [shot=" + shot + "].");
             }
+        }
+
+        // load up the sound that will go with our shootin'
+        if (_shooter instanceof Unit) {
+            // TODO: differentiate return fire and collateral damage
+            String type = ((Unit)_shooter).getType();
+            _bangSound = sounds.getSound(
+                "rsrc/sounds/units/" + type + "/shoot.wav");
         }
 
         // figure out which sprites we need to wait for
@@ -131,6 +142,7 @@ public abstract class ShotHandler
     protected BangBoardView _view;
     protected BangObject _bangobj;
     protected ShotEffect _shot;
+    protected Sound _bangSound;
 
     protected Piece _shooter, _target;
     protected int _sprites, _managed, _sidx;

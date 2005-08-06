@@ -43,6 +43,7 @@ import com.jme.bui.layout.BorderLayout;
 import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.tile.TileFringer;
+import com.threerings.openal.SoundGroup;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
@@ -112,6 +113,10 @@ public class BoardView extends BComponent
         // this is used to target tiles when deploying a card
         _tgtstate = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
+
+        // create a sound group that we'll use for all in-game sounds
+        _sounds = ctx.getSoundManager().createGroup(
+            BangUI.clipprov, GAME_SOURCE_COUNT);
     }
 
     /**
@@ -456,7 +461,7 @@ public class BoardView extends BComponent
         PieceSprite sprite = _pieces.get(piece.pieceId);
         if (sprite == null) {
             sprite = piece.createSprite();
-            sprite.init(_ctx, piece, _bangobj.tick);
+            sprite.init(_ctx, _sounds, piece, _bangobj.tick);
             log.fine("Creating sprite for " + piece + ".");
             _pieces.put((int)piece.pieceId, sprite);
             addSprite(sprite);
@@ -711,6 +716,9 @@ public class BoardView extends BComponent
      * hovering over or (-1, -1). */
     protected Point _high = new Point(-1, -1);
 
+    /** Used to load all in-game sounds. */
+    protected SoundGroup _sounds;
+
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();
 
@@ -723,4 +731,7 @@ public class BoardView extends BComponent
         new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f);
     protected static final ColorRGBA BROWN =
         new ColorRGBA(204/255f, 153/255f, 51/255f, 1.0f);
+
+    /** The number of simultaneous sound "sources" available to the game. */
+    protected static final int GAME_SOURCE_COUNT = 10;
 }

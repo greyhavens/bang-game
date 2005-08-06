@@ -10,11 +10,13 @@ import java.util.List;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.media.util.MathUtil;
+import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.data.BangBoard;
@@ -73,7 +75,8 @@ public class PieceSprite extends Sprite
      * Called when we are first created and immediately before we are
      * added to the display.
      */
-    public void init (BangContext ctx, Piece piece, short tick)
+    public void init (BangContext ctx, SoundGroup sounds,
+                      Piece piece, short tick)
     {
         _piece = piece;
         _tick = tick;
@@ -82,6 +85,9 @@ public class PieceSprite extends Sprite
         createGeometry(ctx);
         setAnimationSpeed(20);
         setAnimationActive(false);
+
+        // create any sounds associated with this sprite
+        createSounds(sounds);
 
         // position ourselves properly to start
         setLocation(piece.x, piece.y, 0);
@@ -198,6 +204,14 @@ public class PieceSprite extends Sprite
      * this method.
      */
     protected void createGeometry (BangContext ctx)
+    {
+    }
+
+    /**
+     * Sprites can create and pre-load sounds they will need by overriding
+     * this method.
+     */
+    protected void createSounds (SoundGroup sounds)
     {
     }
 
