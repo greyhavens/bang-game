@@ -11,8 +11,13 @@ import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.OrientingBallisticPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.openal.Sound;
+import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.ShotSprite;
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.ShotEffect;
+import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -23,6 +28,16 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class BallisticShotHandler extends ShotHandler
 {
+    @Override // documentation inherited
+    public void init (BangContext ctx, BangObject bangobj,
+                      BangBoardView view, SoundGroup sounds, ShotEffect shot)
+    {
+        super.init(ctx, bangobj, view, sounds, shot);
+
+        // load up the whistle sound
+        _whistleSound = sounds.getSound("rsrc/sounds/effects/bomb_whistle.wav");
+    }
+
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
         Vector3f start = new Vector3f(
@@ -65,6 +80,9 @@ public class BallisticShotHandler extends ShotHandler
         _ssprite.move(new OrientingBallisticPath(
                           _ssprite, new Vector3f(1, 0, 0), start, velvec,
                           GRAVVEC, duration));
+
+        // start the bomb whistle
+        _whistleSound.play(false);
     }
 
     @Override // documentation inherited
@@ -74,6 +92,9 @@ public class BallisticShotHandler extends ShotHandler
             sprite.removeObserver(this);
             _view.removeSprite(sprite);
             if (!fireNextSegment()) {
+                if (_bangSound != null) {
+                    _bangSound.play(false); // bang!
+                }
                 _view.applyShot(_shot);
             }
         } else {
@@ -94,6 +115,7 @@ public class BallisticShotHandler extends ShotHandler
     }
 
     protected ShotSprite _ssprite;
+    protected Sound _whistleSound;
 
     protected static final float GRAVITY = 10*BallisticPath.G;
     protected static final Vector3f GRAVVEC = new Vector3f(0, 0, GRAVITY);
