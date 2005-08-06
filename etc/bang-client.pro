@@ -27,6 +27,15 @@
 
 -outjars dist/bang-pcode.jar
 
+-keep public class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    !static !transient <fields>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
 -keep public class * extends com.threerings.presents.dobj.DObject {
     !static !transient <fields>;
 }
