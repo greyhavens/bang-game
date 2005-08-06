@@ -32,10 +32,11 @@ public class BallisticShotHandler extends ShotHandler
     public void init (BangContext ctx, BangObject bangobj,
                       BangBoardView view, SoundGroup sounds, ShotEffect shot)
     {
-        super.init(ctx, bangobj, view, sounds, shot);
-
-        // load up the whistle sound
+        // load up the whistle sound (before calling super so that we have
+        // our sound ready if it decides to immediately fire)
         _whistleSound = sounds.getSound("rsrc/sounds/effects/bomb_whistle.wav");
+
+        super.init(ctx, bangobj, view, sounds, shot);
     }
 
     protected void fireShot (int sx, int sy, int tx, int ty)
