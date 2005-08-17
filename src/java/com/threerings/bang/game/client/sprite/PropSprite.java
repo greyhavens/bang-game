@@ -47,7 +47,7 @@ public class PropSprite extends PieceSprite
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
         _model = ctx.getModelCache().getModel("props", _config.type);
-        Node[] meshes = _model.getMeshes("standing");
+        Node[] meshes = _model.getMeshes("normal");
         for (int ii = 0; ii < meshes.length; ii++) {
             attachChild(meshes[ii]);
             meshes[ii].updateRenderState();

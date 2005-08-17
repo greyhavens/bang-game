@@ -13,6 +13,8 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
+import com.samskivert.util.StringUtil;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.light.PointLight;
@@ -68,8 +70,7 @@ public class Model
             } else {
                 log.info("Faking model info file for " + _key + ".");
                 String mname = name.substring(name.lastIndexOf("/")+1);
-                props.setProperty("standing.meshes", mname);
-                props.setProperty("walking.meshes", mname);
+                props.setProperty("meshes", mname);
             }
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Failed to load model info " +
@@ -79,42 +80,49 @@ public class Model
         // TODO: use a whole different system for non-animating models
         // that uses a SharedMesh
 
-        Enumeration kenum = props.propertyNames();
-        while (kenum.hasMoreElements()) {
-            String pkey = (String)kenum.nextElement();
-            String pval = props.getProperty(pkey);
-            int midx;
-            if ((midx = pkey.indexOf(".meshes")) != -1) {
-                String aname = pkey.substring(0, midx);
-                StringTokenizer tok = new StringTokenizer(pval, ", ");
-                Part[] parts = new Part[tok.countTokens()];
-                for (int ii = 0; ii < parts.length; ii++) {
-                    Part part = (parts[ii] = new Part());
+        String[] actions = StringUtil.split(
+            props.getProperty("actions", ""), ",");
+        for (int ii = 0; ii < actions.length; ii++) {
+            String action = actions[ii].trim();
+            String[] pnames = getParts(props, action);
+            Part[] parts = new Part[pnames.length];
+            for (int pp = 0; pp < parts.length; pp++) {
+                String mesh = pnames[pp];
+                Part part = (parts[pp] = new Part());
 
-                    // load up the part's 3D model
-                    String mesh = tok.nextToken();
-                    part.creator = loadModel(ctx, path + mesh + ".jme");
+                // load up this part's 3D model
+                part.creator = loadModel(
+                    ctx, path + action + "/" + mesh + ".jme");
 
-                    // load up any texture information
-                    String texture = props.getProperty(mesh + ".texture");
-                    if (texture == null) {
-                        texture = props.getProperty("texture");
-                    }
-                    if (texture == null) {
-                        continue;
-                    }
-
-                    // the model may have multiple textures from which we
-                    // select at random
-                    StringTokenizer ttok = new StringTokenizer(texture, ", ");
-                    part.tstates = new TextureState[ttok.countTokens()];
-                    for (int tt = 0; tt < part.tstates.length; tt++) {
-                        part.tstates[tt] =
-                            getTexture(ctx, path + ttok.nextToken());
-                    }
+                // load up any texture information
+                String texture = props.getProperty(mesh + ".texture");
+                if (texture == null) {
+                    texture = props.getProperty("texture");
                 }
-                _anims.put(aname, parts);
+                if (texture == null) {
+                    continue;
+                }
+
+                // the model may have multiple textures from which we
+                // select at random
+                StringTokenizer ttok = new StringTokenizer(texture, ", ");
+                part.tstates = new TextureState[ttok.countTokens()];
+                for (int tt = 0; tt < part.tstates.length; tt++) {
+                    part.tstates[tt] =
+                        getTexture(ctx, path + ttok.nextToken());
+                }
             }
+            _anims.put(action, parts);
+        }
+
+        // use the first frame of the walking pose if this model has no
+        // standing pose defined and use the standing pose for walking if
+        // the opposite is the case
+        if (!_anims.containsKey("standing") && _anims.containsKey("walking")) {
+            _anims.put("standing", _anims.get("walking"));
+        }
+        if (!_anims.containsKey("walking") && _anims.containsKey("standing")) {
+            _anims.put("walking", _anims.get("standing"));
         }
 
         // create the icon image for this model if it's a unit
@@ -167,6 +175,28 @@ public class Model
     {
         return _key + " m:" + _meshes.size() + " t:" + _textures.size() +
             " a:" + _anims.size() + ")";
+    }
+
+    /**
+     * Returns the list of parts (distinct sub-meshes) for the specified
+     * action.
+     */
+    protected String[] getParts (Properties props, String action)
+    {
+        String meshes = props.getProperty(action + ".meshes");
+        if (StringUtil.blank(meshes)) {
+            meshes = props.getProperty("meshes");
+        }
+        if (StringUtil.blank(meshes)) {
+            log.warning("Missing meshes for action [model=" + _key +
+                        ", action=" + action + "].");
+            return new String[0];
+        }
+        String[] parts = StringUtil.split(meshes, ",");
+        for (int ii = 0; ii < parts.length; ii++) {
+            parts[ii] = parts[ii].trim();
+        }
+        return parts;
     }
 
     protected CloneCreator loadModel (BangContext ctx, String path)
