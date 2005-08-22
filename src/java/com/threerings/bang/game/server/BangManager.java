@@ -591,17 +591,17 @@ public class BangManager extends GameManager
         }
 
         // move our AI pieces randomly
-//         for (int ii = 0; ii < pieces.length; ii++) {
-//             if (pieces[ii] instanceof Unit && pieces[ii].isAlive() &&
-//                 isAI(pieces[ii].owner) &&
-//                 pieces[ii].ticksUntilMovable(tick) == 0) {
-//                 Unit unit = (Unit)pieces[ii];
-//                 _moves.clear();
-//                 _bangobj.board.computeMoves(unit, _moves, null);
-//                 int midx = RandomUtil.getInt(_moves.size());
-//                 moveUnit(unit, _moves.getX(midx), _moves.getY(midx));
-//             }
-//         }
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii] instanceof Unit && pieces[ii].isAlive() &&
+                isAI(pieces[ii].owner) &&
+                pieces[ii].ticksUntilMovable(tick) == 0) {
+                Unit unit = (Unit)pieces[ii];
+                _moves.clear();
+                _bangobj.board.computeMoves(unit, _moves, null);
+                int midx = RandomUtil.getInt(_moves.size());
+                moveUnit(unit, _moves.getX(midx), _moves.getY(midx));
+            }
+        }
 
         // tick the scenario and determine whether we should end the game
         if (_scenario.tick(_bangobj, tick)) {

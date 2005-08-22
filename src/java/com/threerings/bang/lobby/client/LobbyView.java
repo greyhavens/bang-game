@@ -30,6 +30,7 @@ import com.threerings.parlor.client.TableObserver;
 import com.threerings.parlor.data.Table;
 import com.threerings.parlor.data.TableConfig;
 import com.threerings.parlor.data.TableLobbyObject;
+import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.jme.chat.ChatView;
 
@@ -112,79 +113,6 @@ public class LobbyView extends BWindow
         _inplay.setBorder(new LineBorder(ColorRGBA.black));
         top.add(ilist);
         add(top, BorderLayout.CENTER);
-
-//         // set up a layout manager
-// 	HGroupLayout gl = new HGroupLayout(HGroupLayout.STRETCH);
-// 	gl.setOffAxisPolicy(HGroupLayout.STRETCH);
-// 	setLayout(gl);
-
-//         // we have two lists of tables, one of tables being matchmade...
-//         VGroupLayout pgl = new VGroupLayout(VGroupLayout.STRETCH);
-//         pgl.setOffAxisPolicy(VGroupLayout.STRETCH);
-//         pgl.setJustification(VGroupLayout.TOP);
-//         JPanel panel = new JPanel(pgl);
-//         String cmsg = config.isPartyGame() ?
-//             "m.create_game" : "m.pending_tables";
-//         panel.add(new JLabel(msgs.get(cmsg)), VGroupLayout.FIXED);
-
-//         VGroupLayout mgl = new VGroupLayout(VGroupLayout.NONE);
-//         mgl.setOffAxisPolicy(VGroupLayout.STRETCH);
-//         mgl.setJustification(VGroupLayout.TOP);
-//         _matchList = new JPanel(mgl);
-//         if (!config.isPartyGame()) {
-//             _matchList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-//             panel.add(new SafeScrollPane(_matchList));
-//         }
-
-//         // create and initialize our configurator interface
-//         _figger = _config.createConfigurator();
-//         if (_figger != null) {
-//             _figger.init(_ctx);
-//             _figger.setGameConfig(config);
-//             panel.add(_figger, VGroupLayout.FIXED);
-//         }
-
-//         // add the interface for selecting the number of seats at the table
-//         panel.add(_pslide = new SimpleSlider(msgs.get("m.seats"), 0, 10, 0),
-//                   VGroupLayout.FIXED);
-
-//         // configure our slider
-//         _pslide.setMinimum(config.getMinimumPlayers());
-//         _pslide.setMaximum(config.getMaximumPlayers());
-//         _pslide.setValue(config.getDesiredPlayers());
-
-//         int range = config.getMaximumPlayers() - config.getMinimumPlayers();
-//         _pslide.getSlider().setPaintTicks(true);
-//         _pslide.getSlider().setMinorTickSpacing(1);
-//         _pslide.getSlider().setMajorTickSpacing(range / 2);
-//         _pslide.getSlider().setSnapToTicks(true);
-
-//         // if the min == the max, hide the slider because it's pointless
-//         _pslide.setVisible(config.getMinimumPlayers() !=
-//                            config.getMaximumPlayers());
-
-//         cmsg = config.isPartyGame() ? "m.create_game" : "m.create_table";
-//         _create = new JButton(msgs.get(cmsg));
-//         _create.addActionListener(this);
-//         JPanel bbox = HGroupLayout.makeButtonBox(HGroupLayout.RIGHT);
-//         bbox.add(_create);
-//         panel.add(bbox, VGroupLayout.FIXED);
-
-//         if (config.isPartyGame()) {
-//             panel.add(new JLabel(msgs.get("m.party_hint")), VGroupLayout.FIXED);
-//         }
-
-//         add(panel);
-
-//         // ...and one of games in progress
-//         panel = new JPanel(pgl);
-//         panel.add(new JLabel(msgs.get("m.in_progress")), VGroupLayout.FIXED);
-
-//         _playList = new JPanel(mgl);
-//     	_playList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-//         panel.add(new SafeScrollPane(_playList));
-
-//         add(panel);
     }
 
     protected BContainer createLabeledList (String label)
@@ -305,19 +233,16 @@ public class LobbyView extends BWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-//         // the create table button was clicked. use the game config as
-//         // configured by the configurator to create a table
-//         ToyBoxGameConfig config = _config;
-//         if (_figger != null) {
-//             config = (ToyBoxGameConfig)_figger.getGameConfig();
-//         }
-
-//         // fill in our number of seats configuration
-//         config.setDesiredPlayers(_pslide.getValue());
-
         TableConfig tconfig = new TableConfig();
         tconfig.desiredPlayerCount = (Integer)_seats.getSelectedItem();
         BangConfig config = new BangConfig();
+        // do some temporary jiggery pokery for a one "seat" game; create
+        // an AI to play the other opponent
+        if (tconfig.desiredPlayerCount == 1) {
+            tconfig.desiredPlayerCount = 2;
+            config.ais = new GameAI[1];
+            config.ais[0] = new GameAI(0, 50);
+        }
         config.seats = tconfig.desiredPlayerCount;
         config.scenarios = new String[(Integer)_rounds.getSelectedItem()];
         for (int ii = 0; ii < config.scenarios.length; ii++) {
@@ -373,7 +298,8 @@ public class LobbyView extends BWindow
     protected BContainer _inplay;
 
     protected static final Integer[] SEATS = new Integer[] {
-        Integer.valueOf(2), Integer.valueOf(3), Integer.valueOf(4) };
+        Integer.valueOf(1), Integer.valueOf(2),
+        Integer.valueOf(3), Integer.valueOf(4) };
 
     protected static final Integer[] ROUNDS = new Integer[] {
         Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(3),
