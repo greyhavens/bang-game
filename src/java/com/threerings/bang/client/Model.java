@@ -80,13 +80,13 @@ public class Model
         // TODO: use a whole different system for non-animating models
         // that uses a SharedMesh
 
-        String[] actions = StringUtil.split(
-            props.getProperty("actions", ""), ",");
+        String[] actions = getList(props, "actions", null, true);
         for (int ii = 0; ii < actions.length; ii++) {
             String action = actions[ii].trim();
-            String[] pnames = getParts(props, action);
+
+            String[] pnames = getList(props, action + ".meshes", "meshes", true);
             Part[] parts = new Part[pnames.length];
-            for (int pp = 0; pp < parts.length; pp++) {
+            for (int pp = 0; pp < pnames.length; pp++) {
                 String mesh = pnames[pp];
                 Part part = (parts[pp] = new Part());
 
@@ -94,22 +94,16 @@ public class Model
                 part.creator = loadModel(
                     ctx, path + action + "/" + mesh + ".jme");
 
-                // load up any texture information
-                String texture = props.getProperty(mesh + ".texture");
-                if (texture == null) {
-                    texture = props.getProperty("texture");
-                }
-                if (texture == null) {
-                    continue;
-                }
-
                 // the model may have multiple textures from which we
                 // select at random
-                StringTokenizer ttok = new StringTokenizer(texture, ", ");
-                part.tstates = new TextureState[ttok.countTokens()];
+                String[] tnames =
+                    getList(props, mesh + ".texture", "texture", false);
+                if (tnames.length == 0) {
+                    continue;
+                }
+                part.tstates = new TextureState[tnames.length];
                 for (int tt = 0; tt < part.tstates.length; tt++) {
-                    part.tstates[tt] =
-                        getTexture(ctx, path + ttok.nextToken());
+                    part.tstates[tt] = getTexture(ctx, path + tnames[ii]);
                 }
             }
             _anims.put(action, parts);
@@ -193,25 +187,30 @@ public class Model
     }
 
     /**
-     * Returns the list of parts (distinct sub-meshes) for the specified
-     * action.
+     * Parses a comma separated list from the supplied properties file,
+     * using the specified "parent" property if the main property is not
+     * set.
      */
-    protected String[] getParts (Properties props, String action)
+    protected String[] getList (
+        Properties props, String key, String fallback, boolean warn)
     {
-        String meshes = props.getProperty(action + ".meshes");
-        if (StringUtil.blank(meshes)) {
-            meshes = props.getProperty("meshes");
+        String value = props.getProperty(key);
+        if (StringUtil.blank(value) && fallback != null) {
+            value = props.getProperty(fallback);
         }
-        if (StringUtil.blank(meshes)) {
-            log.warning("Missing meshes for action [model=" + _key +
-                        ", action=" + action + "].");
+        if (StringUtil.blank(value)) {
+            if (warn) {
+                log.warning("Missing model list [model=" + _key +
+                            ", key=" + key + ", fallback=" + fallback + "].");
+            }
             return new String[0];
         }
-        String[] parts = StringUtil.split(meshes, ",");
-        for (int ii = 0; ii < parts.length; ii++) {
-            parts[ii] = parts[ii].trim();
+        StringTokenizer ttok = new StringTokenizer(value, ", ");
+        String[] values = new String[ttok.countTokens()];
+        for (int ii = 0; ii < values.length; ii++) {
+            values[ii] = ttok.nextToken();
         }
-        return parts;
+        return values;
     }
 
     protected CloneCreator loadModel (BangContext ctx, String path)
