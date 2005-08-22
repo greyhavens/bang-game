@@ -55,6 +55,24 @@ public class MobileSprite extends PieceSprite
         return _model.hasMeshes(action);
     }
 
+    /**
+     * Called to inform us that we will be shooting the specified target
+     * sprite when we finish our path.
+     */
+    public void willShoot (Piece target, PieceSprite tsprite)
+    {
+    }
+
+    /**
+     * Runs the specified action animation.
+     */
+    public void runAction (String action)
+    {
+        Model.Animation anim = setAction(action);
+        _restoreResting = anim.duration/1000f;
+        setAnimationActive(true);
+    }
+
     @Override // documentation inherited
     public void pathCompleted ()
     {
@@ -62,6 +80,25 @@ public class MobileSprite extends PieceSprite
 
         // stop our movement sound
         _moveSound.stop();
+
+        // reorient properly
+        setOrientation(_piece.orientation);
+    }
+
+    @Override // documentation inherited
+    public void updateWorldData (float time)
+    {
+        // expire any actions first before we update our children
+        if (_restoreResting > 0) {
+            _restoreResting -= time;
+            if (_restoreResting <= 0) {
+                _restoreResting = 0;
+                setAction(getRestPose());
+                setAnimationActive(false);
+            }
+        }
+
+        super.updateWorldData(time);
     }
 
     @Override // documentation inherited
@@ -124,20 +161,25 @@ public class MobileSprite extends PieceSprite
     /**
      * Configures the current set of meshes being used by this sprite.
      */
-    protected void setAction (String action)
+    protected Model.Animation setAction (String action)
     {
+        // remove the old meshes
         if (_meshes != null) {
             for (int ii = 0; ii < _meshes.length; ii++) {
                 detachChild(_meshes[ii]);
             }
         }
-        _meshes = _model.getMeshes(action);
+
+        // add the new meshes
+        Model.Animation anim = _model.getAnimation(action);
+        _meshes = anim.getMeshes();
         for (int ii = 0; ii < _meshes.length; ii++) {
             attachChild(_meshes[ii]);
             _meshes[ii].updateRenderState();
+            _meshes[ii].updateGeometricState(0, true);
         }
-        // TODO: get this from the model?
-        setAnimationSpeed(20);
+        setAnimationSpeed(anim.getSpeed());
+        return anim;
     }
 
     /**
@@ -203,6 +245,8 @@ public class MobileSprite extends PieceSprite
     protected Node[] _meshes;
     protected Quad _shadow;
     protected Sound _moveSound;
+
+    protected float _restoreResting;
 
     protected static TextureState _shadtex;
 }

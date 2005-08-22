@@ -9,6 +9,7 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;
@@ -56,9 +57,14 @@ public abstract class ShotHandler
         }
 
         // figure out which sprites we need to wait for
-        considerPiece(_shooter);
+        PieceSprite ssprite = considerPiece(_shooter);
         if (_target != null) {
-            considerPiece(_target);
+            PieceSprite tsprite = considerPiece(_target);
+            // let the shooting sprite know that it will be shooting the
+            // specified target at the end of its path
+            if (ssprite instanceof MobileSprite) {
+                ((MobileSprite)ssprite).willShoot(_target, tsprite);
+            }
         }
 
         // if no one was managed, it's a shot fired from an invisible
@@ -91,22 +97,25 @@ public abstract class ShotHandler
         }
     }
 
-    protected void considerPiece (Piece piece)
+    protected PieceSprite considerPiece (Piece piece)
     {
         PieceSprite sprite = null;
         if (piece != null) {
             sprite = _view.getPieceSprite(piece);
         }
         if (sprite == null) {
-            return;
+            return null;
         }
-        if (_view.isManaged(sprite)) {
-            _managed++;
-            if (sprite.isMoving()) {
-                sprite.addObserver(this);
-                _sprites++;
-            }
+        if (!_view.isManaged(sprite)) {
+            return null;
         }
+
+        _managed++;
+        if (sprite.isMoving()) {
+            sprite.addObserver(this);
+            _sprites++;
+        }
+        return sprite;
     }
 
     protected void fireShot ()
@@ -114,6 +123,12 @@ public abstract class ShotHandler
         if (_sidx == 0) {
             fireShot(_shooter.x, _shooter.y,
                      _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
+            // on the first shot, we animate the shooter
+            PieceSprite ssprite = _view.getPieceSprite(_shooter);
+            if (ssprite instanceof MobileSprite) {
+                ((MobileSprite)ssprite).runAction("shooting_move_forward");
+            }
+
         } else {
             fireShot(_shot.xcoords[_sidx-1], _shot.ycoords[_sidx-1],
                      _shot.xcoords[_sidx], _shot.ycoords[_sidx]);

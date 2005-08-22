@@ -40,6 +40,7 @@ import com.jme.bui.TextureIcon;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -50,6 +51,49 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class Model
 {
+    /** Information on an animation which is a collection of animated
+     * meshes with a frame count and a duration. */
+    public static class Animation
+    {
+        /** The number of frames in this animation. */
+        public int frames;
+
+        /** The duration of one cycle of the animation in milliseconds. */
+        public int duration;
+
+        /**
+         * Returns the "speed" at which this animation's controller should
+         * be run.
+         */
+        public float getSpeed ()
+        {
+            return 1000f * frames / duration;
+        }
+
+        /**
+         * Returns the meshes for the specified action or a zero-length array
+         * if we have no meshes for said action.
+         */
+        public Node[] getMeshes ()
+        {
+            Node[] nodes = new Node[_parts.length];
+            for (int ii = 0; ii < nodes.length; ii++) {
+                nodes[ii] = (Node)_parts[ii].creator.createCopy();
+                // select a random texture state
+                if (_parts[ii].tstates != null) {
+                    TextureState tstate = (TextureState)
+                        RandomUtil.pickRandom(_parts[ii].tstates);
+                    nodes[ii].setRenderState(tstate);
+                    nodes[ii].updateRenderState();
+                }
+            }
+            return nodes;
+        }
+
+        /** The animated meshes that make up the animation. */
+        protected Part[] _parts;
+    }
+
     /** The size along each axis of the model icon. */
     public static final int ICON_SIZE = 128;
 
@@ -84,11 +128,17 @@ public class Model
         for (int ii = 0; ii < actions.length; ii++) {
             String action = actions[ii].trim();
 
+            Animation anim = new Animation();
+            anim.frames = BangUtil.getIntProperty(
+                _key, props, action + ".frames", 10);
+            anim.duration = BangUtil.getIntProperty(
+                _key, props, action + ".duration", 200);
+
             String[] pnames = getList(props, action + ".meshes", "meshes", true);
-            Part[] parts = new Part[pnames.length];
+            anim._parts = new Part[pnames.length];
             for (int pp = 0; pp < pnames.length; pp++) {
                 String mesh = pnames[pp];
-                Part part = (parts[pp] = new Part());
+                Part part = (anim._parts[pp] = new Part());
 
                 // load up this part's 3D model
                 part.creator = loadModel(
@@ -106,7 +156,7 @@ public class Model
                     part.tstates[tt] = getTexture(ctx, path + tnames[tt]);
                 }
             }
-            _anims.put(action, parts);
+            _anims.put(action, anim);
         }
 
         // use the first frame of the walking pose if this model has no
@@ -142,29 +192,18 @@ public class Model
     }
 
     /**
-     * Returns the meshes for the specified action or a zero-length array
-     * if we have no meshes for said action.
+     * Returns the specified named animation or a blank animation if the
+     * specified animation does not exist.
      */
-    public Node[] getMeshes (String action)
+    public Animation getAnimation (String action)
     {
-        Part[] parts = _anims.get(action);
-        if (parts == null) {
-            log.warning("Requested unknown action [model=" + _key +
-                        ", action=" + action + "].");
-            return new Node[0];
+        Animation anim = _anims.get(action);
+        if (anim == null) {
+            log.warning("Requested non-existent animation [model=" + _key +
+                        ", anim=" + action + "].");
+            return BLANK_ANIM;
         }
-        Node[] nodes = new Node[parts.length];
-        for (int ii = 0; ii < parts.length; ii++) {
-            nodes[ii] = (Node)parts[ii].creator.createCopy();
-            // select a random texture state
-            if (parts[ii].tstates != null) {
-                TextureState tstate = (TextureState)
-                    RandomUtil.pickRandom(parts[ii].tstates);
-                nodes[ii].setRenderState(tstate);
-                nodes[ii].updateRenderState();
-            }
-        }
-        return nodes;
+        return anim;
     }
 
     @Override // documentation inherited
@@ -319,7 +358,7 @@ public class Model
         lights.attach(light);
         all.setRenderState(lights);
 
-        Node[] meshes = getMeshes("standing");
+        Node[] meshes = getAnimation("standing").getMeshes();
         for (int ii = 0; ii < meshes.length; ii++) {
             all.attachChild(meshes[ii]);
         }
@@ -394,7 +433,14 @@ public class Model
     protected HashMap<String,TextureState> _textures =
         new HashMap<String,TextureState>();
 
-    protected HashMap<String,Part[]> _anims = new HashMap<String,Part[]>();
+    protected HashMap<String,Animation> _anims = new HashMap<String,Animation>();
 
+    protected static final Animation BLANK_ANIM = new Animation();
     protected static final String PATH_DOTDOT = "[^/]+/\\.\\./";
+
+    static {
+        BLANK_ANIM._parts = new Part[0];
+        BLANK_ANIM.frames = 1;
+        BLANK_ANIM.duration = 100;
+    }
 }

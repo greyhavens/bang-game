@@ -7,6 +7,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -17,6 +18,9 @@ public class ShotEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
     public static final String DAMAGED = "bang";
+
+    /** We also rotate the shooter, thereby affecting it. */
+    public static final String ROTATED = "rotated";
 
     /** The piece id of the shooter. */
     public int shooterId;
@@ -107,7 +111,17 @@ public class ShotEffect extends Effect
             return;
         }
 
+        // rotate the shooter to face the target
+        Piece shooter = (Piece)bangobj.pieces.get(shooterId);
         Piece target = (Piece)bangobj.pieces.get(targetId);
+        if (shooter != null && target != null) {
+            short orient = PieceUtil.getDirection(shooter, target);
+            if (orient != shooter.orientation) {
+                shooter.orientation = orient;
+                reportEffect(obs, shooter, ROTATED);
+            }
+        }
+
         if (target == null) {
             log.warning("Missing shot target " + this + ".");
             return;
