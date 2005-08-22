@@ -46,6 +46,15 @@ public class MobileSprite extends PieceSprite
         _name = name;
     }
 
+    /**
+     * Returns true if this sprite supports the specified action
+     * animation.
+     */
+    public boolean hasAction (String action)
+    {
+        return _model.hasMeshes(action);
+    }
+
     @Override // documentation inherited
     public void pathCompleted ()
     {
@@ -72,14 +81,11 @@ public class MobileSprite extends PieceSprite
         _shadow.setLocalTranslation(new Vector3f(0, 0, height));
         attachChild(_shadow);
 
-        // our models are centered at the origin, but we need to shift
-        // them to the center of the tile
+        // load our model
         _model = ctx.getModelCache().getModel(_type, _name);
-        Node[] meshes = _model.getMeshes(getRestPose());
-        for (int ii = 0; ii < meshes.length; ii++) {
-            attachChild(meshes[ii]);
-            meshes[ii].updateRenderState();
-        }
+
+        // start in our rest post
+        setAction(getRestPose());
     }
 
     @Override // documentation inherited
@@ -105,7 +111,6 @@ public class MobileSprite extends PieceSprite
         if (!isMoving()) {
             Path path = createPath(board, opiece, npiece);
             if (path != null) {
-                setAnimationActive(true);
                 // start looping our movement sound
                 _moveSound.loop(false);
                 move(path);
@@ -114,6 +119,25 @@ public class MobileSprite extends PieceSprite
                 setLocation(npiece.x, npiece.y, elev);
             }
         }
+    }
+
+    /**
+     * Configures the current set of meshes being used by this sprite.
+     */
+    protected void setAction (String action)
+    {
+        if (_meshes != null) {
+            for (int ii = 0; ii < _meshes.length; ii++) {
+                detachChild(_meshes[ii]);
+            }
+        }
+        _meshes = _model.getMeshes(action);
+        for (int ii = 0; ii < _meshes.length; ii++) {
+            attachChild(_meshes[ii]);
+            _meshes[ii].updateRenderState();
+        }
+        // TODO: get this from the model?
+        setAnimationSpeed(20);
     }
 
     /**
@@ -156,7 +180,7 @@ public class MobileSprite extends PieceSprite
                     durations[ii-1] = 0.2f;
                 }
             }
-            return new LineSegmentPath(this, UP, FORWARD, coords, durations);
+            return new MoveUnitPath(this, coords, durations);
 
         } else {
             Vector3f start = toWorldCoords(
@@ -176,6 +200,7 @@ public class MobileSprite extends PieceSprite
 
     protected String _type, _name;
     protected Model _model;
+    protected Node[] _meshes;
     protected Quad _shadow;
     protected Sound _moveSound;
 

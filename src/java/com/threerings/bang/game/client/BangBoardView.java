@@ -15,6 +15,7 @@ import com.jme.bui.event.MouseEvent;
 import com.jme.bui.event.MouseListener;
 import com.jme.input.KeyInput;
 
+import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
 
@@ -501,6 +502,17 @@ public class BangBoardView extends BoardView
 
     protected void executeAction ()
     {
+        // look up the unit we're "acting" with
+        Unit actor = (Unit)_bangobj.pieces.get(_action[0]);
+        if (actor == null) {
+            log.warning("No actor? [action=" +
+                        StringUtil.toString(_action) + "].");
+            clearSelection();
+            return;
+        }
+
+        // if this unit is not yet movable, "queue" up their
+        UnitSprite sprite = (UnitSprite)getPieceSprite(actor);
         // enact the move/fire combination
         _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
         // and clear everything out

@@ -187,9 +187,6 @@ public class PieceSprite extends Sprite
         super.pathCompleted();
         updateCollisionTree();
 
-        // turn off our movement animation
-        setAnimationActive(false);
-
         // if there are any queued effects, run them
         if (_effects != null) {
             for (int ii = 0; ii < _effects.size(); ii++) {

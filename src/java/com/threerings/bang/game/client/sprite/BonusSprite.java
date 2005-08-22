@@ -34,10 +34,10 @@ public class BonusSprite extends PieceSprite
 
         // load up the model for this bonus
         Model model = ctx.getModelCache().getModel("bonuses", _type);
-        Node[] meshes = model.getMeshes("standing");
+        Node[] meshes = model.getMeshes("normal");
 
         // TEMP: cope with bonuses for which we yet have no model
-        if (meshes[0].getName().startsWith("error")) {
+        if (meshes.length == 0 || meshes[0].getName().startsWith("error")) {
             // create some simple temporary geometry
             Dome geom =
                 new Dome("bonus", 10, 10, TILE_SIZE/2);
@@ -45,10 +45,6 @@ public class BonusSprite extends PieceSprite
             Quaternion rotate = new Quaternion();
             rotate.fromAngleAxis(FastMath.PI/2, LEFT);
             geom.setLocalRotation(rotate);
-            BufferedImage image =
-                ctx.loadImage("bonuses/" + _type + "/icon.png");
-            geom.setRenderState(RenderUtil.createTexture(ctx, image));
-            geom.updateRenderState();
 
         } else {
             for (int ii = 0; ii < meshes.length; ii++) {

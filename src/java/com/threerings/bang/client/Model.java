@@ -139,6 +139,18 @@ public class Model
         return new TextureIcon(_icon, ICON_SIZE, ICON_SIZE);
     }
 
+    /**
+     * Returns true if we have meshes for the specified action.
+     */
+    public boolean hasMeshes (String action)
+    {
+        return _anims.containsKey(action);
+    }
+
+    /**
+     * Returns the meshes for the specified action or a zero-length array
+     * if we have no meshes for said action.
+     */
     public Node[] getMeshes (String action)
     {
         Part[] parts = _anims.get(action);
@@ -161,16 +173,19 @@ public class Model
         return nodes;
     }
 
+    @Override // documentation inherited
     public boolean equals (Object other)
     {
         return _key.equals(((Model)other)._key);
     }
 
+    @Override // documentation inherited
     public int hashCode ()
     {
         return _key.hashCode();
     }
 
+    @Override // documentation inherited
     public String toString ()
     {
         return _key + " m:" + _meshes.size() + " t:" + _textures.size() +
