@@ -103,7 +103,7 @@ public class Model
                 }
                 part.tstates = new TextureState[tnames.length];
                 for (int tt = 0; tt < part.tstates.length; tt++) {
-                    part.tstates[tt] = getTexture(ctx, path + tnames[ii]);
+                    part.tstates[tt] = getTexture(ctx, path + tnames[tt]);
                 }
             }
             _anims.put(action, parts);
