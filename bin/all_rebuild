@@ -41,6 +41,11 @@ fi
 # bookkeeping
 echo "*** Starting build in $ROOT at " `date`
 
+# this is needed when running in a cronjob
+if [ -f $HOME/bin/svnssh ]; then
+    export SVN_SSH=$HOME/bin/svnssh
+fi
+
 if [ ! -z "$UPDATE" ]; then
     # update the whole enchilada
     echo "Updating main tree..."
