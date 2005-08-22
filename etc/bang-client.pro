@@ -10,6 +10,7 @@
 -injars lib/narya-media.jar(!META-INF/*,!**/tools/**)
 -injars lib/narya-parlor.jar(!META-INF/*,!**/tools/**)
 -injars lib/narya-jme.jar(!META-INF/*,!**/tools/**)
+-injars lib/narya-openal.jar(!META-INF/*,!**/tools/**)
 -injars lib/samskivert.jar(!META-INF/*,!**/velocity/**,!**/xml/**)
 -injars lib/jme.jar(!META-INF/*)
 -injars lib/jme-effects.jar(!META-INF/*)
