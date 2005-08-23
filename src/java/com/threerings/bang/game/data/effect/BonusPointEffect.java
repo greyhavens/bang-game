@@ -14,7 +14,7 @@ import com.threerings.bang.game.data.piece.Piece;
 public class BonusPointEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String BONUS_POINT = "bonus_point";
+    public static final String BONUS_POINT = "bonuses/bonus_point/activate";
 
     public int pieceId;
 

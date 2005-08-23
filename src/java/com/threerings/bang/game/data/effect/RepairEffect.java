@@ -14,7 +14,7 @@ import com.threerings.bang.game.data.piece.Piece;
 public class RepairEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String REPAIRED = "repaired";
+    public static final String REPAIRED = "bonuses/repair/activate";
 
     /** The identifier of the piece to be repaired. */
     public int pieceId;

@@ -31,7 +31,7 @@ public class HustleEffect extends Effect
     }
 
     /** The identifier for the type of effect that we produce. */
-    public static final String GIDDY_UP = "giddy_up";
+    public static final String GIDDY_UP = "bonuses/hustle/activate";
 
     /** The piece we will affect. */
     public int pieceId;

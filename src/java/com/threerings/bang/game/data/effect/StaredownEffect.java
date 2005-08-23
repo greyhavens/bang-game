@@ -17,7 +17,7 @@ import com.threerings.bang.game.data.piece.Piece;
 public class StaredownEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String STARED_DOWN = "stared_down";
+    public static final String STARED_DOWN = "cards/staredown/activate";
 
     /** The coordinates at which we were activated. */
     public short x, y;

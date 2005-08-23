@@ -19,7 +19,7 @@ import static com.threerings.bang.Log.log;
 public class DuplicateEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String DUPLICATED = "duplicated";
+    public static final String DUPLICATED = "bonuses/duplicate/activate";
 
     /** Reported when a duplicate could not be placed for lack of room. */
     public static final String WASTED_DUP = "wasted_dup";

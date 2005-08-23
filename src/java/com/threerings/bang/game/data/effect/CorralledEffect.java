@@ -15,7 +15,7 @@ import com.threerings.bang.game.data.piece.Piece;
 public class CorralledEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String CORRALLED = "corralled";
+    public static final String CORRALLED = "bonuses/corralled/activate";
 
     /** The piece we will affect. */
     public int pieceId;

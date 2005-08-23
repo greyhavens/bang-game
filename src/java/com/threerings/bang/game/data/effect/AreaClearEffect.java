@@ -14,7 +14,7 @@ import com.threerings.bang.game.data.piece.Piece;
 public class AreaClearEffect extends AreaEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String CLEARED = "cleared";
+    public static final String CLEARED = "cards/dust_devil/activate";
 
     public AreaClearEffect ()
     {

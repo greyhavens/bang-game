@@ -17,6 +17,7 @@ import com.jme.input.KeyInput;
 
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
+import com.threerings.openal.Sound;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.jme.sprite.LinePath;
@@ -664,8 +665,9 @@ public class BangBoardView extends BoardView
         }
     }
 
-    /** Called to display something useful when an effect is applied. */
-    protected void createEffectAnimation (Piece piece, String effect)
+    /** Called to display something useful when an effect is applied and
+     * perhaps play a sound as well. */
+    protected void communicateEffect (Piece piece, String effect)
     {
         // create the appropriate effect
         EffectViz viz = null;
@@ -693,6 +695,11 @@ public class BangBoardView extends BoardView
             // update the sprite to reflect its change
             pieceUpdated(null, piece);
         }
+
+        // play the sound associated with this effect
+        Sound sound = _sounds.getSound("rsrc/" + effect + ".wav");
+        // TODO: position the sound properly
+        sound.play(true);
     }
 
     /** Used to remove shot sprites when they reach their target. */
@@ -713,7 +720,7 @@ public class BangBoardView extends BoardView
         }
 
         public void pieceAffected (Piece piece, String effect) {
-            createEffectAnimation(piece, effect);
+            communicateEffect(piece, effect);
         }
 
         public void pieceRemoved (Piece piece) {

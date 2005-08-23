@@ -22,7 +22,7 @@ import static com.threerings.bang.Log.log;
 public class DefectEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String DEFECTED = "defected";
+    public static final String DEFECTED = "bonuses/defect/activate";
 
     public int activator;
 

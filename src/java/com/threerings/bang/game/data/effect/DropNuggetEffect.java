@@ -20,7 +20,7 @@ import static com.threerings.bang.Log.log;
 public class DropNuggetEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String DROPPED = "dropped";
+    public static final String DROPPED = "bonuses/nugget/dropped";
 
     /** The piece id of the dropping piece. */
     public int dropperId;

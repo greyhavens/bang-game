@@ -15,7 +15,7 @@ import com.threerings.bang.game.data.piece.Unit;
 public class NuggetEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String BENUGGETED = "benuggeted";
+    public static final String BENUGGETED = "bonuses/nugget/activate";
 
     public int pieceId;
 

@@ -26,7 +26,7 @@ public class RamblinEffect extends Effect
     }
 
     /** The identifier for the type of effect that we produce. */
-    public static final String RAMBLIN = "ramblin";
+    public static final String RAMBLIN = "bonuses/ramblin/activate";
 
     /** The piece we will affect. */
     public int pieceId;
