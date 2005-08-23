@@ -3,12 +3,12 @@
 
 package com.threerings.bang.client;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BLookAndFeel;
-import com.jme.bui.BToggleButton;
-import com.jme.bui.background.BBackground;
-import com.jme.bui.background.TiledBackground;
-import com.jme.bui.border.BBorder;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BToggleButton;
+import com.jmex.bui.background.BBackground;
+import com.jmex.bui.background.TiledBackground;
+import com.jmex.bui.border.BBorder;
 
 /**
  * Handles the custom look and feel for the Bang! Howdy BUI user interface.

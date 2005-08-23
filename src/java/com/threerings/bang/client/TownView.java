@@ -9,12 +9,12 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BWindow;
-import com.jme.bui.background.ScaledBackground;
-import com.jme.bui.event.MouseAdapter;
-import com.jme.bui.event.MouseEvent;
-import com.jme.bui.layout.GroupLayout;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BWindow;
+import com.jmex.bui.background.ScaledBackground;
+import com.jmex.bui.event.MouseAdapter;
+import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.layout.GroupLayout;
 import com.samskivert.util.StringUtil;
 
 import com.jme.util.TextureManager;

@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionEvent;
 
 import com.threerings.bang.client.EscapeMenuView;
 import com.threerings.bang.util.BangContext;

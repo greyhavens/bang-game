@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BComponent;
-import com.jme.bui.BContainer;
-import com.jme.bui.BDecoratedWindow;
-import com.jme.bui.BLabel;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.BorderLayout;
-import com.jme.bui.layout.GroupLayout;
-import com.jme.bui.layout.TableLayout;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.StringUtil;
 

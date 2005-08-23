@@ -8,15 +8,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BCheckBox;
-import com.jme.bui.BComboBox;
-import com.jme.bui.BContainer;
-import com.jme.bui.BDecoratedWindow;
-import com.jme.bui.BLabel;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.GroupLayout;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BCheckBox;
+import com.jmex.bui.BComboBox;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.RunAnywhere;

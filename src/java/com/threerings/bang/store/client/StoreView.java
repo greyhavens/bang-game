@@ -3,17 +3,17 @@
 
 package com.threerings.bang.store.client;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BContainer;
-import com.jme.bui.BLabel;
-import com.jme.bui.BWindow;
-import com.jme.bui.util.Dimension;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.BWindow;
+import com.jmex.bui.util.Dimension;
 import com.jme.renderer.ColorRGBA;
-import com.jme.bui.border.EmptyBorder;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.BorderLayout;
-import com.jme.bui.layout.GroupLayout;
+import com.jmex.bui.border.EmptyBorder;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;

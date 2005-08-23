@@ -5,9 +5,9 @@ package com.threerings.bang.ranch.client;
 
 import java.util.Iterator;
 
-import com.jme.bui.BContainer;
-import com.jme.bui.border.EmptyBorder;
-import com.jme.bui.layout.TableLayout;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.border.EmptyBorder;
+import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;

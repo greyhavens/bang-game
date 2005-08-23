@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import com.jme.bui.BLookAndFeel;
-import com.jme.bui.BWindow;
-import com.jme.bui.BRootNode;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BWindow;
+import com.jmex.bui.BRootNode;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;

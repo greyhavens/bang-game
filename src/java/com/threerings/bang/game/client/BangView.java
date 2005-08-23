@@ -5,13 +5,13 @@ package com.threerings.bang.game.client;
 
 import com.jme.renderer.ColorRGBA;
 
-import com.jme.bui.BComponent;
-import com.jme.bui.BDecoratedWindow;
-import com.jme.bui.BWindow;
-import com.jme.bui.background.BBackground;
-import com.jme.bui.background.TintedBackground;
-import com.jme.bui.layout.BorderLayout;
-import com.jme.bui.layout.GroupLayout;
+import com.jmex.bui.BComponent;
+import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BWindow;
+import com.jmex.bui.background.BBackground;
+import com.jmex.bui.background.TintedBackground;
+import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;

@@ -3,9 +3,9 @@
 
 package com.threerings.bang.client.util;
 
-import com.jme.bui.event.BEvent;
-import com.jme.bui.event.EventListener;
-import com.jme.bui.event.KeyEvent;
+import com.jmex.bui.event.BEvent;
+import com.jmex.bui.event.EventListener;
+import com.jmex.bui.event.KeyEvent;
 import com.jme.input.KeyInput;
 
 /**

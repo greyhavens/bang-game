@@ -5,11 +5,11 @@ package com.threerings.bang.ranch.client;
 
 import java.util.EnumSet;
 
-import com.jme.bui.BContainer;
-import com.jme.bui.BLabel;
-import com.jme.bui.border.EmptyBorder;
-import com.jme.bui.layout.BorderLayout;
-import com.jme.bui.layout.GroupLayout;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.border.EmptyBorder;
+import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 

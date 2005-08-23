@@ -6,11 +6,11 @@ package com.threerings.bang.client;
 import java.awt.Font;
 import java.io.IOException;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BLabel;
-import com.jme.bui.BLookAndFeel;
-import com.jme.bui.BlankIcon;
-import com.jme.bui.text.AWTTextFactory;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BlankIcon;
+import com.jmex.bui.text.AWTTextFactory;
 
 import com.threerings.openal.ClipProvider;
 import com.threerings.openal.WaveDataClipProvider;

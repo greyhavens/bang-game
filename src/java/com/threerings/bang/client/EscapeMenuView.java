@@ -3,12 +3,12 @@
 
 package com.threerings.bang.client;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BComponent;
-import com.jme.bui.BDecoratedWindow;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.GroupLayout;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
+import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.util.MessageBundle;

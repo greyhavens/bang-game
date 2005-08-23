@@ -15,11 +15,11 @@ import com.jme.scene.Node;
 import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 
-import com.jme.bui.BDecoratedWindow;
-import com.jme.bui.BLabel;
-import com.jme.bui.BLookAndFeel;
-import com.jme.bui.BRootNode;
-import com.jme.bui.layout.BorderLayout;
+import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BRootNode;
+import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.tile.FringeConfiguration;

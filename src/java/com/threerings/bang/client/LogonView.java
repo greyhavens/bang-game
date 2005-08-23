@@ -3,19 +3,19 @@
 
 package com.threerings.bang.client;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BContainer;
-import com.jme.bui.BIcon;
-import com.jme.bui.BLabel;
-import com.jme.bui.BPasswordField;
-import com.jme.bui.BTextField;
-import com.jme.bui.BWindow;
-import com.jme.bui.background.ScaledBackground;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.GroupLayout;
-import com.jme.bui.layout.TableLayout;
-import com.jme.bui.util.Dimension;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BIcon;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.BPasswordField;
+import com.jmex.bui.BTextField;
+import com.jmex.bui.BWindow;
+import com.jmex.bui.background.ScaledBackground;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 import com.jme.renderer.ColorRGBA;
 import com.jme.util.TextureManager;
 

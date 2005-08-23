@@ -12,8 +12,8 @@ import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.jme.bui.event.MouseEvent;
-import com.jme.bui.event.MouseListener;
+import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.event.MouseListener;
 import com.jme.input.KeyInput;
 
 import com.samskivert.util.StringUtil;

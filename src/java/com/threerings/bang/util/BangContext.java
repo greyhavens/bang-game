@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 
-import com.jme.bui.BLookAndFeel;
+import com.jmex.bui.BLookAndFeel;
 
 import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;

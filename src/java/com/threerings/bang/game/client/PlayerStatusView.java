@@ -3,16 +3,16 @@
 
 package com.threerings.bang.game.client;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BContainer;
-import com.jme.bui.BIcon;
-import com.jme.bui.BLabel;
-import com.jme.bui.BLookAndFeel;
-import com.jme.bui.ImageIcon;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.GroupLayout;
-import com.jme.bui.layout.TableLayout;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BIcon;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.ImageIcon;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;

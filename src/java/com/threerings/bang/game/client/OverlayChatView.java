@@ -5,16 +5,16 @@ package com.threerings.bang.game.client;
 
 import java.util.StringTokenizer;
 
-import com.jme.bui.BComponent;
-import com.jme.bui.BLabel;
-import com.jme.bui.BLookAndFeel;
-import com.jme.bui.BTextField;
-import com.jme.bui.BWindow;
-import com.jme.bui.background.BBackground;
-import com.jme.bui.background.BlankBackground;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.GroupLayout;
+import com.jmex.bui.BComponent;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BTextField;
+import com.jmex.bui.BWindow;
+import com.jmex.bui.background.BBackground;
+import com.jmex.bui.background.BlankBackground;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.GroupLayout;
 import com.jme.renderer.ColorRGBA;
 
 import com.samskivert.util.Interval;

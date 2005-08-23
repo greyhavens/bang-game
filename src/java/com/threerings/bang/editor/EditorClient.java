@@ -15,8 +15,8 @@ import javax.swing.JPopupMenu;
 
 import java.util.logging.Level;
 
-import com.jme.bui.BLookAndFeel;
-import com.jme.bui.BRootNode;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BRootNode;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;

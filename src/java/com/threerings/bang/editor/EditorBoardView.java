@@ -6,9 +6,9 @@ package com.threerings.bang.editor;
 import java.awt.Cursor;
 import java.awt.Point;
 
-import com.jme.bui.event.MouseEvent;
-import com.jme.bui.event.MouseListener;
-import com.jme.bui.event.MouseWheelListener;
+import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.event.MouseListener;
+import com.jmex.bui.event.MouseWheelListener;
 
 import com.threerings.jme.sprite.Sprite;
 

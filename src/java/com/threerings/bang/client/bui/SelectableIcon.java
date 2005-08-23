@@ -5,15 +5,15 @@ package com.threerings.bang.client.bui;
 
 import com.jme.renderer.ColorRGBA;
 
-import com.jme.bui.BIcon;
-import com.jme.bui.BLookAndFeel;
-import com.jme.bui.BToggleButton;
-import com.jme.bui.background.BBackground;
-import com.jme.bui.background.BlankBackground;
-import com.jme.bui.border.BBorder;
-import com.jme.bui.border.CompoundBorder;
-import com.jme.bui.border.EmptyBorder;
-import com.jme.bui.border.LineBorder;
+import com.jmex.bui.BIcon;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BToggleButton;
+import com.jmex.bui.background.BBackground;
+import com.jmex.bui.background.BlankBackground;
+import com.jmex.bui.border.BBorder;
+import com.jmex.bui.border.CompoundBorder;
+import com.jmex.bui.border.EmptyBorder;
+import com.jmex.bui.border.LineBorder;
 
 /**
  * Displays an icon image with text below it that can be selected when

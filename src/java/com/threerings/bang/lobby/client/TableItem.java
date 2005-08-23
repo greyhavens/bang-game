@@ -3,16 +3,16 @@
 
 package com.threerings.bang.lobby.client;
 
-import com.jme.bui.BButton;
-import com.jme.bui.BContainer;
-import com.jme.bui.BLabel;
-import com.jme.bui.border.EmptyBorder;
-import com.jme.bui.border.CompoundBorder;
-import com.jme.bui.border.LineBorder;
+import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.border.EmptyBorder;
+import com.jmex.bui.border.CompoundBorder;
+import com.jmex.bui.border.LineBorder;
 import com.jme.renderer.ColorRGBA;
-import com.jme.bui.event.ActionEvent;
-import com.jme.bui.event.ActionListener;
-import com.jme.bui.layout.TableLayout;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;

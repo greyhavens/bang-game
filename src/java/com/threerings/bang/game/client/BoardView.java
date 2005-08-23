@@ -32,13 +32,13 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
-import com.jme.bui.BComponent;
-import com.jme.bui.BDecoratedWindow;
-import com.jme.bui.BLabel;
-import com.jme.bui.event.MouseEvent;
-import com.jme.bui.event.MouseMotionListener;
-import com.jme.bui.event.MouseWheelListener;
-import com.jme.bui.layout.BorderLayout;
+import com.jmex.bui.BComponent;
+import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.event.MouseMotionListener;
+import com.jmex.bui.event.MouseWheelListener;
+import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
