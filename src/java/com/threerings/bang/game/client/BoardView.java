@@ -472,7 +472,7 @@ public class BoardView extends BComponent
     /**
      * Removes the sprite associated with the specified piece.
      */
-    protected void removePieceSprite (int pieceId, String why)
+    protected PieceSprite removePieceSprite (int pieceId, String why)
     {
         PieceSprite sprite = _pieces.remove(pieceId);
         if (sprite != null) {
@@ -482,6 +482,7 @@ public class BoardView extends BComponent
             log.warning("No sprite for removed piece [id=" + pieceId +
                         ", why=" + why + "].");
         }
+        return sprite;
     }
 
     /**

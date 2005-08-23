@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.jme.bui.event.MouseEvent;
@@ -34,7 +35,10 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.client.effect.ExplosionViz;
+import com.threerings.bang.game.client.effect.PlaySoundViz;
 import com.threerings.bang.game.client.effect.RepairViz;
+import com.threerings.bang.game.client.sprite.BonusSprite;
+import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangConfig;
@@ -239,6 +243,24 @@ public class BangBoardView extends BoardView
         if (_vstate != null) {
             _vstate.reveal();
             adjustEnemyVisibility();
+        }
+    }
+
+    @Override // documentation inherited
+    public void addSprite (Sprite sprite)
+    {
+        super.addSprite(sprite);
+        if (sprite instanceof MobileSprite) {
+            sprite.addObserver(_bonusClearer);
+        }
+    }
+
+    @Override // documentation inherited
+    public void removeSprite (Sprite sprite)
+    {
+        super.removeSprite(sprite);
+        if (sprite instanceof MobileSprite) {
+            sprite.removeObserver(_bonusClearer);
         }
     }
 
@@ -565,6 +587,26 @@ public class BangBoardView extends BoardView
         }
     }
 
+    @Override // documentation inherited
+    protected PieceSprite removePieceSprite (int pieceId, String why)
+    {
+        PieceSprite sprite = super.removePieceSprite(pieceId, why);
+
+        // bonus sprites are not removed immediately; instead they are
+        // shifted to a secondary table and they will be removed when the
+        // piece that activated the bonus finally comes to rest on the
+        // bonus piece's location
+        if (sprite instanceof BonusSprite) {
+            // put the sprite back into the mix
+            addSprite(sprite);
+            // and stick it into the pending bonuses table
+            Piece piece = sprite.getPiece();
+            _pendingBonuses.put(new Point(piece.x, piece.y), sprite);
+        }
+
+        return sprite;
+    }
+
     /**
      * Called every time the board ticks.
      */
@@ -669,7 +711,15 @@ public class BangBoardView extends BoardView
      * perhaps play a sound as well. */
     protected void communicateEffect (Piece piece, String effect)
     {
-        // create the appropriate effect
+        Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
+        PieceSprite sprite = getPieceSprite(piece);
+        if (sprite == null) {
+            log.warning("Missing sprite for effect [piece=" + piece +
+                        ", effect=" + effect + "].");
+            return;
+        }
+
+        // create the appropriate visual effect
         EffectViz viz = null;
         if (effect.equals("bang")) {
             viz = new ExplosionViz(false);
@@ -681,9 +731,7 @@ public class BangBoardView extends BoardView
 
         // queue the effect up on the piece sprite
         if (viz != null) {
-            Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
             viz.init(_ctx, this, opiece, piece);
-            PieceSprite sprite = getPieceSprite(piece);
             sprite.queueEffect(viz);
 
             // if they just got shot, clear any pending shot
@@ -696,10 +744,9 @@ public class BangBoardView extends BoardView
             pieceUpdated(null, piece);
         }
 
-        // play the sound associated with this effect
-        Sound sound = _sounds.getSound("rsrc/" + effect + ".wav");
-        // TODO: position the sound properly
-        sound.play(true);
+        // also play a sound along with any visual effect
+        sprite.queueEffect(
+            new PlaySoundViz(_sounds, "rsrc/" + effect + ".wav"));
     }
 
     /** Used to remove shot sprites when they reach their target. */
@@ -739,6 +786,23 @@ public class BangBoardView extends BoardView
         }
     };
 
+    /** Clears bonuses from tiles when units finally land on them. */
+    protected PathObserver _bonusClearer = new PathObserver() {
+        public void pathCancelled (Sprite sprite, Path path) {
+            pathCompleted(sprite, path);
+        }
+        public void pathCompleted (Sprite sprite, Path path) {
+            if (sprite instanceof MobileSprite) {
+                Piece p = ((MobileSprite)sprite).getPiece();
+                PieceSprite bsprite =
+                    _pendingBonuses.remove(new Point(p.x, p.y));
+                if (bsprite != null) {
+                    removeSprite(bsprite);
+                }
+            }
+        }
+    };
+
     protected BangController _ctrl;
 
     protected Piece _selection;
@@ -754,4 +818,8 @@ public class BangBoardView extends BoardView
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
+
+    /** Contains bonus sprites that are pending removal. */
+    protected HashMap<Point,PieceSprite> _pendingBonuses =
+        new HashMap<Point,PieceSprite>();
 }
