@@ -126,7 +126,7 @@ public abstract class ShotHandler
             // on the first shot, we animate the shooter
             PieceSprite ssprite = _view.getPieceSprite(_shooter);
             if (ssprite instanceof MobileSprite) {
-                ((MobileSprite)ssprite).runAction("shooting_move_forward");
+                ((MobileSprite)ssprite).runAction("shooting");
             }
 
         } else {
