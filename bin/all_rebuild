@@ -73,7 +73,7 @@ ant clean dist
 
 # build the client if requested
 if [ ! -z "$CLIENT" ]; then
-    ant client
+    ant models client
 fi
 
 # now build the editor deployment
