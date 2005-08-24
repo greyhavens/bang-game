@@ -28,6 +28,7 @@ import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.util.BangContext;
 
@@ -183,45 +184,16 @@ public class OverlayChatView extends BWindow
 
     protected boolean handleInput (String text)
     {
-        // if the message to send begins with /tell then parse it and
-        // generate a tell request rather than a speak request
-        if (text.startsWith("/tell")) {
-            StringTokenizer tok = new StringTokenizer(text);
-            // there should be at least three tokens: '/tell target word'
-            if (tok.countTokens() < 3) {
-                displayError("Usage: /tell username message");
-                return false;
-            }
-
-            // skip the /tell and grab the username
-            tok.nextToken();
-            String username = tok.nextToken();
-
-            // now strip off everything up to the username to get the
-            // message
-            int uidx = text.indexOf(username);
-            String message = text.substring(uidx + username.length()).trim();
-
-            // request to send this text as a tell message
-            _chatdtr.requestTell(new Name(username), message, null);
-
-        } else if (text.startsWith("/clear")) {
-            // clear the chat box
-            _chatdtr.clearDisplays();
-
-        } else if (text.startsWith("/")) {
-            displayError("Error: unknown slash command.");
-            return false;
+        String errmsg = _chatdtr.requestChat(null, text, true);
+        if (errmsg.equals(ChatCodes.SUCCESS)) {
+            _ctx.getRootNode().requestFocus(null);
+            _input.setBackground(_blankbg);
+            return true;
 
         } else {
-            // request to send this text as a chat message
-            _chatdtr.requestSpeak(null, text, ChatCodes.DEFAULT_MODE);
+            displayError(_ctx.xlate(BangCodes.CHAT_MSGS, errmsg));
+            return false;
         }
-
-        _ctx.getRootNode().requestFocus(null);
-        _input.setBackground(_blankbg);
-
-        return true;
     }
 
     protected void expireChat ()

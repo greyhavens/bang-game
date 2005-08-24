@@ -32,7 +32,6 @@ import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.SessionObserver;
 import com.threerings.presents.dobj.DObjectManager;
 
-import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;

@@ -112,7 +112,7 @@ public class BasicClient
         _locdir = new LocationDirector(_ctx);
         _occdir = new OccupantDirector(_ctx);
         _pardir = new ParlorDirector(_ctx);
-        _chatdir = new ChatDirector(_ctx, _msgmgr, null);
+        _chatdir = new BangChatDirector(_ctx);
     }
 
     /**
@@ -222,7 +222,7 @@ public class BasicClient
     protected Client _client;
     protected LocationDirector _locdir;
     protected OccupantDirector _occdir;
-    protected ChatDirector _chatdir;
+    protected BangChatDirector _chatdir;
     protected ParlorDirector _pardir;
 
     /** The prefix prepended to localization bundle names before looking
