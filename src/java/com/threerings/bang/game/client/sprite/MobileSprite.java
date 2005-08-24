@@ -22,6 +22,7 @@ import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
 import com.threerings.jme.sprite.Path;
 
+import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
@@ -69,7 +70,7 @@ public class MobileSprite extends PieceSprite
     public void runAction (String action)
     {
         Model.Animation anim = setAction(action);
-        _restoreResting = anim.duration/1000f;
+        _restoreResting = Config.display.animationSpeed * anim.duration/1000f;
         setAnimationActive(true);
     }
 
@@ -178,7 +179,7 @@ public class MobileSprite extends PieceSprite
             _meshes[ii].updateRenderState();
             _meshes[ii].updateGeometricState(0, true);
         }
-        setAnimationSpeed(anim.getSpeed());
+        setAnimationSpeed(Config.display.animationSpeed * anim.getSpeed());
         return anim;
     }
 
@@ -219,7 +220,7 @@ public class MobileSprite extends PieceSprite
                 coords[ii] = new Vector3f();
                 toWorldCoords(p.x, p.y, elevation, coords[ii]);
                 if (ii > 0) {
-                    durations[ii-1] = 0.2f;
+                    durations[ii-1] = 1f / Config.display.getMovementSpeed();
                 }
             }
             return new MoveUnitPath(this, coords, durations);
