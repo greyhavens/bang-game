@@ -215,7 +215,7 @@ public class OverlayChatView extends BWindow
 
         } else {
             // request to send this text as a chat message
-            _chatdtr.requestSpeak(text);
+            _chatdtr.requestSpeak(null, text, ChatCodes.DEFAULT_MODE);
         }
 
         _ctx.getRootNode().requestFocus(null);
