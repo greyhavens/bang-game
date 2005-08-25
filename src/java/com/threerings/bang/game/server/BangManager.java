@@ -357,7 +357,7 @@ public class BangManager extends GameManager
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii) || isTest()) {
+            if (isAI(ii) || (isTest() && _bconfig.teamSize == 4)) {
                 selectStarters(ii, null, null);
                 String[] units = new String[] {
                     "artillery", "steamgunman", "gunslinger", "dirigible" };
