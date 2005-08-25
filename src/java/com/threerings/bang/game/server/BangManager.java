@@ -385,7 +385,7 @@ public class BangManager extends GameManager
             // if they failed to select a big shot (or are an AI) give
             // them a default
             if (item == null) {
-                item = new BigShotItem(-1, "tactitian");
+                item = new BigShotItem(-1, "tactician");
             }
 
             // configure their big shot selection
