@@ -22,6 +22,20 @@ public class ShotEffect extends Effect
     /** We also rotate the shooter, thereby affecting it. */
     public static final String ROTATED = "rotated";
 
+    /** A normal shot. */
+    public static final int NORMAL = 0;
+
+    /** A return fire shot. */
+    public static final int RETURN_FIRE = 1;
+
+    /** Maps shot types to animation identifiers. */
+    public static final String[] SHOT_ACTIONS = {
+        "shooting", "returning_fire"
+    };
+
+    /** The type of shot. */
+    public short type = NORMAL;
+
     /** The piece id of the shooter. */
     public int shooterId;
 

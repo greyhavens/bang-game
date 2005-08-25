@@ -154,6 +154,7 @@ public class Unit extends Piece
             // calculating our shot; it will be applied properly later
             this.damage = newDamage;
             shot = shoot(bangobj, shooter);
+            shot.type = ShotEffect.RETURN_FIRE;
             this.damage = oldDamage;
             // scale the damage down appropriately
             shot.newDamage = (_config.returnFire * shot.newDamage) / 100;

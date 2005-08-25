@@ -126,7 +126,8 @@ public abstract class ShotHandler
             // on the first shot, we animate the shooter
             PieceSprite ssprite = _view.getPieceSprite(_shooter);
             if (ssprite instanceof MobileSprite) {
-                ((MobileSprite)ssprite).runAction("shooting");
+                ((MobileSprite)ssprite).runAction(
+                    ShotEffect.SHOT_ACTIONS[_shot.type]);
             }
             // and the target (though eventually this will trigger on an
             // "event" in the shooting animation
