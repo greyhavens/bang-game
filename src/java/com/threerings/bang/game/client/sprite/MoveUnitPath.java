@@ -9,6 +9,9 @@ import com.jme.math.Vector3f;
 
 import com.threerings.jme.sprite.LineSegmentPath;
 
+import com.threerings.bang.client.Config;
+import com.threerings.bang.client.Model;
+
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -23,26 +26,48 @@ public class MoveUnitPath extends LineSegmentPath
     {
         super(sprite, UP, FORWARD, coords, durations);
 
-        // figure out which actions we'll use all along the way
-        _actions = new String[durations.length];
-
-        // fill in our standard walking cycle
-        Arrays.fill(_actions, sprite.hasAction("walking_cycle") ?
-                    "walking_cycle" : "walking");
-
-        // add a start and end animation if we have them
-        if (_actions.length > 1) {
-            if (sprite.hasAction("walking_start")) {
-                _actions[0] = "walking_start";
+        // either we do "walking" the whole time, or we break our path
+        // down into "start", "cycle" and "end"
+        if (sprite.hasAction("walking_start")) {
+            float total = 0;
+            for (int ii = 0; ii < durations.length; ii++) {
+                total += durations[ii];
             }
-            if (sprite.hasAction("walking_end")) {
-                _actions[_actions.length-1] = "walking_end";
+            _actions = new String[] {
+                "walking_start", "walking_cycle", "walking_end" };
+            _times = new float[_actions.length];
+            Model.Animation start = sprite.getAction("walking_start");
+            if (start != null) {
+                _times[0] = start.getDuration() / Config.display.animationSpeed;
+                total -= _times[0];
             }
+            Model.Animation end = sprite.getAction("walking_end");
+            if (end != null) {
+                _times[2] = end.getDuration() / Config.display.animationSpeed;
+                total -= _times[2];
+            }
+            _times[1] = total + _times[0];
+            _times[2] += _times[1];
+            sprite.setAction("walking_start");
+
+        } else {
+            sprite.setAction("walking");
         }
-
-        // start with our first action
-        sprite.setAction(_actions[0]);
         sprite.setAnimationActive(true);
+    }
+
+    @Override // documentation inherited
+    public void update (float time)
+    {
+        super.update(time);
+
+        _elapsed += time;
+        if (_actions != null && _elapsed > _times[_index] &&
+            _index < _actions.length-1) {
+            MobileSprite sprite = (MobileSprite)_sprite;
+            sprite.setAction(_actions[++_index]);
+            sprite.setAnimationActive(true);
+        }
     }
 
     @Override // documentation inherited
@@ -56,23 +81,8 @@ public class MoveUnitPath extends LineSegmentPath
         sprite.setAnimationActive(false);
     }
 
-    @Override // documentation inherited
-    protected void advance ()
-    {
-        super.advance();
-
-        // stop now if we're about to finish the path
-        if (_current == _actions.length) {
-            return;
-        }
-
-        // update our current animation action if it changed
-        if (!_actions[_current].equals(_actions[_current-1])) {
-            MobileSprite sprite = (MobileSprite)_sprite;
-            sprite.setAction(_actions[_current]);
-            sprite.setAnimationActive(true);
-        }
-    }
-
     protected String[] _actions;
+    protected float[] _times;
+    protected float _elapsed;
+    protected int _index;
 }

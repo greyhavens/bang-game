@@ -71,6 +71,14 @@ public class Model
         }
 
         /**
+         * Returns the duration of this animation in seconds.
+         */
+        public float getDuration ()
+        {
+            return duration / 1000f;
+        }
+
+        /**
          * Returns the meshes for the specified action or a zero-length array
          * if we have no meshes for said action.
          */
@@ -130,9 +138,9 @@ public class Model
 
             Animation anim = new Animation();
             anim.frames = BangUtil.getIntProperty(
-                _key, props, action + ".frames", 10);
+                _key, props, action + ".frames", 8);
             anim.duration = BangUtil.getIntProperty(
-                _key, props, action + ".duration", 200);
+                _key, props, action + ".duration", 250);
 
             String[] pnames = getList(props, action + ".meshes", "meshes", true);
             anim._parts = new Part[pnames.length];
@@ -186,7 +194,7 @@ public class Model
     /**
      * Returns true if we have meshes for the specified action.
      */
-    public boolean hasMeshes (String action)
+    public boolean hasAnimation (String action)
     {
         return _anims.containsKey(action);
     }

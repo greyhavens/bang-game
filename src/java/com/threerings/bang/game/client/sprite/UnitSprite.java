@@ -78,6 +78,13 @@ public class UnitSprite extends MobileSprite
         _tgtquad.setForceCull(!pending);
     }
 
+    /**
+     * Indicates that we have queued up 
+     */
+    public void setPendingMove (boolean pending)
+    {
+    }
+
     @Override // documentation inherited
     public void updated (BangBoard board, Piece piece, short tick)
     {

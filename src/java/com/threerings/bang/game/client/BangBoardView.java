@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
@@ -534,10 +535,15 @@ public class BangBoardView extends BoardView
             return;
         }
 
-        // if this unit is not yet movable, "queue" up their
+        // if this unit is not yet movable, "queue" up their action
         UnitSprite sprite = (UnitSprite)getPieceSprite(actor);
-        // enact the move/fire combination
-        _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
+        if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
+            _queuedMoves.put(_action[0], _action);
+            sprite.setTargeted(true);
+        } else {
+            // otherwise enact the move/fire combination immediately
+            _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
+        }
         // and clear everything out
         clearSelection();
     }
@@ -612,6 +618,19 @@ public class BangBoardView extends BoardView
      */
     protected void ticked (short tick)
     {
+        // fire off any queued moves
+        for (Iterator<Map.Entry<Integer,int[]>> iter =
+                 _queuedMoves.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry<Integer,int[]> move = iter.next();
+            Piece piece = (Piece)_bangobj.pieces.get(move.getKey());
+            if (piece.ticksUntilMovable(tick) == 0) {
+                int[] action = move.getValue();
+                _ctrl.moveAndFire(action[0], action[1], action[2], action[3]);
+                ((UnitSprite)getPieceSprite(piece)).setTargeted(false);
+                iter.remove();
+            }
+        }
+
         // update all of our piece sprites
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
@@ -815,6 +834,8 @@ public class BangBoardView extends BoardView
 
     protected int[] _action;
     protected Card _card;
+
+    protected HashMap<Integer,int[]> _queuedMoves = new HashMap<Integer,int[]>();
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;

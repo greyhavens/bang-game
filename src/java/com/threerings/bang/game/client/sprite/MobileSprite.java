@@ -53,7 +53,15 @@ public class MobileSprite extends PieceSprite
      */
     public boolean hasAction (String action)
     {
-        return _model.hasMeshes(action);
+        return _model.hasAnimation(action);
+    }
+
+    /**
+     * Returns the underlying animation for the specified action.
+     */
+    public Model.Animation getAction (String action)
+    {
+        return _model.getAnimation(action);
     }
 
     /**

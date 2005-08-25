@@ -17,7 +17,7 @@ public class Config
         public float animationSpeed = 1f;
 
         /** The speed (in tiles per second) of unit movement. */
-        public float movementSpeed = 5f;
+        public float movementSpeed = 4f;
 
         /** Returns the unit movement speed modulated by the total
          * animation speed. */
