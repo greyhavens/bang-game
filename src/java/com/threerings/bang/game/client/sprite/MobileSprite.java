@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -75,11 +76,12 @@ public class MobileSprite extends PieceSprite
     /**
      * Runs the specified action animation.
      */
-    public void runAction (String action)
+    public void queueAction (String action)
     {
-        Model.Animation anim = setAction(action);
-        _restoreResting = Config.display.animationSpeed * anim.duration/1000f;
-        setAnimationActive(true);
+        _actions.add(action);
+        if (_actions.size() == 1) {
+            startNextAction();
+        }
     }
 
     @Override // documentation inherited
@@ -98,12 +100,16 @@ public class MobileSprite extends PieceSprite
     public void updateWorldData (float time)
     {
         // expire any actions first before we update our children
-        if (_restoreResting > 0) {
-            _restoreResting -= time;
-            if (_restoreResting <= 0) {
-                _restoreResting = 0;
-                setAction(getRestPose());
-                setAnimationActive(false);
+        if (_nextAction > 0) {
+            _nextAction -= time;
+            if (_nextAction <= 0) {
+                _nextAction = 0;
+                if (_actions.size() > 0) {
+                    startNextAction();
+                } else {
+                    setAction(getRestPose());
+                    setAnimationActive(false);
+                }
             }
         }
 
@@ -192,6 +198,17 @@ public class MobileSprite extends PieceSprite
     }
 
     /**
+     * Pulls the next action off of our queue and runs it.
+     */
+    protected void startNextAction ()
+    {
+        String action = _actions.remove(0);
+        Model.Animation anim = setAction(action);
+        _nextAction = Config.display.animationSpeed * anim.duration/1000f;
+        setAnimationActive(true);
+    }
+
+    /**
      * Returns the default pose for this model when it is simply resting
      * on the board.
      */
@@ -255,7 +272,8 @@ public class MobileSprite extends PieceSprite
     protected Quad _shadow;
     protected Sound _moveSound;
 
-    protected float _restoreResting;
+    protected float _nextAction;
+    protected ArrayList<String> _actions = new ArrayList<String>();
 
     protected static TextureState _shadtex;
 }

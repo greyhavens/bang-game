@@ -126,7 +126,7 @@ public abstract class ShotHandler
             // on the first shot, we animate the shooter
             PieceSprite ssprite = _view.getPieceSprite(_shooter);
             if (ssprite instanceof MobileSprite) {
-                ((MobileSprite)ssprite).runAction(
+                ((MobileSprite)ssprite).queueAction(
                     ShotEffect.SHOT_ACTIONS[_shot.type]);
             }
             // and the target (though eventually this will trigger on an
@@ -134,7 +134,7 @@ public abstract class ShotHandler
             if (_target != null) {
                 PieceSprite tsprite = _view.getPieceSprite(_target);
                 if (tsprite instanceof MobileSprite) {
-                    ((MobileSprite)tsprite).runAction("reacting");
+                    ((MobileSprite)tsprite).queueAction("reacting");
                 }
             }
 
