@@ -6,5 +6,5 @@ gunslinger
 sharpshooter
 shotgunner
 steamgunman
-tactitian
+tactician
 windupslinger

@@ -14,11 +14,11 @@ import com.threerings.bang.game.data.effect.ShotEffect;
 import static com.threerings.bang.Log.log;
 
 /**
- * Handles the special capabilities of the Tactitian unit.
+ * Handles the special capabilities of the Tactician unit.
  */
-public class Tactitian extends Unit
+public class Tactician extends Unit
 {
-    /** Set to the tick on which the tactitian last fired. */
+    /** Set to the tick on which the tactician last fired. */
     public short lastFired = -4;
 
     @Override // documentation inherited
