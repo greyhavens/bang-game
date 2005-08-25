@@ -79,10 +79,12 @@ public class UnitSprite extends MobileSprite
     }
 
     /**
-     * Indicates that we have queued up 
+     * Indicates that we have queued up an action to be taken when our
+     * piece is once again able to move and shoot.
      */
-    public void setPendingMove (boolean pending)
+    public void setPendingAction (boolean pending)
     {
+        _pendquad.setForceCull(!pending);
     }
 
     @Override // documentation inherited
@@ -200,6 +202,19 @@ public class UnitSprite extends MobileSprite
         attachChild(bbn);
         _tgtquad.setForceCull(true);
 
+        // this icon is displayed when we have a pending action queued
+        _pendquad = RenderUtil.createIcon(5, 5);
+        _pendquad.setRenderState(_pendtex);
+        _pendquad.setLocalTranslation(new Vector3f(0, 0, 0));
+        _pendquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _pendquad.setRenderState(RenderUtil.alwaysZBuf);
+        _pendquad.updateRenderState();
+        bbn = new BillboardNode("pending");
+        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
+        bbn.attachChild(_pendquad);
+        attachChild(bbn);
+        _pendquad.setForceCull(true);
+
         // this icon is displayed when we are modified in some way (we're
         // carrying a nugget, for example)
         _icon = RenderUtil.createIcon(5, 5);
@@ -208,7 +223,7 @@ public class UnitSprite extends MobileSprite
         _icon.setRenderState(RenderUtil.alwaysZBuf);
         _icon.updateRenderState();
         bbn = new BillboardNode("icon");
-        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
+        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
         bbn.attachChild(_icon);
         attachChild(bbn);
         _icon.setForceCull(true);
@@ -277,6 +292,8 @@ public class UnitSprite extends MobileSprite
             ctx, ctx.loadImage("textures/ustatus/selected.png"));
         _tgttex = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
+        _pendtex = RenderUtil.createTexture(
+            ctx, ctx.loadImage("textures/ustatus/pending.png"));
         _movetex = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/tick_ready.png"));
         _nugtex = RenderUtil.createTexture(
@@ -353,7 +370,7 @@ public class UnitSprite extends MobileSprite
         protected float _lastUpdate;
     }
 
-    protected Quad _hovquad, _tgtquad;
+    protected Quad _hovquad, _tgtquad, _pendquad;
 
     protected StatusNode _status;
     protected Quad _ticks, _damage, _movable, _icon;
@@ -366,7 +383,7 @@ public class UnitSprite extends MobileSprite
     protected static Quaternion _tquat = new Quaternion();
 
     protected static BufferedImage _dfull, _dempty;
-    protected static TextureState _hovtex, _tgttex, _movetex, _nugtex;
+    protected static TextureState _hovtex, _tgttex, _pendtex, _movetex, _nugtex;
     protected static TextureState[] _ticktex;
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;

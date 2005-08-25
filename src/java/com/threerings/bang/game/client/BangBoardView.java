@@ -539,7 +539,7 @@ public class BangBoardView extends BoardView
         UnitSprite sprite = (UnitSprite)getPieceSprite(actor);
         if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
             _queuedMoves.put(_action[0], _action);
-            sprite.setTargeted(true);
+            sprite.setPendingAction(true);
         } else {
             // otherwise enact the move/fire combination immediately
             _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
@@ -626,7 +626,7 @@ public class BangBoardView extends BoardView
             if (piece.ticksUntilMovable(tick) == 0) {
                 int[] action = move.getValue();
                 _ctrl.moveAndFire(action[0], action[1], action[2], action[3]);
-                ((UnitSprite)getPieceSprite(piece)).setTargeted(false);
+                ((UnitSprite)getPieceSprite(piece)).setPendingAction(false);
                 iter.remove();
             }
         }
