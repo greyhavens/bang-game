@@ -357,10 +357,10 @@ public class BangManager extends GameManager
 
         // configure purchases for our AIs
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii) /* || isTest() */) {
+            if (isAI(ii) || isTest()) {
                 selectStarters(ii, null, null);
                 String[] units = new String[] {
-                    "dirigible", "steamgunman", "artillery" };
+                    "artillery", "steamgunman", "gunslinger", "dirigible" };
                 purchaseUnits(ii, units);
             }
         }
@@ -950,9 +950,11 @@ public class BangManager extends GameManager
     }
 
     /** Indicates that we're testing and to do wacky stuff. */
-    protected static boolean isTest ()
+    protected boolean isTest ()
     {
-        return (System.getProperty("test") != null);
+        // if it's a two player game and one player is an AI, we're
+        // testing
+        return (_AIs != null && getPlayerSlots() == 2);
     }
 
     /** Triggers our board tick once every N seconds. */
