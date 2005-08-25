@@ -75,6 +75,15 @@
     </copy>
   </target>
 
+  <!-- enumerates all of our sounds into a master list -->
+  <target name="sounds">
+    <exec executable="find" output="rsrc/sounds.txt">
+      <arg value="rsrc"/>
+      <arg value="-name"/>
+      <arg value="*.wav"/>
+    </exec>
+  </target>
+
   <!-- converts our models into JME format -->
   <target name="models">
     <taskdef name="convert" classname="com.threerings.jme.tools.ConvertModelTask"
@@ -181,7 +190,7 @@
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
   <!-- builds the main bang jar file -->
-  <target name="dist" depends="prepare,compile,fringe">
+  <target name="dist" depends="prepare,compile,fringe,sounds,models">
     <jar file="${deploy.dir}/${app.name}-code.jar"
          basedir="${deploy.dir}/classes" includes="com/**"/>
     <jar file="${deploy.dir}/${app.name}-media.jar"

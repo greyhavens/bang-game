@@ -83,7 +83,9 @@ public class BallisticShotHandler extends ShotHandler
                           GRAVVEC, duration));
 
         // start the bomb whistle
-        _whistleSound.play(false);
+        if (_sidx == 0) {
+            _whistleSound.play(false);
+        }
     }
 
     @Override // documentation inherited
@@ -96,6 +98,8 @@ public class BallisticShotHandler extends ShotHandler
                 if (_bangSound != null) {
                     _bangSound.play(false); // bang!
                 }
+                // stop the bomb whistle
+                _whistleSound.stop();
                 _view.applyShot(_shot);
             }
         } else {
