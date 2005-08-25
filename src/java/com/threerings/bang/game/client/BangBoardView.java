@@ -33,6 +33,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.client.effect.ExplosionViz;
@@ -764,8 +765,10 @@ public class BangBoardView extends BoardView
         }
 
         // also play a sound along with any visual effect
-        sprite.queueEffect(
-            new PlaySoundViz(_sounds, "rsrc/" + effect + ".wav"));
+        String path = "rsrc/" + effect + ".wav";
+        if (SoundUtil.haveSound(path)) {
+            sprite.queueEffect(new PlaySoundViz(_sounds, path));
+        }
     }
 
     /** Used to remove shot sprites when they reach their target. */

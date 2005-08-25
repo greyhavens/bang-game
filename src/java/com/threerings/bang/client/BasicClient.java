@@ -37,6 +37,7 @@ import com.threerings.jme.tile.FringeConfiguration;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
+import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -74,8 +75,9 @@ public class BasicClient
         // create the directors/managers/etc. provided by the context
         createContextServices(rqueue);
 
-        // create a bunch of standard rendering stuff
+        // initialize some static services
         RenderUtil.init(_ctx);
+        SoundUtil.init(_ctx);
     }
 
     /**
