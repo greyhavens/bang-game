@@ -7,6 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
@@ -253,11 +254,14 @@ public class Model
             return new String[0];
         }
         StringTokenizer ttok = new StringTokenizer(value, ", ");
-        String[] values = new String[ttok.countTokens()];
-        for (int ii = 0; ii < values.length; ii++) {
-            values[ii] = ttok.nextToken();
+        ArrayList<String> values = new ArrayList<String>();
+        while (ttok.hasMoreTokens()) {
+            String val = ttok.nextToken();
+            if (!StringUtil.blank(val)) {
+                values.add(val);
+            }
         }
-        return values;
+        return values.toArray(new String[values.size()]);
     }
 
     protected CloneCreator loadModel (BangContext ctx, String path)
