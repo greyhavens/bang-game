@@ -16,7 +16,8 @@ public class InstantShotHandler extends ShotHandler
             _bangSound.play(false);
         }
 
-        // TODO: activate the "firing" animation on the shooter
+        // apply the shot effect which will damage the target and trigger
+        // the appropriate animations and whatnot
         _view.applyShot(_shot);
     }
 }

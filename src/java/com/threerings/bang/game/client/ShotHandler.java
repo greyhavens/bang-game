@@ -129,14 +129,6 @@ public abstract class ShotHandler
                 ((MobileSprite)ssprite).queueAction(
                     ShotEffect.SHOT_ACTIONS[_shot.type]);
             }
-            // and the target (though eventually this will trigger on an
-            // "event" in the shooting animation
-            if (_target != null) {
-                PieceSprite tsprite = _view.getPieceSprite(_target);
-                if (tsprite instanceof MobileSprite) {
-                    ((MobileSprite)tsprite).queueAction("reacting");
-                }
-            }
 
         } else {
             fireShot(_shot.xcoords[_sidx-1], _shot.ycoords[_sidx-1],

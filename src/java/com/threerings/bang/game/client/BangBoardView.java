@@ -46,7 +46,9 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.card.Card;
+import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -597,21 +599,32 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     protected PieceSprite removePieceSprite (int pieceId, String why)
     {
-        PieceSprite sprite = super.removePieceSprite(pieceId, why);
+        PieceSprite sprite = _pieces.get(pieceId);
 
         // bonus sprites are not removed immediately; instead they are
         // shifted to a secondary table and they will be removed when the
         // piece that activated the bonus finally comes to rest on the
         // bonus piece's location
         if (sprite instanceof BonusSprite) {
-            // put the sprite back into the mix
-            addSprite(sprite);
             // and stick it into the pending bonuses table
             Piece piece = sprite.getPiece();
             _pendingBonuses.put(new Point(piece.x, piece.y), sprite);
+            _pieces.remove(pieceId);
+            return sprite;
+
+        } else if (sprite instanceof MobileSprite) {
+            MobileSprite msprite = (MobileSprite)sprite;
+            // if this mobile sprite is animating it will have to wait
+            // until it's finished before being removed
+            if (msprite.isAnimating()) {
+                _pieces.remove(pieceId);
+                msprite.addObserver(_deadRemover);
+                msprite.queueAction(MobileSprite.REMOVED);
+                return sprite;
+            }
         }
 
-        return sprite;
+        return super.removePieceSprite(pieceId, why);
     }
 
     /**
@@ -741,11 +754,11 @@ public class BangBoardView extends BoardView
 
         // create the appropriate visual effect
         EffectViz viz = null;
-        if (effect.equals("bang")) {
+        if (effect.equals(ShotEffect.DAMAGED)) {
             viz = new ExplosionViz(false);
-        } else if (effect.equals("howdy")) {
+        } else if (effect.equals(AreaDamageEffect.MISSILED)) {
             viz = new ExplosionViz(true);
-        } else if (effect.equals("repaired")) {
+        } else if (effect.equals(RepairEffect.REPAIRED)) {
             viz = new RepairViz();
         }
 
@@ -762,6 +775,12 @@ public class BangBoardView extends BoardView
         } else {
             // update the sprite to reflect its change
             pieceUpdated(null, piece);
+        }
+
+        // if this piece was shot, trigger the reacting or dying animation
+        if (sprite instanceof MobileSprite) {
+            ((MobileSprite)sprite).queueAction(
+                piece.isAlive() ? "reacting" : "dying");
         }
 
         // also play a sound along with any visual effect
@@ -820,6 +839,19 @@ public class BangBoardView extends BoardView
                     _pendingBonuses.remove(new Point(p.x, p.y));
                 if (bsprite != null) {
                     removeSprite(bsprite);
+                }
+            }
+        }
+    };
+
+    /** Used to remove unit sprites that have completed their death
+     * animations. */
+    protected MobileSprite.ActionObserver _deadRemover =
+        new MobileSprite.ActionObserver() {
+        public void actionCompleted (Sprite sprite, String action) {
+            if (action.equals(MobileSprite.REMOVED)) {
+                if (!((MobileSprite)sprite).isAnimating()) {
+                    removeSprite(sprite);
                 }
             }
         }

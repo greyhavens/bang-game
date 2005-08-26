@@ -14,6 +14,7 @@ import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
 
+import com.samskivert.util.ObserverList;
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
@@ -22,6 +23,8 @@ import com.threerings.openal.SoundGroup;
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
 import com.threerings.jme.sprite.Path;
+import com.threerings.jme.sprite.Sprite;
+import com.threerings.jme.sprite.SpriteObserver;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
@@ -39,6 +42,17 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class MobileSprite extends PieceSprite
 {
+    /** Used to notify observers of completed animation actions. */
+    public interface ActionObserver extends SpriteObserver
+    {
+        /** Called when an action has been completed by this sprite. */
+        public void actionCompleted (Sprite sprite, String action);
+    }
+
+    /** A fake action that is queued up to indicate that this sprite
+     * should be removed when all other actions are completed. */
+    public static final String REMOVED = "__removed__";
+
     /**
      * Creates a mobile sprite with the specified model type and name.
      */
@@ -84,6 +98,17 @@ public class MobileSprite extends PieceSprite
         }
     }
 
+    /**
+     * Returns true if this sprite is currently displaying an action
+     * animation or moving along a path.
+     */
+    public boolean isAnimating ()
+    {
+        // this might be called between clearing _action and starting our
+        // next action, so check both _action and _actions.size()
+        return isMoving() || (_action != null) || (_actions.size() > 0);
+    }
+
     @Override // documentation inherited
     public void pathCompleted ()
     {
@@ -103,7 +128,16 @@ public class MobileSprite extends PieceSprite
         if (_nextAction > 0) {
             _nextAction -= time;
             if (_nextAction <= 0) {
+                String action = _action;
                 _nextAction = 0;
+                _action = null;
+
+                // report that we completed this action
+                if (_observers != null) {
+                    _observers.apply(new CompletedOp(this, action));
+                }
+
+                // start the next action if we have one, otherwise rest
                 if (_actions.size() > 0) {
                     startNextAction();
                 } else {
@@ -202,10 +236,16 @@ public class MobileSprite extends PieceSprite
      */
     protected void startNextAction ()
     {
-        String action = _actions.remove(0);
-        Model.Animation anim = setAction(action);
-        _nextAction = Config.display.animationSpeed * anim.duration/1000f;
-        setAnimationActive(true);
+        _action = _actions.remove(0);
+        if (_action.equals(REMOVED)) {
+            // expire our fake action on the next frame and keep using our
+            // previous action
+            _nextAction = 0.001f;
+        } else {
+            Model.Animation anim = setAction(_action);
+            _nextAction = Config.display.animationSpeed * anim.duration/1000f;
+            setAnimationActive(true);
+        }
     }
 
     /**
@@ -266,12 +306,32 @@ public class MobileSprite extends PieceSprite
             ctx, ctx.loadImage("textures/ustatus/shadow.png"));
     }
 
+    /** Used to dispatch {@link ActionObserver#actionCompleted}. */
+    protected static class CompletedOp implements ObserverList.ObserverOp
+    {
+        public CompletedOp (Sprite sprite, String action) {
+            _sprite = sprite;
+            _action = action;
+        }
+
+        public boolean apply (Object observer) {
+            if (observer instanceof ActionObserver) {
+                ((ActionObserver)observer).actionCompleted(_sprite, _action);
+            }
+            return true;
+        }
+
+        protected Sprite _sprite;
+        protected String _action;
+    }
+
     protected String _type, _name;
     protected Model _model;
     protected Node[] _meshes;
     protected Quad _shadow;
     protected Sound _moveSound;
 
+    protected String _action;
     protected float _nextAction;
     protected ArrayList<String> _actions = new ArrayList<String>();
 
