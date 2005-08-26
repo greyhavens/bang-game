@@ -60,8 +60,6 @@ public class ClaimJumping extends Scenario
 
         _claims = new ArrayList<Claim>();
         _gameOverTick = -1;
-        _startStamp = System.currentTimeMillis();
-        _warnStage = 0;
 
         // locate all the claims, assign them to players and fill them
         // with nuggets

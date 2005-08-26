@@ -92,8 +92,9 @@ public class MobileSprite extends PieceSprite
      */
     public void queueAction (String action)
     {
+        log.info("Queueing action " + action + " on " + _piece.info() + ".");
         _actions.add(action);
-        if (_actions.size() == 1) {
+        if (_action == null) {
             startNextAction();
         }
     }
@@ -243,7 +244,7 @@ public class MobileSprite extends PieceSprite
             _nextAction = 0.001f;
         } else {
             Model.Animation anim = setAction(_action);
-            _nextAction = Config.display.animationSpeed * anim.duration/1000f;
+            _nextAction = anim.getDuration() / Config.display.animationSpeed;
             setAnimationActive(true);
         }
     }

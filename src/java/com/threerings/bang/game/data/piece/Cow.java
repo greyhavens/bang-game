@@ -47,17 +47,17 @@ public class Cow extends Piece
             }
         }
 
-//         // if we're on the edge of the board, shy away from that as well
-//         if (x == board.getWidth()-1) {
-//             avoid(board, _spot, board.getWidth(), y);
-//         } else if (x == 0) {
-//             avoid(board, _spot, -1, y);
-//         }
-//         if (y == board.getHeight()-1) {
-//             avoid(board, _spot, x, board.getHeight());
-//         } else if (y == 0) {
-//             avoid(board, _spot, x, -1);
-//         }
+        // if we're on the edge of the board, shy away from that as well
+        if (x == board.getWidth()-1) {
+            avoid(board, _spot, board.getWidth(), y);
+        } else if (x == 0) {
+            avoid(board, _spot, -1, y);
+        }
+        if (y == board.getHeight()-1) {
+            avoid(board, _spot, x, board.getHeight());
+        } else if (y == 0) {
+            avoid(board, _spot, x, -1);
+        }
 
         // if we haven't moved due to a unit scaring us off, randomly
         // continue moving some percentage of the time

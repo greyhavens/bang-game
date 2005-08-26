@@ -59,6 +59,10 @@ public abstract class Scenario
         // clear our respawn queue
         _respawns.clear();
 
+        // set up our maximum duration timer
+        _startStamp = System.currentTimeMillis();
+        _warnStage = 0;
+
         // this will contain the starting spot for each player
         _startSpots = new Point[bangobj.players.length];
         for (int ii = 0; ii < _startSpots.length; ii++) {
