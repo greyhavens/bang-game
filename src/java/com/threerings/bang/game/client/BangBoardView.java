@@ -637,6 +637,11 @@ public class BangBoardView extends BoardView
                  _queuedMoves.entrySet().iterator(); iter.hasNext(); ) {
             Map.Entry<Integer,int[]> move = iter.next();
             Piece piece = (Piece)_bangobj.pieces.get(move.getKey());
+            if (piece == null || !piece.isAlive()) {
+                // our piece up and died, clear their queued action
+                iter.remove();
+                continue;
+            }
             if (piece.ticksUntilMovable(tick) == 0) {
                 int[] action = move.getValue();
                 _ctrl.moveAndFire(action[0], action[1], action[2], action[3]);
@@ -816,6 +821,10 @@ public class BangBoardView extends BoardView
         }
 
         public void pieceAffected (Piece piece, String effect) {
+            // if this piece is now dead, clear out its pending moves
+            if (!piece.isAlive() && _queuedMoves.remove(piece.pieceId) != null) {
+                ((UnitSprite)getPieceSprite(piece)).setPendingAction(false);
+            }
             communicateEffect(piece, effect);
         }
 
