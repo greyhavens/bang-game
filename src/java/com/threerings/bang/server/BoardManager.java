@@ -57,7 +57,8 @@ public class BoardManager
      * Randomly selects a set of boards for play given the required number
      * of players and the specified sequence of scenarios.
      */
-    public BoardRecord[] selectBoards (int players, String[] scenarios)
+    public BoardRecord[] selectBoards (
+        int players, String[] scenarios, boolean testing)
     {
         BoardRecord[] choices = new BoardRecord[scenarios.length];
         for (int ii = 0; ii < scenarios.length; ii++) {
@@ -65,6 +66,8 @@ public class BoardManager
             if (candidates == null) {
                 log.warning("Aiya! Missing boards [players=" + players +
                             ", scenario=" + scenarios[ii] + "].");
+            } else if (testing) {
+                choices[ii] = candidates.get(0);
             } else {
                 choices[ii] = (BoardRecord)RandomUtil.pickRandom(candidates);
             }
