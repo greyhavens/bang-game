@@ -16,7 +16,6 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
@@ -45,7 +44,6 @@ import static com.threerings.bang.Log.log;
  * </ul>
  */
 public class ClaimJumping extends Scenario
-    implements GameCodes
 {
     /** The identifier for this scenario. */
     public static final String IDENT = "cj";
@@ -98,9 +96,7 @@ public class ClaimJumping extends Scenario
     @Override // documentation inherited
     public boolean tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
-
-        if (checkRoundOver(bangobj, tick)) {
+        if (super.tick(bangobj, tick) || checkRoundOver(bangobj, tick)) {
             // score cash for all nuggets in each player's claim
             for (Claim claim : _claims) {
                 if (claim.nuggets <= 0) {
@@ -189,22 +185,6 @@ public class ClaimJumping extends Scenario
      */
     protected boolean checkRoundOver (BangObject bangobj, short tick)
     {
-        // check to see if we should end the scenario due to time, or warn
-        // that we're going to
-        long now = System.currentTimeMillis();
-        long remain = MAX_SCENARIO_TIME - (now - _startStamp);
-        if (remain <= 0L) {
-            SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.round_time_up");
-            return true;
-
-        } else if (_warnStage < TIME_WARNINGS.length &&
-                   remain < TIME_WARNINGS[_warnStage]) {
-            String msg = MessageBundle.tcompose(
-                "m.round_ends_in", "" + (TIME_WARNINGS[_warnStage]/1000L));
-            SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
-            _warnStage++;
-        }
-
         // check to see if there are empty claims
         boolean empty = false;
         for (Claim claim : _claims) {
@@ -260,14 +240,8 @@ public class ClaimJumping extends Scenario
     /** A list of the active claims. */
     protected ArrayList<Claim> _claims;
 
-    /** Indicates the tick on whcih we will end the game. */
+    /** Indicates the tick on which we will end the game. */
     protected short _gameOverTick = -1;
-
-    /** The time at which the current round started. */
-    protected long _startStamp;
-
-    /** Used to track when we've warned about the end of the round. */
-    protected int _warnStage = -1;
 
     /** A prototype nugget bonus used to ensure that pieces can be
      * benuggeted. */
@@ -280,12 +254,4 @@ public class ClaimJumping extends Scenario
 
     /** The amount of cash earned per nugget at the end of the game. */
     protected static final int CASH_PER_NUGGET = 50;
-
-    /** The amount of time after which we stick a fork in the round. */
-    protected static final long MAX_SCENARIO_TIME = 7 * 60 * 1000L;
-
-    /** A set of times (in seconds prior to the end of the round) at which
-     * we warn the players. */
-    protected static final long[] TIME_WARNINGS = {
-        60*1000L, 30*1000L, 10*1000L };
 }

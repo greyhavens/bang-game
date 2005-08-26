@@ -8,10 +8,14 @@ import java.util.ArrayList;
 
 import com.samskivert.util.IntIntMap;
 import com.threerings.media.util.MathUtil;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.crowd.chat.server.SpeakProvider;
+
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -24,6 +28,7 @@ import static com.threerings.bang.Log.log;
  * Implements a particular gameplay scenario.
  */
 public abstract class Scenario
+    implements GameCodes
 {
     /**
      * Allows a scenario to filter out custom marker pieces prior to the
@@ -121,6 +126,22 @@ public abstract class Scenario
             bangobj.board.updateShadow(null, unit);
         }
 
+        // check to see if we should end the scenario due to time, or warn
+        // that we're going to
+        long now = System.currentTimeMillis();
+        long remain = MAX_SCENARIO_TIME - (now - _startStamp);
+        if (remain <= 0L) {
+            SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.round_time_up");
+            return true;
+
+        } else if (_warnStage < TIME_WARNINGS.length &&
+                   remain < TIME_WARNINGS[_warnStage]) {
+            String msg = MessageBundle.tcompose(
+                "m.round_ends_in", "" + (TIME_WARNINGS[_warnStage]/1000L));
+            SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
+            _warnStage++;
+        }
+
         return false;
     }
 
@@ -210,6 +231,20 @@ public abstract class Scenario
     /** A list of units waiting to be respawned. */
     protected ArrayList<Unit> _respawns = new ArrayList<Unit>();
 
+    /** The time at which the current round started. */
+    protected long _startStamp;
+
+    /** Used to track when we've warned about the end of the round. */
+    protected int _warnStage = -1;
+
     /** The number of ticks that must elapse before a unit is respawned. */
     protected static final int RESPAWN_TICKS = 12;
+
+    /** The amount of time after which we stick a fork in the round. */
+    protected static final long MAX_SCENARIO_TIME = 7 * 60 * 1000L;
+
+    /** A set of times (in seconds prior to the end of the round) at which
+     * we warn the players. */
+    protected static final long[] TIME_WARNINGS = {
+        60*1000L, 30*1000L, 10*1000L };
 }

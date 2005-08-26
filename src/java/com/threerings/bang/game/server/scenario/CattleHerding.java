@@ -106,7 +106,9 @@ public class CattleHerding extends Scenario
     @Override // documentation inherited
     public boolean tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
+        if (super.tick(bangobj, tick)) {
+            return true;
+        }
 
         // continue the game while at least one cow remains uncorralled
         Piece[] pieces = bangobj.getPieceArray();
