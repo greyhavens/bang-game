@@ -216,6 +216,28 @@ public class BangBoardView extends BoardView
             adjustBoardVisibility();
             adjustEnemyVisibility();
         }
+
+        // make sure all of our queued moves are still valid
+        if (_queuedMoves.size() > 0) {
+            PointSet moves = new PointSet();
+            for (Iterator<Integer> iter = _queuedMoves.keySet().iterator();
+                 iter.hasNext(); ) {
+                Integer pieceId = iter.next();
+                int[] action = _queuedMoves.get(pieceId);
+                Unit unit = (Unit)_bangobj.pieces.get(pieceId);
+                if (unit == null) {
+                    iter.remove();
+                    continue;
+                }
+                _bangobj.board.computeMoves(unit, moves, null);
+                if (!moves.contains(action[1], action[2])) {
+                    log.info("Clearing queued action [unit=" + unit.info() +
+                             ", action=" + StringUtil.toString(action) + "].");
+                    iter.remove();
+                    getUnitSprite(unit).setPendingAction(false);
+                }
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -539,7 +561,7 @@ public class BangBoardView extends BoardView
         }
 
         // if this unit is not yet movable, "queue" up their action
-        UnitSprite sprite = (UnitSprite)getPieceSprite(actor);
+        UnitSprite sprite = getUnitSprite(actor);
         if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
             _queuedMoves.put(_action[0], _action);
             sprite.setPendingAction(true);
@@ -645,7 +667,7 @@ public class BangBoardView extends BoardView
             if (piece.ticksUntilMovable(tick) == 0) {
                 int[] action = move.getValue();
                 _ctrl.moveAndFire(action[0], action[1], action[2], action[3]);
-                ((UnitSprite)getPieceSprite(piece)).setPendingAction(false);
+                getUnitSprite(piece).setPendingAction(false);
                 iter.remove();
             }
         }
@@ -823,7 +845,7 @@ public class BangBoardView extends BoardView
         public void pieceAffected (Piece piece, String effect) {
             // if this piece is now dead, clear out its pending moves
             if (!piece.isAlive() && _queuedMoves.remove(piece.pieceId) != null) {
-                ((UnitSprite)getPieceSprite(piece)).setPendingAction(false);
+                getUnitSprite(piece).setPendingAction(false);
             }
             communicateEffect(piece, effect);
         }
