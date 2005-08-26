@@ -50,10 +50,14 @@ public abstract class ShotHandler
 
         // load up the sound that will go with our shootin'
         if (_shooter instanceof Unit) {
-            // TODO: differentiate return fire and collateral damage
             String type = ((Unit)_shooter).getType();
-            _bangSound = sounds.getSound(
-                "rsrc/sounds/units/" + type + "/shoot.wav");
+            // no sound for collateral damage shot; the main shot will
+            // produce a sound
+            if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
+                _bangSound = sounds.getSound(
+                    "rsrc/units/" + type + "/" +
+                    ShotEffect.SHOT_ACTIONS[_shot.type] + ".wav");
+            }
         }
 
         // figure out which sprites we need to wait for
@@ -123,11 +127,15 @@ public abstract class ShotHandler
         if (_sidx == 0) {
             fireShot(_shooter.x, _shooter.y,
                      _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
-            // on the first shot, we animate the shooter
-            PieceSprite ssprite = _view.getPieceSprite(_shooter);
-            if (ssprite instanceof MobileSprite) {
-                ((MobileSprite)ssprite).queueAction(
-                    ShotEffect.SHOT_ACTIONS[_shot.type]);
+            // don't animate the shooter for collateral damage shots, the
+            // main shot will trigger an animation
+            if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
+                // on the first shot, we animate the shooter
+                PieceSprite ssprite = _view.getPieceSprite(_shooter);
+                if (ssprite instanceof MobileSprite) {
+                    ((MobileSprite)ssprite).queueAction(
+                        ShotEffect.SHOT_ACTIONS[_shot.type]);
+                }
             }
 
         } else {

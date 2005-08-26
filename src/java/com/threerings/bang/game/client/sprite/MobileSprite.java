@@ -182,7 +182,7 @@ public class MobileSprite extends PieceSprite
 
         // load up our movement sounds
         _moveSound = sounds.getSound(
-            "rsrc/sounds/" + _type + "/" + _name + "/move.wav");
+            "rsrc/" + _type + "/" + _name + "/move.wav");
     }
 
     @Override // documentation inherited

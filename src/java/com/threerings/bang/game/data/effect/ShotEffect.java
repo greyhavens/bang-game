@@ -28,9 +28,12 @@ public class ShotEffect extends Effect
     /** A return fire shot. */
     public static final int RETURN_FIRE = 1;
 
+    /** A collateral damage shot. */
+    public static final int COLLATERAL_DAMAGE = 2;
+
     /** Maps shot types to animation identifiers. */
     public static final String[] SHOT_ACTIONS = {
-        "shooting", "returning_fire"
+        "shooting", "returning_fire", "collateral_damage"
     };
 
     /** The type of shot. */

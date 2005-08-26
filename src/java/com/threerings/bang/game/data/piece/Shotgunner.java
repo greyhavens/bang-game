@@ -28,6 +28,7 @@ public class Shotgunner extends Unit
                 // target, then it's properly perpendicular
                 (p.x != x && p.y != y) && (p.x == target.x || p.y == target.y)) {
                 ShotEffect shot = shoot(bangobj, p);
+                shot.type = ShotEffect.COLLATERAL_DAMAGE;
                 shot.newDamage /= 2; // our collateral damage is 50%
                 shots.add(shot);
             }
