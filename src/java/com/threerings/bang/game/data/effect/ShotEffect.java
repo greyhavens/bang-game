@@ -130,10 +130,8 @@ public class ShotEffect extends Effect
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (shooter != null && target != null) {
             short orient = PieceUtil.getDirection(shooter, target);
-            if (orient != shooter.orientation) {
-                shooter.orientation = orient;
-                reportEffect(obs, shooter, ROTATED);
-            }
+            shooter.orientation = orient;
+            reportEffect(obs, shooter, ROTATED);
         }
 
         if (target == null) {
