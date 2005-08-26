@@ -135,7 +135,7 @@ public class Model
 
         String[] actions = getList(props, "actions", null, true);
         for (int ii = 0; ii < actions.length; ii++) {
-            String action = actions[ii].trim();
+            String action = actions[ii];
 
             Animation anim = new Animation();
             anim.frames = BangUtil.getIntProperty(
@@ -256,7 +256,7 @@ public class Model
         StringTokenizer ttok = new StringTokenizer(value, ", ");
         ArrayList<String> values = new ArrayList<String>();
         while (ttok.hasMoreTokens()) {
-            String val = ttok.nextToken();
+            String val = ttok.nextToken().trim();
             if (!StringUtil.blank(val)) {
                 values.add(val);
             }
