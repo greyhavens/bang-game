@@ -16,6 +16,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 import com.jme.renderer.ColorRGBA;
 
 import com.threerings.util.MessageBundle;
@@ -85,22 +86,34 @@ public class LobbyView extends BWindow
 
         // add our various configuration options
         BContainer blist = new BContainer(
-            GroupLayout.makeHoriz(GroupLayout.CENTER));
+            new TableLayout(6, 5, 5, TableLayout.CENTER));
         blist.add(new BLabel(msgs.get("m.player_count")));
         _seats = new BComboBox(SEATS);
         blist.add(_seats);
-        blist.add(new BLabel(msgs.get("m.rounds")));
-        _rounds = new BComboBox(ROUNDS);
-        blist.add(_rounds);
+
         blist.add(new BLabel(msgs.get("m.team_size")));
         _tsize = new BComboBox(TEAM_SIZE);
         blist.add(_tsize);
+
+        blist.add(new BLabel(msgs.get("m.scenario")));
+        _scenarios = new BComboBox(new Object[] { new ScenarioLabel("random") });
+        blist.add(_scenarios);
+
+        blist.add(new BLabel(msgs.get("m.rounds")));
+        _rounds = new BComboBox(ROUNDS);
+        blist.add(_rounds);
 
         // configure the controls with the defaults
         BangConfig defconf = new BangConfig();
         _seats.selectItem(Integer.valueOf(defconf.seats));
         _rounds.selectItem(Integer.valueOf(3));
         _tsize.selectItem(Integer.valueOf(defconf.teamSize));
+        _scenarios.selectItem(0);
+
+        // put the create button in the rightmost column
+        blist.add(new BLabel(""));
+        blist.add(new BLabel(""));
+        blist.add(new BLabel(""));
 
         BButton create = new BButton(msgs.get("m.create"), "create");
         create.addListener(this);
@@ -160,6 +173,11 @@ public class LobbyView extends BWindow
         TableLobbyObject tlobj = (TableLobbyObject)plobj;
         for (Iterator iter = tlobj.getTables().iterator(); iter.hasNext(); ) {
             tableAdded((Table)iter.next());
+        }
+
+        // add our scenarios to the drop down
+        for (int ii = 0; ii < _lobobj.scenarios.length; ii++) {
+            _scenarios.addItem(new ScenarioLabel(_lobobj.scenarios[ii]));
         }
     }
 
@@ -245,9 +263,14 @@ public class LobbyView extends BWindow
         }
         config.seats = tconfig.desiredPlayerCount;
         config.scenarios = new String[(Integer)_rounds.getSelectedItem()];
+        String id = ((ScenarioLabel)_scenarios.getSelectedItem()).id;
         for (int ii = 0; ii < config.scenarios.length; ii++) {
-            config.scenarios[ii] = (String)
-                RandomUtil.pickRandom(_lobobj.scenarios);
+            if (id.equals("random")) {
+                config.scenarios[ii] = (String)
+                    RandomUtil.pickRandom(_lobobj.scenarios);
+            } else {
+                config.scenarios[ii] = id;
+            }
         }
         config.teamSize = (Integer)_tsize.getSelectedItem();
         _tbldtr.createTable(tconfig, config);
@@ -288,12 +311,24 @@ public class LobbyView extends BWindow
         return null;
     }
 
+    /** Used to display selectable scenarios. */
+    protected class ScenarioLabel
+    {
+        public String id;
+        public ScenarioLabel (String id) {
+            this.id = id;
+        }
+        public String toString () {
+            return _ctx.xlate(GameCodes.GAME_MSGS, "m.scenario_" + id);
+        }
+    }
+
     protected BangContext _ctx;
     protected LobbyObject _lobobj;
     protected ChatView _chat;
     protected TableDirector _tbldtr;
 
-    protected BComboBox _seats, _tsize, _rounds;
+    protected BComboBox _seats, _tsize, _rounds, _scenarios;
     protected BContainer _penders;
     protected BContainer _inplay;
 
