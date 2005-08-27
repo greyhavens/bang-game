@@ -27,8 +27,8 @@ import static com.threerings.bang.client.BangMetrics.*;
 public abstract class ShotHandler
     implements PathObserver
 {
-    public void init (BangContext ctx, BangObject bangobj,
-                      BangBoardView view, SoundGroup sounds, ShotEffect shot)
+    public void init (BangContext ctx, BangObject bangobj, BangBoardView view,
+                      SoundGroup sounds, ShotEffect shot)
     {
         _ctx = ctx;
         _bangobj = bangobj;
@@ -48,17 +48,8 @@ public abstract class ShotHandler
             }
         }
 
-        // load up the sound that will go with our shootin'
-        if (_shooter instanceof Unit) {
-            String type = ((Unit)_shooter).getType();
-            // no sound for collateral damage shot; the main shot will
-            // produce a sound
-            if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
-                _bangSound = sounds.getSound(
-                    "rsrc/units/" + type + "/" +
-                    ShotEffect.SHOT_ACTIONS[_shot.type] + ".wav");
-            }
-        }
+        // prepare our sounds
+        prepareSounds(sounds);
 
         // figure out which sprites we need to wait for
         PieceSprite ssprite = considerPiece(_shooter);
@@ -98,6 +89,24 @@ public abstract class ShotHandler
         sprite.removeObserver(this);
         if (--_sprites == 0) {
             fireShot();
+        }
+    }
+
+    /**
+     * Prepares the sounds we'll need during the animation of this shot.
+     */
+    protected void prepareSounds (SoundGroup sounds)
+    {
+        // load up the sound that will go with our shootin'
+        if (_shooter instanceof Unit) {
+            String type = ((Unit)_shooter).getType();
+            // no sound for collateral damage shot; the main shot will
+            // produce a sound
+            if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
+                _bangSound = sounds.getSound(
+                    "rsrc/units/" + type + "/" +
+                    ShotEffect.SHOT_ACTIONS[_shot.type] + ".wav");
+            }
         }
     }
 

@@ -11,13 +11,16 @@ import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.OrientingBallisticPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
+
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -29,16 +32,25 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class BallisticShotHandler extends ShotHandler
 {
     @Override // documentation inherited
-    public void init (BangContext ctx, BangObject bangobj,
-                      BangBoardView view, SoundGroup sounds, ShotEffect shot)
+    protected void prepareSounds (SoundGroup sounds)
     {
-        // load up the whistle sound (before calling super so that we have
-        // our sound ready if it decides to immediately fire)
+        super.prepareSounds(sounds);
+
+        // load up the whistle sound
         _whistleSound = sounds.getSound("rsrc/sounds/effects/bomb_whistle.wav");
 
-        super.init(ctx, bangobj, view, sounds, shot);
+        // if the shooter has a "launch" sound, grab that
+        if (_shooter instanceof Unit) {
+            Unit sunit = (Unit)_shooter;
+            String lpath = "rsrc/units/" + sunit.getType() + "/launch.wav";
+            log.info("Launch? " + lpath);
+            if (SoundUtil.haveSound(lpath)) {
+                _launchSound = sounds.getSound(lpath);
+            }
+        }
     }
 
+    @Override // documentation inherited
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
         Vector3f start = new Vector3f(
@@ -82,8 +94,16 @@ public class BallisticShotHandler extends ShotHandler
                           _ssprite, new Vector3f(1, 0, 0), start, velvec,
                           GRAVVEC, duration));
 
-        // start the bomb whistle
         if (_sidx == 0) {
+            // play the launch sound if we have one
+            if (_launchSound != null) {
+                log.info("Launch!");
+                _launchSound.play(false);
+            }
+
+            // TODO: delay the whistle sound a short while
+
+            // start the bomb whistle
             _whistleSound.play(false);
         }
     }
@@ -120,7 +140,7 @@ public class BallisticShotHandler extends ShotHandler
     }
 
     protected ShotSprite _ssprite;
-    protected Sound _whistleSound;
+    protected Sound _whistleSound, _launchSound;
 
     protected static final float GRAVITY = 10*BallisticPath.G;
     protected static final Vector3f GRAVVEC = new Vector3f(0, 0, GRAVITY);
