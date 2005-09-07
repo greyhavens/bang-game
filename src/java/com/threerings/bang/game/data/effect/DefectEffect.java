@@ -40,16 +40,16 @@ public class DefectEffect extends Effect
         // determine which of our opponents is the strongest and steal one
         // of their pieces
         int maxpower = Integer.MIN_VALUE, pidx = -1;
-        for (int ii = 0; ii < bangobj.pstats.length; ii++) {
-            if (bangobj.pstats[ii].power > maxpower) {
+        for (int ii = 0; ii < bangobj.pdata.length; ii++) {
+            if (bangobj.pdata[ii].power > maxpower) {
                 pidx = ii;
-                maxpower = bangobj.pstats[ii].power;
+                maxpower = bangobj.pdata[ii].power;
             }
         }
         if (pidx == -1) {
             log.warning("Failed to find player for defect " +
-                        "[activator=" + activator + ", pstats=" +
-                        StringUtil.toString(bangobj.pstats) + "].");
+                        "[activator=" + activator + ", pdata=" +
+                        StringUtil.toString(bangobj.pdata) + "].");
             return;
         }
 

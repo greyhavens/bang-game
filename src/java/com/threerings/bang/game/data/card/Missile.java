@@ -23,10 +23,10 @@ public class Missile extends Card
         super.init(bangobj, owner);
 
         // if our player is "in the nooksak", give them a big missile
-        if (bangobj.pstats[owner].power < 30) {
+        if (bangobj.pdata[owner].power < 30) {
             power = 100;
             radius = 4;
-        } else if (bangobj.pstats[owner].powerFactor < 0.34) {
+        } else if (bangobj.pdata[owner].powerFactor < 0.34) {
             power = 80;
             radius = 3;
         }
@@ -47,6 +47,6 @@ public class Missile extends Card
     @Override // documentation inherited
     public Effect activate (int x, int y)
     {
-        return new AreaDamageEffect(power, getRadius(), x, y);
+        return new AreaDamageEffect(owner, power, getRadius(), x, y);
     }
 }

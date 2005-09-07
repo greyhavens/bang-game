@@ -110,6 +110,9 @@ public class BangObject extends GameObject
 
     /** The field name of the <code>funds</code> field. */
     public static final String FUNDS = "funds";
+
+    /** The field name of the <code>killer</code> field. */
+    public static final String KILLER = "killer";
     // AUTO-GENERATED: FIELDS END
 
     /** A {@link #state} constant indicating the pre-game selection phase. */
@@ -123,11 +126,11 @@ public class BangObject extends GameObject
 
     /** Contains statistics on the game, updated every time any change is
      * made to pertinent game state. */
-    public transient GameData gstats = new GameData();
+    public transient GameData gdata = new GameData();
 
     /** Contains statistics on each player, updated every time any change
      * is made to pertinent game state. */
-    public transient PlayerData[] pstats;
+    public transient PlayerData[] pdata;
 
     /** The invocation service via which the client communicates with the
      * server. */
@@ -162,6 +165,9 @@ public class BangObject extends GameObject
 
     /** Total cash earned by each player. */
     public int[] funds;
+
+    /** Used to report a kill made by a player. */
+    public int killer;
 
     /** Returns the {@link #pieces} set as an array to allow for
      * simultaneous iteration and removal. */
@@ -317,7 +323,7 @@ public class BangObject extends GameObject
     {
         double tpower = 0;
         for (int ii = 0; ii < players.size(); ii++) {
-            tpower += pstats[players.get(ii)].power;
+            tpower += pdata[players.get(ii)].power;
         }
         return tpower/players.size();
     }
@@ -340,19 +346,19 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Updates the {@link #gstats} and {@link #pstats} information.
+     * Updates the {@link #gdata} and {@link #pdata} information.
      */
     public void updateStats ()
     {
         // don't do any computation on the client
-        if (pstats == null) {
+        if (pdata == null) {
             return;
         }
 
         // first clear out the old stats
-        gstats.clear();
-        for (int ii = 0; ii < pstats.length; ii++) {
-            pstats[ii].clear();
+        gdata.clear();
+        for (int ii = 0; ii < pdata.length; ii++) {
+            pdata[ii].clear();
         }
 
         Piece[] pieces = getPieceArray();
@@ -360,32 +366,32 @@ public class BangObject extends GameObject
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
             if (p instanceof Bonus) {
-                gstats.bonuses++;
+                gdata.bonuses++;
             } else if (p.isAlive() && p.owner >= 0) {
-                pstats[p.owner].liveUnits++;
+                pdata[p.owner].liveUnits++;
                 int pp = (100 - p.damage);
-                pstats[p.owner].power += pp;
-                gstats.totalPower += pp;
+                pdata[p.owner].power += pp;
+                gdata.totalPower += pp;
 //                 if (p.ticksUntilMovable(prevTick) == 0) {
 //                     nonactors[p.owner]++;
 //                 }
             }
         }
 
-        for (int ii = 0; ii < pstats.length; ii++) {
-            if (pstats[ii].liveUnits > 0) {
-                gstats.livePlayers++;
+        for (int ii = 0; ii < pdata.length; ii++) {
+            if (pdata[ii].liveUnits > 0) {
+                gdata.livePlayers++;
             }
         }
 
-        gstats.averagePower = (double)gstats.totalPower / gstats.livePlayers;
-        for (int ii = 0; ii < pstats.length; ii++) {
-            pstats[ii].powerFactor =
-                (double)pstats[ii].power / gstats.averagePower;
+        gdata.averagePower = (double)gdata.totalPower / gdata.livePlayers;
+        for (int ii = 0; ii < pdata.length; ii++) {
+            pdata[ii].powerFactor =
+                (double)pdata[ii].power / gdata.averagePower;
         }
 
-//         log.info("Updated stats " + gstats + ": " +
-//                  StringUtil.toString(pstats));
+//         log.info("Updated stats " + gdata + ": " +
+//                  StringUtil.toString(pdata));
     }
 
     // AUTO-GENERATED: METHODS START
@@ -657,6 +663,22 @@ public class BangObject extends GameObject
         requestElementUpdate(
             FUNDS, index, new Integer(value), new Integer(ovalue));
         this.funds[index] = value;
+    }
+
+    /**
+     * Requests that the <code>killer</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setKiller (int value)
+    {
+        int ovalue = this.killer;
+        requestAttributeChange(
+            KILLER, new Integer(value), new Integer(ovalue));
+        this.killer = value;
     }
     // AUTO-GENERATED: METHODS END
 }

@@ -165,6 +165,7 @@ public class BangManager extends GameManager
                 // effect the initial shot
                 ShotEffect effect = shooter.shoot(_bangobj, target);
                 deployEffect(shooter.owner, effect);
+                _pstats[shooter.owner].shotsFired++;
 
                 // effect any collateral damage
                 Effect[] ceffects = shooter.collateralDamage(
@@ -178,6 +179,7 @@ public class BangManager extends GameManager
                 effect = target.returnFire(_bangobj, shooter, effect.newDamage);
                 if (effect != null) {
                     deployEffect(target.owner, effect);
+                    _pstats[target.owner].shotsFired++;
                 }
 
                 // if they did not move in this same action, we need to
@@ -213,9 +215,12 @@ public class BangManager extends GameManager
         // remove it from their list
         _bangobj.removeFromCards(cardId);
 
-        // and activate it
+        // activate it
         Effect effect = card.activate(x, y);
         deployEffect(card.owner, effect);
+
+        // note that this player played a card
+        _pstats[card.owner].cardsPlayed++;
     }
 
     // documentation inherited
@@ -227,6 +232,10 @@ public class BangManager extends GameManager
 
         } else if (name.equals(BangObject.EFFECT)) {
             ((Effect)event.getValue()).apply(_bangobj, _effector);
+
+        } else if (name.equals(BangObject.KILLER)) {
+            // record a kill for this player
+            _pstats[event.getIntValue()].piecesKilled++;
 
         } else {
             super.attributeChanged(event);
@@ -259,11 +268,18 @@ public class BangManager extends GameManager
         _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
 
         // create our per-player arrays
-        _bangobj.funds = new int[getPlayerSlots()];
-        Arrays.fill(_bangobj.funds, isTest() ? 300 : 0);
-        _bangobj.pstats = new BangObject.PlayerData[getPlayerSlots()];
-        for (int ii = 0; ii < _bangobj.pstats.length; ii++) {
-            _bangobj.pstats[ii] = new BangObject.PlayerData();
+        int slots = getPlayerSlots();
+        _bangobj.funds = new int[slots];
+        _bangobj.pdata = new BangObject.PlayerData[slots];
+        _pstats = new PlayerStats[slots];
+        for (int ii = 0; ii < slots; ii++) {
+            _bangobj.pdata[ii] = new BangObject.PlayerData();
+            _pstats[ii] = new PlayerStats();
+        }
+
+        // start with some cash if we're testing
+        if (isTest()) {
+            Arrays.fill(_bangobj.funds, 300);
         }
     }
 
@@ -599,8 +615,10 @@ public class BangManager extends GameManager
                 Unit unit = (Unit)pieces[ii];
                 _moves.clear();
                 _bangobj.board.computeMoves(unit, _moves, null);
-                int midx = RandomUtil.getInt(_moves.size());
-                moveUnit(unit, _moves.getX(midx), _moves.getY(midx));
+                if (_moves.size() > 0) {
+                    int midx = RandomUtil.getInt(_moves.size());
+                    moveUnit(unit, _moves.getX(midx), _moves.getY(midx));
+                }
             }
         }
 
@@ -659,7 +677,6 @@ public class BangManager extends GameManager
             if (user == null || !_gameobj.isActivePlayer(ii)) {
                 continue;
             }
-
             // if the game wasn't at least one minute long, certain stats
             // don't count
             if (gameTime > 0) {
@@ -676,6 +693,12 @@ public class BangManager extends GameManager
             // TODO: record CASH_EARNED
             // TODO: record HIGHEST_EARNINGS
             // TODO: record MOST_KILLS
+
+            // TODO: award and report "take home" cash
+        }
+
+        for (int ii = 0; ii < _pstats.length; ii++) {
+            log.info(getPlayerName(ii) + ": " + _pstats[ii]);
         }
     }
 
@@ -760,11 +783,18 @@ public class BangManager extends GameManager
         // update our board shadow
         _bangobj.board.updateShadow(unit, munit);
 
+        // record the move to this player's statistics
+        _pstats[munit.owner].distanceMoved += steps;
+
         // interact with any piece occupying our target space
         if (lapper != null) {
             switch (munit.maybeInteract(lapper, _effects)) {
             case CONSUMED:
                 _bangobj.removeFromPieces(lapper.getKey());
+                // note that this player collected a bonus
+                if (lapper instanceof Bonus) {
+                    _pstats[munit.owner].bonusesCollected++;
+                }
                 break;
 
             case ENTERED:
@@ -844,7 +874,7 @@ public class BangManager extends GameManager
 
         // have a 1 in 4 chance of adding a bonus for each live player for
         // which there is not already a bonus on the board
-        int bprob = (_bangobj.gstats.livePlayers - _bangobj.gstats.bonuses);
+        int bprob = (_bangobj.gdata.livePlayers - _bangobj.gdata.bonuses);
         int rando = RandomUtil.getInt(40);
         if (bprob == 0 || rando > bprob*10) {
 //             log.info("No bonus, probability " + bprob + " in 10 (" +
@@ -891,7 +921,7 @@ public class BangManager extends GameManager
                 // if only one player can reach it, give it a probability
                 // inversely proportional to that player's power
                 int pidx = reachers[ii].get(0);
-                double ifactor = 1.0 - _bangobj.pstats[pidx].powerFactor;
+                double ifactor = 1.0 - _bangobj.pdata[pidx].powerFactor;
                 weights[ii] = (int)Math.round(10 * Math.max(0, ifactor)) + 1;
 
             } else {
@@ -901,7 +931,7 @@ public class BangManager extends GameManager
                 boolean outlier = false;
                 for (int pp = 0; pp < reachers[ii].size(); pp++) {
                     int pidx = reachers[ii].get(pp);
-                    double power = _bangobj.pstats[pidx].power;
+                    double power = _bangobj.pdata[pidx].power;
                     if (power < 0.9 * avgpow || power > 1.1 * avgpow) {
                         outlier = true;
                     }
@@ -958,8 +988,14 @@ public class BangManager extends GameManager
             }
             total += ddone;
         }
+
+        // record the damage dealt statistic
+        _pstats[pidx].damageDealt += total;
+
+        // award cash for the damage dealt
         total /= 10; // you get $1 for each 10 points of damage
         _bangobj.setFundsAt(_bangobj.funds[pidx] + total, pidx);
+        _pstats[pidx].cashEarned += total;
 
         // finally clear out the damage index
         damage.clear();
@@ -986,6 +1022,28 @@ public class BangManager extends GameManager
         return (_AIs != null && getPlayerSlots() == 2);
     }
 
+    /** Used to track statistics on a per-player basis during the game. */
+    protected static class PlayerStats
+    {
+        public int distanceMoved;
+        public int shotsFired;
+        public int damageDealt;
+        public int piecesKilled;
+        public int piecesLost;
+        public int respawns;
+        public int bonusesCollected;
+        public int cardsPlayed;
+        public int cashEarned;
+
+        // public int[] powerByTime
+        // public int[] cashByTime
+        // public int takeHomeCash?
+
+        public String toString () {
+            return StringUtil.fieldsToString(this);
+        }
+    }
+
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
@@ -1008,6 +1066,8 @@ public class BangManager extends GameManager
         public void pieceAffected (Piece piece, String effect) {
             if (!piece.isAlive()) {
                 piece.wasKilled(_bangobj.tick);
+                // record the kill statistics
+                _pstats[piece.owner].piecesLost++;
                 // if the scenario modifies the killed piece, broadcast
                 // those modifications to the clients
                 if (_scenario.pieceWasKilled(_bangobj, piece)) {
@@ -1060,6 +1120,9 @@ public class BangManager extends GameManager
     /** The item ids of all cards used by players in this game. These will
      * be destroyed if the game completes normally. */
     protected ArrayIntSet _usedCards = new ArrayIntSet();
+
+    /** Used to track stats on each player during the game. */
+    protected PlayerStats[] _pstats;
 
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;

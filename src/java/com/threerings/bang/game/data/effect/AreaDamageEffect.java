@@ -16,6 +16,9 @@ public class AreaDamageEffect extends AreaEffect
     /** The identifier for the type of effect that we produce. */
     public static final String MISSILED = "howdy";
 
+    /** The index of the player causing the damage or -1. */
+    public int causer;
+
     /** The base damage for this effect. */
     public int baseDamage;
 
@@ -26,9 +29,10 @@ public class AreaDamageEffect extends AreaEffect
     {
     }
 
-    public AreaDamageEffect (int damage, int radius, int x, int y)
+    public AreaDamageEffect (int causer, int damage, int radius, int x, int y)
     {
         super(radius, x, y);
+        this.causer = causer;
         this.baseDamage = damage;
     }
 
@@ -57,6 +61,7 @@ public class AreaDamageEffect extends AreaEffect
     protected void apply (
         BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {
-        ShotEffect.damage(bangobj, obs, piece, newDamage[pidx], MISSILED);
+        ShotEffect.damage(
+            bangobj, obs, causer, piece, newDamage[pidx], MISSILED);
     }
 }

@@ -22,10 +22,10 @@ public class AreaRepair extends Card
         super.init(bangobj, owner);
 
         // if our player is "in the nooksak", give them good repair
-        if (bangobj.pstats[owner].power < 30) {
+        if (bangobj.pdata[owner].power < 30) {
             repair = 100;
             radius = 3;
-        } else if (bangobj.pstats[owner].powerFactor < 0.34) {
+        } else if (bangobj.pdata[owner].powerFactor < 0.34) {
             repair = 100;
         }
     }
