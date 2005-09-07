@@ -271,10 +271,10 @@ public class BangManager extends GameManager
         int slots = getPlayerSlots();
         _bangobj.funds = new int[slots];
         _bangobj.pdata = new BangObject.PlayerData[slots];
-        _pstats = new PlayerStats[slots];
+        _pstats = new BangObject.PlayerStats[slots];
         for (int ii = 0; ii < slots; ii++) {
             _bangobj.pdata[ii] = new BangObject.PlayerData();
-            _pstats[ii] = new PlayerStats();
+            _pstats[ii] = new BangObject.PlayerStats();
         }
 
         // start with some cash if we're testing
@@ -1022,28 +1022,6 @@ public class BangManager extends GameManager
         return (_AIs != null && getPlayerSlots() == 2);
     }
 
-    /** Used to track statistics on a per-player basis during the game. */
-    protected static class PlayerStats
-    {
-        public int distanceMoved;
-        public int shotsFired;
-        public int damageDealt;
-        public int piecesKilled;
-        public int piecesLost;
-        public int respawns;
-        public int bonusesCollected;
-        public int cardsPlayed;
-        public int cashEarned;
-
-        // public int[] powerByTime
-        // public int[] cashByTime
-        // public int takeHomeCash?
-
-        public String toString () {
-            return StringUtil.fieldsToString(this);
-        }
-    }
-
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
@@ -1122,7 +1100,7 @@ public class BangManager extends GameManager
     protected ArrayIntSet _usedCards = new ArrayIntSet();
 
     /** Used to track stats on each player during the game. */
-    protected PlayerStats[] _pstats;
+    protected BangObject.PlayerStats[] _pstats;
 
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;

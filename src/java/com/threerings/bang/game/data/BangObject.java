@@ -9,6 +9,8 @@ import java.util.Iterator;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
 
@@ -25,31 +27,7 @@ import static com.threerings.bang.Log.log;
  */
 public class BangObject extends GameObject
 {
-    /** Used to track statistics on each player. */
-    public static class PlayerData
-    {
-        /** The number of still-alive units controlled by this player. */
-        public int liveUnits;
-
-        /** The total power (un-damage) controlled by this player. */
-        public int power;
-
-        /** This player's power divided by the average power. */
-        public double powerFactor;
-
-        /** Clears our accumulator stats in preparation for a recompute. */
-        public void clear () {
-            liveUnits = 0;
-            power = 0;
-        }
-
-        /** Generates a string representation of this instance. */
-        public String toString () {
-            return StringUtil.fieldsToString(this);
-        }
-    }
-
-    /** Used to track statistics on the overall game. */
+    /** Used to track runtime metrics for the overall game. */
     public static class GameData
     {
         /** The number of live players remaining in the game. */
@@ -75,6 +53,48 @@ public class BangObject extends GameObject
         public String toString () {
             return StringUtil.fieldsToString(this);
         }
+    }
+
+    /** Used to track runtime metrics for each player. */
+    public static class PlayerData
+    {
+        /** The number of still-alive units controlled by this player. */
+        public int liveUnits;
+
+        /** The total power (un-damage) controlled by this player. */
+        public int power;
+
+        /** This player's power divided by the average power. */
+        public double powerFactor;
+
+        /** Clears our accumulator stats in preparation for a recompute. */
+        public void clear () {
+            liveUnits = 0;
+            power = 0;
+        }
+
+        /** Generates a string representation of this instance. */
+        public String toString () {
+            return StringUtil.fieldsToString(this);
+        }
+    }
+
+    /** Used to track and report statistics for each player. */
+    public static class PlayerStats extends SimpleStreamableObject
+    {
+        public int distanceMoved;
+        public int shotsFired;
+        public int damageDealt;
+        public int piecesKilled;
+        public int piecesLost;
+        public int respawns;
+        public int bonusesCollected;
+        public int cardsPlayed;
+        public int cashEarned;
+
+        // public int[] powerByTime
+        // public int[] cashByTime
+        // public int takeHomeCash?
     }
 
     // AUTO-GENERATED: FIELDS START
