@@ -29,6 +29,7 @@ import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
+import com.threerings.bang.server.persist.StatRepository;
 
 import static com.threerings.bang.Log.log;
 
@@ -52,6 +53,9 @@ public class BangServer extends CrowdServer
 
     /** Manages the persistent repository of items. */
     public static ItemRepository itemrepo;
+
+    /** Manages the persistent repository of stats. */
+    public static StatRepository statrepo;
 
     /** Provides micropayment services. (This will need to be turned into
      * a pluggable interface to support third party micropayment
@@ -82,6 +86,7 @@ public class BangServer extends CrowdServer
         actionrepo = new AccountActionRepository(conprov);
         playrepo = new PlayerRepository(conprov);
         itemrepo = new ItemRepository(conprov);
+        statrepo = new StatRepository(conprov);
         coinrepo = new CoinRepository(
             conprov, ServerConfig.serverName, _clog, actionrepo);
 

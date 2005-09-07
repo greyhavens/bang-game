@@ -31,6 +31,7 @@ import com.threerings.parlor.game.server.GameManager;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
@@ -645,9 +646,37 @@ public class BangManager extends GameManager
     }
 
     @Override // documentation inherited
-    protected void gameWillEnd ()
+    protected void gameDidEnd ()
     {
-        super.gameWillEnd();
+        super.gameDidEnd();
+
+        // note the duration of the game (in minutes)
+        int gameTime = (int)(System.currentTimeMillis() - _startStamp) / 60000;
+
+        // record various statistics
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            BangUserObject user = (BangUserObject)getPlayer(ii);
+            if (user == null || !_gameobj.isActivePlayer(ii)) {
+                continue;
+            }
+
+            // if the game wasn't at least one minute long, certain stats
+            // don't count
+            if (gameTime > 0) {
+                user.incrementStat(Stat.Type.GAMES_PLAYED, 1);
+                user.incrementStat(Stat.Type.GAME_TIME, gameTime);
+                if (_gameobj.winners[ii]) {
+                    user.incrementStat(Stat.Type.GAMES_WON, 1);
+                }
+            }
+
+            // these stats count regardless of the game duration
+            // TODO: record CARDS_PLAYED
+            // TODO: record DAMAGE_DEALT
+            // TODO: record CASH_EARNED
+            // TODO: record HIGHEST_EARNINGS
+            // TODO: record MOST_KILLS
+        }
     }
 
     @Override // documentation inherited

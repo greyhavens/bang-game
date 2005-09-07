@@ -3,12 +3,13 @@
 
 package com.threerings.bang.server;
 
+import java.util.HashMap;
+
 import com.samskivert.util.HashIntMap;
 
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
-import java.util.HashMap;
 
 import static com.threerings.bang.Log.log;
 

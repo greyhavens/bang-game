@@ -8,6 +8,9 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.TokenRing;
 
+import com.threerings.bang.data.IntStat;
+import com.threerings.bang.data.Stat;
+
 /**
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
  */
@@ -31,6 +34,9 @@ public class BangUserObject extends BodyObject
 
     /** The field name of the <code>gold</code> field. */
     public static final String GOLD = "gold";
+
+    /** The field name of the <code>stats</code> field. */
+    public static final String STATS = "stats";
     // AUTO-GENERATED: FIELDS END
 
     /** This user's persistent unique id. */
@@ -51,10 +57,49 @@ public class BangUserObject extends BodyObject
     /** The amount of "hard" currency this player is carrying. */
     public int gold;
 
+    /** Statistics tracked for this player. */
+    public DSet stats;
+
     @Override // documentation inherited
     public TokenRing getTokens ()
     {
         return tokens;
+    }
+
+    /**
+     * Sets an integer statistic for this player.
+     *
+     * @exception ClassCastException thrown if the registered type of the
+     * specified stat is not an {@link IntStat}.
+     */
+    public void setStat (Stat.Type type, int value)
+    {
+        IntStat stat = (IntStat)stats.get(type.name());
+        if (stat == null) {
+            stat = (IntStat)type.newStat();
+            stat.setValue(value);
+            addToStats(stat);
+        } else if (stat.setValue(value)) {
+            updateStats(stat);
+        }
+    }
+
+    /**
+     * Increments an integer statistic for this player.
+     *
+     * @exception ClassCastException thrown if the registered type of the
+     * specified stat is not an {@link IntStat}.
+     */
+    public void incrementStat (Stat.Type type, int delta)
+    {
+        IntStat stat = (IntStat)stats.get(type.name());
+        if (stat == null) {
+            stat = (IntStat)type.newStat();
+            stat.increment(delta);
+            addToStats(stat);
+        } else if (stat.increment(delta)) {
+            updateStats(stat);
+        }
     }
 
     // AUTO-GENERATED: METHODS START
@@ -182,6 +227,52 @@ public class BangUserObject extends BodyObject
         requestAttributeChange(
             GOLD, new Integer(value), new Integer(ovalue));
         this.gold = value;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>stats</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToStats (DSet.Entry elem)
+    {
+        requestEntryAdd(STATS, stats, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>stats</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromStats (Comparable key)
+    {
+        requestEntryRemove(STATS, stats, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>stats</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateStats (DSet.Entry elem)
+    {
+        requestEntryUpdate(STATS, stats, elem);
+    }
+
+    /**
+     * Requests that the <code>stats</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setStats (DSet value)
+    {
+        requestAttributeChange(STATS, value, this.stats);
+        this.stats = (value == null) ? null : (DSet)value.clone();
     }
     // AUTO-GENERATED: METHODS END
 }

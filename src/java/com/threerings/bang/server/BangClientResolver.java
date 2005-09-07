@@ -11,6 +11,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.persist.Player;
 
 /**
@@ -45,10 +46,10 @@ public class BangClientResolver extends CrowdClientResolver
 
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
-        if (items != null) {
-            buser.inventory = new DSet(items.iterator());
-        } else {
-            buser.inventory = new DSet();
-        }
+        buser.inventory = new DSet(items.iterator());
+
+        // load up this player's persistent stats
+        ArrayList<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);
+        buser.stats = new DSet(stats.iterator());
     }
 }

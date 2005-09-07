@@ -12,6 +12,7 @@ import com.threerings.crowd.server.CrowdClient;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.Stat;
 
 import static com.threerings.bang.Log.log;
 
@@ -84,9 +85,15 @@ public class BangClient extends CrowdClient
     protected void performDatabaseSaves (BangUserObject user)
     {
         try {
+            // write out any modified stats
+            Stat[] stats = new Stat[user.stats.size()];
+            user.stats.toArray(stats);
+            BangServer.statrepo.writeModified(user.playerId, stats);
+
             // record our playtime to the database
             BangServer.playrepo.noteSessionEnded(
                 user.playerId, (int)Math.round(_connectTime / 60f));
+
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to note ended session " +
                     "[user=" + user.who() + "].", e);
