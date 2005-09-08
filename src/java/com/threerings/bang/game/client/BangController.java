@@ -3,16 +3,20 @@
 
 package com.threerings.bang.game.client;
 
+import com.samskivert.util.Multex;
+
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.parlor.game.client.GameController;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.util.BangContext;
@@ -37,6 +41,19 @@ public class BangController extends GameController
         super.init(ctx, config);
         _ctx = (BangContext)ctx;
         _config = (BangConfig)config;
+
+        // we start the new round after the player has dismissed the
+        // previous round's stats dialogue and the game is reported as
+        // ready to go
+        _selphaseMultex = new Multex(new Runnable() {
+            public void run () {
+                _view.selectionPhase(_bangobj, _config, _pidx);
+            }
+        }, 2);
+
+        // there's no stats dialogue when we first enter, so start with
+        // that condition already satisfied
+        _selphaseMultex.satisfied(Multex.CONDITION_TWO);
     }
 
     @Override // documentation inherited
@@ -134,7 +151,7 @@ public class BangController extends GameController
     protected boolean handleStateChange (int state)
     {
         if (state == BangObject.SELECT_PHASE) {
-            _view.selectionPhase(_bangobj, _config, _pidx);
+            _selphaseMultex.satisfied(Multex.CONDITION_ONE);
             return true;
 
         } else if (state == BangObject.BUYING_PHASE) {
@@ -142,7 +159,16 @@ public class BangController extends GameController
             return true;
 
         } else if (state == BangObject.POST_ROUND) {
+            // let the view know that the round is over
             _view.view.endRound();
+
+            // create the end of round stats display
+            String title = _ctx.xlate(GameCodes.GAME_MSGS, "m.round_over_stats");
+            StatsDisplay stats =
+                new StatsDisplay(_ctx, this, _bangobj, _pidx, title);
+            _ctx.getRootNode().addWindow(stats);
+            stats.pack();
+            stats.center();
             return true;
 
         } else {
@@ -155,7 +181,6 @@ public class BangController extends GameController
     {
         super.gameDidStart();
 
-        // we may be returning to an already started game
         _view.startGame(_bangobj, _config, _pidx);
     }
 
@@ -163,6 +188,8 @@ public class BangController extends GameController
     protected void gameWillReset ()
     {
         super.gameWillReset();
+
+        // let the view know that the game is over
         _view.endGame();
     }
 
@@ -170,7 +197,43 @@ public class BangController extends GameController
     protected void gameDidEnd ()
     {
         super.gameDidEnd();
+
+        // let the view know that the game is over
         _view.endGame();
+
+        // create the end of game stats display
+        StringBuffer winners = new StringBuffer();
+        for (int ii = 0; ii < _bangobj.winners.length; ii++) {
+            if (_bangobj.winners[ii]) {
+                if (winners.length() > 0) {
+                    winners.append(", ");
+                }
+                winners.append(_bangobj.players[ii]);
+            }
+        }
+        String title = MessageBundle.tcompose("m.game_over_stats", winners);
+        title = _ctx.xlate(GameCodes.GAME_MSGS, title);
+        StatsDisplay stats =
+            new StatsDisplay(_ctx, this, _bangobj, _pidx, title);
+        _ctx.getRootNode().addWindow(stats);
+        stats.pack();
+        stats.center();
+    }
+
+    /**
+     * Called by the stats dialog when it has been dismissed.
+     */
+    protected void statsDismissed ()
+    {
+        // if the game is over, head back to the lobby
+        if (_bangobj.state == BangObject.GAME_OVER) {
+            _ctx.getLocationDirector().leavePlace();
+
+        } else {
+            // otherwise potentially display the selection phase dialog
+            // for the next round
+            _selphaseMultex.satisfied(Multex.CONDITION_TWO);
+        }
     }
 
     /** A casted reference to our context. */
@@ -187,4 +250,7 @@ public class BangController extends GameController
 
     /** Our player index or -1 if we're not a player. */
     protected int _pidx;
+
+    /** Used to start the new round after two conditions have been met. */
+    protected Multex _selphaseMultex;
 }

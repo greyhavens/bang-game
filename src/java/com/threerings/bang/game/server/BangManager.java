@@ -630,15 +630,7 @@ public class BangManager extends GameManager
             if (_bangobj.roundId == _bconfig.getRounds()) {
                 endGame();
             } else {
-                _bangobj.setState(BangObject.POST_ROUND);
-                // give them a moment to stare at the board then end the round
-                new Interval(PresentsServer.omgr) {
-                    public void expired () {
-                        if (_bangobj.isActive()) {
-                            endRound();
-                        }
-                    }
-                }.schedule(5000L);
+                endRound();
             }
 
             // cancel the board tick
@@ -659,6 +651,9 @@ public class BangManager extends GameManager
 
     protected void endRound ()
     {
+        // trigger the display of the post round bits
+        _bangobj.setState(BangObject.POST_ROUND);
+
         // start the next round
         startRound();
     }

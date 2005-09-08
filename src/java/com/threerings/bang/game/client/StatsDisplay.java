@@ -30,11 +30,14 @@ import com.threerings.bang.util.BangContext;
 public class StatsDisplay extends BDecoratedWindow
 {
     public StatsDisplay (
-        BangContext ctx, BangObject bangobj, int pidx, String title)
+        BangContext ctx, BangController ctrl, BangObject bangobj,
+        int pidx, String title)
     {
         super(ctx.getLookAndFeel(), null);
 
         _ctx = ctx;
+        _ctrl = ctrl;
+
         MessageBundle msgs = ctx.getMessageManager().getBundle(
             GameCodes.GAME_MSGS);
 
@@ -82,9 +85,7 @@ public class StatsDisplay extends BDecoratedWindow
         dismiss.addListener(new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 _ctx.getRootNode().removeWindow(StatsDisplay.this);
-                // TODO: send a command to the controller letting it know
-                // to take them back to the lobby or display the big shot
-                // selection panel as appropriate
+                _ctrl.statsDismissed();
             }
         });
         buttons.add(dismiss);
@@ -92,4 +93,5 @@ public class StatsDisplay extends BDecoratedWindow
     }
 
     protected BangContext _ctx;
+    protected BangController _ctrl;
 }
