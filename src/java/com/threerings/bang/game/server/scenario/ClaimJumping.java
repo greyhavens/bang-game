@@ -100,9 +100,8 @@ public class ClaimJumping extends Scenario
                 if (claim.nuggets <= 0) {
                     continue;
                 }
-                int ncash = bangobj.funds[claim.owner] +
-                    CASH_PER_NUGGET * (claim.nuggets);
-                bangobj.setFundsAt(ncash, claim.owner);
+                bangobj.grantCash(
+                    claim.owner, CASH_PER_NUGGET * (claim.nuggets));
             }
             return true;
         }

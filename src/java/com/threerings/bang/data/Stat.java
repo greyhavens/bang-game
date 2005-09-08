@@ -8,6 +8,7 @@ import java.util.EnumSet;
 import java.util.logging.Level;
 
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
@@ -24,37 +25,27 @@ public abstract class Stat
     implements DSet.Entry, Cloneable
 {
     /**
-     * Defines the various per-player tracked statistics. <em>NOTE:</em>
-     * old stats must NEVER be removed nor may their order be changed.
+     * Defines the various per-player tracked statistics.
      */
     public static enum Type
     {
-        // accumulating: total number of games played
         GAMES_PLAYED(new IntStat()),
-
-        // accumulating: total number of games won
         GAMES_WON(new IntStat()),
-
-        // accumulating: total number of minutes spent in games
         GAME_TIME(new IntStat()),
 
-        // accumulating: total cash earned
+        HIGHEST_EARNINGS(new IntStat()),
+        MOST_KILLS(new IntStat()),
+
+        DISTANCE_MOVED(new IntStat()),
+        SHOTS_FIRED(new IntStat()),
+        DAMAGE_DEALT(new IntStat()),
+        UNITS_KILLED(new IntStat()),
+        UNITS_LOST(new IntStat()),
+        BONUSES_COLLECTED(new IntStat()),
+        CARDS_PLAYED(new IntStat()),
         CASH_EARNED(new IntStat()),
 
-        // accumulating: total points of damage dealt
-        DAMAGE_DEALT(new IntStat()),
-
-        // accumulating: total number of bonuses collected
-        BONUSES_COLLECTED(new IntStat()),
-
-        // accumulating: total number of cards played
-        CARDS_PLAYED(new IntStat()),
-
-        // maximum: highest earnings in a single game
-        HIGHEST_EARNINGS(new IntStat()),
-
-        // maximum: highest number of kills in a single game
-        MOST_KILLS(new IntStat());
+        UNUSED(new IntStat());
 
         /** Returns a new blank stat instance of the specified type. */
         public Stat newStat ()
@@ -62,36 +53,67 @@ public abstract class Stat
             return (Stat)_prototype.clone();
         }
 
+        /** Returns the translation key used by this stat. */
+        public String key () {
+            return "m.stat_" + name().toLowerCase();
+        }
+
+        /** Returns the unique code for this stat which is a function of
+         * its name. */
+        public int code () {
+            return _code;
+        }
+
+        /** Returns the unique string to which this stat's name was
+         * reduced that must not collide with any other stat. */
+        public String codeString () {
+            return _codestr;
+        }
+
         Type (Stat prototype) {
+            // configure our prototype
             _prototype = prototype;
             _prototype._type = this;
             _prototype._modified = true;
+
+            // compute our unique code
+            StringBuffer codestr = new StringBuffer();
+            _code = StringUtil.stringCode(name(), codestr);
+            _codestr = codestr.toString();
         }
 
         protected Stat _prototype;
+        protected int _code;
+        protected String _codestr;
     };
 
     /**
-     * Maps a {@Type}'s ordinal code back to a {@link Type} instance.
+     * Maps a {@Type}'s code code back to a {@link Type} instance.
      */
     public static Type getType (int code)
     {
-        // map our enumerated types back from their ordinal codes
+        // map our enumerated types back from their codes
         if (_codeToType == null) {
             _codeToType = new HashIntMap();
             for (Type type : EnumSet.allOf(Type.class)) {
-                _codeToType.put(type.ordinal(), type);
+                if (_codeToType.containsKey(type.code())) {
+                    log.warning("Stat type collision! " + type + " and " +
+                                _codeToType.get(type.code()) + " both map to '" +
+                                type.codeString() + "'.");
+                } else {
+                    _codeToType.put(type.code(), type);
+                }
             }
         }
         return (Type)_codeToType.get(code);
     }
 
     /**
-     * Returns the name of this statistic.
+     * Returns the type of this statistic.
      */
-    public String getName ()
+    public Type getType ()
     {
-        return _type.name().toLowerCase().intern();
+        return _type;
     }
 
     /**
@@ -99,7 +121,7 @@ public abstract class Stat
      */
     public int getCode ()
     {
-        return _type.ordinal();
+        return _type.code();
     }
 
     /**
@@ -118,7 +140,7 @@ public abstract class Stat
         throws IOException
     {
         if (_nondb) {
-            out.writeInt(_type.ordinal());
+            out.writeInt(_type.code());
         }
         out.defaultWriteObject();
     }
@@ -168,11 +190,18 @@ public abstract class Stat
      */
     public String toString ()
     {
-        StringBuffer buf = new StringBuffer(getName());
+        StringBuffer buf = new StringBuffer(_type.name().toLowerCase());
         buf.append("=");
-        valueToString(buf);
+        buf.append(valueToString());
         return buf.toString();
     }
+
+    /**
+     * Derived statistics must override this method and render their value
+     * to a string. Used by {@link #toString} and to display the value in
+     * game.
+     */
+    public abstract String valueToString ();
 
     // documentation inherited from DSet.Entry
     public Comparable getKey ()
@@ -189,12 +218,6 @@ public abstract class Stat
             throw new RuntimeException("Clone failed", e);
         }
     }
-
-    /**
-     * Derived statistics must override this method and render their value
-     * to a string. Used by {@link #toString}.
-     */
-    protected abstract void valueToString (StringBuffer buf);
 
     /** The type of the statistic in question. */
     protected transient Type _type;

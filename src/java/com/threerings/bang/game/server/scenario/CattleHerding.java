@@ -133,8 +133,7 @@ public class CattleHerding extends Scenario
         for (CorralEntrance ce : _corrals) {
             if (ce.x == piece.x && ce.y == piece.y) {
                 // score cash for this player
-                int ncash = bangobj.funds[ce.owner] + CASH_PER_COW;
-                bangobj.setFundsAt(ncash, ce.owner);
+                bangobj.grantCash(ce.owner, CASH_PER_COW);
 
                 // return an effect that will corral the cow
                 return new CorralledEffect();

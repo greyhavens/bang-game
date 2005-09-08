@@ -74,7 +74,7 @@ public class SaintElmosEffect extends Effect
             reportAddition(obs, newPieces[ii]);
         }
 
-        // the balance of power has shifted, recompute our stats
-        bangobj.updateStats();
+        // the balance of power has shifted, recompute our metrics
+        bangobj.updateData();
     }
 }

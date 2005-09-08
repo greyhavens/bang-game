@@ -32,6 +32,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatSet;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
@@ -165,7 +166,8 @@ public class BangManager extends GameManager
                 // effect the initial shot
                 ShotEffect effect = shooter.shoot(_bangobj, target);
                 deployEffect(shooter.owner, effect);
-                _pstats[shooter.owner].shotsFired++;
+                _bangobj.stats[shooter.owner].incrementStat(
+                    Stat.Type.SHOTS_FIRED, 1);
 
                 // effect any collateral damage
                 Effect[] ceffects = shooter.collateralDamage(
@@ -179,7 +181,8 @@ public class BangManager extends GameManager
                 effect = target.returnFire(_bangobj, shooter, effect.newDamage);
                 if (effect != null) {
                     deployEffect(target.owner, effect);
-                    _pstats[target.owner].shotsFired++;
+                    _bangobj.stats[target.owner].incrementStat(
+                        Stat.Type.SHOTS_FIRED, 1);
                 }
 
                 // if they did not move in this same action, we need to
@@ -190,8 +193,8 @@ public class BangManager extends GameManager
                 }
             }
 
-            // finally update our game statistics
-            _bangobj.updateStats();
+            // finally update our metrics
+            _bangobj.updateData();
 
         } finally {
             _bangobj.commitTransaction();
@@ -220,7 +223,7 @@ public class BangManager extends GameManager
         deployEffect(card.owner, effect);
 
         // note that this player played a card
-        _pstats[card.owner].cardsPlayed++;
+        _bangobj.stats[card.owner].incrementStat(Stat.Type.CARDS_PLAYED, 1);
     }
 
     // documentation inherited
@@ -232,10 +235,6 @@ public class BangManager extends GameManager
 
         } else if (name.equals(BangObject.EFFECT)) {
             ((Effect)event.getValue()).apply(_bangobj, _effector);
-
-        } else if (name.equals(BangObject.KILLER)) {
-            // record a kill for this player
-            _pstats[event.getIntValue()].piecesKilled++;
 
         } else {
             super.attributeChanged(event);
@@ -271,10 +270,10 @@ public class BangManager extends GameManager
         int slots = getPlayerSlots();
         _bangobj.funds = new int[slots];
         _bangobj.pdata = new BangObject.PlayerData[slots];
-        _pstats = new BangObject.PlayerStats[slots];
+        _bangobj.stats = new StatSet[slots];
         for (int ii = 0; ii < slots; ii++) {
             _bangobj.pdata[ii] = new BangObject.PlayerData();
-            _pstats[ii] = new BangObject.PlayerStats();
+            _bangobj.stats[ii] = new StatSet();
         }
 
         // start with some cash if we're testing
@@ -624,8 +623,9 @@ public class BangManager extends GameManager
 
         // tick the scenario and determine whether we should end the game
         if (_scenario.tick(_bangobj, tick)) {
-            log.info("round " + _bangobj.roundId +
-                     ", rounds: " + _bconfig.getRounds());
+            // broadcast our updated statistics
+            _bangobj.setStats(_bangobj.stats);
+
             // if this is the last round, end the game
             if (_bangobj.roundId == _bconfig.getRounds()) {
                 endGame();
@@ -650,7 +650,7 @@ public class BangManager extends GameManager
             _bangobj.startTransaction();
             // potentially create and add new bonuses
             if (addBonus()) {
-                _bangobj.updateStats();
+                _bangobj.updateData();
             }
         } finally {
             _bangobj.commitTransaction();
@@ -680,10 +680,10 @@ public class BangManager extends GameManager
             // if the game wasn't at least one minute long, certain stats
             // don't count
             if (gameTime > 0) {
-                user.incrementStat(Stat.Type.GAMES_PLAYED, 1);
-                user.incrementStat(Stat.Type.GAME_TIME, gameTime);
+                user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
+                user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
                 if (_gameobj.winners[ii]) {
-                    user.incrementStat(Stat.Type.GAMES_WON, 1);
+                    user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
                 }
             }
 
@@ -697,8 +697,8 @@ public class BangManager extends GameManager
             // TODO: award and report "take home" cash
         }
 
-        for (int ii = 0; ii < _pstats.length; ii++) {
-            log.info(getPlayerName(ii) + ": " + _pstats[ii]);
+        for (int ii = 0; ii < _bangobj.stats.length; ii++) {
+            log.info(getPlayerName(ii) + ": " + _bangobj.stats[ii]);
         }
     }
 
@@ -784,7 +784,8 @@ public class BangManager extends GameManager
         _bangobj.board.updateShadow(unit, munit);
 
         // record the move to this player's statistics
-        _pstats[munit.owner].distanceMoved += steps;
+        _bangobj.stats[munit.owner].incrementStat(
+            Stat.Type.DISTANCE_MOVED, steps);
 
         // interact with any piece occupying our target space
         if (lapper != null) {
@@ -793,7 +794,8 @@ public class BangManager extends GameManager
                 _bangobj.removeFromPieces(lapper.getKey());
                 // note that this player collected a bonus
                 if (lapper instanceof Bonus) {
-                    _pstats[munit.owner].bonusesCollected++;
+                    _bangobj.stats[munit.owner].incrementStat(
+                        Stat.Type.BONUSES_COLLECTED, 1);
                 }
                 break;
 
@@ -990,12 +992,11 @@ public class BangManager extends GameManager
         }
 
         // record the damage dealt statistic
-        _pstats[pidx].damageDealt += total;
+        _bangobj.stats[pidx].incrementStat(Stat.Type.DAMAGE_DEALT, total);
 
         // award cash for the damage dealt
         total /= 10; // you get $1 for each 10 points of damage
-        _bangobj.setFundsAt(_bangobj.funds[pidx] + total, pidx);
-        _pstats[pidx].cashEarned += total;
+        _bangobj.grantCash(pidx, total);
 
         // finally clear out the damage index
         damage.clear();
@@ -1044,8 +1045,6 @@ public class BangManager extends GameManager
         public void pieceAffected (Piece piece, String effect) {
             if (!piece.isAlive()) {
                 piece.wasKilled(_bangobj.tick);
-                // record the kill statistics
-                _pstats[piece.owner].piecesLost++;
                 // if the scenario modifies the killed piece, broadcast
                 // those modifications to the clients
                 if (_scenario.pieceWasKilled(_bangobj, piece)) {
@@ -1098,9 +1097,6 @@ public class BangManager extends GameManager
     /** The item ids of all cards used by players in this game. These will
      * be destroyed if the game completes normally. */
     protected ArrayIntSet _usedCards = new ArrayIntSet();
-
-    /** Used to track stats on each player during the game. */
-    protected BangObject.PlayerStats[] _pstats;
 
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;

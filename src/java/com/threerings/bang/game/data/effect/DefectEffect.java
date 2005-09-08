@@ -90,8 +90,8 @@ public class DefectEffect extends Effect
             defected++;
         }
         if (defected > 0) {
-            // the balance of power has shifted, recompute our stats
-            bangobj.updateStats();
+            // the balance of power has shifted, recompute our metrics
+            bangobj.updateData();
         }
     }
 }

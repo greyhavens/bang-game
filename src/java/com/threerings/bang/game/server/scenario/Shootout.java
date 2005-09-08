@@ -55,7 +55,7 @@ public class Shootout extends Scenario
         for (int ii = 0; ii < _knockoutOrder.length; ii++) {
             if (_knockoutOrder[ii] == 0 && !_havers.contains(ii)) {
                 _knockoutOrder[ii] = score;
-                bangobj.setFundsAt(bangobj.funds[ii] + SCORE_CASH * score, ii);
+                bangobj.grantCash(ii, SCORE_CASH * score);
                 String msg = MessageBundle.tcompose(
                     "m.knocked_out", bangobj.players[ii]);
                 SpeakProvider.sendInfo(bangobj, GameCodes.GAME_MSGS, msg);
@@ -65,10 +65,7 @@ public class Shootout extends Scenario
         // the game ends when one or zero players are left standing
         if (_havers.size() < 2) {
             // score cash for the last player standing
-            int winidx = _havers.get(0);
-            bangobj.setFundsAt(bangobj.funds[winidx] +
-                               SCORE_CASH * (score + 1), winidx);
-
+            bangobj.grantCash(_havers.get(0), SCORE_CASH * (score + 1));
             return true;
         }
 

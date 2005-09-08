@@ -58,48 +58,12 @@ public class BangUserObject extends BodyObject
     public int gold;
 
     /** Statistics tracked for this player. */
-    public DSet stats;
+    public StatSet stats;
 
     @Override // documentation inherited
     public TokenRing getTokens ()
     {
         return tokens;
-    }
-
-    /**
-     * Sets an integer statistic for this player.
-     *
-     * @exception ClassCastException thrown if the registered type of the
-     * specified stat is not an {@link IntStat}.
-     */
-    public void setStat (Stat.Type type, int value)
-    {
-        IntStat stat = (IntStat)stats.get(type.name());
-        if (stat == null) {
-            stat = (IntStat)type.newStat();
-            stat.setValue(value);
-            addToStats(stat);
-        } else if (stat.setValue(value)) {
-            updateStats(stat);
-        }
-    }
-
-    /**
-     * Increments an integer statistic for this player.
-     *
-     * @exception ClassCastException thrown if the registered type of the
-     * specified stat is not an {@link IntStat}.
-     */
-    public void incrementStat (Stat.Type type, int delta)
-    {
-        IntStat stat = (IntStat)stats.get(type.name());
-        if (stat == null) {
-            stat = (IntStat)type.newStat();
-            stat.increment(delta);
-            addToStats(stat);
-        } else if (stat.increment(delta)) {
-            updateStats(stat);
-        }
     }
 
     // AUTO-GENERATED: METHODS START
@@ -269,10 +233,10 @@ public class BangUserObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setStats (DSet value)
+    public void setStats (StatSet value)
     {
         requestAttributeChange(STATS, value, this.stats);
-        this.stats = (value == null) ? null : (DSet)value.clone();
+        this.stats = (value == null) ? null : (StatSet)value.clone();
     }
     // AUTO-GENERATED: METHODS END
 }

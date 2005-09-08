@@ -20,6 +20,7 @@ import com.jme.input.KeyInput;
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.jme.sprite.LinePath;
@@ -45,6 +46,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
@@ -254,6 +256,13 @@ public class BangBoardView extends BoardView
             _vstate.reveal();
             adjustEnemyVisibility();
         }
+
+        // create the end of round stats display
+        String title = _ctx.xlate(GameCodes.GAME_MSGS, "m.round_over_stats");
+        StatsDisplay stats = new StatsDisplay(_ctx, _bangobj, _pidx, title);
+        _ctx.getRootNode().addWindow(stats);
+        stats.pack();
+        stats.center();
     }
 
     @Override // documentation inherited
@@ -270,6 +279,23 @@ public class BangBoardView extends BoardView
             _vstate.reveal();
             adjustEnemyVisibility();
         }
+
+        // create the end of game stats display
+        StringBuffer winners = new StringBuffer();
+        for (int ii = 0; ii < _bangobj.winners.length; ii++) {
+            if (_bangobj.winners[ii]) {
+                if (winners.length() > 0) {
+                    winners.append(", ");
+                }
+                winners.append(_bangobj.players[ii]);
+            }
+        }
+        String title = MessageBundle.tcompose("m.game_over_stats", winners);
+        title = _ctx.xlate(GameCodes.GAME_MSGS, title);
+        StatsDisplay stats = new StatsDisplay(_ctx, _bangobj, _pidx, title);
+        _ctx.getRootNode().addWindow(stats);
+        stats.pack();
+        stats.center();
     }
 
     @Override // documentation inherited

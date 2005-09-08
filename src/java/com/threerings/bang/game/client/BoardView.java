@@ -226,8 +226,6 @@ public class BoardView extends BComponent
     {
         // remove our event listener
         _bangobj.removeListener(_blistener);
-
-        createMarquee("Round over!");
     }
 
     /**
@@ -237,26 +235,6 @@ public class BoardView extends BComponent
     {
         // remove our event listener
         _bangobj.removeListener(_blistener);
-
-        // create a giant game over label and render it
-        StringBuffer winners = new StringBuffer();
-        for (int ii = 0; ii < _bangobj.winners.length; ii++) {
-            if (_bangobj.winners[ii]) {
-                if (winners.length() > 0) {
-                    winners.append(", ");
-                }
-                winners.append(_bangobj.players[ii]);
-            }
-        }
-        String wtext = "Game Over!\n";
-        if (winners.length() > 1) {
-            wtext += "Winner: " + winners;
-        } else if (winners.length() > 0) {
-            wtext += "Winner: " + winners;
-        } else {
-            wtext += "No winner!";
-        }
-        createMarquee(wtext);
     }
 
     /**

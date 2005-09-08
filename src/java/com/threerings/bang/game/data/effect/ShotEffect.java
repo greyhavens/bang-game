@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.PieceUtil;
@@ -181,11 +182,12 @@ public class ShotEffect extends Effect
         reportEffect(obs, target, effect);
 
         // if the target is dead and we have a shooter and we're on the
-        // server, report the kill
+        // server, record the kill
         if (shooter != -1 && !target.isAlive() &&
             bangobj.getManager().isManager(bangobj)) {
-            // the manager will listen for this event and record the kill
-            bangobj.setKiller(shooter);
+            // record the kill statistics
+            bangobj.stats[shooter].incrementStat(Stat.Type.UNITS_KILLED, 1);
+            bangobj.stats[target.owner].incrementStat(Stat.Type.UNITS_LOST, 1);
         }
 
         // if the target is dead and should be removed, do so

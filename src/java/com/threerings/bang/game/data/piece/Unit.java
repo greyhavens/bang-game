@@ -278,7 +278,7 @@ public class Unit extends Piece
     @Override // documentation inherited
     protected void toString (StringBuffer buf)
     {
-        buf.append(_config.type).append(", ");
+        buf.append((_config == null) ? "?" : _config.type).append(", ");
         super.toString(buf);
     }
 

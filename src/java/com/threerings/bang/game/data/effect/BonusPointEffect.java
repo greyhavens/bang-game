@@ -32,7 +32,7 @@ public class BonusPointEffect extends Effect
             return;
         }
         // grant some cash to the activating player
-        bangobj.setFundsAt(bangobj.funds[piece.owner] + BONUS_CASH, piece.owner);
+        bangobj.grantCash(piece.owner, BONUS_CASH);
     }
 
     @Override // documentation inherited

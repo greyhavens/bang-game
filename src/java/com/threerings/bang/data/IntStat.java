@@ -42,9 +42,9 @@ public class IntStat extends Stat
     }
 
     @Override // documentation inherited
-    protected void valueToString (StringBuffer buf)
+    public String valueToString ()
     {
-        buf.append(_value);
+        return String.valueOf(_value);
     }
 
     /** Contains the integer value of this statistic. */

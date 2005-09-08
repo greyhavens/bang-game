@@ -14,6 +14,9 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
 
+import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatSet;
+
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
@@ -79,25 +82,10 @@ public class BangObject extends GameObject
         }
     }
 
-    /** Used to track and report statistics for each player. */
-    public static class PlayerStats extends SimpleStreamableObject
-    {
-        public int distanceMoved;
-        public int shotsFired;
-        public int damageDealt;
-        public int piecesKilled;
-        public int piecesLost;
-        public int respawns;
-        public int bonusesCollected;
-        public int cardsPlayed;
-        public int cashEarned;
-
-        // public int[] powerByTime
-        // public int[] cashByTime
-        // public int takeHomeCash?
-    }
-
     // AUTO-GENERATED: FIELDS START
+    /** The field name of the <code>stats</code> field. */
+    public static final String STATS = "stats";
+
     /** The field name of the <code>service</code> field. */
     public static final String SERVICE = "service";
 
@@ -130,9 +118,6 @@ public class BangObject extends GameObject
 
     /** The field name of the <code>funds</code> field. */
     public static final String FUNDS = "funds";
-
-    /** The field name of the <code>killer</code> field. */
-    public static final String KILLER = "killer";
     // AUTO-GENERATED: FIELDS END
 
     /** A {@link #state} constant indicating the pre-game selection phase. */
@@ -151,6 +136,10 @@ public class BangObject extends GameObject
     /** Contains statistics on each player, updated every time any change
      * is made to pertinent game state. */
     public transient PlayerData[] pdata;
+
+    /** This value is set at the end of every round, to inform the players
+     * of various interesting statistics. */
+    public StatSet[] stats;
 
     /** The invocation service via which the client communicates with the
      * server. */
@@ -185,9 +174,6 @@ public class BangObject extends GameObject
 
     /** Total cash earned by each player. */
     public int[] funds;
-
-    /** Used to report a kill made by a player. */
-    public int killer;
 
     /** Returns the {@link #pieces} set as an array to allow for
      * simultaneous iteration and removal. */
@@ -368,7 +354,7 @@ public class BangObject extends GameObject
     /**
      * Updates the {@link #gdata} and {@link #pdata} information.
      */
-    public void updateStats ()
+    public void updateData ()
     {
         // don't do any computation on the client
         if (pdata == null) {
@@ -414,7 +400,51 @@ public class BangObject extends GameObject
 //                  StringUtil.toString(pdata));
     }
 
+    /**
+     * Grants the specified amount of cash to the specified player,
+     * updating their {@link #funds} and updating the appropriate earned
+     * cash statistic.
+     */
+    public void grantCash (int pidx, int amount)
+    {
+        setFundsAt(funds[pidx] + amount, pidx);
+        stats[pidx].incrementStat(Stat.Type.CASH_EARNED, amount);
+    }
+
     // AUTO-GENERATED: METHODS START
+    /**
+     * Requests that the <code>stats</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setStats (StatSet[] value)
+    {
+        StatSet[] ovalue = this.stats;
+        requestAttributeChange(
+            STATS, value, ovalue);
+        this.stats = (value == null) ? null : (StatSet[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>stats</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setStatsAt (StatSet value, int index)
+    {
+        StatSet ovalue = this.stats[index];
+        requestElementUpdate(
+            STATS, index, value, ovalue);
+        this.stats[index] = value;
+    }
+
     /**
      * Requests that the <code>service</code> field be set to the
      * specified value. The local value will be updated immediately and an
@@ -683,22 +713,6 @@ public class BangObject extends GameObject
         requestElementUpdate(
             FUNDS, index, new Integer(value), new Integer(ovalue));
         this.funds[index] = value;
-    }
-
-    /**
-     * Requests that the <code>killer</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setKiller (int value)
-    {
-        int ovalue = this.killer;
-        requestAttributeChange(
-            KILLER, new Integer(value), new Integer(ovalue));
-        this.killer = value;
     }
     // AUTO-GENERATED: METHODS END
 }

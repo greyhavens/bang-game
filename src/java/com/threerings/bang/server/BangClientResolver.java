@@ -12,6 +12,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StatSet;
 import com.threerings.bang.server.persist.Player;
 
 /**
@@ -50,6 +51,7 @@ public class BangClientResolver extends CrowdClientResolver
 
         // load up this player's persistent stats
         ArrayList<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);
-        buser.stats = new DSet(stats.iterator());
+        buser.stats = new StatSet(stats.iterator());
+        buser.stats.setContainer(buser);
     }
 }
