@@ -29,21 +29,26 @@ public abstract class Stat
      */
     public static enum Type
     {
+        // meta statistics
         GAMES_PLAYED(new IntStat()),
         GAMES_WON(new IntStat()),
         GAME_TIME(new IntStat()),
 
-        HIGHEST_EARNINGS(new IntStat()),
-        MOST_KILLS(new IntStat()),
-
+        // stats accumulated during a game
         DISTANCE_MOVED(new IntStat()),
         SHOTS_FIRED(new IntStat()),
         DAMAGE_DEALT(new IntStat()),
+
+        // stats accumulated during a game and persisted
         UNITS_KILLED(new IntStat()),
         UNITS_LOST(new IntStat()),
         BONUSES_COLLECTED(new IntStat()),
         CARDS_PLAYED(new IntStat()),
         CASH_EARNED(new IntStat()),
+
+        // stats derived from in-game statistics
+        HIGHEST_EARNINGS(new IntStat()),
+        MOST_KILLS(new IntStat()),
 
         UNUSED(new IntStat());
 

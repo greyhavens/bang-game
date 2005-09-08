@@ -677,24 +677,37 @@ public class BangManager extends GameManager
             if (user == null || !_gameobj.isActivePlayer(ii)) {
                 continue;
             }
-            // if the game wasn't at least one minute long, certain stats
-            // don't count
-            if (gameTime > 0) {
-                user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
-                user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
-                if (_gameobj.winners[ii]) {
-                    user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
+            StatSet stats = _bangobj.stats[ii];
+
+            try {
+                // send all the stat updates out in one dobj event
+                user.startTransaction();
+
+                // if the game wasn't at least one minute long, certain
+                // stats don't count
+                if (gameTime > 0) {
+                    user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
+                    user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
+                    if (_gameobj.winners[ii]) {
+                        user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
+                    }
                 }
+
+                // these stats count regardless of the game duration
+                for (int ss = 0; ss < ACCUM_STATS.length; ss++) {
+                    Stat.Type type = ACCUM_STATS[ss];
+                    user.stats.incrementStat(type, stats.getIntStat(type));
+                }
+                user.stats.maxStat(Stat.Type.HIGHEST_EARNINGS,
+                                   stats.getIntStat(Stat.Type.CASH_EARNED));
+                user.stats.maxStat(Stat.Type.MOST_KILLS,
+                                   stats.getIntStat(Stat.Type.UNITS_KILLED));
+
+                // TODO: award and report "take home" cash
+
+            } finally {
+                user.commitTransaction();
             }
-
-            // these stats count regardless of the game duration
-            // TODO: record CARDS_PLAYED
-            // TODO: record DAMAGE_DEALT
-            // TODO: record CASH_EARNED
-            // TODO: record HIGHEST_EARNINGS
-            // TODO: record MOST_KILLS
-
-            // TODO: award and report "take home" cash
         }
 
         for (int ii = 0; ii < _bangobj.stats.length; ii++) {
@@ -1103,4 +1116,14 @@ public class BangManager extends GameManager
 
     /** We stop reducing the tick time after ten minutes. */
     protected static final long TIME_SCALE_CAP = 10 * 60 * 1000L;
+
+    /** Stats that we accumulate at the end of the game into the player's
+     * persistent stats. */
+    protected static final Stat.Type[] ACCUM_STATS = {
+        Stat.Type.UNITS_KILLED,
+        Stat.Type.UNITS_LOST,
+        Stat.Type.BONUSES_COLLECTED,
+        Stat.Type.CARDS_PLAYED,
+        Stat.Type.CASH_EARNED
+    };
 }

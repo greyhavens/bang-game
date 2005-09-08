@@ -56,6 +56,18 @@ public final class StatSet extends DSet
     }
 
     /**
+     * Sets an integer stat to the specified value, if it exceeds our
+     * existing recorded value.
+     */
+    public void maxStat (Stat.Type type, int value)
+    {
+        int ovalue = getIntStat(type);
+        if (value > ovalue) {
+            setStat(type, value);
+        }
+    }
+
+    /**
      * Increments an integer statistic in this set.
      *
      * @exception ClassCastException thrown if the registered type of the
@@ -71,6 +83,15 @@ public final class StatSet extends DSet
         } else if (stat.increment(delta)) {
             updateStat(stat);
         }
+    }
+
+    /**
+     * Returns the current value of the specified integer statistic.
+     */
+    public int getIntStat (Stat.Type type)
+    {
+        IntStat stat = (IntStat)get(type.name());
+        return (stat == null) ? 0 : stat.getValue();
     }
 
     protected void addStat (Stat stat)
