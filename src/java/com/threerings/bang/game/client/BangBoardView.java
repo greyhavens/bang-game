@@ -230,12 +230,28 @@ public class BangBoardView extends BoardView
                     continue;
                 }
                 _bangobj.board.computeMoves(unit, moves, null);
-                if (!moves.contains(action[1], action[2])) {
-                    log.info("Clearing queued action [unit=" + unit.info() +
-                             ", action=" + StringUtil.toString(action) + "].");
-                    iter.remove();
-                    getUnitSprite(unit).setPendingAction(false);
+
+                // if no specific location was specified, make sure we can
+                // still determine a location from which to fire
+                if (action[1] == Short.MAX_VALUE) {
+                    Piece target = (Piece)_bangobj.pieces.get(action[3]);
+                    if (target != null) {
+                        Point spot = unit.computeShotLocation(target, moves);
+                        if (spot != null) {
+                            continue;
+                        }
+                    }
+
+                // if a specific location was specified, make sure we can
+                // still reach it
+                } else if (moves.contains(action[1], action[2])) {
+                    continue;
                 }
+
+                log.info("Clearing queued action [unit=" + unit.info() +
+                         ", action=" + StringUtil.toString(action) + "].");
+                iter.remove();
+                getUnitSprite(unit).setPendingAction(false);
             }
         }
     }
@@ -431,20 +447,11 @@ public class BangBoardView extends BoardView
         // maybe we're clicking on a piece that is in our attack set
         if (_attackSet.contains(tx, ty) &&
             piece != null && piece.owner != _pidx) {
-            // if we have not yet selected move coordinates, reverse
-            // engineer those from the piece we would like to attack
+            // if we have not yet selected move coordinates, we'll let the
+            // server figure it out for us when it processes our move
             if (_action == null) {
-                // locate the position in our move set that has the
-                // smallest move distance but is still within attack range
-                Point spot = _selection.computeShotLocation(piece, _moveSet);
-                if (spot == null) {
-                    log.warning("Unable to find place from which to shoot? " +
-                                "[piece=" + _selection.info() +
-                                ", target=" + piece.info() +
-                                ", moveSet=" + _moveSet + "].");
-                    return true;
-                }
-                _action = new int[] { _selection.pieceId, spot.x, spot.y, -1 };
+                _action = new int[] { _selection.pieceId,
+                                      Short.MAX_VALUE, Short.MAX_VALUE, -1 };
             }
             // note the piece we desire to fire upon
             _action[3] = piece.pieceId;
@@ -460,6 +467,8 @@ public class BangBoardView extends BoardView
                 int idx = RandomUtil.getInt(_attackSet.size());
                 Piece target = _bangobj.getPlayerPiece(
                     _attackSet.getX(idx), _attackSet.getY(idx));
+                // TODO: prefer targets that are guaranteed to be there
+                // when we make our move versus those that may be gone
                 if (target != null && _selection.validTarget(target, false)) {
                     log.info("Randomly targeting " + target.info());
                     _action[3] = target.pieceId;

@@ -143,7 +143,7 @@ public class BangManager extends GameManager
 
             // if they specified a non-NOOP move, execute it
             if (x != unit.x || y != unit.y) {
-                munit = moveUnit(unit, x, y);
+                munit = moveUnit(unit, x, y, target);
                 if (munit == null) {
                     throw new InvocationException(MOVE_BLOCKED);
                 }
@@ -616,7 +616,7 @@ public class BangManager extends GameManager
                 _bangobj.board.computeMoves(unit, _moves, null);
                 if (_moves.size() > 0) {
                     int midx = RandomUtil.getInt(_moves.size());
-                    moveUnit(unit, _moves.getX(midx), _moves.getY(midx));
+                    moveUnit(unit, _moves.getX(midx), _moves.getY(midx), null);
                 }
             }
         }
@@ -726,8 +726,35 @@ public class BangManager extends GameManager
      * @return the cloned and moved piece if the piece was moved, null if
      * it was not movable for some reason.
      */
-    protected Unit moveUnit (Unit unit, int x, int y)
+    protected Unit moveUnit (Unit unit, int x, int y, Piece target)
     {
+        // compute the possible moves for this unit
+        _moves.clear();
+        _bangobj.board.computeMoves(unit, _moves, null);
+
+        // if we have not specified an exact move, locate one now
+        if (x == Short.MAX_VALUE) {
+            // the target must no longer be around, so abandon ship
+            if (target == null) {
+                return null;
+            }
+
+            Point spot = unit.computeShotLocation(target, _moves);
+            if (spot == null) {
+                log.info("Unable to find place from which to shoot. " +
+                         "[piece=" + unit.info() + ", target=" + target.info() +
+                         ", moves=" + _moves + "].");
+                return null;
+            }
+            x = spot.x;
+            y = spot.y;
+
+            // if we decided not to move, just pretend like we did the job
+            if (x == unit.x && y == unit.y) {
+                return unit;
+            }
+        }
+
         // make sure we are alive, and are ready to move
         int steps = Math.abs(unit.x-x) + Math.abs(unit.y-y);
         if (!unit.isAlive() || unit.ticksUntilMovable(_bangobj.tick) > 0) {
@@ -739,8 +766,6 @@ public class BangManager extends GameManager
         }
 
         // validate that the move is legal
-        _moves.clear();
-        _bangobj.board.computeMoves(unit, _moves, null);
         if (!_moves.contains(x, y)) {
             log.warning("Unit requested illegal move [unit=" + unit +
                         ", x=" + x + ", y=" + y + ", moves=" + _moves + "].");
@@ -769,6 +794,23 @@ public class BangManager extends GameManager
         Unit munit = (Unit)unit.clone();
         munit.position(x, y);
         munit.lastActed = _bangobj.tick;
+
+        // if they specified a target, make sure it is still valid
+        if (target != null) {
+            if (!munit.validTarget(target, false)) {
+                log.info("Target no longer valid [shooter=" + munit.info() +
+                         ", target=" + target.info() + "].");
+                return null;
+//                 // target already dead or something
+//                 throw new InvocationException(TARGET_NO_LONGER_VALID);
+            }
+            if (!munit.targetInRange(target.x, target.y)) {
+                log.info("Target no longer in range [shooter=" + munit.info() +
+                         ", target=" + target.info() + "].");
+                return null;
+//                 throw new InvocationException(TARGET_MOVED);
+            }
+        }
 
         // ensure that we don't land on a piece that prevents us from
         // overlapping it and make a note of any piece that we land on
