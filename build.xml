@@ -189,10 +189,14 @@
   <!-- a target for rebuilding everything -->
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
-  <!-- builds the main bang jar file -->
-  <target name="dist" depends="prepare,compile,fringe,sounds,models">
+  <!-- builds the code jar file -->
+  <target name="dist" depends="prepare,compile">
     <jar file="${deploy.dir}/${app.name}-code.jar"
          basedir="${deploy.dir}/classes" includes="com/**"/>
+  </target>
+
+  <!-- builds the media and sounds jar files -->
+  <target name="mdist" depends="prepare,fringe,sounds,models">
     <jar file="${deploy.dir}/${app.name}-media.jar"
          basedir="${deploy.dir}/classes" includes="rsrc/**"
          excludes="rsrc/sounds/**"/>

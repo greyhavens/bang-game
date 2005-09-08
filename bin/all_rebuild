@@ -69,7 +69,7 @@ done
 
 # build the main thang
 cd $ROOT
-ant clean dist
+ant clean dist mdist
 
 # build the client if requested
 if [ ! -z "$CLIENT" ]; then
