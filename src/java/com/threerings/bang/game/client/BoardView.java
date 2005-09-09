@@ -160,9 +160,7 @@ public class BoardView extends BComponent
         // reset the camera for this board
         CameraHandler ch = (CameraHandler)_ctx.getInputHandler();
         if (ch != null) {
-            ch.setBoardDimens(
-                TILE_SIZE * _bangobj.board.getWidth(),
-                TILE_SIZE * _bangobj.board.getHeight());
+            ch.setBoardDimens(bangobj, pidx);
         }
 
         // freshen up
@@ -343,9 +341,10 @@ public class BoardView extends BComponent
                 zoom = Math.min(1f, zoom + 0.1f);
             }
             ih.setZoomLevel(zoom);
-        } else {
+
+        } else if (!ih.isRotating()) {
             ih.rotateCamera((e.getDelta() > 0) ?
-                            -FastMath.PI/8 : FastMath.PI/8);
+                            -FastMath.PI/2 : FastMath.PI/2);
         }
     }
 
