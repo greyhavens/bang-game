@@ -34,7 +34,7 @@ public class BonusSprite extends PieceSprite
 
         // load up the model for this bonus
         Model model = ctx.getModelCache().getModel("bonuses", _type);
-        Node[] meshes = model.getAnimation("normal").getMeshes();
+        Node[] meshes = model.getAnimation("normal").getMeshes(0);
 
         // TEMP: cope with bonuses for which we yet have no model
         if (meshes.length == 0 || meshes[0].getName().startsWith("error")) {

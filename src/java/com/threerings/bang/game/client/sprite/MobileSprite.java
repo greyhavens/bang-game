@@ -16,9 +16,11 @@ import com.jme.scene.state.TextureState;
 
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.StringUtil;
+
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
@@ -222,7 +224,7 @@ public class MobileSprite extends PieceSprite
 
         // add the new meshes
         Model.Animation anim = _model.getAnimation(action);
-        _meshes = anim.getMeshes();
+        _meshes = anim.getMeshes(_texrando);
         for (int ii = 0; ii < _meshes.length; ii++) {
             attachChild(_meshes[ii]);
             _meshes[ii].updateRenderState();
@@ -335,6 +337,10 @@ public class MobileSprite extends PieceSprite
     protected String _action;
     protected float _nextAction;
     protected ArrayList<String> _actions = new ArrayList<String>();
+
+    /** Ensures that we use the same random texture for every animation
+     * displayed for this particular instance. */
+    protected int _texrando = RandomUtil.getInt(Integer.MAX_VALUE);
 
     protected static TextureState _shadtex;
 }

@@ -38,8 +38,6 @@ import com.jmex.model.XMLparser.JmeBinaryReader;
 import com.jmex.bui.BIcon;
 import com.jmex.bui.TextureIcon;
 
-import com.threerings.util.RandomUtil;
-
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
@@ -82,16 +80,23 @@ public class Model
         /**
          * Returns the meshes for the specified action or a zero-length array
          * if we have no meshes for said action.
+         *
+         * @param random a random number used to select a texture state
+         * for models that support random textures. To allow the same
+         * texture to be used for different animations, the caller must
+         * select a random number for the "instance" and then supply it to
+         * the model when obtaining animated meshes for that particular
+         * instance.
          */
-        public Node[] getMeshes ()
+        public Node[] getMeshes (int random)
         {
             Node[] nodes = new Node[_parts.length];
             for (int ii = 0; ii < nodes.length; ii++) {
                 nodes[ii] = (Node)_parts[ii].creator.createCopy();
                 // select a random texture state
                 if (_parts[ii].tstates != null) {
-                    TextureState tstate = (TextureState)
-                        RandomUtil.pickRandom(_parts[ii].tstates);
+                    TextureState tstate =
+                        _parts[ii].tstates[random % _parts[ii].tstates.length];
                     nodes[ii].setRenderState(tstate);
                     nodes[ii].updateRenderState();
                 }
@@ -370,7 +375,7 @@ public class Model
         lights.attach(light);
         all.setRenderState(lights);
 
-        Node[] meshes = getAnimation("standing").getMeshes();
+        Node[] meshes = getAnimation("standing").getMeshes(0);
         for (int ii = 0; ii < meshes.length; ii++) {
             all.attachChild(meshes[ii]);
         }
