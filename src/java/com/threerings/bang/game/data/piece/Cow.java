@@ -38,12 +38,13 @@ public class Cow extends Piece
 
         _spot.setLocation(x, y);
 
-        // if there is a unit on any side of us, adjust our coordinates
-        // accordingly
+        // if there is a unit on any side of us, we'll get spooked and run
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
             if (p instanceof Unit) {
-                avoid(board, _spot, p.x, p.y);
+                if (avoid(board, _spot, p.x, p.y)) {
+                    _spookLevel = UNIT_SPOOK_LEVEL;
+                }
             }
         }
 
@@ -59,9 +60,9 @@ public class Cow extends Piece
             avoid(board, _spot, x, -1);
         }
 
-        // if we haven't moved due to a unit scaring us off, randomly
-        // continue moving some percentage of the time
-        if (_spot.x == x && _spot.y == y && RandomUtil.getInt(100) < 50) {
+        // if we haven't moved due to a unit scaring us off, keep moving
+        // as long as we're spooked
+        if (_spot.x == x && _spot.y == y && _spookLevel > 0) {
             // pick a set of candidate movements
             int[] dorient = DORIENTS[RandomUtil.getInt(DORIENTS.length)];
             // go down the list looking for one that works
@@ -77,6 +78,11 @@ public class Cow extends Piece
             }
         }
 
+        // decrement our spook level if we've been previously spooked
+        if (_spookLevel > 0) {
+            _spookLevel--;
+        }
+
         if (_spot.x != x || _spot.y != y) {
             board.updateShadow(this, null);
             position(_spot.x, _spot.y);
@@ -87,20 +93,24 @@ public class Cow extends Piece
     }
 
     /** Helper function for {@link #tick}. */
-    protected void avoid (BangBoard board, Point spot, int x, int y)
+    protected boolean avoid (BangBoard board, Point spot, int x, int y)
     {
+        boolean adjusted = false;
         if (spot.y == y) {
             int cx = spot.x + adjust(x, spot.x);
             if (board.canOccupy(this, cx, spot.y)) {
                 spot.x = cx;
+                adjusted = true;
             }
         }
         if (spot.x == x) {
             int cy = spot.y + adjust(y, spot.y);
             if (board.canOccupy(this, spot.x, cy)) {
                 spot.y = cy;
+                adjusted = true;
             }
         }
+        return adjusted;
     }
 
     /** Helper function for {@link #avoid}. */
@@ -110,7 +120,13 @@ public class Cow extends Piece
         return (dv == -1) ? 1 : ((dv == 1) ? -1 : 0);
     }
 
+    /** Used for temporary calculations. */
     protected transient Point _spot = new Point();
+
+    /** Used to track when this cow is "spooked" and will move around for
+     * a few ticks. After each tick, it's spook level is decreased until
+     * it finally stops moving again. */
+    protected transient int _spookLevel;
 
     protected static final int[][] DORIENTS = {
         { 0, 1, -1 }, // foward, right, left
@@ -120,4 +136,8 @@ public class Cow extends Piece
         { 1, -1, 0 }, // right, left, forward
         { -1, 1, 0 }, // left, right, forward
     };
+
+    /** The number of turns we'll move due to being spooked by a unit
+     * landing next to us. */
+    protected static final int UNIT_SPOOK_LEVEL = 3;
 }
