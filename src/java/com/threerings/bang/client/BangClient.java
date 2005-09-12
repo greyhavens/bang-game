@@ -95,7 +95,7 @@ public class BangClient extends BasicClient
             config.players = new Name[] {
                 _client.getCredentials().getUsername(), new Name("Larry") };
             config.ais = new GameAI[] { null, new GameAI(0, 50) };
-            config.scenarios = new String[] { "cj" };
+            config.scenarios = new String[] { "ch" };
             ConfirmListener cl = new ConfirmListener() {
                 public void requestProcessed () {
                 }
