@@ -5,10 +5,12 @@ package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
 
+import com.samskivert.util.ArrayUtil;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.data.BangBoard;
 
 import static com.threerings.bang.Log.log;
@@ -29,6 +31,12 @@ public class Cow extends Piece
     }
 
     @Override // documentation inherited
+    public int getMoveDistance ()
+    {
+        return 4;
+    }
+
+    @Override // documentation inherited
     public boolean tick (short tick, BangBoard board, Piece[] pieces)
     {
         // if we're corralled, stop moving
@@ -39,48 +47,53 @@ public class Cow extends Piece
         _spot.setLocation(x, y);
 
         // if there is a unit on any side of us, we'll get spooked and run
+        boolean wantToMove = false;
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
             if (p instanceof Unit) {
-                if (avoid(board, _spot, p.x, p.y)) {
-                    _spookLevel = UNIT_SPOOK_LEVEL;
-                }
-            }
-        }
-
-        // if we're on the edge of the board, shy away from that as well
-        if (x == board.getWidth()-1) {
-            avoid(board, _spot, board.getWidth(), y);
-        } else if (x == 0) {
-            avoid(board, _spot, -1, y);
-        }
-        if (y == board.getHeight()-1) {
-            avoid(board, _spot, x, board.getHeight());
-        } else if (y == 0) {
-            avoid(board, _spot, x, -1);
-        }
-
-        // if we haven't moved due to a unit scaring us off, keep moving
-        // as long as we're spooked
-        if (_spot.x == x && _spot.y == y && _spookLevel > 0) {
-            // pick a set of candidate movements
-            int[] dorient = DORIENTS[RandomUtil.getInt(DORIENTS.length)];
-            // go down the list looking for one that works
-            for (int ii = 0; ii < dorient.length; ii++) {
-                int norient = (orientation + dorient[ii] + 4) % 4;
-                int nx = x + FWD_X_MAP[norient];
-                int ny = y + FWD_Y_MAP[norient];
-                if (board.canOccupy(this, nx, ny)) {
-                    _spot.x = nx;
-                    _spot.y = ny;
+                if ((p.x == x && (p.y == y-1 || p.y == y+1)) ||
+                    (p.y == y && (p.x == x-1 || p.x == x+1))) {
+                    wantToMove = true;
                     break;
                 }
             }
         }
 
-        // decrement our spook level if we've been previously spooked
-        if (_spookLevel > 0) {
-            _spookLevel--;
+        // if we're walled in on all three sides, we also move
+        int walls = 0;
+        if (!board.isGroundOccupiable(x-1, y)) {
+            walls++;
+        }
+        if (!board.isGroundOccupiable(x+1, y)) {
+            walls++;
+        }
+        if (!board.isGroundOccupiable(x, y-1)) {
+            walls++;
+        }
+        if (!board.isGroundOccupiable(x, y+1)) {
+            walls++;
+        }
+        if (walls > 2) {
+            wantToMove = true;
+        }
+
+        // if we don't want to move, stop here
+        if (!wantToMove) {
+            return false;
+        }
+
+        // otherwise look around for somewhere nicer to stand
+        PointSet moves = new PointSet();
+        board.computeMoves(this, moves, null);
+        int[] coords = moves.toIntArray();
+        ArrayUtil.shuffle(coords);
+        for (int ii = 0; ii < coords.length; ii++) {
+            int hx = PointSet.decodeX(coords[ii]);
+            int hy = PointSet.decodeY(coords[ii]);
+            // TODO: consider whether this is a desirable spot to stand
+            _spot.x = hx;
+            _spot.y = hy;
+            break;
         }
 
         if (_spot.x != x || _spot.y != y) {
