@@ -142,6 +142,14 @@ public class Model
         for (int ii = 0; ii < actions.length; ii++) {
             String action = actions[ii];
 
+            // skip commented out actions
+            if (action.equals("#")) {
+                ii++;
+                continue;
+            } else if (action.startsWith("#")) {
+                continue;
+            }
+
             Animation anim = new Animation();
             anim.frames = BangUtil.getIntProperty(
                 _key, props, action + ".frames", 8);
