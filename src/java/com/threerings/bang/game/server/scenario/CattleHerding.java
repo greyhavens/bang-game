@@ -126,14 +126,14 @@ public class CattleHerding extends Scenario
         if (piece instanceof Cow) {
             // recompute this cow's owner
             Cow cow = (Cow)piece;
-            int newOwner = -1;
-            int minDistSq = Integer.MAX_VALUE;
+            int newOwner = cow.owner;
+            int minDist = cow.getDistance(
+                _startSpots[newOwner].x, _startSpots[newOwner].y);
             for (int ii = 0; ii < _startSpots.length; ii++) {
-                int distSq = MathUtil.distanceSq(
-                    cow.x, cow.y, _startSpots[ii].x, _startSpots[ii].y);
-                if (distSq < minDistSq) {
+                int dist = cow.getDistance(_startSpots[ii].x, _startSpots[ii].y);
+                if (dist < minDist) {
                     newOwner = ii;
-                    minDistSq = distSq;
+                    minDist = dist;
                 }
             }
 
