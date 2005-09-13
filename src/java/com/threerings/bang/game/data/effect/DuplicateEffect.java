@@ -43,7 +43,7 @@ public class DuplicateEffect extends Effect
         }
 
         // find a place to put our new unit
-        Point spot = bangobj.board.getOccupiableSpot(unit.x, unit.y, 1);
+        Point spot = bangobj.board.getOccupiableSpot(unit.x, unit.y, 2);
         if (spot == null) {
             log.info("Dropped duplicate effect. No spots [unit=" + unit + "].");
             return;
