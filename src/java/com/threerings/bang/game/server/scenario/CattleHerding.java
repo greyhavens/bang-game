@@ -106,7 +106,7 @@ public class CattleHerding extends Scenario
         // score cash for each cow
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Cow) {
+            if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
                 bangobj.grantCash(pieces[ii].owner, CASH_PER_COW);
             }
         }
