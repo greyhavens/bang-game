@@ -56,22 +56,12 @@ public class CattleHerding extends Scenario
     public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
                                ArrayList<Piece> pieces)
     {
-        // extract and remove all corral markers
-        _corrals.clear();
+        // extract and remove all cattle markers
+        _cattleSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (Marker.isMarker(p, Marker.CORRAL)) {
-                CorralEntrance ce = new CorralEntrance();
-                ce.x = p.x;
-                ce.y = p.y;
-                ce.owner = getOwner(p, starts);
-                if (ce.owner == -1) {
-                    log.warning("No owner for corral entrance!? " +
-                                "[entrance=" + p + ", starts=" +
-                                StringUtil.toString(starts) + "].");
-                } else {
-                    _corrals.add(ce);
-                }
+            if (Marker.isMarker(p, Marker.CATTLE)) {
+                _cattleSpots.add((Marker)p);
                 iter.remove();
             }
         }
@@ -83,19 +73,23 @@ public class CattleHerding extends Scenario
     {
         super.init(bangobj, markers, bonusSpots, purchases);
 
-        // determine how many cows we'll have per player (3-5)
-        int cpp = RandomUtil.getInt(2) + 3;
+        // determine how many cattle we want to put on the board
+        int cattle = 0, cps = 0;
+        while (cattle < bangobj.players.length * 3) {
+            cattle += _cattleSpots.size();
+            cps++;
+        }
 
-        // now place the cattle near the players' starting locations
-        for (int ii = 0; ii < _startSpots.length; ii++) {
+        // now place the cattle near the cattle starting spots
+        for (Marker cspot : _cattleSpots) {
             ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
-                cpp, _startSpots[ii].x, _startSpots[ii].y, 5);
+                cps, cspot.x, cspot.y, 3);
             for (Point spot : spots) {
                 Cow cow = new Cow();
-                cow.owner = (short)ii;
                 cow.assignPieceId();
                 cow.position(spot.x, spot.y);
                 cow.orientation = (short)RandomUtil.getInt(4);
+                cow.owner = determineOwner(cow);
                 bangobj.board.updateShadow(null, cow);
                 bangobj.addToPieces(cow);
             }
@@ -126,17 +120,7 @@ public class CattleHerding extends Scenario
         if (piece instanceof Cow) {
             // recompute this cow's owner
             Cow cow = (Cow)piece;
-            int newOwner = cow.owner;
-            int minDist = cow.getDistance(
-                _startSpots[newOwner].x, _startSpots[newOwner].y);
-            for (int ii = 0; ii < _startSpots.length; ii++) {
-                int dist = cow.getDistance(_startSpots[ii].x, _startSpots[ii].y);
-                if (dist < minDist) {
-                    newOwner = ii;
-                    minDist = dist;
-                }
-            }
-
+            int newOwner = determineOwner(cow);
             if (newOwner != cow.owner) {
                 cow.owner = newOwner;
                 log.info("Cow changed owner " + cow.info());
@@ -168,12 +152,38 @@ public class CattleHerding extends Scenario
         return 5 * 60 * 1000L;
     }
 
-    protected static class CorralEntrance
+    /**
+     * Returns the owner of this cow (the player with the closest starting
+     * spot) or -1 if the cow is not close enough to any spot to be owned.
+     */
+    protected int determineOwner (Cow cow)
     {
-        public short x, y;
-        public int owner;
+        int newOwner = -1;
+        int minDist = MAX_OWNER_DISTANCE+1;
+
+        // if the cow currently has an owner, and that owner is within
+        // range, start with them as the new owner and only assign another
+        // player to be the owner if they are closer than this player
+        if (cow.owner != -1) {
+            int oldDist = cow.getDistance(_startSpots[cow.owner].x,
+                                          _startSpots[cow.owner].y);
+            if (oldDist <= MAX_OWNER_DISTANCE) {
+                newOwner = cow.owner;
+                minDist = oldDist;
+            }
+        }
+
+        for (int ii = 0; ii < _startSpots.length; ii++) {
+            int dist = cow.getDistance(_startSpots[ii].x, _startSpots[ii].y);
+            if (dist < minDist) {
+                newOwner = ii;
+                minDist = dist;
+            }
+        }
+        return newOwner;
     }
 
-    protected ArrayList<CorralEntrance> _corrals =
-        new ArrayList<CorralEntrance>();
+    protected ArrayList<Marker> _cattleSpots = new ArrayList<Marker>();
+
+    protected static final int MAX_OWNER_DISTANCE = 5;
 }

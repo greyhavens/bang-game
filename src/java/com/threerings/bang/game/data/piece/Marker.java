@@ -18,7 +18,7 @@ public class Marker extends Piece
     public static final int BONUS = 1;
 
     /** A particular marker type. */
-    public static final int CORRAL = 2;
+    public static final int CATTLE = 2;
 
     /**
      * Handy function for checking if this piece is a marker and of the

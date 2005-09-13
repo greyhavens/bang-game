@@ -30,6 +30,6 @@ public class MarkerSprite extends PieceSprite
     protected static final ColorRGBA[] COLORS = {
         ColorRGBA.blue, // START
         ColorRGBA.green, // BONUS
-        ColorRGBA.red, // CORRAL
+        ColorRGBA.red, // CATTLE
     };
 }

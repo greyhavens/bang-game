@@ -43,7 +43,7 @@ public class PieceCreator extends JPanel
         add(new JLabel(_ctx.xlate("editor", "m.pieces_marker")));
         add(createPieceButton("start_marker", new Marker(Marker.START)));
         add(createPieceButton("bonus_marker", new Marker(Marker.BONUS)));
-        add(createPieceButton("corral_marker", new Marker(Marker.CORRAL)));
+        add(createPieceButton("cattle_marker", new Marker(Marker.CATTLE)));
     }
 
     protected CommandButton createPieceButton (String type, Piece piece)
