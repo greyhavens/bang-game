@@ -187,7 +187,7 @@ public class BangManager extends GameManager
 
                 // if they did not move in this same action, we need to
                 // set their last acted tick
-                if (munit == null) {
+                if (munit == null || munit == unit) {
                     unit.lastActed = _bangobj.tick;
                     _bangobj.updatePieces(unit);
                 }
