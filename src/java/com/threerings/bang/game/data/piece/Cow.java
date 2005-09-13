@@ -24,6 +24,31 @@ public class Cow extends Piece
     /** Indicates whether or not this cow has been corralled. */
     public boolean corralled;
 
+    /**
+     * Called when a unit moves next to this cow; causes the cow to spook
+     * in the opposite direction.
+     */
+    public void spook (Unit spooker)
+    {
+        // if we're already spooked, the first spooker retains precedence
+        if (_wantToMove != -1) {
+            return;
+        }
+
+        // otherwise spook in the opposite direction of our spooker
+        for (int dd = 0; dd < DIRECTIONS.length; dd++) {
+            if (spooker.x + DX[dd] == x && spooker.y + DY[dd] == y) {
+                // spook in the direction that the spooker would have to
+                // move to occupy our location (ie. if we're east of the
+                // spooker, try spooking further east)
+                _wantToMove = dd;
+                log.info(info() + " spooked by " + spooker.info() +
+                         " in " + _wantToMove);
+                break;
+            }
+        }
+    }
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
@@ -44,113 +69,76 @@ public class Cow extends Piece
             return false;
         }
 
-        _spot.setLocation(x, y);
-
-        // if there is a unit on any side of us, we'll get spooked and run
-        boolean wantToMove = false;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
-            if (p instanceof Unit) {
-                if ((p.x == x && (p.y == y-1 || p.y == y+1)) ||
-                    (p.y == y && (p.x == x-1 || p.x == x+1))) {
-                    wantToMove = true;
-                    break;
+        // if we're walled in on all three sides, we also move
+        if (_wantToMove == -1) {
+            int walls = 0;
+            for (int dd = 0; dd < DIRECTIONS.length; dd++) {
+                if (board.isGroundOccupiable(x + DX[dd], y + DY[dd])) {
+                    // in the case that we're walled in on three sides,
+                    // this will only get assigned once, to the direction
+                    // in which we are not walled in
+                    _wantToMove = dd;
+                } else {
+                    walls++;
                 }
+            }
+            if (walls < 3) {
+                _wantToMove = -1;
             }
         }
 
-        // if we're walled in on all three sides, we also move
-        int walls = 0;
-        if (!board.isGroundOccupiable(x-1, y)) {
-            walls++;
-        }
-        if (!board.isGroundOccupiable(x+1, y)) {
-            walls++;
-        }
-        if (!board.isGroundOccupiable(x, y-1)) {
-            walls++;
-        }
-        if (!board.isGroundOccupiable(x, y+1)) {
-            walls++;
-        }
-        if (walls > 2) {
-            wantToMove = true;
-        }
-
         // if we don't want to move, stop here
-        if (!wantToMove) {
+        if (_wantToMove == -1) {
             return false;
         }
 
         // otherwise look around for somewhere nicer to stand
-        PointSet moves = new PointSet();
-        board.computeMoves(this, moves, null);
-        int[] coords = moves.toIntArray();
+        _moves.clear();
+        board.computeMoves(this, _moves, null);
+        int[] coords = _moves.toIntArray();
         ArrayUtil.shuffle(coords);
+
+        // first look for a coordinate in the direction that we want to move
+        int nx = x, ny = y;
         for (int ii = 0; ii < coords.length; ii++) {
             int hx = PointSet.decodeX(coords[ii]);
             int hy = PointSet.decodeY(coords[ii]);
-            // TODO: consider whether this is a desirable spot to stand
-            _spot.x = hx;
-            _spot.y = hy;
-            break;
+            if (whichDirection(hx, hy) == _wantToMove) {
+                nx = hx;
+                ny = hy;
+                break;
+            }
         }
 
-        if (_spot.x != x || _spot.y != y) {
+        // if that failed, go with anything that works
+        if (nx == x && ny == y && coords.length > 0) {
+            nx = PointSet.decodeX(coords[0]);
+            ny = PointSet.decodeY(coords[0]);
+        }
+
+        if (nx != x || ny != y) {
+            _wantToMove = -1;
             board.updateShadow(this, null);
-            position(_spot.x, _spot.y);
+            position(nx, ny);
             board.updateShadow(null, this);
             return true;
         }
         return false;
     }
 
-    /** Helper function for {@link #tick}. */
-    protected boolean avoid (BangBoard board, Point spot, int x, int y)
+    protected int whichDirection (int nx, int ny)
     {
-        boolean adjusted = false;
-        if (spot.y == y) {
-            int cx = spot.x + adjust(x, spot.x);
-            if (board.canOccupy(this, cx, spot.y)) {
-                spot.x = cx;
-                adjusted = true;
-            }
+        if (nx == x) {
+            return (ny < y) ? NORTH : SOUTH;
+        } else if (ny == y) {
+            return (nx < x) ? WEST : EAST;
         }
-        if (spot.x == x) {
-            int cy = spot.y + adjust(y, spot.y);
-            if (board.canOccupy(this, spot.x, cy)) {
-                spot.y = cy;
-                adjusted = true;
-            }
-        }
-        return adjusted;
+        return -1;
     }
 
-    /** Helper function for {@link #avoid}. */
-    protected int adjust (int a, int b)
-    {
-        int dv = a - b;
-        return (dv == -1) ? 1 : ((dv == 1) ? -1 : 0);
-    }
+    /** Computed when a unit has moved near us and "spooked" us. */
+    protected transient int _wantToMove = -1;
 
     /** Used for temporary calculations. */
-    protected transient Point _spot = new Point();
-
-    /** Used to track when this cow is "spooked" and will move around for
-     * a few ticks. After each tick, it's spook level is decreased until
-     * it finally stops moving again. */
-    protected transient int _spookLevel;
-
-    protected static final int[][] DORIENTS = {
-        { 0, 1, -1 }, // foward, right, left
-        { 0, -1, 1 }, // foward, left, right
-        { 0, 1, -1 }, // foward, right, left
-        { 0, -1, 1 }, // foward, left, right
-        { 1, -1, 0 }, // right, left, forward
-        { -1, 1, 0 }, // left, right, forward
-    };
-
-    /** The number of turns we'll move due to being spooked by a unit
-     * landing next to us. */
-    protected static final int UNIT_SPOOK_LEVEL = 3;
+    protected static PointSet _moves = new PointSet();
 }

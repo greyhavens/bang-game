@@ -123,38 +123,34 @@ public class CattleHerding extends Scenario
     @Override // documentation inherited
     public Effect pieceMoved (BangObject bangobj, Piece piece)
     {
-        if (!(piece instanceof Cow)) {
-            return null;
-        }
-
-//         // check to see if our cow entered a corral
-//         Cow cow = (Cow)piece;
-//         for (CorralEntrance ce : _corrals) {
-//             if (ce.x == piece.x && ce.y == piece.y) {
-//                 // score cash for this player
-//                 bangobj.grantCash(ce.owner, CASH_PER_COW);
-
-//                 // return an effect that will corral the cow
-//                 return new CorralledEffect();
-//             }
-//         }
-
-        // recompute this cow's owner
-        Cow cow = (Cow)piece;
-        int newOwner = -1;
-        int minDistSq = Integer.MAX_VALUE;
-        for (int ii = 0; ii < _startSpots.length; ii++) {
-            int distSq = MathUtil.distanceSq(
-                cow.x, cow.y, _startSpots[ii].x, _startSpots[ii].y);
-            if (distSq < minDistSq) {
-                newOwner = ii;
-                minDistSq = distSq;
+        if (piece instanceof Cow) {
+            // recompute this cow's owner
+            Cow cow = (Cow)piece;
+            int newOwner = -1;
+            int minDistSq = Integer.MAX_VALUE;
+            for (int ii = 0; ii < _startSpots.length; ii++) {
+                int distSq = MathUtil.distanceSq(
+                    cow.x, cow.y, _startSpots[ii].x, _startSpots[ii].y);
+                if (distSq < minDistSq) {
+                    newOwner = ii;
+                    minDistSq = distSq;
+                }
             }
-        }
 
-        if (newOwner != cow.owner) {
-            cow.owner = newOwner;
-            log.info("Cow changed owner " + cow.info());
+            if (newOwner != cow.owner) {
+                cow.owner = newOwner;
+                log.info("Cow changed owner " + cow.info());
+            }
+
+        } else if (piece instanceof Unit) {
+            // check to see if this unit spooked any cattle
+            Piece[] pieces = bangobj.getPieceArray();
+            for (int ii = 0; ii < pieces.length; ii++) {
+                if (pieces[ii] instanceof Cow &&
+                    piece.getDistance(pieces[ii]) == 1) {
+                    ((Cow)pieces[ii]).spook((Unit)piece);
+                }
+            }
         }
 
         return null;
