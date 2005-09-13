@@ -1,7 +1,9 @@
 buildings/general_store
 buildings/outhouse
 buildings/saloon
+buildings/jail
 natural/cactus1
 natural/cactus2
 natural/rocks1
 special/claim
+special/wagon
