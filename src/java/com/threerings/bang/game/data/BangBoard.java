@@ -175,7 +175,7 @@ public class BangBoard extends SimpleStreamableObject
         ArrayList<Point> ospots = new ArrayList<Point>();
         PointSet spots = new PointSet();
       SEARCH:
-        for (int dist = 0; dist < 3; dist++) {
+        for (int dist = 1; dist < maxdist; dist++) {
             spots.clear();
             spots.addFrame(cx, cy, dist, getBounds());
             int[] coords = spots.toIntArray();
