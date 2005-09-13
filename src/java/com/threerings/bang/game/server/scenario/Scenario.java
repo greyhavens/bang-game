@@ -133,7 +133,7 @@ public abstract class Scenario
         // check to see if we should end the scenario due to time, or warn
         // that we're going to
         long now = System.currentTimeMillis();
-        long remain = MAX_SCENARIO_TIME - (now - _startStamp);
+        long remain = getMaxScenarioTime() - (now - _startStamp);
         if (remain <= 0L) {
             SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.round_time_up");
             return true;
@@ -224,6 +224,14 @@ public abstract class Scenario
             }
         }
         return idx;
+    }
+
+    /**
+     * Returns the maximum duration of tihs scenario in milliseconds.
+     */
+    protected long getMaxScenarioTime ()
+    {
+        return MAX_SCENARIO_TIME;
     }
 
     /** Used to track the locations where players are started. */

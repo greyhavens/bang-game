@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.samskivert.util.StringUtil;
+import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
@@ -82,39 +83,37 @@ public class CattleHerding extends Scenario
     {
         super.init(bangobj, markers, bonusSpots, purchases);
 
-        // place cattle randomly around the board
-        int width = bangobj.board.getWidth(), height = bangobj.board.getHeight();
-        int cattle = (int)Math.round(width * height * CATTLE_RATIO);
-        for (int ii = 0; ii < cattle; ii++) {
-            Cow cow = new Cow();
-            int cx = RandomUtil.getInt(width);
-            int cy = RandomUtil.getInt(height);
-            Point spot = bangobj.board.getOccupiableSpot(cx, cy, 3);
-            if (spot == null) {
-                log.info("Unable to place cow [game=" + bangobj.which() +
-                         ", cx=" + cx + ", cy=" + cy + "].");
-                continue;
+        // determine how many cows we'll have per player (3-5)
+        int cpp = RandomUtil.getInt(2) + 3;
+
+        // now place the cattle near the players' starting locations
+        for (int ii = 0; ii < _startSpots.length; ii++) {
+            ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
+                cpp, _startSpots[ii].x, _startSpots[ii].y, 5);
+            for (Point spot : spots) {
+                Cow cow = new Cow();
+                cow.owner = (short)ii;
+                cow.assignPieceId();
+                cow.position(spot.x, spot.y);
+                cow.orientation = (short)RandomUtil.getInt(4);
+                bangobj.board.updateShadow(null, cow);
+                bangobj.addToPieces(cow);
             }
-            cow.assignPieceId();
-            cow.position(spot.x, spot.y);
-            cow.orientation = (short)RandomUtil.getInt(4);
-            bangobj.board.updateShadow(null, cow);
-            bangobj.addToPieces(cow);
         }
     }
 
     @Override // documentation inherited
     public boolean tick (BangObject bangobj, short tick)
     {
-        if (super.tick(bangobj, tick)) {
-            return true;
+        if (!super.tick(bangobj, tick)) {
+            return false;
         }
 
-        // continue the game while at least one cow remains uncorralled
+        // score cash for each cow
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
-            if ((pieces[ii] instanceof Cow) && !((Cow)pieces[ii]).corralled) {
-                return false;
+            if (pieces[ii] instanceof Cow) {
+                bangobj.grantCash(pieces[ii].owner, CASH_PER_COW);
             }
         }
 
@@ -128,16 +127,34 @@ public class CattleHerding extends Scenario
             return null;
         }
 
-        // check to see if our cow entered a corral
-        Cow cow = (Cow)piece;
-        for (CorralEntrance ce : _corrals) {
-            if (ce.x == piece.x && ce.y == piece.y) {
-                // score cash for this player
-                bangobj.grantCash(ce.owner, CASH_PER_COW);
+//         // check to see if our cow entered a corral
+//         Cow cow = (Cow)piece;
+//         for (CorralEntrance ce : _corrals) {
+//             if (ce.x == piece.x && ce.y == piece.y) {
+//                 // score cash for this player
+//                 bangobj.grantCash(ce.owner, CASH_PER_COW);
 
-                // return an effect that will corral the cow
-                return new CorralledEffect();
+//                 // return an effect that will corral the cow
+//                 return new CorralledEffect();
+//             }
+//         }
+
+        // recompute this cow's owner
+        Cow cow = (Cow)piece;
+        int newOwner = -1;
+        int minDistSq = Integer.MAX_VALUE;
+        for (int ii = 0; ii < _startSpots.length; ii++) {
+            int distSq = MathUtil.distanceSq(
+                cow.x, cow.y, _startSpots[ii].x, _startSpots[ii].y);
+            if (distSq < minDistSq) {
+                newOwner = ii;
+                minDistSq = distSq;
             }
+        }
+
+        if (newOwner != cow.owner) {
+            cow.owner = newOwner;
+            log.info("Cow changed owner " + cow.info());
         }
 
         return null;
@@ -147,6 +164,12 @@ public class CattleHerding extends Scenario
     protected boolean respawnPieces ()
     {
         return true;
+    }
+
+    @Override // documentation inherited
+    protected long getMaxScenarioTime ()
+    {
+        return 5 * 60 * 1000L;
     }
 
     protected static class CorralEntrance

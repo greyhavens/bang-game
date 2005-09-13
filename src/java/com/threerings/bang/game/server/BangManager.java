@@ -939,7 +939,7 @@ public class BangManager extends GameManager
         ArrayIntSet[] reachers = new ArrayIntSet[weights.length];
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (p.owner < 0 || !p.isAlive() ||
+            if (!(p instanceof Unit) || p.owner < 0 || !p.isAlive() ||
                 p.ticksUntilMovable(_bangobj.tick) > 0) {
                 continue;
             }

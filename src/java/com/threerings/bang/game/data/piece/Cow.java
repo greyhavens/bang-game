@@ -8,10 +8,10 @@ import java.awt.Point;
 import com.samskivert.util.ArrayUtil;
 import com.threerings.util.RandomUtil;
 
-import com.threerings.bang.game.client.sprite.MobileSprite;
+import com.threerings.bang.game.client.sprite.CowSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 
@@ -27,7 +27,7 @@ public class Cow extends Piece
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new MobileSprite("extras", "cow");
+        return new CowSprite();
     }
 
     @Override // documentation inherited
