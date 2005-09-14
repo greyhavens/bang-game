@@ -38,6 +38,9 @@ public interface BangCodes extends InvocationCodes
     public static final String CHAT_MSGS = "chat";
 
     /** The message bundle identifier for our translation messages. */
+    public static final String STATS_MSGS = "stats";
+
+    /** The message bundle identifier for our translation messages. */
     public static final String BADGE_MSGS = "badge";
 
     /** An error code reported when a financial transaction cannot complete. */

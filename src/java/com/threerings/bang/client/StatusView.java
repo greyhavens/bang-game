@@ -8,9 +8,12 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BTabbedPane;
+import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.util.EscapeListener;
@@ -18,6 +21,7 @@ import com.threerings.bang.ranch.client.UnitPalette;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -53,13 +57,22 @@ public class StatusView extends BDecoratedWindow
         row.add(new BLabel(_msgs.get("m.status_gold", "" + user.gold)));
         add(row, GroupLayout.FIXED);
 
-        add(new BLabel(_msgs.get("m.status_inventory")), GroupLayout.FIXED);
-        add(new BContainer());
+        BTabbedPane tabs = new BTabbedPane();
+        add(tabs);
 
-        add(new BLabel(_msgs.get("m.status_big_shots")), GroupLayout.FIXED);
+        // add the inventory tab
+        tabs.addTab(_msgs.get("m.status_inventory"), new BContainer());
+
+        // add the big shots tab
         UnitPalette bigshots = new UnitPalette(ctx, null);
         bigshots.setUser(user);
-        add(bigshots);
+        tabs.addTab(_msgs.get("m.status_big_shots"), bigshots);
+
+        // add the badges tab
+        tabs.addTab(_msgs.get("m.status_badges"), new BContainer());
+
+        // add the stats tab
+        tabs.addTab(_msgs.get("m.status_stats"), createStatsTab(user));
 
         row = new BContainer(GroupLayout.makeHStretch());
         row.add(createButton("quit"), GroupLayout.FIXED);
@@ -70,6 +83,20 @@ public class StatusView extends BDecoratedWindow
         }
         row.add(createButton("resume"), GroupLayout.FIXED);
         add(row, GroupLayout.FIXED);
+    }
+
+    protected BContainer createStatsTab (BangUserObject user)
+    {
+        BContainer scont = new BContainer(new TableLayout(2, 5, 5));
+        scont.setBorder(new EmptyBorder(5, 5, 5, 5));
+        Stat[] stats = (Stat[])user.stats.toArray(new Stat[user.stats.size()]);
+        // TODO: sort on translated key
+        for (int ii = 0; ii < stats.length; ii++) {
+            String key = stats[ii].getType().key();
+            scont.add(new BLabel(_ctx.xlate(BangCodes.STATS_MSGS, key)));
+            scont.add(new BLabel(stats[ii].valueToString()));
+        }
+        return scont;
     }
 
     /**

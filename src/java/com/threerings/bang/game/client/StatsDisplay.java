@@ -71,7 +71,7 @@ public class StatsDisplay extends BDecoratedWindow
         // each section
 
         for (Stat.Type type : types) {
-            bits.add(new BLabel(msgs.get(type.key())));
+            bits.add(new BLabel(_ctx.xlate(BangCodes.STATS_MSGS, type.key())));
             for (int pp = 0; pp < bangobj.stats.length; pp++) {
                 Stat pstat = (Stat)bangobj.stats[pp].get(type.name());
                 BLabel slabel = new BLabel(
