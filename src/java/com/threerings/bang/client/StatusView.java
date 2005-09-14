@@ -61,7 +61,7 @@ public class StatusView extends BDecoratedWindow
         add(tabs);
 
         // add the inventory tab
-        tabs.addTab(_msgs.get("m.status_inventory"), new BContainer());
+        tabs.addTab(_msgs.get("m.status_inventory"), createInventoryTab(user));
 
         // add the big shots tab
         UnitPalette bigshots = new UnitPalette(ctx, null);
@@ -69,7 +69,7 @@ public class StatusView extends BDecoratedWindow
         tabs.addTab(_msgs.get("m.status_big_shots"), bigshots);
 
         // add the badges tab
-        tabs.addTab(_msgs.get("m.status_badges"), new BContainer());
+        tabs.addTab(_msgs.get("m.status_badges"), createBadgeTab(user));
 
         // add the stats tab
         tabs.addTab(_msgs.get("m.status_stats"), createStatsTab(user));
@@ -83,6 +83,22 @@ public class StatusView extends BDecoratedWindow
         }
         row.add(createButton("resume"), GroupLayout.FIXED);
         add(row, GroupLayout.FIXED);
+    }
+
+    protected BContainer createInventoryTab (BangUserObject user)
+    {
+        BContainer icont = new BContainer(new TableLayout(2, 5, 5));
+        icont.setBorder(new EmptyBorder(5, 5, 5, 5));
+        icont.add(new BLabel("Not yet implemented"));
+        return icont;
+    }
+
+    protected BContainer createBadgeTab (BangUserObject user)
+    {
+        BContainer bcont = new BContainer(new TableLayout(2, 5, 5));
+        bcont.setBorder(new EmptyBorder(5, 5, 5, 5));
+        bcont.add(new BLabel("Not yet implemented"));
+        return bcont;
     }
 
     protected BContainer createStatsTab (BangUserObject user)
