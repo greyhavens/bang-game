@@ -725,13 +725,10 @@ public class BangManager extends GameManager
         _bangobj.setBadgeCounts(bcounts);
         _bangobj.setBadges(badges.toArray(new Badge[badges.size()]));
 
-        log.info("Badges: " + StringUtil.toString(_bangobj.badges));
-        log.info("Badge counts: " + StringUtil.toString(bcounts));
-
-//         // persist the awarded badges
-//         if (badges.size() > 0) {
-//             awardBadges(badges, bcounts);
-//         }
+        // persist the awarded badges
+        if (badges.size() > 0) {
+            awardBadges(badges, bcounts);
+        }
     }
 
     @Override // documentation inherited
