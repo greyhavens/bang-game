@@ -47,11 +47,7 @@ public final class StatSet extends DSet
             stat.setValue(value);
             addStat(stat);
         } else if (stat.setValue(value)) {
-            if (_container != null) {
-                _container.updateStats(stat);
-            } else {
-                update(stat);
-            }
+            updateStat(stat);
         }
     }
 
@@ -107,8 +103,6 @@ public final class StatSet extends DSet
     {
         if (_container != null) {
             _container.updateStats(stat);
-        } else {
-            update(stat);
         }
     }
 

@@ -14,7 +14,10 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BonusConfig;
+import com.threerings.bang.data.Stat;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
@@ -102,6 +105,8 @@ public class ClaimJumping extends Scenario
                 }
                 bangobj.grantCash(
                     claim.owner, CASH_PER_NUGGET * (claim.nuggets));
+                bangobj.stats[claim.owner].incrementStat(
+                    Stat.Type.NUGS_COLLECTED, claim.nuggets);
             }
             return true;
         }
@@ -167,6 +172,19 @@ public class ClaimJumping extends Scenario
         }
 
         return update;
+    }
+
+    @Override // documentation inherited
+    public void recordStats (
+        BangObject bangobj, int gameTime, int pidx, BangUserObject user)
+    {
+        super.recordStats(bangobj, gameTime, pidx, user);
+
+        // record the number of nuggets they collected
+        int nuggets = bangobj.stats[pidx].getIntStat(Stat.Type.NUGS_COLLECTED);
+        if (nuggets > 0) {
+            user.stats.incrementStat(Stat.Type.NUGS_COLLECTED, nuggets);
+        }
     }
 
     @Override // documentation inherited

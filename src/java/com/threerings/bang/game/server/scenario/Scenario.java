@@ -14,6 +14,7 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
 
+import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
@@ -176,6 +177,16 @@ public abstract class Scenario
             maybeQueueForRespawn(piece, bangobj.tick);
         }
         return false;
+    }
+
+    /**
+     * Gives the scenario an opportunity to record statistics for the
+     * supplied player at the end of the game.
+     */
+    public void recordStats (
+        BangObject bangobj, int gameTime, int pidx, BangUserObject user)
+    {
+        // nothing by default
     }
 
     /**

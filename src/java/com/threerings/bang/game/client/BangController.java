@@ -13,6 +13,7 @@ import com.threerings.crowd.util.CrowdContext;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.parlor.game.client.GameController;
+import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -141,6 +142,33 @@ public class BangController extends GameController
     }
 
     @Override // documentation inherited
+    public void attributeChanged (AttributeChangedEvent event)
+    {
+        super.attributeChanged(event);
+
+        // once the badges are set, we can display the end of game stats
+        if (event.getName().equals(BangObject.BADGES)) {
+            log.info("Displaying stats!");
+            StringBuffer winners = new StringBuffer();
+            for (int ii = 0; ii < _bangobj.winners.length; ii++) {
+                if (_bangobj.winners[ii]) {
+                    if (winners.length() > 0) {
+                        winners.append(", ");
+                    }
+                    winners.append(_bangobj.players[ii]);
+                }
+            }
+            String title = MessageBundle.tcompose("m.game_over_stats", winners);
+            title = _ctx.xlate(GameCodes.GAME_MSGS, title);
+            StatsDisplay stats =
+                new StatsDisplay(_ctx, this, _bangobj, _pidx, title);
+            _ctx.getRootNode().addWindow(stats);
+            stats.pack();
+            stats.center();
+        }
+    }
+
+    @Override // documentation inherited
     protected PlaceView createPlaceView (CrowdContext ctx)
     {
         _view = new BangView((BangContext)ctx, this);
@@ -200,24 +228,6 @@ public class BangController extends GameController
 
         // let the view know that the game is over
         _view.endGame();
-
-        // create the end of game stats display
-        StringBuffer winners = new StringBuffer();
-        for (int ii = 0; ii < _bangobj.winners.length; ii++) {
-            if (_bangobj.winners[ii]) {
-                if (winners.length() > 0) {
-                    winners.append(", ");
-                }
-                winners.append(_bangobj.players[ii]);
-            }
-        }
-        String title = MessageBundle.tcompose("m.game_over_stats", winners);
-        title = _ctx.xlate(GameCodes.GAME_MSGS, title);
-        StatsDisplay stats =
-            new StatsDisplay(_ctx, this, _bangobj, _pidx, title);
-        _ctx.getRootNode().addWindow(stats);
-        stats.pack();
-        stats.center();
     }
 
     /**
@@ -225,6 +235,7 @@ public class BangController extends GameController
      */
     protected void statsDismissed ()
     {
+        log.info("Stats dismissed!");
         // if the game is over, head back to the lobby
         if (_bangobj.state == BangObject.GAME_OVER) {
             _ctx.getLocationDirector().leavePlace();

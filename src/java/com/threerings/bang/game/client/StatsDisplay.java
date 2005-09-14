@@ -19,6 +19,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
@@ -41,11 +42,12 @@ public class StatsDisplay extends BDecoratedWindow
         MessageBundle msgs = ctx.getMessageManager().getBundle(
             GameCodes.GAME_MSGS);
 
-        setLayoutManager(new BorderLayout(5, 5));
+        setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
+                                              GroupLayout.STRETCH));
 
         BLabel label = new BLabel(title);
         label.setLookAndFeel(BangUI.dtitleLNF);
-        add(label, BorderLayout.NORTH);
+        add(label);
 
         BContainer bits = new BContainer(
             new TableLayout(bangobj.players.length + 1, 5, 5));
@@ -78,7 +80,33 @@ public class StatsDisplay extends BDecoratedWindow
                 bits.add(slabel);
             }
         }
-        add(bits, BorderLayout.CENTER);
+        add(bits);
+
+        // display any awarded badges
+        if (bangobj.badges != null && bangobj.badges.length > 0) {
+            add(new BLabel(""));
+            BContainer badges = new BContainer(
+                GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
+                                     GroupLayout.STRETCH));
+            label = new BLabel(msgs.get("m.badges"));
+            label.setLookAndFeel(BangUI.dtitleLNF);
+            badges.add(label);
+            int bidx = 0;
+            for (int ii = 0; ii < bangobj.badgeCounts.length; ii++) {
+                if (bangobj.badgeCounts[ii] == 0) {
+                    continue;
+                }
+                StringBuffer blabel = new StringBuffer(
+                    bangobj.players[ii].toString());
+                for (int bb = 0; bb < bangobj.badgeCounts[ii]; bb++) {
+                    blabel.append(bb > 0 ? ", " : ": ");
+                    String key = bangobj.badges[bidx++].getType().key();
+                    blabel.append(_ctx.xlate(BangCodes.BADGE_MSGS, key));
+                }
+                badges.add(new BLabel(blabel.toString()));
+            }
+            add(badges);
+        }
 
         BContainer buttons = GroupLayout.makeButtonBox(GroupLayout.CENTER);
         BButton dismiss = new BButton(msgs.get("m.dismiss"));
@@ -89,7 +117,7 @@ public class StatsDisplay extends BDecoratedWindow
             }
         });
         buttons.add(dismiss);
-        add(buttons, BorderLayout.SOUTH);
+        add(buttons);
     }
 
     protected BangContext _ctx;

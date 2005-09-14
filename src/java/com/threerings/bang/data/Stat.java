@@ -46,6 +46,9 @@ public abstract class Stat
         CARDS_PLAYED(new IntStat()),
         CASH_EARNED(new IntStat()),
 
+        CATTLE_HERDED(new IntStat()),
+        NUGS_COLLECTED(new IntStat()),
+
         // stats derived from in-game statistics
         HIGHEST_EARNINGS(new IntStat()),
         MOST_KILLS(new IntStat()),

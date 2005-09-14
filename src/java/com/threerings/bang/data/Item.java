@@ -131,6 +131,16 @@ public abstract class Item
     }
 
     /**
+     * Generates a string representation of this instance.
+     */
+    public String toString ()
+    {
+        StringBuffer buf = new StringBuffer("[");
+        toString(buf);
+        return buf.append("]").toString();
+    }
+
+    /**
      * Used by derived classes when an item is newly constructed.
      */
     protected Item (int ownerId)
@@ -141,6 +151,15 @@ public abstract class Item
     /** Creates a blank item, used only during unserialization. */
     protected Item ()
     {
+    }
+
+    /**
+     * Allows derived classes to augment our {@link #toString} output.
+     */
+    protected void toString (StringBuffer buf)
+    {
+        buf.append("itemId=").append(_itemId);
+        buf.append(", ownerId=").append(_ownerId);
     }
 
     /** This item's unique identifier. */

@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import com.samskivert.util.HashIntMap;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
@@ -87,6 +88,7 @@ public class ItemFactory
         // register the item classes (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
         registerItemClass(BigShotItem.class);
         registerItemClass(CardItem.class);
+        registerItemClass(Badge.class);
         // end of registeration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 

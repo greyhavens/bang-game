@@ -14,6 +14,7 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
@@ -118,6 +119,12 @@ public class BangObject extends GameObject
 
     /** The field name of the <code>funds</code> field. */
     public static final String FUNDS = "funds";
+
+    /** The field name of the <code>badges</code> field. */
+    public static final String BADGES = "badges";
+
+    /** The field name of the <code>badgeCounts</code> field. */
+    public static final String BADGE_COUNTS = "badgeCounts";
     // AUTO-GENERATED: FIELDS END
 
     /** A {@link #state} constant indicating the pre-game selection phase. */
@@ -174,6 +181,13 @@ public class BangObject extends GameObject
 
     /** Total cash earned by each player. */
     public int[] funds;
+
+    /** Used to report badges awarded at the end of the game. */
+    public Badge[] badges;
+
+    /** Indicates how many badges were earned by each player. This is used
+     * to decode {@link #badges}. */
+    public int[] badgeCounts;
 
     /** Returns the {@link #pieces} set as an array to allow for
      * simultaneous iteration and removal. */
@@ -713,6 +727,72 @@ public class BangObject extends GameObject
         requestElementUpdate(
             FUNDS, index, new Integer(value), new Integer(ovalue));
         this.funds[index] = value;
+    }
+
+    /**
+     * Requests that the <code>badges</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setBadges (Badge[] value)
+    {
+        Badge[] ovalue = this.badges;
+        requestAttributeChange(
+            BADGES, value, ovalue);
+        this.badges = (value == null) ? null : (Badge[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>badges</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setBadgesAt (Badge value, int index)
+    {
+        Badge ovalue = this.badges[index];
+        requestElementUpdate(
+            BADGES, index, value, ovalue);
+        this.badges[index] = value;
+    }
+
+    /**
+     * Requests that the <code>badgeCounts</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setBadgeCounts (int[] value)
+    {
+        int[] ovalue = this.badgeCounts;
+        requestAttributeChange(
+            BADGE_COUNTS, value, ovalue);
+        this.badgeCounts = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>badgeCounts</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setBadgeCountsAt (int value, int index)
+    {
+        int ovalue = this.badgeCounts[index];
+        requestElementUpdate(
+            BADGE_COUNTS, index, new Integer(value), new Integer(ovalue));
+        this.badgeCounts[index] = value;
     }
     // AUTO-GENERATED: METHODS END
 }

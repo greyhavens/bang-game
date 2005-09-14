@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.logging.Level;
 
+import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
 
@@ -28,6 +31,7 @@ import com.threerings.presents.server.PresentsServer;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.parlor.game.server.GameManager;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
@@ -666,6 +670,10 @@ public class BangManager extends GameManager
         // note the duration of the game (in minutes)
         int gameTime = (int)(System.currentTimeMillis() - _startStamp) / 60000;
 
+        // this will hold any newly created badges
+        ArrayList<Badge> badges = new ArrayList<Badge>();
+        int[] bcounts = new int[getPlayerSlots()];
+
         // record various statistics
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             BangUserObject user = (BangUserObject)getPlayer(ii);
@@ -698,16 +706,32 @@ public class BangManager extends GameManager
                 user.stats.maxStat(Stat.Type.MOST_KILLS,
                                    stats.getIntStat(Stat.Type.UNITS_KILLED));
 
+                // allow the scenario to record statistics as well
+                _scenario.recordStats(_bangobj, gameTime, ii, user);
+
                 // TODO: award and report "take home" cash
+
+                // determine whether this player qualifies for new badges
+                int size = badges.size();
+                Badge.checkBadges(user, badges);
+                bcounts[ii] = badges.size()-size;
 
             } finally {
                 user.commitTransaction();
             }
         }
 
-        for (int ii = 0; ii < _bangobj.stats.length; ii++) {
-            log.info(getPlayerName(ii) + ": " + _bangobj.stats[ii]);
-        }
+        // stuff the awarded badges into the game object
+        _bangobj.setBadgeCounts(bcounts);
+        _bangobj.setBadges(badges.toArray(new Badge[badges.size()]));
+
+        log.info("Badges: " + StringUtil.toString(_bangobj.badges));
+        log.info("Badge counts: " + StringUtil.toString(bcounts));
+
+//         // persist the awarded badges
+//         if (badges.size() > 0) {
+//             awardBadges(badges, bcounts);
+//         }
     }
 
     @Override // documentation inherited
@@ -1050,6 +1074,39 @@ public class BangManager extends GameManager
 
         // finally clear out the damage index
         damage.clear();
+    }
+
+    /**
+     * Stores the supplied badges to the inventories of the appropriate
+     * players. Called at the end of a game when any badges have been
+     * earned by the players.
+     */
+    protected void awardBadges (
+        final ArrayList<Badge> badges, final int[] bcounts)
+    {
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                for (Badge badge : badges) {
+                    try {
+                        BangServer.itemrepo.insertItem(badge);
+                    } catch (PersistenceException pe) {
+                        log.log(Level.WARNING, "Failed to store badge " +
+                                "[badge=" + badge + "]", pe);
+                    }
+                }
+                return true;
+            }
+
+            public void handleResult () {
+                int idx = 0;
+                for (int ii = 0; ii < bcounts.length; ii++) {
+                    BangUserObject user = (BangUserObject)getPlayer(ii);
+                    for (int bb = 0; bb < bcounts[ii]; bb++) {
+                        user.addToInventory(badges.get(idx++));
+                    }
+                }
+            }
+        });
     }
 
     /** Used to accelerate things when testing. */

@@ -3,8 +3,11 @@
 
 package com.threerings.bang.data;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.StringUtil;
 
@@ -24,31 +27,102 @@ public class Badge extends Item
         WEEKLY_HIGH_SCORER, // weekly
         MONTHLY_HIGH_SCORER, // monthly
 
-        FIFTY_GAMES_PLAYED, // 50 games played
-        FIVEC_GAMES_PLAYED, // 500
-        ONEM_GAMES_PLAYED, // 1000
-        FIVEM_GAMES_PLAYED, // 5000
-        TENM_GAMES_PLAYED, // 10,000
-        FIFTYM_GAMES_PLAYED, // 50,000
+        // games played badges
+        FIFTY_GAMES_PLAYED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5;
+            }
+        },
+        FIVEC_GAMES_PLAYED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 500;
+            }
+        },
+        ONEM_GAMES_PLAYED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 1000;
+            }
+        },
+        FIVEM_GAMES_PLAYED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
+            }
+        },
+        TENM_GAMES_PLAYED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 10000;
+            }
+        },
+        FIFTYM_GAMES_PLAYED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 50000;
+            }
+        },
 
-        FIVEC_UNITS_KILLED,  // 500 units killed
-        FIVEM_UNITS_KILLED, // 5000
-        FIFTYM_UNITS_KILLED, // 50,000
+        // units killed badges
+        FIVEC_UNITS_KILLED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 500;
+            }
+        },
+        FIVEM_UNITS_KILLED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 5000;
+            }
+        },
+        TENM_UNITS_KILLED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 10000;
+            }
+        },
+        FIFTYM_UNITS_KILLED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 50000;
+            }
+        },
 
-        ONEC_CATTLE_HERDED, // 100 cattle herded
-        ONEM_CATTLE_HERDED, // 1000
-        TENM_CATTLE_HERDED, // 10,000
+        // cattle herded badges
+        ONEC_CATTLE_HERDED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 100;
+            }
+        },
+        ONEM_CATTLE_HERDED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 1000;
+            }
+        },
+        TENM_CATTLE_HERDED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 10000;
+            }
+        },
 
-        ONEC_NUGGETS_COLLECTED, // 100 nuggets collected
-        ONEM_NUGGETS_COLLECTED, // 1000
-        TENM_NUGGETS_COLLECTED, // 10,000
+        // nuggets collected badges
+        ONEC_NUGGETS_COLLECTED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 100;
+            }
+        },
+        ONEM_NUGGETS_COLLECTED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 1000;
+            }
+        },
+        TENM_NUGGETS_COLLECTED {
+            public boolean qualifies (BangUserObject user) {
+                return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 10000;
+            }
+        },
 
+        // badges for using (owning) bigshots
         FRTO_BIGSHOTS_USED, // all Frontier Town bigshots owned (used)
         INVI_BIGSHOTS_USED, // all Indian Village bigshots owned (used)
         BOTO_BIGSHOTS_USED, // all Boom Town bigshots owned (used)
         GHTO_BIGSHOTS_USED, // all Ghost Town bigshots owned (used)
         CIGO_BIGSHOTS_USED, // all City of Gold bigshots owned (used)
 
+        // badges for using special units
         FRTO_SPECIALS_USED, // all Frontier Town special units used
         INVI_SPECIALS_USED, // all Indian Village special units used
         BOTO_SPECIALS_USED, // all Boom Town special units used
@@ -61,6 +135,12 @@ public class Badge extends Item
         public Badge newBadge ()
         {
             return new Badge(code());
+        }
+
+        /** Overridden by each badge type to indicate whether the supplied
+         * user qualifies for this badge. */
+        public boolean qualifies (BangUserObject user) {
+            return false;
         }
 
         /** Returns the translation key used by this badge. */
@@ -101,9 +181,33 @@ public class Badge extends Item
         protected String _codestr;
     };
 
-    public static void main (String[] args)
+    /**
+     * Determines whether this player qualifies for any new badges and
+     * adds those for which they qualify to the supplied list.
+     */
+    public static void checkBadges (BangUserObject user, ArrayList<Badge> badges)
     {
-        System.out.println("Code for 0: " + getType(0));
+        // first enumerate the badges they already hold
+        _badgeCodes.clear();
+        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
+            Object item = iter.next();
+            if (item instanceof Badge) {
+                _badgeCodes.add(((Badge)item).getCode());
+            }
+        }
+
+        // now check each type in turn for qualification
+        for (Type type : EnumSet.allOf(Type.class)) {
+            if (_badgeCodes.contains(type.code())) {
+                continue;
+            }
+            if (!type.qualifies(user)) {
+                continue;
+            }
+            Badge badge = type.newBadge();
+            badge.setOwnerId(user.playerId);
+            badges.add(badge);
+        }
     }
 
     /** Creates a blank instance for serialization. */
@@ -143,6 +247,13 @@ public class Badge extends Item
         _code = code;
     }
 
+    @Override // documentation inherited
+    protected void toString (StringBuffer buf)
+    {
+        super.toString(buf);
+        buf.append(", type=").append(getType());
+    }
+
     /** The unique code for the type of this badge. */
     protected int _code;
 
@@ -151,4 +262,7 @@ public class Badge extends Item
 
     /** Trigger the loading of the enum when we load this class. */
     protected static Type _trigger = Type.UNUSED;
+
+    /** Used by {@link #checkBadges}. */
+    protected static ArrayIntSet _badgeCodes = new ArrayIntSet();
 }

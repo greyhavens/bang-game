@@ -13,6 +13,9 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.Stat;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.CorralledEffect;
 import com.threerings.bang.game.data.effect.Effect;
@@ -103,11 +106,13 @@ public class CattleHerding extends Scenario
             return false;
         }
 
-        // score cash for each cow
+        // score cash for each cow and note herd counts
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
                 bangobj.grantCash(pieces[ii].owner, CASH_PER_COW);
+                bangobj.stats[pieces[ii].owner].incrementStat(
+                    Stat.Type.CATTLE_HERDED, 1);
             }
         }
 
@@ -138,6 +143,19 @@ public class CattleHerding extends Scenario
         }
 
         return null;
+    }
+
+    @Override // documentation inherited
+    public void recordStats (
+        BangObject bangobj, int gameTime, int pidx, BangUserObject user)
+    {
+        super.recordStats(bangobj, gameTime, pidx, user);
+
+        // record the number of cattle they herded
+        int herded = bangobj.stats[pidx].getIntStat(Stat.Type.CATTLE_HERDED);
+        if (herded > 0) {
+            user.stats.incrementStat(Stat.Type.CATTLE_HERDED, herded);
+        }
     }
 
     @Override // documentation inherited

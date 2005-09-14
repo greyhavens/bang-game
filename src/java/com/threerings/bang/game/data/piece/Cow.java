@@ -42,8 +42,8 @@ public class Cow extends Piece
                 // move to occupy our location (ie. if we're east of the
                 // spooker, try spooking further east)
                 _wantToMove = dd;
-                log.info(info() + " spooked by " + spooker.info() +
-                         " in " + _wantToMove);
+//                 log.info(info() + " spooked by " + spooker.info() +
+//                          " in " + _wantToMove);
                 break;
             }
         }
