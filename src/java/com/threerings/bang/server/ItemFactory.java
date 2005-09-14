@@ -11,6 +11,7 @@ import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.Purse;
 
 import static com.threerings.bang.Log.log;
 
@@ -89,6 +90,7 @@ public class ItemFactory
         registerItemClass(BigShotItem.class);
         registerItemClass(CardItem.class);
         registerItemClass(Badge.class);
+        registerItemClass(Purse.class);
         // end of registeration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 
