@@ -15,17 +15,17 @@ public class DustDevil extends Card
     public int radius = 2;
 
     @Override // documentation inherited
+    public String getType ()
+    {
+        return "dust_devil";
+    }
+
+    @Override // documentation inherited
     public void init (BangObject bangobj, int owner)
     {
         super.init(bangobj, owner);
 
         // TODO: change radius for any reason?
-    }
-
-    @Override // documentation inherited
-    public String getIconPath ()
-    {
-        return "dust_devil";
     }
 
     @Override // documentation inherited

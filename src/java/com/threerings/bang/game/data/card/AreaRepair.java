@@ -17,6 +17,12 @@ public class AreaRepair extends Card
     public int radius = 2;
 
     @Override // documentation inherited
+    public String getType ()
+    {
+        return "area_repair";
+    }
+
+    @Override // documentation inherited
     public void init (BangObject bangobj, int owner)
     {
         super.init(bangobj, owner);
@@ -28,12 +34,6 @@ public class AreaRepair extends Card
         } else if (bangobj.pdata[owner].powerFactor < 0.34) {
             repair = 100;
         }
-    }
-
-    @Override // documentation inherited
-    public String getIconPath ()
-    {
-        return "area_repair";
     }
 
     @Override // documentation inherited

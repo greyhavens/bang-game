@@ -33,7 +33,7 @@ public class Missile extends Card
     }
 
     @Override // documentation inherited
-    public String getIconPath ()
+    public String getType ()
     {
         return "missile";
     }

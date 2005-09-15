@@ -3,11 +3,15 @@
 
 package com.threerings.bang.game.data.card;
 
+import java.util.HashMap;
+
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Provides the player with a one-shot crazy thing that they can do during
@@ -15,7 +19,7 @@ import com.threerings.bang.game.data.effect.Effect;
  * use them on any turn during the game (modulo special restrictions).
  */
 public abstract class Card extends SimpleStreamableObject
-    implements DSet.Entry
+    implements DSet.Entry, Cloneable
 {
     /** Every card has a unique id which is how we reference them. */
     public int cardId;
@@ -23,8 +27,23 @@ public abstract class Card extends SimpleStreamableObject
     /** The player index of the player that is holding this card. */
     public int owner;
 
-    /** Returns the name of the icon image for this card. */
-    public abstract String getIconPath ();
+    /**
+     * Creates a card of the specified type. Returns null if no card
+     * exists with the specified type.
+     */
+    public static Card newCard (String type)
+    {
+        Card proto = _cards.get(type);
+        if (proto == null) {
+            log.warning("Requested to create unknown card '" + type + "'.");
+            Thread.dumpStack();
+            return null;
+        }
+        return (Card)proto.clone();
+    }
+
+    /** Returns a string type identifier for this card. */
+    public abstract String getType ();
 
     /** Returns the radius that should be used when displaying this
      * card's area of effect. */
@@ -76,9 +95,39 @@ public abstract class Card extends SimpleStreamableObject
         return cardId == ((Card)other).cardId;
     }
 
+    @Override // documentation inherited
+    public Object clone ()
+    {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException cnse) {
+            throw new RuntimeException("Pigs flying! " + cnse);
+        }
+    }
+
+    /**
+     * Registers a card prototype so that it may be looked up and
+     * instantiated by "type" (as defined by {@link #getType}).
+     */
+    protected static void register (Card card)
+    {
+        _cards.put(card.getType(), card);
+    }
+
     /** Used as our DSet.Entry key. */
     protected transient Integer _key;
 
     /** Used to assign unique ids to card instances. */
     protected static int _nextCardId;
+
+    /** A mapping from card identifier to card prototype. */
+    protected static HashMap<String,Card> _cards = new HashMap<String,Card>();
+
+    static {
+        register(new AreaRepair());
+        register(new DustDevil());
+        register(new Missile());
+        register(new Stampede());
+        register(new Staredown());
+    }
 }

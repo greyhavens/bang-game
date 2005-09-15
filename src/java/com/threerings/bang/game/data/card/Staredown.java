@@ -13,7 +13,7 @@ import com.threerings.bang.game.data.effect.StaredownEffect;
 public class Staredown extends Card
 {
     @Override // documentation inherited
-    public String getIconPath ()
+    public String getType ()
     {
         return "staredown";
     }
