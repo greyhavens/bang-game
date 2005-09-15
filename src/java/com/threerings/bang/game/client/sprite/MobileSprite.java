@@ -164,7 +164,7 @@ public class MobileSprite extends PieceSprite
 
         // we display a simple shadow texture on the ground beneath us
         _shadow = RenderUtil.createIcon(_shadtex);
-        _shadow.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+//         _shadow.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         float height = _piece.isFlyer() ? -2 * TILE_SIZE : 0;
         height += 0.1f;
         _shadow.setLocalTranslation(new Vector3f(0, 0, height));

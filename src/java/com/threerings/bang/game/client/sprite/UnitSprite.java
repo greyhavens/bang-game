@@ -148,7 +148,7 @@ public class UnitSprite extends MobileSprite
 
         // this icon is displayed when the mouse is hovered over us
         _hovquad = RenderUtil.createIcon(_hovtex);
-        _hovquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+//         _hovquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _hovquad.setLocalTranslation(new Vector3f(0, 0, 0.2f));
         attachChild(_hovquad);
         _hovquad.setForceCull(true);
@@ -156,7 +156,7 @@ public class UnitSprite extends MobileSprite
         // this composite of icons combines to display our status
         _status = new StatusNode();
         _status.setRenderState(RenderUtil.blendAlpha);
-        _status.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+//         _status.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _status.updateRenderState();
         _status.setLocalTranslation(new Vector3f(0, 0, 0.1f));
         attachChild(_status);
@@ -193,7 +193,7 @@ public class UnitSprite extends MobileSprite
         // this icon is displayed when we're a target
         _tgtquad = RenderUtil.createIcon(_tgttex);
         _tgtquad.setLocalTranslation(new Vector3f(0, 0, 0));
-        _tgtquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+//         _tgtquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _tgtquad.setRenderState(RenderUtil.alwaysZBuf);
         _tgtquad.updateRenderState();
         BillboardNode bbn = new BillboardNode("target");
@@ -206,7 +206,7 @@ public class UnitSprite extends MobileSprite
         _pendquad = RenderUtil.createIcon(5, 5);
         _pendquad.setRenderState(_pendtex);
         _pendquad.setLocalTranslation(new Vector3f(0, 0, 0));
-        _pendquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+//         _pendquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _pendquad.setRenderState(RenderUtil.alwaysZBuf);
         _pendquad.updateRenderState();
         bbn = new BillboardNode("pending");
@@ -219,7 +219,7 @@ public class UnitSprite extends MobileSprite
         // carrying a nugget, for example)
         _icon = RenderUtil.createIcon(5, 5);
         _icon.setLocalTranslation(new Vector3f(0, 0, 0));
-        _icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+//         _icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _icon.setRenderState(RenderUtil.alwaysZBuf);
         _icon.updateRenderState();
         bbn = new BillboardNode("icon");

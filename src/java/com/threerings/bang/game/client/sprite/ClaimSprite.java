@@ -6,12 +6,13 @@ package com.threerings.bang.game.client.sprite;
 import java.awt.Color;
 
 import com.jme.image.Texture;
-import com.jme.renderer.Renderer;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
+import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
@@ -45,7 +46,7 @@ public class ClaimSprite extends PropSprite
             Texture tex = RenderUtil.createTextTexture(
                 BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
                 String.valueOf(claim.nuggets), tcoords);
-            _counter.setTextures(tcoords);
+            _counter.setTextureBuffer(BufferUtils.createFloatBuffer(tcoords));
             // resize our quad to accomodate the text
             _counter.resize(10 * tcoords[2].x, 10 * tcoords[2].y);
             _tstate.setTexture(tex);
@@ -67,7 +68,7 @@ public class ClaimSprite extends PropSprite
         _counter.setRenderState(_tstate);
         _counter.setRenderState(RenderUtil.blendAlpha);
         _counter.setRenderState(RenderUtil.overlayZBuf);
-        _counter.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+//         _counter.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         BillboardNode bbn = new BillboardNode("cbillboard");
         bbn.attachChild(_counter);
         // TODO: account properly for the height of the claim model
