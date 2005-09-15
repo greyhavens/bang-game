@@ -68,7 +68,7 @@ public class ClaimSprite extends PropSprite
         _counter.setRenderState(_tstate);
         _counter.setRenderState(RenderUtil.blendAlpha);
         _counter.setRenderState(RenderUtil.overlayZBuf);
-//         _counter.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _counter.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         BillboardNode bbn = new BillboardNode("cbillboard");
         bbn.attachChild(_counter);
         // TODO: account properly for the height of the claim model

@@ -98,7 +98,7 @@ public class BoardView extends BComponent
 
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
-//         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 
         // we'll hang all of our pieces off this node
         _node.attachChild(_pnode = new Node("pieces"));

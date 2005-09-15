@@ -45,7 +45,7 @@ public class CowSprite extends MobileSprite
 
         // this is used to indicate who owns us
         _ownquad = RenderUtil.createIcon(_owntex);
-//         _ownquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _ownquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _ownquad.setLocalTranslation(new Vector3f(0, 0, 0.2f));
         attachChild(_ownquad);
 
