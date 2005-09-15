@@ -40,6 +40,7 @@ import com.jmex.bui.TextureIcon;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -163,8 +164,10 @@ public class Model
                 Part part = (anim._parts[pp] = new Part());
 
                 // load up this part's 3D model
+                boolean trans = props.getProperty(
+                    mesh + ".transparent", "false").equalsIgnoreCase("true");
                 part.creator = loadModel(
-                    ctx, path + action + "/" + mesh + ".jme");
+                    ctx, path + action + "/" + mesh + ".jme", trans);
 
                 // the model may have multiple textures from which we
                 // select at random
@@ -277,7 +280,8 @@ public class Model
         return values.toArray(new String[values.size()]);
     }
 
-    protected CloneCreator loadModel (BangContext ctx, String path)
+    protected CloneCreator loadModel (
+        BangContext ctx, String path, boolean trans)
     {
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
@@ -297,6 +301,12 @@ public class Model
                         model.setLocalScale(0.04f);
                     } else {
                         model.setLocalScale(0.05f);
+                    }
+
+                    // configure transparent models specially
+                    if (trans) {
+                        model.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+                        model.setRenderState(RenderUtil.blendAlpha);
                     }
 
                 } catch (IOException ioe) {
