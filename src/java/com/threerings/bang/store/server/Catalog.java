@@ -47,6 +47,26 @@ public class Catalog
     }
 
     /**
+     * Requests that a {@link Provider} be created to provide the specified
+     * good to the specified user. Returns null if no provider is registered
+     * for the good in question.
+     */
+    public static Provider getProvider (BangUserObject user, Good good)
+        throws InvocationException
+    {
+        for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
+            ProviderFactory factory = _goods[tt].get(good);
+            if (factory != null) {
+                return factory.createProvider(user, good);
+            }
+            if (BangCodes.TOWN_IDS[tt].equals(user.townId)) {
+                break;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Registers a Good -> ProviderFactory mapping for the specified town.
      */
     protected static void registerGood (

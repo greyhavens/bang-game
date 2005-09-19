@@ -13,14 +13,36 @@ import com.threerings.crowd.data.PlaceObject;
 public class StoreObject extends PlaceObject
 {
     // AUTO-GENERATED: FIELDS START
+    /** The field name of the <code>service</code> field. */
+    public static final String SERVICE = "service";
+
     /** The field name of the <code>goods</code> field. */
     public static final String GOODS = "goods";
     // AUTO-GENERATED: FIELDS END
+
+    /** The means by which the client makes requests to the server. */
+    public StoreMarshaller service;
 
     /** The goods available for sale in this store. */
     public DSet goods;
 
     // AUTO-GENERATED: METHODS START
+    /**
+     * Requests that the <code>service</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setService (StoreMarshaller value)
+    {
+        StoreMarshaller ovalue = this.service;
+        requestAttributeChange(
+            SERVICE, value, ovalue);
+        this.service = value;
+    }
+
     /**
      * Requests that the specified entry be added to the
      * <code>goods</code> set. The set will not change until the event is
