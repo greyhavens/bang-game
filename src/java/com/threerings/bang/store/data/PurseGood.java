@@ -24,6 +24,11 @@ public class PurseGood extends Good
         _townIndex = townIndex;
     }
 
+    /** A constructor only used during serialization. */
+    public PurseGood ()
+    {
+    }
+
     /**
      * Returns the index of the town with which our purse is associated.
      */

@@ -24,9 +24,13 @@ import com.threerings.parlor.server.ParlorManager;
 import com.threerings.coin.server.persist.CoinRepository;
 import com.threerings.user.AccountActionRepository;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.lobby.data.LobbyConfig;
+import com.threerings.bang.lobby.server.LobbyManager;
 import com.threerings.bang.ranch.server.RanchManager;
+import com.threerings.bang.store.data.StoreConfig;
+import com.threerings.bang.store.server.StoreManager;
+
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.StatRepository;
@@ -62,8 +66,14 @@ public class BangServer extends CrowdServer
      * systems.) */
     public static CoinRepository coinrepo;
 
-    /** Keeps an eye on the ranch, a good man to have around. */
+    /** Keeps an eye on the Ranch, a good man to have around. */
     public static RanchManager ranchmgr = new RanchManager();
+
+    /** Manages the Saloon and match-making. */
+    public static LobbyManager saloonmgr;
+
+    /** Manages the General Store and item purchase. */
+    public static StoreManager storemgr;
 
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
@@ -101,12 +111,20 @@ public class BangServer extends CrowdServer
         ranchmgr.init(invmgr);
         boardmgr.init(conprov);
 
-        // create a lobby (TODO: redo all this)
+        // create the saloon manager
         LobbyConfig lconfig = new LobbyConfig();
-        lconfig.townId = BangCodes.FRONTIER_TOWN;
+        lconfig.townId = ServerConfig.getTownId();
         plreg.createPlace(lconfig, new PlaceRegistry.CreationObserver() {
             public void placeCreated (PlaceObject place, PlaceManager pmgr) {
-                log.info("Created " + pmgr.where() + ".");
+                saloonmgr = (LobbyManager)pmgr;
+            }
+        });
+
+        // create the general store manager
+        StoreConfig sconfig = new StoreConfig();
+        plreg.createPlace(sconfig, new PlaceRegistry.CreationObserver() {
+            public void placeCreated (PlaceObject place, PlaceManager pmgr) {
+                storemgr = (StoreManager)pmgr;
             }
         });
 

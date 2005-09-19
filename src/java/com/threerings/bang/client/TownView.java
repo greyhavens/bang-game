@@ -21,8 +21,8 @@ import com.jme.util.TextureManager;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.ranch.client.RanchView;
-import com.threerings.bang.store.client.StoreView;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -118,10 +118,14 @@ public class TownView extends BWindow
             return; // TODO
 
         } else if ("to_store".equals(command)) {
-            _ctx.setPlaceView(new StoreView(_ctx));
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            _ctx.getLocationDirector().moveTo(bbd.storeOid);
 
         } else if ("to_saloon".equals(command)) {
-            _ctx.getLocationDirector().moveTo(2);
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
         }
     }
 

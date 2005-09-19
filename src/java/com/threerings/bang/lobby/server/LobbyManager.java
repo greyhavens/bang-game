@@ -22,13 +22,13 @@ import com.threerings.bang.lobby.data.LobbyObject;
 public class LobbyManager extends PlaceManager
     implements TableManagerProvider
 {
-    // documentation inherited from interface
+    // documentation inherited from interface TableManagerProvider
     public TableManager getTableManager ()
     {
         return _tablemgr;
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void didInit ()
     {
         super.didInit();
@@ -36,7 +36,7 @@ public class LobbyManager extends PlaceManager
         _lconfig = (LobbyConfig)_config;
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void didStartup ()
     {
         super.didStartup();
@@ -48,7 +48,7 @@ public class LobbyManager extends PlaceManager
         _tablemgr = new TableManager(this);
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void placeBecameEmpty ()
     {
         // we don't want to do the standard "became empty" processing
@@ -58,14 +58,14 @@ public class LobbyManager extends PlaceManager
         }
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected long idleUnloadPeriod ()
     {
         // we don't want to unload
         return 0L;
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected Class getPlaceObjectClass ()
     {
         return LobbyObject.class;

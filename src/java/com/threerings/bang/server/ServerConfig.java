@@ -14,6 +14,8 @@ import com.samskivert.util.StringUtil;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.server.Authenticator;
 
+import com.threerings.bang.data.BangCodes;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -84,6 +86,14 @@ public class ServerConfig
                     "[class=" + aclass + "]", e);
         }
         return null;
+    }
+
+    /**
+     * Returns the town that is handled by this server instance.
+     */
+    public static String getTownId ()
+    {
+        return config.getValue("town_id", BangCodes.FRONTIER_TOWN);
     }
 
     static {

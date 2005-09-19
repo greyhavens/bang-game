@@ -26,6 +26,11 @@ public class CardPackGood extends Good
         _size = size;
     }
 
+    /** A constructor only used during serialization. */
+    public CardPackGood ()
+    {
+    }
+
     /**
      * Returns the number of cards in the pack.
      */

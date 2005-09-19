@@ -9,7 +9,9 @@ import com.samskivert.util.Invoker;
 
 import com.threerings.crowd.data.TokenRing;
 import com.threerings.crowd.server.CrowdClient;
+import com.threerings.presents.net.BootstrapData;
 
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.Stat;
@@ -50,6 +52,23 @@ public class BangClient extends CrowdClient
 
         // TEMP: start all players in frontier town for now
         user.townId = BangCodes.FRONTIER_TOWN;
+    }
+
+    @Override // documentation inherited
+    protected BootstrapData createBootstrapData ()
+    {
+        return new BangBootstrapData();
+    }
+
+    @Override // documentation inherited
+    protected void populateBootstrapData (BootstrapData data)
+    {
+        super.populateBootstrapData(data);
+
+        // fill in the oids of important places
+        BangBootstrapData bbd = (BangBootstrapData)data;
+        bbd.saloonOid = BangServer.saloonmgr.getPlaceObject().getOid();
+        bbd.storeOid = BangServer.storemgr.getPlaceObject().getOid();
     }
 
     @Override // documentation inherited

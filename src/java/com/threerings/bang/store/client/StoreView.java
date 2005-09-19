@@ -3,6 +3,8 @@
 
 package com.threerings.bang.store.client;
 
+import java.util.Iterator;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
@@ -14,6 +16,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
@@ -21,6 +24,9 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.StatusView;
 import com.threerings.bang.util.BangContext;
+
+import com.threerings.bang.store.data.Good;
+import com.threerings.bang.store.data.StoreObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -46,8 +52,9 @@ public class StoreView extends BWindow
         setModal(true);
         new StatusView(_ctx).bind(this);
 
-        // TODO: the display of items for sale
-        add(new BContainer(), BorderLayout.CENTER);
+        // the display of items for sale
+        _goods = new BContainer(new TableLayout(4, 5, 5));
+        add(_goods, BorderLayout.CENTER);
 
         BContainer side = new BContainer(GroupLayout.makeVert(GroupLayout.TOP));
         add(side, BorderLayout.EAST);
@@ -73,7 +80,7 @@ public class StoreView extends BWindow
     public void actionPerformed (ActionEvent event)
     {
         if ("back".equals(event.getAction())) {
-            _ctx.clearPlaceView(this);
+            _ctx.getLocationDirector().leavePlace();
 
         } else if ("buy".equals(event.getAction())) {
             log.info("I'll take it!");
@@ -83,13 +90,19 @@ public class StoreView extends BWindow
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
-        // this is never actually called; the store is not a real place
+        // populate our salable goods
+        StoreObject stobj = (StoreObject)plobj;
+
+        // TODO: sort the goods by type
+        for (Iterator iter = stobj.goods.iterator(); iter.hasNext(); ) {
+            Good good = (Good)iter.next();
+            _goods.add(new BLabel(_msgs.xlate(good.getName())));
+        }
     }
 
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
-        // this is never actually called; the store is not a real place
     }
 
     @Override // documentation inherited
@@ -101,6 +114,7 @@ public class StoreView extends BWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
 
+    protected BContainer _goods;
     protected BLabel _descrip;
     protected BLabel _cost;
     protected BButton _buy;

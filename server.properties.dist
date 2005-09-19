@@ -25,6 +25,12 @@ server_root = /export/bang
 server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
 
 #
+# Indicates which town is handled by this server. Valid values:
+# frontier_town, indian_village, boom_town, ghost_town, city_of_gold.
+
+town_id = frontier_town
+
+#
 # The default database mapping; all other definitions will inherit from
 # this and need only be specified in cases where they differ from the
 # defaults

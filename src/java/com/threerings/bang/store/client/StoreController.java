@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.lobby.client;
+package com.threerings.bang.store.client;
 
 import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.client.PlaceView;
@@ -9,22 +9,18 @@ import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 
-import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.util.BangContext;
 
 /**
- * Manages the client side of the Bang! Saloon match-making interface.
+ * Manages the client side of the Bang! General Store.
  */
-public class LobbyController extends PlaceController
+public class StoreController extends PlaceController
 {
     // documentation inherited
     public void init (CrowdContext ctx, PlaceConfig config)
     {
         super.init(ctx, config);
-
-        // cast our references
         _ctx = (BangContext)ctx;
-        _config = (LobbyConfig)config;
     }
 
     // documentation inherited
@@ -36,10 +32,9 @@ public class LobbyController extends PlaceController
     // documentation inherited
     protected PlaceView createPlaceView (CrowdContext ctx)
     {
-        return (_view = new LobbyView((BangContext)ctx));
+        return (_view = new StoreView((BangContext)ctx));
     }
 
     protected BangContext _ctx;
-    protected LobbyConfig _config;
-    protected LobbyView _view;
+    protected StoreView _view;
 }
