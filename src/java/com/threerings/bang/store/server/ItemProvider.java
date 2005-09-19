@@ -35,7 +35,7 @@ public abstract class ItemProvider extends Provider
     protected void rollbackPersistentAction ()
         throws PersistenceException
     {
-        BangServer.itemrepo.deleteItem(_item, "provider_rollback");
+        BangServer.itemrepo.deleteItem(_item, "item_provider_rollback");
     }
 
     /** Creates the item that will be delivered by this provider. */

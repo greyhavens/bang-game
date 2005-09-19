@@ -58,6 +58,15 @@ public class CardItem extends Item
     }
 
     /**
+     * Adds a card to this collection. This is called when the player purchases
+     * a new pack of cards.
+     */
+    public void addCard ()
+    {
+        _quantity++;
+    }
+
+    /**
      * Returns a {@link Card} instance that can be used in a game. Note,
      * this does not deduct the card from this item, that will be done
      * later by a call to {@link #playCard} after the game manager has

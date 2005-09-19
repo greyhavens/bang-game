@@ -13,7 +13,7 @@ import com.threerings.presents.dobj.DSet;
  * The base class for all items in Bang! Howdy.
  */
 public abstract class Item
-    implements DSet.Entry
+    implements DSet.Entry, Cloneable
 {
     /**
      * Returns the key used to identify this item in a {@link DSet}.
@@ -124,10 +124,20 @@ public abstract class Item
         }
     }
 
-    // documentation inherited (Object)
+    @Override // documentation inherited
     public int hashCode ()
     {
         return _itemId.intValue();
+    }
+
+    @Override // documentation inherited
+    public Object clone ()
+    {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException cnse) {
+            throw new RuntimeException("The sky is falling!");
+        }
     }
 
     /**
