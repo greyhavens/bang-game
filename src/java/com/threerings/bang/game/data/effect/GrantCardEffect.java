@@ -6,14 +6,10 @@ package com.threerings.bang.game.data.effect;
 import java.util.Iterator;
 
 import com.samskivert.util.IntIntMap;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.card.AreaRepair;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
-import com.threerings.bang.game.data.card.DustDevil;
-import com.threerings.bang.game.data.card.Missile;
-import com.threerings.bang.game.data.card.Staredown;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -42,20 +38,13 @@ public class GrantCardEffect extends Effect
                 have++;
             }
         }
-        if (have >= 3) {
+        if (have >= GameCodes.MAX_CARDS) {
             log.info("No soup four you! " + player + ".");
             return;
         }
 
-        // TODO: select the card more sophisticatedly
-        Card card;
-        switch (RandomUtil.getInt(4)) {
-        default: case 0: card = new Missile(); break;
-        case 1: card = new AreaRepair(); break;
-        case 2: card = new DustDevil(); break;
-        case 3: card = new Staredown(); break;
-        }
-
+        // select a random card
+        Card card = Card.newCard(Card.selectRandomCard(bangobj.townId, true));
         card.init(bangobj, player);
         bangobj.addToCards(card);
     }

@@ -3,13 +3,12 @@
 
 package com.threerings.bang.data;
 
+import java.util.Iterator;
+
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.TokenRing;
-
-import com.threerings.bang.data.IntStat;
-import com.threerings.bang.data.Stat;
 
 /**
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
@@ -59,6 +58,21 @@ public class BangUserObject extends BodyObject
 
     /** Statistics tracked for this player. */
     public StatSet stats;
+
+    /**
+     * Returns the purse owned by this player or the default purse if the
+     * player does not yet have one.
+     */
+    public Purse getPurse ()
+    {
+        for (Iterator iter = inventory.iterator(); iter.hasNext(); ) {
+            Object item = iter.next();
+            if (item instanceof Purse) {
+                return (Purse)item;
+            }
+        }
+        return Purse.DEFAULT_PURSE;
+    }
 
     @Override // documentation inherited
     public TokenRing getTokens ()

@@ -31,4 +31,7 @@ public interface GameCodes extends InvocationCodes
 
     /** Defines the maximum team size (not counting one's big shot). */
     public static final int MAX_TEAM_SIZE = 6;
+
+    /** The maximum number of cards a player can hold in a game. */
+    public static final int MAX_CARDS = 3;
 }

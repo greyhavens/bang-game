@@ -6,6 +6,8 @@ package com.threerings.bang.game.data.card;
 import java.util.HashMap;
 
 import com.threerings.io.SimpleStreamableObject;
+import com.threerings.util.RandomUtil;
+
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.game.data.BangObject;
@@ -26,6 +28,20 @@ public abstract class Card extends SimpleStreamableObject
 
     /** The player index of the player that is holding this card. */
     public int owner;
+
+    /**
+     * Selects a random card from the set of all available cards for the
+     * specified town.
+     *
+     * @param inGame whether this card will immediately be deployed in a game
+     * or not (not generally means the card is being sold in a pack).
+     */
+    public static String selectRandomCard (String townId, boolean inGame)
+    {
+        // TODO: select the card more sophisticatedly
+        return (String)RandomUtil.pickRandom(
+            _cards.keySet().iterator(), _cards.size());
+    }
 
     /**
      * Creates a card of the specified type. Returns null if no card
