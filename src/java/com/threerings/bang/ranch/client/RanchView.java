@@ -23,6 +23,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.TownView;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -44,6 +45,8 @@ public class RanchView extends BWindow
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
         _msgs = ctx.getMessageManager().getBundle("ranch");
 
+        String townId = _ctx.getUserObject().townId;
+
         // we cover the whole screen
         setBounds(0, 0, ctx.getDisplay().getWidth(),
                   ctx.getDisplay().getHeight());
@@ -63,14 +66,13 @@ public class RanchView extends BWindow
 
         // ...recruitable big shots...
         _recruits = new UnitPalette(ctx, _inspector);
-        _recruits.setUnits(UnitConfig.getTownUnits(BangCodes.FRONTIER_TOWN,
-                                                   UnitConfig.Rank.BIGSHOT));
+        _recruits.setUnits(UnitConfig.getTownUnits(
+                               townId, UnitConfig.Rank.BIGSHOT));
         _tabs.addTab(_msgs.get("t.recruits"), _recruits);
 
         // ...normal units...
         _units = new UnitPalette(ctx, _inspector);
-        _units.setUnits(UnitConfig.getTownUnits(BangCodes.FRONTIER_TOWN,
-                                                UnitConfig.Rank.NORMAL));
+        _units.setUnits(UnitConfig.getTownUnits(townId, UnitConfig.Rank.NORMAL));
         _tabs.addTab(_msgs.get("t.units"), _units);
 
         // TODO: and special units?
@@ -136,7 +138,10 @@ public class RanchView extends BWindow
             _ctx.getClient().requireService(RanchService.class);
         RanchService.ResultListener rl = new RanchService.ResultListener() {
             public void requestProcessed (Object result) {
-                log.info("Recruited " + result);
+                _status.setText(_msgs.get("m.recruited_bigshot"));
+                _tabs.selectTab(0);
+                BigShotItem unit = (BigShotItem)result;
+                _bigshots.selectUnit(unit.getItemId());
             }
             public void requestFailed (String cause) {
                 _status.setText(_msgs.xlate(cause));

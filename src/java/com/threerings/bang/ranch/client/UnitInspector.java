@@ -14,6 +14,8 @@ import com.jmex.bui.layout.GroupLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -22,6 +24,7 @@ import com.threerings.bang.util.BangContext;
  * the unit's statistics below.
  */
 public class UnitInspector extends BContainer
+    implements IconPalette.Inspector
 {
     public UnitInspector (BangContext ctx)
     {
@@ -82,6 +85,13 @@ public class UnitInspector extends BContainer
         }
         _astats.setText(_msgs.get("m.attack", abuf.toString()));
         _dstats.setText(_msgs.get("m.defense", dbuf.toString()));
+    }
+
+    // documentation inherited from interface IconPalette.Inspector
+    public void iconSelected (SelectableIcon icon)
+    {
+        UnitIcon uicon = (UnitIcon)icon;
+        setUnit(uicon.getItemId(), uicon.getUnit());
     }
 
     protected void noteAdjust (StringBuffer buf, int adjust, String key)

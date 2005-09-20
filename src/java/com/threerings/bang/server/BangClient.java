@@ -50,8 +50,8 @@ public class BangClient extends CrowdClient
             user.tokens = new TokenRing();
         }
 
-        // TEMP: start all players in frontier town for now
-        user.townId = BangCodes.FRONTIER_TOWN;
+        // configure the player in the town for this server
+        user.townId = ServerConfig.getTownId();
     }
 
     @Override // documentation inherited

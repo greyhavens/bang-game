@@ -267,8 +267,8 @@ public class BangManager extends GameManager
         _boards = BangServer.boardmgr.selectBoards(
             _bconfig.players.length, _bconfig.scenarios, isTest());
 
-        // TODO: get the town info from somewhere
-        _bangobj.setTownId(BangCodes.FRONTIER_TOWN);
+        // configure the town associated with this server
+        _bangobj.setTownId(ServerConfig.getTownId());
 
         // create our per-player arrays
         int slots = getPlayerSlots();

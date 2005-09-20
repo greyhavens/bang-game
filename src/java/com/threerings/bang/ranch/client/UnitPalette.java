@@ -14,6 +14,7 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
@@ -23,15 +24,12 @@ import com.threerings.bang.util.BangContext;
  * Displays a grid of units, one of which can be selected at any given
  * time.
  */
-public class UnitPalette extends BContainer
+public class UnitPalette extends IconPalette
 {
     public UnitPalette (BangContext ctx, UnitInspector inspector)
     {
-        super(new TableLayout(4, 5, 5));
-        setBorder(new EmptyBorder(5, 5, 5, 5));
-
+        super(inspector);
         _ctx = ctx;
-        _inspector = inspector;
     }
 
     /**
@@ -67,7 +65,21 @@ public class UnitPalette extends BContainer
      */
     public UnitIcon getSelectedUnit ()
     {
-        return _selection;
+        return (UnitIcon)_selection;
+    }
+
+    /**
+     * Selects the unit with the specified item id.
+     */
+    public void selectUnit (int itemId)
+    {
+        for (int ii = 0; ii < getComponentCount(); ii++) {
+            UnitIcon icon = (UnitIcon)getComponent(ii);
+            if (icon.getItemId() == itemId) {
+                icon.setSelected(true);
+                return;
+            }
+        }
     }
 
     /**
@@ -81,13 +93,6 @@ public class UnitPalette extends BContainer
             _user.removeListener(_invlistener);
             _user = null;
         }
-    }
-
-    @Override // documentation inherited
-    protected void wasRemoved ()
-    {
-        super.wasRemoved();
-        iconSelected(null);
     }
 
     protected void addUnit (BigShotItem unit)
@@ -104,25 +109,6 @@ public class UnitPalette extends BContainer
                 remove(icon);
                 return;
             }
-        }
-    }
-
-    protected void iconSelected (UnitIcon icon)
-    {
-        // note the new selection
-        _selection = icon;
-
-        // deselect all other icons
-        for (int ii = 0; ii < getComponentCount(); ii++) {
-            UnitIcon child = (UnitIcon)getComponent(ii);
-            if (child != icon) {
-                child.setSelected(false);
-            }
-        }
-
-        if (icon != null && _inspector != null) {
-            // inspect this unit
-            _inspector.setUnit(icon.getItemId(), icon.getUnit());
         }
     }
 
@@ -147,7 +133,5 @@ public class UnitPalette extends BContainer
     };
 
     protected BangContext _ctx;
-    protected UnitInspector _inspector;
     protected BangUserObject _user;
-    protected UnitIcon _selection;
 }
