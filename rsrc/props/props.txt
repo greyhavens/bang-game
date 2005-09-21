@@ -1,9 +1,13 @@
 buildings/general_store
 buildings/outhouse
-buildings/officebuildings/saloon
+buildings/office
+buildings/saloon
 buildings/jail
 natural/cactus1
 natural/cactus2
-natural/rocks1natural/cactus_roundnatural/tree_joshuanatural/tree_oak
+natural/rocks1
+natural/cactus_round
+natural/tree_joshua
+natural/tree_oak
 special/claim
 special/wagon
