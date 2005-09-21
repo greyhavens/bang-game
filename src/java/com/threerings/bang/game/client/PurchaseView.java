@@ -119,7 +119,6 @@ public class PurchaseView extends BDecoratedWindow
         _ready = new BButton(_msgs.get("m.ready"));
         _ready.setAction("ready");
         _ready.addListener(this);
-//         _ready.setEnabled(false);
         footer.add(_ready, GroupLayout.FIXED);
     }
 
@@ -142,6 +141,7 @@ public class PurchaseView extends BDecoratedWindow
             }
         }
         _tlabel.setText(_msgs.get("m.pv_cost", "" + _total));
+        _ready.setEnabled(_total <= _bangobj.funds[_pidx]);
     }
 
     // documentation inherited from interface ActionListener
@@ -168,7 +168,7 @@ public class PurchaseView extends BDecoratedWindow
             updateTotal();
 
         } else if (cmd.equals("ready")) {
-            // _ready.setEnabled(false);
+            _ready.setEnabled(false);
             ArrayList<String> units = new ArrayList<String>();
             for (int ii = 0; ii < _tconfigs.length; ii++) {
                 if (_tconfigs[ii] != null) {

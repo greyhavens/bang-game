@@ -61,7 +61,7 @@ public class PlayerStatusView extends BContainer
     public void wasAdded ()
     {
         BLookAndFeel lnf = getLookAndFeel().deriveLookAndFeel();
-        lnf.setForeground(JPIECE_COLORS[_pidx]);
+        lnf.setForeground(true, JPIECE_COLORS[_pidx]);
         _player.setLookAndFeel(lnf);
         super.wasAdded();
     }

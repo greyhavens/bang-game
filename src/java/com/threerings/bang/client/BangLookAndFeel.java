@@ -26,6 +26,7 @@ public class BangLookAndFeel extends BLookAndFeel
         int dx = 0, dy = 0;
         switch (state) {
         case BToggleButton.SELECTED:
+        case BButton.DISABLED:
         case BButton.DOWN:
             path = "rsrc/ui/button_down.png";
             dx = -1;

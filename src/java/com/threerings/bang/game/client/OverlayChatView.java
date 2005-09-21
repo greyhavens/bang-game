@@ -172,12 +172,12 @@ public class OverlayChatView extends BWindow
         int lidx = _history.length-1;
         for (int ii = 0; ii < lidx; ii++) {
             _stamps[ii] = _stamps[ii+1];
-            _lnfs[ii].setForeground(_lnfs[ii+1].getForeground());
+            _lnfs[ii].setForeground(true, _lnfs[ii+1].getForeground(true));
             _history[ii].setText(_history[ii+1].getText());
         }
 
         // now stuff this message at the bottom
-        _lnfs[lidx].setForeground(color);
+        _lnfs[lidx].setForeground(true, color);
         _history[lidx].setText(text);
         _stamps[lidx] = System.currentTimeMillis();
     }

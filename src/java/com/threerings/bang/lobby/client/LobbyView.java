@@ -115,9 +115,9 @@ public class LobbyView extends BWindow
         blist.add(new BLabel(""));
         blist.add(new BLabel(""));
 
-        BButton create = new BButton(msgs.get("m.create"), "create");
-        create.addListener(this);
-        blist.add(create);
+        _create = new BButton(msgs.get("m.create"), "create");
+        _create.addListener(this);
+        blist.add(_create);
         plist.add(blist, BorderLayout.SOUTH);
         top.add(plist);
 
@@ -279,8 +279,8 @@ public class LobbyView extends BWindow
     // documentation inherited from interface SeatednessObserver
     public void seatednessDidChange (boolean isSeated)
     {
-//         // update the create table button
-//         _create.setEnabled(!isSeated);
+        // update the create table button
+        _create.setEnabled(!isSeated);
     }
 
     /**
@@ -328,6 +328,7 @@ public class LobbyView extends BWindow
     protected ChatView _chat;
     protected TableDirector _tbldtr;
 
+    protected BButton _create;
     protected BComboBox _seats, _tsize, _rounds, _scenarios;
     protected BContainer _penders;
     protected BContainer _inplay;

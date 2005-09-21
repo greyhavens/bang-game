@@ -118,22 +118,22 @@ public class TableItem extends BContainer
         for (int i = 0; i < slength; i++) {
             if (table.occupants[i] == null) {
                 _seats[i].setText(_msgs.get("m.join"));
-//                 _seats[i].setEnabled(!isSeated);
+                _seats[i].setEnabled(!isSeated);
                 _seats[i].setAction("join");
 
             } else if (table.occupants[i].equals(_self) &&
                        !table.inPlay()) {
                 _seats[i].setText(_msgs.get("m.leave"));
-//                 _seats[i].setEnabled(true);
+                _seats[i].setEnabled(true);
                 _seats[i].setAction("leave");
 
             } else {
                 _seats[i].setText(table.occupants[i].toString());
-//                 _seats[i].setEnabled(false);
+                _seats[i].setEnabled(false);
             }
         }
 
-//         // show or hide our "go" button appropriately
+        // show or hide our "go" button appropriately
 //         _goButton.setVisible(table.gameOid != -1);
     }
 
