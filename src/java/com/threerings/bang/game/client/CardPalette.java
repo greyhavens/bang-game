@@ -52,4 +52,10 @@ public class CardPalette extends IconPalette
             add(new BLabel(msg));
         }
     }
+
+    public CardItem getSelectedCard (int index)
+    {
+        CardIcon icon = (CardIcon)getSelectedIcon(index);
+        return icon == null ? null : icon.item;
+    }
 }

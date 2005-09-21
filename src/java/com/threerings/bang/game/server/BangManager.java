@@ -35,6 +35,7 @@ import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.server.BangServer;
@@ -91,14 +92,21 @@ public class BangManager extends GameManager
         }
 
         // fetch the requisite items from their inventory
-        BigShotItem unit = (BigShotItem)user.inventory.get(bigShotId);
         Card[] cards = null;
         if (_bangobj.roundId == 0 && cardIds != null) {
             cards = new Card[cardIds.length];
             for (int ii = 0; ii < cardIds.length; ii++) {
-                // TODO: convert card items to cards
+                CardItem item = (CardItem)user.inventory.get(cardIds[ii]);
+                // no magicking up cards
+                if (item.getQuantity() <= 0) {
+                    continue;
+                }
+                cards[ii] = item.getCard();
+                cards[ii].init(_bangobj, pidx);
+                _scards.put(cards[ii].cardId, new StartingCard(pidx, item));
             }
         }
+        BigShotItem unit = (BigShotItem)user.inventory.get(bigShotId);
         selectStarters(pidx, unit, cards);
     }
 
@@ -226,6 +234,12 @@ public class BangManager extends GameManager
         Effect effect = card.activate(x, y);
         deployEffect(card.owner, effect);
 
+        // if this card was a starting card, note that it was consumed
+        StartingCard scard = (StartingCard)_scards.get(cardId);
+        if (scard != null) {
+            scard.played = true;
+        }
+
         // note that this player played a card
         _bangobj.stats[card.owner].incrementStat(Stat.Type.CARDS_PLAYED, 1);
     }
@@ -307,7 +321,7 @@ public class BangManager extends GameManager
         _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);
         _scenario = ScenarioFactory.createScenario(_bangobj.scenarioId);
 
-        // clear out the readiness status of each player
+        // clear out the various per-player data structures
         _ready.clear();
         _purchases.clear();
 
@@ -397,8 +411,10 @@ public class BangManager extends GameManager
             // if they supplied cards, fill those in
             if (cards != null) {
                 for (int ii = 0; ii < cards.length; ii++) {
-                    cards[ii].init(_bangobj, pidx);
-                    _bangobj.addToCards(cards[ii]);
+                    if (cards[ii] != null) {
+                        cards[ii].init(_bangobj, pidx);
+                        _bangobj.addToCards(cards[ii]);
+                    }
                 }
             }
 
@@ -666,6 +682,24 @@ public class BangManager extends GameManager
     protected void gameDidEnd ()
     {
         super.gameDidEnd();
+
+        // process any played cards
+        ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
+        ArrayList<StartingCard> removals = new ArrayList<StartingCard>();
+        for (Iterator iter = _scards.values().iterator(); iter.hasNext(); ) {
+            StartingCard scard = (StartingCard)iter.next();
+            if (!scard.played) {
+                continue;
+            }
+            if (scard.item.playCard()) {
+                removals.add(scard);
+            } else {
+                updates.add(scard);
+            }
+        }
+        if (updates.size() > 0 || removals.size() > 0) {
+            notePlayedCards(updates, removals);
+        }
 
         // note the duration of the game (in minutes)
         int gameTime = (int)(System.currentTimeMillis() - _startStamp) / 60000;
@@ -1106,6 +1140,54 @@ public class BangManager extends GameManager
         });
     }
 
+    /**
+     * Flushes any updated card items to the database and effects any removals
+     * due to the last card being played from a player's inventory.
+     */
+    protected void notePlayedCards (final ArrayList<StartingCard> updates,
+                                    final ArrayList<StartingCard> removals)
+    {
+        log.info("Noting played cards [updates=" + updates.size() +
+                 ", removals=" + removals.size() + "].");
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                for (StartingCard scard : updates) {
+                    try {
+                        BangServer.itemrepo.updateItem(scard.item);
+                    } catch (PersistenceException pe) {
+                        log.log(Level.WARNING, "Failed to update played card " +
+                                "[item=" + scard.item + "]", pe);
+                    }
+                }
+                for (StartingCard scard : removals) {
+                    try {
+                        BangServer.itemrepo.deleteItem(
+                            scard.item, "played_last_card");
+                    } catch (PersistenceException pe) {
+                        log.log(Level.WARNING, "Failed to delete played card " +
+                                "[item=" + scard.item + "]", pe);
+                    }
+                }
+                return true;
+            }
+
+            public void handleResult () {
+                for (StartingCard scard : updates) {
+                    BangUserObject user = (BangUserObject)getPlayer(scard.pidx);
+                    if (user != null) {
+                        user.updateInventory(scard.item);
+                    }
+                }
+                for (StartingCard scard : removals) {
+                    BangUserObject user = (BangUserObject)getPlayer(scard.pidx);
+                    if (user != null) {
+                        user.removeFromInventory(scard.item.getKey());
+                    }
+                }
+            }
+        });
+    }
+
     /** Used to accelerate things when testing. */
     protected long getBaseTick ()
     {
@@ -1125,6 +1207,20 @@ public class BangManager extends GameManager
         // if it's a two player game and one player is an AI, we're
         // testing
         return (_AIs != null && getPlayerSlots() == 2);
+    }
+
+    /** Used to track cards from a player's inventory and whether or not they
+     * are actually used during a game. */
+    protected static class StartingCard
+    {
+        public int pidx;
+        public CardItem item;
+        public boolean played;
+
+        public StartingCard (int pidx, CardItem item) {
+            this.pidx = pidx;
+            this.item = item;
+        }
     }
 
     /** Triggers our board tick once every N seconds. */
@@ -1198,9 +1294,8 @@ public class BangManager extends GameManager
     /** Used to track effects during a move. */
     protected ArrayList<Effect> _effects = new ArrayList<Effect>();
 
-    /** The item ids of all cards used by players in this game. These will
-     * be destroyed if the game completes normally. */
-    protected ArrayIntSet _usedCards = new ArrayIntSet();
+    /** Maps card id to a {@link StartingCard} record. */
+    protected HashIntMap _scards = new HashIntMap();
 
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;

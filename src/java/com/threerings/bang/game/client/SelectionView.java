@@ -13,6 +13,7 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
+import com.samskivert.util.ArrayIntSet;
 
 import com.threerings.util.MessageBundle;
 
@@ -24,6 +25,7 @@ import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.ranch.client.UnitPalette;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -78,7 +80,6 @@ public class SelectionView extends BDecoratedWindow
         BContainer footer = new BContainer(new BorderLayout(10, 0));
         _ready = new BButton(_msgs.get("m.ready"));
         _ready.addListener(this);
-//         _ready.setEnabled(false);
         footer.add(_ready, BorderLayout.EAST);
         add(footer, GroupLayout.FIXED);
     }
@@ -91,10 +92,21 @@ public class SelectionView extends BDecoratedWindow
             return;
         }
 
-        // TODO: allow for selection of cards...
+        // don't allow double clickage
+        _ready.setEnabled(false);
+
+        // determine which cards are selected
+        ArrayIntSet cardIds = new ArrayIntSet();
+        for (int ii = 0; ii < GameCodes.MAX_CARDS; ii++) {
+            CardItem item = _cards.getSelectedCard(ii);
+            if (item != null) {
+                cardIds.add(item.getItemId());
+            }
+        }
 
         int bigShotId = icon.getItemId();
-        _bangobj.service.selectStarters(_ctx.getClient(), bigShotId, null);
+        _bangobj.service.selectStarters(
+            _ctx.getClient(), bigShotId, cardIds.toIntArray());
     }
 
     @Override // documentation inherited

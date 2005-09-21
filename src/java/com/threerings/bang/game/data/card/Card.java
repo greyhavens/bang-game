@@ -82,7 +82,7 @@ public abstract class Card extends SimpleStreamableObject
     public void init (BangObject bangobj, int owner)
     {
         _key = null;
-        cardId = 0;
+        cardId = ++_nextCardId;
         this.owner = owner;
         getKey();
     }
@@ -91,9 +91,6 @@ public abstract class Card extends SimpleStreamableObject
     public Comparable getKey ()
     {
         if (_key == null) {
-            if (cardId == 0) {
-                cardId = ++_nextCardId;
-            }
             _key = new Integer(cardId);
         }
         return _key;
