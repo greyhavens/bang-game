@@ -45,8 +45,8 @@ public class SelectableIcon extends BToggleButton
         // configure our border
         setBorder(_selected ? _selborder : _unborder);
 
-        if (_selected && _parent instanceof IconPalette) {
-            ((IconPalette)_parent).iconSelected(this);
+        if (_parent instanceof IconPalette) {
+            ((IconPalette)_parent).iconUpdated(this, _selected);
         }
     }
 

@@ -28,7 +28,7 @@ public class UnitPalette extends IconPalette
 {
     public UnitPalette (BangContext ctx, UnitInspector inspector, int columns)
     {
-        super(inspector, columns);
+        super(inspector, columns, 1);
         _ctx = ctx;
     }
 
@@ -65,7 +65,7 @@ public class UnitPalette extends IconPalette
      */
     public UnitIcon getSelectedUnit ()
     {
-        return (UnitIcon)_selection;
+        return (UnitIcon)getSelectedIcon();
     }
 
     /**

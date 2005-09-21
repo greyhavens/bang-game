@@ -10,12 +10,15 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BlankIcon;
+import com.jmex.bui.ImageIcon;
 import com.jmex.bui.text.AWTTextFactory;
 
 import com.threerings.openal.ClipProvider;
 import com.threerings.openal.WaveDataClipProvider;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -83,6 +86,19 @@ public class BangUI
             label.setIcon(_ctx.getModelCache().getModel(
                               "units", config.type).getIcon());
         }
+    }
+
+    /**
+     * Configures the supplied label to display the specified card.
+     */
+    public static void configCardLabel (BLabel label, CardItem card)
+    {
+        label.setOrientation(BLabel.VERTICAL);
+        label.setHorizontalAlignment(BLabel.CENTER);
+        String path = "cards/" + card.getType() + "/icon.png";
+        label.setIcon(new ImageIcon(_ctx.loadImage(path)));
+        String name = _ctx.xlate(BangCodes.CARDS_MSGS, "m." + card.getType());
+        label.setText(name + ": " + card.getQuantity());
     }
 
     /**

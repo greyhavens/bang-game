@@ -7,10 +7,12 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
@@ -64,10 +66,14 @@ public class SelectionView extends BDecoratedWindow
         add(createRoundHeader(ctx, config, bangobj), GroupLayout.FIXED);
         add(new BLabel(_msgs.get("m.select_bigshot")), GroupLayout.FIXED);
 
-        // create the big shots display
+        // create the big shot selection display
         _units = new UnitPalette(ctx, null, 4);
         _units.setUser(_ctx.getUserObject());
-        add(_units);
+        add(new BScrollPane(_units));
+
+        // create the card selection display
+        add(new BLabel(_msgs.get("m.select_cards")), GroupLayout.FIXED);
+        add(new BScrollPane(_cards = new CardPalette(ctx)));
 
         BContainer footer = new BContainer(new BorderLayout(10, 0));
         _ready = new BButton(_msgs.get("m.ready"));
@@ -92,6 +98,15 @@ public class SelectionView extends BDecoratedWindow
     }
 
     @Override // documentation inherited
+    public Dimension getPreferredSize ()
+    {
+        Dimension d = super.getPreferredSize();
+        // make sure we fit comfortably in the available height
+        d.height = Math.min(d.height, _ctx.getDisplay().getHeight() - 250);
+        return d;
+    }
+
+    @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
@@ -104,5 +119,6 @@ public class SelectionView extends BDecoratedWindow
     protected int _pidx;
 
     protected UnitPalette _units;
+    protected CardPalette _cards;
     protected BButton _ready;
 }
