@@ -3,6 +3,8 @@
 
 package com.threerings.bang.data;
 
+import com.threerings.bang.client.ItemIcon;
+
 /**
  * Represents a Big Shot unit owned by a player.
  */
@@ -37,6 +39,12 @@ public class BigShotItem extends Item
     public String getType ()
     {
         return _type;
+    }
+
+    @Override // documentation inherited
+    public ItemIcon createIcon ()
+    {
+        return null;
     }
 
     protected String _type;

@@ -46,6 +46,9 @@ public interface BangCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String GOODS_MSGS = "goods";
 
+    /** The message bundle identifier for our translation messages. */
+    public static final String CARDS_MSGS = "cards";
+
     /** An error code reported when a financial transaction cannot complete. */
     public static final String INSUFFICIENT_FUNDS =
         MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");

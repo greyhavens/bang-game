@@ -3,6 +3,9 @@
 
 package com.threerings.bang.data;
 
+import com.threerings.bang.client.ItemIcon;
+import com.threerings.bang.client.PurseIcon;
+
 /**
  * Enables a player to retain more money (per round) at the end of a game.
  */
@@ -10,6 +13,16 @@ public class Purse extends Item
 {
     /** The default purse, used when a player doesn't yet have one. */
     public static final Purse DEFAULT_PURSE = new Purse(-1, 0);
+
+    /** Provides text identifiers for the various purse types. */
+    public static final String[] PURSE_TYPES = {
+        "default", // not used
+        "frontier_purse",
+        "indian_purse",
+        "boom_purse",
+        "ghost_purse",
+        "gold_purse",
+    };
 
     /** The per-round-cash earned by the various purses. This is public so
      * that we can use this information when displaying the purses for
@@ -52,6 +65,12 @@ public class Purse extends Item
     public int getPerRoundCash ()
     {
         return PER_ROUND_CASH[_townIndex];
+    }
+
+    @Override // documentation inherited
+    public ItemIcon createIcon ()
+    {
+        return new PurseIcon();
     }
 
     protected int _townIndex;

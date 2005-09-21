@@ -26,9 +26,9 @@ import com.threerings.bang.util.BangContext;
  */
 public class UnitPalette extends IconPalette
 {
-    public UnitPalette (BangContext ctx, UnitInspector inspector)
+    public UnitPalette (BangContext ctx, UnitInspector inspector, int columns)
     {
-        super(inspector);
+        super(inspector, columns);
         _ctx = ctx;
     }
 

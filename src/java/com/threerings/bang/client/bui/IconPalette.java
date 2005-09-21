@@ -30,9 +30,9 @@ public class IconPalette extends BContainer
      * may be added via {@link #add} but they must derive from {@link
      * SelectableIcon}.
      */
-    public IconPalette (Inspector inspector)
+    public IconPalette (Inspector inspector, int columns)
     {
-        super(new TableLayout(4, 5, 5));
+        super(new TableLayout(columns, 5, 5));
         setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
                                      new EmptyBorder(5, 5, 5, 5)));
         _inspector = inspector;

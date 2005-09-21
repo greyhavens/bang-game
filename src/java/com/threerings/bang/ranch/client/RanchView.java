@@ -58,18 +58,18 @@ public class RanchView extends BWindow
         add(_tabs, BorderLayout.CENTER);
 
         // ...recruited big shots...
-        _bigshots = new UnitPalette(ctx, _inspector);
+        _bigshots = new UnitPalette(ctx, _inspector, 4);
         _bigshots.setUser(_ctx.getUserObject());
         _tabs.addTab(_msgs.get("t.bigshots"), _bigshots);
 
         // ...recruitable big shots...
-        _recruits = new UnitPalette(ctx, _inspector);
+        _recruits = new UnitPalette(ctx, _inspector, 4);
         _recruits.setUnits(UnitConfig.getTownUnits(
                                townId, UnitConfig.Rank.BIGSHOT));
         _tabs.addTab(_msgs.get("t.recruits"), _recruits);
 
         // ...normal units...
-        _units = new UnitPalette(ctx, _inspector);
+        _units = new UnitPalette(ctx, _inspector, 4);
         _units.setUnits(UnitConfig.getTownUnits(townId, UnitConfig.Rank.NORMAL));
         _tabs.addTab(_msgs.get("t.units"), _units);
 

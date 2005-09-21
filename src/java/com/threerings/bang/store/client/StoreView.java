@@ -74,6 +74,7 @@ public class StoreView extends BWindow
         _status.setPreferredSize(new Dimension(100, 100));
         _status.setBorder(new LineBorder(ColorRGBA.black));
         _status.setText(_msgs.get("m.intro_tip"));
+        _status.setLookAndFeel(BangUI.dtitleLNF);
         main.add(_status, GroupLayout.FIXED);
 
         BContainer mcont = GroupLayout.makeButtonBox(GroupLayout.LEFT);

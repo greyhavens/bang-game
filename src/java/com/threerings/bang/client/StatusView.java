@@ -61,10 +61,10 @@ public class StatusView extends BDecoratedWindow
         add(tabs);
 
         // add the inventory tab
-        tabs.addTab(_msgs.get("m.status_inventory"), createInventoryTab(user));
+        tabs.addTab(_msgs.get("m.status_inventory"), new InventoryPalette(ctx));
 
         // add the big shots tab
-        UnitPalette bigshots = new UnitPalette(ctx, null);
+        UnitPalette bigshots = new UnitPalette(ctx, null, 3);
         bigshots.setUser(user);
         tabs.addTab(_msgs.get("m.status_big_shots"), bigshots);
 
@@ -83,14 +83,6 @@ public class StatusView extends BDecoratedWindow
         }
         row.add(createButton("resume"), GroupLayout.FIXED);
         add(row, GroupLayout.FIXED);
-    }
-
-    protected BContainer createInventoryTab (BangUserObject user)
-    {
-        BContainer icont = new BContainer(new TableLayout(2, 5, 5));
-        icont.setBorder(new EmptyBorder(5, 5, 5, 5));
-        icont.add(new BLabel("Not yet implemented"));
-        return icont;
     }
 
     protected BContainer createBadgeTab (BangUserObject user)

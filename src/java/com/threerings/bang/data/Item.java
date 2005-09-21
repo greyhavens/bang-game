@@ -9,6 +9,8 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.client.ItemIcon;
+
 /**
  * The base class for all items in Bang! Howdy.
  */
@@ -55,6 +57,19 @@ public abstract class Item
     public void setOwnerId (int ownerId)
     {
         _ownerId = ownerId;
+    }
+
+    /**
+     * Creates an icon for use in displaying this item. The icon <em>must</em>
+     * be configured with the item and a reference to the client context via a
+     * subsequent call to {@link ItemIcon#setItem}. If this method returns
+     * null, it will be assumed that items of this type should not appear in
+     * the standard inventory displays (Big Shot items, for example, are
+     * handled specially, as perhaps will avatar items).
+     */
+    public ItemIcon createIcon ()
+    {
+        return new ItemIcon();
     }
 
     /**
@@ -140,9 +155,7 @@ public abstract class Item
         }
     }
 
-    /**
-     * Generates a string representation of this instance.
-     */
+    @Override // documentation inherited
     public String toString ()
     {
         StringBuffer buf = new StringBuffer("[");

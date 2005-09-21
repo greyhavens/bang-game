@@ -3,6 +3,8 @@
 
 package com.threerings.bang.data;
 
+import com.threerings.bang.client.CardItemIcon;
+import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.game.data.card.Card;
 
 /**
@@ -75,6 +77,12 @@ public class CardItem extends Item
     public Card getCard ()
     {
         return Card.newCard(_type);
+    }
+
+    @Override // documentation inherited
+    public ItemIcon createIcon ()
+    {
+        return new CardItemIcon();
     }
 
     protected String _type;

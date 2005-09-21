@@ -36,8 +36,8 @@ public abstract class FinancialAction extends Invoker.Unit
         if (_user.scrip < _scripCost || _user.gold < _goldCost) {
             throw new InvocationException(BangCodes.INSUFFICIENT_FUNDS);
         }
-        _user.scrip -= _scripCost;
-        _user.gold -= _goldCost;
+        _user.setScrip(_user.scrip - _scripCost);
+        _user.setGold(_user.gold - _goldCost);
 
         BangServer.invoker.postUnit(this);
     }
@@ -78,8 +78,8 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         if (_failed) {
             // return the scrip and gold to the user
-            _user.scrip += _scripCost;
-            _user.gold += _goldCost;
+            _user.setScrip(_user.scrip + _scripCost);
+            _user.setGold(_user.gold + _goldCost);
             actionFailed();
         } else {
             actionCompleted();

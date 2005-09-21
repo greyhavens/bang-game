@@ -20,7 +20,7 @@ public class PurseGood extends Good
      */
     public PurseGood (int townIndex, int scripCost, int goldCost)
     {
-        super(PURSE_TYPES[townIndex], scripCost, goldCost);
+        super(Purse.PURSE_TYPES[townIndex], scripCost, goldCost);
         _townIndex = townIndex;
     }
 
@@ -53,8 +53,4 @@ public class PurseGood extends Good
     }
 
     protected int _townIndex;
-
-    protected static final String[] PURSE_TYPES = {
-        "default" /* not used */, "frontier_purse", "indian_purse",
-        "boom_purse", "ghost_purse", "gold_purse" };
 }
