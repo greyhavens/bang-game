@@ -33,6 +33,17 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
+     * Returns the filename of the icon associated with this good. The default
+     * is based on the type of the good, but this can be overridden by
+     * specialized goods.
+     */
+    public String getIconPath ()
+    {
+//        return "goods/" + _type + ".png";
+        return "goods/default.png";
+    }
+
+    /**
      * Returns a fully qualified translatable string indicating the name
      * of this good.
      */
@@ -48,21 +59,21 @@ public abstract class Good extends SimpleStreamableObject
     public abstract String getTip ();
 
     /**
-     * Returns the cost of this good in gold coins. This is in addition to
-     * the scrip cost ({@link #getScripCost}).
-     */
-    public int getGoldCost ()
-    {
-        return _goldCost;
-    }
-
-    /**
      * Returns the cost of this good in scrip. This is in addition to the
      * gold cost ({@link #getGoldCost}).
      */
     public int getScripCost ()
     {
         return _scripCost;
+    }
+
+    /**
+     * Returns the cost of this good in gold coins. This is in addition to
+     * the scrip cost ({@link #getScripCost}).
+     */
+    public int getGoldCost ()
+    {
+        return _goldCost;
     }
 
     /**
@@ -90,14 +101,14 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /** Creates a good of the specified type. */
-    protected Good (String type, int goldCost, int scripCost)
+    protected Good (String type, int scripCost, int goldCost)
     {
         _type = type;
-        _goldCost = goldCost;
         _scripCost = scripCost;
+        _goldCost = goldCost;
     }
 
     protected String _type;
-    protected int _goldCost;
     protected int _scripCost;
+    protected int _goldCost;
 }

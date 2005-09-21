@@ -3,8 +3,12 @@
 
 package com.threerings.bang.client.bui;
 
+import com.jme.renderer.ColorRGBA;
+
 import com.jmex.bui.BContainer;
+import com.jmex.bui.border.CompoundBorder;
 import com.jmex.bui.border.EmptyBorder;
+import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.layout.TableLayout;
 
 /**
@@ -29,7 +33,8 @@ public class IconPalette extends BContainer
     public IconPalette (Inspector inspector)
     {
         super(new TableLayout(4, 5, 5));
-        setBorder(new EmptyBorder(5, 5, 5, 5));
+        setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
+                                     new EmptyBorder(5, 5, 5, 5)));
         _inspector = inspector;
     }
 

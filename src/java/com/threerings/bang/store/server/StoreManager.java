@@ -67,6 +67,13 @@ public class StoreManager extends PlaceManager
     }
 
     @Override // documentation inherited
+    protected long idleUnloadPeriod ()
+    {
+        // we don't want to unload
+        return 0L;
+    }
+
+    @Override // documentation inherited
     protected void didInit ()
     {
         super.didInit();

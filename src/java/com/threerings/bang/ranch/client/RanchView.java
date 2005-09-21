@@ -11,7 +11,6 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -56,7 +55,6 @@ public class RanchView extends BWindow
 
         // center panel: tabbed view with...
         _tabs = new BTabbedPane();
-        _tabs.setBorder(new LineBorder(ColorRGBA.black));
         add(_tabs, BorderLayout.CENTER);
 
         // ...recruited big shots...

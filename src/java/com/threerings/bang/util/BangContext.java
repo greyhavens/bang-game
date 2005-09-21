@@ -74,6 +74,7 @@ public abstract class BangContext
      */
     public BufferedImage loadImage (String rsrcPath)
     {
+        // TODO: implement an image cache
         try {
             return ImageIO.read(getResourceManager().getImageResource(rsrcPath));
         } catch (IOException ioe) {
