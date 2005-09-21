@@ -52,7 +52,7 @@ public class ClaimSprite extends PropSprite
             _tstate.setTexture(tex);
             _counter.updateRenderState();
             _dnuggets = claim.nuggets;
-            _counter.setForceCull(false);
+            _counter.setCullMode(CULL_DYNAMIC);
         }
     }
 
@@ -74,7 +74,7 @@ public class ClaimSprite extends PropSprite
         // TODO: account properly for the height of the claim model
         bbn.setLocalTranslation(new Vector3f(0, 0, 3*TILE_SIZE/2));
         attachChild(bbn);
-        _counter.setForceCull(true);
+        _counter.setCullMode(CULL_ALWAYS);
     }
 
     protected Quad _counter;

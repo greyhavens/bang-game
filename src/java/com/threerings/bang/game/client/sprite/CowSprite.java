@@ -59,11 +59,11 @@ public class CowSprite extends MobileSprite
     protected void configureOwnerColors ()
     {
         if (_piece.owner < 0) {
-            _ownquad.setForceCull(true);
+            _ownquad.setCullMode(CULL_ALWAYS);
         } else {
             _ownquad.setSolidColor(JPIECE_COLORS[_piece.owner]);
             _ownquad.updateRenderState();
-            _ownquad.setForceCull(false);
+            _ownquad.setCullMode(CULL_DYNAMIC);
         }
     }
 

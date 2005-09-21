@@ -44,7 +44,7 @@ public abstract class ParticleEffectViz extends EffectViz
             new Vector3f(spos.x, spos.y, spos.z + TILE_SIZE/2));
         _pmgr.forceRespawn();
         _view.getPieceNode().attachChild(_pmgr.getParticles());
-        _pmgr.getParticles().setForceView(true);
+        _pmgr.getParticles().setCullMode(Node.CULL_NEVER);
 
         // finally note that the effect was displayed
         effectDisplayed();

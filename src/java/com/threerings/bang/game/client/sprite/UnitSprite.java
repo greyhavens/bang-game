@@ -47,7 +47,7 @@ public class UnitSprite extends MobileSprite
      */
     public void setHovered (boolean hovered)
     {
-        _hovquad.setForceCull(!hovered);
+        _hovquad.setCullMode(hovered ? CULL_DYNAMIC : CULL_ALWAYS);
     }
 
     /**
@@ -57,7 +57,7 @@ public class UnitSprite extends MobileSprite
     {
         if (_pendingTick == -1) {
             _tgtquad.setSolidColor(ColorRGBA.white);
-            _tgtquad.setForceCull(!targeted);
+            _tgtquad.setCullMode(targeted ? CULL_DYNAMIC : CULL_ALWAYS);
         }
     }
 
@@ -75,7 +75,7 @@ public class UnitSprite extends MobileSprite
         } else {
             _pendingTick = -1;
         }
-        _tgtquad.setForceCull(!pending);
+        _tgtquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
     }
 
     /**
@@ -84,7 +84,7 @@ public class UnitSprite extends MobileSprite
      */
     public void setPendingAction (boolean pending)
     {
-        _pendquad.setForceCull(!pending);
+        _pendquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
     }
 
     @Override // documentation inherited
@@ -101,15 +101,15 @@ public class UnitSprite extends MobileSprite
         }
 
         // update our status display
-        _status.setForceCull(!unit.isAlive());
+        _status.setCullMode(unit.isAlive() ? CULL_DYNAMIC : CULL_ALWAYS);
         if ((ticks = unit.ticksUntilMovable(_tick)) > 0) {
             _ticks.setRenderState(_ticktex[Math.max(0, 4-ticks)]);
             _ticks.updateRenderState();
-            _movable.setForceCull(true);
+            _movable.setCullMode(CULL_ALWAYS);
         } else {
             _ticks.setRenderState(_ticktex[4]);
             _ticks.updateRenderState();
-            _movable.setForceCull(false);
+            _movable.setCullMode(CULL_DYNAMIC);
         }
 
         // update our colors in the event that our owner changes
@@ -123,12 +123,12 @@ public class UnitSprite extends MobileSprite
         }
 
         // update our icon if necessary
-        if (unit.benuggeted && _icon.isForceCulled()) {
+        if (unit.benuggeted && _icon.getCullMode() == CULL_ALWAYS) {
             _icon.setRenderState(_nugtex);
             _icon.updateRenderState();
-            _icon.setForceCull(false);
-        } else if (!unit.benuggeted && !_icon.isForceCulled()) {
-            _icon.setForceCull(true);
+            _icon.setCullMode(CULL_DYNAMIC);
+        } else if (!unit.benuggeted && _icon.getCullMode() != CULL_ALWAYS) {
+            _icon.setCullMode(CULL_ALWAYS);
         }
     }
 
@@ -151,7 +151,7 @@ public class UnitSprite extends MobileSprite
         _hovquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _hovquad.setLocalTranslation(new Vector3f(0, 0, 0.2f));
         attachChild(_hovquad);
-        _hovquad.setForceCull(true);
+        _hovquad.setCullMode(CULL_ALWAYS);
 
         // this composite of icons combines to display our status
         _status = new StatusNode();
@@ -182,7 +182,7 @@ public class UnitSprite extends MobileSprite
         _movable.updateRenderState();
         _status.attachChild(_movable);
         attachChild(_status);
-        _movable.setForceCull(tick > 0);
+        _movable.setCullMode(tick > 0 ? CULL_ALWAYS : CULL_DYNAMIC);
 
         // configure our colors
         configureOwnerColors();
@@ -200,7 +200,7 @@ public class UnitSprite extends MobileSprite
         bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
         bbn.attachChild(_tgtquad);
         attachChild(bbn);
-        _tgtquad.setForceCull(true);
+        _tgtquad.setCullMode(CULL_ALWAYS);
 
         // this icon is displayed when we have a pending action queued
         _pendquad = RenderUtil.createIcon(5, 5);
@@ -213,7 +213,7 @@ public class UnitSprite extends MobileSprite
         bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
         bbn.attachChild(_pendquad);
         attachChild(bbn);
-        _pendquad.setForceCull(true);
+        _pendquad.setCullMode(CULL_ALWAYS);
 
         // this icon is displayed when we are modified in some way (we're
         // carrying a nugget, for example)
@@ -226,7 +226,7 @@ public class UnitSprite extends MobileSprite
         bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
         bbn.attachChild(_icon);
         attachChild(bbn);
-        _icon.setForceCull(true);
+        _icon.setCullMode(CULL_ALWAYS);
     }
 
     @Override // documentation inherited
