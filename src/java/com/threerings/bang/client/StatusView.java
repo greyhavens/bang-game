@@ -3,21 +3,24 @@
 
 package com.threerings.bang.client;
 
+import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTabbedPane;
+import com.jmex.bui.border.CompoundBorder;
 import com.jmex.bui.border.EmptyBorder;
+import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
-import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.ranch.client.UnitPalette;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangUserObject;
@@ -46,6 +49,7 @@ public class StatusView extends BDecoratedWindow
 
         BangUserObject user = ctx.getUserObject();
         BContainer row = new BContainer(GroupLayout.makeHStretch());
+        row.setLookAndFeel(BangUI.dtitleLNF);
         row.add(new BLabel(user.username.toString()));
         BLabel town = new BLabel(_msgs.get("m." + user.townId));
         town.setHorizontalAlignment(BLabel.RIGHT);
@@ -88,7 +92,8 @@ public class StatusView extends BDecoratedWindow
     protected BContainer createBadgeTab (BangUserObject user)
     {
         BContainer bcont = new BContainer(new TableLayout(2, 5, 5));
-        bcont.setBorder(new EmptyBorder(5, 5, 5, 5));
+        bcont.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
+                                           new EmptyBorder(5, 5, 5, 5)));
         bcont.add(new BLabel("Not yet implemented"));
         return bcont;
     }
@@ -96,7 +101,8 @@ public class StatusView extends BDecoratedWindow
     protected BContainer createStatsTab (BangUserObject user)
     {
         BContainer scont = new BContainer(new TableLayout(2, 5, 5));
-        scont.setBorder(new EmptyBorder(5, 5, 5, 5));
+        scont.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
+                                           new EmptyBorder(5, 5, 5, 5)));
         Stat[] stats = (Stat[])user.stats.toArray(new Stat[user.stats.size()]);
         // TODO: sort on translated key
         for (int ii = 0; ii < stats.length; ii++) {
