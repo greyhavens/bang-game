@@ -101,6 +101,15 @@ public class CardPackProvider extends Provider
     @Override // documentation inherited
     protected void actionCompleted ()
     {
+        // broadcast the update to the player's inventory
+        for (CardItem item : _items.values()) {
+            if (_user.inventory.contains(item)) {
+                _user.updateInventory(item);
+            } else {
+                _user.addToInventory(item);
+            }
+        }
+
         // send a custom message to their user object detailing the cards
         // they just received so that they can be nicely displayed
         _user.postMessage(CardPackGood.PURCHASED_CARDS, new Object[] { _cards});

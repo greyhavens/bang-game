@@ -29,23 +29,43 @@ public class InventoryPalette extends BContainer
         super(new TableLayout(3, 5, 5));
         setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
                                      new EmptyBorder(5, 5, 5, 5)));
+        _ctx = ctx;
+    }
 
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // populate our item display every time we are shown as we may be
+        // hidden, the player's inventory updated then reshown again
         int added = 0;
-        BangUserObject user = ctx.getUserObject();
+        BangUserObject user = _ctx.getUserObject();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Item item = (Item)iter.next();
             ItemIcon icon = item.createIcon();
             if (icon == null) {
                 continue;
             }
-            icon.setItem(ctx, item);
+            icon.setItem(_ctx, item);
             add(icon);
             added++;
         }
 
         if (added == 0) {
-            String msg = ctx.xlate(BangCodes.BANG_MSGS, "m.status_noinventory");
+            String msg = _ctx.xlate(BangCodes.BANG_MSGS, "m.status_noinventory");
             add(new BLabel(msg));
         }
     }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        // clear out our item display
+        removeAll();
+    }
+
+    protected BangContext _ctx;
 }

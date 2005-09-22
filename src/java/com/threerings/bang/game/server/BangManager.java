@@ -101,6 +101,7 @@ public class BangManager extends GameManager
                 if (item.getQuantity() <= 0) {
                     continue;
                 }
+                // TODO: get pissy if they try to use the same card twice
                 cards[ii] = item.getCard();
                 cards[ii].init(_bangobj, pidx);
                 _scards.put(cards[ii].cardId, new StartingCard(pidx, item));
@@ -412,7 +413,6 @@ public class BangManager extends GameManager
             if (cards != null) {
                 for (int ii = 0; ii < cards.length; ii++) {
                     if (cards[ii] != null) {
-                        cards[ii].init(_bangobj, pidx);
                         _bangobj.addToCards(cards[ii]);
                     }
                 }
@@ -1226,14 +1226,20 @@ public class BangManager extends GameManager
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
+            // cope if the game has been ended and destroyed since we were
+            // queued up for execution
+            if (!_bangobj.isActive() || !_bangobj.isInPlay()) {
+                return;
+            }
+
+            // update the game's tick counter
             int nextTick = (_bangobj.tick + 1) % Short.MAX_VALUE;
             _bangobj.setTick((short)nextTick);
-            if (_bangobj.isInPlay()) {
-                // queue ourselves up to expire in a time proportional to
-                // the average number of pieces per player
-                int avgPer = _bangobj.getAverageUnitCount();
-                _ticker.schedule(getBaseTick() * avgPer);
-            }
+
+            // queue ourselves up to expire in a time proportional to the
+            // average number of pieces per player
+            int avgPer = _bangobj.getAverageUnitCount();
+            _ticker.schedule(getBaseTick() * avgPer);
         }
     };
 
