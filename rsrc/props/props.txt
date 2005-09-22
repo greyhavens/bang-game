@@ -1,4 +1,5 @@
-buildings/bankbuildings/general_store
+buildings/bank
+buildings/general_store
 buildings/outhouse
 buildings/office
 buildings/saloon
