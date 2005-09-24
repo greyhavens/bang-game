@@ -3,6 +3,7 @@ buildings/general_store
 buildings/outhouse
 buildings/office
 buildings/saloon
+buildings/stables
 buildings/jail
 natural/cactus1
 natural/cactus2
