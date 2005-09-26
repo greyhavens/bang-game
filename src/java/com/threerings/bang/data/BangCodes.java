@@ -44,6 +44,9 @@ public interface BangCodes extends InvocationCodes
     public static final String BADGE_MSGS = "badge";
 
     /** The message bundle identifier for our translation messages. */
+    public static final String UNITS_MSGS = "units";
+
+    /** The message bundle identifier for our translation messages. */
     public static final String GOODS_MSGS = "goods";
 
     /** The message bundle identifier for our translation messages. */

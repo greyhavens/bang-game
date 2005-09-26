@@ -159,10 +159,19 @@ public class UnitConfig
      */
     public static UnitConfig[] getTownUnits (String townId, Rank rank)
     {
+        return getTownUnits(townId, EnumSet.of(rank));
+    }
+
+    /**
+     * Returns a filtered array of configurations for all unit types
+     * accessible in the specified town of the specified rank.
+     */
+    public static UnitConfig[] getTownUnits (String townId, EnumSet<Rank> ranks)
+    {
         UnitConfig[] units = getTownUnits(townId);
         ArrayList<UnitConfig> list = new ArrayList<UnitConfig>();
         for (int ii = 0; ii < units.length; ii++) {
-            if (units[ii].rank == rank) {
+            if (ranks.contains(units[ii].rank)) {
                 list.add(units[ii]);
             }
         }
