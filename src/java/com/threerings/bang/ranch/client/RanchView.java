@@ -45,7 +45,7 @@ public class RanchView extends BWindow
         setBorder(new EmptyBorder(5, 5, 5, 5));
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
-        _msgs = ctx.getMessageManager().getBundle("ranch");
+        final MessageBundle msgs = ctx.getMessageManager().getBundle("ranch");
 
         String townId = _ctx.getUserObject().townId;
 
@@ -59,54 +59,46 @@ public class RanchView extends BWindow
 
         // the sign displays text and unit details
         _sign = new SignView(ctx);
-        _sign.setText(_msgs.get("m.welcome"));
         signcont.add(_sign, BorderLayout.CENTER);
 
         // center panel: tabbed view with...
-        _tabs = new BTabbedPane();
+        _tabs = new BTabbedPane() {
+            public void selectTab (int tabidx) {
+                super.selectTab(tabidx);
+                _sign.setText(msgs.get("m." + TAB[tabidx] + "_tip"));
+            };
+        };
         add(_tabs, BorderLayout.CENTER);
 
         // ...recruited big shots...
         _bigshots = new UnitPalette(ctx, _sign, 4);
         _bigshots.setUser(_ctx.getUserObject());
-        _tabs.addTab(_msgs.get("t.bigshots"), _bigshots);
+        _tabs.addTab(msgs.get("t.bigshots"), _bigshots);
 
         // ...recruitable big shots...
         _recruits = new UnitPalette(ctx, _sign, 4);
         _recruits.setUnits(UnitConfig.getTownUnits(
                                townId, UnitConfig.Rank.BIGSHOT));
-        _tabs.addTab(_msgs.get("t.recruits"), _recruits);
+        _tabs.addTab(msgs.get("t.recruits"), _recruits);
 
-        // ...normal units...
+        // ...and normal + special units
         _units = new UnitPalette(ctx, _sign, 4);
         EnumSet<UnitConfig.Rank> ranks = EnumSet.of(
             UnitConfig.Rank.NORMAL, UnitConfig.Rank.SPECIAL);
         _units.setUnits(UnitConfig.getTownUnits(townId, ranks));
-        _tabs.addTab(_msgs.get("t.units"), _units);
-
-        // TODO: and special units?
+        _tabs.addTab(msgs.get("t.units"), _units);
 
         // add a row displaying our cash on hand and the back button
         BContainer bottom = new BContainer(GroupLayout.makeHStretch());
         add(bottom, BorderLayout.SOUTH);
 
-        bottom.add(new BLabel(_msgs.get("m.cash_on_hand")), GroupLayout.FIXED);
+        bottom.add(new BLabel(msgs.get("m.cash_on_hand")), GroupLayout.FIXED);
         bottom.add(new WalletLabel(ctx));
-        BButton btn;
-        bottom.add(btn = new BButton(_msgs.get("m.back_to_town"), "back"),
+        bottom.add(new BButton(msgs.get("m.back_to_town"), this, "back"),
                    GroupLayout.FIXED);
-        btn.addListener(this);
 
-//         // side panel: unit inspector, customize/recruit and back button
-//         BContainer side = new BContainer(GroupLayout.makeVStretch());
-// //         side.add(_sign, GroupLayout.FIXED);
-//         side.add(_uaction = new BButton(_msgs.get("m.recruit"), "recruit"),
-//                  GroupLayout.FIXED);
-//         _uaction.addListener(this);
-//         side.add(new BLabel("")); // absorb space
-//         add(side, BorderLayout.EAST);
-
-//         add(_status = new BLabel(""), BorderLayout.SOUTH);
+        // start out with some special welcome text
+        _sign.setText(msgs.get("m.welcome"));
     }
 
     // documentation inherited from interface ActionListener
@@ -114,14 +106,6 @@ public class RanchView extends BWindow
     {
         if ("back".equals(event.getAction())) {
             _ctx.clearPlaceView(this);
-
-        } else if ("recruit".equals(event.getAction())) {
-            UnitConfig config = _sign.getConfig();
-            // TODO: disable the button when this is not the case
-            if (config != null && _sign.getItemId() == -1 &&
-                config.rank == UnitConfig.Rank.BIGSHOT) {
-                recruit(config);
-            }
         }
     }
 
@@ -148,30 +132,19 @@ public class RanchView extends BWindow
         _recruits.shutdown();
     }
 
-    protected void recruit (UnitConfig config)
+    /**
+     * Called by the {@link SignView} when we've recruited a new Big Shot.
+     */
+    protected void unitRecruited (int itemId)
     {
-        RanchService rsvc = (RanchService)
-            _ctx.getClient().requireService(RanchService.class);
-        RanchService.ResultListener rl = new RanchService.ResultListener() {
-            public void requestProcessed (Object result) {
-                _sign.setText(_msgs.get("m.recruited_bigshot"));
-                _tabs.selectTab(0);
-                BigShotItem unit = (BigShotItem)result;
-                _bigshots.selectUnit(unit.getItemId());
-            }
-            public void requestFailed (String cause) {
-                _sign.setText(_msgs.xlate(cause));
-            }
-        };
-        rsvc.recruitBigShot(_ctx.getClient(), config.type, rl);
+        _tabs.selectTab(0);
+        _bigshots.selectUnit(itemId);
     }
 
     protected BangContext _ctx;
-    protected MessageBundle _msgs;
-
     protected SignView _sign;
-
     protected BTabbedPane _tabs;
     protected UnitPalette _bigshots, _units, _recruits;
-    protected BButton _uaction;
+
+    protected static final String[] TAB = { "bigshots", "recruits", "units" };
 }

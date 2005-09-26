@@ -9,6 +9,7 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.border.CompoundBorder;
 import com.jmex.bui.border.EmptyBorder;
@@ -65,18 +66,21 @@ public class StatusView extends BDecoratedWindow
         add(tabs);
 
         // add the inventory tab
-        tabs.addTab(_msgs.get("m.status_inventory"), new InventoryPalette(ctx));
+        tabs.addTab(_msgs.get("m.status_inventory"),
+                    new BScrollPane(new InventoryPalette(ctx)));
 
         // add the big shots tab
         UnitPalette bigshots = new UnitPalette(ctx, null, 3);
         bigshots.setUser(user);
-        tabs.addTab(_msgs.get("m.status_big_shots"), bigshots);
+        tabs.addTab(_msgs.get("m.status_big_shots"), new BScrollPane(bigshots));
 
         // add the badges tab
-        tabs.addTab(_msgs.get("m.status_badges"), createBadgeTab(user));
+        tabs.addTab(_msgs.get("m.status_badges"),
+                    new BScrollPane(createBadgeTab(user)));
 
         // add the stats tab
-        tabs.addTab(_msgs.get("m.status_stats"), createStatsTab(user));
+        tabs.addTab(_msgs.get("m.status_stats"),
+                    new BScrollPane(createStatsTab(user)));
 
         row = new BContainer(GroupLayout.makeHStretch());
         row.add(createButton("quit"), GroupLayout.FIXED);
