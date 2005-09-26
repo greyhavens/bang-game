@@ -6,7 +6,7 @@ package com.threerings.bang.client;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -25,9 +25,9 @@ public class WalletLabel extends MoneyLabel
     // documentation inherited from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent event)
     {
-        if (event.getName().equals(BangUserObject.SCRIP)) {
+        if (event.getName().equals(PlayerObject.SCRIP)) {
             updateValues(true);
-        } else if (event.getName().equals(BangUserObject.GOLD)) {
+        } else if (event.getName().equals(PlayerObject.GOLD)) {
             updateValues(true);
         }
     }
@@ -52,5 +52,5 @@ public class WalletLabel extends MoneyLabel
         setMoney(_user.scrip, _user.gold, animate);
     }
 
-    protected BangUserObject _user;
+    protected PlayerObject _user;
 }

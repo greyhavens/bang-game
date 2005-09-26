@@ -6,7 +6,7 @@ package com.threerings.bang.store.data;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 
 /**
  * Represents a pack of cards that are for sale.
@@ -40,7 +40,7 @@ public class CardPackGood extends Good
     }
 
     @Override // documentation inherited
-    public boolean isAvailable (BangUserObject user)
+    public boolean isAvailable (PlayerObject user)
     {
         // anyone can buy a pack of cards
         return true;

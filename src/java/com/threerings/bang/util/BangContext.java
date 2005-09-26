@@ -22,7 +22,7 @@ import com.threerings.media.image.ImageUtil;
 import com.threerings.parlor.util.ParlorContext;
 
 import com.threerings.bang.client.ModelCache;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -55,9 +55,9 @@ public abstract class BangContext
 
     /** Returns a reference to the current player's user object. Only
      * valid when we are logged onto the server. */
-    public BangUserObject getUserObject ()
+    public PlayerObject getUserObject ()
     {
-        return (BangUserObject)getClient().getClientObject();
+        return (PlayerObject)getClient().getClientObject();
     }
 
     /**

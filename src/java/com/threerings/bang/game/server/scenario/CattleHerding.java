@@ -13,7 +13,7 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
@@ -147,7 +147,7 @@ public class CattleHerding extends Scenario
 
     @Override // documentation inherited
     public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, BangUserObject user)
+        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 

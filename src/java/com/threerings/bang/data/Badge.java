@@ -29,88 +29,88 @@ public class Badge extends Item
 
         // games played badges
         FIFTY_GAMES_PLAYED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 50;
             }
         },
         FIVEC_GAMES_PLAYED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 500;
             }
         },
         ONEM_GAMES_PLAYED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 1000;
             }
         },
         FIVEM_GAMES_PLAYED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
             }
         },
         TENM_GAMES_PLAYED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 10000;
             }
         },
         FIFTYM_GAMES_PLAYED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 50000;
             }
         },
 
         // units killed badges
         FIVEC_UNITS_KILLED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 500;
             }
         },
         FIVEM_UNITS_KILLED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 5000;
             }
         },
         TENM_UNITS_KILLED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 10000;
             }
         },
         FIFTYM_UNITS_KILLED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 50000;
             }
         },
 
         // cattle herded badges
         ONEC_CATTLE_HERDED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 100;
             }
         },
         ONEM_CATTLE_HERDED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 1000;
             }
         },
         TENM_CATTLE_HERDED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 10000;
             }
         },
 
         // nuggets collected badges
         ONEC_NUGGETS_COLLECTED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 100;
             }
         },
         ONEM_NUGGETS_COLLECTED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 1000;
             }
         },
         TENM_NUGGETS_COLLECTED {
-            public boolean qualifies (BangUserObject user) {
+            public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 10000;
             }
         },
@@ -139,7 +139,7 @@ public class Badge extends Item
 
         /** Overridden by each badge type to indicate whether the supplied
          * user qualifies for this badge. */
-        public boolean qualifies (BangUserObject user) {
+        public boolean qualifies (PlayerObject user) {
             return false;
         }
 
@@ -185,7 +185,7 @@ public class Badge extends Item
      * Determines whether this player qualifies for any new badges and
      * adds those for which they qualify to the supplied list.
      */
-    public static void checkBadges (BangUserObject user, ArrayList<Badge> badges)
+    public static void checkBadges (PlayerObject user, ArrayList<Badge> badges)
     {
         // first enumerate the badges they already hold
         _badgeCodes.clear();

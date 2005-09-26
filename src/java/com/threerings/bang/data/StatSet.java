@@ -28,7 +28,7 @@ public final class StatSet extends DSet
      * Wires this stat set up to a containing user object. All subsequent
      * modifications will be published to the container.
      */
-    public void setContainer (BangUserObject container)
+    public void setContainer (PlayerObject container)
     {
         _container = container;
     }
@@ -106,5 +106,5 @@ public final class StatSet extends DSet
         }
     }
 
-    protected transient BangUserObject _container;
+    protected transient PlayerObject _container;
 }

@@ -15,7 +15,7 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.bui.IconPalette;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -45,7 +45,7 @@ public class UnitPalette extends IconPalette
     /**
      * Configures the palette to display the supplied user's Big Shots.
      */
-    public void setUser (BangUserObject user)
+    public void setUser (PlayerObject user)
     {
         // listen to the user object for inventory additions and deletions
         _user = user;
@@ -114,7 +114,7 @@ public class UnitPalette extends IconPalette
 
     protected SetListener _invlistener = new SetListener() {
         public void entryAdded (EntryAddedEvent event) {
-            if (event.getName().equals(BangUserObject.INVENTORY)) {
+            if (event.getName().equals(PlayerObject.INVENTORY)) {
                 Object item = event.getEntry();
                 if (item instanceof BigShotItem) {
                     addUnit((BigShotItem)item);
@@ -125,7 +125,7 @@ public class UnitPalette extends IconPalette
             // nada
         }
         public void entryRemoved (EntryRemovedEvent event) {
-            if (event.getName().equals(BangUserObject.INVENTORY)) {
+            if (event.getName().equals(PlayerObject.INVENTORY)) {
                 // removal of non-bigshots will just NOOP
                 removeUnit((Integer)event.getKey());
             }
@@ -133,5 +133,5 @@ public class UnitPalette extends IconPalette
     };
 
     protected BangContext _ctx;
-    protected BangUserObject _user;
+    protected PlayerObject _user;
 }

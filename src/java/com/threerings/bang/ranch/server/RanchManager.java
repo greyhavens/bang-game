@@ -10,7 +10,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
@@ -41,7 +41,7 @@ public class RanchManager
                                 final RanchService.ResultListener listener)
         throws InvocationException
     {
-        final BangUserObject user = (BangUserObject)caller;
+        final PlayerObject user = (PlayerObject)caller;
         final UnitConfig config = UnitConfig.getConfig(type);
         if (config == null) {
             log.warning("Requested to recruit bogus unit [who=" + user.who() +
@@ -64,7 +64,7 @@ public class RanchManager
     /** Used to recruit and deliver a big shot to a player. */
     protected static final class RecruitBigShotAction extends FinancialAction
     {
-        public RecruitBigShotAction (BangUserObject user, UnitConfig config,
+        public RecruitBigShotAction (PlayerObject user, UnitConfig config,
                                      RanchService.ResultListener listener) {
             super(user, config.scripCost, config.goldCost);
             _unit = new BigShotItem(user.playerId, config.type);

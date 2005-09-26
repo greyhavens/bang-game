@@ -18,7 +18,7 @@ import com.threerings.util.Name;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.util.BangContext;
 
@@ -78,7 +78,7 @@ public class BangChatDirector extends ChatDirector
 
             // make sure we're not trying to tell something to ourselves
             Name target = new Name(username);
-            BangUserObject self = _ctx.getUserObject();
+            PlayerObject self = _ctx.getUserObject();
             if (self.username.equals(target)) {
                 return "m.talk_self";
             }

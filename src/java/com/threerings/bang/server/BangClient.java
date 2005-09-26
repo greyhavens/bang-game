@@ -13,7 +13,7 @@ import com.threerings.presents.net.BootstrapData;
 
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
 import static com.threerings.bang.Log.log;
@@ -38,7 +38,7 @@ public class BangClient extends CrowdClient
         super.sessionWillStart();
 
         // if we have auth data in the form of a token ring, use it
-        BangUserObject user = (BangUserObject)_clobj;
+        PlayerObject user = (PlayerObject)_clobj;
         if (_authdata instanceof TokenRing) {
             // we can set things directly here rather than use the setter
             // methods because the user object is not yet out in the wild
@@ -86,7 +86,7 @@ public class BangClient extends CrowdClient
      */
     protected void recordEndedSession ()
     {
-        final BangUserObject user = (BangUserObject)_clobj;
+        final PlayerObject user = (PlayerObject)_clobj;
         String uname = "recordEndedSession:" + user.username;
         BangServer.invoker.postUnit(new Invoker.Unit(uname) {
             public boolean invoke () {
@@ -101,7 +101,7 @@ public class BangClient extends CrowdClient
      * database any necessary information at the end of a player's
      * session.
      */
-    protected void performDatabaseSaves (BangUserObject user)
+    protected void performDatabaseSaves (PlayerObject user)
     {
         try {
             // write out any modified stats

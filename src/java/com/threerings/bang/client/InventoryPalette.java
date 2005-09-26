@@ -15,7 +15,7 @@ import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.util.BangContext;
 
@@ -40,7 +40,7 @@ public class InventoryPalette extends BContainer
         // populate our item display every time we are shown as we may be
         // hidden, the player's inventory updated then reshown again
         int added = 0;
-        BangUserObject user = _ctx.getUserObject();
+        PlayerObject user = _ctx.getUserObject();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Item item = (Item)iter.next();
             ItemIcon icon = item.createIcon();

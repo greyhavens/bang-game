@@ -6,7 +6,7 @@ package com.threerings.bang.store.server;
 import com.samskivert.io.PersistenceException;
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
 
 import com.threerings.bang.server.BangServer;
@@ -17,7 +17,7 @@ import com.threerings.bang.store.data.Good;
  */
 public abstract class ItemProvider extends Provider
 {
-    public ItemProvider (BangUserObject user, Good good)
+    public ItemProvider (PlayerObject user, Good good)
         throws InvocationException
     {
         super(user, good);

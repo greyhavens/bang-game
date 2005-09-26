@@ -14,7 +14,7 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
 
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
@@ -184,7 +184,7 @@ public abstract class Scenario
      * supplied player at the end of the game.
      */
     public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, BangUserObject user)
+        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {
         // nothing by default
     }

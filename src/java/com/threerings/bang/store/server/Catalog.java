@@ -14,7 +14,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Purse;
 
@@ -51,7 +51,7 @@ public class Catalog
      * good to the specified user. Returns null if no provider is registered
      * for the good in question.
      */
-    public static Provider getProvider (BangUserObject user, Good good)
+    public static Provider getProvider (PlayerObject user, Good good)
         throws InvocationException
     {
         for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
@@ -83,13 +83,13 @@ public class Catalog
 
     /** Used to create a {@link Provider} for a particular {@link Good}. */
     protected static abstract class ProviderFactory {
-        public abstract Provider createProvider (BangUserObject user, Good good)
+        public abstract Provider createProvider (PlayerObject user, Good good)
             throws InvocationException;
     }
 
     /** Used for {@link PurseGood}s. */
     protected static class PurseProviderFactory extends ProviderFactory {
-        public Provider createProvider (BangUserObject user, Good good)
+        public Provider createProvider (PlayerObject user, Good good)
             throws InvocationException {
             return new ItemProvider(user, good) {
                 protected Item createItem () throws InvocationException {
@@ -104,7 +104,7 @@ public class Catalog
 
     /** Used for {@link CardPackGood}s. */
     protected static class CardPackProviderFactory extends ProviderFactory {
-        public Provider createProvider (BangUserObject user, Good good)
+        public Provider createProvider (PlayerObject user, Good good)
             throws InvocationException {
             return new CardPackProvider(user, good);
         }

@@ -9,7 +9,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 
 /**
  * Represents a particular good that can be purchased from the general
@@ -79,7 +79,7 @@ public abstract class Good extends SimpleStreamableObject
     /**
      * Indicates that this good is available to the specified user.
      */
-    public abstract boolean isAvailable (BangUserObject user);
+    public abstract boolean isAvailable (PlayerObject user);
 
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()

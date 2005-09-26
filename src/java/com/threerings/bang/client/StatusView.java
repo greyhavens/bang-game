@@ -24,7 +24,7 @@ import com.threerings.bang.ranch.client.UnitPalette;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangContext;
 
@@ -48,7 +48,7 @@ public class StatusView extends BDecoratedWindow
             }
         });
 
-        BangUserObject user = ctx.getUserObject();
+        PlayerObject user = ctx.getUserObject();
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         row.setLookAndFeel(BangUI.dtitleLNF);
         row.add(new BLabel(user.username.toString()));
@@ -93,7 +93,7 @@ public class StatusView extends BDecoratedWindow
         add(row, GroupLayout.FIXED);
     }
 
-    protected BContainer createBadgeTab (BangUserObject user)
+    protected BContainer createBadgeTab (PlayerObject user)
     {
         BContainer bcont = new BContainer(new TableLayout(2, 5, 5));
         bcont.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
@@ -102,7 +102,7 @@ public class StatusView extends BDecoratedWindow
         return bcont;
     }
 
-    protected BContainer createStatsTab (BangUserObject user)
+    protected BContainer createStatsTab (PlayerObject user)
     {
         BContainer scont = new BContainer(new TableLayout(2, 5, 5));
         scont.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),

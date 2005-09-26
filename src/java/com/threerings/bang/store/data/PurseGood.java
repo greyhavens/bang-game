@@ -6,7 +6,7 @@ package com.threerings.bang.store.data;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 
 /**
@@ -38,7 +38,7 @@ public class PurseGood extends Good
     }
 
     @Override // documentation inherited
-    public boolean isAvailable (BangUserObject user)
+    public boolean isAvailable (PlayerObject user)
     {
         // make sure they don't already have a better purse
         return (user.getPurse().getTownIndex() < _townIndex);

@@ -10,7 +10,7 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.server.PlaceManager;
 
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 
@@ -32,7 +32,7 @@ public class StoreManager extends PlaceManager
         ClientObject caller, String type, StoreService.ConfirmListener cl)
         throws InvocationException
     {
-        BangUserObject user = (BangUserObject)caller;
+        PlayerObject user = (PlayerObject)caller;
 
         // make sure we sell the good in question
         Good good = (Good)_stobj.goods.get(type);

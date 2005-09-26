@@ -13,7 +13,7 @@ import com.threerings.crowd.data.TokenRing;
 /**
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
  */
-public class BangUserObject extends BodyObject
+public class PlayerObject extends BodyObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerId</code> field. */

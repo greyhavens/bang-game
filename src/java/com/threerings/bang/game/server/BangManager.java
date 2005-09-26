@@ -33,7 +33,7 @@ import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Stat;
@@ -76,7 +76,7 @@ public class BangManager extends GameManager
     public void selectStarters (
         ClientObject caller, int bigShotId, int[] cardIds)
     {
-        BangUserObject user = (BangUserObject)caller;
+        PlayerObject user = (PlayerObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.username);
         if (pidx == -1) {
             log.warning("Request to select starters by non-player " +
@@ -114,7 +114,7 @@ public class BangManager extends GameManager
     // documentation inherited from interface BangProvider
     public void purchaseUnits (ClientObject caller, String[] units)
     {
-        BangUserObject user = (BangUserObject)caller;
+        PlayerObject user = (PlayerObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.username);
         if (pidx == -1) {
             log.warning("Request to purchase units by non-player " +
@@ -129,7 +129,7 @@ public class BangManager extends GameManager
                       int targetId, BangService.InvocationListener il)
         throws InvocationException
     {
-        BangUserObject user = (BangUserObject)caller;
+        PlayerObject user = (PlayerObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.username);
 
         Piece piece = (Piece)_bangobj.pieces.get(pieceId);
@@ -217,7 +217,7 @@ public class BangManager extends GameManager
     // documentation inherited from interface BangProvider
     public void playCard (ClientObject caller, int cardId, short x, short y)
     {
-        BangUserObject user = (BangUserObject)caller;
+        PlayerObject user = (PlayerObject)caller;
         Card card = (Card)_bangobj.cards.get(cardId);
         if (card == null ||
             card.owner != _bangobj.getPlayerIndex(user.username)) {
@@ -710,7 +710,7 @@ public class BangManager extends GameManager
 
         // record various statistics
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            BangUserObject user = (BangUserObject)getPlayer(ii);
+            PlayerObject user = (PlayerObject)getPlayer(ii);
             if (user == null || !_gameobj.isActivePlayer(ii)) {
                 continue;
             }
@@ -1131,7 +1131,7 @@ public class BangManager extends GameManager
             public void handleResult () {
                 int idx = 0;
                 for (int ii = 0; ii < bcounts.length; ii++) {
-                    BangUserObject user = (BangUserObject)getPlayer(ii);
+                    PlayerObject user = (PlayerObject)getPlayer(ii);
                     for (int bb = 0; bb < bcounts[ii]; bb++) {
                         user.addToInventory(badges.get(idx++));
                     }
@@ -1173,13 +1173,13 @@ public class BangManager extends GameManager
 
             public void handleResult () {
                 for (StartingCard scard : updates) {
-                    BangUserObject user = (BangUserObject)getPlayer(scard.pidx);
+                    PlayerObject user = (PlayerObject)getPlayer(scard.pidx);
                     if (user != null) {
                         user.updateInventory(scard.item);
                     }
                 }
                 for (StartingCard scard : removals) {
-                    BangUserObject user = (BangUserObject)getPlayer(scard.pidx);
+                    PlayerObject user = (PlayerObject)getPlayer(scard.pidx);
                     if (user != null) {
                         user.removeFromInventory(scard.item.getKey());
                     }

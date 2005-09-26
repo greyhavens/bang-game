@@ -7,7 +7,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.persist.FinancialAction;
 
 import com.threerings.bang.store.data.Good;
@@ -28,7 +28,7 @@ public abstract class Provider extends FinancialAction
      * product cannot be created. It is not necessary to check for
      * sufficient funds in the constructor, that will be done elsewhere.
      */
-    protected Provider (BangUserObject user, Good good)
+    protected Provider (PlayerObject user, Good good)
         throws InvocationException
     {
         super(user, good.getScripCost(), good.getGoldCost());

@@ -9,21 +9,21 @@ import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.server.persist.Player;
 
 /**
- * Customizes the client resolver to use our {@link BangUserObject}.
+ * Customizes the client resolver to use our {@link PlayerObject}.
  */
 public class BangClientResolver extends CrowdClientResolver
 {
     // documentation inherited
     public Class getClientObjectClass ()
     {
-        return BangUserObject.class;
+        return PlayerObject.class;
     }
 
     // documentation inherited
@@ -31,7 +31,7 @@ public class BangClientResolver extends CrowdClientResolver
         throws Exception
     {
         super.resolveClientData(clobj);
-        BangUserObject buser = (BangUserObject)clobj;
+        PlayerObject buser = (PlayerObject)clobj;
 
         // load up our per-player bits
         String username = buser.username.toString();

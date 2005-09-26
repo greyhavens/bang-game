@@ -11,7 +11,7 @@ import com.samskivert.util.Invoker;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangUserObject;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
 
 import static com.threerings.bang.Log.log;
@@ -94,7 +94,7 @@ public abstract class FinancialAction extends Invoker.Unit
         return buf.append("]").toString();
     }
 
-    protected FinancialAction (BangUserObject user, int scripCost, int goldCost)
+    protected FinancialAction (PlayerObject user, int scripCost, int goldCost)
     {
         _user = user;
         _scripCost = scripCost;
@@ -181,7 +181,7 @@ public abstract class FinancialAction extends Invoker.Unit
         buf.append(", gold=").append(_goldCost);
     }
 
-    protected BangUserObject _user;
+    protected PlayerObject _user;
     protected int _scripCost, _goldCost;
     protected boolean _goldReserved, _scripSpent, _actionTaken, _failed;
 }
