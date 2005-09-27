@@ -20,10 +20,10 @@ public class BankObject extends PlaceObject
     public static final String SELL_OFFERS = "sellOffers";
     // AUTO-GENERATED: FIELDS END
 
-    /** The top N offers to buy gold for scrip. */
+    /** The top N offers to buy coins for scrip. */
     public DSet buyOffers;
 
-    /** The top N offers to sell gold for scrip. */
+    /** The top N offers to sell coins for scrip. */
     public DSet sellOffers;
 
     // AUTO-GENERATED: METHODS START

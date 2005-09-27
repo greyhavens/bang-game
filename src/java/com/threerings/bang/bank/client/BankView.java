@@ -8,6 +8,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
@@ -38,12 +39,19 @@ public class BankView extends BWindow
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-        String qtitle = _ctx.xlate("bank", "m.quick_title");
-        add(wrap(qtitle, _qsell = new QuickTransact(ctx, false),
+        String title = _ctx.xlate("bank", "m.quick_title");
+        add(wrap(title, _qsell = new QuickTransact(ctx, false),
                  _qbuy = new QuickTransact(ctx, true)), GroupLayout.FIXED);
 
-        // add a blank container to suck up whitespace
-        add(new BContainer());
+        // add a spacer container to suck up whitespace
+        add(new Spacer());
+
+        title = _ctx.xlate("bank", "m.full_title");
+        add(wrap(title, _fsell = new FullTransact(ctx, false),
+                 _fbuy = new FullTransact(ctx, true)), GroupLayout.FIXED);
+
+        // add another spacer container to suck up more whitespace
+        add(new Spacer());
 
         // add a row displaying our cash on hand and the back button
         BContainer bottom = new BContainer(GroupLayout.makeHStretch());
@@ -59,6 +67,8 @@ public class BankView extends BWindow
         BankObject bankobj = (BankObject)plobj;
         _qbuy.init(bankobj);
         _qsell.init(bankobj);
+        _fbuy.init(bankobj);
+        _fsell.init(bankobj);
     }
 
     // documentation inherited from interface PlaceView
@@ -82,4 +92,5 @@ public class BankView extends BWindow
 
     protected BangContext _ctx;
     protected QuickTransact _qbuy, _qsell;
+    protected FullTransact _fbuy, _fsell;
 }
