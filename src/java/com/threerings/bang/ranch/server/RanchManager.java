@@ -92,7 +92,7 @@ public class RanchManager extends PlaceManager
     {
         public RecruitBigShotAction (PlayerObject user, UnitConfig config,
                                      RanchService.ResultListener listener) {
-            super(user, config.scripCost, config.goldCost);
+            super(user, config.scripCost, config.coinCost);
             _unit = new BigShotItem(user.playerId, config.type);
             _listener = listener;
         }

@@ -59,7 +59,7 @@ public class StatusView extends BDecoratedWindow
 
         row = new BContainer(GroupLayout.makeHStretch());
         row.add(new BLabel(_msgs.get("m.status_scrip", "" + user.scrip)));
-        row.add(new BLabel(_msgs.get("m.status_gold", "" + user.gold)));
+        row.add(new BLabel(_msgs.get("m.status_coins", "" + user.coins)));
         add(row, GroupLayout.FIXED);
 
         BTabbedPane tabs = new BTabbedPane();

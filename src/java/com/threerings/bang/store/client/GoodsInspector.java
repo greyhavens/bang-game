@@ -68,7 +68,7 @@ public class GoodsInspector extends BContainer
         _icon.setIcon(new ImageIcon(_ctx.loadImage(_good.getIconPath())));
         _title.setText(_ctx.xlate(BangCodes.GOODS_MSGS, _good.getName()));
         _descrip.setText(_ctx.xlate(BangCodes.GOODS_MSGS, _good.getTip()));
-        _cost.setMoney(_good.getScripCost(), _good.getGoldCost(), false);
+        _cost.setMoney(_good.getScripCost(), _good.getCoinCost(), false);
     }
 
     // documentation inherited from interface ActionListener

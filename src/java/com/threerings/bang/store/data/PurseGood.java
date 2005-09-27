@@ -18,9 +18,9 @@ public class PurseGood extends Good
      * Creates a good representing the purse associated with the specified
      * town.
      */
-    public PurseGood (int townIndex, int scripCost, int goldCost)
+    public PurseGood (int townIndex, int scripCost, int coinCost)
     {
-        super(Purse.PURSE_TYPES[townIndex], scripCost, goldCost);
+        super(Purse.PURSE_TYPES[townIndex], scripCost, coinCost);
         _townIndex = townIndex;
     }
 

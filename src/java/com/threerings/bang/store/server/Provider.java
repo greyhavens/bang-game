@@ -31,7 +31,7 @@ public abstract class Provider extends FinancialAction
     protected Provider (PlayerObject user, Good good)
         throws InvocationException
     {
-        super(user, good.getScripCost(), good.getGoldCost());
+        super(user, good.getScripCost(), good.getCoinCost());
         _good = good;
     }
 

@@ -30,7 +30,7 @@ public class WalletLabel extends MoneyLabel
     {
         if (event.getName().equals(PlayerObject.SCRIP)) {
             updateValues(true);
-        } else if (event.getName().equals(PlayerObject.GOLD)) {
+        } else if (event.getName().equals(PlayerObject.COINS)) {
             updateValues(true);
         }
     }
@@ -59,7 +59,7 @@ public class WalletLabel extends MoneyLabel
     protected void updateValues (boolean animate)
     {
         // TODO: animate and bling!
-        setMoney(_user.scrip, _user.gold, animate);
+        setMoney(_user.scrip, _user.coins, animate);
     }
 
     protected PlayerObject _user;

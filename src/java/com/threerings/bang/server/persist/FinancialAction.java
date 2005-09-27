@@ -33,11 +33,11 @@ public abstract class FinancialAction extends Invoker.Unit
         throws InvocationException
     {
         // check and immediately deduct the necessary funds
-        if (_user.scrip < _scripCost || _user.gold < _goldCost) {
+        if (_user.scrip < _scripCost || _user.coins < _coinCost) {
             throw new InvocationException(BangCodes.INSUFFICIENT_FUNDS);
         }
         _user.setScrip(_user.scrip - _scripCost);
-        _user.setGold(_user.gold - _goldCost);
+        _user.setCoins(_user.coins - _coinCost);
 
         BangServer.invoker.postUnit(this);
     }
@@ -46,9 +46,9 @@ public abstract class FinancialAction extends Invoker.Unit
     public boolean invoke ()
     {
         try {
-            if (_goldCost > 0) {
+            if (_coinCost > 0) {
                 // TODO: reserve any needed coins
-                // _goldReserved = true;
+                // _coinsReserved = true;
             }
 
             if (_scripCost > 0) {
@@ -61,7 +61,7 @@ public abstract class FinancialAction extends Invoker.Unit
             persistentAction();
             _actionTaken = true;
 
-            if (_goldCost > 0) {
+            if (_coinCost > 0) {
                 // TODO: finally "spend" our reserved coins
             }
 
@@ -77,9 +77,9 @@ public abstract class FinancialAction extends Invoker.Unit
     public void handleResult ()
     {
         if (_failed) {
-            // return the scrip and gold to the user
+            // return the scrip and coins to the user
             _user.setScrip(_user.scrip + _scripCost);
-            _user.setGold(_user.gold + _goldCost);
+            _user.setCoins(_user.coins + _coinCost);
             actionFailed();
         } else {
             actionCompleted();
@@ -94,17 +94,16 @@ public abstract class FinancialAction extends Invoker.Unit
         return buf.append("]").toString();
     }
 
-    protected FinancialAction (PlayerObject user, int scripCost, int goldCost)
+    protected FinancialAction (PlayerObject user, int scripCost, int coinCost)
     {
         _user = user;
         _scripCost = scripCost;
-        _goldCost = goldCost;
+        _coinCost = coinCost;
     }
 
     /**
-     * Here derived classes can take any persistent action needed knowing
-     * that necessary gold has been reserved and necessary scrip has been
-     * spent.
+     * Here derived classes can take any persistent action needed knowing that
+     * necessary coins have been reserved and necessary scrip has been spent.
      */
     protected void persistentAction ()
         throws PersistenceException
@@ -130,14 +129,14 @@ public abstract class FinancialAction extends Invoker.Unit
     }
 
     /**
-     * If any step of the persistent processing of an action failed,
-     * rollbacks will be attempted for all completed parts of the action
-     * and this method will be called on the distributed object thread to
-     * allow for reporting of the failed action.
+     * If any step of the persistent processing of an action failed, rollbacks
+     * will be attempted for all completed parts of the action and this method
+     * will be called on the distributed object thread to allow for reporting
+     * of the failed action.
      *
-     * <p><em>Note:</em> the user's scrip and gold will have been returned
-     * (in their user object and in the database) by the time this method
-     * is called.
+     * <p><em>Note:</em> the user's scrip and coins will have been returned (in
+     * their user object and in the database) by the time this method is
+     * called.
      */
     protected void actionFailed ()
     {
@@ -152,7 +151,7 @@ public abstract class FinancialAction extends Invoker.Unit
         _failed = true;
 
         // roll everything back that needs it
-        if (_goldReserved) {
+        if (_coinsReserved) {
             // TODO: return reservation
         }
 
@@ -178,10 +177,10 @@ public abstract class FinancialAction extends Invoker.Unit
         buf.append("type=").append(getClass().getName());
         buf.append(", who=").append(_user.who());
         buf.append(", scrip=").append(_scripCost);
-        buf.append(", gold=").append(_goldCost);
+        buf.append(", coins=").append(_coinCost);
     }
 
     protected PlayerObject _user;
-    protected int _scripCost, _goldCost;
-    protected boolean _goldReserved, _scripSpent, _actionTaken, _failed;
+    protected int _scripCost, _coinCost;
+    protected boolean _coinsReserved, _scripSpent, _actionTaken, _failed;
 }

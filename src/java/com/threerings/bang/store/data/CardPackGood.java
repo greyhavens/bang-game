@@ -20,9 +20,9 @@ public class CardPackGood extends Good
     /**
      * Creates a good representing a pack of cards of the specified size.
      */
-    public CardPackGood (int size, int scripCost, int goldCost)
+    public CardPackGood (int size, int scripCost, int coinCost)
     {
-        super("card_pack" + size, scripCost, goldCost);
+        super("card_pack" + size, scripCost, coinCost);
         _size = size;
     }
 

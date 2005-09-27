@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.io.IOException;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BIcon;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BlankIcon;
@@ -43,6 +44,12 @@ public class BangUI
     /** Used to load sounds from the classpath. */
     public static ClipProvider clipprov = new WaveDataClipProvider();
 
+    /** An icon used to indicate a quantity of coins. */
+    public static BIcon coinIcon;
+
+    /** An icon used to indicate a quantity of scrip. */
+    public static BIcon scripIcon;
+
     /**
      * Configures the UI singleton with a context reference.
      */
@@ -56,6 +63,9 @@ public class BangUI
 
         dtitleLNF = new BangLookAndFeel();
         dtitleLNF.setTextFactory(new AWTTextFactory(DTITLE_FONT));
+
+        scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
+        coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
     }
 
     /**

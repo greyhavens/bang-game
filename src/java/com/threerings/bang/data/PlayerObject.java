@@ -31,8 +31,8 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>scrip</code> field. */
     public static final String SCRIP = "scrip";
 
-    /** The field name of the <code>gold</code> field. */
-    public static final String GOLD = "gold";
+    /** The field name of the <code>coins</code> field. */
+    public static final String COINS = "coins";
 
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
@@ -54,7 +54,7 @@ public class PlayerObject extends BodyObject
     public int scrip;
 
     /** The amount of "hard" currency this player is carrying. */
-    public int gold;
+    public int coins;
 
     /** Statistics tracked for this player. */
     public StatSet stats;
@@ -192,19 +192,19 @@ public class PlayerObject extends BodyObject
     }
 
     /**
-     * Requests that the <code>gold</code> field be set to the
+     * Requests that the <code>coins</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setGold (int value)
+    public void setCoins (int value)
     {
-        int ovalue = this.gold;
+        int ovalue = this.coins;
         requestAttributeChange(
-            GOLD, new Integer(value), new Integer(ovalue));
-        this.gold = value;
+            COINS, new Integer(value), new Integer(ovalue));
+        this.coins = value;
     }
 
     /**

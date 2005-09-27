@@ -78,7 +78,7 @@ public class BangServer extends CrowdServer
     /** Manages the General Store and item purchase. */
     public static StoreManager storemgr;
 
-    /** Manages the Bank and the gold exchange. */
+    /** Manages the Bank and the coin exchange. */
     public static BankManager bankmgr;
 
     /** Manages our selection of game boards. */

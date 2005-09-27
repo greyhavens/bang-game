@@ -134,7 +134,7 @@ public class SignView extends BContainer
         if (config.rank == UnitConfig.Rank.BIGSHOT) {
             if (itemId == -1) {
                 showRecruit = true;
-                _cost.setMoney(config.scripCost, config.goldCost, false);
+                _cost.setMoney(config.scripCost, config.coinCost, false);
             } else {
                 showCustomize = true;
             }

@@ -60,7 +60,7 @@ public abstract class Good extends SimpleStreamableObject
 
     /**
      * Returns the cost of this good in scrip. This is in addition to the
-     * gold cost ({@link #getGoldCost}).
+     * coin cost ({@link #getCoinCost}).
      */
     public int getScripCost ()
     {
@@ -68,12 +68,12 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
-     * Returns the cost of this good in gold coins. This is in addition to
-     * the scrip cost ({@link #getScripCost}).
+     * Returns the cost of this good in coins. This is in addition to the scrip
+     * cost ({@link #getScripCost}).
      */
-    public int getGoldCost ()
+    public int getCoinCost ()
     {
-        return _goldCost;
+        return _coinCost;
     }
 
     /**
@@ -101,14 +101,14 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /** Creates a good of the specified type. */
-    protected Good (String type, int scripCost, int goldCost)
+    protected Good (String type, int scripCost, int coinCost)
     {
         _type = type;
         _scripCost = scripCost;
-        _goldCost = goldCost;
+        _coinCost = coinCost;
     }
 
     protected String _type;
     protected int _scripCost;
-    protected int _goldCost;
+    protected int _coinCost;
 }
