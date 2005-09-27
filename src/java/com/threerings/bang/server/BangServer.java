@@ -24,8 +24,11 @@ import com.threerings.parlor.server.ParlorManager;
 import com.threerings.coin.server.persist.CoinRepository;
 import com.threerings.user.AccountActionRepository;
 
+import com.threerings.bang.bank.data.BankConfig;
+import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.lobby.server.LobbyManager;
+import com.threerings.bang.ranch.data.RanchConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.store.data.StoreConfig;
 import com.threerings.bang.store.server.StoreManager;
@@ -67,13 +70,16 @@ public class BangServer extends CrowdServer
     public static CoinRepository coinrepo;
 
     /** Keeps an eye on the Ranch, a good man to have around. */
-    public static RanchManager ranchmgr = new RanchManager();
+    public static RanchManager ranchmgr;
 
     /** Manages the Saloon and match-making. */
     public static LobbyManager saloonmgr;
 
     /** Manages the General Store and item purchase. */
     public static StoreManager storemgr;
+
+    /** Manages the Bank and the gold exchange. */
+    public static BankManager bankmgr;
 
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
@@ -108,7 +114,6 @@ public class BangServer extends CrowdServer
 
         // initialize our managers
         parmgr.init(invmgr, plreg);
-        ranchmgr.init(invmgr);
         boardmgr.init(conprov);
 
         // create the saloon manager
@@ -125,6 +130,22 @@ public class BangServer extends CrowdServer
         plreg.createPlace(sconfig, new PlaceRegistry.CreationObserver() {
             public void placeCreated (PlaceObject place, PlaceManager pmgr) {
                 storemgr = (StoreManager)pmgr;
+            }
+        });
+
+        // create the bank manager
+        BankConfig bconfig = new BankConfig();
+        plreg.createPlace(bconfig, new PlaceRegistry.CreationObserver() {
+            public void placeCreated (PlaceObject place, PlaceManager pmgr) {
+                bankmgr = (BankManager)pmgr;
+            }
+        });
+
+        // create the ranch manager
+        RanchConfig rconfig = new RanchConfig();
+        plreg.createPlace(rconfig, new PlaceRegistry.CreationObserver() {
+            public void placeCreated (PlaceObject place, PlaceManager pmgr) {
+                ranchmgr = (RanchManager)pmgr;
             }
         });
 

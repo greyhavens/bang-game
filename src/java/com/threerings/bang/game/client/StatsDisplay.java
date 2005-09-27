@@ -108,7 +108,7 @@ public class StatsDisplay extends BDecoratedWindow
             add(badges);
         }
 
-        BContainer buttons = GroupLayout.makeButtonBox(GroupLayout.CENTER);
+        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         BButton dismiss = new BButton(msgs.get("m.dismiss"));
         dismiss.addListener(new ActionListener() {
             public void actionPerformed (ActionEvent event) {

@@ -31,6 +31,8 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.ranch.data.RanchObject;
+
 /**
  * Displays the contents of the sign hanging down in the Ranch view. This sign
  * at times displays just text and at other times displays the details of a
@@ -64,12 +66,12 @@ public class SignView extends BContainer
         _inspector.add(_details, BorderLayout.CENTER);
 
         // this is shown when we're displaying recruitable big shots
-        _recruit = GroupLayout.makeButtonBox(GroupLayout.LEFT);
+        _recruit = GroupLayout.makeHBox(GroupLayout.LEFT);
         _recruit.add(_cost = new MoneyLabel(ctx));
         _recruit.add(new BButton(_msgs.get("m.recruit"), this, "recruit"));
 
         // this is shown when we're displaying recruited big shots
-        _customize = GroupLayout.makeButtonBox(GroupLayout.LEFT);
+        _customize = GroupLayout.makeHBox(GroupLayout.LEFT);
         _customize.add(new BButton(_msgs.get("m.customize", this, "customize")));
 
         // this is used when we're simply displaying text
@@ -78,6 +80,15 @@ public class SignView extends BContainer
 
         // start in marquee mode
         add(_marquee);
+    }
+
+    /**
+     * Called by our containing view once it gets ahold of the ranch
+     * distributed object.
+     */
+    public void init (RanchObject ranchobj)
+    {
+        _ranchobj = ranchobj;
     }
 
     /**
@@ -163,8 +174,6 @@ public class SignView extends BContainer
 
     protected void recruit (UnitConfig config)
     {
-        RanchService rsvc = (RanchService)
-            _ctx.getClient().requireService(RanchService.class);
         RanchService.ResultListener rl = new RanchService.ResultListener() {
             public void requestProcessed (Object result) {
                 BigShotItem unit = (BigShotItem)result;
@@ -176,7 +185,7 @@ public class SignView extends BContainer
                 setText(_msgs.xlate(cause));
             }
         };
-        rsvc.recruitBigShot(_ctx.getClient(), config.type, rl);
+        _ranchobj.service.recruitBigShot(_ctx.getClient(), config.type, rl);
     }
 
     protected void setVisible (
@@ -191,6 +200,7 @@ public class SignView extends BContainer
 
     protected BangContext _ctx;
     protected MessageBundle _msgs, _umsgs;
+    protected RanchObject _ranchobj;
 
     protected int _itemId = -1;
     protected UnitConfig _config;

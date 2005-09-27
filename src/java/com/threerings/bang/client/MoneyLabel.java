@@ -18,13 +18,8 @@ public class MoneyLabel extends BContainer
     public MoneyLabel (BangContext ctx)
     {
         _ctx = ctx;
-
         setLayoutManager(GroupLayout.makeHoriz(GroupLayout.LEFT));
-        add(_scrip = new BLabel(""));
-        add(_gold = new BLabel(""));
-
-        _scrip.setIcon(new ImageIcon(ctx.loadImage("ui/scrip.png")));
-        _gold.setIcon(new ImageIcon(ctx.loadImage("ui/gold.png")));
+        createLabels(ctx);
     }
 
     /**
@@ -35,6 +30,14 @@ public class MoneyLabel extends BContainer
         // TODO: animate and bling!
         _scrip.setText(String.valueOf(scrip));
         _gold.setText(String.valueOf(gold));
+    }
+
+    protected void createLabels (BangContext ctx)
+    {
+        add(_scrip = new BLabel(""));
+        _scrip.setIcon(new ImageIcon(ctx.loadImage("ui/scrip.png")));
+        add(_gold = new BLabel(""));
+        _gold.setIcon(new ImageIcon(ctx.loadImage("ui/gold.png")));
     }
 
     protected BangContext _ctx;

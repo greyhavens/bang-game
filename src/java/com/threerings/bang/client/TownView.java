@@ -22,7 +22,6 @@ import com.jme.util.TextureManager;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangBootstrapData;
-import com.threerings.bang.ranch.client.RanchView;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -108,23 +107,22 @@ public class TownView extends BWindow
 
     protected void fireCommand (String command)
     {
+        BangBootstrapData bbd = (BangBootstrapData)
+            _ctx.getClient().getBootstrapData();
+
         if ("logoff".equals(command)) {
             _ctx.getApp().stop();
 
         } else if ("to_ranch".equals(command)) {
-            _ctx.setPlaceView(new RanchView(_ctx));
+            _ctx.getLocationDirector().moveTo(bbd.ranchOid);
 
         } else if ("to_bank".equals(command)) {
-            return; // TODO
+            _ctx.getLocationDirector().moveTo(bbd.bankOid);
 
         } else if ("to_store".equals(command)) {
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.storeOid);
 
         } else if ("to_saloon".equals(command)) {
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.saloonOid);
         }
     }

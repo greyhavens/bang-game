@@ -43,7 +43,7 @@ public class GoodsInspector extends BContainer
         vert.add(_title = new BLabel(""));
         _title.setLookAndFeel(BangUI.dtitleLNF);
         vert.add(_descrip = new BLabel(""));
-        vert.add(horiz = GroupLayout.makeButtonBox(GroupLayout.LEFT));
+        vert.add(horiz = GroupLayout.makeHBox(GroupLayout.LEFT));
 
         horiz.add(_cost = new MoneyLabel(ctx));
         _cost.setMoney(0, 0, false);

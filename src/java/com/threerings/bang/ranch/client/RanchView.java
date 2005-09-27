@@ -3,16 +3,15 @@
 
 package com.threerings.bang.ranch.client;
 
+import java.util.EnumSet;
+
 import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BLabel;
 import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.event.ActionEvent;
-import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -20,6 +19,7 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.TownView;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.data.BangCodes;
@@ -27,7 +27,7 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
-import java.util.EnumSet;
+import com.threerings.bang.ranch.data.RanchObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -37,7 +37,7 @@ import static com.threerings.bang.Log.log;
  * units can also be inspected.
  */
 public class RanchView extends BWindow
-    implements ActionListener, PlaceView
+    implements PlaceView
 {
     public RanchView (BangContext ctx)
     {
@@ -45,13 +45,8 @@ public class RanchView extends BWindow
         setBorder(new EmptyBorder(5, 5, 5, 5));
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
+
         final MessageBundle msgs = ctx.getMessageManager().getBundle("ranch");
-
-        String townId = _ctx.getUserObject().townId;
-
-        // we cover the whole screen
-        setBounds(0, 0, ctx.getDisplay().getWidth(),
-                  ctx.getDisplay().getHeight());
 
         // at the top we have a box that displays text and the unit inspector
         BContainer signcont = new BContainer(new BorderLayout(0, 0));
@@ -62,7 +57,7 @@ public class RanchView extends BWindow
         signcont.add(_sign, BorderLayout.CENTER);
 
         // center panel: tabbed view with...
-        _tabs = new BTabbedPane() {
+        _tabs = new BTabbedPane(GroupLayout.CENTER) {
             public void selectTab (int tabidx) {
                 super.selectTab(tabidx);
                 _sign.setText(msgs.get("m." + TAB[tabidx] + "_tip"));
@@ -76,6 +71,7 @@ public class RanchView extends BWindow
         _tabs.addTab(msgs.get("t.bigshots"), _bigshots);
 
         // ...recruitable big shots...
+        String townId = _ctx.getUserObject().townId;
         _recruits = new UnitPalette(ctx, _sign, 4);
         _recruits.setUnits(UnitConfig.getTownUnits(
                                townId, UnitConfig.Rank.BIGSHOT));
@@ -92,33 +88,22 @@ public class RanchView extends BWindow
         BContainer bottom = new BContainer(GroupLayout.makeHStretch());
         add(bottom, BorderLayout.SOUTH);
 
-        bottom.add(new BLabel(msgs.get("m.cash_on_hand")), GroupLayout.FIXED);
         bottom.add(new WalletLabel(ctx));
-        bottom.add(new BButton(msgs.get("m.back_to_town"), this, "back"),
-                   GroupLayout.FIXED);
+        bottom.add(new TownButton(ctx), GroupLayout.FIXED);
 
         // start out with some special welcome text
         _sign.setText(msgs.get("m.welcome"));
     }
 
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        if ("back".equals(event.getAction())) {
-            _ctx.clearPlaceView(this);
-        }
-    }
-
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
-        // this is never actually called; the ranch is not a real place
+        _sign.init((RanchObject)plobj);
     }
 
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
-        // this is never actually called; the ranch is not a real place
     }
 
     @Override // documentation inherited

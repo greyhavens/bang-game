@@ -57,19 +57,19 @@ public class OptionsView extends BDecoratedWindow
 
         add(new BLabel(_msgs.get("m.title")));
 
-        BContainer cont = GroupLayout.makeButtonBox(GroupLayout.LEFT);
+        BContainer cont = GroupLayout.makeHBox(GroupLayout.LEFT);
         cont.add(new BLabel(_msgs.get("m.video_mode")));
         cont.add(_modes = new BComboBox());
         _modes.addListener(_modelist);
         add(cont);
 
-        cont = GroupLayout.makeButtonBox(GroupLayout.LEFT);
+        cont = GroupLayout.makeHBox(GroupLayout.LEFT);
         cont.add(_fullscreen = new BCheckBox(_msgs.get("m.fullscreen_mode")));
         _fullscreen.setChecked(Display.isFullscreen());
         _fullscreen.addListener(_modelist);
         add(cont);
 
-        cont = GroupLayout.makeButtonBox(GroupLayout.RIGHT);
+        cont = GroupLayout.makeHBox(GroupLayout.RIGHT);
         BButton btn;
         cont.add(btn = new BButton(_msgs.get("m.dismiss"), "dismiss"));
         btn.addListener(this);

@@ -8,7 +8,8 @@ import com.samskivert.util.ListUtil;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.InvocationManager;
+
+import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BigShotItem;
@@ -18,24 +19,17 @@ import com.threerings.bang.server.persist.FinancialAction;
 
 import com.threerings.bang.ranch.client.RanchService;
 import com.threerings.bang.ranch.data.RanchCodes;
+import com.threerings.bang.ranch.data.RanchMarshaller;
+import com.threerings.bang.ranch.data.RanchObject;
 
 import static com.threerings.bang.Log.log;
 
 /**
  * Provides ranch-related services.
  */
-public class RanchManager
+public class RanchManager extends PlaceManager
     implements RanchCodes, RanchProvider
 {
-    /**
-     * Prepares the ranch manager for operation.
-     */
-    public void init (InvocationManager invmgr)
-    {
-        // register ourselves with the invocation manager
-        invmgr.registerDispatcher(new RanchDispatcher(this), true);
-    }
-
     // documentation inherited from interface RanchProvider
     public void recruitBigShot (ClientObject caller, String type,
                                 final RanchService.ResultListener listener)
@@ -59,6 +53,38 @@ public class RanchManager
         // create and deliver the unit to the player; all the heavy
         // lifting is handled by the financiial action
         new RecruitBigShotAction(user, config, listener).start();
+    }
+
+    @Override // documentation inherited
+    protected Class getPlaceObjectClass ()
+    {
+        return RanchObject.class;
+    }
+
+    @Override // documentation inherited
+    protected long idleUnloadPeriod ()
+    {
+        // we don't want to unload
+        return 0L;
+    }
+
+    @Override // documentation inherited
+    protected void didInit ()
+    {
+        super.didInit();
+
+        // TODO: anything?
+    }
+
+    @Override // documentation inherited
+    protected void didStartup ()
+    {
+        super.didStartup();
+
+        // register our invocation service
+        _robj = (RanchObject)_plobj;
+        _robj.setService((RanchMarshaller)BangServer.invmgr.registerDispatcher(
+                             new RanchDispatcher(this), false));
     }
 
     /** Used to recruit and deliver a big shot to a player. */
@@ -89,4 +115,6 @@ public class RanchManager
         protected BigShotItem _unit;
         protected RanchService.ResultListener _listener;
     }
+
+    protected RanchObject _robj;
 }

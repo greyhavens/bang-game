@@ -15,8 +15,6 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.ImageIcon;
 import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.border.LineBorder;
-import com.jmex.bui.event.ActionEvent;
-import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
@@ -26,7 +24,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.client.StatusView;
+import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.util.BangContext;
 
@@ -39,25 +37,18 @@ import static com.threerings.bang.Log.log;
  * Displays the main interface for the General Store.
  */
 public class StoreView extends BWindow
-    implements ActionListener, PlaceView
+    implements PlaceView
 {
     public StoreView (BangContext ctx)
     {
         super(ctx.getLookAndFeel(), GroupLayout.makeHStretch());
         setBorder(new EmptyBorder(5, 5, 5, 5));
+
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
         _msgs = ctx.getMessageManager().getBundle("store");
 
         String townId = _ctx.getUserObject().townId;
-
-        // display the status view when the player presses escape
-        setModal(true);
-        new StatusView(_ctx).bind(this);
-
-        // we cover the whole screen
-        setBounds(0, 0, ctx.getDisplay().getWidth(),
-                  ctx.getDisplay().getHeight());
 
         // the left column contains some fancy graphics
         BContainer left = new BContainer(GroupLayout.makeVert(GroupLayout.TOP));
@@ -77,8 +68,7 @@ public class StoreView extends BWindow
         _status.setLookAndFeel(BangUI.dtitleLNF);
         main.add(_status, GroupLayout.FIXED);
 
-        BContainer mcont = GroupLayout.makeButtonBox(GroupLayout.LEFT);
-        mcont.add(new BLabel(_msgs.get("m.cash_on_hand")));
+        BContainer mcont = GroupLayout.makeHBox(GroupLayout.LEFT);
         mcont.add(new WalletLabel(_ctx));
         main.add(mcont, GroupLayout.FIXED);
 
@@ -93,21 +83,9 @@ public class StoreView extends BWindow
         lay.setOffAxisPolicy(GroupLayout.CONSTRAIN);
         lay.setOffAxisJustification(GroupLayout.BOTTOM);
         BContainer bottom = new BContainer(lay);
-        main.add(bottom, GroupLayout.FIXED);
-
         bottom.add(_inspector);
-        BButton btn;
-        bottom.add(btn = new BButton(_msgs.get("m.back_to_town"), "back"),
-                   GroupLayout.FIXED);
-        btn.addListener(this);
-    }
-
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        if ("back".equals(event.getAction())) {
-            _ctx.getLocationDirector().leavePlace();
-        }
+        bottom.add(new TownButton(ctx), GroupLayout.FIXED);
+        main.add(bottom, GroupLayout.FIXED);
     }
 
     // documentation inherited from interface PlaceView

@@ -35,7 +35,6 @@ import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.jme.chat.ChatView;
 
-import com.threerings.bang.client.StatusView;
 import com.threerings.bang.client.TownView;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
@@ -57,10 +56,6 @@ public class LobbyView extends BWindow
     {
         super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
         _ctx = ctx;
-
-        // display a simple menu when the player presses escape
-        setModal(true);
-        new StatusView(_ctx).bind(this);
 
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
         _chat.setBorder(new EmptyBorder(5, 0, 5, 5));
@@ -142,9 +137,6 @@ public class LobbyView extends BWindow
     public void wasAdded ()
     {
         super.wasAdded();
-
-        setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                  _ctx.getDisplay().getHeight());
 
         // switch to a gray background
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);

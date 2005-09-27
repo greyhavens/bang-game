@@ -3,9 +3,12 @@
 
 package com.threerings.bang.client;
 
+import com.jmex.bui.BLabel;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
@@ -30,6 +33,13 @@ public class WalletLabel extends MoneyLabel
         } else if (event.getName().equals(PlayerObject.GOLD)) {
             updateValues(true);
         }
+    }
+
+    @Override // documentation inherited
+    protected void createLabels (BangContext ctx)
+    {
+        add(new BLabel(ctx.xlate(BangCodes.BANG_MSGS, "m.cash_on_hand")));
+        super.createLabels(ctx);
     }
 
     @Override // documentation inherited

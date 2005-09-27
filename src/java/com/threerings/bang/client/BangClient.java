@@ -175,7 +175,21 @@ public class BangClient extends BasicClient
             } else if (_tview != null) {
                 _ctx.getRootNode().removeWindow(_tview);
             }
-            _ctx.getRootNode().addWindow(_pview = (BWindow)view);
+
+            // wire a status view to this place view (show by pressing esc);
+            // the window must be modal prior to adding it to the hierarchy to
+            // ensure that it is a default event target (and hears the escape
+            // key pressed event)
+            _pview = (BWindow)view;
+            _pview.setModal(true);
+            new StatusView(_ctx).bind(_pview);
+
+            // now we can add the window to the hierarchy
+            _ctx.getRootNode().addWindow(_pview);
+
+            // size the view to fill the display
+            _pview.setBounds(0, 0, _ctx.getDisplay().getWidth(),
+                             _ctx.getDisplay().getHeight());
         }
 
         public void clearPlaceView (PlaceView view) {

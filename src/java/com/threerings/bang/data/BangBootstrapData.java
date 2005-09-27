@@ -15,4 +15,10 @@ public class BangBootstrapData extends BootstrapData
 
     /** The room oid of the General Store. */
     public int storeOid;
+
+    /** The room oid of the Bank. */
+    public int bankOid;
+
+    /** The room oid of the Ranch. */
+    public int ranchOid;
 }

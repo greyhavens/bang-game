@@ -69,6 +69,8 @@ public class BangClient extends CrowdClient
         BangBootstrapData bbd = (BangBootstrapData)data;
         bbd.saloonOid = BangServer.saloonmgr.getPlaceObject().getOid();
         bbd.storeOid = BangServer.storemgr.getPlaceObject().getOid();
+        bbd.bankOid = BangServer.bankmgr.getPlaceObject().getOid();
+        bbd.ranchOid = BangServer.ranchmgr.getPlaceObject().getOid();
     }
 
     @Override // documentation inherited
