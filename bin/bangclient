@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# $Id$
+#
+# Command line launcher for the Bang! development client
 
 # parse our arguments
 ARGS="localhost 47624"
