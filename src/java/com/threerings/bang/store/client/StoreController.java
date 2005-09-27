@@ -5,36 +5,18 @@ package com.threerings.bang.store.client;
 
 import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.data.PlaceConfig;
-import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.bang.util.BangContext;
 
 /**
- * Manages the client side of the Bang! General Store.
+ * Manages the client side of the General Store.
  */
 public class StoreController extends PlaceController
 {
     // documentation inherited
-    public void init (CrowdContext ctx, PlaceConfig config)
-    {
-        super.init(ctx, config);
-        _ctx = (BangContext)ctx;
-    }
-
-    // documentation inherited
-    public void willEnterPlace (PlaceObject plobj)
-    {
-        super.willEnterPlace(plobj);
-    }
-
-    // documentation inherited
     protected PlaceView createPlaceView (CrowdContext ctx)
     {
-        return (_view = new StoreView((BangContext)ctx));
+        return new StoreView((BangContext)ctx);
     }
-
-    protected BangContext _ctx;
-    protected StoreView _view;
 }
