@@ -1,9 +1,29 @@
 #!/bin/sh
 
-CLASS=com.threerings.bang.client.BangApp
-if [ "$1" == "-test" ]; then
-    TEST="-Dtest=true";
+# parse our arguments
+ARGS="localhost 47624"
+
+while [ ! -z "$1" ]; do
+    case "$1" in
+        -test)
+            TEST="-Dtest=true";
+            ;;
+        
+        -build)
+            ant
+            if [ $? != 0 ]; then
+                echo "Compilation failed."
+                exit 255
+            fi
+            ;;
+
+        *)
+            ARGS="$ARGS $1"
+            ;;
+    esac
     shift
-fi
-`dirname $0`/runjava -- -Dno_log_redir=true $TEST $CLASS localhost 47624 $*
+done
+
+CLASS=com.threerings.bang.client.BangApp
+`dirname $0`/runjava -- -Dno_log_redir=true $TEST $CLASS $ARGS
 xset r on
