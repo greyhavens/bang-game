@@ -15,6 +15,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankObject;
 
 /**
@@ -31,15 +32,15 @@ public class QuickTransact extends BContainer
         _buying = buying;
 
         String msg = buying ? "m.buy" : "m.sell";
-        add(new BLabel(_ctx.xlate("bank", msg)));
+        add(new BLabel(_ctx.xlate(BankCodes.BANK_MSGS, msg)));
         add(new BLabel(BangUI.coinIcon));
         add(_coins = new BTextField());
         _coins.setPreferredWidth(30);
-        add(new BLabel(_ctx.xlate("bank", "m.for")));
+        add(new BLabel(_ctx.xlate(BankCodes.BANK_MSGS, "m.for")));
         add(_scrip = new BLabel(BangUI.scripIcon));
         _scrip.setText("0");
         add(new Spacer(15, 1));
-        add(new BButton(_ctx.xlate("bank", msg), this, "go"));
+        add(new BButton(_ctx.xlate(BankCodes.BANK_MSGS, msg), this, "go"));
     }
 
     public void init (BankObject bankobj)

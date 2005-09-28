@@ -18,6 +18,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankObject;
 
 /**
@@ -29,14 +30,14 @@ public class FullTransact extends BContainer
 {
     public FullTransact (BangContext ctx, boolean buying)
     {
-        super(GroupLayout.makeVStretch());
+        super(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
+                                   GroupLayout.STRETCH));
         _ctx = ctx;
         _buying = buying;
-        _msgs = ctx.getMessageManager().getBundle("bank");
+        _msgs = ctx.getMessageManager().getBundle(BankCodes.BANK_MSGS);
 
         String msg = buying ? "m.buy" : "m.sell";
-        add(new BLabel(_msgs.get(msg + "_offers")),
-            GroupLayout.FIXED);
+        add(new BLabel(_msgs.get(msg + "_offers")));
 
         // add slots for the top four offers
         BContainer offers = new BContainer(new TableLayout(4, 5, 2));
@@ -45,10 +46,10 @@ public class FullTransact extends BContainer
             _offers[ii] = new OfferLabel(offers);
         }
         _offers[0].setNoOffers();
-        add(offers, GroupLayout.FIXED);
-        add(new Spacer(1, 15), GroupLayout.FIXED);
+        add(offers);
+        add(new Spacer(1, 15));
 
-        add(new BLabel(_msgs.get(msg + "_post_offer")), GroupLayout.FIXED);
+        add(new BLabel(_msgs.get(msg + "_post_offer")));
 
         BContainer moffer = GroupLayout.makeHBox(GroupLayout.LEFT);
         moffer.add(new BLabel(BangUI.coinIcon));
@@ -61,7 +62,19 @@ public class FullTransact extends BContainer
         moffer.add(new BLabel(_msgs.get("m.each")));
         moffer.add(new Spacer(15, 1));
         moffer.add(new BButton(_msgs.get("m.post", this, "post")));
-        add(moffer, GroupLayout.FIXED);
+        add(moffer);
+        add(new Spacer(1, 15));
+
+        add(new BLabel(_msgs.get("m.your_offers")));
+        BContainer myoffers = new BContainer(new TableLayout(5, 5, 2));
+        add(myoffers);
+
+        // TODO: extract our offers from the supplied set
+        OfferLabel mine = new OfferLabel(myoffers);
+        mine.setOffer(5, 1234);
+        BButton rescind = new BButton(_msgs.get("m.rescind", this, "rescind"));
+        // rescind.setProperty("offer", offer);
+        myoffers.add(rescind);
     }
 
     public void init (BankObject bankobj)
@@ -77,6 +90,8 @@ public class FullTransact extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         if ("post".equals(event.getAction())) {
+            // do the deed
+        } else if ("rescind".equals(event.getAction())) {
             // do the deed
         }
     }

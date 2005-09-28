@@ -23,13 +23,14 @@ import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankObject;
 
 /**
  * Displays the main interface for the Bank.
  */
 public class BankView extends BWindow
-    implements PlaceView
+    implements PlaceView, BankCodes
 {
     public BankView (BangContext ctx)
     {
@@ -39,14 +40,14 @@ public class BankView extends BWindow
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-        String title = _ctx.xlate("bank", "m.quick_title");
+        String title = _ctx.xlate(BANK_MSGS, "m.quick_title");
         add(wrap(title, _qsell = new QuickTransact(ctx, false),
                  _qbuy = new QuickTransact(ctx, true)), GroupLayout.FIXED);
 
         // add a spacer container to suck up whitespace
         add(new Spacer());
 
-        title = _ctx.xlate("bank", "m.full_title");
+        title = _ctx.xlate(BANK_MSGS, "m.full_title");
         add(wrap(title, _fsell = new FullTransact(ctx, false),
                  _fbuy = new FullTransact(ctx, true)), GroupLayout.FIXED);
 
