@@ -46,7 +46,8 @@ public class LogonView extends BWindow
 
         ClassLoader loader = getClass().getClassLoader();
         setBackground(new ScaledBackground(
-                          TextureManager.loadImage(loader.getResource("rsrc/menu/logon.png"), true),
+                          TextureManager.loadImage(
+                              loader.getResource("rsrc/menu/logon.png"), true),
                           0, 300, 50, 0)); // magic!
 
         _msgs = ctx.getMessageManager().getBundle("logon");
