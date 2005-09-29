@@ -21,7 +21,6 @@ import com.threerings.crowd.server.PlaceRegistry;
 
 import com.threerings.parlor.server.ParlorManager;
 
-import com.threerings.coin.server.persist.CoinRepository;
 import com.threerings.user.AccountActionRepository;
 
 import com.threerings.bang.bank.data.BankConfig;
@@ -64,10 +63,12 @@ public class BangServer extends CrowdServer
     /** Manages the persistent repository of stats. */
     public static StatRepository statrepo;
 
-    /** Provides micropayment services. (This will need to be turned into
-     * a pluggable interface to support third party micropayment
-     * systems.) */
-    public static CoinRepository coinrepo;
+    /** Provides micropayment services. (This will need to be turned into a
+     * pluggable interface to support third party micropayment systems.) */
+    public static BangCoinManager coinmgr;
+
+    /** Manages the market for exchange between scrips and coins. */
+    public static BangCoinExchangeManager coinexmgr;
 
     /** Keeps an eye on the Ranch, a good man to have around. */
     public static RanchManager ranchmgr;
@@ -103,8 +104,8 @@ public class BangServer extends CrowdServer
         playrepo = new PlayerRepository(conprov);
         itemrepo = new ItemRepository(conprov);
         statrepo = new StatRepository(conprov);
-        coinrepo = new CoinRepository(
-            conprov, ServerConfig.serverName, _clog, actionrepo);
+        coinmgr = new BangCoinManager(conprov);
+        coinexmgr = new BangCoinExchangeManager(conprov);
 
         // set up our authenticator
         Authenticator auth = ServerConfig.getAuthenticator();
@@ -160,7 +161,6 @@ public class BangServer extends CrowdServer
         // close our audit logs
         _glog.close();
         _ilog.close();
-        _clog.close();
     }
 
     /**
@@ -177,6 +177,15 @@ public class BangServer extends CrowdServer
     public static void itemLog (String message)
     {
         _ilog.log(message);
+    }
+
+    /**
+     * Creates an audit log with the specified name (which should includ the
+     * <code>.log</code> suffix) in our server log directory.
+     */
+    public static AuditLogger createAuditLog (String logname)
+    {
+        return new AuditLogger(_logdir, logname);
     }
 
     @Override // documentation inherited
@@ -201,7 +210,6 @@ public class BangServer extends CrowdServer
     }
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
-    protected static AuditLogger _glog = new AuditLogger(_logdir, "server.log");
-    protected static AuditLogger _ilog = new AuditLogger(_logdir, "item.log");
-    protected static AuditLogger _clog = new AuditLogger(_logdir, "coin.log");
+    protected static AuditLogger _glog = createAuditLog("server.log");
+    protected static AuditLogger _ilog = createAuditLog("item.log");
 }

@@ -78,7 +78,7 @@ public class PlayerRepository extends JORARepository
     public void spendScrip (int playerId, int amount)
         throws PersistenceException
     {
-        updateScrip(playerId, amount, "spend");
+        updateScrip("PLAYER_ID = " + playerId, amount, "spend");
     }
 
     /**
@@ -88,30 +88,41 @@ public class PlayerRepository extends JORARepository
     public void grantScrip (int playerId, int amount)
         throws PersistenceException
     {
-        updateScrip(playerId, amount, "grant");
+        updateScrip("PLAYER_ID = " + playerId, amount, "grant");
+    }
+
+    /**
+     * <em>Do not use this method!</em> It exists only because we must work
+     * with the coin system which tracks players by name rather than id.
+     */
+    public void grantScrip (String accountName, int amount)
+        throws PersistenceException
+    {
+        updateScrip("ACCOUNT_NAME = " + JDBCUtil.escape(accountName),
+                    amount, "grant");
     }
 
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
-    protected void updateScrip (int playerId, int amount, String type)
+    protected void updateScrip (String where, int amount, String type)
         throws PersistenceException
     {
         if (amount <= 0) {
             throw new PersistenceException(
-                "Illegal scrip " + type + " [pid=" + playerId +
+                "Illegal scrip " + type + " [where=" + where +
                 ", amount=" + amount + "]");
         }
 
         String action = type.equals("grant") ? "+" : "-";
         String query = "update PLAYERS set SCRIP = SCRIP " + action + " " +
-            amount + " where PLAYER_ID = " + playerId;
+            amount + " where " + where;
         int mods = update(query);
         if (mods == 0) {
             throw new PersistenceException(
-                "Scrip " + type + " modified zero rows [pid=" + playerId +
+                "Scrip " + type + " modified zero rows [where=" + where +
                 ", amount=" + amount + "]");
         } else if (mods > 1) {
             log.warning("Scrip " + type + " modified multiple rows " +
-                        "[pid=" + playerId + ", amount=" + amount +
+                        "[where=" + where + ", amount=" + amount +
                         ", mods=" + mods + "].");
         }
     }
