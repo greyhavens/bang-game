@@ -42,6 +42,7 @@ import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
 
+import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
@@ -704,9 +705,8 @@ public class BangManager extends GameManager
         // note the duration of the game (in minutes)
         int gameTime = (int)(System.currentTimeMillis() - _startStamp) / 60000;
 
-        // this will hold any newly created badges
-        ArrayList<Badge> badges = new ArrayList<Badge>();
-        int[] bcounts = new int[getPlayerSlots()];
+        // these will track awarded cash and badges
+        Award[] awards = new Award[getPlayerSlots()];
 
         // record various statistics
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
@@ -715,6 +715,7 @@ public class BangManager extends GameManager
                 continue;
             }
             StatSet stats = _bangobj.stats[ii];
+            awards[ii] = new Award(user);
 
             try {
                 // send all the stat updates out in one dobj event
@@ -743,26 +744,26 @@ public class BangManager extends GameManager
                 // allow the scenario to record statistics as well
                 _scenario.recordStats(_bangobj, gameTime, ii, user);
 
-                // TODO: award and report "take home" cash
+                // compute their "take home" cash; TODO: track which round each
+                // player "left" the game in and use that instead of the final
+                // round id if we support bailing before the final round
+                int maxCash =
+                    user.getPurse().getPerRoundCash() * _bangobj.roundId;
+                awards[ii].cashEarned = Math.min(_bangobj.funds[ii], maxCash);
 
                 // determine whether this player qualifies for new badges
-                int size = badges.size();
-                Badge.checkBadges(user, badges);
-                bcounts[ii] = badges.size()-size;
+                Badge.checkBadges(user, awards[ii].badges);
 
             } finally {
                 user.commitTransaction();
             }
         }
 
-        // stuff the awarded badges into the game object
-        _bangobj.setBadgeCounts(bcounts);
-        _bangobj.setBadges(badges.toArray(new Badge[badges.size()]));
+        // stuff the award data into the game object
+        _bangobj.setAwards(awards);
 
-        // persist the awarded badges
-        if (badges.size() > 0) {
-            awardBadges(badges, bcounts);
-        }
+        // and persist the awards as well
+        persistAwards(awards);
     }
 
     @Override // documentation inherited
@@ -1108,32 +1109,55 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Stores the supplied badges to the inventories of the appropriate
-     * players. Called at the end of a game when any badges have been
-     * earned by the players.
+     * Persists the supplied cash and badges and sticks them into the
+     * distributed objects of the appropriate players.
      */
-    protected void awardBadges (
-        final ArrayList<Badge> badges, final int[] bcounts)
+    protected void persistAwards (final Award[] awards)
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
-                for (Badge badge : badges) {
-                    try {
-                        BangServer.itemrepo.insertItem(badge);
-                    } catch (PersistenceException pe) {
-                        log.log(Level.WARNING, "Failed to store badge " +
-                                "[badge=" + badge + "]", pe);
+                for (int ii = 0; ii < awards.length; ii++) {
+                    if (awards[ii] != null) {
+                        persistAward(awards[ii]);
                     }
                 }
                 return true;
             }
 
             public void handleResult () {
-                int idx = 0;
-                for (int ii = 0; ii < bcounts.length; ii++) {
-                    PlayerObject user = (PlayerObject)getPlayer(ii);
-                    for (int bb = 0; bb < bcounts[ii]; bb++) {
-                        user.addToInventory(badges.get(idx++));
+                for (int ii = 0; ii < awards.length; ii++) {
+                    if (awards[ii] == null) {
+                        continue;
+                    }
+                    PlayerObject player = awards[ii].player;
+                    if (awards[ii].cashEarned > 0) {
+                        player.setScrip(player.scrip + awards[ii].cashEarned);
+                    }
+                    for (Badge badge : awards[ii].badges) {
+                        player.addToInventory(badge);
+                    }
+                }
+            }
+
+            protected void persistAward (Award award) {
+                try {
+                    if (award.cashEarned > 0) {
+                        BangServer.playrepo.grantScrip(
+                            award.player.playerId, award.cashEarned);
+                    }
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failed to award scrip to player " +
+                            "[who=" + award.player.who() +
+                            ", scrip=" + award.cashEarned + "].", pe);
+                }
+
+                for (Badge badge : award.badges) {
+                    try {
+                        BangServer.itemrepo.insertItem(badge);
+                    } catch (PersistenceException pe) {
+                        log.log(Level.WARNING, "Failed to store badge " +
+                                "[for=" + award.player.who() +
+                                ", badge=" + badge + "]", pe);
                     }
                 }
             }

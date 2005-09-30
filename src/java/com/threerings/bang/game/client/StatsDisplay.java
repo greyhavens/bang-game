@@ -19,11 +19,13 @@ import com.jmex.bui.layout.TableLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.util.BangContext;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.util.BangContext;
 
 /**
  * Displays post-round and post-game statistics on all players.
@@ -82,31 +84,27 @@ public class StatsDisplay extends BDecoratedWindow
         }
         add(bits);
 
-        // display any awarded badges
-        if (bangobj.badges != null && bangobj.badges.length > 0) {
-            add(new BLabel(""));
-            BContainer badges = new BContainer(
-                GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                     GroupLayout.STRETCH));
-            label = new BLabel(msgs.get("m.badges"));
-            label.setLookAndFeel(BangUI.dtitleLNF);
-            badges.add(label);
-            int bidx = 0;
-            for (int ii = 0; ii < bangobj.badgeCounts.length; ii++) {
-                if (bangobj.badgeCounts[ii] == 0) {
-                    continue;
-                }
-                StringBuffer blabel = new StringBuffer(
-                    bangobj.players[ii].toString());
-                for (int bb = 0; bb < bangobj.badgeCounts[ii]; bb++) {
-                    blabel.append(bb > 0 ? ", " : ": ");
-                    String key = bangobj.badges[bidx++].getType().key();
-                    blabel.append(_ctx.xlate(BangCodes.BADGE_MSGS, key));
-                }
-                badges.add(new BLabel(blabel.toString()));
+        // display awarded cash and badges
+        add(new BLabel(""));
+        BContainer awards = new BContainer(
+            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
+                                 GroupLayout.STRETCH));
+        label = new BLabel(msgs.get("m.awards"));
+        label.setLookAndFeel(BangUI.dtitleLNF);
+        awards.add(label);
+        for (int ii = 0; ii < bangobj.awards.length; ii++) {
+            BContainer pbox = GroupLayout.makeHBox(GroupLayout.LEFT);
+            pbox.add(new BLabel(bangobj.players[ii].toString()));
+            BLabel cash = new BLabel("" + bangobj.awards[ii].cashEarned);
+            cash.setIcon(BangUI.scripIcon);
+            pbox.add(cash);
+            for (Badge badge : bangobj.awards[ii].badges) {
+                String key = badge.getType().key();
+                pbox.add(new BLabel(_ctx.xlate(BangCodes.BADGE_MSGS, key)));
             }
-            add(badges);
+            awards.add(pbox);
         }
+        add(awards);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         BButton dismiss = new BButton(msgs.get("m.dismiss"));

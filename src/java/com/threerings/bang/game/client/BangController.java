@@ -146,9 +146,8 @@ public class BangController extends GameController
     {
         super.attributeChanged(event);
 
-        // once the badges are set, we can display the end of game stats
-        if (event.getName().equals(BangObject.BADGES)) {
-            log.info("Displaying stats!");
+        // once the awards are set, we can display the end of game stats
+        if (event.getName().equals(BangObject.AWARDS)) {
             StringBuffer winners = new StringBuffer();
             for (int ii = 0; ii < _bangobj.winners.length; ii++) {
                 if (_bangobj.winners[ii]) {
