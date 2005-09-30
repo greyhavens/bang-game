@@ -22,6 +22,7 @@ import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.parlor.server.ParlorManager;
 
 import com.threerings.user.AccountActionRepository;
+import com.threerings.util.Name;
 
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
@@ -33,6 +34,7 @@ import com.threerings.bang.store.data.StoreConfig;
 import com.threerings.bang.store.server.StoreManager;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.StatRepository;
@@ -162,6 +164,16 @@ public class BangServer extends CrowdServer
         // close our audit logs
         _glog.close();
         _ilog.close();
+    }
+
+    /**
+     * Returns the player object for the specified user if they are online
+     * currently, null otherwise. This should only be called from the dobjmgr
+     * thread.
+     */
+    public static PlayerObject lookupPlayer (Name username)
+    {
+        return (PlayerObject)clmgr.getClientObject(username);
     }
 
     /**
