@@ -17,6 +17,7 @@
 -injars lib/jme-model.jar(!META-INF/*)
 -injars lib/jme-terrain.jar(!META-INF/*)
 -injars lib/jme-bui.jar(!META-INF/*)
+-injars lib/threerings.jar(**/coin/**)
 -injars dist/bang-code.jar(!META-INF/*,!**/tools/**)
 
 -libraryjars <java.home>/lib/rt.jar
