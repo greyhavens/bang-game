@@ -59,7 +59,7 @@ public class QuickTransact extends BContainer
     {
         // determine the best offer price
         ConsolidatedOffer best = _buying ?
-            _bankobj.getBestBuy() : _bankobj.getBestSell();
+            _bankobj.getBestSell() : _bankobj.getBestBuy();
         if (best == null) {
             return;
         }

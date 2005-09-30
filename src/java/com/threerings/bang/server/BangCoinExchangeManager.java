@@ -117,8 +117,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     @Override // documentation inherited
     protected void updateUserCoins (String gameName, String accountName)
     {
-        PlayerObject player = (PlayerObject)BangServer.lookupBody(
-            new Name(accountName));
+        PlayerObject player = BangServer.lookupPlayer(new Name(accountName));
         if (player != null) {
             BangServer.coinmgr.updateCoinCount(player);
         }
@@ -132,12 +131,21 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             public boolean invoke () {
                 try {
                     BangServer.playrepo.grantScrip(info.accountName, currency);
+                    return true;
                 } catch (PersistenceException pe) {
                     log.log(Level.WARNING, "Failed to grant scrip to player " +
                             "[offer=" + info + ", amount=" + currency +
                             ", type=" + msg + "].", pe);
+                    return false;
                 }
-                return false;
+            }
+
+            public void handleResult () {
+                PlayerObject player = BangServer.lookupPlayer(
+                    new Name(info.accountName));
+                if (player != null) {
+                    player.setScrip(player.scrip + currency);
+                }
             }
         });
     }
