@@ -38,31 +38,10 @@ public class BankDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
-        case BankMarshaller.BUY_COINS:
-            ((BankProvider)provider).buyCoins(
+        case BankMarshaller.POST_OFFER:
+            ((BankProvider)provider).postOffer(
                 source,
-                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
-            );
-            return;
-
-        case BankMarshaller.POST_BUY_OFFER:
-            ((BankProvider)provider).postBuyOffer(
-                source,
-                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
-            );
-            return;
-
-        case BankMarshaller.POST_SELL_OFFER:
-            ((BankProvider)provider).postSellOffer(
-                source,
-                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
-            );
-            return;
-
-        case BankMarshaller.SELL_COINS:
-            ((BankProvider)provider).sellCoins(
-                source,
-                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
+                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), ((Boolean)args[2]).booleanValue(), ((Boolean)args[3]).booleanValue(), (InvocationService.ConfirmListener)args[4]
             );
             return;
 

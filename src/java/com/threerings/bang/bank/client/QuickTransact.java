@@ -14,11 +14,11 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankObject;
-import com.threerings.bang.bank.data.Offer;
 
 /**
  * Displays an interface for making a quick transaction: an immediately
@@ -58,7 +58,8 @@ public class QuickTransact extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         // determine the best offer price
-        Offer best = _buying ? _bankobj.getBestBuy() : _bankobj.getBestSell();
+        ConsolidatedOffer best = _buying ?
+            _bankobj.getBestBuy() : _bankobj.getBestSell();
         if (best == null) {
             return;
         }
@@ -66,6 +67,8 @@ public class QuickTransact extends BContainer
         BankService.ConfirmListener cl = new BankService.ConfirmListener() {
             public void requestProcessed () {
                 _status.setText(_ctx.xlate(BANK_MSGS, "m.trans_completed"));
+                _coins.setText("");
+                _scrip.setText("0");
             }
             public void requestFailed (String reason) {
                 _status.setText(_ctx.xlate(BANK_MSGS, reason));
@@ -74,7 +77,8 @@ public class QuickTransact extends BContainer
 
         try {
             int coins = Integer.valueOf(_coins.getText());
-            _bankobj.service.buyCoins(_ctx.getClient(), coins, best.price, cl);
+            _bankobj.service.postOffer(_ctx.getClient(), coins, best.price,
+                                       _buying, true, cl);
         } catch (Exception e) {
             // TODO: make BTextField support input restriction
             _status.setText(_ctx.xlate(BANK_MSGS, "m.invalid_coins"));

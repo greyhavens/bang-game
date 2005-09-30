@@ -106,7 +106,6 @@ public class BankView extends BWindow
     {
         BContainer wrapper = new BContainer(new BorderLayout(5, 5));
         BLabel tlabel = new BLabel(title);
-        tlabel.setHorizontalAlignment(BLabel.CENTER);
         tlabel.setLookAndFeel(BangUI.dtitleLNF);
         wrapper.add(tlabel, BorderLayout.NORTH);
         BContainer pair = new BContainer(GroupLayout.makeHStretch());

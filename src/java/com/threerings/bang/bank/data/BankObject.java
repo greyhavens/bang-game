@@ -9,6 +9,8 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.data.ConsolidatedOffer;
+
 /**
  * Contains published information for the Bank.
  */
@@ -17,6 +19,9 @@ public class BankObject extends PlaceObject
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
     public static final String SERVICE = "service";
+
+    /** The field name of the <code>lastTrade</code> field. */
+    public static final String LAST_TRADE = "lastTrade";
 
     /** The field name of the <code>buyOffers</code> field. */
     public static final String BUY_OFFERS = "buyOffers";
@@ -28,30 +33,26 @@ public class BankObject extends PlaceObject
     /** Provides access to the bank invocation service. */
     public BankMarshaller service;
 
+    /** The price of the last transaction on the exchange. */
+    public int lastTrade;
+
     /** The top N offers to buy coins for scrip. */
-    public DSet buyOffers;
+    public ConsolidatedOffer[] buyOffers;
 
     /** The top N offers to sell coins for scrip. */
-    public DSet sellOffers;
+    public ConsolidatedOffer[] sellOffers;
 
     /**
      * Returns a consolidation of the best published buy offers (the price will
      * be the best buy price and the volume will be the total volume of all
      * offers at that price) or null if there are no published buy offers.
      */
-    public Offer getBestBuy ()
+    public ConsolidatedOffer getBestBuy ()
     {
-        Offer best = null;
-        for (Iterator iter = buyOffers.iterator(); iter.hasNext(); ) {
-            Offer offer = (Offer)iter.next();
-            if (best == null || offer.price > best.price) {
-                if (best == null) {
-                    best = new Offer();
-                }
-                best.price = offer.price;
-                best.volume = offer.volume;
-            } else if (best != null && offer.price == best.price) {
-                best.volume += offer.volume;
+        ConsolidatedOffer best = null;
+        for (int ii = 0; ii < buyOffers.length; ii++) {
+            if (best == null || buyOffers[ii].price > best.price) {
+                best = buyOffers[ii];
             }
         }
         return best;
@@ -62,19 +63,12 @@ public class BankObject extends PlaceObject
      * will be the best sell price and the volume will be the total volume of
      * all offers at that price) or null if there are no published sell offers.
      */
-    public Offer getBestSell ()
+    public ConsolidatedOffer getBestSell ()
     {
-        Offer best = null;
-        for (Iterator iter = sellOffers.iterator(); iter.hasNext(); ) {
-            Offer offer = (Offer)iter.next();
-            if (best == null || offer.price < best.price) {
-                if (best == null) {
-                    best = new Offer();
-                }
-                best.price = offer.price;
-                best.volume = offer.volume;
-            } else if (best != null && offer.price == best.price) {
-                best.volume += offer.volume;
+        ConsolidatedOffer best = null;
+        for (int ii = 0; ii < sellOffers.length; ii++) {
+            if (best == null || sellOffers[ii].price < best.price) {
+                best = sellOffers[ii];
             }
         }
         return best;
@@ -98,95 +92,85 @@ public class BankObject extends PlaceObject
     }
 
     /**
-     * Requests that the specified entry be added to the
-     * <code>buyOffers</code> set. The set will not change until the event is
-     * actually propagated through the system.
+     * Requests that the <code>lastTrade</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
      */
-    public void addToBuyOffers (DSet.Entry elem)
+    public void setLastTrade (int value)
     {
-        requestEntryAdd(BUY_OFFERS, buyOffers, elem);
-    }
-
-    /**
-     * Requests that the entry matching the supplied key be removed from
-     * the <code>buyOffers</code> set. The set will not change until the
-     * event is actually propagated through the system.
-     */
-    public void removeFromBuyOffers (Comparable key)
-    {
-        requestEntryRemove(BUY_OFFERS, buyOffers, key);
-    }
-
-    /**
-     * Requests that the specified entry be updated in the
-     * <code>buyOffers</code> set. The set will not change until the event is
-     * actually propagated through the system.
-     */
-    public void updateBuyOffers (DSet.Entry elem)
-    {
-        requestEntryUpdate(BUY_OFFERS, buyOffers, elem);
+        int ovalue = this.lastTrade;
+        requestAttributeChange(
+            LAST_TRADE, new Integer(value), new Integer(ovalue));
+        this.lastTrade = value;
     }
 
     /**
      * Requests that the <code>buyOffers</code> field be set to the
-     * specified value. Generally one only adds, updates and removes
-     * entries of a distributed set, but certain situations call for a
-     * complete replacement of the set value. The local value will be
-     * updated immediately and an event will be propagated through the
-     * system to notify all listeners that the attribute did
-     * change. Proxied copies of this object (on clients) will apply the
-     * value change when they received the attribute changed notification.
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
      */
-    public void setBuyOffers (DSet value)
+    public void setBuyOffers (ConsolidatedOffer[] value)
     {
-        requestAttributeChange(BUY_OFFERS, value, this.buyOffers);
-        this.buyOffers = (value == null) ? null : (DSet)value.clone();
+        ConsolidatedOffer[] ovalue = this.buyOffers;
+        requestAttributeChange(
+            BUY_OFFERS, value, ovalue);
+        this.buyOffers = (value == null) ? null : (ConsolidatedOffer[])value.clone();
     }
 
     /**
-     * Requests that the specified entry be added to the
-     * <code>sellOffers</code> set. The set will not change until the event is
-     * actually propagated through the system.
+     * Requests that the <code>index</code>th element of
+     * <code>buyOffers</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
      */
-    public void addToSellOffers (DSet.Entry elem)
+    public void setBuyOffersAt (ConsolidatedOffer value, int index)
     {
-        requestEntryAdd(SELL_OFFERS, sellOffers, elem);
-    }
-
-    /**
-     * Requests that the entry matching the supplied key be removed from
-     * the <code>sellOffers</code> set. The set will not change until the
-     * event is actually propagated through the system.
-     */
-    public void removeFromSellOffers (Comparable key)
-    {
-        requestEntryRemove(SELL_OFFERS, sellOffers, key);
-    }
-
-    /**
-     * Requests that the specified entry be updated in the
-     * <code>sellOffers</code> set. The set will not change until the event is
-     * actually propagated through the system.
-     */
-    public void updateSellOffers (DSet.Entry elem)
-    {
-        requestEntryUpdate(SELL_OFFERS, sellOffers, elem);
+        ConsolidatedOffer ovalue = this.buyOffers[index];
+        requestElementUpdate(
+            BUY_OFFERS, index, value, ovalue);
+        this.buyOffers[index] = value;
     }
 
     /**
      * Requests that the <code>sellOffers</code> field be set to the
-     * specified value. Generally one only adds, updates and removes
-     * entries of a distributed set, but certain situations call for a
-     * complete replacement of the set value. The local value will be
-     * updated immediately and an event will be propagated through the
-     * system to notify all listeners that the attribute did
-     * change. Proxied copies of this object (on clients) will apply the
-     * value change when they received the attribute changed notification.
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
      */
-    public void setSellOffers (DSet value)
+    public void setSellOffers (ConsolidatedOffer[] value)
     {
-        requestAttributeChange(SELL_OFFERS, value, this.sellOffers);
-        this.sellOffers = (value == null) ? null : (DSet)value.clone();
+        ConsolidatedOffer[] ovalue = this.sellOffers;
+        requestAttributeChange(
+            SELL_OFFERS, value, ovalue);
+        this.sellOffers = (value == null) ? null : (ConsolidatedOffer[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>sellOffers</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setSellOffersAt (ConsolidatedOffer value, int index)
+    {
+        ConsolidatedOffer ovalue = this.sellOffers[index];
+        requestElementUpdate(
+            SELL_OFFERS, index, value, ovalue);
+        this.sellOffers[index] = value;
     }
     // AUTO-GENERATED: METHODS END
 }

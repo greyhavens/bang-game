@@ -12,7 +12,9 @@ import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.coin.server.CoinExOffer;
 
+import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.bank.data.BankCodes;
@@ -28,48 +30,35 @@ public class BankManager extends PlaceManager
     implements BankProvider, BankCodes, BangCoinExchangeManager.OfferPublisher
 {
     // documentation inherited from interface BankProvider
-    public void buyCoins (ClientObject caller, int coins, int pricePerCoin,
-                          InvocationService.ConfirmListener listener)
-        throws InvocationException
-    {
-        CoinExOffer offer = createOffer(caller, true, coins, pricePerCoin);
-        BangServer.coinexmgr.postOffer(caller, offer, true,
-                                       new ConfirmAdapter(listener));
-    }
-
-    // documentation inherited from interface BankProvider
-    public void sellCoins (ClientObject caller, int coins, int pricePerCoin,
+    public void postOffer (ClientObject caller, int coins, int pricePerCoin,
+                           boolean buying, boolean immediate,
                            InvocationService.ConfirmListener listener)
         throws InvocationException
     {
-        CoinExOffer offer = createOffer(caller, false, coins, pricePerCoin);
-        BangServer.coinexmgr.postOffer(caller, offer, true,
-                                       new ConfirmAdapter(listener));
-    }
-
-    // documentation inherited from interface BankProvider
-    public void postBuyOffer (ClientObject caller, int coins, int pricePerCoin,
-                              InvocationService.ConfirmListener listener)
-        throws InvocationException
-    {
-        CoinExOffer offer = createOffer(caller, true, coins, pricePerCoin);
-        BangServer.coinexmgr.postOffer(caller, offer, false,
-                                       new ConfirmAdapter(listener));
-    }
-
-    // documentation inherited from interface BankProvider
-    public void postSellOffer (ClientObject caller, int coins, int pricePerCoin,
-                               InvocationService.ConfirmListener listener)
-        throws InvocationException
-    {
-        CoinExOffer offer = createOffer(caller, false, coins, pricePerCoin);
-        BangServer.coinexmgr.postOffer(caller, offer, false,
+        PlayerObject player = (PlayerObject)caller;
+        CoinExOffer offer = new CoinExOffer();
+        offer.accountName = player.accountName.toString();
+        offer.gameName = offer.accountName;
+        offer.buy = buying;
+        offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
+        offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
+        BangServer.coinexmgr.postOffer(caller, offer, immediate,
                                        new ConfirmAdapter(listener));
     }
 
     // documentation inherited from interface OfferPublisher
-    public void updateOffers (boolean buy, boolean sell, int lastPrice)
+    public void updateOffers (ConsolidatedOffer[] buys,
+                              ConsolidatedOffer[] sells, int lastPrice)
     {
+        if (buys != null) {
+            _bankobj.setBuyOffers(buys);
+        }
+        if (sells != null) {
+            _bankobj.setSellOffers(sells);
+        }
+        if (lastPrice != -1) {
+            _bankobj.setLastTrade(lastPrice);
+        }
     }
 
     @Override // documentation inherited
@@ -91,27 +80,13 @@ public class BankManager extends PlaceManager
         super.didStartup();
 
         // register our invocation service
-        _bobj = (BankObject)_plobj;
-        _bobj.setService((BankMarshaller)BangServer.invmgr.registerDispatcher(
-                             new BankDispatcher(this), false));
+        _bankobj = (BankObject)_plobj;
+        _bankobj.setService((BankMarshaller)BangServer.invmgr.registerDispatcher(
+                                new BankDispatcher(this), false));
+
+        // register with the coin exchange manager
+        BangServer.coinexmgr.registerPublisher(this);
     }
 
-    /**
-     * Creates a coin exchange offer for our various buying, selling and offer
-     * posting needs.
-     */
-    protected CoinExOffer createOffer (
-        ClientObject caller, boolean buy, int coins, int pricePerCoin)
-    {
-        PlayerObject player = (PlayerObject)caller;
-        CoinExOffer offer = new CoinExOffer();
-        offer.accountName = player.accountName.toString();
-        offer.gameName = offer.accountName;
-        offer.buy = buy;
-        offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
-        offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
-        return offer;
-    }
-
-    protected BankObject _bobj;
+    protected BankObject _bankobj;
 }

@@ -116,6 +116,7 @@ public class BangServer extends CrowdServer
         // initialize our managers
         parmgr.init(invmgr, plreg);
         boardmgr.init(conprov);
+        coinexmgr.init();
 
         // create the saloon manager
         LobbyConfig lconfig = new LobbyConfig();

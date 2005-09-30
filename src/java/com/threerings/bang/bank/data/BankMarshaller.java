@@ -19,55 +19,16 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class BankMarshaller extends InvocationMarshaller
     implements BankService
 {
-    /** The method id used to dispatch {@link #buyCoins} requests. */
-    public static final int BUY_COINS = 1;
+    /** The method id used to dispatch {@link #postOffer} requests. */
+    public static final int POST_OFFER = 1;
 
     // documentation inherited from interface
-    public void buyCoins (Client arg1, int arg2, int arg3, InvocationService.ConfirmListener arg4)
+    public void postOffer (Client arg1, int arg2, int arg3, boolean arg4, boolean arg5, InvocationService.ConfirmListener arg6)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, BUY_COINS, new Object[] {
-            new Integer(arg2), new Integer(arg3), listener4
-        });
-    }
-
-    /** The method id used to dispatch {@link #postBuyOffer} requests. */
-    public static final int POST_BUY_OFFER = 2;
-
-    // documentation inherited from interface
-    public void postBuyOffer (Client arg1, int arg2, int arg3, InvocationService.ConfirmListener arg4)
-    {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, POST_BUY_OFFER, new Object[] {
-            new Integer(arg2), new Integer(arg3), listener4
-        });
-    }
-
-    /** The method id used to dispatch {@link #postSellOffer} requests. */
-    public static final int POST_SELL_OFFER = 3;
-
-    // documentation inherited from interface
-    public void postSellOffer (Client arg1, int arg2, int arg3, InvocationService.ConfirmListener arg4)
-    {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, POST_SELL_OFFER, new Object[] {
-            new Integer(arg2), new Integer(arg3), listener4
-        });
-    }
-
-    /** The method id used to dispatch {@link #sellCoins} requests. */
-    public static final int SELL_COINS = 4;
-
-    // documentation inherited from interface
-    public void sellCoins (Client arg1, int arg2, int arg3, InvocationService.ConfirmListener arg4)
-    {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, SELL_COINS, new Object[] {
-            new Integer(arg2), new Integer(arg3), listener4
+        InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
+        listener6.listener = arg6;
+        sendRequest(arg1, POST_OFFER, new Object[] {
+            new Integer(arg2), new Integer(arg3), new Boolean(arg4), new Boolean(arg5), listener6
         });
     }
 

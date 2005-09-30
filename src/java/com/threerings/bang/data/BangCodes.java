@@ -52,12 +52,15 @@ public interface BangCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String CARDS_MSGS = "cards";
 
-    /** An error code reported when a financial transaction cannot complete. */
-    public static final String INSUFFICIENT_FUNDS =
-        MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");
+    /** The number of offers of each type we publish in the coin exchange. */
+    public static final int COINEX_OFFERS_SHOWN = 5;
 
     /** The highest number of players we will allow in a game (currently
      * we only support four but we'll probably get crazy and try larger
      * numbers at some point). */
     public static final int MAX_PLAYERS = 8;
+
+    /** An error code reported when a financial transaction cannot complete. */
+    public static final String INSUFFICIENT_FUNDS =
+        MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");
 }

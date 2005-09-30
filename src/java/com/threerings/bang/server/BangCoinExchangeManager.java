@@ -4,6 +4,9 @@
 package com.threerings.bang.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
@@ -19,6 +22,7 @@ import com.threerings.coin.server.CoinExOffer;
 import com.threerings.coin.server.CoinExchangeManager;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.PlayerObject;
 
 import static com.threerings.bang.Log.log;
@@ -37,15 +41,13 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         /**
          * Called when the published offeers should be updated.
          *
-         * @param buy if true, the buy offers should be updated.
-         * @param sell if true, the sell offers should be updated.
+         * @param buys if non-null, the latest consolidated buy offers.
+         * @param sells if non-null, the latest consolidated sell offers.
          * @param lastPrice if not -1 the last trade price should be updated.
          */
-        public void updateOffers (boolean buy, boolean sell, int lastPrice);
+        public void updateOffers (ConsolidatedOffer[] buys,
+                                  ConsolidatedOffer[] sells, int lastPrice);
     }
-
-    /** The number of offers of each type we publish in the coin exchange. */
-    public static final int COINEX_OFFERS_SHOWN = 5;
 
     /**
      * Creates the coin exchange manager and its associated repository.
@@ -63,7 +65,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         throws PersistenceException
     {
         init(BangServer.coinmgr, BangServer.invoker, BangCoinManager.coinlog,
-             COINEX_OFFERS_SHOWN);
+             BangCodes.COINEX_OFFERS_SHOWN);
     }
 
     /**
@@ -72,6 +74,11 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     public void registerPublisher (OfferPublisher publisher)
     {
         _publishers.add(publisher);
+
+        // trigger a full published info update; ideally we'd only inform the
+        // newly registered publisher, but there's only really ever one
+        // publisher anyway, so it's a wash
+        updatePublishedInfo(true, true, _lastPrice);
     }
 
     /**
@@ -92,8 +99,18 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     @Override // documentation inherited
     protected void updatePublishedInfo (boolean buy, boolean sell, int lastPrice)
     {
+        ConsolidatedOffer[] buys = null;
+        if (buy) {
+            buys = summarizeOffers(_bids);
+            Arrays.sort(buys);
+        }
+        ConsolidatedOffer[] sells = null;
+        if (sell) {
+            sells = summarizeOffers(_asks);
+            Arrays.sort(sells, _revcmp);
+        }
         for (OfferPublisher publisher : _publishers) {
-            publisher.updateOffers(buy, sell, lastPrice);
+            publisher.updateOffers(buys, sells, lastPrice);
         }
     }
 
@@ -164,6 +181,46 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         });
     }
 
+    /**
+     * Helper function for {@link #updatePublishedInfo}.
+     */
+    protected ConsolidatedOffer[] summarizeOffers (List offers)
+    {
+        ArrayList<ConsolidatedOffer> list = new ArrayList<ConsolidatedOffer>();
+        for (int ii = 0, nn = offers.size(); ii < nn; ii++) {
+            // start with an offer containing this info
+            CoinExOffer offer = (CoinExOffer)offers.get(ii);
+            ConsolidatedOffer published = new ConsolidatedOffer();
+            published.price = offer.price;
+            published.volume = offer.volume;
+
+            // consolidate all subsequent offers at the same price
+            for (int jj = ii + 1; jj < nn; jj++) {
+                offer = (CoinExOffer) offers.get(jj);
+                if (offer.price == published.price) {
+                    published.volume += offer.volume;
+                    ii++;
+                } else {
+                    break;
+                }
+            }
+
+            list.add(published);
+            if (list.size() == _offersShown) {
+                break;
+            }
+        }
+        return list.toArray(new ConsolidatedOffer[list.size()]);
+    }
+
     protected ArrayList<OfferPublisher> _publishers =
         new ArrayList<OfferPublisher>();
+
+    /** Used to reverse sort our offers. */
+    protected Comparator<ConsolidatedOffer> _revcmp =
+        new Comparator<ConsolidatedOffer>() {
+        public int compare (ConsolidatedOffer o1, ConsolidatedOffer o2) {
+            return o1.price - o2.price;
+        }
+    };
 }

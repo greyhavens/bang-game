@@ -16,26 +16,8 @@ import com.threerings.presents.server.InvocationProvider;
 public interface BankProvider extends InvocationProvider
 {
     /**
-     * Handles a {@link BankService#buyCoins} request.
+     * Handles a {@link BankService#postOffer} request.
      */
-    public void buyCoins (ClientObject caller, int arg1, int arg2, InvocationService.ConfirmListener arg3)
-        throws InvocationException;
-
-    /**
-     * Handles a {@link BankService#postBuyOffer} request.
-     */
-    public void postBuyOffer (ClientObject caller, int arg1, int arg2, InvocationService.ConfirmListener arg3)
-        throws InvocationException;
-
-    /**
-     * Handles a {@link BankService#postSellOffer} request.
-     */
-    public void postSellOffer (ClientObject caller, int arg1, int arg2, InvocationService.ConfirmListener arg3)
-        throws InvocationException;
-
-    /**
-     * Handles a {@link BankService#sellCoins} request.
-     */
-    public void sellCoins (ClientObject caller, int arg1, int arg2, InvocationService.ConfirmListener arg3)
+    public void postOffer (ClientObject caller, int arg1, int arg2, boolean arg3, boolean arg4, InvocationService.ConfirmListener arg5)
         throws InvocationException;
 }
