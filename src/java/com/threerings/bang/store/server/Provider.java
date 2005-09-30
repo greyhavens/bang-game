@@ -3,9 +3,13 @@
 
 package com.threerings.bang.store.server;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
+
+import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.persist.FinancialAction;
@@ -45,6 +49,16 @@ public abstract class Provider extends FinancialAction
     protected void setListener (InvocationService.ConfirmListener listener)
     {
         _listener = listener;
+    }
+
+    @Override // documentation inherited
+    protected int getCoinType () {
+        return CoinTransaction.GOOD_PURCHASE;
+    }
+
+    @Override // documentation inherited
+    protected String getCoinDescrip () {
+        return MessageBundle.compose("m.good_purchase", _good.getName());
     }
 
     @Override // documentation inherited

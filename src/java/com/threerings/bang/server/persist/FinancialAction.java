@@ -10,6 +10,8 @@ import com.samskivert.util.Invoker;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.coin.server.persist.CoinTransaction;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -47,8 +49,13 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         try {
             if (_coinCost > 0) {
-                // TODO: reserve any needed coins
-                // _coinsReserved = true;
+                _coinres = BangServer.coinmgr.getCoinRepository().reserveCoins(
+                    _user.accountName.toString(), _coinCost);
+                if (_coinres == -1) {
+                    log.warning("Failed to reserve coins " + this + ".");
+                    fail();
+                    return true;
+                }
             }
 
             if (_scripCost > 0) {
@@ -62,7 +69,14 @@ public abstract class FinancialAction extends Invoker.Unit
             _actionTaken = true;
 
             if (_coinCost > 0) {
-                // TODO: finally "spend" our reserved coins
+                // finally "spend" our reserved coins
+                if (!BangServer.coinmgr.getCoinRepository().spendCoins(
+                        _coinres, getCoinType(), getCoinDescrip())) {
+                    log.warning("Failed to spend coin reservation " + this +
+                                " [resid=" + _coinres + "].");
+                    fail();
+                    return true;
+                }
             }
 
         } catch (PersistenceException pe) {
@@ -99,6 +113,24 @@ public abstract class FinancialAction extends Invoker.Unit
         _user = user;
         _scripCost = scripCost;
         _coinCost = coinCost;
+    }
+
+    /**
+     * If a financial action involves coins, this method <em>must</em> be
+     * overridden to classify the purchase. See {@link CoinTransaction}.
+     */
+    protected int getCoinType ()
+    {
+        return CoinTransaction.PRODUCT_PURCHASE;
+    }
+
+    /**
+     * If a financial action involves coins, this method <em>must</em> be
+     * overridden to provide a translatable string describing the purchase.
+     */
+    protected String getCoinDescrip ()
+    {
+        return null;
     }
 
     /**
@@ -151,8 +183,16 @@ public abstract class FinancialAction extends Invoker.Unit
         _failed = true;
 
         // roll everything back that needs it
-        if (_coinsReserved) {
-            // TODO: return reservation
+        if (_coinres != -1) {
+            // return the coin reservation
+            try {
+                if (!BangServer.coinmgr.getCoinRepository().
+                    returnReservation(_coinres)) {
+                    log.warning("Failed to return coins " + this + ".");
+                }
+            } catch (PersistenceException pe) {
+                log.log(Level.WARNING, "Failed to return coins " + this, pe);
+            }
         }
 
         if (_scripSpent) {
@@ -182,5 +222,6 @@ public abstract class FinancialAction extends Invoker.Unit
 
     protected PlayerObject _user;
     protected int _scripCost, _coinCost;
-    protected boolean _coinsReserved, _scripSpent, _actionTaken, _failed;
+    protected boolean _scripSpent, _actionTaken, _failed;
+    protected int _coinres = -1;
 }

@@ -5,6 +5,9 @@ package com.threerings.bang.ranch.server;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ListUtil;
+import com.threerings.util.MessageBundle;
+
+import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
@@ -93,8 +96,17 @@ public class RanchManager extends PlaceManager
         public RecruitBigShotAction (PlayerObject user, UnitConfig config,
                                      RanchService.ResultListener listener) {
             super(user, config.scripCost, config.coinCost);
+            _config = config;
             _unit = new BigShotItem(user.playerId, config.type);
             _listener = listener;
+        }
+
+        protected int getCoinType () {
+            return CoinTransaction.BIGSHOT_PURCHASE;
+        }
+        protected String getCoinDescrip () {
+            return MessageBundle.compose(
+                "m.bigshot_purchase", _config.getName());
         }
 
         protected void persistentAction () throws PersistenceException {
@@ -112,6 +124,7 @@ public class RanchManager extends PlaceManager
             _listener.requestFailed(INTERNAL_ERROR);
         }
 
+        protected UnitConfig _config;
         protected BigShotItem _unit;
         protected RanchService.ResultListener _listener;
     }
