@@ -4,6 +4,7 @@
 package com.threerings.bang.store.client;
 
 import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.store.data.Good;
@@ -24,11 +25,25 @@ public class GoodsPalette extends IconPalette
 
     public void init (StoreObject stobj)
     {
+        _stobj = stobj;
+        reinitGoods(true);
+    }
+
+    public void reinitGoods (boolean selectFirst)
+    {
+        clearSelections();
+        removeAll();
+        PlayerObject self = _ctx.getUserObject();
+
         // TODO: sort the goods by type
-        for (Iterator iter = stobj.goods.iterator(); iter.hasNext(); ) {
-            add(new GoodsIcon(_ctx, (Good)iter.next()));
+        for (Iterator iter = _stobj.goods.iterator(); iter.hasNext(); ) {
+            Good good = (Good)iter.next();
+            if (good.isAvailable(self)) {
+                add(new GoodsIcon(_ctx, good));
+            }
         }
-        if (getComponentCount() > 0) {
+
+        if (selectFirst && getComponentCount() > 0) {
             ((GoodsIcon)getComponent(0)).setSelected(true);
         }
     }
@@ -38,4 +53,5 @@ public class GoodsPalette extends IconPalette
     }
 
     protected BangContext _ctx;
+    protected StoreObject _stobj;
 }

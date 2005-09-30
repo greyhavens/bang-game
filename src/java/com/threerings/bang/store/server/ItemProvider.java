@@ -38,6 +38,13 @@ public abstract class ItemProvider extends Provider
         BangServer.itemrepo.deleteItem(_item, "item_provider_rollback");
     }
 
+    @Override // documentation inherited
+    protected void actionCompleted ()
+    {
+        _user.addToInventory(_item);
+        super.actionCompleted();
+    }
+
     /** Creates the item that will be delivered by this provider. */
     protected abstract Item createItem ()
         throws InvocationException;

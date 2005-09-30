@@ -29,9 +29,10 @@ import com.threerings.bang.store.data.StoreObject;
 public class GoodsInspector extends BContainer
     implements IconPalette.Inspector, ActionListener
 {
-    public GoodsInspector (BangContext ctx, BTextArea status)
+    public GoodsInspector (BangContext ctx, StoreView parent, BTextArea status)
     {
         _ctx = ctx;
+        _parent = parent;
         _status = status;
 
         setLayoutManager(GroupLayout.makeHoriz(GroupLayout.LEFT));
@@ -81,6 +82,7 @@ public class GoodsInspector extends BContainer
         StoreService.ConfirmListener cl = new StoreService.ConfirmListener() {
             public void requestProcessed () {
                 _status.setText(_ctx.xlate("store", "m.purchased"));
+                _parent.goodPurchased();
             }
             public void requestFailed (String cause) {
                 _status.setText(_ctx.xlate("store", cause));
@@ -96,5 +98,6 @@ public class GoodsInspector extends BContainer
     protected BLabel _icon, _title, _descrip;
     protected MoneyLabel _cost;
 
+    protected StoreView _parent;
     protected BTextArea _status;
 }

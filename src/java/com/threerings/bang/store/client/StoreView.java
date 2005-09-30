@@ -73,7 +73,7 @@ public class StoreView extends BWindow
         main.add(mcont, GroupLayout.FIXED);
 
         // create our goods inspector first as the goods palette will need it
-        _inspector = new GoodsInspector(_ctx, _status);
+        _inspector = new GoodsInspector(_ctx, this, _status);
 
         // the display of goods for sale
         main.add(_goods = new GoodsPalette(_ctx, _inspector));
@@ -99,6 +99,14 @@ public class StoreView extends BWindow
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
+    }
+
+    /**
+     * Called by the palette when a good has been purchased.
+     */
+    protected void goodPurchased ()
+    {
+        _goods.reinitGoods(false);
     }
 
     @Override // documentation inherited
