@@ -5,6 +5,8 @@ package com.threerings.bang.data;
 
 import java.util.Iterator;
 
+import com.threerings.util.Name;
+
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.BodyObject;
@@ -18,6 +20,9 @@ public class PlayerObject extends BodyObject
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerId</code> field. */
     public static final String PLAYER_ID = "playerId";
+
+    /** The field name of the <code>accountName</code> field. */
+    public static final String ACCOUNT_NAME = "accountName";
 
     /** The field name of the <code>tokens</code> field. */
     public static final String TOKENS = "tokens";
@@ -40,6 +45,9 @@ public class PlayerObject extends BodyObject
 
     /** This user's persistent unique id. */
     public int playerId;
+
+    /** This user's authentication account username. */
+    public Name accountName;
 
     /** Indicates which access control tokens are held by this user. */
     public TokenRing tokens;
@@ -95,6 +103,22 @@ public class PlayerObject extends BodyObject
         requestAttributeChange(
             PLAYER_ID, new Integer(value), new Integer(ovalue));
         this.playerId = value;
+    }
+
+    /**
+     * Requests that the <code>accountName</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setAccountName (Name value)
+    {
+        Name ovalue = this.accountName;
+        requestAttributeChange(
+            ACCOUNT_NAME, value, ovalue);
+        this.accountName = value;
     }
 
     /**

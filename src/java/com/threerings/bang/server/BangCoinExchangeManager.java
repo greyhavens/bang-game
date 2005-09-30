@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
@@ -10,9 +11,12 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Name;
+
+import com.threerings.presents.server.InvocationException;
+
 import com.threerings.coin.server.CoinExOffer;
 import com.threerings.coin.server.CoinExchangeManager;
-import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -24,6 +28,22 @@ import static com.threerings.bang.Log.log;
  */
 public class BangCoinExchangeManager extends CoinExchangeManager
 {
+    /** Entities that will publish the coin exchange offers should implement
+     * this interface and register themselves with the coin exchange manager to
+     * be informed when they should reread and updated their list of published
+     * offers. */
+    public interface OfferPublisher
+    {
+        /**
+         * Called when the published offeers should be updated.
+         *
+         * @param buy if true, the buy offers should be updated.
+         * @param sell if true, the sell offers should be updated.
+         * @param lastPrice if not -1 the last trade price should be updated.
+         */
+        public void updateOffers (boolean buy, boolean sell, int lastPrice);
+    }
+
     /** The number of offers of each type we publish in the coin exchange. */
     public static final int COINEX_OFFERS_SHOWN = 5;
 
@@ -46,6 +66,22 @@ public class BangCoinExchangeManager extends CoinExchangeManager
              COINEX_OFFERS_SHOWN);
     }
 
+    /**
+     * Registers an offer publisher with the exchange manager.
+     */
+    public void registerPublisher (OfferPublisher publisher)
+    {
+        _publishers.add(publisher);
+    }
+
+    /**
+     * De-registers an offer publisher with the exchange manager.
+     */
+    public void removePublisher (OfferPublisher publisher)
+    {
+        _publishers.remove(publisher);
+    }
+
     @Override // documentation inherited
     protected byte getFee ()
     {
@@ -56,11 +92,19 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     @Override // documentation inherited
     protected void updatePublishedInfo (boolean buy, boolean sell, int lastPrice)
     {
+        for (OfferPublisher publisher : _publishers) {
+            publisher.updateOffers(buy, sell, lastPrice);
+        }
     }
 
     @Override // documentation inherited
     protected void updateUserCoins (String gameName, String accountName)
     {
+        PlayerObject player = (PlayerObject)BangServer.lookupBody(
+            new Name(accountName));
+        if (player != null) {
+            BangServer.coinmgr.updateCoinCount(player);
+        }
     }
 
     @Override // documentation inherited
@@ -119,4 +163,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             protected PersistenceException _error;
         });
     }
+
+    protected ArrayList<OfferPublisher> _publishers =
+        new ArrayList<OfferPublisher>();
 }

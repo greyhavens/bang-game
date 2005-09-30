@@ -6,6 +6,7 @@ package com.threerings.bang.bank.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
@@ -28,11 +29,12 @@ import com.threerings.bang.bank.data.BankObject;
 public class FullTransact extends BContainer
     implements ActionListener
 {
-    public FullTransact (BangContext ctx, boolean buying)
+    public FullTransact (BangContext ctx, BTextArea status, boolean buying)
     {
         super(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
                                    GroupLayout.STRETCH));
         _ctx = ctx;
+        _status = status;
         _buying = buying;
         _msgs = ctx.getMessageManager().getBundle(BankCodes.BANK_MSGS);
 
@@ -138,6 +140,7 @@ public class FullTransact extends BContainer
     protected BankObject _bankobj;
     protected boolean _buying;
 
+    protected BTextArea _status;
     protected OfferLabel[] _offers;
     protected BTextField _coins, _scrip;
 }

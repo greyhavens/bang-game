@@ -3,6 +3,8 @@
 
 package com.threerings.bang.bank.data;
 
+import java.util.Iterator;
+
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -31,6 +33,52 @@ public class BankObject extends PlaceObject
 
     /** The top N offers to sell coins for scrip. */
     public DSet sellOffers;
+
+    /**
+     * Returns a consolidation of the best published buy offers (the price will
+     * be the best buy price and the volume will be the total volume of all
+     * offers at that price) or null if there are no published buy offers.
+     */
+    public Offer getBestBuy ()
+    {
+        Offer best = null;
+        for (Iterator iter = buyOffers.iterator(); iter.hasNext(); ) {
+            Offer offer = (Offer)iter.next();
+            if (best == null || offer.price > best.price) {
+                if (best == null) {
+                    best = new Offer();
+                }
+                best.price = offer.price;
+                best.volume = offer.volume;
+            } else if (best != null && offer.price == best.price) {
+                best.volume += offer.volume;
+            }
+        }
+        return best;
+    }
+
+    /**
+     * Returns a consolidation of the best published sell offers (the price
+     * will be the best sell price and the volume will be the total volume of
+     * all offers at that price) or null if there are no published sell offers.
+     */
+    public Offer getBestSell ()
+    {
+        Offer best = null;
+        for (Iterator iter = sellOffers.iterator(); iter.hasNext(); ) {
+            Offer offer = (Offer)iter.next();
+            if (best == null || offer.price < best.price) {
+                if (best == null) {
+                    best = new Offer();
+                }
+                best.price = offer.price;
+                best.volume = offer.volume;
+            } else if (best != null && offer.price == best.price) {
+                best.volume += offer.volume;
+            }
+        }
+        return best;
+    }
 
     // AUTO-GENERATED: METHODS START
     /**

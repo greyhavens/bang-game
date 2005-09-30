@@ -5,6 +5,8 @@ package com.threerings.bang.server;
 
 import java.util.ArrayList;
 
+import com.threerings.util.Name;
+
 import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
@@ -43,7 +45,10 @@ public class BangClientResolver extends CrowdClientResolver
             BangServer.generalLog("first_timer " + username);
         }
         buser.playerId = player.playerId;
+        buser.accountName = new Name(player.accountName);
         buser.scrip = player.scrip;
+        buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
+            player.accountName);
 
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
