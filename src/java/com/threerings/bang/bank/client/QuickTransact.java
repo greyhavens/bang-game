@@ -64,8 +64,8 @@ public class QuickTransact extends BContainer
             return;
         }
 
-        BankService.ConfirmListener cl = new BankService.ConfirmListener() {
-            public void requestProcessed () {
+        BankService.ResultListener rl = new BankService.ResultListener() {
+            public void requestProcessed (Object result) {
                 _status.setText(_ctx.xlate(BANK_MSGS, "m.trans_completed"));
                 _coins.setText("");
                 _scrip.setText("0");
@@ -78,7 +78,7 @@ public class QuickTransact extends BContainer
         try {
             int coins = Integer.valueOf(_coins.getText());
             _bankobj.service.postOffer(_ctx.getClient(), coins, best.price,
-                                       _buying, true, cl);
+                                       _buying, true, rl);
         } catch (Exception e) {
             // TODO: make BTextField support input restriction
             _status.setText(_ctx.xlate(BANK_MSGS, "m.invalid_coins"));
