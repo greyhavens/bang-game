@@ -18,6 +18,7 @@ import com.threerings.util.Name;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.coin.server.CoinExOffer;
 import com.threerings.coin.server.CoinExchangeManager;
 
@@ -87,6 +88,19 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     public void removePublisher (OfferPublisher publisher)
     {
         _publishers.remove(publisher);
+    }
+
+    /**
+     * Returns a two element array containing the outstanding buy and sell
+     * offers (in that order) for the specified player. The returned arrays may
+     * be zero length but will not be null.
+     */
+    public CoinExOfferInfo[][] getPlayerOffers (PlayerObject player)
+    {
+        return new CoinExOfferInfo[][] {
+            getPlayerOffers(player.accountName.toString(), _bids),
+            getPlayerOffers(player.accountName.toString(), _asks),
+        };
     }
 
     @Override // documentation inherited
@@ -219,6 +233,21 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             }
         }
         return list.toArray(new ConsolidatedOffer[list.size()]);
+    }
+
+    /**
+     * Helper function for {@link #getPlayerOffers(PlayerObject)}.
+     */
+    protected CoinExOfferInfo[] getPlayerOffers (String accountName, List offers)
+    {
+        ArrayList<CoinExOfferInfo> list = new ArrayList<CoinExOfferInfo>();
+        for (int ii = 0, nn = offers.size(); ii < nn; ii++) {
+            CoinExOffer offer = (CoinExOffer)offers.get(ii);
+            if (offer.accountName.equals(accountName)) {
+                list.add(createInfo(offer));
+            }
+        }
+        return list.toArray(new CoinExOfferInfo[list.size()]);
     }
 
     protected ArrayList<OfferPublisher> _publishers =

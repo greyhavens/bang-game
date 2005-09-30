@@ -5,6 +5,7 @@ package com.threerings.bang.bank.server;
 
 import com.threerings.bang.bank.client.BankService;
 import com.threerings.bang.bank.data.BankMarshaller;
+import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -38,10 +39,24 @@ public class BankDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case BankMarshaller.CANCEL_OFFER:
+            ((BankProvider)provider).cancelOffer(
+                source,
+                ((Integer)args[0]).intValue(), (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
+        case BankMarshaller.GET_MY_OFFERS:
+            ((BankProvider)provider).getMyOffers(
+                source,
+                (BankService.OfferListener)args[0]
+            );
+            return;
+
         case BankMarshaller.POST_OFFER:
             ((BankProvider)provider).postOffer(
                 source,
-                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), ((Boolean)args[2]).booleanValue(), ((Boolean)args[3]).booleanValue(), (InvocationService.ConfirmListener)args[4]
+                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), ((Boolean)args[2]).booleanValue(), ((Boolean)args[3]).booleanValue(), (InvocationService.ResultListener)args[4]
             );
             return;
 

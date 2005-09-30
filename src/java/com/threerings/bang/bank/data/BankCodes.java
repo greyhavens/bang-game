@@ -12,4 +12,7 @@ public interface BankCodes extends InvocationCodes
 {
     /** The identifier for our message bundle. */
     public static final String BANK_MSGS = "bank";
+
+    /** An error response returned by the bank service. */
+    public static final String NO_SUCH_OFFER = "m.no_such_offer";
 }

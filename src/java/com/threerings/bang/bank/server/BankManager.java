@@ -3,13 +3,13 @@
 
 package com.threerings.bang.bank.server;
 
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.util.ConfirmAdapter;
+import com.threerings.presents.util.ResultAdapter;
 
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.coin.server.CoinExOffer;
 
 import com.threerings.bang.data.ConsolidatedOffer;
@@ -17,6 +17,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangServer;
 
+import com.threerings.bang.bank.client.BankService;
 import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankMarshaller;
 import com.threerings.bang.bank.data.BankObject;
@@ -30,9 +31,18 @@ public class BankManager extends PlaceManager
     implements BankProvider, BankCodes, BangCoinExchangeManager.OfferPublisher
 {
     // documentation inherited from interface BankProvider
+    public void getMyOffers (ClientObject caller, BankService.OfferListener ol)
+        throws InvocationException
+    {
+        PlayerObject user = (PlayerObject)caller;
+        CoinExOfferInfo[][] offers = BangServer.coinexmgr.getPlayerOffers(user);
+        ol.gotOffers(offers[0], offers[1]);
+    }
+
+    // documentation inherited from interface BankProvider
     public void postOffer (ClientObject caller, int coins, int pricePerCoin,
                            boolean buying, boolean immediate,
-                           InvocationService.ConfirmListener listener)
+                           BankService.ResultListener listener)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
@@ -42,8 +52,22 @@ public class BankManager extends PlaceManager
         offer.buy = buying;
         offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
         offer.price = (short)Math.min(pricePerCoin, Short.MAX_VALUE);
-        BangServer.coinexmgr.postOffer(caller, offer, immediate,
-                                       new ConfirmAdapter(listener));
+        BangServer.coinexmgr.postOffer(
+            caller, offer, immediate, new ResultAdapter(listener));
+    }
+
+    // documentation inherited from interface BankProvider
+    public void cancelOffer (ClientObject caller, int offerId,
+                             BankService.ConfirmListener cl)
+        throws InvocationException
+    {
+        PlayerObject player = (PlayerObject)caller;
+        if (BangServer.coinexmgr.cancelOffer(
+                player.accountName.toString(), offerId)) {
+            cl.requestProcessed();
+        } else {
+            cl.requestFailed(NO_SUCH_OFFER);
+        }
     }
 
     // documentation inherited from interface OfferPublisher

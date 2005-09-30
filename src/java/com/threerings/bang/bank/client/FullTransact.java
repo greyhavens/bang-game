@@ -6,6 +6,7 @@ package com.threerings.bang.bank.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
@@ -18,6 +19,8 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+
+import com.threerings.coin.data.CoinExOfferInfo;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
@@ -75,15 +78,10 @@ public class FullTransact extends BContainer
         add(new Spacer(1, 15));
 
         add(new BLabel(_msgs.get("m.your_offers")));
-        BContainer myoffers = new BContainer(new TableLayout(5, 5, 15));
-        add(myoffers);
-
-        // TODO: extract our offers from the supplied set
-        OfferLabel mine = new OfferLabel(myoffers);
-        mine.setOffer(5, 1234);
-        BButton rescind = new BButton(_msgs.get("m.rescind"), this, "rescind");
-        // rescind.setProperty("offer", offer);
-        myoffers.add(rescind);
+        _myoffers = new BContainer(new TableLayout(5, 5, 15));
+        add(_myoffers);
+// TODO: figure out weird layout bug
+//         add(new BScrollPane(_myoffers));
     }
 
     public void init (BankObject bankobj)
@@ -93,17 +91,23 @@ public class FullTransact extends BContainer
         updateOffers();
     }
 
+    public void notePostedOffers (CoinExOfferInfo[] offers)
+    {
+        for (int ii = 0; ii < offers.length; ii++) {
+            notePostedOffer(offers[ii]);
+        }
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        log.info("Action! " + event);
-
         if ("post".equals(event.getAction())) {
-            BankService.ConfirmListener cl = new BankService.ConfirmListener() {
-                public void requestProcessed () {
+            BankService.ResultListener cl = new BankService.ResultListener() {
+                public void requestProcessed (Object result) {
                     _status.setText(_ctx.xlate(BANK_MSGS, "m.offer_posted"));
                     _coins.setText("");
                     _scrip.setText("");
+                    notePostedOffer((CoinExOfferInfo)result);
                 }
                 public void requestFailed (String reason) {
                     _status.setText(_ctx.xlate(BANK_MSGS, reason));
@@ -113,7 +117,6 @@ public class FullTransact extends BContainer
             try {
                 int coins = Integer.parseInt(_coins.getText());
                 int price = Integer.parseInt(_scrip.getText());
-                log.info("Posting offer " + coins + "@" + price + ".");
                 _bankobj.service.postOffer(
                     _ctx.getClient(), coins, price, _buying, false, cl);
 
@@ -123,7 +126,18 @@ public class FullTransact extends BContainer
             }
 
         } else if ("rescind".equals(event.getAction())) {
-            // do the deed
+            BButton rb = (BButton)event.getSource();
+            final CoinExOfferInfo offer =
+                (CoinExOfferInfo)rb.getProperty("offer");
+            BankService.ConfirmListener cl = new BankService.ConfirmListener() {
+                public void requestProcessed () {
+                    clearPostedOffer(offer);
+                }
+                public void requestFailed (String reason) {
+                    _status.setText(_ctx.xlate(BANK_MSGS, reason));
+                }
+            };
+            _bankobj.service.cancelOffer(_ctx.getClient(), offer.offerId, cl);
         }
     }
 
@@ -140,6 +154,31 @@ public class FullTransact extends BContainer
                 } else {
                     _offers[ii].clearOffer();
                 }
+            }
+        }
+    }
+
+    protected void notePostedOffer (CoinExOfferInfo offer)
+    {
+        OfferLabel mine = new OfferLabel(_myoffers);
+        mine.setOffer(offer.volume, offer.price);
+        BButton rescind = new BButton(_msgs.get("m.rescind"), this, "rescind");
+        rescind.setProperty("offer", offer);
+        _myoffers.add(rescind);
+    }
+
+    protected void clearPostedOffer (CoinExOfferInfo offer)
+    {
+        for (int ii = 0; ii < _myoffers.getComponentCount(); ii += 5) {
+            BButton rb = (BButton)_myoffers.getComponent(ii+4);
+            CoinExOfferInfo rbinfo = (CoinExOfferInfo)rb.getProperty("offer");
+            if (rbinfo.offerId == offer.offerId) {
+                _myoffers.remove(_myoffers.getComponent(ii));
+                _myoffers.remove(_myoffers.getComponent(ii));
+                _myoffers.remove(_myoffers.getComponent(ii));
+                _myoffers.remove(_myoffers.getComponent(ii));
+                _myoffers.remove(rb);
+                break;
             }
         }
     }
@@ -199,4 +238,5 @@ public class FullTransact extends BContainer
     protected BTextArea _status;
     protected OfferLabel[] _offers;
     protected BTextField _coins, _scrip;
+    protected BContainer _myoffers;
 }

@@ -22,6 +22,8 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.coin.data.CoinExOfferInfo;
+
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
@@ -29,6 +31,8 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bank.data.BankCodes;
 import com.threerings.bang.bank.data.BankObject;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Displays the main interface for the Bank.
@@ -95,6 +99,20 @@ public class BankView extends BWindow
         _qsell.init(bankobj);
         _fbuy.init(bankobj);
         _fsell.init(bankobj);
+
+        // issue a request for our outstanding offers
+        BankService.OfferListener ol = new BankService.OfferListener() {
+            public void gotOffers (CoinExOfferInfo[] buys,
+                                   CoinExOfferInfo[] sells) {
+                _fbuy.notePostedOffers(buys);
+                _fsell.notePostedOffers(sells);
+            }
+            public void requestFailed (String reason) {
+                log.warning("Failed to fetch our posted offers " +
+                            "[reason=" + reason + "].");
+            }
+        };
+        bankobj.service.getMyOffers(_ctx.getClient(), ol);
     }
 
     // documentation inherited from interface PlaceView
