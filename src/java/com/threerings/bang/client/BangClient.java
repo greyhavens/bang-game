@@ -39,6 +39,7 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.parlor.client.ParlorDirector;
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.util.BangContext;
@@ -181,8 +182,10 @@ public class BangClient extends BasicClient
             // ensure that it is a default event target (and hears the escape
             // key pressed event)
             _pview = (BWindow)view;
-            _pview.setModal(true);
-            new StatusView(_ctx).bind(_pview);
+            if (!(_pview instanceof BangView)) {
+                _pview.setModal(true);
+                new StatusView(_ctx).bind(_pview);
+            }
 
             // now we can add the window to the hierarchy
             _ctx.getRootNode().addWindow(_pview);

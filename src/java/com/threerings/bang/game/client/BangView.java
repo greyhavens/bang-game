@@ -43,7 +43,7 @@ public class BangView extends BWindow
         _ctrl = ctrl;
 
         // create our various displays
-        view = new BangBoardView(ctx, ctrl);
+        add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
         chat = new OverlayChatView(ctx);
     }
 
@@ -97,9 +97,6 @@ public class BangView extends BWindow
     {
         BangObject bangobj = (BangObject)plobj;
 
-        // add the main bang view
-        _ctx.getGeometry().attachChild(view.getNode());
-
         // add our chat display
         int width = _ctx.getDisplay().getWidth();
         _ctx.getRootNode().addWindow(chat);
@@ -128,13 +125,9 @@ public class BangView extends BWindow
     {
         chat.didLeavePlace(plobj);
 
-        // shut down the main game view
-        view.shutdown();
-
         // remove our displays
         _ctx.getRootNode().removeWindow(_pstatus);
         _ctx.getRootNode().removeWindow(chat);
-        _ctx.getGeometry().detachChild(view.getNode());
 
         if (_oview != null) {
             _ctx.getRootNode().removeWindow(_oview);

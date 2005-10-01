@@ -76,9 +76,6 @@ public class BoardView extends BComponent
     {
         _ctx = ctx;
 
-        // configure ourselves as the default event target
-        _ctx.getRootNode().pushDefaultEventTarget(this);
-
         // create a fringer
         _fringer = new TileFringer(_ctx.getFringeConfig(), _tfisrc);
 
@@ -125,18 +122,6 @@ public class BoardView extends BComponent
     public Node getNode ()
     {
         return _node;
-    }
-
-    /**
-     * Called when we're to be removed from the display.
-     */
-    public void shutdown ()
-    {
-        // clear ourselves as a default event target
-        _ctx.getRootNode().popDefaultEventTarget(this);
-
-        // clear any marquee we have up
-        clearMarquee();
     }
 
     /**
@@ -346,6 +331,27 @@ public class BoardView extends BComponent
             ih.rotateCamera((e.getDelta() > 0) ?
                             -FastMath.PI/2 : FastMath.PI/2);
         }
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // add our geometry into the scene graph
+        _ctx.getGeometry().attachChild(_node);
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        // remove our geometry from the scene graph
+        _ctx.getGeometry().detachChild(_node);
+
+        // clear any marquee we have up
+        clearMarquee();
     }
 
     /**

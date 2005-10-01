@@ -84,27 +84,29 @@ public class StatsDisplay extends BDecoratedWindow
         }
         add(bits);
 
-        // display awarded cash and badges
-        add(new BLabel(""));
-        BContainer awards = new BContainer(
-            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                 GroupLayout.STRETCH));
-        label = new BLabel(msgs.get("m.awards"));
-        label.setLookAndFeel(BangUI.dtitleLNF);
-        awards.add(label);
-        for (int ii = 0; ii < bangobj.awards.length; ii++) {
-            BContainer pbox = GroupLayout.makeHBox(GroupLayout.LEFT);
-            pbox.add(new BLabel(bangobj.players[ii].toString()));
-            BLabel cash = new BLabel("" + bangobj.awards[ii].cashEarned);
-            cash.setIcon(BangUI.scripIcon);
-            pbox.add(cash);
-            for (Badge badge : bangobj.awards[ii].badges) {
-                String key = badge.getType().key();
-                pbox.add(new BLabel(_ctx.xlate(BangCodes.BADGE_MSGS, key)));
+        // display awarded cash and badges if this is the end of the game
+        if (bangobj.awards != null) {
+            add(new BLabel(""));
+            BContainer awards = new BContainer(
+                GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
+                                     GroupLayout.STRETCH));
+            label = new BLabel(msgs.get("m.awards"));
+            label.setLookAndFeel(BangUI.dtitleLNF);
+            awards.add(label);
+            for (int ii = 0; ii < bangobj.awards.length; ii++) {
+                BContainer pbox = GroupLayout.makeHBox(GroupLayout.LEFT);
+                pbox.add(new BLabel(bangobj.players[ii].toString()));
+                BLabel cash = new BLabel("" + bangobj.awards[ii].cashEarned);
+                cash.setIcon(BangUI.scripIcon);
+                pbox.add(cash);
+                for (Badge badge : bangobj.awards[ii].badges) {
+                    String key = badge.getType().key();
+                    pbox.add(new BLabel(_ctx.xlate(BangCodes.BADGE_MSGS, key)));
+                }
+                awards.add(pbox);
             }
-            awards.add(pbox);
+            add(awards);
         }
-        add(awards);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         BButton dismiss = new BButton(msgs.get("m.dismiss"));

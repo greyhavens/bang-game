@@ -33,9 +33,10 @@ import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.server.BangServer;
@@ -711,11 +712,20 @@ public class BangManager extends GameManager
         // record various statistics
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             PlayerObject user = (PlayerObject)getPlayer(ii);
+            StatSet stats = _bangobj.stats[ii];
+            awards[ii] = new Award(user);
+
+            // compute this player's "take home" cash; TODO: track which round
+            // each player "left" the game in and use that instead of the final
+            // round id if we support bailing before the final round
+            Purse purse = (user == null) ? Purse.DEFAULT_PURSE : user.getPurse();
+            int maxCash = purse.getPerRoundCash() * _bangobj.roundId;
+            awards[ii].cashEarned = Math.min(_bangobj.funds[ii], maxCash);
+
+            // if this is not a real player, stop here
             if (user == null || !_gameobj.isActivePlayer(ii)) {
                 continue;
             }
-            StatSet stats = _bangobj.stats[ii];
-            awards[ii] = new Award(user);
 
             try {
                 // send all the stat updates out in one dobj event
@@ -743,13 +753,6 @@ public class BangManager extends GameManager
 
                 // allow the scenario to record statistics as well
                 _scenario.recordStats(_bangobj, gameTime, ii, user);
-
-                // compute their "take home" cash; TODO: track which round each
-                // player "left" the game in and use that instead of the final
-                // round id if we support bailing before the final round
-                int maxCash =
-                    user.getPurse().getPerRoundCash() * _bangobj.roundId;
-                awards[ii].cashEarned = Math.min(_bangobj.funds[ii], maxCash);
 
                 // determine whether this player qualifies for new badges
                 Badge.checkBadges(user, awards[ii].badges);
@@ -1117,7 +1120,7 @@ public class BangManager extends GameManager
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 for (int ii = 0; ii < awards.length; ii++) {
-                    if (awards[ii] != null) {
+                    if (awards[ii].player != null) {
                         persistAward(awards[ii]);
                     }
                 }
@@ -1126,7 +1129,7 @@ public class BangManager extends GameManager
 
             public void handleResult () {
                 for (int ii = 0; ii < awards.length; ii++) {
-                    if (awards[ii] == null) {
+                    if (awards[ii].player == null) {
                         continue;
                     }
                     PlayerObject player = awards[ii].player;
