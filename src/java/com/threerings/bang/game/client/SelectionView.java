@@ -75,7 +75,7 @@ public class SelectionView extends BDecoratedWindow
 
         // create the card selection display
         add(new BLabel(_msgs.get("m.select_cards")), GroupLayout.FIXED);
-        add(new BScrollPane(_cards = new CardPalette(ctx)));
+        add(new BScrollPane(_cards = new CardPalette(ctx, bangobj)));
 
         BContainer footer = new BContainer(new BorderLayout(10, 0));
         _ready = new BButton(_msgs.get("m.ready"));

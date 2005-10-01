@@ -14,6 +14,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 
 /**
@@ -33,7 +34,7 @@ public class CardPalette extends IconPalette
         }
     }
 
-    public CardPalette (BangContext ctx)
+    public CardPalette (BangContext ctx, BangObject bangobj)
     {
         super(null, 4, GameCodes.MAX_CARDS);
 
@@ -51,6 +52,11 @@ public class CardPalette extends IconPalette
             String msg = ctx.xlate(GameCodes.GAME_MSGS, "m.select_nocards");
             add(new BLabel(msg));
         }
+
+        // reduce the number of selectable cards by the number we have waiting
+        // to be played
+        _selectable -= bangobj.countPlayerCards(
+            bangobj.getPlayerIndex(user.username));
     }
 
     public CardItem getSelectedCard (int index)

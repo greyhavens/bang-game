@@ -17,6 +17,7 @@ import com.threerings.parlor.game.data.GameObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
+import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
@@ -262,6 +263,21 @@ public class BangObject extends GameObject
             }
         }
         return pcount;
+    }
+
+    /**
+     * Returns the number of playable cards owned by the specified player.
+     */
+    public int countPlayerCards (int pidx)
+    {
+        int ccount = 0;
+        for (Iterator iter = cards.iterator(); iter.hasNext(); ) {
+            Card card = (Card)iter.next();
+            if (card.owner == pidx) {
+                ccount++;
+            }
+        }
+        return ccount;
     }
 
     /**
