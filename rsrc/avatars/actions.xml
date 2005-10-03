@@ -1,0 +1,19 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- $Id: actions.xml 20287 2005-04-04 22:55:28Z mdb $ -->
+
+<actions>
+  <!-- actions relating to the face shot components -->
+  <action name="default">
+    <framesPerSecond>1</framesPerSecond>
+    <origin>29,40</origin>
+    <!-- TODO: fix code that requires one array entry for each orientation -->
+    <orients>SW</orients>
+    <tileset>
+      <widths>58</widths>
+      <heights>58</heights>
+      <tileCounts>1</tileCounts>
+      <offsetPos>0, 0</offsetPos>
+      <gapSize>0, 0</gapSize>
+    </tileset>
+  </action>
+</actions>

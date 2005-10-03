@@ -1,0 +1,75 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- $Id$ -->
+
+<!-- class ids are assigned by hand, which means that if you delete a -->
+<!-- colorization class, *do not* change the ids of the other colorization -->
+<!-- classes; reuse ids at your own risk -->
+<colors>
+  <!-- hair recolorations -->
+  <class classId="1" name="hair" source="#922226" range="0.05, 0.8, 1">
+    <color colorId="1" name="red" offsets="0.02, -0.1, 0"/>
+    <color colorId="2" name="grey" offsets="0.13, -0.9, -0.15"/>
+    <color colorId="3" name="white" offsets="0.13, -0.8, .15"/>
+    <color colorId="4" name="black" offsets="0.6, -0.7, -0.6"/>
+    <color colorId="5" name="brown" offsets="0.1, 0, -0.4"/>
+    <color colorId="6" name="lightBrown" offsets="0.11, -0.2, -0.2"/>
+    <color colorId="7" name="sandyBlonde" offsets="0.1, -0.1, 0"/>
+    <color colorId="8" name="blonde" offsets="0.13, -0.4, -0.1"/>
+    <color colorId="9" name="toehead" offsets="0.15, -0.4, 0.05"/>
+  </class>
+
+  <!-- skin recolorations -->
+  <class classId="2" name="skin" source="#C550D7" range="0.08, 0.4, 1">
+    <color colorId="1" name="darkest" offsets="-0.75, -0.2, -0.45"/>
+    <color colorId="2" name="dark" offsets="-0.75, 0.16, -0.26"/>
+    <color colorId="3" name="medium" offsets="-0.75, -0.05, -0.01"/>
+    <color colorId="4" name="tan" offsets="-0.73, -0.08, -0.03"/>
+    <color colorId="5" name="white" offsets="-0.74, -0.28, -0.02"/>
+    <color colorId="6" name="pale" offsets="-0.72, -0.42, 0"/>
+    <color colorId="7" name="pasty" offsets="-0.72, -0.48, 0"/>
+  </class>
+
+  <!-- primary clothing recolorations -->
+  <class classId="3" name="clothes_p" source="#922226" range="0.07, 0.7, 1">
+    <color colorId="1" name="red" offsets="0, 0, 0"/>
+    <color colorId="2" name="brown" offsets="-0.91, -0.2, -0.2"/>
+    <color colorId="3" name="white" offsets="0, -1, 0.1"/>
+    <color colorId="4" name="black" offsets="0, -1, -0.6"/>
+    <color colorId="5" name="grey" offsets="0, -1, -0.2"/>
+    <color colorId="6" name="yellow" offsets="-0.83, -0.2, 0.1"/>
+    <color colorId="7" name="pink" offsets="0.95, -0.2, 0.15"/>
+    <color colorId="8" name="violet" offsets="0.83, -0.1, -0.15"/>
+    <color colorId="9" name="purple" offsets="0.76, 0.05, -0.11"/>
+    <color colorId="10" name="navyBlue" offsets="0.65, -0.2, -0.2"/>
+    <color colorId="11" name="blue" offsets="-0.4, 0, 0"/>
+    <color colorId="12" name="aqua" offsets="0.5, 0, -0.1"/>
+    <color colorId="13" name="lime" offsets="0.32, -0.1, -0.1"/>
+    <color colorId="14" name="green" offsets="0.3, -0.2, -0.4"/>
+    <color colorId="15" name="orange" offsets="0.08, 0, 0.05"/>
+    <color colorId="16" name="maroon" offsets="0, 0.1, -0.3"/>
+    <color colorId="17" name="darkBrown" offsets="-0.91, -0.2, -0.4"/>
+    <color colorId="18" name="gold" offsets="0.125, 0.4, 0.1"/>
+  </class>
+
+  <!-- secondary clothing recolorations -->
+  <class classId="4" name="clothes_s" source="#57AC6A" range="0.1, 0.6, 1">
+    <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
+    <color colorId="2" name="brown" offsets="-0.28, -0.37, -0.1"/>
+    <color colorId="3" name="white" offsets="0.72, -1, 0.2"/>
+    <color colorId="4" name="black" offsets="0.72, -1, -0.5"/>
+    <color colorId="5" name="grey" offsets="0.2, -1, 0"/>
+    <color colorId="6" name="yellow" offsets="0.81, -0.25, 0.2"/>
+    <color colorId="7" name="pink" offsets="0.6, -0.27, 0.25"/>
+    <color colorId="8" name="violet" offsets="-0.55, -0.15, 0.09"/>
+    <color colorId="9" name="purple" offsets="-0.6, 0.1, 0.1"/>
+    <color colorId="10" name="navyBlue" offsets="0.28, -0.27, -0.07"/>
+    <color colorId="11" name="blue" offsets="0.25, -0.15, 0.2"/>
+    <color colorId="12" name="aqua" offsets="0.15, 0, 0.15"/>
+    <color colorId="13" name="lime" offsets="-0.05, -0.1, 0.1"/>
+    <color colorId="14" name="green" offsets="-0.05, -0.25, -0.3"/>
+    <color colorId="15" name="orange" offsets="0.72, 0.04, 0.252"/>
+    <color colorId="16" name="maroon" offsets="0.65, 0.1, -0.2"/>
+    <color colorId="17" name="darkBrown" offsets="-0.28, -0.37, -0.27"/>
+    <color colorId="18" name="gold" offsets="0.76, 0.6, 0.24"/>
+  </class>
+</colors>

@@ -1,0 +1,16 @@
+<!-- $Id$ -->
+<!-- Build configuration for avatar components. -->
+<project name="Avatar component bundles" default="all" basedir=".">
+  <target name="bundles">
+    <taskdef name="cbundle"
+      classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
+    <cbundle actiondef="actions.xml" mapfile="compmap.txt" root="."
+             target="female/components.jar">
+      <fileset dir="female" includes="**/*.png" excludes="components/**"/>
+    </cbundle>
+    <cbundle actiondef="actions.xml" mapfile="compmap.txt" root="."
+             target="male/components.jar">
+      <fileset dir="male" includes="**/*.png" excludes="components/**"/>
+    </cbundle>
+  </target>
+</project>
