@@ -54,7 +54,7 @@ if [ ! -z "$UPDATE" ]; then
 fi
 
 # rebuild our libraries
-for LIB in samskivert jme-bui narya ; do
+for LIB in samskivert jme-bui narya threerings ; do
     if [ -d $ROOT/projects/$LIB ]; then
         cd $ROOT/projects/$LIB
         if [ ! -z "$UPDATE" ]; then
