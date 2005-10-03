@@ -28,23 +28,41 @@ public class BangPrefs
      */
     public static void configureDisplayMode (PropertiesIO props)
     {
-        DisplayMode mode = getClosest(1024, 768, 16, 60);
-        if (mode == null) {
-            mode = Display.getDisplayMode();
+        // first look up our "preferred" mode
+        int width = config.getValue("display_width", 1024);
+        int height = config.getValue("display_height", 768);
+        int bpp = config.getValue("display_bpp", 16);
+        int freq = config.getValue("display_freq", 60);
+
+        // if that is a full screen mode, we need to find the closest matching
+        // available screen mode
+        if (isFullscreen()) {
+            DisplayMode mode = getClosest(width, height, bpp, freq);
+            if (mode == null) {
+                mode = Display.getDisplayMode();
+            }
+            width = mode.getWidth();
+            height = mode.getHeight();
+            bpp = mode.getBitsPerPixel();
+            freq = mode.getFrequency();
+
+        } else {
+            // otherwise we just need to sanitize the depth and frequency
+            DisplayMode mode = Display.getDisplayMode();
+            bpp = mode.getBitsPerPixel();
+            freq = mode.getFrequency();
         }
-        String dwidth = String.valueOf(mode.getWidth());
-        props.set("WIDTH", config.getValue("display_width", dwidth));
-        String dheight = String.valueOf(mode.getHeight());
-        props.set("HEIGHT", config.getValue("display_height", dheight));
-        String dbpp = String.valueOf(mode.getBitsPerPixel());
-        props.set("DEPTH", config.getValue("display_bpp", dbpp));
-        String dfreq = String.valueOf(mode.getFrequency());
-        props.set("FREQ", config.getValue("display_freq", dfreq));
+
+        props.set("WIDTH", String.valueOf(width));
+        props.set("HEIGHT", String.valueOf(height));
+        props.set("DEPTH", String.valueOf(bpp));
+        props.set("FREQ", String.valueOf(freq));
         props.set("FULLSCREEN", String.valueOf(isFullscreen()));
         props.set("RENDERER", "LWJGL");
+
         log.info("Display mode: " + props.getWidth() + "x" + props.getHeight() +
                  "x" + props.getDepth() + " " + props.getFreq() + "Hz " +
-                 "(current: " + mode + ").");
+                 "(current: " + Display.getDisplayMode() + ").");
     }
 
     /**
