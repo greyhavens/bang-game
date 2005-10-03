@@ -38,3 +38,14 @@ li {
 h3 {
    margin-bottom: 0px
 }
+
+.postdate {
+  color: #760507;
+  font-weight: bold;
+}
+
+.posttitle {
+  color: #760507;
+  font-weight: bold;
+  font-size: large;
+}

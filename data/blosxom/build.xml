@@ -1,0 +1,9 @@
+<!-- handles rebuilding the developer blog -->
+<project name="bang" default="blog" basedir=".">
+  <target name="blog">
+    <exec executable="/usr/lib/cgi-bin/blosxom">
+      <arg line="-f=../../etc/blosxom.conf"/>
+      <arg line="-password=b@ngbl0sx0m"/>
+    </exec>
+  </target>
+</project>

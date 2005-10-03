@@ -1,0 +1,9 @@
+Welcome to the Bang! Howdy Developer Diary
+
+Round these parts, we'll be talking about the development of Bang! Howdy,
+<a href="http://www.threerings.net/">Three Rings</a>' forthcoming
+multiplayer tactical strategy game for the PC. If ya just fell off the
+turnip truck, then you'll want to <a href="about.html">read about</a> the
+game so ya have some idea of what we're talking about here.
+
+<p> ...

@@ -1,0 +1,36 @@
+<html>
+
+<head>
+<title>$blog_title</title>
+<!--<link rel=stylesheet type="text/css" href="/blogbook.css">-->
+
+<style>
+body,td { font-family: Verdana,Geneva,Arial,Sans-serif; 
+          font-size: 11px; color: #666666; }
+a { text-decoration: none; }
+.title { font-size: 12pt; font-weight: bold; color: #336699; }
+.blosxomDate {font-weight: bold; color: #336699; }
+.blosxomTitle { font-weight: bold; color: #000000; }
+.blosxomTime { text-decoration: italicize; color: #336699; }
+</style>
+
+</head>
+
+<body bgcolor="#ffffff">
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+ <tr>
+  <td colspan="3">
+   <span class="title">$blog_title</span>
+  </td>
+ </tr>
+
+ <tr>
+  <td colspan="9" bgcolor="#000000" height="1" ></td>
+ </tr>
+ 
+ <tr valign="top">
+  <td bgcolor="#cccccc" width="100%">
+
+   <br />
+
