@@ -115,6 +115,15 @@
                 target="rsrc/tiles/fringe/config.dat"/>
   </target>
 
+  <!-- builds the avatar component bundles. -->
+  <target name="avatars">
+    <taskdef name="metabundle" classpathref="classpath"
+      classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
+    <metabundle actiondef="rsrc/avatars/actions.xml"
+      classdef="rsrc/avatars/classes.xml" target="rsrc/avatars/metadata.jar"/>
+    <ant target="bundles" dir="rsrc/avatars" antfile="build.xml"/>
+  </target>
+
   <!-- cleans out the installed application -->
   <target name="clean">
     <delete dir="${deploy.dir}"/>

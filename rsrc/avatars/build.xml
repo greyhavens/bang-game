@@ -1,8 +1,13 @@
 <!-- $Id$ -->
 <!-- Build configuration for avatar components. -->
 <project name="Avatar component bundles" default="all" basedir=".">
+  <!-- declare our classpath -->
+  <path id="classpath">
+    <fileset dir="../../lib" includes="**/*.jar"/>
+  </path>
+
   <target name="bundles">
-    <taskdef name="cbundle"
+    <taskdef name="cbundle" classpathref="classpath"
       classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
     <cbundle actiondef="actions.xml" mapfile="compmap.txt" root="."
              target="female/components.jar">
