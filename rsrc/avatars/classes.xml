@@ -5,35 +5,62 @@
 <classes>
   <!-- male component classes -->
   <class name="male/background" renderPriority="0"/>
-  <class name="male/clothing_back" renderPriority="10"/>
-  <class name="male/hair_back" renderPriority="20"/>
-  <class name="male/head" renderPriority="30"/>
-  <class name="male/mouth" renderPriority="40"/>
-  <class name="male/eyebrows" renderPriority="50"/>
-  <class name="male/nose" renderPriority="60"/>
-  <class name="male/eyes" renderPriority="70"/>
-  <class name="male/facial_hair" renderPriority="80"/>
-  <class name="male/hair_front" renderPriority="90"/>
-  <class name="male/clothing_front" renderPriority="100"/>
-  <class name="male/glasses" renderPriority="110"/>
-  <class name="male/jewelery" renderPriority="120"/>
-  <class name="male/hat" renderPriority="130"/>
-  <class name="male/familiar" renderPriority="140"/>
+  <class name="male/clothing_back" renderPriority="10"
+         colors="clothes_p,clothes_s"/>
+  <class name="male/hair_back" renderPriority="20"
+         colors="hair"/>
+  <class name="male/head" renderPriority="30"
+         colors="skin"/>
+  <class name="male/mouth" renderPriority="40"
+         colors="skin"/>
+  <class name="male/eyebrows" renderPriority="50"
+         colors="hair"/>
+  <class name="male/nose" renderPriority="60"
+         colors="skin"/>
+  <class name="male/eyes" renderPriority="70"
+         colors="skin"/>
+  <class name="male/facial_hair" renderPriority="80"
+         colors="hair"/>
+  <class name="male/hair_front" renderPriority="90"
+         colors="hair"/>
+  <class name="male/clothing_front" renderPriority="100"
+         colors="clothes_p,clothes_s"/>
+  <class name="male/glasses" renderPriority="110"
+         colors="clothes_p,clothes_s"/>
+  <class name="male/jewelery" renderPriority="120"
+         colors="clothes_p,clothes_s"/>
+  <class name="male/hat" renderPriority="130"
+         colors="clothes_p,clothes_s"/>
+  <class name="male/familiar" renderPriority="140"
+         colors="clothes_p,clothes_s"/>
 
   <!-- female component classes -->
   <class name="female/background" renderPriority="0"/>
-  <class name="female/clothing_back" renderPriority="10"/>
-  <class name="female/hair_back" renderPriority="20"/>
-  <class name="female/head" renderPriority="30"/>
-  <class name="female/mouth" renderPriority="40"/>
-  <class name="female/eyebrows" renderPriority="50"/>
-  <class name="female/nose" renderPriority="60"/>
-  <class name="female/eyes" renderPriority="70"/>
+  <class name="female/clothing_back" renderPriority="10"
+         colors="clothes_p,clothes_s"/>
+  <class name="female/hair_back" renderPriority="20"
+         colors="hair"/>
+  <class name="female/head" renderPriority="30"
+         colors="skin"/>
+  <class name="female/mouth" renderPriority="40"
+         colors="skin"/>
+  <class name="female/eyebrows" renderPriority="50"
+         colors="hair"/>
+  <class name="female/nose" renderPriority="60"
+         colors="skin"/>
+  <class name="female/eyes" renderPriority="70"
+         colors="skin"/>
   <!--<class name="female/facial_hair" renderPriority="80"/>-->
-  <class name="female/hair_front" renderPriority="90"/>
-  <class name="female/clothing_front" renderPriority="100"/>
-  <class name="female/glasses" renderPriority="110"/>
-  <class name="female/jewelery" renderPriority="120"/>
-  <class name="female/hat" renderPriority="130"/>
-  <class name="female/familiar" renderPriority="140"/>
+  <class name="female/hair_front" renderPriority="90"
+         colors="hair"/>
+  <class name="female/clothing_front" renderPriority="100"
+         colors="clothes_p,clothes_s"/>
+  <class name="female/glasses" renderPriority="110"
+         colors="clothes_p,clothes_s"/>
+  <class name="female/jewelery" renderPriority="120"
+         colors="clothes_p,clothes_s"/>
+  <class name="female/hat" renderPriority="130"
+         colors="clothes_p,clothes_s"/>
+  <class name="female/familiar" renderPriority="140"
+         colors="clothes_p,clothes_s"/>
 </classes>
