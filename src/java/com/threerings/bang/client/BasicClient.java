@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
 import com.jmex.bui.BLookAndFeel;
@@ -52,6 +53,13 @@ import static com.threerings.bang.Log.log;
  */
 public class BasicClient
 {
+    /** Used to display our initialization progress. */
+    public interface InitObserver
+    {
+        /** Reports the percent completion of our initialization progress. */
+        public void progress (int percent);
+    }
+
     /**
      * Given a subdirectory name (that should correspond to the calling
      * service), returns a file path that can be used to store local data.
@@ -86,22 +94,6 @@ public class BasicClient
     }
 
     /**
-     * This must be called by the application when it is ready to unpack and
-     * initialize our bundled resources and display the progress of that
-     * process.
-     */
-    protected void initResources (ResourceManager.InitObserver inobs)
-    {
-        try {
-            _rsrcmgr.initBundles(
-                null, "config/resource/manager.properties", inobs);
-        } catch (IOException ioe) {
-            // TODO: report to the client
-            log.log(Level.WARNING, "Failed to initialize rsrcmgr.", ioe);
-        }
-    }
-
-    /**
      * Creates and initializes the various services that are provided by
      * the context. Derived classes that provide an extended context
      * should override this method and create their own extended
@@ -122,19 +114,17 @@ public class BasicClient
         // create our media managers
         _icreator = new ImageManager.OptimalImageCreator() {
             public BufferedImage createImage (int w, int h, int t) {
-                return null;
+                // TODO: take screen depth into account
+                switch (t) {
+                case Transparency.OPAQUE:
+                    return new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+                default:
+                    return new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+                }
             }
         };
         _imgmgr = new ImageManager(_rsrcmgr, _icreator);
         _soundmgr = SoundManager.createSoundManager(rqueue);
-        try {
-            _charmgr = new CharacterManager(
-                _imgmgr, new BundledComponentRepository(
-                    _rsrcmgr, _imgmgr, "avatars"));
-        } catch (IOException ioe) {
-            // TODO: report to the client
-            log.log(Level.WARNING, "Failed to load avatar metadata.", ioe);
-        }
 
         // load up our fringe configuration
         try {
@@ -151,6 +141,56 @@ public class BasicClient
         _occdir = new OccupantDirector(_ctx);
         _pardir = new ParlorDirector(_ctx);
         _chatdir = new BangChatDirector(_ctx);
+    }
+
+    /**
+     * This must be called by the application when it is ready to unpack and
+     * initialize our bundled resources and display the progress of that
+     * process.
+     */
+    protected void initResources (final InitObserver inobs)
+    {
+        ResourceManager.InitObserver obs = new ResourceManager.InitObserver() {
+            public void progress (final int percent, long remaining) {
+                // we need to get back onto a safe thread
+                _client.getRunQueue().postRunnable(new Runnable() {
+                    public void run () {
+                        inobs.progress(percent);
+                        if (percent >= 0) {
+                            postResourcesInit();
+                        }
+                    }
+                });
+            }
+            public void initializationFailed (Exception e) {
+                // TODO: we need to get back onto a safe thread
+                // TODO: report to the client
+                log.log(Level.WARNING, "Failed to initialize rsrcmgr.", e);
+            }
+        };
+        try {
+            _rsrcmgr.initBundles(
+                null, "config/resource/manager.properties", obs);
+        } catch (IOException ioe) {
+            // TODO: report to the client
+            log.log(Level.WARNING, "Failed to initialize rsrcmgr.", ioe);
+        }
+    }
+
+    /**
+     * This initialization routine is called once the resource manager has
+     * finished unpacking and initializing our resource bundles.
+     */
+    protected void postResourcesInit ()
+    {
+        try {
+            _charmgr = new CharacterManager(
+                _imgmgr, new BundledComponentRepository(
+                    _rsrcmgr, _imgmgr, "avatars"));
+        } catch (IOException ioe) {
+            // TODO: report to the client
+            log.log(Level.WARNING, "Failed to load avatar metadata.", ioe);
+        }
     }
 
     /**

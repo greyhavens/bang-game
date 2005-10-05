@@ -17,10 +17,14 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.GroupLayout;
 import com.samskivert.util.StringUtil;
 
+import com.jme.input.KeyInput;
 import com.jme.util.TextureManager;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.avatar.client.CreateAvatarView;
+
+import com.threerings.bang.client.util.KeyListener;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.util.BangContext;
 
@@ -42,6 +46,18 @@ public class TownView extends BWindow
         // display the status view when the player presses escape
         setModal(true);
         new StatusView(_ctx).bind(this);
+
+        // TEMP: test the avatar view
+        addListener(new KeyListener() {
+            public void keyPressed (int keyCode) {
+                if (keyCode == KeyInput.KEY_F1) {
+                    CreateAvatarView aview = new CreateAvatarView(_ctx);
+                    _ctx.getRootNode().addWindow(aview);
+                    aview.pack();
+                    aview.center();
+                }
+            }
+        });
 
         int width = ctx.getDisplay().getWidth();
         int height = ctx.getDisplay().getHeight();

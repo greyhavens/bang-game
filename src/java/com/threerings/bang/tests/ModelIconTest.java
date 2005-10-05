@@ -21,6 +21,7 @@ import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BRootNode;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.threerings.cast.CharacterManager;
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.openal.SoundManager;
@@ -154,6 +155,10 @@ public class ModelIconTest extends JmeApp
         }
 
         public SoundManager getSoundManager () {
+            return null;
+        }
+
+        public CharacterManager getCharacterManager () {
             return null;
         }
 

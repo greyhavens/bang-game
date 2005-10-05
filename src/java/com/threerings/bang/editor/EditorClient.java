@@ -26,9 +26,11 @@ import com.jme.system.DisplaySystem;
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 
-import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
+
+import com.threerings.cast.CharacterManager;
+import com.threerings.resource.ResourceManager;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.tile.FringeConfiguration;
@@ -207,6 +209,10 @@ public class EditorClient extends BasicClient
 
         public SoundManager getSoundManager () {
             return _soundmgr;
+        }
+
+        public CharacterManager getCharacterManager () {
+            return _charmgr;
         }
 
         public ModelCache getModelCache () {

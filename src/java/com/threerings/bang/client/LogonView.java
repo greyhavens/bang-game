@@ -21,7 +21,6 @@ import com.jme.util.TextureManager;
 
 import com.samskivert.servlet.user.Password;
 
-import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -37,7 +36,7 @@ import static com.threerings.bang.Log.log;
  * Displays a simple user interface for logging in.
  */
 public class LogonView extends BWindow
-    implements ActionListener, ResourceManager.InitObserver
+    implements ActionListener, BasicClient.InitObserver
 {
     public LogonView (BangContext ctx)
     {
@@ -110,8 +109,8 @@ public class LogonView extends BWindow
         }
     }
 
-    // documentation inherited from interface ResourceManager.InitObserver
-    public void progress (int percent, long remaining)
+    // documentation inherited from interface BasicClient.InitObserver
+    public void progress (int percent)
     {
         if (percent < 100) {
             _status.setText(_msgs.get("m.init_progress", ""+percent));
@@ -119,13 +118,6 @@ public class LogonView extends BWindow
             _status.setText(_msgs.get("m.init_complete"));
             _initialized = true;
         }
-    }
-
-    // documentation inherited from interface ResourceManager.InitObserver
-    public void initializationFailed (Exception e)
-    {
-        // TODO: more sophistication
-        _status.setText(e.getMessage());
     }
 
     @Override // documentation inherited
