@@ -24,6 +24,8 @@ import com.threerings.parlor.server.ParlorManager;
 import com.threerings.user.AccountActionRepository;
 import com.threerings.util.Name;
 
+import com.threerings.bang.avatar.data.BarberConfig;
+import com.threerings.bang.avatar.server.BarberManager;
 import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
@@ -88,6 +90,9 @@ public class BangServer extends CrowdServer
     /** Manages the Bank and the coin exchange. */
     public static BankManager bankmgr;
 
+    /** Manages the Barber and avatar customization. */
+    public static BarberManager barbermgr;
+
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
 
@@ -125,38 +130,28 @@ public class BangServer extends CrowdServer
         boardmgr.init(conprov);
         coinexmgr.init();
 
-        // create the saloon manager
-        LobbyConfig lconfig = new LobbyConfig();
-        lconfig.townId = ServerConfig.getTownId();
-        plreg.createPlace(lconfig, new PlaceRegistry.CreationObserver() {
+        // create our managers
+        PlaceRegistry.CreationObserver crobs =
+            new PlaceRegistry.CreationObserver() {
             public void placeCreated (PlaceObject place, PlaceManager pmgr) {
-                saloonmgr = (LobbyManager)pmgr;
+                if (pmgr instanceof LobbyManager) {
+                    saloonmgr = (LobbyManager)pmgr;
+                } else if (pmgr instanceof StoreManager) {
+                    storemgr = (StoreManager)pmgr;
+                } else if (pmgr instanceof BankManager) {
+                    bankmgr = (BankManager)pmgr;
+                } else if (pmgr instanceof RanchManager) {
+                    ranchmgr = (RanchManager)pmgr;
+                } else if (pmgr instanceof BarberManager) {
+                    barbermgr = (BarberManager)pmgr;
+                }
             }
-        });
-
-        // create the general store manager
-        StoreConfig sconfig = new StoreConfig();
-        plreg.createPlace(sconfig, new PlaceRegistry.CreationObserver() {
-            public void placeCreated (PlaceObject place, PlaceManager pmgr) {
-                storemgr = (StoreManager)pmgr;
-            }
-        });
-
-        // create the bank manager
-        BankConfig bconfig = new BankConfig();
-        plreg.createPlace(bconfig, new PlaceRegistry.CreationObserver() {
-            public void placeCreated (PlaceObject place, PlaceManager pmgr) {
-                bankmgr = (BankManager)pmgr;
-            }
-        });
-
-        // create the ranch manager
-        RanchConfig rconfig = new RanchConfig();
-        plreg.createPlace(rconfig, new PlaceRegistry.CreationObserver() {
-            public void placeCreated (PlaceObject place, PlaceManager pmgr) {
-                ranchmgr = (RanchManager)pmgr;
-            }
-        });
+        };
+        plreg.createPlace(new LobbyConfig(), crobs);
+        plreg.createPlace(new StoreConfig(), crobs);
+        plreg.createPlace(new BankConfig(), crobs);
+        plreg.createPlace(new RanchConfig(), crobs);
+        plreg.createPlace(new BarberConfig(), crobs);
 
         log.info("Bang server initialized.");
     }

@@ -12,9 +12,6 @@ import com.threerings.bang.lobby.client.LobbyController;
  */
 public class LobbyConfig extends PlaceConfig
 {
-    /** The town in which this lobby resides. */
-    public String townId;
-
     // documentation inherited
     public Class getControllerClass ()
     {

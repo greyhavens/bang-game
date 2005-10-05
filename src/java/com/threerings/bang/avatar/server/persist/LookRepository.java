@@ -21,6 +21,8 @@ import com.samskivert.jdbc.SimpleRepository;
 
 import com.threerings.bang.avatar.data.Look;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Stores a set of "looks" (avatar fingerprints) for players.
  */
@@ -73,9 +75,9 @@ public class LookRepository extends SimpleRepository
     }
 
     /**
-     * Stores a new look in the database for the specified player.
+     * Inserts a new look into the database for the specified player.
      */
-    public void storeLook (final int playerId, final Look look)
+    public void insertLook (final int playerId, final Look look)
         throws PersistenceException
     {
         execute(new Operation() {
@@ -98,6 +100,20 @@ public class LookRepository extends SimpleRepository
                 return null;
             }
         });
+    }
+
+    /**
+     * Deletes a particular look owned by a particular player.
+     */
+    public void deleteLook (int playerId, String name)
+        throws PersistenceException
+    {
+        int mods = update("delete from LOOKS where PLAYER_ID = " + playerId +
+                          " and LOOK = " + JDBCUtil.escape(name));
+        if (mods != 1) {
+            log.warning("Unable to delete look [pid=" + playerId +
+                        ", name=" + name + ", mods=" + mods + "].");
+        }
     }
 
     /** Helper function for {@link #loadLooks}. */

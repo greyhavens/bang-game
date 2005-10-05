@@ -34,12 +34,12 @@ public class RanchManager extends PlaceManager
     implements RanchCodes, RanchProvider
 {
     // documentation inherited from interface RanchProvider
-    public void recruitBigShot (ClientObject caller, String type,
-                                final RanchService.ResultListener listener)
+    public void recruitBigShot (
+        ClientObject caller, String type, RanchService.ResultListener listener)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject)caller;
-        final UnitConfig config = UnitConfig.getConfig(type);
+        PlayerObject user = (PlayerObject)caller;
+        UnitConfig config = UnitConfig.getConfig(type);
         if (config == null) {
             log.warning("Requested to recruit bogus unit [who=" + user.who() +
                         ", type=" + type + "].");

@@ -21,4 +21,7 @@ public class BangBootstrapData extends BootstrapData
 
     /** The room oid of the Ranch. */
     public int ranchOid;
+
+    /** The room oid of the Barber. */
+    public int barberOid;
 }

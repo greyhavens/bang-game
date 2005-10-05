@@ -11,9 +11,10 @@ import com.threerings.crowd.server.PlaceManager;
 import com.threerings.parlor.server.TableManager;
 import com.threerings.parlor.server.TableManagerProvider;
 
+import com.threerings.bang.server.ServerConfig;
+
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
 
-import com.threerings.bang.lobby.data.LobbyConfig;
 import com.threerings.bang.lobby.data.LobbyObject;
 
 /**
@@ -29,22 +30,15 @@ public class LobbyManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected void didInit ()
-    {
-        super.didInit();
-
-        _lconfig = (LobbyConfig)_config;
-    }
-
-    @Override // documentation inherited
     protected void didStartup ()
     {
         super.didStartup();
 
+        String townId = ServerConfig.getTownId();
         _lobobj = (LobbyObject)_plobj;
         _lobobj.addListener(_emptyListener);
-        _lobobj.setTownId(_lconfig.townId);
-        _lobobj.setScenarios(ScenarioFactory.getScenarios(_lconfig.townId));
+        _lobobj.setTownId(townId);
+        _lobobj.setScenarios(ScenarioFactory.getScenarios(townId));
         _tablemgr = new TableManager(this);
     }
 
@@ -83,9 +77,6 @@ public class LobbyManager extends PlaceManager
             }
         }
     };
-
-    /** A casted reference to our lobby config. */
-    protected LobbyConfig _lconfig;
 
     /** A casted reference to our lobby object. */
     protected LobbyObject _lobobj;
