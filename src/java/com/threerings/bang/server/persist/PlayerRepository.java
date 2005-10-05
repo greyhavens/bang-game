@@ -102,6 +102,44 @@ public class PlayerRepository extends JORARepository
                     amount, "grant");
     }
 
+    /**
+     * Mimics the disabling of deleted players by renaming them to an
+     * invalid value that we do in our user management system. This is
+     * triggered by us receiving a player action indicating that the
+     * player was deleted.
+     */
+    public void disablePlayer (String accountName, String disabledName)
+        throws PersistenceException
+    {
+        if (update("update PLAYERS set ACCOUNT_NAME = " +
+                   JDBCUtil.escape(disabledName) + " where ACCOUNT_NAME = " +
+                   JDBCUtil.escape(accountName)) == 1) {
+            log.info("Disabled deleted player [oname=" + accountName +
+                     ", dname=" + disabledName + "].");
+        }
+    }
+
+    /**
+     * Note that a user's session has ended: increment their sessions, add in
+     * the number of minutes spent online, set their last session time to now
+     * and remember their most recently selected avatar look.
+     */
+    public void noteSessionEnded (int playerId, String look, int minutes)
+        throws PersistenceException
+    {
+        checkedUpdate("update PLAYERS set SESSIONS = SESSIONS + 1, " +
+                      "SESSION_MINUTES = SESSION_MINUTES + " + minutes + ", " +
+                      "LOOK = " + JDBCUtil.escape(look) + ", " +
+                      "LAST_SESSION = NOW() where PLAYER_ID=" + playerId, 1);
+    }
+
+    @Override // documentation inherited
+    protected void createTables (Session session)
+    {
+	_ptable = new Table(Player.class.getName(), "PLAYERS",
+                            session, "PLAYER_ID", true);
+    }
+
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
     protected void updateScrip (String where, int amount, String type)
         throws PersistenceException
@@ -125,43 +163,6 @@ public class PlayerRepository extends JORARepository
                         "[where=" + where + ", amount=" + amount +
                         ", mods=" + mods + "].");
         }
-    }
-
-    /**
-     * Mimics the disabling of deleted players by renaming them to an
-     * invalid value that we do in our user management system. This is
-     * triggered by us receiving a player action indicating that the
-     * player was deleted.
-     */
-    public void disablePlayer (String accountName, String disabledName)
-        throws PersistenceException
-    {
-        if (update("update PLAYERS set ACCOUNT_NAME = " +
-                   JDBCUtil.escape(disabledName) + " where ACCOUNT_NAME = " +
-                   JDBCUtil.escape(accountName)) == 1) {
-            log.info("Disabled deleted player [oname=" + accountName +
-                     ", dname=" + disabledName + "].");
-        }
-    }
-
-    /**
-     * Note that a user's session has ended: increment their sessions,
-     * add in the number of minutes spent online, set their last session
-     * time to now and clear out any epires date that they may have.
-     */
-    public void noteSessionEnded (int playerId, int minutes)
-        throws PersistenceException
-    {
-        checkedUpdate("update PLAYERS set SESSIONS = SESSIONS + 1, " +
-                      "SESSION_MINUTES = SESSION_MINUTES + " + minutes + ", " +
-                      "LAST_SESSION = NOW() where PLAYER_ID=" + playerId, 1);
-    }
-
-    @Override // documentation inherited
-    protected void createTables (Session session)
-    {
-	_ptable = new Table(Player.class.getName(), "PLAYERS",
-                            session, "PLAYER_ID", true);
     }
 
     protected Table _ptable;

@@ -20,6 +20,9 @@ CREATE TABLE PLAYERS
     /** The amount of scrip this player holds. */
     SCRIP INTEGER NOT NULL,
 
+    /** The current avatar look selected by this player. */
+    LOOK VARCHAR(48) NOT NULL,
+
     /** The time at which this player was created (when they first starting
      * playing  this particular game). */
     CREATED DATETIME NOT NULL,

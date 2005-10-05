@@ -20,6 +20,9 @@ public class Player
     /** The amount of scrip this player holds. */
     public int scrip;
 
+    /** The current avatar look selected by this player. */
+    public String look;
+
     /** The time at which this player was created (when they first starting
      * playing  this particular game). */
     public Date created;

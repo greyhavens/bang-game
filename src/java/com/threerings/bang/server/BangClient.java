@@ -113,7 +113,7 @@ public class BangClient extends CrowdClient
 
             // record our playtime to the database
             BangServer.playrepo.noteSessionEnded(
-                user.playerId, (int)Math.round(_connectTime / 60f));
+                user.playerId, user.look, (int)Math.round(_connectTime / 60f));
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to note ended session " +

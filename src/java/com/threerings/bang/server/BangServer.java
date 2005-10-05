@@ -24,6 +24,7 @@ import com.threerings.parlor.server.ParlorManager;
 import com.threerings.user.AccountActionRepository;
 import com.threerings.util.Name;
 
+import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.lobby.data.LobbyConfig;
@@ -64,6 +65,9 @@ public class BangServer extends CrowdServer
 
     /** Manages the persistent repository of stats. */
     public static StatRepository statrepo;
+
+    /** Manages the persistent repository of avatar looks. */
+    public static LookRepository lookrepo;
 
     /** Provides micropayment services. (This will need to be turned into a
      * pluggable interface to support third party micropayment systems.) */
@@ -106,6 +110,7 @@ public class BangServer extends CrowdServer
         playrepo = new PlayerRepository(conprov);
         itemrepo = new ItemRepository(conprov);
         statrepo = new StatRepository(conprov);
+        lookrepo = new LookRepository(conprov);
         coinmgr = new BangCoinManager(conprov);
         coinexmgr = new BangCoinExchangeManager(conprov);
 

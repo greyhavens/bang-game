@@ -12,6 +12,8 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.TokenRing;
 
+import com.threerings.bang.avatar.data.Look;
+
 /**
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
  */
@@ -41,6 +43,12 @@ public class PlayerObject extends BodyObject
 
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
+
+    /** The field name of the <code>look</code> field. */
+    public static final String LOOK = "look";
+
+    /** The field name of the <code>looks</code> field. */
+    public static final String LOOKS = "looks";
     // AUTO-GENERATED: FIELDS END
 
     /** This user's persistent unique id. */
@@ -67,6 +75,12 @@ public class PlayerObject extends BodyObject
     /** Statistics tracked for this player. */
     public StatSet stats;
 
+    /** This player's current avatar look. */
+    public String look;
+
+    /** The avatar looks this player has available. */
+    public DSet looks;
+
     /**
      * Returns the purse owned by this player or the default purse if the
      * player does not yet have one.
@@ -80,6 +94,14 @@ public class PlayerObject extends BodyObject
             }
         }
         return Purse.DEFAULT_PURSE;
+    }
+
+    /**
+     * Returns the look currently in effect for this player.
+     */
+    public Look getLook ()
+    {
+        return (Look)looks.get(look);
     }
 
     @Override // documentation inherited
@@ -275,6 +297,68 @@ public class PlayerObject extends BodyObject
     {
         requestAttributeChange(STATS, value, this.stats);
         this.stats = (value == null) ? null : (StatSet)value.clone();
+    }
+
+    /**
+     * Requests that the <code>look</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setLook (String value)
+    {
+        String ovalue = this.look;
+        requestAttributeChange(
+            LOOK, value, ovalue);
+        this.look = value;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>looks</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToLooks (DSet.Entry elem)
+    {
+        requestEntryAdd(LOOKS, looks, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>looks</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromLooks (Comparable key)
+    {
+        requestEntryRemove(LOOKS, looks, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>looks</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateLooks (DSet.Entry elem)
+    {
+        requestEntryUpdate(LOOKS, looks, elem);
+    }
+
+    /**
+     * Requests that the <code>looks</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setLooks (DSet value)
+    {
+        requestAttributeChange(LOOKS, value, this.looks);
+        this.looks = (value == null) ? null : (DSet)value.clone();
     }
     // AUTO-GENERATED: METHODS END
 }

@@ -58,5 +58,10 @@ public class BangClientResolver extends CrowdClientResolver
         ArrayList<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);
         buser.stats = new StatSet(stats.iterator());
         buser.stats.setContainer(buser);
+
+        // load up this player's avatar looks
+        buser.look = player.look;
+        buser.looks = new DSet(
+            BangServer.lookrepo.loadLooks(player.playerId).iterator());
     }
 }
