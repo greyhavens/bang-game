@@ -68,6 +68,9 @@ public class BangClient extends BasicClient
 
         // create and display the logon view
         displayLogon();
+
+        // and start unpacking our resources
+        initResources(_lview);
     }
 
     /**

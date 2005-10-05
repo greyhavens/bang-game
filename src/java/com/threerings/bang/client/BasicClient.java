@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import java.awt.image.BufferedImage;
+
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BRootNode;
 import com.jme.input.InputHandler;
@@ -19,7 +21,9 @@ import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.openal.SoundManager;
+import com.threerings.cast.CharacterManager;
+import com.threerings.cast.bundle.BundledComponentRepository;
+import com.threerings.media.image.ImageManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.CompiledConfig;
 import com.threerings.util.MessageManager;
@@ -34,6 +38,7 @@ import com.threerings.parlor.client.ParlorDirector;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.tile.FringeConfiguration;
+import com.threerings.openal.SoundManager;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
@@ -81,6 +86,22 @@ public class BasicClient
     }
 
     /**
+     * This must be called by the application when it is ready to unpack and
+     * initialize our bundled resources and display the progress of that
+     * process.
+     */
+    protected void initResources (ResourceManager.InitObserver inobs)
+    {
+        try {
+            _rsrcmgr.initBundles(
+                null, "config/resource/manager.properties", inobs);
+        } catch (IOException ioe) {
+            // TODO: report to the client
+            log.log(Level.WARNING, "Failed to initialize rsrcmgr.", ioe);
+        }
+    }
+
+    /**
      * Creates and initializes the various services that are provided by
      * the context. Derived classes that provide an extended context
      * should override this method and create their own extended
@@ -98,8 +119,22 @@ public class BasicClient
         _lnf = new BangLookAndFeel();
         _mcache = new ModelCache(_ctx);
 
-        // create our sound manager
+        // create our media managers
+        _icreator = new ImageManager.OptimalImageCreator() {
+            public BufferedImage createImage (int w, int h, int t) {
+                return null;
+            }
+        };
+        _imgmgr = new ImageManager(_rsrcmgr, _icreator);
         _soundmgr = SoundManager.createSoundManager(rqueue);
+        try {
+            _charmgr = new CharacterManager(
+                _imgmgr, new BundledComponentRepository(
+                    _rsrcmgr, _imgmgr, "avatars"));
+        } catch (IOException ioe) {
+            // TODO: report to the client
+            log.log(Level.WARNING, "Failed to load avatar metadata.", ioe);
+        }
 
         // load up our fringe configuration
         try {
@@ -107,6 +142,7 @@ public class BasicClient
                 CompiledConfig.loadConfig(
                     _rsrcmgr.getResource("tiles/fringe/config.dat"));
         } catch (IOException ioe) {
+            // TODO: report to the client
             log.log(Level.WARNING, "Failed to load fringe config.", ioe);
         }
 
@@ -170,6 +206,10 @@ public class BasicClient
             return _soundmgr;
         }
 
+        public CharacterManager getCharacterManager () {
+            return _charmgr;
+        }
+
         public ModelCache getModelCache () {
             return _mcache;
         }
@@ -216,7 +256,10 @@ public class BasicClient
 
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;
+    protected ImageManager.OptimalImageCreator _icreator;
+    protected ImageManager _imgmgr;
     protected SoundManager _soundmgr;
+    protected CharacterManager _charmgr;
     protected BLookAndFeel _lnf;
     protected ModelCache _mcache;
     protected FringeConfiguration _fringeconf;

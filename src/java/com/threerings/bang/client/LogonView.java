@@ -21,6 +21,7 @@ import com.jme.util.TextureManager;
 
 import com.samskivert.servlet.user.Password;
 
+import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -36,7 +37,7 @@ import static com.threerings.bang.Log.log;
  * Displays a simple user interface for logging in.
  */
 public class LogonView extends BWindow
-    implements ActionListener
+    implements ActionListener, ResourceManager.InitObserver
 {
     public LogonView (BangContext ctx)
     {
@@ -84,6 +85,11 @@ public class LogonView extends BWindow
     {
         if (event.getSource() == _password ||
             "logon".equals(event.getAction())) {
+            if (!_initialized) {
+                log.warning("Not finished initializing. Hang tight.");
+                return;
+            }
+
             String username = _username.getText();
             String password = _password.getText();
             _status.setText(_msgs.get("m.logging_on"));
@@ -102,6 +108,24 @@ public class LogonView extends BWindow
         } else if ("exit".equals(event.getAction())) {
             _ctx.getApp().stop();
         }
+    }
+
+    // documentation inherited from interface ResourceManager.InitObserver
+    public void progress (int percent, long remaining)
+    {
+        if (percent < 100) {
+            _status.setText(_msgs.get("m.init_progress", ""+percent));
+        } else {
+            _status.setText(_msgs.get("m.init_complete"));
+            _initialized = true;
+        }
+    }
+
+    // documentation inherited from interface ResourceManager.InitObserver
+    public void initializationFailed (Exception e)
+    {
+        // TODO: more sophistication
+        _status.setText(e.getMessage());
     }
 
     @Override // documentation inherited
@@ -126,4 +150,5 @@ public class LogonView extends BWindow
     protected BTextField _username;
     protected BPasswordField _password;
     protected BLabel _status;
+    protected boolean _initialized;
 }

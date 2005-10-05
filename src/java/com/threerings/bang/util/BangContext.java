@@ -10,16 +10,18 @@ import javax.imageio.ImageIO;
 
 import com.jmex.bui.BLookAndFeel;
 
-import com.threerings.openal.SoundManager;
-import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.JmeContext;
 import com.threerings.jme.tile.FringeConfiguration;
+import com.threerings.openal.SoundManager;
+
+import com.threerings.cast.CharacterManager;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.parlor.util.ParlorContext;
+import com.threerings.resource.ResourceManager;
 
 import com.threerings.bang.client.ModelCache;
 import com.threerings.bang.data.PlayerObject;
@@ -52,6 +54,9 @@ public abstract class BangContext
 
     /** Returns a reference to our sound manager. */
     public abstract SoundManager getSoundManager ();
+
+    /** Returns a reference to our character manager. */
+    public abstract CharacterManager getCharacterManager ();
 
     /** Returns a reference to the current player's user object. Only
      * valid when we are logged onto the server. */
