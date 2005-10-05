@@ -12,7 +12,6 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.ImageIcon;
 import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.border.LineBorder;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
@@ -39,7 +38,7 @@ public class BarberView extends BWindow
 {
     public BarberView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
+        super(ctx.getLookAndFeel(), GroupLayout.makeHStretch());
         setBorder(new EmptyBorder(5, 5, 5, 5));
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
