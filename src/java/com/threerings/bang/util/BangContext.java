@@ -19,6 +19,7 @@ import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.openal.SoundManager;
 
 import com.threerings.cast.CharacterManager;
+import com.threerings.media.image.ImageManager;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.parlor.util.ParlorContext;
 import com.threerings.resource.ResourceManager;
@@ -51,6 +52,9 @@ public abstract class BangContext
 
     /** Returns a reference to our top-level application. */
     public abstract JmeApp getApp ();
+
+    /** Returns a reference to our image manager. */
+    public abstract ImageManager getImageManager ();
 
     /** Returns a reference to our sound manager. */
     public abstract SoundManager getSoundManager ();

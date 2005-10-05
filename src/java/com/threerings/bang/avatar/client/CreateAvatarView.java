@@ -3,15 +3,21 @@
 
 package com.threerings.bang.avatar.client;
 
+import java.awt.Graphics2D;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BConstants;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.ImageIcon;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -20,7 +26,11 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.media.util.MultiFrameImage;
+
+import com.threerings.cast.ActionFrames;
 import com.threerings.cast.CharacterComponent;
+import com.threerings.cast.CharacterDescriptor;
 import com.threerings.cast.ComponentClass;
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
@@ -63,9 +73,6 @@ public class CreateAvatarView extends BDecoratedWindow
         text = ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.ok");
         controls.add(new BButton(text, this, "ok"), GroupLayout.FIXED);
         add(controls, BorderLayout.SOUTH);
-
-        // configure our default portrait
-        updatePortrait();
     }
 
     // documentation inherited from interface ActionListener
@@ -79,8 +86,47 @@ public class CreateAvatarView extends BDecoratedWindow
         }
     }
 
+    @Override // documentation inherited
+    public void wasAdded ()
+    {
+        super.wasAdded();
+
+        // configure our default portrait
+        updatePortrait();
+    }
+
     protected void updatePortrait ()
     {
+        if (_selections.size() == 0) {
+            return;
+        }
+
+        int[] cids = new int[_selections.size()];
+        int cidx = 0;
+        for (CharacterComponent ccomp : _selections.values()) {
+            cids[cidx++] = ccomp.componentId;
+        }
+        CharacterDescriptor cdesc = new CharacterDescriptor(cids, null);
+
+        ActionFrames af;
+        try {
+            af = _ctx.getCharacterManager().getActionFrames(cdesc, "default");
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Unable to load action frames " +
+                    "[cdesc=" + cdesc + "].", e);
+            return;
+        }
+
+        MultiFrameImage mfi = af.getFrames(0);
+        BufferedImage image = _ctx.getImageManager().createImage(
+            mfi.getWidth(0), mfi.getHeight(0), Transparency.BITMASK);
+        Graphics2D gfx = (Graphics2D)image.createGraphics();
+        try {
+            mfi.paintFrame(gfx, 0, 0, 0);
+        } finally {
+            gfx.dispose();
+        }
+        _portrait.setIcon(new ImageIcon(image));
     }
 
     protected class ComponentSelector extends BContainer

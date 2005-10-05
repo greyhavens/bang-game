@@ -30,6 +30,7 @@ import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
 import com.threerings.cast.CharacterManager;
+import com.threerings.media.image.ImageManager;
 import com.threerings.resource.ResourceManager;
 
 import com.threerings.jme.JmeApp;
@@ -205,6 +206,10 @@ public class EditorClient extends BasicClient
 
         public JmeApp getApp () {
             return _app;
+        }
+
+        public ImageManager getImageManager () {
+            return _imgmgr;
         }
 
         public SoundManager getSoundManager () {

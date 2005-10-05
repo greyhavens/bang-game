@@ -242,6 +242,10 @@ public class BasicClient
             return _app;
         }
 
+        public ImageManager getImageManager () {
+            return _imgmgr;
+        }
+
         public SoundManager getSoundManager () {
             return _soundmgr;
         }

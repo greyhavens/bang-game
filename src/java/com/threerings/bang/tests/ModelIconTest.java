@@ -24,6 +24,7 @@ import com.jmex.bui.layout.BorderLayout;
 import com.threerings.cast.CharacterManager;
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.tile.FringeConfiguration;
+import com.threerings.media.image.ImageManager;
 import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.resource.ResourceManager;
@@ -151,6 +152,10 @@ public class ModelIconTest extends JmeApp
         }
 
         public BangApp getApp () {
+            return null;
+        }
+
+        public ImageManager getImageManager () {
             return null;
         }
 
