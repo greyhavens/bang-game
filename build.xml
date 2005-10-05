@@ -115,6 +115,15 @@
                 target="rsrc/tiles/fringe/config.dat"/>
   </target>
 
+  <!-- creates the serialized color repository config -->
+  <target name="colorpos">
+    <taskdef name="confcomp" classpathref="classpath"
+      classname="com.threerings.tools.CompiledConfigTask"/>
+    <confcomp parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
+      configdef="rsrc/config/media/colordefs.xml"
+      target="rsrc/config/media/colordefs.dat"/>
+  </target>
+
   <!-- builds the avatar component bundles. -->
   <target name="avatars">
     <taskdef name="metabundle" classpathref="classpath"
@@ -198,14 +207,17 @@
   <!-- a target for rebuilding everything -->
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
+  <!-- rebuild all the niggling bits -->
+  <target name="bits" depends="colorpos,fringe"/>
+
   <!-- builds the code jar file -->
   <target name="dist" depends="prepare,compile">
     <jar file="${deploy.dir}/${app.name}-code.jar"
          basedir="${deploy.dir}/classes" includes="com/**"/>
   </target>
 
-  <!-- builds the media and sounds jar files -->
-  <target name="mdist" depends="prepare,fringe,sounds,models">
+  <!-- builds the avatar, media and sounds jar files -->
+  <target name="mdist" depends="prepare,bits,sounds,models,avatars">
     <jar file="${deploy.dir}/${app.name}-media.jar"
          basedir="${deploy.dir}/classes" includes="rsrc/**"
          excludes="rsrc/sounds/**"/>
