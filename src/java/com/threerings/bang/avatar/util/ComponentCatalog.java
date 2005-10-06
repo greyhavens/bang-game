@@ -19,7 +19,7 @@ public class ComponentCatalog
 {
     /** The path (relative to the resource directory) at which the component
      * catalog should be loaded and stored. */
-    public static final String CONFIG_PATH = "avatar/components.dat";
+    public static final String CONFIG_PATH = "avatars/components.dat";
 
     /** Contains all {@link Component} records for a particular class of avatar
      * components. */

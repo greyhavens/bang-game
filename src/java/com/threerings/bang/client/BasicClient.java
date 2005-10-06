@@ -27,8 +27,6 @@ import com.threerings.util.CompiledConfig;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
-import com.threerings.cast.CharacterManager;
-import com.threerings.cast.bundle.BundledComponentRepository;
 import com.threerings.media.image.ImageManager;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.resource.ResourceManager;
@@ -187,14 +185,6 @@ public class BasicClient
      */
     protected void postResourcesInit ()
     {
-        try {
-            _charmgr = new CharacterManager(
-                _imgmgr, new BundledComponentRepository(
-                    _rsrcmgr, _imgmgr, "avatars"));
-        } catch (IOException ioe) {
-            // TODO: report to the client
-            log.log(Level.WARNING, "Failed to load avatar metadata.", ioe);
-        }
     }
 
     /**
@@ -253,10 +243,6 @@ public class BasicClient
 
         public SoundManager getSoundManager () {
             return _soundmgr;
-        }
-
-        public CharacterManager getCharacterManager () {
-            return _charmgr;
         }
 
         public ModelCache getModelCache () {
@@ -326,7 +312,6 @@ public class BasicClient
     protected ImageManager.OptimalImageCreator _icreator;
     protected ImageManager _imgmgr;
     protected SoundManager _soundmgr;
-    protected CharacterManager _charmgr;
     protected BLookAndFeel _lnf;
     protected ModelCache _mcache;
     protected FringeConfiguration _fringeconf;

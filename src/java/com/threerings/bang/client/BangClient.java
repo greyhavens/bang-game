@@ -20,12 +20,15 @@ import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.jme.JmeApp;
-import com.threerings.jme.tile.FringeConfiguration;
-import com.threerings.resource.ResourceManager;
 import com.threerings.util.CompiledConfig;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
+
+import com.threerings.cast.CharacterManager;
+import com.threerings.cast.bundle.BundledComponentRepository;
+import com.threerings.jme.JmeApp;
+import com.threerings.jme.tile.FringeConfiguration;
+import com.threerings.resource.ResourceManager;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService.ConfirmListener;
@@ -37,6 +40,7 @@ import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.avatar.util.ComponentCatalog;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
@@ -142,6 +146,25 @@ public class BangClient extends BasicClient
         ParticleFactory.warmup(_ctx);
     }
 
+    @Override // documentation inherited
+    protected void postResourcesInit ()
+    {
+        super.postResourcesInit();
+
+        try {
+            _charmgr = new CharacterManager(
+                _imgmgr, new BundledComponentRepository(
+                    _rsrcmgr, _imgmgr, "avatars"));
+
+            _compcat = (ComponentCatalog)CompiledConfig.loadConfig(
+                _rsrcmgr.getResource(ComponentCatalog.CONFIG_PATH));
+
+        } catch (IOException ioe) {
+            // TODO: report to the client
+            log.log(Level.WARNING, "Initialization failed.", ioe);
+        }
+    }
+
     protected void displayLogon ()
     {
         _lview = new LogonView(_ctx);
@@ -222,12 +245,22 @@ public class BangClient extends BasicClient
         public PlayerObject getUserObject () {
             return (PlayerObject)getClient().getClientObject();
         }
+
+        public CharacterManager getCharacterManager () {
+            return _charmgr;
+        }
+
+        public ComponentCatalog getComponentCatalog () {
+            return _compcat;
+        }
     }
 
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
 
     protected BangChatDirector _chatdir;
+    protected ComponentCatalog _compcat;
+    protected CharacterManager _charmgr;
 
     protected BWindow _pview;
     protected LogonView _lview;
