@@ -18,7 +18,6 @@ import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.StringUtil;
-import com.samskivert.util.Tuple;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
@@ -32,7 +31,6 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.data.Badge;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.PlayerObject;
@@ -54,15 +52,12 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.client.BangService;
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
-import com.threerings.bang.game.server.scenario.CattleHerding;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
-import com.threerings.bang.game.server.scenario.Shootout;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 

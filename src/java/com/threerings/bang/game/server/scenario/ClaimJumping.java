@@ -7,8 +7,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.samskivert.util.ArrayIntSet;
-
-import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.chat.server.SpeakProvider;

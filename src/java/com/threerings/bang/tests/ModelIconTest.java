@@ -19,33 +19,21 @@ import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BDecoratedWindow;
-import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BRootNode;
 import com.jmex.bui.layout.BorderLayout;
 
-import com.threerings.cast.CharacterManager;
-import com.threerings.jme.JmeApp;
-import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.media.image.ImageManager;
-import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
-import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.DObjectManager;
-
-import com.threerings.crowd.chat.client.ChatDirector;
-import com.threerings.crowd.client.LocationDirector;
-import com.threerings.crowd.client.OccupantDirector;
-import com.threerings.crowd.client.PlaceView;
-
-import com.threerings.parlor.client.ParlorDirector;
+import com.threerings.jme.JmeApp;
+import com.threerings.jme.tile.FringeConfiguration;
+import com.threerings.openal.SoundManager;
 
 import com.threerings.bang.client.BangApp;
-import com.threerings.bang.client.Model;
 import com.threerings.bang.client.ModelCache;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.ranch.client.UnitIcon;

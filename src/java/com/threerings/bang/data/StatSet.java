@@ -5,7 +5,6 @@ package com.threerings.bang.data;
 
 import java.util.Iterator;
 
-import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 /**

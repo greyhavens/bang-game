@@ -5,12 +5,9 @@ package com.threerings.bang.store.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import com.samskivert.util.ListUtil;
 
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.BangCodes;

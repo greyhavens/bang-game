@@ -4,7 +4,6 @@
 package com.threerings.bang.client;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.util.BangContext;
 

@@ -3,37 +3,23 @@
 
 package com.threerings.bang.client;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.BRootNode;
-import com.jme.input.InputHandler;
-import com.jme.renderer.Camera;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.system.DisplaySystem;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.util.CompiledConfig;
-import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
 import com.threerings.cast.CharacterManager;
 import com.threerings.cast.bundle.BundledComponentRepository;
-import com.threerings.jme.JmeApp;
-import com.threerings.jme.tile.FringeConfiguration;
-import com.threerings.resource.ResourceManager;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.SessionObserver;
-import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.PlaceView;
@@ -46,7 +32,6 @@ import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -265,8 +250,4 @@ public class BangClient extends BasicClient
     protected BWindow _pview;
     protected LogonView _lview;
     protected TownView _tview;
-
-    /** The prefix prepended to localization bundle names before looking
-     * them up in the classpath. */
-    protected static final String MESSAGE_MANAGER_PREFIX = "rsrc.i18n";
 }

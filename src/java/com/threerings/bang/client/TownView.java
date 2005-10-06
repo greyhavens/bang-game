@@ -9,7 +9,6 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import com.jmex.bui.BButton;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.background.ScaledBackground;
 import com.jmex.bui.event.MouseAdapter;

@@ -7,7 +7,6 @@ import java.util.EnumSet;
 
 import com.jme.renderer.ColorRGBA;
 
-import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BWindow;
@@ -20,10 +19,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.TownButton;
-import com.threerings.bang.client.TownView;
 import com.threerings.bang.client.WalletLabel;
-import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 

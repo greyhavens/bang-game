@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -13,8 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.image.Image;
-import com.jme.image.Texture;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.math.FastMath;
 import com.jme.math.Ray;
@@ -30,7 +26,6 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BDecoratedWindow;

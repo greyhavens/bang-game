@@ -9,8 +9,6 @@ import java.util.Iterator;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.io.SimpleStreamableObject;
-
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
 

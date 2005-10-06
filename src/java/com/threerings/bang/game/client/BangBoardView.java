@@ -3,9 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -19,10 +16,8 @@ import com.jme.input.KeyInput;
 
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
-import com.threerings.openal.Sound;
 import com.threerings.util.RandomUtil;
 
-import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;

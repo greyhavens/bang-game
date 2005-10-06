@@ -3,8 +3,6 @@
 
 package com.threerings.bang.ranch.client;
 
-import java.util.EnumSet;
-
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;

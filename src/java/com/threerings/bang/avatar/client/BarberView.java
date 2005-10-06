@@ -22,10 +22,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
-
-import com.threerings.bang.avatar.data.BarberObject;
 
 import static com.threerings.bang.Log.log;
 

@@ -6,9 +6,7 @@ package com.threerings.bang.game.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.PieceCodes;
 
 /**
  * Utility methods relating to pieces.

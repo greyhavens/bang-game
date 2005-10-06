@@ -6,7 +6,6 @@ package com.threerings.bang.client.util;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.EventListener;
 import com.jmex.bui.event.KeyEvent;
-import com.jme.input.KeyInput;
 
 /**
  * Reacts to the pressing of keys.

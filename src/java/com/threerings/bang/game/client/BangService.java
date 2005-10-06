@@ -6,8 +6,6 @@ package com.threerings.bang.game.client;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
-import com.threerings.bang.game.data.piece.Piece;
-
 /**
  * Defines the requests that the client can make to the server.
  */

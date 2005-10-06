@@ -3,11 +3,8 @@
 
 package com.threerings.bang.store.client;
 
-import java.util.Iterator;
-
 import com.jme.renderer.ColorRGBA;
 
-import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
@@ -16,7 +13,6 @@ import com.jmex.bui.ImageIcon;
 import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.crowd.client.PlaceView;
@@ -28,7 +24,6 @@ import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.util.BangContext;
 
-import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.StoreObject;
 
 import static com.threerings.bang.Log.log;

@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.awt.image.BufferedImage;
-
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.scene.Node;
@@ -12,7 +10,6 @@ import com.jme.scene.shape.Dome;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
 

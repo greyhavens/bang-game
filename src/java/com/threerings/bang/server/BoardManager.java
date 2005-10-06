@@ -3,9 +3,6 @@
 
 package com.threerings.bang.server;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collections;
 import java.util.HashMap;
 
 import com.samskivert.io.PersistenceException;
@@ -15,7 +12,6 @@ import com.samskivert.util.StringUtil;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.server.persist.BoardRepository.BoardList;
 import com.threerings.bang.server.persist.BoardRepository;

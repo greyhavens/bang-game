@@ -5,12 +5,8 @@ package com.threerings.bang.util;
 
 import java.awt.image.BufferedImage;
 
-import java.io.IOException;
-import java.util.logging.Level;
-
 import com.jmex.bui.BLookAndFeel;
 
-import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
 import com.threerings.jme.JmeApp;

@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import java.util.StringTokenizer;
-
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;

@@ -3,10 +3,6 @@
 
 package com.threerings.bang.bank.data;
 
-import java.util.Iterator;
-
-import com.threerings.presents.dobj.DSet;
-
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.ConsolidatedOffer;

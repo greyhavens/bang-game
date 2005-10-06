@@ -7,8 +7,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.samskivert.util.StringUtil;
-import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
@@ -17,7 +15,6 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.CorralledEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;

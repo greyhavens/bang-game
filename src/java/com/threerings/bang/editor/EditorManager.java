@@ -3,13 +3,8 @@
 
 package com.threerings.bang.editor;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.logging.Level;
-
-import com.samskivert.util.Tuple;
 
 import com.threerings.parlor.game.server.GameManager;
 

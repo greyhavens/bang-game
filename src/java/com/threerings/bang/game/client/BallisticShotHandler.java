@@ -16,10 +16,7 @@ import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.ShotSprite;
-import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.Log.log;

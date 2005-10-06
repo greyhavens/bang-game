@@ -3,10 +3,7 @@
 
 package com.threerings.bang.game.data.piece;
 
-import java.awt.Point;
-
 import com.samskivert.util.ArrayUtil;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.client.sprite.CowSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;

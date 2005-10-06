@@ -5,7 +5,6 @@ package com.threerings.bang.data;
 
 import java.io.IOException;
 import java.util.EnumSet;
-import java.util.logging.Level;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.StringUtil;

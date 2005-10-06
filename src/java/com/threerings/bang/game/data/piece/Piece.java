@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.AStarPathUtil;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.dobj.DSet;
 

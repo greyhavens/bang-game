@@ -12,7 +12,6 @@ import com.threerings.crowd.server.CrowdClient;
 import com.threerings.presents.net.BootstrapData;
 
 import com.threerings.bang.data.BangBootstrapData;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 

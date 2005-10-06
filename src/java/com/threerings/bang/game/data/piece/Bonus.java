@@ -6,7 +6,6 @@ package com.threerings.bang.game.data.piece;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.logging.Level;
 

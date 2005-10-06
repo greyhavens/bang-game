@@ -5,7 +5,6 @@ package com.threerings.bang.client;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.util.BangContext;

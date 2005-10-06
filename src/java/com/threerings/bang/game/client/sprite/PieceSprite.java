@@ -4,18 +4,12 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
-import com.threerings.jme.sprite.LinePath;
-import com.threerings.jme.sprite.LineSegmentPath;
-import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
-import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.effect.EffectViz;

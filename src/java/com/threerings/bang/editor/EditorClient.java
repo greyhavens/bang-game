@@ -15,45 +15,21 @@ import javax.swing.JPopupMenu;
 
 import java.util.logging.Level;
 
-import com.jmex.bui.BLookAndFeel;
-import com.jmex.bui.BRootNode;
-import com.jme.input.InputHandler;
-import com.jme.renderer.Camera;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.system.DisplaySystem;
-
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 
-import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
-
-import com.threerings.cast.CharacterManager;
-import com.threerings.media.image.ImageManager;
-import com.threerings.resource.ResourceManager;
-
-import com.threerings.jme.JmeApp;
-import com.threerings.jme.tile.FringeConfiguration;
-import com.threerings.openal.SoundManager;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.SessionObserver;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.net.BootstrapData;
 import com.threerings.presents.server.ClientResolutionListener;
 
-import com.threerings.crowd.chat.client.ChatDirector;
-import com.threerings.crowd.client.LocationDirector;
-import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 
-import com.threerings.parlor.client.ParlorDirector;
-
 import com.threerings.bang.client.BasicClient;
-import com.threerings.bang.client.ModelCache;
 
 import static com.threerings.bang.Log.log;
 

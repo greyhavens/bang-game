@@ -4,7 +4,6 @@
 package com.threerings.bang.bank.client;
 
 import com.jme.renderer.ColorRGBA;
-import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
@@ -16,8 +15,6 @@ import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
-
-import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;

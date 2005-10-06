@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.util.Arrays;
-
 import com.jme.math.Vector3f;
 
 import com.threerings.jme.sprite.LineSegmentPath;

@@ -31,7 +31,6 @@ import com.threerings.media.util.MultiFrameImage;
 import com.threerings.cast.ActionFrames;
 import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.CharacterDescriptor;
-import com.threerings.cast.ComponentClass;
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
 

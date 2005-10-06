@@ -5,7 +5,6 @@ package com.threerings.bang.client.bui;
 
 import com.jme.renderer.ColorRGBA;
 
-import com.jmex.bui.BIcon;
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.background.BBackground;

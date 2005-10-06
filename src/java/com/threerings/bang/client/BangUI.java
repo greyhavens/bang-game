@@ -4,7 +4,6 @@
 package com.threerings.bang.client;
 
 import java.awt.Font;
-import java.io.IOException;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BIcon;

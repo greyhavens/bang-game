@@ -23,7 +23,6 @@ import com.threerings.openal.SoundGroup;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.jme.sprite.LinePath;
-import com.threerings.jme.sprite.LineSegmentPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.sprite.SpriteObserver;
