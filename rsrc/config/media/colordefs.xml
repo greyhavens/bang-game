@@ -87,4 +87,19 @@
   <class classId="7" name="clothes_t" source="#57AC6A" range="0.1, 0.6, 1">
     <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
   </class>
+
+  <!-- TODO: primary familiar recolorations -->
+  <class classId="8" name="familiar_p" source="#57AC6A" range="0.1, 0.6, 1">
+    <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
+  </class>
+
+  <!-- TODO: secondary familiar recolorations -->
+  <class classId="9" name="familiar_s" source="#57AC6A" range="0.1, 0.6, 1">
+    <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
+  </class>
+
+  <!-- TODO: tertiary familiar recolorations -->
+  <class classId="10" name="familiar_t" source="#57AC6A" range="0.1, 0.6, 1">
+    <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
+  </class>
 </colors>

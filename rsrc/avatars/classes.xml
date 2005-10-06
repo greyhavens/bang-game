@@ -32,7 +32,7 @@
   <class name="male/hat" renderPriority="130"
          colors="skin,clothes_p,clothes_s,clothes_t"/>
   <class name="male/familiar" renderPriority="140"
-         colors="clothes_p,clothes_s"/>
+         colors="familiar_p,familiar_s,familiar_t"/>
 
   <!-- female component classes -->
   <class name="female/background" renderPriority="0"/>
@@ -62,5 +62,5 @@
   <class name="female/hat" renderPriority="130"
          colors="skin,clothes_p,clothes_s,clothes_t"/>
   <class name="female/familiar" renderPriority="140"
-         colors="clothes_p,clothes_s"/>
+         colors="familiar_p,familiar_s,familiar_t"/>
 </classes>
