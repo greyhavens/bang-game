@@ -1,0 +1,152 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- $Id$ -->
+
+<components>
+  <!-- male component classes -->
+  <class name="male/background">
+  </class>
+
+  <class name="male/clothing_back">
+  </class>
+
+  <class name="male/hair_back">
+    <component name="ponytail" cost="0"/>
+  </class>
+
+  <class name="male/head">
+    <component name="normal" cost="0"/>
+  </class>
+
+  <class name="male/mouth">
+    <component name="content" cost="0"/>
+    <component name="giddy" cost="0"/>
+    <component name="happy" cost="0"/>
+    <component name="jolly" cost="1"/>
+    <component name="laughing" cost="0"/>
+    <component name="rascal" cost="1"/>
+    <component name="shy" cost="0"/>
+    <component name="smile" cost="0"/>
+    <component name="smirk" cost="1"/>
+    <component name="smug" cost="1"/>
+    <component name="stern" cost="1"/>
+    <component name="worried" cost="2"/>
+  </class>
+
+  <class name="male/eyebrows">
+  </class>
+
+  <class name="male/nose">
+  </class>
+
+  <class name="male/eyes">
+    <component name="angry" cost="0"/>
+    <component name="content" cost="0"/>
+    <component name="happy" cost="1"/>
+    <component name="jolly" cost="1"/>
+    <component name="laughing" cost="0"/>
+    <component name="mad" cost="0"/>
+    <component name="nervous" cost="0"/>
+    <component name="normal" cost="0"/>
+    <component name="peeved" cost="0"/>
+    <component name="rascal" cost="1"/>
+    <component name="shy" cost="0"/>
+    <component name="smug" cost="1"/>
+    <component name="stern" cost="1"/>
+    <component name="tipsy" cost="1"/>
+    <component name="wink" cost="1"/>
+    <component name="worried" cost="2"/>
+  </class>
+
+  <class name="male/facial_hair">
+    <component name="beard_long" cost="0"/>
+    <component name="beard_short" cost="0"/>
+    <component name="goatee" cost="0"/>
+    <component name="mutton_chops" cost="0"/>
+  </class>
+
+  <class name="male/hair_front">
+    <component name="ponytail" cost="0"/>
+    <component name="messy_short" cost="0"/>
+    <component name="princevaliant" cost="1"/>
+  </class>
+
+  <class name="male/clothing_front">
+    <component name="apron" cost="0"/>
+    <component name="captainsjacket_belt" cost="0"/>
+    <component name="conquistador_armor" cost="0"/>
+    <component name="epaulet_jacket" cost="0"/>
+    <component name="frillyshirt_sash" cost="0"/>
+    <component name="jerkin" cost="0"/>
+    <component name="plainshirt_sash" cost="0"/>
+    <component name="shirt_cape" cost="0"/>
+    <component name="shirt_rags" cost="0"/>
+    <component name="stripedshirt" cost="0"/>
+    <component name="swash_jacket" cost="0"/>
+    <component name="vest_sash" cost="0"/>
+    <component name="vest_stripedshirt_belt" cost="0"/>
+  </class>
+
+  <class name="male/glasses">
+  </class>
+
+  <class name="male/jewelery">
+  </class>
+
+  <class name="male/hat">
+    <component name="bandana" cost="0"/>
+    <component name="captains" cost="0"/>
+    <component name="conquistador" cost="0"/>
+    <component name="crown" cost="0"/>
+    <component name="feathered" cost="0"/>
+    <component name="savvy" cost="0"/>
+    <component name="sleepinghat" cost="0"/>
+    <component name="tricorne" cost="0"/>
+    <component name="turban" cost="0"/>
+  </class>
+
+  <class name="male/familiar">
+  </class>
+
+  <!-- female component classes -->
+  <class name="female/background">
+  </class>
+
+  <class name="female/clothing_back">
+  </class>
+
+  <class name="female/hair_back">
+  </class>
+
+  <class name="female/head">
+  </class>
+
+  <class name="female/mouth">
+  </class>
+
+  <class name="female/eyebrows">
+  </class>
+
+  <class name="female/nose">
+  </class>
+
+  <class name="female/eyes">
+  </class>
+
+  <class name="female/hair_front">
+  </class>
+
+  <class name="female/clothing_front">
+  </class>
+
+  <class name="female/glasses">
+  </class>
+
+  <class name="female/jewelery">
+  </class>
+
+  <class name="female/hat">
+  </class>
+
+  <class name="female/familiar">
+  </class>
+</components>
