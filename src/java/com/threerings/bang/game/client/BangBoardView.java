@@ -67,6 +67,7 @@ public class BangBoardView extends BoardView
     public BangBoardView (BangContext ctx, BangController ctrl)
     {
         super(ctx);
+        _ctx = ctx;
         _ctrl = ctrl;
         addListener(this);
 
@@ -905,6 +906,7 @@ public class BangBoardView extends BoardView
         }
     };
 
+    protected BangContext _ctx;
     protected BangController _ctrl;
 
     protected Piece _selection;

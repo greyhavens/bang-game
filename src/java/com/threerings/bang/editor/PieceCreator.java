@@ -16,14 +16,14 @@ import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Provides buttons for adding pieces of various types to the board.
  */
 public class PieceCreator extends JPanel
 {
-    public PieceCreator (BangContext ctx)
+    public PieceCreator (BasicContext ctx)
     {
         setLayout(new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH,
                                    5, VGroupLayout.TOP));
@@ -58,5 +58,5 @@ public class PieceCreator extends JPanel
         return button;
     }
 
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
 }

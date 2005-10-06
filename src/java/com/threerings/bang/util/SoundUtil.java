@@ -5,7 +5,7 @@ package com.threerings.bang.util;
 
 import java.util.HashSet;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Handles some useful sound related bits.
@@ -15,7 +15,7 @@ public class SoundUtil
     /**
      * Loads up information from our deployment.
      */
-    public static void init (BangContext ctx)
+    public static void init (BasicContext ctx)
     {
         String[] sounds = BangUtil.resourceToStrings("rsrc/sounds.txt");
         for (int ii = 0; ii < sounds.length; ii++) {

@@ -11,7 +11,7 @@ import com.jme.scene.Node;
 import com.jme.scene.shape.Dome;
 
 import com.threerings.bang.client.Model;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -28,7 +28,7 @@ public class BonusSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BangContext ctx)
+    protected void createGeometry (BasicContext ctx)
     {
         super.createGeometry(ctx);
 

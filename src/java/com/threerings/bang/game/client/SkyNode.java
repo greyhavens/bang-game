@@ -12,7 +12,7 @@ import com.jme.scene.Node;
 import com.jme.scene.Skybox;
 import com.jme.util.TextureManager;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -21,7 +21,7 @@ import static com.threerings.bang.Log.log;
  */
 public class SkyNode extends Node
 {
-    public SkyNode (BangContext ctx)
+    public SkyNode (BasicContext ctx)
     {
         super("skynode");
     

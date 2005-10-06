@@ -5,19 +5,21 @@ package com.threerings.bang.editor;
 
 import javax.swing.JFrame;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.parlor.util.ParlorContext;
+
+import com.threerings.bang.util.BasicContext;
 
 /**
- * Extends the Bang client context with editor specific bits.
+ * Defines services needed by the editor client.
  */
-public abstract class EditorContext extends BangContext
+public interface EditorContext extends BasicContext, ParlorContext
 {
     /** Updates the main window title. */
-    public abstract void setWindowTitle (String title);
+    public void setWindowTitle (String title);
 
     /** Displays a status message. */
-    public abstract void displayStatus (String status);
+    public void displayStatus (String status);
 
     /** Provides access to the main editor window. */
-    public abstract JFrame getFrame ();
+    public JFrame getFrame ();
 }

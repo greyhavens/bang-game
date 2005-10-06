@@ -20,14 +20,14 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.server.persist.BoardRecord;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays and allows editing of board metadata.
  */
 public class BoardInfo extends JPanel
 {
-    public BoardInfo (BangContext ctx)
+    public BoardInfo (BasicContext ctx)
     {
         setLayout(new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH,
                                    5, VGroupLayout.TOP));
@@ -107,7 +107,7 @@ public class BoardInfo extends JPanel
         board.setScenarios(scenids.toArray(new String[scenids.size()]));
     }
 
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
     protected MessageBundle _msgs;
 
     protected JTextField _name;

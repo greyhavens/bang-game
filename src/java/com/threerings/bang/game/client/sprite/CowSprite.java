@@ -8,7 +8,7 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.BangBoard;
@@ -37,7 +37,7 @@ public class CowSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BangContext ctx)
+    protected void createGeometry (BasicContext ctx)
     {
         if (_owntex == null) {
             loadTextures(ctx);
@@ -67,7 +67,7 @@ public class CowSprite extends MobileSprite
         }
     }
 
-    protected static void loadTextures (BangContext ctx)
+    protected static void loadTextures (BasicContext ctx)
     {
         _owntex = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/selected.png"));

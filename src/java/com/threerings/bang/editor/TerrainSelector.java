@@ -10,14 +10,14 @@ import javax.swing.JPanel;
 import com.samskivert.swing.HGroupLayout;
 
 import com.threerings.bang.game.data.Terrain;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays a drop-down of terrain types.
  */
 public class TerrainSelector extends JPanel
 {
-    public TerrainSelector (BangContext ctx)
+    public TerrainSelector (BasicContext ctx)
     {
         _ctx = ctx;
         setLayout(new HGroupLayout(HGroupLayout.STRETCH));
@@ -62,6 +62,6 @@ public class TerrainSelector extends JPanel
         }
     }
 
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
     protected JComboBox _selector;
 }

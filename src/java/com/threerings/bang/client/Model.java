@@ -38,7 +38,7 @@ import com.jmex.model.XMLparser.JmeBinaryReader;
 import com.jmex.bui.BIcon;
 import com.jmex.bui.TextureIcon;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.RenderUtil;
 
@@ -115,7 +115,7 @@ public class Model
     /**
      * Creates the model and loads up all of its consituent animations.
      */
-    public Model (BangContext ctx, String type, String name)
+    public Model (BasicContext ctx, String type, String name)
     {
         _key = type + "/" + name;
 
@@ -281,7 +281,7 @@ public class Model
     }
 
     protected CloneCreator loadModel (
-        BangContext ctx, String path, boolean trans)
+        BasicContext ctx, String path, boolean trans)
     {
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
@@ -337,7 +337,7 @@ public class Model
         return cc;
     }
 
-    protected void createIconImage (BangContext ctx)
+    protected void createIconImage (BasicContext ctx)
     {
         TextureRenderer trenderer =
             ctx.getDisplay().createTextureRenderer(
@@ -413,7 +413,7 @@ public class Model
         ctx.getCamera().update();
     }
 
-    protected TextureState getTexture (BangContext ctx, String texpath)
+    protected TextureState getTexture (BasicContext ctx, String texpath)
     {
         texpath = cleanPath(texpath);
         TextureState ts = _textures.get(texpath);

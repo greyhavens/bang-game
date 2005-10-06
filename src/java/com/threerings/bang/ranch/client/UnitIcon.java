@@ -6,7 +6,7 @@ package com.threerings.bang.ranch.client;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays a static view of a unit model for use as an icon in interface
@@ -14,7 +14,7 @@ import com.threerings.bang.util.BangContext;
  */
 public class UnitIcon extends SelectableIcon
 {
-    public UnitIcon (BangContext ctx, int itemId, UnitConfig config)
+    public UnitIcon (BasicContext ctx, int itemId, UnitConfig config)
     {
         BangUI.configUnitLabel(_label, config);
         _itemId = itemId;

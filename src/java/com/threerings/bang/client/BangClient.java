@@ -32,13 +32,12 @@ import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.SessionObserver;
 import com.threerings.presents.dobj.DObjectManager;
 
-import com.threerings.crowd.client.LocationDirector;
-import com.threerings.crowd.client.OccupantDirector;
+import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.PlaceView;
 
-import com.threerings.parlor.client.ParlorDirector;
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
 import com.threerings.bang.game.data.BangConfig;
@@ -133,6 +132,9 @@ public class BangClient extends BasicClient
     {
         super.createContextServices(rqueue);
 
+        // create our custom directors
+        _chatdir = new BangChatDirector(_ctx);
+
         // initialize our user interface helper
         BangUI.init(_ctx);
 
@@ -161,6 +163,7 @@ public class BangClient extends BasicClient
     /** The context implementation. This provides access to all of the
      * objects and services that are needed by the operating client. */
     protected class BangContextImpl extends BasicContextImpl
+        implements BangContext
     {
         /** Apparently the default constructor has default access, rather
          * than protected access, even though this class is declared to be
@@ -171,6 +174,10 @@ public class BangClient extends BasicClient
 
         public Config getConfig () {
             return _config;
+        }
+
+        public ChatDirector getChatDirector () {
+            return _chatdir;
         }
 
         public void setPlaceView (PlaceView view) {
@@ -211,10 +218,16 @@ public class BangClient extends BasicClient
             _pview = null;
             _ctx.getRootNode().addWindow(_tview);
         }
+
+        public PlayerObject getUserObject () {
+            return (PlayerObject)getClient().getClientObject();
+        }
     }
 
-    protected BangContext _ctx;
+    protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
+
+    protected BangChatDirector _chatdir;
 
     protected BWindow _pview;
     protected LogonView _lview;

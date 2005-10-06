@@ -29,7 +29,7 @@ import com.jme.util.TextureManager;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.data.Terrain;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -49,7 +49,7 @@ public class RenderUtil
     /**
      * Initializes our commonly used render states.
      */
-    public static void init (BangContext ctx)
+    public static void init (BasicContext ctx)
     {
         blendAlpha = ctx.getRenderer().createAlphaState();
         blendAlpha.setBlendEnabled(true);
@@ -197,7 +197,7 @@ public class RenderUtil
      * Creates a texture using the supplied image.
      */
     public static TextureState createTexture (
-        BangContext ctx, BufferedImage image)
+        BasicContext ctx, BufferedImage image)
     {
         Texture texture = TextureManager.loadTexture(
             image, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
@@ -211,7 +211,7 @@ public class RenderUtil
      * Creates a single tile "icon" image which is a textured quad that
      * covers a tile worth of space.
      */
-    public static Quad createIcon (BangContext ctx, String path)
+    public static Quad createIcon (BasicContext ctx, String path)
     {
         return createIcon(createTexture(ctx, ctx.loadImage(path)));
     }

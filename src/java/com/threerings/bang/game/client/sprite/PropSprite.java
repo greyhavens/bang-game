@@ -12,7 +12,7 @@ import com.jme.scene.state.LightState;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.data.PropConfig;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -29,7 +29,7 @@ public class PropSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BangContext ctx)
+    protected void createGeometry (BasicContext ctx)
     {
         // draw a footprint if we're in editor mode
         if (_editorMode) {

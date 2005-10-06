@@ -26,7 +26,7 @@ import com.threerings.bang.client.Model;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -140,7 +140,7 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BangContext ctx)
+    protected void createGeometry (BasicContext ctx)
     {
         if (_hovtex == null) {
             loadTextures(ctx);
@@ -286,7 +286,7 @@ public class UnitSprite extends MobileSprite
             comp, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
     }
 
-    protected static void loadTextures (BangContext ctx)
+    protected static void loadTextures (BasicContext ctx)
     {
         _hovtex = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/selected.png"));

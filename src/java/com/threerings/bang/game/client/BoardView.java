@@ -59,7 +59,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.PointSet;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -72,7 +72,7 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class BoardView extends BComponent
     implements MouseMotionListener, MouseWheelListener
 {
-    public BoardView (BangContext ctx)
+    public BoardView (BasicContext ctx)
     {
         _ctx = ctx;
 
@@ -358,7 +358,7 @@ public class BoardView extends BComponent
      * Creates the geometry that defines the ground around and behind the
      * board.
      */
-    protected void createGround (BangContext ctx)
+    protected void createGround (BasicContext ctx)
     {
         Node gnode = new Node("ground");
         _node.attachChild(gnode);
@@ -669,7 +669,7 @@ public class BoardView extends BComponent
         }
     };
 
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
     protected BangObject _bangobj;
     protected BangBoard _board;
     protected Rectangle _bbounds;

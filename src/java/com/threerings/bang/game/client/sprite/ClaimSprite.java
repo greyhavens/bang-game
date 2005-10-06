@@ -15,7 +15,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.BangBoard;
@@ -57,7 +57,7 @@ public class ClaimSprite extends PropSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BangContext ctx)
+    protected void createGeometry (BasicContext ctx)
     {
         super.createGeometry(ctx);
 

@@ -3,6 +3,9 @@
 
 package com.threerings.bang.tests;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import java.util.logging.Level;
 
 import com.samskivert.util.Config;
@@ -28,6 +31,7 @@ import com.threerings.media.image.ImageManager;
 import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
 import com.threerings.resource.ResourceManager;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
 import com.threerings.presents.client.Client;
@@ -45,7 +49,7 @@ import com.threerings.bang.client.Model;
 import com.threerings.bang.client.ModelCache;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.ranch.client.UnitIcon;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * A test program for displaying unit model icons.
@@ -66,7 +70,7 @@ public class ModelIconTest extends JmeApp
 
     protected void initTest ()
     {
-        _ctx = new BangContextImpl();
+        _ctx = new BasicContextImpl();
         _rsrcmgr = new ResourceManager("rsrc");
         _lnf = BLookAndFeel.getDefaultLookAndFeel();
         _mcache = new ModelCache(_ctx);
@@ -92,85 +96,8 @@ public class ModelIconTest extends JmeApp
      * The context implementation. This provides access to all of the
      * objects and services that are needed by the operating client.
      */
-    protected class BangContextImpl extends BangContext
+    protected class BasicContextImpl implements BasicContext
     {
-        /**
-         * Apparently the default constructor has default access, rather
-         * than protected access, even though this class is declared to be
-         * protected. Why, I don't know, but we need to be able to extend
-         * this class elsewhere, so we need this.
-         */
-        protected BangContextImpl () {
-        }
-
-        public Client getClient () {
-            return null;
-        }
-
-        public DObjectManager getDObjectManager () {
-            return null;
-        }
-
-        public Config getConfig () {
-            return _config;
-        }
-
-        public LocationDirector getLocationDirector () {
-            return null;
-        }
-
-        public OccupantDirector getOccupantDirector () {
-            return null;
-        }
-
-        public ChatDirector getChatDirector () {
-            return null;
-        }
-
-        public ParlorDirector getParlorDirector () {
-            return null;
-        }
-
-        public FringeConfiguration getFringeConfig () {
-            return null;
-        }
-
-        public void setPlaceView (PlaceView view) {
-            // TBD
-        }
-
-        public void clearPlaceView (PlaceView view) {
-            // we'll just let the next place view replace our old one
-        }
-
-        public ResourceManager getResourceManager () {
-            return _rsrcmgr;
-        }
-
-        public MessageManager getMessageManager () {
-            return null;
-        }
-
-        public BangApp getApp () {
-            return null;
-        }
-
-        public ImageManager getImageManager () {
-            return null;
-        }
-
-        public SoundManager getSoundManager () {
-            return null;
-        }
-
-        public CharacterManager getCharacterManager () {
-            return null;
-        }
-
-        public ModelCache getModelCache () {
-            return _mcache;
-        }
-
         public DisplaySystem getDisplay () {
             return getContext().getDisplay();
         }
@@ -199,12 +126,55 @@ public class ModelIconTest extends JmeApp
             return getContext().getRootNode();
         }
 
+        public ResourceManager getResourceManager () {
+            return _rsrcmgr;
+        }
+
+        public MessageManager getMessageManager () {
+            return null;
+        }
+
         public BLookAndFeel getLookAndFeel () {
             return _lnf;
         }
+
+        public ModelCache getModelCache () {
+            return _mcache;
+        }
+
+        public FringeConfiguration getFringeConfig () {
+            return null;
+        }
+
+        public BangApp getApp () {
+            return null;
+        }
+
+        public ImageManager getImageManager () {
+            return null;
+        }
+
+        public SoundManager getSoundManager () {
+            return null;
+        }
+
+        public String xlate (String bundle, String message) {
+            MessageBundle mb = getMessageManager().getBundle(bundle);
+            return (mb == null) ? message : mb.xlate(message);
+        }
+
+        public BufferedImage loadImage (String rsrcPath) {
+            try {
+                return ImageIO.read(
+                    getResourceManager().getImageResource(rsrcPath));
+            } catch (IOException ioe) {
+                ioe.printStackTrace(System.err);
+                return null;
+            }
+        }
     }
 
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
     protected Config _config = new Config("bang");
     protected ResourceManager _rsrcmgr;
     protected BLookAndFeel _lnf;

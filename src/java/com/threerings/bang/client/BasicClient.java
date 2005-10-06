@@ -6,6 +6,7 @@ package com.threerings.bang.client;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+import javax.imageio.ImageIO;
 
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
@@ -22,12 +23,15 @@ import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.util.CompiledConfig;
+import com.threerings.util.MessageBundle;
+import com.threerings.util.MessageManager;
+
 import com.threerings.cast.CharacterManager;
 import com.threerings.cast.bundle.BundledComponentRepository;
 import com.threerings.media.image.ImageManager;
+import com.threerings.media.image.ImageUtil;
 import com.threerings.resource.ResourceManager;
-import com.threerings.util.CompiledConfig;
-import com.threerings.util.MessageManager;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
@@ -36,12 +40,13 @@ import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.parlor.client.ParlorDirector;
+import com.threerings.parlor.util.ParlorContext;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.openal.SoundManager;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
@@ -80,7 +85,7 @@ public class BasicClient
     /**
      * Initializes various standard client services.
      */
-    protected void initClient (BangContext ctx, JmeApp app, RunQueue rqueue)
+    protected void initClient (BasicContextImpl ctx, JmeApp app, RunQueue rqueue)
     {
         _app = app;
         _ctx = ctx;
@@ -140,7 +145,6 @@ public class BasicClient
         _locdir = new LocationDirector(_ctx);
         _occdir = new OccupantDirector(_ctx);
         _pardir = new ParlorDirector(_ctx);
-        _chatdir = new BangChatDirector(_ctx);
     }
 
     /**
@@ -197,7 +201,8 @@ public class BasicClient
      * The basic context implementation. This provides access to objects
      * and services that are needed by the operating client.
      */
-    protected abstract class BasicContextImpl extends BangContext
+    protected abstract class BasicContextImpl
+        implements BasicContext, ParlorContext
     {
         /** Apparently the default constructor has default access, rather
          * than protected access, even though this class is declared to be
@@ -223,7 +228,7 @@ public class BasicClient
         }
 
         public ChatDirector getChatDirector () {
-            return _chatdir;
+            return null;
         }
 
         public ParlorDirector getParlorDirector () {
@@ -293,10 +298,28 @@ public class BasicClient
         public BLookAndFeel getLookAndFeel () {
             return _lnf;
         }
+
+        public String xlate (String bundle, String message) {
+            MessageBundle mb = getMessageManager().getBundle(bundle);
+            return (mb == null) ? message : mb.xlate(message);
+        }
+
+        public BufferedImage loadImage (String rsrcPath) {
+            // TODO: use the image manager
+            try {
+                return ImageIO.read(getResourceManager().getImageResource(
+                                        rsrcPath));
+            } catch (IOException ioe) {
+                log.log(Level.WARNING, "Unable to load image resource " +
+                        "[path=" + rsrcPath + "].", ioe);
+                // cope; return an error image of abitrary size
+                return ImageUtil.createErrorImage(50, 50);
+            }
+        }
     }
 
     protected JmeApp _app;
-    protected BangContext _ctx;
+    protected BasicContextImpl _ctx;
 
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;
@@ -311,7 +334,6 @@ public class BasicClient
     protected Client _client;
     protected LocationDirector _locdir;
     protected OccupantDirector _occdir;
-    protected BangChatDirector _chatdir;
     protected ParlorDirector _pardir;
 
     /** The prefix prepended to localization bundle names before looking

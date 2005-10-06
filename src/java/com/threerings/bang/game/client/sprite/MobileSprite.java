@@ -32,7 +32,7 @@ import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -154,7 +154,7 @@ public class MobileSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BangContext ctx)
+    protected void createGeometry (BasicContext ctx)
     {
         super.createGeometry(ctx);
 
@@ -303,7 +303,7 @@ public class MobileSprite extends PieceSprite
         }
     }
 
-    protected static void loadTextures (BangContext ctx)
+    protected static void loadTextures (BasicContext ctx)
     {
         _shadtex = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/shadow.png"));

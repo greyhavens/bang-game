@@ -8,7 +8,7 @@ import java.util.HashMap;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -17,7 +17,7 @@ import static com.threerings.bang.Log.log;
  */
 public class ModelCache
 {
-    public ModelCache (BangContext ctx)
+    public ModelCache (BasicContext ctx)
     {
         _ctx = ctx;
     }
@@ -49,6 +49,6 @@ public class ModelCache
         }
     }
 
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
     protected HashMap<String,Model> _models = new HashMap<String,Model>();
 }

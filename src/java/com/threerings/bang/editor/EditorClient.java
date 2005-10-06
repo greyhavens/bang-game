@@ -161,7 +161,8 @@ public class EditorClient extends BasicClient
      * The context implementation. This provides access to all of the
      * objects and services that are needed by the operating client.
      */
-    protected class EditorContextImpl extends EditorContext
+    protected class EditorContextImpl extends BasicContextImpl
+        implements EditorContext
     {
         /**
          * Apparently the default constructor has default access, rather
@@ -170,94 +171,6 @@ public class EditorClient extends BasicClient
          * this class elsewhere, so we need this.
          */
         protected EditorContextImpl () {
-        }
-
-        public Client getClient () {
-            return _client;
-        }
-
-        public DObjectManager getDObjectManager () {
-            return _client.getDObjectManager();
-        }
-
-        public LocationDirector getLocationDirector () {
-            return _locdir;
-        }
-
-        public OccupantDirector getOccupantDirector () {
-            return _occdir;
-        }
-
-        public ChatDirector getChatDirector () {
-            return _chatdir;
-        }
-
-        public ParlorDirector getParlorDirector () {
-            return _pardir;
-        }
-
-        public ResourceManager getResourceManager () {
-            return _rsrcmgr;
-        }
-
-        public MessageManager getMessageManager () {
-            return _msgmgr;
-        }
-
-        public JmeApp getApp () {
-            return _app;
-        }
-
-        public ImageManager getImageManager () {
-            return _imgmgr;
-        }
-
-        public SoundManager getSoundManager () {
-            return _soundmgr;
-        }
-
-        public CharacterManager getCharacterManager () {
-            return _charmgr;
-        }
-
-        public ModelCache getModelCache () {
-            return _mcache;
-        }
-
-        public FringeConfiguration getFringeConfig () {
-            return _fringeconf;
-        }
-
-        public DisplaySystem getDisplay () {
-            return _app.getContext().getDisplay();
-        }
-
-        public Renderer getRenderer () {
-            return _app.getContext().getRenderer();
-        }
-
-        public Camera getCamera () {
-            return _app.getContext().getCamera();
-        }
-
-        public Node getGeometry () {
-            return _app.getContext().getGeometry();
-        }
-
-        public Node getInterface () {
-            return _app.getContext().getInterface();
-        }
-
-        public InputHandler getInputHandler () {
-            return _app.getContext().getInputHandler();
-        }
-
-        public BRootNode getRootNode () {
-            return _app.getContext().getRootNode();
-        }
-
-        public BLookAndFeel getLookAndFeel () {
-            return _lnf;
         }
 
         public Config getConfig () {
@@ -293,7 +206,7 @@ public class EditorClient extends BasicClient
         }
     }
 
-    protected EditorContext _ctx;
+    protected EditorContextImpl _ctx;
     protected Config _config = new Config("editor");
 
     protected JFrame _frame;

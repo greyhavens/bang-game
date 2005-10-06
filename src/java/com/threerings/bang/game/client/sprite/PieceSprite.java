@@ -21,7 +21,7 @@ import com.threerings.openal.SoundGroup;
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -75,7 +75,7 @@ public class PieceSprite extends Sprite
      * Called when we are first created and immediately before we are
      * added to the display.
      */
-    public void init (BangContext ctx, SoundGroup sounds,
+    public void init (BasicContext ctx, SoundGroup sounds,
                       Piece piece, short tick)
     {
         _piece = piece;
@@ -200,7 +200,7 @@ public class PieceSprite extends Sprite
      * Sprites should create and attach their scene geometry by overriding
      * this method.
      */
-    protected void createGeometry (BangContext ctx)
+    protected void createGeometry (BasicContext ctx)
     {
     }
 

@@ -16,7 +16,7 @@ import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.editor.EditorContext;
 
@@ -29,7 +29,7 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class EditorBoardView extends BoardView
     implements MouseListener, MouseWheelListener
 {
-    public EditorBoardView (BangContext ctx, EditorPanel panel)
+    public EditorBoardView (BasicContext ctx, EditorPanel panel)
     {
         super(ctx);
         _panel = panel;
