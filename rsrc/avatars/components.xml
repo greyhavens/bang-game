@@ -9,6 +9,9 @@
   <class name="male/clothing_back">
   </class>
 
+  <class name="male/hat_back">
+  </class>
+
   <class name="male/hair_back">
     <component name="ponytail" cost="0"/>
   </class>
@@ -104,11 +107,17 @@
     <component name="turban" cost="0"/>
   </class>
 
+  <class name="male/hat_band">
+  </class>
+
   <class name="male/familiar">
   </class>
 
   <!-- female component classes -->
   <class name="female/background">
+  </class>
+
+  <class name="female/hat_back">
   </class>
 
   <class name="female/clothing_back">
@@ -145,6 +154,9 @@
   </class>
 
   <class name="female/hat">
+  </class>
+
+  <class name="female/hat_band">
   </class>
 
   <class name="female/familiar">
