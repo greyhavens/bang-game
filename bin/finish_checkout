@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Completes the checkout of a Bang! build directory
+
+ROOT=`dirname $0 | sed s:/bin$::`
+ANT=ant
+
+# sanity check
+if [ ! -d $ROOT/projects ]; then
+    echo "Run this script with a full path (not as ./finish_checkout)."
+    exit -1
+fi
+
+# set up the necessary library symlinks
+cd $ROOT/projects/samskivert/lib
+ln -sf ../../../lib/servlet-*.jar .
+ln -sf ../../../lib/mail.jar .
+ln -sf ../../../lib/commons-collections.jar .
+ln -sf ../../../lib/commons-digester.jar .
+ln -sf ../../../lib/commons-logging.jar .
+ln -sf ../../../lib/velocity-*.jar .
+cd $ROOT/projects/narya/lib
+for lib in `cat LIBS`; do ln -sf ../../../lib/$lib . ; done
+cd $ROOT/projects/jme-bui/lib
+ln -sf ../../../lib/jme.jar .
+ln -sf ../../../lib/lwjgl.jar .
+
+# create the necessary symlinks in $ROOT/lib
+cd $ROOT/projects
+for PROJECT in jme-bui samskivert narya threerings; do
+    cd $ROOT/projects/$PROJECT
+    $ANT clean dist
+    cd $ROOT/lib
+    ln -sf ../projects/$PROJECT/dist/*.jar .
+done
