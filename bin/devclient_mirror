@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Mirrors Bang development client release files to the development server
+
+MIRROR=/export/tools/bin/mirror
+ROOT=`dirname $0 | sed s:/bin$::`
+cd $ROOT
+
+# mirror the client files
+echo "** Mirroring devclient..."
+$MIRROR pages/client/code/*.jar pages/client/media/*.jar \
+    pages/client/*.*
