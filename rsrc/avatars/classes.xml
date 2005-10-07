@@ -25,7 +25,7 @@
          colors="skin,iris,makeup"/>
   <class name="male/beard" renderPriority="100"
          colors="hair"/>
-  <class name="male/moustache" renderPriority="110"
+  <class name="male/mustache" renderPriority="110"
          colors="hair"/>
   <class name="male/hair_front" renderPriority="120"
          colors="hair,clothes_s"/>

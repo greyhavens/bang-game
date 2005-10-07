@@ -30,7 +30,7 @@
   </class>
 
   <!-- TODO: iris recolorations -->
-  <class classId="3" name="clothes_t" source="#57AC6A" range="0.1, 0.6, 1">
+  <class classId="3" name="iris" source="#57AC6A" range="0.1, 0.6, 1">
     <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
   </class>
 

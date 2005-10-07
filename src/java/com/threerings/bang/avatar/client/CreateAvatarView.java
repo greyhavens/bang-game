@@ -58,11 +58,25 @@ public class CreateAvatarView extends BDecoratedWindow
         BContainer spinners = new BContainer(
             GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.CENTER,
                                  GroupLayout.STRETCH));
-        spinners.add(new ComponentSelector("hair_front"));
+        spinners.add(new ComponentSelector("background"));
+        spinners.add(new ComponentSelector("hat_back"));
+        spinners.add(new ComponentSelector("clothing_back"));
+        spinners.add(new ComponentSelector("hair_back"));
+        spinners.add(new ComponentSelector("beard_back"));
         spinners.add(new ComponentSelector("head"));
-        spinners.add(new ComponentSelector("eyebrows"));
-        spinners.add(new ComponentSelector("eyes"));
         spinners.add(new ComponentSelector("mouth"));
+        spinners.add(new ComponentSelector("eyebrows"));
+        spinners.add(new ComponentSelector("nose"));
+        spinners.add(new ComponentSelector("eyes"));
+        spinners.add(new ComponentSelector("beard"));
+        spinners.add(new ComponentSelector("mustache"));
+        spinners.add(new ComponentSelector("hair_front"));
+        spinners.add(new ComponentSelector("clothing_front"));
+        spinners.add(new ComponentSelector("glasses"));
+        spinners.add(new ComponentSelector("jewelery"));
+        spinners.add(new ComponentSelector("hat"));
+        spinners.add(new ComponentSelector("hat_band"));
+        spinners.add(new ComponentSelector("familiar"));
         add(spinners, BorderLayout.EAST);
 
         BContainer controls = new BContainer(GroupLayout.makeHStretch());
