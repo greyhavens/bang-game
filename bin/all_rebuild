@@ -57,10 +57,6 @@ fi
 for LIB in samskivert jme-bui narya threerings ; do
     if [ -d $ROOT/projects/$LIB ]; then
         cd $ROOT/projects/$LIB
-        if [ ! -z "$UPDATE" ]; then
-            echo "Updating $LIB..."
-            svn update -q
-        fi
         echo "Rebuilding $LIB..."
         ant clean dist
         ln -sf $ROOT/projects/$LIB/dist/*.jar $ROOT/lib
