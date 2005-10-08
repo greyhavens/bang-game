@@ -9,8 +9,8 @@ ROOT=`dirname $0 | sed s:/bin$::`
 cd $ROOT
 
 # mirror the library files
-echo "** Mirroring library jars..."
-$MIRROR lib/*.jar
+echo "** Mirroring libraries..."
+$MIRROR lib/*.jar lib/i?86-*/lib*.so
 
 # mirror the project jar files
 echo "** Mirroring project jars..."
