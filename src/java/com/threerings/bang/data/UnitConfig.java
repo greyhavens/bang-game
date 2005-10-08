@@ -48,16 +48,16 @@ public class UnitConfig
     /** The name of this unit type (ie. <code>gunslinger</code>, etc.). */
     public String type;
 
-    /** The modality of this unit: {@link #GROUND}, {@link #AIR} or {@link
-     * #RANGE}. */
+    /** The modality of this unit: {@link Mode#GROUND}, {@link Mode#AIR} or
+     * {@link Mode#RANGE}. */
     public Mode mode;
 
-    /** The make of this unit: {@link #HUMAN}, {@link #STEAM} or {@link
-     * #SPIRIT}. */
+    /** The make of this unit: {@link Make#HUMAN}, {@link Make#STEAM} or {@link
+     * Make#SPIRIT}. */
     public Make make;
 
-    /** The rank of this unit: {@link #NORMAL}, {@link #SPECIAL} or {@link
-     * #BIGSHOT}. */
+    /** The rank of this unit: {@link Rank#NORMAL}, {@link Rank#SPECIAL} or
+     * {@link Rank#BIGSHOT}. */
     public Rank rank;
 
     /** The distance this unit can see. */

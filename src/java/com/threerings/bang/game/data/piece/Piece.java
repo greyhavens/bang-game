@@ -28,12 +28,6 @@ import static com.threerings.bang.Log.log;
 public abstract class Piece extends SimpleStreamableObject
     implements Cloneable, DSet.Entry, PieceCodes
 {
-    /** Used by {@link #checkSet} and other piece considerers. */
-    public static interface Predicate
-    {
-        public boolean matches (Piece piece);
-    }
-
     /** Used by {@link #maybeInteract}. */
     public enum Interaction { CONSUMED, ENTERED, INTERACTED, NOTHING };
 

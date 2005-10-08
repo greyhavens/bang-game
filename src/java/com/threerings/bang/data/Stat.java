@@ -95,7 +95,7 @@ public abstract class Stat
     };
 
     /**
-     * Maps a {@Type}'s code code back to a {@link Type} instance.
+     * Maps a {@link Type}'s code code back to a {@link Type} instance.
      */
     public static Type getType (int code)
     {
