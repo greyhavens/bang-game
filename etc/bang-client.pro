@@ -4,11 +4,13 @@
 # Proguard configuration file for Bang! development client
 
 -injars lib/commons-io.jar(!META-INF/*)
+-injars lib/commons-collections.jar(!META-INF/*)
 -injars lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars lib/narya-base.jar(!META-INF/*,!**/tools/**)
 -injars lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
 -injars lib/narya-media.jar(!META-INF/*,!**/tools/**)
 -injars lib/narya-parlor.jar(!META-INF/*,!**/tools/**)
+-injars lib/narya-cast.jar(!META-INF/*,!**/tools/**)
 -injars lib/narya-jme.jar(!META-INF/*,!**/tools/**)
 -injars lib/narya-openal.jar(!META-INF/*,!**/tools/**)
 -injars lib/samskivert.jar(!META-INF/*,!**/velocity/**,!**/xml/**)

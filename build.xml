@@ -70,7 +70,11 @@
        <exclude name="**/*.MD3"/>
        <exclude name="**/*.obj"/>
        <exclude name="**/*.mtl"/>
+       <exclude name="avatars/**"/>
        <exclude name="tiles/fringe/config.xml"/>
+      </fileset>
+      <fileset dir="rsrc">
+       <include name="avatars/*.dat"/>
       </fileset>
     </copy>
   </target>
@@ -184,7 +188,9 @@
       <fileset dir="lib" includes="lwjgl.jar"/>
       <fileset dir="lib" includes="lwjgl_util.jar"/>
     </copy>
-    <copy todir="pages/client/media">
+    <copy todir="pages/client/rsrc">
+      <fileset dir="rsrc" includes="**/*.jar"/>
+      <fileset dir="rsrc" includes="config/resource/manager.properties"/>
       <fileset dir="dist" includes="bang-*.jar" excludes="bang-*code.jar"/>
     </copy>
     <copy todir="pages/client/native">

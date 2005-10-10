@@ -19,8 +19,8 @@ ui.status_text = FFEC48
 code = code/bang-pcode.jar
 code = code/lwjgl.jar
 code = code/lwjgl_util.jar
-code = media/bang-media.jar
-code = media/bang-sounds.jar
+code = rsrc/bang-media.jar
+code = rsrc/bang-sounds.jar
 
 # Linux specific native libraries
 resource = [linux] native/liblwjgl.so
@@ -31,11 +31,16 @@ resource = [windows] native/lwjgl-fmod3.dll
 
 # Our media resources
 resource = background.png
+resource = rsrc/avatars/female/components.jar
+resource = rsrc/avatars/male/components.jar
+resource = rsrc/avatars/metadata.jar
+resource = rsrc/config/resource/manager.properties
 
 # Parameters passed to the JVM
 jvmarg = -Xmx128M
 jvmarg = -Djava.library.path=%APPDIR%/native
 jvmarg = -Dappdir=%APPDIR%
+jvmarg = -Dresource_dir=%APPDIR%/rsrc
 
 # The main Java class
 class = com.threerings.bang.client.BangApp

@@ -10,5 +10,7 @@ cd $ROOT
 
 # mirror the client files
 echo "** Mirroring devclient..."
-$MIRROR pages/client/code/*.jar pages/client/media/*.jar \
+$MIRROR `find pages/client -name '*.jar'` \
+    pages/client/rsrc/config/resource/manager.properties \
+    pages/client/native/* \
     pages/client/*.*
