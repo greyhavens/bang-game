@@ -73,7 +73,7 @@ public class CreateAvatarView extends BDecoratedWindow
         spinners.add(new ComponentSelector("hair_front"));
         spinners.add(new ComponentSelector("clothing_front"));
         spinners.add(new ComponentSelector("glasses"));
-        spinners.add(new ComponentSelector("jewelery"));
+        spinners.add(new ComponentSelector("jewelry"));
         spinners.add(new ComponentSelector("hat"));
         spinners.add(new ComponentSelector("hat_band"));
         spinners.add(new ComponentSelector("familiar"));

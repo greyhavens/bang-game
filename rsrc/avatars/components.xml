@@ -92,7 +92,7 @@
   <class name="male/glasses">
   </class>
 
-  <class name="male/jewelery">
+  <class name="male/jewelry">
   </class>
 
   <class name="male/hat">
@@ -150,7 +150,7 @@
   <class name="female/glasses">
   </class>
 
-  <class name="female/jewelery">
+  <class name="female/jewelry">
   </class>
 
   <class name="female/hat">

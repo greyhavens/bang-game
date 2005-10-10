@@ -27,7 +27,7 @@ public class AvatarMetrics
         "BODY_ZATIONS", // hair and skin colorizations
         "familiar",
         "hat",
-        "jewelery",
+        "jewelry",
         "glasses",
         "clothing_front",
         "hair_front",

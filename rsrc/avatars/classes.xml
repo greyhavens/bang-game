@@ -33,7 +33,7 @@
          colors="skin,clothes_p,clothes_s,clothes_t"/>
   <class name="male/glasses" renderPriority="140"
          colors="clothes_p,clothes_s"/>
-  <class name="male/jewelery" renderPriority="150"
+  <class name="male/jewelry" renderPriority="150"
          colors="clothes_p,clothes_s"/>
   <class name="male/hat" renderPriority="160"
          colors="clothes_p,clothes_s"/>
@@ -66,7 +66,7 @@
          colors="skin,clothes_p,clothes_s,clothes_t"/>
   <class name="female/glasses" renderPriority="110"
          colors="clothes_p,clothes_s"/>
-  <class name="female/jewelery" renderPriority="120"
+  <class name="female/jewelry" renderPriority="120"
          colors="clothes_p,clothes_s"/>
   <class name="female/hat" renderPriority="130"
          colors="clothes_p,clothes_s"/>
