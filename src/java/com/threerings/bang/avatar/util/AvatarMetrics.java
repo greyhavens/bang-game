@@ -89,7 +89,7 @@ public class AvatarMetrics
     public static final String SKIN = "skin";
 
     /** The colorization class for hair colors. */
-    public static final String HAIR = "skin";
+    public static final String HAIR = "hair";
 
     /**
      * Creates a metrics instance which will make use of the supplied

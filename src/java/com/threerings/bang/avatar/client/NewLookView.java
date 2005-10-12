@@ -67,6 +67,20 @@ public class NewLookView extends BContainer
         cost.add(new Spacer(25, 1));
         cost.add(new BButton(_msgs.get("m.buy"), this, "buy"));
 
+        // TEMP: select a default torso component
+        ComponentRepository crepo =
+            _ctx.getCharacterManager().getComponentRepository();
+        Iterator iter = crepo.enumerateComponentIds(
+            crepo.getComponentClass("male/clothing_back"));
+        if (iter.hasNext()) {
+            try {
+                _selections.put("clothing_back",
+                                crepo.getComponent((Integer)iter.next()));
+            } catch (NoSuchComponentException nsce) {
+            }
+        }
+        // END TEMP
+
         updateAvatar();
     }
 
@@ -79,7 +93,7 @@ public class NewLookView extends BContainer
     {
         int[] avatar = new int[AvatarMetrics.SLOTS.length];
         // TODO: get global colorizations from proper place
-        avatar[0] = (1 << 5) | 1;
+        avatar[0] = (7 << 5) | 3;
         for (int ii = 1; ii < avatar.length; ii++) {
             CharacterComponent ccomp = _selections.get(AvatarMetrics.SLOTS[ii]);
             if (ccomp != null) {
@@ -145,6 +159,10 @@ public class NewLookView extends BContainer
                 _components.add(comps);
             }
 
+            if (_aspect.optional) {
+                _components.add(null);
+            }
+
             // TODO: sort components based on cost
 
             // configure our default selection
@@ -181,11 +199,13 @@ public class NewLookView extends BContainer
         protected void noteSelection ()
         {
             CharacterComponent[] selcomp = _components.get(_selidx);
-            for (int ii = 0; ii < selcomp.length; ii++) {
-                _selections.put(_aspect.classes[ii], selcomp[ii]);
+            for (int ii = 0; ii < _aspect.classes.length; ii++) {
+                _selections.put(_aspect.classes[ii],
+                                (selcomp == null) ? null : selcomp[ii]);
             }
             // TODO: translate
-            _selection.setText(selcomp[0].name);
+            _selection.setText(selcomp == null ?
+                               _msgs.get("m.none") : selcomp[0].name);
         }
 
         protected AvatarMetrics.Aspect _aspect;
