@@ -7,6 +7,7 @@ import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.ImageIcon;
@@ -61,8 +62,11 @@ public class BarberView extends BWindow
         _status.setLookAndFeel(BangUI.dtitleLNF);
         main.add(_status, GroupLayout.FIXED);
 
-        // TODO: the avatar configuration interface
-        main.add(new BContainer());
+        // put our new look and change clothes interfaces in tabs
+        BTabbedPane tabs = new BTabbedPane(GroupLayout.CENTER);
+        tabs.addTab(msgs.get("m.new_look"), new NewLookView(ctx));
+        tabs.addTab(msgs.get("m.wear_clothes"), new WearClothingView(ctx));
+        main.add(tabs);
 
         // add a row displaying our cash on hand and the back button
         BContainer bottom = new BContainer(GroupLayout.makeHStretch());

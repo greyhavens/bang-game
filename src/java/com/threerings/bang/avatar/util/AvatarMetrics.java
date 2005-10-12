@@ -22,24 +22,67 @@ import static com.threerings.bang.Log.log;
  */
 public class AvatarMetrics
 {
+    /** Defines a particular aspect of an avatar's look. An aspect will
+     * configure one or more character components in the avatar's look. */
+    public static class Aspect
+    {
+        /** A string identifier for this aspect. Translated for display on the
+         * client. */
+        public String name;
+
+        /** The names of the component classes configured by this aspect. */
+        public String[] classes;
+
+        /** Indicates whether or not this aspect can be omitted. */
+        public boolean optional;
+
+        /** Indicates that this aspect is only for male avatars. */
+        public boolean maleOnly;
+
+        public Aspect (String name, String[] classes,
+                       boolean optional, boolean maleOnly)
+        {
+            this.name = name;
+            this.classes = classes;
+            this.optional = optional;
+            this.maleOnly = maleOnly;
+        }
+    }
+
     /** The different avatar slots available for customization. */
     public static final String[] SLOTS = {
-        "BODY_ZATIONS", // hair and skin colorizations
+        "GLOBAL_ZATIONS", // hair and skin colorizations
         "familiar",
+        "hat_band",
         "hat",
         "jewelry",
         "glasses",
         "clothing_front",
         "hair_front",
-        "facial_hair",
+        "mustache",
+        "beard",
         "eyes",
         "nose",
         "eyebrows",
         "mouth",
         "head",
+        "beard_back",
         "hair_back",
         "clothing_back",
-        "background",
+        "hat_back",
+    };
+
+    /** Defines the various aspects of an avatar's look. */
+    public static final Aspect[] ASPECTS = {
+        new Aspect("head", new String[] { "head" }, false, false),
+        new Aspect("hair", new String[] { "hair_front", "hair_back" },
+                   false, false),
+        new Aspect("eyebrows", new String[] { "eyebrows" }, false, false),
+        new Aspect("eyes", new String[] { "eyes" }, false, false),
+        new Aspect("nose", new String[] { "nose" }, false, false),
+        new Aspect("mustache", new String[] { "mustache" }, true, true),
+        new Aspect("mouth", new String[] { "mouth" }, false, false),
+        new Aspect("beard", new String[] { "beard", "beard_back" }, true, true),
     };
 
     /** The colorization class for skin colors. */
@@ -47,15 +90,6 @@ public class AvatarMetrics
 
     /** The colorization class for hair colors. */
     public static final String HAIR = "skin";
-
-    /** The colorization class for primary clothing colors. */
-    public static final String CLOTHES_P = "clothes_p";
-
-    /** The colorization class for secondary clothing colors. */
-    public static final String CLOTHES_S = "clothes_s";
-
-    /** The colorization class for tertiary clothing colors. */
-    public static final String CLOTHES_T = "clothes_t";
 
     /**
      * Creates a metrics instance which will make use of the supplied
@@ -108,7 +142,7 @@ public class AvatarMetrics
             // determine which colors are appropriate for this component
             String[] colors = ccomp.componentClass.colors;
             zations[ii] = new Colorization[colors.length];
-            for (int cc = 0, ccount = 0; cc < zations.length; cc++) {
+            for (int cc = 0, ccount = 0; cc < colors.length; cc++) {
                 if (colors[cc].equals(SKIN)) {
                     zations[ii][cc] = _globals[0];
                 } else if (colors[cc].equals(HAIR)) {
@@ -119,10 +153,10 @@ public class AvatarMetrics
                 }
             }
 
-            log.info("Decoded colors for " + ccomp.name + " into " +
-                     StringUtil.toString(zations[ii]) + " using " +
-                     StringUtil.toString(colors) + " and " +
-                     StringUtil.toString(_colors));
+//             log.info("Decoded colors for " + ccomp.name + " into " +
+//                      StringUtil.toString(zations[ii]) + " using " +
+//                      StringUtil.toString(colors) + " and " +
+//                      StringUtil.toString(_colors));
         }
 
         return new CharacterDescriptor(componentIds, zations);

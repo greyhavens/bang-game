@@ -14,6 +14,8 @@ import com.samskivert.util.RunQueue;
 import com.threerings.util.CompiledConfig;
 import com.threerings.util.Name;
 
+import com.threerings.media.image.ColorPository;
+
 import com.threerings.cast.CharacterManager;
 import com.threerings.cast.bundle.BundledComponentRepository;
 
@@ -26,6 +28,7 @@ import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.avatar.util.AvatarMetrics;
 import com.threerings.bang.avatar.util.ComponentCatalog;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.client.BangView;
@@ -140,7 +143,9 @@ public class BangClient extends BasicClient
             _charmgr = new CharacterManager(
                 _imgmgr, new BundledComponentRepository(
                     _rsrcmgr, _imgmgr, "avatars"));
-
+            _colorpos = ColorPository.loadColorPository(_rsrcmgr);
+            _ametrics = new AvatarMetrics(
+                _colorpos, _charmgr.getComponentRepository());
             _compcat = (ComponentCatalog)CompiledConfig.loadConfig(
                 _rsrcmgr.getResource(ComponentCatalog.CONFIG_PATH));
 
@@ -235,6 +240,10 @@ public class BangClient extends BasicClient
             return _charmgr;
         }
 
+        public AvatarMetrics getAvatarMetrics () {
+            return _ametrics;
+        }
+
         public ComponentCatalog getComponentCatalog () {
             return _compcat;
         }
@@ -244,8 +253,10 @@ public class BangClient extends BasicClient
     protected Config _config = new Config("bang");
 
     protected BangChatDirector _chatdir;
-    protected ComponentCatalog _compcat;
     protected CharacterManager _charmgr;
+    protected ColorPository _colorpos;
+    protected AvatarMetrics _ametrics;
+    protected ComponentCatalog _compcat;
 
     protected BWindow _pview;
     protected LogonView _lview;

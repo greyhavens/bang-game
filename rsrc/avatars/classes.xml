@@ -4,7 +4,6 @@
 <!-- Avatar component class definitions -->
 <classes>
   <!-- male component classes -->
-  <class name="male/background" renderPriority="0"/>
   <class name="male/hat_back" renderPriority="10"
          colors="clothes_p,clothes_s"/>
   <class name="male/clothing_back" renderPriority="20"
@@ -43,7 +42,6 @@
          colors="familiar_p,familiar_s,familiar_t"/>
 
   <!-- female component classes -->
-  <class name="female/background" renderPriority="0"/>
   <class name="female/hat_back" renderPriority="10"
          colors="clothes_p,clothes_s"/>
   <class name="female/clothing_back" renderPriority="20"

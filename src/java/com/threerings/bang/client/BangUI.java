@@ -49,6 +49,12 @@ public class BangUI
     /** An icon used to indicate a quantity of scrip. */
     public static BIcon scripIcon;
 
+    /** A left arrow icon. */
+    public static BIcon leftArrow;
+
+    /** A right arrow icon. */
+    public static BIcon rightArrow;
+
     /**
      * Configures the UI singleton with a context reference.
      */
@@ -65,6 +71,9 @@ public class BangUI
 
         scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
         coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
+
+        leftArrow = new ImageIcon(ctx.loadImage("ui/left_arrow.png"));
+        rightArrow = new ImageIcon(ctx.loadImage("ui/right_arrow.png"));
     }
 
     /**
