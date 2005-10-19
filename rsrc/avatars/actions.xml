@@ -5,12 +5,12 @@
   <!-- actions relating to the face shot components -->
   <action name="default">
     <framesPerSecond>1</framesPerSecond>
-    <origin>156,400</origin>
+    <origin>468,300</origin>
     <!-- TODO: fix code that requires one array entry for each orientation -->
     <orients>SW</orients>
     <tileset>
-      <widths>312</widths>
-      <heights>400</heights>
+      <widths>468</widths>
+      <heights>600</heights>
       <tileCounts>1</tileCounts>
       <offsetPos>0, 0</offsetPos>
       <gapSize>0, 0</gapSize>

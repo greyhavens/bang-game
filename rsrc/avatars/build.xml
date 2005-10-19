@@ -11,11 +11,21 @@
       classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
     <cbundle actiondef="actions.xml" mapfile="compmap.txt" root="."
              target="female/components.jar">
-      <fileset dir="female" includes="**/*.png" excludes="components/**"/>
+      <fileset dir="female">
+        <include name="**/*.png"/>
+        <exclude name="**/*_shadow.png"/>
+        <exclude name="**/*_crop.png"/>
+        <exclude name="components/**"/>
+      </fileset>
     </cbundle>
     <cbundle actiondef="actions.xml" mapfile="compmap.txt" root="."
              target="male/components.jar">
-      <fileset dir="male" includes="**/*.png" excludes="components/**"/>
+      <fileset dir="male">
+        <include name="**/*.png"/>
+        <exclude name="**/*_shadow.png"/>
+        <exclude name="**/*_crop.png"/>
+        <exclude name="components/**"/>
+      </fileset>
     </cbundle>
   </target>
 </project>

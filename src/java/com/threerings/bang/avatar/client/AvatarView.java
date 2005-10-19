@@ -64,13 +64,14 @@ public class AvatarView extends BLabel
         } finally {
             gfx.dispose();
         }
-        setIcon(new ImageIcon(image));
+        setIcon(new ImageIcon(image.getScaledInstance(
+                                  234, 300, BufferedImage.SCALE_SMOOTH)));
     }
 
     @Override // documentation inherited
     public Dimension getPreferredSize ()
     {
-        return new Dimension(312, 400);
+        return new Dimension(234, 300);
     }
 
     protected BangContext _ctx;
