@@ -5,7 +5,7 @@
   <!-- actions relating to the face shot components -->
   <action name="default">
     <framesPerSecond>1</framesPerSecond>
-    <origin>468,300</origin>
+    <origin>234,600</origin>
     <!-- TODO: fix code that requires one array entry for each orientation -->
     <orients>SW</orients>
     <tileset>
