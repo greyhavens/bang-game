@@ -230,11 +230,8 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
-        int offset = 0;
-        if (_piece.isFlyer()) {
-            offset = board.getElevation(tx, ty);
-        }
-        return super.computeElevation(board, tx, ty) + offset;
+        return super.computeElevation(board, tx, ty) + (_piece.isFlyer() ?
+            2*BangBoard.ELEVATION_UNITS_PER_TILE : 0);
     }
 
     /** Sets up our colors according to our owning player. */
@@ -246,15 +243,6 @@ public class UnitSprite extends MobileSprite
         _damage.updateRenderState();
         _movable.setSolidColor(JPIECE_COLORS[_piece.owner]);
         _movable.updateRenderState();
-    }
-
-    /** Converts tile coordinates plus elevation into (3D) world
-     * coordinates. */
-    protected Vector3f toWorldCoords (int tx, int ty, int elev, Vector3f target)
-    {
-        // flyers are always up in the air
-        elev = _piece.isFlyer() ? 2 : elev;
-        return super.toWorldCoords(tx, ty, elev, target);
     }
 
     protected Texture createDamageTexture ()

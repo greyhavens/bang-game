@@ -4,12 +4,18 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
+import com.threerings.jme.sprite.LinePath;
+import com.threerings.jme.sprite.LineSegmentPath;
+import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.effect.EffectViz;
@@ -97,6 +103,7 @@ public class PieceSprite extends Sprite
      */
     public void setLocation (int tx, int ty, int elevation)
     {
+        _elevation = elevation;
         toWorldCoords(tx, ty, elevation, _temp);
         if (!_temp.equals(localTranslation)) {
             setLocalTranslation(new Vector3f(_temp));
@@ -132,8 +139,9 @@ public class PieceSprite extends Sprite
         _tick = tick;
 
         // move ourselves to our new location
-        if (piece.x != opiece.x || piece.y != opiece.y) {
-            moveSprite(board, opiece, piece);
+        if (piece.x != opiece.x || piece.y != opiece.y ||
+            computeElevation(board, piece.x, piece.y) != _elevation) {
+            moveSprite(board, opiece, piece);   
         }
 
         // if we're rotated (which only happens in the editor), we need to
@@ -211,7 +219,7 @@ public class PieceSprite extends Sprite
      */
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
-        return 0;
+        return board.getHeightfieldElevation(tx, ty);
     }
 
     /**
@@ -232,7 +240,7 @@ public class PieceSprite extends Sprite
     {
         target.x = tx * TILE_SIZE;
         target.y = ty * TILE_SIZE;
-        target.z = elev * TILE_SIZE;
+        target.z = elev * (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
         centerWorldCoords(target);
         return target;
     }
@@ -250,13 +258,16 @@ public class PieceSprite extends Sprite
     protected boolean _selected;
     protected ArrayList<EffectViz> _effects;
 
+    /** The current elevation of the piece. */
+    protected int _elevation;
+    
     /** When activated, causes all pieces to warp instead of smoothly
      * follow a path. */
     protected static boolean _editorMode;
 
     /** Used for temporary calculations. */
     protected static Vector3f _temp = new Vector3f();
-
+    
     protected static float[] ROTATIONS = {
         0, // NORTH
         FastMath.PI/2, // EAST

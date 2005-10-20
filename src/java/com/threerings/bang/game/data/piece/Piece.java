@@ -422,7 +422,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public boolean canTraverse (BangBoard board, int tx, int ty)
     {
-        return canTraverse(board.getTile(tx, ty));
+        return board.isGroundOccupiable(tx, ty);
     }
 
     /**
@@ -554,15 +554,6 @@ public abstract class Piece extends SimpleStreamableObject
      */
     protected void recomputeBounds ()
     {
-    }
-
-    /**
-     * Returns true if this piece can traverse the specified type of
-     * terrain.
-     */
-    protected boolean canTraverse (Terrain terrain)
-    {
-        return (terrain.traversalCost > 0);
     }
 
     /**

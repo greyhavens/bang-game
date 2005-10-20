@@ -64,7 +64,7 @@ public class AvatarView extends BLabel
         } finally {
             gfx.dispose();
         }
-        setIcon(new ImageIcon(image.getScaledInstance(
+        setIcon(new ImageIcon((BufferedImage)image.getScaledInstance(
                                   234, 300, BufferedImage.SCALE_SMOOTH)));
     }
 

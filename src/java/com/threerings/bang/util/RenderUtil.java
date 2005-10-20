@@ -83,6 +83,7 @@ public class RenderUtil
                 BufferedImage teximg = ctx.loadImage(path);
                 Texture texture = TextureManager.loadTexture(
                     teximg, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+                texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
                 TextureState tstate = ctx.getRenderer().createTextureState();
                 tstate.setEnabled(true);
                 tstate.setTexture(texture);

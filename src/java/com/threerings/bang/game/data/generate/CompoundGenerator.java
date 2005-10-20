@@ -28,7 +28,7 @@ public class CompoundGenerator extends EnvironmentGenerator
         int width = board.getWidth(), height = board.getHeight();
 
         // first fill the board with dirt
-        board.fill(Terrain.DIRT);
+        board.fillTerrain(Terrain.DIRT);
 
         int density = 11 - 5; // config.density;
 

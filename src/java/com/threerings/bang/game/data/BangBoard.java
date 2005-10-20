@@ -35,18 +35,29 @@ public class BangBoard extends SimpleStreamableObject
     /** The basic traversal cost. */
     public static final int BASE_TRAVERSAL = 10;
 
+    /** The number of subdivisions in the heightfield for each tile. */
+    public static final int HEIGHTFIELD_SUBDIVISIONS = 4;
+    
+    /** The number of elevation units per vertical tile size. */
+    public static final int ELEVATION_UNITS_PER_TILE = 64;
+    
+    /** The maximum difference between adjacent height points allowed before a
+     * tile becomes unoccupiable. */
+    public static final int MAX_OCCUPIABLE_HEIGHT_DELTA = 16;
+    
     /** Creates a board with the specified dimensions. */
     public BangBoard (int width, int height)
     {
         _width = width;
         _height = height;
-        _tiles = new int[width*height];
         _btstate = new byte[width*height];
         _estate = new byte[width*height];
         _tstate = new byte[width*height];
         _pgrid = new byte[width*height];
+        _heightfield = new byte[getHeightfieldWidth() *
+            getHeightfieldHeight()];
+        _terrain = new byte[getTerrainWidth() * getTerrainHeight()];
         _bbounds = new Rectangle(0, 0, _width, _height);
-        fill(Terrain.NONE);
     }
 
     /** A default constructor for unserialization. */
@@ -54,18 +65,97 @@ public class BangBoard extends SimpleStreamableObject
     {
     }
 
-    /** Returns the width of the board. */
+    /** Returns the width of the board in tiles. */
     public int getWidth ()
     {
         return _width;
     }
 
-    /** Returns the height of the board. */
+    /** Returns the height of the board in tiles. */
     public int getHeight ()
     {
         return _height;
     }
 
+    /** Returns the width of the board's heightfield. */
+    public int getHeightfieldWidth ()
+    {
+        return _width * HEIGHTFIELD_SUBDIVISIONS - 1;
+    }
+    
+    /** Returns the height of the board's heightfield. */
+    public int getHeightfieldHeight ()
+    {
+        return _height * HEIGHTFIELD_SUBDIVISIONS - 1;
+    }
+    
+    /** Returns the height at the specified heightfield coordinates. */
+    public byte getHeightfieldValue (int x, int y)
+    {
+        return _heightfield[y*getHeightfieldWidth() + x];
+    }
+    
+    /**
+     * Sets the value at the specified heightfield coordinates.
+     */
+    public void setHeightfieldValue (int x, int y, byte value)
+    {
+        _heightfield[y*getHeightfieldWidth() + x] = value;
+    }
+    
+    /** Adds to or subtracts from the height at the specified heightfield
+     * coordinates, clamping to the allowed range. */
+    public void addHeightfieldValue (int x, int y, int value)
+    {
+        int idx = y*getHeightfieldWidth() + x;
+        _heightfield[idx] = (byte)Math.min(Math.max(-128,
+            _heightfield[idx] + value), +127);
+    }
+    
+    /** Returns a reference to the heightfield array. */
+    public byte[] getHeightfield ()
+    {
+        return _heightfield;
+    }
+    
+    /** Returns the width of the board's terrain map. */
+    public int getTerrainWidth ()
+    {
+        return _width * HEIGHTFIELD_SUBDIVISIONS + 1;
+    }
+    
+    /** Returns the height of the board's terrain map. */
+    public int getTerrainHeight ()
+    {
+        return _height * HEIGHTFIELD_SUBDIVISIONS + 1;
+    }
+    
+    /** Returns the terrain value at the specified terrain coordinates. */
+    public byte getTerrainValue (int x, int y)
+    {
+        return _terrain[y*getTerrainWidth() + x];
+    }
+    
+    /** Sets a single terrain value. */
+    public void setTerrainValue (int x, int y, byte value)
+    {
+        _terrain[y*getTerrainWidth() + x] = value;
+    }
+    
+    /** Fills the terrain array with the specified terrain. */
+    public void fillTerrain (Terrain terrain)
+    {
+        for (int i = 0; i < _terrain.length; i++) {
+            _terrain[i] = (byte)terrain.code;
+        }
+    }
+    
+    /** Returns a reference to the terrain array. */
+    public byte[] getTerrain ()
+    {
+        return _terrain;
+    }
+    
     /**
      * Returns the bounds of our board. <em>Do not modify</em> the
      * returned rectangle.
@@ -73,45 +163,6 @@ public class BangBoard extends SimpleStreamableObject
     public Rectangle getBounds ()
     {
         return _bbounds;
-    }
-
-    /** Fills the board with the specified tile. */
-    public void fill (Terrain tile)
-    {
-        Arrays.fill(_tiles, tile.code);
-    }
-
-    /**
-     * Returns the tile value at the specified x and y coordinate.
-     */
-    public Terrain getTile (int xx, int yy)
-    {
-        int index = yy * _width + xx;
-        if (index < 0 || index >= _tiles.length) {
-            log.warning("Requested to get OOB tile " +
-                        "[x=" + xx + ", y=" + yy + "].");
-            Thread.dumpStack();
-            return Terrain.NONE;
-        } else {
-            return Terrain.fromCode(_tiles[index]);
-        }
-    }
-
-    /**
-     * Updates the tile value at the specified x and y coordinate.
-     */
-    public boolean setTile (int xx, int yy, Terrain tile)
-    {
-        int index = yy * _width + xx;
-        if (index < 0 || index >= _tiles.length) {
-            log.warning("Requested to set OOB tile [x=" + xx + ", y=" + yy +
-                        ", tile=" + tile + "].");
-            Thread.dumpStack();
-        } else if (_tiles[index] != tile.code) {
-            _tiles[index] = tile.code;
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -218,12 +269,8 @@ public class BangBoard extends SimpleStreamableObject
         // start out with _tstate configured according to the board
         for (int yy = 0; yy < _height; yy++) {
             for (int xx = 0; xx < _width; xx++) {
-                byte tvalue;
-                switch (getTile(xx, yy)) {
-                case NONE: tvalue = (byte)3; break;
-                case WATER: tvalue = (byte)2; break;
-                default: tvalue = (byte)0; break;
-                }
+                byte tvalue = (getMaxHeightDelta(xx, yy) >
+                    MAX_OCCUPIABLE_HEIGHT_DELTA) ? (byte)2 : (byte)0;
                 int pos = _width*yy+xx;
                 _tstate[pos] = tvalue;
                 _btstate[pos] = tvalue;
@@ -272,14 +319,40 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
-     * Returns the elevation at the specified coordinates (currently only
-     * non-zero when there's a building at that tile location).
+     * Returns the combined elevation (heightfield elevation plus piece
+     * elevation) at the specified tile coordinates.
      */
     public int getElevation (int x, int y)
     {
-        return _estate[y*_width+x];
+        return getHeightfieldElevation(x, y) + getPieceElevation(x, y);
+    }
+    
+    /**
+     * Returns the heightfield elevation (the elevation of the terrain in
+     * elevation units) at the specified tile coordinates.
+     */
+    public int getHeightfieldElevation (int x, int y)
+    {
+        // return zero for locations beyond the edges
+        if (x < 0 || y < 0 || x >= _width || y >= _height) {
+            return 0;
+        }
+        
+        // for now, just grab the heightfield value in the center of the tile
+        int offset = HEIGHTFIELD_SUBDIVISIONS/2 - 1;
+        return getHeightfieldValue(x*HEIGHTFIELD_SUBDIVISIONS + offset,
+                y*HEIGHTFIELD_SUBDIVISIONS + offset);
     }
 
+    /**
+     * Returns the piece elevation (the height of the piece in elevation units)
+     * at the specified tile coordinates.
+     */
+    public int getPieceElevation (int x, int y)
+    {
+        return _estate[y*_width+x] * ELEVATION_UNITS_PER_TILE;
+    }
+    
     /**
      * Returns true if the specified location is ground traversable.
      */
@@ -411,6 +484,13 @@ public class BangBoard extends SimpleStreamableObject
         _bbounds = new Rectangle(0, 0, _width, _height);
     }
 
+    /** Finds the maximum delta between adjacent height values in the specified
+     * tile. */
+    protected int getMaxHeightDelta (int tx, int ty)
+    {
+        return 0;
+    }
+    
     /** Helper function for {@link #computeMoves}. */
     protected void considerMoving (
         Piece piece, PointSet moves, int xx, int yy, byte remain)
@@ -423,7 +503,7 @@ public class BangBoard extends SimpleStreamableObject
         // see if we can move into this square with a higher remaining
         // point count than has already been accomplished
         int pos = yy*_width+xx;
-        byte premain = (byte)(remain - piece.traversalCost(getTile(xx, yy)));
+        byte premain = (byte)(remain - BASE_TRAVERSAL);
         byte current = _pgrid[pos];
         if (premain <= current) {
             return;
@@ -483,8 +563,11 @@ public class BangBoard extends SimpleStreamableObject
     /** The width and height of our board. */
     protected int _width, _height;
 
-    /** Contains a 2D array of tiles, defining the terrain. */
-    protected int[] _tiles;
+    /** The heightfield that describes the board terrain. */
+    protected byte[] _heightfield;
+    
+    /** The terrain codes for each heightfield vertex. */
+    protected byte[] _terrain;
 
     /** Tracks coordinate traversability. */
     protected transient byte[] _tstate, _btstate, _estate;

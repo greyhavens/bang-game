@@ -281,11 +281,12 @@ public class MobileSprite extends PieceSprite
             // coordinates
             Vector3f[] coords = new Vector3f[path.size()];
             float[] durations = new float[path.size()-1];
-            int ii = 0, elevation = 0; // TODO: handle elevated paths
+            int ii = 0;
             for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
                 Point p = (Point)iter.next();
                 coords[ii] = new Vector3f();
-                toWorldCoords(p.x, p.y, elevation, coords[ii]);
+                toWorldCoords(p.x, p.y, computeElevation(board, p.x, p.y),
+                    coords[ii]);
                 if (ii > 0) {
                     durations[ii-1] = 1f / Config.display.getMovementSpeed();
                 }
@@ -293,9 +294,10 @@ public class MobileSprite extends PieceSprite
             return new MoveUnitPath(this, coords, durations);
 
         } else {
-            Vector3f start = toWorldCoords(
-                opiece.x, opiece.y, 0, new Vector3f());
-            Vector3f end = toWorldCoords(npiece.x, npiece.y, 0, new Vector3f());
+            Vector3f start = toWorldCoords(opiece.x, opiece.y,
+                computeElevation(board, opiece.x, opiece.y), new Vector3f());
+            Vector3f end = toWorldCoords(npiece.x, npiece.y,
+                computeElevation(board, npiece.x, npiece.y), new Vector3f());
             float duration = (float)MathUtil.distance(
                 opiece.x, opiece.y, npiece.x, npiece.y) * .003f;
             return new LinePath(this, start, end, duration);

@@ -7,11 +7,16 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.intersection.TrianglePickResults;
+import com.jme.light.DirectionalLight;
+import com.jme.light.SimpleLightNode;
 import com.jme.math.FastMath;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
@@ -21,11 +26,14 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.scene.TriMesh;
+import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BDecoratedWindow;
@@ -37,7 +45,6 @@ import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
-import com.threerings.jme.tile.TileFringer;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -71,22 +78,19 @@ public class BoardView extends BComponent
     {
         _ctx = ctx;
 
-        // create a fringer
-        _fringer = new TileFringer(_ctx.getFringeConfig(), _tfisrc);
-
         // create our top-level node
         _node = new Node("board_view");
 
         // create a sky box
         _node.attachChild(new SkyNode(ctx));
-
+        
         // create some fake ground
         createGround(ctx);
 
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
         _node.attachChild(bnode);
-        bnode.attachChild(_tnode = new Node("tiles"));
+        bnode.attachChild(_tnode = new TerrainNode(ctx));
 
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
@@ -155,9 +159,6 @@ public class BoardView extends BComponent
      */
     public void refreshBoard ()
     {
-        // remove all the board tile geometry
-        _tnode.detachAllChildren();
-
         // remove any old sprites
         for (PieceSprite sprite : _pieces.values()) {
             removeSprite(sprite);
@@ -169,26 +170,8 @@ public class BoardView extends BComponent
         _board.shadowPieces(_bangobj.pieces.iterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
 
-        // create the board tiles
-        for (int yy = -1; yy < _board.getHeight()+1; yy++) {
-            for (int xx = -1; xx < _board.getWidth()+1; xx++) {
-                float bx = xx * TILE_SIZE, by = yy * TILE_SIZE;
-                Quad t = new Quad("tile", TILE_SIZE, TILE_SIZE);
-                _tnode.attachChild(t);
-                t.setLocalTranslation(
-                    new Vector3f(bx + TILE_SIZE/2, by + TILE_SIZE/2, 0f));
-
-                // tiles on the "rim" need to be transparent
-                if (!_board.getBounds().contains(xx, yy)) {
-                    t.setRenderState(RenderUtil.blendAlpha);
-                }
-
-                refreshTile(xx, yy);
-            }
-        }
-        _tnode.setLightCombineMode(LightState.OFF);
-        _tnode.updateRenderState();
-        _tnode.updateGeometricState(0, true);
+        // create the board geometry
+        _tnode.createBoardTerrain(_board);
 
         // create sprites for all of the pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
@@ -196,7 +179,7 @@ public class BoardView extends BComponent
             pieceUpdated(null, (Piece)iter.next());
         }
     }
-
+    
     /**
      * Called by the controller when the round has ended.
      */
@@ -215,6 +198,14 @@ public class BoardView extends BComponent
         _bangobj.removeListener(_blistener);
     }
 
+    /**
+     * Returns the node containing the terrain.
+     */
+    public TerrainNode getTerrainNode ()
+    {
+        return _tnode;
+    }
+    
     /**
      * Returns the node to which our pieces and piece effects are
      * attached.
@@ -265,17 +256,7 @@ public class BoardView extends BComponent
     // documentation inherited from interface MouseMotionListener
     public void mouseMoved (MouseEvent e)
     {
-        // determine which tile the mouse is over
-        Vector2f screenPos = new Vector2f(e.getX(), e.getY());
-        _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
-        _worldMouse.subtractLocal(_ctx.getCamera().getLocation());
-
-        // determine which tile the mouse is over
-        float dist = -1f * _groundNormal.dot(_ctx.getCamera().getLocation()) /
-            _groundNormal.dot(_worldMouse);
-        Vector3f ground = _ctx.getCamera().getLocation().add(
-            _worldMouse.mult(dist));
-        ground.z = 0.1f;
+        Vector3f ground = getGroundIntersect(e, null); 
 
         int mx = (int)Math.floor(ground.x / TILE_SIZE);
         int my = (int)Math.floor(ground.y / TILE_SIZE);
@@ -302,6 +283,35 @@ public class BoardView extends BComponent
         }
     }
 
+    /**
+     * Given a mouse event, returns the point at which a ray cast from the
+     * eye through the mouse pointer intersects the ground plane.
+     *
+     * @param result a vector to hold the result, or <code>null</code> to
+     * create a new vector
+     * @return a reference to the result
+     */
+    public Vector3f getGroundIntersect (MouseEvent e, Vector3f result)
+    {
+        if (result == null) {
+            result = new Vector3f();
+        }
+        
+        // determine which tile the mouse is over
+        Vector2f screenPos = new Vector2f(e.getX(), e.getY());
+        _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
+        _worldMouse.subtractLocal(_ctx.getCamera().getLocation());
+
+        // determine which tile the mouse is over
+        float dist = -1f * _groundNormal.dot(_ctx.getCamera().getLocation()) /
+            _groundNormal.dot(_worldMouse);
+        _ctx.getCamera().getLocation().add(
+            _worldMouse.mult(dist), result);
+        result.z = 0.1f;
+        
+        return result;
+    }
+     
     // documentation inherited from interface MouseMotionListener
     public void mouseDragged (MouseEvent e)
     {
@@ -348,7 +358,7 @@ public class BoardView extends BComponent
         // clear any marquee we have up
         clearMarquee();
     }
-
+    
     /**
      * Creates the geometry that defines the ground around and behind the
      * board.
@@ -399,34 +409,6 @@ public class BoardView extends BComponent
             _ctx.getRootNode().removeWindow(_marquee);
             _marquee = null;
         }
-    }
-
-    /**
-     * Recolors a board tile based on the (presumably updated) underlying
-     * terrain value.
-     */
-    protected void refreshTile (int tx, int ty)
-    {
-        Quad t = (Quad)_tnode.getChild((ty+1) * (_board.getHeight()+2) + tx + 1);
-        // determine whether we need a fringe tile
-        BufferedImage img =
-            _fringer.getFringeTile(_tftsrc, tx, ty, _fmasks);
-        if (img != null) {
-            t.setRenderState(RenderUtil.createTexture(_ctx, img));
-        } else {
-            // otherwise use the unadorned ground tile
-            Terrain tile = _board.getBounds().contains(tx, ty) ?
-                _board.getTile(tx, ty) : Terrain.RIM;
-            TextureState tstate = RenderUtil.getGroundTexture(tile);
-            if (tstate != null) {
-                t.setRenderState(tstate);
-            } else {
-                // or black if all else fails
-                t.clearRenderState(RenderState.RS_TEXTURE);
-                t.setSolidColor(ColorRGBA.black);
-            }
-        }
-        t.updateRenderState();
     }
 
     /**
@@ -561,8 +543,8 @@ public class BoardView extends BComponent
             int elev = _board.getElevation(sx, sy);
             quad.setLocalTranslation(
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
-                             sy * TILE_SIZE + TILE_SIZE/2,
-                             elev * TILE_SIZE + 0.1f));
+                    sy * TILE_SIZE + TILE_SIZE/2, elev * TILE_SIZE /
+                        BangBoard.ELEVATION_UNITS_PER_TILE + 0.1f));
             quad.setModelBound(new BoundingBox());
             quad.updateModelBound();
             quad.setRenderState(RenderUtil.overlayZBuf);
@@ -579,8 +561,9 @@ public class BoardView extends BComponent
             Quad quad = RenderUtil.createIcon(_tgtstate);
             quad.setLocalTranslation(
                 new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
-                             sy * TILE_SIZE + TILE_SIZE/2,
-                             _bangobj.board.getElevation(sx, sy) * TILE_SIZE));
+                    sy * TILE_SIZE + TILE_SIZE/2,
+                    _bangobj.board.getElevation(sx, sy) * TILE_SIZE /
+                        BangBoard.ELEVATION_UNITS_PER_TILE));
             quad.setRenderState(RenderUtil.overlayZBuf);
             _hnode.attachChild(quad);
         }
@@ -634,36 +617,6 @@ public class BoardView extends BComponent
         }
     };
 
-    protected TileFringer.ImageSource _tfisrc = new TileFringer.ImageSource() {
-        public BufferedImage createImage (int width, int height, int trans) {
-            return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        }
-        public BufferedImage getTileSource (String type) {
-            return RenderUtil.getGroundTile(Terrain.valueOf(type));
-        }
-        public BufferedImage getFringeSource (String name) {
-            // TODO: incorporate this into some larger image cache?
-            BufferedImage frimg = _frimgs.get(name);
-            if (frimg == null) {
-                _frimgs.put(
-                    name, frimg = _ctx.loadImage("tiles/fringe/" + name));
-            }
-            return frimg;
-        }
-        protected HashMap<String,BufferedImage> _frimgs =
-            new HashMap<String,BufferedImage>();
-    };
-
-    protected TileFringer.TileSource _tftsrc = new TileFringer.TileSource() {
-        public String getTileType (int x, int y) {
-            return _board.getBounds().contains(x, y) ? 
-                _board.getTile(x, y).toString() : null;
-        }
-        public String getDefaultType () {
-            return Terrain.RIM.toString();
-        }
-    };
-
     protected BasicContext _ctx;
     protected BangObject _bangobj;
     protected BangBoard _board;
@@ -672,14 +625,14 @@ public class BoardView extends BComponent
 
     protected BDecoratedWindow _marquee;
 
-    protected TileFringer _fringer;
     protected HashMap _fmasks = new HashMap();
 
-    protected Node _node, _pnode, _tnode, _hnode;
+    protected Node _node, _pnode, _hnode;
+    protected TerrainNode _tnode;
     protected Vector3f _worldMouse;
     protected TrianglePickResults _pick = new TrianglePickResults();
     protected Sprite _hover;
-
+    
     /** Used to texture a quad that "targets" a tile. */
     protected TextureState _tgtstate;
 

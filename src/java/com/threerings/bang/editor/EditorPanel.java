@@ -45,8 +45,8 @@ public class EditorPanel extends JPanel
     /** Displays board metadata. */
     public BoardInfo info;
 
-    /** Allows the selection of terrain. */
-    public TerrainSelector terrain;
+    /** Allows user to select and configure tools. */
+    public ToolPanel tools;
 
     /** Creates the main panel and its sub-interfaces. */
     public EditorPanel (EditorContext ctx, EditorController ctrl)
@@ -78,8 +78,7 @@ public class EditorPanel extends JPanel
 
         // add the various control panels
         sidePanel.add(info = new BoardInfo(ctx), VGroupLayout.FIXED);
-        sidePanel.add(terrain = new TerrainSelector(ctx), VGroupLayout.FIXED);
-        sidePanel.add(new JScrollPane(new PieceCreator(ctx)));
+        sidePanel.add(tools = new ToolPanel(ctx, this));
 
         // TODO: translate menu accelerators and short cuts
         JMenuBar menubar = _ctx.getFrame().getJMenuBar();
@@ -92,9 +91,19 @@ public class EditorPanel extends JPanel
                        KeyEvent.VK_O, EditorController.LOAD_BOARD);
         createMenuItem(file, msgs.get("m.menu_save"), KeyEvent.VK_S,
                        KeyEvent.VK_S, EditorController.SAVE_BOARD);
+        
+        file.addSeparator();
+        
+        createMenuItem(file, msgs.get("m.menu_import_hf"), KeyEvent.VK_I,
+                       KeyEvent.VK_I, EditorController.IMPORT_HEIGHTFIELD);
+        createMenuItem(file, msgs.get("m.menu_export_hf"), KeyEvent.VK_E,
+                       KeyEvent.VK_E, EditorController.EXPORT_HEIGHTFIELD);
+        
+        file.addSeparator();
+        
         createMenuItem(file, msgs.get("m.menu_quit"), KeyEvent.VK_Q,
                        KeyEvent.VK_Q, EditorController.EXIT);
-
+        
 //         // add a "load" button
 //         JButton load = new JButton(msgs.get("m.load_board"));
 //         load.setActionCommand(EditorController.LOAD_BOARD);
@@ -141,12 +150,14 @@ public class EditorPanel extends JPanel
     {
         // add the main bang view
         _ctx.getGeometry().attachChild(view.getNode());
+        _ctx.getRootNode().pushDefaultEventTarget(view);
     }
 
     // documentation inherited from interface
     public void didLeavePlace (PlaceObject plobj)
     {
         _ctx.getGeometry().detachChild(view.getNode());
+        _ctx.getRootNode().popDefaultEventTarget(view);
     }
 
     @Override // documentation inherited
