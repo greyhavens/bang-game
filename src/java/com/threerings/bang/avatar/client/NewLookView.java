@@ -74,7 +74,7 @@ public class NewLookView extends BContainer
         ComponentRepository crepo =
             _ctx.getCharacterManager().getComponentRepository();
         Iterator iter = crepo.enumerateComponentIds(
-            crepo.getComponentClass("male/clothing_back"));
+            crepo.getComponentClass(_gender + "clothing_back"));
         if (iter.hasNext()) {
             try {
                 _selections.put("clothing_back",
