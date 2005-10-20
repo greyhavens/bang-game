@@ -75,8 +75,8 @@ public class AvatarMetrics
     /** Defines the various aspects of an avatar's look. */
     public static final Aspect[] ASPECTS = {
         new Aspect("head", new String[] { "head" }, false, false),
-        new Aspect("hair", new String[] { "hair_front", "hair_back" },
-                   false, false),
+        new Aspect("hair", new String[] {
+            "hair_front", "hair_middle", "hair_back" }, false, false),
         new Aspect("eyebrows", new String[] { "eyebrows" }, false, false),
         new Aspect("eyes", new String[] { "eyes" }, false, false),
         new Aspect("nose", new String[] { "nose" }, false, false),
