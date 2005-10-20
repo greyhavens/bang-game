@@ -48,6 +48,9 @@ public class NewLookView extends BContainer
 
         add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
 
+        // TODO: obtain gender based on the user object
+        _gender = (RandomUtil.getInt(100) >= 50) ? "male/" : "female/";
+
         BContainer toggles = new BContainer(new TableLayout(5, 5, 5));
         add(toggles, BorderLayout.CENTER);
         for (int ii = 0; ii < AvatarMetrics.ASPECTS.length; ii++) {
@@ -126,15 +129,13 @@ public class NewLookView extends BContainer
             // TODO: add a color selector for certain aspects
             table.add(new Spacer(5, 5));
 
-            // TODO: select the prefix based on gender
-            String gender = "male/";
             ComponentRepository crepo =
                 _ctx.getCharacterManager().getComponentRepository();
 
             // we iterate over the first component class defined in the aspect
             // and assume all associated classes have components with the exact
             // same names (which they should unless someone fuppeduck)
-            String cclass = gender + _aspect.classes[0];
+            String cclass = _gender + _aspect.classes[0];
             Iterator iter = crepo.enumerateComponentIds(
                 crepo.getComponentClass(cclass));
             while (iter.hasNext()) {
@@ -149,7 +150,7 @@ public class NewLookView extends BContainer
                 }
                 String cname = comps[0].name;
                 for (int ii = 1; ii < _aspect.classes.length; ii++) {
-                    cclass = gender + _aspect.classes[ii];
+                    cclass = _gender + _aspect.classes[ii];
                     try {
                         comps[ii] = crepo.getComponent(cclass, cname);
                     } catch (NoSuchComponentException nsce) {
@@ -220,6 +221,8 @@ public class NewLookView extends BContainer
     protected AvatarView _avatar;
     protected BTextField _name;
     protected MoneyLabel _cost;
+
+    protected String _gender;
 
     protected HashMap<String,CharacterComponent> _selections =
         new HashMap<String,CharacterComponent>();
