@@ -18,7 +18,7 @@
          renderPriority="60"/>
   <class name="male/makeup" colors="skin,makeup"
          renderPriority="70"/>
-  <class name="male/shadow" shadowColor="0,0,0,200"
+  <class name="male/shadow" shadowAlpha="0.26"
          renderPriority="80"/>
   <class name="male/mouth" colors="skin,makeup" shadow="male/shadow"
          renderPriority="90"/>
@@ -62,7 +62,7 @@
          renderPriority="50"/>
   <class name="female/makeup" colors="skin,makeup"
          renderPriority="60"/>
-  <class name="female/shadow" shadowColor="0,0,0,200"
+  <class name="female/shadow" shadowAlpha="0.26"
          renderPriority="70"/>
   <class name="female/mouth" colors="skin,makeup" shadow="female/shadow"
          renderPriority="80"/>

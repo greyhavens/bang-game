@@ -94,14 +94,14 @@ public class NewLookView extends BContainer
 
     protected void updateAvatar ()
     {
-        int[] avatar = new int[AvatarMetrics.SLOTS.length];
+        int[] avatar = new int[_selections.size()+1];
+        int idx = 0;
         // TODO: get global colorizations from proper place
-        avatar[0] = (7 << 5) | 3;
-        for (int ii = 1; ii < avatar.length; ii++) {
-            CharacterComponent ccomp = _selections.get(AvatarMetrics.SLOTS[ii]);
+        avatar[idx++] = (7 << 5) | 3;
+        for (CharacterComponent ccomp : _selections.values()) {
             if (ccomp != null) {
                 // TODO: add encoded colorizations
-                avatar[ii] = ccomp.componentId;
+                avatar[idx++] = ccomp.componentId;
             }
         }
         _avatar.setAvatar(avatar);

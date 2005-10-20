@@ -49,29 +49,6 @@ public class AvatarMetrics
         }
     }
 
-    /** The different avatar slots available for customization. */
-    public static final String[] SLOTS = {
-        "GLOBAL_ZATIONS", // hair and skin colorizations
-        "familiar",
-        "hat_band",
-        "hat",
-        "jewelry",
-        "glasses",
-        "clothing_front",
-        "hair_front",
-        "mustache",
-        "beard",
-        "eyes",
-        "nose",
-        "eyebrows",
-        "mouth",
-        "head",
-        "beard_back",
-        "hair_back",
-        "clothing_back",
-        "hat_back",
-    };
-
     /** Defines the various aspects of an avatar's look. */
     public static final Aspect[] ASPECTS = {
         new Aspect("head", new String[] { "head" }, false, false),
