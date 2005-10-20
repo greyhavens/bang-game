@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.client;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
@@ -20,6 +21,7 @@ import com.threerings.cast.CharacterDescriptor;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
+import static com.threerings.bang.avatar.util.AvatarMetrics.*;
 
 /**
  * Displays an avatar.
@@ -55,23 +57,32 @@ public class AvatarView extends BLabel
             return;
         }
 
+        // composite the myriad components and render them into an image
         MultiFrameImage mfi = af.getFrames(0);
+        int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0);
         BufferedImage image = _ctx.getImageManager().createImage(
-            mfi.getWidth(0), mfi.getHeight(0), Transparency.BITMASK);
+            WIDTH, HEIGHT, Transparency.BITMASK);
         Graphics2D gfx = (Graphics2D)image.createGraphics();
         try {
-            mfi.paintFrame(gfx, 0, 0, 0);
+            gfx.setColor(java.awt.Color.black);
+            gfx.drawRect(0, 0, WIDTH-1, HEIGHT-1);
+            mfi.paintFrame(gfx, 0, WIDTH/2-ox, HEIGHT-oy);
         } finally {
             gfx.dispose();
         }
-        setIcon(new ImageIcon((BufferedImage)image.getScaledInstance(
-                                  234, 300, BufferedImage.SCALE_SMOOTH)));
+
+        // scale that image appropriately
+        Image scaled = image.getScaledInstance(
+            WIDTH/2, HEIGHT/2, BufferedImage.SCALE_SMOOTH);
+
+        // TODO: fade between the two images
+        setIcon(new ImageIcon(scaled));
     }
 
     @Override // documentation inherited
     public Dimension getPreferredSize ()
     {
-        return new Dimension(234, 300);
+        return new Dimension(WIDTH/2, HEIGHT/2);
     }
 
     protected BangContext _ctx;

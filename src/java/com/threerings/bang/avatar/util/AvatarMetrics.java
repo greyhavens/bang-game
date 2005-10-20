@@ -22,6 +22,12 @@ import static com.threerings.bang.Log.log;
  */
 public class AvatarMetrics
 {
+    /** The width of our avatar source images. */
+    public static final int WIDTH = 468;
+
+    /** The height of our avatar source images. */
+    public static final int HEIGHT = 600;
+
     /** Defines a particular aspect of an avatar's look. An aspect will
      * configure one or more character components in the avatar's look. */
     public static class Aspect
