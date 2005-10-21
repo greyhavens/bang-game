@@ -59,7 +59,7 @@ public class TerrainNode extends Node
         {
             super("cursor");
             
-            // setDefaultColor(ColorRGBA.white);
+            setDefaultColor(ColorRGBA.white);
             setLightCombineMode(LightState.OFF);
             setRenderState(RenderUtil.lequalZBuf);
             
@@ -106,6 +106,7 @@ public class TerrainNode extends Node
             }
             setVertexBuffer(BufferUtils.createFloatBuffer(
                 verts.toArray(new Vector3f[verts.size()])));
+            generateIndices();
         }
         
         /**
