@@ -230,8 +230,13 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
-        return super.computeElevation(board, tx, ty) + (_piece.isFlyer() ?
-            2*BangBoard.ELEVATION_UNITS_PER_TILE : 0);
+        int elev = super.computeElevation(board, tx, ty);
+        if (_piece.isFlyer()) {
+            // flying pieces hover 2 "units" above the ground; not sinking into
+            // holes, but raising up to two units above hills
+            elev = Math.max(elev, 0) + 2 * BangBoard.ELEVATION_UNITS_PER_TILE;
+        }
+        return elev;
     }
 
     /** Sets up our colors according to our owning player. */
