@@ -17,6 +17,7 @@ import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
@@ -57,10 +58,13 @@ public class TerrainNode extends Node
         protected Cursor ()
         {
             super("cursor");
-            setMode(LOOP);
-            setVertexBuffer(BufferUtils.createVector3Buffer(CURSOR_SEGMENTS));
+            
+            // setDefaultColor(ColorRGBA.white);
             setLightCombineMode(LightState.OFF);
+            setRenderState(RenderUtil.lequalZBuf);
+            
             updateRenderState();
+            update();
         }
         
         /**
@@ -88,21 +92,138 @@ public class TerrainNode extends Node
          */
         public void update ()
         {
-            if (_board == null) {
-                return;
+            ArrayList<Vector3f> verts = new ArrayList<Vector3f>();
+            if (_board != null) {
+                float step = FastMath.TWO_PI / CURSOR_SEGMENTS, angle = 0.0f;
+                for (int i = 0; i < CURSOR_SEGMENTS; i++) {
+                    addSegment(verts,
+                        new Vector2f(x + radius*FastMath.cos(angle),
+                            y + radius*FastMath.sin(angle)),
+                        new Vector2f(x + radius*FastMath.cos(angle+step),
+                            y + radius*FastMath.sin(angle+step)));
+                    angle += step;
+                }
+            }
+            setVertexBuffer(BufferUtils.createFloatBuffer(
+                verts.toArray(new Vector3f[verts.size()])));
+        }
+        
+        /**
+         * Adds a segment to the line, breaking it up into intermediate
+         * segments if it crosses edge boundaries.
+         */
+        protected void addSegment (ArrayList<Vector3f> verts, Vector2f v1,
+            Vector2f v2)
+        {
+            Vector2f between = getHorizontalIntermediate(v1, v2);
+            if (between == null) {
+                between = getVerticalIntermediate(v1, v2);
+                if (between == null) {
+                    between = getDiagonalIntermediate(v1, v2);
+                }
             }
             
-            FloatBuffer vbuf = getVertexBuffer();
-            Vector3f vector = new Vector3f();
-            
-            float step = FastMath.TWO_PI / CURSOR_SEGMENTS;
-            for (int i = 0; i < CURSOR_SEGMENTS; i++) {
-                float angle = i * step,
-                    vx = x + radius*FastMath.cos(angle),
-                    vy = y + radius*FastMath.sin(angle);
-                vector.set(vx, vy, getHeightfieldHeight(vx, vy));
-                BufferUtils.setInBuffer(vector, vbuf, i);
+            if (between == null) {
+                verts.add(new Vector3f(v1.x, v1.y, getHeightfieldHeight(v1.x,
+                    v1.y) + 1.0f));   
+                verts.add(new Vector3f(v2.x, v2.y, getHeightfieldHeight(v2.x,
+                    v2.y) + 1.0f));
+                    
+            } else {
+                addSegment(verts, v1, between);
+                addSegment(verts, between, v2);
             }
+        }
+        
+        /**
+         * If the two vertices lie on either side of a horizontal boundary,
+         * return the point on the boundary between them (otherwise null).
+         */
+        protected Vector2f getHorizontalIntermediate (Vector2f v1, Vector2f v2)
+        {
+            int b1 = getBoundaryIndex(v1.y, SUB_TILE_SIZE),
+                b2 = getBoundaryIndex(v2.y, SUB_TILE_SIZE),
+                bmin = Math.min(b1, b2), bmax = Math.max(b1, b2);
+            for (int b = bmin+1; b < bmax; b++) {
+                if (b % 2 != 0) {
+                    continue;
+                }
+                float y = (b/2)*SUB_TILE_SIZE, t = (y - v1.y) / (v2.y - v1.y);
+                return new Vector2f(v1.x + t*(v2.x - v1.x), y);
+            }
+            return null;
+        }
+        
+        /**
+         * If the two vertices lie on either side of a vertical boundary,
+         * return the point on the boundary between them (otherwise null).
+         */
+        protected Vector2f getVerticalIntermediate (Vector2f v1, Vector2f v2)
+        {
+            int b1 = getBoundaryIndex(v1.x, SUB_TILE_SIZE),
+                b2 = getBoundaryIndex(v2.x, SUB_TILE_SIZE),
+                bmin = Math.min(b1, b2), bmax = Math.max(b1, b2);
+            for (int b = bmin+1; b < bmax; b++) {
+                if (b % 2 != 0) {
+                    continue;
+                }
+                float x = (b/2)*SUB_TILE_SIZE, t = (x - v1.x) / (v2.x - v1.x);
+                return new Vector2f(x, v1.y + t*(v2.y - v1.y));
+            }
+            return null;
+        }
+        
+        /**
+         * If the two vertices lie on either side of a diagonal boundary,
+         * return the point on the boundary between them (otherwise null).
+         */
+        protected Vector2f getDiagonalIntermediate (Vector2f v1, Vector2f v2)
+        {
+            float r2 = FastMath.sqrt(2.0f), d1 = (v1.y - v1.x)/(2 * r2),
+                d2 = (v2.y - v2.x)/(2 * r2), step = SUB_TILE_SIZE * r2;
+            
+            int b1 = getBoundaryIndex(d1, step),
+                b2 = getBoundaryIndex(d2, step),
+                bmin = Math.min(b1, b2), bmax = Math.max(b1, b2);
+            for (int b = bmin+1; b < bmax; b++) {
+                if (b % 2 != 0) {
+                    continue;
+                }
+                float d = (b/2)*step, t = (d - d1) / (d2 - d1);
+                return new Vector2f(v1.x + t*(v2.x - v1.x),
+                    v1.y + t*(v2.y - v1.y));
+            }
+            return null;
+        }
+        
+        /**
+         * Returns a boundary index for the specified value.  Starting at zero,
+         * every other index represents a boundary between two regions.  The
+         * other indices represent regions between the boundaries.
+         *
+         * @param step the size of the regions between boundaries
+         */
+        protected int getBoundaryIndex (float v, float step)
+        {
+            int base = (int)Math.floor(v / step), adjust;
+            if (epsilonEquals(v, base*step)) {
+                adjust = 0; // lower boundary
+            
+            } else if (epsilonEquals(v, (base+1)*step)) {
+                adjust = 2; // upper boundary
+            
+            } else {
+                adjust = 1; // region between
+            }
+            return base*2 + adjust;
+        }
+        
+        /**
+         * Checks whether the two values are "close enough" to equal.
+         */
+        protected boolean epsilonEquals (float a, float b)
+        {
+            return FastMath.abs(a - b) < 0.001f;
         }
     }
     
@@ -305,8 +426,8 @@ public class TerrainNode extends Node
      */
     protected void getHeightfieldVertex (int x, int y, Vector3f result)
     {
-        float step = TILE_SIZE / BangBoard.HEIGHTFIELD_SUBDIVISIONS;
-        result.set(x * step, y * step, getHeightfieldValue(x, y));
+        result.set(x * SUB_TILE_SIZE, y * SUB_TILE_SIZE,
+            getHeightfieldValue(x, y));
     }
     
     /**
@@ -317,23 +438,9 @@ public class TerrainNode extends Node
      */
     protected void getHeightfieldNormal (int x, int y, Vector3f result)
     {
-        float step = TILE_SIZE / BangBoard.HEIGHTFIELD_SUBDIVISIONS;
-        
-        // the normal is determined by taking the cross product of the vector
-        // from the left height point to the right height point...
-        boolean le = (x == 0), re = (x == _board.getHeightfieldWidth()+1);
-        Vector3f vx = new Vector3f((le || re) ? step : step*2, 0,
-            getHeightfieldValue(re ? x : x+1, y) -
-                getHeightfieldValue(le ? x : x-1, y));
-        
-        // ...and the vector from the bottom height point to the top height
-        // point, substituting this height point in the edge cases
-        boolean be = (y == 0), te = (y == _board.getHeightfieldHeight()+1);
-        Vector3f vy = new Vector3f(0, (te || be) ? step : step*2,
-            getHeightfieldValue(x, te ? y : y+1) -
-                getHeightfieldValue(x, be ? y : y-1));
-              
-        vx.cross(vy, result);
+        result.set(getHeightfieldValue(x-1, y) - getHeightfieldValue(x+1, y),
+            getHeightfieldValue(x, y-1) - getHeightfieldValue(x, y+1),
+            2*SUB_TILE_SIZE);
         result.normalizeLocal();
     }
  
@@ -375,14 +482,8 @@ public class TerrainNode extends Node
             cc = getHeightfieldValue(cx, cy),
             ax = x - fx, ay = y - fy;
         
-        // if the fractional component of y is greater than that of x, we're in
-        // the upper left triangle; otherwise, we're in the lower right
-        if (ay < ax) {
-            return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc), cc);
-            
-        } else {
-            return FastMath.LERP(ax, ff, FastMath.LERP(ay, cf, cc));
-        }
+        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
+            FastMath.LERP(ay, cf, cc));
     }
     
     /**
@@ -399,7 +500,8 @@ public class TerrainNode extends Node
             cc = getTerrainCode(cx, cy) == code ? 1.0f : 0.0f,
             ax = x - fx, ay = y - fy;
             
-        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc), FastMath.LERP(ay, cf, cc));
+        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
+            FastMath.LERP(ay, cf, cc));
     }
     
     /**
@@ -636,6 +738,10 @@ public class TerrainNode extends Node
     /** The size of the splat alpha textures. */
     protected static final int TEXTURE_SIZE = SPLAT_SIZE * 2;
     
+    /** The size of the sub-tiles. */
+    protected static final float SUB_TILE_SIZE = TILE_SIZE /
+        BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+    
     /** The number of segments in the cursor. */
-    protected static final int CURSOR_SEGMENTS = 64;
+    protected static final int CURSOR_SEGMENTS = 32;
 }
