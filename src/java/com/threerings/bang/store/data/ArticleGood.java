@@ -5,6 +5,8 @@ package com.threerings.bang.store.data;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.avatar.data.AvatarCodes;
+
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BangCodes;
 
@@ -31,6 +33,12 @@ public class ArticleGood extends Good
     {
         // TODO: make sure the gender matches
         return true;
+    }
+
+    @Override // documentation inherited
+    public String getName ()
+    {
+        return MessageBundle.qualify(AvatarCodes.ARTICLE_MSGS, "m." + _type);
     }
 
     @Override // documentation inherited

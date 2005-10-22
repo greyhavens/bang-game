@@ -28,8 +28,9 @@ import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.avatar.util.ArticleCatalog;
+import com.threerings.bang.avatar.util.AspectCatalog;
 import com.threerings.bang.avatar.util.AvatarMetrics;
-import com.threerings.bang.avatar.util.ComponentCatalog;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
@@ -146,8 +147,10 @@ public class BangClient extends BasicClient
             _colorpos = ColorPository.loadColorPository(_rsrcmgr);
             _ametrics = new AvatarMetrics(
                 _colorpos, _charmgr.getComponentRepository());
-            _compcat = (ComponentCatalog)CompiledConfig.loadConfig(
-                _rsrcmgr.getResource(ComponentCatalog.CONFIG_PATH));
+            _aspcat = (AspectCatalog)CompiledConfig.loadConfig(
+                _rsrcmgr.getResource(AspectCatalog.CONFIG_PATH));
+            _artcat = (ArticleCatalog)CompiledConfig.loadConfig(
+                _rsrcmgr.getResource(ArticleCatalog.CONFIG_PATH));
 
         } catch (IOException ioe) {
             // TODO: report to the client
@@ -244,8 +247,12 @@ public class BangClient extends BasicClient
             return _ametrics;
         }
 
-        public ComponentCatalog getComponentCatalog () {
-            return _compcat;
+        public AspectCatalog getAspectCatalog () {
+            return _aspcat;
+        }
+
+        public ArticleCatalog getArticleCatalog () {
+            return _artcat;
         }
     }
 
@@ -256,7 +263,8 @@ public class BangClient extends BasicClient
     protected CharacterManager _charmgr;
     protected ColorPository _colorpos;
     protected AvatarMetrics _ametrics;
-    protected ComponentCatalog _compcat;
+    protected AspectCatalog _aspcat;
+    protected ArticleCatalog _artcat;
 
     protected BWindow _pview;
     protected LogonView _lview;

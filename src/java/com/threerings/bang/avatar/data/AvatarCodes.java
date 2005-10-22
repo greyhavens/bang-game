@@ -10,4 +10,7 @@ public interface AvatarCodes
 {
     /** The identifier for our message bundle. */
     public static final String AVATAR_MSGS = "avatar";
+
+    /** The identifier for the article message bundle. */
+    public static final String ARTICLE_MSGS = "article";
 }
