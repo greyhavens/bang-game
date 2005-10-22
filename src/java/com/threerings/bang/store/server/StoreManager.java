@@ -50,7 +50,7 @@ public class StoreManager extends PlaceManager
         }
 
         // create the appropriate provider and pass the buck to it
-        Provider provider = Catalog.getProvider(user, good);
+        Provider provider = GoodsCatalog.getProvider(user, good);
         if (provider == null) {
             log.warning("Unable to find provider for good [who=" + user.who() +
                         ", good=" + good + "].");
@@ -92,7 +92,8 @@ public class StoreManager extends PlaceManager
                               new StoreDispatcher(this), false));
 
         // populate the store object with our salable goods
-        _stobj.setGoods(new DSet(Catalog.getGoods(ServerConfig.getTownId())));
+        _stobj.setGoods(
+            new DSet(GoodsCatalog.getGoods(ServerConfig.getTownId())));
     }
 
     protected StoreObject _stobj;

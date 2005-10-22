@@ -48,6 +48,9 @@ public class AspectCatalog
         /** The name of this particular attire aspect. */
         public String name;
 
+        /** The town in which this aspect is available. */
+        public String townId;
+
         /** The scrip cost associated with this aspect. */
         public int scrip;
 

@@ -6,6 +6,7 @@ package com.threerings.bang.avatar.util;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import static com.threerings.bang.Log.log;
@@ -25,6 +26,9 @@ public class ArticleCatalog
     {
         /** The name of this article. */
         public String name;
+
+        /** The town in which this article is available. */
+        public String townId;
 
         /** The cost of this article in scrip. */
         public int scrip;
@@ -57,18 +61,11 @@ public class ArticleCatalog
     }
 
     /**
-     * Returns an array of all articles with names starting with the specified
-     * prefix (generally used to filter by gender).
+     * Returns a collection containing all registered articles.
      */
-    public String[] enumerateArticles (String prefix)
+    public Collection<Article> getArticles ()
     {
-        ArrayList<String> names = new ArrayList<String>();
-        for (String name : _articles.keySet()) {
-            if (name.startsWith(prefix)) {
-                names.add(name);
-            }
-        }
-        return names.toArray(new String[names.size()]);
+        return _articles.values();
     }
 
     /**

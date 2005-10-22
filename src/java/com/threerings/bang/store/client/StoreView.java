@@ -7,6 +7,7 @@ import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.ImageIcon;
@@ -71,7 +72,7 @@ public class StoreView extends BWindow
         _inspector = new GoodsInspector(_ctx, this, _status);
 
         // the display of goods for sale
-        main.add(_goods = new GoodsPalette(_ctx, _inspector));
+        main.add(new BScrollPane(_goods = new GoodsPalette(_ctx, _inspector)));
 
         // the bottom contains the goods inspector and "to town" button
         GroupLayout lay = GroupLayout.makeHStretch();

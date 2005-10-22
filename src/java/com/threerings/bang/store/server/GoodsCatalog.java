@@ -3,10 +3,13 @@
 
 package com.threerings.bang.store.server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import com.samskivert.util.ListUtil;
+import com.threerings.util.CompiledConfig;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -15,6 +18,9 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Purse;
 
+import com.threerings.bang.avatar.util.ArticleCatalog;
+
+import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardPackGood;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.PurseGood;
@@ -26,7 +32,7 @@ import static com.threerings.bang.Log.log;
  * Shop and associates them with providers that are used to actually
  * create and deliver the goods when purchased.
  */
-public class Catalog
+public class GoodsCatalog
 {
     /**
      * Returns the goods that are available in the town in question.
@@ -135,5 +141,20 @@ public class Catalog
 //         registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(5, 500, 1), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(13, 1500, 2), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(52, 5000, 6), pf);
+
+        // load up our avatar article catalog and use the data therein to
+        // create goods for all avatar articles
+        try {
+            ArticleCatalog acat = (ArticleCatalog)CompiledConfig.loadConfig(
+                GoodsCatalog.class.getClassLoader().getResourceAsStream(
+                    "rsrc/" + ArticleCatalog.CONFIG_PATH));
+            for (ArticleCatalog.Article article : acat.getArticles()) {
+                ArticleGood good = new ArticleGood(
+                    article.name, article.scrip, article.coins);
+                registerGood(article.townId, good, pf);
+            }
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Unable to load article catalog.", ioe);
+        }
     }
 }
