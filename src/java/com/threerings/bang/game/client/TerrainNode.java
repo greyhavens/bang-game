@@ -18,6 +18,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.CompositeMesh;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
@@ -228,15 +229,93 @@ public class TerrainNode extends Node
         }
     }
     
+    /** 
+     * Represents a highlight draped over the terrain underneath a tile.
+     */
+    public class Highlight extends CompositeMesh
+    {
+        /** The tile coordinate to highlight. */
+        public int x, y;
+        
+        protected Highlight (int x, int y)
+        {
+            super("highlight");
+            this.x = x;
+            this.y = y;
+            
+            setDefaultColor(new ColorRGBA(1f, 0f, 0f, 0.25f));
+            setLightCombineMode(LightState.OFF);
+            setRenderState(RenderUtil.overlayZBuf);
+            setRenderState(RenderUtil.blendAlpha);
+            setRenderState(RenderUtil.backCull);
+            updateRenderState();
+            
+            // set the vertices, which change according to position and terrain
+            int size = BangBoard.HEIGHTFIELD_SUBDIVISIONS + 1;
+            setVertexBuffer(BufferUtils.createFloatBuffer(size * size * 3));
+            updateVertices();
+            
+            // set the indices and ranges, which never change
+            IntBuffer ibuf = BufferUtils.createIntBuffer(
+                BangBoard.HEIGHTFIELD_SUBDIVISIONS * size * 2);
+            for (int iy = 0; iy < BangBoard.HEIGHTFIELD_SUBDIVISIONS; iy++) {
+                for (int ix = 0; ix < size; ix++) {
+                    ibuf.put((iy+1)*size + ix);
+                    ibuf.put(iy*size + ix);
+                }
+            }
+            setIndexBuffer(ibuf);
+            
+            CompositeMesh.IndexRange[] ranges = new CompositeMesh.IndexRange[
+                BangBoard.HEIGHTFIELD_SUBDIVISIONS];
+            for (int i = 0; i < ranges.length; i++) {
+                ranges[i] = CompositeMesh.createTriangleStrip(size*2);
+            }
+            setIndexRanges(ranges);
+        }
+        
+        /**
+         * Sets the position of this highlight and updates it.
+         */
+        public void setPosition (int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+            updateVertices();
+        }
+        
+        /**
+         * Updates the vertices of the highlight to reflect a change in
+         * position or in the underlying terrain.
+         */
+        public void updateVertices ()
+        {
+            if (_board == null) {
+                return;
+            }
+            
+            FloatBuffer vbuf = getVertexBuffer();
+            
+            int size = BangBoard.HEIGHTFIELD_SUBDIVISIONS + 1,
+                tx0 = x*BangBoard.HEIGHTFIELD_SUBDIVISIONS,
+                ty0 = y*BangBoard.HEIGHTFIELD_SUBDIVISIONS, idx = 0;
+            Vector3f vertex = new Vector3f();
+            for (int ty = ty0, ty1 = ty0 + size; ty < ty1; ty++) {
+                for (int tx = tx0, tx1 = tx0 + size; tx < tx1; tx++) {
+                    getHeightfieldVertex(tx, ty, vertex);
+                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
+                }
+            }
+        }
+    }
+    
     public TerrainNode (BasicContext ctx)
     {
         super("terrain");
         _ctx = ctx;
         
         // always perform backface culling
-        CullState cs = _ctx.getDisplay().getRenderer().createCullState();
-        cs.setCullMode(CullState.CS_BACK);
-        setRenderState(cs);
+        setRenderState(RenderUtil.backCull);
     }
     
     /**
@@ -332,6 +411,16 @@ public class TerrainNode extends Node
     public Cursor createCursor ()
     {
         return new Cursor();
+    }
+    
+    /**
+     * Creates and returns a highlight over this terrain at the specified tile
+     * coordinates.  The highlight must be added to the scene graph before it
+     * becomes visible.
+     */
+    public Highlight createHighlight (int x, int y)
+    {
+        return new Highlight(x, y);
     }
     
     /**
@@ -451,16 +540,8 @@ public class TerrainNode extends Node
      */
     protected float getHeightfieldValue (int x, int y)
     {
-        // return zero for vertices at the edge or beyond
-        if (x <= 0 || y <= 0 || x > _board.getHeightfieldWidth() ||
-            y > _board.getHeightfieldHeight()) {
-            return 0.0f;
-        
-        // otherwise, subtract one for the rim and look up in the heightfield
-        } else {
-            return _board.getHeightfieldValue(x-1, y-1) *
-                (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
-        }
+        return _board.getHeightfieldValue(x, y) *
+            (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
     }
     
     /**
@@ -495,31 +576,14 @@ public class TerrainNode extends Node
     {
          int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
             fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
-        float ff = getTerrainCode(fx, fy) == code ? 1.0f : 0.0f,
-            fc = getTerrainCode(fx, cy) == code ? 1.0f : 0.0f,
-            cf = getTerrainCode(cx, fy) == code ? 1.0f : 0.0f,
-            cc = getTerrainCode(cx, cy) == code ? 1.0f : 0.0f,
+        float ff = _board.getTerrainValue(fx, fy) == code ? 1.0f : 0.0f,
+            fc = _board.getTerrainValue(fx, cy) == code ? 1.0f : 0.0f,
+            cf = _board.getTerrainValue(cx, fy) == code ? 1.0f : 0.0f,
+            cc = _board.getTerrainValue(cx, cy) == code ? 1.0f : 0.0f,
             ax = x - fx, ay = y - fy;
             
         return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
             FastMath.LERP(ay, cf, cc));
-    }
-    
-    /**
-     * Returns the terrain code at the specified location in sub-tile
-     * coordinates.
-     */
-    protected int getTerrainCode (int x, int y)
-    {
-        // return zero for vertices beyond the edge
-        if (x < 0 || y < 0 || x >= _board.getTerrainWidth() ||
-            y >= _board.getTerrainHeight()) {
-            return 0;
-        
-        // otherwise, look it up in the terrain map
-        } else {
-            return _board.getTerrainValue(x, y);
-        }
     }
 
     /**
@@ -588,7 +652,7 @@ public class TerrainNode extends Node
             int baseCode = 0, baseCount = 0;
             for (int y = bounds.y, ymax = y+bounds.height; y < ymax; y++) {
                 for (int x = bounds.x, xmax = x+bounds.width; x < xmax; x++) {
-                    int code = getTerrainCode(x, y);
+                    int code = _board.getTerrainValue(x, y);
                     counts.increment(code, 1);
                     int count = counts.get(code);
                     if (count > baseCount) {
@@ -602,11 +666,7 @@ public class TerrainNode extends Node
             // and writes to the z buffer)
             SharedMesh base = new SharedMesh("base", mesh);
             base.setRenderState(getGroundTexture(baseCode));
-            ZBufferState zbstate =
-                _ctx.getDisplay().getRenderer().createZBufferState();
-            zbstate.setWritable(true);
-            zbstate.setFunction(ZBufferState.CF_LEQUAL);
-            base.setRenderState(zbstate);
+            base.setRenderState(RenderUtil.lequalZBuf);
             node.attachChild(base);
             
             // add the rest as splats (which only test the z buffer)
@@ -631,18 +691,10 @@ public class TerrainNode extends Node
                 splat.setRenderState(tstate);
                 
                 // and the z buffer state
-                zbstate = _ctx.getDisplay().getRenderer().createZBufferState();
-                zbstate.setWritable(false);
-                zbstate.setFunction(ZBufferState.CF_LEQUAL);
-                splat.setRenderState(zbstate);
+                splat.setRenderState(RenderUtil.overlayZBuf);
                 
                 // and the alpha state
-                AlphaState astate =
-                    _ctx.getDisplay().getRenderer().createAlphaState();
-                astate.setBlendEnabled(true);
-                astate.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-                astate.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-                splat.setRenderState(astate);
+                splat.setRenderState(RenderUtil.blendAlpha);
                 
                 node.attachChild(splat);
             }

@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -122,6 +123,14 @@ public class EditorPanel extends JPanel
 //         back.addActionListener(ctrl);
 //         sidePanel.add(back, VGroupLayout.FIXED);
 
+        JMenu view = new JMenu(msgs.get("m.menu_view"));
+        view.setMnemonic(KeyEvent.VK_V);
+        menubar.add(view);
+        
+        createCheckBoxMenuItem(view, msgs.get("m.menu_highlight"),
+            KeyEvent.VK_H, KeyEvent.VK_H, EditorController.TOGGLE_HIGHLIGHTS,
+            false);
+        
         // add our side panel to the main display
         add(sidePanel, HGroupLayout.FIXED);
     }
@@ -180,6 +189,19 @@ public class EditorPanel extends JPanel
         menu.add(item);
     }
 
+    protected void createCheckBoxMenuItem (JMenu menu, String label,
+        int accelerator, int mnemonic, String command, boolean selected)
+    {
+        JCheckBoxMenuItem item = new JCheckBoxMenuItem(label);
+        item.setAccelerator(KeyStroke.getKeyStroke(accelerator,
+            ActionEvent.CTRL_MASK));
+        item.setMnemonic(mnemonic);
+        item.setActionCommand(command);
+        item.addActionListener(_ctrl);
+        item.setSelected(selected);
+        menu.add(item);
+    }
+    
     /** Giver of life and context. */
     protected EditorContext _ctx;
 

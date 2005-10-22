@@ -47,6 +47,32 @@ public class EditorBoardView extends BoardView
         PieceSprite.setEditorMode(true);
     }
 
+    @Override // documentation inherited
+    public void refreshBoard ()
+    {
+        super.refreshBoard();
+        
+        if (_highlights == null) {
+            int width = _board.getWidth(), height = _board.getHeight();
+            _highlights = new TerrainNode.Highlight[width][height];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    _highlights[x][y] = _tnode.createHighlight(x, y);
+                }
+            }
+        }
+        updateHighlights();
+    }
+    
+    /**
+     * Shows or hides the unoccupiable tile highlights.
+     */
+    public void toggleHighlights ()
+    {
+        _showHighlights = !_showHighlights;
+        updateHighlights();
+    }
+    
     /**
      * Sets the heightfield to the contents of the specified image.
      */
@@ -72,6 +98,7 @@ public class EditorBoardView extends BoardView
         // update the terrain geometry and update the pieces
         _tnode.refreshHeightfield();
         updatePieces();
+        updateHighlights();
     }
     
     /**
@@ -87,8 +114,8 @@ public class EditorBoardView extends BoardView
         // transfer the heightfield values to the bitmap one line at a time
         // upside-down
         int[] vals = new int[hfwidth];
-        for (int y = 0; y < hfheight; y++) {
-            for (int x = 0; x < hfwidth; x++) {
+        for (int y = 1; y <= hfheight; y++) {
+            for (int x = 1; x <= hfwidth; x++) {
                 vals[x] = _board.getHeightfieldValue(x, y) + 128;
             }
             grayimg.getRaster().setPixels(0, hfheight-y-1, hfwidth, 1, vals);
@@ -130,6 +157,7 @@ public class EditorBoardView extends BoardView
         
         // update the terrain splats
         _tnode.refreshTerrain(x1, y1, (x2 - x1) + 1, (y2 - y1) + 1);
+        updateHighlights();
     }
     
     /**
@@ -162,12 +190,12 @@ public class EditorBoardView extends BoardView
                 if (add) {
                     float w = 1.0f - vec.lengthSquared()/rr;
                     if (w > 0.0f) {
-                        _board.addHeightfieldValue(tx-1, ty-1,
+                        _board.addHeightfieldValue(tx, ty,
                             Math.round(w*value));
                     }
                     
                 } else if (vec.lengthSquared() <= rr) {
-                    _board.setHeightfieldValue(tx-1, ty-1, (byte)value);
+                    _board.setHeightfieldValue(tx, ty, (byte)value);
                 }
             }
         }
@@ -175,6 +203,7 @@ public class EditorBoardView extends BoardView
         // update the heightfield geometry and the pieces
         _tnode.refreshHeightfield(x1, y1, (x2 - x1) + 1, (y2 - y1) + 1);
         updatePieces();
+        updateHighlights();
     }
     
     @Override // documentation inherited
@@ -213,6 +242,31 @@ public class EditorBoardView extends BoardView
         }
     }
     
+    /**
+     * Updates the highlights over the entire board.
+     */
+    protected void updateHighlights ()
+    {
+        _hnode.detachAllChildren();
+        if (!_showHighlights) {
+            return;
+        } 
+        
+        for (int x = 0, width = _board.getWidth(); x < width; x++) {
+            for (int y = 0, height = _board.getHeight(); y < height; y++) {
+                if (_board.exceedsMaxHeightDelta(x, y)) {
+                    _highlights[x][y].updateVertices();
+                    if (_highlights[x][y].getParent() != _hnode) {
+                        _hnode.attachChild(_highlights[x][y]);
+                    }
+                                    
+                } else if (_highlights[x][y].getParent() == _hnode) {
+                    _hnode.detachChild(_highlights[x][y]);
+                }
+            }
+        }
+    }
+    
     @Override // documentation inherited
     protected void hoverTileChanged (int tx, int ty)
     {
@@ -230,4 +284,10 @@ public class EditorBoardView extends BoardView
     /** The panel that contains additional interface elements with which
      * we interact. */
     protected EditorPanel _panel;
+
+    /** Highlights indicating which tiles are occupiable. */    
+    protected TerrainNode.Highlight[][] _highlights;
+    
+    /** Whether or not to show the highlights. */
+    protected boolean _showHighlights;
 }

@@ -21,6 +21,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
@@ -46,6 +47,8 @@ public class RenderUtil
 
     public static ZBufferState overlayZBuf;
 
+    public static CullState backCull;
+    
     /**
      * Initializes our commonly used render states.
      */
@@ -71,6 +74,9 @@ public class RenderUtil
         overlayZBuf.setWritable(false);
         overlayZBuf.setFunction(ZBufferState.CF_LEQUAL);
 
+        backCull = ctx.getRenderer().createCullState();
+        backCull.setCullMode(CullState.CS_BACK);
+        
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.RENDERABLE) {
             for (int ii = 1; ii <= MAX_TILE_VARIANT; ii++) {
