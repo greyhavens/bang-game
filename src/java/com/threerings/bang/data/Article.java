@@ -16,30 +16,21 @@ public class Article extends Item
     }
 
     /**
-     * Creates a new article item with the specified component id and
-     * colorizations.
+     * Creates a new article item with the specified avatar components.
      */
-    public Article (int ownerId, int componentId, int zations)
+    public Article (int ownerId, int[] components)
     {
         super(ownerId);
-        _componentId = componentId;
-        _zations = zations;
+        _components = components;
     }
 
     /**
-     * Returns the component id of this article.
+     * Returns the component ids (and associated colorizations) for the various
+     * avatar components that should be "applied" when wearing this article.
      */
-    public int getComponentId ()
+    public int[] getComponents ()
     {
-        return _componentId;
-    }
-
-    /**
-     * Returns the colorizations for this article.
-     */
-    public int getColorizations ()
-    {
-        return _zations;
+        return _components;
     }
 
     @Override // documentation inherited
@@ -48,5 +39,5 @@ public class Article extends Item
         return null;
     }
 
-    protected int _componentId, _zations;
+    protected int[] _components;
 }
