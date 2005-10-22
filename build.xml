@@ -13,6 +13,7 @@
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
   <property name="javadoc.dir"  value="${deploy.dir}/docs"/>
+  <property name="savedoc.dir"  value="docs"/>
 
   <!-- declare our classpath -->
   <path id="classpath">
@@ -173,6 +174,15 @@
       <classpath refid="classpath"/>
       <link href="http://java.sun.com/j2se/1.5/docs/api/"/>
     </javadoc>
+  </target>
+
+  <!-- builds the javadocs and stuffs them in a directory where they -->
+  <!-- won't be blown away when we do "clean" next time -->
+  <target name="savedoc" depends="javadoc">
+    <delete dir="${savedoc.dir}/api"/>
+    <copy todir="${savedoc.dir}/api">
+      <fileset dir="${javadoc.dir}" includes="**/*"/>
+    </copy>
   </target>
 
   <!-- builds the client getdown distribution -->
