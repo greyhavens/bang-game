@@ -129,14 +129,24 @@
       target="rsrc/config/media/colordefs.dat"/>
   </target>
 
-  <!-- creates the serialized component catalog -->
-  <target name="compcat">
+  <!-- creates the serialized avatar article catalog -->
+  <target name="artcat">
     <taskdef name="confcomp" classpathref="classpath"
       classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp
-      parser="com.threerings.bang.avatar.tools.xml.ComponentCatalogParser"
-      configdef="rsrc/avatars/components.xml"
-      target="rsrc/avatars/components.dat"/>
+      parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"
+      configdef="rsrc/avatars/articles.xml"
+      target="rsrc/avatars/articles.dat"/>
+  </target>
+
+  <!-- creates the serialized component catalog -->
+  <target name="aspcat">
+    <taskdef name="confcomp" classpathref="classpath"
+      classname="com.threerings.tools.CompiledConfigTask"/>
+    <confcomp
+      parser="com.threerings.bang.avatar.tools.xml.AspectCatalogParser"
+      configdef="rsrc/avatars/aspects.xml"
+      target="rsrc/avatars/aspects.dat"/>
   </target>
 
   <!-- builds the avatar component bundles. -->
@@ -234,7 +244,7 @@
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
   <!-- rebuild all the niggling bits -->
-  <target name="bits" depends="colorpos,compcat,fringe"/>
+  <target name="bits" depends="colorpos,artcat,aspcat,fringe"/>
 
   <!-- builds the code jar file -->
   <target name="dist" depends="prepare,compile">
