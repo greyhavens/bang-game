@@ -112,6 +112,10 @@ public class BoardView extends BComponent
         _tgtstate = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
 
+        // this is used to indicate where you can move
+        _movstate = RenderUtil.createTexture(
+            ctx, ctx.loadImage("textures/ustatus/movement.png"));
+            
         // create a sound group that we'll use for all in-game sounds
         _sounds = ctx.getSoundManager().createGroup(
             BangUI.clipprov, GAME_SOURCE_COUNT);
@@ -524,14 +528,12 @@ public class BoardView extends BComponent
         _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
             Geometry tmesh = _pick.getPickData(ii).getTargetMesh();
-            Vector3f loc = tmesh.getLocalTranslation();
-//             int ohx = _high.x, ohy = _high.y;
-            _high.x = (int)((loc.x - TILE_SIZE/2) / TILE_SIZE);
-            _high.y = (int)((loc.y - TILE_SIZE/2) / TILE_SIZE);
-//             if (ohx != _high.x || ohy != _high.y) {
-//                 log.info("Updating highlight " + _high + ".");
-//             }
-            return;
+            if (tmesh instanceof TerrainNode.Highlight) {
+                TerrainNode.Highlight highlight = (TerrainNode.Highlight)tmesh;
+                _high.x = highlight.x;
+                _high.y = highlight.y;
+                return;
+            }
         }
         if (_high.x != -1 || _high.y != -1) {
 //             log.info("Clearing highlight.");
@@ -567,22 +569,11 @@ public class BoardView extends BComponent
     protected void highlightTiles (PointSet set, boolean forFlyer)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
-            int sx = set.getX(ii), sy = set.getY(ii);
-            float size = TILE_SIZE - TILE_SIZE/10;
-            Quad quad = new Quad("highlight", size, size);
-            quad.setSolidColor(_hcolor);
-            quad.setLightCombineMode(LightState.OFF);
-            quad.setRenderState(_hastate);
-            int elev = _board.getElevation(sx, sy);
-            quad.setLocalTranslation(
-                new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
-                    sy * TILE_SIZE + TILE_SIZE/2, elev * TILE_SIZE /
-                        BangBoard.ELEVATION_UNITS_PER_TILE + 0.1f));
-            quad.setModelBound(new BoundingBox());
-            quad.updateModelBound();
-            quad.setRenderState(RenderUtil.overlayZBuf);
-            quad.updateRenderState();
-            _hnode.attachChild(quad);
+            TerrainNode.Highlight highlight = _tnode.createHighlight(
+                set.getX(ii), set.getY(ii), true);
+            highlight.setRenderState(_movstate);
+            highlight.updateRenderState();
+            _hnode.attachChild(highlight);
         }
     }
 
@@ -590,15 +581,11 @@ public class BoardView extends BComponent
     protected void targetTiles (PointSet set)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
-            int sx = set.getX(ii), sy = set.getY(ii);
-            Quad quad = RenderUtil.createIcon(_tgtstate);
-            quad.setLocalTranslation(
-                new Vector3f(sx * TILE_SIZE + TILE_SIZE/2,
-                    sy * TILE_SIZE + TILE_SIZE/2,
-                    _bangobj.board.getElevation(sx, sy) * TILE_SIZE /
-                        BangBoard.ELEVATION_UNITS_PER_TILE));
-            quad.setRenderState(RenderUtil.overlayZBuf);
-            _hnode.attachChild(quad);
+            TerrainNode.Highlight highlight = _tnode.createHighlight(
+                set.getX(ii), set.getY(ii), true);
+            highlight.setRenderState(_tgtstate);
+            highlight.updateRenderState();
+            _hnode.attachChild(highlight);
         }
     }
 
@@ -669,8 +656,9 @@ public class BoardView extends BComponent
     /** Used to texture a quad that "targets" a tile. */
     protected TextureState _tgtstate;
 
-    /** Used to texture a quad that highlights a tile. */
-    protected ColorRGBA _hcolor = new ColorRGBA(1, 1, 0, 0.5f);
+    /** Used to texture movement highlights. */
+    protected TextureState _movstate;
+    
     // TODO: rename _hastate
     protected AlphaState _hastate;
 

@@ -237,13 +237,13 @@ public class TerrainNode extends Node
         /** The tile coordinate to highlight. */
         public int x, y;
         
-        protected Highlight (int x, int y)
+        protected Highlight (int x, int y, boolean overPieces)
         {
             super("highlight");
             this.x = x;
             this.y = y;
+            _overPieces = overPieces;
             
-            setDefaultColor(new ColorRGBA(1f, 0f, 0f, 0.25f));
             setLightCombineMode(LightState.OFF);
             setRenderState(RenderUtil.overlayZBuf);
             setRenderState(RenderUtil.blendAlpha);
@@ -255,23 +255,39 @@ public class TerrainNode extends Node
             setVertexBuffer(BufferUtils.createFloatBuffer(size * size * 3));
             updateVertices();
             
-            // set the indices and ranges, which never change
-            IntBuffer ibuf = BufferUtils.createIntBuffer(
-                BangBoard.HEIGHTFIELD_SUBDIVISIONS * size * 2);
-            for (int iy = 0; iy < BangBoard.HEIGHTFIELD_SUBDIVISIONS; iy++) {
-                for (int ix = 0; ix < size; ix++) {
-                    ibuf.put((iy+1)*size + ix);
-                    ibuf.put(iy*size + ix);
+            // set the texture coords, indices, and ranges, which never change
+            if (_htbuf == null) {
+                _htbuf = BufferUtils.createFloatBuffer(size * size * 2);
+                float step = 1f / BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+                for (int iy = 0; iy < size; iy++) {
+                    for (int ix = 0; ix < size; ix++) {
+                        _htbuf.put(ix * step);
+                        _htbuf.put(iy * step);
+                    }
+                }
+            
+                _hibuf = BufferUtils.createIntBuffer(
+                    BangBoard.HEIGHTFIELD_SUBDIVISIONS * size * 2);
+                for (int iy = 0; iy < BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+                        iy++) {
+                    for (int ix = 0; ix < size; ix++) {
+                        _hibuf.put((iy+1)*size + ix);
+                        _hibuf.put(iy*size + ix);
+                    }
+                }
+                
+                _hranges = new CompositeMesh.IndexRange[
+                    BangBoard.HEIGHTFIELD_SUBDIVISIONS];
+                for (int i = 0; i < _hranges.length; i++) {
+                    _hranges[i] = CompositeMesh.createTriangleStrip(size*2);
                 }
             }
-            setIndexBuffer(ibuf);
+            setTextureBuffer(_htbuf);
+            setIndexBuffer(_hibuf);
+            setIndexRanges(_hranges);
             
-            CompositeMesh.IndexRange[] ranges = new CompositeMesh.IndexRange[
-                BangBoard.HEIGHTFIELD_SUBDIVISIONS];
-            for (int i = 0; i < ranges.length; i++) {
-                ranges[i] = CompositeMesh.createTriangleStrip(size*2);
-            }
-            setIndexRanges(ranges);
+            setModelBound(new BoundingBox());
+            updateModelBound();
         }
         
         /**
@@ -296,17 +312,39 @@ public class TerrainNode extends Node
             
             FloatBuffer vbuf = getVertexBuffer();
             
-            int size = BangBoard.HEIGHTFIELD_SUBDIVISIONS + 1,
+            // if we're putting highlights over pieces and there's a piece
+            // here, use the same elevation over the entire highlight
+            boolean constantElevation = false;
+            float elevation = 0f;
+            if (_overPieces && _board.getPieceElevation(x, y) > 0) {
+                constantElevation = true;
+                elevation = _board.getElevation(x, y) * (TILE_SIZE /
+                    BangBoard.ELEVATION_UNITS_PER_TILE);
+            }
+            
+            int size = BangBoard.HEIGHTFIELD_SUBDIVISIONS,
                 tx0 = x*BangBoard.HEIGHTFIELD_SUBDIVISIONS,
                 ty0 = y*BangBoard.HEIGHTFIELD_SUBDIVISIONS, idx = 0;
             Vector3f vertex = new Vector3f();
-            for (int ty = ty0, ty1 = ty0 + size; ty < ty1; ty++) {
-                for (int tx = tx0, tx1 = tx0 + size; tx < tx1; tx++) {
-                    getHeightfieldVertex(tx, ty, vertex);
+            for (int ty = ty0, ty1 = ty0 + size; ty <= ty1; ty++) {
+                for (int tx = tx0, tx1 = tx0 + size; tx <= tx1; tx++) {
+                    if (constantElevation) {
+                        vertex.set(tx * SUB_TILE_SIZE, ty * SUB_TILE_SIZE,
+                            elevation);
+                    
+                    } else {
+                        getHeightfieldVertex(tx, ty, vertex);
+                    }
                     BufferUtils.setInBuffer(vertex, vbuf, idx++);
                 }
             }
+            
+            updateModelBound();
         }
+        
+        /** If true, place the highlight on top of any pieces occupying the
+         * tile. */
+        protected boolean _overPieces;
     }
     
     public TerrainNode (BasicContext ctx)
@@ -417,10 +455,13 @@ public class TerrainNode extends Node
      * Creates and returns a highlight over this terrain at the specified tile
      * coordinates.  The highlight must be added to the scene graph before it
      * becomes visible.
+     *
+     * @param overPieces if true, place the highlight above any pieces
+     * occupying the tile
      */
-    public Highlight createHighlight (int x, int y)
+    public Highlight createHighlight (int x, int y, boolean overPieces)
     {
-        return new Highlight(x, y);
+        return new Highlight(x, y, overPieces);
     }
     
     /**
@@ -784,6 +825,15 @@ public class TerrainNode extends Node
     
     /** The array of splat blocks containing the terrain geometry/textures. */
     protected SplatBlock[][] _blocks;
+    
+    /** The shared texture coordinate buffer for highlights. */
+    protected static FloatBuffer _htbuf;
+    
+    /** The shared index buffer for highlights. */
+    protected static IntBuffer _hibuf;
+    
+    /** The shared range array for highlights. */
+    protected static CompositeMesh.IndexRange[] _hranges;
     
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;

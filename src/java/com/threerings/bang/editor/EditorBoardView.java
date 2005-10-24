@@ -12,6 +12,7 @@ import java.util.Iterator;
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
@@ -57,7 +58,8 @@ public class EditorBoardView extends BoardView
             _highlights = new TerrainNode.Highlight[width][height];
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    _highlights[x][y] = _tnode.createHighlight(x, y);
+                    _highlights[x][y] = _tnode.createHighlight(x, y, false);
+                    _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
                 }
             }
         }
@@ -290,4 +292,8 @@ public class EditorBoardView extends BoardView
     
     /** Whether or not to show the highlights. */
     protected boolean _showHighlights;
+    
+    /** The color to use for highlights. */
+    protected static final ColorRGBA HIGHLIGHT_COLOR =
+        new ColorRGBA(1f, 0f, 0f, 0.25f);
 }
