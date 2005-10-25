@@ -18,7 +18,6 @@ import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.util.SwingUtil;
 
 import com.threerings.bang.game.data.Terrain;
-import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays a panel that allows the user to select and configure the active
@@ -27,14 +26,13 @@ import com.threerings.bang.util.BasicContext;
 public class ToolPanel extends JPanel
     implements ItemListener
 {   
-    public ToolPanel (BasicContext ctx, EditorPanel panel)
+    public ToolPanel (EditorContext ctx, EditorPanel panel)
     {
         super(new BorderLayout());
-        _ctx = ctx;
         
         // add the chooser panel on top
         JPanel cpanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
-        cpanel.add(new JLabel(_ctx.xlate("editor", "m.tool")),
+        cpanel.add(new JLabel(ctx.xlate("editor", "m.tool")),
             HGroupLayout.FIXED);
         _tools = new JComboBox();
         CameraDolly dolly = new CameraDolly(ctx, panel);
@@ -91,7 +89,6 @@ public class ToolPanel extends JPanel
         }
     }
     
-    protected BasicContext _ctx;
     protected JComboBox _tools;
     protected JScrollPane _scroll;
 }

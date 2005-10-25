@@ -3,16 +3,22 @@
 
 package com.threerings.bang.editor;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import java.text.ParseException;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -22,6 +28,7 @@ import com.jmex.bui.event.MouseEvent;
 
 import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
+import com.samskivert.swing.util.SwingUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.util.BasicContext;
@@ -34,7 +41,7 @@ public class HeightfieldBrush extends EditorTool
     /** The name of this tool. */
     public static final String NAME = "heightfield_brush";
     
-    public HeightfieldBrush (BasicContext ctx, EditorPanel panel)
+    public HeightfieldBrush (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
         _cursor = panel.view.getTerrainNode().createCursor();
@@ -104,11 +111,12 @@ public class HeightfieldBrush extends EditorTool
     
     /** The options for this panel. */
     protected class HeightfieldBrushOptions extends JPanel
-        implements ChangeListener
+        implements ActionListener, ChangeListener
     {
         public JSlider sizer;
         public JComboBox mode;
         public JFormattedTextField value;
+        public JButton noise, generate;
         
         public HeightfieldBrushOptions ()
         {
@@ -152,11 +160,75 @@ public class HeightfieldBrush extends EditorTool
             value.setColumns(4);
             value.setHorizontalAlignment(JFormattedTextField.RIGHT);
             add(vpanel);
+            
+            noise = new JButton(_msgs.get("b.add_noise"));
+            noise.addActionListener(this);
+            add(noise);
+            
+            generate = new JButton(_msgs.get("m.generate_fractal"));
+            generate.addActionListener(this);
+            add(generate);
         }
         
         public void stateChanged (ChangeEvent e)
         {
             _cursor.setRadius(sizer.getValue());
+        }
+        
+        public void actionPerformed (ActionEvent e)
+        {
+            if (e.getSource() == noise) {
+                _panel.view.addHeightfieldNoise(
+                    ((Byte)value.getValue()).byteValue());
+                    
+            } else { // e.getSource() == generate
+                new GenerateDialog().setVisible(true);
+            }
+        }
+    }
+    
+    /** A dialog for generating terrain using JME's utility classes. */
+    protected class GenerateDialog extends JDialog
+        implements ActionListener
+    {
+        public JTabbedPane tabs;
+        public JButton generate, dismiss;
+        
+        public GenerateDialog ()
+        {
+            super(_ctx.getFrame(), _msgs.get("m.generate_fractal"), true);
+            
+            tabs = new JTabbedPane();
+            tabs.setPreferredSize(new Dimension(400, 200));
+            getContentPane().add(tabs, BorderLayout.CENTER);
+            
+            JPanel mdpanel = new JPanel();
+            JPanel rpanel = new JPanel();
+            rpanel.add(new JLabel(_msgs.get("m.roughness")));
+            //rpanel.add(
+            mdpanel.add(rpanel);
+            tabs.addTab(_msgs.get("m.midpoint_displacement"), mdpanel);
+            
+            JPanel buttons = new JPanel();
+            buttons.add(generate = new JButton(_msgs.get("b.generate")));
+            generate.addActionListener(this);
+            buttons.add(dismiss = new JButton(_msgs.get("b.dismiss")));
+            dismiss.addActionListener(this);
+            getContentPane().add(buttons, BorderLayout.SOUTH);
+            
+            setBounds(100, 100, 500, 300);
+            setResizable(false);
+            setLocationRelativeTo(_ctx.getFrame());
+        }
+        
+        public void actionPerformed (ActionEvent e)
+        {
+            if (e.getSource() == generate) {
+                _panel.view.generateMidpointDisplacement(1.0f);
+                
+            } else { // e.getSource() == dismiss
+                setVisible(false);
+            }
         }
     }
     

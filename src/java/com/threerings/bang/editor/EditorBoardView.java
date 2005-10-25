@@ -18,7 +18,11 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 import com.jmex.bui.event.MouseWheelListener;
 
+import com.jmex.terrain.util.MidPointHeightMap;
+
 import com.threerings.jme.sprite.Sprite;
+
+import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
@@ -27,6 +31,7 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.editor.EditorContext;
 
@@ -118,9 +123,9 @@ public class EditorBoardView extends BoardView
         int[] vals = new int[hfwidth];
         for (int y = 1; y <= hfheight; y++) {
             for (int x = 1; x <= hfwidth; x++) {
-                vals[x] = _board.getHeightfieldValue(x, y) + 128;
+                vals[x-1] = _board.getHeightfieldValue(x, y) + 128;
             }
-            grayimg.getRaster().setPixels(0, hfheight-y-1, hfwidth, 1, vals);
+            grayimg.getRaster().setPixels(0, hfheight-y, hfwidth, 1, vals);
         }
 
         return grayimg;
@@ -203,7 +208,54 @@ public class EditorBoardView extends BoardView
         }
         
         // update the heightfield geometry and the pieces
-        _tnode.refreshHeightfield(x1, y1, (x2 - x1) + 1, (y2 - y1) + 1);
+        _tnode.refreshHeightfield(x1 - 1, y1 - 1, (x2 - x1) + 2,
+            (y2 - y1) + 2);
+        updatePieces();
+        updateHighlights();
+    }
+    
+    /**
+     * Adds some random noise to the heightfield.
+     */
+    public void addHeightfieldNoise (int value)
+    {
+        int width = _board.getHeightfieldWidth(),
+            height = _board.getHeightfieldHeight();
+        
+        for (int y = 1; y <= height; y++) {
+            for (int x = 1; x <= width; x++) {
+                _board.addHeightfieldValue(x, y,
+                    RandomUtil.getInt(+value, -value));
+            }
+        }
+        
+        // update the heightfield geometry and the pieces
+        _tnode.refreshHeightfield();
+        updatePieces();
+        updateHighlights();
+    }
+    
+    /**
+     * Generates a heightfield using JME's midpoint displacement class.
+     */
+    public void generateMidpointDisplacement (float roughness)
+    {
+        int size = RenderUtil.nextPOT(Math.max(_board.getHeightfieldWidth(),
+            _board.getHeightfieldHeight()));
+        
+        MidPointHeightMap map = new MidPointHeightMap(size, roughness);
+        
+        int width = _board.getHeightfieldWidth(),
+            height = _board.getHeightfieldHeight();
+        for (int y = 1; y <= height; y++) {
+            for (int x = 1; x <= width; x++) {
+                _board.setHeightfieldValue(x, y,
+                    (byte)(map.getTrueHeightAtPoint(x, y) - 128));
+            }
+        }
+        
+        // update the heightfield geometry and the pieces
+        _tnode.refreshHeightfield();
         updatePieces();
         updateHighlights();
     }

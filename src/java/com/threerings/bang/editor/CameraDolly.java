@@ -11,8 +11,6 @@ import com.jme.renderer.Camera;
 
 import com.jmex.bui.event.MouseEvent;
 
-import com.threerings.bang.util.BasicContext;
-
 /**
  * Allows the user to move the camera around the board.
  */
@@ -21,7 +19,7 @@ public class CameraDolly extends EditorTool
     /** The name of this tool. */
     public static final String NAME = "camera_dolly";
     
-    public CameraDolly (BasicContext ctx, EditorPanel panel)
+    public CameraDolly (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
     }

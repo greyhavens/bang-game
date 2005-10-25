@@ -20,7 +20,6 @@ import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.VGroupLayout;
 
 import com.threerings.bang.game.client.TerrainNode;
-import com.threerings.bang.util.BasicContext;
 
 /**
  * Allows the user to paint heightfield vertices with different types of
@@ -31,7 +30,7 @@ public class TerrainBrush extends EditorTool
     /** The name of this tool. */
     public static final String NAME = "terrain_brush";
     
-    public TerrainBrush (BasicContext ctx, EditorPanel panel)
+    public TerrainBrush (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
         _cursor = panel.view.getTerrainNode().createCursor();

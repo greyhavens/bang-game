@@ -16,7 +16,6 @@ import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.util.BasicContext;
 
 /**
  * Allows the user to place and manipulate pieces on the board.
@@ -26,7 +25,7 @@ public class PiecePlacer extends EditorTool
     /** The name of this tool. */
     public static final String NAME = "piece_placer";
     
-    public PiecePlacer (BasicContext ctx, EditorPanel panel)
+    public PiecePlacer (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
     }

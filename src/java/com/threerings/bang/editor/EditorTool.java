@@ -15,8 +15,6 @@ import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.util.BasicContext;
-
 /**
  * The superclass of editor tools, which have option panels to display in the
  * user interface and perform operations on input received from the view.
@@ -24,7 +22,7 @@ import com.threerings.bang.util.BasicContext;
 public abstract class EditorTool
     implements MouseListener, MouseMotionListener, MouseWheelListener
 {
-    public EditorTool (BasicContext ctx, EditorPanel panel)
+    public EditorTool (EditorContext ctx, EditorPanel panel)
     {
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("editor");
@@ -130,7 +128,7 @@ public abstract class EditorTool
      */    
     protected abstract JPanel createOptions ();
     
-    protected BasicContext _ctx;
+    protected EditorContext _ctx;
     protected MessageBundle _msgs;
     protected EditorPanel _panel;
     protected JPanel _options;
