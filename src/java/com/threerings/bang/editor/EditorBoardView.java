@@ -18,7 +18,10 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 import com.jmex.bui.event.MouseWheelListener;
 
+import com.jmex.terrain.util.AbstractHeightMap;
+import com.jmex.terrain.util.FaultFractalHeightMap;
 import com.jmex.terrain.util.MidPointHeightMap;
+import com.jmex.terrain.util.ParticleDepositionHeightMap;
 
 import com.threerings.jme.sprite.Sprite;
 
@@ -242,22 +245,31 @@ public class EditorBoardView extends BoardView
     {
         int size = RenderUtil.nextPOT(Math.max(_board.getHeightfieldWidth(),
             _board.getHeightfieldHeight()));
-        
-        MidPointHeightMap map = new MidPointHeightMap(size, roughness);
-        
-        int width = _board.getHeightfieldWidth(),
-            height = _board.getHeightfieldHeight();
-        for (int y = 1; y <= height; y++) {
-            for (int x = 1; x <= width; x++) {
-                _board.setHeightfieldValue(x, y,
-                    (byte)(map.getTrueHeightAtPoint(x, y) - 128));
-            }
-        }
-        
-        // update the heightfield geometry and the pieces
-        _tnode.refreshHeightfield();
-        updatePieces();
-        updateHighlights();
+        setHeightfield(new MidPointHeightMap(size, roughness));
+    }
+    
+    /**
+     * Generates a heightfield using JME's fault fractal class.
+     */
+    public void generateFaultFractal (int iterations, int minDelta,
+        int maxDelta, float filter)
+    {
+        int size = RenderUtil.nextPOT(Math.max(_board.getHeightfieldWidth(),
+            _board.getHeightfieldHeight()));
+        setHeightfield(new FaultFractalHeightMap(size, iterations, minDelta,
+            maxDelta, filter));
+    }
+    
+    /**
+     * Generates a heightfield using JME's particle deposition class.
+     */
+    public void generateParticleDeposition (int jumps, int peakWalk,
+        int minParticles, int maxParticles, float caldera)
+    {
+        int size = RenderUtil.nextPOT(Math.max(_board.getHeightfieldWidth(),
+            _board.getHeightfieldHeight()));
+        setHeightfield(new ParticleDepositionHeightMap(size, jumps, peakWalk,
+            minParticles, maxParticles, caldera));
     }
     
     @Override // documentation inherited
@@ -285,6 +297,27 @@ public class EditorBoardView extends BoardView
         return Math.min(Math.max(v, a), b);
     }
 
+    /**
+     * Sets the heightfield to the contents of the given JME height map (whose
+     * size must be equal to or greater than that of the heightfield).
+     */
+    protected void setHeightfield (AbstractHeightMap map)
+    {
+        int width = _board.getHeightfieldWidth(),
+            height = _board.getHeightfieldHeight();
+        for (int y = 1; y <= height; y++) {
+            for (int x = 1; x <= width; x++) {
+                _board.setHeightfieldValue(x, y,
+                    (byte)(map.getTrueHeightAtPoint(x, y) - 128));
+            }
+        }
+        
+        // update the heightfield geometry and the pieces
+        _tnode.refreshHeightfield();
+        updatePieces();
+        updateHighlights();
+    }
+    
     /**
      * Updates all the pieces in response to a change in terrain.
      */
