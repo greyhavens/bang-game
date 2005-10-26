@@ -219,7 +219,19 @@ public class PieceSprite extends Sprite
      */
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
-        return board.getHeightfieldElevation(tx, ty);
+        int width = _piece.getWidth(), height = _piece.getHeight();
+        if (width == 1 && height == 1) {
+            return board.getHeightfieldElevation(tx, ty);
+        }
+        
+        int elevation = Integer.MIN_VALUE;
+        for (int y = ty, ymax = ty + height; y < ymax; y++) {
+            for (int x = tx, xmax = tx + width; x < xmax; x++) {
+                elevation = Math.max(elevation,
+                    board.getHeightfieldElevation(x, y));
+            }
+        }
+        return elevation;
     }
 
     /**
