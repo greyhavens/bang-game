@@ -119,7 +119,7 @@ public class HeightfieldBrush extends EditorTool
         public JSlider sizer;
         public JComboBox mode;
         public JFormattedTextField value;
-        public JButton noise, generate;
+        public JButton noise, smooth, generate;
         
         public HeightfieldBrushOptions ()
         {
@@ -168,6 +168,10 @@ public class HeightfieldBrush extends EditorTool
             noise.addActionListener(this);
             add(noise);
             
+            smooth = new JButton(_msgs.get("b.smooth"));
+            smooth.addActionListener(this);
+            add(smooth);
+            
             generate = new JButton(_msgs.get("m.generate_fractal"));
             generate.addActionListener(this);
             add(generate);
@@ -183,7 +187,10 @@ public class HeightfieldBrush extends EditorTool
             if (e.getSource() == noise) {
                 _panel.view.addHeightfieldNoise(
                     ((Byte)value.getValue()).byteValue());
-                    
+            
+            } else if (e.getSource() == smooth) {
+                _panel.view.smoothHeightfield();
+                
             } else { // e.getSource() == generate
                 new GenerateDialog().setVisible(true);
             }

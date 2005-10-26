@@ -105,10 +105,7 @@ public class EditorBoardView extends BoardView
             hf[i] = (byte)(vals[i] - 128);
         }
         
-        // update the terrain geometry and update the pieces
-        _tnode.refreshHeightfield();
-        updatePieces();
-        updateHighlights();
+        heightfieldChanged();
     }
     
     /**
@@ -167,7 +164,6 @@ public class EditorBoardView extends BoardView
         
         // update the terrain splats
         _tnode.refreshTerrain(x1, y1, (x2 - x1) + 1, (y2 - y1) + 1);
-        updateHighlights();
     }
     
     /**
@@ -232,10 +228,37 @@ public class EditorBoardView extends BoardView
             }
         }
         
-        // update the heightfield geometry and the pieces
-        _tnode.refreshHeightfield();
-        updatePieces();
-        updateHighlights();
+        heightfieldChanged();
+    }
+    
+    /**
+     * Smooths the heightfield using a simple blur.
+     */
+    public void smoothHeightfield ()
+    {
+        byte[] smoothed = new byte[_board.getHeightfield().length];
+        
+        int width = _board.getHeightfieldWidth(),
+            height = _board.getHeightfieldHeight(), idx = 0;
+        for (int y = 1; y <= height; y++) {
+            for (int x = 1; x <= width; x++) {
+                // average this pixel and its eight neighbors
+                smoothed[idx++] = (byte)
+                    (((int)_board.getHeightfieldValue(x-1, y-1) +
+                    _board.getHeightfieldValue(x, y-1) +
+                    _board.getHeightfieldValue(x+1, y-1) +
+                    _board.getHeightfieldValue(x-1, y) +
+                    _board.getHeightfieldValue(x, y) +
+                    _board.getHeightfieldValue(x+1, y) +
+                    _board.getHeightfieldValue(x-1, y+1) +
+                    _board.getHeightfieldValue(x, y+1) +
+                    _board.getHeightfieldValue(x+1, y+1)) / 9);
+            }
+        }
+        
+        System.arraycopy(smoothed, 0, _board.getHeightfield(), 0,
+            smoothed.length);
+        heightfieldChanged();
     }
     
     /**
@@ -300,6 +323,8 @@ public class EditorBoardView extends BoardView
     /**
      * Sets the heightfield to the contents of the given JME height map (whose
      * size must be equal to or greater than that of the heightfield).
+     *
+     * @param above whether or not to 
      */
     protected void setHeightfield (AbstractHeightMap map)
     {
@@ -308,11 +333,18 @@ public class EditorBoardView extends BoardView
         for (int y = 1; y <= height; y++) {
             for (int x = 1; x <= width; x++) {
                 _board.setHeightfieldValue(x, y,
-                    (byte)(map.getTrueHeightAtPoint(x, y) - 128));
+                    (byte)(map.getTrueHeightAtPoint(x, y)/2));
             }
         }
         
-        // update the heightfield geometry and the pieces
+        heightfieldChanged();
+    }
+    
+    /**
+     * Called when the entire heightfield has changed.
+     */
+    protected void heightfieldChanged ()
+    {
         _tnode.refreshHeightfield();
         updatePieces();
         updateHighlights();
