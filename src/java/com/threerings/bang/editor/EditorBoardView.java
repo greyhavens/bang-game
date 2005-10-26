@@ -214,9 +214,10 @@ public class EditorBoardView extends BoardView
     }
     
     /**
-     * Adds some random noise to the heightfield.
+     * Adds some random noise to the heightfield (just enough to create some
+     * interesting texture.
      */
-    public void addHeightfieldNoise (int value)
+    public void addHeightfieldNoise ()
     {
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight();
@@ -224,7 +225,7 @@ public class EditorBoardView extends BoardView
         for (int y = 1; y <= height; y++) {
             for (int x = 1; x <= width; x++) {
                 _board.addHeightfieldValue(x, y,
-                    RandomUtil.getInt(+value, -value));
+                    RandomUtil.getInt(+2, -2));
             }
         }
         

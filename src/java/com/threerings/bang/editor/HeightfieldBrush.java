@@ -185,8 +185,7 @@ public class HeightfieldBrush extends EditorTool
         public void actionPerformed (ActionEvent e)
         {
             if (e.getSource() == noise) {
-                _panel.view.addHeightfieldNoise(
-                    ((Byte)value.getValue()).byteValue());
+                _panel.view.addHeightfieldNoise();
             
             } else if (e.getSource() == smooth) {
                 _panel.view.smoothHeightfield();
