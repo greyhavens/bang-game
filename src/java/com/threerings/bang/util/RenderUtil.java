@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.jme.image.Texture;
-import com.jme.light.PointLight;
+import com.jme.light.DirectionalLight;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -252,13 +252,10 @@ public class RenderUtil
 
     public static LightState createDaylight (Renderer renderer)
     {
-        PointLight light = new PointLight();
+        DirectionalLight light = new DirectionalLight();
         light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-        // light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
-        light.setAmbient(new ColorRGBA(0.25f, 0.25f, 0.55f, 1.0f));
-        light.setLocation(new Vector3f(100, 100, 100));
-        light.setAttenuate(true);
-        light.setConstant(0.25f);
+        light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
+        light.setDirection(new Vector3f(-0.707f, 0f, -0.707f));
         light.setEnabled(true);
 
         LightState lights = renderer.createLightState();
