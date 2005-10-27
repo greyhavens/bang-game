@@ -60,6 +60,8 @@ public class BangBoard extends SimpleStreamableObject
         _theight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
         _terrain = new byte[_twidth * _theight];
         
+        _waterLevel = (byte)-128;
+        
         _pterrain = new byte[width*height];
         _btstate = new byte[width*height];
         _estate = new byte[width*height];
@@ -181,6 +183,19 @@ public class BangBoard extends SimpleStreamableObject
     public byte[] getTerrain ()
     {
         return _terrain;
+    }
+    
+    /** Returns the level of the water on the board in heightfield units (-128
+     * for no water. */
+    public byte getWaterLevel ()
+    {
+        return _waterLevel;
+    }
+    
+    /** Sets the water level. */
+    public void setWaterLevel (byte level)
+    {
+        _waterLevel = level;
     }
     
     /**
@@ -395,6 +410,26 @@ public class BangBoard extends SimpleStreamableObject
                 if (Math.abs(d1) > MAX_OCCUPIABLE_HEIGHT_DELTA ||
                     Math.abs(d2) > MAX_OCCUPIABLE_HEIGHT_DELTA ||
                     Math.abs(d3) > MAX_OCCUPIABLE_HEIGHT_DELTA) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Checks whether any portion of the specified tile is beneath the
+     * water level.
+     */
+    public boolean isUnderWater (int tx, int ty)
+    {
+        int x1 = tx * HEIGHTFIELD_SUBDIVISIONS,
+            y1 = ty * HEIGHTFIELD_SUBDIVISIONS,
+            x2 = (tx+1) * HEIGHTFIELD_SUBDIVISIONS,
+            y2 = (ty+1) * HEIGHTFIELD_SUBDIVISIONS;
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+                if (getHeightfieldValue(x, y) < _waterLevel) {
                     return true;
                 }
             }
@@ -677,6 +712,9 @@ public class BangBoard extends SimpleStreamableObject
     
     /** The terrain codes for each heightfield vertex. */
     protected byte[] _terrain;
+    
+    /** The level of the water on the board (-128 for no water). */
+    protected byte _waterLevel;
     
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight, _twidth, _theight;

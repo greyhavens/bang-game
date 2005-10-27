@@ -93,7 +93,8 @@ public class BoardView extends BComponent
         Node bnode = new Node("board");
         _node.attachChild(bnode);
         bnode.attachChild(_tnode = new TerrainNode(ctx));
-
+        bnode.attachChild(_wnode = new WaterNode(ctx));
+        
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -181,7 +182,8 @@ public class BoardView extends BComponent
         
         // create the board geometry
         _tnode.createBoardTerrain(_board);
-
+        _wnode.createBoardWater(_board);
+        
         // create sprites for all of the pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             // this will trigger the creation, initialization and whatnot
@@ -649,6 +651,7 @@ public class BoardView extends BComponent
 
     protected Node _node, _pnode, _hnode, _gnode;
     protected TerrainNode _tnode;
+    protected WaterNode _wnode;
     protected Vector3f _worldMouse;
     protected TrianglePickResults _pick = new TrianglePickResults();
     protected Sprite _hover;

@@ -163,7 +163,7 @@ public class EditorBoardView extends BoardView
         }
         
         // update the terrain splats
-        _tnode.refreshTerrain(x1, y1, (x2 - x1) + 1, (y2 - y1) + 1);
+        _tnode.refreshTerrain(x1, y1, x2, y2);
     }
     
     /**
@@ -206,11 +206,8 @@ public class EditorBoardView extends BoardView
             }
         }
         
-        // update the heightfield geometry and the pieces
-        _tnode.refreshHeightfield(x1 - 1, y1 - 1, (x2 - x1) + 2,
-            (y2 - y1) + 2);
-        updatePieces();
-        updateHighlights();
+        // update the heightfield bits
+        heightfieldChanged(x1 - 1, y1 - 1, x2 + 1, y2 + 1);
     }
     
     /**
@@ -296,6 +293,15 @@ public class EditorBoardView extends BoardView
             minParticles, maxParticles, caldera));
     }
     
+    /**
+     * Sets the board's water level.
+     */
+    public void setWaterLevel (int level)
+    {
+        _board.setWaterLevel((byte)level);
+        _wnode.refreshSurface();
+    }
+    
     @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {
@@ -312,14 +318,6 @@ public class EditorBoardView extends BoardView
             ((PieceSprite)_hover).getPieceId() : -1;
         return (Piece)_bangobj.pieces.get(pid);
     }
-    
-    /**
-     * Clamps v between a and b (inclusive).
-     */
-    protected int clamp (int v, int a, int b)
-    {
-        return Math.min(Math.max(v, a), b);
-    }
 
     /**
      * Sets the heightfield to the contents of the given JME height map (whose
@@ -334,7 +332,7 @@ public class EditorBoardView extends BoardView
         for (int y = 1; y <= height; y++) {
             for (int x = 1; x <= width; x++) {
                 _board.setHeightfieldValue(x, y,
-                    (byte)(map.getTrueHeightAtPoint(x, y)/2));
+                    (byte)(map.getTrueHeightAtPoint(x, y) - 128));
             }
         }
         
@@ -347,8 +345,34 @@ public class EditorBoardView extends BoardView
     protected void heightfieldChanged ()
     {
         _tnode.refreshHeightfield();
+        _wnode.refreshSurface();
         updatePieces();
         updateHighlights();
+    }
+    
+    /**
+     * Called when part of the heightfield (as specified in sub-tile
+     * coordinates) has changed.
+     */
+    protected void heightfieldChanged (int x1, int y1, int x2, int y2)
+    {
+        int txmax = _board.getWidth() - 1, tymax = _board.getHeight() - 1,
+            tx1 = clamp(x1 / BangBoard.HEIGHTFIELD_SUBDIVISIONS, 0, txmax),
+            ty1 = clamp(y1 / BangBoard.HEIGHTFIELD_SUBDIVISIONS, 0, tymax),
+            tx2 = clamp(x2 / BangBoard.HEIGHTFIELD_SUBDIVISIONS, 0, txmax),
+            ty2 = clamp(y2 / BangBoard.HEIGHTFIELD_SUBDIVISIONS, 0, tymax);
+        _tnode.refreshHeightfield(x1, y1, x2, y2);
+        _wnode.refreshSurface(tx1, ty1, tx2, ty2);
+        updatePieces();
+        updateHighlights(tx1, ty1, tx2, ty2);
+    }
+    
+    /**
+     * Clamps v between a and b (inclusive).
+     */
+    protected int clamp (int v, int a, int b)
+    {
+        return Math.min(Math.max(v, a), b);
     }
     
     /**
@@ -367,20 +391,28 @@ public class EditorBoardView extends BoardView
      */
     protected void updateHighlights ()
     {
-        _hnode.detachAllChildren();
-        if (!_showHighlights) {
-            return;
-        } 
-        
-        for (int x = 0, width = _board.getWidth(); x < width; x++) {
-            for (int y = 0, height = _board.getHeight(); y < height; y++) {
-                if (_board.exceedsMaxHeightDelta(x, y)) {
-                    _highlights[x][y].updateVertices();
-                    if (_highlights[x][y].getParent() != _hnode) {
+        updateHighlights(0, 0, _board.getWidth() - 1, _board.getHeight() - 1);
+    }
+    
+    /**
+     * Updates the highlights over the specified tile coordinate rectangle.
+     */
+    protected void updateHighlights (int x1, int y1, int x2, int y2)
+    {
+        for (int x = x1; x <= x2; x++) {
+            for (int y = y1; y <= y2; y++) {
+                if (_showHighlights && _board.exceedsMaxHeightDelta(x, y)) {
+                    if (_highlights[x][y] == null) {
+                        _highlights[x][y] = _tnode.createHighlight(x, y,
+                            false);
+                        _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
+                    }
+                    if (_highlights[x][y].getParent() == null) {
                         _hnode.attachChild(_highlights[x][y]);
                     }
-                                    
-                } else if (_highlights[x][y].getParent() == _hnode) {
+                    
+                } else if (_highlights[x][y] != null &&
+                    _highlights[x][y].getParent() != null) {
                     _hnode.detachChild(_highlights[x][y]);
                 }
             }

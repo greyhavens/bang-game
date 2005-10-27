@@ -392,8 +392,8 @@ public class TerrainNode extends Node
      */
     public void refreshHeightfield ()
     {
-        refreshHeightfield(0, 0, _board.getHeightfieldWidth() + 2,
-            _board.getHeightfieldHeight() + 2);
+        refreshHeightfield(0, 0, _board.getTerrainWidth() - 1,
+            _board.getTerrainWidth() - 1);
     }
     
     /**
@@ -401,9 +401,9 @@ public class TerrainNode extends Node
      * coordinates.  Remember that changing any height point affects the
      * normals of its neighbors, so be sure to include them in the region.
      */
-    public void refreshHeightfield (int rx, int ry, int rwidth, int rheight)
+    public void refreshHeightfield (int x1, int y1, int x2, int y2)
     {
-        Rectangle rect = new Rectangle(rx, ry, rwidth, rheight);
+        Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 SplatBlock block = _blocks[x][y];
@@ -420,17 +420,17 @@ public class TerrainNode extends Node
      */
     public void refreshTerrain ()
     {
-        refreshTerrain(0, 0, _board.getHeightfieldWidth() + 2,
-            _board.getHeightfieldHeight() + 2);
+        refreshTerrain(0, 0, _board.getTerrainWidth() - 1,
+            _board.getTerrainWidth() - 1);
     }
     
     /**
      * Refreshes the terrain splats over the specified region in sub-tile
      * coordinates.
      */
-    public void refreshTerrain (int rx, int ry, int rwidth, int rheight)
+    public void refreshTerrain (int x1, int y1, int x2, int y2)
     {
-        Rectangle rect = new Rectangle(rx, ry, rwidth, rheight);
+        Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 SplatBlock block = _blocks[x][y];

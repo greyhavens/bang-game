@@ -45,7 +45,7 @@ public class EditorPanel extends JPanel
 
     /** Displays board metadata. */
     public BoardInfo info;
-
+    
     /** Allows user to select and configure tools. */
     public ToolPanel tools;
 
@@ -55,13 +55,13 @@ public class EditorPanel extends JPanel
         _ctx = ctx;
         _ctrl = ctrl;
 
-	// give ourselves a wee bit of a border
-	setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        // give ourselves a wee bit of a border
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         MessageBundle msgs = ctx.getMessageManager().getBundle("editor");
-	HGroupLayout gl = new HGroupLayout(HGroupLayout.STRETCH);
-	gl.setOffAxisPolicy(HGroupLayout.STRETCH);
-	setLayout(gl);
+	    HGroupLayout gl = new HGroupLayout(HGroupLayout.STRETCH);
+        gl.setOffAxisPolicy(HGroupLayout.STRETCH);
+        setLayout(gl);
 
         // create the board view
         view = new EditorBoardView(ctx, this);
@@ -123,6 +123,13 @@ public class EditorPanel extends JPanel
 //         back.addActionListener(ctrl);
 //         sidePanel.add(back, VGroupLayout.FIXED);
 
+        JMenu edit = new JMenu(msgs.get("m.menu_edit"));
+        edit.setMnemonic(KeyEvent.VK_E);
+        menubar.add(edit);
+        
+        createMenuItem(edit, msgs.get("m.menu_water"), -1, KeyEvent.VK_W,
+            EditorController.EDIT_WATER);
+        
         JMenu view = new JMenu(msgs.get("m.menu_view"));
         view.setMnemonic(KeyEvent.VK_V);
         menubar.add(view);
@@ -181,8 +188,10 @@ public class EditorPanel extends JPanel
                                    int mnemonic, String command)
     {
         JMenuItem item = new JMenuItem(label);
-        item.setAccelerator(KeyStroke.getKeyStroke(
-                                accelerator, ActionEvent.CTRL_MASK));
+        if (accelerator != -1) {
+            item.setAccelerator(KeyStroke.getKeyStroke(accelerator,
+                ActionEvent.CTRL_MASK));
+        }
         item.setMnemonic(mnemonic);
         item.setActionCommand(command);
         item.addActionListener(_ctrl);
