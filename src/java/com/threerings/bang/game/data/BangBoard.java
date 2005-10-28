@@ -311,8 +311,8 @@ public class BangBoard extends SimpleStreamableObject
         // start out with _tstate configured according to the board
         for (int yy = 0; yy < _height; yy++) {
             for (int xx = 0; xx < _width; xx++) {
-                byte tvalue = exceedsMaxHeightDelta(xx, yy) ?
-                    (byte)2 : (byte)0;
+                byte tvalue = (isUnderWater(xx, yy) ||
+                    exceedsMaxHeightDelta(xx, yy)) ? (byte)2 : (byte)0;
                 int pos = _width*yy+xx;
                 _tstate[pos] = tvalue;
                 _btstate[pos] = tvalue;
