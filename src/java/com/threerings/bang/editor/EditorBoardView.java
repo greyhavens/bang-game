@@ -64,12 +64,6 @@ public class EditorBoardView extends BoardView
         if (_highlights == null) {
             int width = _board.getWidth(), height = _board.getHeight();
             _highlights = new TerrainNode.Highlight[width][height];
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    _highlights[x][y] = _tnode.createHighlight(x, y, false);
-                    _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
-                }
-            }
         }
         updateHighlights();
     }
@@ -407,6 +401,7 @@ public class EditorBoardView extends BoardView
                             false);
                         _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
                     }
+                    _highlights[x][y].updateVertices();
                     if (_highlights[x][y].getParent() == null) {
                         _hnode.attachChild(_highlights[x][y]);
                     }
