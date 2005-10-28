@@ -5,16 +5,21 @@ package com.threerings.bang.editor;
 
 import javax.swing.JPanel;
 
+import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
+import com.jme.scene.Controller;
 
+import com.jmex.bui.event.KeyEvent;
+import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 
 /**
  * Allows the user to move the camera around the board.
  */
 public class CameraDolly extends EditorTool
+    implements KeyListener
 {
     /** The name of this tool. */
     public static final String NAME = "camera_dolly";
@@ -22,6 +27,13 @@ public class CameraDolly extends EditorTool
     public CameraDolly (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
+        _panel.view.addListener(this);
+        
+        ctx.getRootNode().addController(new Controller() {
+            public void update (float time) {
+                updateCamera(time);
+            }
+        });
     }
     
     // documentation inherited
@@ -31,8 +43,24 @@ public class CameraDolly extends EditorTool
     }
     
     @Override // documentation inherited
+    public void activate ()
+    {
+        _active = true;
+    }
+    
+    @Override // documentation inherited
+    public void deactivate ()
+    {
+        _active = false;
+    }
+    
+    @Override // documentation inherited
     public void mousePressed (MouseEvent e)
     {
+        if (!_active) {
+            return;
+        }
+        
         _lastX = e.getX();
         _lastY = e.getY();
         _lastButton = e.getButton();
@@ -41,6 +69,10 @@ public class CameraDolly extends EditorTool
     @Override // documentation inherited
     public void mouseDragged (MouseEvent e)
     {
+        if (!_active) {
+            return;
+        }
+        
         int dx = _lastX - e.getX(), dy =  _lastY - e.getY();
         Position pos = getCameraPosition();
         switch(_lastButton) {
@@ -64,16 +96,62 @@ public class CameraDolly extends EditorTool
     @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {
+        if (!_active) {
+            return;
+        }
+        
         Position pos = getCameraPosition();
         pos.distance = Math.min(Math.max(pos.distance + e.getDelta() * 10 *
             LINEAR_SCALE, MIN_DISTANCE), MAX_DISTANCE);
         setCameraPosition(pos);
     }
     
+    // documentation inherited from interface KeyListener
+    public void keyPressed (KeyEvent e)
+    {
+        int code = e.getKeyCode();
+        switch (code) {
+             case KeyInput.KEY_Q: _dvel = +LINEAR_SPEED; _dcode = code; break;
+             case KeyInput.KEY_W: _evel = +ANGULAR_SPEED; _ecode = code; break;
+             case KeyInput.KEY_E: _dvel = -LINEAR_SPEED; _dcode = code; break;
+             case KeyInput.KEY_A: _avel = -ANGULAR_SPEED; _acode = code; break;
+             case KeyInput.KEY_S: _evel = -ANGULAR_SPEED; _ecode = code; break;
+             case KeyInput.KEY_D: _avel = +ANGULAR_SPEED; _acode = code; break;
+        }
+    }
+    
+    // documentation inherited from interface KeyListener
+    public void keyReleased (KeyEvent e)
+    {
+        int code = e.getKeyCode();
+        switch (code) {
+             case KeyInput.KEY_Q: _dvel = (_dcode == code) ? 0f : _dvel; break;
+             case KeyInput.KEY_W: _evel = (_ecode == code) ? 0f : _evel; break;
+             case KeyInput.KEY_E: _dvel = (_dcode == code) ? 0f : _dvel; break;
+             case KeyInput.KEY_A: _avel = (_acode == code) ? 0f : _avel; break;
+             case KeyInput.KEY_S: _evel = (_ecode == code) ? 0f : _evel; break;
+             case KeyInput.KEY_D: _avel = (_acode == code) ? 0f : _avel; break;
+        }
+    }
+    
     // documentation inherited
     protected JPanel createOptions ()
     {
         return new JPanel();
+    }
+    
+    /**
+     * Updates the position of the camera since the elapsed time.
+     */
+    protected void updateCamera (float time)
+    {
+        Position pos = getCameraPosition();
+        pos.azimuth += _avel * time;
+        pos.elevation = Math.min(Math.max(pos.elevation + _evel*time,
+            MIN_ELEVATION), MAX_ELEVATION);
+        pos.distance = Math.min(Math.max(pos.distance + _dvel*time,
+            MIN_DISTANCE), MAX_DISTANCE);
+        setCameraPosition(pos);
     }
     
     /**
@@ -132,11 +210,26 @@ public class CameraDolly extends EditorTool
     /** The point at which the camera is looking. */
     protected Vector3f _target;
  
+    /** Whether or not the tool is currently active. */
+    protected boolean _active;
+    
+    /** Camera azimuth, elevation, and distance velocities. */
+    protected float _avel, _evel, _dvel;
+    
+    /** The last keys pressed for azimuth, elevation, and distance. */
+    protected int _acode, _ecode, _dcode;
+    
     /** The angular scale (radians per pixel). */
     protected static final float ANGULAR_SCALE = FastMath.PI / 1000;
-       
+    
+    /** The angular speed (radians per second). */
+    protected static final float ANGULAR_SPEED = FastMath.PI / 2;
+    
     /** The linear scale (world units per pixel). */
     protected static final float LINEAR_SCALE = 1.0f; 
+    
+    /** The linear speed (world units per second). */
+    protected static final float LINEAR_SPEED = 300f;
     
     /** The minimum distance from the target. */
     protected static final float MIN_DISTANCE = 50.0f;
