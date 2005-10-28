@@ -13,6 +13,8 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.state.RenderState;
+import com.jme.scene.state.WireframeState;
 
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
@@ -75,6 +77,24 @@ public class EditorBoardView extends BoardView
     {
         _showHighlights = !_showHighlights;
         updateHighlights();
+    }
+    
+    /**
+     * Activates or deactivates wireframe rendering.
+     */
+    public void toggleWireframe ()
+    {
+        WireframeState wstate = (WireframeState)_node.getRenderState(
+            RenderState.RS_WIREFRAME);
+        if (wstate == null) {
+            wstate = _ctx.getRenderer().createWireframeState();
+            wstate.setFace(WireframeState.WS_FRONT_AND_BACK);
+            _node.setRenderState(wstate);
+            
+        } else {
+            wstate.setEnabled(!wstate.isEnabled());
+        }
+        _node.updateRenderState();
     }
     
     /**
