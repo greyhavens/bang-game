@@ -88,6 +88,8 @@ public class EditorPanel extends JPanel
         file.setMnemonic(KeyEvent.VK_F);
         menubar.add(file);
 
+        createMenuItem(file, msgs.get("m.menu_new"), KeyEvent.VK_N,
+                       KeyEvent.VK_N, EditorController.NEW_BOARD);
         createMenuItem(file, msgs.get("m.menu_load"), KeyEvent.VK_O,
                        KeyEvent.VK_O, EditorController.LOAD_BOARD);
         createMenuItem(file, msgs.get("m.menu_save"), KeyEvent.VK_S,

@@ -6,6 +6,7 @@ package com.threerings.bang.editor;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -107,6 +108,18 @@ public class BoardInfo extends JPanel
         board.setScenarios(scenids.toArray(new String[scenids.size()]));
     }
 
+    /**
+     * Clears the user interface.
+     */
+    public void clear ()
+    {
+        _name.setText("");
+        for (Iterator<JCheckBox> it = _sboxes.values().iterator();
+                it.hasNext(); ) {
+            it.next().setSelected(false);
+        }
+    }
+    
     protected BasicContext _ctx;
     protected MessageBundle _msgs;
 
