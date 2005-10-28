@@ -346,7 +346,7 @@ public class TerrainNode extends Node
          * tile. */
         protected boolean _overPieces;
     }
-    
+
     public TerrainNode (BasicContext ctx)
     {
         super("terrain");
@@ -465,6 +465,18 @@ public class TerrainNode extends Node
     }
     
     /**
+     * Computes the heightfield vertex at the specified location in sub-tile
+     * coordinates.
+     *
+     * @param result a vector to hold the result
+     */
+    public void getHeightfieldVertex (int x, int y, Vector3f result)
+    {
+        result.set(x * SUB_TILE_SIZE, y * SUB_TILE_SIZE,
+            getHeightfieldValue(x, y));
+    }
+    
+    /**
      * Creates and returns a splat block for the specified splat coordinates.
      */
     protected SplatBlock createSplatBlock (int sx, int sy)
@@ -547,18 +559,6 @@ public class TerrainNode extends Node
     protected boolean isHeightfieldStatic ()
     {
         return false;
-    }
-    
-    /**
-     * Computes the heightfield vertex at the specified location in sub-tile
-     * coordinates.
-     *
-     * @param result a vector to hold the result
-     */
-    protected void getHeightfieldVertex (int x, int y, Vector3f result)
-    {
-        result.set(x * SUB_TILE_SIZE, y * SUB_TILE_SIZE,
-            getHeightfieldValue(x, y));
     }
     
     /**

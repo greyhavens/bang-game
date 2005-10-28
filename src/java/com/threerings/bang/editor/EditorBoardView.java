@@ -7,14 +7,19 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
+import java.nio.FloatBuffer;
+
 import java.util.Iterator;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Line;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.WireframeState;
+import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
@@ -68,15 +73,7 @@ public class EditorBoardView extends BoardView
             _highlights = new TerrainNode.Highlight[width][height];
         }
         updateHighlights();
-    }
-    
-    /**
-     * Shows or hides the unoccupiable tile highlights.
-     */
-    public void toggleHighlights ()
-    {
-        _showHighlights = !_showHighlights;
-        updateHighlights();
+        updateGrid();
     }
     
     /**
@@ -97,6 +94,24 @@ public class EditorBoardView extends BoardView
         _node.updateRenderState();
     }
     
+    /**
+     * Shows or hides the tile grid.
+     */
+    public void toggleGrid ()
+    {
+        _showGrid = !_showGrid;
+        updateGrid();
+    }
+    
+    /**
+     * Shows or hides the unoccupiable tile highlights.
+     */
+    public void toggleHighlights ()
+    {
+        _showHighlights = !_showHighlights;
+        updateHighlights();
+    }
+
     /**
      * Sets the heightfield to the contents of the specified image.
      */
@@ -361,6 +376,7 @@ public class EditorBoardView extends BoardView
         _tnode.refreshHeightfield();
         _wnode.refreshSurface();
         updatePieces();
+        updateGrid();
         updateHighlights();
     }
     
@@ -378,6 +394,7 @@ public class EditorBoardView extends BoardView
         _tnode.refreshHeightfield(x1, y1, x2, y2);
         _wnode.refreshSurface(tx1, ty1, tx2, ty2);
         updatePieces();
+        updateGrid();
         updateHighlights(tx1, ty1, tx2, ty2);
     }
     
@@ -397,6 +414,25 @@ public class EditorBoardView extends BoardView
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
             pieceUpdated(piece, piece);
+        }
+    }
+    
+    /**
+     * Updates the tile grid over the entire board.
+     */
+    protected void updateGrid ()
+    {
+        if (_showGrid) {
+            if (_grid == null) {
+                _grid = new TileGrid();
+            }
+            _grid.updateVertices();
+            if (_grid.getParent() == null) {
+                _hnode.attachChild(_grid);
+            }
+
+        } else if (_grid != null && _grid.getParent() != null) {
+            _hnode.detachChild(_grid);
         }
     }
     
@@ -448,12 +484,80 @@ public class EditorBoardView extends BoardView
         _panel.tools.getActiveTool().hoverSpriteChanged(hover);
     }
 
+    /** A grid indicating where the tile boundaries lie. */
+    protected class TileGrid extends Line
+    {
+        public TileGrid ()
+        {
+            super("grid");
+            
+            setDefaultColor(ColorRGBA.gray);
+            setLightCombineMode(LightState.OFF);
+            setRenderState(RenderUtil.overlayZBuf);
+            updateRenderState();
+            
+            int vertices =
+                (_board.getHeight() + 1) * (_board.getTerrainWidth() - 1) * 2 +
+                (_board.getWidth() + 1) * (_board.getTerrainHeight() - 1) * 2;
+            setVertexBuffer(BufferUtils.createFloatBuffer(vertices * 3));
+            generateIndices();
+            
+            updateVertices();
+        }
+        
+        /**
+         * Updates the vertices of the grid when the heightfield changes.
+         */
+        public void updateVertices ()
+        {
+            Vector3f vertex = new Vector3f();
+            FloatBuffer vbuf = getVertexBuffer();
+            int idx = 0;
+            
+            // horizontal grid lines
+            for (int ty = 0, height = _board.getHeight(); ty <= height; ty++) {
+                int y = ty * BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+                for (int x = 0, width = _board.getTerrainWidth() - 1;
+                        x < width; x++) {
+                    _tnode.getHeightfieldVertex(x, y, vertex);
+                    vertex.z += 0.1f;
+                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
+                    
+                    _tnode.getHeightfieldVertex(x + 1, y, vertex);
+                    vertex.z += 0.1f;
+                    BufferUtils.setInBuffer(vertex, vbuf, idx++);                   
+                }
+            }
+            
+            // vertical grid lines
+            for (int tx = 0, width = _board.getWidth(); tx <= width; tx++) {
+                int x = tx * BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+                for (int y = 0, height = _board.getTerrainHeight() - 1;
+                        y < height; y++) {
+                    _tnode.getHeightfieldVertex(x, y, vertex);
+                    vertex.z += 0.1f;
+                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
+                    
+                    _tnode.getHeightfieldVertex(x, y + 1, vertex);
+                    vertex.z += 0.1f;
+                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
+                }
+            }
+        }
+    }
+    
     /** The panel that contains additional interface elements with which
      * we interact. */
     protected EditorPanel _panel;
 
     /** Highlights indicating which tiles are occupiable. */    
     protected TerrainNode.Highlight[][] _highlights;
+    
+    /** The grid indicating where the tile boundaries lie. */
+    protected TileGrid _grid;
+    
+    /** Whether or not to show the tile grid. */
+    protected boolean _showGrid;
     
     /** Whether or not to show the highlights. */
     protected boolean _showHighlights;
