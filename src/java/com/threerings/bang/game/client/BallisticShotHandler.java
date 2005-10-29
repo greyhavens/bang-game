@@ -16,6 +16,7 @@ import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.ShotSprite;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.SoundUtil;
 
@@ -50,21 +51,23 @@ public class BallisticShotHandler extends ShotHandler
     @Override // documentation inherited
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
+        float escale = (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
         Vector3f start = new Vector3f(
             sx * TILE_SIZE + TILE_SIZE/2, sy * TILE_SIZE + TILE_SIZE/2,
-            TILE_SIZE/2);
+            _bangobj.board.getElevation(sx, sy) * escale + TILE_SIZE/2);
         Vector3f end = new Vector3f(
             tx * TILE_SIZE + TILE_SIZE/2, ty * TILE_SIZE + TILE_SIZE/2,
-            TILE_SIZE/2);
+            _bangobj.board.getElevation(tx, ty) * escale + TILE_SIZE/2);
         _ssprite = new ShotSprite(_ctx);
         Vector3f velvec = end.subtract(start);
+        float edelta = velvec.z;
+        velvec.z = 0f;
         float distance = velvec.length();
 
-        float angle = -3*FastMath.PI/8;
-        float velocity = FastMath.sqrt(
-            distance * GRAVITY / FastMath.sin(2*angle));
-        float duration = BallisticPath.computeFlightTime(
-            distance, velocity, angle);
+        float angle = 3*FastMath.PI/8;
+        float duration = FastMath.sqrt(
+            2 * (edelta - distance * FastMath.tan(angle)) / GRAVITY),
+            velocity = distance / (duration * FastMath.cos(angle));
 
         // normalize the velocity vector and scale it to the velocity
         velvec.normalizeLocal();
@@ -73,7 +76,7 @@ public class BallisticShotHandler extends ShotHandler
         // rotate the velocity vector up by the computed angle (around
         // the axis made by crossing the velocity vector with the up
         // vector)
-        Vector3f axis = UP.cross(velvec);
+        Vector3f axis = velvec.cross(UP);
         axis.normalizeLocal();
         Quaternion rot = new Quaternion();
         rot.fromAngleAxis(angle, axis);

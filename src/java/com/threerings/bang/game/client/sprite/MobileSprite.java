@@ -126,20 +126,21 @@ public class MobileSprite extends PieceSprite
             return;
         }
         
+        // adjust position to terrain height
         Vector3f pos = getLocalTranslation();
         TerrainNode tnode = _view.getTerrainNode();
         pos.z = tnode.getHeightfieldHeight(pos.x, pos.y);
         setLocalTranslation(pos);
         
+        // adjust rotation to terrain slope
         Quaternion rot = getLocalRotation();
         Vector3f normal = tnode.getHeightfieldNormal(pos.x, pos.y),
             up = rot.mult(Vector3f.UNIT_Z),
             cross = up.cross(normal);
         float angle = FastMath.asin(cross.length());
-        if (angle < FastMath.FLT_EPSILON) {
+        if (angle == 0f) {
             return;
         }
-        
         Quaternion mod = new Quaternion();
         mod.fromAngleAxis(angle, cross);
         setLocalRotation(mod.multLocal(rot));
@@ -157,6 +158,13 @@ public class MobileSprite extends PieceSprite
         setOrientation(_piece.orientation);
     }
 
+    @Override // documentation inherited
+    public void setOrientation (int orientation)
+    {
+        super.setOrientation(orientation);
+        snapToTerrain();
+    }
+    
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
