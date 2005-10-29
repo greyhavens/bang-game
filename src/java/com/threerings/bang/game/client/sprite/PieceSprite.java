@@ -18,6 +18,7 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
@@ -75,9 +76,10 @@ public class PieceSprite extends Sprite
      * Called when we are first created and immediately before we are
      * added to the display.
      */
-    public void init (BasicContext ctx, SoundGroup sounds,
+    public void init (BasicContext ctx, BoardView view, SoundGroup sounds,
                       Piece piece, short tick)
     {
+        _view = view;
         _piece = piece;
         _tick = tick;
 
@@ -264,6 +266,8 @@ public class PieceSprite extends Sprite
         coords.y += TILE_SIZE/2;
     }
 
+    protected BoardView _view;
+    
     protected Piece _piece;
     protected short _tick;
 

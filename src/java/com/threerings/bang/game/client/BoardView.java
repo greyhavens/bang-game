@@ -460,7 +460,7 @@ public class BoardView extends BComponent
         PieceSprite sprite = _pieces.get(piece.pieceId);
         if (sprite == null) {
             sprite = piece.createSprite();
-            sprite.init(_ctx, _sounds, piece, _bangobj.tick);
+            sprite.init(_ctx, this, _sounds, piece, _bangobj.tick);
             log.fine("Creating sprite for " + piece + ".");
             _pieces.put((int)piece.pieceId, sprite);
             addSprite(sprite);

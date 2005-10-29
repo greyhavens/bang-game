@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -29,6 +31,7 @@ import com.threerings.jme.sprite.SpriteObserver;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
+import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BasicContext;
@@ -111,6 +114,37 @@ public class MobileSprite extends PieceSprite
         return isMoving() || (_action != null) || (_actions.size() > 0);
     }
 
+    /**
+     * If the unit is on the ground, sets its z position based on the height of
+     * the terrain, and its pitch and roll based on the slope of the terrain.
+     * The units's x coordinate, y coordinate, and heading are unaffected.
+     */
+    public void snapToTerrain ()
+    {
+        // flyers simply fly from point to point
+        if (_piece.isFlyer()) {
+            return;
+        }
+        
+        Vector3f pos = getLocalTranslation();
+        TerrainNode tnode = _view.getTerrainNode();
+        pos.z = tnode.getHeightfieldHeight(pos.x, pos.y);
+        setLocalTranslation(pos);
+        
+        Quaternion rot = getLocalRotation();
+        Vector3f normal = tnode.getHeightfieldNormal(pos.x, pos.y),
+            up = rot.mult(Vector3f.UNIT_Z),
+            cross = up.cross(normal);
+        float angle = FastMath.asin(cross.length());
+        if (angle < FastMath.FLT_EPSILON) {
+            return;
+        }
+        
+        Quaternion mod = new Quaternion();
+        mod.fromAngleAxis(angle, cross);
+        setLocalRotation(mod.multLocal(rot));
+    }
+    
     @Override // documentation inherited
     public void pathCompleted ()
     {

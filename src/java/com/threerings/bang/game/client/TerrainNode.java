@@ -465,6 +465,60 @@ public class TerrainNode extends Node
     }
     
     /**
+     * Returns the interpolated height at the specified set of node space
+     * coordinates.
+     */
+    public float getHeightfieldHeight (float x, float y)
+    {
+        // scale down to sub-tile coordinates
+        float stscale = BangBoard.HEIGHTFIELD_SUBDIVISIONS / TILE_SIZE;
+        x *= stscale;
+        y *= stscale;
+        
+        // sample at the four closest points and find the fractional components
+        int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
+            fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
+        float ff = getHeightfieldValue(fx, fy),
+            fc = getHeightfieldValue(fx, cy),
+            cf = getHeightfieldValue(cx, fy),
+            cc = getHeightfieldValue(cx, cy),
+            ax = x - fx, ay = y - fy;
+        
+        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
+            FastMath.LERP(ay, cf, cc));
+    }
+    
+    /**
+     * Returns the interpolated normal at the specified set of node space
+     * coordinates.
+     */
+    public Vector3f getHeightfieldNormal (float x, float y)
+    {
+        // scale down to sub-tile coordinates
+        float stscale = BangBoard.HEIGHTFIELD_SUBDIVISIONS / TILE_SIZE;
+        x *= stscale;
+        y *= stscale;
+        
+        // sample at the four closest points and find the fractional components
+        int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
+            fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
+        Vector3f ff = new Vector3f(), fc = new Vector3f(), cf = new Vector3f(),
+            cc = new Vector3f(), fffc = new Vector3f(), cfcc = new Vector3f(),
+            result = new Vector3f();
+        getHeightfieldNormal(fx, fy, ff);
+        getHeightfieldNormal(fx, cy, fc);
+        getHeightfieldNormal(cx, fy, cf);
+        getHeightfieldNormal(cx, cy, cc);
+        float ax = x - fx, ay = y - fy;
+        
+        fffc.interpolate(ff, fc, ay);
+        cfcc.interpolate(cf, cc, ay);
+        result.interpolate(fffc, cfcc, ax);
+        result.normalizeLocal();
+        return result;
+    }
+    
+    /**
      * Computes the heightfield vertex at the specified location in sub-tile
      * coordinates.
      *
@@ -583,30 +637,6 @@ public class TerrainNode extends Node
     {
         return _board.getHeightfieldValue(x, y) *
             (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
-    }
-    
-    /**
-     * Returns the interpolated height at the specified set of node space
-     * coordinates.
-     */
-    protected float getHeightfieldHeight (float x, float y)
-    {
-        // scale down to sub-tile coordinates
-        float stscale = BangBoard.HEIGHTFIELD_SUBDIVISIONS / TILE_SIZE;
-        x *= stscale;
-        y *= stscale;
-        
-        // sample at the four closest points and find the fractional components
-        int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
-            fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
-        float ff = getHeightfieldValue(fx, fy),
-            fc = getHeightfieldValue(fx, cy),
-            cf = getHeightfieldValue(cx, fy),
-            cc = getHeightfieldValue(cx, cy),
-            ax = x - fx, ay = y - fy;
-        
-        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
-            FastMath.LERP(ay, cf, cc));
     }
     
     /**

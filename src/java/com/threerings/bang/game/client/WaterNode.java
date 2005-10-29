@@ -105,6 +105,9 @@ public class WaterNode extends Node
     public void updateWorldData (float time)
     {
         super.updateWorldData(time);
+        if (_blocks == null) {
+            return;
+        }
         
         // adjust the phase based on time elapsed
         _phase += time * WAVE_SPEED;

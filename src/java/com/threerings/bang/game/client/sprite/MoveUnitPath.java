@@ -59,10 +59,13 @@ public class MoveUnitPath extends LineSegmentPath
     {
         super.update(time);
 
+        // adjust to the terrain at the current coordinates
+        MobileSprite sprite = (MobileSprite)_sprite;
+        sprite.snapToTerrain();
+        
         _elapsed += time;
         if (_actions != null && _elapsed > _times[_index] &&
             _index < _actions.length-1) {
-            MobileSprite sprite = (MobileSprite)_sprite;
             sprite.setAction(_actions[++_index]);
             sprite.setAnimationActive(true);
         }
