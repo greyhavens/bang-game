@@ -31,18 +31,18 @@ public class PropSprite extends PieceSprite
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
-        // draw a footprint if we're in editor mode
-        if (_editorMode) {
-            Quad foot = new Quad("footprint", TILE_SIZE*_config.width,
-                                 TILE_SIZE*_config.height);
-            foot.setRenderState(RenderUtil.overlayZBuf);
-            foot.setRenderState(RenderUtil.blendAlpha);
-            foot.setSolidColor(FOOT_COLOR);
-            foot.setLightCombineMode(LightState.OFF);
-            foot.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-            foot.setLocalTranslation(new Vector3f(0, 0, 0.1f));
-            attachChild(foot);
-        }
+//         // draw a footprint if we're in editor mode
+//         if (_editorMode) {
+//             Quad foot = new Quad("footprint", TILE_SIZE*_config.width,
+//                                  TILE_SIZE*_config.height);
+//             foot.setRenderState(RenderUtil.overlayZBuf);
+//             foot.setRenderState(RenderUtil.blendAlpha);
+//             foot.setSolidColor(FOOT_COLOR);
+//             foot.setLightCombineMode(LightState.OFF);
+//             foot.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+//             foot.setLocalTranslation(new Vector3f(0, 0, 0.1f));
+//             attachChild(foot);
+//         }
 
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
@@ -68,5 +68,6 @@ public class PropSprite extends PieceSprite
     protected PropConfig _config;
     protected Model _model;
 
-    protected static final ColorRGBA FOOT_COLOR = new ColorRGBA(1, 1, 1, 0.5f);
+//     protected static final ColorRGBA FOOT_COLOR =
+//         new ColorRGBA(1, 1, 1, 0.5f);
 }
