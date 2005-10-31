@@ -11,9 +11,10 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.CompositeMesh;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
+import com.jme.scene.TriMesh;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.geom.BufferUtils;
@@ -58,7 +59,7 @@ public class WaterNode extends Node
         detachAllChildren();
         
         // initialize the array of blocks
-        _blocks = new SurfaceBlock[_board.getWidth()][_board.getHeight()];
+        _blocks = new SharedMesh[_board.getWidth()][_board.getHeight()];
         setWorldBound(new BoundingBox());
         refreshSurface();
     }
@@ -82,15 +83,19 @@ public class WaterNode extends Node
             for (int y = y1; y <= y2; y++) {
                 if (_board.isUnderWater(x, y)) {
                     if (_blocks[x][y] == null) {
-                        _blocks[x][y] = new SurfaceBlock(x, y);
+                        _blocks[x][y] = new SharedMesh("block", _tile);
+                        _blocks[x][y].setLocalTranslation(
+                            new Vector3f(x * TILE_SIZE, y * TILE_SIZE, 0f));
                     }
                     if (_blocks[x][y].getParent() == null) {
                         attachChild(_blocks[x][y]);
+                        _bcount++;
                     }
                     
                 } else if (_blocks[x][y] != null &&
                     _blocks[x][y].getParent() != null) {
                     detachChild(_blocks[x][y]);
+                    _bcount--;
                 }
             }
         }
@@ -115,28 +120,19 @@ public class WaterNode extends Node
             _phase -= WAVE_LENGTH;
         }
         
-        // update the vertices of all active blocks
-        for (int x = 0; x < _blocks.length; x++) {
-            for (int y = 0; y < _blocks[x].length; y++) {
-                if (_blocks[x][y] != null &&
-                    _blocks[x][y].getParent() != null) {
-                    _blocks[x][y].updateVertices();
-                }
-            }  
+        // update the vertices of the tile if there are any blocks
+        // showing
+        if (_bcount > 0) {
+            _tile.updateVertices();
         }
     }
     
-    /** Represents a block of the water surface at a single tile coordinate. */
-    protected class SurfaceBlock extends CompositeMesh
+    /** Represents a tilable, tile-sized block of water. */
+    protected class SurfaceTile extends TriMesh
     {
-        /** The tile coordinates of the block. */
-        public int x, y;
-        
-        public SurfaceBlock (int x, int y)
+        public SurfaceTile ()
         {
-            super("block");
-            this.x = x;
-            this.y = y;
+            super("surface");
             
             // set the vertices and normals, which change over time
             int size = SURFACE_SUBDIVISIONS + 1, bsize = size * size * 3;
@@ -145,24 +141,23 @@ public class WaterNode extends Node
             updateVertices();
             
             // set the indices and ranges, which never change
-            if (_bibuf == null) {
-                _bibuf = BufferUtils.createIntBuffer(SURFACE_SUBDIVISIONS *
-                    size * 2);
-                for (int iy = 0; iy < SURFACE_SUBDIVISIONS; iy++) {
-                    for (int ix = 0; ix < size; ix++) {
-                        _bibuf.put((iy+1)*size + ix);
-                        _bibuf.put(iy*size + ix);
-                    }
-                }
-                
-                _branges = new CompositeMesh.IndexRange[SURFACE_SUBDIVISIONS];
-                for (int i = 0; i < _branges.length; i++) {
-                    _branges[i] = CompositeMesh.createTriangleStrip(size*2);
+            IntBuffer ibuf = BufferUtils.createIntBuffer(SURFACE_SUBDIVISIONS *
+                SURFACE_SUBDIVISIONS * 2 * 3);
+            for (int iy = 0; iy < SURFACE_SUBDIVISIONS; iy++) {
+                for (int ix = 0; ix < SURFACE_SUBDIVISIONS; ix++) {
+                    // upper left triangle
+                    ibuf.put(iy*size + ix);
+                    ibuf.put((iy+1)*size + (ix+1));
+                    ibuf.put((iy+1)*size + ix);
+                    
+                    // lower right triangle
+                    ibuf.put(iy*size + ix);
+                    ibuf.put(iy*size + (ix+1));
+                    ibuf.put((iy+1)*size + (ix+1));
                 }
             }
-            setIndexBuffer(_bibuf);
-            setIndexRanges(_branges);
-
+            setIndexBuffer(ibuf);
+            
             setModelBound(new BoundingBox());
             updateModelBound();
         }
@@ -172,21 +167,22 @@ public class WaterNode extends Node
          */
         public void updateVertices ()
         {
+            if (_board == null) {
+                return;
+            }
+            
             FloatBuffer vbuf = getVertexBuffer(), nbuf = getNormalBuffer();
             
-            int tx0 = x,
-                ty0 = y*BangBoard.HEIGHTFIELD_SUBDIVISIONS, idx = 0;
             float step = TILE_SIZE / SURFACE_SUBDIVISIONS,
-                x0 = x * TILE_SIZE, y0 = y * TILE_SIZE,
                 waterline = (_board.getWaterLevel() - 1) *
                     (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE),
                 a = FastMath.TWO_PI / WAVE_LENGTH, p1 = _phase,
                 p2 = _phase + PHASE_DIFFERENCE;
             Vector3f vertex = new Vector3f(), normal = new Vector3f();
-            for (int i = 0; i <= SURFACE_SUBDIVISIONS; i++) {
+            for (int i = 0, idx = 0; i <= SURFACE_SUBDIVISIONS; i++) {
                 for (int j = 0; j <= SURFACE_SUBDIVISIONS; j++) {
-                    vertex.x = x0 + j * step;
-                    vertex.y = y0 + i * step;
+                    vertex.x = j * step;
+                    vertex.y = i * step;
                     float wx = a*(vertex.x + p1), wy = a*(vertex.y + p2);
                     vertex.z = waterline + WAVE_AMPLITUDE *
                         (FastMath.sin(wx) + FastMath.sin(wy));
@@ -209,14 +205,14 @@ public class WaterNode extends Node
     /** The board with the terrain information. */
     protected BangBoard _board;
     
-    /** The array of surface blocks for the tile locations. */
-    protected SurfaceBlock[][] _blocks;
+    /** The tile geometry shared between the blocks. */
+    protected SurfaceTile _tile = new SurfaceTile();
     
-    /** The shared index buffer for surface blocks. */
-    protected IntBuffer _bibuf;
+    /** The array of tiled surface blocks for the tile locations. */
+    protected SharedMesh[][] _blocks;
     
-    /** The shared range array for surface blocks. */
-    protected CompositeMesh.IndexRange[] _branges;
+    /** The number of currently active blocks. */
+    protected int _bcount;
     
     /** The current wave phase in node units. */
     protected float _phase;
