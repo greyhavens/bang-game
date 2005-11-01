@@ -267,6 +267,20 @@ public class BoardView extends BComponent
     // documentation inherited from interface MouseMotionListener
     public void mouseMoved (MouseEvent e)
     {
+        updateHoverState(e);   
+    }
+
+    // documentation inherited from interface MouseMotionListener
+    public void mouseDragged (MouseEvent e)
+    {
+        updateHoverState(e);
+    }
+    
+    /**
+     * Updates the hover state based on the supplied mouse event. 
+     */
+    public void updateHoverState (MouseEvent e)
+    {
         Vector3f ground = getGroundIntersect(e, null); 
 
         int mx = (int)Math.floor(ground.x / TILE_SIZE);
@@ -293,7 +307,7 @@ public class BoardView extends BComponent
             hoverTileChanged(_mouse.x, _mouse.y);
         }
     }
-
+    
     /**
      * Given a mouse event, returns the point at which a ray cast from the
      * eye through the mouse pointer intersects the ground plane.
@@ -321,13 +335,6 @@ public class BoardView extends BComponent
         result.z = 0.1f;
         
         return result;
-    }
-     
-    // documentation inherited from interface MouseMotionListener
-    public void mouseDragged (MouseEvent e)
-    {
-        // first update our mousely business
-        mouseMoved(e);
     }
 
     // documentation inherited from interface MouseWheelListener

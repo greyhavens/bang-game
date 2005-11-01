@@ -54,6 +54,22 @@ public class PiecePlacer extends EditorTool
             } else {
                 _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
             }
+        
+        // otherwise, create a piece and start dragging
+        } else if (e.getButton() == MouseEvent.BUTTON1) {
+            Piece piece = _chooser.getSelectedPiece();
+            if (piece == null) {
+                return;
+            }
+            
+            _dragPiece = (Piece)piece.clone();
+            _dragPiece.assignPieceId();
+            _dragPiece.position(tx, ty);
+            
+            EditorController.postAction(
+                _panel, EditorController.ADD_PIECE, _dragPiece);
+            
+            _panel.view.updateHoverState(e);
         }
     }
 
@@ -109,10 +125,13 @@ public class PiecePlacer extends EditorTool
     protected JPanel createOptions ()
     {
         JPanel options = new JPanel(new BorderLayout());
-        options.add(new PieceCreator(_ctx), BorderLayout.CENTER);
+        options.add(_chooser = new PieceChooser(_ctx), BorderLayout.CENTER);
         return options;
     }
 
+    /** The piece chooser component. */
+    protected PieceChooser _chooser;
+    
     /** The location of the mouse pointer in tile coordinates. */
     protected Point _hoverTile = new Point(-1, -1);
         
