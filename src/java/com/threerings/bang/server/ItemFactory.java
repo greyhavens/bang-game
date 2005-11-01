@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import com.samskivert.util.HashIntMap;
 
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
@@ -91,6 +92,7 @@ public class ItemFactory
         registerItemClass(CardItem.class);
         registerItemClass(Badge.class);
         registerItemClass(Purse.class);
+        registerItemClass(Article.class);
         // end of registeration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 

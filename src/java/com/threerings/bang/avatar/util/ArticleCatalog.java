@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.samskivert.util.StringUtil;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -30,6 +32,9 @@ public class ArticleCatalog
         /** The town in which this article is available. */
         public String townId;
 
+        /** The avatar slot into which this article "fits". */
+        public String slot;
+
         /** The cost of this article in scrip. */
         public int scrip;
 
@@ -45,6 +50,12 @@ public class ArticleCatalog
             components.add(comp);
         }
 
+        /** Generates a string representation of this instance. */
+        public String toString ()
+        {
+            return StringUtil.fieldsToString(this);
+        }
+
         /** Increase this value when object's serialized state is impacted by a
          * class change (modification of fields, inheritance). */
         private static final long serialVersionUID = 1;
@@ -58,6 +69,16 @@ public class ArticleCatalog
 
         /** The name of this component. */
         public String name;
+
+        /** Generates a string representation of this instance. */
+        public String toString ()
+        {
+            return StringUtil.fieldsToString(this);
+        }
+
+        /** Increase this value when object's serialized state is impacted by a
+         * class change (modification of fields, inheritance). */
+        private static final long serialVersionUID = 1;
     }
 
     /**

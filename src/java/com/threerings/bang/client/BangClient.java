@@ -28,6 +28,7 @@ import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AspectCatalog;
 import com.threerings.bang.avatar.util.AvatarMetrics;
@@ -143,7 +144,7 @@ public class BangClient extends BasicClient
         try {
             _charmgr = new CharacterManager(
                 _imgmgr, new BundledComponentRepository(
-                    _rsrcmgr, _imgmgr, "avatars"));
+                    _rsrcmgr, _imgmgr, AvatarCodes.AVATAR_RSRC_SET));
             _colorpos = ColorPository.loadColorPository(_rsrcmgr);
             _ametrics = new AvatarMetrics(
                 _colorpos, _charmgr.getComponentRepository());

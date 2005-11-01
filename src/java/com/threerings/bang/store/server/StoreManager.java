@@ -50,7 +50,7 @@ public class StoreManager extends PlaceManager
         }
 
         // create the appropriate provider and pass the buck to it
-        Provider provider = GoodsCatalog.getProvider(user, good);
+        Provider provider = _goods.getProvider(user, good);
         if (provider == null) {
             log.warning("Unable to find provider for good [who=" + user.who() +
                         ", good=" + good + "].");
@@ -78,7 +78,8 @@ public class StoreManager extends PlaceManager
     {
         super.didInit();
 
-        // TODO: anything?
+        // create our goods catalog
+        _goods = new GoodsCatalog(BangServer.rsrcmgr, BangServer.comprepo);
     }
 
     @Override // documentation inherited
@@ -92,9 +93,9 @@ public class StoreManager extends PlaceManager
                               new StoreDispatcher(this), false));
 
         // populate the store object with our salable goods
-        _stobj.setGoods(
-            new DSet(GoodsCatalog.getGoods(ServerConfig.getTownId())));
+        _stobj.setGoods(new DSet(_goods.getGoods(ServerConfig.getTownId())));
     }
 
     protected StoreObject _stobj;
+    protected GoodsCatalog _goods;
 }

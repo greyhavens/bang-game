@@ -14,6 +14,8 @@ import com.threerings.cast.CharacterDescriptor;
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
 
+import com.threerings.bang.data.Article;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -22,12 +24,6 @@ import static com.threerings.bang.Log.log;
  */
 public class AvatarMetrics
 {
-    /** The width of our avatar source images. */
-    public static final int WIDTH = 468;
-
-    /** The height of our avatar source images. */
-    public static final int HEIGHT = 600;
-
     /** Defines a particular aspect of an avatar's look. An aspect will
      * configure one or more character components in the avatar's look. */
     public static class Aspect
@@ -68,11 +64,29 @@ public class AvatarMetrics
         new Aspect("beard", new String[] { "beard", "beard_back" }, true, true),
     };
 
+    /** Defines the various article slots available to an avatar. */
+    public static final Aspect[] SLOTS = {
+        new Aspect("hat", new String[] {
+            "hat", "hat_back", "hat_band" }, true, false),
+        new Aspect("clothing", new String[] {
+            "clothing_back", "clothing_front", "clothing_props" }, true, false),
+        new Aspect("familiar", new String[] { "familiar" }, true, false),
+        new Aspect("glasses", new String[] { "glasses" }, true, false),
+        new Aspect("jewelry", new String[] { "jewelry" }, true, false),
+        new Aspect("makeup", new String[] { "makeup" }, true, false),
+    };
+
     /** The colorization class for skin colors. */
     public static final String SKIN = "skin";
 
     /** The colorization class for hair colors. */
     public static final String HAIR = "hair";
+
+    /** The width of our avatar source images. */
+    public static final int WIDTH = 468;
+
+    /** The height of our avatar source images. */
+    public static final int HEIGHT = 600;
 
     /**
      * Creates a metrics instance which will make use of the supplied
@@ -143,6 +157,47 @@ public class AvatarMetrics
         }
 
         return new CharacterDescriptor(componentIds, zations);
+    }
+
+    /**
+     * Creates an inventory article from an article catalog entry and a set of
+     * colorizations.
+     */
+    public Article createArticle (int playerId, ArticleCatalog.Article article
+                                  /* TODO: , zations */)
+    {
+        // sanity check the slot name
+        Aspect slot = null;
+        for (int ii = 0; ii < SLOTS.length; ii++) {
+            if (SLOTS[ii].name.equals(article.slot)) {
+                slot = SLOTS[ii];
+                break;
+            }
+        }
+        if (slot == null) {
+            log.warning("Requested to create article for unknown slot " +
+                        "[pid=" + playerId + ", article=" + article + "].");
+            return null;
+        }
+
+        // look up the component ids of the various components in the article
+        int[] componentIds = new int[article.components.size()];
+        int idx = 0;
+        for (ArticleCatalog.Component comp : article.components) {
+            try {
+                CharacterComponent ccomp = _crepo.getComponent(
+                    comp.cclass, comp.name);
+                componentIds[idx++] = ccomp.componentId;
+                // TODO: add the colorizations
+            } catch (NoSuchComponentException nsce) {
+                log.warning("Article references unknown component " +
+                            "[article=" + article.name +
+                            ", cclass=" + comp.cclass +
+                            ", name=" + comp.name + "].");
+            }
+        }
+
+        return new Article(playerId, article.slot, article.name, componentIds);
     }
 
     protected ColorPository _pository;

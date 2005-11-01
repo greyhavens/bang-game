@@ -13,4 +13,7 @@ public interface AvatarCodes
 
     /** The identifier for the article message bundle. */
     public static final String ARTICLE_MSGS = "article";
+
+    /** The resource set that contains our avatar imagery. */
+    public static final String AVATAR_RSRC_SET = "avatars";
 }

@@ -12,6 +12,11 @@ import com.samskivert.util.AuditLogger;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 
+import com.threerings.cast.ComponentRepository;
+import com.threerings.cast.bundle.BundledComponentRepository;
+import com.threerings.resource.ResourceManager;
+import com.threerings.util.Name;
+
 import com.threerings.presents.server.Authenticator;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -22,8 +27,8 @@ import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.parlor.server.ParlorManager;
 
 import com.threerings.user.AccountActionRepository;
-import com.threerings.util.Name;
 
+import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberConfig;
 import com.threerings.bang.avatar.server.BarberManager;
 import com.threerings.bang.avatar.server.persist.LookRepository;
@@ -51,6 +56,14 @@ public class BangServer extends CrowdServer
     /** The connection provider used to obtain access to our JDBC
      * databases. */
     public static ConnectionProvider conprov;
+
+    /** A resource manager with which we can load resources in the same manner
+     * that the client does (for resources that are used on both the server and
+     * client). */
+    public static ResourceManager rsrcmgr;
+
+    /** Provides information on our character components. */
+    public static ComponentRepository comprepo;
 
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
@@ -107,6 +120,12 @@ public class BangServer extends CrowdServer
 
         // configure the client manager to use our resolver
         clmgr.setClientResolverClass(BangClientResolver.class);
+
+        // create our resource manager and other resource bits
+        rsrcmgr = new ResourceManager("rsrc");
+        rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
+        comprepo = new BundledComponentRepository(
+            rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET);
 
         // create our database connection provider and repositories
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
