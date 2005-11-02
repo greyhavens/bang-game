@@ -104,7 +104,7 @@ public class BangApp extends JmeApp
         _client.init(this);
 
         // speed up key input
-        _input.setKeySpeed(150f);
+        _input.setActionSpeed(150f);
         return true;
     }
 

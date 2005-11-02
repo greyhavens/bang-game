@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
@@ -129,6 +130,7 @@ public class CameraHandler extends GodViewHandler
         super.setKeyBindings(api);
 
         // additional key bindings for the zoom actions
+        KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
         keyboard.set("zoomIn", KeyInput.KEY_E);
         keyboard.set("zoomOut", KeyInput.KEY_Q);
     }
