@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BDecoratedWindow;
@@ -14,9 +15,11 @@ import com.jmex.bui.layout.GroupLayout;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.client.util.EscapeListener;
+import com.threerings.bang.util.BangContext;
+
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.util.BangContext;
 
 /**
  * Manages the primary user interface during the game.
@@ -41,6 +44,24 @@ public class BangView extends BWindow
         // create our various displays
         add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
         chat = new OverlayChatView(ctx);
+
+        addListener(new EscapeListener() {
+            public void keyPressed (int keyCode) {
+                switch (keyCode) {
+                case KeyInput.KEY_SPACE:
+                    _ctrl.startChat();
+                    break;
+                default:
+                    super.keyPressed(keyCode);
+                }
+            }
+            public void escapePressed () {
+                InGameOptionsView oview = new InGameOptionsView(_ctx);
+                _ctx.getRootNode().addWindow(oview);
+                oview.pack();
+                oview.center();
+            }
+        });
     }
 
     /** Called by the controller when the big shot and card selection

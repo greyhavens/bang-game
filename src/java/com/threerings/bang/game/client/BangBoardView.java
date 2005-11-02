@@ -12,7 +12,6 @@ import java.util.Map;
 
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
-import com.jme.input.KeyInput;
 
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
@@ -25,7 +24,6 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.SoundUtil;
@@ -65,24 +63,6 @@ public class BangBoardView extends BoardView
         _ctx = ctx;
         _ctrl = ctrl;
         addListener(this);
-
-        addListener(new EscapeListener() {
-            public void keyPressed (int keyCode) {
-                switch (keyCode) {
-                case KeyInput.KEY_SPACE:
-                    _ctrl.startChat();
-                    break;
-                default:
-                    super.keyPressed(keyCode);
-                }
-            }
-            public void escapePressed () {
-                InGameOptionsView oview = new InGameOptionsView(_ctx);
-                _ctx.getRootNode().addWindow(oview);
-                oview.pack();
-                oview.center();
-            }
-        });
     }
 
     /**

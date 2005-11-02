@@ -209,8 +209,8 @@ public class BangClient extends BasicClient
             // ensure that it is a default event target (and hears the escape
             // key pressed event)
             _pview = (BWindow)view;
+            _pview.setModal(true);
             if (!(_pview instanceof BangView)) {
-                _pview.setModal(true);
                 new StatusView(_ctx).bind(_pview);
             }
 
