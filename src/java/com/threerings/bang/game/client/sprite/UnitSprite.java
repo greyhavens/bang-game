@@ -16,11 +16,16 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
+import com.threerings.jme.sprite.Path;
+
+import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -45,7 +50,7 @@ public class UnitSprite extends MobileSprite
      */
     public void setHovered (boolean hovered)
     {
-        _hovquad.setCullMode(hovered ? CULL_DYNAMIC : CULL_ALWAYS);
+        _hov.setCullMode(hovered ? CULL_DYNAMIC : CULL_ALWAYS);
     }
 
     /**
@@ -100,13 +105,15 @@ public class UnitSprite extends MobileSprite
 
         // update our status display
         _status.setCullMode(unit.isAlive() ? CULL_DYNAMIC : CULL_ALWAYS);
+        TextureState tstate =
+            (TextureState)_ticks.getRenderState(RenderState.RS_TEXTURE);
         if ((ticks = unit.ticksUntilMovable(_tick)) > 0) {
-            _ticks.setRenderState(_ticktex[Math.max(0, 4-ticks)]);
-            _ticks.updateRenderState();
+            tstate.setTexture(
+                _ticktex[Math.max(0, 4-ticks)].createSimpleClone());
             _movable.setCullMode(CULL_ALWAYS);
         } else {
-            _ticks.setRenderState(_ticktex[4]);
-            _ticks.updateRenderState();
+            tstate.setTexture(_ticktex[4].createSimpleClone());
+            //_ticks.updateRenderState();
             _movable.setCullMode(CULL_DYNAMIC);
         }
 
@@ -116,7 +123,6 @@ public class UnitSprite extends MobileSprite
         // update our damage texture if necessary
         if (unit.damage != _odamage) {
             _damtex.setTexture(createDamageTexture());
-            _damage.updateRenderState();
             _odamage = unit.damage;
         }
 
@@ -138,50 +144,106 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
+    public void move (Path path)
+    {
+        super.move(path);
+        _view.getNode().detachChild(_status);
+    }
+    
+    @Override // documentation inherited
+    public void cancelMove ()
+    {
+        super.cancelMove();
+        _highlight.setPosition(_piece.x, _piece.y);
+        _view.getNode().attachChild(_status);
+    }
+    
+    @Override // documentation inherited
+    public void pathCompleted ()
+    {
+        super.pathCompleted();
+        _highlight.setPosition(_piece.x, _piece.y);
+        _view.getNode().attachChild(_status);
+    }
+    
+    @Override // documentation inherited
+    public void updateWorldData (float time)
+    {
+        super.updateWorldData(time);
+        
+        Vector3f dir = _ctx.getCamera().getDirection();
+        float angle = FastMath.atan2(-dir.x, dir.y);
+        Quaternion rot = new Quaternion();
+        rot.fromAngleAxis(-angle, Vector3f.UNIT_Z);
+        Vector3f trans = rot.mult(new Vector3f(0.5f, 0.5f, 0f));
+        trans.set(0.5f - trans.x, 0.5f - trans.y, 0f);
+        
+        Texture mtex = ((TextureState)_movable.getRenderState(
+            RenderState.RS_TEXTURE)).getTexture();
+        mtex.setRotation(rot);
+        mtex.setTranslation(trans);
+        
+        Texture ttex = ((TextureState)_ticks.getRenderState(
+            RenderState.RS_TEXTURE)).getTexture();
+        ttex.setRotation(rot);
+        ttex.setTranslation(trans);
+        
+        Texture dtex = ((TextureState)_damage.getRenderState(
+            RenderState.RS_TEXTURE)).getTexture();
+        dtex.setRotation(rot);
+        dtex.setTranslation(trans);
+    }
+    
+    @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
         if (_hovtex == null) {
             loadTextures(ctx);
         }
-
-        // this icon is displayed when the mouse is hovered over us
-        _hovquad = RenderUtil.createIcon(_hovtex);
-        _hovquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _hovquad.setLocalTranslation(new Vector3f(0, 0, 0.2f));
-        attachChild(_hovquad);
-        _hovquad.setCullMode(CULL_ALWAYS);
-
+        
+        _ctx = ctx;
+        
         // this composite of icons combines to display our status
-        _status = new StatusNode();
-        _status.setRenderState(RenderUtil.blendAlpha);
-        _status.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _status.updateRenderState();
-        _status.setLocalTranslation(new Vector3f(0, 0, 0.1f));
-        attachChild(_status);
-        _ticks = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
-        _ticks.setLocalTranslation(new Vector3f(-TILE_SIZE/4, TILE_SIZE/4, 0));
+        _status = new Node("status");
+        
+        // the geometry of the highlight is shared between the status elements
+        _highlight = _view.getTerrainNode().createHighlight(_piece.x, _piece.y,
+            true);
+            
+        // this icon is displayed when the mouse is hovered over us
+        _hov = new SharedMesh("hov", _highlight);
+        TextureState tstate = ctx.getRenderer().createTextureState();
+        tstate.setTexture(_hovtex.createSimpleClone());
+        _hov.setRenderState(tstate);
+        _hov.updateRenderState();
+        _status.attachChild(_hov);
+        _hov.setCullMode(CULL_ALWAYS);
+
+        _ticks = new SharedMesh("ticks", _highlight);
         int tick = _piece.ticksUntilMovable(_tick), tidx = Math.max(0, 4-tick);
-        _ticks.setRenderState(_ticktex[tidx]);
+        tstate = ctx.getRenderer().createTextureState();
+        tstate.setTexture(_ticktex[tidx].createSimpleClone());
+        _ticks.setRenderState(tstate);
         _ticks.updateRenderState();
         _status.attachChild(_ticks);
-
-        _damage = RenderUtil.createIcon(TILE_SIZE/2, TILE_SIZE/2);
-        _damage.setLocalTranslation(new Vector3f(TILE_SIZE/4, TILE_SIZE/4, 0));
+        
+        _damage = new SharedMesh("damage", _highlight);
         _damtex = ctx.getRenderer().createTextureState();
         _damtex.setEnabled(true);
         _damtex.setTexture(createDamageTexture());
         _damage.setRenderState(_damtex);
         _damage.updateRenderState();
         _status.attachChild(_damage);
-
-        _movable = RenderUtil.createIcon(TILE_SIZE, TILE_SIZE/2);
-        _movable.setLocalTranslation(new Vector3f(0, -TILE_SIZE/4, 0));
-        _movable.setRenderState(_movetex);
+        
+        _movable = new SharedMesh("movable", _highlight);
+        tstate = ctx.getRenderer().createTextureState();
+        tstate.setTexture(_movetex.createSimpleClone());
+        _movable.setRenderState(tstate);
         _movable.updateRenderState();
         _status.attachChild(_movable);
-        attachChild(_status);
+        _view.getNode().attachChild(_status);
         _movable.setCullMode(tick > 0 ? CULL_ALWAYS : CULL_DYNAMIC);
-
+        
         // configure our colors
         configureOwnerColors();
 
@@ -242,12 +304,8 @@ public class UnitSprite extends MobileSprite
     /** Sets up our colors according to our owning player. */
     protected void configureOwnerColors ()
     {
-        _ticks.setSolidColor(JPIECE_COLORS[_piece.owner]);
-        _ticks.updateRenderState();
-        _damage.setSolidColor(JPIECE_COLORS[_piece.owner]);
-        _damage.updateRenderState();
-        _movable.setSolidColor(JPIECE_COLORS[_piece.owner]);
-        _movable.updateRenderState();
+        _highlight.setDefaultColor(JPIECE_COLORS[_piece.owner]);
+        _highlight.updateRenderState();
     }
 
     protected Texture createDamageTexture ()
@@ -264,7 +322,7 @@ public class UnitSprite extends MobileSprite
             // expand the width and height a smidge to avoid funny
             // business around the edges
             Arc2D.Float arc = new Arc2D.Float(
-                -5*width/4, -height/4, 10*width/4, 10*height/4,
+                -width/8, -height/8, 10*width/8, 10*height/8,
                 90 - ARC_INSETS - extent, extent, Arc2D.PIE);
             gfx.setClip(arc);
             gfx.drawImage(_dfull, 0, 0, null);
@@ -273,98 +331,47 @@ public class UnitSprite extends MobileSprite
             gfx.dispose();
         }
 
-        return TextureManager.loadTexture(
+        Texture dtex = TextureManager.loadTexture(
             comp, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+        dtex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+        return dtex;
     }
 
     protected static void loadTextures (BasicContext ctx)
     {
-        _hovtex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("textures/ustatus/selected.png"));
+        _hovtex = TextureManager.loadTexture(
+            ctx.loadImage("textures/ustatus/selected.png"),
+            Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+        
         _tgttex = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
         _pendtex = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/pending.png"));
-        _movetex = RenderUtil.createTexture(
-            ctx, ctx.loadImage("textures/ustatus/tick_ready.png"));
+        _movetex = TextureManager.loadTexture(
+            ctx.loadImage("textures/ustatus/tick_ready.png"),
+            Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+        _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+        
         _nugtex = RenderUtil.createTexture(
             ctx, ctx.loadImage("textures/ustatus/nugget.png"));
-        _ticktex = new TextureState[5];
+        _ticktex = new Texture[5];
         for (int ii = 0; ii < 5; ii++) {
-            _ticktex[ii] = RenderUtil.createTexture(
-                ctx, ctx.loadImage(
-                    "textures/ustatus/tick_counter_" + ii + ".png"));
+            _ticktex[ii] = TextureManager.loadTexture(
+                ctx.loadImage("textures/ustatus/tick_counter_" + ii + ".png"),
+                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+            _ticktex[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         }
         _dfull = ctx.loadImage("textures/ustatus/health_meter_full.png");
         _dempty = ctx.loadImage("textures/ustatus/health_meter_empty.png");
     }
+    
+    protected BasicContext _ctx;
+    protected Quad _tgtquad, _pendquad;
 
-    /** A node that rotates itself around the up vector as the camera
-     * rotates so as to keep the status textures properly oriented toward
-     * the player. */
-    protected class StatusNode extends Node
-    {
-        public StatusNode () {
-            super("status");
-        }
-
-	public void updateWorldData (float time) {
-            _lastUpdate = time;
-            updateWorldBound();
-	}
-
-	public void draw (Renderer r) {
-            Camera cam = r.getCamera();
-
-            // obtain our current world coordinates
-            worldScale.set(parent.getWorldScale()).multLocal(localScale);
-            worldTranslation = parent.getWorldRotation().mult(
-                localTranslation, worldTranslation).multLocal(
-                    parent.getWorldScale()).addLocal(
-                        parent.getWorldTranslation());
-            // we don't want our parent's world rotation, which would
-            // normally by obtained like so:
-            // parent.getWorldRotation().mult(localRotation, worldRotation);
-            worldRotation.set(localRotation);
-
-            // project the camera forward vector onto the "ground":
-            // camdir - (camdir . UP) * UP
-            Vector3f camdir = cam.getDirection();
-            UP.mult(camdir.dot(UP), _tvec);
-            camdir.subtract(_tvec, _tvec);
-            _tvec.normalizeLocal();
-
-            // compute the angle between LEFT and the camera direction to
-            // find the camera rotation around the up vector
-            _tvec.normalizeLocal();
-            float theta = FastMath.acos(_tvec.dot(LEFT));
-            // when y is negative, we need to flip the sign of the angle
-            if (_tvec.y < 0) {
-                theta *= -1f;
-            }
-            // we offset theta by PI/2 because our "natural" orientation
-            // is a bit sideways
-            _tquat.fromAngleAxis(theta + FastMath.PI/2, UP);
-            worldRotation.multLocal(_tquat);
-
-            // now we can update our children
-            for (int ii = 0, ll = children.size(); ii < ll; ii++) {
-                Spatial child = (Spatial)children.get(ii);
-                if (child != null) {
-                    child.updateGeometricState(_lastUpdate, false);
-                }
-            }
-
-            super.draw(r);
-	}
-
-        protected float _lastUpdate;
-    }
-
-    protected Quad _hovquad, _tgtquad, _pendquad;
-
-    protected StatusNode _status;
-    protected Quad _ticks, _damage, _movable, _icon;
+    protected Node _status;
+    protected TerrainNode.Highlight _highlight;
+    protected SharedMesh _hov, _ticks, _damage, _movable;
+    protected Quad _icon;
     protected TextureState _damtex;
 
     protected int _odamage;
@@ -374,9 +381,10 @@ public class UnitSprite extends MobileSprite
     protected static Quaternion _tquat = new Quaternion();
 
     protected static BufferedImage _dfull, _dempty;
-    protected static TextureState _hovtex, _tgttex, _pendtex, _movetex, _nugtex;
-    protected static TextureState[] _ticktex;
-
+    protected static Texture _hovtex, _movetex;
+    protected static Texture[] _ticktex;
+    protected static TextureState _tgttex, _pendtex, _nugtex;
+    
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
 

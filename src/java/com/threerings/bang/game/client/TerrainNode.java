@@ -232,7 +232,7 @@ public class TerrainNode extends Node
     /** 
      * Represents a highlight draped over the terrain underneath a tile.
      */
-    public class Highlight extends CompositeMesh
+    public class Highlight extends TriMesh
     {
         /** The tile coordinate to highlight. */
         public int x, y;
@@ -255,7 +255,7 @@ public class TerrainNode extends Node
             setVertexBuffer(BufferUtils.createFloatBuffer(size * size * 3));
             updateVertices();
             
-            // set the texture coords, indices, and ranges, which never change
+            // set the texture coords and indices, which never change
             if (_htbuf == null) {
                 _htbuf = BufferUtils.createFloatBuffer(size * size * 2);
                 float step = 1f / BangBoard.HEIGHTFIELD_SUBDIVISIONS;
@@ -267,24 +267,26 @@ public class TerrainNode extends Node
                 }
             
                 _hibuf = BufferUtils.createIntBuffer(
-                    BangBoard.HEIGHTFIELD_SUBDIVISIONS * size * 2);
+                    BangBoard.HEIGHTFIELD_SUBDIVISIONS *
+                    BangBoard.HEIGHTFIELD_SUBDIVISIONS * 2 * 3);
                 for (int iy = 0; iy < BangBoard.HEIGHTFIELD_SUBDIVISIONS;
                         iy++) {
-                    for (int ix = 0; ix < size; ix++) {
-                        _hibuf.put((iy+1)*size + ix);
+                    for (int ix = 0; ix < BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+                            ix++) {
+                        // upper left triangle
                         _hibuf.put(iy*size + ix);
+                        _hibuf.put((iy+1)*size + (ix+1));
+                        _hibuf.put((iy+1)*size + ix);
+                    
+                        // lower right triangle
+                        _hibuf.put(iy*size + ix);
+                        _hibuf.put(iy*size + (ix+1));
+                        _hibuf.put((iy+1)*size + (ix+1));
                     }
-                }
-                
-                _hranges = new CompositeMesh.IndexRange[
-                    BangBoard.HEIGHTFIELD_SUBDIVISIONS];
-                for (int i = 0; i < _hranges.length; i++) {
-                    _hranges[i] = CompositeMesh.createTriangleStrip(size*2);
                 }
             }
             setTextureBuffer(_htbuf);
             setIndexBuffer(_hibuf);
-            setIndexRanges(_hranges);
             
             setModelBound(new BoundingBox());
             updateModelBound();
@@ -861,9 +863,6 @@ public class TerrainNode extends Node
     
     /** The shared index buffer for highlights. */
     protected static IntBuffer _hibuf;
-    
-    /** The shared range array for highlights. */
-    protected static CompositeMesh.IndexRange[] _hranges;
     
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;
