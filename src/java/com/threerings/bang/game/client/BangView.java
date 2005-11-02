@@ -114,13 +114,7 @@ public class BangView extends BWindow
     {
         BangObject bangobj = (BangObject)plobj;
 
-        // add our chat display
-        int width = _ctx.getDisplay().getWidth();
-        _ctx.getRootNode().addWindow(chat);
-        chat.pack();
-        chat.setBounds(10, 20, width-20, chat.getHeight());
-
-        // create and position our player status displays
+        // create our player status displays
         int pcount = bangobj.players.length;
         _pstatus = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
         _pstatus.setLayoutManager(GroupLayout.makeHStretch());
@@ -129,10 +123,6 @@ public class BangView extends BWindow
         for (int ii = 0; ii < pcount; ii++) {
             _pstatus.add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
         }
-        _ctx.getRootNode().addWindow(_pstatus);
-        _pstatus.setSize(_ctx.getDisplay().getWidth() - 20, 50);
-        int height = _ctx.getDisplay().getHeight();
-        _pstatus.setLocation(10, height - _pstatus.getHeight() - 10);
 
         chat.willEnterPlace(plobj);
     }
@@ -150,6 +140,26 @@ public class BangView extends BWindow
             _ctx.getRootNode().removeWindow(_oview);
             _oview = null;
         }
+    }
+
+    @Override // documentation inherited
+    public void wasAdded ()
+    {
+        super.wasAdded();
+
+        int width = _ctx.getDisplay().getWidth();
+        int height = _ctx.getDisplay().getHeight();
+
+        // now that we've been added to the interface hierarchy, we can add the
+        // player status window which should be "above" this one
+        _ctx.getRootNode().addWindow(_pstatus);
+        _pstatus.setSize(width - 20, 50);
+        _pstatus.setLocation(10, height - _pstatus.getHeight() - 10);
+
+        // and add our chat display
+        _ctx.getRootNode().addWindow(chat);
+        chat.pack();
+        chat.setBounds(10, 20, width-20, chat.getHeight());
     }
 
     /** Giver of life and context. */
