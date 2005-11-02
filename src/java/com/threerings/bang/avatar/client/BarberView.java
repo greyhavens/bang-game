@@ -64,8 +64,8 @@ public class BarberView extends BWindow
 
         // put our new look and change clothes interfaces in tabs
         BTabbedPane tabs = new BTabbedPane(GroupLayout.CENTER);
-        tabs.addTab(msgs.get("m.new_look"), new NewLookView(ctx));
-        tabs.addTab(msgs.get("m.wear_clothes"), new WearClothingView(ctx));
+        tabs.addTab(msgs.get("m.new_look"), wrap(new NewLookView(ctx)));
+        tabs.addTab(msgs.get("m.wear_clothes"), wrap(new WearClothingView(ctx)));
         main.add(tabs);
 
         // add a row displaying our cash on hand and the back button
@@ -84,6 +84,14 @@ public class BarberView extends BWindow
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
+    }
+
+    /** UI helper function. */
+    protected BContainer wrap (BContainer comp)
+    {
+        BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
+        wrapper.add(comp);
+        return wrapper;
     }
 
     protected BangContext _ctx;

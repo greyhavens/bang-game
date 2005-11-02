@@ -69,11 +69,11 @@ public class AvatarMetrics
         new Aspect("hat", new String[] {
             "hat", "hat_back", "hat_band" }, true, false),
         new Aspect("clothing", new String[] {
-            "clothing_back", "clothing_front", "clothing_props" }, true, false),
-        new Aspect("familiar", new String[] { "familiar" }, true, false),
+            "clothing_back", "clothing_front", "clothing_props" }, false, false),
         new Aspect("glasses", new String[] { "glasses" }, true, false),
         new Aspect("jewelry", new String[] { "jewelry" }, true, false),
         new Aspect("makeup", new String[] { "makeup" }, true, false),
+        new Aspect("familiar", new String[] { "familiar" }, true, false),
     };
 
     /** The colorization class for skin colors. */

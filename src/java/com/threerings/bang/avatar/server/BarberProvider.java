@@ -17,6 +17,12 @@ import com.threerings.presents.server.InvocationProvider;
 public interface BarberProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link BarberService#configureLook} request.
+     */
+    public void configureLook (ClientObject caller, String arg1, int[] arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
+
+    /**
      * Handles a {@link BarberService#purchaseLook} request.
      */
     public void purchaseLook (ClientObject caller, Look arg1, InvocationService.ConfirmListener arg2)

@@ -3,21 +3,20 @@
 
 package com.threerings.bang.client;
 
-import com.jmex.bui.BLabel;
 import com.jmex.bui.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.util.BangContext;
 
 /**
  * Displays an icon and descriptive text for a particular inventory item.
  */
-public class ItemIcon extends BLabel
+public class ItemIcon extends SelectableIcon
 {
     public ItemIcon ()
     {
-        super("");
         setOrientation(VERTICAL);
         setHorizontalAlignment(CENTER);
     }

@@ -39,6 +39,13 @@ public class BarberDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case BarberMarshaller.CONFIGURE_LOOK:
+            ((BarberProvider)provider).configureLook(
+                source,
+                (String)args[0], (int[])args[1], (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
         case BarberMarshaller.PURCHASE_LOOK:
             ((BarberProvider)provider).purchaseLook(
                 source,

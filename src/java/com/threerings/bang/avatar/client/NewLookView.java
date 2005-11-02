@@ -49,13 +49,15 @@ public class NewLookView extends BContainer
         add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
 
         // TODO: obtain gender based on the user object
-        _gender = (RandomUtil.getInt(100) >= 50) ? "male/" : "female/";
+        boolean isMale = (RandomUtil.getInt(100) >= 50);
+        _gender = isMale ? "male/" : "female/";
 
         BContainer toggles = new BContainer(new TableLayout(5, 5, 5));
         add(toggles, BorderLayout.CENTER);
         for (int ii = 0; ii < AvatarMetrics.ASPECTS.length; ii++) {
-            // TODO: skip male-only toggles if we are female
-            new AspectToggle(AvatarMetrics.ASPECTS[ii], toggles);
+            if (isMale || !AvatarMetrics.ASPECTS[ii].maleOnly) {
+                new AspectToggle(AvatarMetrics.ASPECTS[ii], toggles);
+            }
         }
 
         BContainer cost = GroupLayout.makeHBox(GroupLayout.RIGHT);

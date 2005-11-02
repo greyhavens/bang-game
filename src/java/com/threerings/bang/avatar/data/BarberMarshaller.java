@@ -20,8 +20,21 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class BarberMarshaller extends InvocationMarshaller
     implements BarberService
 {
+    /** The method id used to dispatch {@link #configureLook} requests. */
+    public static final int CONFIGURE_LOOK = 1;
+
+    // documentation inherited from interface
+    public void configureLook (Client arg1, String arg2, int[] arg3, InvocationService.ConfirmListener arg4)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, CONFIGURE_LOOK, new Object[] {
+            arg2, arg3, listener4
+        });
+    }
+
     /** The method id used to dispatch {@link #purchaseLook} requests. */
-    public static final int PURCHASE_LOOK = 1;
+    public static final int PURCHASE_LOOK = 2;
 
     // documentation inherited from interface
     public void purchaseLook (Client arg1, Look arg2, InvocationService.ConfirmListener arg3)

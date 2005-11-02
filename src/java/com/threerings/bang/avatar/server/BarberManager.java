@@ -41,6 +41,17 @@ public class BarberManager extends PlaceManager
         throw new InvocationException(INTERNAL_ERROR);
     }
 
+    // documentation inherited from interface BarberProvider
+    public void configureLook (
+        ClientObject caller, String name, int[] articleIds,
+        BarberService.ConfirmListener cl)
+        throws InvocationException
+    {
+        PlayerObject user = (PlayerObject)caller;
+        // TODO
+        throw new InvocationException(INTERNAL_ERROR);
+    }
+
     @Override // documentation inherited
     protected Class getPlaceObjectClass ()
     {
