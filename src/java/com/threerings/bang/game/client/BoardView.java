@@ -698,7 +698,7 @@ public class BoardView extends BComponent
 
     /** The color of the movement highlights. */
     protected static final ColorRGBA MOVEMENT_HIGHLIGHT_COLOR =
-        new ColorRGBA(1f, 1f, 0f, 0.9f);
+        new ColorRGBA(1f, 1f, 0f, 0.6f);
     
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;
