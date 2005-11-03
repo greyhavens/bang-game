@@ -580,6 +580,7 @@ public class BoardView extends BComponent
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             TerrainNode.Highlight highlight = _tnode.createHighlight(
                 set.getX(ii), set.getY(ii), true);
+            highlight.setDefaultColor(MOVEMENT_HIGHLIGHT_COLOR);
             highlight.setRenderState(_movstate);
             highlight.updateRenderState();
             _hnode.attachChild(highlight);
@@ -695,6 +696,10 @@ public class BoardView extends BComponent
     protected static final ColorRGBA BROWN =
         new ColorRGBA(204/255f, 153/255f, 51/255f, 1.0f);
 
+    /** The color of the movement highlights. */
+    protected static final ColorRGBA MOVEMENT_HIGHLIGHT_COLOR =
+        new ColorRGBA(1f, 1f, 0f, 0.9f);
+    
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;
     
