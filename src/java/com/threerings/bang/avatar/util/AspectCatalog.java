@@ -6,8 +6,8 @@ package com.threerings.bang.avatar.util;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import static com.threerings.bang.Log.log;
 
@@ -74,14 +74,14 @@ public class AspectCatalog
     }
 
     /**
-     * Returns an iterator over the set of aspect names in the specified aspect
-     * class. <code>null</code> is returned if no aspect class is registered
-     * with the specified name.
+     * Returns the collection of aspects in the specified aspect class.
+     * <code>null</code> is returned if no aspect class is registered with the
+     * specified name.
      */
-    public Iterator<String> enumerateAspectNames (String aclass)
+    public Collection<Aspect> getAspects (String aclass)
     {
         AspectClass ccrec = _classes.get(aclass);
-        return (ccrec == null) ? null : ccrec.aspects.keySet().iterator();
+        return (ccrec == null) ? null : ccrec.aspects.values();
     }
 
     /**

@@ -49,6 +49,11 @@ public class AvatarMetrics
             this.optional = optional;
             this.maleOnly = maleOnly;
         }
+
+        public String toString ()
+        {
+            return StringUtil.fieldsToString(this);
+        }
     }
 
     /** Defines the various aspects of an avatar's look. */

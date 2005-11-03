@@ -19,8 +19,25 @@ public class Look extends SimpleStreamableObject
     /** The name of this look (provided by the player). */
     public String name;
 
-    /** The avatar fingerprint associated with this look. */
-    public int[] avatar;
+    /** The immutable avatar aspects associated with this look (character
+     * component ids). */
+    public int[] aspects;
+
+    /** The most recently configured set of articles for this look (character
+     * component ids and colorizations). */
+    public int[] articles;
+
+    /**
+     * Combines the aspect and article information into a full avatar
+     * fingerprint.
+     */
+    public int[] getAvatar ()
+    {
+        int[] avatar = new int[aspects.length+articles.length];
+        System.arraycopy(aspects, 0, avatar, 0, aspects.length);
+        System.arraycopy(articles, 0, avatar, aspects.length, articles.length);
+        return avatar;
+    }
 
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()

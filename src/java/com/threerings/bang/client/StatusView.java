@@ -19,10 +19,12 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
-import com.threerings.bang.client.util.EscapeListener;
-import com.threerings.bang.ranch.client.UnitPalette;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.avatar.client.PickLookView;
+import com.threerings.bang.ranch.client.UnitPalette;
+
+import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
@@ -59,25 +61,30 @@ public class StatusView extends BDecoratedWindow
 
         add(new WalletLabel(ctx), GroupLayout.FIXED);
 
-        BTabbedPane tabs = new BTabbedPane();
-        add(tabs);
+        // TODO: record in a static variable which tab was last selected and
+        // use it when opening the view
+        _tabs = new BTabbedPane();
+        add(_tabs);
+
+        // add the avatar tab
+        _tabs.addTab(_msgs.get("m.status_avatar"), new PickLookView(ctx));
 
         // add the inventory tab
-        tabs.addTab(_msgs.get("m.status_inventory"),
-                    new BScrollPane(new InventoryPalette(ctx)));
+        _tabs.addTab(_msgs.get("m.status_inventory"),
+                     new BScrollPane(new InventoryPalette(ctx)));
 
         // add the big shots tab
         UnitPalette bigshots = new UnitPalette(ctx, null, 3);
         bigshots.setUser(user);
-        tabs.addTab(_msgs.get("m.status_big_shots"), new BScrollPane(bigshots));
+        _tabs.addTab(_msgs.get("m.status_big_shots"), new BScrollPane(bigshots));
 
         // add the badges tab
-        tabs.addTab(_msgs.get("m.status_badges"),
-                    new BScrollPane(createBadgeTab(user)));
+        _tabs.addTab(_msgs.get("m.status_badges"),
+                     new BScrollPane(createBadgeTab(user)));
 
         // add the stats tab
-        tabs.addTab(_msgs.get("m.status_stats"),
-                    new BScrollPane(createStatsTab(user)));
+        _tabs.addTab(_msgs.get("m.status_stats"),
+                     new BScrollPane(createStatsTab(user)));
 
         row = new BContainer(GroupLayout.makeHStretch());
         row.add(createButton("quit"), GroupLayout.FIXED);
@@ -88,6 +95,16 @@ public class StatusView extends BDecoratedWindow
         }
         row.add(createButton("resume"), GroupLayout.FIXED);
         add(row, GroupLayout.FIXED);
+
+        // finally select the most recently selected tab
+        _tabs.selectTab(_selectedTab);
+    }
+
+    @Override // documentation inherited
+    public void dismiss ()
+    {
+        super.dismiss();
+        _selectedTab = _tabs.getSelectedTabIndex();
     }
 
     protected BContainer createBadgeTab (PlayerObject user)
@@ -155,4 +172,8 @@ public class StatusView extends BDecoratedWindow
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
+    protected BTabbedPane _tabs;
+
+    /** We track which tab was last selected across instances. */
+    protected static int _selectedTab;
 }

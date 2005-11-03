@@ -53,7 +53,7 @@ public class LookRepository extends SimpleRepository
         throws PersistenceException
     {
         final ArrayList<Look> looks = new ArrayList<Look>();
-        final String query = "select NAME, AVATAR from LOOKS " +
+        final String query = "select NAME, ASPECTS, ARTICLES from LOOKS " +
             "where PLAYER_ID = " + playerId;
         execute(new Operation() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
@@ -84,15 +84,14 @@ public class LookRepository extends SimpleRepository
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
-                String ssql = "insert into LOOKS (PLAYER_ID, NAME, AVATAR) " +
-                    "values (?, ?, ?)";
+                String ssql = "insert into LOOKS " +
+                    "(PLAYER_ID, NAME, ASPECTS, ARTICLES) values (?, ?, ?, ?)";
                 PreparedStatement stmt = conn.prepareStatement(ssql);
                 try {
                     stmt.setInt(1, playerId);
                     stmt.setString(2, look.name);
-                    ByteBuffer adata = ByteBuffer.allocate(look.avatar.length*4);
-                    adata.asIntBuffer().put(look.avatar);
-                    stmt.setBytes(3, adata.array());
+                    stmt.setBytes(3, toByteArray(look.aspects));
+                    stmt.setBytes(4, toByteArray(look.articles));
                     stmt.executeUpdate();
                 } finally {
                     JDBCUtil.close(stmt);
@@ -122,10 +121,25 @@ public class LookRepository extends SimpleRepository
     {
         Look look = new Look();
         look.name = rs.getString(1);
-        byte[] adata = rs.getBytes(2);
-        IntBuffer ints = ByteBuffer.wrap(adata).asIntBuffer();
-        look.avatar = new int[ints.remaining()];
-        ints.get(look.avatar);
+        look.aspects = fromByteArray(rs.getBytes(2));
+        look.articles = fromByteArray(rs.getBytes(3));
         return look;
+    }
+
+    /** Helper function for {@link #insertLook}. */
+    protected byte[] toByteArray (int[] array)
+    {
+        ByteBuffer adata = ByteBuffer.allocate(array.length*4);
+        adata.asIntBuffer().put(array);
+        return adata.array();
+    }
+
+    /** Helper function for {@link #decodeLook}. */
+    protected int[] fromByteArray (byte[] array)
+    {
+        IntBuffer ints = ByteBuffer.wrap(array).asIntBuffer();
+        int[] iarray = new int[ints.remaining()];
+        ints.get(iarray);
+        return iarray;
     }
 }

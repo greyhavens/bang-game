@@ -25,6 +25,9 @@ import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.avatar.data.BarberCodes;
+import com.threerings.bang.avatar.data.BarberObject;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -41,7 +44,8 @@ public class BarberView extends BWindow
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-        final MessageBundle msgs = ctx.getMessageManager().getBundle("barber");
+        final MessageBundle msgs = ctx.getMessageManager().getBundle(
+            BarberCodes.BARBER_MSGS);
 
         String townId = _ctx.getUserObject().townId;
 
@@ -64,8 +68,10 @@ public class BarberView extends BWindow
 
         // put our new look and change clothes interfaces in tabs
         BTabbedPane tabs = new BTabbedPane(GroupLayout.CENTER);
-        tabs.addTab(msgs.get("m.new_look"), wrap(new NewLookView(ctx)));
-        tabs.addTab(msgs.get("m.wear_clothes"), wrap(new WearClothingView(ctx)));
+        _newlook = new NewLookView(ctx, _status);
+        tabs.addTab(msgs.get("m.new_look"), wrap(_newlook));
+        _wearclothes = new WearClothingView(ctx, _status);
+        tabs.addTab(msgs.get("m.wear_clothes"), wrap(_wearclothes));
         main.add(tabs);
 
         // add a row displaying our cash on hand and the back button
@@ -79,6 +85,9 @@ public class BarberView extends BWindow
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
+        BarberObject barbobj = (BarberObject)plobj;
+        _newlook.setBarberObject(barbobj);
+        // _wearclothes.setBarberObject(barbobj);
     }
 
     // documentation inherited from interface PlaceView
@@ -96,4 +105,6 @@ public class BarberView extends BWindow
 
     protected BangContext _ctx;
     protected BTextArea _status;
+    protected NewLookView _newlook;
+    protected WearClothingView _wearclothes;
 }

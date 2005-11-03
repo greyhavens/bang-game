@@ -12,4 +12,10 @@ public interface BarberCodes extends InvocationCodes
 {
     /** The identifier for our message bundle. */
     public static final String BARBER_MSGS = "barber";
+
+    /** The base scrip cost for a new look. */
+    public static final int BASE_LOOK_SCRIP_COST = 1000;
+
+    /** The base coin cost for a new look. */
+    public static final int BASE_LOOK_COIN_COST = 2;
 }

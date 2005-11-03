@@ -17,8 +17,11 @@ CREATE TABLE LOOKS
     /** The name given to this look by the player. */
     NAME VARCHAR(48) NOT NULL,
 
-    /** The array of integers representing the avatar configuration. */
-    AVATAR BLOB NOT NULL,
+    /** The array of integers representing the avatar's aspects. */
+    ASPECTS BLOB NOT NULL,
+
+    /** The array of integers representing the avatar's articles. */
+    ARTICLES BLOB NOT NULL,
 
     /** Defines our table keys. */
     KEY (PLAYER_ID)

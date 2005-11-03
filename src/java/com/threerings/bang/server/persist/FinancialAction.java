@@ -79,8 +79,8 @@ public abstract class FinancialAction extends Invoker.Unit
                 }
             }
 
-        } catch (PersistenceException pe) {
-            log.log(Level.WARNING, "Financial action failed " + this, pe);
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Financial action failed " + this, e);
             fail();
         }
 

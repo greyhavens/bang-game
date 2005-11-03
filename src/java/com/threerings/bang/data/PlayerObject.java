@@ -26,6 +26,9 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>accountName</code> field. */
     public static final String ACCOUNT_NAME = "accountName";
 
+    /** The field name of the <code>isMale</code> field. */
+    public static final String IS_MALE = "isMale";
+
     /** The field name of the <code>tokens</code> field. */
     public static final String TOKENS = "tokens";
 
@@ -56,6 +59,9 @@ public class PlayerObject extends BodyObject
 
     /** This user's authentication account username. */
     public Name accountName;
+
+    /** Whether this character is male or female. */
+    public boolean isMale;
 
     /** Indicates which access control tokens are held by this user. */
     public TokenRing tokens;
@@ -141,6 +147,22 @@ public class PlayerObject extends BodyObject
         requestAttributeChange(
             ACCOUNT_NAME, value, ovalue);
         this.accountName = value;
+    }
+
+    /**
+     * Requests that the <code>isMale</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setIsMale (boolean value)
+    {
+        boolean ovalue = this.isMale;
+        requestAttributeChange(
+            IS_MALE, new Boolean(value), new Boolean(ovalue));
+        this.isMale = value;
     }
 
     /**

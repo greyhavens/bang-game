@@ -3,7 +3,13 @@
 
 package com.threerings.bang.avatar.server;
 
+import java.io.IOException;
+import java.util.logging.Level;
+
 import com.samskivert.io.PersistenceException;
+import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.StringUtil;
+import com.threerings.util.CompiledConfig;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.coin.server.persist.CoinTransaction;
@@ -12,6 +18,9 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.server.PlaceManager;
+
+import com.threerings.cast.CharacterComponent;
+import com.threerings.cast.NoSuchComponentException;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -22,6 +31,8 @@ import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.data.BarberMarshaller;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.util.AspectCatalog;
+import com.threerings.bang.avatar.util.AvatarMetrics;
 
 import static com.threerings.bang.Log.log;
 
@@ -32,19 +43,77 @@ public class BarberManager extends PlaceManager
     implements BarberCodes, BarberProvider
 {
     // documentation inherited from interface BarberProvider
-    public void purchaseLook (
-        ClientObject caller, Look look, BarberService.ConfirmListener cl)
+    public void purchaseLook (ClientObject caller, String name, String[] aspects,
+                              BarberService.ConfirmListener cl)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
-        // TODO: compute the price of the look and create a BuyLookAction
-        throw new InvocationException(INTERNAL_ERROR);
+
+        if (StringUtil.blank(name)) {
+            log.warning("Requested to create look with blank name " +
+                        "[who=" + user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        String gender = user.isMale ? "male/" : "female/";
+        int scrip = BarberCodes.BASE_LOOK_SCRIP_COST,
+            coins = BarberCodes.BASE_LOOK_COIN_COST;
+        ArrayIntSet compids = new ArrayIntSet();
+        for (int ii = 0; ii < aspects.length; ii++) {
+            AvatarMetrics.Aspect aclass = AvatarMetrics.ASPECTS[ii];
+            String acname = gender + aclass.name;
+            if (aspects[ii] == null) {
+                if (!aclass.optional) {
+                    log.warning("Requested to purchase look that is missing " +
+                                "a non-optional aspect [who=" + user.who() +
+                                ", class=" + acname + "].");
+                    throw new InvocationException(INTERNAL_ERROR);
+                }
+                continue;
+            }
+
+            AspectCatalog.Aspect aspect = _aspcat.getAspect(acname, aspects[ii]);
+            if (aspect == null) {
+                log.warning("Requested to purchase a look with unknown aspect " +
+                            "[who=" + user.who() + ", class=" + acname +
+                            ", choice=" + aspects[ii] + "].");
+                throw new InvocationException(INTERNAL_ERROR);
+            }
+
+            // add the cost to the total cost
+            scrip += aspect.scrip;
+            coins += aspect.coins;
+
+            // look up the aspect's components
+            for (int cc = 0; cc < aclass.classes.length; cc++) {
+                String cclass = gender + aclass.classes[cc];
+                try {
+                    CharacterComponent ccomp = BangServer.comprepo.getComponent(
+                        cclass, aspect.name);
+                    compids.add(ccomp.componentId);
+                } catch (NoSuchComponentException nsce) {
+                    // no problem, some of these are optional
+                }
+            }
+        }
+
+        Look look = new Look();
+        look.name = name;
+        look.aspects = new int[compids.size()+1];
+        // TODO: add proper hair and skin colorizations
+        look.aspects[0] = (7 << 5) | 3;
+        compids.toIntArray(look.aspects, 1);
+        // TODO: copy articles from "active" look
+        look.articles = new int[0];
+
+        // the buy look action takes care of the rest (including checking that
+        // they have sufficient funds)
+        new BuyLookAction(user, look, scrip, coins, cl).start();
     }
 
     // documentation inherited from interface BarberProvider
-    public void configureLook (
-        ClientObject caller, String name, int[] articleIds,
-        BarberService.ConfirmListener cl)
+    public void configureLook (ClientObject caller, String name, int[] articles,
+                               BarberService.ConfirmListener cl)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
@@ -70,7 +139,14 @@ public class BarberManager extends PlaceManager
     {
         super.didInit();
 
-        // TODO: anything?
+        try {
+            // load up our aspect catalog; this only happens at server startup,
+            // so we don't mind doing disk I/O directly on the dobj thread
+            _aspcat = (AspectCatalog)CompiledConfig.loadConfig(
+                BangServer.rsrcmgr.getResource(AspectCatalog.CONFIG_PATH));
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Failed to load aspect catalog.", ioe);
+        }
     }
 
     @Override // documentation inherited
@@ -123,4 +199,5 @@ public class BarberManager extends PlaceManager
     }
 
     protected BarberObject _bobj;
+    protected AspectCatalog _aspcat;
 }

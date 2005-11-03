@@ -6,6 +6,7 @@ package com.threerings.bang.server;
 import java.util.ArrayList;
 
 import com.threerings.util.Name;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
@@ -16,6 +17,8 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.server.persist.Player;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Customizes the client resolver to use our {@link PlayerObject}.
@@ -46,6 +49,8 @@ public class BangClientResolver extends CrowdClientResolver
         }
         buser.playerId = player.playerId;
         buser.accountName = new Name(player.accountName);
+        // TODO: allow player to specify during initial avatar creation
+        buser.isMale = (RandomUtil.getInt(100) > 50);
         buser.scrip = player.scrip;
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
             player.accountName);

@@ -4,7 +4,6 @@
 package com.threerings.bang.avatar.data;
 
 import com.threerings.bang.avatar.client.BarberService;
-import com.threerings.bang.avatar.data.Look;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -37,12 +36,12 @@ public class BarberMarshaller extends InvocationMarshaller
     public static final int PURCHASE_LOOK = 2;
 
     // documentation inherited from interface
-    public void purchaseLook (Client arg1, Look arg2, InvocationService.ConfirmListener arg3)
+    public void purchaseLook (Client arg1, String arg2, String[] arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
         sendRequest(arg1, PURCHASE_LOOK, new Object[] {
-            arg2, listener3
+            arg2, arg3, listener4
         });
     }
 
