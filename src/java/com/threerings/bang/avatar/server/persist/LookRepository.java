@@ -102,6 +102,33 @@ public class LookRepository extends SimpleRepository
     }
 
     /**
+     * Writes updates to a look out to the database. <em>Note:</em> only {@link
+     * Look#articles} are updated, all other aspects of a look are immutable.
+     */
+    public void updateLook (final int playerId, final Look look)
+        throws PersistenceException
+    {
+        execute(new Operation() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                String ssql = "update LOOKS set ARTICLES = ? " +
+                    "where PLAYER_ID = ? and NAME = ?";
+                PreparedStatement stmt = conn.prepareStatement(ssql);
+                try {
+                    stmt.setBytes(1, toByteArray(look.articles));
+                    stmt.setInt(2, playerId);
+                    stmt.setString(3, look.name);
+                    JDBCUtil.warnedUpdate(stmt, 1);
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+    }
+
+    /**
      * Deletes a particular look owned by a particular player.
      */
     public void deleteLook (int playerId, String name)

@@ -76,7 +76,7 @@ public class IconPalette extends BContainer
         while (_selections.size() > 0) {
             _selections.remove(0).setSelected(false);
         }
-        if (sels > 0 && _inspector != null) {
+        if (sels > 0 && _inspector != null && isAdded()) {
             _inspector.selectionCleared();
         }
     }

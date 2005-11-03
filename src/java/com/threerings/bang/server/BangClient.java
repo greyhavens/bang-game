@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.samskivert.util.Invoker;
@@ -10,6 +11,8 @@ import com.samskivert.util.Invoker;
 import com.threerings.crowd.data.TokenRing;
 import com.threerings.crowd.server.CrowdClient;
 import com.threerings.presents.net.BootstrapData;
+
+import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.PlayerObject;
@@ -110,6 +113,14 @@ public class BangClient extends CrowdClient
             Stat[] stats = new Stat[user.stats.size()];
             user.stats.toArray(stats);
             BangServer.statrepo.writeModified(user.playerId, stats);
+
+            // write out any modified looks
+            for (Iterator iter = user.looks.iterator(); iter.hasNext(); ) {
+                Look look = (Look)iter.next();
+                if (look.modified) {
+                    BangServer.lookrepo.updateLook(user.playerId, look);
+                }
+            }
 
             // record our playtime to the database
             BangServer.playrepo.noteSessionEnded(

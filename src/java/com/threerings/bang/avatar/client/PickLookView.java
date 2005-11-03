@@ -20,8 +20,6 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Allows a player to select one of their active looks for use.
  */
@@ -129,11 +127,8 @@ public class PickLookView extends BContainer
         // differ, send a request to the server to update the look
         Look remote = (Look)_ctx.getUserObject().looks.get(_selection.name);
         if (!_selection.equals(remote)) {
-            log.info("Flushing " + _selection + ".");
             _barbobj.service.configureLook(
                 _ctx.getClient(), _selection.name, _selection.articles);
-        } else {
-            log.info("Not flushing " + _selection + ".");
         }
     }
 

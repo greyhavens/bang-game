@@ -18,8 +18,6 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.server.persist.Player;
 
-import static com.threerings.bang.Log.log;
-
 /**
  * Customizes the client resolver to use our {@link PlayerObject}.
  */
@@ -67,6 +65,5 @@ public class BangClientResolver extends CrowdClientResolver
         buser.look = player.look;
         buser.looks = new DSet(
             BangServer.lookrepo.loadLooks(player.playerId).iterator());
-        log.info("Loaded looks " + buser.looks);
     }
 }
