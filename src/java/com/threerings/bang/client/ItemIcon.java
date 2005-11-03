@@ -21,6 +21,13 @@ public class ItemIcon extends SelectableIcon
         setHorizontalAlignment(CENTER);
     }
 
+    /** Returns the item associated with this icon. */
+    public Item getItem ()
+    {
+        return _item;
+    }
+
+    /** Configures this icon with its associated item. */
     public void setItem (BangContext ctx, Item item)
     {
         _item = item;

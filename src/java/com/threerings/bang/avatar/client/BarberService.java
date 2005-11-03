@@ -26,12 +26,12 @@ public interface BarberService extends InvocationService
 
     /**
      * Requests that the specified look be configured with the specified set of
-     * articles.
+     * articles. No confirmation is provided as the client will have already
+     * applied the changes locally.
      *
      * @param name the name of the look to be configured.
      * @param articles item ids of the article inventory items to be used to
      * configure the look.
      */
-    public void configureLook (
-        Client client, String name, int[] articles, ConfirmListener cl);
+    public void configureLook (Client client, String name, int[] articles);
 }

@@ -148,6 +148,12 @@ public class SignView extends BContainer
         setUnit(uicon.getItemId(), uicon.getUnit());
     }
 
+    // documentation inherited from interface IconPalette.Inspector
+    public void selectionCleared ()
+    {
+        // nada
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {

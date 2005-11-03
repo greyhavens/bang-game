@@ -16,10 +16,14 @@ import com.jmex.bui.layout.GroupLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.data.Article;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.data.BarberObject;
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarMetrics;
 
 /**
@@ -34,12 +38,10 @@ public class WearClothingView extends BContainer
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
 
-        BContainer cont = new BContainer(new BorderLayout(5, 5));
-        cont.add(_look = new BComboBox(), BorderLayout.NORTH);
-        cont.add(_avatar = new AvatarView(ctx), BorderLayout.CENTER);
-        add(cont, BorderLayout.WEST);
+        add(_pick = new PickLookView(ctx), BorderLayout.WEST);
 
-        cont = new BContainer(new BorderLayout(5, 5));
+        BContainer cont = new BContainer(new BorderLayout(5, 5));
+        cont.add(_articles = new ArticlePalette(ctx, this), BorderLayout.CENTER);
 
         BContainer slotsel = new BContainer(GroupLayout.makeHStretch());
         BButton left = new BButton(BangUI.leftArrow, "down");
@@ -50,13 +52,21 @@ public class WearClothingView extends BContainer
         BButton right = new BButton(BangUI.rightArrow, "up");
         right.addListener(this);
         slotsel.add(right, GroupLayout.FIXED);
-        cont.add(slotsel, BorderLayout.NORTH);
+        cont.add(slotsel, BorderLayout.SOUTH);
 
-        cont.add(_articles = new ArticlePalette(ctx, this), BorderLayout.CENTER);
         add(cont, BorderLayout.CENTER);
 
         // start out with the first slot
         setSlot(0);
+    }
+
+    /**
+     * Called by the {@link BarberView} to give us a reference to our barber
+     * object when needed.
+     */
+    public void setBarberObject (BarberObject barbobj)
+    {
+        _pick.setBarberObject(barbobj);
     }
 
     // documentation inherited from interface ActionListener
@@ -74,6 +84,16 @@ public class WearClothingView extends BContainer
     // documentation inherited from interface ArticlePalette.Inspector
     public void iconSelected (SelectableIcon icon)
     {
+        Article article = (Article)((ItemIcon)icon).getItem();
+        _pick.getSelection().setArticle(article);
+        _pick.refreshDisplay();
+    }
+
+    // documentation inherited from interface ArticlePalette.Inspector
+    public void selectionCleared ()
+    {
+        _pick.getSelection().articles[_slotidx] = 0;
+        _pick.refreshDisplay();
     }
 
     protected void setSlot (int slotidx)
@@ -86,11 +106,9 @@ public class WearClothingView extends BContainer
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
+    protected int _slotidx;
 
-    protected AvatarView _avatar;
-    protected BComboBox _look;
-
+    protected PickLookView _pick;
     protected ArticlePalette _articles;
     protected BLabel _slot;
-    protected int _slotidx;
 }

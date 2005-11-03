@@ -72,6 +72,12 @@ public class GoodsInspector extends BContainer
         _cost.setMoney(_good.getScripCost(), _good.getCoinCost(), false);
     }
 
+    // documentation inherited from interface IconPalette.Inspector
+    public void selectionCleared ()
+    {
+        // nada
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {

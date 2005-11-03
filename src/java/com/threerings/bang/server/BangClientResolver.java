@@ -49,8 +49,7 @@ public class BangClientResolver extends CrowdClientResolver
         }
         buser.playerId = player.playerId;
         buser.accountName = new Name(player.accountName);
-        // TODO: allow player to specify during initial avatar creation
-        buser.isMale = (RandomUtil.getInt(100) > 50);
+        buser.isMale = player.isSet(Player.IS_MALE_FLAG);
         buser.scrip = player.scrip;
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
             player.accountName);
@@ -68,5 +67,6 @@ public class BangClientResolver extends CrowdClientResolver
         buser.look = player.look;
         buser.looks = new DSet(
             BangServer.lookrepo.loadLooks(player.playerId).iterator());
+        log.info("Loaded looks " + buser.looks);
     }
 }

@@ -87,7 +87,7 @@ public class BarberView extends BWindow
     {
         BarberObject barbobj = (BarberObject)plobj;
         _newlook.setBarberObject(barbobj);
-        // _wearclothes.setBarberObject(barbobj);
+        _wearclothes.setBarberObject(barbobj);
     }
 
     // documentation inherited from interface PlaceView

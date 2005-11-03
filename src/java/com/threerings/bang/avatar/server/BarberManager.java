@@ -22,6 +22,7 @@ import com.threerings.crowd.server.PlaceManager;
 import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.NoSuchComponentException;
 
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.persist.FinancialAction;
@@ -112,13 +113,55 @@ public class BarberManager extends PlaceManager
     }
 
     // documentation inherited from interface BarberProvider
-    public void configureLook (ClientObject caller, String name, int[] articles,
-                               BarberService.ConfirmListener cl)
-        throws InvocationException
+    public void configureLook (ClientObject caller, String name, int[] articles)
     {
         PlayerObject user = (PlayerObject)caller;
-        // TODO
-        throw new InvocationException(INTERNAL_ERROR);
+
+        // locate the look in question
+        Look look = (Look)user.looks.get(name);
+        if (look == null) {
+            log.warning("Asked to configure unknown look [who=" + user.who() +
+                        ", look=" + name +
+                        ", articles=" + StringUtil.toString(articles) + "].");
+            return;
+        }
+
+        // sanity check
+        if (articles == null || articles.length != AvatarMetrics.SLOTS.length) {
+            log.warning("Requested to configure invalid articles array " +
+                        "[who=" + user.who() + ", look=" + name +
+                        ", articles=" + StringUtil.toString(articles) + "].");
+            return;
+        }
+
+        // make sure all articles in the list are valid
+        for (int ii = 0; ii < articles.length; ii++) {
+            if (articles[ii] == 0) {
+                if (AvatarMetrics.SLOTS[ii].optional) {
+                    continue;
+                } else {
+                    log.warning("Requested to configure look with missing " +
+                                "non-optional articles [who=" + user.who() +
+                                ", idx=" + ii + ", look=" + name +
+                                ", art=" + StringUtil.toString(articles) + "].");
+                    return;
+                }
+            }
+
+            Article article = (Article)user.inventory.get(articles[ii]);
+            if (article == null ||
+                !article.getSlot().equals(AvatarMetrics.SLOTS[ii].name)) {
+                log.warning("Requested to configure look with invalid article " +
+                            "[who=" + user.who() + ", article=" + article +
+                            ", slot=" + AvatarMetrics.SLOTS[ii].name + "].");
+                return;
+            }
+        }
+
+        // put the new articles in place and update the user object
+        look.articles = articles;
+        look.modified = true;
+        user.updateLooks(look);
     }
 
     @Override // documentation inherited

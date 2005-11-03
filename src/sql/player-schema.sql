@@ -28,13 +28,16 @@ CREATE TABLE PLAYERS
     CREATED DATETIME NOT NULL,
 
     /** The number of sessions this player has played. */
-    SESSIONS INTEGER UNSIGNED NOT NULL,
+    SESSIONS INTEGER NOT NULL,
 
     /** The cumulative number of minutes spent playing. */
     SESSION_MINUTES INTEGER NOT NULL,
 
     /** The time at which the player ended their last session. */
     LAST_SESSION DATETIME NOT NULL,
+
+    /** Various one bit data (gender, etc.). */
+    FLAGS INTEGER NOT NULL,
 
     /** Defines our table keys. */
     PRIMARY KEY (PLAYER_ID)

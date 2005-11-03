@@ -94,6 +94,19 @@ public class AvatarMetrics
     public static final int HEIGHT = 600;
 
     /**
+     * Returns the index in the {@link #SLOTS} array of the specified slot.
+     */
+    public static int getSlotIndex (String slot)
+    {
+        for (int ii = 0; ii < SLOTS.length; ii++) {
+            if (SLOTS[ii].name.equals(slot)) {
+                return ii;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Creates a metrics instance which will make use of the supplied
      * repositories to obtain avatar related information.
      */

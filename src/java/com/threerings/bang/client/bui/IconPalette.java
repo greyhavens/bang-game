@@ -27,6 +27,9 @@ public class IconPalette extends BContainer
         /** Called to indicate that the supplied icon has been selected in the
          * icon palette. */
         public void iconSelected (SelectableIcon icon);
+
+        /** Called when there is no longer a selection. */
+        public void selectionCleared ();
     }
 
     /**
@@ -69,8 +72,12 @@ public class IconPalette extends BContainer
      */
     public void clearSelections ()
     {
+        int sels = _selections.size();
         while (_selections.size() > 0) {
             _selections.remove(0).setSelected(false);
+        }
+        if (sels > 0 && _inspector != null) {
+            _inspector.selectionCleared();
         }
     }
 
@@ -100,6 +107,12 @@ public class IconPalette extends BContainer
         } else if (!selected && _selections.contains(icon)) {
             // the icon was deselected, remove it from the selections list
             _selections.remove(icon);
+
+            // if this was the last selected icon, inform our inspector that
+            // the seleciton was cleared
+            if (_inspector != null && _selections.size() == 0) {
+                _inspector.selectionCleared();
+            }
         }
     }
 

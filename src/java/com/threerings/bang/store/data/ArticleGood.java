@@ -31,8 +31,9 @@ public class ArticleGood extends Good
     @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
-        // TODO: make sure the gender matches
-        return true;
+        // make sure the gender matches
+        boolean isMale = _type.startsWith("male");
+        return user.isMale == isMale;
     }
 
     @Override // documentation inherited

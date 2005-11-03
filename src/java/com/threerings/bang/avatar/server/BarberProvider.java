@@ -18,8 +18,7 @@ public interface BarberProvider extends InvocationProvider
     /**
      * Handles a {@link BarberService#configureLook} request.
      */
-    public void configureLook (ClientObject caller, String arg1, int[] arg2, InvocationService.ConfirmListener arg3)
-        throws InvocationException;
+    public void configureLook (ClientObject caller, String arg1, int[] arg2);
 
     /**
      * Handles a {@link BarberService#purchaseLook} request.

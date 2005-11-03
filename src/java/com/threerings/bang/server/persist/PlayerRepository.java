@@ -3,11 +3,14 @@
 
 package com.threerings.bang.server.persist;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.Session;
@@ -136,6 +139,22 @@ public class PlayerRepository extends JORARepository
     @Override // documentation inherited
     protected void createTables (Session session)
     {
+        // TEMP
+        try {
+            execute(new Operation() {
+                public Object invoke (Connection conn, DatabaseLiaison liaison)
+                    throws SQLException, PersistenceException
+                {
+                    JDBCUtil.addColumn(conn, "PLAYERS", "FLAGS",
+                                       "INTEGER NOT NULL", "LAST_SESSION");
+                    return null;
+                }
+            });
+        } catch (PersistenceException pe) {
+            pe.printStackTrace(System.err);
+        }
+        // END TEMP
+
 	_ptable = new Table(Player.class.getName(), "PLAYERS",
                             session, "PLAYER_ID", true);
     }

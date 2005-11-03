@@ -41,7 +41,7 @@ public class BarberDispatcher extends InvocationDispatcher
         case BarberMarshaller.CONFIGURE_LOOK:
             ((BarberProvider)provider).configureLook(
                 source,
-                (String)args[0], (int[])args[1], (InvocationService.ConfirmListener)args[2]
+                (String)args[0], (int[])args[1]
             );
             return;
 

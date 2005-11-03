@@ -64,8 +64,8 @@ public class AvatarView extends BLabel
             WIDTH, HEIGHT, Transparency.BITMASK);
         Graphics2D gfx = (Graphics2D)image.createGraphics();
         try {
-            gfx.setColor(java.awt.Color.black);
-            gfx.drawRect(0, 0, WIDTH-1, HEIGHT-1);
+//             gfx.setColor(java.awt.Color.black);
+//             gfx.drawRect(0, 0, WIDTH-1, HEIGHT-1);
             mfi.paintFrame(gfx, 0, WIDTH/2-ox, HEIGHT-oy);
         } finally {
             gfx.dispose();

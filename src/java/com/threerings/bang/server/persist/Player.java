@@ -11,6 +11,9 @@ import java.sql.Date;
  */
 public class Player
 {
+    /** A flag indicating the player's gender. */
+    public static final int IS_MALE_FLAG = 1 << 0;
+
     /** This player's unique identifier. */
     public int playerId;
 
@@ -36,6 +39,9 @@ public class Player
     /** The time at which the player ended their last session. */
     public Date lastSession;
 
+    /** Various one bit data (gender, etc.). */
+    public int flags;
+
     /** A blank constructor used when loading records from the database. */
     public Player ()
     {
@@ -45,5 +51,11 @@ public class Player
     public Player (String accountName)
     {
         this.accountName = accountName;
+    }
+
+    /** Returns true if the specified flag is set. */
+    public boolean isSet (int flag)
+    {
+        return (flags & flag) == flag;
     }
 }
