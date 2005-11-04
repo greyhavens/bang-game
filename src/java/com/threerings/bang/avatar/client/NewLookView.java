@@ -49,11 +49,12 @@ import com.threerings.bang.avatar.util.AvatarMetrics;
 public class NewLookView extends BContainer
     implements ActionListener
 {
-    public NewLookView (BangContext ctx, BTextArea status)
+    public NewLookView (BangContext ctx, BTextArea status, boolean firstLook)
     {
         super(new BorderLayout(5, 5));
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(BarberCodes.BARBER_MSGS);
+        _firstLook = firstLook;
         _status = status;
 
         add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
@@ -62,25 +63,29 @@ public class NewLookView extends BContainer
         _gender = isMale ? "male/" : "female/";
 
         BContainer toggles = new BContainer(new TableLayout(4, 5, 5));
-        add(toggles, BorderLayout.CENTER);
+        BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
+        wrapper.add(toggles);
+        add(wrapper, BorderLayout.CENTER);
         for (int ii = 0; ii < AvatarMetrics.ASPECTS.length; ii++) {
             if (isMale || !AvatarMetrics.ASPECTS[ii].maleOnly) {
                 new AspectToggle(AvatarMetrics.ASPECTS[ii], toggles);
             }
         }
 
-        BContainer cost = GroupLayout.makeHBox(GroupLayout.RIGHT);
-        add(cost, BorderLayout.SOUTH);
-        cost.add(new BLabel(_msgs.get("m.look_name")));
-        cost.add(_name = new BTextField(""));
-        // TODO: limit length to BarberCodes.MAX_LOOK_NAME_LENGTH
-        _name.setPreferredWidth(150);
-        cost.add(new Spacer(25, 1));
-        cost.add(new BLabel(_msgs.get("m.look_cost")));
-        cost.add(_cost = new MoneyLabel(ctx));
-        _cost.setMoney(0, 0, false);
-        cost.add(new Spacer(25, 1));
-        cost.add(_buy = new BButton(_msgs.get("m.buy"), this, "buy"));
+        if (!firstLook) {
+            BContainer cost = GroupLayout.makeHBox(GroupLayout.RIGHT);
+            add(cost, BorderLayout.SOUTH);
+            cost.add(new BLabel(_msgs.get("m.look_name")));
+            cost.add(_name = new BTextField(""));
+            // TODO: limit length to BarberCodes.MAX_LOOK_NAME_LENGTH
+            _name.setPreferredWidth(150);
+            cost.add(new Spacer(25, 1));
+            cost.add(new BLabel(_msgs.get("m.look_cost")));
+            cost.add(_cost = new MoneyLabel(ctx));
+            _cost.setMoney(0, 0, false);
+            cost.add(new Spacer(25, 1));
+            cost.add(_buy = new BButton(_msgs.get("m.buy"), this, "buy"));
+        }
 
         updateAvatar();
     }
@@ -174,7 +179,9 @@ public class NewLookView extends BContainer
 
         // update the avatar and cost displays
         _avatar.setAvatar(avatar);
-        _cost.setMoney(scrip, coins, false);
+        if (_cost != null) {
+            _cost.setMoney(scrip, coins, false);
+        }
     }
 
     protected class AspectToggle
@@ -217,6 +224,12 @@ public class NewLookView extends BContainer
             Collection<AspectCatalog.Aspect> aspects =
                 _ctx.getAspectCatalog().getAspects(_gender + _aspect.name);
             for (AspectCatalog.Aspect entry : aspects) {
+                // if this is the first look view, skip aspects that have
+                // non-zero cost
+                if (_firstLook && (entry.scrip > 0 || entry.coins > 0)) {
+                    continue;
+                }
+
                 Choice choice = new Choice();
                 choice.aspect = entry;
                 choice.components =
@@ -291,6 +304,7 @@ public class NewLookView extends BContainer
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
+    protected boolean _firstLook;
     protected BTextArea _status;
 
     protected AvatarView _avatar;

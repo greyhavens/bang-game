@@ -68,7 +68,7 @@ public class BarberView extends BWindow
 
         // put our new look and change clothes interfaces in tabs
         BTabbedPane tabs = new BTabbedPane(GroupLayout.CENTER);
-        _newlook = new NewLookView(ctx, _status);
+        _newlook = new NewLookView(ctx, _status, false);
         tabs.addTab(msgs.get("m.new_look"), wrap(_newlook));
         _wearclothes = new WearClothingView(ctx, _status);
         tabs.addTab(msgs.get("m.wear_clothes"), wrap(_wearclothes));

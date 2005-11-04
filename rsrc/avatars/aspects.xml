@@ -70,52 +70,52 @@
 
   <!-- female avatar aspects -->
   <class name="female/head">
-    <aspect name="normal" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="sharp" townId="frontier_town" scrip="100" coins="1"/>
+    <aspect name="normal" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="sharp" townId="frontier_town" scrip="0" coins="0"/>
   </class>
 
   <class name="female/hair">
-    <aspect name="bangstraight" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="beehive" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="braids" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="fro" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="ponytail" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="ponytail_bangs" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="spikey" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="wavy" townId="frontier_town" scrip="100" coins="1"/>
+    <aspect name="bangstraight" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="beehive" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="braids" townId="frontier_town" scrip="1000" coins="2"/>
+    <aspect name="fro" townId="frontier_town" scrip="1000" coins="2"/>
+    <aspect name="ponytail" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="ponytail_bangs" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="spikey" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="wavy" townId="frontier_town" scrip="0" coins="0"/>
   </class>
 
   <class name="female/eyebrows">
-    <aspect name="curious" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="high" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="inquisitive" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="knit" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="normal" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="sharp" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="smirk" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="thick" townId="frontier_town" scrip="100" coins="1"/>
+    <aspect name="curious" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="high" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="inquisitive" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="knit" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="normal" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="sharp" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="smirk" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="thick" townId="frontier_town" scrip="500" coins="1"/>
   </class>
 
   <class name="female/eyes">
-    <aspect name="big" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="sly" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="small" townId="frontier_town" scrip="100" coins="1"/>
+    <aspect name="big" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="sly" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="small" townId="frontier_town" scrip="0" coins="0"/>
   </class>
 
   <class name="female/nose">
-    <aspect name="line" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="normal" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="round" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="sharp" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="up" townId="frontier_town" scrip="100" coins="1"/>
+    <aspect name="line" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="normal" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="round" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="sharp" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="up" townId="frontier_town" scrip="500" coins="1"/>
   </class>
 
   <class name="female/mouth">
-    <aspect name="jolie" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="nervous" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="pouty" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="serious" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="smirk" townId="frontier_town" scrip="100" coins="1"/>
-    <aspect name="tiny" townId="frontier_town" scrip="100" coins="1"/>
+    <aspect name="jolie" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="nervous" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="pouty" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="serious" townId="frontier_town" scrip="0" coins="0"/>
+    <aspect name="smirk" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="tiny" townId="frontier_town" scrip="500" coins="1"/>
   </class>
 </aspects>
