@@ -6,12 +6,16 @@ package com.threerings.bang.editor;
 import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 
 import com.samskivert.swing.Controller;
 import com.samskivert.swing.HGroupLayout;
@@ -43,6 +47,12 @@ public class ToolPanel extends JPanel
         _tools.addItemListener(this);
         cpanel.add(_tools);
         add(cpanel, BorderLayout.NORTH);
+        
+        // add actions to select tools using ctrl-1+
+        addSelectAction(panel, KeyEvent.VK_1, 0);
+        addSelectAction(panel, KeyEvent.VK_2, 1);
+        addSelectAction(panel, KeyEvent.VK_3, 2);
+        addSelectAction(panel, KeyEvent.VK_4, 3);
         
         // and the tool options below
         dolly.activate();
@@ -87,6 +97,22 @@ public class ToolPanel extends JPanel
         } else if (ie.getStateChange() == ItemEvent.DESELECTED) {
             tool.deactivate();
         }
+    }
+    
+    /**
+     * Adds a binding to ctrl-keyCode that selected the tool at the given
+     * index.
+     */
+    protected void addSelectAction (JPanel panel, int keyCode, final int index)
+    {
+        String key = "select_tool_" + index;
+        panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(
+            KeyStroke.getKeyStroke(keyCode, KeyEvent.CTRL_DOWN_MASK), key);
+        panel.getActionMap().put(key, new AbstractAction() {
+            public void actionPerformed (ActionEvent e) {
+                _tools.setSelectedIndex(index);
+            }
+        });
     }
     
     protected JComboBox _tools;
