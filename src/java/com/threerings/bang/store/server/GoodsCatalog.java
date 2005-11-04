@@ -111,13 +111,13 @@ public class GoodsCatalog
      * good to the specified user. Returns null if no provider is registered
      * for the good in question.
      */
-    public Provider getProvider (PlayerObject user, Good good)
+    public Provider getProvider (PlayerObject user, Good good, Object[] args)
         throws InvocationException
     {
         for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
             ProviderFactory factory = _goods[tt].get(good);
             if (factory != null) {
-                return factory.createProvider(user, good);
+                return factory.createProvider(user, good, args);
             }
             if (BangCodes.TOWN_IDS[tt].equals(user.townId)) {
                 break;
@@ -143,15 +143,17 @@ public class GoodsCatalog
 
     /** Used to create a {@link Provider} for a particular {@link Good}. */
     protected abstract class ProviderFactory {
-        public abstract Provider createProvider (PlayerObject user, Good good)
+        public abstract Provider createProvider (
+            PlayerObject user, Good good, Object[] args)
             throws InvocationException;
     }
 
     /** Used for {@link PurseGood}s. */
     protected class PurseProviderFactory extends ProviderFactory {
-        public Provider createProvider (PlayerObject user, Good good)
+        public Provider createProvider (
+            PlayerObject user, Good good, Object[] args)
             throws InvocationException {
-            return new ItemProvider(user, good) {
+            return new ItemProvider(user, good, args) {
                 protected Item createItem () throws InvocationException {
                     int townIndex = ((PurseGood)_good).getTownIndex();
                     return new Purse(_user.playerId, townIndex);
@@ -164,7 +166,8 @@ public class GoodsCatalog
 
     /** Used for {@link CardPackGood}s. */
     protected class CardPackProviderFactory extends ProviderFactory {
-        public Provider createProvider (PlayerObject user, Good good)
+        public Provider createProvider (
+            PlayerObject user, Good good, Object[] args)
             throws InvocationException {
             return new CardPackProvider(user, good);
         }
@@ -172,9 +175,10 @@ public class GoodsCatalog
 
     /** Used for {@link ArticleGood}s. */
     protected class ArticleProviderFactory extends ProviderFactory {
-        public Provider createProvider (PlayerObject user, Good good)
+        public Provider createProvider (
+            PlayerObject user, Good good, Object[] args)
             throws InvocationException {
-            return new ItemProvider(user, good) {
+            return new ItemProvider(user, good, args) {
                 protected Item createItem () throws InvocationException {
                     ArticleCatalog.Article article =
                         _artcat.getArticle(_good.getType());
@@ -185,7 +189,11 @@ public class GoodsCatalog
                         throw new InvocationException(
                             InvocationCodes.INTERNAL_ERROR);
                     }
-                    Item item = _ametrics.createArticle(_user.playerId, article);
+                    // our arguments are colorization ids
+                    int zations = AvatarMetrics.composeZations(
+                        (Integer)_args[0], (Integer)_args[1], (Integer)_args[2]);
+                    Item item = _ametrics.createArticle(
+                        _user.playerId, article, zations);
                     if (item == null) {
                         throw new InvocationException(
                             InvocationCodes.INTERNAL_ERROR);

@@ -18,6 +18,6 @@ public interface StoreProvider extends InvocationProvider
     /**
      * Handles a {@link StoreService#buyGood} request.
      */
-    public void buyGood (ClientObject caller, String arg1, InvocationService.ConfirmListener arg2)
+    public void buyGood (ClientObject caller, String arg1, Object[] arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 }

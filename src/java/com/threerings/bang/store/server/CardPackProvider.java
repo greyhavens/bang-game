@@ -28,7 +28,7 @@ public class CardPackProvider extends Provider
     public CardPackProvider (PlayerObject user, Good good)
         throws InvocationException
     {
-        super(user, good);
+        super(user, good, null);
 
         // create a random selection of cards
         _cards = new String[((CardPackGood)good).getSize()];

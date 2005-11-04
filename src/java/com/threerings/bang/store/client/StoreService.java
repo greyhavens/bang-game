@@ -13,6 +13,10 @@ public interface StoreService extends InvocationService
 {
     /**
      * Issues a request to purchase the specified good from the store.
+     *
+     * @param type the type of good to be purchased.
+     * @param args custom arguments to be interpreted on a per-good basis.
      */
-    public void buyGood (Client client, String type, ConfirmListener cl);
+    public void buyGood (Client client, String type, Object[] args,
+                         ConfirmListener cl);
 }

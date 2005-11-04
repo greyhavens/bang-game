@@ -28,8 +28,8 @@ public class StoreManager extends PlaceManager
     implements StoreProvider
 {
     // documentation inherited from interface StoreProvider
-    public void buyGood (
-        ClientObject caller, String type, StoreService.ConfirmListener cl)
+    public void buyGood (ClientObject caller, String type, Object[] args,
+                         StoreService.ConfirmListener cl)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
@@ -50,7 +50,7 @@ public class StoreManager extends PlaceManager
         }
 
         // create the appropriate provider and pass the buck to it
-        Provider provider = _goods.getProvider(user, good);
+        Provider provider = _goods.getProvider(user, good, args);
         if (provider == null) {
             log.warning("Unable to find provider for good [who=" + user.who() +
                         ", good=" + good + "].");

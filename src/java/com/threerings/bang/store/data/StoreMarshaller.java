@@ -23,12 +23,12 @@ public class StoreMarshaller extends InvocationMarshaller
     public static final int BUY_GOOD = 1;
 
     // documentation inherited from interface
-    public void buyGood (Client arg1, String arg2, InvocationService.ConfirmListener arg3)
+    public void buyGood (Client arg1, String arg2, Object[] arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
         sendRequest(arg1, BUY_GOOD, new Object[] {
-            arg2, listener3
+            arg2, arg3, listener4
         });
     }
 

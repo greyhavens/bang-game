@@ -17,10 +17,10 @@ import com.threerings.bang.store.data.Good;
  */
 public abstract class ItemProvider extends Provider
 {
-    public ItemProvider (PlayerObject user, Good good)
+    public ItemProvider (PlayerObject user, Good good, Object[] args)
         throws InvocationException
     {
-        super(user, good);
+        super(user, good, args);
         _item = createItem();
     }
 

@@ -7,6 +7,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -41,7 +42,8 @@ public class WearClothingView extends BContainer
         add(_pick = new PickLookView(ctx), BorderLayout.WEST);
 
         BContainer cont = new BContainer(new BorderLayout(5, 5));
-        cont.add(_articles = new ArticlePalette(ctx, this), BorderLayout.CENTER);
+        _articles = new ArticlePalette(ctx, this);
+        cont.add(new BScrollPane(_articles), BorderLayout.CENTER);
 
         BContainer slotsel = new BContainer(GroupLayout.makeHStretch());
         BButton left = new BButton(BangUI.leftArrow, "down");

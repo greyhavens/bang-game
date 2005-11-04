@@ -3,6 +3,8 @@
 
 package com.threerings.bang.data;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.bang.client.ArticleIcon;
 import com.threerings.bang.client.ItemIcon;
 
@@ -57,6 +59,16 @@ public class Article extends Item
     public ItemIcon createIcon ()
     {
         return new ArticleIcon();
+    }
+
+    @Override // documentation inherited
+    protected void toString (StringBuffer buf)
+    {
+        super.toString(buf);
+        buf.append(", slot=").append(_slot);
+        buf.append(", name=").append(_name);
+        buf.append(", components=");
+        StringUtil.toString(buf, _components);
     }
 
     protected String _slot, _name;

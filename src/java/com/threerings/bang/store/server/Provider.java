@@ -32,11 +32,12 @@ public abstract class Provider extends FinancialAction
      * product cannot be created. It is not necessary to check for
      * sufficient funds in the constructor, that will be done elsewhere.
      */
-    protected Provider (PlayerObject user, Good good)
+    protected Provider (PlayerObject user, Good good, Object[] args)
         throws InvocationException
     {
         super(user, good.getScripCost(), good.getCoinCost());
         _good = good;
+        _args = args;
     }
 
     /**
@@ -74,5 +75,6 @@ public abstract class Provider extends FinancialAction
     }
 
     protected Good _good;
+    protected Object[] _args;
     protected InvocationService.ConfirmListener _listener;
 }

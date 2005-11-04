@@ -11,6 +11,7 @@ import com.threerings.media.image.Colorization;
 
 import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.CharacterDescriptor;
+import com.threerings.cast.ComponentClass;
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
 
@@ -110,6 +111,17 @@ public class AvatarMetrics
     }
 
     /**
+     * Creates a colorization mask with the specified three colorization ids
+     * (which may be zero if the component in question does not require
+     * secondary or tertiary colorizations). This value can then be provided to
+     * {@link #createArticle}.
+     */
+    public static int composeZations (int primary, int secondary, int tertiary)
+    {
+        return (primary << 16) | (secondary << 21) | (tertiary << 26);
+    }
+
+    /**
      * Creates a metrics instance which will make use of the supplied
      * repositories to obtain avatar related information.
      */
@@ -189,11 +201,11 @@ public class AvatarMetrics
     }
 
     /**
-     * Creates an inventory article from an article catalog entry and a set of
-     * colorizations.
+     * Creates an inventory article from an article catalog entry and a
+     * colorization mask.
      */
-    public Article createArticle (int playerId, ArticleCatalog.Article article
-                                  /* TODO: , zations */)
+    public Article createArticle (
+        int playerId, ArticleCatalog.Article article, int zations)
     {
         // sanity check the slot name
         Aspect slot = null;
@@ -216,8 +228,9 @@ public class AvatarMetrics
             try {
                 CharacterComponent ccomp = _crepo.getComponent(
                     comp.cclass, comp.name);
-                componentIds[idx++] = ccomp.componentId;
-                // TODO: add the colorizations
+                // the zations are already shifted 16 bits left
+                componentIds[idx] = ccomp.componentId | zations;
+                idx++;
             } catch (NoSuchComponentException nsce) {
                 log.warning("Article references unknown component " +
                             "[article=" + article.name +
@@ -227,6 +240,17 @@ public class AvatarMetrics
         }
 
         return new Article(playerId, article.slot, article.name, componentIds);
+    }
+
+    /**
+     * Returns the colorization classes used by the specified article.
+     */
+    public String[] getColorizationClasses (ArticleCatalog.Article article)
+    {
+        // look up the component class of the first component
+        ComponentClass cclass = _crepo.getComponentClass(
+            article.components.get(0).cclass);
+        return cclass.colors;
     }
 
     protected ColorPository _pository;

@@ -41,7 +41,7 @@ public class StoreDispatcher extends InvocationDispatcher
         case StoreMarshaller.BUY_GOOD:
             ((StoreProvider)provider).buyGood(
                 source,
-                (String)args[0], (InvocationService.ConfirmListener)args[1]
+                (String)args[0], (Object[])args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 
