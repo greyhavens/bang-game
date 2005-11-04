@@ -62,6 +62,10 @@ public class BangBoard extends SimpleStreamableObject
         
         _waterLevel = (byte)-128;
         
+        _lightElevation = (float)(Math.PI / 4);
+        _lightDiffuseColor = 0xFFFFFF;
+        _lightAmbientColor = 0xBEBEBE;
+        
         _pterrain = new byte[width*height];
         _btstate = new byte[width*height];
         _estate = new byte[width*height];
@@ -196,6 +200,58 @@ public class BangBoard extends SimpleStreamableObject
     public void setWaterLevel (byte level)
     {
         _waterLevel = level;
+    }
+    
+    /**
+     * Returns the azimuth in radians of the directional light (sun or moon),
+     * where zero has the light in the positive x direction and increasing
+     * values rotate the light counter-clockwise.
+     */
+    public float getLightAzimuth ()
+    {
+        return _lightAzimuth;
+    }
+    
+    /**
+     * Returns the elevation in radians of the directional light, where zero
+     * has the light on the horizon and pi/2 has the light exactly overhead.
+     */
+    public float getLightElevation ()
+    {
+        return _lightElevation;
+    }
+    
+    /**
+     * Returns the diffuse RGB color of the directional light.
+     */
+    public int getLightDiffuseColor ()
+    {
+        return _lightDiffuseColor;
+    }
+    
+    /**
+     * Returns the ambient RGB color of the directional light.
+     */
+    public int getLightAmbientColor ()
+    {
+        return _lightAmbientColor;
+    }
+    
+    /**
+     * Sets the parameters of the directional light.
+     *
+     * @param azimuth the azimuth about the board in radians
+     * @param elevation the elevation above the horizon in radians
+     * @param diffuseColor the RGB diffuse color
+     * @param ambientColor the RGB ambient color
+     */
+    public void setLightParams (float azimuth, float elevation,
+        int diffuseColor, int ambientColor)
+    {
+        _lightAzimuth = azimuth;
+        _lightElevation = elevation;
+        _lightDiffuseColor = diffuseColor;
+        _lightAmbientColor = ambientColor;
     }
     
     /**
@@ -715,6 +771,12 @@ public class BangBoard extends SimpleStreamableObject
     
     /** The level of the water on the board (-128 for no water). */
     protected byte _waterLevel;
+    
+    /** The azimuth and elevation of the directional light (sun or moon). */
+    protected float _lightAzimuth, _lightElevation;
+    
+    /** The diffuse and ambient colors of the directional light. */
+    protected int _lightDiffuseColor, _lightAmbientColor; 
     
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight, _twidth, _theight;

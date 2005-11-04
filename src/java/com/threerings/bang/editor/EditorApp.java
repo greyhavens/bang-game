@@ -114,8 +114,7 @@ public class EditorApp extends JmeCanvasApp
     @Override // documentation inherited
     protected void initLighting ()
     {
-        _geom.setRenderState(
-            _lights = RenderUtil.createDaylight(_display.getRenderer()));
+        // handle lights in board view
     }
 
     protected JFrame _frame;

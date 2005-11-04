@@ -145,8 +145,7 @@ public class BangApp extends JmeApp
     @Override // documentation inherited
     protected void initLighting ()
     {
-        _geom.setRenderState(
-            _lights = RenderUtil.createDaylight(_display.getRenderer()));
+        // handle lights in board view
     }
 
     @Override // documentation inherited

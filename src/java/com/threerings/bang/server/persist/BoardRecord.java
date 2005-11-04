@@ -66,6 +66,7 @@ public class BoardRecord
         public int width, height;
         public byte[] heightfield;    
         public byte[] terrain;
+        public byte waterLevel;
     }
     
     /**

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -82,6 +83,17 @@ public class BoardView extends BComponent
         // create our top-level node
         _node = new Node("board_view");
 
+        // let there be light
+        _light = new DirectionalLight();
+        _light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+        _light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
+        _light.setDirection(new Vector3f(-0.707f, 0f, -0.707f));
+        _light.setEnabled(true);
+        LightState lights = _ctx.getRenderer().createLightState();
+        lights.attach(_light);
+        _node.setRenderState(lights);
+        _node.updateRenderState();
+        
         // create a sky box
         _node.attachChild(new SkyNode(ctx));
         
@@ -177,6 +189,9 @@ public class BoardView extends BComponent
         _board.shadowPieces(_bangobj.pieces.iterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
 
+        // refresh the light
+        refreshLight();
+        
         // refresh the ground as well
         refreshGround();
         
@@ -378,6 +393,26 @@ public class BoardView extends BComponent
     }
     
     /**
+     * Updates the directional light according to the board's light
+     * parameters.
+     */
+    protected void refreshLight ()
+    {
+        float cose = FastMath.cos(_board.getLightElevation());
+        _light.setDirection(new Vector3f(
+            -cose * FastMath.cos(_board.getLightAzimuth()),
+            -cose * FastMath.sin(_board.getLightAzimuth()),
+            -FastMath.sin(_board.getLightElevation())));
+        
+        Color diffuseColor = new Color(_board.getLightDiffuseColor()),
+            ambientColor = new Color(_board.getLightAmbientColor());
+        float[] drgb = diffuseColor.getRGBColorComponents(null),
+            argb = ambientColor.getRGBColorComponents(null);
+        _light.setDiffuse(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
+        _light.setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
+    }
+    
+    /**
      * Creates the geometry that defines the ground around and behind the
      * board.
      */
@@ -403,8 +438,7 @@ public class BoardView extends BComponent
             _gnode.attachChild(createGroundSection(_board.getWidth(), 0,
                 lrwidth, lrheight)); // right
         }
-        
-        _gnode.setLightCombineMode(LightState.OFF);
+
         _gnode.updateRenderState();
     }
 
@@ -658,6 +692,7 @@ public class BoardView extends BComponent
     protected HashMap _fmasks = new HashMap();
 
     protected Node _node, _pnode, _hnode, _gnode;
+    protected DirectionalLight _light;
     protected TerrainNode _tnode;
     protected WaterNode _wnode;
     protected Vector3f _worldMouse;

@@ -331,6 +331,16 @@ public class EditorBoardView extends BoardView
         _wnode.refreshSurface();
     }
     
+    /**
+     * Sets the parameters of the board's light.
+     */
+    public void setLightParams (float azimuth, float elevation,
+        int diffuseColor, int ambientColor)
+    {
+        _board.setLightParams(azimuth, elevation, diffuseColor, ambientColor);
+        refreshLight();
+    }
+    
     @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {

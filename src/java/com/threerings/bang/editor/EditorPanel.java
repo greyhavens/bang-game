@@ -131,7 +131,9 @@ public class EditorPanel extends JPanel
         
         createMenuItem(edit, msgs.get("m.menu_water"), -1, KeyEvent.VK_W,
             EditorController.EDIT_WATER);
-        
+        createMenuItem(edit, msgs.get("m.menu_light"), -1, KeyEvent.VK_L,
+            EditorController.EDIT_LIGHT);
+            
         JMenu view = new JMenu(msgs.get("m.menu_view"));
         view.setMnemonic(KeyEvent.VK_V);
         menubar.add(view);
