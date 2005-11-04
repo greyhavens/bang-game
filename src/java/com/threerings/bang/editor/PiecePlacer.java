@@ -13,14 +13,17 @@ import com.jmex.bui.event.MouseEvent;
 
 import com.threerings.crowd.util.CrowdContext;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.PieceCodes;
 
 /**
  * Allows the user to place and manipulate pieces on the board.
  */
 public class PiecePlacer extends EditorTool
+    implements PieceCodes
 {
     /** The name of this tool. */
     public static final String NAME = "piece_placer";
@@ -64,6 +67,8 @@ public class PiecePlacer extends EditorTool
             
             _dragPiece = (Piece)piece.clone();
             _dragPiece.assignPieceId();
+            _dragPiece.orientation = (short)DIRECTIONS[
+                RandomUtil.getInt(DIRECTIONS.length)];
             _dragPiece.position(tx, ty);
             
             EditorController.postAction(
