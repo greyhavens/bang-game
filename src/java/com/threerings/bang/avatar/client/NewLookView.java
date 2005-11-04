@@ -41,7 +41,7 @@ import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AspectCatalog;
-import com.threerings.bang.avatar.util.AvatarMetrics;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 /**
  * Allows the configuration of a new avatar look.
@@ -66,9 +66,9 @@ public class NewLookView extends BContainer
         BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
         wrapper.add(toggles);
         add(wrapper, BorderLayout.CENTER);
-        for (int ii = 0; ii < AvatarMetrics.ASPECTS.length; ii++) {
-            if (isMale || !AvatarMetrics.ASPECTS[ii].maleOnly) {
-                new AspectToggle(AvatarMetrics.ASPECTS[ii], toggles);
+        for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
+            if (isMale || !AvatarLogic.ASPECTS[ii].maleOnly) {
+                new AspectToggle(AvatarLogic.ASPECTS[ii], toggles);
             }
         }
 
@@ -110,9 +110,9 @@ public class NewLookView extends BContainer
         }
 
         // look up the selection for each aspect class
-        String[] choices = new String[AvatarMetrics.ASPECTS.length];
+        String[] choices = new String[AvatarLogic.ASPECTS.length];
         for (int ii = 0; ii < choices.length; ii++) {
-            Choice choice = _selections.get(AvatarMetrics.ASPECTS[ii].name); 
+            Choice choice = _selections.get(AvatarLogic.ASPECTS[ii].name); 
             choices[ii] = (choice == null) ? null : choice.aspect.name;
         }
 
@@ -140,8 +140,8 @@ public class NewLookView extends BContainer
 
     protected void updateAvatar ()
     {
-        int scrip = BarberCodes.BASE_LOOK_SCRIP_COST,
-            coins = BarberCodes.BASE_LOOK_COIN_COST;
+        int scrip = AvatarCodes.BASE_LOOK_SCRIP_COST,
+            coins = AvatarCodes.BASE_LOOK_COIN_COST;
 
         // obtain the component ids of the various aspect selections and total
         // up the cost of this look while we're at it
@@ -163,8 +163,8 @@ public class NewLookView extends BContainer
         PlayerObject user = _ctx.getUserObject();
         Look current = user.getLook();
         if (current != null) {
-            for (int ii = 0; ii < AvatarMetrics.SLOTS.length; ii++) {
-                if (AvatarMetrics.SLOTS[ii].optional) {
+            for (int ii = 0; ii < AvatarLogic.SLOTS.length; ii++) {
+                if (AvatarLogic.SLOTS[ii].optional) {
                     continue;
                 }
                 Article article = (Article)
@@ -187,7 +187,7 @@ public class NewLookView extends BContainer
     protected class AspectToggle
         implements ActionListener
     {
-        public AspectToggle (AvatarMetrics.Aspect aspect, BContainer table)
+        public AspectToggle (AvatarLogic.Aspect aspect, BContainer table)
         {
             _aspect = aspect;
 
@@ -203,17 +203,17 @@ public class NewLookView extends BContainer
             table.add(right);
 
             if (_aspect.name.equals("head")) {
-                table.add(_skin = new ColorSelector(_ctx, AvatarMetrics.SKIN));
+                table.add(_skin = new ColorSelector(_ctx, AvatarLogic.SKIN));
                 _skin.addListener(this);
             } else if (_aspect.name.equals("hair")) {
-                table.add(_hair = new ColorSelector(_ctx, AvatarMetrics.HAIR));
+                table.add(_hair = new ColorSelector(_ctx, AvatarLogic.HAIR));
                 _hair.addListener(this);
             } else if (_aspect.name.equals("eyes")) {
-                table.add(_eyes = new ColorSelector(_ctx, AvatarMetrics.EYES));
+                table.add(_eyes = new ColorSelector(_ctx, AvatarLogic.EYES));
                 _eyes.addListener(this);
 // TODO: give women a colorization for lips?
 //             } else if (_aspect.name.equals("mouth")) {
-//                 table.add(_lips = new ColorSelector(_ctx, AvatarMetrics.LIPS));
+//                 table.add(_lips = new ColorSelector(_ctx, AvatarLogic.LIPS));
 //                 _lips.addListener(this);
             } else {
                 table.add(new Spacer(5, 5));
@@ -222,7 +222,8 @@ public class NewLookView extends BContainer
             ComponentRepository crepo =
                 _ctx.getCharacterManager().getComponentRepository();
             Collection<AspectCatalog.Aspect> aspects =
-                _ctx.getAspectCatalog().getAspects(_gender + _aspect.name);
+                _ctx.getAvatarLogic().getAspectCatalog().getAspects(
+                    _gender + _aspect.name);
             for (AspectCatalog.Aspect entry : aspects) {
                 // if this is the first look view, skip aspects that have
                 // non-zero cost
@@ -291,7 +292,7 @@ public class NewLookView extends BContainer
             _selections.put(_aspect.name, _choices.get(_selidx));
         }
 
-        protected AvatarMetrics.Aspect _aspect;
+        protected AvatarLogic.Aspect _aspect;
         protected int _selidx;
         protected ArrayList<Choice> _choices = new ArrayList<Choice>();
     }

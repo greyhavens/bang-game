@@ -21,7 +21,7 @@ import com.threerings.cast.CharacterDescriptor;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
-import static com.threerings.bang.avatar.util.AvatarMetrics.*;
+import static com.threerings.bang.avatar.util.AvatarLogic.*;
 
 /**
  * Displays an avatar.
@@ -47,7 +47,7 @@ public class AvatarView extends BLabel
      */
     public void setAvatar (int[] avatar)
     {
-        CharacterDescriptor cdesc = _ctx.getAvatarMetrics().decodeAvatar(avatar);
+        CharacterDescriptor cdesc = _ctx.getAvatarLogic().decodeAvatar(avatar);
         ActionFrames af;
         try {
             af = _ctx.getCharacterManager().getActionFrames(cdesc, "default");

@@ -23,7 +23,7 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Purse;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;
-import com.threerings.bang.avatar.util.AvatarMetrics;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardPackGood;
@@ -43,27 +43,13 @@ public class GoodsCatalog
      * Creates a goods catalog, loading up the various bits necessary to create
      * articles of clothing and accessories for avatars.
      */
-    public GoodsCatalog (ResourceManager rsrcmgr, ComponentRepository comprepo)
+    public GoodsCatalog (AvatarLogic alogic)
     {
+        _alogic= alogic;
+
         // create our goods mappings
         for (int ii = 0; ii < _goods.length; ii++) {
             _goods[ii] = new GoodsMap();
-        }
-
-        try {
-            // load up the article catalog
-            _artcat = (ArticleCatalog)CompiledConfig.loadConfig(
-                GoodsCatalog.class.getClassLoader().getResourceAsStream(
-                    "rsrc/" + ArticleCatalog.CONFIG_PATH));
-
-            // load the color pository and create our avatar metrics
-            _ametrics = new AvatarMetrics(
-                ColorPository.loadColorPository(rsrcmgr), comprepo);
-
-        } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failure initializing goods catalog.", ioe);
-            // bail now with nothing registered
-            return;
         }
 
         // register our purses
@@ -84,7 +70,8 @@ public class GoodsCatalog
         // load up our avatar article catalog and use the data therein to
         // create goods for all avatar articles
         pf = new ArticleProviderFactory();
-        for (ArticleCatalog.Article article : _artcat.getArticles()) {
+        for (ArticleCatalog.Article article :
+                 _alogic.getArticleCatalog().getArticles()) {
             ArticleGood good = new ArticleGood(
                 article.name, article.scrip, article.coins);
             registerGood(article.townId, good, pf);
@@ -181,7 +168,7 @@ public class GoodsCatalog
             return new ItemProvider(user, good, args) {
                 protected Item createItem () throws InvocationException {
                     ArticleCatalog.Article article =
-                        _artcat.getArticle(_good.getType());
+                        _alogic.getArticleCatalog().getArticle(_good.getType());
                     if (article == null) {
                         log.warning("Requested to create article for unknown " +
                                     "catalog entry [who=" + _user.who() +
@@ -190,9 +177,9 @@ public class GoodsCatalog
                             InvocationCodes.INTERNAL_ERROR);
                     }
                     // our arguments are colorization ids
-                    int zations = AvatarMetrics.composeZations(
+                    int zations = AvatarLogic.composeZations(
                         (Integer)_args[0], (Integer)_args[1], (Integer)_args[2]);
-                    Item item = _ametrics.createArticle(
+                    Item item = _alogic.createArticle(
                         _user.playerId, article, zations);
                     if (item == null) {
                         throw new InvocationException(
@@ -208,11 +195,8 @@ public class GoodsCatalog
     protected static class GoodsMap extends HashMap<Good,ProviderFactory> {
     }
 
-    /** Used to compute various article related bits. */
-    protected AvatarMetrics _ametrics;
-
-    /** Contains information on our avatar articles. */
-    protected ArticleCatalog _artcat;
+    /** Handles all of our avatar related bits. */
+    protected AvatarLogic _alogic;
 
     /** Contains mappings from {@link Good} to {@link ProviderFactory} for
      * the goods available in each town. */

@@ -10,11 +10,7 @@ import com.jmex.bui.BWindow;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
-
-import com.threerings.util.CompiledConfig;
 import com.threerings.util.Name;
-
-import com.threerings.media.image.ColorPository;
 
 import com.threerings.cast.CharacterManager;
 import com.threerings.cast.bundle.BundledComponentRepository;
@@ -30,9 +26,7 @@ import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.avatar.client.FirstLookView;
 import com.threerings.bang.avatar.data.AvatarCodes;
-import com.threerings.bang.avatar.util.ArticleCatalog;
-import com.threerings.bang.avatar.util.AspectCatalog;
-import com.threerings.bang.avatar.util.AvatarMetrics;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
@@ -157,13 +151,8 @@ public class BangClient extends BasicClient
             _charmgr = new CharacterManager(
                 _imgmgr, new BundledComponentRepository(
                     _rsrcmgr, _imgmgr, AvatarCodes.AVATAR_RSRC_SET));
-            _colorpos = ColorPository.loadColorPository(_rsrcmgr);
-            _ametrics = new AvatarMetrics(
-                _colorpos, _charmgr.getComponentRepository());
-            _aspcat = (AspectCatalog)CompiledConfig.loadConfig(
-                _rsrcmgr.getResource(AspectCatalog.CONFIG_PATH));
-            _artcat = (ArticleCatalog)CompiledConfig.loadConfig(
-                _rsrcmgr.getResource(ArticleCatalog.CONFIG_PATH));
+            _alogic = new AvatarLogic(
+                _rsrcmgr, _charmgr.getComponentRepository());
 
         } catch (IOException ioe) {
             // TODO: report to the client
@@ -256,16 +245,8 @@ public class BangClient extends BasicClient
             return _charmgr;
         }
 
-        public AvatarMetrics getAvatarMetrics () {
-            return _ametrics;
-        }
-
-        public AspectCatalog getAspectCatalog () {
-            return _aspcat;
-        }
-
-        public ArticleCatalog getArticleCatalog () {
-            return _artcat;
+        public AvatarLogic getAvatarLogic () {
+            return _alogic;
         }
     }
 
@@ -274,10 +255,7 @@ public class BangClient extends BasicClient
 
     protected BangChatDirector _chatdir;
     protected CharacterManager _charmgr;
-    protected ColorPository _colorpos;
-    protected AvatarMetrics _ametrics;
-    protected AspectCatalog _aspcat;
-    protected ArticleCatalog _artcat;
+    protected AvatarLogic _alogic;
 
     protected BWindow _pview;
     protected LogonView _lview;

@@ -60,6 +60,9 @@ public class PlayerObject extends BodyObject
     /** This user's authentication account username. */
     public Name accountName;
 
+    /** This user's cowboy handle (in-game name). */
+    public Handle handle;
+
     /** Whether this character is male or female. */
     public boolean isMale;
 

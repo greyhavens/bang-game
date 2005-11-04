@@ -24,7 +24,7 @@ public class ColorSelector extends BComboBox
 {
     public ColorSelector (BangContext ctx, String colorClass)
     {
-        ColorPository cpos = ctx.getAvatarMetrics().getColorPository();
+        ColorPository cpos = ctx.getAvatarLogic().getColorPository();
         ColorPository.ColorRecord[] colors = cpos.enumerateColors(colorClass);
 
         SwatchIcon[] icons = new SwatchIcon[colors.length];

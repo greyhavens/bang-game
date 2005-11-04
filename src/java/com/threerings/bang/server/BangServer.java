@@ -32,6 +32,8 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberConfig;
 import com.threerings.bang.avatar.server.BarberManager;
 import com.threerings.bang.avatar.server.persist.LookRepository;
+import com.threerings.bang.avatar.util.AvatarLogic;
+
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.lobby.data.LobbyConfig;
@@ -64,6 +66,9 @@ public class BangServer extends CrowdServer
 
     /** Provides information on our character components. */
     public static ComponentRepository comprepo;
+
+    /** Handles the heavy lifting relating to avatar looks and articles. */
+    public static AvatarLogic alogic;
 
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
@@ -124,9 +129,12 @@ public class BangServer extends CrowdServer
         // create our resource manager and other resource bits
         rsrcmgr = new ResourceManager("rsrc");
         rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
+
+        // create our avatar related bits
         comprepo = new BundledComponentRepository(
             rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET);
-
+        alogic = new AvatarLogic(rsrcmgr, comprepo);
+            
         // create our database connection provider and repositories
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
         actionrepo = new AccountActionRepository(conprov);

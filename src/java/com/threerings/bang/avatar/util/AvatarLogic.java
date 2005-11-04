@@ -3,11 +3,16 @@
 
 package com.threerings.bang.avatar.util;
 
+import java.io.IOException;
+
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.image.ColorPository;
 import com.threerings.media.image.Colorization;
+import com.threerings.resource.ResourceManager;
+import com.threerings.util.CompiledConfig;
 
 import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.CharacterDescriptor;
@@ -16,6 +21,10 @@ import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
 
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.PlayerObject;
+
+import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.data.Look;
 
 import static com.threerings.bang.Log.log;
 
@@ -23,7 +32,7 @@ import static com.threerings.bang.Log.log;
  * Used to calculate various things about avatars, decode avatar fingerprints
  * and whatnot.
  */
-public class AvatarMetrics
+public class AvatarLogic
 {
     /** Defines a particular aspect of an avatar's look. An aspect will
      * configure one or more character components in the avatar's look. */
@@ -125,10 +134,15 @@ public class AvatarMetrics
      * Creates a metrics instance which will make use of the supplied
      * repositories to obtain avatar related information.
      */
-    public AvatarMetrics (ColorPository pository, ComponentRepository crepo)
+    public AvatarLogic (ResourceManager rsrcmgr, ComponentRepository crepo)
+        throws IOException
     {
-        _pository = pository;
         _crepo = crepo;
+        _pository = ColorPository.loadColorPository(rsrcmgr);
+        _aspcat = (AspectCatalog)CompiledConfig.loadConfig(
+            rsrcmgr.getResource(AspectCatalog.CONFIG_PATH));
+        _artcat = (ArticleCatalog)CompiledConfig.loadConfig(
+            rsrcmgr.getResource(ArticleCatalog.CONFIG_PATH));
     }
 
     /**
@@ -137,6 +151,22 @@ public class AvatarMetrics
     public ColorPository getColorPository ()
     {
         return _pository;
+    }
+
+    /**
+     * Returns the catalog that defines the various avatar aspects.
+     */
+    public AspectCatalog getAspectCatalog ()
+    {
+        return _aspcat;
+    }
+
+    /**
+     * Returns the catalog that defines the various avatar articles.
+     */
+    public ArticleCatalog getArticleCatalog ()
+    {
+        return _artcat;
     }
 
     /**
@@ -201,6 +231,78 @@ public class AvatarMetrics
     }
 
     /**
+     * Creates a new {@link Look} with the specified configuration.
+     *
+     * @return the newly created look or null if the look configuration was
+     * invalid for some reason (in which case an error will have been logged).
+     *
+     * @param user the user for whom we are creating the look.
+     * @param cost a two element array into which the scrip and coin cost of
+     * the look will be filled in (in that order).
+     */
+    public Look createLook (PlayerObject user, String name, int hair, int skin,
+                            String[] aspects, int[] colors, int[] cost)
+    {
+        String gender = user.isMale ? "male/" : "female/";
+        int scrip = AvatarCodes.BASE_LOOK_SCRIP_COST,
+            coins = AvatarCodes.BASE_LOOK_COIN_COST;
+        ArrayIntSet compids = new ArrayIntSet();
+        for (int ii = 0; ii < aspects.length; ii++) {
+            AvatarLogic.Aspect aclass = AvatarLogic.ASPECTS[ii];
+            String acname = gender + aclass.name;
+            if (aspects[ii] == null) {
+                if (aclass.optional) {
+                    continue;
+                }
+                log.warning("Requested to purchase look that is missing a " +
+                            "non-optional aspect [who=" + user.who() +
+                            ", class=" + acname + "].");
+                return null;
+            }
+
+            AspectCatalog.Aspect aspect = _aspcat.getAspect(acname, aspects[ii]);
+            if (aspect == null) {
+                log.warning("Requested to purchase a look with unknown aspect " +
+                            "[who=" + user.who() + ", class=" + acname +
+                            ", choice=" + aspects[ii] + "].");
+                return null;
+            }
+
+            // add the cost to the total cost
+            scrip += aspect.scrip;
+            coins += aspect.coins;
+
+            // look up the aspect's components
+            for (int cc = 0; cc < aclass.classes.length; cc++) {
+                String cclass = gender + aclass.classes[cc];
+                try {
+                    CharacterComponent ccomp = _crepo.getComponent(
+                        cclass, aspect.name);
+                    int compmask = ccomp.componentId;
+                    if (colors[ii] != 0) {
+                        // TODO: additional costs for some colors?
+                        compmask |= colors[ii] << 16;
+                    }
+                    compids.add(compmask);
+                } catch (NoSuchComponentException nsce) {
+                    // no problem, some of these are optional
+                }
+            }
+        }
+
+        Look look = new Look();
+        look.name = name;
+        look.aspects = new int[compids.size()+1];
+        // TODO: additional costs for some hair and skin colorizations?
+        look.aspects[0] = (hair << 5) | skin;
+        compids.toIntArray(look.aspects, 1);
+
+        cost[0] = scrip;
+        cost[1] = coins;
+        return look;
+    }
+
+    /**
      * Creates an inventory article from an article catalog entry and a
      * colorization mask.
      */
@@ -253,8 +355,10 @@ public class AvatarMetrics
         return cclass.colors;
     }
 
-    protected ColorPository _pository;
     protected ComponentRepository _crepo;
+    protected ColorPository _pository;
+    protected AspectCatalog _aspcat;
+    protected ArticleCatalog _artcat;
 
     /** Used by {@link #decodeAvatar}. */
     protected Colorization[] _globals = new Colorization[2];

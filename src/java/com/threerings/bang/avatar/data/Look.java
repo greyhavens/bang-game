@@ -13,7 +13,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.PlayerObject;
 
-import com.threerings.bang.avatar.util.AvatarMetrics;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import static com.threerings.bang.Log.log;
 
@@ -34,7 +34,7 @@ public class Look extends SimpleStreamableObject
     public int[] aspects;
 
     /** An array of item ids of the various articles used in this look (the
-     * order of the array matches {@link AvatarMetrics#SLOTS} with unused slots
+     * order of the array matches {@link AvatarLogic#SLOTS} with unused slots
      * containing zero). */
     public int[] articles;
 
@@ -83,8 +83,8 @@ public class Look extends SimpleStreamableObject
     {
         String slot = article.getSlot();
         int idx = -1;
-        for (int ii = 0; ii < AvatarMetrics.SLOTS.length; ii++) {
-            if (AvatarMetrics.SLOTS[ii].name.equals(slot)) {
+        for (int ii = 0; ii < AvatarLogic.SLOTS.length; ii++) {
+            if (AvatarLogic.SLOTS[ii].name.equals(slot)) {
                 idx = ii;
                 break;
             }
@@ -97,7 +97,7 @@ public class Look extends SimpleStreamableObject
 
         // gracefully deal with old article arrays in case we add new slots
         if (articles.length <= idx) {
-            int[] narticles = new int[AvatarMetrics.SLOTS.length];
+            int[] narticles = new int[AvatarLogic.SLOTS.length];
             System.arraycopy(articles, 0, narticles, 0, articles.length);
             articles = narticles;
         }

@@ -22,7 +22,7 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.ColorSelector;
 import com.threerings.bang.avatar.util.ArticleCatalog;
-import com.threerings.bang.avatar.util.AvatarMetrics;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
@@ -85,14 +85,15 @@ public class GoodsInspector extends BContainer
         // do some special jockeying to handle colorizations for articles
         if (_good instanceof ArticleGood) {
             ArticleCatalog.Article article =
-                _ctx.getArticleCatalog().getArticle(_good.getType());
+                _ctx.getAvatarLogic().getArticleCatalog().getArticle(
+                    _good.getType());
             String[] cclasses =
-                _ctx.getAvatarMetrics().getColorizationClasses(article);
+                _ctx.getAvatarLogic().getColorizationClasses(article);
             _args[0] = _args[1] = _args[2] = Integer.valueOf(0);
             int index = 0;
             for (int ii = 0; ii < cclasses.length; ii++) {
-                if (cclasses[ii].equals(AvatarMetrics.SKIN) ||
-                    cclasses[ii].equals(AvatarMetrics.HAIR)) {
+                if (cclasses[ii].equals(AvatarLogic.SKIN) ||
+                    cclasses[ii].equals(AvatarLogic.HAIR)) {
                     continue;
                 }
                 ColorSelector colorsel = new ColorSelector(_ctx, cclasses[ii]);

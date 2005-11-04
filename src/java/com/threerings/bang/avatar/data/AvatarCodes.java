@@ -16,4 +16,10 @@ public interface AvatarCodes
 
     /** The resource set that contains our avatar imagery. */
     public static final String AVATAR_RSRC_SET = "avatars";
+
+    /** The base scrip cost for a new look. */
+    public static final int BASE_LOOK_SCRIP_COST = 1000;
+
+    /** The base coin cost for a new look. */
+    public static final int BASE_LOOK_COIN_COST = 2;
 }

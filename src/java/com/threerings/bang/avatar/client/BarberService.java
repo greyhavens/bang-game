@@ -20,7 +20,7 @@ public interface BarberService extends InvocationService
      * @param hair the global hair colorization id.
      * @param skin the global skin colorization id.
      * @param aspects an array of aspect selections that must be in the order
-     * specified by {@link AvatarMetrics#ASPECTS}, unused aspects should have a
+     * specified by {@link AvatarLogic#ASPECTS}, unused aspects should have a
      * null slot in the array.
      * @param colors color ids associated with each of the specified aspects.
      * Many of these will be 0 as those aspects have no special colorization.

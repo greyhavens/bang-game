@@ -79,7 +79,7 @@ public class StoreManager extends PlaceManager
         super.didInit();
 
         // create our goods catalog
-        _goods = new GoodsCatalog(BangServer.rsrcmgr, BangServer.comprepo);
+        _goods = new GoodsCatalog(BangServer.alogic);
     }
 
     @Override // documentation inherited

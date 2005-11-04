@@ -25,7 +25,7 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
-import com.threerings.bang.avatar.util.AvatarMetrics;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 /**
  * Allows the customization of looks with clothing and accessories.
@@ -76,10 +76,10 @@ public class WearClothingView extends BContainer
     {
         String action = event.getAction();
         if ("down".equals(action)) {
-            setSlot((_slotidx + AvatarMetrics.SLOTS.length - 1) %
-                    AvatarMetrics.SLOTS.length);
+            setSlot((_slotidx + AvatarLogic.SLOTS.length - 1) %
+                    AvatarLogic.SLOTS.length);
         } else if ("up".equals(action)) {
-            setSlot((_slotidx + 1) % AvatarMetrics.SLOTS.length);
+            setSlot((_slotidx + 1) % AvatarLogic.SLOTS.length);
         }
     }
 
@@ -101,7 +101,7 @@ public class WearClothingView extends BContainer
     protected void setSlot (int slotidx)
     {
         _slotidx = slotidx;
-        String slot = AvatarMetrics.SLOTS[slotidx].name;
+        String slot = AvatarLogic.SLOTS[slotidx].name;
         _slot.setText(_msgs.get("m." + slot));
         _articles.setSlot(slot);
     }

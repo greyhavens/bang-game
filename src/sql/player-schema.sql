@@ -15,7 +15,10 @@ CREATE TABLE PLAYERS
     PLAYER_ID INTEGER NOT NULL AUTO_INCREMENT,
 
     /** The authentication account name associated with this player. */
-    ACCOUNT_NAME VARCHAR(255) NOT NULL,
+    ACCOUNT_NAME VARCHAR(64) NOT NULL,
+
+    /** The authentication account name associated with this player. */
+    HANDLE VARCHAR(64) NOT NULL,
 
     /** The amount of scrip this player holds. */
     SCRIP INTEGER NOT NULL,

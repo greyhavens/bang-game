@@ -20,6 +20,9 @@ public class Player
     /** The authentication account name associated with this player. */
     public String accountName;
 
+    /** The cowboy handle (in-game name) associated with this player. */
+    public String handle;
+
     /** The amount of scrip this player holds. */
     public int scrip;
 

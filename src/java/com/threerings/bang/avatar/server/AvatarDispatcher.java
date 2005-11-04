@@ -5,7 +5,9 @@ package com.threerings.bang.avatar.server;
 
 import com.threerings.bang.avatar.client.AvatarService;
 import com.threerings.bang.avatar.data.AvatarMarshaller;
+import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
@@ -37,6 +39,13 @@ public class AvatarDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case AvatarMarshaller.CREATE_AVATAR:
+            ((AvatarProvider)provider).createAvatar(
+                source,
+                (Handle)args[0], ((Boolean)args[1]).booleanValue(), ((Integer)args[2]).intValue(), ((Integer)args[3]).intValue(), (String[])args[4], (int[])args[5], (InvocationService.ConfirmListener)args[6]
+            );
+            return;
+
         case AvatarMarshaller.SELECT_LOOK:
             ((AvatarProvider)provider).selectLook(
                 source,
