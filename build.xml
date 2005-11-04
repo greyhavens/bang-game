@@ -150,8 +150,13 @@
     <ant target="bundles" dir="rsrc/avatars" antfile="build.xml"/>
   </target>
 
-  <!-- cleans out the installed application -->
+  <!-- cleans out the compiled code -->
   <target name="clean">
+    <delete dir="${deploy.dir}/classes/com"/>
+  </target>
+
+  <!-- fully cleans out the installed application -->
+  <target name="distclean">
     <delete dir="${deploy.dir}"/>
   </target>
 
