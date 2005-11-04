@@ -41,16 +41,18 @@ import static com.threerings.bang.Log.log;
  * Provides Barber-related services.
  */
 public class BarberManager extends PlaceManager
-    implements BarberCodes, BarberProvider
+    implements BarberCodes, BarberProvider, AvatarProvider
 {
     // documentation inherited from interface BarberProvider
-    public void purchaseLook (ClientObject caller, String name, String[] aspects,
-                              BarberService.ConfirmListener cl)
+    public void purchaseLook (
+        ClientObject caller, String name, int hair, int skin, String[] aspects,
+        int[] colors, BarberService.ConfirmListener cl)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
 
-        if (StringUtil.blank(name)) {
+        if (StringUtil.blank(name) ||
+            name.length() > BarberCodes.MAX_LOOK_NAME_LENGTH) {
             log.warning("Requested to create look with blank name " +
                         "[who=" + user.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);
@@ -91,7 +93,12 @@ public class BarberManager extends PlaceManager
                 try {
                     CharacterComponent ccomp = BangServer.comprepo.getComponent(
                         cclass, aspect.name);
-                    compids.add(ccomp.componentId);
+                    int compmask = ccomp.componentId;
+                    if (colors[ii] != 0) {
+                        // TODO: additional costs for some colors?
+                        compmask |= colors[ii] << 16;
+                    }
+                    compids.add(compmask);
                 } catch (NoSuchComponentException nsce) {
                     // no problem, some of these are optional
                 }
@@ -101,11 +108,11 @@ public class BarberManager extends PlaceManager
         Look look = new Look();
         look.name = name;
         look.aspects = new int[compids.size()+1];
-        // TODO: add proper hair and skin colorizations
-        look.aspects[0] = (7 << 5) | 3;
+        // TODO: additional costs for some hair and skin colorizations?
+        look.aspects[0] = (hair << 5) | skin;
         compids.toIntArray(look.aspects, 1);
-        // TODO: copy articles from "active" look
-        look.articles = new int[0];
+        // copy the articles from their "active" look
+        look.articles = user.getLook().articles;
 
         // the buy look action takes care of the rest (including checking that
         // they have sufficient funds)
@@ -164,6 +171,22 @@ public class BarberManager extends PlaceManager
         user.updateLooks(look);
     }
 
+    // documentation inherited from interface AvatarProvider
+    public void selectLook (ClientObject caller, String name)
+    {
+        PlayerObject user = (PlayerObject)caller;
+
+        // sanity check
+        Look look = (Look)user.looks.get(name);
+        if (look == null) {
+            log.warning("Player requested to select unknown look " +
+                        "[who=" + user.who() + ", look=" + name + "].");
+            return;
+        }
+
+        user.setLook(name);
+    }
+
     @Override // documentation inherited
     protected Class getPlaceObjectClass ()
     {
@@ -181,6 +204,9 @@ public class BarberManager extends PlaceManager
     protected void didInit ()
     {
         super.didInit();
+
+        // register ourselves as the AvatarService provider
+        BangServer.invmgr.registerDispatcher(new AvatarDispatcher(this), true);
 
         try {
             // load up our aspect catalog; this only happens at server startup,

@@ -32,15 +32,16 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
+import com.threerings.bang.data.Article;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.data.BarberObject;
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AspectCatalog;
 import com.threerings.bang.avatar.util.AvatarMetrics;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Allows the configuration of a new avatar look.
@@ -72,6 +73,7 @@ public class NewLookView extends BContainer
         add(cost, BorderLayout.SOUTH);
         cost.add(new BLabel(_msgs.get("m.look_name")));
         cost.add(_name = new BTextField(""));
+        // TODO: limit length to BarberCodes.MAX_LOOK_NAME_LENGTH
         _name.setPreferredWidth(150);
         cost.add(new Spacer(25, 1));
         cost.add(new BLabel(_msgs.get("m.look_cost")));
@@ -79,19 +81,6 @@ public class NewLookView extends BContainer
         _cost.setMoney(0, 0, false);
         cost.add(new Spacer(25, 1));
         cost.add(_buy = new BButton(_msgs.get("m.buy"), this, "buy"));
-
-        // TEMP: select a default torso component
-        ComponentRepository crepo =
-            _ctx.getCharacterManager().getComponentRepository();
-        Iterator iter = crepo.enumerateComponentIds(
-            crepo.getComponentClass(_gender + "clothing_back"));
-        if (iter.hasNext()) {
-            try {
-                _ccomp = crepo.getComponent((Integer)iter.next());
-            } catch (NoSuchComponentException nsce) {
-            }
-        }
-        // END TEMP
 
         updateAvatar();
     }
@@ -122,6 +111,9 @@ public class NewLookView extends BContainer
             choices[ii] = (choice == null) ? null : choice.aspect.name;
         }
 
+        // TODO: get per-aspect colorizations
+        int[] colors = new int[choices.length];
+
         // prevent double clicks or other lag related fuckolas
         _buy.setEnabled(false);
 
@@ -136,7 +128,9 @@ public class NewLookView extends BContainer
                 _buy.setEnabled(true);
             }
         };
-        _barbobj.service.purchaseLook(_ctx.getClient(), name, choices, cl);
+        _barbobj.service.purchaseLook(
+            _ctx.getClient(), name, _hair.getSelectedColor(),
+            _skin.getSelectedColor(), choices, colors, cl);
     }
 
     protected void updateAvatar ()
@@ -160,17 +154,23 @@ public class NewLookView extends BContainer
             }
         }
 
-        int[] avatar = new int[compids.size()+2];
-        // TODO: get global colorizations from proper place
-        avatar[0] = (7 << 5) | 3;
-
-        // TEMP: slip in some sort of clothing
-        if (_ccomp != null) {
-            avatar[1] = _ccomp.componentId;
+        // copy in any required articles from their active look
+        PlayerObject user = _ctx.getUserObject();
+        Look current = user.getLook();
+        if (current != null) {
+            for (int ii = 0; ii < AvatarMetrics.SLOTS.length; ii++) {
+                if (AvatarMetrics.SLOTS[ii].optional) {
+                    continue;
+                }
+                Article article = (Article)
+                    user.inventory.get(current.articles[ii]);
+                compids.add(article.getComponents());
+            }
         }
-        // END TEMP
 
-        compids.toIntArray(avatar, 2);
+        int[] avatar = new int[compids.size()+1];
+        avatar[0] = (_hair.getSelectedColor() << 5) | _skin.getSelectedColor();
+        compids.toIntArray(avatar, 1);
 
         // update the avatar and cost displays
         _avatar.setAvatar(avatar);
@@ -195,12 +195,25 @@ public class NewLookView extends BContainer
             right.addListener(this);
             table.add(right);
 
-            // TODO: add a color selector for certain aspects
-            table.add(new Spacer(5, 5));
+            if (_aspect.name.equals("head")) {
+                table.add(_skin = new ColorSelector(_ctx, AvatarMetrics.SKIN));
+                _skin.addListener(this);
+            } else if (_aspect.name.equals("hair")) {
+                table.add(_hair = new ColorSelector(_ctx, AvatarMetrics.HAIR));
+                _hair.addListener(this);
+            } else if (_aspect.name.equals("eyes")) {
+                table.add(_eyes = new ColorSelector(_ctx, AvatarMetrics.EYES));
+                _eyes.addListener(this);
+// TODO: give women a colorization for lips?
+//             } else if (_aspect.name.equals("mouth")) {
+//                 table.add(_lips = new ColorSelector(_ctx, AvatarMetrics.LIPS));
+//                 _lips.addListener(this);
+            } else {
+                table.add(new Spacer(5, 5));
+            }
 
             ComponentRepository crepo =
                 _ctx.getCharacterManager().getComponentRepository();
-            log.info("Looking up " + _aspect + ".");
             Collection<AspectCatalog.Aspect> aspects =
                 _ctx.getAspectCatalog().getAspects(_gender + _aspect.name);
             for (AspectCatalog.Aspect entry : aspects) {
@@ -249,6 +262,8 @@ public class NewLookView extends BContainer
                 _selidx = (_selidx + csize - 1) % csize;
             } else if (action.equals("up")) {
                 _selidx = (_selidx + 1) % csize;
+            } else if (action.equals("select")) {
+                // nothing special, this is a colorization change
             }
 
             // note our new selection
@@ -279,6 +294,8 @@ public class NewLookView extends BContainer
     protected BTextArea _status;
 
     protected AvatarView _avatar;
+    protected ColorSelector _skin, _hair, _eyes;
+
     protected BTextField _name;
     protected MoneyLabel _cost;
     protected BButton _buy;

@@ -23,6 +23,6 @@ public interface BarberProvider extends InvocationProvider
     /**
      * Handles a {@link BarberService#purchaseLook} request.
      */
-    public void purchaseLook (ClientObject caller, String arg1, String[] arg2, InvocationService.ConfirmListener arg3)
+    public void purchaseLook (ClientObject caller, String arg1, int arg2, int arg3, String[] arg4, int[] arg5, InvocationService.ConfirmListener arg6)
         throws InvocationException;
 }

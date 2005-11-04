@@ -34,12 +34,12 @@ public class BarberMarshaller extends InvocationMarshaller
     public static final int PURCHASE_LOOK = 2;
 
     // documentation inherited from interface
-    public void purchaseLook (Client arg1, String arg2, String[] arg3, InvocationService.ConfirmListener arg4)
+    public void purchaseLook (Client arg1, String arg2, int arg3, int arg4, String[] arg5, int[] arg6, InvocationService.ConfirmListener arg7)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
+        InvocationMarshaller.ConfirmMarshaller listener7 = new InvocationMarshaller.ConfirmMarshaller();
+        listener7.listener = arg7;
         sendRequest(arg1, PURCHASE_LOOK, new Object[] {
-            arg2, arg3, listener4
+            arg2, new Integer(arg3), new Integer(arg4), arg5, arg6, listener7
         });
     }
 

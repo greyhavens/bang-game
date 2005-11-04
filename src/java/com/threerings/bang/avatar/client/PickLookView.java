@@ -115,6 +115,14 @@ public class PickLookView extends BContainer
             _selection = (Look)_selection.clone();
         }
         refreshDisplay();
+
+        // if we don't have a barber object, we need to tell the server that we
+        // updated our preferred look
+        if (_barbobj == null) {
+            AvatarService asvc = (AvatarService)
+                _ctx.getClient().requireService(AvatarService.class);
+            asvc.selectLook(_ctx.getClient(), name);
+        }
     }
 
     protected void flushModifiedLook ()

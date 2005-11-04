@@ -3,25 +3,24 @@
 
 package com.threerings.bang.avatar.server;
 
-import com.threerings.bang.avatar.client.BarberService;
-import com.threerings.bang.avatar.data.BarberMarshaller;
+import com.threerings.bang.avatar.client.AvatarService;
+import com.threerings.bang.avatar.data.AvatarMarshaller;
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
 
 /**
- * Dispatches requests to the {@link BarberProvider}.
+ * Dispatches requests to the {@link AvatarProvider}.
  */
-public class BarberDispatcher extends InvocationDispatcher
+public class AvatarDispatcher extends InvocationDispatcher
 {
     /**
      * Creates a dispatcher that may be registered to dispatch invocation
      * service requests for the specified provider.
      */
-    public BarberDispatcher (BarberProvider provider)
+    public AvatarDispatcher (AvatarProvider provider)
     {
         this.provider = provider;
     }
@@ -29,7 +28,7 @@ public class BarberDispatcher extends InvocationDispatcher
     // documentation inherited
     public InvocationMarshaller createMarshaller ()
     {
-        return new BarberMarshaller();
+        return new AvatarMarshaller();
     }
 
     // documentation inherited
@@ -38,17 +37,10 @@ public class BarberDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
-        case BarberMarshaller.CONFIGURE_LOOK:
-            ((BarberProvider)provider).configureLook(
+        case AvatarMarshaller.SELECT_LOOK:
+            ((AvatarProvider)provider).selectLook(
                 source,
-                (String)args[0], (int[])args[1]
-            );
-            return;
-
-        case BarberMarshaller.PURCHASE_LOOK:
-            ((BarberProvider)provider).purchaseLook(
-                source,
-                (String)args[0], ((Integer)args[1]).intValue(), ((Integer)args[2]).intValue(), (String[])args[3], (int[])args[4], (InvocationService.ConfirmListener)args[5]
+                (String)args[0]
             );
             return;
 

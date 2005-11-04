@@ -87,6 +87,9 @@ public class AvatarMetrics
     /** The colorization class for hair colors. */
     public static final String HAIR = "hair";
 
+    /** The colorization class for eye colors. */
+    public static final String EYES = "iris";
+
     /** The width of our avatar source images. */
     public static final int WIDTH = 468;
 
@@ -114,6 +117,14 @@ public class AvatarMetrics
     {
         _pository = pository;
         _crepo = crepo;
+    }
+
+    /**
+     * Returns the colorization repository used by these metrics.
+     */
+    public ColorPository getColorPository ()
+    {
+        return _pository;
     }
 
     /**
