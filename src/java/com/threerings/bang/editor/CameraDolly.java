@@ -36,6 +36,16 @@ public class CameraDolly extends EditorTool
         });
     }
     
+    /**
+     * Recenters the camera, pointing it at the center of the board.
+     */
+    public void recenter ()
+    {
+        _target = new Vector3f(
+            _panel.view.getTerrainNode().getWorldBound().getCenter());
+        _target.z = 0.0f;
+    }
+    
     // documentation inherited
     public String getName ()
     {
@@ -161,8 +171,7 @@ public class CameraDolly extends EditorTool
     {
         // find out what we're looking at if it's not already set
         if (_target == null) {
-            _target = _panel.view.getTerrainNode().getWorldBound().getCenter();
-            _target.z = 0.0f;
+            recenter();
         }
         
         // use the vector from target to camera to determine position

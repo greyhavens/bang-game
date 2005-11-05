@@ -40,6 +40,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -68,10 +69,13 @@ public class EditorBoardView extends BoardView
     {
         super.refreshBoard();
         
-        if (_highlights == null) {
-            int width = _board.getWidth(), height = _board.getHeight();
-            _highlights = new TerrainNode.Highlight[width][height];
-        }
+        // recenter the camera
+        _panel.tools.cameraDolly.recenter();
+        
+        // make sure highlights and grid are reset to new size
+        _hnode.detachAllChildren();
+        _highlights = null;
+        _grid = null;
         updateHighlights();
         updateGrid();
     }
@@ -340,6 +344,63 @@ public class EditorBoardView extends BoardView
         refreshLight();
     }
     
+    /**
+     * Creates a fresh new board.
+     */
+    public void createNewBoard (int width, int height)
+    {
+        _bangobj.setBoard(new BangBoard(width, height));
+        _bangobj.board.fillTerrain(Terrain.DIRT);
+        _bangobj.setPieces(new PieceDSet());
+        refreshBoard();
+        _panel.info.clear();
+        _panel.info.updatePlayers(0);
+    }
+    
+    /**
+     * Changes the board size, preserving as much of its contents as possible.
+     */
+    public void changeBoardSize (int width, int height)
+    {
+        // make sure it's not the same size
+        if (width == _board.getWidth() && height == _board.getHeight()) {
+            return;
+        }
+        
+        // first transfer the board
+        BangBoard nboard = new BangBoard(width, height);
+        int hfwidth = nboard.getHeightfieldWidth(),
+            hfheight = nboard.getHeightfieldHeight(),
+            xoff = (_board.getHeightfieldWidth() - hfwidth)/2,
+            yoff = (_board.getHeightfieldHeight() - hfheight)/2;
+        for (int y = 0; y < hfheight; y++) {
+            for (int x = 0; x < hfwidth; x++) {
+            
+                nboard.setHeightfieldValue(x, y,
+                    _board.getHeightfieldValue(x+xoff, y+yoff));
+                
+                nboard.setTerrainValue(x, y,
+                    _board.getTerrainValue(x+xoff, y+yoff));
+            }
+        }
+        nboard.setWaterLevel(_board.getWaterLevel());
+        nboard.setLightParams(_board.getLightAzimuth(),
+            _board.getLightElevation(), _board.getLightDiffuseColor(),
+            _board.getLightAmbientColor());
+        _bangobj.setBoard(nboard);
+        
+        // then move the pieces
+        xoff = (width - _board.getWidth())/2;
+        yoff = (height - _board.getHeight())/2;
+        for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
+            Piece piece = (Piece)it.next();
+            piece.position(piece.x + xoff, piece.y + yoff);
+        }
+        
+        // finally, refresh
+        refreshBoard();
+    }
+    
     @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {
@@ -458,6 +519,10 @@ public class EditorBoardView extends BoardView
      */
     protected void updateHighlights (int x1, int y1, int x2, int y2)
     {
+        if (_highlights == null) {
+            _highlights = new TerrainNode.Highlight[_board.getWidth()][
+                _board.getHeight()];
+        }
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
                 if (_showHighlights && _board.exceedsMaxHeightDelta(x, y)) {
@@ -559,7 +624,7 @@ public class EditorBoardView extends BoardView
      * we interact. */
     protected EditorPanel _panel;
 
-    /** Highlights indicating which tiles are occupiable. */    
+    /** Highlights indicating which tiles are occupiable. */
     protected TerrainNode.Highlight[][] _highlights;
     
     /** The grid indicating where the tile boundaries lie. */

@@ -144,9 +144,9 @@ public class BangBoard extends SimpleStreamableObject
     /** Returns the terrain value at the specified terrain coordinates. */
     public byte getTerrainValue (int x, int y)
     {
-        // return RIM for locations beyond the edge
+        // return zero for locations beyond the edge
         if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
-            return (byte)Terrain.RIM.code;
+            return (byte)0;
             
         // otherwise, look up in the terrain map
         } else {

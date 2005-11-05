@@ -29,7 +29,9 @@ import com.threerings.bang.game.data.Terrain;
  */
 public class ToolPanel extends JPanel
     implements ItemListener
-{   
+{
+    public CameraDolly cameraDolly;
+    
     public ToolPanel (EditorContext ctx, EditorPanel panel)
     {
         super(new BorderLayout());
@@ -39,8 +41,8 @@ public class ToolPanel extends JPanel
         cpanel.add(new JLabel(ctx.xlate("editor", "m.tool")),
             HGroupLayout.FIXED);
         _tools = new JComboBox();
-        CameraDolly dolly = new CameraDolly(ctx, panel);
-        _tools.addItem(dolly);
+        cameraDolly = new CameraDolly(ctx, panel);
+        _tools.addItem(cameraDolly);
         _tools.addItem(new PiecePlacer(ctx, panel));
         _tools.addItem(new HeightfieldBrush(ctx, panel));
         _tools.addItem(new TerrainBrush(ctx, panel));
@@ -55,8 +57,8 @@ public class ToolPanel extends JPanel
         addSelectAction(panel, KeyEvent.VK_4, 3);
         
         // and the tool options below
-        dolly.activate();
-        add(_scroll = new JScrollPane(dolly.getOptions()),
+        cameraDolly.activate();
+        add(_scroll = new JScrollPane(cameraDolly.getOptions()),
             BorderLayout.CENTER);
         _scroll.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createEmptyBorder(6, 0, 0, 0), _scroll.getBorder()));

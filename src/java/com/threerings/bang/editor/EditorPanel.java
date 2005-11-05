@@ -133,6 +133,8 @@ public class EditorPanel extends JPanel
             EditorController.EDIT_WATER);
         createMenuItem(edit, msgs.get("m.menu_light"), -1, KeyEvent.VK_L,
             EditorController.EDIT_LIGHT);
+        createMenuItem(edit, msgs.get("m.menu_board_size"), -1, KeyEvent.VK_B,
+            EditorController.EDIT_BOARD_SIZE);
             
         JMenu view = new JMenu(msgs.get("m.menu_view"));
         view.setMnemonic(KeyEvent.VK_V);
