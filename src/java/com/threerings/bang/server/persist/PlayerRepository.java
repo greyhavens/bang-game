@@ -16,6 +16,8 @@ import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.Session;
 import com.samskivert.jdbc.jora.Table;
 
+import com.threerings.bang.data.Handle;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -63,6 +65,19 @@ public class PlayerRepository extends JORARepository
             player.lastSession = player.created;
         }
         insert(_ptable, player);
+    }
+
+    /**
+     * Configures a player's handle, and gender.
+     */
+    public void configurePlayer (int playerId, Handle handle, boolean isMale)
+        throws PersistenceException
+    {
+        String gensql = isMale ?
+            "| " + Player.IS_MALE_FLAG : "& " + ~Player.IS_MALE_FLAG;
+        checkedUpdate("update PLAYERS set FLAGS = FLAGS " + gensql +
+                      ", HANDLE = " + JDBCUtil.escape(handle.toString()) +
+                      " where PLAYER_ID = " + playerId, 1);
     }
 
     /**

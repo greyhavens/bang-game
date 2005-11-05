@@ -5,6 +5,7 @@ package com.threerings.bang.avatar.server;
 
 import com.threerings.bang.avatar.client.BarberService;
 import com.threerings.bang.avatar.data.BarberMarshaller;
+import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -48,7 +49,7 @@ public class BarberDispatcher extends InvocationDispatcher
         case BarberMarshaller.PURCHASE_LOOK:
             ((BarberProvider)provider).purchaseLook(
                 source,
-                (String)args[0], ((Integer)args[1]).intValue(), ((Integer)args[2]).intValue(), (String[])args[3], (int[])args[4], (InvocationService.ConfirmListener)args[5]
+                (LookConfig)args[0], (InvocationService.ConfirmListener)args[1]
             );
             return;
 

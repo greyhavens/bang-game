@@ -43,7 +43,7 @@ public class BangCoinManager extends CoinManager
         _invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
-                    _coins = _coinRepo.getCoinCount(user.accountName.toString());
+                    _coins = _coinRepo.getCoinCount(user.username.toString());
                 } catch (PersistenceException pe) {
                     _err = pe;
                 }

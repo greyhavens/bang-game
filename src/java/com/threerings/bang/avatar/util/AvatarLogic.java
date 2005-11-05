@@ -25,6 +25,7 @@ import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.data.LookConfig;
 
 import static com.threerings.bang.Log.log;
 
@@ -131,8 +132,8 @@ public class AvatarLogic
     }
 
     /**
-     * Creates a metrics instance which will make use of the supplied
-     * repositories to obtain avatar related information.
+     * Creates a logic instance which will make use of the supplied sources to
+     * obtain avatar related information.
      */
     public AvatarLogic (ResourceManager rsrcmgr, ComponentRepository crepo)
         throws IOException
@@ -146,7 +147,7 @@ public class AvatarLogic
     }
 
     /**
-     * Returns the colorization repository used by these metrics.
+     * Returns the repository which defines our various recolorizations.
      */
     public ColorPository getColorPository ()
     {
@@ -240,17 +241,16 @@ public class AvatarLogic
      * @param cost a two element array into which the scrip and coin cost of
      * the look will be filled in (in that order).
      */
-    public Look createLook (PlayerObject user, String name, int hair, int skin,
-                            String[] aspects, int[] colors, int[] cost)
+    public Look createLook (PlayerObject user, LookConfig config, int[] cost)
     {
         String gender = user.isMale ? "male/" : "female/";
         int scrip = AvatarCodes.BASE_LOOK_SCRIP_COST,
             coins = AvatarCodes.BASE_LOOK_COIN_COST;
         ArrayIntSet compids = new ArrayIntSet();
-        for (int ii = 0; ii < aspects.length; ii++) {
+        for (int ii = 0; ii < config.aspects.length; ii++) {
             AvatarLogic.Aspect aclass = AvatarLogic.ASPECTS[ii];
             String acname = gender + aclass.name;
-            if (aspects[ii] == null) {
+            if (config.aspects[ii] == null) {
                 if (aclass.optional) {
                     continue;
                 }
@@ -260,11 +260,12 @@ public class AvatarLogic
                 return null;
             }
 
-            AspectCatalog.Aspect aspect = _aspcat.getAspect(acname, aspects[ii]);
+            AspectCatalog.Aspect aspect =
+                _aspcat.getAspect(acname, config.aspects[ii]);
             if (aspect == null) {
                 log.warning("Requested to purchase a look with unknown aspect " +
                             "[who=" + user.who() + ", class=" + acname +
-                            ", choice=" + aspects[ii] + "].");
+                            ", choice=" + config.aspects[ii] + "].");
                 return null;
             }
 
@@ -279,9 +280,9 @@ public class AvatarLogic
                     CharacterComponent ccomp = _crepo.getComponent(
                         cclass, aspect.name);
                     int compmask = ccomp.componentId;
-                    if (colors[ii] != 0) {
+                    if (config.colors[ii] != 0) {
                         // TODO: additional costs for some colors?
-                        compmask |= colors[ii] << 16;
+                        compmask |= config.colors[ii] << 16;
                     }
                     compids.add(compmask);
                 } catch (NoSuchComponentException nsce) {
@@ -291,10 +292,10 @@ public class AvatarLogic
         }
 
         Look look = new Look();
-        look.name = name;
+        look.name = config.name;
         look.aspects = new int[compids.size()+1];
         // TODO: additional costs for some hair and skin colorizations?
-        look.aspects[0] = (hair << 5) | skin;
+        look.aspects[0] = (config.hair << 5) | config.skin;
         compids.toIntArray(look.aspects, 1);
 
         cost[0] = scrip;

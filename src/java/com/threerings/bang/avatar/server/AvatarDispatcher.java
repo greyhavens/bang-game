@@ -5,6 +5,7 @@ package com.threerings.bang.avatar.server;
 
 import com.threerings.bang.avatar.client.AvatarService;
 import com.threerings.bang.avatar.data.AvatarMarshaller;
+import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -42,7 +43,7 @@ public class AvatarDispatcher extends InvocationDispatcher
         case AvatarMarshaller.CREATE_AVATAR:
             ((AvatarProvider)provider).createAvatar(
                 source,
-                (Handle)args[0], ((Boolean)args[1]).booleanValue(), ((Integer)args[2]).intValue(), ((Integer)args[3]).intValue(), (String[])args[4], (int[])args[5], (InvocationService.ConfirmListener)args[6]
+                (Handle)args[0], ((Boolean)args[1]).booleanValue(), (LookConfig)args[2], (InvocationService.ConfirmListener)args[3]
             );
             return;
 

@@ -50,7 +50,7 @@ public abstract class FinancialAction extends Invoker.Unit
         try {
             if (_coinCost > 0) {
                 _coinres = BangServer.coinmgr.getCoinRepository().reserveCoins(
-                    _user.accountName.toString(), _coinCost);
+                    _user.username.toString(), _coinCost);
                 if (_coinres == -1) {
                     log.warning("Failed to reserve coins " + this + ".");
                     fail();

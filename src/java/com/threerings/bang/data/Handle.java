@@ -18,11 +18,12 @@ public class Handle extends Name
     }
 
     /**
-     * Creates a handle instance with the supplied name.
+     * Creates a handle instance with the supplied name. Whitespace will
+     * automatically be trimmed from either end of the string.
      */
     public Handle (String name)
     {
-        super(name);
+        super(name == null ? "" : name.trim());
     }
 
     @Override // documentation inherited

@@ -47,7 +47,7 @@ public class BankManager extends PlaceManager
     {
         PlayerObject player = (PlayerObject)caller;
         CoinExOffer offer = new CoinExOffer();
-        offer.accountName = player.accountName.toString();
+        offer.accountName = player.username.toString();
         offer.gameName = offer.accountName;
         offer.buy = buying;
         offer.volume = (short)Math.min(coins, Short.MAX_VALUE);
@@ -63,7 +63,7 @@ public class BankManager extends PlaceManager
     {
         PlayerObject player = (PlayerObject)caller;
         if (BangServer.coinexmgr.cancelOffer(
-                player.accountName.toString(), offerId)) {
+                player.username.toString(), offerId)) {
             cl.requestProcessed();
         } else {
             cl.requestFailed(NO_SUCH_OFFER);

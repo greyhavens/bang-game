@@ -40,6 +40,7 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.avatar.util.AspectCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
@@ -99,6 +100,29 @@ public class NewLookView extends BContainer
         _barbobj = barbobj;
     }
 
+    /**
+     * Creates a {@link LookConfig} for the currently configured look.
+     */
+    public LookConfig getLookConfig ()
+    {
+        LookConfig config = new LookConfig();
+        config.name = (_name == null) ? "" : _name.getText();
+        config.hair = _hair.getSelectedColor();
+        config.skin = _skin.getSelectedColor();
+
+        // look up the selection for each aspect class
+        config.aspects = new String[AvatarLogic.ASPECTS.length];
+        for (int ii = 0; ii < config.aspects.length; ii++) {
+            Choice choice = _selections.get(AvatarLogic.ASPECTS[ii].name); 
+            config.aspects[ii] = (choice == null) ? null : choice.aspect.name;
+        }
+
+        // TODO: get per-aspect colorizations
+        config.colors = new int[config.aspects.length];
+
+        return config;
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
@@ -108,16 +132,6 @@ public class NewLookView extends BContainer
             _status.setText(_msgs.get("m.name_required"));
             return;
         }
-
-        // look up the selection for each aspect class
-        String[] choices = new String[AvatarLogic.ASPECTS.length];
-        for (int ii = 0; ii < choices.length; ii++) {
-            Choice choice = _selections.get(AvatarLogic.ASPECTS[ii].name); 
-            choices[ii] = (choice == null) ? null : choice.aspect.name;
-        }
-
-        // TODO: get per-aspect colorizations
-        int[] colors = new int[choices.length];
 
         // prevent double clicks or other lag related fuckolas
         _buy.setEnabled(false);
@@ -133,9 +147,7 @@ public class NewLookView extends BContainer
                 _buy.setEnabled(true);
             }
         };
-        _barbobj.service.purchaseLook(
-            _ctx.getClient(), name, _hair.getSelectedColor(),
-            _skin.getSelectedColor(), choices, colors, cl);
+        _barbobj.service.purchaseLook(_ctx.getClient(), getLookConfig(), cl);
     }
 
     protected void updateAvatar ()

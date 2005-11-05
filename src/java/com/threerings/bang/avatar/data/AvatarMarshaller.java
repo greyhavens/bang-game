@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.data;
 
 import com.threerings.bang.avatar.client.AvatarService;
+import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -24,12 +25,12 @@ public class AvatarMarshaller extends InvocationMarshaller
     public static final int CREATE_AVATAR = 1;
 
     // documentation inherited from interface
-    public void createAvatar (Client arg1, Handle arg2, boolean arg3, int arg4, int arg5, String[] arg6, int[] arg7, InvocationService.ConfirmListener arg8)
+    public void createAvatar (Client arg1, Handle arg2, boolean arg3, LookConfig arg4, InvocationService.ConfirmListener arg5)
     {
-        InvocationMarshaller.ConfirmMarshaller listener8 = new InvocationMarshaller.ConfirmMarshaller();
-        listener8.listener = arg8;
+        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
+        listener5.listener = arg5;
         sendRequest(arg1, CREATE_AVATAR, new Object[] {
-            arg2, new Boolean(arg3), new Integer(arg4), new Integer(arg5), arg6, arg7, listener8
+            arg2, new Boolean(arg3), arg4, listener5
         });
     }
 

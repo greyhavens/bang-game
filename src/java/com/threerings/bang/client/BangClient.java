@@ -24,7 +24,7 @@ import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.parlor.game.data.GameAI;
 
-import com.threerings.bang.avatar.client.FirstLookView;
+import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
@@ -104,13 +104,13 @@ public class BangClient extends BasicClient
             _tview = new TownView(_ctx);
             _ctx.getRootNode().addWindow(_tview);
 
-            // if this player does not have a default look, it's their first
-            // time, so pop up the first look view
-            if (_ctx.getUserObject().looks.get("") == null) {
-                FirstLookView flv = new FirstLookView(_ctx);
-                _ctx.getRootNode().addWindow(flv);
-                flv.pack();
-                flv.center();
+            // if this player does not have a name, it's their first time, so
+            // pop up the create avatar view
+            if (_ctx.getUserObject().handle.isBlank()) {
+                CreateAvatarView cav = new CreateAvatarView(_ctx);
+                _ctx.getRootNode().addWindow(cav);
+                cav.pack();
+                cav.center();
             }
         }
     }

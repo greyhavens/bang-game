@@ -8,6 +8,8 @@ import com.threerings.presents.client.InvocationService;
 
 import com.threerings.bang.data.Handle;
 
+import com.threerings.bang.avatar.data.LookConfig;
+
 /**
  * Provides avatar invocation services that are available anywhere, not just
  * when in the Barber Shop.
@@ -18,9 +20,8 @@ public interface AvatarService extends InvocationService
      * Configures a player's avatar for the first time, specifying their handle
      * (in-game name), sex, and default avatar look.
      */
-    public void createAvatar (
-        Client client, Handle handle, boolean isMale, int hair, int skin,
-        String[] aspects, int[] colors, ConfirmListener cl);
+    public void createAvatar (Client client, Handle handle, boolean isMale,
+                              LookConfig look, ConfirmListener cl);
 
     /**
      * Selects the specified look as the player's "current" look.

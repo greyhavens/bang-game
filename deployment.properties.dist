@@ -15,12 +15,17 @@ server_host = game.banghowdy.com
 # server_port = 47624
 
 #
+# Specifies the locale for this deployment. This is used to ensure that the
+# same language specific name handling routines are used on client and server.
+
+default_locale = en
+
+#
 # These are used by the installer and game launcher.
 
 client_ident = client
 client_title = Bang! Howdy
 editor_title = Bang! Howdy Editor
-default_locale = en
 
 #
 # If this deployment will be used to build signed Java Web Start

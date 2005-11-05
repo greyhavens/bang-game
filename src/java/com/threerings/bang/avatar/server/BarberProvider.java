@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.server;
 
 import com.threerings.bang.avatar.client.BarberService;
+import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -23,6 +24,6 @@ public interface BarberProvider extends InvocationProvider
     /**
      * Handles a {@link BarberService#purchaseLook} request.
      */
-    public void purchaseLook (ClientObject caller, String arg1, int arg2, int arg3, String[] arg4, int[] arg5, InvocationService.ConfirmListener arg6)
+    public void purchaseLook (ClientObject caller, LookConfig arg1, InvocationService.ConfirmListener arg2)
         throws InvocationException;
 }

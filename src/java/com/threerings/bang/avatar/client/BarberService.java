@@ -6,7 +6,8 @@ package com.threerings.bang.avatar.client;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
-import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.data.LookConfig;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 /**
  * Provides Barber-related functionality.
@@ -26,8 +27,7 @@ public interface BarberService extends InvocationService
      * Many of these will be 0 as those aspects have no special colorization.
      */
     public void purchaseLook (
-        Client client, String name, int hair, int skin, String[] aspects,
-        int[] colors, ConfirmListener cl);
+        Client client, LookConfig look, ConfirmListener cl);
 
     /**
      * Requests that the specified look be configured with the specified set of

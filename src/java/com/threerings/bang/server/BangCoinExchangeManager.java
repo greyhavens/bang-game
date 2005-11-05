@@ -98,8 +98,8 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     public CoinExOfferInfo[][] getPlayerOffers (PlayerObject player)
     {
         return new CoinExOfferInfo[][] {
-            getPlayerOffers(player.accountName.toString(), _bids),
-            getPlayerOffers(player.accountName.toString(), _asks),
+            getPlayerOffers(player.username.toString(), _bids),
+            getPlayerOffers(player.username.toString(), _asks),
         };
     }
 

@@ -23,8 +23,8 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>playerId</code> field. */
     public static final String PLAYER_ID = "playerId";
 
-    /** The field name of the <code>accountName</code> field. */
-    public static final String ACCOUNT_NAME = "accountName";
+    /** The field name of the <code>handle</code> field. */
+    public static final String HANDLE = "handle";
 
     /** The field name of the <code>isMale</code> field. */
     public static final String IS_MALE = "isMale";
@@ -56,9 +56,6 @@ public class PlayerObject extends BodyObject
 
     /** This user's persistent unique id. */
     public int playerId;
-
-    /** This user's authentication account username. */
-    public Name accountName;
 
     /** This user's cowboy handle (in-game name). */
     public Handle handle;
@@ -119,6 +116,12 @@ public class PlayerObject extends BodyObject
         return tokens;
     }
 
+    @Override // documentation inherited
+    public String who ()
+    {
+        return "'" + handle + "' " + super.who();
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>playerId</code> field be set to the
@@ -137,19 +140,19 @@ public class PlayerObject extends BodyObject
     }
 
     /**
-     * Requests that the <code>accountName</code> field be set to the
+     * Requests that the <code>handle</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setAccountName (Name value)
+    public void setHandle (Handle value)
     {
-        Name ovalue = this.accountName;
+        Handle ovalue = this.handle;
         requestAttributeChange(
-            ACCOUNT_NAME, value, ovalue);
-        this.accountName = value;
+            HANDLE, value, ovalue);
+        this.handle = value;
     }
 
     /**
