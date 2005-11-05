@@ -96,10 +96,6 @@ public class BoardView extends BComponent
         
         // create a sky box
         _node.attachChild(new SkyNode(ctx));
-        
-        // create some fake ground
-        _node.attachChild(_gnode = new Node("ground"));
-        refreshGround();
 
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
@@ -191,9 +187,6 @@ public class BoardView extends BComponent
 
         // refresh the light
         refreshLight();
-        
-        // refresh the ground as well
-        refreshGround();
         
         // create the board geometry
         _tnode.createBoardTerrain(_board);
@@ -410,59 +403,6 @@ public class BoardView extends BComponent
             argb = ambientColor.getRGBColorComponents(null);
         _light.setDiffuse(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
         _light.setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
-    }
-    
-    /**
-     * Creates the geometry that defines the ground around and behind the
-     * board.
-     */
-    protected void refreshGround ()
-    {
-        _gnode.detachAllChildren();
-
-        if (_board == null) {
-            _gnode.attachChild(createGroundSection(-GROUND_SIZE/2,
-                -GROUND_SIZE/2, GROUND_SIZE, GROUND_SIZE));
-            
-        } else {
-            int tbheight = (GROUND_SIZE - _board.getHeight())/2,
-                lrwidth = (GROUND_SIZE - _board.getWidth())/2,
-                lrheight = _board.getHeight();
-                
-            _gnode.attachChild(createGroundSection(-lrwidth, +lrheight,
-                GROUND_SIZE, tbheight)); // top
-            _gnode.attachChild(createGroundSection(-lrwidth, -tbheight,
-                GROUND_SIZE, tbheight)); // bottom
-            _gnode.attachChild(createGroundSection(-lrwidth, 0, lrwidth,
-                lrheight)); // left
-            _gnode.attachChild(createGroundSection(_board.getWidth(), 0,
-                lrwidth, lrheight)); // right
-        }
-
-        _gnode.updateRenderState();
-    }
-
-    /**
-     * Creates a section of the ground around the board with the specified tile
-     * coordinate dimensions.
-     */
-    protected Quad createGroundSection (int x, int y, int width, int height)
-    {
-        float w = width*TILE_SIZE, h = height*TILE_SIZE;
-        Quad section = new Quad("section", w, h);
-        section.setLocalTranslation(new Vector3f(x*TILE_SIZE + w/2,
-            y*TILE_SIZE + h/2, 0f));
-            
-        // tile the texture over the quad
-        Texture texture = RenderUtil.getGroundTexture(
-            Terrain.OUTER).getTexture().createSimpleClone();
-        texture.setScale(new Vector3f(width, height, 1));
-        TextureState tstate =
-            _ctx.getDisplay().getRenderer().createTextureState();
-        tstate.setTexture(texture);
-        section.setRenderState(tstate);
-        
-        return section;
     }
     
     /**
@@ -691,7 +631,7 @@ public class BoardView extends BComponent
 
     protected HashMap _fmasks = new HashMap();
 
-    protected Node _node, _pnode, _hnode, _gnode;
+    protected Node _node, _pnode, _hnode;
     protected DirectionalLight _light;
     protected TerrainNode _tnode;
     protected WaterNode _wnode;
@@ -737,7 +677,4 @@ public class BoardView extends BComponent
     
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;
-    
-    /** The size of the surrounding ground, in tiles. */
-    protected static final int GROUND_SIZE = 100;
 }

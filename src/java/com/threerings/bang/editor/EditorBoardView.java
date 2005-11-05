@@ -150,9 +150,9 @@ public class EditorBoardView extends BoardView
         // transfer the heightfield values to the bitmap one line at a time
         // upside-down
         int[] vals = new int[hfwidth];
-        for (int y = 1; y <= hfheight; y++) {
-            for (int x = 1; x <= hfwidth; x++) {
-                vals[x-1] = _board.getHeightfieldValue(x, y) + 128;
+        for (int y = 0; y < hfheight; y++) {
+            for (int x = 0; x < hfwidth; x++) {
+                vals[x] = _board.getHeightfieldValue(x, y) + 128;
             }
             grayimg.getRaster().setPixels(0, hfheight-y, hfwidth, 1, vals);
         }
@@ -174,10 +174,10 @@ public class EditorBoardView extends BoardView
         int x1 = (int)((x-radius)/stscale), y1 = (int)((y-radius)/stscale),
             x2 = (int)((x+radius)/stscale), y2 = (int)((y+radius)/stscale);
         
-        x1 = clamp(x1, 0, _board.getTerrainWidth() - 1);
-        x2 = clamp(x2, 0, _board.getTerrainWidth() - 1);
-        y1 = clamp(y1, 0, _board.getTerrainHeight() - 1);
-        y2 = clamp(y2, 0, _board.getTerrainHeight() - 1);
+        x1 = clamp(x1, 0, _board.getHeightfieldWidth() - 1);
+        x2 = clamp(x2, 0, _board.getHeightfieldWidth() - 1);
+        y1 = clamp(y1, 0, _board.getHeightfieldHeight() - 1);
+        y2 = clamp(y2, 0, _board.getHeightfieldHeight() - 1);
         
         // scan over the sub-tile coordinates, setting any that fall in the
         // circle
@@ -211,10 +211,10 @@ public class EditorBoardView extends BoardView
         int x1 = (int)((x-radius)/stscale), y1 = (int)((y-radius)/stscale),
             x2 = (int)((x+radius)/stscale), y2 = (int)((y+radius)/stscale);
         
-        x1 = clamp(x1, 1, _board.getHeightfieldWidth());
-        x2 = clamp(x2, 1, _board.getHeightfieldWidth());
-        y1 = clamp(y1, 1, _board.getHeightfieldHeight());
-        y2 = clamp(y2, 1, _board.getHeightfieldHeight());
+        x1 = clamp(x1, 0, _board.getHeightfieldWidth() - 1);
+        x2 = clamp(x2, 0, _board.getHeightfieldWidth() - 1);
+        y1 = clamp(y1, 0, _board.getHeightfieldHeight() - 1);
+        y2 = clamp(y2, 0, _board.getHeightfieldHeight() - 1);
         
         // scan over the sub-tile coordinates, setting any that fall in the
         // circle
@@ -248,10 +248,9 @@ public class EditorBoardView extends BoardView
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight();
         
-        for (int y = 1; y <= height; y++) {
-            for (int x = 1; x <= width; x++) {
-                _board.addHeightfieldValue(x, y,
-                    RandomUtil.getInt(+2, -2));
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                _board.addHeightfieldValue(x, y, RandomUtil.getInt(+2, -2));
             }
         }
         
@@ -267,8 +266,8 @@ public class EditorBoardView extends BoardView
         
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight(), idx = 0;
-        for (int y = 1; y <= height; y++) {
-            for (int x = 1; x <= width; x++) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 // average this pixel and its eight neighbors
                 smoothed[idx++] = (byte)
                     (((int)_board.getHeightfieldValue(x-1, y-1) +
@@ -368,8 +367,8 @@ public class EditorBoardView extends BoardView
     {
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight();
-        for (int y = 1; y <= height; y++) {
-            for (int x = 1; x <= width; x++) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 _board.setHeightfieldValue(x, y,
                     (byte)(map.getTrueHeightAtPoint(x, y) - 128));
             }
@@ -507,8 +506,8 @@ public class EditorBoardView extends BoardView
             updateRenderState();
             
             int vertices =
-                (_board.getHeight() + 1) * (_board.getTerrainWidth() - 1) * 2 +
-                (_board.getWidth() + 1) * (_board.getTerrainHeight() - 1) * 2;
+                (_board.getHeight() + 1) * (_board.getHeightfieldWidth() - 1) * 2 +
+                (_board.getWidth() + 1) * (_board.getHeightfieldHeight() - 1) * 2;
             setVertexBuffer(BufferUtils.createFloatBuffer(vertices * 3));
             generateIndices();
             
@@ -527,7 +526,7 @@ public class EditorBoardView extends BoardView
             // horizontal grid lines
             for (int ty = 0, height = _board.getHeight(); ty <= height; ty++) {
                 int y = ty * BangBoard.HEIGHTFIELD_SUBDIVISIONS;
-                for (int x = 0, width = _board.getTerrainWidth() - 1;
+                for (int x = 0, width = _board.getHeightfieldWidth() - 1;
                         x < width; x++) {
                     _tnode.getHeightfieldVertex(x, y, vertex);
                     vertex.z += 0.1f;
@@ -542,7 +541,7 @@ public class EditorBoardView extends BoardView
             // vertical grid lines
             for (int tx = 0, width = _board.getWidth(); tx <= width; tx++) {
                 int x = tx * BangBoard.HEIGHTFIELD_SUBDIVISIONS;
-                for (int y = 0, height = _board.getTerrainHeight() - 1;
+                for (int y = 0, height = _board.getHeightfieldHeight() - 1;
                         y < height; y++) {
                     _tnode.getHeightfieldVertex(x, y, vertex);
                     vertex.z += 0.1f;

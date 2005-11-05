@@ -56,8 +56,8 @@ public class EditorManager extends GameManager
      */
     protected BangBoard createBoard (ArrayList<Piece> pieces)
     {
-        int size = 16; // gconfig.size;
-        BangBoard board = new BangBoard(size, size);
+        BangBoard board = new BangBoard(DEFAULT_BOARD_WIDTH,
+            DEFAULT_BOARD_HEIGHT);
         CompoundGenerator gen = new CompoundGenerator();
         gen.generate(board, pieces);
         return board;
@@ -65,4 +65,8 @@ public class EditorManager extends GameManager
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
+    
+    /** The default board dimensions. */
+    protected static final int DEFAULT_BOARD_WIDTH = 32;
+    protected static final int DEFAULT_BOARD_HEIGHT = 32;
 }

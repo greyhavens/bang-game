@@ -113,7 +113,8 @@ public class EditorController extends GameController
      * {@link #NEW_BOARD} command. */
     public void handleNewBoard (Object source)
     {
-        _bangobj.setBoard(new BangBoard(16, 16));
+        _bangobj.setBoard(new BangBoard(_bangobj.board.getWidth(),
+            _bangobj.board.getHeight()));
         _bangobj.board.fillTerrain(Terrain.DIRT);
         _bangobj.setPieces(new PieceDSet());
         _panel.view.refreshBoard();

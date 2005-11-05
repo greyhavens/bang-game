@@ -46,19 +46,20 @@ public class BangBoard extends SimpleStreamableObject
      * tile becomes unoccupiable. */
     public static final int MAX_OCCUPIABLE_HEIGHT_DELTA = 16;
     
+    /** The size in tiles of the border between the edge of the heightfield and
+     * the edge of the playable region. */
+    public static final int BORDER_SIZE = 8;
+    
     /** Creates a board with the specified dimensions. */
     public BangBoard (int width, int height)
     {
         _width = width;
         _height = height;
         
-        _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS - 1;
-        _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS - 1;
+        _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
+        _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
         _heightfield = new byte[_hfwidth * _hfheight];
-        
-        _twidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
-        _theight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
-        _terrain = new byte[_twidth * _theight];
+        _terrain = new byte[_hfwidth * _hfheight];
         
         _waterLevel = (byte)-128;
         
@@ -91,7 +92,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _height;
     }
-
+    
     /** Returns the width of the board's heightfield. */
     public int getHeightfieldWidth ()
     {
@@ -107,11 +108,7 @@ public class BangBoard extends SimpleStreamableObject
     /** Returns the height at the specified sub-tile coordinates. */
     public byte getHeightfieldValue (int x, int y)
     {
-        // subtract one for the edge
-        x -= 1;
-        y -= 1;
-        
-        // return zero for locations on or beyond the edge
+        // return zero for locations beyond the edge
         if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
             return (byte)0;
         
@@ -126,14 +123,14 @@ public class BangBoard extends SimpleStreamableObject
      */
     public void setHeightfieldValue (int x, int y, byte value)
     {
-        _heightfield[(y-1)*_hfwidth + (x-1)] = value;
+        _heightfield[y*_hfwidth + x] = value;
     }
     
     /** Adds to or subtracts from the height at the specified sub-tile
      * coordinates, clamping to the allowed range. */
     public void addHeightfieldValue (int x, int y, int value)
     {
-        int idx = (y-1)*_hfwidth + (x-1);
+        int idx = y*_hfwidth + x;
         _heightfield[idx] = (byte)Math.min(Math.max(-128,
             _heightfield[idx] + value), +127);
     }
@@ -144,35 +141,23 @@ public class BangBoard extends SimpleStreamableObject
         return _heightfield;
     }
     
-    /** Returns the width of the board's terrain map. */
-    public int getTerrainWidth ()
-    {
-        return _twidth;
-    }
-    
-    /** Returns the height of the board's terrain map. */
-    public int getTerrainHeight ()
-    {
-        return _theight;
-    }
-    
     /** Returns the terrain value at the specified terrain coordinates. */
     public byte getTerrainValue (int x, int y)
     {
         // return RIM for locations beyond the edge
-        if (x < 0 || y < 0 || x >= _twidth || y >= _theight) {
+        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
             return (byte)Terrain.RIM.code;
             
         // otherwise, look up in the terrain map
         } else {
-            return _terrain[y*_twidth + x];
+            return _terrain[y*_hfwidth + x];
         }
     }
     
     /** Sets a single terrain value. */
     public void setTerrainValue (int x, int y, byte value)
     {
-        _terrain[y*_twidth + x] = value;
+        _terrain[y*_hfwidth + x] = value;
     }
     
     /** Fills the terrain array with the specified terrain. */
@@ -452,7 +437,6 @@ public class BangBoard extends SimpleStreamableObject
      */
     public boolean exceedsMaxHeightDelta (int tx, int ty)
     {
-        // first check the heightfield vertices to see if it's unoccupiable
         int x1 = tx * HEIGHTFIELD_SUBDIVISIONS,
             y1 = ty * HEIGHTFIELD_SUBDIVISIONS,
             x2 = (tx+1) * HEIGHTFIELD_SUBDIVISIONS,
@@ -617,12 +601,9 @@ public class BangBoard extends SimpleStreamableObject
     {
         in.defaultReadObject();
         
-        _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS - 1;
-        _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS - 1;
+        _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
+        _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
         
-        _twidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
-        _theight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
-
         int size = _width*_height;
         _pterrain = new byte[size];
         _btstate = new byte[size];
@@ -762,7 +743,7 @@ public class BangBoard extends SimpleStreamableObject
 
     /** The width and height of our board. */
     protected int _width, _height;
-
+    
     /** The heightfield that describes the board terrain. */
     protected byte[] _heightfield;
     
@@ -779,7 +760,7 @@ public class BangBoard extends SimpleStreamableObject
     protected int _lightDiffuseColor, _lightAmbientColor; 
     
     /** The dimensions of the heightfield and terrain arrays. */
-    protected transient int _hfwidth, _hfheight, _twidth, _theight;
+    protected transient int _hfwidth, _hfheight;
     
     /** The predominant terrain codes for each tile. */
     protected transient byte[] _pterrain;

@@ -370,9 +370,9 @@ public class TerrainNode extends Node
         detachAllChildren();
         
         // create, store, and attach the splat blocks
-        int swidth = (int)Math.ceil((_board.getHeightfieldWidth() + 1.0) /
+        int swidth = (int)Math.ceil((_board.getHeightfieldWidth() - 1.0) /
                 SPLAT_SIZE),
-            sheight = (int)Math.ceil((_board.getHeightfieldHeight() + 1.0) /
+            sheight = (int)Math.ceil((_board.getHeightfieldHeight() - 1.0) /
                 SPLAT_SIZE);
         _blocks = new SplatBlock[swidth][sheight];
         for (int x = 0; x < swidth; x++) {
@@ -394,8 +394,8 @@ public class TerrainNode extends Node
      */
     public void refreshHeightfield ()
     {
-        refreshHeightfield(0, 0, _board.getTerrainWidth() - 1,
-            _board.getTerrainWidth() - 1);
+        refreshHeightfield(0, 0, _board.getHeightfieldWidth() - 1,
+            _board.getHeightfieldWidth() - 1);
     }
     
     /**
@@ -422,8 +422,8 @@ public class TerrainNode extends Node
      */
     public void refreshTerrain ()
     {
-        refreshTerrain(0, 0, _board.getTerrainWidth() - 1,
-            _board.getTerrainWidth() - 1);
+        refreshTerrain(0, 0, _board.getHeightfieldWidth() - 1,
+            _board.getHeightfieldWidth() - 1);
     }
     
     /**
@@ -545,9 +545,9 @@ public class TerrainNode extends Node
         // the vertices and normals
         int vx = sx * SPLAT_SIZE, vy = sy * SPLAT_SIZE,
             vwidth = Math.min(SPLAT_SIZE + 1,
-                _board.getHeightfieldWidth() + 2 - vx),
+                _board.getHeightfieldWidth() - vx),
             vheight = Math.min(SPLAT_SIZE + 1,
-                _board.getHeightfieldHeight() + 2 - vy),
+                _board.getHeightfieldHeight() - vy),
             vbufsize = vwidth * vheight * 3;
         block.vbuf = BufferUtils.createFloatBuffer(vbufsize);
         block.nbuf = BufferUtils.createFloatBuffer(vbufsize);

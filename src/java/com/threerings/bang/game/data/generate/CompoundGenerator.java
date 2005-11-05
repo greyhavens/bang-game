@@ -25,7 +25,8 @@ public class CompoundGenerator extends EnvironmentGenerator
     @Override // documentation inherited
     public void generate (BangBoard board, ArrayList<Piece> pieces)
     {
-        int width = board.getWidth(), height = board.getHeight();
+        int width = board.getWidth() - BangBoard.BORDER_SIZE*2,
+            height = board.getHeight() - BangBoard.BORDER_SIZE*2;
 
         // first fill the board with dirt
         board.fillTerrain(Terrain.DIRT);
@@ -53,8 +54,10 @@ public class CompoundGenerator extends EnvironmentGenerator
             bldg.assignPieceId();
 
             // position it randomly
-            int tx = RandomUtil.getInt(width-bldg.getBounds().width, 0);
-            int ty = RandomUtil.getInt(height-bldg.getBounds().height, 0);
+            int tx = RandomUtil.getInt(width-bldg.getBounds().width, 0) +
+                BangBoard.BORDER_SIZE;
+            int ty = RandomUtil.getInt(height-bldg.getBounds().height, 0) +
+                BangBoard.BORDER_SIZE;
             bldg.position(tx, ty);
 
             // rotate it randomly
@@ -111,7 +114,8 @@ public class CompoundGenerator extends EnvironmentGenerator
         }
 
         // finally add all the props that are still fully on the board
-        Rectangle rect = new Rectangle(0, 0, width, height);
+        Rectangle rect = new Rectangle(BangBoard.BORDER_SIZE,
+            BangBoard.BORDER_SIZE, width, height);
         for (int ii = 0; ii < count; ii++) {
             if (rect.contains(bldgs[ii].getBounds())) {
                 pieces.add(bldgs[ii]);

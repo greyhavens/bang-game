@@ -235,7 +235,7 @@ public class CameraDolly extends EditorTool
     protected static final float MIN_DISTANCE = 50.0f;
     
     /** The maximum distance from the target. */
-    protected static final float MAX_DISTANCE = 300.0f;
+    protected static final float MAX_DISTANCE = 500.0f;
     
     /** The minimum elevation. */
     protected static final float MIN_ELEVATION = FastMath.PI / 16.0f; 

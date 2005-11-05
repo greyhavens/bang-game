@@ -12,6 +12,7 @@ import com.jme.renderer.Camera;
 
 import com.threerings.jme.input.GodViewHandler;
 
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -48,8 +49,9 @@ public class CameraHandler extends GodViewHandler
      */
     public void setBoardDimens (BangObject bangobj, int pidx)
     {
-        float breadth = TILE_SIZE * bangobj.board.getWidth();
-        float depth = TILE_SIZE * bangobj.board.getHeight();
+        float off = TILE_SIZE * BangBoard.BORDER_SIZE,
+            breadth = TILE_SIZE * bangobj.board.getWidth() - off*2,
+            depth = TILE_SIZE * bangobj.board.getHeight() - off*2;
 
         float height = 100; // default to 100 units up in the air
         float angle = FastMath.PI/3; // default to 60 degree view angle
@@ -81,10 +83,10 @@ public class CameraHandler extends GodViewHandler
         // the player's starting location
         float cx = TILE_SIZE * x / pcount, cy = TILE_SIZE * y / pcount;
         float rotangle;
-        if (cx > breadth/2) {
-            rotangle = (cy > depth/2) ? -3*FastMath.PI/4 : -FastMath.PI/4;
+        if (cx-off > breadth/2) {
+            rotangle = (cy-off > depth/2) ? -3*FastMath.PI/4 : -FastMath.PI/4;
         } else {
-            rotangle = (cy > depth/2) ? 3*FastMath.PI/4 : FastMath.PI/4;
+            rotangle = (cy-off > depth/2) ? 3*FastMath.PI/4 : FastMath.PI/4;
         }
 
         log.info("Camera [cx=" + cx + ", cy=" + cy +
@@ -122,7 +124,7 @@ public class CameraHandler extends GodViewHandler
         _camera.update();
 
         // set the pan limits based on the board size
-        setPanLimits(-50, -50, breadth+50, depth+50);
+        setPanLimits(off-50, off-50, off+breadth+50, off+depth+50);
     }
 
     protected void setKeyBindings (String api)

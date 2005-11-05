@@ -67,6 +67,8 @@ public class BoardRecord
         public byte[] heightfield;    
         public byte[] terrain;
         public byte waterLevel;
+        public float lightAzimuth, lightElevation;
+        public int lightDiffuseColor, lightAmbientColor; 
     }
     
     /**
@@ -212,6 +214,9 @@ public class BoardRecord
                 obb.heightfield.length);
             System.arraycopy(obb.terrain, 0, _board.getTerrain(), 0,
                 obb.terrain.length);
+            _board.setWaterLevel(obb.waterLevel);
+            _board.setLightParams(obb.lightAzimuth, obb.lightElevation,
+                obb.lightDiffuseColor, obb.lightAmbientColor);
             */
             _board = (BangBoard)oin.readObject();
             _pieces = new Piece[oin.readInt()];
