@@ -59,17 +59,6 @@ public class BoardRecord
 
     /** The serialized board data. */
     public byte[] data;
-
-    /** The last version of the bang board. */
-    public static class OldBangBoard extends SimpleStreamableObject
-    {
-        public int width, height;
-        public byte[] heightfield;    
-        public byte[] terrain;
-        public byte waterLevel;
-        public float lightAzimuth, lightElevation;
-        public int lightDiffuseColor, lightAmbientColor; 
-    }
     
     /**
      * Serializes the supplied board and piece information and stuffs it
@@ -205,19 +194,6 @@ public class BoardRecord
         try {
             ObjectInputStream oin = new ObjectInputStream(
                 new ByteArrayInputStream(data));
-            /*
-            oin.addTranslation("com.threerings.bang.game.data.BangBoard",
-                "com.threerings.bang.server.persist.BoardRecord$OldBangBoard");
-            OldBangBoard obb = (OldBangBoard)oin.readObject();
-            _board = new BangBoard(obb.width, obb.height);
-            System.arraycopy(obb.heightfield, 0, _board.getHeightfield(), 0,
-                obb.heightfield.length);
-            System.arraycopy(obb.terrain, 0, _board.getTerrain(), 0,
-                obb.terrain.length);
-            _board.setWaterLevel(obb.waterLevel);
-            _board.setLightParams(obb.lightAzimuth, obb.lightElevation,
-                obb.lightDiffuseColor, obb.lightAmbientColor);
-            */
             _board = (BangBoard)oin.readObject();
             _pieces = new Piece[oin.readInt()];
             for (int ii = 0; ii < _pieces.length; ii++) {
@@ -257,10 +233,6 @@ public class BoardRecord
         Piece piece;
         if (type.equals("__marker__")) {
             piece = new Marker(oin.readInt());
-        } else if (type.equals("__start__")) {
-            piece = new Marker(Marker.START); // legacy format
-        } else if (type.equals("__bonus__")) {
-            piece = new Marker(Marker.BONUS); // legacy format
         } else {
             piece = Prop.getProp(type);
         }

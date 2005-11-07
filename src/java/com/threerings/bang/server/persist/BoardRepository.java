@@ -84,6 +84,7 @@ public class BoardRepository extends JORARepository
     {
         FieldMask mask = _btable.getFieldMask();
         mask.setModified("name");
+        mask.setModified("players");
         BoardRecord orecord = (BoardRecord)loadByExample(_btable, mask, record);
         if (orecord != null) {
             record.boardId = orecord.boardId;
