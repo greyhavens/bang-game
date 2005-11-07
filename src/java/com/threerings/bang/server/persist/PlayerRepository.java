@@ -156,7 +156,7 @@ public class PlayerRepository extends JORARepository
         throws SQLException, PersistenceException
     {
         JDBCUtil.addColumn(
-            conn, "PLAYERS", "HANDLE", "VARCHAR(64) NOT NULL", "ACCOUNT_NAME");
+            conn, "PLAYERS", "HANDLE", "VARCHAR(64) UNIQUE", "ACCOUNT_NAME");
         JDBCUtil.addColumn(
             conn, "PLAYERS", "FLAGS", "INTEGER NOT NULL", "LAST_SESSION");
     }

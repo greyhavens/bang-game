@@ -18,7 +18,7 @@ CREATE TABLE PLAYERS
     ACCOUNT_NAME VARCHAR(64) NOT NULL,
 
     /** The authentication account name associated with this player. */
-    HANDLE VARCHAR(64) NOT NULL,
+    HANDLE VARCHAR(64) UNIQUE,
 
     /** The amount of scrip this player holds. */
     SCRIP INTEGER NOT NULL,

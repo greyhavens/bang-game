@@ -47,7 +47,9 @@ public class BangClientResolver extends CrowdClientResolver
         }
 
         buser.playerId = player.playerId;
-        buser.handle = new Handle(player.handle);
+        if (player.handle != null) {
+            buser.handle = new Handle(player.handle);
+        }
         buser.isMale = player.isSet(Player.IS_MALE_FLAG);
         buser.scrip = player.scrip;
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
