@@ -106,7 +106,7 @@ public class BangClient extends BasicClient
 
             // if this player does not have a name, it's their first time, so
             // pop up the create avatar view
-            if (_ctx.getUserObject().handle.isBlank()) {
+            if (_ctx.getUserObject().handle == null) {
                 CreateAvatarView cav = new CreateAvatarView(_ctx);
                 _ctx.getRootNode().addWindow(cav);
                 cav.pack();

@@ -60,18 +60,10 @@ public class NewLookView extends BContainer
 
         add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
 
-        boolean isMale = _ctx.getUserObject().isMale;
-        _gender = isMale ? "male/" : "female/";
-
-        BContainer toggles = new BContainer(new TableLayout(4, 5, 5));
+        _toggles = new BContainer(new TableLayout(4, 5, 5));
         BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
-        wrapper.add(toggles);
+        wrapper.add(_toggles);
         add(wrapper, BorderLayout.CENTER);
-        for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
-            if (isMale || !AvatarLogic.ASPECTS[ii].maleOnly) {
-                new AspectToggle(AvatarLogic.ASPECTS[ii], toggles);
-            }
-        }
 
         if (!firstLook) {
             BContainer cost = GroupLayout.makeHBox(GroupLayout.RIGHT);
@@ -88,7 +80,7 @@ public class NewLookView extends BContainer
             cost.add(_buy = new BButton(_msgs.get("m.buy"), this, "buy"));
         }
 
-        updateAvatar();
+        setGender(_ctx.getUserObject().isMale);
     }
 
     /**
@@ -98,6 +90,22 @@ public class NewLookView extends BContainer
     public void setBarberObject (BarberObject barbobj)
     {
         _barbobj = barbobj;
+    }
+
+    /**
+     * Can be used to change the gender of the avatar we're configuring. This
+     * is only used when creating a character for the first time.
+     */
+    public void setGender (boolean isMale)
+    {
+        _gender = isMale ? "male/" : "female/";
+        _toggles.removeAll();
+        for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
+            if (isMale || !AvatarLogic.ASPECTS[ii].maleOnly) {
+                new AspectToggle(AvatarLogic.ASPECTS[ii], _toggles);
+            }
+        }
+        updateAvatar();
     }
 
     /**
@@ -321,6 +329,7 @@ public class NewLookView extends BContainer
     protected BTextArea _status;
 
     protected AvatarView _avatar;
+    protected BContainer _toggles;
     protected ColorSelector _skin, _hair, _eyes;
 
     protected BTextField _name;

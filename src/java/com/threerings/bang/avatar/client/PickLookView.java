@@ -79,14 +79,14 @@ public class PickLookView extends BContainer
         int idx = 0;
         for (Iterator iter = user.looks.iterator(); iter.hasNext(); ) {
             Look look = (Look)iter.next();
-            looks[idx++] = !StringUtil.blank(look.name) ? look.name : _deflook;
+            looks[idx++] = getName(look);
         }
         _looks.setItems(looks);
 
         // select their current look (which will update the display)
         Look current = user.getLook();
         if (current != null) {
-            _looks.selectItem(current.name);
+            _looks.selectItem(getName(current));
         }
     }
 
@@ -123,6 +123,11 @@ public class PickLookView extends BContainer
                 _ctx.getClient().requireService(AvatarService.class);
             asvc.selectLook(_ctx.getClient(), name);
         }
+    }
+
+    protected String getName (Look look)
+    {
+        return !StringUtil.blank(look.name) ? look.name : _deflook;
     }
 
     protected void flushModifiedLook ()

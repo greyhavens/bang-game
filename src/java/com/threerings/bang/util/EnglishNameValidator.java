@@ -18,7 +18,8 @@ public class EnglishNameValidator extends NameValidator
         String hstr = (handle != null) ? handle.toString() : "";
         return !(hstr.length() < getMinHandleLength() ||
                  hstr.length() > getMaxHandleLength() ||
-                 !isCharacters(hstr));
+                 !isValidCharacters(hstr) ||
+                 !hstr.replaceAll(" +", " ").equals(hstr));
     }
 
     @Override // documentation inherited
@@ -31,6 +32,8 @@ public class EnglishNameValidator extends NameValidator
     @Override // documentation inherited
     public Handle makeCasedHandle (String handle)
     {
+        // remove excess spaces
+        handle = handle.replaceAll(" +", " ");
         return new Handle(NameUtil.capitalizeName(handle));
     }
 
@@ -47,11 +50,12 @@ public class EnglishNameValidator extends NameValidator
     }
 
     /** Determines whether the supplied string is all characters (ie. no
-     * numbers or punctuation). */
-    protected boolean isCharacters (String text)
+     * numbers or punctuation) or spaces. */
+    protected boolean isValidCharacters (String text)
     {
         for (int ii = 0, ll = text.length(); ii < ll; ii++) {
-            if (!Character.isLetter(text.charAt(ii))) {
+            char c = text.charAt(ii);
+            if (c != ' ' && !Character.isLetter(c)) {
                 return false;
             }
         }

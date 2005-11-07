@@ -131,8 +131,8 @@ public class BarberManager extends PlaceManager
 
     // documentation inherited from interface AvatarProvider
     public void createAvatar (
-        ClientObject caller, Handle handle, boolean isMale, LookConfig config,
-        final AvatarService.ConfirmListener cl)
+        ClientObject caller, final Handle handle, boolean isMale,
+        LookConfig config, final AvatarService.ConfirmListener cl)
         throws InvocationException
     {
         final PlayerObject user = (PlayerObject)caller;
@@ -157,8 +157,7 @@ public class BarberManager extends PlaceManager
             throw new InvocationException(AvatarCodes.ERR_VULGAR_HANDLE);
         }
 
-        // go ahead and set the handle and gender in the user object
-        user.setHandle(handle);
+        // go ahead and set their gender in the user object
         user.setIsMale(isMale);
 
         // create their default look based on the supplied configuration
@@ -168,6 +167,9 @@ public class BarberManager extends PlaceManager
             // an error will already have been logged
             throw new InvocationException(INTERNAL_ERROR);
         }
+
+        // TODO: sort out their initial clothing article
+        look.articles = new int[0];
 
         // the client should prevent selection of components that have cost
         if (cost[0] > AvatarCodes.BASE_LOOK_SCRIP_COST ||
@@ -181,28 +183,33 @@ public class BarberManager extends PlaceManager
         // do the deed!
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
-                // store the look in the database
                 try {
-                    BangServer.lookrepo.insertLook(user.playerId, look);
-                    BangServer.playrepo.configurePlayer(
-                        user.playerId, user.handle, user.isMale);
+                    if (!BangServer.playrepo.configurePlayer(
+                            user.playerId, handle, user.isMale)) {
+                        _error = AvatarCodes.ERR_DUP_HANDLE;
+                    } else {
+                        BangServer.lookrepo.insertLook(user.playerId, look);
+                    }
                 } catch (PersistenceException pe) {
                     log.log(Level.WARNING, "Error creating avatar " +
                             "[for=" + user.who() + ", look=" + look + "].", pe);
-                    _error = pe;
+                    _error = INTERNAL_ERROR;
                 }
                 return true;
             }
 
             public void handleResult () {
                 if (_error != null) {
-                    cl.requestFailed(INTERNAL_ERROR);
+                    cl.requestFailed(_error);
                 } else {
+                    user.setHandle(handle);
+                    user.setLook("");
+                    user.addToLooks(look);
                     cl.requestProcessed();
                 }
             }
 
-            protected PersistenceException _error;
+            protected String _error;
         });
     }
 

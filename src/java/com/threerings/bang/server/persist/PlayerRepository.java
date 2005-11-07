@@ -6,6 +6,7 @@ package com.threerings.bang.server.persist;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.samskivert.io.PersistenceException;
 
@@ -69,15 +70,44 @@ public class PlayerRepository extends JORARepository
 
     /**
      * Configures a player's handle, and gender.
+     *
+     * @return true if the player was properly configured, false if the
+     * requested handle is a duplicate of an existing handle.
      */
-    public void configurePlayer (int playerId, Handle handle, boolean isMale)
+    public boolean configurePlayer (int playerId, Handle handle, boolean isMale)
         throws PersistenceException
     {
         String gensql = isMale ?
             "| " + Player.IS_MALE_FLAG : "& " + ~Player.IS_MALE_FLAG;
-        checkedUpdate("update PLAYERS set FLAGS = FLAGS " + gensql +
-                      ", HANDLE = " + JDBCUtil.escape(handle.toString()) +
-                      " where PLAYER_ID = " + playerId, 1);
+        final String query = "update PLAYERS set FLAGS = FLAGS " + gensql +
+            ", HANDLE = " + JDBCUtil.escape(handle.toString()) +
+            " where PLAYER_ID = " + playerId;
+        return (Boolean)execute(new Operation() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    int mods = stmt.executeUpdate(query);
+                    if (mods != 1) {
+                        log.warning("Failed to config player [query=" + query +
+                                    ", mods=" + mods + "].");
+                        return Boolean.FALSE;
+                    }
+
+                } catch (SQLException sqe) {
+                    if (liaison.isDuplicateRowException(sqe)) {
+                        return Boolean.FALSE;
+                    } else {
+                        throw sqe;
+                    }
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return Boolean.TRUE;
+            }
+        });
     }
 
     /**

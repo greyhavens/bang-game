@@ -27,4 +27,7 @@ public interface AvatarCodes
 
     /** An error message used by {@link AvatarService#createAvatar}. */
     public static final String ERR_VULGAR_HANDLE = "m.vulgar_handle";
+
+    /** An error message used by {@link AvatarService#createAvatar}. */
+    public static final String ERR_DUP_HANDLE = "m.duplicate_handle";
 }
