@@ -111,6 +111,19 @@
     </loadboard>
   </target>
 
+  <!-- builds sphere reflection maps from cube sky box maps -->
+  <target name="spheremaps">
+    <taskdef name="buildspheremap"
+      classname="com.threerings.jme.tools.BuildSphereMapTask"
+      classpathref="classpath"/>
+    <buildspheremap front="rsrc/textures/environ/desertdayft.png"
+        back="rsrc/textures/environ/desertdaybk.png"
+        left="rsrc/textures/environ/desertdaylf.png"
+        right="rsrc/textures/environ/desertdayrt.png"
+        up="rsrc/textures/environ/desertdayup.png"
+        target="rsrc/textures/environ/desertdaysp.png" size="256"/>
+  </target>
+  
   <!-- creates the serialized fringe config -->
   <target name="fringe">
     <taskdef name="conffringe"
@@ -241,7 +254,7 @@
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
   <!-- rebuild all the niggling bits -->
-  <target name="bits" depends="colorpos,fringe"/>
+  <target name="bits" depends="colorpos,fringe,spheremaps"/>
 
   <!-- builds the code jar file -->
   <target name="dist" depends="prepare,compile">
