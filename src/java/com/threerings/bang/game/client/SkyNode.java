@@ -28,7 +28,7 @@ public class SkyNode extends Node
         Skybox box = new Skybox("sky", 1000, 1000, 1000);
         for (int ii = 0; ii < ORIENTS.length; ii++) {
             String path = "rsrc/textures/environ/desertday" +
-                SUFFIXES[ii] + ".tga";
+                SUFFIXES[ii] + ".png";
             Texture texture = TextureManager.loadTexture(
                 getClass().getClassLoader().getResource(path),
                 Texture.MM_LINEAR, Texture.FM_LINEAR,
@@ -45,10 +45,10 @@ public class SkyNode extends Node
         attachChild(box);
         updateRenderState();
     }
-
+    
     protected static final int[] ORIENTS = {
         Skybox.NORTH, Skybox.SOUTH, Skybox.WEST, Skybox.EAST,
-        Skybox.UP /*, Skybox.DOWN */
+        Skybox.UP, Skybox.DOWN
     };
     protected static final String[] SUFFIXES = {
         "ft", "bk", "rt", "lf", "up", "dn"
