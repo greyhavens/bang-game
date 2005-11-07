@@ -470,7 +470,7 @@ public class Model
     protected HashMap<String,Animation> _anims = new HashMap<String,Animation>();
 
     protected static final Animation BLANK_ANIM = new Animation();
-    protected static final String PATH_DOTDOT = "[^/]+/\\.\\./";
+    protected static final String PATH_DOTDOT = "[^/.]+/\\.\\./";
 
     static {
         BLANK_ANIM._parts = new Part[0];
