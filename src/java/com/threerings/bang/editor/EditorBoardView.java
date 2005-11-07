@@ -158,7 +158,7 @@ public class EditorBoardView extends BoardView
             for (int x = 0; x < hfwidth; x++) {
                 vals[x] = _board.getHeightfieldValue(x, y) + 128;
             }
-            grayimg.getRaster().setPixels(0, hfheight-y, hfwidth, 1, vals);
+            grayimg.getRaster().setPixels(0, hfheight-y-1, hfwidth, 1, vals);
         }
 
         return grayimg;
