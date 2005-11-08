@@ -412,6 +412,7 @@ public class TerrainNode extends Node
                 Rectangle isect = rect.intersection(block.bounds);
                 if (!isect.isEmpty()) {
                     block.refreshGeometry(isect);
+                    block.mesh.updateModelBound();
                 }
             }
         }
@@ -528,8 +529,24 @@ public class TerrainNode extends Node
      */
     public void getHeightfieldVertex (int x, int y, Vector3f result)
     {
-        result.set(x * SUB_TILE_SIZE, y * SUB_TILE_SIZE,
-            getHeightfieldValue(x, y));
+        // expand the edges to hide the void
+        result.x = x * SUB_TILE_SIZE;
+        if (x < -1) {
+            result.x -= EDGE_SIZE;
+            
+        } else if (x > _board.getHeightfieldWidth()) {
+            result.x += EDGE_SIZE;
+        }
+        
+        result.y = y * SUB_TILE_SIZE;
+        if (y < -1) {
+            result.y -= EDGE_SIZE;
+        
+        } else if (y > _board.getHeightfieldHeight()) {
+            result.y += EDGE_SIZE;
+        }
+        
+        result.z = getHeightfieldValue(x, y);
     }
     
     /**
@@ -541,30 +558,53 @@ public class TerrainNode extends Node
         SplatBlock block = new SplatBlock();
         block.node = new Node("block_" + sx + "_" + sy);
         
+        // determine which edges this splat contains, if any
+        boolean le = (sx == 0), re = (sx == _blocks.length - 1),
+            be = (sy == 0), te = (sy == _blocks[0].length - 1);
+        
         // compute the dimensions in terms of vertices and create buffers for
         // the vertices and normals
         int vx = sx * SPLAT_SIZE, vy = sy * SPLAT_SIZE,
-            vwidth = Math.min(SPLAT_SIZE + 1,
+            bwidth = Math.min(SPLAT_SIZE + 1,
                 _board.getHeightfieldWidth() - vx),
-            vheight = Math.min(SPLAT_SIZE + 1,
+            bheight = Math.min(SPLAT_SIZE + 1,
                 _board.getHeightfieldHeight() - vy),
+            vwidth = bwidth + (le ? 2 : 0) + (re ? 2 : 0),
+            vheight = bheight + (be ? 2 : 0) + (te ? 2 : 0),
             vbufsize = vwidth * vheight * 3;
         block.vbuf = BufferUtils.createFloatBuffer(vbufsize);
         block.nbuf = BufferUtils.createFloatBuffer(vbufsize);
         
         // refresh sets the vertices and normals from the heightfield
-        block.bounds = new Rectangle(vx, vy, vwidth, vheight);
-        block.refreshGeometry(block.bounds);
+        block.bounds = new Rectangle(vx, vy, bwidth, bheight);
+        block.ebounds = new Rectangle(vx - (le ? 2 : 0), vy - (be ? 2 : 0),
+            vwidth, vheight);
+        block.refreshGeometry(block.ebounds);
         
         // set the texture coordinates
         FloatBuffer tbuf0 = BufferUtils.createFloatBuffer(vwidth*vheight*2),
             tbuf1 = BufferUtils.createFloatBuffer(vwidth*vheight*2);
         float step0 = 1.0f / BangBoard.HEIGHTFIELD_SUBDIVISIONS,
             step1 = 1.0f / (SPLAT_SIZE+1);
-        for (int y = 0; y < vheight; y++) {
-            for (int x = 0; x < vwidth; x++) {
-                tbuf0.put(x * step0);
-                tbuf0.put(y * step0);
+        for (int y = (be ? -2 : 0), ymax = y + vheight; y < ymax; y++) {
+            for (int x = (le ? -2 : 0), xmax = x + vwidth; x < xmax; x++) {
+                float xoff = 0f;
+                if (le && x == -2) {
+                    xoff = -EDGE_SIZE / TILE_SIZE;
+                    
+                } else if (re && x == xmax - 1) {
+                    xoff = EDGE_SIZE / TILE_SIZE;
+                }
+                tbuf0.put(x * step0 + xoff);
+                
+                float yoff = 0f;
+                if (be && y == -2) {
+                    yoff = -EDGE_SIZE / TILE_SIZE;
+                    
+                } else if (te && y == ymax - 1) {
+                    yoff = EDGE_SIZE / TILE_SIZE;
+                }
+                tbuf0.put(y * step0 + yoff);
                 
                 tbuf1.put(0.5f*step1 + x * step1);
                 tbuf1.put(0.5f*step1 + y * step1);
@@ -658,14 +698,6 @@ public class TerrainNode extends Node
         return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
             FastMath.LERP(ay, cf, cc));
     }
-
-    /**
-     * Clamps the given value between the specified beginning and end points.
-     */
-    protected static float clamp (float v, float a, float b)
-    {
-        return Math.min(Math.max(v, a), b);
-    }
     
     /** Contains all the state associated with a splat block (a collection of
      * splats covering a single block of terrain). */
@@ -674,8 +706,9 @@ public class TerrainNode extends Node
         /** The node containing the {@link SharedMesh} splats. */
         public Node node;
         
-        /** The bounds of this block in sub-tile coordinates. */
-        public Rectangle bounds;
+        /** The bounds of this block in sub-tile coordinates and the bounds
+         * that include the edge. */
+        public Rectangle bounds, ebounds;
         
         /** The shared, unparented mesh instance. */
         public TriMesh mesh;
@@ -699,7 +732,7 @@ public class TerrainNode extends Node
             
             for (int y = rect.y, ymax = y + rect.height; y < ymax; y++) {
                 for (int x = rect.x, xmax = x + rect.width; x < xmax; x++) {
-                    int index = (y-bounds.y)*bounds.width + (x-bounds.x);
+                    int index = (y-ebounds.y)*ebounds.width + (x-ebounds.x);
                 
                     getHeightfieldVertex(x, y, vector);
                     BufferUtils.setInBuffer(vector, vbuf, index);
@@ -873,6 +906,9 @@ public class TerrainNode extends Node
     /** The size of the sub-tiles. */
     protected static final float SUB_TILE_SIZE = TILE_SIZE /
         BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+    
+    /** The size of the board edges that hide the void. */
+    protected static final float EDGE_SIZE = 10000f;
     
     /** The number of segments in the cursor. */
     protected static final int CURSOR_SEGMENTS = 32;
