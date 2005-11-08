@@ -65,7 +65,7 @@ public class PlayerRepository extends JORARepository
             player.created = new Date(System.currentTimeMillis());
             player.lastSession = player.created;
         }
-        insert(_ptable, player);
+        player.playerId = insert(_ptable, player);
     }
 
     /**

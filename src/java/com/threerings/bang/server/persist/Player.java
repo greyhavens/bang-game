@@ -54,6 +54,7 @@ public class Player
     public Player (String accountName)
     {
         this.accountName = accountName;
+        this.look = "";
     }
 
     /** Returns true if the specified flag is set. */
