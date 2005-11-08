@@ -108,14 +108,10 @@ public class BangBoard extends SimpleStreamableObject
     /** Returns the height at the specified sub-tile coordinates. */
     public byte getHeightfieldValue (int x, int y)
     {
-        // return zero for locations beyond the edge
-        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
-            return (byte)0;
-        
-        // otherwise, look up in the heightfield
-        } else {
-            return _heightfield[y*_hfwidth + x];
-        }
+        // clamp the coordinates to repeat the edge
+        x = Math.min(Math.max(x, 0), _hfwidth - 1);
+        y = Math.min(Math.max(y, 0), _hfheight - 1);
+        return _heightfield[y*_hfwidth + x];
     }
     
     /**
@@ -144,14 +140,10 @@ public class BangBoard extends SimpleStreamableObject
     /** Returns the terrain value at the specified terrain coordinates. */
     public byte getTerrainValue (int x, int y)
     {
-        // return zero for locations beyond the edge
-        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
-            return (byte)0;
-            
-        // otherwise, look up in the terrain map
-        } else {
-            return _terrain[y*_hfwidth + x];
-        }
+        // clamp the coordinates to repeat the edge
+        x = Math.min(Math.max(x, 0), _hfwidth - 1);
+        y = Math.min(Math.max(y, 0), _hfheight - 1);
+        return _terrain[y*_hfwidth + x];
     }
     
     /** Sets a single terrain value. */

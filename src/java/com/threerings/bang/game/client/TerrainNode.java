@@ -400,16 +400,18 @@ public class TerrainNode extends Node
     
     /**
      * Refreshes a region of the heightfield as specified in sub-tile
-     * coordinates.  Remember that changing any height point affects the
-     * normals of its neighbors, so be sure to include them in the region.
+     * coordinates.
      */
     public void refreshHeightfield (int x1, int y1, int x2, int y2)
     {
+        // enlarge the rectangle to include edges and adjacent vertex normals
         Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
+        rect.grow(2, 2);
+        
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 SplatBlock block = _blocks[x][y];
-                Rectangle isect = rect.intersection(block.bounds);
+                Rectangle isect = rect.intersection(block.ebounds);
                 if (!isect.isEmpty()) {
                     block.refreshGeometry(isect);
                     block.mesh.updateModelBound();
