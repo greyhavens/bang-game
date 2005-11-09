@@ -136,7 +136,7 @@ public class NewLookView extends BContainer
     {
         // make sure they specified a name for the new look
         String name = _name.getText();
-        if (StringUtil.blank(name)) {
+        if (StringUtil.isBlank(name)) {
             _status.setText(_msgs.get("m.name_required"));
             return;
         }

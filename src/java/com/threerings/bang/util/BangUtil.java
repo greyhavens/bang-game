@@ -91,7 +91,7 @@ public class BangUtil
         // if this properties file extends another file, load it up and
         // overlay it onto this file
         String ppath = props.getProperty("extends");
-        if (!StringUtil.blank(ppath)) {
+        if (!StringUtil.isBlank(ppath)) {
             Properties parent = resourceToProperties(ppath, history);
             Enumeration iter = parent.propertyNames();
             while (iter.hasMoreElements()) {

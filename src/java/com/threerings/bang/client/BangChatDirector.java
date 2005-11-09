@@ -72,7 +72,7 @@ public class BangChatDirector extends ChatDirector
             String username = tok.nextToken();
             int uidx = args.indexOf(username);
             String message = args.substring(uidx + username.length()).trim();
-            if (StringUtil.blank(message)) {
+            if (StringUtil.isBlank(message)) {
                 return "m.usage_tell";
             }
 

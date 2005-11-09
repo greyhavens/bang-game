@@ -258,10 +258,10 @@ public class Model
         Properties props, String key, String fallback, boolean warn)
     {
         String value = props.getProperty(key);
-        if (StringUtil.blank(value) && fallback != null) {
+        if (StringUtil.isBlank(value) && fallback != null) {
             value = props.getProperty(fallback);
         }
-        if (StringUtil.blank(value)) {
+        if (StringUtil.isBlank(value)) {
             if (warn) {
                 log.warning("Missing model list [model=" + _key +
                             ", key=" + key + ", fallback=" + fallback + "].");
@@ -272,7 +272,7 @@ public class Model
         ArrayList<String> values = new ArrayList<String>();
         while (ttok.hasMoreTokens()) {
             String val = ttok.nextToken().trim();
-            if (!StringUtil.blank(val)) {
+            if (!StringUtil.isBlank(val)) {
                 values.add(val);
             }
         }

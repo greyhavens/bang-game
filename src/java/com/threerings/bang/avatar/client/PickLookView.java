@@ -127,7 +127,7 @@ public class PickLookView extends BContainer
 
     protected String getName (Look look)
     {
-        return !StringUtil.blank(look.name) ? look.name : _deflook;
+        return !StringUtil.isBlank(look.name) ? look.name : _deflook;
     }
 
     protected void flushModifiedLook ()

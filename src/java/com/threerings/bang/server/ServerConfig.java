@@ -78,7 +78,7 @@ public class ServerConfig
     {
         String aclass = config.getValue("server_auth", "");
         try {
-            if (!StringUtil.blank(aclass)) {
+            if (!StringUtil.isBlank(aclass)) {
                 return (Authenticator)Class.forName(aclass).newInstance();
             }
         } catch (Exception e) {

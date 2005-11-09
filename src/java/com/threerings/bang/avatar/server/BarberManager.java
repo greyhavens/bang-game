@@ -54,7 +54,7 @@ public class BarberManager extends PlaceManager
     {
         PlayerObject user = (PlayerObject)caller;
 
-        if (StringUtil.blank(config.name) ||
+        if (StringUtil.isBlank(config.name) ||
             config.name.length() > BarberCodes.MAX_LOOK_NAME_LENGTH) {
             log.warning("Requested to create look with blank name " +
                         "[who=" + user.who() + "].");

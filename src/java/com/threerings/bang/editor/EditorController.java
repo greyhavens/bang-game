@@ -410,7 +410,7 @@ public class EditorController extends GameController
 
         // load up any board specified on the command line
         if (EditorApp.appArgs.length > 0 &&
-            !StringUtil.blank(EditorApp.appArgs[0])) {
+            !StringUtil.isBlank(EditorApp.appArgs[0])) {
             loadBoard(new File(EditorApp.appArgs[0]));
         }
     }
