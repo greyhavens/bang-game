@@ -17,7 +17,7 @@ import com.samskivert.servlet.user.Password;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 
-import com.threerings.bang.game.client.CameraHandler;
+import com.threerings.bang.game.client.GameInputHandler;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.util.Name;
 
@@ -25,6 +25,7 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.net.UsernamePasswordCreds;
 
 import com.threerings.jme.JmeApp;
+import com.threerings.jme.camera.CameraHandler;
 
 import static com.threerings.bang.Log.log;
 
@@ -137,9 +138,9 @@ public class BangApp extends JmeApp
     }
 
     @Override // documentation inherited
-    protected InputHandler createInputHandler (Camera camera, String api)
+    protected InputHandler createInputHandler (CameraHandler camhand, String api)
     {
-        return new CameraHandler(camera, api);
+        return new GameInputHandler(camhand, api);
     }
 
     @Override // documentation inherited

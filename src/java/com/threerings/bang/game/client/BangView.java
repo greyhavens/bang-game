@@ -73,7 +73,8 @@ public class BangView extends BWindow
         view.startGame(bangobj, cfg, pidx);
 
         // let the camera handler know that we're getting ready to start
-        ((CameraHandler)_ctx.getInputHandler()).startGame(this, bangobj, pidx);
+        GameInputHandler gih = (GameInputHandler)_ctx.getInputHandler();
+        gih.startGame(this, bangobj, pidx);
 
         // add the selection view to the display
         _oview = new SelectionView(_ctx, cfg, bangobj, pidx);
@@ -109,7 +110,7 @@ public class BangView extends BWindow
     /** Called by the controller when the game ends. */
     public void endGame ()
     {
-        ((CameraHandler)_ctx.getInputHandler()).endGame(this);
+        ((GameInputHandler)_ctx.getInputHandler()).endGame(this);
         view.endGame();
     }
 
