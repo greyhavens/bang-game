@@ -12,7 +12,6 @@ import com.samskivert.util.Config;
 
 import com.jme.input.InputHandler;
 import com.jme.util.LoggingSystem;
-import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Node;
@@ -30,6 +29,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
 import com.threerings.jme.JmeApp;
+import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.openal.SoundManager;
 
@@ -94,8 +94,8 @@ public class ModelIconTest extends JmeApp
             return getContext().getRenderer();
         }
 
-        public Camera getCamera () {
-            return getContext().getCamera();
+        public CameraHandler getCameraHandler () {
+            return getContext().getCameraHandler();
         }
 
         public Node getGeometry () {

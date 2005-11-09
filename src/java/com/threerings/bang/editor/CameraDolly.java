@@ -175,7 +175,8 @@ public class CameraDolly extends EditorTool
         }
         
         // use the vector from target to camera to determine position
-        Vector3f vec = _ctx.getCamera().getLocation().subtract(_target);
+        Vector3f vec = _ctx.getCameraHandler().getCamera().
+            getLocation().subtract(_target);
         float distance = vec.length();
         vec.normalizeLocal();
         return new Position(FastMath.atan2(vec.y, vec.x), FastMath.asin(vec.z),
@@ -196,7 +197,7 @@ public class CameraDolly extends EditorTool
             left = Vector3f.UNIT_Z.cross(dir).normalize(),
             up = dir.cross(left);
             
-        _ctx.getCamera().setFrame(loc, left, up, dir);
+        _ctx.getCameraHandler().getCamera().setFrame(loc, left, up, dir);
     }
     
     /** Represents a camera position in spherical coordinates about the

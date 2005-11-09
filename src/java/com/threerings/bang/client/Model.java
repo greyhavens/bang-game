@@ -409,7 +409,7 @@ public class Model
         trenderer.cleanup();
 
         // restore the normal view camera
-        ctx.getCamera().update();
+        ctx.getCameraHandler().getCamera().update();
     }
 
     protected TextureState getTexture (BasicContext ctx, String texpath)

@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BRootNode;
 import com.jme.input.InputHandler;
-import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
@@ -40,6 +39,7 @@ import com.threerings.parlor.client.ParlorDirector;
 import com.threerings.parlor.util.ParlorContext;
 
 import com.threerings.jme.JmeApp;
+import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.openal.SoundManager;
 
@@ -260,8 +260,8 @@ public class BasicClient
             return _app.getContext().getRenderer();
         }
 
-        public Camera getCamera () {
-            return _app.getContext().getCamera();
+        public CameraHandler getCameraHandler () {
+            return _app.getContext().getCameraHandler();
         }
 
         public Node getGeometry () {

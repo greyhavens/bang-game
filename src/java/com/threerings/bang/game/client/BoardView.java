@@ -23,6 +23,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
@@ -324,15 +325,15 @@ public class BoardView extends BComponent
         }
         
         // determine which tile the mouse is over
+        Camera camera = _ctx.getCameraHandler().getCamera();
         Vector2f screenPos = new Vector2f(e.getX(), e.getY());
         _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
-        _worldMouse.subtractLocal(_ctx.getCamera().getLocation());
+        _worldMouse.subtractLocal(camera.getLocation());
 
         // determine which tile the mouse is over
-        float dist = -1f * _groundNormal.dot(_ctx.getCamera().getLocation()) /
+        float dist = -1f * _groundNormal.dot(camera.getLocation()) /
             _groundNormal.dot(_worldMouse);
-        _ctx.getCamera().getLocation().add(
-            _worldMouse.mult(dist), result);
+        camera.getLocation().add(_worldMouse.mult(dist), result);
         result.z = 0.1f;
         
         return result;
@@ -449,7 +450,7 @@ public class BoardView extends BComponent
      */
     protected Sprite updateHoverSprite ()
     {
-        Vector3f camloc = _ctx.getCamera().getLocation();
+        Vector3f camloc = _ctx.getCameraHandler().getCamera().getLocation();
         _pick.clear();
         _pnode.findPick(new Ray(camloc, _worldMouse), _pick);
         float dist = Float.MAX_VALUE;
@@ -480,7 +481,7 @@ public class BoardView extends BComponent
      */
     protected void updateHighlightHover ()
     {
-        Vector3f camloc = _ctx.getCamera().getLocation();
+        Vector3f camloc = _ctx.getCameraHandler().getCamera().getLocation();
         _pick.clear();
         _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
