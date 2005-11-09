@@ -44,6 +44,7 @@ public class ToolPanel extends JPanel
         cameraDolly = new CameraDolly(ctx, panel);
         _tools.addItem(cameraDolly);
         _tools.addItem(new PiecePlacer(ctx, panel));
+        _tools.addItem(new TrackLayer(ctx, panel));
         _tools.addItem(new HeightfieldBrush(ctx, panel));
         _tools.addItem(new TerrainBrush(ctx, panel));
         _tools.addItemListener(this);
@@ -55,6 +56,7 @@ public class ToolPanel extends JPanel
         addSelectAction(panel, KeyEvent.VK_2, 1);
         addSelectAction(panel, KeyEvent.VK_3, 2);
         addSelectAction(panel, KeyEvent.VK_4, 3);
+        addSelectAction(panel, KeyEvent.VK_5, 4);
         
         // and the tool options below
         cameraDolly.activate();
