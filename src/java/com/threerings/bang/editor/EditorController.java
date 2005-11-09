@@ -131,7 +131,6 @@ public class EditorController extends GameController
         if (track == null) {
             track = new Track();
             track.position(tcoords.x, tcoords.y);
-            
             _bangobj.addToPieces(track);
         }
         
@@ -451,10 +450,10 @@ public class EditorController extends GameController
         }
         track = (Track)track.clone();
         int[] neighbors = // n, e, s, w
-            new int[] { getTrack(track.x, track.y + 1) == null ? 0 : 1,
-                getTrack(track.x - 1, track.y) == null ? 0 : 1,
-                getTrack(track.x, track.y - 1) == null ? 0 : 1,
-                getTrack(track.x + 1, track.y) == null ? 0 : 1 };
+            new int[] { getTrack(track.x, track.y - 1) == null ? 0 : 1,
+                getTrack(track.x + 1, track.y) == null ? 0 : 1,
+                getTrack(track.x, track.y + 1) == null ? 0 : 1,
+                getTrack(track.x - 1, track.y) == null ? 0 : 1 };
         int ncount = IntListUtil.sum(neighbors);
         
         // except for turns, the values of the types are all equal to the

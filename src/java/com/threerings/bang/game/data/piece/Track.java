@@ -32,6 +32,21 @@ public class Track extends Piece
     /** The type of this track (singleton, terminal, etc.) */
     public byte type;
     
+    /**
+     * Creates a piece of track with the default type, for use in the editor.
+     */
+    public Track ()
+    {
+    }
+    
+    /**
+     * Creates a piece of track with the given type.
+     */
+    public Track (byte type)
+    {
+        this.type = type;
+    }
+    
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {

@@ -90,8 +90,8 @@ public class TrackSprite extends PieceSprite
     protected void attachLeg(int dir)
     {
         Box box = new Box("box",
-            new Vector3f(-TILE_SIZE/8, -TILE_SIZE/8, -TILE_SIZE/16),
-            new Vector3f(TILE_SIZE/8, TILE_SIZE/2, TILE_SIZE/16));
+            new Vector3f(-TILE_SIZE/8, -TILE_SIZE/2, -TILE_SIZE/16),
+            new Vector3f(TILE_SIZE/8, TILE_SIZE/8, TILE_SIZE/16));
         Quaternion rot = new Quaternion();
         rot.fromAngleAxis(ROTATIONS[dir], Vector3f.UNIT_Z);
         box.setLocalRotation(rot);

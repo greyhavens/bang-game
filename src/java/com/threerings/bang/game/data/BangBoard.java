@@ -24,6 +24,7 @@ import com.threerings.media.util.AStarPathUtil;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -384,7 +385,7 @@ public class BangBoard extends SimpleStreamableObject
                     }
                 }
 
-            } else if (piece instanceof Bonus) {
+            } else if (piece instanceof Bonus || piece instanceof Track) {
                 _tstate[_width*piece.y+piece.x] = 1;
 
             } else {

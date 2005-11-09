@@ -5,10 +5,12 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.samskivert.util.IntIntMap;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -19,6 +21,8 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Track;
+import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
@@ -131,6 +135,9 @@ public abstract class Scenario
             bangobj.board.updateShadow(null, unit);
         }
 
+        // update train pieces
+        updateTrain(bangobj);
+        
         // check to see if we should end the scenario due to time, or warn
         // that we're going to
         long now = System.currentTimeMillis();
@@ -150,6 +157,92 @@ public abstract class Scenario
         return false;
     }
 
+    /**
+     * Updates the train pieces on the board.
+     */
+    protected void updateTrain (BangObject bangobj)
+    {
+        // determine whether there is a train on the board and, if so, whether
+        // we are still pumping out cars
+        ArrayList<Track> terminals = getTerminals(bangobj);
+        boolean foundTrain = false;
+        Train last = null;
+        Track terminal = null;
+        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
+            Object piece = it.next();
+            if (piece instanceof Train) {
+                Train train = (Train)piece;
+                foundTrain = true;
+                terminal = getTerminalBehind(train, terminals);
+                if (terminal != null) {
+                    last = train;
+                }
+            }
+        }
+        
+        // if we haven't found a train, consider creating one; if we can
+        // still add cars, consider adding another one
+        if (!foundTrain && terminals.size() > 0 &&
+            Math.random() < 1f/AVG_TRAIN_TICKS) {
+            createTrain(bangobj, terminals);
+            
+        } else if (last != null && Math.random() > 1f/AVG_TRAIN_CARS) {
+            Train train = new Train();
+            train.x = terminal.x;
+            train.y = terminal.y;
+            train.orientation = terminal.orientation;
+            train.attachId = last.pieceId;
+            bangobj.addToPieces(train);
+        }
+    }
+    
+    /**
+     * Adds a new train to the board.
+     */
+    protected void createTrain (BangObject bangobj, ArrayList<Track> terminals)
+    {
+        // pick a random terminal
+        Track terminal = (Track)RandomUtil.pickRandom(terminals);
+        
+        // create the engine there
+        Train train = new Train();
+        train.x = terminal.x;
+        train.y = terminal.y;
+        train.orientation = terminal.orientation;
+        bangobj.addToPieces(train);
+    }
+    
+    /**
+     * Gets a list of all terminals on the board.
+     */
+    protected ArrayList<Track> getTerminals (BangObject bangobj)
+    {
+        ArrayList<Track> terminals = new ArrayList<Track>();
+        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
+            Object piece = it.next();
+            if (piece instanceof Track &&
+                ((Track)piece).type == Track.TERMINAL) {
+                terminals.add((Track)piece);
+            }
+        }
+        return terminals;
+    }
+    
+    /**
+     * Returns the terminal behind the specified train, or <code>null</code>
+     * if there isn't one.
+     */
+    protected Track getTerminalBehind (Train train, ArrayList<Track> terminals)
+    {
+        for (Iterator<Track> it = terminals.iterator(); it.hasNext(); ) {
+            Track track = it.next();
+            if (train.isBehind(track)) {
+                return track;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Called when a piece makes a move in the game but before the
      * associated update for that piece is broadcast. The scenario can
@@ -270,4 +363,11 @@ public abstract class Scenario
      * we warn the players. */
     protected static final long[] TIME_WARNINGS = {
         60*1000L, 30*1000L, 10*1000L };
+
+    /** The average number of ticks to let pass before we create a train when
+     * there is no train on the board. */
+    protected static final int AVG_TRAIN_TICKS = 3;
+    
+    /** The average number of cars on a train. */
+    protected static final int AVG_TRAIN_CARS = 4;
 }
