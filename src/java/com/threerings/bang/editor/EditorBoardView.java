@@ -564,9 +564,10 @@ public class EditorBoardView extends BoardView
             setRenderState(RenderUtil.overlayZBuf);
             updateRenderState();
             
-            int vertices =
-                (_board.getHeight() + 1) * (_board.getHeightfieldWidth() - 1) * 2 +
-                (_board.getWidth() + 1) * (_board.getHeightfieldHeight() - 1) * 2;
+            int vertices = (_board.getHeight() + 1) *
+                (_board.getHeightfieldWidth() - 1) * 2 +
+                (_board.getWidth() + 1) *
+                (_board.getHeightfieldHeight() - 1) * 2;
             setVertexBuffer(BufferUtils.createFloatBuffer(vertices * 3));
             generateIndices();
             
@@ -593,7 +594,7 @@ public class EditorBoardView extends BoardView
                     
                     _tnode.getHeightfieldVertex(x + 1, y, vertex);
                     vertex.z += 0.1f;
-                    BufferUtils.setInBuffer(vertex, vbuf, idx++);                   
+                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
                 }
             }
             
