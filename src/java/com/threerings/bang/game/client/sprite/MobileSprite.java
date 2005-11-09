@@ -207,7 +207,13 @@ public class MobileSprite extends PieceSprite
 
         // TODO: append an additional path if we're currently moving
         if (!isMoving()) {
-            Path path = createPath(board, opiece, npiece);
+            Path path = null;
+            // only create a path if we're moving along the ground, if this is
+            // solely an elevation move (which happens at the start of the
+            // game), we just blip to our new location
+            if (opiece.x != npiece.x || opiece.y != npiece.y) {
+                path = createPath(board, opiece, npiece);
+            }
             if (path != null) {
                 // start looping our movement sound
                 _moveSound.loop(false);
