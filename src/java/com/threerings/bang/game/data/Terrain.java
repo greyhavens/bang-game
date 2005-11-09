@@ -21,7 +21,7 @@ public enum Terrain
     ROAD        (3, BangBoard.BASE_TRAVERSAL),
     ROCKY       (4, 3*BangBoard.BASE_TRAVERSAL/2),
     ROUGH_DIRT  (5, 4*BangBoard.BASE_TRAVERSAL/3),
-    SAND        (6, 2*BangBoard.BASE_TRAVERSAL),
+    SAND        (6, 3*BangBoard.BASE_TRAVERSAL/2),
     WATER       (7, -1),
 
     // special "outside the board" tiles
