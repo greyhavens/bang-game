@@ -400,13 +400,7 @@ public class EditorBoardView extends BoardView
         // finally, refresh
         refreshBoard();
     }
-    
-    @Override // documentation inherited
-    public void mouseWheeled (MouseEvent e)
-    {
-        // don't try to access the nonexistent input handler
-    }
-    
+
     /**
      * Returns the piece associated with the sprite under the mouse, if
      * there is one and if it is a piece sprite. Returns null otherwise.
