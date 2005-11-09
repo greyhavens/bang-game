@@ -42,7 +42,11 @@ public class TownView extends BWindow
 
         // display the status view when the player presses escape
         setModal(true);
-        new StatusView(_ctx).bind(this);
+        // don't enable the status view until the player has configured their
+        // avatar for the first time
+        if (ctx.getUserObject().handle != null) {
+            new StatusView(_ctx).bind(this);
+        }
 
         int width = ctx.getDisplay().getWidth();
         int height = ctx.getDisplay().getHeight();

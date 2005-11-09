@@ -53,7 +53,7 @@ public class StatusView extends BDecoratedWindow
         PlayerObject user = ctx.getUserObject();
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         row.setLookAndFeel(BangUI.dtitleLNF);
-        row.add(new BLabel(user.username.toString()));
+        row.add(new BLabel(user.handle.toString()));
         BLabel town = new BLabel(_msgs.get("m." + user.townId));
         town.setHorizontalAlignment(BLabel.RIGHT);
         row.add(town);
@@ -76,7 +76,8 @@ public class StatusView extends BDecoratedWindow
         // add the big shots tab
         UnitPalette bigshots = new UnitPalette(ctx, null, 3);
         bigshots.setUser(user);
-        _tabs.addTab(_msgs.get("m.status_big_shots"), new BScrollPane(bigshots));
+        _tabs.addTab(_msgs.get("m.status_big_shots"),
+                     new BScrollPane(bigshots));
 
         // add the badges tab
         _tabs.addTab(_msgs.get("m.status_badges"),

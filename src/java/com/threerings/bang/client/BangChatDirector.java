@@ -14,10 +14,10 @@ import com.threerings.crowd.chat.client.SpeakService;
 import com.threerings.crowd.chat.data.ChatCodes;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.util.BangContext;
@@ -41,8 +41,8 @@ public class BangChatDirector extends ChatDirector
     /** A temporary hack to adjust the global animation speed. */
     protected class SlowMoHandler extends CommandHandler
     {
-        public String handleCommand (
-            SpeakService speakSvc, String command, String args, String[] history)
+        public String handleCommand (SpeakService speakSvc, String command,
+                                     String args, String[] history)
         {
             if (Config.display.animationSpeed == 1) {
                 Config.display.animationSpeed = 0.25f;
@@ -68,18 +68,18 @@ public class BangChatDirector extends ChatDirector
                 return "m.usage_tell";
             }
 
-            // now strip off everything up to the username for the message
-            String username = tok.nextToken();
-            int uidx = args.indexOf(username);
-            String message = args.substring(uidx + username.length()).trim();
+            // now strip off everything up to the handle for the message
+            String handle = tok.nextToken();
+            int uidx = args.indexOf(handle);
+            String message = args.substring(uidx + handle.length()).trim();
             if (StringUtil.isBlank(message)) {
                 return "m.usage_tell";
             }
 
             // make sure we're not trying to tell something to ourselves
-            Name target = new Name(username);
+            Handle target = new Handle(handle);
             PlayerObject self = _ctx.getUserObject();
-            if (self.username.equals(target)) {
+            if (self.handle.equals(target)) {
                 return "m.talk_self";
             }
 
@@ -103,7 +103,7 @@ public class BangChatDirector extends ChatDirector
             requestTell(target, message, new ResultListener() {
                 public void requestCompleted (Object result) {
                     // replace the full one in the history with just
-                    // "/tell <username>"
+                    // "/tell <handle>"
                     String newEntry = "/" + command + " " + result + " ";
                     _history.remove(newEntry);
                     int dex = _history.lastIndexOf("/" + histEntry);
