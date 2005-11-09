@@ -29,6 +29,7 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.game.client.BangView;
+import com.threerings.bang.game.client.CameraHandler;
 import com.threerings.bang.game.client.effect.ParticleFactory;
 import com.threerings.bang.game.data.BangConfig;
 
@@ -140,6 +141,9 @@ public class BangClient extends BasicClient
 
         // warm up the particle factory
         ParticleFactory.warmup(_ctx);
+
+        // initialize our camera handler
+        ((CameraHandler)_ctx.getInputHandler()).init(_ctx);
     }
 
     @Override // documentation inherited

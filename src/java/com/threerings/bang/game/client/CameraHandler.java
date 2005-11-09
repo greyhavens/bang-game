@@ -10,11 +10,19 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
-import com.threerings.jme.input.GodViewHandler;
+import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.event.MouseWheelListener;
 
+import com.threerings.jme.JmeApp;
+import com.threerings.jme.camera.GodViewHandler;
+import com.threerings.jme.camera.SwingPath;
+
+import com.threerings.bang.client.util.KeyListener;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -27,93 +35,41 @@ public class CameraHandler extends GodViewHandler
     public CameraHandler (Camera cam, String api)
     {
         super(cam, api);
-
-        // set up limits on zooming and panning
-        setZoomLimits(50f, 150f);
-        setPanLimits(-50, -50, 250, 250);
-        setRotateVelocity(2*FastMath.PI);
-
-        // set up the camera
-        Vector3f loc = new Vector3f(50, -100, 200);
-        cam.setLocation(loc);
-        Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/4, cam.getLeft());
-        rotm.mult(cam.getDirection(), cam.getDirection());
-        rotm.mult(cam.getUp(), cam.getUp());
-        rotm.mult(cam.getLeft(), cam.getLeft());
-        cam.update();
     }
 
     /**
-     * Configures the camera according to the supplied board dimensions.
+     * Provides the camera handler with a reference to our context.
      */
-    public void setBoardDimens (BangObject bangobj, int pidx)
+    public void init (BasicContext ctx)
     {
-        float off = TILE_SIZE * BangBoard.BORDER_SIZE,
-            breadth = TILE_SIZE * bangobj.board.getWidth() - off*2,
-            depth = TILE_SIZE * bangobj.board.getHeight() - off*2;
+        _ctx = ctx;
+    }
 
-        float height = 100; // default to 100 units up in the air
-        float angle = FastMath.PI/3; // default to 60 degree view angle
+    /**
+     * Configures the camera at the start of the game.
+     */
+    public void startGame (BangView view, BangObject bangobj, int pidx)
+    {
+        // listen for mouse wheel, etc. events
+        view.view.addListener(_swingListener);
+        view.addListener(_rollListener);
 
-        // find the center of our units
-        Piece[] pieces = bangobj.getPieceArray();
-        int pcount = 0, x = 0, y = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii].owner == pidx) {
-                pcount++;
-                x += pieces[ii].x;
-                y += pieces[ii].y;
-            }
-        }
+        // start the camera in the center of the board, pointing straight down
+        float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
+        float cy = TILE_SIZE * bangobj.board.getHeight() / 2;
+        float height = CAMERA_ZOOMS[0];
+        _camera.setLocation(new Vector3f(cx, cy, height));
 
-        // if there are no pieces, just choose an arbitrary center point
-        if (pcount == 0) {
-            x = y = 5;
-            pcount = 1;
-        }
-
-        // orient the camera
+        // rotate the camera by 45 degrees and orient it properly
+        float rotangle = FastMath.PI/4;
         Vector3f left = new Vector3f(-1, 0, 0);
         Vector3f up = new Vector3f(0, 1, 0);
         Vector3f forward = new Vector3f(0, 0, -1);
         Matrix3f rotm = new Matrix3f();
 
-        // determine from which corner we want to view the board based on
-        // the player's starting location
-        float cx = TILE_SIZE * x / pcount, cy = TILE_SIZE * y / pcount;
-        float rotangle;
-        if (cx-off > breadth/2) {
-            rotangle = (cy-off > depth/2) ? -3*FastMath.PI/4 : -FastMath.PI/4;
-        } else {
-            rotangle = (cy-off > depth/2) ? 3*FastMath.PI/4 : FastMath.PI/4;
-        }
-
-        log.info("Camera [cx=" + cx + ", cy=" + cy +
-                 ", rot=" + (rotangle/FastMath.PI) + "].");
-
         // the camera starts out looking straight down at the board, so we
         // rotate it around the forward axis to the desired starting angle
         rotm.fromAngleAxis(rotangle, forward);
-        rotm.mult(forward, forward);
-        rotm.mult(left, left);
-        rotm.mult(up, up);
-
-        // recompute the panning vectors
-        _rxdir.set(1, 0, 0);
-        _rydir.set(0, 1, 0);
-        rotm.mult(_rxdir, _rxdir);
-        rotm.mult(_rydir, _rydir);
-
-        // next we position the camera back a bit from the point of focus
-        // so that when we roll it up, said point will be in the center of
-        // the screen
-        Vector3f pos = new Vector3f(cx, cy, height);
-        pos.add(up.mult(-1 * FastMath.tan(FastMath.PI/2-angle) * height), pos);
-        _camera.setLocation(pos);
-
-        // finally we roll it up to our desired elevation angle
-        rotm.fromAngleAxis(angle-FastMath.PI/2, left);
         rotm.mult(forward, forward);
         rotm.mult(left, left);
         rotm.mult(up, up);
@@ -123,22 +79,103 @@ public class CameraHandler extends GodViewHandler
         _camera.setUp(up);
         _camera.update();
 
+        // recompute the panning vectors
+        _rxdir.set(1, 0, 0);
+        _rydir.set(0, 1, 0);
+        rotm.mult(_rxdir, _rxdir);
+        rotm.mult(_rydir, _rydir);
+
         // set the pan limits based on the board size
+        float off = TILE_SIZE * (BangBoard.BORDER_SIZE + 6),
+            breadth = TILE_SIZE * bangobj.board.getWidth() - off*2,
+            depth = TILE_SIZE * bangobj.board.getHeight() - off*2;
         setPanLimits(off-50, off-50, off+breadth+50, off+depth+50);
+    }
+
+    public void endGame (BangView view)
+    {
+        // stop listening for mouse wheel, etc. events
+        view.view.removeListener(_swingListener);
+        view.removeListener(_rollListener);
+    }
+
+    /**
+     * Swings the camera smoothly around the point on the ground at which it is
+     * "looking", by the requested angle (in radians).
+     */
+    public void swingCamera (float deltaAngle)
+    {
+        JmeApp app = _ctx.getApp();
+        if (app.cameraIsMoving()) {
+            log.info("Already rotating, no swing: " + deltaAngle + ".");
+            return;
+        }
+
+        float angvel = 2*FastMath.PI;
+        app.moveCamera(new SwingPath(_camera, groundPoint(_camera),
+                                     _groundNormal, deltaAngle, angvel, 0));
+
+        // rotate our internal scrolling directions
+        _rotm.fromAxisAngle(_groundNormal, deltaAngle);
+        _rotm.mult(_rxdir, _rxdir);
+        _rotm.mult(_rydir, _rydir);
+    }
+
+    /**
+     * Moves the camera to the next elevation angle. The camera will smoothly
+     * roll to the appropriate angle rather than changing abruptly.
+     */
+    public void rollCamera ()
+    {
+        JmeApp app = _ctx.getApp();
+        if (app.cameraIsMoving()) {
+            return;
+        }
+        rollCamera((_camidx + 1) % CAMERA_ANGLES.length, 2*FastMath.PI);
+    }
+
+    protected void rollCamera (int nextidx, float angvel)
+    {
+        float curang = CAMERA_ANGLES[_camidx], curzoom = CAMERA_ZOOMS[_camidx];
+        float nextang = CAMERA_ANGLES[nextidx], nextzoom = CAMERA_ZOOMS[nextidx];
+        float deltaAngle = nextang-curang, deltaZoom = nextzoom-curzoom;
+        _camidx = nextidx;
+        _ctx.getApp().moveCamera(
+            new SwingPath(_camera, groundPoint(_camera), _camera.getLeft(),
+                          deltaAngle, angvel, deltaZoom));
     }
 
     protected void setKeyBindings (String api)
     {
-        super.setKeyBindings(api);
-
-        // additional key bindings for the zoom actions
         KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
-        keyboard.set("zoomIn", KeyInput.KEY_E);
-        keyboard.set("zoomOut", KeyInput.KEY_Q);
+
+        // we only allow free form panning, nothing else
+        keyboard.set("forward", KeyInput.KEY_W);
+        keyboard.set("backward", KeyInput.KEY_S);
+        keyboard.set("left", KeyInput.KEY_A);
+        keyboard.set("right", KeyInput.KEY_D);
     }
 
-    protected void addRollActions (Camera cam)
-    {
-        // no rolling
-    }
+    protected MouseWheelListener _swingListener = new MouseWheelListener() {
+        public void mouseWheeled (MouseEvent e) {
+            swingCamera((e.getDelta() > 0) ? -FastMath.PI/2 : FastMath.PI/2);
+        }
+    };
+
+    protected KeyListener _rollListener = new KeyListener() {
+        public void keyPressed (int keyCode) {
+            switch (keyCode) {
+            case KeyInput.KEY_C:
+                rollCamera();
+                break;
+            }
+        }
+    };
+
+    protected BasicContext _ctx;
+    protected int _camidx = 0;
+    protected final static float[] CAMERA_ANGLES = {
+        FastMath.PI/2, FastMath.PI/3, FastMath.PI/4 };
+    protected final static float[] CAMERA_ZOOMS = {
+        150f, 112.5f, 75f };
 }

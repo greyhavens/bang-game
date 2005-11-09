@@ -43,10 +43,8 @@ import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
-import com.jmex.bui.event.MouseWheelListener;
 import com.jmex.bui.layout.BorderLayout;
 
-import com.threerings.jme.input.GodViewHandler;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.SoundGroup;
 
@@ -75,7 +73,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * create the actual game view as well as the level editor.
  */
 public class BoardView extends BComponent
-    implements MouseMotionListener, MouseWheelListener
+    implements MouseMotionListener
 {
     public BoardView (BasicContext ctx)
     {
@@ -156,12 +154,6 @@ public class BoardView extends BComponent
         // add the listener that will react to pertinent events
         _bangobj = bangobj;
         _bangobj.addListener(_blistener);
-
-        // reset the camera for this board
-        CameraHandler ch = (CameraHandler)_ctx.getInputHandler();
-        if (ch != null) {
-            ch.setBoardDimens(bangobj, pidx);
-        }
 
         // freshen up
         refreshBoard();
@@ -344,25 +336,6 @@ public class BoardView extends BComponent
         result.z = 0.1f;
         
         return result;
-    }
-
-    // documentation inherited from interface MouseWheelListener
-    public void mouseWheeled (MouseEvent e)
-    {
-        GodViewHandler ih = (GodViewHandler)_ctx.getInputHandler();
-        if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0) {
-            float zoom = ih.getZoomLevel();
-            if (e.getDelta() > 0) {
-                zoom = Math.max(0f, zoom - 0.1f);
-            } else {
-                zoom = Math.min(1f, zoom + 0.1f);
-            }
-            ih.setZoomLevel(zoom);
-
-        } else if (!ih.isRotating()) {
-            ih.rotateCamera((e.getDelta() > 0) ?
-                            -FastMath.PI/2 : FastMath.PI/2);
-        }
     }
 
     @Override // documentation inherited
