@@ -36,8 +36,18 @@ public class TrackSprite extends PieceSprite
             detachAllChildren();
             createGeometry(null);
         }
+        
+        // make sure it's lying on the terrain
+        setOrientation(piece.orientation);
     }
     
+    @Override // documentation inherited
+    public void setOrientation (int orientation)
+    {
+        super.setOrientation(orientation);
+        snapToTerrain();
+    }
+
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {

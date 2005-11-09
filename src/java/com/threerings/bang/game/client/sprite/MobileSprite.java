@@ -113,38 +113,6 @@ public class MobileSprite extends PieceSprite
         // next action, so check both _action and _actions.size()
         return isMoving() || (_action != null) || (_actions.size() > 0);
     }
-
-    /**
-     * If the unit is on the ground, sets its z position based on the height of
-     * the terrain, and its pitch and roll based on the slope of the terrain.
-     * The units's x coordinate, y coordinate, and heading are unaffected.
-     */
-    public void snapToTerrain ()
-    {
-        // flyers simply fly from point to point
-        if (_piece.isFlyer()) {
-            return;
-        }
-        
-        // adjust position to terrain height
-        Vector3f pos = getLocalTranslation();
-        TerrainNode tnode = _view.getTerrainNode();
-        pos.z = tnode.getHeightfieldHeight(pos.x, pos.y);
-        setLocalTranslation(pos);
-        
-        // adjust rotation to terrain slope
-        Quaternion rot = getLocalRotation();
-        Vector3f normal = tnode.getHeightfieldNormal(pos.x, pos.y),
-            up = rot.mult(Vector3f.UNIT_Z),
-            cross = up.cross(normal);
-        float angle = FastMath.asin(cross.length());
-        if (angle == 0f) {
-            return;
-        }
-        Quaternion mod = new Quaternion();
-        mod.fromAngleAxis(angle, cross);
-        setLocalRotation(mod.multLocal(rot));
-    }
     
     @Override // documentation inherited
     public void pathCompleted ()

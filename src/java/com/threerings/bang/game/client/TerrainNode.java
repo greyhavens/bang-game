@@ -552,6 +552,16 @@ public class TerrainNode extends Node
     }
     
     /**
+     * Returns the scaled height of the specified location in sub-tile
+     * coordinates.
+     */
+    public float getHeightfieldValue (int x, int y)
+    {
+        return _board.getHeightfieldValue(x, y) *
+            (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
+    }
+    
+    /**
      * Creates and returns a splat block for the specified splat coordinates.
      */
     protected SplatBlock createSplatBlock (int sx, int sy)
@@ -671,16 +681,6 @@ public class TerrainNode extends Node
             getHeightfieldValue(x, y-1) - getHeightfieldValue(x, y+1),
             2*SUB_TILE_SIZE);
         result.normalizeLocal();
-    }
- 
-    /**
-     * Returns the scaled height of the specified location in sub-tile
-     * coordinates.
-     */
-    protected float getHeightfieldValue (int x, int y)
-    {
-        return _board.getHeightfieldValue(x, y) *
-            (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
     }
     
     /**
