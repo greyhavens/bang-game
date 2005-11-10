@@ -202,9 +202,12 @@ public class BarberManager extends PlaceManager
                 if (_error != null) {
                     cl.requestFailed(_error);
                 } else {
-                    user.setHandle(handle);
                     user.setLook("");
                     user.addToLooks(look);
+                    user.setHandle(handle);
+                    // register the player with their handle as we were unable
+                    // to do so when they logged on
+                    BangServer.registerPlayer(user);
                     cl.requestProcessed();
                 }
             }

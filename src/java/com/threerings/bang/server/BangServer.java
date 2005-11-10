@@ -4,6 +4,7 @@
 package com.threerings.bang.server;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -19,6 +20,7 @@ import com.threerings.util.Name;
 
 import com.threerings.presents.server.Authenticator;
 
+import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.CrowdServer;
 import com.threerings.crowd.server.PlaceManager;
@@ -43,6 +45,7 @@ import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.store.data.StoreConfig;
 import com.threerings.bang.store.server.StoreManager;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
@@ -192,14 +195,53 @@ public class BangServer extends CrowdServer
         _ilog.close();
     }
 
+    @Override // documentation inherited
+    protected BodyLocator createBodyLocator ()
+    {
+        return new BodyLocator() {
+            public BodyObject get (Name visibleName) {
+                return _players.get(visibleName);
+            }
+        };
+    }
+
     /**
      * Returns the player object for the specified user if they are online
      * currently, null otherwise. This should only be called from the dobjmgr
      * thread.
      */
-    public static PlayerObject lookupPlayer (Name username)
+    public static PlayerObject lookupPlayer (Handle handle)
     {
-        return (PlayerObject)clmgr.getClientObject(username);
+        return _players.get(handle);
+    }
+
+    /**
+     * Returns the player object for the specified user if they are online
+     * currently, null otherwise. This should only be called from the dobjmgr
+     * thread.
+     */
+    public static PlayerObject lookupByAccountName (Name accountName)
+    {
+        return (PlayerObject)clmgr.getClientObject(accountName);
+    }
+
+    /**
+     * Called when a player starts their session (or after they choose a handle
+     * for players on their first session) to associate the handle with the
+     * player's distributed object.
+     */
+    public static void registerPlayer (PlayerObject player)
+    {
+        _players.put(player.handle, player);
+    }
+
+    /**
+     * Called when a player ends their session to clear their handle to player
+     * object mapping.
+     */
+    public static void clearPlayer (PlayerObject player)
+    {
+        _players.remove(player.handle);
     }
 
     /**
@@ -247,6 +289,9 @@ public class BangServer extends CrowdServer
             log.log(Level.WARNING, "Unable to initialize server.", e);
         }
     }
+
+    protected static HashMap<Handle,PlayerObject> _players =
+        new HashMap<Handle,PlayerObject>();
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server.log");

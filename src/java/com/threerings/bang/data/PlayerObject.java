@@ -117,6 +117,12 @@ public class PlayerObject extends BodyObject
     }
 
     @Override // documentation inherited
+    public Name getVisibleName ()
+    {
+        return handle;
+    }
+
+    @Override // documentation inherited
     public String who ()
     {
         return "'" + handle + "' " + super.who();

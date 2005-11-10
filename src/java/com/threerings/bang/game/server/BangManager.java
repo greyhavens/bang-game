@@ -74,7 +74,7 @@ public class BangManager extends GameManager
         ClientObject caller, int bigShotId, int[] cardIds)
     {
         PlayerObject user = (PlayerObject)caller;
-        int pidx = _bangobj.getPlayerIndex(user.username);
+        int pidx = getPlayerIndex(user.getVisibleName());
         if (pidx == -1) {
             log.warning("Request to select starters by non-player " +
                         "[who=" + user.who() + "].");
@@ -112,7 +112,7 @@ public class BangManager extends GameManager
     public void purchaseUnits (ClientObject caller, String[] units)
     {
         PlayerObject user = (PlayerObject)caller;
-        int pidx = _bangobj.getPlayerIndex(user.username);
+        int pidx = getPlayerIndex(user.getVisibleName());
         if (pidx == -1) {
             log.warning("Request to purchase units by non-player " +
                         "[who=" + user.who() + "].");
@@ -127,7 +127,7 @@ public class BangManager extends GameManager
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
-        int pidx = _bangobj.getPlayerIndex(user.username);
+        int pidx = getPlayerIndex(user.getVisibleName());
 
         Piece piece = (Piece)_bangobj.pieces.get(pieceId);
         if (piece == null || !(piece instanceof Unit) || piece.owner != pidx) {
@@ -217,7 +217,7 @@ public class BangManager extends GameManager
         PlayerObject user = (PlayerObject)caller;
         Card card = (Card)_bangobj.cards.get(cardId);
         if (card == null ||
-            card.owner != _bangobj.getPlayerIndex(user.username)) {
+            card.owner != getPlayerIndex(user.getVisibleName())) {
             log.warning("Rejecting invalid card request [who=" + user.who() +
                         ", sid=" + cardId + ", card=" + card + "].");
             return;

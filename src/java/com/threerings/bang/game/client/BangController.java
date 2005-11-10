@@ -65,7 +65,7 @@ public class BangController extends GameController
 
         // determine our player index
         BodyObject me = (BodyObject)_ctx.getClient().getClientObject();
-        _pidx = _bangobj.getPlayerIndex(me.username);
+        _pidx = _bangobj.getPlayerIndex(me.getVisibleName());
 
         // we may be returning to an already started game
         if (_bangobj.state != BangObject.AWAITING_PLAYERS) {

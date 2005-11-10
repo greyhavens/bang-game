@@ -49,7 +49,7 @@ public class TableItem extends BContainer
                                      new EmptyBorder(5, 5, 5, 5)));
 
         _ctx = ctx;
-        _self = ((BodyObject)ctx.getClient().getClientObject()).username;
+        _self = ((BodyObject)ctx.getClient().getClientObject()).getVisibleName();
         _tconfig = (BangConfig)table.config;
         _tdtr = tdtr;
         _tdtr.addSeatednessObserver(this);

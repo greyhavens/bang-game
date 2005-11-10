@@ -131,7 +131,8 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     @Override // documentation inherited
     protected void updateUserCoins (String gameName, String accountName)
     {
-        PlayerObject player = BangServer.lookupPlayer(new Name(accountName));
+        PlayerObject player =
+            BangServer.lookupByAccountName(new Name(accountName));
         if (player != null) {
             BangServer.coinmgr.updateCoinCount(player);
         }
@@ -155,7 +156,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
             }
 
             public void handleResult () {
-                PlayerObject player = BangServer.lookupPlayer(
+                PlayerObject player = BangServer.lookupByAccountName(
                     new Name(info.accountName));
                 if (player != null) {
                     player.setScrip(player.scrip + currency);

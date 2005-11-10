@@ -38,9 +38,14 @@ public class BangClient extends CrowdClient
     protected void sessionWillStart ()
     {
         super.sessionWillStart();
+        PlayerObject user = (PlayerObject)_clobj;
+
+        // register the player with their handle if they have one
+        if (user.handle != null) {
+            BangServer.registerPlayer(user);
+        }
 
         // if we have auth data in the form of a token ring, use it
-        PlayerObject user = (PlayerObject)_clobj;
         if (_authdata instanceof TokenRing) {
             // we can set things directly here rather than use the setter
             // methods because the user object is not yet out in the wild
@@ -80,6 +85,12 @@ public class BangClient extends CrowdClient
     protected void sessionDidEnd ()
     {
         super.sessionDidEnd();
+
+        // clear out our handle to player object registration
+        PlayerObject user = (PlayerObject)_clobj;
+        if (user.handle != null) {
+            BangServer.clearPlayer(user);
+        }
 
         // this session is over, make a note of it
         recordEndedSession();

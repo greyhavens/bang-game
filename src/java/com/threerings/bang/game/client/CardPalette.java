@@ -56,7 +56,7 @@ public class CardPalette extends IconPalette
         // reduce the number of selectable cards by the number we have waiting
         // to be played
         _selectable -= bangobj.countPlayerCards(
-            bangobj.getPlayerIndex(user.username));
+            bangobj.getPlayerIndex(user.getVisibleName()));
     }
 
     public CardItem getSelectedCard (int index)
