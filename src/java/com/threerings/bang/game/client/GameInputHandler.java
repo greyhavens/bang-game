@@ -46,9 +46,9 @@ public class GameInputHandler extends GodViewHandler
 
         // set the pan limits based on the board size
         _camhand.setPanLimits(
-            TILE_SIZE, TILE_SIZE,
-            TILE_SIZE * bangobj.board.getWidth() - 2*TILE_SIZE,
-            TILE_SIZE * bangobj.board.getHeight() - 2*TILE_SIZE, true);
+            0, 0,
+            TILE_SIZE * bangobj.board.getWidth(),
+            TILE_SIZE * bangobj.board.getHeight(), true);
 
         // start the camera in the center of the board, pointing straight down
         float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
