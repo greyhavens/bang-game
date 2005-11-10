@@ -45,10 +45,10 @@ public class GameInputHandler extends GodViewHandler
         view.addListener(_rollListener);
 
         // set the pan limits based on the board size
-        float edge = TILE_SIZE * (BangBoard.BORDER_SIZE + 6);
-        float breadth = TILE_SIZE * bangobj.board.getWidth() - edge*2;
-        float depth = TILE_SIZE * bangobj.board.getHeight() - edge*2;
-        _camhand.setPanLimits(edge-50, edge-50, edge+breadth+50, edge+depth+50);
+        _camhand.setPanLimits(
+            TILE_SIZE, TILE_SIZE,
+            TILE_SIZE * bangobj.board.getWidth() - 2*TILE_SIZE,
+            TILE_SIZE * bangobj.board.getHeight() - 2*TILE_SIZE, true);
 
         // start the camera in the center of the board, pointing straight down
         float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
