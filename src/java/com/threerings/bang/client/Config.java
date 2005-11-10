@@ -19,6 +19,9 @@ public class Config
         /** The speed (in tiles per second) of unit movement. */
         public float movementSpeed = 4f;
 
+        /** Whether or not move highlights float above pieces. */
+        public boolean floatHighlights = true;
+
         /** Returns the unit movement speed modulated by the total
          * animation speed. */
         public float getMovementSpeed ()

@@ -36,10 +36,12 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interator;
 
-import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.Terrain;
+import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
+
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.Terrain;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -466,7 +468,7 @@ public class TerrainNode extends Node
      */
     public Highlight createHighlight (int x, int y, boolean overPieces)
     {
-        return new Highlight(x, y, overPieces);
+        return new Highlight(x, y, overPieces && Config.display.floatHighlights);
     }
     
     /**

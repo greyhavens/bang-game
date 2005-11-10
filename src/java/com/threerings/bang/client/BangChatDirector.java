@@ -34,23 +34,34 @@ public class BangChatDirector extends ChatDirector
 
         // register our user chat command handlers
         MessageBundle msg = _msgmgr.getBundle(_bundle);
-        registerCommandHandler(msg, "slowmo", new SlowMoHandler());
+        registerCommandHandler(msg, "debug", new DebugHandler());
         registerCommandHandler(msg, "tell", new TellHandler());
     }
 
-    /** A temporary hack to adjust the global animation speed. */
-    protected class SlowMoHandler extends CommandHandler
+    /** A place for temporary debug hacks. */
+    protected class DebugHandler extends CommandHandler
     {
         public String handleCommand (SpeakService speakSvc, String command,
                                      String args, String[] history)
         {
-            if (Config.display.animationSpeed == 1) {
-                Config.display.animationSpeed = 0.25f;
-                displayFeedback(_bundle, "m.slowmo_activated");
+            String[] argv = StringUtil.split(args, " ");
+            if (argv[0].equals("slowmo")) {
+                if (Config.display.animationSpeed == 1) {
+                    Config.display.animationSpeed = 0.25f;
+                } else {
+                    Config.display.animationSpeed = 1f;
+                }
+
+            } else if (argv[0].equals("hfloat")) {
+                Config.display.floatHighlights = !Config.display.floatHighlights;
+
             } else {
-                Config.display.animationSpeed = 1f;
-                displayFeedback(_bundle, "m.slowmo_deactivated");
+                return "m.unknown_debug";
             }
+
+            displayFeedback(
+                _bundle, MessageBundle.tcompose("m.debug_toggled", argv[0]));
+
             return ChatCodes.SUCCESS;
         }
     }
