@@ -121,12 +121,13 @@ public class BangView extends BWindow
 
         // create our player status displays
         int pcount = bangobj.players.length;
-        _pstatus = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
-        _pstatus.setLayoutManager(GroupLayout.makeHStretch());
-        _pstatus.setBackground(
-            new TintedBackground(ColorRGBA.darkGray, 5, 5, 5, 5));
+        _pstatus = new BWindow[pcount];
         for (int ii = 0; ii < pcount; ii++) {
-            _pstatus.add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
+            _pstatus[ii] = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
+            _pstatus[ii].setLayoutManager(GroupLayout.makeHStretch());
+            _pstatus[ii].setBackground(
+                new TintedBackground(ColorRGBA.darkGray, 5, 5, 5, 5));
+            _pstatus[ii].add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
         }
 
         chat.willEnterPlace(plobj);
@@ -138,7 +139,9 @@ public class BangView extends BWindow
         chat.didLeavePlace(plobj);
 
         // remove our displays
-        _ctx.getRootNode().removeWindow(_pstatus);
+        for (int ii = 0; ii < _pstatus.length; ii++) {
+            _ctx.getRootNode().removeWindow(_pstatus[ii]);
+        }
         _ctx.getRootNode().removeWindow(chat);
 
         if (_oview != null) {
@@ -154,17 +157,42 @@ public class BangView extends BWindow
 
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
+        int cwidth = width - 20, cypos = 10;
 
         // now that we've been added to the interface hierarchy, we can add the
-        // player status window which should be "above" this one
-        _ctx.getRootNode().addWindow(_pstatus);
-        _pstatus.setSize(width - 20, 50);
-        _pstatus.setLocation(10, height - _pstatus.getHeight() - 10);
+        // player status windows which should be "above" this one
+        for (int ii = 0; ii < _pstatus.length; ii++) {
+            BWindow pwin = _pstatus[ii];
+            _ctx.getRootNode().addWindow(pwin);
+            pwin.pack();
+            int pwidth = pwin.getWidth(), pheight = pwin.getHeight();
+            switch (ii) {
+            case 0:
+                pwin.setLocation(10, height - pheight - 10);
+                break;
+            case 1:
+                pwin.setLocation(width - pwidth - 10, height - pheight - 10);
+                break;
+            case 2:
+                pwin.setLocation(width - pwidth - 10, 10);
+                // having the third player status window requires that we make
+                // the chat display a bit skinnier
+                cwidth -= (pwidth+10);
+                break;
+            case 3:
+                pwin.setLocation(10, 10);
+                // having the fourth player status window requires that we move
+                // the chat window up, but we can stretch it wide again
+                cypos += (pheight + 10);
+                cwidth = width - 20;
+                break;
+            }
+        }
 
         // and add our chat display
         _ctx.getRootNode().addWindow(chat);
         chat.pack();
-        chat.setBounds(10, 20, width-20, chat.getHeight());
+        chat.setBounds(10, cypos, cwidth, chat.getHeight());
     }
 
     /** Giver of life and context. */
@@ -173,8 +201,8 @@ public class BangView extends BWindow
     /** Our game controller. */
     protected BangController _ctrl;
 
-    /** Contain various onscreen displays. */
-    protected BWindow _pstatus;
+    /** Contain per-player displays. */
+    protected BWindow[] _pstatus;
 
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;
