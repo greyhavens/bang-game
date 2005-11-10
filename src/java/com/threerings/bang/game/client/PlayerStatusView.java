@@ -13,6 +13,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -40,7 +41,8 @@ public class PlayerStatusView extends BContainer
     public PlayerStatusView (BangContext ctx, BangObject bangobj,
                              BangController ctrl, int pidx)
     {
-        super(GroupLayout.makeHoriz(GroupLayout.LEFT));
+        super(GroupLayout.makeHoriz((pidx == 0 || pidx == 3) ?
+                                    GroupLayout.LEFT : GroupLayout.RIGHT));
 
         _ctx = ctx;
         _bangobj = bangobj;
@@ -66,6 +68,15 @@ public class PlayerStatusView extends BContainer
         super.wasAdded();
     }
 
+    @Override // documentation inherited
+    public Dimension getPreferredSize ()
+    {
+        Dimension d = super.getPreferredSize();
+        // hack in some size temporarily for the buttons that we're not showing
+        d.width += (4-getComponentCount()) * 50;
+        return d;
+    }
+
     // documentation inherited from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent event)
     {
@@ -86,7 +97,11 @@ public class PlayerStatusView extends BContainer
         if (event.getName().equals(BangObject.CARDS)) {
             Card card = (Card)event.getEntry();
             if (card.owner == _pidx) {
-                add(createButton(card));
+                if (_pidx == 1 || _pidx == 2) {
+                    add(0, createButton(card));
+                } else {
+                    add(createButton(card));
+                }
             }
         }
     }
