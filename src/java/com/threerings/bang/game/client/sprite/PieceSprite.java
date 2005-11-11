@@ -10,6 +10,7 @@ import java.util.List;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.scene.Spatial;
 
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
@@ -101,6 +102,15 @@ public class PieceSprite extends Sprite
         updateCollisionTree();
     }
 
+    /**
+     * Allows the piece sprite to return a separate piece of geometry that will
+     * be added to the scene along with it as a peer.
+     */
+    public Spatial getHighlight ()
+    {
+        return null;
+    }
+    
     /**
      * Configures this sprite's tile location.
      */

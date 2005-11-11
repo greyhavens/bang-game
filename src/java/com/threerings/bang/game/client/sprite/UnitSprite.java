@@ -91,6 +91,12 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
+    public Spatial getHighlight ()
+    {
+        return _status;
+    }
+    
+    @Override // documentation inherited
     public void updated (BangBoard board, Piece piece, short tick)
     {
         super.updated(board, piece, tick);
@@ -104,7 +110,7 @@ public class UnitSprite extends MobileSprite
         }
 
         // update our status display
-        _status.setCullMode(unit.isAlive() ? CULL_DYNAMIC : CULL_ALWAYS);
+        updateStatus();
         TextureState tstate =
             (TextureState)_ticks.getRenderState(RenderState.RS_TEXTURE);
         if ((ticks = unit.ticksUntilMovable(_tick)) > 0) {
@@ -147,23 +153,21 @@ public class UnitSprite extends MobileSprite
     public void move (Path path)
     {
         super.move(path);
-        _view.getNode().detachChild(_status);
+        _status.setCullMode(CULL_ALWAYS);
     }
     
     @Override // documentation inherited
     public void cancelMove ()
     {
         super.cancelMove();
-        _highlight.setPosition(_piece.x, _piece.y);
-        _view.getNode().attachChild(_status);
+        updateStatus();
     }
     
     @Override // documentation inherited
     public void pathCompleted ()
     {
         super.pathCompleted();
-        _highlight.setPosition(_piece.x, _piece.y);
-        _view.getNode().attachChild(_status);
+        updateStatus();
     }
     
     @Override // documentation inherited
@@ -241,7 +245,6 @@ public class UnitSprite extends MobileSprite
         _movable.setRenderState(tstate);
         _movable.updateRenderState();
         _status.attachChild(_movable);
-        _view.getNode().attachChild(_status);
         _movable.setCullMode(tick > 0 ? CULL_ALWAYS : CULL_DYNAMIC);
         
         // configure our colors
@@ -288,7 +291,23 @@ public class UnitSprite extends MobileSprite
         attachChild(bbn);
         _icon.setCullMode(CULL_ALWAYS);
     }
-
+    
+    /**
+     * Updates the visibility and location of the status display.
+     */
+    protected void updateStatus ()
+    {
+        if (_piece.isAlive() && !isMoving()) {
+            _status.setCullMode(CULL_DYNAMIC);
+            if (_highlight.x != _piece.x || _highlight.y != _piece.y) {
+                _highlight.setPosition(_piece.x, _piece.y);
+            }
+            
+        } else {
+            _status.setCullMode(CULL_ALWAYS);
+        }
+    }
+    
     @Override // documentation inherited
     protected int computeElevation (BangBoard board, int tx, int ty)
     {

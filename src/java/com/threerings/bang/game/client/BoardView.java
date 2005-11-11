@@ -145,13 +145,6 @@ public class BoardView extends BComponent
      */
     public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
     {
-        // clear out old piece sprites from a previous game
-        for (Iterator<PieceSprite> iter = _pieces.values().iterator();
-             iter.hasNext(); ) {
-            removeSprite(iter.next());
-            iter.remove();
-        }
-
         // add the listener that will react to pertinent events
         _bangobj = bangobj;
         _bangobj.addListener(_blistener);
@@ -169,10 +162,9 @@ public class BoardView extends BComponent
     public void refreshBoard ()
     {
         // remove any old sprites
-        for (PieceSprite sprite : _pieces.values()) {
-            removeSprite(sprite);
-        }
+        _pnode.detachAllChildren();
         _pieces.clear();
+        _plights.clear();
 
         // start afresh
         _board = _bangobj.board;
@@ -420,6 +412,12 @@ public class BoardView extends BComponent
             log.fine("Creating sprite for " + piece + ".");
             _pieces.put((int)piece.pieceId, sprite);
             addSprite(sprite);
+            
+            Spatial highlight = sprite.getHighlight();
+            if (highlight != null) {
+                _pnode.attachChild(highlight);
+                _plights.put(highlight, sprite);
+            }
         }
         return sprite;
     }
@@ -433,6 +431,12 @@ public class BoardView extends BComponent
         if (sprite != null) {
             log.fine("Removing sprite [id=" + pieceId + ", why=" + why + "].");
             removeSprite(sprite);
+            
+            Spatial highlight = sprite.getHighlight();
+            if (highlight != null) {
+                _pnode.detachChild(highlight);
+                _plights.remove(highlight);
+            }
         } else {
             log.warning("No sprite for removed piece [id=" + pieceId +
                         ", why=" + why + "].");
@@ -564,6 +568,10 @@ public class BoardView extends BComponent
     {
         if (spatial instanceof Sprite) {
             return (Sprite)spatial;
+        
+        } else if (_plights.containsKey(spatial)) {
+            return _plights.get(spatial);
+            
         } else if (spatial.getParent() != null) {
             return getSprite(spatial.getParent());
         } else {
@@ -635,7 +643,10 @@ public class BoardView extends BComponent
 
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();
-
+    
+    protected HashMap<Spatial,Sprite> _plights =
+        new HashMap<Spatial,Sprite>();
+    
     /** Used when intersecting the ground. */
     protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
 
