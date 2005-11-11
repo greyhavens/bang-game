@@ -82,10 +82,10 @@ public class BangClient extends BasicClient
             // create a one player game of bang
             BangConfig config = new BangConfig();
             config.players = new Name[] {
-                _client.getCredentials().getUsername(),
-                new Name("Larry"), new Name("Moe") };
+                _ctx.getUserObject().getVisibleName(),
+                new Name("Larry") /*, new Name("Moe")*/ };
             config.ais = new GameAI[] {
-                null, new GameAI(0, 50), new GameAI(0, 50) };
+                null, new GameAI(0, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { "cj" };
             ConfirmListener cl = new ConfirmListener() {
                 public void requestProcessed () {
