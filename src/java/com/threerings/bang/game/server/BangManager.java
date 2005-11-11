@@ -257,6 +257,19 @@ public class BangManager extends GameManager
         }
     }
 
+    /**
+     * Prepares an effect and posts it to the game object, recording
+     * damage done in the process.
+     */
+    public void deployEffect (int effector, Effect effect)
+    {
+        effect.prepare(_bangobj, _damage);
+        _bangobj.setEffect(effect);
+        if (effector != -1) {
+            recordDamage(effector, _damage);
+        }
+    }
+    
     // documentation inherited
     protected Class getPlaceObjectClass ()
     {
@@ -521,7 +534,8 @@ public class BangManager extends GameManager
 
             // let the scenario know that we're about to start
             try {
-                _scenario.init(_bangobj, _starts, _bonusSpots, _purchases);
+                _scenario.init(this, _bangobj, _starts, _bonusSpots,
+                    _purchases);
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
                             ", error=" + ie.getMessage() + "].");
@@ -941,19 +955,6 @@ public class BangManager extends GameManager
         _effects.clear();
 
         return munit;
-    }
-
-    /**
-     * Prepares an effect and posts it to the game object, recording
-     * damage done in the process.
-     */
-    protected void deployEffect (int effector, Effect effect)
-    {
-        effect.prepare(_bangobj, _damage);
-        _bangobj.setEffect(effect);
-        if (effector != -1) {
-            recordDamage(effector, _damage);
-        }
     }
 
     /**

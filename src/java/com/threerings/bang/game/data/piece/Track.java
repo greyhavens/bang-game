@@ -50,7 +50,17 @@ public class Track extends Piece
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
-        return false;
+        return preventsGroundOverlap() && !(lapper instanceof Train) &&
+            !lapper.isFlyer();
+    }
+    
+    /**
+     * Determines whether this track is a singleton or terminal, and thus
+     * prevents ground vehicles from overlapping.
+     */
+    public boolean preventsGroundOverlap ()
+    {
+        return type == SINGLETON || type == TERMINAL;
     }
     
     @Override // documentation inherited

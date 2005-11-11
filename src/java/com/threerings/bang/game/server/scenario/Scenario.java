@@ -5,9 +5,11 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.QuickSort;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
@@ -20,11 +22,15 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.TrainEffect;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.PieceSet;
+import com.threerings.bang.game.util.PieceUtil;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -33,7 +39,7 @@ import static com.threerings.bang.Log.log;
  * Implements a particular gameplay scenario.
  */
 public abstract class Scenario
-    implements GameCodes
+    implements GameCodes, PieceCodes
 {
     /**
      * Allows a scenario to filter out custom marker pieces prior to the
@@ -57,10 +63,13 @@ public abstract class Scenario
      * indicating why the scenario is booched, which will be displayed to
      * the players and the game will be cancelled.
      */
-    public void init (BangObject bangobj, ArrayList<Piece> starts,
-                      PointSet bonusSpots, PieceSet purchases)
+    public void init (BangManager bangman, BangObject bangobj,
+                      ArrayList<Piece> starts, PointSet bonusSpots,
+                      PieceSet purchases)
         throws InvocationException
     {
+        _bangman = bangman;
+        
         // clear our respawn queue
         _respawns.clear();
 
@@ -136,7 +145,7 @@ public abstract class Scenario
         }
 
         // update train pieces
-        updateTrain(bangobj);
+        updateTrains(bangobj);
         
         // check to see if we should end the scenario due to time, or warn
         // that we're going to
@@ -160,44 +169,185 @@ public abstract class Scenario
     /**
      * Updates the train pieces on the board.
      */
-    protected void updateTrain (BangObject bangobj)
+    protected void updateTrains (BangObject bangobj)
     {
-        // determine whether there is a train on the board and, if so, whether
-        // we are still pumping out cars
+        // find the trains and terminals on the board; if there are no trains
+        // but there are terminals, consider creating a train
+        ArrayList<Train> trains = getTrains(bangobj);
         ArrayList<Track> terminals = getTerminals(bangobj);
-        boolean foundTrain = false;
-        Train last = null;
-        Track terminal = null;
-        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-            Object piece = it.next();
-            if (piece instanceof Train) {
-                Train train = (Train)piece;
-                foundTrain = true;
-                terminal = getTerminalBehind(train, terminals);
-                if (terminal != null) {
-                    last = train;
-                }
+        if (trains.size() == 0) {
+            if (terminals.size() > 0 && Math.random() < 1f/AVG_TRAIN_TICKS) {
+                createTrain(bangobj, terminals);
+            }
+            return;
+        }
+        
+        // update the oldest train first; if it moves, move the rest in order
+        QuickSort.sort(trains, PIECE_ID_COMPARATOR);
+        if (updateTrain(bangobj, trains.get(0))) {
+            for (int i = 1, size = trains.size(); i < size; i++) {
+                Train previous = trains.get(i-1);
+                moveTrain(bangobj, trains.get(i), previous.lastX,
+                    previous.lastY);
             }
         }
         
-        // if we haven't found a train, consider creating one; if we can
-        // still add cars, consider adding another one
-        if (!foundTrain && terminals.size() > 0 &&
-            Math.random() < 1f/AVG_TRAIN_TICKS) {
-            createTrain(bangobj, terminals);
-            
-        } else if (last != null && Math.random() > 1f/AVG_TRAIN_CARS) {
-            Train train = new Train();
-            train.x = terminal.x;
-            train.y = terminal.y;
-            train.orientation = terminal.orientation;
-            train.attachId = last.pieceId;
-            bangobj.addToPieces(train);
+        // see if there is a terminal that can pump out another train; if so,
+        // consider pumping another one out
+        Train last = trains.get(trains.size() - 1);
+        Track terminal = getTerminalBehind(last, terminals);
+        if (terminal != null && !isOccupied(terminal, trains) &&
+            Math.random() > 1f/AVG_TRAIN_CARS) {
+            createTrain(bangobj, last, terminal);
         }
     }
     
     /**
-     * Adds a new train to the board.
+     * Updates the first in a sequence of train pieces.  This is the one that
+     * will determine whether the entire train moves or not.
+     *
+     * @return true if the rest of the train should move, false otherwise
+     */
+    protected boolean updateTrain (BangObject bangobj, Train train)
+    {
+        // find the adjacent track pieces excluding the one behind
+        ArrayList<Track> tracks = new ArrayList<Track>();
+        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
+            Piece piece = (Piece)it.next();
+            if (piece instanceof Track && train.getDistance(piece) == 1 &&
+                !train.isBehind(piece)) {
+                tracks.add((Track)piece);
+            }
+        }
+        
+        // if there's nowhere to go, disappear; otherwise, move to a random
+        // piece of track (pushing anything in front out of the way or
+        // stopping for things that can't be pushed)
+        if (tracks.size() == 0) {
+            train.lastX = train.x;
+            train.lastY = train.y; // in order to pull remaining cars in
+            bangobj.removeFromPieces(train.getKey());
+            bangobj.board.updateShadow(train, null);
+            return true;
+            
+        } else {
+            Track track = (Track)RandomUtil.pickRandom(tracks);
+            Piece blocker = getBlockingPiece(bangobj, train, track.x, track.y);
+            if (blocker instanceof Unit) {
+                if (!pushUnit(bangobj, train, (Unit)blocker)) {
+                    return false;
+                }
+                
+            } else if (blocker != null) {
+                return false;
+            }
+            moveTrain(bangobj, train, track.x, track.y);
+            return true;
+        }
+    }
+    
+    /**
+     * Searches for a piece that would block the train from moving to the
+     * specified coordinates.  If there's a {@link Unit}, return that;
+     * otherwise, return any blocking piece.
+     */
+    protected Piece getBlockingPiece (BangObject bangobj, Train train, int x,
+        int y)
+    {
+        Piece blocker = null;
+        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
+            Piece piece = (Piece)it.next();
+            if (piece.intersects(x, y) &&
+                train.preventsOverlap(piece)) {
+                if (piece instanceof Unit) {
+                    return piece;
+                    
+                } else {
+                    blocker = piece;
+                }
+            }
+        }
+        return blocker;
+    }
+    
+    /**
+     * Handles the collision between a train and a unit.
+     *
+     * @return true if the train pushed the unit out of the way, false
+     * otherwise
+     */
+    protected boolean pushUnit (BangObject bangobj, Train train, Unit unit)
+    {
+        Point pt = getPushLocation(bangobj, train, unit);
+        if (pt != null) {
+            bangobj.board.updateShadow(unit, null);
+            unit.position(pt.x, pt.y);
+            bangobj.board.updateShadow(null, unit);
+            bangobj.updatePieces(unit);
+        }
+        
+        // hurt the unit hit
+        _bangman.deployEffect(-1, new TrainEffect(unit, TRAIN_DAMAGE));
+        
+        return pt != null;
+    }
+    
+    protected Point getPushLocation (BangObject bangobj, Train train,
+        Unit unit)
+    {
+        // only consider passable locations; prefer locations without
+        // tracks and the location in front in that order
+        int fwd = PieceUtil.getDirection(train, unit);
+        int[] dirs = new int[] { fwd, (fwd + 1) % DIRECTIONS.length,
+            (fwd + 3) % DIRECTIONS.length }; // fwd, left, right
+        ArrayList<Point> passable = new ArrayList<Point>(),
+            trackless = new ArrayList<Point>();
+        for (int i = 0; i < dirs.length; i++) {
+            int x = unit.x + DX[dirs[i]], y = unit.y + DY[dirs[i]];
+            if (unit.canTraverse(bangobj.board, x, y)) {
+                Point pt = new Point(x, y);
+                passable.add(pt);
+                if (!hasTracks(bangobj, x, y)) {
+                    trackless.add(pt);
+                }
+            }
+        }
+        if (passable.isEmpty()) {
+            return null;
+        }
+        
+        ArrayList<Point> pts = (trackless.isEmpty() ? passable : trackless);
+        return (pts.size() == 2) ? (Point)RandomUtil.pickRandom(pts) :
+            pts.get(0);
+    }
+    
+    /**
+     * Determines whether there is a track piece at the specified coordinates.
+     */
+    protected boolean hasTracks (BangObject bangobj, int tx, int ty)
+    {
+        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
+            Piece piece = (Piece)it.next();
+            if (piece instanceof Track && piece.intersects(tx, ty)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Moves the train, performing any necessary updates.
+     */
+    protected void moveTrain (BangObject bangobj, Train train, int nx, int ny)
+    {
+        bangobj.board.updateShadow(train, null);
+        train.position(nx, ny);
+        bangobj.board.updateShadow(null, train);
+        bangobj.updatePieces(train);
+    }
+    
+    /**
+     * Adds a new train engine to the board.
      */
     protected void createTrain (BangObject bangobj, ArrayList<Track> terminals)
     {
@@ -210,6 +360,35 @@ public abstract class Scenario
         train.y = terminal.y;
         train.orientation = terminal.orientation;
         bangobj.addToPieces(train);
+    }
+    
+    /**
+     * Adds a new train car to the board.
+     */
+    protected void createTrain (BangObject bangobj, Train last,
+        Track terminal)
+    {
+        Train train = new Train();
+        train.x = terminal.x;
+        train.y = terminal.y;
+        train.orientation = terminal.orientation;
+        train.attachId = last.pieceId;
+        bangobj.addToPieces(train);
+    }
+    
+    /**
+     * Gets a list of all trains on the board.
+     */
+    protected ArrayList<Train> getTrains (BangObject bangobj)
+    {
+        ArrayList<Train> trains = new ArrayList<Train>();
+        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
+            Object piece = it.next();
+            if (piece instanceof Train) {
+                trains.add((Train)piece);
+            }
+        }
+        return trains;
     }
     
     /**
@@ -234,13 +413,25 @@ public abstract class Scenario
      */
     protected Track getTerminalBehind (Train train, ArrayList<Track> terminals)
     {
-        for (Iterator<Track> it = terminals.iterator(); it.hasNext(); ) {
-            Track track = it.next();
-            if (train.isBehind(track)) {
-                return track;
+        for (int i = 0, size = terminals.size(); i < size; i++) {
+            if (train.isBehind(terminals.get(i))) {
+                return terminals.get(i);
             }
         }
         return null;
+    }
+    
+    /**
+     * Determines whether there is a train in the specified terminal.
+     */
+    protected boolean isOccupied (Track terminal, ArrayList<Train> trains)
+    {
+        for (int i = 0, size = trains.size(); i < size; i++) {
+            if (trains.get(i).intersects(terminal)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -338,6 +529,9 @@ public abstract class Scenario
         return MAX_SCENARIO_TIME;
     }
 
+    /** The Bang game manager. */
+    protected BangManager _bangman;
+    
     /** Used to track the locations where players are started. */
     protected Point[] _startSpots;
 
@@ -370,4 +564,15 @@ public abstract class Scenario
     
     /** The average number of cars on a train. */
     protected static final int AVG_TRAIN_CARS = 4;
+    
+    /** The amount of damage taken by units hit by the train. */
+    protected static final int TRAIN_DAMAGE = 20;
+    
+    /** Compares pieces based on their piece ids. */
+    protected static final Comparator<Piece> PIECE_ID_COMPARATOR =
+        new Comparator<Piece>() {
+        public int compare (Piece p1, Piece p2) {
+            return p1.pieceId - p2.pieceId;
+        }
+    };
 }

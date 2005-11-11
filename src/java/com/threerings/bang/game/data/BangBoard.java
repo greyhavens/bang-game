@@ -25,6 +25,7 @@ import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Track;
+import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -385,9 +386,21 @@ public class BangBoard extends SimpleStreamableObject
                     }
                 }
 
-            } else if (piece instanceof Bonus || piece instanceof Track) {
+            } else if (piece instanceof Track) {
+                int idx = _width*piece.y+piece.x;
+                if (((Track)piece).preventsGroundOverlap()) {
+                    _tstate[idx] = _btstate[idx] = _estate[idx] = 2;
+                    
+                } else {
+                    _tstate[idx] = _btstate[idx] = 1;
+                }
+            
+            } else if (piece instanceof Bonus) {
                 _tstate[_width*piece.y+piece.x] = 1;
 
+            } else if (piece instanceof Train) {
+                _tstate[_width*piece.y+piece.x] = 2;
+                
             } else {
                 _tstate[_width*piece.y+piece.x] = 3;
             }
@@ -491,7 +504,7 @@ public class BangBoard extends SimpleStreamableObject
             return false;
         }
         int max = 1;
-        if (piece.isFlyer()) {
+        if (piece.isFlyer() || piece instanceof Train) {
             max = 2;
         }
         return (_tstate[y*_width+x] <= max);

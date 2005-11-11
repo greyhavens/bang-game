@@ -20,6 +20,7 @@ import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -67,11 +68,12 @@ public class CattleHerding extends Scenario
         }
     }
 
-    public void init (BangObject bangobj, ArrayList<Piece> markers,
-                      PointSet bonusSpots, PieceSet purchases)
+    @Override // documentation inherited
+    public void init (BangManager bangman, BangObject bangobj,
+        ArrayList<Piece> markers, PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.init(bangobj, markers, bonusSpots, purchases);
+        super.init(bangman, bangobj, markers, bonusSpots, purchases);
 
         // determine how many cattle we want to put on the board
         int cattle = 0, cps = 0;

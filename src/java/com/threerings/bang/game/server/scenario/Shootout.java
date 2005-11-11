@@ -16,6 +16,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -25,11 +26,11 @@ import com.threerings.bang.game.util.PointSet;
 public class Shootout extends Scenario
 {
     @Override // documentation inherited
-    public void init (BangObject bangobj, ArrayList<Piece> markers,
-                      PointSet bonusSpots, PieceSet purchases)
+    public void init (BangManager bangman, BangObject bangobj,
+        ArrayList<Piece> markers, PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.init(bangobj, markers, bonusSpots, purchases);
+        super.init(bangman, bangobj, markers, bonusSpots, purchases);
 
         // create a fresh knockout array
         _knockoutOrder = new int[bangobj.players.length];
