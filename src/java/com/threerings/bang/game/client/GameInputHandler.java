@@ -10,6 +10,8 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
+import com.jmex.bui.event.KeyEvent;
+import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseWheelListener;
 
@@ -17,7 +19,6 @@ import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.camera.GodViewHandler;
 import com.threerings.jme.camera.SwingPath;
 
-import com.threerings.bang.client.util.KeyListener;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
@@ -126,12 +127,14 @@ public class GameInputHandler extends GodViewHandler
     };
 
     protected KeyListener _rollListener = new KeyListener() {
-        public void keyPressed (int keyCode) {
-            switch (keyCode) {
+        public void keyPressed (KeyEvent event) {
+            switch (event.getKeyCode()) {
             case KeyInput.KEY_C:
                 rollCamera();
                 break;
             }
+        }
+        public void keyReleased (KeyEvent event) {
         }
     };
 

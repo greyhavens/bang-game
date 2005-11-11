@@ -9,6 +9,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.background.TintedBackground;
+import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -46,13 +47,11 @@ public class BangView extends BWindow
         chat = new OverlayChatView(ctx);
 
         addListener(new EscapeListener() {
-            public void keyPressed (int keyCode) {
-                switch (keyCode) {
-                case KeyInput.KEY_SPACE:
+            public void keyPressed (KeyEvent event) {
+                if (event.getKeyCode() == KeyInput.KEY_SPACE) {
                     _ctrl.startChat();
-                    break;
-                default:
-                    super.keyPressed(keyCode);
+                } else {
+                    super.keyPressed(event);
                 }
             }
             public void escapePressed () {

@@ -21,7 +21,6 @@ import com.jme.util.TextureManager;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.util.KeyListener;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.util.BangContext;
 

@@ -182,7 +182,7 @@ public class NewLookView extends BContainer
         // copy in any required articles from their active look
         PlayerObject user = _ctx.getUserObject();
         Look current = user.getLook();
-        if (current != null) {
+        if (current != null || current.articles.length == 0) {
             for (int ii = 0; ii < AvatarLogic.SLOTS.length; ii++) {
                 if (AvatarLogic.SLOTS[ii].optional) {
                     continue;
