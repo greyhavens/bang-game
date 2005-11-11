@@ -177,7 +177,7 @@ public class BangBoardView extends BoardView
                  sel.getDistance(npiece) < sel.getMoveDistance())) {
                 int[] oaction = _action;
                 clearSelection();
-                selectUnit((Unit)sel);
+                selectUnit((Unit)sel, false);
                 // if we had already selected a movement, reconfigure that
                 // (it might no longer be valid but handleClickToMove will
                 // ignore us in that case
@@ -342,7 +342,7 @@ public class BangBoardView extends BoardView
         // sundry conditions
         if (piece != null &&  sprite != null && piece.owner == _pidx &&
             sprite.isSelectable()) {
-            selectUnit((Unit)piece);
+            selectUnit((Unit)piece, false);
             return;
         }
 
@@ -517,21 +517,30 @@ public class BangBoardView extends BoardView
         return (UnitSprite)getPieceSprite(piece);
     }
 
-    protected void selectUnit (Unit piece)
+    protected void selectUnit (Unit piece, boolean scrollCamera)
     {
-        log.info("Selecting " + piece.info());
         boolean deselect = (piece == _selection);
         clearSelection();
-        if (!deselect && piece.isAlive()) {
-            _selection = piece;
-            getPieceSprite(_selection).setSelected(true);
-            PointSet attacks = new PointSet();
-            _bangobj.board.computeMoves(piece, _moveSet, attacks);
-            _attackSet.clear();
-            pruneAttackSet(_moveSet, _moveSet, _attackSet);
-            pruneAttackSet(attacks, _moveSet, _attackSet);
-            highlightTiles(_moveSet, piece.isFlyer());
+        if (deselect || !piece.isAlive()) {
+            return;
         }
+        _selection = piece;
+
+        // select the sprite and center it in the view
+        PieceSprite sprite = getPieceSprite(_selection);
+        sprite.setSelected(true);
+        if (scrollCamera) {
+            ((GameInputHandler)_ctx.getInputHandler()).aimCamera(
+                sprite.getWorldTranslation());
+        }
+
+        // highlight our potential moves and attackable pieces
+        PointSet attacks = new PointSet();
+        _bangobj.board.computeMoves(piece, _moveSet, attacks);
+        _attackSet.clear();
+        pruneAttackSet(_moveSet, _moveSet, _attackSet);
+        pruneAttackSet(attacks, _moveSet, _attackSet);
+        highlightTiles(_moveSet, piece.isFlyer());
     }
 
     protected void executeAction ()

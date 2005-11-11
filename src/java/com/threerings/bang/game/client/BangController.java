@@ -159,7 +159,7 @@ public class BangController extends GameController
 
         if (unit != null) {
             _lastSelection = unit.pieceId;
-            _view.view.selectUnit(unit);
+            _view.view.selectUnit(unit, true);
         }
     }
 

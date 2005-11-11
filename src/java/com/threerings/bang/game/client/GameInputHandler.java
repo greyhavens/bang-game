@@ -17,6 +17,7 @@ import com.jmex.bui.event.MouseWheelListener;
 
 import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.camera.GodViewHandler;
+import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.camera.SwingPath;
 
 import com.threerings.bang.game.data.BangBoard;
@@ -97,6 +98,28 @@ public class GameInputHandler extends GodViewHandler
         rollCamera((_camidx + 1) % CAMERA_ANGLES.length, 2*FastMath.PI);
     }
 
+    /**
+     * Pans the camera to a point where the specified location is basically in
+     * the center of the view. The specified location's x and y coordinate will
+     * be used but the z coordinate will be assumed to be on the ground.
+     */
+    public void aimCamera (Vector3f location)
+    {
+        // compute the distance from the camera to the ground plane along the
+        // camera's direction vector
+        Vector3f gnorm = _camhand.getGroundNormal();
+        Vector3f camloc = _camhand.getCamera().getLocation();
+        Vector3f camdir = _camhand.getCamera().getDirection();
+        float camdist = -1f * gnorm.dot(camloc) / gnorm.dot(camdir);
+
+        // slide our target location backwards along the direction vector by
+        // the same distance and we'll have our desired camera location
+        Vector3f spot = new Vector3f(location.x, location.y, 0);
+        spot.scaleAdd(-camdist, camdir, spot);
+
+        _camhand.moveCamera(new PanPath(_camhand, spot, 0.25f));
+    }
+
     protected void rollCamera (int nextidx, float angvel)
     {
         float curang = CAMERA_ANGLES[_camidx], curzoom = CAMERA_ZOOMS[_camidx];
@@ -139,6 +162,7 @@ public class GameInputHandler extends GodViewHandler
     };
 
     protected int _camidx = 0;
+
     protected final static float[] CAMERA_ANGLES = {
         FastMath.PI/2, FastMath.PI/3, FastMath.PI/4 };
     protected final static float[] CAMERA_ZOOMS = {
