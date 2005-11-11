@@ -175,8 +175,11 @@ public class UnitSprite extends MobileSprite
     {
         super.updateWorldData(time);
         
-        Vector3f dir = _ctx.getCameraHandler().getCamera().getDirection();
-        float angle = FastMath.PI + FastMath.atan2(-dir.x, dir.y);
+        // of up and forward, use the one with the greater x/y
+        Vector3f dir = _ctx.getCameraHandler().getCamera().getDirection(),
+            up = _ctx.getCameraHandler().getCamera().getUp(),
+            vec = (dir.x*dir.x+dir.y*dir.y > up.x*up.x+up.y*up.y) ? dir : up;
+        float angle = FastMath.PI + FastMath.atan2(-vec.x, vec.y);
         Quaternion rot = new Quaternion();
         rot.fromAngleAxis(-angle, Vector3f.UNIT_Z);
         Vector3f trans = rot.mult(new Vector3f(0.5f, 0.5f, 0f));
