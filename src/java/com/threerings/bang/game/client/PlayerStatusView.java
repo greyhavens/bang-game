@@ -123,11 +123,14 @@ public class PlayerStatusView extends BContainer
             return;
         }
         String cid = "" + card.cardId;
-        for (int ii = 1; ii < getComponentCount(); ii++) {
-            BButton button = (BButton)getComponent(ii);
-            if (cid.equals(button.getAction())) {
-                remove(button);
-                return;
+        for (int ii = 0; ii < getComponentCount(); ii++) {
+            Object comp = getComponent(ii);
+            if (comp instanceof BButton) {
+                BButton button = (BButton)comp;
+                if (cid.equals(button.getAction())) {
+                    remove(button);
+                    return;
+                }
             }
         }
     }
