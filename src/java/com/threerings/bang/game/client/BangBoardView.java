@@ -177,7 +177,7 @@ public class BangBoardView extends BoardView
                  sel.getDistance(npiece) < sel.getMoveDistance())) {
                 int[] oaction = _action;
                 clearSelection();
-                selectPiece((Unit)sel);
+                selectUnit((Unit)sel);
                 // if we had already selected a movement, reconfigure that
                 // (it might no longer be valid but handleClickToMove will
                 // ignore us in that case
@@ -342,7 +342,7 @@ public class BangBoardView extends BoardView
         // sundry conditions
         if (piece != null &&  sprite != null && piece.owner == _pidx &&
             sprite.isSelectable()) {
-            selectPiece((Unit)piece);
+            selectUnit((Unit)piece);
             return;
         }
 
@@ -517,7 +517,7 @@ public class BangBoardView extends BoardView
         return (UnitSprite)getPieceSprite(piece);
     }
 
-    protected void selectPiece (Unit piece)
+    protected void selectUnit (Unit piece)
     {
         log.info("Selecting " + piece.info());
         boolean deselect = (piece == _selection);

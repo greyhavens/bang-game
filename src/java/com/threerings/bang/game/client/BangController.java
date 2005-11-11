@@ -3,6 +3,13 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.event.ActionEvent;
+
+import com.jme.input.KeyInput;
+import com.jmex.bui.event.KeyEvent;
+import com.jmex.bui.event.KeyListener;
+
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Multex;
 
 import com.threerings.crowd.client.PlaceView;
@@ -18,8 +25,10 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.data.card.Card;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -35,6 +44,16 @@ public class BangController extends GameController
 
     /** A command that requests to place a card. */
     public static final String PLACE_CARD = "PlaceCard";
+
+    /**
+     * Configures a controller command that will be fired when the specified
+     * key is pressed (assuming no key-listening component has focus like the
+     * chat box).
+     */
+    public void mapCommand (int keyCode, String command)
+    {
+        _keycmds.put(keyCode, command);
+    }
 
     @Override // documentation inherited
     public void init (CrowdContext ctx, PlaceConfig config)
@@ -55,6 +74,22 @@ public class BangController extends GameController
         // there's no stats dialogue when we first enter, so start with
         // that condition already satisfied
         _selphaseMultex.satisfied(Multex.CONDITION_TWO);
+
+        // wire up our command listener
+        _view.addListener(new KeyListener() {
+            public void keyPressed (KeyEvent event) {
+                String cmd = (String)_keycmds.get(event.getKeyCode());
+                if (cmd != null) {
+                    handleAction(new ActionEvent(this, 0, cmd));
+                }
+            }
+            public void keyReleased (KeyEvent event) {
+            }
+        });
+
+        mapCommand(KeyInput.KEY_SPACE, "StartChat");
+        mapCommand(KeyInput.KEY_ESCAPE, "ShowOptions");
+        mapCommand(KeyInput.KEY_TAB, "SelectNextUnit");
     }
 
     @Override // documentation inherited
@@ -80,11 +115,52 @@ public class BangController extends GameController
         _ctx.getLocationDirector().moveBack();
     }
 
-    /** Called when we desire to start chatting. Focuses the chat input
-     * field. */
-    public void startChat ()
+    /** Instructs the controller to activate the chat input. */
+    public void handleStartChat (Object source)
     {
         _view.chat.requestFocus();
+    }
+
+    /** Instructs the controller to display the in-game options view. */
+    public void handleShowOptions (Object source)
+    {
+        InGameOptionsView oview = new InGameOptionsView(_ctx);
+        _ctx.getRootNode().addWindow(oview);
+        oview.pack();
+        oview.center();
+    }
+
+    /**
+     * Instructs the controller to select the most sensible unit for this
+     * player.
+     */
+    public void handleSelectNextUnit (Object source)
+    {
+        Piece[] pieces = _bangobj.getPieceArray();
+
+        // start with the most recently selected unit
+        int startidx = 0;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii].pieceId == _lastSelection) {
+                startidx = ii+1;
+                break;
+            }
+        }
+
+        // now find the next unit owned by this player
+        Unit unit = null;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece piece = pieces[(ii+startidx)%pieces.length];
+            if (piece instanceof Unit && piece.owner == _pidx) {
+                unit = (Unit)piece;
+                break;
+            }
+        }
+
+        if (unit != null) {
+            _lastSelection = unit.pieceId;
+            _view.view.selectUnit(unit);
+        }
     }
 
     /** Handles a request to move a piece. */
@@ -261,6 +337,13 @@ public class BangController extends GameController
     /** Our player index or -1 if we're not a player. */
     protected int _pidx;
 
+    /** The unit id of the unit most recently selected via {@link
+     * #handleSelectNextUnit}. */
+    protected int _lastSelection = -1;
+
     /** Used to start the new round after two conditions have been met. */
     protected Multex _selphaseMultex;
+
+    /** Maps keys to controller commands. */
+    protected HashIntMap _keycmds = new HashIntMap();
 }

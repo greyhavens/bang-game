@@ -16,7 +16,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -45,22 +44,6 @@ public class BangView extends BWindow
         // create our various displays
         add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
         chat = new OverlayChatView(ctx);
-
-        addListener(new EscapeListener() {
-            public void keyPressed (KeyEvent event) {
-                if (event.getKeyCode() == KeyInput.KEY_SPACE) {
-                    _ctrl.startChat();
-                } else {
-                    super.keyPressed(event);
-                }
-            }
-            public void escapePressed () {
-                InGameOptionsView oview = new InGameOptionsView(_ctx);
-                _ctx.getRootNode().addWindow(oview);
-                oview.pack();
-                oview.center();
-            }
-        });
     }
 
     /** Called by the controller when the big shot and card selection
