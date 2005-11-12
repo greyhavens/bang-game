@@ -6,8 +6,10 @@ package com.threerings.bang.game.client.sprite;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Node;
 import com.jme.scene.shape.Box;
 
+import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -34,7 +36,7 @@ public class TrackSprite extends PieceSprite
         // refresh the geometry when the type changes
         if (ntrack.type != otrack.type) {
             detachAllChildren();
-            createGeometry(null);
+            createGeometry(_ctx);
         }
         
         // make sure it's lying on the terrain
@@ -51,50 +53,22 @@ public class TrackSprite extends PieceSprite
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
+        _ctx = ctx;
+        
         Track track = (Track)_piece;
-        if (track.type == Track.SINGLETON || track.type == Track.TERMINAL) {
-            attachCenter();
+        _model = ctx.getModelCache().getModel("extras/tracks",
+            MODEL_NAMES[track.type]);
+        Node[] meshes = _model.getAnimation("normal").getMeshes(0);
+        for (int ii = 0; ii < meshes.length; ii++) {
+            attachChild(meshes[ii]);
+            meshes[ii].updateRenderState();
         }
-        if (track.type == Track.TERMINAL || track.type == Track.STRAIGHT ||
-            track.type == Track.X_JUNCTION || track.type == Track.TURN) {
-            attachLeg(NORTH);
-        }
-        if (track.type == Track.STRAIGHT || track.type == Track.T_JUNCTION ||
-            track.type == Track.X_JUNCTION) {
-            attachLeg(SOUTH);
-        }
-        if (track.type == Track.T_JUNCTION || track.type == Track.X_JUNCTION ||
-            track.type == Track.TURN) {
-            attachLeg(EAST);
-        }
-        if (track.type == Track.T_JUNCTION || track.type == Track.X_JUNCTION) {
-            attachLeg(WEST);
-        }
-        updateRenderState();
     }
     
-    /**
-     * Attaches a big cube to indicate that this piece is a source.
-     */
-    protected void attachCenter ()
-    {
-        Box box = new Box("box",
-            new Vector3f(-TILE_SIZE/4, -TILE_SIZE/4, -TILE_SIZE/16),
-            new Vector3f(TILE_SIZE/4, TILE_SIZE/4, TILE_SIZE/2));
-        attachChild(box);
-    }
+    protected BasicContext _ctx;
+    protected Model _model;
     
-    /**
-     * Attaches a track leg in the specified direction.
-     */
-    protected void attachLeg(int dir)
-    {
-        Box box = new Box("box",
-            new Vector3f(-TILE_SIZE/8, -TILE_SIZE/2, -TILE_SIZE/16),
-            new Vector3f(TILE_SIZE/8, TILE_SIZE/8, TILE_SIZE/16));
-        Quaternion rot = new Quaternion();
-        rot.fromAngleAxis(ROTATIONS[dir], Vector3f.UNIT_Z);
-        box.setLocalRotation(rot);
-        attachChild(box);
-    }
+    /* The models for each type of track. */
+    protected static final String[] MODEL_NAMES = { "node", "node", "straight",
+        "tee", "cross", "curve" };
 }
