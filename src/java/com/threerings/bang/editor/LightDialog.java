@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
@@ -22,13 +23,14 @@ import com.jme.math.FastMath;
 
 import com.samskivert.swing.VGroupLayout;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangBoard;
 
 /**
  * Allows the user to edit the board's light configuration.
  */
 public class LightDialog extends JDialog
-    implements ChangeListener
 {
     public LightDialog (EditorContext ctx, EditorPanel panel)
     {
@@ -38,49 +40,10 @@ public class LightDialog extends JDialog
     
         JPanel center = new JPanel(new VGroupLayout());
         
-        JPanel apanel = new JPanel();
-        apanel.add(new JLabel(_ctx.xlate("editor", "m.light_azimuth")));
-        apanel.add(_azimuth = new JSlider(-180, +180, 0));
-        _azimuth.addChangeListener(this);
-        center.add(apanel);
-        
-        JPanel epanel = new JPanel();
-        epanel.add(new JLabel(_ctx.xlate("editor", "m.light_elevation")));
-        epanel.add(_elevation = new JSlider(0, 90, 45));
-        _elevation.addChangeListener(this);
-        center.add(epanel);
-        
-        JPanel dcpanel = new JPanel();
-        dcpanel.add(new JLabel(_ctx.xlate("editor", "m.light_diffuse_color")));
-        dcpanel.add(_diffuseColor = new JButton("    "));
-        _diffuseColor.addActionListener(new ActionListener() {
-            public void actionPerformed (ActionEvent e) {
-                Color chosen = JColorChooser.showDialog(LightDialog.this,
-                    _ctx.xlate("editor", "m.light_diffuse_color"),
-                    _diffuseColor.getBackground());
-                if (chosen != null) {
-                    _diffuseColor.setBackground(chosen);
-                    stateChanged(null);
-                }
-            }
-        });
-        center.add(dcpanel);
-        
-        JPanel acpanel = new JPanel();
-        acpanel.add(new JLabel(_ctx.xlate("editor", "m.light_ambient_color")));
-        acpanel.add(_ambientColor = new JButton("    "));
-        _ambientColor.addActionListener(new ActionListener() {
-            public void actionPerformed (ActionEvent e) {
-                Color chosen = JColorChooser.showDialog(LightDialog.this,
-                    _ctx.xlate("editor", "m.light_ambient_color"),
-                    _ambientColor.getBackground());
-                if (chosen != null) {
-                    _ambientColor.setBackground(chosen);
-                    stateChanged(null);
-                }
-            }
-        });
-        center.add(acpanel);
+        _lpanels = new LightPanel[BangBoard.NUM_LIGHTS];
+        for (int i = 0; i < _lpanels.length; i++) {
+            center.add(_lpanels[i] = new LightPanel(i));
+        }
         
         getContentPane().add(center, BorderLayout.CENTER);
         
@@ -94,7 +57,7 @@ public class LightDialog extends JDialog
         buttons.add(dismiss);
         getContentPane().add(buttons, BorderLayout.SOUTH);
         
-        setSize(350, 250);
+        setSize(350, 450);
         setResizable(false);
     }
     
@@ -103,19 +66,64 @@ public class LightDialog extends JDialog
      */
     public void fromBoard (BangBoard board)
     {
-        _azimuth.setValue((int)Math.toDegrees(board.getLightAzimuth()));
-        _elevation.setValue((int)Math.toDegrees(board.getLightElevation()));
-        _diffuseColor.setBackground(new Color(board.getLightDiffuseColor()));
-        _ambientColor.setBackground(new Color(board.getLightAmbientColor()));
+        for (int i = 0; i < _lpanels.length; i++) {
+            _lpanels[i].fromBoard(board);
+        }
     }
     
-    // documentation inherited from interface ChangeListener
-    public void stateChanged (ChangeEvent e)
+    /** Controls the parameters for a single light. */
+    protected class LightPanel extends JPanel
+        implements ChangeListener
     {
-        _panel.view.setLightParams(_azimuth.getValue() * FastMath.DEG_TO_RAD,
-            _elevation.getValue() * FastMath.DEG_TO_RAD,
-            _diffuseColor.getBackground().getRGB(),
-            _ambientColor.getBackground().getRGB());
+        public int idx;
+        public JSlider azimuth, elevation;
+        public ColorPanel diffuseColor, ambientColor;
+        
+        public LightPanel (int idx)
+        {
+            super(new VGroupLayout());
+            this.idx = idx;
+            
+            setBorder(BorderFactory.createTitledBorder(null,
+                _ctx.xlate("editor", MessageBundle.tcompose("m.light_name",
+                    new Integer(idx)))));
+            
+            JPanel apanel = new JPanel();
+            apanel.add(new JLabel(_ctx.xlate("editor", "m.light_azimuth")));
+            apanel.add(azimuth = new JSlider(-180, +180, 0));
+            azimuth.addChangeListener(this);
+            add(apanel);
+        
+            JPanel epanel = new JPanel();
+            epanel.add(new JLabel(_ctx.xlate("editor", "m.light_elevation")));
+            epanel.add(elevation = new JSlider(-90, 90, 45));
+            elevation.addChangeListener(this);
+            add(epanel);
+        
+            add(diffuseColor = new ColorPanel(_ctx, "m.diffuse_color"));
+            diffuseColor.addChangeListener(this);
+            
+            add(ambientColor = new ColorPanel(_ctx, "m.ambient_color"));
+            ambientColor.addChangeListener(this);
+        }
+        
+        public void fromBoard (BangBoard board)
+        {
+            diffuseColor.setRGB(board.getLightDiffuseColor(idx));
+            ambientColor.setRGB(board.getLightAmbientColor(idx));
+            azimuth.setValue(
+                (int)Math.toDegrees(board.getLightAzimuth(idx)));
+            elevation.setValue(
+                (int)Math.toDegrees(board.getLightElevation(idx)));   
+        }
+        
+        public void stateChanged (ChangeEvent e)
+        {
+            _panel.view.setLightParams(idx,
+                azimuth.getValue() * FastMath.DEG_TO_RAD,
+                elevation.getValue() * FastMath.DEG_TO_RAD,
+                diffuseColor.getRGB(), ambientColor.getRGB());
+        }
     }
     
     /** The application context. */
@@ -124,9 +132,6 @@ public class LightDialog extends JDialog
     /** The containing panel. */
     protected EditorPanel _panel;
     
-    /** The azimuth and elevation sliders. */
-    protected JSlider _azimuth, _elevation;
-    
-    /** The diffuse and ambient color buttons. */
-    protected JButton _diffuseColor, _ambientColor;
+    /** The panels for each light. */
+    protected LightPanel[] _lpanels;
 }

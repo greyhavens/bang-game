@@ -52,6 +52,9 @@ public class BangBoard extends SimpleStreamableObject
      * the edge of the playable region. */
     public static final int BORDER_SIZE = 8;
     
+    /** The number of directional lights on the board. */
+    public static final int NUM_LIGHTS = 2;
+    
     /** Creates a board with the specified dimensions. */
     public BangBoard (int width, int height)
     {
@@ -64,10 +67,14 @@ public class BangBoard extends SimpleStreamableObject
         _terrain = new byte[_hfwidth * _hfheight];
         
         _waterLevel = (byte)-128;
+        _waterDiffuseColor = 0x99CCFF;
+        _waterAmbientColor = 0x001A33;
         
-        _lightElevation = (float)(Math.PI / 4);
-        _lightDiffuseColor = 0xFFFFFF;
-        _lightAmbientColor = 0xBEBEBE;
+        _lightAzimuths = new float[] { 0f, (float)Math.PI };
+        _lightElevations = new float[] { (float)(Math.PI / 4),
+            (float)(-Math.PI / 4)};
+        _lightDiffuseColors = new int[] { 0xFFFFFF, 0x0 };
+        _lightAmbientColors = new int[] { 0xBEBEBE, 0x0 };
         
         _pterrain = new byte[width*height];
         _btstate = new byte[width*height];
@@ -197,62 +204,79 @@ public class BangBoard extends SimpleStreamableObject
         return _waterLevel;
     }
     
+    /** Returns the diffuse color of the water. */
+    public int getWaterDiffuseColor ()
+    {
+        return _waterDiffuseColor;
+    }
+    
+    /** Returns the ambient color of the water. */
+    public int getWaterAmbientColor ()
+    {
+        return _waterAmbientColor;
+    }
+    
     /** Sets the water level. */
-    public void setWaterLevel (byte level)
+    public void setWaterParams (byte level, int diffuseColor, int ambientColor)
     {
         _waterLevel = level;
+        _waterDiffuseColor = diffuseColor;
+        _waterAmbientColor = ambientColor;
     }
     
     /**
-     * Returns the azimuth in radians of the directional light (sun or moon),
-     * where zero has the light in the positive x direction and increasing
-     * values rotate the light counter-clockwise.
+     * Returns the azimuth in radians of the directional light at the specified
+     * index, where zero has the light in the positive x direction and
+     * increasing values rotate the light counter-clockwise.
      */
-    public float getLightAzimuth ()
+    public float getLightAzimuth (int idx)
     {
-        return _lightAzimuth;
+        return _lightAzimuths[idx];
     }
     
     /**
-     * Returns the elevation in radians of the directional light, where zero
-     * has the light on the horizon and pi/2 has the light exactly overhead.
+     * Returns the elevation in radians of the directional light at the
+     * specified index, where zero has the light on the horizon and pi/2 has
+     * the light exactly overhead.
      */
-    public float getLightElevation ()
+    public float getLightElevation (int idx)
     {
-        return _lightElevation;
+        return _lightElevations[idx];
     }
     
     /**
-     * Returns the diffuse RGB color of the directional light.
+     * Returns the diffuse RGB color of the directional light at the specified
+     * index.
      */
-    public int getLightDiffuseColor ()
+    public int getLightDiffuseColor (int idx)
     {
-        return _lightDiffuseColor;
+        return _lightDiffuseColors[idx];
     }
     
     /**
-     * Returns the ambient RGB color of the directional light.
+     * Returns the ambient RGB color of the directional light at the specified
+     * index.
      */
-    public int getLightAmbientColor ()
+    public int getLightAmbientColor (int idx)
     {
-        return _lightAmbientColor;
+        return _lightAmbientColors[idx];
     }
     
     /**
-     * Sets the parameters of the directional light.
+     * Sets the parameters of the directional light at the specified index.
      *
      * @param azimuth the azimuth about the board in radians
      * @param elevation the elevation above the horizon in radians
      * @param diffuseColor the RGB diffuse color
      * @param ambientColor the RGB ambient color
      */
-    public void setLightParams (float azimuth, float elevation,
+    public void setLightParams (int idx, float azimuth, float elevation,
         int diffuseColor, int ambientColor)
     {
-        _lightAzimuth = azimuth;
-        _lightElevation = elevation;
-        _lightDiffuseColor = diffuseColor;
-        _lightAmbientColor = ambientColor;
+        _lightAzimuths[idx] = azimuth;
+        _lightElevations[idx] = elevation;
+        _lightDiffuseColors[idx] = diffuseColor;
+        _lightAmbientColors[idx] = ambientColor;
     }
     
     /**
@@ -782,11 +806,14 @@ public class BangBoard extends SimpleStreamableObject
     /** The level of the water on the board (-128 for no water). */
     protected byte _waterLevel;
     
-    /** The azimuth and elevation of the directional light (sun or moon). */
-    protected float _lightAzimuth, _lightElevation;
+    /** The diffuse and ambient colors of the water. */
+    protected int _waterDiffuseColor, _waterAmbientColor;
     
-    /** The diffuse and ambient colors of the directional light. */
-    protected int _lightDiffuseColor, _lightAmbientColor; 
+    /** The azimuths and elevations of the directional lights. */
+    protected float[] _lightAzimuths, _lightElevations;
+    
+    /** The diffuse and ambient colors of the directional lights. */
+    protected int[] _lightDiffuseColors, _lightAmbientColors; 
     
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight;

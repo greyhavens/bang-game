@@ -61,6 +61,17 @@ public class BoardRecord
     /** The serialized board data. */
     public byte[] data;
     
+    /** The last iteration of the bang board. */
+    public static class OldBangBoard extends SimpleStreamableObject
+    {
+        public int width, height;
+        public byte[] heightfield;
+        public byte[] terrain;
+        public byte waterLevel;
+        public float lightAzimuth, lightElevation;
+        public int lightDiffuseColor, lightAmbientColor; 
+    }
+    
     /**
      * Serializes the supplied board and piece information and stuffs it
      * into the {@link #data} member.
@@ -195,7 +206,20 @@ public class BoardRecord
         try {
             ObjectInputStream oin = new ObjectInputStream(
                 new ByteArrayInputStream(data));
-            _board = (BangBoard)oin.readObject();
+            oin.addTranslation("com.threerings.bang.game.data.BangBoard",
+                "com.threerings.bang.server.persist.BoardRecord$OldBangBoard");
+            OldBangBoard obb = (OldBangBoard)oin.readObject();
+            _board = new BangBoard(obb.width, obb.height);
+            System.arraycopy(obb.heightfield, 0, _board.getHeightfield(), 0,
+                obb.heightfield.length);
+            System.arraycopy(obb.terrain, 0, _board.getTerrain(), 0,
+                obb.terrain.length);
+            _board.setWaterParams(obb.waterLevel, 0x99CCFF, 0x001A33);
+            _board.setLightParams(0, obb.lightAzimuth, obb.lightElevation,
+                obb.lightDiffuseColor, obb.lightAmbientColor);
+            _board.setLightParams(1, (float)Math.PI, (float)(-Math.PI / 4),
+                0x0, 0x0);
+            // _board = (BangBoard)oin.readObject();
             _pieces = new Piece[oin.readInt()];
             for (int ii = 0; ii < _pieces.length; ii++) {
                 _pieces[ii] = readPiece(oin);

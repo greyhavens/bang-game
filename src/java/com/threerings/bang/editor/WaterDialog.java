@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,16 +32,18 @@ public class WaterDialog extends JDialog
         _panel = panel;
     
         JPanel center = new JPanel(new VGroupLayout());
-        center.add(_enable = new JCheckBox(_ctx.xlate("editor",
-            "m.water_enable"), false));
-        _enable.addChangeListener(this);
         
         JPanel lpanel = new JPanel();
         lpanel.add(new JLabel(_ctx.xlate("editor", "m.water_level")));
         lpanel.add(_level = new JSlider(-128, +127, 0));
         _level.addChangeListener(this);
-        _level.setEnabled(false);
         center.add(lpanel);
+        
+        center.add(_diffuseColor = new ColorPanel(ctx, "m.diffuse_color"));
+        _diffuseColor.addChangeListener(this);
+        
+        center.add(_ambientColor = new ColorPanel(ctx, "m.ambient_color"));
+        _ambientColor.addChangeListener(this);
         
         getContentPane().add(center, BorderLayout.CENTER);
         
@@ -56,7 +57,7 @@ public class WaterDialog extends JDialog
         buttons.add(dismiss);
         getContentPane().add(buttons, BorderLayout.SOUTH);
         
-        setSize(300, 200);
+        setSize(350, 250);
         setResizable(false);
     }
     
@@ -65,19 +66,16 @@ public class WaterDialog extends JDialog
      */
     public void fromBoard (BangBoard board)
     {
-        int level = board.getWaterLevel();
-        boolean enable = (level != -128);
-        _enable.setSelected(enable);
-        _level.setEnabled(enable);
-        _level.setValue(enable ? level : 0);
+        _diffuseColor.setRGB(board.getWaterDiffuseColor());
+        _ambientColor.setRGB(board.getWaterAmbientColor());
+        _level.setValue(board.getWaterLevel());
     }
     
     // documentation inherited from interface ChangeListener
     public void stateChanged (ChangeEvent e)
     {
-        boolean enable = _enable.isSelected();
-        _panel.view.setWaterLevel(enable ? _level.getValue() : -128);
-        _level.setEnabled(enable);
+        _panel.view.setWaterParams(_level.getValue(), _diffuseColor.getRGB(),
+            _ambientColor.getRGB());
     }
     
     /** The application context. */
@@ -86,9 +84,9 @@ public class WaterDialog extends JDialog
     /** The containing panel. */
     protected EditorPanel _panel;
     
-    /** The enable/disable water checkbox. */
-    protected JCheckBox _enable;
-    
     /** The water level slider. */
     protected JSlider _level;
+    
+    /** The diffuse and ambient color panels. */
+    public ColorPanel _diffuseColor, _ambientColor;
 }

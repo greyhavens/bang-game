@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -53,12 +54,8 @@ public class WaterNode extends Node
         setRenderState(RenderUtil.backCull);
         setRenderState(RenderUtil.lequalZBuf);
         
-        MaterialState mstate = _ctx.getRenderer().createMaterialState();
-        mstate.setAmbient(new ColorRGBA(0f, 0.1f, 0.2f, 0.5f));
-        mstate.setDiffuse(new ColorRGBA(0.6f, 0.8f, 1f, 0.75f));
-        mstate.setSpecular(ColorRGBA.white);
-        mstate.setShininess(64f);
-        setRenderState(mstate);
+        _mstate = _ctx.getRenderer().createMaterialState();
+        setRenderState(_mstate);
         
         Texture texture = TextureManager.loadTexture(
             _ctx.loadImage("textures/environ/desertdaysp.png"),
@@ -82,10 +79,26 @@ public class WaterNode extends Node
         // clean up any existing geometry
         detachAllChildren();
         
+        // refresh the material
+        refreshMaterial();
+        
         // initialize the array of blocks
         _blocks = new SharedMesh[_board.getWidth()][_board.getHeight()];
         setWorldBound(new BoundingBox());
         refreshSurface();
+    }
+    
+    /**
+     * Updates the material according to the board parameters.
+     */
+    public void refreshMaterial ()
+    {
+        int dcolor = _board.getWaterDiffuseColor(),
+            acolor = _board.getWaterAmbientColor();
+        float[] drgb = new Color(dcolor, true).getRGBColorComponents(null),
+            argb = new Color(acolor, true).getRGBColorComponents(null);
+        _mstate.setDiffuse(new ColorRGBA(drgb[0], drgb[1], drgb[2], 0.75f));
+        _mstate.setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 0.5f));
     }
     
     /**
@@ -228,6 +241,9 @@ public class WaterNode extends Node
     
     /** The board with the terrain information. */
     protected BangBoard _board;
+    
+    /** The material state. */
+    protected MaterialState _mstate;
     
     /** The tile geometry shared between the blocks. */
     protected SurfaceTile _tile = new SurfaceTile();

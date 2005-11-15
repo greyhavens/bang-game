@@ -83,15 +83,14 @@ public class BoardView extends BComponent
         // create our top-level node
         _node = new Node("board_view");
 
-        // let there be light
-        _light = new DirectionalLight();
-        _light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-        _light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
-        _light.setDirection(new Vector3f(-0.707f, 0f, -0.707f));
-        _light.setEnabled(true);
-        LightState lights = _ctx.getRenderer().createLightState();
-        lights.attach(_light);
-        _node.setRenderState(lights);
+        // let there be lights
+        LightState lstate = _ctx.getRenderer().createLightState();
+        _lights = new DirectionalLight[BangBoard.NUM_LIGHTS];
+        for (int i = 0; i < _lights.length; i++) {
+            lstate.attach(_lights[i] = new DirectionalLight());
+            _lights[i].setEnabled(true);
+        }
+        _node.setRenderState(lstate);
         _node.updateRenderState();
         
         // create a sky box
@@ -171,8 +170,8 @@ public class BoardView extends BComponent
         _board.shadowPieces(_bangobj.pieces.iterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
 
-        // refresh the light
-        refreshLight();
+        // refresh the lights
+        refreshLights();
         
         // create the board geometry
         _tnode.createBoardTerrain(_board);
@@ -353,23 +352,39 @@ public class BoardView extends BComponent
     }
     
     /**
-     * Updates the directional light according to the board's light
+     * Updates the directional lights according to the board's light
      * parameters.
      */
-    protected void refreshLight ()
+    protected void refreshLights ()
     {
-        float cose = FastMath.cos(_board.getLightElevation());
-        _light.setDirection(new Vector3f(
-            -cose * FastMath.cos(_board.getLightAzimuth()),
-            -cose * FastMath.sin(_board.getLightAzimuth()),
-            -FastMath.sin(_board.getLightElevation())));
+        for (int i = 0; i < _lights.length; i++) {
+            refreshLight(i);
+        }
+    }
+    
+    /**
+     * Updates a directional light according to the board's light parameters.
+     */
+    protected void refreshLight (int idx)
+    {
+        int dcolor = _board.getLightDiffuseColor(idx),
+            acolor = _board.getLightAmbientColor(idx);
+        if (dcolor == 0 && acolor == 0) {
+            _lights[idx].setEnabled(false);
+            return;
+        }
+        _lights[idx].setEnabled(true);
         
-        Color diffuseColor = new Color(_board.getLightDiffuseColor()),
-            ambientColor = new Color(_board.getLightAmbientColor());
-        float[] drgb = diffuseColor.getRGBColorComponents(null),
-            argb = ambientColor.getRGBColorComponents(null);
-        _light.setDiffuse(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
-        _light.setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
+        float cose = FastMath.cos(_board.getLightElevation(idx));
+        _lights[idx].setDirection(new Vector3f(
+            -cose * FastMath.cos(_board.getLightAzimuth(idx)),
+            -cose * FastMath.sin(_board.getLightAzimuth(idx)),
+            -FastMath.sin(_board.getLightElevation(idx))));
+        
+        float[] drgb = new Color(dcolor).getRGBColorComponents(null),
+            argb = new Color(acolor).getRGBColorComponents(null);
+        _lights[idx].setDiffuse(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
+        _lights[idx].setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
     }
     
     /**
@@ -615,7 +630,7 @@ public class BoardView extends BComponent
     protected HashMap _fmasks = new HashMap();
 
     protected Node _node, _pnode, _hnode;
-    protected DirectionalLight _light;
+    protected DirectionalLight[] _lights;
     protected TerrainNode _tnode;
     protected WaterNode _wnode;
     protected Vector3f _worldMouse;

@@ -326,22 +326,24 @@ public class EditorBoardView extends BoardView
     }
     
     /**
-     * Sets the board's water level.
+     * Sets the board's water parameters.
      */
-    public void setWaterLevel (int level)
+    public void setWaterParams (int level, int diffuseColor, int ambientColor)
     {
-        _board.setWaterLevel((byte)level);
+        _board.setWaterParams((byte)level, diffuseColor, ambientColor);
+        _wnode.refreshMaterial();
         _wnode.refreshSurface();
     }
     
     /**
      * Sets the parameters of the board's light.
      */
-    public void setLightParams (float azimuth, float elevation,
+    public void setLightParams (int idx, float azimuth, float elevation,
         int diffuseColor, int ambientColor)
     {
-        _board.setLightParams(azimuth, elevation, diffuseColor, ambientColor);
-        refreshLight();
+        _board.setLightParams(idx, azimuth, elevation, diffuseColor,
+            ambientColor);
+        refreshLight(idx);
     }
     
     /**
@@ -375,7 +377,6 @@ public class EditorBoardView extends BoardView
             yoff = (_board.getHeightfieldHeight() - hfheight)/2;
         for (int y = 0; y < hfheight; y++) {
             for (int x = 0; x < hfwidth; x++) {
-            
                 nboard.setHeightfieldValue(x, y,
                     _board.getHeightfieldValue(x+xoff, y+yoff));
                 
@@ -383,10 +384,13 @@ public class EditorBoardView extends BoardView
                     _board.getTerrainValue(x+xoff, y+yoff));
             }
         }
-        nboard.setWaterLevel(_board.getWaterLevel());
-        nboard.setLightParams(_board.getLightAzimuth(),
-            _board.getLightElevation(), _board.getLightDiffuseColor(),
-            _board.getLightAmbientColor());
+        nboard.setWaterParams(_board.getWaterLevel(),
+            _board.getWaterDiffuseColor(), _board.getWaterAmbientColor());
+        for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
+            nboard.setLightParams(i, _board.getLightAzimuth(i),
+                _board.getLightElevation(i), _board.getLightDiffuseColor(i),
+                _board.getLightAmbientColor(i));    
+        }
         _bangobj.setBoard(nboard);
         
         // then move the pieces
