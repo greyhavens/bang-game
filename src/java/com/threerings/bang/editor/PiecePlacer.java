@@ -9,6 +9,10 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
+import com.jme.input.KeyInput;
+
+import com.jmex.bui.event.KeyEvent;
+import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 
 import com.threerings.crowd.util.CrowdContext;
@@ -23,7 +27,7 @@ import com.threerings.bang.game.data.piece.PieceCodes;
  * Allows the user to place and manipulate pieces on the board.
  */
 public class PiecePlacer extends EditorTool
-    implements PieceCodes
+    implements KeyListener, PieceCodes
 {
     /** The name of this tool. */
     public static final String NAME = "piece_placer";
@@ -117,6 +121,30 @@ public class PiecePlacer extends EditorTool
         ((EditorContext)_ctx).getFrame().setCursor(
             hover == null ? Cursor.getDefaultCursor() :
             Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+    
+    // documentation inherited from interface KeyListener
+    public void keyPressed (KeyEvent e)
+    {
+        int code = e.getKeyCode(), rot;
+        switch (code) {
+             case KeyInput.KEY_LEFT: rot = Piece.CCW; break;
+             case KeyInput.KEY_RIGHT: rot = Piece.CW; break;
+             default: return;
+        }
+        Piece piece = _panel.view.getHoverPiece();
+        if (piece == null) {
+            return;
+        }
+        if ((piece = (Piece)piece.clone()).rotate(rot)) {
+            getBangObject().updatePieces(piece);
+        }
+    }
+    
+    // documentation inherited from interface KeyListener
+    public void keyReleased (KeyEvent e)
+    {
+        // nada
     }
     
     /** Returns a reference to the game object. */
