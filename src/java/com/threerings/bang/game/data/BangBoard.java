@@ -110,10 +110,32 @@ public class BangBoard extends SimpleStreamableObject
     /** Returns the height at the specified sub-tile coordinates. */
     public byte getHeightfieldValue (int x, int y)
     {
-        // clamp the coordinates to repeat the edge
-        x = Math.min(Math.max(x, 0), _hfwidth - 1);
-        y = Math.min(Math.max(y, 0), _hfheight - 1);
-        return _heightfield[y*_hfwidth + x];
+        // return the minimum edge height for values beyond the edge
+        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
+            return _minEdgeHeight;
+            
+        } else {
+            return _heightfield[y*_hfwidth + x];
+        }
+    }
+    
+    /**
+     * Updates the board's minimum edge height, which is returned for values
+     * outside the board.
+     */
+    public void updateMinEdgeHeight ()
+    {
+        int toff = (_hfheight - 1)*_hfwidth, roff = _hfwidth - 1;
+        byte min = Byte.MAX_VALUE;
+        for (int x = 0; x < _hfwidth; x++) {
+            min = (byte)Math.min(min, _heightfield[x]);
+            min = (byte)Math.min(min, _heightfield[toff + x]);
+        }
+        for (int y = 0; y < _hfheight; y++) {
+            min = (byte)Math.min(min, _heightfield[y*_hfwidth]);
+            min = (byte)Math.min(min, _heightfield[y*_hfwidth + roff]);
+        }
+        _minEdgeHeight = min;
     }
     
     /**
@@ -618,6 +640,7 @@ public class BangBoard extends SimpleStreamableObject
         _pgrid = new byte[size];
         _bbounds = new Rectangle(0, 0, _width, _height);
         
+        updateMinEdgeHeight();
         updatePredominantTerrain();
     }
     
@@ -767,6 +790,10 @@ public class BangBoard extends SimpleStreamableObject
     
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight;
+    
+    /** The minimum height at the edge of the board, used for values beyond the
+     * edge. */
+    protected transient byte _minEdgeHeight;
     
     /** The predominant terrain codes for each tile. */
     protected transient byte[] _pterrain;

@@ -406,9 +406,20 @@ public class TerrainNode extends Node
      */
     public void refreshHeightfield (int x1, int y1, int x2, int y2)
     {
-        // enlarge the rectangle to include edges and adjacent vertex normals
-        Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
-        rect.grow(2, 2);
+        // if the region includes the edges, we have to update the whole
+        // shebang
+        Rectangle rect;
+        if (x1 <= 0 || y1 <= 0 || x2 >= _board.getHeightfieldWidth() - 1 ||
+            y2 >= _board.getHeightfieldHeight() - 1) {
+            rect = new Rectangle(-1, -1, _board.getHeightfieldWidth() + 1,
+                _board.getHeightfieldHeight() + 1);
+        
+        } else {
+            rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
+        }
+        
+        // grow the rectangle to make sure it includes the normals
+        rect.grow(1, 1);
         
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
@@ -679,6 +690,13 @@ public class TerrainNode extends Node
      */
     protected void getHeightfieldNormal (int x, int y, Vector3f result)
     {
+        // return straight up for vertices beyond the edge
+        if (x < 0 || y < 0 || x >= _board.getHeightfieldWidth() ||
+                y >= _board.getHeightfieldHeight()) {
+            result.set(Vector3f.UNIT_Z);
+            return;
+        }
+        
         result.set(getHeightfieldValue(x-1, y) - getHeightfieldValue(x+1, y),
             getHeightfieldValue(x, y-1) - getHeightfieldValue(x, y+1),
             2*SUB_TILE_SIZE);
