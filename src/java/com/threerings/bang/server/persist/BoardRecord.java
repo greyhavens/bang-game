@@ -206,6 +206,7 @@ public class BoardRecord
         try {
             ObjectInputStream oin = new ObjectInputStream(
                 new ByteArrayInputStream(data));
+            /*
             oin.addTranslation("com.threerings.bang.game.data.BangBoard",
                 "com.threerings.bang.server.persist.BoardRecord$OldBangBoard");
             OldBangBoard obb = (OldBangBoard)oin.readObject();
@@ -219,7 +220,8 @@ public class BoardRecord
                 obb.lightDiffuseColor, obb.lightAmbientColor);
             _board.setLightParams(1, (float)Math.PI, (float)(-Math.PI / 4),
                 0x0, 0x0);
-            // _board = (BangBoard)oin.readObject();
+            */
+            _board = (BangBoard)oin.readObject();
             _pieces = new Piece[oin.readInt()];
             for (int ii = 0; ii < _pieces.length; ii++) {
                 _pieces[ii] = readPiece(oin);
