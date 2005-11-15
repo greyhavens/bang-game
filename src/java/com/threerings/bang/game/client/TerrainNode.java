@@ -411,6 +411,7 @@ public class TerrainNode extends Node
         Rectangle rect;
         if (x1 <= 0 || y1 <= 0 || x2 >= _board.getHeightfieldWidth() - 1 ||
             y2 >= _board.getHeightfieldHeight() - 1) {
+            _board.updateMinEdgeHeight();
             rect = new Rectangle(-1, -1, _board.getHeightfieldWidth() + 1,
                 _board.getHeightfieldHeight() + 1);
         

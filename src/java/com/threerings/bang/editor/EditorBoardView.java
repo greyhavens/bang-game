@@ -437,7 +437,6 @@ public class EditorBoardView extends BoardView
      */
     protected void heightfieldChanged ()
     {
-        _board.updateMinEdgeHeight();
         _tnode.refreshHeightfield();
         _wnode.refreshSurface();
         updatePieces();
@@ -451,7 +450,6 @@ public class EditorBoardView extends BoardView
      */
     protected void heightfieldChanged (int x1, int y1, int x2, int y2)
     {
-        _board.updateMinEdgeHeight();
         _tnode.refreshHeightfield(x1, y1, x2, y2);
         
         int txmax = _board.getWidth() - 1, tymax = _board.getHeight() - 1,
