@@ -7,6 +7,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 
 import com.threerings.jme.sprite.LineSegmentPath;
+import com.threerings.jme.sprite.PathUtil;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
@@ -76,7 +77,7 @@ public class MoveUnitPath extends LineSegmentPath
                 _sprite.setLocalRotation(_rotate);
             }
         }
-
+        
         // adjust to the terrain at the current coordinates
         MobileSprite sprite = (MobileSprite)_sprite;
         sprite.snapToTerrain();
@@ -103,8 +104,11 @@ public class MoveUnitPath extends LineSegmentPath
     @Override // documentation inherited
     protected void updateRotation ()
     {
-        super.updateRotation();
-        
+        _points[_current+1].subtract(_points[_current], _temp);
+        _temp.z = 0f;
+        PathUtil.computeRotation(_up, _orient, _temp, _rotate);
+        _sprite.setLocalRotation(_rotate);
+                
         updateCorneringParams(FIRST_HALF);
         updateCorneringParams(SECOND_HALF);
     }

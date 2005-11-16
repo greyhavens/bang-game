@@ -136,7 +136,7 @@ public class PieceSprite extends Sprite
         if (!isMoving()) {
             Quaternion quat = new Quaternion();
             quat.fromAngleAxis(ROTATIONS[orientation], UP);
-            getLocalRotation().set(quat);
+            setLocalRotation(quat);
         }
     }
 
