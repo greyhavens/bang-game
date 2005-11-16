@@ -123,9 +123,9 @@ public class MobileSprite extends PieceSprite
         _moveSound.stop();
 
         // reorient properly
-        setOrientation(_piece.orientation);
+        reorient();
     }
-
+    
     @Override // documentation inherited
     public void setOrientation (int orientation)
     {
@@ -161,7 +161,7 @@ public class MobileSprite extends PieceSprite
 
         super.updateWorldData(time);
     }
-
+    
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
@@ -300,9 +300,7 @@ public class MobileSprite extends PieceSprite
             int ii = 0;
             for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
                 Point p = (Point)iter.next();
-                coords[ii] = new Vector3f();
-                toWorldCoords(p.x, p.y, computeElevation(board, p.x, p.y),
-                    coords[ii]);
+                setCoord(board, coords, ii, p.x, p.y);
                 if (ii > 0) {
                     durations[ii-1] = 1f / Config.display.getMovementSpeed();
                 }
@@ -320,6 +318,24 @@ public class MobileSprite extends PieceSprite
         }
     }
 
+    /**
+     * Sets the coordinate in the given array at the specified index.
+     */
+    protected void setCoord (BangBoard board, Vector3f[] coords, int idx,
+        int nx, int ny)
+    {
+        coords[idx] = new Vector3f();
+        toWorldCoords(nx, ny, computeElevation(board, nx, ny), coords[idx]);
+    }
+    
+    /**
+     * Sets the orientation to the one stored in the piece.
+     */
+    protected void reorient ()
+    {
+        setOrientation(_piece.orientation);
+    }
+    
     protected static void loadTextures (BasicContext ctx)
     {
         _shadtex = RenderUtil.createTexture(

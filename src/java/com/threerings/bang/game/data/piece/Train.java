@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 import com.threerings.util.RandomUtil;
 
-import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.sprite.TrainSprite;
 import com.threerings.bang.game.data.BangBoard;
 
 /**
@@ -16,11 +16,32 @@ import com.threerings.bang.game.data.BangBoard;
  */
 public class Train extends Piece
 {
-    /** The id of the piece to which this is attached, or 0 for the engine. */
-    public int attachId;
+    /** The engine that leads the train. */
+    public static final byte ENGINE = 0;
+    
+    /** The caboose that tails the train. */
+    public static final byte CABOOSE = 1;
+    
+    /** A car carrying passengers. */
+    public static final byte PASSENGER_CAR = 2;
+    
+    /** A car carrying coal. */
+    public static final byte COAL_CAR = 3;
+    
+    /** The types of cars to insert between the engine and the caboose. */
+    public static final byte[] CAR_TYPES = { PASSENGER_CAR, COAL_CAR };
+    
+    /** A special value indicating that a short value is unset. */
+    public static final short UNSET = Short.MIN_VALUE;
+    
+    /** The type of train piece: engine, caboose, etc. */
+    public byte type;
     
     /** The last occupied position of the piece. */
-    public transient int lastX, lastY;
+    public short lastX = UNSET, lastY = UNSET;
+    
+    /** The next position that the piece will occupy. */
+    public short nextX, nextY;
     
     /**
      * Determines whether the specified piece is behind this one.
@@ -46,14 +67,22 @@ public class Train extends Piece
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new MobileSprite("extras", attachId == 0 ? "bison" : "cow");
+        return new TrainSprite(type);
     }
     
-    @Override // documentation inherited
-    protected void updatePosition (int nx, int ny)
+    /**
+     * Updates the next position to be occupied by this train, recording the
+     * current position as the last position, moving the train into the
+     * previously stored next position, and storing the new next position.
+     */
+    public void positionNext (int nx, int ny)
     {
         lastX = x;
         lastY = y;
-        super.updatePosition(nx, ny);
+        
+        position(nextX, nextY);
+        
+        nextX = (short)nx;
+        nextY = (short)ny;
     }
 }

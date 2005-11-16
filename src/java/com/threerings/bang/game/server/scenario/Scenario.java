@@ -187,19 +187,54 @@ public abstract class Scenario
         if (updateTrain(bangobj, trains.get(0))) {
             for (int i = 1, size = trains.size(); i < size; i++) {
                 Train previous = trains.get(i-1);
-                moveTrain(bangobj, trains.get(i), previous.lastX,
-                    previous.lastY);
+                moveTrain(bangobj, trains.get(i), previous.x, previous.y);
             }
         }
         
-        // see if there is a terminal that can pump out another train; if so,
+        // see if there is a terminal that can pump out another car; if so,
         // consider pumping another one out
         Train last = trains.get(trains.size() - 1);
         Track terminal = getTerminalBehind(last, terminals);
-        if (terminal != null && !isOccupied(terminal, trains) &&
-            Math.random() > 1f/AVG_TRAIN_CARS) {
-            createTrain(bangobj, last, terminal);
+        if (terminal != null && last.type != Train.CABOOSE) {
+            createTrain(bangobj, last, terminal,
+                Math.random() < 1f/AVG_TRAIN_CARS);
         }
+    }
+    
+    /**
+     * Adds a new train engine to the board.
+     */
+    protected void createTrain (BangObject bangobj, ArrayList<Track> terminals)
+    {
+        // pick a random terminal
+        Track terminal = (Track)RandomUtil.pickRandom(terminals);
+        
+        // create the engine there
+        Train train = new Train();
+        train.x = terminal.x;
+        train.y = terminal.y;
+        train.orientation = terminal.orientation;
+        train.type = Train.ENGINE;
+        train.nextX = (short)(train.x + DX[train.orientation]);
+        train.nextY = (short)(train.y + DY[train.orientation]);
+        bangobj.addToPieces(train);
+    }
+    
+    /**
+     * Adds a new train car or caboose to the board.
+     */
+    protected void createTrain (BangObject bangobj, Train last,
+        Track terminal, boolean caboose)
+    {
+        Train train = new Train();
+        train.x = terminal.x;
+        train.y = terminal.y;
+        train.orientation = terminal.orientation;
+        train.type = caboose ? Train.CABOOSE :
+            Train.CAR_TYPES[RandomUtil.getInt(Train.CAR_TYPES.length)];
+        train.nextX = last.x;
+        train.nextY = last.y;
+        bangobj.addToPieces(train);
     }
     
     /**
@@ -210,40 +245,48 @@ public abstract class Scenario
      */
     protected boolean updateTrain (BangObject bangobj, Train train)
     {
+        // see if we've been flagged to disappear on this tick
+        if (train.nextX == Train.UNSET) {
+            bangobj.removeFromPieces(train.getKey());
+            bangobj.board.updateShadow(train, null);
+            train.positionNext(Train.UNSET, Train.UNSET); // suck the rest in
+            return true;
+        }
+        
+        // see if the next position is blocked
+        Piece blocker = getBlockingPiece(bangobj, train, train.nextX,
+            train.nextY);
+        if (blocker instanceof Unit) {
+            if (!pushUnit(bangobj, train, (Unit)blocker)) {
+                return false;
+            }
+            
+        } else if (blocker != null) {
+            return false;
+        }
+        
         // find the adjacent track pieces excluding the one behind
         ArrayList<Track> tracks = new ArrayList<Track>();
         for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
             Piece piece = (Piece)it.next();
-            if (piece instanceof Track && train.getDistance(piece) == 1 &&
-                !train.isBehind(piece)) {
+            if (piece instanceof Track &&
+                piece.getDistance(train.nextX, train.nextY) == 1 &&
+                (piece.x != train.x || piece.y != train.y)) {
                 tracks.add((Track)piece);
             }
         }
         
-        // if there's nowhere to go, disappear; otherwise, move to a random
-        // piece of track (pushing anything in front out of the way or
-        // stopping for things that can't be pushed)
+        // if there's nowhere to go, flag to disappear on next tick; otherwise,
+        // move to a random piece of track
         if (tracks.size() == 0) {
-            train.lastX = train.x;
-            train.lastY = train.y; // in order to pull remaining cars in
-            bangobj.removeFromPieces(train.getKey());
-            bangobj.board.updateShadow(train, null);
-            return true;
+            moveTrain(bangobj, train, Train.UNSET, Train.UNSET);
             
         } else {
             Track track = (Track)RandomUtil.pickRandom(tracks);
-            Piece blocker = getBlockingPiece(bangobj, train, track.x, track.y);
-            if (blocker instanceof Unit) {
-                if (!pushUnit(bangobj, train, (Unit)blocker)) {
-                    return false;
-                }
-                
-            } else if (blocker != null) {
-                return false;
-            }
             moveTrain(bangobj, train, track.x, track.y);
-            return true;
         }
+        
+        return true;
     }
     
     /**
@@ -292,6 +335,11 @@ public abstract class Scenario
         return pt != null;
     }
     
+    /**
+     * Returns the location to which the specified unit will be pushed by
+     * the given train, or <code>null</code> if the unit can't be pushed
+     * anywhere.
+     */
     protected Point getPushLocation (BangObject bangobj, Train train,
         Unit unit)
     {
@@ -337,43 +385,16 @@ public abstract class Scenario
     
     /**
      * Moves the train, performing any necessary updates.
+     *
+     * @param nx the next x coordinate to be occupied by the train
+     * @param ny the next y coordinate to be occupied by the train
      */
     protected void moveTrain (BangObject bangobj, Train train, int nx, int ny)
     {
         bangobj.board.updateShadow(train, null);
-        train.position(nx, ny);
+        train.positionNext(nx, ny);
         bangobj.board.updateShadow(null, train);
         bangobj.updatePieces(train);
-    }
-    
-    /**
-     * Adds a new train engine to the board.
-     */
-    protected void createTrain (BangObject bangobj, ArrayList<Track> terminals)
-    {
-        // pick a random terminal
-        Track terminal = (Track)RandomUtil.pickRandom(terminals);
-        
-        // create the engine there
-        Train train = new Train();
-        train.x = terminal.x;
-        train.y = terminal.y;
-        train.orientation = terminal.orientation;
-        bangobj.addToPieces(train);
-    }
-    
-    /**
-     * Adds a new train car to the board.
-     */
-    protected void createTrain (BangObject bangobj, Train last,
-        Track terminal)
-    {
-        Train train = new Train();
-        train.x = terminal.x;
-        train.y = terminal.y;
-        train.orientation = terminal.orientation;
-        train.attachId = last.pieceId;
-        bangobj.addToPieces(train);
     }
     
     /**
@@ -419,19 +440,6 @@ public abstract class Scenario
             }
         }
         return null;
-    }
-    
-    /**
-     * Determines whether there is a train in the specified terminal.
-     */
-    protected boolean isOccupied (Track terminal, ArrayList<Train> trains)
-    {
-        for (int i = 0, size = trains.size(); i < size; i++) {
-            if (trains.get(i).intersects(terminal)) {
-                return true;
-            }
-        }
-        return false;
     }
     
     /**
@@ -563,7 +571,7 @@ public abstract class Scenario
     protected static final int AVG_TRAIN_TICKS = 3;
     
     /** The average number of cars on a train. */
-    protected static final int AVG_TRAIN_CARS = 4;
+    protected static final int AVG_TRAIN_CARS = 2;
     
     /** The amount of damage taken by units hit by the train. */
     protected static final int TRAIN_DAMAGE = 20;
