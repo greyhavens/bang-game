@@ -1306,7 +1306,6 @@ public class BangManager extends GameManager
                 
             } else {
                 _nextTickTime += extraTime;
-                _ticker.cancel();
                 _ticker.schedule(_nextTickTime - now);
             }
         }
