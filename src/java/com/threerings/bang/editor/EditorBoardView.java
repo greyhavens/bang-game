@@ -333,6 +333,7 @@ public class EditorBoardView extends BoardView
         _board.setWaterParams((byte)level, diffuseColor, ambientColor);
         _wnode.refreshMaterial();
         _wnode.refreshSurface();
+        updateHighlights();
     }
     
     /**
@@ -524,7 +525,9 @@ public class EditorBoardView extends BoardView
         }
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
-                if (_showHighlights && _board.exceedsMaxHeightDelta(x, y)) {
+                if (_showHighlights && (_board.isUnderWater(x, y,
+                        BangBoard.MAX_OCCUPIABLE_WATER_LEVEL) ||
+                            _board.exceedsMaxHeightDelta(x, y))) {
                     if (_highlights[x][y] == null) {
                         _highlights[x][y] = _tnode.createHighlight(x, y,
                             false);

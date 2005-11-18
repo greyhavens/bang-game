@@ -48,6 +48,10 @@ public class BangBoard extends SimpleStreamableObject
      * tile becomes unoccupiable. */
     public static final int MAX_OCCUPIABLE_HEIGHT_DELTA = 16;
     
+    /** The maximum water level (above ground in elevation units) that ground
+     * units can occupy. */
+    public static final byte MAX_OCCUPIABLE_WATER_LEVEL = 1;
+    
     /** The size in tiles of the border between the edge of the heightfield and
      * the edge of the playable region. */
     public static final int BORDER_SIZE = 8;
@@ -392,8 +396,16 @@ public class BangBoard extends SimpleStreamableObject
         // start out with _tstate configured according to the board
         for (int yy = 0; yy < _height; yy++) {
             for (int xx = 0; xx < _width; xx++) {
-                byte tvalue = (isUnderWater(xx, yy) ||
-                    exceedsMaxHeightDelta(xx, yy)) ? (byte)2 : (byte)0;
+                byte tvalue;
+                if (isUnderWater(xx, yy, MAX_OCCUPIABLE_WATER_LEVEL)) {
+                    tvalue = (byte)3;
+                    
+                } else if (exceedsMaxHeightDelta(xx, yy)) {
+                    tvalue = (byte)2;
+                    
+                } else {
+                    tvalue = (byte)0;
+                }
                 int pos = _width*yy+xx;
                 _tstate[pos] = tvalue;
                 _btstate[pos] = tvalue;
@@ -404,7 +416,7 @@ public class BangBoard extends SimpleStreamableObject
             updateShadow(null, (Piece)iter.next());
         }
     }
-
+    
     /**
      * Updates the shadow for the specified piece.
      */
@@ -425,9 +437,9 @@ public class BangBoard extends SimpleStreamableObject
                     for (int xx = pbounds.x, lx = xx + pbounds.width;
                          xx < lx; xx++) {
                         if (_bbounds.contains(xx, yy)) {
-                            _tstate[_width*yy+xx] = 2;
-                            _btstate[_width*yy+xx] = 2;
-                            _estate[_width*yy+xx] = 2;
+                            _tstate[_width*yy+xx] = 3;
+                            _btstate[_width*yy+xx] = 3;
+                            _estate[_width*yy+xx] = 3;
                         }
                     }
                 }
@@ -435,7 +447,7 @@ public class BangBoard extends SimpleStreamableObject
             } else if (piece instanceof Track) {
                 int idx = _width*piece.y+piece.x;
                 if (((Track)piece).preventsGroundOverlap()) {
-                    _tstate[idx] = _btstate[idx] = _estate[idx] = 2;
+                    _tstate[idx] = _btstate[idx] = _estate[idx] = 3;
                     
                 } else {
                     _tstate[idx] = _btstate[idx] = 1;
@@ -445,10 +457,10 @@ public class BangBoard extends SimpleStreamableObject
                 _tstate[_width*piece.y+piece.x] = 1;
 
             } else if (piece instanceof Train) {
-                _tstate[_width*piece.y+piece.x] = 2;
+                _tstate[_width*piece.y+piece.x] = 3;
                 
             } else {
-                _tstate[_width*piece.y+piece.x] = 3;
+                _tstate[_width*piece.y+piece.x] = 4;
             }
         }
     }
@@ -510,10 +522,19 @@ public class BangBoard extends SimpleStreamableObject
     }
     
     /**
-     * Checks whether any portion of the specified tile is beneath the
-     * water level.
+     * Checks whether any portion of the specified tile is beneath any
+     * amount of water.
      */
     public boolean isUnderWater (int tx, int ty)
+    {
+        return isUnderWater(tx, ty, (byte)0);
+    }
+    
+    /**
+     * Checks whether any portion of the specified tile is beneath the
+     * specified level of water.
+     */
+    public boolean isUnderWater (int tx, int ty, byte level)
     {
         int x1 = tx * HEIGHTFIELD_SUBDIVISIONS,
             y1 = ty * HEIGHTFIELD_SUBDIVISIONS,
@@ -521,7 +542,7 @@ public class BangBoard extends SimpleStreamableObject
             y2 = (ty+1) * HEIGHTFIELD_SUBDIVISIONS;
         for (int y = y1; y <= y2; y++) {
             for (int x = x1; x <= x2; x++) {
-                if (getHeightfieldValue(x, y) < _waterLevel) {
+                if (getHeightfieldValue(x, y) < _waterLevel - level) {
                     return true;
                 }
             }
@@ -534,10 +555,21 @@ public class BangBoard extends SimpleStreamableObject
      */
     public boolean isGroundOccupiable (int x, int y)
     {
+        return isGroundOccupiable(x, y, false);
+    }
+    
+    /**
+     * Returns true if the specified location is ground traversable.
+     *
+     * @param rough whether or not to allow the occupation of rough
+     * terrain
+     */
+    public boolean isGroundOccupiable (int x, int y, boolean rough)
+    {
         if (!_bbounds.contains(x, y)) {
             return false;
         }
-        return (_btstate[y*_width+x] < 2);
+        return (_btstate[y*_width+x] < (rough ? 3 : 2));
     }
 
     /**
@@ -551,7 +583,7 @@ public class BangBoard extends SimpleStreamableObject
         }
         int max = 1;
         if (piece.isFlyer() || piece instanceof Train) {
-            max = 2;
+            max = 3;
         }
         return (_tstate[y*_width+x] <= max);
     }
