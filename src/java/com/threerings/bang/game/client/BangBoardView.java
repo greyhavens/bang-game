@@ -847,6 +847,9 @@ public class BangBoardView extends BoardView
         public void pieceRemoved (Piece piece) {
             removePieceSprite(piece.pieceId, "deathByEffect");
         }
+        
+        public void tickDelayed (long extraTime) {
+        }
     };
 
     /** Listens for ticks and effects and does the right thing. */

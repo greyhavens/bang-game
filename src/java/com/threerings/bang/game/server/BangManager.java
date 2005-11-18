@@ -1261,14 +1261,17 @@ public class BangManager extends GameManager
                 return;
             }
 
-            // update the game's tick counter
+            // reset the extra tick time and update the game's tick counter 
             int nextTick = (_bangobj.tick + 1) % Short.MAX_VALUE;
+            _extraTickTime = 0L;
             _bangobj.setTick((short)nextTick);
 
             // queue ourselves up to expire in a time proportional to the
             // average number of pieces per player
             int avgPer = _bangobj.getAverageUnitCount();
-            _ticker.schedule(getBaseTick() * avgPer);
+            long now = System.currentTimeMillis();
+            _nextTickTime = now + getBaseTick() * avgPer + _extraTickTime;
+            _ticker.schedule(_nextTickTime - now);
         }
     };
 
@@ -1292,6 +1295,20 @@ public class BangManager extends GameManager
         }
         
         public void pieceRemoved (Piece piece) {
+        }
+        
+        public void tickDelayed (long extraTime) {
+            // if we are currently processing a tick, add to the extra tick
+            // time; otherwise, postpone the next tick
+            long now = System.currentTimeMillis();
+            if (now >= _nextTickTime) {
+                _extraTickTime = Math.max(_extraTickTime, extraTime);
+                
+            } else {
+                _nextTickTime += extraTime;
+                _ticker.cancel();
+                _ticker.schedule(_nextTickTime - now);
+            }
         }
     };
 
@@ -1335,6 +1352,13 @@ public class BangManager extends GameManager
     /** Maps card id to a {@link StartingCard} record. */
     protected HashIntMap _scards = new HashIntMap();
 
+    /** The time for which the next tick is scheduled. */
+    protected long _nextTickTime;
+    
+    /** The extra time to take for the current tick to allow extended effects
+     * to complete. */
+    protected long _extraTickTime;
+    
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;
 

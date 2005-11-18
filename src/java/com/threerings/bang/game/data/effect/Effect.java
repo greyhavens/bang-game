@@ -40,6 +40,12 @@ public abstract class Effect extends SimpleStreamableObject
          * Indicates that the specified piece was removed from the board.
          */
         public void pieceRemoved (Piece piece);
+        
+        /**
+         * Indicates that the tick was delayed for the specified amount of time
+         * in order to let an effect run its course.
+         */
+        public void tickDelayed (long extraTime);
     }
 
     /** Initializes this effect (called only on the server) with the piece
@@ -122,6 +128,14 @@ public abstract class Effect extends SimpleStreamableObject
     {
         if (obs != null) {
             obs.pieceRemoved(piece);
+        }
+    }
+    
+    /** A helper function for reporting a tick delay. */
+    protected static void reportDelay (Observer obs, long extraTime)
+    {
+        if (obs != null) {
+            obs.tickDelayed(extraTime);
         }
     }
 }

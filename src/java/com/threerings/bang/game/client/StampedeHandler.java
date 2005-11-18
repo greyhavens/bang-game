@@ -74,7 +74,8 @@ public class StampedeHandler extends EffectHandler
             MobileSprite sprite = new MobileSprite("extras", "bison");
             sprite.init(_ctx, _view, _sounds, new DummyPiece(), _bangobj.tick);
             _view.addSprite(sprite);
-            sprite.move(_bangobj.board, _stampede.paths[i]);
+            sprite.move(_bangobj.board, _stampede.paths[i],
+                StampedeEffect.BUFFALO_SPEED);
             sprite.addObserver(_remover);
         }
     }

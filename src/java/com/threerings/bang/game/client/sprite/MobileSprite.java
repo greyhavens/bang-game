@@ -116,11 +116,13 @@ public class MobileSprite extends PieceSprite
     
     /**
      * Sets this sprite on a path defined by a list of {@link Point} objects.
+     *
+     * @param speed the speed at which to move, in tiles per second
      */
-    public void move (BangBoard board, List path)
+    public void move (BangBoard board, List path, float speed)
     {
         _moveSound.loop(false);
-        move(createPath(board, path));
+        move(createPath(board, path, speed));
     }
     
     @Override // documentation inherited
@@ -302,7 +304,7 @@ public class MobileSprite extends PieceSprite
                             ", path=" + StringUtil.toString(path) + "].");
                 return null;
             }
-            return createPath(board, path);
+            return createPath(board, path, Config.display.getMovementSpeed());
 
         } else {
             Vector3f start = toWorldCoords(opiece.x, opiece.y,
@@ -317,8 +319,10 @@ public class MobileSprite extends PieceSprite
 
     /**
      * Creates a path from a list of {@link Point} objects.
+     *
+     * @param speed the speed at which to move, in tiles per second
      */
-    protected Path createPath (BangBoard board, List path)
+    protected Path createPath (BangBoard board, List path, float speed)
     {
         // create a world coordinate path from the tile
         // coordinates
@@ -329,7 +333,7 @@ public class MobileSprite extends PieceSprite
             Point p = (Point)iter.next();
             setCoord(board, coords, ii, p.x, p.y);
             if (ii > 0) {
-                durations[ii-1] = 1f / Config.display.getMovementSpeed();
+                durations[ii-1] = 1f / speed;
             }
         }
         return new MoveUnitPath(this, coords, durations);

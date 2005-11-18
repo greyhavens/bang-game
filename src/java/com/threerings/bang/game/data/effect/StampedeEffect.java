@@ -26,6 +26,9 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 public class StampedeEffect extends Effect
     implements PieceCodes
 {
+    /** The speed of the buffalo in tiles per second. */
+    public static final float BUFFALO_SPEED = 8f;
+    
     /** The id of the player causing the damage or -1. */
     public transient int causer;
     
@@ -118,7 +121,13 @@ public class StampedeEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer observer)
     {
-        
+        // delay the tick by the amount of time it takes for the buffalo to run
+        // their course
+        int maxlen = 0;
+        for (int i = 0; i < paths.length; i++) {
+            maxlen = Math.max(maxlen, paths[i].size());
+        }
+        reportDelay(observer, (long)((maxlen-1) * 1000 / BUFFALO_SPEED));
     }
     
     @Override // documentation inherited
