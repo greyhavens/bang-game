@@ -12,6 +12,7 @@ import com.threerings.openal.SoundGroup;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -24,27 +25,26 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Waits for all sprites involved in a shot to stop moving and then
  * animates the fired shot.
  */
-public abstract class ShotHandler
+public abstract class ShotHandler extends EffectHandler
     implements PathObserver
 {
+    @Override // documentation inherited
     public void init (BangContext ctx, BangObject bangobj, BangBoardView view,
-                      SoundGroup sounds, ShotEffect shot)
+                      SoundGroup sounds, Effect effect)
     {
-        _ctx = ctx;
-        _bangobj = bangobj;
-        _view = view;
-        _shot = shot;
+        super.init(ctx, bangobj, view, sounds, effect);
+        _shot = (ShotEffect)effect;
 
-        _shooter = (Piece)_bangobj.pieces.get(shot.shooterId);
+        _shooter = (Piece)_bangobj.pieces.get(_shot.shooterId);
         if (_shooter == null) {
-            log.warning("Missing shooter? [shot=" + shot + "].");
+            log.warning("Missing shooter? [shot=" + _shot + "].");
             // abandon ship, we're screwed
             return;
         }
-        if (shot.targetId != -1) {
-            _target = (Piece)_bangobj.pieces.get(shot.targetId);
+        if (_shot.targetId != -1) {
+            _target = (Piece)_bangobj.pieces.get(_shot.targetId);
             if (_target == null) {
-                log.warning("Missing target? [shot=" + shot + "].");
+                log.warning("Missing target? [shot=" + _shot + "].");
             }
         }
 
@@ -171,9 +171,6 @@ public abstract class ShotHandler
 
     protected abstract void fireShot (int sx, int sy, int tx, int ty);
 
-    protected BangContext _ctx;
-    protected BangBoardView _view;
-    protected BangObject _bangobj;
     protected ShotEffect _shot;
     protected Sound _bangSound;
 

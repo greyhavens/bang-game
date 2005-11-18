@@ -24,15 +24,20 @@ public class TrainEffect extends Effect
     /** The new total damage to assign to the target. */
     public int newDamage;
 
+    /** The x and y coordinates to which the target was pushed. */
+    public short x, y;
+    
     /**
      * Constructor used when creating a new train effect.
      *
      * @param damage the amount by which to increase the target's damage.
      * This will be capped and converted to an absolute value.
+     * @param x the x coordinate to which the piece was pushed
+     * @param y the y coordinate to which the piece was pushed
      */
-    public TrainEffect (Piece target, int damage)
+    public TrainEffect (Piece target, int damage, int x, int y)
     {
-        setTarget(target, damage);
+        setTarget(target, damage, x, y);
     }
 
     /** Constructor used when unserializing. */
@@ -46,11 +51,15 @@ public class TrainEffect extends Effect
      *
      * @param damage the amount by which to increase the target's damage.
      * This will be capped and converted to an absolute value.
+     * @param x the x coordinate to which the piece was pushed
+     * @param y the y coordinate to which the piece was pushed
      */
-    public void setTarget (Piece target, int damage)
+    public void setTarget (Piece target, int damage, int x, int y)
     {
         targetId = target.pieceId;
         newDamage = Math.min(100, target.damage + damage);
+        this.x = (short)x;
+        this.y = (short)y;   
     }
 
     @Override // documentation inherited
@@ -72,6 +81,19 @@ public class TrainEffect extends Effect
             log.warning("Missing train target " + this + ".");
             return;
         }
-        ShotEffect.damage(bangobj, obs, -1, target, newDamage, DAMAGED);
+        
+        // move the target to its new coordinates
+        if (target.x != x || target.y != y) {
+            Piece otarget = target, ntarget = (Piece)target.clone();
+            ntarget.position(x, y);
+            reportUpdate(obs, otarget, ntarget);
+            bangobj.updatePieceDirect(ntarget);
+            target = ntarget;
+        }
+        
+        // damage the target if it's still alive
+        if (target.isAlive()) {
+            ShotEffect.damage(bangobj, obs, -1, target, newDamage, DAMAGED);
+        }
     }
 }

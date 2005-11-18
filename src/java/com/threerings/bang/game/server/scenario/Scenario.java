@@ -322,17 +322,16 @@ public abstract class Scenario
     protected boolean pushUnit (BangObject bangobj, Train train, Unit unit)
     {
         Point pt = getPushLocation(bangobj, train, unit);
-        if (pt != null) {
-            bangobj.board.updateShadow(unit, null);
-            unit.position(pt.x, pt.y);
-            bangobj.board.updateShadow(null, unit);
-            bangobj.updatePieces(unit);
+        if (pt == null) {
+            _bangman.deployEffect(-1, new TrainEffect(unit, TRAIN_DAMAGE,
+                unit.x, unit.y));
+            return false;
+            
+        } else {
+            _bangman.deployEffect(-1, new TrainEffect(unit, TRAIN_DAMAGE,
+                pt.x, pt.y));
+            return true;
         }
-        
-        // hurt the unit hit
-        _bangman.deployEffect(-1, new TrainEffect(unit, TRAIN_DAMAGE));
-        
-        return pt != null;
     }
     
     /**

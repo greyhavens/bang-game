@@ -428,6 +428,12 @@ public class BangManager extends GameManager
                 }
             }
 
+            for (int i = 0; i < 3; i++) {
+                Card card = Card.newCard("stampede");
+                card.init(_bangobj, pidx);
+                _bangobj.addToCards(card);
+            }
+                    
             // if they failed to select a big shot (or are an AI) give
             // them a default
             if (item == null) {
@@ -1282,6 +1288,9 @@ public class BangManager extends GameManager
             }
         }
 
+        public void pieceUpdated (Piece opiece, Piece npiece) {
+        }
+        
         public void pieceRemoved (Piece piece) {
         }
     };

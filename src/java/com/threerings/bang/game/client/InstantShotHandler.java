@@ -18,6 +18,6 @@ public class InstantShotHandler extends ShotHandler
 
         // apply the shot effect which will damage the target and trigger
         // the appropriate animations and whatnot
-        _view.applyShot(_shot);
+        _view.applyEffectDirect(_shot);
     }
 }

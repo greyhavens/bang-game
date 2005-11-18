@@ -212,6 +212,19 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Updates a piece directly in the piece set without broadcasting any
+     * distributed object events.  This is used by entities that are
+     * known to run on both the client and server.  The board's piece shadow
+     * is also updated by this call.
+     */
+    public void updatePieceDirect (Piece piece)
+    {
+        board.updateShadow(piece, null);
+        pieces.updateDirect(piece);
+        board.updateShadow(null, piece);
+    }
+    
+    /**
      * Returns a list of pieces that overlap the specified piece given its
      * (hypothetical) current coordinates. If no pieces overlap, null will
      * be returned.

@@ -682,26 +682,22 @@ public class BangBoardView extends BoardView
      */
     protected void applyEffect (Effect effect)
     {
-        if (effect instanceof ShotEffect) {
-            ShotEffect seffect = (ShotEffect)effect;
-            Unit shooter = (Unit)_bangobj.pieces.get(seffect.shooterId);
-            ShotHandler handler;
-            if (shooter.getConfig().mode == UnitConfig.Mode.RANGE) {
-                handler = new BallisticShotHandler();
-            } else {
-                handler = new InstantShotHandler();
-            }
-            handler.init(_ctx, _bangobj, this, _sounds, seffect);
-
+        EffectHandler handler = effect.createHandler(_bangobj);
+        if (handler != null) {
+            handler.init(_ctx, _bangobj, this, _sounds, effect);
+            
         } else {
             effect.apply(_bangobj, _effector);
         }
     }
 
-    protected void applyShot (ShotEffect shot)
+    /**
+     * Applies the effect without looking to see if we should create a handler.
+     */
+    protected void applyEffectDirect (Effect effect)
     {
-        // apply the shot
-        shot.apply(_bangobj, _effector);
+        // apply the effect
+        effect.apply(_bangobj, _effector);
     }
 
     /** Adjusts the visibility settings for the tiles of the board. */
@@ -844,6 +840,10 @@ public class BangBoardView extends BoardView
             communicateEffect(piece, effect);
         }
 
+        public void pieceUpdated (Piece opiece, Piece npiece) {
+            BangBoardView.this.pieceUpdated(opiece, npiece);
+        }
+        
         public void pieceRemoved (Piece piece) {
             removePieceSprite(piece.pieceId, "deathByEffect");
         }

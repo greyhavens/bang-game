@@ -120,7 +120,7 @@ public class BallisticShotHandler extends ShotHandler
                 }
                 // stop the bomb whistle
                 _whistleSound.stop();
-                _view.applyShot(_shot);
+                _view.applyEffectDirect(_shot);
             }
         } else {
             super.pathCompleted(sprite, path);
@@ -133,7 +133,7 @@ public class BallisticShotHandler extends ShotHandler
         if (sprite == _ssprite) {
             sprite.removeObserver(this);
             _view.removeSprite(sprite);
-            _view.applyShot(_shot);
+            _view.applyEffectDirect(_shot);
         } else {
             super.pathCancelled(sprite, path);
         }

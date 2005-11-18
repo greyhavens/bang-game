@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.StampedeEffect;
 
 /**
  * Causes a herd of buffalo to stampede across the board, damaging any
@@ -12,14 +13,6 @@ import com.threerings.bang.game.data.effect.Effect;
  */
 public class Stampede extends Card
 {
-    @Override // documentation inherited
-    public void init (BangObject bangobj, int owner)
-    {
-        super.init(bangobj, owner);
-
-        // TODO
-    }
-
     @Override // documentation inherited
     public String getType ()
     {
@@ -35,6 +28,6 @@ public class Stampede extends Card
     @Override // documentation inherited
     public Effect activate (int x, int y)
     {
-        return null; // TODO
+        return new StampedeEffect(owner, x, y, getRadius());
     }
 }

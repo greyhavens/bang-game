@@ -23,6 +23,12 @@ public interface PieceCodes
     /** Contains all the four directions. */
     public static final int[] DIRECTIONS = { NORTH, EAST, SOUTH, WEST };
 
+    /** The directions in line with the x axis. */
+    public static final int[] X_DIRECTIONS = { WEST, EAST };
+    
+    /** The directions in line with the y axis. */
+    public static final int[] Y_DIRECTIONS = { NORTH, SOUTH };
+    
     /** The delta applied to x if we are moving in each direction. */
     public static final int[] DX = { 0, 1, 0, -1 };
 

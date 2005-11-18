@@ -20,7 +20,7 @@ public class TrainSprite extends MobileSprite
 {
     public TrainSprite (byte type)
     {
-        super("extras", TYPE_NAMES[type]);
+        super("extras/train", TYPE_NAMES[type]);
     }
     
     @Override // documentation inherited
@@ -80,6 +80,6 @@ public class TrainSprite extends MobileSprite
     }
     
     /** The model names for each train type. */    
-    protected static final String[] TYPE_NAMES = { "bison", "cow", "cow",
-        "cow" };
+    protected static final String[] TYPE_NAMES = { "locomotive", "locomotive",
+        "locomotive", "locomotive" };
 }

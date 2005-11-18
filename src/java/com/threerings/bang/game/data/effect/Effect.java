@@ -7,6 +7,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.io.SimpleStreamableObject;
 
+import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -30,6 +31,11 @@ public abstract class Effect extends SimpleStreamableObject
          */
         public void pieceAffected (Piece piece, String effect);
 
+        /**
+         * Indicates that the specified piece was updated.
+         */
+        public void pieceUpdated (Piece opiece, Piece npiece);
+        
         /**
          * Indicates that the specified piece was removed from the board.
          */
@@ -75,6 +81,16 @@ public abstract class Effect extends SimpleStreamableObject
      */
     public abstract void apply (BangObject bangobj, Observer observer);
 
+    /**
+     * Creates the appropriate derivation of {@link EffectHandler} to render
+     * this effect.  Default implemenation returns <code>null</code>,
+     * indicating no special handler required.
+     */
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        return null;
+    }
+    
     /** A helper function for reporting a piece addition. */
     protected static void reportAddition (Observer obs, Piece piece)
     {
@@ -92,6 +108,15 @@ public abstract class Effect extends SimpleStreamableObject
         }
     }
 
+    /** A helper function for reporting a piece update. */
+    protected static void reportUpdate (Observer obs, Piece opiece,
+        Piece npiece)
+    {
+        if (obs != null) {
+            obs.pieceUpdated(opiece, npiece);
+        }
+    }
+    
     /** A helper function for reporting a piece addition. */
     protected static void reportRemoval (Observer obs, Piece piece)
     {

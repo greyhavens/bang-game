@@ -6,8 +6,13 @@ package com.threerings.bang.game.data.effect;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.game.client.BallisticShotHandler;
+import com.threerings.bang.game.client.InstantShotHandler;
+import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
@@ -148,6 +153,18 @@ public class ShotEffect extends Effect
         damage(bangobj, obs, shooter.owner, target, newDamage, DAMAGED);
     }
 
+    @Override // documentation inherited
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        Unit shooter = (Unit)bangobj.pieces.get(shooterId);
+        if (shooter.getConfig().mode == UnitConfig.Mode.RANGE) {
+            return new BallisticShotHandler();
+            
+        } else {
+            return new InstantShotHandler();
+        }
+    }
+    
     /** Helper function for setting targets. */
     protected short[] append (short[] array, short value)
     {

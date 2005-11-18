@@ -51,4 +51,15 @@ public class PieceDSet extends DSet
     {
         return remove(piece);
     }
+    
+    /**
+     * Updates a piece directly in this distributed set without creating the
+     * necessary distributed events to make things work properly.  This exists
+     * so that effects (which are "applied") on the client and server can
+     * update pieces in the game.
+     */
+    protected Piece updateDirect (Piece piece)
+    {
+        return (Piece)update(piece);
+    }
 }

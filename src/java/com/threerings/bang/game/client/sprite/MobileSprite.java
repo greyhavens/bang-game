@@ -114,6 +114,15 @@ public class MobileSprite extends PieceSprite
         return isMoving() || (_action != null) || (_actions.size() > 0);
     }
     
+    /**
+     * Sets this sprite on a path defined by a list of {@link Point} objects.
+     */
+    public void move (BangBoard board, List path)
+    {
+        _moveSound.loop(false);
+        move(createPath(board, path));
+    }
+    
     @Override // documentation inherited
     public void pathCompleted ()
     {
@@ -224,7 +233,7 @@ public class MobileSprite extends PieceSprite
             }
         }
     }
-
+    
     /**
      * Configures the current set of meshes being used by this sprite.
      */
@@ -293,19 +302,7 @@ public class MobileSprite extends PieceSprite
                             ", path=" + StringUtil.toString(path) + "].");
                 return null;
             }
-            // create a world coordinate path from the tile
-            // coordinates
-            Vector3f[] coords = new Vector3f[path.size()];
-            float[] durations = new float[path.size()-1];
-            int ii = 0;
-            for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
-                Point p = (Point)iter.next();
-                setCoord(board, coords, ii, p.x, p.y);
-                if (ii > 0) {
-                    durations[ii-1] = 1f / Config.display.getMovementSpeed();
-                }
-            }
-            return new MoveUnitPath(this, coords, durations);
+            return createPath(board, path);
 
         } else {
             Vector3f start = toWorldCoords(opiece.x, opiece.y,
@@ -318,6 +315,26 @@ public class MobileSprite extends PieceSprite
         }
     }
 
+    /**
+     * Creates a path from a list of {@link Point} objects.
+     */
+    protected Path createPath (BangBoard board, List path)
+    {
+        // create a world coordinate path from the tile
+        // coordinates
+        Vector3f[] coords = new Vector3f[path.size()];
+        float[] durations = new float[path.size()-1];
+        int ii = 0;
+        for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
+            Point p = (Point)iter.next();
+            setCoord(board, coords, ii, p.x, p.y);
+            if (ii > 0) {
+                durations[ii-1] = 1f / Config.display.getMovementSpeed();
+            }
+        }
+        return new MoveUnitPath(this, coords, durations);
+    }
+    
     /**
      * Sets the coordinate in the given array at the specified index.
      */
