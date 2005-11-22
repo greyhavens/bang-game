@@ -323,13 +323,11 @@ public abstract class Scenario
     {
         Point pt = getPushLocation(bangobj, train, unit);
         if (pt == null) {
-            _bangman.deployEffect(-1, new TrainEffect(unit, TRAIN_DAMAGE,
-                unit.x, unit.y));
+            _bangman.deployEffect(-1, new TrainEffect(unit, unit.x, unit.y));
             return false;
             
         } else {
-            _bangman.deployEffect(-1, new TrainEffect(unit, TRAIN_DAMAGE,
-                pt.x, pt.y));
+            _bangman.deployEffect(-1, new TrainEffect(unit, pt.x, pt.y));
             return true;
         }
     }
@@ -571,9 +569,6 @@ public abstract class Scenario
     
     /** The average number of cars on a train. */
     protected static final int AVG_TRAIN_CARS = 2;
-    
-    /** The amount of damage taken by units hit by the train. */
-    protected static final int TRAIN_DAMAGE = 20;
     
     /** Compares pieces based on their piece ids. */
     protected static final Comparator<Piece> PIECE_ID_COMPARATOR =

@@ -15,51 +15,34 @@ import static com.threerings.bang.Log.log;
  */
 public class TrainEffect extends Effect
 {
+    /** The amount of damage taken by units hit by the train. */
+    public static final int COLLISION_DAMAGE = 20;
+    
     /** The identifier for the type of effect that we produce. */
     public static final String DAMAGED = "bang";
 
     /** The piece id of the target. */
     public int targetId;
 
-    /** The new total damage to assign to the target. */
-    public int newDamage;
-
     /** The x and y coordinates to which the target was pushed. */
     public short x, y;
     
-    /**
-     * Constructor used when creating a new train effect.
-     *
-     * @param damage the amount by which to increase the target's damage.
-     * This will be capped and converted to an absolute value.
-     * @param x the x coordinate to which the piece was pushed
-     * @param y the y coordinate to which the piece was pushed
-     */
-    public TrainEffect (Piece target, int damage, int x, int y)
-    {
-        setTarget(target, damage, x, y);
-    }
-
     /** Constructor used when unserializing. */
     public TrainEffect ()
     {
     }
-
+    
     /**
-     * Configures this train effect with a target and a damage amount. Any
-     * previous target will be overridden.
+     * Constructor used when creating a new train effect.
      *
-     * @param damage the amount by which to increase the target's damage.
-     * This will be capped and converted to an absolute value.
      * @param x the x coordinate to which the piece was pushed
      * @param y the y coordinate to which the piece was pushed
      */
-    public void setTarget (Piece target, int damage, int x, int y)
+    public TrainEffect (Piece target, int x, int y)
     {
         targetId = target.pieceId;
-        newDamage = Math.min(100, target.damage + damage);
         this.x = (short)x;
-        this.y = (short)y;   
+        this.y = (short)y;
     }
 
     @Override // documentation inherited
@@ -67,7 +50,7 @@ public class TrainEffect extends Effect
     {
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target != null) {
-            dammap.increment(target.owner, newDamage - target.damage);
+            dammap.increment(target.owner, COLLISION_DAMAGE);
         } else {
             log.warning("Train effect missing target [id=" + targetId + "].");
         }
@@ -76,9 +59,21 @@ public class TrainEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        collide(bangobj, obs, -1, targetId, COLLISION_DAMAGE, x, y, DAMAGED);
+    }
+    
+    /**
+     * Handles a collision that moves and damages a unit.
+     *
+     * @param collider the index of the user causing the collision, or -1
+     */
+    public static void collide (BangObject bangobj, Observer obs, int collider,
+        int targetId, int damage, int x, int y, String effect)
+    {
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target == null) {
-            log.warning("Missing train target " + this + ".");
+            log.warning("Missing collision target [targetId=" + targetId +
+                "].");
             return;
         }
         
@@ -93,7 +88,8 @@ public class TrainEffect extends Effect
         
         // damage the target if it's still alive
         if (target.isAlive()) {
-            ShotEffect.damage(bangobj, obs, -1, target, newDamage, DAMAGED);
+            ShotEffect.damage(bangobj, obs, collider, target,
+                Math.min(100, target.damage + damage), effect);
         }
     }
 }

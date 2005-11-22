@@ -12,6 +12,8 @@ import java.util.Iterator;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ListUtil;
 
+import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.util.RandomUtil;
 import com.threerings.util.StreamableArrayList;
 import com.threerings.util.StreamablePoint;
@@ -22,6 +24,7 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Unit;
 
 /**
  * Represents the effect of a stampede running over the board.
@@ -30,7 +33,40 @@ public class StampedeEffect extends Effect
     implements PieceCodes
 {
     /** The speed of the buffalo in tiles per second. */
-    public static final float BUFFALO_SPEED = 8f;
+    public static final float BUFFALO_SPEED = 4f;
+    
+    /** The amount of damage taken by units hit by buffalo. */
+    public static final int COLLISION_DAMAGE = 20;
+    
+    /** The identifier for the type of effect that we produce. */
+    public static final String DAMAGED = "bang";
+    
+    /**
+     * Represents a buffalo's collision with a unit.
+     */
+    public static class Collision extends SimpleStreamableObject
+    {
+        /** The timestep at which the collision occurred. */
+        public int step;
+        
+        /** The id of the unit hit. */
+        public int targetId;
+        
+        /** The coordinates to which the unit was pushed. */
+        public short x, y;
+        
+        public Collision ()
+        {
+        }
+        
+        public Collision (int step, int targetId, int x, int y)
+        {
+            this.step = step;
+            this.targetId = targetId;
+            this.x = (short)x;
+            this.y = (short)y;
+        }
+    }
     
     /** The id of the player causing the damage or -1. */
     public transient int causer;
@@ -43,6 +79,9 @@ public class StampedeEffect extends Effect
     
     /** The paths to be followed by each buffalo. */
     public StreamableArrayList[] paths;
+    
+    /** The list of collisions between buffalo and units. */
+    public StreamableArrayList collisions;
     
     public StampedeEffect ()
     {
@@ -113,28 +152,12 @@ public class StampedeEffect extends Effect
             locs[i] = loc;
         }
         
-        // run the search algorithm for each buffalo; if it doesn't find a path
-        // across the board, we have to append a backwards path
-        paths = new StreamableArrayList[NUM_BUFFALO];
-        int maxStep = (int)(MAX_STEP_FACTOR * 
-            ((dir == NORTH || dir == SOUTH) ?
-                bangobj.board.getHeight() : bangobj.board.getWidth()));
-        for (int i = 0; i < locs.length; i++) {
-            paths[i] = findFurthestPath(bangobj.board, dir, locs[i],
-                new HashSet<Point>(), 0, maxStep);
-            if (rankPath(bangobj.board, dir, paths[i]) < 1f) {
-                int oppdir = (dir + 2) % DIRECTIONS.length;
-                Point eloc = (Point)paths[i].get(paths[i].size() - 1);
-                StreamableArrayList bpath = findFurthestPath(bangobj.board,
-                    oppdir, eloc, new HashSet<Point>(), paths[i].size() - 1,
-                    maxStep * 2);
-                paths[i].addAll(bpath.subList(1, bpath.size()));
-            }
-        }
+        preparePaths(bangobj.board, dir, locs);
+        prepareCollisions(bangobj, dammap);
     }
     
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer observer)
+    public void apply (BangObject bangobj, Observer obs)
     {
         // delay the tick by the amount of time it takes for the buffalo to run
         // their course
@@ -142,7 +165,14 @@ public class StampedeEffect extends Effect
         for (int i = 0; i < paths.length; i++) {
             maxlen = Math.max(maxlen, paths[i].size());
         }
-        reportDelay(observer, (long)((maxlen-1) * 1000 / BUFFALO_SPEED));
+        reportDelay(obs, (long)((maxlen-1) * 1000 / BUFFALO_SPEED));
+        
+        // apply the collisions in order
+        for (int i = 0, size = collisions.size(); i < size; i++) {
+            Collision collision = (Collision)collisions.get(i);
+            TrainEffect.collide(bangobj, obs, causer, collision.targetId,
+                COLLISION_DAMAGE, collision.x, collision.y, DAMAGED);
+        }
     }
     
     @Override // documentation inherited
@@ -151,6 +181,32 @@ public class StampedeEffect extends Effect
         return new StampedeHandler();
     }
     
+    /**
+     * Initializes the paths for the buffalo.
+     */
+    protected void preparePaths (BangBoard board, int dir,
+        StreamablePoint[] locs)
+    {
+        // run the search algorithm for each buffalo; if it doesn't find a path
+        // across the board, we have to append a backwards path
+        paths = new StreamableArrayList[NUM_BUFFALO];
+        int maxStep = (int)(MAX_STEP_FACTOR * 
+            ((dir == NORTH || dir == SOUTH) ?
+                board.getHeight() : board.getWidth()));
+        for (int i = 0; i < locs.length; i++) {
+            paths[i] = findFurthestPath(board, dir, locs[i],
+                new HashSet<Point>(), 0, maxStep);
+            if (rankPath(board, dir, paths[i]) < 1f) {
+                int oppdir = (dir + 2) % DIRECTIONS.length;
+                Point eloc = (Point)paths[i].get(paths[i].size() - 1);
+                StreamableArrayList bpath = findFurthestPath(board, oppdir,
+                    eloc, new HashSet<Point>(), paths[i].size() - 1,
+                    maxStep * 2);
+                paths[i].addAll(bpath.subList(1, bpath.size()));
+            }
+        }
+    }
+
     /**
      * Uses a simple best-first search to find the path that gets the furthest
      * across the board.
@@ -233,6 +289,9 @@ public class StampedeEffect extends Effect
      */
     protected boolean containsBuffalo (Point loc, int step)
     {
+        if (step < 0) {
+            return false;
+        }
         for (int i = 0; i < paths.length; i++) {
             if (paths[i] != null && paths[i].size() > step &&
                 paths[i].get(step).equals(loc)) {
@@ -240,6 +299,57 @@ public class StampedeEffect extends Effect
             }
         }
         return false;
+    }
+    
+    /**
+     * Initializes the collisions for the buffalo.
+     */
+    protected void prepareCollisions (BangObject bangobj, IntIntMap dammap)
+    {
+        // clone all the non-flying units
+        ArrayList<Piece> units = new ArrayList<Piece>();
+        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
+            Piece piece = (Piece)it.next();
+            if (piece instanceof Unit && !piece.isFlyer()) {
+                units.add((Piece)piece.clone());
+            }
+        }
+        
+        // find the maximum path length
+        int maxlen = 0;
+        for (int i = 0; i < paths.length; i++) {
+            maxlen = Math.max(maxlen, paths[i].size());
+        }
+        
+        // step through the paths, updating units and generating collisions
+        collisions = new StreamableArrayList();
+        Point loc = new Point();
+        for (int i = 0; i < maxlen; i++) {
+            for (Piece unit : units) {
+                loc.setLocation(unit.x, unit.y);
+                if (containsBuffalo(loc, i)) {
+                    // try to move the unit to a point that wasn't occupied by
+                    // a buffalo in the last step and won't be in the next step
+                    ArrayList<Point> nlocs = new ArrayList<Point>();
+                    for (int j = 0; j < DIRECTIONS.length; j++) {
+                        Point nloc = new Point(loc.x + DX[j], loc.y + DY[j]);
+                        if (bangobj.board.canOccupy(unit, nloc.x, nloc.y) &&
+                            !containsBuffalo(nloc, i - 1) &&
+                            !containsBuffalo(nloc, i + 1)) {
+                            nlocs.add(nloc);
+                        }
+                    }
+                    Point nloc = (nlocs.size() > 0 ?
+                        (Point)RandomUtil.pickRandom(nlocs) : loc);
+                    collisions.add(new Collision(i, unit.pieceId, nloc.x,
+                        nloc.y));
+                    bangobj.board.updateShadow(unit, null);
+                    unit.position(nloc.x, nloc.y);
+                    bangobj.board.updateShadow(null, unit);
+                    dammap.increment(unit.owner, COLLISION_DAMAGE);
+                }
+            }
+        }
     }
     
     /** The number of buffalo in the stampede. */
