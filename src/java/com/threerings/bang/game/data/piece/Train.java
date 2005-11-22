@@ -22,14 +22,14 @@ public class Train extends Piece
     /** The caboose that tails the train. */
     public static final byte CABOOSE = 1;
     
-    /** A car carrying passengers. */
-    public static final byte PASSENGER_CAR = 2;
+    /** A car carrying cattle. */
+    public static final byte CATTLE_CAR = 2;
     
-    /** A car carrying coal. */
-    public static final byte COAL_CAR = 3;
+    /** A car carrying freight. */
+    public static final byte FREIGHT_CAR = 3;
     
     /** The types of cars to insert between the engine and the caboose. */
-    public static final byte[] CAR_TYPES = { PASSENGER_CAR, COAL_CAR };
+    public static final byte[] CAR_TYPES = { CATTLE_CAR, FREIGHT_CAR };
     
     /** A special value indicating that a short value is unset. */
     public static final short UNSET = Short.MIN_VALUE;
