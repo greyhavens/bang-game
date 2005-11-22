@@ -131,23 +131,22 @@ public class StampedeEffect extends Effect
             shuffleCopy(DIRECTIONS, 0, dirs, 0, DIRECTIONS.length);
         }
         
-        // try the directions in sequence until we find one that lets the
-        // buffalo across the board (if there isn't one, use the one that
-        // gets them the furthest)
-        float maxRank = Float.MIN_VALUE;
-        StreamableArrayList[] maxPaths = null;
+        // try the directions in sequence and use whichever one gets the
+        // buffalo closest to the target
+        int minSquareDist = Integer.MAX_VALUE;
+        StreamableArrayList[] bestPaths = null;
         for (int i = 0; i < dirs.length; i++) {
             StreamableArrayList[] paths = new StreamableArrayList[NUM_BUFFALO];
-            float rank = createPaths(bangobj.board, dirs[i], paths);
-            if (rank > maxRank) {
-                maxRank = rank;
-                maxPaths = paths;
-                if (rank >= 1f) {
+            int squareDist = createPaths(bangobj.board, dirs[i], paths);
+            if (squareDist < minSquareDist) {
+                minSquareDist = squareDist;
+                bestPaths = paths;
+                if (minSquareDist <= radius * radius) {
                     break;
                 }
             }
         }
-        paths = maxPaths;
+        paths = bestPaths;
         
         // create the list of collisions
         createCollisions(bangobj, dammap);
@@ -194,10 +193,10 @@ public class StampedeEffect extends Effect
      * direction.
      *
      * @param paths the array of paths to populate
-     * @return the maximum path rank for the paths created, indicating how far
-     * across the board the paths reach
+     * @return the minimum square distance to the stampede target reached in
+     * the paths
      */
-    protected float createPaths (BangBoard board, int dir,
+    protected int createPaths (BangBoard board, int dir,
         StreamableArrayList[] paths)
     {
         // determine the approximate point of origin
@@ -234,15 +233,15 @@ public class StampedeEffect extends Effect
         // the maximum path length
         int maxStep = (int)(MAX_STEP_FACTOR * ((dir == NORTH || dir == SOUTH) ?
             board.getHeight() : board.getWidth()));
-        float maxRank = 0f;
+        int minSquareDist = Integer.MAX_VALUE;
         for (int i = 0; i < maxStep; i++) {
-            maxRank = Math.max(maxRank, stepStampede(board, dir, paths, locs,
-                dirs, reversed));
+            minSquareDist = Math.min(minSquareDist, stepStampede(board, dir,
+                paths, locs, dirs, reversed));
             if (ListUtil.size(locs) == 0) {
                 break;
             }
         }
-        return maxRank;
+        return minSquareDist;
     }
     
     /**
@@ -253,14 +252,15 @@ public class StampedeEffect extends Effect
      * @param reversed whether each buffalo is moving in reverse with respect
      * to the stampede direction
      * @param dirs the temporary directions of each buffalo
-     * @return the maximum rank reached on this step
+     * @return the minimum square distance to the stampede target reached on
+     * this step
      */
-    protected float stepStampede (BangBoard board, int dir,
+    protected int stepStampede (BangBoard board, int dir,
         StreamableArrayList[] paths, StreamablePoint[] locs, int[] dirs,
         boolean[] reversed)
     {
         StreamablePoint[] nlocs = new StreamablePoint[paths.length];
-        float maxRank = Float.MIN_VALUE;
+        int minSquareDist = Integer.MAX_VALUE;
         for (int i = 0; i < paths.length; i++) {
             if (locs[i] == null) {
                 continue;
@@ -303,34 +303,47 @@ public class StampedeEffect extends Effect
                 reversed[i] = !reversed[i];
             }
             
-            // update the direction and max rank, add the new location to the
+            // update the direction and min dist, add the new location to the
             // path, and end if we've reached the edge of the board
             dirs[i] = ndir;
             paths[i].add(nlocs[i]);
-            maxRank = Math.max(maxRank, getRank(board, dir, nlocs[i]));
-            float frank = getRank(board, fdir, nlocs[i]);
-            if (frank >= 1f) {
+            minSquareDist = Math.min(minSquareDist,
+                getSquareDistanceToTarget(nlocs[i]));
+            if (isOnEdge(board, fdir, nlocs[i])) {
                 nlocs[i] = null;
             }
         }
         System.arraycopy(nlocs, 0, locs, 0, paths.length);
-        return maxRank;
+        return minSquareDist;
     }
     
     /**
-     * Ranks the specified point with respect to the stampede direction.
-     * Higher ranks are further across the board, with 1 as the ultimate
-     * goal (the opposite edge).
+     * Gets the squared distance from the specified point to the stampede
+     * target.
      */
-    protected float getRank (BangBoard board, int dir, Point loc)
+    protected int getSquareDistanceToTarget (Point loc)
     {
-        if (dir == NORTH || dir == SOUTH) {
-            float base = loc.y / (board.getHeight() - 1f);
-            return (dir == SOUTH ? base : 1f - base);
+        int dx = loc.x - x, dy = loc.y - y;
+        return dx*dx + dy*dy;
+    }
+    
+    /**
+     * Determines whether the specified point is on the edge of the board with
+     * respect to the specified stampede direction.
+     */
+    protected boolean isOnEdge (BangBoard board, int dir, Point loc)
+    {
+        if (dir == NORTH) {
+            return loc.y == 0;
             
-        } else {
-            float base = loc.x / (board.getWidth() - 1f);
-            return (dir == EAST ? base : 1f - base);      
+        } else if (dir == SOUTH) {
+            return loc.y == board.getHeight() - 1;
+            
+        } else if (dir == WEST) {
+            return loc.x == 0;
+            
+        } else { // dir == EAST
+            return loc.x == board.getWidth() - 1;
         }
     }
     
