@@ -80,6 +80,6 @@ public class TrainSprite extends MobileSprite
     }
     
     /** The model names for each train type. */    
-    protected static final String[] TYPE_NAMES = { "locomotive", "cattle",
+    protected static final String[] TYPE_NAMES = { "locomotive", "caboose",
         "cattle", "freight" };
 }
