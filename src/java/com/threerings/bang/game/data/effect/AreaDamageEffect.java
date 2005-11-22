@@ -61,7 +61,6 @@ public class AreaDamageEffect extends AreaEffect
     protected void apply (
         BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {
-        ShotEffect.damage(
-            bangobj, obs, causer, piece, newDamage[pidx], MISSILED);
+        damage(bangobj, obs, causer, piece, newDamage[pidx], MISSILED);
     }
 }

@@ -113,7 +113,7 @@ public class StampedeHandler extends EffectHandler
         
         public void expired ()
         {
-            TrainEffect.collide(_bangobj, _view.getEffectObserver(),
+            Effect.collide(_bangobj, _view.getEffectObserver(),
                 _stampede.causer, _collision.targetId,
                 StampedeEffect.COLLISION_DAMAGE, _collision.x, _collision.y,
                 StampedeEffect.DAMAGED);

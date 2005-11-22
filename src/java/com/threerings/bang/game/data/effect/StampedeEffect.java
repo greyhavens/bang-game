@@ -170,8 +170,8 @@ public class StampedeEffect extends Effect
         // apply the collisions in order
         for (int i = 0, size = collisions.size(); i < size; i++) {
             Collision collision = (Collision)collisions.get(i);
-            TrainEffect.collide(bangobj, obs, causer, collision.targetId,
-                COLLISION_DAMAGE, collision.x, collision.y, DAMAGED);
+            collide(bangobj, obs, causer, collision.targetId, COLLISION_DAMAGE,
+                collision.x, collision.y, DAMAGED);
         }
     }
     

@@ -7,9 +7,12 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.io.SimpleStreamableObject;
 
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Represents the effect of a piece activating a bonus.
@@ -136,6 +139,73 @@ public abstract class Effect extends SimpleStreamableObject
     {
         if (obs != null) {
             obs.tickDelayed(extraTime);
+        }
+    }
+    
+    /**
+     * Handles a collision that moves and damages a unit.
+     *
+     * @param collider the index of the user causing the collision, or -1
+     * @param damage the amount of damage caused by the collision
+     */
+    public static void collide (BangObject bangobj, Observer obs, int collider,
+        int targetId, int damage, int x, int y, String effect)
+    {
+        Piece target = (Piece)bangobj.pieces.get(targetId);
+        if (target == null) {
+            log.warning("Missing collision target [targetId=" + targetId +
+                "].");
+            return;
+        }
+        
+        // move the target to its new coordinates
+        if (target.x != x || target.y != y) {
+            Piece otarget = target, ntarget = (Piece)target.clone();
+            ntarget.position(x, y);
+            reportUpdate(obs, otarget, ntarget);
+            bangobj.updatePieceDirect(ntarget);
+            target = ntarget;
+        }
+        
+        // damage the target if it's still alive
+        if (target.isAlive()) {
+            damage(bangobj, obs, collider, target,
+                Math.min(100, target.damage + damage), effect);
+        }
+    }
+    
+    /**
+     * Damages the supplied piece by the specified amount, properly
+     * removing it from the board if appropriate and reporting the
+     * specified effect.
+     *
+     * @param shooter the index of the player doing the damage or -1 if
+     * the damage was not originated by a player.
+     * @param newDamage the new total damage to assign to the damaged piece.
+     */
+    public static void damage (BangObject bangobj, Observer obs, int shooter,
+                               Piece target, int newDamage, String effect)
+    {
+        // effect the actual damage
+        log.fine("Damaging " + target.info() + " -> " + newDamage + ".");
+        target.damage = newDamage;
+
+        // report that the target was affected
+        reportEffect(obs, target, effect);
+
+        // if the target is dead and we have a shooter and we're on the
+        // server, record the kill
+        if (shooter != -1 && !target.isAlive() &&
+            bangobj.getManager().isManager(bangobj)) {
+            // record the kill statistics
+            bangobj.stats[shooter].incrementStat(Stat.Type.UNITS_KILLED, 1);
+            bangobj.stats[target.owner].incrementStat(Stat.Type.UNITS_LOST, 1);
+        }
+
+        // if the target is dead and should be removed, do so
+        if (!target.isAlive() && target.removeWhenDead()) {
+            bangobj.removePieceDirect(target);
+            reportRemoval(obs, target);
         }
     }
 }
