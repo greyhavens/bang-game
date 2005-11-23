@@ -1227,7 +1227,7 @@ public class BangManager extends GameManager
         // scale from 1/1 to 1/2 over the course of ten minutes
         float factor = 1f + 1f * delta / TIME_SCALE_CAP;
         long abase = (long)Math.round(BASE_TICK_TIME / factor);
-        return isTest() ? 500L : abase;
+        return abase;
     }
 
     /** Indicates that we're testing and to do wacky stuff. */
