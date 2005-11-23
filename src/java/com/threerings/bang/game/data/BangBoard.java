@@ -40,52 +40,52 @@ public class BangBoard extends SimpleStreamableObject
 
     /** The number of subdivisions in the heightfield for each tile. */
     public static final int HEIGHTFIELD_SUBDIVISIONS = 4;
-    
+
     /** The number of elevation units per vertical tile size. */
     public static final int ELEVATION_UNITS_PER_TILE = 64;
-    
+
     /** The maximum difference between adjacent height points allowed before a
      * tile becomes unoccupiable. */
     public static final int MAX_OCCUPIABLE_HEIGHT_DELTA = 16;
-    
+
     /** The maximum water level (above ground in elevation units) that ground
      * units can occupy. */
     public static final byte MAX_OCCUPIABLE_WATER_LEVEL = 1;
-    
+
     /** The size in tiles of the border between the edge of the heightfield and
      * the edge of the playable region. */
     public static final int BORDER_SIZE = 8;
-    
+
     /** The number of directional lights on the board. */
     public static final int NUM_LIGHTS = 2;
-    
+
     /** Creates a board with the specified dimensions. */
     public BangBoard (int width, int height)
     {
         _width = width;
         _height = height;
-        
+
         _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
         _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
         _heightfield = new byte[_hfwidth * _hfheight];
         _terrain = new byte[_hfwidth * _hfheight];
-        
+
         _waterLevel = (byte)-128;
         _waterDiffuseColor = 0x99CCFF;
         _waterAmbientColor = 0x001A33;
-        
+
         _lightAzimuths = new float[] { 0f, (float)Math.PI };
         _lightElevations = new float[] { (float)(Math.PI / 4),
             (float)(-Math.PI / 4)};
         _lightDiffuseColors = new int[] { 0xFFFFFF, 0x0 };
         _lightAmbientColors = new int[] { 0xBEBEBE, 0x0 };
-        
+
         _pterrain = new byte[width*height];
         _btstate = new byte[width*height];
         _estate = new byte[width*height];
         _tstate = new byte[width*height];
         _pgrid = new byte[width*height];
-        
+
         _bbounds = new Rectangle(0, 0, _width, _height);
     }
 
@@ -105,31 +105,31 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _height;
     }
-    
+
     /** Returns the width of the board's heightfield. */
     public int getHeightfieldWidth ()
     {
         return _hfwidth;
     }
-    
+
     /** Returns the height of the board's heightfield. */
     public int getHeightfieldHeight ()
     {
         return _hfheight;
     }
-    
+
     /** Returns the height at the specified sub-tile coordinates. */
     public byte getHeightfieldValue (int x, int y)
     {
         // return the minimum edge height for values beyond the edge
         if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
             return _minEdgeHeight;
-            
+
         } else {
             return _heightfield[y*_hfwidth + x];
         }
     }
-    
+
     /**
      * Updates the board's minimum edge height, which is returned for values
      * outside the board.
@@ -148,7 +148,7 @@ public class BangBoard extends SimpleStreamableObject
         }
         _minEdgeHeight = min;
     }
-    
+
     /**
      * Sets the value at the specified sub-tile coordinates.
      */
@@ -156,7 +156,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         _heightfield[y*_hfwidth + x] = value;
     }
-    
+
     /** Adds to or subtracts from the height at the specified sub-tile
      * coordinates, clamping to the allowed range. */
     public void addHeightfieldValue (int x, int y, int value)
@@ -165,13 +165,13 @@ public class BangBoard extends SimpleStreamableObject
         _heightfield[idx] = (byte)Math.min(Math.max(-128,
             _heightfield[idx] + value), +127);
     }
-    
+
     /** Returns a reference to the heightfield array. */
     public byte[] getHeightfield ()
     {
         return _heightfield;
     }
-    
+
     /** Returns the terrain value at the specified terrain coordinates. */
     public byte getTerrainValue (int x, int y)
     {
@@ -180,13 +180,13 @@ public class BangBoard extends SimpleStreamableObject
         y = Math.min(Math.max(y, 0), _hfheight - 1);
         return _terrain[y*_hfwidth + x];
     }
-    
+
     /** Sets a single terrain value. */
     public void setTerrainValue (int x, int y, byte value)
     {
         _terrain[y*_hfwidth + x] = value;
     }
-    
+
     /** Fills the terrain array with the specified terrain. */
     public void fillTerrain (Terrain terrain)
     {
@@ -194,32 +194,32 @@ public class BangBoard extends SimpleStreamableObject
             _terrain[i] = (byte)terrain.code;
         }
     }
-    
+
     /** Returns a reference to the terrain array. */
     public byte[] getTerrain ()
     {
         return _terrain;
     }
-    
+
     /** Returns the level of the water on the board in heightfield units (-128
      * for no water. */
     public byte getWaterLevel ()
     {
         return _waterLevel;
     }
-    
+
     /** Returns the diffuse color of the water. */
     public int getWaterDiffuseColor ()
     {
         return _waterDiffuseColor;
     }
-    
+
     /** Returns the ambient color of the water. */
     public int getWaterAmbientColor ()
     {
         return _waterAmbientColor;
     }
-    
+
     /** Sets the water level. */
     public void setWaterParams (byte level, int diffuseColor, int ambientColor)
     {
@@ -227,7 +227,7 @@ public class BangBoard extends SimpleStreamableObject
         _waterDiffuseColor = diffuseColor;
         _waterAmbientColor = ambientColor;
     }
-    
+
     /**
      * Returns the azimuth in radians of the directional light at the specified
      * index, where zero has the light in the positive x direction and
@@ -237,7 +237,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _lightAzimuths[idx];
     }
-    
+
     /**
      * Returns the elevation in radians of the directional light at the
      * specified index, where zero has the light on the horizon and pi/2 has
@@ -247,7 +247,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _lightElevations[idx];
     }
-    
+
     /**
      * Returns the diffuse RGB color of the directional light at the specified
      * index.
@@ -256,7 +256,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _lightDiffuseColors[idx];
     }
-    
+
     /**
      * Returns the ambient RGB color of the directional light at the specified
      * index.
@@ -265,7 +265,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _lightAmbientColors[idx];
     }
-    
+
     /**
      * Sets the parameters of the directional light at the specified index.
      *
@@ -282,7 +282,7 @@ public class BangBoard extends SimpleStreamableObject
         _lightDiffuseColors[idx] = diffuseColor;
         _lightAmbientColors[idx] = ambientColor;
     }
-    
+
     /**
      * Returns the bounds of our board. <em>Do not modify</em> the
      * returned rectangle.
@@ -385,7 +385,7 @@ public class BangBoard extends SimpleStreamableObject
         ArrayList<Point> spots = getOccupiableSpots(1, cx, cy, maxdist);
         return (spots.size() > 0) ? spots.get(0) : null;
     }
-    
+
     /**
      * Adds the supplied set of pieces to our board "shadow" data. This is
      * done at the start of the game; all subsequent changes are
@@ -398,13 +398,11 @@ public class BangBoard extends SimpleStreamableObject
             for (int xx = 0; xx < _width; xx++) {
                 byte tvalue;
                 if (isUnderWater(xx, yy, MAX_OCCUPIABLE_WATER_LEVEL)) {
-                    tvalue = (byte)3;
-                    
+                    tvalue = O_FLYER;
                 } else if (exceedsMaxHeightDelta(xx, yy)) {
-                    tvalue = (byte)2;
-                    
+                    tvalue = O_ROUGH;
                 } else {
-                    tvalue = (byte)0;
+                    tvalue = O_EMPTY;
                 }
                 int pos = _width*yy+xx;
                 _tstate[pos] = tvalue;
@@ -416,7 +414,7 @@ public class BangBoard extends SimpleStreamableObject
             updateShadow(null, (Piece)iter.next());
         }
     }
-    
+
     /**
      * Updates the shadow for the specified piece.
      */
@@ -437,9 +435,9 @@ public class BangBoard extends SimpleStreamableObject
                     for (int xx = pbounds.x, lx = xx + pbounds.width;
                          xx < lx; xx++) {
                         if (_bbounds.contains(xx, yy)) {
-                            _tstate[_width*yy+xx] = 3;
-                            _btstate[_width*yy+xx] = 3;
-                            _estate[_width*yy+xx] = 3;
+                            _tstate[_width*yy+xx] = O_FLYER;
+                            _btstate[_width*yy+xx] = O_FLYER;
+                            _estate[_width*yy+xx] = O_FLYER;
                         }
                     }
                 }
@@ -447,20 +445,19 @@ public class BangBoard extends SimpleStreamableObject
             } else if (piece instanceof Track) {
                 int idx = _width*piece.y+piece.x;
                 if (((Track)piece).preventsGroundOverlap()) {
-                    _tstate[idx] = _btstate[idx] = _estate[idx] = 3;
-                    
+                    _tstate[idx] = _btstate[idx] = _estate[idx] = O_FLYER;
                 } else {
-                    _tstate[idx] = _btstate[idx] = 1;
+                    _tstate[idx] = _btstate[idx] = O_ANY;
                 }
-            
+
             } else if (piece instanceof Bonus) {
-                _tstate[_width*piece.y+piece.x] = 1;
+                _tstate[_width*piece.y+piece.x] = O_ANY;
 
             } else if (piece instanceof Train) {
-                _tstate[_width*piece.y+piece.x] = 3;
-                
+                _tstate[_width*piece.y+piece.x] = O_FLYER;
+
             } else {
-                _tstate[_width*piece.y+piece.x] = 4;
+                _tstate[_width*piece.y+piece.x] = O_NONE;
             }
         }
     }
@@ -473,7 +470,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return getHeightfieldElevation(x, y) + getPieceElevation(x, y);
     }
-    
+
     /**
      * Returns the heightfield elevation (the elevation of the terrain in
      * elevation units) at the specified tile coordinates.
@@ -494,7 +491,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _estate[y*_width+x] * ELEVATION_UNITS_PER_TILE;
     }
-    
+
     /**
      * Checks whether any adjacent vertices in the heightfield under the
      * specified tile coordinates exceed the maximum height delta.
@@ -520,7 +517,7 @@ public class BangBoard extends SimpleStreamableObject
         }
         return false;
     }
-    
+
     /**
      * Checks whether any portion of the specified tile is beneath any
      * amount of water.
@@ -529,7 +526,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return isUnderWater(tx, ty, (byte)0);
     }
-    
+
     /**
      * Checks whether any portion of the specified tile is beneath the
      * specified level of water.
@@ -549,7 +546,7 @@ public class BangBoard extends SimpleStreamableObject
         }
         return false;
     }
-    
+
     /**
      * Returns true if the specified location is ground traversable.
      */
@@ -557,7 +554,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return isGroundOccupiable(x, y, false);
     }
-    
+
     /**
      * Returns true if the specified location is ground traversable.
      *
@@ -569,7 +566,7 @@ public class BangBoard extends SimpleStreamableObject
         if (!_bbounds.contains(x, y)) {
             return false;
         }
-        return (_btstate[y*_width+x] < (rough ? 3 : 2));
+        return (_btstate[y*_width+x] < (rough ? O_FLYER : O_ROUGH));
     }
 
     /**
@@ -581,10 +578,7 @@ public class BangBoard extends SimpleStreamableObject
         if (!_bbounds.contains(x, y)) {
             return false;
         }
-        int max = 1;
-        if (piece.isFlyer() || piece instanceof Train) {
-            max = 3;
-        }
+        int max = (piece.isFlyer() || piece instanceof Train) ? O_FLYER : O_ANY;
         return (_tstate[y*_width+x] <= max);
     }
 
@@ -597,7 +591,7 @@ public class BangBoard extends SimpleStreamableObject
         if (!_bbounds.contains(x, y)) {
             return false;
         }
-        return (_tstate[y*_width+x] <= 0);
+        return (_tstate[y*_width+x] <= O_EMPTY);
     }
 
     /**
@@ -670,7 +664,7 @@ public class BangBoard extends SimpleStreamableObject
             }
         }
     }
-    
+
     /** Returns a string representation of this board. */
     public String toString ()
     {
@@ -684,10 +678,10 @@ public class BangBoard extends SimpleStreamableObject
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        
+
         _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
         _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
-        
+
         int size = _width*_height;
         _pterrain = new byte[size];
         _btstate = new byte[size];
@@ -695,11 +689,11 @@ public class BangBoard extends SimpleStreamableObject
         _tstate = new byte[size];
         _pgrid = new byte[size];
         _bbounds = new Rectangle(0, 0, _width, _height);
-        
+
         updateMinEdgeHeight();
         updatePredominantTerrain();
     }
-    
+
     /**
      * Updates the array of predominant terrain values for all tiles.
      */
@@ -707,7 +701,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         updatePredominantTerrain(0, 0, _width, _height);
     }
-    
+
     /**
      * Updates the array of predominant terrain values for the tiles in the
      * specified rectangle.
@@ -720,15 +714,15 @@ public class BangBoard extends SimpleStreamableObject
             }
         }
     }
-    
+
     /**
      * Returns the most common terrain value under the specified tile.
      */
     public Terrain getPredominantTerrain (int x, int y)
     {
-        return Terrain.fromCode(_pterrain[y*_width + x]);   
+        return Terrain.fromCode(_pterrain[y*_width + x]);
     }
-    
+
     /**
      * Finds and returns the predominant terrain code under the specified tile.
      */
@@ -744,18 +738,18 @@ public class BangBoard extends SimpleStreamableObject
                 counts.increment(getTerrainValue(x, y), 1);
             }
         }
-        
+
         int maxCount = 0, maxCode = 0;
         for (Iterator it = counts.entrySet().iterator(); it.hasNext(); ) {
             IntIntMap.Entry e = (IntIntMap.Entry)it.next();
             if (e.getIntValue() > maxCount) {
                 maxCode = e.getIntKey();
                 maxCount = e.getIntValue();
-            } 
+            }
         }
         return (byte)maxCode;
     }
-    
+
     /** Helper function for {@link #computeMoves}. */
     protected void considerMoving (
         Piece piece, PointSet moves, int xx, int yy, byte remain)
@@ -787,8 +781,8 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /** Helper function for {@link #computeMoves}. */
-    protected void considerFiring (PointSet attacks, int xx, int yy, byte remain,
-                                   boolean checkThisSpot)
+    protected void considerFiring (
+        PointSet attacks, int xx, int yy, byte remain, boolean checkThisSpot)
     {
         // make sure this coordinate is on the board
         if (!_bbounds.contains(xx, yy)) {
@@ -828,41 +822,56 @@ public class BangBoard extends SimpleStreamableObject
 
     /** The width and height of our board. */
     protected int _width, _height;
-    
+
     /** The heightfield that describes the board terrain. */
     protected byte[] _heightfield;
-    
+
     /** The terrain codes for each heightfield vertex. */
     protected byte[] _terrain;
-    
+
     /** The level of the water on the board (-128 for no water). */
     protected byte _waterLevel;
-    
+
     /** The diffuse and ambient colors of the water. */
     protected int _waterDiffuseColor, _waterAmbientColor;
-    
+
     /** The azimuths and elevations of the directional lights. */
     protected float[] _lightAzimuths, _lightElevations;
-    
+
     /** The diffuse and ambient colors of the directional lights. */
-    protected int[] _lightDiffuseColors, _lightAmbientColors; 
-    
+    protected int[] _lightDiffuseColors, _lightAmbientColors;
+
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight;
-    
+
     /** The minimum height at the edge of the board, used for values beyond the
      * edge. */
     protected transient byte _minEdgeHeight;
-    
+
     /** The predominant terrain codes for each tile. */
     protected transient byte[] _pterrain;
-    
+
     /** Tracks coordinate traversability. */
     protected transient byte[] _tstate, _btstate, _estate;
-    
+
     /** A temporary array for computing move and fire sets. */
     protected transient byte[] _pgrid;
 
     /** A rectangle containing our bounds, used when path finding. */
     protected transient Rectangle _bbounds;
+
+    /** Indicates that this tile is completely empty. */
+    protected static final byte O_EMPTY = 0;
+
+    /** Indicates that a normal unit can occupy this tile. */
+    protected static final byte O_ANY = 1;
+
+    /** Indicates that a rough-terrain capable unit can occupy this tile. */
+    protected static final byte O_ROUGH = 2;
+
+    /** Indicates that a flying unit can occupy this tile. */
+    protected static final byte O_FLYER = 3;
+
+    /** Indicates that no unit can occupy this tile. */
+    protected static final byte O_NONE = 4;
 }
