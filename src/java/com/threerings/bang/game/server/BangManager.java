@@ -289,8 +289,18 @@ public class BangManager extends GameManager
         _bconfig = (BangConfig)_gameconfig;
 
         // select the boards we'll use for each round
-        _boards = BangServer.boardmgr.selectBoards(
-            _bconfig.players.length, _bconfig.scenarios, isTest());
+        if (!StringUtil.isBlank(_bconfig.board)) {
+            BoardRecord brec = BangServer.boardmgr.getBoard(
+                _bconfig.players.length, _bconfig.board);
+            if (brec != null) {
+                _boards = new BoardRecord[_bconfig.scenarios.length];
+                Arrays.fill(_boards, brec);
+            }
+        }
+        if (_boards == null) {
+            _boards = BangServer.boardmgr.selectBoards(
+                _bconfig.players.length, _bconfig.scenarios, isTest());
+        }
 
         // configure the town associated with this server
         _bangobj.setTownId(ServerConfig.getTownId());

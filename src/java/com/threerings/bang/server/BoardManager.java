@@ -30,22 +30,28 @@ public class BoardManager
         throws PersistenceException
     {
         _brepo = new BoardRepository(conprov);
+        _byname = new BoardMap[BangCodes.MAX_PLAYERS-1];
+        for (int ii = 0; ii < _byname.length; ii++) {
+            _byname[ii] = new BoardMap();
+        }
 
         // load up and map all of our boards by scenario and player count
         for (BoardRecord record : _brepo.loadBoards()) {
             int pidx = record.players-1;
             String[] scenarios = StringUtil.split(record.scenarios, ",");
             for (int ii = 0; ii < scenarios.length; ii++) {
-                BoardList[] lists = _map.get(scenarios[ii]);
+                BoardList[] lists = _byscenario.get(scenarios[ii]);
                 if (lists == null) {
-                    _map.put(scenarios[ii],
-                             lists = new BoardList[BangCodes.MAX_PLAYERS]);
+                    _byscenario.put(
+                        scenarios[ii],
+                        lists = new BoardList[BangCodes.MAX_PLAYERS]);
                 }
                 if (lists[pidx] == null) {
                     lists[pidx] = new BoardList();
                 }
                 lists[pidx].add(record);
             }
+            _byname[pidx].put(record.name, record);
         }
     }
 
@@ -58,7 +64,7 @@ public class BoardManager
     {
         BoardRecord[] choices = new BoardRecord[scenarios.length];
         for (int ii = 0; ii < scenarios.length; ii++) {
-            BoardList candidates = _map.get(scenarios[ii])[players-1];
+            BoardList candidates = _byscenario.get(scenarios[ii])[players-1];
             if (candidates == null) {
                 log.warning("Aiya! Missing boards [players=" + players +
                             ", scenario=" + scenarios[ii] + "].");
@@ -71,11 +77,28 @@ public class BoardManager
         return choices;
     }
 
+    /**
+     * Returns the version of the specified named board appropriate for the
+     * specified number of players, or null if no such board exists.
+     */
+    public BoardRecord getBoard (int pcount, String name)
+    {
+        return _byname[pcount-1].get(name);
+    }
+
+    /** Used for our name to board mapping. */
+    protected static class BoardMap extends HashMap<String,BoardRecord>
+    {
+    }
+
     /** Provides access to the board database. */
     protected BoardRepository _brepo;
 
     /** A mapping from scenario name to a list of boards playable with
      * that scenario (which are broken out by player count). */
-    protected HashMap<String,BoardList[]> _map =
+    protected HashMap<String,BoardList[]> _byscenario =
         new HashMap<String,BoardList[]>();
+
+    /** A mapping by board name, broken out by player count. */
+    protected BoardMap[] _byname;
 }

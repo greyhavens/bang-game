@@ -3,12 +3,13 @@
 
 package com.threerings.bang.lobby.client;
 
+import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BTextField;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.util.Dimension;
 import com.jmex.bui.border.CompoundBorder;
 import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.border.LineBorder;
@@ -17,7 +18,9 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
-import com.jme.renderer.ColorRGBA;
+import com.jmex.bui.util.Dimension;
+
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
@@ -79,7 +82,7 @@ public class LobbyView extends BWindow
 
         // add our various configuration options
         BContainer blist = new BContainer(
-            new TableLayout(6, 5, 5, TableLayout.CENTER));
+            new TableLayout(7, 5, 5, TableLayout.CENTER));
         blist.add(new BLabel(msgs.get("m.player_count")));
         _seats = new BComboBox(SEATS);
         blist.add(_seats);
@@ -91,6 +94,9 @@ public class LobbyView extends BWindow
         blist.add(new BLabel(msgs.get("m.scenario")));
         _scenarios = new BComboBox(new Object[] { new ScenarioLabel("random") });
         blist.add(_scenarios);
+
+        blist.add(_board = new BTextField());
+        _board.setPreferredWidth(100);
 
         blist.add(new BLabel(msgs.get("m.rounds")));
         _rounds = new BComboBox(ROUNDS);
@@ -263,6 +269,10 @@ public class LobbyView extends BWindow
             }
         }
         config.teamSize = (Integer)_tsize.getSelectedItem();
+        String bname = _board.getText();
+        if (!StringUtil.isBlank(bname)) {
+            config.board = bname;
+        }
         _tbldtr.createTable(tconfig, config);
     }
 
@@ -322,6 +332,7 @@ public class LobbyView extends BWindow
     protected BComboBox _seats, _tsize, _rounds, _scenarios;
     protected BContainer _penders;
     protected BContainer _inplay;
+    protected BTextField _board;
 
     protected static final Integer[] SEATS = new Integer[] {
         Integer.valueOf(1), Integer.valueOf(2),

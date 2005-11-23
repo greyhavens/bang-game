@@ -22,6 +22,10 @@ public class BangConfig extends GameConfig
     /** The desired scenarios for each round (implies the number of rounds). */
     public String[] scenarios;
 
+    /** Specifies the exact name of the board to be used instead of choosing
+     * randomly. This is used when testing. */
+    public String board;
+
     /** Whether or not fog of war is activated. */
     public boolean fog = false;
 
