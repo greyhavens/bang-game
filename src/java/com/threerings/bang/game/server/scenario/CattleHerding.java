@@ -77,9 +77,14 @@ public class CattleHerding extends Scenario
 
         // determine how many cattle we want to put on the board
         int cattle = 0, cps = 0;
-        while (cattle < bangobj.players.length * 3) {
-            cattle += _cattleSpots.size();
-            cps++;
+        if (_cattleSpots.size() > 0) {
+            while (cattle < bangobj.players.length * 3) {
+                cattle += _cattleSpots.size();
+                cps++;
+            }
+        } else {
+            log.warning("Board has no cattle spots! [game=" + bangman.where() +
+                        ", board=" + bangobj.boardName + "].");
         }
 
         // now place the cattle near the cattle starting spots
