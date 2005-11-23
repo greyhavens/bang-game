@@ -3,7 +3,9 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
 
@@ -31,10 +33,12 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.geom.BufferUtils;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
-import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interator;
+
+import com.threerings.media.image.ColorUtil;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
@@ -610,10 +614,13 @@ public class TerrainNode extends Node
         // set the texture coordinates
         FloatBuffer tbuf0 = BufferUtils.createFloatBuffer(vwidth*vheight*2),
             tbuf1 = BufferUtils.createFloatBuffer(vwidth*vheight*2);
-        float step0 = 1.0f / BangBoard.HEIGHTFIELD_SUBDIVISIONS,
-            step1 = 1.0f / (SPLAT_SIZE+1);
+        float step0 = 1.0f / (SPLAT_SIZE+1),
+            step1 = 1.0f / BangBoard.HEIGHTFIELD_SUBDIVISIONS;
         for (int y = (be ? -2 : 0), ymax = y + vheight; y < ymax; y++) {
             for (int x = (le ? -2 : 0), xmax = x + vwidth; x < xmax; x++) {
+                tbuf0.put(0.5f*step0 + x * step0);
+                tbuf0.put(0.5f*step0 + y * step0);
+                
                 float xoff = 0f;
                 if (le && x == -2) {
                     xoff = -EDGE_SIZE / TILE_SIZE;
@@ -621,7 +628,7 @@ public class TerrainNode extends Node
                 } else if (re && x == xmax - 1) {
                     xoff = EDGE_SIZE / TILE_SIZE;
                 }
-                tbuf0.put(x * step0 + xoff);
+                tbuf1.put(x * step1 + xoff);
                 
                 float yoff = 0f;
                 if (be && y == -2) {
@@ -630,10 +637,7 @@ public class TerrainNode extends Node
                 } else if (te && y == ymax - 1) {
                     yoff = EDGE_SIZE / TILE_SIZE;
                 }
-                tbuf0.put(y * step0 + yoff);
-                
-                tbuf1.put(0.5f*step1 + x * step1);
-                tbuf1.put(0.5f*step1 + y * step1);
+                tbuf1.put(y * step1 + yoff);
             }
         }
         
@@ -710,16 +714,65 @@ public class TerrainNode extends Node
      */
     protected float getTerrainAlpha (int code, float x, float y)
     {
-         int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
+        int rx = (int)FastMath.floor(x + 0.5f),
+            ry = (int)FastMath.floor(y + 0.5f);
+        float alpha = 0f, total = 0f;
+        for (int sx = rx - 1, sxmax = rx + 1; sx <= sxmax; sx++) {
+            for (int sy = ry - 1, symax = ry + 1; sy <= symax; sy++) {
+                float xdist = (x - sx), ydist = (y - sy),
+                    weight = Math.max(0f,
+                        1f - (xdist*xdist + ydist*ydist)/(1.75f*1.75f));
+                if (_board.getTerrainValue(sx, sy) == code) {
+                    alpha += weight;
+                }
+                total += weight;
+            }
+        }
+        return alpha / total;
+    }
+    
+    /**
+     * Computes and returns the base color value at the given sub-tile
+     * coordinates.
+     */
+    protected Color getTerrainColor (float x, float y)
+    {
+        int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
             fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
-        float ff = _board.getTerrainValue(fx, fy) == code ? 1.0f : 0.0f,
-            fc = _board.getTerrainValue(fx, cy) == code ? 1.0f : 0.0f,
-            cf = _board.getTerrainValue(cx, fy) == code ? 1.0f : 0.0f,
-            cc = _board.getTerrainValue(cx, cy) == code ? 1.0f : 0.0f,
-            ax = x - fx, ay = y - fy;
-            
-        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
-            FastMath.LERP(ay, cf, cc));
+        Color ff = getTerrainColor(fx, fy), fc = getTerrainColor(fx, cy),
+            cf = getTerrainColor(cx, fy), cc = getTerrainColor(cx, cy);
+        float ax = x - fx, ay = y - fy;
+        
+        return ColorUtil.blend(ColorUtil.blend(fc, ff, ay),
+            ColorUtil.blend(cc, cf, ay), ax);
+    }
+    
+    /**
+     * Returns the base color value at the given sub-tile coordinates.
+     */
+    protected Color getTerrainColor (int x, int y)
+    {
+        byte code = _board.getTerrainValue(x, y);
+        Color color = (Color)_tcolors.get(code);
+        if (color != null) {
+            return color;
+        }
+        
+        // if we haven't computed it already, determine the overall color
+        // average for the texture
+        BufferedImage img = RenderUtil.getGroundTile(Terrain.fromCode(code));
+        int[] rgb = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0,
+            img.getWidth());
+        int r = 0, g = 0, b = 0, c;
+        for (int i = 0; i < rgb.length; i++) {
+            c = rgb[i];
+            r += ((c >> 16) & 0xFF);
+            g += ((c >> 8) & 0xFF);
+            b += (c & 0xFF);
+        }
+        color = new Color(r / rgb.length, g / rgb.length, b / rgb.length);
+        _tcolors.put(code, color);
+        return color;
     }
     
     /** Contains all the state associated with a splat block (a collection of
@@ -741,6 +794,9 @@ public class TerrainNode extends Node
         
         /** Maps terrain codes to ground texture states. */
         public HashIntMap groundTextures = new HashIntMap();
+        
+        /** The base texture buffer. */
+        public ByteBuffer baseBuffer;
         
         /** Maps terrain codes to alpha texture buffers. */
         public HashIntMap alphaBuffers = new HashIntMap();
@@ -775,48 +831,39 @@ public class TerrainNode extends Node
             // remove all the existing children
             node.detachAllChildren();
             
-            // find out which terrain codes this block contains and which is
-            // the most common
-            IntIntMap counts = new IntIntMap();
-            int baseCode = 0, baseCount = 0;
+            // find out which terrain codes this block contains
+            ArrayIntSet codes = new ArrayIntSet();
             for (int y = bounds.y, ymax = y+bounds.height; y < ymax; y++) {
                 for (int x = bounds.x, xmax = x+bounds.width; x < xmax; x++) {
-                    int code = _board.getTerrainValue(x, y);
-                    counts.increment(code, 1);
-                    int count = counts.get(code);
-                    if (count > baseCount) {
-                        baseCode = code;
-                        baseCount = count;
-                    }
+                    codes.add(_board.getTerrainValue(x, y));
                 }
             }
 
             // use the most common terrain for the base mesh (which both tests
             // and writes to the z buffer)
             SharedMesh base = new SharedMesh("base", mesh);
-            base.setRenderState(getGroundTexture(baseCode));
+            base.setRenderState(createBaseTexture(rect));
             base.setRenderState(RenderUtil.lequalZBuf);
             node.attachChild(base);
             
             // add the rest as splats (which only test the z buffer)
-            counts.remove(baseCode);
-            int[] codes = counts.getKeys();
-            for (int i = 0; i < codes.length; i++) {
-                SharedMesh splat = new SharedMesh("splat" + i, mesh);
+            for (Interator it = codes.interator(); it.hasNext(); ) {
+                int code = it.nextInt();
+                SharedMesh splat = new SharedMesh("splat" + code, mesh);
                 
                 // initialize the texture state
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
-                Texture ground = getGroundTexture(codes[i]).getTexture().
+                tstate.setTexture(createAlphaTexture(code, rect), 0);
+                Texture ground = getGroundTexture(code).getTexture().
                     createSimpleClone();
                 ground.setApply(Texture.AM_COMBINE);
                 ground.setCombineFuncAlpha(Texture.ACF_REPLACE);
-                ground.setCombineSrc0Alpha(Texture.ACS_TEXTURE);
+                ground.setCombineSrc0Alpha(Texture.ACS_PREVIOUS);
                 ground.setCombineFuncRGB(Texture.ACF_MODULATE);
                 ground.setCombineSrc0RGB(Texture.ACS_TEXTURE);
                 ground.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
-                tstate.setTexture(ground, 0);
-                tstate.setTexture(createAlphaTexture(codes[i], rect), 1);
+                tstate.setTexture(ground, 1);
                 splat.setRenderState(tstate);
                 
                 // and the z buffer state
@@ -830,7 +877,7 @@ public class TerrainNode extends Node
             
             // prune any unused alpha buffers from the map
             for (Interator it = alphaBuffers.keys(); it.hasNext(); ) {
-                if (!IntListUtil.contains(codes, it.nextInt())) {
+                if (!codes.contains(it.nextInt())) {
                     it.remove();
                 }
             }
@@ -849,6 +896,54 @@ public class TerrainNode extends Node
                 groundTextures.put(code, tstate = RenderUtil.getGroundTexture(
                     Terrain.fromCode(code)));
             }
+            return tstate;
+        }
+        
+        /**
+         * Creates and returns the base texture, using preexisting buffers when
+         * possible.
+         */
+        protected TextureState createBaseTexture (Rectangle rect)
+        {
+            // create the buffer if it doesn't already exist
+            if (baseBuffer == null) {
+                baseBuffer = ByteBuffer.allocateDirect(TEXTURE_SIZE *
+                    TEXTURE_SIZE * 3);
+                rect = bounds;
+            }
+            
+            // update the affected region of the buffer
+            float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE;
+            int x1 = (int)((rect.x - bounds.x) / step),
+                y1 = (int)((rect.y - bounds.y) / step),
+                x2 = (int)FastMath.ceil((rect.x + rect.width - 1 - bounds.x) /
+                    step),
+                y2 = (int)FastMath.ceil((rect.y + rect.height - 1 - bounds.y) /
+                    step);
+            for (int y = y1; y <= y2; y++) {
+                for (int x = x1; x <= x2; x++) {
+                    int idx = (y*TEXTURE_SIZE + x)*3;
+                    
+                    Color color = getTerrainColor(bounds.x + x * step,
+                        bounds.y + y * step);
+                    baseBuffer.put((byte)color.getRed());
+                    baseBuffer.put((byte)color.getGreen());
+                    baseBuffer.put((byte)color.getBlue());
+                }
+            }
+            
+            Texture texture = new Texture();
+            baseBuffer.rewind();
+            texture.setImage(new Image(Image.RGB888, TEXTURE_SIZE,
+                TEXTURE_SIZE, baseBuffer));
+            
+            // set the filter parameters
+            texture.setFilter(Texture.FM_LINEAR);
+            texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+            
+            TextureState tstate =
+                _ctx.getDisplay().getRenderer().createTextureState();
+            tstate.setTexture(texture);
             return tstate;
         }
         
@@ -893,13 +988,12 @@ public class TerrainNode extends Node
             
             // set the filter parameters
             texture.setFilter(Texture.FM_LINEAR);
+            texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
             
             // and the combination parameters
             texture.setApply(Texture.AM_COMBINE);
             texture.setCombineFuncAlpha(Texture.ACF_REPLACE);
             texture.setCombineSrc0Alpha(Texture.ACS_TEXTURE);
-            texture.setCombineFuncRGB(Texture.ACF_REPLACE);
-            texture.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
                 
             return texture;
         }
@@ -919,6 +1013,9 @@ public class TerrainNode extends Node
     
     /** The shared index buffer for highlights. */
     protected static IntBuffer _hibuf;
+    
+    /** Maps terrain codes to colors. */
+    protected static HashIntMap _tcolors = new HashIntMap();
     
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;
