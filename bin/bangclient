@@ -37,6 +37,12 @@ done
 BANG_HOME=`dirname $0`/..
 CARGS="-Dresource_dir=$BANG_HOME/rsrc"
 CLASS=com.threerings.bang.client.BangApp
-$BANG_HOME/bin/runjava -v -- -Dno_log_redir=true \
-    $CARGS $TEST "$BOARD" $CLASS $ARGS
+if [ -z "$BOARD" ]; then
+    $BANG_HOME/bin/runjava -- -Dno_log_redir=true \
+        $CARGS $TEST $CLASS $ARGS
+else
+    $BANG_HOME/bin/runjava -- -Dno_log_redir=true \
+        $CARGS $TEST "$BOARD" $CLASS $ARGS
+fi
+
 xset r on
