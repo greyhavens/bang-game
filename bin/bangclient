@@ -9,6 +9,12 @@ ARGS="localhost 47624"
 
 while [ ! -z "$1" ]; do
     case "$1" in
+        -test=*)
+            BOARD=`echo $1 | sed 's:-test=::g'`;
+            BOARD="-Dboard=$BOARD";
+            TEST="-Dtest=true";
+            ;;
+        
         -test)
             TEST="-Dtest=true";
             ;;
@@ -31,5 +37,6 @@ done
 BANG_HOME=`dirname $0`/..
 CARGS="-Dresource_dir=$BANG_HOME/rsrc"
 CLASS=com.threerings.bang.client.BangApp
-$BANG_HOME/bin/runjava -- -Dno_log_redir=true $CARGS $TEST $CLASS $ARGS
+$BANG_HOME/bin/runjava -v -- -Dno_log_redir=true \
+    $CARGS $TEST "$BOARD" $CLASS $ARGS
 xset r on

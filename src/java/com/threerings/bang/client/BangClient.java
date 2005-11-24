@@ -87,6 +87,7 @@ public class BangClient extends BasicClient
             config.ais = new GameAI[] {
                 null, new GameAI(0, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { "cj" };
+            config.board = System.getProperty("board");
             ConfirmListener cl = new ConfirmListener() {
                 public void requestProcessed () {
                 }
