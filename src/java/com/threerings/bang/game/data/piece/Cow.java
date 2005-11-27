@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.piece;
 
 import com.samskivert.util.ArrayUtil;
 
+import com.threerings.bang.data.UnitConfig;
+
 import com.threerings.bang.game.client.sprite.CowSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -30,6 +32,11 @@ public class Cow extends Piece
         // if we're already spooked, the first spooker retains precedence
         if (_wantToMove != -1) {
             return;
+        }
+
+        // if we were spooked by a big shot, become owned by that player
+        if (spooker.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            this.owner = spooker.owner;
         }
 
         // otherwise spook in the opposite direction of our spooker

@@ -96,7 +96,7 @@ public class CattleHerding extends Scenario
                 cow.assignPieceId();
                 cow.position(spot.x, spot.y);
                 cow.orientation = (short)RandomUtil.getInt(4);
-                cow.owner = determineOwner(cow);
+//                cow.owner = determineOwner(cow);
                 bangobj.board.updateShadow(null, cow);
                 bangobj.addToPieces(cow);
             }
@@ -126,7 +126,7 @@ public class CattleHerding extends Scenario
     @Override // documentation inherited
     public Effect pieceMoved (BangObject bangobj, Piece piece)
     {
-        if (piece instanceof Cow) {
+        /* if (piece instanceof Cow) {
             // recompute this cow's owner
             Cow cow = (Cow)piece;
             int newOwner = determineOwner(cow);
@@ -135,7 +135,8 @@ public class CattleHerding extends Scenario
                 log.info("Cow changed owner " + cow.info());
             }
 
-        } else if (piece instanceof Unit) {
+        } else */
+        if (piece instanceof Unit) {
             // check to see if this unit spooked any cattle
             Piece[] pieces = bangobj.getPieceArray();
             for (int ii = 0; ii < pieces.length; ii++) {
