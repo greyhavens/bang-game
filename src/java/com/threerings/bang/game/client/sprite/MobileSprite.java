@@ -13,6 +13,8 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
 
@@ -114,6 +116,12 @@ public class MobileSprite extends PieceSprite
         return isMoving() || (_action != null) || (_actions.size() > 0);
     }
     
+    @Override // documentation inherited
+    public Spatial getHighlight ()
+    {
+        return _hnode;
+    }
+    
     /**
      * Sets this sprite on a path defined by a list of {@link Point} objects.
      *
@@ -174,6 +182,13 @@ public class MobileSprite extends PieceSprite
     }
     
     @Override // documentation inherited
+    public void snapToTerrain ()
+    {
+        super.snapToTerrain();
+        updateHighlight();
+    }
+    
+    @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
         super.createGeometry(ctx);
@@ -182,14 +197,19 @@ public class MobileSprite extends PieceSprite
             loadTextures(ctx);
         }
 
+        // contains highlights draped over terrain
+        _hnode = new Node("highlight");
+        
+        // the geometry of the highlight is shared between the elements
+        _highlight = _view.getTerrainNode().createHighlight(localTranslation.x,
+            localTranslation.y);
+        
         // we display a simple shadow texture on the ground beneath us
-        _shadow = RenderUtil.createIcon(_shadtex);
-        _shadow.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        float height = _piece.isFlyer() ? -2 * TILE_SIZE : 0;
-        height += 0.1f;
-        _shadow.setLocalTranslation(new Vector3f(0, 0, height));
-        attachChild(_shadow);
-
+        _shadow = new SharedMesh("shadow", _highlight);
+        _shadow.setRenderState(_shadtex);
+        _shadow.updateRenderState();
+        _hnode.attachChild(_shadow);
+        
         // load our model
         _model = ctx.getModelCache().getModel(_type, _name);
 
@@ -316,7 +336,7 @@ public class MobileSprite extends PieceSprite
             return new LinePath(this, start, end, duration);
         }
     }
-
+    
     /**
      * Creates a path from a list of {@link Point} objects.
      *
@@ -357,6 +377,17 @@ public class MobileSprite extends PieceSprite
         setOrientation(_piece.orientation);
     }
     
+    /**
+     * Updates the position of the highlight.
+     */
+    protected void updateHighlight ()
+    {
+        if (_highlight.x != localTranslation.x ||
+            _highlight.y != localTranslation.y) {
+            _highlight.setPosition(localTranslation.x, localTranslation.y);
+        }
+    }
+    
     protected static void loadTextures (BasicContext ctx)
     {
         _shadtex = RenderUtil.createTexture(
@@ -384,8 +415,10 @@ public class MobileSprite extends PieceSprite
 
     protected String _type, _name;
     protected Model _model;
+    protected Node _hnode;
+    protected TerrainNode.Highlight _highlight;
     protected Node[] _meshes;
-    protected Quad _shadow;
+    protected SharedMesh _shadow;
     protected Sound _moveSound;
 
     protected String _action;

@@ -89,12 +89,6 @@ public class UnitSprite extends MobileSprite
     {
         _pendquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
     }
-
-    @Override // documentation inherited
-    public Spatial getHighlight ()
-    {
-        return _status;
-    }
     
     @Override // documentation inherited
     public void updated (BangBoard board, Piece piece, short tick)
@@ -210,13 +204,13 @@ public class UnitSprite extends MobileSprite
         
         _ctx = ctx;
         
+        // load up our model
+        super.createGeometry(ctx);
+        
         // this composite of icons combines to display our status
         _status = new Node("status");
+        _hnode.attachChild(_status);
         
-        // the geometry of the highlight is shared between the status elements
-        _highlight = _view.getTerrainNode().createHighlight(_piece.x, _piece.y,
-            true);
-            
         // this icon is displayed when the mouse is hovered over us
         _hov = new SharedMesh("hov", _highlight);
         TextureState tstate = ctx.getRenderer().createTextureState();
@@ -252,9 +246,6 @@ public class UnitSprite extends MobileSprite
         
         // configure our colors
         configureOwnerColors();
-
-        // load up our model
-        super.createGeometry(ctx);
 
         // this icon is displayed when we're a target
         _tgtquad = RenderUtil.createIcon(_tgttex);
@@ -300,11 +291,8 @@ public class UnitSprite extends MobileSprite
      */
     protected void updateStatus ()
     {
-        if (_piece.isAlive() && !isMoving()) {
+        if (_piece.isAlive() /* && !isMoving() */) {
             _status.setCullMode(CULL_DYNAMIC);
-            if (_highlight.x != _piece.x || _highlight.y != _piece.y) {
-                _highlight.setPosition(_piece.x, _piece.y);
-            }
             
         } else {
             _status.setCullMode(CULL_ALWAYS);
@@ -391,11 +379,9 @@ public class UnitSprite extends MobileSprite
     protected Quad _tgtquad, _pendquad;
 
     protected Node _status;
-    protected TerrainNode.Highlight _highlight;
     protected SharedMesh _hov, _ticks, _damage, _movable;
     protected Quad _icon;
     protected TextureState _damtex;
-
     protected int _odamage;
     protected short _pendingTick = -1;
 

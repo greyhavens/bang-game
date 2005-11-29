@@ -507,8 +507,8 @@ public class BoardView extends BComponent
             Geometry tmesh = _pick.getPickData(ii).getTargetMesh();
             if (tmesh instanceof TerrainNode.Highlight) {
                 TerrainNode.Highlight highlight = (TerrainNode.Highlight)tmesh;
-                _high.x = highlight.x;
-                _high.y = highlight.y;
+                _high.x = highlight.getTileX();
+                _high.y = highlight.getTileY();
                 return;
             }
         }

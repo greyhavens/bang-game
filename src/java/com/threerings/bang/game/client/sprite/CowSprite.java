@@ -5,7 +5,7 @@ package com.threerings.bang.game.client.sprite;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
-import com.jme.scene.shape.Quad;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.state.TextureState;
 
 import com.threerings.bang.util.BasicContext;
@@ -43,27 +43,27 @@ public class CowSprite extends MobileSprite
             loadTextures(ctx);
         }
 
+        super.createGeometry(ctx);
+        
         // this is used to indicate who owns us
-        _ownquad = RenderUtil.createIcon(_owntex);
-        _ownquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _ownquad.setLocalTranslation(new Vector3f(0, 0, 0.2f));
-        attachChild(_ownquad);
+        _own = new SharedMesh("own", _highlight);
+        _own.setRenderState(_owntex);
+        _own.updateRenderState();
+        _hnode.attachChild(_own);
 
         // configure our colors
         configureOwnerColors();
-
-        super.createGeometry(ctx);
     }
 
     /** Sets up our colors according to our owning player. */
     protected void configureOwnerColors ()
     {
         if (_piece.owner < 0) {
-            _ownquad.setCullMode(CULL_ALWAYS);
+            _own.setCullMode(CULL_ALWAYS);
         } else {
-            _ownquad.setSolidColor(JPIECE_COLORS[_piece.owner]);
-            _ownquad.updateRenderState();
-            _ownquad.setCullMode(CULL_DYNAMIC);
+            _highlight.setDefaultColor(JPIECE_COLORS[_piece.owner]);
+            _highlight.updateRenderState();
+            _own.setCullMode(CULL_DYNAMIC);
         }
     }
 
@@ -73,7 +73,7 @@ public class CowSprite extends MobileSprite
             ctx, ctx.loadImage("textures/ustatus/selected.png"));
     }
 
-    protected Quad _ownquad;
+    protected SharedMesh _own;
 
     protected static TextureState _owntex;
 }
