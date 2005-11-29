@@ -567,6 +567,11 @@ public class BangBoardView extends BoardView
         clearSelection();
     }
 
+    protected boolean hasQueuedMove (int pieceId)
+    {
+        return _queuedMoves.containsKey(pieceId);
+    }
+
     protected void clearMoveSet ()
     {
         clearHighlights();

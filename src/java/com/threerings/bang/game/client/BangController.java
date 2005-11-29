@@ -5,6 +5,10 @@ package com.threerings.bang.game.client;
 
 import java.awt.event.ActionEvent;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import com.jme.input.KeyInput;
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.KeyListener;
@@ -136,31 +140,37 @@ public class BangController extends GameController
      */
     public void handleSelectNextUnit (Object source)
     {
+        // determine which units are available for selection
+        _selections.clear();
         Piece[] pieces = _bangobj.getPieceArray();
-
-        // start with the most recently selected unit
-        int startidx = 0;
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii].pieceId == _lastSelection) {
-                startidx = ii+1;
+            if ((pieces[ii].owner != _pidx) ||
+                !(pieces[ii] instanceof Unit) ||
+                _view.view.hasQueuedMove(pieces[ii].pieceId)) {
+                continue;
+            }
+            _selections.add((Unit)pieces[ii]);
+        }
+        Collections.sort(_selections, UNIT_COMPARATOR);
+
+        // nothing doing if we have no available selections
+        if (_selections.size() == 0) {
+            return;
+        }
+
+        // locate the index of the most recently selected unit
+        int selidx = -1;
+        for (int ii = 0, ll = _selections.size(); ii < ll; ii++) {
+            if (_selections.get(ii).pieceId == _lastSelection) {
+                selidx = ii;
                 break;
             }
         }
 
-        // now find the next unit owned by this player
-        Unit unit = null;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece piece = pieces[(ii+startidx)%pieces.length];
-            if (piece instanceof Unit && piece.owner == _pidx) {
-                unit = (Unit)piece;
-                break;
-            }
-        }
-
-        if (unit != null) {
-            _lastSelection = unit.pieceId;
-            _view.view.selectUnit(unit, true);
-        }
+        // select that unit and note the new selection
+        Unit unit = _selections.get((selidx+1)%_selections.size());
+        _lastSelection = unit.pieceId;
+        _view.view.selectUnit(unit, true);
     }
 
     /** Handles a request to move a piece. */
@@ -284,6 +294,7 @@ public class BangController extends GameController
     {
         super.gameDidStart();
 
+        // let the view know that things are underway
         _view.startGame(_bangobj, _config, _pidx);
     }
 
@@ -337,13 +348,31 @@ public class BangController extends GameController
     /** Our player index or -1 if we're not a player. */
     protected int _pidx;
 
-    /** The unit id of the unit most recently selected via {@link
-     * #handleSelectNextUnit}. */
-    protected int _lastSelection = -1;
-
     /** Used to start the new round after two conditions have been met. */
     protected Multex _selphaseMultex;
 
     /** Maps keys to controller commands. */
     protected HashIntMap _keycmds = new HashIntMap();
+
+    /** The units we cycle through when we press tab. */
+    protected ArrayList<Unit> _selections = new ArrayList<Unit>();
+
+    /** The unit id of the unit most recently selected via {@link
+     * #handleSelectNextUnit}. */
+    protected int _lastSelection = -1;
+
+    /** Used to by {@link #handleSelectNextUnit}. */
+    protected static Comparator<Unit> UNIT_COMPARATOR = new Comparator<Unit>() {
+        public int compare (Unit u1, Unit u2) {
+            if (u1.lastActed != u2.lastActed) {
+                return u1.lastActed - u2.lastActed;
+            }
+            String t1 = u1.getType(), t2 = u2.getType();
+            int cv = t1.compareTo(t2);
+            if (cv != 0) {
+                return cv;
+            }
+            return u1.pieceId - u2.pieceId;
+        }
+    };
 }
