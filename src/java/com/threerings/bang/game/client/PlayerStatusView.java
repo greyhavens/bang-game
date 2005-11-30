@@ -38,6 +38,7 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.util.BangContext;
@@ -91,6 +92,7 @@ public class PlayerStatusView extends BContainer
         _player.setHorizontalAlignment(BLabel.CENTER);
         _player.setVerticalAlignment(BLabel.CENTER);
         add(_cash = new BLabel(""), CASH_LOC);
+        _cash.setLookAndFeel(BangUI.pstatusLNF);
         _pieces = new BLabel("");
 
         updateStatus();
@@ -99,7 +101,7 @@ public class PlayerStatusView extends BContainer
     @Override // documentation inherited
     public void wasAdded ()
     {
-        BLookAndFeel lnf = getLookAndFeel().deriveLookAndFeel();
+        BLookAndFeel lnf = BangUI.pstatusLNF.deriveLookAndFeel();
         lnf.setForeground(true, JPIECE_COLORS[_pidx]);
         _player.setLookAndFeel(lnf);
         super.wasAdded();
@@ -173,6 +175,7 @@ public class PlayerStatusView extends BContainer
         }
     }
 
+    @Override // documentation inherited
     protected void renderBackground (Renderer renderer)
     {
         // first draw our color

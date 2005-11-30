@@ -34,11 +34,17 @@ public class BangUI
     /** A font used to render dialog titles. */
     public static Font DTITLE_FONT = new Font("Dialog", Font.BOLD, 16);
 
+    /** A font used to render player status text. */
+    public static Font PSTATUS_FONT = new Font("Helvetica", Font.BOLD, 11);
+
     /** A look and feel for big splash text. */
     public static BLookAndFeel marqueeLNF;
 
     /** A look and feel for dialog title text. */
     public static BLookAndFeel dtitleLNF;
+
+    /** A look and feel for player status text. */
+    public static BLookAndFeel pstatusLNF;
 
     /** Used to load sounds from the classpath. */
     public static ClipProvider clipprov = new WaveDataClipProvider();
@@ -68,6 +74,9 @@ public class BangUI
 
         dtitleLNF = new BangLookAndFeel();
         dtitleLNF.setTextFactory(new AWTTextFactory(DTITLE_FONT));
+
+        pstatusLNF = new BangLookAndFeel();
+        pstatusLNF.setTextFactory(new AWTTextFactory(PSTATUS_FONT));
 
         scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
         coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
