@@ -3,17 +3,27 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.image.BufferedImage;
+
+import com.jme.image.Image;
+import com.jme.renderer.Renderer;
+import com.jme.util.TextureManager;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BIcon;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.ImageIcon;
+import com.jmex.bui.background.ScaledBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -23,6 +33,10 @@ import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
+
+import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.card.Card;
@@ -41,8 +55,7 @@ public class PlayerStatusView extends BContainer
     public PlayerStatusView (BangContext ctx, BangObject bangobj,
                              BangController ctrl, int pidx)
     {
-        super(GroupLayout.makeHoriz((pidx == 0 || pidx == 3) ?
-                                    GroupLayout.LEFT : GroupLayout.RIGHT));
+        super(new AbsoluteLayout());
 
         _ctx = ctx;
         _bangobj = bangobj;
@@ -50,11 +63,35 @@ public class PlayerStatusView extends BContainer
         _ctrl = ctrl;
         _pidx = pidx;
 
-        BContainer bits = new BContainer(new TableLayout(2, 5, 5));
-        bits.add(_player = new BLabel(_bangobj.players[_pidx].toString()));
-        bits.add(_cash = new BLabel(""));
-        bits.add(_pieces = new BLabel(""));
-        add(bits);
+        // load up the solid color background for our player
+        _color = new ImageIcon(
+            _ctx.loadImage("textures/pstatus/background" + pidx + ".png"));
+
+        // load up the main status image
+        ClassLoader loader = getClass().getClassLoader();
+        Image bg = TextureManager.loadImage(
+            loader.getResource("rsrc/textures/pstatus/dashboard.png"), true);
+        log.info("Type " + bg.getType());
+        setBackground(new ScaledBackground(bg, 0, 0, 0, 0));
+        setPreferredSize(new Dimension(bg.getWidth(), bg.getHeight()));
+
+        // load up our avatar image
+        Look look = ctx.getUserObject().getLook();
+        if (look != null) {
+            int[] avatar = look.getAvatar(ctx.getUserObject());
+            BufferedImage aimage = AvatarView.createImage(ctx, avatar);
+            _avatar = new ImageIcon(
+                aimage.getScaledInstance(
+                    AvatarLogic.WIDTH/10, AvatarLogic.HEIGHT/10,
+                    BufferedImage.SCALE_SMOOTH));
+        }
+
+        // create our interface elements
+        add(_player = new BLabel(_bangobj.players[_pidx].toString()), NAME_RECT);
+        _player.setHorizontalAlignment(BLabel.CENTER);
+        _player.setVerticalAlignment(BLabel.CENTER);
+        add(_cash = new BLabel(""), CASH_LOC);
+        _pieces = new BLabel("");
 
         updateStatus();
     }
@@ -66,15 +103,6 @@ public class PlayerStatusView extends BContainer
         lnf.setForeground(true, JPIECE_COLORS[_pidx]);
         _player.setLookAndFeel(lnf);
         super.wasAdded();
-    }
-
-    @Override // documentation inherited
-    public Dimension getPreferredSize ()
-    {
-        Dimension d = super.getPreferredSize();
-        // hack in some size temporarily for the buttons that we're not showing
-        d.width += (4-getComponentCount()) * 50;
-        return d;
     }
 
     // documentation inherited from interface AttributeChangeListener
@@ -98,9 +126,9 @@ public class PlayerStatusView extends BContainer
             Card card = (Card)event.getEntry();
             if (card.owner == _pidx) {
                 if (_pidx == 1 || _pidx == 2) {
-                    add(0, createButton(card));
+//                     add(0, createButton(card));
                 } else {
-                    add(createButton(card));
+//                     add(createButton(card));
                 }
             }
         }
@@ -128,7 +156,7 @@ public class PlayerStatusView extends BContainer
             if (comp instanceof BButton) {
                 BButton button = (BButton)comp;
                 if (cid.equals(button.getAction())) {
-                    remove(button);
+//                     remove(button);
                     return;
                 }
             }
@@ -143,6 +171,20 @@ public class PlayerStatusView extends BContainer
         } catch (Exception e) {
             log.warning("Bogus card '" + event.getAction() + "': " + e);
         }
+    }
+
+    protected void renderBackground (Renderer renderer)
+    {
+        // first draw our color
+        _color.render(renderer, BACKGROUND_LOC.x, BACKGROUND_LOC.y);
+
+        // then draw our avatar
+        if (_avatar != null) {
+            _avatar.render(renderer, AVATAR_LOC.x, AVATAR_LOC.y);
+        }
+
+        // then draw the normal background
+        super.renderBackground(renderer);
     }
 
     protected void updateStatus ()
@@ -169,4 +211,13 @@ public class PlayerStatusView extends BContainer
     protected BangController _ctrl;
     protected int _pidx;
     protected BLabel _player, _cash, _pieces;
+
+    protected ImageIcon _color, _avatar;
+
+    protected static final Point PLACE_LOC = new Point(10, 40);
+    protected static final Point BACKGROUND_LOC = new Point(33, 13);
+    protected static final Point AVATAR_LOC = new Point(33, 8);
+    protected static final Point FIRST_CARD_LOC = new Point(148, 52);
+    protected static final Point CASH_LOC = new Point(97, 34);
+    protected static final Rectangle NAME_RECT = new Rectangle(11, 0, 100, 16);
 }

@@ -8,7 +8,6 @@ import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.background.TintedBackground;
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
@@ -107,8 +106,7 @@ public class BangView extends BWindow
         for (int ii = 0; ii < pcount; ii++) {
             _pstatus[ii] = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
             _pstatus[ii].setLayoutManager(GroupLayout.makeHStretch());
-            _pstatus[ii].setBackground(
-                new TintedBackground(ColorRGBA.darkGray, 5, 5, 5, 5));
+            _pstatus[ii].setBackground(null);
             _pstatus[ii].add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
         }
 

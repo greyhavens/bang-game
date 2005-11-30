@@ -47,28 +47,9 @@ public class AvatarView extends BLabel
      */
     public void setAvatar (int[] avatar)
     {
-        CharacterDescriptor cdesc = _ctx.getAvatarLogic().decodeAvatar(avatar);
-        ActionFrames af;
-        try {
-            af = _ctx.getCharacterManager().getActionFrames(cdesc, "default");
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Unable to load action frames " +
-                    "[cdesc=" + cdesc + "].", e);
+        BufferedImage image = createImage(_ctx, avatar);
+        if (image == null) {
             return;
-        }
-
-        // composite the myriad components and render them into an image
-        MultiFrameImage mfi = af.getFrames(0);
-        int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0);
-        BufferedImage image = _ctx.getImageManager().createImage(
-            WIDTH, HEIGHT, Transparency.BITMASK);
-        Graphics2D gfx = (Graphics2D)image.createGraphics();
-        try {
-//             gfx.setColor(java.awt.Color.black);
-//             gfx.drawRect(0, 0, WIDTH-1, HEIGHT-1);
-            mfi.paintFrame(gfx, 0, WIDTH/2-ox, HEIGHT-oy);
-        } finally {
-            gfx.dispose();
         }
 
         // scale that image appropriately
@@ -83,6 +64,37 @@ public class AvatarView extends BLabel
     public Dimension getPreferredSize ()
     {
         return new Dimension(WIDTH/2, HEIGHT/2);
+    }
+
+    /**
+     * Creates an unscaled image for the specified avatar.
+     */
+    public static BufferedImage createImage (BangContext ctx, int[] avatar)
+    {
+        CharacterDescriptor cdesc = ctx.getAvatarLogic().decodeAvatar(avatar);
+        ActionFrames af;
+        try {
+            af = ctx.getCharacterManager().getActionFrames(cdesc, "default");
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Unable to load action frames " +
+                    "[cdesc=" + cdesc + "].", e);
+            return null;
+        }
+
+        // composite the myriad components and render them into an image
+        MultiFrameImage mfi = af.getFrames(0);
+        int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0);
+        BufferedImage image = ctx.getImageManager().createImage(
+            WIDTH, HEIGHT, Transparency.BITMASK);
+        Graphics2D gfx = (Graphics2D)image.createGraphics();
+        try {
+//             gfx.setColor(java.awt.Color.black);
+//             gfx.drawRect(0, 0, WIDTH-1, HEIGHT-1);
+            mfi.paintFrame(gfx, 0, WIDTH/2-ox, HEIGHT-oy);
+        } finally {
+            gfx.dispose();
+        }
+        return image;
     }
 
     protected BangContext _ctx;
