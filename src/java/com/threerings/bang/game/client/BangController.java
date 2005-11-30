@@ -196,6 +196,9 @@ public class BangController extends GameController
                  ", to=+" + tx + "+" + ty + ", tid=" + targetId + "].");
         _bangobj.service.move(
             _ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, il);
+
+        // clear out our last selected unit as we want to start afresh
+        _lastSelection = -1;
     }
 
     /** Handles a request to place a card. */
