@@ -40,6 +40,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.util.BangContext;
 
@@ -66,12 +67,12 @@ public class PlayerStatusView extends BContainer
 
         // load up the solid color background for our player
         _color = new ImageIcon(
-            _ctx.loadImage("textures/pstatus/background" + pidx + ".png"));
+            _ctx.loadImage("ui/pstatus/background" + pidx + ".png"));
 
         // load up the main status image
         ClassLoader loader = getClass().getClassLoader();
         Image bg = TextureManager.loadImage(
-            loader.getResource("rsrc/textures/pstatus/dashboard.png"), true);
+            loader.getResource("rsrc/ui/pstatus/dashboard.png"), true);
         log.info("Type " + bg.getType());
         setBackground(new ScaledBackground(bg, 0, 0, 0, 0));
         setPreferredSize(new Dimension(bg.getWidth(), bg.getHeight()));
@@ -124,16 +125,27 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent event)
     {
-        if (event.getName().equals(BangObject.CARDS)) {
-            Card card = (Card)event.getEntry();
-            if (card.owner == _pidx) {
-                if (_pidx == 1 || _pidx == 2) {
-//                     add(0, createButton(card));
-                } else {
-//                     add(createButton(card));
-                }
+        if (!event.getName().equals(BangObject.CARDS)) {
+            return;
+        }
+        Card card = (Card)event.getEntry();
+        if (card.owner != _pidx) {
+            return;
+        }
+        int cidx = -1;
+        for (int ii = 0; ii < _cards.length; ii++) {
+            if (_cards[ii] == null) {
+                cidx = ii;
+                break;
             }
         }
+        if (cidx == -1) {
+            return;
+        }
+        _cards[cidx] = createButton(card);
+        Rectangle rect = new Rectangle(CARD_RECT);
+        rect.x += (rect.width * cidx);
+        add(_cards[cidx], rect);
     }
 
     // documentation inherited from interface SetListener
@@ -153,14 +165,11 @@ public class PlayerStatusView extends BContainer
             return;
         }
         String cid = "" + card.cardId;
-        for (int ii = 0; ii < getComponentCount(); ii++) {
-            Object comp = getComponent(ii);
-            if (comp instanceof BButton) {
-                BButton button = (BButton)comp;
-                if (cid.equals(button.getAction())) {
-//                     remove(button);
-                    return;
-                }
+        for (int ii = 0; ii < _cards.length; ii++) {
+            if (cid.equals(_cards[ii].getAction())) {
+                remove(_cards[ii]);
+                _cards[ii] = null;
+                return;
             }
         }
     }
@@ -205,6 +214,7 @@ public class PlayerStatusView extends BContainer
         BIcon icon = new ImageIcon(
             _ctx.loadImage("cards/" + card.getType() + "/icon.png"));
         BButton btn = new BButton(icon, "" + card.cardId);
+        btn.setLookAndFeel(BangUI.pstatusLNF);
         btn.addListener(this);
         return btn;
     }
@@ -213,14 +223,16 @@ public class PlayerStatusView extends BContainer
     protected BangObject _bangobj;
     protected BangController _ctrl;
     protected int _pidx;
-    protected BLabel _player, _cash, _pieces;
-
     protected ImageIcon _color, _avatar;
+
+    protected BLabel _player, _cash, _pieces;
+    protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];
 
     protected static final Point PLACE_LOC = new Point(10, 40);
     protected static final Point BACKGROUND_LOC = new Point(33, 13);
     protected static final Point AVATAR_LOC = new Point(33, 8);
-    protected static final Point FIRST_CARD_LOC = new Point(148, 52);
     protected static final Point CASH_LOC = new Point(97, 34);
+
     protected static final Rectangle NAME_RECT = new Rectangle(11, 0, 100, 16);
+    protected static final Rectangle CARD_RECT = new Rectangle(146, 16, 30, 39);
 }

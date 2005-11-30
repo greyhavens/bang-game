@@ -11,6 +11,8 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BlankIcon;
 import com.jmex.bui.ImageIcon;
+import com.jmex.bui.background.BBackground;
+import com.jmex.bui.background.TiledBackground;
 import com.jmex.bui.text.AWTTextFactory;
 
 import com.threerings.openal.ClipProvider;
@@ -75,7 +77,25 @@ public class BangUI
         dtitleLNF = new BangLookAndFeel();
         dtitleLNF.setTextFactory(new AWTTextFactory(DTITLE_FONT));
 
-        pstatusLNF = new BangLookAndFeel();
+        pstatusLNF = new BangLookAndFeel() {
+            public BBackground createButtonBack (int state) {
+                String path;
+                int dx = 0, dy = 0;
+                switch (state) {
+                case BButton.DISABLED:
+                case BButton.DOWN:
+                    dx = 1;
+                    dy = -1;
+                    path = "rsrc/ui/pstatus/card_down.png";
+                    break;
+                default:
+                case BButton.OVER:
+                case BButton.UP: path = "rsrc/ui/pstatus/card_up.png"; break;
+                }
+                return new TiledBackground(
+                    getResource(path), 1+dx, 1+dy, 1-dx, 1-dy);
+            }
+        };
         pstatusLNF.setTextFactory(new AWTTextFactory(PSTATUS_FONT));
 
         scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
