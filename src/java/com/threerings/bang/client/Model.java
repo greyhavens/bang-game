@@ -442,10 +442,14 @@ public class Model
 
     protected String cleanPath (String path)
     {
-        // non-file URLs don't handle blah/foo/../bar so we make those
-        // path adjustments by hand
+        // non-file URLs don't handle blah/foo/../bar so we make those path
+        // adjustments by hand
         String npath = path.replaceAll(PATH_DOTDOT, "");
-        return npath.replaceAll(PATH_DOTDOT, "");
+        while (!npath.equals(path)) {
+            path = npath;
+            npath = path.replaceAll(PATH_DOTDOT, "");
+        }
+        return npath;
     }
 
     /** Contains information on one part of a model. */
