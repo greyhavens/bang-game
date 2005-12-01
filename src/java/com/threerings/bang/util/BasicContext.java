@@ -5,6 +5,7 @@ package com.threerings.bang.util;
 
 import java.awt.image.BufferedImage;
 
+import com.jme.image.Image;
 import com.jmex.bui.BLookAndFeel;
 
 import com.threerings.util.MessageManager;
@@ -16,7 +17,7 @@ import com.threerings.media.image.ImageManager;
 import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
 
-import com.threerings.bang.client.ModelCache;
+import com.threerings.bang.client.Model;
 
 import static com.threerings.bang.Log.log;
 
@@ -35,9 +36,6 @@ public interface BasicContext extends JmeContext
     /** Returns the look and feel used to configure the user interface. */
     public BLookAndFeel getLookAndFeel ();
 
-    /** Returns the 3D model cache. */
-    public ModelCache getModelCache ();
-
     /** Provides access to the tile fringing configuration. */
     public FringeConfiguration getFringeConfig ();
 
@@ -53,6 +51,16 @@ public interface BasicContext extends JmeContext
     /** Translates the specified message using the specified message bundle. */
     public String xlate (String bundle, String message);
 
-    /** Convenience method to load an image from our resource bundles. */
-    public BufferedImage loadImage (String rsrcPath);
+    /** Loads a 3D model from the cache. */
+    public Model loadModel (String type, String name);
+
+    /** Loads an image from the cache. */
+    public Image loadImage (String rsrcPath);
+
+    /** Loads a buffered image from the cache. <em>Note:</em> you probably want
+     * to use {@link #loadImage} unless you need a buffered image for some
+     * special reason. Using {@link #loadImage} is (or will be) <em>much</em>
+     * faster than loading a buffered image and converting that to something
+     * usable by OpenGL. */
+    public BufferedImage loadBufferedImage (String rsrcPath);
 }

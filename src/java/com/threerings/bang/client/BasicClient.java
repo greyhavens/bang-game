@@ -11,12 +11,13 @@ import javax.imageio.ImageIO;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
-import com.jmex.bui.BLookAndFeel;
-import com.jmex.bui.BRootNode;
+import com.jme.image.Image;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
+import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BRootNode;
 
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
@@ -26,7 +27,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
 import com.threerings.media.image.ImageManager;
-import com.threerings.media.image.ImageUtil;
 import com.threerings.resource.ResourceManager;
 
 import com.threerings.presents.client.Client;
@@ -46,6 +46,9 @@ import com.threerings.openal.SoundManager;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
+
+import com.threerings.bang.client.util.ImageCache;
+import com.threerings.bang.client.util.ModelCache;
 
 import static com.threerings.bang.Log.log;
 
@@ -111,6 +114,7 @@ public class BasicClient
         _rsrcmgr = new ResourceManager("rsrc");
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _lnf = new BangLookAndFeel();
+        _icache = new ImageCache(_ctx);
         _mcache = new ModelCache(_ctx);
 
         // create our media managers
@@ -244,10 +248,6 @@ public class BasicClient
             return _soundmgr;
         }
 
-        public ModelCache getModelCache () {
-            return _mcache;
-        }
-
         public FringeConfiguration getFringeConfig () {
             return _fringeconf;
         }
@@ -289,17 +289,16 @@ public class BasicClient
             return (mb == null) ? message : mb.xlate(message);
         }
 
-        public BufferedImage loadImage (String rsrcPath) {
-            // TODO: use the image manager
-            try {
-                return ImageIO.read(getResourceManager().getImageResource(
-                                        rsrcPath));
-            } catch (IOException ioe) {
-                log.log(Level.WARNING, "Unable to load image resource " +
-                        "[path=" + rsrcPath + "].", ioe);
-                // cope; return an error image of abitrary size
-                return ImageUtil.createErrorImage(50, 50);
-            }
+        public Model loadModel (String type, String name) {
+            return _mcache.getModel(type, name);
+        }
+
+        public Image loadImage (String rsrcPath) {
+            return _icache.getImage(rsrcPath);
+        }
+
+        public BufferedImage loadBufferedImage (String rsrcPath) {
+            return _icache.getBufferedImage(rsrcPath);
         }
     }
 
@@ -311,7 +310,9 @@ public class BasicClient
     protected ImageManager.OptimalImageCreator _icreator;
     protected ImageManager _imgmgr;
     protected SoundManager _soundmgr;
+
     protected BLookAndFeel _lnf;
+    protected ImageCache _icache;
     protected ModelCache _mcache;
     protected FringeConfiguration _fringeconf;
 

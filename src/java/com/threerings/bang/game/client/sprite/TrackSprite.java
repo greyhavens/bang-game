@@ -56,8 +56,7 @@ public class TrackSprite extends PieceSprite
         _ctx = ctx;
         
         Track track = (Track)_piece;
-        _model = ctx.getModelCache().getModel("extras/tracks",
-            MODEL_NAMES[track.type]);
+        _model = ctx.loadModel("extras/tracks", MODEL_NAMES[track.type]);
         Node[] meshes = _model.getAnimation("normal").getMeshes(0);
         for (int ii = 0; ii < meshes.length; ii++) {
             attachChild(meshes[ii]);

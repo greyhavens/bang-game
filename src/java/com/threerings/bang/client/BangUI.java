@@ -130,8 +130,7 @@ public class BangUI
             label.setIcon(new BlankIcon(Model.ICON_SIZE, Model.ICON_SIZE));
         } else {
             label.setText(_ctx.xlate("units", config.getName()));
-            label.setIcon(_ctx.getModelCache().getModel(
-                              "units", config.type).getIcon());
+            label.setIcon(_ctx.loadModel("units", config.type).getIcon());
         }
     }
 
@@ -155,8 +154,7 @@ public class BangUI
     public static BButton createUnitButton (UnitConfig config)
     {
         BButton button = new BButton(_ctx.xlate("units", config.getName()));
-        button.setIcon(_ctx.getModelCache().getModel(
-                           "units", config.type).getIcon());
+        button.setIcon(_ctx.loadModel("units", config.type).getIcon());
         button.setOrientation(BButton.VERTICAL);
         button.setHorizontalAlignment(BButton.CENTER);
         return button;

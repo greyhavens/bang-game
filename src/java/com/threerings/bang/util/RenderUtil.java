@@ -6,13 +6,14 @@ package com.threerings.bang.util;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.font.TextLayout;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
 import com.jme.math.Vector2f;
@@ -48,7 +49,7 @@ public class RenderUtil
     public static ZBufferState overlayZBuf;
 
     public static CullState backCull;
-    
+
     /**
      * Initializes our commonly used render states.
      */
@@ -76,7 +77,7 @@ public class RenderUtil
 
         backCull = ctx.getRenderer().createCullState();
         backCull.setCullMode(CullState.CS_BACK);
-        
+
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.RENDERABLE) {
             for (int ii = 1; ii <= MAX_TILE_VARIANT; ii++) {
@@ -86,9 +87,8 @@ public class RenderUtil
                 if (texpath == null) {
                     continue;
                 }
-                BufferedImage teximg = ctx.loadImage(path);
-                Texture texture = TextureManager.loadTexture(
-                    teximg, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+                Image teximg = ctx.loadImage(path);
+                Texture texture = createTexture(teximg);
                 texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
                 TextureState tstate = ctx.getRenderer().createTextureState();
                 tstate.setEnabled(true);
@@ -99,19 +99,13 @@ public class RenderUtil
                         terrain, texs = new ArrayList<TextureState>());
                 }
                 texs.add(tstate);
-                ArrayList<BufferedImage> tiles = _groundTiles.get(terrain);
+                ArrayList<Image> tiles = _groundTiles.get(terrain);
                 if (tiles == null) {
-                    _groundTiles.put(
-                        terrain, tiles = new ArrayList<BufferedImage>());
+                    _groundTiles.put(terrain, tiles = new ArrayList<Image>());
                 }
                 tiles.add(teximg);
             }
         }
-
-        // put in a special blank tile image for the rim
-        ArrayList<BufferedImage> tiles = new ArrayList<BufferedImage>();
-        tiles.add(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
-        _groundTiles.put(Terrain.RIM, tiles);
     }
 
     /** Rounds the supplied value up to a power of two. */
@@ -128,7 +122,7 @@ public class RenderUtil
     public static TextureState getGroundTexture (Terrain terrain)
     {
         ArrayList<TextureState> texs = _groundTexs.get(terrain);
-        return (texs == null) ? null : 
+        return (texs == null) ? null :
             (TextureState)RandomUtil.pickRandom(texs);
     }
 
@@ -136,11 +130,10 @@ public class RenderUtil
      * Returns a randomly selected ground tile for the specified terrain
      * type.
      */
-    public static BufferedImage getGroundTile (Terrain terrain)
+    public static Image getGroundTile (Terrain terrain)
     {
-        ArrayList<BufferedImage> tiles = _groundTiles.get(terrain);
-        return (tiles == null) ? null : 
-            (BufferedImage)RandomUtil.pickRandom(tiles);
+        ArrayList<Image> tiles = _groundTiles.get(terrain);
+        return (tiles == null) ? null : (Image)RandomUtil.pickRandom(tiles);
     }
 
     /**
@@ -196,6 +189,7 @@ public class RenderUtil
         tcoords[2] = new Vector2f(width/tsf, height/tsf);
         tcoords[3] = new Vector2f(width/tsf, 0);
 
+        // TODO: use our faster BufferedImage -> Image routines
         return TextureManager.loadTexture(
             image, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, false);
     }
@@ -203,11 +197,22 @@ public class RenderUtil
     /**
      * Creates a texture using the supplied image.
      */
-    public static TextureState createTexture (
-        BasicContext ctx, BufferedImage image)
+    public static Texture createTexture (Image image)
     {
-        Texture texture = TextureManager.loadTexture(
-            image, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+        Texture texture = new Texture();
+        texture.setCorrection(Texture.CM_PERSPECTIVE);
+        texture.setFilter(Texture.FM_LINEAR);
+        texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+        texture.setImage(image);
+        return texture;
+    }
+
+    /**
+     * Creates a texture state using the supplied image.
+     */
+    public static TextureState createTextureState (BasicContext ctx, Image image)
+    {
+        Texture texture = createTexture(image);
         TextureState tstate = ctx.getRenderer().createTextureState();
         tstate.setEnabled(true);
         tstate.setTexture(texture);
@@ -220,7 +225,7 @@ public class RenderUtil
      */
     public static Quad createIcon (BasicContext ctx, String path)
     {
-        return createIcon(createTexture(ctx, ctx.loadImage(path)));
+        return createIcon(createTextureState(ctx, ctx.loadImage(path)));
     }
 
     /**
@@ -264,8 +269,8 @@ public class RenderUtil
         return lights;
     }
 
-    protected static HashMap<Terrain,ArrayList<BufferedImage>> _groundTiles =
-        new HashMap<Terrain,ArrayList<BufferedImage>>();
+    protected static HashMap<Terrain,ArrayList<Image>> _groundTiles =
+        new HashMap<Terrain,ArrayList<Image>>();
 
     protected static HashMap<Terrain,ArrayList<TextureState>> _groundTexs =
         new HashMap<Terrain,ArrayList<TextureState>>();

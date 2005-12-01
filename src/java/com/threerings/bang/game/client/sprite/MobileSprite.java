@@ -211,7 +211,7 @@ public class MobileSprite extends PieceSprite
         _hnode.attachChild(_shadow);
         
         // load our model
-        _model = ctx.getModelCache().getModel(_type, _name);
+        _model = ctx.loadModel(_type, _name);
 
         // start in our rest post
         setAction(getRestPose());
@@ -390,7 +390,7 @@ public class MobileSprite extends PieceSprite
     
     protected static void loadTextures (BasicContext ctx)
     {
-        _shadtex = RenderUtil.createTexture(
+        _shadtex = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/shadow.png"));
     }
 

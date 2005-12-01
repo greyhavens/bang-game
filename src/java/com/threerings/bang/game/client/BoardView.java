@@ -117,11 +117,11 @@ public class BoardView extends BComponent
         _hastate.setEnabled(true);
 
         // this is used to target tiles when deploying a card
-        _tgtstate = RenderUtil.createTexture(
+        _tgtstate = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
 
         // this is used to indicate where you can move
-        _movstate = RenderUtil.createTexture(
+        _movstate = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/movement.png"));
             
         // create a sound group that we'll use for all in-game sounds

@@ -50,7 +50,18 @@ public class UnitSprite extends MobileSprite
      */
     public void setHovered (boolean hovered)
     {
-        _hov.setCullMode(hovered ? CULL_DYNAMIC : CULL_ALWAYS);
+        if (_hovered != hovered) {
+            _hovered = hovered;
+            _hov.setCullMode((_selected || _hovered) ?
+                             CULL_DYNAMIC : CULL_ALWAYS);
+        }
+    }
+
+    @Override // documentation inherited
+    public void setSelected (boolean selected)
+    {
+        super.setSelected(selected);
+        _hov.setCullMode((_selected || _hovered) ? CULL_DYNAMIC : CULL_ALWAYS);
     }
 
     /**
@@ -349,30 +360,28 @@ public class UnitSprite extends MobileSprite
 
     protected static void loadTextures (BasicContext ctx)
     {
-        _hovtex = TextureManager.loadTexture(
-            ctx.loadImage("textures/ustatus/selected.png"),
-            Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+        _hovtex = RenderUtil.createTexture(
+            ctx.loadImage("textures/ustatus/selected.png"));
         
-        _tgttex = RenderUtil.createTexture(
+        _tgttex = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
-        _pendtex = RenderUtil.createTexture(
+        _pendtex = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/pending.png"));
-        _movetex = TextureManager.loadTexture(
-            ctx.loadImage("textures/ustatus/tick_ready.png"),
-            Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+        _movetex = RenderUtil.createTexture(
+            ctx.loadImage("textures/ustatus/tick_ready.png"));
         _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         
-        _nugtex = RenderUtil.createTexture(
+        _nugtex = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/nugget.png"));
         _ticktex = new Texture[5];
         for (int ii = 0; ii < 5; ii++) {
-            _ticktex[ii] = TextureManager.loadTexture(
-                ctx.loadImage("textures/ustatus/tick_counter_" + ii + ".png"),
-                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
+            _ticktex[ii] = RenderUtil.createTexture(
+                ctx.loadImage("textures/ustatus/tick_counter_" + ii + ".png"));
             _ticktex[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         }
-        _dfull = ctx.loadImage("textures/ustatus/health_meter_full.png");
-        _dempty = ctx.loadImage("textures/ustatus/health_meter_empty.png");
+        _dfull = ctx.loadBufferedImage("textures/ustatus/health_meter_full.png");
+        _dempty = ctx.loadBufferedImage(
+            "textures/ustatus/health_meter_empty.png");
     }
     
     protected BasicContext _ctx;
@@ -384,6 +393,7 @@ public class UnitSprite extends MobileSprite
     protected TextureState _damtex;
     protected int _odamage;
     protected short _pendingTick = -1;
+    protected boolean _hovered;
 
     protected static Vector3f _tvec = new Vector3f();
     protected static Quaternion _tquat = new Quaternion();

@@ -20,7 +20,7 @@ public class ShotSprite extends Sprite
     {
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
-        _model = ctx.getModelCache().getModel("bonuses", "missile");
+        _model = ctx.loadModel("bonuses", "missile");
         Node[] meshes = _model.getAnimation("normal").getMeshes(0);
         for (int ii = 0; ii < meshes.length; ii++) {
             attachChild(meshes[ii]);

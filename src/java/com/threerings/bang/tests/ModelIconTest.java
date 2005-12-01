@@ -5,11 +5,11 @@ package com.threerings.bang.tests;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 
+import com.jme.image.Image;
 import com.jme.input.InputHandler;
 import com.jme.util.LoggingSystem;
 import com.jme.renderer.Renderer;
@@ -34,7 +34,9 @@ import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.openal.SoundManager;
 
 import com.threerings.bang.client.BangApp;
+import com.threerings.bang.client.Model;
 import com.threerings.bang.client.ModelCache;
+import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.util.BasicContext;
@@ -61,6 +63,7 @@ public class ModelIconTest extends JmeApp
         _ctx = new BasicContextImpl();
         _rsrcmgr = new ResourceManager("rsrc");
         _lnf = BLookAndFeel.getDefaultLookAndFeel();
+        _icache = new ImageCache(_ctx);
         _mcache = new ModelCache(_ctx);
 
         BDecoratedWindow window = new BDecoratedWindow(_lnf, "Test");
@@ -126,10 +129,6 @@ public class ModelIconTest extends JmeApp
             return _lnf;
         }
 
-        public ModelCache getModelCache () {
-            return _mcache;
-        }
-
         public FringeConfiguration getFringeConfig () {
             return null;
         }
@@ -151,14 +150,16 @@ public class ModelIconTest extends JmeApp
             return (mb == null) ? message : mb.xlate(message);
         }
 
-        public BufferedImage loadImage (String rsrcPath) {
-            try {
-                return ImageIO.read(
-                    getResourceManager().getImageResource(rsrcPath));
-            } catch (IOException ioe) {
-                ioe.printStackTrace(System.err);
-                return null;
-            }
+        public Model loadModel (String type, String name) {
+            return _mcache.getModel(type, name);
+        }
+
+        public Image loadImage (String rsrcPath) {
+            return _icache.getImage(rsrcPath);
+        }
+
+        public BufferedImage loadBufferedImage (String rsrcPath) {
+            return _icache.getBufferedImage(rsrcPath);
         }
     }
 
@@ -166,5 +167,6 @@ public class ModelIconTest extends JmeApp
     protected Config _config = new Config("bang");
     protected ResourceManager _rsrcmgr;
     protected BLookAndFeel _lnf;
+    protected ImageCache _icache;
     protected ModelCache _mcache;
 }

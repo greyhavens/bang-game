@@ -1,13 +1,14 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.client.util;
 
 import java.util.HashMap;
 
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
+import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;

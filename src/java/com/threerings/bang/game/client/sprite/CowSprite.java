@@ -69,7 +69,7 @@ public class CowSprite extends MobileSprite
 
     protected static void loadTextures (BasicContext ctx)
     {
-        _owntex = RenderUtil.createTexture(
+        _owntex = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/selected.png"));
     }
 

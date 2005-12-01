@@ -70,10 +70,7 @@ public class PlayerStatusView extends BContainer
             _ctx.loadImage("ui/pstatus/background" + pidx + ".png"));
 
         // load up the main status image
-        ClassLoader loader = getClass().getClassLoader();
-        Image bg = TextureManager.loadImage(
-            loader.getResource("rsrc/ui/pstatus/dashboard.png"), true);
-        log.info("Type " + bg.getType());
+        Image bg = _ctx.loadImage("ui/pstatus/dashboard.png");
         setBackground(new ScaledBackground(bg, 0, 0, 0, 0));
         setPreferredSize(new Dimension(bg.getWidth(), bg.getHeight()));
 

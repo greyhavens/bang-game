@@ -111,8 +111,7 @@ public class SignView extends BContainer
         _itemId = itemId;
         _config = config;
 
-        _unit.setIcon(
-            _ctx.getModelCache().getModel("units", config.type).getIcon());
+        _unit.setIcon(_ctx.loadModel("units", config.type).getIcon());
         _name.setText(_umsgs.xlate(config.getName()));
         _descrip.setText(_umsgs.xlate(config.getName() + "_descrip"));
         _move.setText(_umsgs.get("m.move_range", "" + config.moveDistance));

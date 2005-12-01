@@ -5,7 +5,6 @@ package com.threerings.bang.game.client;
 
 import java.awt.Color;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
 
@@ -61,19 +60,19 @@ public class TerrainNode extends Node
     {
         /** The coordinates of the cursor in node space. */
         public float x, y, radius;
-        
+
         protected Cursor ()
         {
             super("cursor");
-            
+
             setDefaultColor(ColorRGBA.white);
             setLightCombineMode(LightState.OFF);
             setRenderState(RenderUtil.lequalZBuf);
-            
+
             updateRenderState();
             update();
         }
-        
+
         /**
          * Sets the position of this cursor and updates it.
          */
@@ -83,7 +82,7 @@ public class TerrainNode extends Node
             this.y = y;
             update();
         }
-        
+
         /**
          * Sets the radius of this cursor and updates it.
          */
@@ -92,7 +91,7 @@ public class TerrainNode extends Node
             this.radius = radius;
             update();
         }
-        
+
         /**
          * Updates the geometry of the cursor to reflect a change in position
          * or in the underlying terrain.
@@ -115,7 +114,7 @@ public class TerrainNode extends Node
                 verts.toArray(new Vector3f[verts.size()])));
             generateIndices();
         }
-        
+
         /**
          * Adds a segment to the line, breaking it up into intermediate
          * segments if it crosses edge boundaries.
@@ -130,19 +129,19 @@ public class TerrainNode extends Node
                     between = getDiagonalIntermediate(v1, v2);
                 }
             }
-            
+
             if (between == null) {
                 verts.add(new Vector3f(v1.x, v1.y, getHeightfieldHeight(v1.x,
-                    v1.y) + 1.0f));   
+                    v1.y) + 1.0f));
                 verts.add(new Vector3f(v2.x, v2.y, getHeightfieldHeight(v2.x,
                     v2.y) + 1.0f));
-                    
+
             } else {
                 addSegment(verts, v1, between);
                 addSegment(verts, between, v2);
             }
         }
-        
+
         /**
          * If the two vertices lie on either side of a horizontal boundary,
          * return the point on the boundary between them (otherwise null).
@@ -161,7 +160,7 @@ public class TerrainNode extends Node
             }
             return null;
         }
-        
+
         /**
          * If the two vertices lie on either side of a vertical boundary,
          * return the point on the boundary between them (otherwise null).
@@ -180,7 +179,7 @@ public class TerrainNode extends Node
             }
             return null;
         }
-        
+
         /**
          * If the two vertices lie on either side of a diagonal boundary,
          * return the point on the boundary between them (otherwise null).
@@ -189,7 +188,7 @@ public class TerrainNode extends Node
         {
             float r2 = FastMath.sqrt(2.0f), d1 = (v1.y - v1.x)/(2 * r2),
                 d2 = (v2.y - v2.x)/(2 * r2), step = SUB_TILE_SIZE * r2;
-            
+
             int b1 = getBoundaryIndex(d1, step),
                 b2 = getBoundaryIndex(d2, step),
                 bmin = Math.min(b1, b2), bmax = Math.max(b1, b2);
@@ -203,7 +202,7 @@ public class TerrainNode extends Node
             }
             return null;
         }
-        
+
         /**
          * Returns a boundary index for the specified value.  Starting at zero,
          * every other index represents a boundary between two regions.  The
@@ -216,16 +215,16 @@ public class TerrainNode extends Node
             int base = (int)Math.floor(v / step), adjust;
             if (epsilonEquals(v, base*step)) {
                 adjust = 0; // lower boundary
-            
+
             } else if (epsilonEquals(v, (base+1)*step)) {
                 adjust = 2; // upper boundary
-            
+
             } else {
                 adjust = 1; // region between
             }
             return base*2 + adjust;
         }
-        
+
         /**
          * Checks whether the two values are "close enough" to equal.
          */
@@ -234,26 +233,26 @@ public class TerrainNode extends Node
             return FastMath.abs(a - b) < 0.001f;
         }
     }
-    
-    /** 
+
+    /**
      * Represents a tile-sized highlight draped over the terrain.
      */
     public class Highlight extends TriMesh
     {
         /** The position of the center of the highlight. */
         public float x, y;
-        
+
         protected Highlight (int x, int y, boolean overPieces)
         {
             this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, true,
                 overPieces);
         }
-        
+
         protected Highlight (float x, float y)
         {
             this(x, y, false, false);
         }
-        
+
         protected Highlight (float x, float y, boolean onTile,
             boolean overPieces)
         {
@@ -262,13 +261,13 @@ public class TerrainNode extends Node
             this.y = y;
             _onTile = onTile;
             _overPieces = overPieces;
-            
+
             setLightCombineMode(LightState.OFF);
             setRenderState(RenderUtil.overlayZBuf);
             setRenderState(RenderUtil.blendAlpha);
             setRenderState(RenderUtil.backCull);
             updateRenderState();
-            
+
             // set the vertices, which change according to position and terrain
             int size = BangBoard.HEIGHTFIELD_SUBDIVISIONS + (_onTile ? 1 : 2);
             setVertexBuffer(BufferUtils.createFloatBuffer(size * size * 3));
@@ -287,15 +286,15 @@ public class TerrainNode extends Node
                     }
                 }
                 setTextureBuffer(_htbuf);
-                            
+
             } else {
                 setTextureBuffer(BufferUtils.createFloatBuffer(
                     size * size * 2));
             }
-            
+
             // update the vertices and possibly the texture coords
             updateVertices();
-            
+
             // set the indices, which never change
             int on = (_onTile ? 0 : 1);
             if (_hibufs[on] == null) {
@@ -308,7 +307,7 @@ public class TerrainNode extends Node
                         _hibufs[on].put(iy*size + ix);
                         _hibufs[on].put((iy+1)*size + (ix+1));
                         _hibufs[on].put((iy+1)*size + ix);
-                    
+
                         // lower right triangle
                         _hibufs[on].put(iy*size + ix);
                         _hibufs[on].put(iy*size + (ix+1));
@@ -317,11 +316,11 @@ public class TerrainNode extends Node
                 }
             }
             setIndexBuffer(_hibufs[on]);
-            
+
             setModelBound(new BoundingBox());
             updateModelBound();
         }
-        
+
         /**
          * Returns the x tile coordinate of this highlight.
          */
@@ -329,7 +328,7 @@ public class TerrainNode extends Node
         {
             return (int)(x / TILE_SIZE);
         }
-        
+
         /**
          * Returns the y tile coordinate of this highlight.
          */
@@ -337,7 +336,7 @@ public class TerrainNode extends Node
         {
             return (int)(y / TILE_SIZE);
         }
-        
+
         /**
          * Sets the position of this highlight in tile coordinates and updates
          * it.
@@ -346,7 +345,7 @@ public class TerrainNode extends Node
         {
             setPosition((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE);
         }
-        
+
         /**
          * Sets the position of this highlight in world coordinates and
          * updates it.
@@ -367,9 +366,9 @@ public class TerrainNode extends Node
             if (_board == null) {
                 return;
             }
-            
+
             FloatBuffer vbuf = getVertexBuffer();
-            
+
             // if we're putting highlights over pieces and there's a piece
             // here, use the same elevation over the entire highlight
             boolean constantElevation = false;
@@ -381,7 +380,7 @@ public class TerrainNode extends Node
                 elevation = _board.getElevation(tx, ty) * (TILE_SIZE /
                     BangBoard.ELEVATION_UNITS_PER_TILE);
             }
-            
+
             float x0 = x - TILE_SIZE/2, y0 = y - TILE_SIZE/2;
             int size = BangBoard.HEIGHTFIELD_SUBDIVISIONS + (_onTile ? 1 : 2),
                 sx0 = (int)(x0 / SUB_TILE_SIZE),
@@ -392,7 +391,7 @@ public class TerrainNode extends Node
                     if (constantElevation) {
                         vertex.set(sx * SUB_TILE_SIZE, sy * SUB_TILE_SIZE,
                             elevation);
-                    
+
                     } else {
                         getHeightfieldVertex(sx, sy, vertex);
                     }
@@ -400,7 +399,7 @@ public class TerrainNode extends Node
                 }
             }
             updateModelBound();
-            
+
             // if the highlight is aligned with a tile, we're done; otherwise,
             // we must update the texture coords as well
             if (_onTile) {
@@ -418,10 +417,10 @@ public class TerrainNode extends Node
                 }
             }
         }
-        
+
         /** If true, the highlight will always be aligned with a tile. */
         protected boolean _onTile;
-        
+
         /** If true, the highlight will be over pieces occupying the tile. */
         protected boolean _overPieces;
     }
@@ -430,11 +429,11 @@ public class TerrainNode extends Node
     {
         super("terrain");
         _ctx = ctx;
-        
+
         // always perform backface culling
         setRenderState(RenderUtil.backCull);
     }
-    
+
     /**
      * Initializes the terrain geometry using terrain data from the given board
      * and saves the board reference for later updates.
@@ -442,10 +441,10 @@ public class TerrainNode extends Node
     public void createBoardTerrain (BangBoard board)
     {
         _board = board;
-        
+
         // clean up any existing geometry
         detachAllChildren();
-        
+
         // create, store, and attach the splat blocks
         int swidth = (int)Math.ceil((_board.getHeightfieldWidth() - 1.0) /
                 SPLAT_SIZE),
@@ -458,14 +457,14 @@ public class TerrainNode extends Node
                 attachChild(_blocks[x][y].node);
             }
         }
-        
+
         setWorldBound(new BoundingBox());
         updateWorldBound();
-        
+
         updateRenderState();
         updateGeometricState(0, true);
     }
-    
+
     /**
      * Refreshes the entire heightfield.
      */
@@ -474,7 +473,7 @@ public class TerrainNode extends Node
         refreshHeightfield(0, 0, _board.getHeightfieldWidth() - 1,
             _board.getHeightfieldWidth() - 1);
     }
-    
+
     /**
      * Refreshes a region of the heightfield as specified in sub-tile
      * coordinates.
@@ -489,14 +488,14 @@ public class TerrainNode extends Node
             _board.updateMinEdgeHeight();
             rect = new Rectangle(-1, -1, _board.getHeightfieldWidth() + 1,
                 _board.getHeightfieldHeight() + 1);
-        
+
         } else {
             rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
         }
-        
+
         // grow the rectangle to make sure it includes the normals
         rect.grow(1, 1);
-        
+
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 SplatBlock block = _blocks[x][y];
@@ -508,7 +507,7 @@ public class TerrainNode extends Node
             }
         }
     }
-    
+
     /**
      * Refreshes all terrain splats.
      */
@@ -517,7 +516,7 @@ public class TerrainNode extends Node
         refreshTerrain(0, 0, _board.getHeightfieldWidth() - 1,
             _board.getHeightfieldWidth() - 1);
     }
-    
+
     /**
      * Refreshes the terrain splats over the specified region in sub-tile
      * coordinates.
@@ -535,7 +534,7 @@ public class TerrainNode extends Node
             }
         }
     }
-    
+
     /**
      * Creates and returns a cursor over this terrain.  The cursor must be
      * added to the scene graph before it becomes visible.
@@ -544,7 +543,7 @@ public class TerrainNode extends Node
     {
         return new Cursor();
     }
-    
+
     /**
      * Creates and returns a tile-aligned highlight over this terrain at the
      * specified tile coordinates.  The highlight must be added to the scene
@@ -557,7 +556,7 @@ public class TerrainNode extends Node
     {
         return new Highlight(x, y, overPieces && Config.display.floatHighlights);
     }
-    
+
     /**
      * Creates and returns a highlight over this terrain at the specified world
      * coordinates.  The highlight must be added to the scene graph before it
@@ -567,7 +566,7 @@ public class TerrainNode extends Node
     {
         return new Highlight(x, y);
     }
-    
+
     /**
      * Returns the interpolated height at the specified set of node space
      * coordinates.
@@ -578,7 +577,7 @@ public class TerrainNode extends Node
         float stscale = BangBoard.HEIGHTFIELD_SUBDIVISIONS / TILE_SIZE;
         x *= stscale;
         y *= stscale;
-        
+
         // sample at the four closest points and find the fractional components
         int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
             fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
@@ -587,11 +586,11 @@ public class TerrainNode extends Node
             cf = getHeightfieldValue(cx, fy),
             cc = getHeightfieldValue(cx, cy),
             ax = x - fx, ay = y - fy;
-        
+
         return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
             FastMath.LERP(ay, cf, cc));
     }
-    
+
     /**
      * Returns the interpolated normal at the specified set of node space
      * coordinates.
@@ -602,7 +601,7 @@ public class TerrainNode extends Node
         float stscale = BangBoard.HEIGHTFIELD_SUBDIVISIONS / TILE_SIZE;
         x *= stscale;
         y *= stscale;
-        
+
         // sample at the four closest points and find the fractional components
         int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
             fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
@@ -614,14 +613,14 @@ public class TerrainNode extends Node
         getHeightfieldNormal(cx, fy, cf);
         getHeightfieldNormal(cx, cy, cc);
         float ax = x - fx, ay = y - fy;
-        
+
         fffc.interpolate(ff, fc, ay);
         cfcc.interpolate(cf, cc, ay);
         result.interpolate(fffc, cfcc, ax);
         result.normalizeLocal();
         return result;
     }
-    
+
     /**
      * Computes the heightfield vertex at the specified location in sub-tile
      * coordinates.
@@ -634,22 +633,22 @@ public class TerrainNode extends Node
         result.x = x * SUB_TILE_SIZE;
         if (x < -1) {
             result.x -= EDGE_SIZE;
-            
+
         } else if (x > _board.getHeightfieldWidth()) {
             result.x += EDGE_SIZE;
         }
-        
+
         result.y = y * SUB_TILE_SIZE;
         if (y < -1) {
             result.y -= EDGE_SIZE;
-        
+
         } else if (y > _board.getHeightfieldHeight()) {
             result.y += EDGE_SIZE;
         }
-        
+
         result.z = getHeightfieldValue(x, y);
     }
-    
+
     /**
      * Returns the scaled height of the specified location in sub-tile
      * coordinates.
@@ -659,7 +658,7 @@ public class TerrainNode extends Node
         return _board.getHeightfieldValue(x, y) *
             (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
     }
-    
+
     /**
      * Creates and returns a splat block for the specified splat coordinates.
      */
@@ -668,11 +667,11 @@ public class TerrainNode extends Node
         // create the block and containing node
         SplatBlock block = new SplatBlock();
         block.node = new Node("block_" + sx + "_" + sy);
-        
+
         // determine which edges this splat contains, if any
         boolean le = (sx == 0), re = (sx == _blocks.length - 1),
             be = (sy == 0), te = (sy == _blocks[0].length - 1);
-        
+
         // compute the dimensions in terms of vertices and create buffers for
         // the vertices and normals
         int vx = sx * SPLAT_SIZE, vy = sy * SPLAT_SIZE,
@@ -685,13 +684,13 @@ public class TerrainNode extends Node
             vbufsize = vwidth * vheight * 3;
         block.vbuf = BufferUtils.createFloatBuffer(vbufsize);
         block.nbuf = BufferUtils.createFloatBuffer(vbufsize);
-        
+
         // refresh sets the vertices and normals from the heightfield
         block.bounds = new Rectangle(vx, vy, bwidth, bheight);
         block.ebounds = new Rectangle(vx - (le ? 2 : 0), vy - (be ? 2 : 0),
             vwidth, vheight);
         block.refreshGeometry(block.ebounds);
-        
+
         // set the texture coordinates
         FloatBuffer tbuf0 = BufferUtils.createFloatBuffer(vwidth*vheight*2),
             tbuf1 = BufferUtils.createFloatBuffer(vwidth*vheight*2);
@@ -701,27 +700,27 @@ public class TerrainNode extends Node
             for (int x = (le ? -2 : 0), xmax = x + vwidth; x < xmax; x++) {
                 tbuf0.put(0.5f*step0 + x * step0);
                 tbuf0.put(0.5f*step0 + y * step0);
-                
+
                 float xoff = 0f;
                 if (le && x == -2) {
                     xoff = -EDGE_SIZE / TILE_SIZE;
-                    
+
                 } else if (re && x == xmax - 1) {
                     xoff = EDGE_SIZE / TILE_SIZE;
                 }
                 tbuf1.put(x * step1 + xoff);
-                
+
                 float yoff = 0f;
                 if (be && y == -2) {
                     yoff = -EDGE_SIZE / TILE_SIZE;
-                    
+
                 } else if (te && y == ymax - 1) {
                     yoff = EDGE_SIZE / TILE_SIZE;
                 }
                 tbuf1.put(y * step1 + yoff);
             }
         }
-        
+
         // compute the dimensions in terms of squares and set the triangle
         // indices
         int swidth = vwidth - 1, sheight = vheight - 1;
@@ -730,20 +729,20 @@ public class TerrainNode extends Node
             for (int x = 0; x < swidth; x++) {
                 int ll = y*vwidth + x, lr = ll + 1,
                     ul = ll + vwidth, ur = ul + 1;
-                
+
                 // two triangles for each square: one including the upper left
                 // vertex, one the lower right, ccw winding order
                 ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
                 ibuf.put(ll); ibuf.put(lr); ibuf.put(ur);
             }
         }
-        
+
         // depending on whether we can assume the heightfield to remain static,
         // either create a trimesh or a clod mesh with the computed values
         if (isHeightfieldStatic()) {
             block.mesh = new AreaClodMesh("terrain", block.vbuf, block.nbuf, null,
                 tbuf0, ibuf, null);
-            
+
         } else {
             block.mesh = new TriMesh("terrain", block.vbuf, block.nbuf, null,
                 tbuf0, ibuf);
@@ -751,13 +750,13 @@ public class TerrainNode extends Node
         block.mesh.setTextureBuffer(tbuf1, 1);
         block.mesh.setModelBound(new BoundingBox());
         block.mesh.updateModelBound();
-            
+
         // initialize the splats
         block.refreshSplats(block.bounds);
-        
-        return block;  
+
+        return block;
     }
-    
+
     /**
      * Checks whether the heightfield can be assumed to be static (and thus a
      * candidate for rendering optimization).  Default implementation returns
@@ -767,7 +766,7 @@ public class TerrainNode extends Node
     {
         return false;
     }
-    
+
     /**
      * Computes the normal at the specified heightfield location in sub-tile
      * coordinates.
@@ -782,13 +781,13 @@ public class TerrainNode extends Node
             result.set(Vector3f.UNIT_Z);
             return;
         }
-        
+
         result.set(getHeightfieldValue(x-1, y) - getHeightfieldValue(x+1, y),
             getHeightfieldValue(x, y-1) - getHeightfieldValue(x, y+1),
             2*SUB_TILE_SIZE);
         result.normalizeLocal();
     }
-    
+
     /**
      * Computes and returns the alpha value for the specified terrain code at
      * the given sub-tile coordinates.
@@ -811,7 +810,7 @@ public class TerrainNode extends Node
         }
         return alpha / total;
     }
-    
+
     /**
      * Computes and returns the base color value at the given sub-tile
      * coordinates.
@@ -823,11 +822,11 @@ public class TerrainNode extends Node
         Color ff = getTerrainColor(fx, fy), fc = getTerrainColor(fx, cy),
             cf = getTerrainColor(cx, fy), cc = getTerrainColor(cx, cy);
         float ax = x - fx, ay = y - fy;
-        
+
         return ColorUtil.blend(ColorUtil.blend(fc, ff, ay),
             ColorUtil.blend(cc, cf, ay), ax);
     }
-    
+
     /**
      * Returns the base color value at the given sub-tile coordinates.
      */
@@ -838,50 +837,55 @@ public class TerrainNode extends Node
         if (color != null) {
             return color;
         }
-        
+
         // if we haven't computed it already, determine the overall color
         // average for the texture
-        BufferedImage img = RenderUtil.getGroundTile(Terrain.fromCode(code));
-        int[] rgb = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0,
-            img.getWidth());
-        int r = 0, g = 0, b = 0, c;
-        for (int i = 0; i < rgb.length; i++) {
-            c = rgb[i];
-            r += ((c >> 16) & 0xFF);
-            g += ((c >> 8) & 0xFF);
-            b += (c & 0xFF);
+        Image img = RenderUtil.getGroundTile(Terrain.fromCode(code));
+        ByteBuffer imgdata = img.getData();
+        int r = 0, g = 0, b = 0, bytes = imgdata.limit(), pixels = bytes/3;
+        for (int ii = 0; ii < bytes; ii += 3) {
+            // the bytes are stored unsigned in the image but java is going to
+            // interpret them as signed, so we need to do some fiddling
+            r += btoi(imgdata.get(ii));
+            g += btoi(imgdata.get(ii+1));
+            b += btoi(imgdata.get(ii+2));
         }
-        color = new Color(r / rgb.length, g / rgb.length, b / rgb.length);
+        color = new Color(r / pixels, g / pixels, b / pixels);
         _tcolors.put(code, color);
         return color;
     }
-    
+
+    protected static final int btoi (byte value)
+    {
+        return (value < 0) ? 256 + value : value;
+    }
+
     /** Contains all the state associated with a splat block (a collection of
      * splats covering a single block of terrain). */
     protected class SplatBlock
     {
         /** The node containing the {@link SharedMesh} splats. */
         public Node node;
-        
+
         /** The bounds of this block in sub-tile coordinates and the bounds
          * that include the edge. */
         public Rectangle bounds, ebounds;
-        
+
         /** The shared, unparented mesh instance. */
         public TriMesh mesh;
-        
+
         /** The vertex and normal buffers. */
         public FloatBuffer vbuf, nbuf;
-        
+
         /** Maps terrain codes to ground texture states. */
         public HashIntMap groundTextures = new HashIntMap();
-        
+
         /** The base texture buffer. */
         public ByteBuffer baseBuffer;
-        
+
         /** Maps terrain codes to alpha texture buffers. */
         public HashIntMap alphaBuffers = new HashIntMap();
-        
+
         /**
          * Refreshes the geometry covered by the specified rectangle (in
          * sub-tile coordinates).
@@ -889,20 +893,20 @@ public class TerrainNode extends Node
         public void refreshGeometry (Rectangle rect)
         {
             Vector3f vector = new Vector3f();
-            
+
             for (int y = rect.y, ymax = y + rect.height; y < ymax; y++) {
                 for (int x = rect.x, xmax = x + rect.width; x < xmax; x++) {
                     int index = (y-ebounds.y)*ebounds.width + (x-ebounds.x);
-                
+
                     getHeightfieldVertex(x, y, vector);
                     BufferUtils.setInBuffer(vector, vbuf, index);
-                
+
                     getHeightfieldNormal(x, y, vector);
                     BufferUtils.setInBuffer(vector, nbuf, index);
                 }
             }
         }
-        
+
         /**
          * Refreshes the splats according to terrain changes over the
          * specified rectangle (in sub-tile coordinates).
@@ -911,7 +915,7 @@ public class TerrainNode extends Node
         {
             // remove all the existing children
             node.detachAllChildren();
-            
+
             // find out which terrain codes this block contains
             ArrayIntSet codes = new ArrayIntSet();
             for (int y = bounds.y, ymax = y+bounds.height; y < ymax; y++) {
@@ -926,12 +930,12 @@ public class TerrainNode extends Node
             base.setRenderState(createBaseTexture(rect));
             base.setRenderState(RenderUtil.lequalZBuf);
             node.attachChild(base);
-            
+
             // add the rest as splats (which only test the z buffer)
             for (Interator it = codes.interator(); it.hasNext(); ) {
                 int code = it.nextInt();
                 SharedMesh splat = new SharedMesh("splat" + code, mesh);
-                
+
                 // initialize the texture state
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
@@ -946,26 +950,26 @@ public class TerrainNode extends Node
                 ground.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
                 tstate.setTexture(ground, 1);
                 splat.setRenderState(tstate);
-                
+
                 // and the z buffer state
                 splat.setRenderState(RenderUtil.overlayZBuf);
-                
+
                 // and the alpha state
                 splat.setRenderState(RenderUtil.blendAlpha);
-                
+
                 node.attachChild(splat);
             }
-            
+
             // prune any unused alpha buffers from the map
             for (Interator it = alphaBuffers.keys(); it.hasNext(); ) {
                 if (!codes.contains(it.nextInt())) {
                     it.remove();
                 }
             }
-            
+
             node.updateRenderState();
         }
-        
+
         /**
          * Returns the ground texture state for the given terrain code, making
          * sure that we always pick the same "random" texture for this splat.
@@ -979,7 +983,7 @@ public class TerrainNode extends Node
             }
             return tstate;
         }
-        
+
         /**
          * Creates and returns the base texture, using preexisting buffers when
          * possible.
@@ -992,7 +996,7 @@ public class TerrainNode extends Node
                     TEXTURE_SIZE * 3);
                 rect = bounds;
             }
-            
+
             // update the affected region of the buffer
             float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE;
             int x1 = (int)((rect.x - bounds.x) / step),
@@ -1004,7 +1008,7 @@ public class TerrainNode extends Node
             for (int y = y1; y <= y2; y++) {
                 for (int x = x1; x <= x2; x++) {
                     int idx = (y*TEXTURE_SIZE + x)*3;
-                    
+
                     Color color = getTerrainColor(bounds.x + x * step,
                         bounds.y + y * step);
                     baseBuffer.put((byte)color.getRed());
@@ -1012,22 +1016,22 @@ public class TerrainNode extends Node
                     baseBuffer.put((byte)color.getBlue());
                 }
             }
-            
+
             Texture texture = new Texture();
             baseBuffer.rewind();
             texture.setImage(new Image(Image.RGB888, TEXTURE_SIZE,
                 TEXTURE_SIZE, baseBuffer));
-            
+
             // set the filter parameters
             texture.setFilter(Texture.FM_LINEAR);
             texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-            
+
             TextureState tstate =
                 _ctx.getDisplay().getRenderer().createTextureState();
             tstate.setTexture(texture);
             return tstate;
         }
-        
+
         /**
          * Creates and returns an alpha texture for the specified terrain
          * code, using preexisting buffers when possible.
@@ -1043,7 +1047,7 @@ public class TerrainNode extends Node
                     TEXTURE_SIZE*TEXTURE_SIZE*4));
                 rect = bounds;
             }
-            
+
             // update the affected region of the buffer
             float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE;
             int x1 = (int)((rect.x - bounds.x) / step),
@@ -1055,63 +1059,63 @@ public class TerrainNode extends Node
             for (int y = y1; y <= y2; y++) {
                 for (int x = x1; x <= x2; x++) {
                     int idx = (y*TEXTURE_SIZE + x)*4;
-                    
+
                     byte alpha = (byte)(getTerrainAlpha(code,
                         bounds.x + x * step, bounds.y + y * step)*255);
                     abuf.putInt(idx, (alpha << 24) | (alpha << 16) |
                         (alpha << 8) | alpha);
                 }
             }
-            
+
             Texture texture = new Texture();
             texture.setImage(new Image(Image.RGBA8888, TEXTURE_SIZE,
                 TEXTURE_SIZE, abuf));
-            
+
             // set the filter parameters
             texture.setFilter(Texture.FM_LINEAR);
             texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-            
+
             // and the combination parameters
             texture.setApply(Texture.AM_COMBINE);
             texture.setCombineFuncAlpha(Texture.ACF_REPLACE);
             texture.setCombineSrc0Alpha(Texture.ACS_TEXTURE);
-                
+
             return texture;
         }
     }
-    
+
     /** The application context. */
     protected BasicContext _ctx;
-    
+
     /** The board with the terrain. */
     protected BangBoard _board;
-    
+
     /** The array of splat blocks containing the terrain geometry/textures. */
     protected SplatBlock[][] _blocks;
-    
+
     /** The shared texture coordinate buffer for highlights on tiles. */
     protected static FloatBuffer _htbuf;
-    
+
     /** The shared index buffers for highlights (on tiles and arbitrarily
      * positioned). */
     protected static IntBuffer[] _hibufs = new IntBuffer[2];
-     
+
     /** Maps terrain codes to colors. */
     protected static HashIntMap _tcolors = new HashIntMap();
-    
+
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;
-    
+
     /** The size of the splat alpha textures. */
     protected static final int TEXTURE_SIZE = SPLAT_SIZE * 2;
-    
+
     /** The size of the sub-tiles. */
     protected static final float SUB_TILE_SIZE = TILE_SIZE /
         BangBoard.HEIGHTFIELD_SUBDIVISIONS;
-    
+
     /** The size of the board edges that hide the void. */
     protected static final float EDGE_SIZE = 10000f;
-    
+
     /** The number of segments in the cursor. */
     protected static final int CURSOR_SEGMENTS = 32;
 }
