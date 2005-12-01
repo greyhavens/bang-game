@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
@@ -32,7 +33,7 @@ public class PickLookView extends BContainer
 
         _ctx = ctx;
         add(_avatar = new AvatarView(ctx));
-        add(_looks = new BComboBox());
+        _looks = new BComboBox();
         _looks.addListener(this);
     }
 
@@ -70,6 +71,11 @@ public class PickLookView extends BContainer
     {
         super.wasAdded();
 
+        // remove either the looks combo or the blurb
+        if (getComponentCount() > 1) {
+            remove(getComponent(1));
+        }
+
         // we'll need this later
         _deflook = _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.default_look");
 
@@ -87,6 +93,15 @@ public class PickLookView extends BContainer
         Look current = user.getLook();
         if (current != null) {
             _looks.selectItem(getName(current));
+        }
+
+        // if we have more than one look, add the looks combo, otherwise add a
+        // blurb for the barber
+        if (looks.length > 1 || _barbobj != null) {
+            add(_looks);
+        } else {
+            add(new BLabel(_ctx.xlate(AvatarCodes.AVATAR_MSGS,
+                                      "m.get_looks_at_barber")));
         }
     }
 
