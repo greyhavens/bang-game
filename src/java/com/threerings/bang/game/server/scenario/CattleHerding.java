@@ -15,6 +15,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
@@ -42,16 +43,10 @@ import static com.threerings.bang.Log.log;
  */
 public class CattleHerding extends Scenario
 {
-    /** The identifier for this scenario. */
-    public static final String IDENT = "ch";
-
     /** The ratio of cattle to the size of the board (width x height). Can
      * also be considered the probability that a cow will be spawned in a
      * particular square. */
     public static final float CATTLE_RATIO = 0.04f;
-
-    /** Cash earned for each corralled cow. */
-    public static final int CASH_PER_COW = 50;
 
     @Override // documentation inherited
     public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
@@ -114,7 +109,7 @@ public class CattleHerding extends Scenario
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
-                bangobj.grantCash(pieces[ii].owner, CASH_PER_COW);
+                bangobj.grantCash(pieces[ii].owner, GameCodes.CASH_PER_COW);
                 bangobj.stats[pieces[ii].owner].incrementStat(
                     Stat.Type.CATTLE_HERDED, 1);
             }

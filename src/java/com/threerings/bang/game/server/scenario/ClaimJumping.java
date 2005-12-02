@@ -17,6 +17,7 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
@@ -47,9 +48,6 @@ import static com.threerings.bang.Log.log;
  */
 public class ClaimJumping extends Scenario
 {
-    /** The identifier for this scenario. */
-    public static final String IDENT = "cj";
-
     /** The number of nuggets in each claim. TODO: put in BangConfig. */
     public static final int NUGGET_COUNT = 2;
 
@@ -103,7 +101,7 @@ public class ClaimJumping extends Scenario
                     continue;
                 }
                 bangobj.grantCash(
-                    claim.owner, CASH_PER_NUGGET * (claim.nuggets));
+                    claim.owner, GameCodes.CASH_PER_NUGGET * (claim.nuggets));
                 bangobj.stats[claim.owner].incrementStat(
                     Stat.Type.NUGS_COLLECTED, claim.nuggets);
             }
@@ -265,7 +263,4 @@ public class ClaimJumping extends Scenario
     /** The number of ticks after which we end the game while at least one
      * claim is empty. */
     protected static final int END_GAME_TIMER = 28;
-
-    /** The amount of cash earned per nugget at the end of the game. */
-    protected static final int CASH_PER_NUGGET = 50;
 }

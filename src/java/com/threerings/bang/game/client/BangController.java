@@ -15,6 +15,14 @@ import com.jmex.bui.event.KeyListener;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Multex;
+import com.samskivert.util.StringUtil;
+
+import com.threerings.presents.dobj.AttributeChangeListener;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.EntryRemovedEvent;
+import com.threerings.presents.dobj.EntryUpdatedEvent;
+import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
@@ -24,7 +32,6 @@ import com.threerings.crowd.util.CrowdContext;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.parlor.game.client.GameController;
-import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -33,6 +40,7 @@ import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
+import com.threerings.bang.game.util.ScenarioUtil;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -101,6 +109,7 @@ public class BangController extends GameController
     {
         super.willEnterPlace(plobj);
         _bangobj = (BangObject)plobj;
+        _bangobj.addListener(_ranklist);
 
         // determine our player index
         BodyObject me = (BodyObject)_ctx.getClient().getClientObject();
@@ -109,6 +118,17 @@ public class BangController extends GameController
         // we may be returning to an already started game
         if (_bangobj.state != BangObject.AWAITING_PLAYERS) {
             handleStateChange(_bangobj.state);
+        }
+    }
+
+    @Override // documentation inherited
+    public void didLeavePlace (PlaceObject plobj)
+    {
+        super.didLeavePlace(plobj);
+
+        if (_bangobj != null) {
+            _bangobj.removeListener(_ranklist);
+            _bangobj = null;
         }
     }
 
@@ -336,6 +356,42 @@ public class BangController extends GameController
         }
     }
 
+    /**
+     * Called whenever anything changes that might result in a change to the
+     * relative ranking of the player.
+     */
+    protected void updateRank ()
+    {
+        int[] funds = (int[])_bangobj.funds.clone();
+        ScenarioUtil.computeUnscoredFunds(_bangobj, funds);
+        // TODO: compute ranks and update player status views...
+    }
+
+    /** Listens for game state changes and calls {@link #updateRank}. */
+    protected class RankUpdater
+        implements AttributeChangeListener, SetListener {
+        public void attributeChanged (AttributeChangedEvent event) {
+            if (event.getName().equals(BangObject.TICK)) {
+                updateRank();
+            }
+        }
+        public void entryAdded (EntryAddedEvent event) {
+            if (event.getName().equals(BangObject.PIECES)) {
+                updateRank();
+            }
+        }
+        public void entryUpdated (EntryUpdatedEvent event) {
+            if (event.getName().equals(BangObject.PIECES)) {
+                updateRank();
+            }
+        }
+        public void entryRemoved (EntryRemovedEvent event) {
+            if (event.getName().equals(BangObject.PIECES)) {
+                updateRank();
+            }
+        }
+    }
+
     /** A casted reference to our context. */
     protected BangContext _ctx;
 
@@ -363,6 +419,9 @@ public class BangController extends GameController
     /** The unit id of the unit most recently selected via {@link
      * #handleSelectNextUnit}. */
     protected int _lastSelection = -1;
+
+    /** Listens for game state changes that might indicate rank changes. */
+    protected RankUpdater _ranklist = new RankUpdater();
 
     /** Used to by {@link #handleSelectNextUnit}. */
     protected static Comparator<Unit> UNIT_COMPARATOR = new Comparator<Unit>() {
