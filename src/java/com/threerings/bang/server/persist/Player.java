@@ -5,6 +5,8 @@ package com.threerings.bang.server.persist;
 
 import java.sql.Date;
 
+import com.samskivert.util.StringUtil;
+
 /**
  * A record containing persistent information maintained about a Bang!
  * player.
@@ -61,5 +63,11 @@ public class Player
     public boolean isSet (int flag)
     {
         return (flags & flag) == flag;
+    }
+
+    /** Generates a string representation of this instance. */
+    public String toString ()
+    {
+        return StringUtil.fieldsToString(this);
     }
 }
