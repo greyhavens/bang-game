@@ -11,13 +11,14 @@ import com.jme.util.TextureManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BIcon;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
-import com.jmex.bui.ImageIcon;
 import com.jmex.bui.background.ScaledBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.BIcon;
+import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.icon.SubimageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
@@ -65,9 +66,10 @@ public class PlayerStatusView extends BContainer
         _ctrl = ctrl;
         _pidx = pidx;
 
-        // load up the solid color background for our player
+        // load up the background and rank images for our player
         _color = new ImageIcon(
             _ctx.loadImage("ui/pstatus/background" + pidx + ".png"));
+        _rankimg = _ctx.loadImage("ui/pstatus/rank" + pidx + ".png");
 
         // load up the main status image
         Image bg = _ctx.loadImage("ui/pstatus/dashboard.png");
@@ -92,6 +94,7 @@ public class PlayerStatusView extends BContainer
         add(_cash = new BLabel(""), CASH_LOC);
         _cash.setLookAndFeel(BangUI.pstatusLNF);
         _pieces = new BLabel("");
+        add(_rank = new BLabel(createRankIcon(-1)), RANK_RECT);
 
         updateStatus();
     }
@@ -216,20 +219,29 @@ public class PlayerStatusView extends BContainer
         return btn;
     }
 
+    protected SubimageIcon createRankIcon (int rank)
+    {
+        return new SubimageIcon(
+            _rankimg, (rank + 1) * RANK_RECT.width, 0,
+            RANK_RECT.width, RANK_RECT.height);
+    }
+
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected BangController _ctrl;
     protected int _pidx;
-    protected ImageIcon _color, _avatar;
 
-    protected BLabel _player, _cash, _pieces;
+    protected ImageIcon _color, _avatar;
+    protected Image _rankimg;
+
+    protected BLabel _player, _cash, _pieces, _rank;
     protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];
 
-    protected static final Point PLACE_LOC = new Point(10, 40);
     protected static final Point BACKGROUND_LOC = new Point(33, 13);
     protected static final Point AVATAR_LOC = new Point(33, 8);
     protected static final Point CASH_LOC = new Point(97, 34);
 
+    protected static final Rectangle RANK_RECT = new Rectangle(8, 35, 21, 23);
     protected static final Rectangle NAME_RECT = new Rectangle(11, 0, 100, 16);
     protected static final Rectangle CARD_RECT = new Rectangle(146, 16, 30, 39);
 }
