@@ -43,5 +43,6 @@ CREATE TABLE PLAYERS
     FLAGS INTEGER NOT NULL,
 
     /** Defines our table keys. */
-    PRIMARY KEY (PLAYER_ID)
+    PRIMARY KEY (PLAYER_ID),
+    UNIQUE (ACCOUNT_NAME)
 );

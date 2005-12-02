@@ -14,6 +14,7 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
+import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Session;
 import com.samskivert.jdbc.jora.Table;
 
@@ -41,6 +42,8 @@ public class PlayerRepository extends JORARepository
         throws PersistenceException
     {
         super(conprov, PLAYER_DB_IDENT);
+        _byNameMask = _ptable.getFieldMask();
+        _byNameMask.setModified("accountName");
     }
 
     /**
@@ -50,7 +53,8 @@ public class PlayerRepository extends JORARepository
     public Player loadPlayer (String accountName)
         throws PersistenceException
     {
-        return (Player)loadByExample(_ptable, new Player(accountName));
+        return (Player)loadByExample(
+            _ptable, _byNameMask, new Player(accountName));
     }
 
     /**
@@ -224,4 +228,5 @@ public class PlayerRepository extends JORARepository
     }
 
     protected Table _ptable;
+    protected FieldMask _byNameMask;
 }
