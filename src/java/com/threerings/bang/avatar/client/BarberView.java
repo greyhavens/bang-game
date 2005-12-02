@@ -10,9 +10,9 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.ImageIcon;
 import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.border.LineBorder;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 

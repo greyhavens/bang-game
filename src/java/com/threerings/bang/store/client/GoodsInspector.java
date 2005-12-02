@@ -7,10 +7,10 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
-import com.jmex.bui.BlankIcon;
-import com.jmex.bui.ImageIcon;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.BlankIcon;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.client.BangUI;

@@ -6,13 +6,13 @@ package com.threerings.bang.client;
 import java.awt.Font;
 
 import com.jmex.bui.BButton;
-import com.jmex.bui.BIcon;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
-import com.jmex.bui.BlankIcon;
-import com.jmex.bui.ImageIcon;
 import com.jmex.bui.background.BBackground;
 import com.jmex.bui.background.TiledBackground;
+import com.jmex.bui.icon.BIcon;
+import com.jmex.bui.icon.BlankIcon;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.text.AWTTextFactory;
 
 import com.threerings.openal.ClipProvider;

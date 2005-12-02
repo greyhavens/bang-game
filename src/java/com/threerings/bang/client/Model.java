@@ -34,8 +34,8 @@ import com.jme.util.TextureManager;
 import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
 
-import com.jmex.bui.BIcon;
-import com.jmex.bui.TextureIcon;
+import com.jmex.bui.icon.BIcon;
+import com.jmex.bui.icon.TextureIcon;
 
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.BangUtil;

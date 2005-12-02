@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BComboBox;
-import com.jmex.bui.BIcon;
+import com.jmex.bui.icon.BIcon;
 
 import com.threerings.media.image.ColorPository;
 

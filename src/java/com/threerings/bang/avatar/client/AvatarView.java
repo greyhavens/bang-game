@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 
 import com.jmex.bui.BLabel;
-import com.jmex.bui.ImageIcon;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.media.util.MultiFrameImage;

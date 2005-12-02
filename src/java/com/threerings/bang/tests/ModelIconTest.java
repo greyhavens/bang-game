@@ -35,8 +35,8 @@ import com.threerings.openal.SoundManager;
 
 import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.Model;
-import com.threerings.bang.client.ModelCache;
 import com.threerings.bang.client.util.ImageCache;
+import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.util.BasicContext;

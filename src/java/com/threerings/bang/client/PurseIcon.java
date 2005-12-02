@@ -3,7 +3,7 @@
 
 package com.threerings.bang.client;
 
-import com.jmex.bui.ImageIcon;
+import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Purse;
