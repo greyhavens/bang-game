@@ -1247,9 +1247,14 @@ public class BangManager extends GameManager
     /** Indicates that we're testing and to do wacky stuff. */
     protected boolean isTest ()
     {
-        // if it's a two player game and one player is an AI, we're
-        // testing
-        return (_AIs != null && getPlayerSlots() == 2);
+        // if one of the AIs has a special personality code, we're testing
+        int aicount = (_AIs == null) ? 0 : _AIs.length;
+        for (int ii = 0; ii < aicount; ii++) {
+            if (_AIs[ii] != null && _AIs[ii].personality == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Used to track cards from a player's inventory and whether or not they

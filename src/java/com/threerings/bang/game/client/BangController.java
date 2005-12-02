@@ -362,6 +362,9 @@ public class BangController extends GameController
      */
     protected void updateRank ()
     {
+        if (_bangobj.funds == null) {
+            return;
+        }
         int[] funds = (int[])_bangobj.funds.clone();
         ScenarioUtil.computeUnscoredFunds(_bangobj, funds);
         // TODO: compute ranks and update player status views...

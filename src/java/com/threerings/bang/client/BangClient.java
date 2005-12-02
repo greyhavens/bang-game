@@ -85,7 +85,7 @@ public class BangClient extends BasicClient
                 _ctx.getUserObject().getVisibleName(),
                 new Name("Larry") /*, new Name("Moe")*/ };
             config.ais = new GameAI[] {
-                null, new GameAI(0, 50) /*, new GameAI(0, 50)*/ };
+                null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { "cj" };
             config.board = System.getProperty("board");
             ConfirmListener cl = new ConfirmListener() {
