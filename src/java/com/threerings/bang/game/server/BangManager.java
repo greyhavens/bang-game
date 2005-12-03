@@ -269,14 +269,14 @@ public class BangManager extends GameManager
             recordDamage(effector, _damage);
         }
     }
-    
-    // documentation inherited
+
+    @Override // documentation inherited
     protected Class getPlaceObjectClass ()
     {
         return BangObject.class;
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void didStartup ()
     {
         super.didStartup();
@@ -321,14 +321,14 @@ public class BangManager extends GameManager
 //         }
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void didShutdown ()
     {
         super.didShutdown();
         PresentsServer.invmgr.clearDispatcher(_bangobj.service);
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void playersAllHere ()
     {
         // when the players all arrive, go into the buying phase
@@ -533,7 +533,7 @@ public class BangManager extends GameManager
         }
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void gameWillStart ()
     {
         super.gameWillStart();
@@ -1280,7 +1280,7 @@ public class BangManager extends GameManager
                 return;
             }
 
-            // reset the extra tick time and update the game's tick counter 
+            // reset the extra tick time and update the game's tick counter
             int nextTick = (_bangobj.tick + 1) % Short.MAX_VALUE;
             _extraTickTime = 0L;
             _bangobj.setTick((short)nextTick);
@@ -1312,17 +1312,17 @@ public class BangManager extends GameManager
 
         public void pieceUpdated (Piece opiece, Piece npiece) {
         }
-        
+
         public void pieceRemoved (Piece piece) {
         }
-        
+
         public void tickDelayed (long extraTime) {
             // if we are currently processing a tick, add to the extra tick
             // time; otherwise, postpone the next tick
             long now = System.currentTimeMillis();
             if (now >= _nextTickTime) {
                 _extraTickTime = Math.max(_extraTickTime, extraTime);
-                
+
             } else {
                 _nextTickTime += extraTime;
                 _ticker.schedule(_nextTickTime - now);
@@ -1372,11 +1372,11 @@ public class BangManager extends GameManager
 
     /** The time for which the next tick is scheduled. */
     protected long _nextTickTime;
-    
+
     /** The extra time to take for the current tick to allow extended effects
      * to complete. */
     protected long _extraTickTime;
-    
+
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;
 
