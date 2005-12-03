@@ -10,6 +10,7 @@ import com.threerings.util.Name;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.BodyObject;
+import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.TokenRing;
 
 import com.threerings.bang.avatar.data.Look;
@@ -114,6 +115,12 @@ public class PlayerObject extends BodyObject
     public TokenRing getTokens ()
     {
         return tokens;
+    }
+
+    @Override // documentation inherited
+    public OccupantInfo createOccupantInfo ()
+    {
+        return new BangOccupantInfo(this);
     }
 
     @Override // documentation inherited
