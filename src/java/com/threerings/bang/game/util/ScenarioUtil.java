@@ -18,7 +18,7 @@ public class ScenarioUtil
     /**
      * Computes the unscored but in-progress cash for each of the players,
      * which tends to be scenario dependent: nuggets in claims, branded cattle,
-     * etc.
+     * etc. Adds it to the supplied funds array.
      */
     public static void computeUnscoredFunds (BangObject bangobj, int[] funds)
     {

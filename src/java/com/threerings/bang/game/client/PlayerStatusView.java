@@ -94,9 +94,21 @@ public class PlayerStatusView extends BContainer
         add(_cash = new BLabel(""), CASH_LOC);
         _cash.setLookAndFeel(BangUI.pstatusLNF);
         _pieces = new BLabel("");
-        add(_rank = new BLabel(createRankIcon(-1)), RANK_RECT);
+        add(_ranklbl = new BLabel(createRankIcon(-1)), RANK_RECT);
 
         updateStatus();
+    }
+
+    /**
+     * Sets the rank displayed for this player to the specified index (0 is 1st
+     * place, 1 is 2nd, etc.).
+     */
+    public void setRank (int rank)
+    {
+        if (_rank != rank) {
+            _rank = rank;
+            _ranklbl.setIcon(createRankIcon(rank));
+        }
     }
 
     @Override // documentation inherited
@@ -229,12 +241,12 @@ public class PlayerStatusView extends BContainer
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected BangController _ctrl;
-    protected int _pidx;
+    protected int _pidx, _rank = -1;
 
     protected ImageIcon _color, _avatar;
     protected Image _rankimg;
 
-    protected BLabel _player, _cash, _pieces, _rank;
+    protected BLabel _player, _cash, _pieces, _ranklbl;
     protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];
 
     protected static final Point BACKGROUND_LOC = new Point(33, 13);

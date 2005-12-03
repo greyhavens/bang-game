@@ -6,6 +6,7 @@ package com.threerings.bang.game.client;
 import java.awt.event.ActionEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -13,6 +14,7 @@ import com.jme.input.KeyInput;
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.KeyListener;
 
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Multex;
 import com.samskivert.util.StringUtil;
@@ -365,9 +367,27 @@ public class BangController extends GameController
         if (_bangobj.funds == null) {
             return;
         }
+
+        // compute each player's total funds including unscored funds
         int[] funds = (int[])_bangobj.funds.clone();
         ScenarioUtil.computeUnscoredFunds(_bangobj, funds);
-        // TODO: compute ranks and update player status views...
+
+        // determine each player's rank based on those funds
+        int[] sfunds = (int[])funds.clone();
+        Arrays.sort(sfunds);
+        ArrayUtil.reverse(sfunds);
+        int rank = 0;
+        for (int rr = 0; rr < sfunds.length; rr++) {
+            if (rr > 0 && sfunds[rr] == sfunds[rr-1]) {
+                continue;
+            }
+            for (int ii = 0; ii < funds.length; ii++) {
+                if (funds[ii] == sfunds[rr]) {
+                    _view.pstatus[ii].setRank(rank);
+                }
+            }
+            rank++;
+        }
     }
 
     /** Listens for game state changes and calls {@link #updateRank}. */

@@ -32,6 +32,9 @@ public class BangView extends BWindow
     /** Our chat display. */
     public OverlayChatView chat;
 
+    /** Our player status views. */
+    public PlayerStatusView[] pstatus;
+
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
@@ -102,12 +105,14 @@ public class BangView extends BWindow
 
         // create our player status displays
         int pcount = bangobj.players.length;
-        _pstatus = new BWindow[pcount];
+        _pswins = new BWindow[pcount];
+        pstatus = new PlayerStatusView[pcount];
         for (int ii = 0; ii < pcount; ii++) {
-            _pstatus[ii] = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
-            _pstatus[ii].setLayoutManager(GroupLayout.makeHStretch());
-            _pstatus[ii].setBackground(null);
-            _pstatus[ii].add(new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
+            _pswins[ii] = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
+            _pswins[ii].setLayoutManager(GroupLayout.makeHStretch());
+            _pswins[ii].setBackground(null);
+            _pswins[ii].add(
+                pstatus[ii] = new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
         }
 
         chat.willEnterPlace(plobj);
@@ -119,8 +124,8 @@ public class BangView extends BWindow
         chat.didLeavePlace(plobj);
 
         // remove our displays
-        for (int ii = 0; ii < _pstatus.length; ii++) {
-            _ctx.getRootNode().removeWindow(_pstatus[ii]);
+        for (int ii = 0; ii < _pswins.length; ii++) {
+            _ctx.getRootNode().removeWindow(_pswins[ii]);
         }
         _ctx.getRootNode().removeWindow(chat);
 
@@ -141,8 +146,8 @@ public class BangView extends BWindow
 
         // now that we've been added to the interface hierarchy, we can add the
         // player status windows which should be "above" this one
-        for (int ii = 0; ii < _pstatus.length; ii++) {
-            BWindow pwin = _pstatus[ii];
+        for (int ii = 0; ii < _pswins.length; ii++) {
+            BWindow pwin = _pswins[ii];
             _ctx.getRootNode().addWindow(pwin);
             pwin.pack();
             int pwidth = pwin.getWidth(), pheight = pwin.getHeight();
@@ -182,7 +187,7 @@ public class BangView extends BWindow
     protected BangController _ctrl;
 
     /** Contain per-player displays. */
-    protected BWindow[] _pstatus;
+    protected BWindow[] _pswins;
 
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;
