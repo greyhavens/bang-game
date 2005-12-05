@@ -21,6 +21,7 @@ import com.jme.light.PointLight;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -35,6 +36,7 @@ import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
 
 import com.jmex.bui.icon.BIcon;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.TextureIcon;
 
 import com.threerings.bang.util.BasicContext;
@@ -195,7 +197,12 @@ public class Model
 
         // create the icon image for this model if it's a unit
         if (type.equals("units")) {
-            createIconImage(ctx);
+            try {
+                createIconImage(ctx);
+            } catch (Throwable t) {
+                log.log(Level.WARNING, "Failed to create icon image " +
+                        "[type=" + type + ", name=" + name + "].", t);
+            }
         }
     }
 
@@ -204,7 +211,10 @@ public class Model
      */
     public BIcon getIcon ()
     {
-        return new TextureIcon(_icon, ICON_SIZE, ICON_SIZE);
+        // temporarily cope with pbuffer failures
+        return (_icon == null) ?
+            new BlankIcon(ICON_SIZE, ICON_SIZE) : 
+            new TextureIcon(_icon, ICON_SIZE, ICON_SIZE);
     }
 
     /**
@@ -342,33 +352,25 @@ public class Model
             ctx.getDisplay().createTextureRenderer(
                 ICON_SIZE, ICON_SIZE, false, true, false, false,
                 TextureRenderer.RENDER_TEXTURE_2D, 0);
-        trenderer.setBackgroundColor(new ColorRGBA(0f, 1f, 1f, 0f));
+        trenderer.setBackgroundColor(new ColorRGBA(.9f, .9f, .9f, 0f));
 
         Vector3f loc = new Vector3f(TILE_SIZE/2, -TILE_SIZE, TILE_SIZE);
-        trenderer.getCamera().setLocation(loc);
+        Camera cam = trenderer.getCamera();
+        cam.setLocation(loc);
         Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/2, trenderer.getCamera().getLeft());
-        rotm.mult(trenderer.getCamera().getDirection(),
-                  trenderer.getCamera().getDirection());
-        rotm.mult(trenderer.getCamera().getUp(),
-                  trenderer.getCamera().getUp());
-        rotm.mult(trenderer.getCamera().getLeft(),
-                  trenderer.getCamera().getLeft());
-        rotm.fromAngleAxis(FastMath.PI/6, trenderer.getCamera().getUp());
-        rotm.mult(trenderer.getCamera().getDirection(),
-                  trenderer.getCamera().getDirection());
-        rotm.mult(trenderer.getCamera().getUp(),
-                  trenderer.getCamera().getUp());
-        rotm.mult(trenderer.getCamera().getLeft(),
-                  trenderer.getCamera().getLeft());
-        rotm.fromAngleAxis(FastMath.PI/6, trenderer.getCamera().getLeft());
-        rotm.mult(trenderer.getCamera().getDirection(),
-                  trenderer.getCamera().getDirection());
-        rotm.mult(trenderer.getCamera().getUp(),
-                  trenderer.getCamera().getUp());
-        rotm.mult(trenderer.getCamera().getLeft(),
-                  trenderer.getCamera().getLeft());
-        trenderer.getCamera().update();
+        rotm.fromAngleAxis(-FastMath.PI/2, cam.getLeft());
+        rotm.mult(cam.getDirection(), cam.getDirection());
+        rotm.mult(cam.getUp(), cam.getUp());
+        rotm.mult(cam.getLeft(), cam.getLeft());
+        rotm.fromAngleAxis(FastMath.PI/6, cam.getUp());
+        rotm.mult(cam.getDirection(), cam.getDirection());
+        rotm.mult(cam.getUp(), cam.getUp());
+        rotm.mult(cam.getLeft(), cam.getLeft());
+        rotm.fromAngleAxis(FastMath.PI/6, cam.getLeft());
+        rotm.mult(cam.getDirection(), cam.getDirection());
+        rotm.mult(cam.getUp(), cam.getUp());
+        rotm.mult(cam.getLeft(), cam.getLeft());
+        cam.update();
 
         _icon = trenderer.setupTexture();
         _icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
@@ -376,8 +378,8 @@ public class Model
         Node all = new Node("all");
         all.setRenderQueueMode(Renderer.QUEUE_SKIP);
 
-        all.attachChild(new Box("origin", new Vector3f(0.01f, .01f, .01f),
-                                new Vector3f(.02f, .02f, .02f)));
+        all.attachChild(new Box("origin", new Vector3f(-0.01f, -0.01f, -0.01f),
+                                new Vector3f(.01f, .01f, .01f)));
 
         PointLight light = new PointLight();
         light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
