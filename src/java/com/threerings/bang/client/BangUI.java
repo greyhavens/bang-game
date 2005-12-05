@@ -22,7 +22,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Contains various utility routines and general purpose bits related to
@@ -66,7 +66,7 @@ public class BangUI
     /**
      * Configures the UI singleton with a context reference.
      */
-    public static void init (BangContext ctx)
+    public static void init (BasicContext ctx)
     {
         _ctx = ctx;
         _umsgs = _ctx.getMessageManager().getBundle("units");
@@ -160,6 +160,6 @@ public class BangUI
         return button;
     }
 
-    protected static BangContext _ctx;
+    protected static BasicContext _ctx;
     protected static MessageBundle _umsgs;
 }
