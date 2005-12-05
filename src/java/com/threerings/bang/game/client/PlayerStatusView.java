@@ -78,17 +78,6 @@ public class PlayerStatusView extends BContainer
         setBackground(new ScaledBackground(bg, 0, 0, 0, 0));
         setPreferredSize(new Dimension(bg.getWidth(), bg.getHeight()));
 
-        // load up this player's avatar image
-        BangOccupantInfo boi = (BangOccupantInfo)
-            bangobj.getOccupantInfo(bangobj.players[pidx]);
-        if (boi != null) {
-            BufferedImage aimage = AvatarView.createImage(ctx, boi.avatar);
-            _avatar = new ImageIcon(
-                aimage.getScaledInstance(
-                    AvatarLogic.WIDTH/10, AvatarLogic.HEIGHT/10,
-                    BufferedImage.SCALE_SMOOTH));
-        }
-
         // create our interface elements
         add(_player = new BLabel(_bangobj.players[_pidx].toString()), NAME_RECT);
         _player.setHorizontalAlignment(BLabel.CENTER);
@@ -98,6 +87,7 @@ public class PlayerStatusView extends BContainer
         _pieces = new BLabel("");
         add(_ranklbl = new BLabel(createRankIcon(-1)), RANK_RECT);
 
+        updateAvatar();
         updateStatus();
     }
 
@@ -139,33 +129,39 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent event)
     {
-        if (!event.getName().equals(BangObject.CARDS)) {
-            return;
-        }
-        Card card = (Card)event.getEntry();
-        if (card.owner != _pidx) {
-            return;
-        }
-        int cidx = -1;
-        for (int ii = 0; ii < _cards.length; ii++) {
-            if (_cards[ii] == null) {
-                cidx = ii;
-                break;
+        String name = event.getName();
+        if (name.equals(BangObject.CARDS)) {
+            Card card = (Card)event.getEntry();
+            if (card.owner != _pidx) {
+                return;
             }
+            int cidx = -1;
+            for (int ii = 0; ii < _cards.length; ii++) {
+                if (_cards[ii] == null) {
+                    cidx = ii;
+                    break;
+                }
+            }
+            if (cidx == -1) {
+                return;
+            }
+            _cards[cidx] = createButton(card);
+            Rectangle rect = new Rectangle(CARD_RECT);
+            rect.x += (rect.width * cidx);
+            add(_cards[cidx], rect);
+
+        } else if (name.equals(BangObject.OCCUPANT_INFO) && _avatar == null) {
+            updateAvatar();
         }
-        if (cidx == -1) {
-            return;
-        }
-        _cards[cidx] = createButton(card);
-        Rectangle rect = new Rectangle(CARD_RECT);
-        rect.x += (rect.width * cidx);
-        add(_cards[cidx], rect);
     }
 
     // documentation inherited from interface SetListener
     public void entryUpdated (EntryUpdatedEvent event)
     {
-        // NOOP
+        if (event.getName().equals(BangObject.OCCUPANT_INFO) &&
+            _avatar == null) {
+            updateAvatar();
+        }
     }
 
     // documentation inherited from interface SetListener
@@ -211,6 +207,20 @@ public class PlayerStatusView extends BContainer
 
         // then draw the normal background
         super.renderBackground(renderer);
+    }
+
+    protected void updateAvatar ()
+    {
+        // load up this player's avatar image
+        BangOccupantInfo boi = (BangOccupantInfo)
+            _bangobj.getOccupantInfo(_bangobj.players[_pidx]);
+        if (boi != null) {
+            BufferedImage aimage = AvatarView.createImage(_ctx, boi.avatar);
+            _avatar = new ImageIcon(
+                aimage.getScaledInstance(
+                    AvatarLogic.WIDTH/10, AvatarLogic.HEIGHT/10,
+                    BufferedImage.SCALE_SMOOTH));
+        }
     }
 
     protected void updateStatus ()
