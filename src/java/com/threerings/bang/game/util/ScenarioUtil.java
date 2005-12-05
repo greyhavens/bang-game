@@ -9,6 +9,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Cow;
+import com.threerings.bang.game.data.piece.Piece;
 
 /**
  * Contains scenario-related utilities.
@@ -28,8 +29,8 @@ public class ScenarioUtil
         if (bangobj.scenarioId.equals(GameCodes.CLAIM_JUMPING)) {
             // add the cash from nuggets in claims
             for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
-                Object p = iter.next();
-                if (p instanceof Claim) {
+                Piece p = (Piece)iter.next();
+                if (p.owner >= 0 && p instanceof Claim) {
                     Claim c = (Claim)p;
                     funds[c.owner] += c.nuggets * GameCodes.CASH_PER_NUGGET;
                 }

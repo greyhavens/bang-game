@@ -316,9 +316,9 @@ public class BangManager extends GameManager
         }
 
         // start with some cash if we're testing
-//         if (isTest()) {
+        if (isTest()) {
             Arrays.fill(_bangobj.funds, 300);
-//         }
+        }
     }
 
     @Override // documentation inherited

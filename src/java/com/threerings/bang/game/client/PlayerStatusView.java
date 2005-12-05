@@ -40,10 +40,12 @@ import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.data.BangOccupantInfo;
+import com.threerings.bang.util.BangContext;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
-import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -76,11 +78,11 @@ public class PlayerStatusView extends BContainer
         setBackground(new ScaledBackground(bg, 0, 0, 0, 0));
         setPreferredSize(new Dimension(bg.getWidth(), bg.getHeight()));
 
-        // load up our avatar image
-        Look look = ctx.getUserObject().getLook();
-        if (look != null) {
-            int[] avatar = look.getAvatar(ctx.getUserObject());
-            BufferedImage aimage = AvatarView.createImage(ctx, avatar);
+        // load up this player's avatar image
+        BangOccupantInfo boi = (BangOccupantInfo)
+            bangobj.getOccupantInfo(bangobj.players[pidx]);
+        if (boi != null) {
+            BufferedImage aimage = AvatarView.createImage(ctx, boi.avatar);
             _avatar = new ImageIcon(
                 aimage.getScaledInstance(
                     AvatarLogic.WIDTH/10, AvatarLogic.HEIGHT/10,
