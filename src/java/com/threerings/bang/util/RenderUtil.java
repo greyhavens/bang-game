@@ -9,7 +9,9 @@ import java.awt.Graphics2D;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
 import java.net.URL;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +29,7 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
+import com.jme.util.geom.BufferUtils;
 
 import com.threerings.util.RandomUtil;
 
@@ -255,18 +258,36 @@ public class RenderUtil
         return icon;
     }
 
-    public static LightState createDaylight (Renderer renderer)
+    /**
+     * Creates texture coordinates that divide a square up into a grid of the
+     * specified number of units (ie. 3 gives us a 3x3 grid). The coordinates
+     * will be in row major order, moving along y = 0 for each value of x, then
+     * y = 1 and so on. <em>Note:</em> the "top" row is considered zero y, not
+     * the bottom which would be OpenGL's opinion.
+     */
+    public static FloatBuffer[] createGridTexCoords (int size)
     {
-        DirectionalLight light = new DirectionalLight();
-        light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-        light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
-        light.setDirection(new Vector3f(-0.707f, 0f, -0.707f));
-        light.setEnabled(true);
-
-        LightState lights = renderer.createLightState();
-        lights.setEnabled(true);
-        lights.attach(light);
-        return lights;
+        FloatBuffer[] fbuf = new FloatBuffer[size*size];
+        Vector2f[] tcoords = new Vector2f[4];
+        for (int ii = 0; ii < tcoords.length; ii++) {
+            tcoords[ii] = new Vector2f();
+        }
+        float fsize = (float)size;
+        int idx = 0;
+        for (int yy = size-1; yy >= 0; yy--) {
+            for (int xx = 0; xx < size; xx++) {
+                tcoords[1].x = xx/fsize;
+                tcoords[1].y = yy/fsize;
+                tcoords[0].x = xx/fsize;
+                tcoords[0].y = (yy+1)/fsize;
+                tcoords[3].x = (xx+1)/fsize;
+                tcoords[3].y = (yy+1)/fsize;
+                tcoords[2].x = (xx+1)/fsize;
+                tcoords[2].y = yy/fsize;
+                fbuf[idx++] = BufferUtils.createFloatBuffer(tcoords);
+            }
+        }
+        return fbuf;
     }
 
     protected static HashMap<Terrain,ArrayList<Image>> _groundTiles =

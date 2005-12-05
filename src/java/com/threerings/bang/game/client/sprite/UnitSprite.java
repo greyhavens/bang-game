@@ -6,6 +6,7 @@ package com.threerings.bang.game.client.sprite;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
+import java.nio.FloatBuffer;
 
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
@@ -99,6 +100,7 @@ public class UnitSprite extends MobileSprite
     public void setPendingAction (boolean pending)
     {
         _pendquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
+        _pendquad.setTextureBuffer(_pendtc[_piece.ticksUntilMovable(_tick)-1]);
     }
 
     @Override // documentation inherited
@@ -107,7 +109,7 @@ public class UnitSprite extends MobileSprite
         super.updated(board, piece, tick);
 
         Unit unit = (Unit)piece;
-        int ticks;
+        int ticks = unit.ticksUntilMovable(_tick);
 
         // clear our pending shot once we've been ticked
         if (_pendingTick != -1 && tick > _pendingTick) {
@@ -118,7 +120,7 @@ public class UnitSprite extends MobileSprite
         updateStatus();
         TextureState tstate =
             (TextureState)_ticks.getRenderState(RenderState.RS_TEXTURE);
-        if ((ticks = unit.ticksUntilMovable(_tick)) > 0) {
+        if (ticks > 0) {
             tstate.setTexture(
                 _ticktex[Math.max(0, 4-ticks)].createSimpleClone());
             _movable.setCullMode(CULL_ALWAYS);
@@ -144,6 +146,12 @@ public class UnitSprite extends MobileSprite
             _icon.setCullMode(CULL_DYNAMIC);
         } else if (!unit.benuggeted && _icon.getCullMode() != CULL_ALWAYS) {
             _icon.setCullMode(CULL_ALWAYS);
+        }
+
+        // if our pending quad is showing, update it to reflect our correct
+        // ticks until movable
+        if (_pendquad.getCullMode() == CULL_DYNAMIC) {
+            _pendquad.setTextureBuffer(_pendtc[ticks-1]);
         }
     }
 
@@ -271,14 +279,14 @@ public class UnitSprite extends MobileSprite
         _tgtquad.setCullMode(CULL_ALWAYS);
 
         // this icon is displayed when we have a pending action queued
-        _pendquad = RenderUtil.createIcon(5, 5);
+        _pendquad = RenderUtil.createIcon(4, 4);
         _pendquad.setRenderState(_pendtex);
         _pendquad.setLocalTranslation(new Vector3f(0, 0, 0));
         _pendquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _pendquad.setRenderState(RenderUtil.alwaysZBuf);
         _pendquad.updateRenderState();
         bbn = new BillboardNode("pending");
-        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
+        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         bbn.attachChild(_pendquad);
         attachChild(bbn);
         _pendquad.setCullMode(CULL_ALWAYS);
@@ -315,9 +323,9 @@ public class UnitSprite extends MobileSprite
     {
         int elev = super.computeElevation(board, tx, ty);
         if (_piece.isFlyer()) {
-            // flying pieces hover 2 "units" above the ground; not sinking into
+            // flying pieces hover 1 "units" above the ground; not sinking into
             // holes, but raising up to two units above hills
-            elev = Math.max(elev, 0) + 2 * BangBoard.ELEVATION_UNITS_PER_TILE;
+            elev = Math.max(elev, 0) + 1 * BangBoard.ELEVATION_UNITS_PER_TILE;
         }
         return elev;
     }
@@ -402,6 +410,8 @@ public class UnitSprite extends MobileSprite
     protected static Texture _hovtex, _movetex;
     protected static Texture[] _ticktex;
     protected static TextureState _tgttex, _pendtex, _nugtex;
+
+    protected static FloatBuffer[] _pendtc = RenderUtil.createGridTexCoords(2);
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
