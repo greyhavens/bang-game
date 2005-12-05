@@ -299,7 +299,7 @@ public class BangManager extends GameManager
         }
         if (_boards == null) {
             _boards = BangServer.boardmgr.selectBoards(
-                _bconfig.players.length, _bconfig.scenarios, isTest());
+                _bconfig.players.length, _bconfig.scenarios);
         }
 
         // configure the town associated with this server

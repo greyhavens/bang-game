@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server;
 
+import java.util.Collections;
 import java.util.HashMap;
 
 import com.samskivert.io.PersistenceException;
@@ -59,19 +60,32 @@ public class BoardManager
      * Randomly selects a set of boards for play given the required number
      * of players and the specified sequence of scenarios.
      */
-    public BoardRecord[] selectBoards (
-        int players, String[] scenarios, boolean testing)
+    public BoardRecord[] selectBoards (int players, String[] scenarios)
     {
         BoardRecord[] choices = new BoardRecord[scenarios.length];
         for (int ii = 0; ii < scenarios.length; ii++) {
-            BoardList candidates = _byscenario.get(scenarios[ii])[players-1];
+            if (choices[ii] != null) {
+                continue;
+            }
+
+            // select the set of boards that work for this scenario and this
+            // number of players; then shuffle that list
+            String scenario = scenarios[ii];
+            BoardList candidates = _byscenario.get(scenario)[players-1];
             if (candidates == null) {
                 log.warning("Aiya! Missing boards [players=" + players +
-                            ", scenario=" + scenarios[ii] + "].");
-            } else if (testing) {
-                choices[ii] = candidates.get(0);
-            } else {
-                choices[ii] = (BoardRecord)RandomUtil.pickRandom(candidates);
+                            ", scenario=" + scenario + "].");
+                continue;
+            }
+            Collections.shuffle(candidates);
+
+            // now fill in all instances of this scenario with (non-duplicate)
+            // selections from the shuffled list
+            int bidx = 0;
+            for (int bb = ii; bb < scenarios.length; bb++) {
+                if (scenarios[ii].equals(scenario)) {
+                    choices[ii] = candidates.get(bidx++);
+                }
             }
         }
         return choices;
