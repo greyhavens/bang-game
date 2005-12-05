@@ -100,7 +100,7 @@ public class UnitSprite extends MobileSprite
     {
         _pendquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
     }
-    
+
     @Override // documentation inherited
     public void updated (BangBoard board, Piece piece, short tick)
     {
@@ -160,26 +160,26 @@ public class UnitSprite extends MobileSprite
         super.move(path);
         _status.setCullMode(CULL_ALWAYS);
     }
-    
+
     @Override // documentation inherited
     public void cancelMove ()
     {
         super.cancelMove();
         updateStatus();
     }
-    
+
     @Override // documentation inherited
     public void pathCompleted ()
     {
         super.pathCompleted();
         updateStatus();
     }
-    
+
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
         super.updateWorldData(time);
-        
+
         // of up and forward, use the one with the greater x/y
         Vector3f dir = _ctx.getCameraHandler().getCamera().getDirection(),
             up = _ctx.getCameraHandler().getCamera().getUp(),
@@ -189,39 +189,39 @@ public class UnitSprite extends MobileSprite
         rot.fromAngleAxis(-angle, Vector3f.UNIT_Z);
         Vector3f trans = rot.mult(new Vector3f(0.5f, 0.5f, 0f));
         trans.set(0.5f - trans.x, 0.5f - trans.y, 0f);
-        
+
         Texture mtex = ((TextureState)_movable.getRenderState(
             RenderState.RS_TEXTURE)).getTexture();
         mtex.setRotation(rot);
         mtex.setTranslation(trans);
-        
+
         Texture ttex = ((TextureState)_ticks.getRenderState(
             RenderState.RS_TEXTURE)).getTexture();
         ttex.setRotation(rot);
         ttex.setTranslation(trans);
-        
+
         Texture dtex = ((TextureState)_damage.getRenderState(
             RenderState.RS_TEXTURE)).getTexture();
         dtex.setRotation(rot);
         dtex.setTranslation(trans);
     }
-    
+
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
         if (_hovtex == null) {
             loadTextures(ctx);
         }
-        
+
         _ctx = ctx;
-        
+
         // load up our model
         super.createGeometry(ctx);
-        
+
         // this composite of icons combines to display our status
         _status = new Node("status");
         _hnode.attachChild(_status);
-        
+
         // this icon is displayed when the mouse is hovered over us
         _hov = new SharedMesh("hov", _highlight);
         TextureState tstate = ctx.getRenderer().createTextureState();
@@ -238,7 +238,7 @@ public class UnitSprite extends MobileSprite
         _ticks.setRenderState(tstate);
         _ticks.updateRenderState();
         _status.attachChild(_ticks);
-        
+
         _damage = new SharedMesh("damage", _highlight);
         _damtex = ctx.getRenderer().createTextureState();
         _damtex.setEnabled(true);
@@ -246,7 +246,7 @@ public class UnitSprite extends MobileSprite
         _damage.setRenderState(_damtex);
         _damage.updateRenderState();
         _status.attachChild(_damage);
-        
+
         _movable = new SharedMesh("movable", _highlight);
         tstate = ctx.getRenderer().createTextureState();
         tstate.setTexture(_movetex.createSimpleClone());
@@ -254,7 +254,7 @@ public class UnitSprite extends MobileSprite
         _movable.updateRenderState();
         _status.attachChild(_movable);
         _movable.setCullMode(tick > 0 ? CULL_ALWAYS : CULL_DYNAMIC);
-        
+
         // configure our colors
         configureOwnerColors();
 
@@ -296,7 +296,7 @@ public class UnitSprite extends MobileSprite
         attachChild(bbn);
         _icon.setCullMode(CULL_ALWAYS);
     }
-    
+
     /**
      * Updates the visibility and location of the status display.
      */
@@ -304,12 +304,12 @@ public class UnitSprite extends MobileSprite
     {
         if (_piece.isAlive() /* && !isMoving() */) {
             _status.setCullMode(CULL_DYNAMIC);
-            
+
         } else {
             _status.setCullMode(CULL_ALWAYS);
         }
     }
-    
+
     @Override // documentation inherited
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
@@ -362,7 +362,7 @@ public class UnitSprite extends MobileSprite
     {
         _hovtex = RenderUtil.createTexture(
             ctx.loadImage("textures/ustatus/selected.png"));
-        
+
         _tgttex = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
         _pendtex = RenderUtil.createTextureState(
@@ -370,7 +370,7 @@ public class UnitSprite extends MobileSprite
         _movetex = RenderUtil.createTexture(
             ctx.loadImage("textures/ustatus/tick_ready.png"));
         _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-        
+
         _nugtex = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/nugget.png"));
         _ticktex = new Texture[5];
@@ -383,7 +383,7 @@ public class UnitSprite extends MobileSprite
         _dempty = ctx.loadBufferedImage(
             "textures/ustatus/health_meter_empty.png");
     }
-    
+
     protected BasicContext _ctx;
     protected Quad _tgtquad, _pendquad;
 
@@ -402,7 +402,7 @@ public class UnitSprite extends MobileSprite
     protected static Texture _hovtex, _movetex;
     protected static Texture[] _ticktex;
     protected static TextureState _tgttex, _pendtex, _nugtex;
-    
+
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
 
