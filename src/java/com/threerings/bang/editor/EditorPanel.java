@@ -149,6 +149,8 @@ public class EditorPanel extends JPanel
         createCheckBoxMenuItem(view, msgs.get("m.menu_highlight"),
             KeyEvent.VK_H, KeyEvent.VK_H, EditorController.TOGGLE_HIGHLIGHTS,
             false);
+        createMenuItem(view, msgs.get("m.menu_shadows"), -1, KeyEvent.VK_S,
+            EditorController.GENERATE_SHADOWS);
             
         // add our side panel to the main display
         add(sidePanel, HGroupLayout.FIXED);

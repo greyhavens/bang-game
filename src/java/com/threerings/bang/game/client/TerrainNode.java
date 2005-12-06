@@ -15,7 +15,9 @@ import java.nio.IntBuffer;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.intersection.TrianglePickResults;
 import com.jme.math.FastMath;
+import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -24,6 +26,7 @@ import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
@@ -425,10 +428,11 @@ public class TerrainNode extends Node
         protected boolean _overPieces;
     }
 
-    public TerrainNode (BasicContext ctx)
+    public TerrainNode (BasicContext ctx, BoardView view)
     {
         super("terrain");
         _ctx = ctx;
+        _view = view;
 
         // always perform backface culling
         setRenderState(RenderUtil.backCull);
@@ -445,6 +449,14 @@ public class TerrainNode extends Node
         // clean up any existing geometry
         detachAllChildren();
 
+        // create the shadow buffer automatically for static terrain
+        if (isHeightfieldStatic()) {
+            createShadowBuffer();
+            
+        } else {
+            _sbuf = null;
+        }
+        
         // create, store, and attach the splat blocks
         int swidth = (int)Math.ceil((_board.getHeightfieldWidth() - 1.0) /
                 SPLAT_SIZE),
@@ -535,6 +547,37 @@ public class TerrainNode extends Node
         }
     }
 
+    /**
+     * Creates the shadow buffer by casting rays from each heightfield vertex.
+     */
+    public void createShadowBuffer ()
+    {
+        int hfwidth = _board.getHeightfieldWidth(),
+            hfheight = _board.getHeightfieldHeight();
+        _sbuf = new boolean[hfwidth][hfheight];
+        
+        float azimuth = _board.getLightAzimuth(0),
+            elevation = _board.getLightElevation(0);
+        Vector3f origin = new Vector3f(),
+            dir = new Vector3f(FastMath.cos(azimuth) * FastMath.cos(elevation),
+                FastMath.sin(azimuth) * FastMath.cos(elevation),
+                FastMath.sin(elevation));
+        Ray ray = new Ray(origin, dir);
+        TrianglePickResults results = new TrianglePickResults();
+        for (int x = 0; x < hfwidth; x++) {
+            for (int y = 0; y < hfheight; y++) {
+                getHeightfieldVertex(x, y, origin);
+                //origin.z += FastMath.FLT_EPSILON;
+                
+                // intersect with pieces
+                results.clear();
+                _view.getPieceNode().calculatePick(ray, results);
+                
+                _sbuf[x][y] = results.getNumber() > 0;
+            }
+        }
+    }
+    
     /**
      * Creates and returns a cursor over this terrain.  The cursor must be
      * added to the scene graph before it becomes visible.
@@ -737,15 +780,12 @@ public class TerrainNode extends Node
             }
         }
 
-        // depending on whether we can assume the heightfield to remain static,
-        // either create a trimesh or a clod mesh with the computed values
+        // create a trimesh with the computed values; if the heightfield is
+        // static, use a VBO to store the vertices
+        block.mesh = new TriMesh("terrain", block.vbuf, block.nbuf, null,
+            tbuf0, ibuf);
         if (isHeightfieldStatic()) {
-            block.mesh = new AreaClodMesh("terrain", block.vbuf, block.nbuf, null,
-                tbuf0, ibuf, null);
-
-        } else {
-            block.mesh = new TriMesh("terrain", block.vbuf, block.nbuf, null,
-                tbuf0, ibuf);
+            block.mesh.setVBOInfo(new VBOInfo());
         }
         block.mesh.setTextureBuffer(tbuf1, 1);
         block.mesh.setModelBound(new BoundingBox());
@@ -787,7 +827,7 @@ public class TerrainNode extends Node
             2*SUB_TILE_SIZE);
         result.normalizeLocal();
     }
-
+    
     /**
      * Computes and returns the alpha value for the specified terrain code at
      * the given sub-tile coordinates.
@@ -803,14 +843,15 @@ public class TerrainNode extends Node
                     weight = Math.max(0f,
                         1f - (xdist*xdist + ydist*ydist)/(1.75f*1.75f));
                 if (_board.getTerrainValue(sx, sy) == code) {
-                    alpha += weight;
+                    alpha += (isInShadow(sx, sy) ? weight * SHADOW_MULTIPLIER :
+                        weight);
                 }
                 total += weight;
             }
         }
         return alpha / total;
     }
-
+    
     /**
      * Computes and returns the base color value at the given sub-tile
      * coordinates.
@@ -823,8 +864,8 @@ public class TerrainNode extends Node
             cf = getTerrainColor(cx, fy), cc = getTerrainColor(cx, cy);
         float ax = x - fx, ay = y - fy;
 
-        return ColorUtil.blend(ColorUtil.blend(fc, ff, ay),
-            ColorUtil.blend(cc, cf, ay), ax);
+        return ColorUtil.blend(ColorUtil.blend(cc, cf, ay),
+            ColorUtil.blend(fc, ff, ay), ax);
     }
 
     /**
@@ -834,25 +875,24 @@ public class TerrainNode extends Node
     {
         byte code = _board.getTerrainValue(x, y);
         Color color = (Color)_tcolors.get(code);
-        if (color != null) {
-            return color;
+        if (color == null) {
+            // if we haven't computed it already, determine the overall color
+            // average for the texture
+            Image img = RenderUtil.getGroundTile(Terrain.fromCode(code));
+            ByteBuffer imgdata = img.getData();
+            int r = 0, g = 0, b = 0, bytes = imgdata.limit(), pixels = bytes/3;
+            for (int ii = 0; ii < bytes; ii += 3) {
+                // the bytes are stored unsigned in the image but java is going
+                // to interpret them as signed, so we need to do some fiddling
+                r += btoi(imgdata.get(ii));
+                g += btoi(imgdata.get(ii+1));
+                b += btoi(imgdata.get(ii+2));
+            }
+            color = new Color(r / pixels, g / pixels, b / pixels);
+            _tcolors.put(code, color);
         }
-
-        // if we haven't computed it already, determine the overall color
-        // average for the texture
-        Image img = RenderUtil.getGroundTile(Terrain.fromCode(code));
-        ByteBuffer imgdata = img.getData();
-        int r = 0, g = 0, b = 0, bytes = imgdata.limit(), pixels = bytes/3;
-        for (int ii = 0; ii < bytes; ii += 3) {
-            // the bytes are stored unsigned in the image but java is going to
-            // interpret them as signed, so we need to do some fiddling
-            r += btoi(imgdata.get(ii));
-            g += btoi(imgdata.get(ii+1));
-            b += btoi(imgdata.get(ii+2));
-        }
-        color = new Color(r / pixels, g / pixels, b / pixels);
-        _tcolors.put(code, color);
-        return color;
+        return (isInShadow(x, y) ? ColorUtil.blend(color, Color.black,
+            SHADOW_MULTIPLIER) : color);
     }
 
     protected static final int btoi (byte value)
@@ -860,6 +900,15 @@ public class TerrainNode extends Node
         return (value < 0) ? 256 + value : value;
     }
 
+    /**
+     * Determines whether the specified sub-tile coordinate is in shadow.
+     */
+    protected boolean isInShadow (int x, int y)
+    {
+        return _sbuf != null && x >= 0 && y >= 0 && x < _sbuf.length &&
+            y < _sbuf[x].length && _sbuf[x][y];
+    }
+    
     /** Contains all the state associated with a splat block (a collection of
      * splats covering a single block of terrain). */
     protected class SplatBlock
@@ -1087,9 +1136,16 @@ public class TerrainNode extends Node
     /** The application context. */
     protected BasicContext _ctx;
 
+    /** The board view. */
+    protected BoardView _view;
+    
     /** The board with the terrain. */
     protected BangBoard _board;
-
+    
+    /** A shadow buffer indicating, for static heightfields, which heightfield
+     * points are in shadow (as determined by raycasting). */
+    protected boolean[][] _sbuf;
+    
     /** The array of splat blocks containing the terrain geometry/textures. */
     protected SplatBlock[][] _blocks;
 
@@ -1116,6 +1172,9 @@ public class TerrainNode extends Node
     /** The size of the board edges that hide the void. */
     protected static final float EDGE_SIZE = 10000f;
 
+    /** The color multiplier for heightfield vertices in shadow. */
+    protected static final float SHADOW_MULTIPLIER = 0.25f;
+    
     /** The number of segments in the cursor. */
     protected static final int CURSOR_SEGMENTS = 32;
 }

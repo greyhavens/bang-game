@@ -99,7 +99,7 @@ public class BoardView extends BComponent
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
         _node.attachChild(bnode);
-        bnode.attachChild(_tnode = new TerrainNode(ctx));
+        bnode.attachChild(_tnode = createTerrainNode(ctx));
         bnode.attachChild(_wnode = new WaterNode(ctx));
         
         // the children of this node will display highlighted tiles
@@ -136,7 +136,7 @@ public class BoardView extends BComponent
     {
         return _node;
     }
-
+    
     /**
      * Sets up the board view with all the necessary bits. This is called
      * by the controller when we enter an already started game or the game
@@ -349,6 +349,15 @@ public class BoardView extends BComponent
 
         // clear any marquee we have up
         clearMarquee();
+    }
+    
+    /**
+     * Creates and returns the terrain node for this board view, giving
+     * subclasses a change to customize the object.
+     */
+    protected TerrainNode createTerrainNode (BasicContext ctx)
+    {
+        return new TerrainNode(ctx, this);
     }
     
     /**

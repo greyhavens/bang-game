@@ -26,6 +26,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.effect.EffectViz;
@@ -282,6 +283,18 @@ public class BangBoardView extends BoardView
         }
     }
 
+    @Override // documentation inherited
+    protected TerrainNode createTerrainNode (BasicContext ctx)
+    {
+        // for now at least, terrain heightfields do not change in the course
+        // of a game
+        return new TerrainNode(ctx, this) {
+            protected boolean isHeightfieldStatic () {
+                return true;
+            }
+        };
+    }
+    
     @Override // documentation inherited
     protected boolean isHoverable (Sprite sprite)
     {
