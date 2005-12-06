@@ -212,8 +212,8 @@ public class BangBoardView extends BoardView
 
                 // if no specific location was specified, make sure we can
                 // still determine a location from which to fire
-                if (move.action[1] == Short.MAX_VALUE) {
-                    Piece target = (Piece)_bangobj.pieces.get(move.action[3]);
+                if (move.mx == Short.MAX_VALUE) {
+                    Piece target = (Piece)_bangobj.pieces.get(move.targetId);
                     if (target != null) {
                         Point spot = unit.computeShotLocation(target, moves);
                         if (spot != null) {
@@ -223,15 +223,14 @@ public class BangBoardView extends BoardView
 
                 // if a specific location was specified, make sure we can
                 // still reach it
-                } else if (moves.contains(move.action[1], move.action[2])) {
+                } else if (moves.contains(move.mx, move.my)) {
                     continue;
                 }
 
-                log.info("Clearing queued action [unit=" + unit.info() +
-                         ", action=" + StringUtil.toString(move.action) + "].");
+                // the move is no longer valid, so clear and remove it
+                // TODO: play a sound?
                 move.clear();
                 iter.remove();
-                getUnitSprite(unit).setPendingAction(false);
             }
         }
     }
@@ -577,8 +576,7 @@ public class BangBoardView extends BoardView
             if (qmove != null) {
                 qmove.clear();
             }
-            _queuedMoves.put(_action[0], new QueuedMove(_action));
-            sprite.setPendingAction(true);
+            _queuedMoves.put(_action[0], new QueuedMove(sprite, _action));
         } else {
             // otherwise enact the move/fire combination immediately
             _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
@@ -685,10 +683,9 @@ public class BangBoardView extends BoardView
             }
             if (piece.ticksUntilMovable(tick) == 0) {
                 QueuedMove qmove = move.getValue();
-                _ctrl.moveAndFire(qmove.action[0], qmove.action[1],
-                                  qmove.action[2], qmove.action[3]);
+                _ctrl.moveAndFire(qmove.unitId, qmove.mx, qmove.my,
+                                  qmove.targetId);
                 qmove.clear();
-                getUnitSprite(piece).setPendingAction(false);
                 iter.remove();
             }
         }
@@ -853,12 +850,29 @@ public class BangBoardView extends BoardView
 
     protected class QueuedMove
     {
-        public int[] action;
+        public int unitId, mx, my, targetId;
 
-        public QueuedMove (int[] action)
+        public QueuedMove (UnitSprite unit, int[] action)
         {
-            this.action = action;
-            _highlight = _tnode.createHighlight(action[1], action[2], true);
+            unitId = action[0];
+            mx = action[1];
+            my = action[2];
+            targetId = action[3];
+
+            _unit = unit;
+            _unit.setPendingAction(true);
+
+            int x = mx, y = my;
+            if (mx == Short.MAX_VALUE) {
+                Piece target = (Piece)_bangobj.pieces.get(targetId);
+                if (target == null) {
+                    target = _unit.getPiece();
+                }
+                x = target.x;
+                y = target.y;
+            }
+
+            _highlight = _tnode.createHighlight(x, y, true);
             _highlight.setDefaultColor(QMOVE_HIGHLIGHT_COLOR);
             _highlight.setRenderState(_movstate);
             _highlight.updateRenderState();
@@ -868,8 +882,10 @@ public class BangBoardView extends BoardView
         public void clear ()
         {
             _pnode.detachChild(_highlight);
+            _unit.setPendingAction(false);
         }
 
+        protected UnitSprite _unit;
         protected TerrainNode.Highlight _highlight;
     }
 
@@ -897,7 +913,6 @@ public class BangBoardView extends BoardView
                 if (move != null) {
                     move.clear();
                 }
-                getUnitSprite(piece).setPendingAction(false);
             }
             communicateEffect(piece, effect);
         }
