@@ -22,12 +22,18 @@ code = code/lwjgl_util.jar
 code = rsrc/bang-media.jar
 code = rsrc/bang-sounds.jar
 
-# Linux specific native libraries
+# Native library bits
 resource = [linux] native/liblwjgl.so
 resource = [linux] native/libopenal.so
 resource = [windows] native/lwjgl.dll
 resource = [windows] native/lwjglaudio.dll
 resource = [windows] native/lwjgl-fmod3.dll
+resource = [mac os x] native/lwjgl-fmod3.dll
+resource = [mac os x] native/IL
+resource = [mac os x] native/liblwjgl-devil.jnilib
+resource = [mac os x] native/liblwjgl-fmod3.jnilib
+resource = [mac os x] native/liblwjgl.jnilib
+resource = [mac os x] native/openal.dylib
 
 # Our media resources
 resource = background.png
