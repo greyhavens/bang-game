@@ -100,7 +100,10 @@ public class UnitSprite extends MobileSprite
     public void setPendingAction (boolean pending)
     {
         _pendquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
-        _pendquad.setTextureBuffer(_pendtc[_piece.ticksUntilMovable(_tick)-1]);
+        int ticks;
+        if (pending && (ticks = _piece.ticksUntilMovable(_tick)) > 0) {
+            _pendquad.setTextureBuffer(_pendtc[ticks-1]);
+        }
     }
 
     @Override // documentation inherited
