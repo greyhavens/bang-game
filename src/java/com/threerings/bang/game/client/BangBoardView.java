@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 
@@ -200,9 +201,10 @@ public class BangBoardView extends BoardView
             for (Iterator<Integer> iter = _queuedMoves.keySet().iterator();
                  iter.hasNext(); ) {
                 Integer pieceId = iter.next();
-                int[] action = _queuedMoves.get(pieceId);
+                QueuedMove move = _queuedMoves.get(pieceId);
                 Unit unit = (Unit)_bangobj.pieces.get(pieceId);
                 if (unit == null) {
+                    move.clear();
                     iter.remove();
                     continue;
                 }
@@ -210,8 +212,8 @@ public class BangBoardView extends BoardView
 
                 // if no specific location was specified, make sure we can
                 // still determine a location from which to fire
-                if (action[1] == Short.MAX_VALUE) {
-                    Piece target = (Piece)_bangobj.pieces.get(action[3]);
+                if (move.action[1] == Short.MAX_VALUE) {
+                    Piece target = (Piece)_bangobj.pieces.get(move.action[3]);
                     if (target != null) {
                         Point spot = unit.computeShotLocation(target, moves);
                         if (spot != null) {
@@ -221,12 +223,13 @@ public class BangBoardView extends BoardView
 
                 // if a specific location was specified, make sure we can
                 // still reach it
-                } else if (moves.contains(action[1], action[2])) {
+                } else if (moves.contains(move.action[1], move.action[2])) {
                     continue;
                 }
 
                 log.info("Clearing queued action [unit=" + unit.info() +
-                         ", action=" + StringUtil.toString(action) + "].");
+                         ", action=" + StringUtil.toString(move.action) + "].");
+                move.clear();
                 iter.remove();
                 getUnitSprite(unit).setPendingAction(false);
             }
@@ -570,7 +573,11 @@ public class BangBoardView extends BoardView
         // if this unit is not yet movable, "queue" up their action
         UnitSprite sprite = getUnitSprite(actor);
         if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
-            _queuedMoves.put(_action[0], _action);
+            QueuedMove qmove = _queuedMoves.remove(_action[0]);
+            if (qmove != null) {
+                qmove.clear();
+            }
+            _queuedMoves.put(_action[0], new QueuedMove(_action));
             sprite.setPendingAction(true);
         } else {
             // otherwise enact the move/fire combination immediately
@@ -667,9 +674,9 @@ public class BangBoardView extends BoardView
     protected void ticked (short tick)
     {
         // fire off any queued moves
-        for (Iterator<Map.Entry<Integer,int[]>> iter =
+        for (Iterator<Map.Entry<Integer,QueuedMove>> iter =
                  _queuedMoves.entrySet().iterator(); iter.hasNext(); ) {
-            Map.Entry<Integer,int[]> move = iter.next();
+            Map.Entry<Integer,QueuedMove> move = iter.next();
             Piece piece = (Piece)_bangobj.pieces.get(move.getKey());
             if (piece == null || !piece.isAlive()) {
                 // our piece up and died, clear their queued action
@@ -677,8 +684,10 @@ public class BangBoardView extends BoardView
                 continue;
             }
             if (piece.ticksUntilMovable(tick) == 0) {
-                int[] action = move.getValue();
-                _ctrl.moveAndFire(action[0], action[1], action[2], action[3]);
+                QueuedMove qmove = move.getValue();
+                _ctrl.moveAndFire(qmove.action[0], qmove.action[1],
+                                  qmove.action[2], qmove.action[3]);
+                qmove.clear();
                 getUnitSprite(piece).setPendingAction(false);
                 iter.remove();
             }
@@ -842,6 +851,28 @@ public class BangBoardView extends BoardView
         }
     }
 
+    protected class QueuedMove
+    {
+        public int[] action;
+
+        public QueuedMove (int[] action)
+        {
+            this.action = action;
+            _highlight = _tnode.createHighlight(action[1], action[2], true);
+            _highlight.setDefaultColor(QMOVE_HIGHLIGHT_COLOR);
+            _highlight.setRenderState(_movstate);
+            _highlight.updateRenderState();
+            _pnode.attachChild(_highlight);
+        }
+
+        public void clear ()
+        {
+            _pnode.detachChild(_highlight);
+        }
+
+        protected TerrainNode.Highlight _highlight;
+    }
+
     /** Used to remove shot sprites when they reach their target. */
     protected PathObserver _remover = new PathObserver() {
         public void pathCompleted (Sprite sprite, Path path) {
@@ -861,7 +892,11 @@ public class BangBoardView extends BoardView
 
         public void pieceAffected (Piece piece, String effect) {
             // if this piece is now dead, clear out its pending moves
-            if (!piece.isAlive() && _queuedMoves.remove(piece.pieceId) != null) {
+            if (!piece.isAlive()) {
+                QueuedMove move = _queuedMoves.remove(piece.pieceId);
+                if (move != null) {
+                    move.clear();
+                }
                 getUnitSprite(piece).setPendingAction(false);
             }
             communicateEffect(piece, effect);
@@ -934,7 +969,8 @@ public class BangBoardView extends BoardView
     protected int[] _action;
     protected Card _card;
 
-    protected HashMap<Integer,int[]> _queuedMoves = new HashMap<Integer,int[]>();
+    protected HashMap<Integer,QueuedMove> _queuedMoves =
+        new HashMap<Integer,QueuedMove>();
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
@@ -942,4 +978,8 @@ public class BangBoardView extends BoardView
     /** Contains bonus sprites that are pending removal. */
     protected HashMap<Point,PieceSprite> _pendingBonuses =
         new HashMap<Point,PieceSprite>();
+
+    /** The color of the queued movement highlights. */
+    protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
+        new ColorRGBA(1f, 0.5f, 0.5f, 0.5f);
 }
