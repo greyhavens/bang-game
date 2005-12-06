@@ -6,7 +6,6 @@ package com.threerings.bang.game.client.sprite;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
-import java.nio.FloatBuffer;
 
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
@@ -97,12 +96,14 @@ public class UnitSprite extends MobileSprite
      * Indicates that we have queued up an action to be taken when our
      * piece is once again able to move and shoot.
      */
-    public void setPendingAction (boolean pending)
+    public void setPendingAction (boolean pending, TerrainNode.Highlight pnode)
     {
         _pendquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
+        _pendnode = pnode;
         int ticks;
         if (pending && (ticks = _piece.ticksUntilMovable(_tick)) > 0) {
-            _pendquad.setTextureBuffer(_pendtc[ticks-1]);
+            _pendnode.setRenderState(_pendtst);
+            RenderUtil.setTextureTile(_pendtex, 2, ticks-1);
         }
     }
 
@@ -144,7 +145,7 @@ public class UnitSprite extends MobileSprite
 
         // update our icon if necessary
         if (unit.benuggeted && _icon.getCullMode() == CULL_ALWAYS) {
-            _icon.setRenderState(_nugtex);
+            _icon.setRenderState(_nugtst);
             _icon.updateRenderState();
             _icon.setCullMode(CULL_DYNAMIC);
         } else if (!unit.benuggeted && _icon.getCullMode() != CULL_ALWAYS) {
@@ -154,7 +155,7 @@ public class UnitSprite extends MobileSprite
         // if our pending quad is showing, update it to reflect our correct
         // ticks until movable
         if (_pendquad.getCullMode() == CULL_DYNAMIC) {
-            _pendquad.setTextureBuffer(_pendtc[ticks-1]);
+            RenderUtil.setTextureTile(_pendtex, 2, ticks-1);
         }
     }
 
@@ -270,7 +271,7 @@ public class UnitSprite extends MobileSprite
         configureOwnerColors();
 
         // this icon is displayed when we're a target
-        _tgtquad = RenderUtil.createIcon(_tgttex);
+        _tgtquad = RenderUtil.createIcon(_tgttst);
         _tgtquad.setLocalTranslation(new Vector3f(0, 0, 0));
         _tgtquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _tgtquad.setRenderState(RenderUtil.alwaysZBuf);
@@ -281,9 +282,16 @@ public class UnitSprite extends MobileSprite
         attachChild(bbn);
         _tgtquad.setCullMode(CULL_ALWAYS);
 
+        // we need to clone our pending texture so that we can translate and
+        // scale it independently
+        _pendtex = _srcpendtex.createSimpleClone();
+        _pendtst = _ctx.getRenderer().createTextureState();
+        _pendtst.setEnabled(true);
+        _pendtst.setTexture(_pendtex);
+
         // this icon is displayed when we have a pending action queued
         _pendquad = RenderUtil.createIcon(4, 4);
-        _pendquad.setRenderState(_pendtex);
+        _pendquad.setRenderState(_pendtst);
         _pendquad.setLocalTranslation(new Vector3f(0, 0, 0));
         _pendquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _pendquad.setRenderState(RenderUtil.alwaysZBuf);
@@ -374,15 +382,15 @@ public class UnitSprite extends MobileSprite
         _hovtex = RenderUtil.createTexture(
             ctx.loadImage("textures/ustatus/selected.png"));
 
-        _tgttex = RenderUtil.createTextureState(
+        _tgttst = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
-        _pendtex = RenderUtil.createTextureState(
-            ctx, ctx.loadImage("textures/ustatus/pending.png"));
+        _srcpendtex = RenderUtil.createTexture(
+            ctx.loadImage("textures/ustatus/pending.png"));
         _movetex = RenderUtil.createTexture(
             ctx.loadImage("textures/ustatus/tick_ready.png"));
         _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
 
-        _nugtex = RenderUtil.createTextureState(
+        _nugtst = RenderUtil.createTextureState(
             ctx, ctx.loadImage("textures/ustatus/nugget.png"));
         _ticktex = new Texture[5];
         for (int ii = 0; ii < 5; ii++) {
@@ -397,6 +405,9 @@ public class UnitSprite extends MobileSprite
 
     protected BasicContext _ctx;
     protected Quad _tgtquad, _pendquad;
+    protected TerrainNode.Highlight _pendnode;
+    protected Texture _pendtex;
+    protected TextureState _pendtst;
 
     protected Node _status;
     protected SharedMesh _hov, _ticks, _damage, _movable;
@@ -410,11 +421,9 @@ public class UnitSprite extends MobileSprite
     protected static Quaternion _tquat = new Quaternion();
 
     protected static BufferedImage _dfull, _dempty;
-    protected static Texture _hovtex, _movetex;
+    protected static Texture _hovtex, _movetex, _srcpendtex;
     protected static Texture[] _ticktex;
-    protected static TextureState _tgttex, _pendtex, _nugtex;
-
-    protected static FloatBuffer[] _pendtc = RenderUtil.createGridTexCoords(2);
+    protected static TextureState _tgttst, _nugtst;
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
