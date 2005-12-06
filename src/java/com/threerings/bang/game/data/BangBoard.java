@@ -489,9 +489,14 @@ public class BangBoard extends SimpleStreamableObject
      */
     public int getPieceElevation (int x, int y)
     {
-        return _estate[y*_width+x] * ELEVATION_UNITS_PER_TILE;
+        if (x < 0 || y < 0 || x >= _width || y >= _height) {
+            return 0;
+            
+        } else {
+            return _estate[y*_width+x] * ELEVATION_UNITS_PER_TILE;
+        }
     }
-
+ 
     /**
      * Checks whether any adjacent vertices in the heightfield under the
      * specified tile coordinates exceed the maximum height delta.
