@@ -182,6 +182,10 @@ public class BoardView extends BComponent
             // this will trigger the creation, initialization and whatnot
             pieceUpdated(null, (Piece)iter.next());
         }
+        _pnode.updateGeometricState(0, true);
+        
+        // allow the terrain to perform extra initialization using the pieces
+        _tnode.initBoardTerrain();
     }
     
     /**

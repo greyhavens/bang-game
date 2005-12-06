@@ -449,14 +449,6 @@ public class TerrainNode extends Node
         // clean up any existing geometry
         detachAllChildren();
 
-        // create the shadow buffer automatically for static terrain
-        if (isHeightfieldStatic()) {
-            createShadowBuffer();
-            
-        } else {
-            _sbuf = null;
-        }
-        
         // create, store, and attach the splat blocks
         int swidth = (int)Math.ceil((_board.getHeightfieldWidth() - 1.0) /
                 SPLAT_SIZE),
@@ -469,14 +461,32 @@ public class TerrainNode extends Node
                 attachChild(_blocks[x][y].node);
             }
         }
+    }
 
+    /**
+     * Performs the second part of initial board creation, which is performed
+     * after the pieces are in place.
+     */
+    public void initBoardTerrain ()
+    {
+        // create the shadow buffer automatically for static terrain
+        if (isHeightfieldStatic()) {
+            createShadowBuffer();
+            
+        } else {
+            _sbuf = null;
+        }
+        
+        // refresh the terrain now that the shadow buffer is up-to-date
+        refreshTerrain();
+        
         setWorldBound(new BoundingBox());
         updateWorldBound();
-
+        
         updateRenderState();
         updateGeometricState(0, true);
     }
-
+    
     /**
      * Refreshes the entire heightfield.
      */
@@ -790,9 +800,6 @@ public class TerrainNode extends Node
         block.mesh.setTextureBuffer(tbuf1, 1);
         block.mesh.setModelBound(new BoundingBox());
         block.mesh.updateModelBound();
-
-        // initialize the splats
-        block.refreshSplats(block.bounds);
 
         return block;
     }
