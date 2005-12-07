@@ -126,6 +126,7 @@ public class PurchaseView extends BDecoratedWindow
         button.addListener(this);
         button.setProperty("unit", unit);
         button.setText(button.getText() + " $" + unit.scripCost);
+        button.setEnabled(_bangobj.funds[_pidx] >= unit.scripCost);
         return button;
     }
 
@@ -148,6 +149,10 @@ public class PurchaseView extends BDecoratedWindow
         if (cmd.equals("buy")) {
             BButton button = (BButton)e.getSource();
             UnitConfig config = (UnitConfig)button.getProperty("unit");
+            if (_total + config.scripCost > _bangobj.funds[_pidx]) {
+                // nothing doing
+                return;
+            }
             for (int ii = 0; ii < _tconfigs.length; ii++) {
                 if (_tconfigs[ii] == null) {
                     _tconfigs[ii] = config;
