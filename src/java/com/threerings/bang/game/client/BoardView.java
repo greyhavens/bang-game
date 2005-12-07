@@ -560,9 +560,10 @@ public class BoardView extends BComponent
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             TerrainNode.Highlight highlight = _tnode.createHighlight(
-                set.getX(ii), set.getY(ii), true);
+                set.getX(ii), set.getY(ii), false);
             highlight.setDefaultColor(MOVEMENT_HIGHLIGHT_COLOR);
             highlight.setRenderState(_movstate);
+            highlight.setRenderState(RenderUtil.alwaysZBuf);
             highlight.updateRenderState();
             _hnode.attachChild(highlight);
         }
