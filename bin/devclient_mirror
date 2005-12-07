@@ -14,3 +14,4 @@ $MIRROR `find pages/client -name '*.jar'` \
     pages/client/rsrc/config/resource/manager.properties \
     pages/client/native/* \
     pages/client/*.*
+echo "*** Finished mirror at" `date`

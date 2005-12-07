@@ -39,7 +39,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 # bookkeeping
-echo "*** Starting build in $ROOT at " `date`
+echo "*** Starting build in $ROOT at" `date`
 
 # this is needed when running in a cronjob
 if [ -f $HOME/bin/svnssh ]; then
@@ -82,4 +82,4 @@ fi
 # remove the lockfile
 rm -f $LOCKFILE
 
-echo "*** Finished build at " `date`
+echo "*** Finished build at" `date`
