@@ -18,6 +18,11 @@ public class PointSet extends ArrayIntSet
         add(((tx << 16) | (ty & 0xFFFF)));
     }
 
+    public void remove (int tx, int ty)
+    {
+        remove(((tx << 16) | (ty & 0xFFFF)));
+    }
+
     public boolean contains (int tx, int ty)
     {
         return contains(((tx << 16) | (ty & 0xFFFF)));

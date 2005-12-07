@@ -398,11 +398,11 @@ public class BangBoard extends SimpleStreamableObject
             for (int xx = 0; xx < _width; xx++) {
                 byte tvalue;
                 if (isUnderWater(xx, yy, MAX_OCCUPIABLE_WATER_LEVEL)) {
-                    tvalue = O_FLYER;
+                    tvalue = O_IMPASS;
                 } else if (exceedsMaxHeightDelta(xx, yy)) {
                     tvalue = O_ROUGH;
                 } else {
-                    tvalue = O_EMPTY;
+                    tvalue = O_FLAT;
                 }
                 int pos = _width*yy+xx;
                 _tstate[pos] = tvalue;
@@ -435,9 +435,9 @@ public class BangBoard extends SimpleStreamableObject
                     for (int xx = pbounds.x, lx = xx + pbounds.width;
                          xx < lx; xx++) {
                         if (_bbounds.contains(xx, yy)) {
-                            _tstate[_width*yy+xx] = O_FLYER;
-                            _btstate[_width*yy+xx] = O_FLYER;
-                            _estate[_width*yy+xx] = O_FLYER;
+                            _tstate[_width*yy+xx] = O_PROP;
+                            _btstate[_width*yy+xx] = O_PROP;
+                            _estate[_width*yy+xx] = 2;
                         }
                     }
                 }
@@ -445,19 +445,19 @@ public class BangBoard extends SimpleStreamableObject
             } else if (piece instanceof Track) {
                 int idx = _width*piece.y+piece.x;
                 if (((Track)piece).preventsGroundOverlap()) {
-                    _tstate[idx] = _btstate[idx] = _estate[idx] = O_FLYER;
-                } else {
-                    _tstate[idx] = _btstate[idx] = O_ANY;
+                    _tstate[idx] = _btstate[idx] = O_PROP;
+                    _btstate[idx] = _btstate[idx] = O_PROP;
+                    _estate[idx] = 2;
                 }
 
             } else if (piece instanceof Bonus) {
-                _tstate[_width*piece.y+piece.x] = O_ANY;
+                _tstate[_width*piece.y+piece.x] = O_FLAT;
 
-            } else if (piece instanceof Train) {
-                _tstate[_width*piece.y+piece.x] = O_FLYER;
+            } else if (piece instanceof Train || piece.owner < 0) {
+                _tstate[_width*piece.y+piece.x] = O_PROP;
 
             } else {
-                _tstate[_width*piece.y+piece.x] = O_NONE;
+                _tstate[_width*piece.y+piece.x] = (byte)piece.owner;
             }
         }
     }
@@ -491,7 +491,6 @@ public class BangBoard extends SimpleStreamableObject
     {
         if (x < 0 || y < 0 || x >= _width || y >= _height) {
             return 0;
-            
         } else {
             return _estate[y*_width+x] * ELEVATION_UNITS_PER_TILE;
         }
@@ -571,7 +570,8 @@ public class BangBoard extends SimpleStreamableObject
         if (!_bbounds.contains(x, y)) {
             return false;
         }
-        return (_btstate[y*_width+x] < (rough ? O_FLYER : O_ROUGH));
+        byte btstate = _btstate[y*_width+x];
+        return (btstate == O_FLAT) || (rough && btstate == O_ROUGH);
     }
 
     /**
@@ -583,8 +583,16 @@ public class BangBoard extends SimpleStreamableObject
         if (!_bbounds.contains(x, y)) {
             return false;
         }
-        int max = (piece.isFlyer() || piece instanceof Train) ? O_FLYER : O_ANY;
-        return (_tstate[y*_width+x] <= max);
+        // we accord flyer status to trains as they need to go "over" some
+        // props, but will otherwise not do funny things
+        int idx = y*_width+x;
+        byte tstate = _tstate[idx];
+        if (piece.isFlyer() || piece instanceof Train) {
+            return true;
+        } else {
+            return (tstate == O_FLAT) ||
+                (tstate == piece.owner && _btstate[idx] == O_FLAT);
+        }
     }
 
     /**
@@ -596,7 +604,7 @@ public class BangBoard extends SimpleStreamableObject
         if (!_bbounds.contains(x, y)) {
             return false;
         }
-        return (_tstate[y*_width+x] <= O_EMPTY);
+        return (_tstate[y*_width+x] == O_FLAT);
     }
 
     /**
@@ -626,6 +634,19 @@ public class BangBoard extends SimpleStreamableObject
         considerMoving(piece, moves, piece.x-1, piece.y, remain);
         considerMoving(piece, moves, piece.x, piece.y+1, remain);
         considerMoving(piece, moves, piece.x, piece.y-1, remain);
+
+        // next prune any moves that "land" us on a tile occupied by a piece
+        // (we allow units to move through certain pieces on their way but not
+        // to stop ontop of another unit)
+        for (int ii = 0, ll = moves.size(); ii < ll; ii++) {
+            int x = moves.getX(ii), y = moves.getY(ii), idx = y*_width+x;
+            if (_tstate[idx] >= 0) {
+                moves.remove(x, y);
+                _pgrid[idx] = 0;
+                ii--;
+                ll--;
+            }
+        }
 
         // if the attack set is non-null, compute our attacks as well
         if (attacks != null) {
@@ -865,18 +886,15 @@ public class BangBoard extends SimpleStreamableObject
     /** A rectangle containing our bounds, used when path finding. */
     protected transient Rectangle _bbounds;
 
-    /** Indicates that this tile is completely empty. */
-    protected static final byte O_EMPTY = 0;
+    /** Indicates that this tile is flat and traversable. */
+    protected static final byte O_FLAT = -1;
 
-    /** Indicates that a normal unit can occupy this tile. */
-    protected static final byte O_ANY = 1;
+    /** Indicates that this tile is rough and only traversable by some units. */
+    protected static final byte O_ROUGH = -2;
 
-    /** Indicates that a rough-terrain capable unit can occupy this tile. */
-    protected static final byte O_ROUGH = 2;
+    /** Indicates that this tile is impassable by non-air units. */
+    protected static final byte O_IMPASS = -3;
 
-    /** Indicates that a flying unit can occupy this tile. */
-    protected static final byte O_FLYER = 3;
-
-    /** Indicates that no unit can occupy this tile. */
-    protected static final byte O_NONE = 4;
+    /** Indicates that this tile is occupied by a prop. */
+    protected static final byte O_PROP = -4;
 }
