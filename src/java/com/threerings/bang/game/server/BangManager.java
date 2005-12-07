@@ -594,8 +594,6 @@ public class BangManager extends GameManager
             _bangobj.commitTransaction();
         }
 
-        log.info("Pieces: " + _bangobj.pieces);
-
         // initialize our pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             ((Piece)iter.next()).init();
@@ -905,20 +903,13 @@ public class BangManager extends GameManager
             }
         }
 
-        // ensure that we don't land on a piece that prevents us from
-        // overlapping it and make a note of any piece that we land on
-        // that does not prevent overlap
+        // ensure that we don't land on any piece that prevents us from
+        // overlapping
         ArrayList<Piece> lappers = _bangobj.getOverlappers(munit);
-        Piece lapper = null;
         if (lappers != null) {
-            for (Piece p : lappers) {
-                if (p.preventsOverlap(munit)) {
+            for (Piece lapper : lappers) {
+                if (lapper.preventsOverlap(munit)) {
                     return null;
-                } else if (lapper != null) {
-                    log.warning("Multiple overlapping pieces [mover=" + munit +
-                                ", lap1=" + lapper + ", lap2=" + p + "].");
-                } else {
-                    lapper = p;
                 }
             }
         }
@@ -930,36 +921,38 @@ public class BangManager extends GameManager
         _bangobj.stats[munit.owner].incrementStat(
             Stat.Type.DISTANCE_MOVED, steps);
 
-        // interact with any piece occupying our target space
-        if (lapper != null) {
-            switch (munit.maybeInteract(lapper, _effects)) {
-            case CONSUMED:
-                _bangobj.removeFromPieces(lapper.getKey());
-                // note that this player collected a bonus
-                if (lapper instanceof Bonus) {
-                    _bangobj.stats[munit.owner].incrementStat(
-                        Stat.Type.BONUSES_COLLECTED, 1);
+        // interact with any pieces occupying our target space
+        if (lappers != null) {
+            for (Piece lapper : lappers) {
+                switch (munit.maybeInteract(lapper, _effects)) {
+                case CONSUMED:
+                    _bangobj.removeFromPieces(lapper.getKey());
+                    // note that this player collected a bonus
+                    if (lapper instanceof Bonus) {
+                        _bangobj.stats[munit.owner].incrementStat(
+                            Stat.Type.BONUSES_COLLECTED, 1);
+                    }
+                    break;
+
+                case ENTERED:
+                    // update the piece we entered as we likely modified it in
+                    // doing so
+                    _bangobj.updatePieces(lapper);
+                    // TODO: generate a special event indicating that the
+                    // unit entered so that we can animate it
+                    _bangobj.removeFromPieces(munit.getKey());
+                    // short-circuit the remaining move processing
+                    return munit;
+
+                case INTERACTED:
+                    // update the piece we interacted with, we'll update
+                    // ourselves momentarily
+                    _bangobj.updatePieces(lapper);
+                    break;
+
+                case NOTHING:
+                    break;
                 }
-                break;
-
-            case ENTERED:
-                // update the piece we entered as we likely modified it in
-                // doing so
-                _bangobj.updatePieces(lapper);
-                // TODO: generate a special event indicating that the
-                // unit entered so that we can animate it
-                _bangobj.removeFromPieces(munit.getKey());
-                // short-circuit the remaining move processing
-                return munit;
-
-            case INTERACTED:
-                // update the piece we interacted with, we'll update
-                // ourselves momentarily
-                _bangobj.updatePieces(lapper);
-                break;
-
-            case NOTHING:
-                break;
             }
         }
 
