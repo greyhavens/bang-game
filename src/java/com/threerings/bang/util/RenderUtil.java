@@ -146,7 +146,8 @@ public class RenderUtil
      * text.
      */
     public static Texture createTextTexture (
-        Font font, ColorRGBA color, String text, Vector2f[] tcoords)
+        BasicContext ctx, Font font, ColorRGBA color, String text,
+        Vector2f[] tcoords)
     {
         Graphics2D gfx = _scratch.createGraphics();
         Color acolor = new Color(color.r, color.g, color.b, color.a);
@@ -190,9 +191,7 @@ public class RenderUtil
         tcoords[2] = new Vector2f(width/tsf, height/tsf);
         tcoords[3] = new Vector2f(width/tsf, 0);
 
-        // TODO: use our faster BufferedImage -> Image routines
-        return TextureManager.loadTexture(
-            image, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, false);
+        return createTexture(ctx.getImageCache().createImage(image));
     }
 
     /**
@@ -209,11 +208,20 @@ public class RenderUtil
     }
 
     /**
-     * Creates a texture state using the supplied image.
+     * Creates a texture state using the image with the supplied path. The
+     * texture is loaded via the texture cache.
      */
-    public static TextureState createTextureState (BasicContext ctx, Image image)
+    public static TextureState createTextureState (BasicContext ctx, String path)
     {
-        Texture texture = createTexture(image);
+        return createTextureState(ctx, ctx.getTextureCache().getTexture(path));
+    }
+
+    /**
+     * Creates a texture state using the supplied texture.
+     */
+    public static TextureState createTextureState (
+        BasicContext ctx, Texture texture)
+    {
         TextureState tstate = ctx.getRenderer().createTextureState();
         tstate.setEnabled(true);
         tstate.setTexture(texture);
@@ -226,7 +234,7 @@ public class RenderUtil
      */
     public static Quad createIcon (BasicContext ctx, String path)
     {
-        return createIcon(createTextureState(ctx, ctx.loadImage(path)));
+        return createIcon(createTextureState(ctx, path));
     }
 
     /**

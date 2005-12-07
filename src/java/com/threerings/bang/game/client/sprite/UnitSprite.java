@@ -236,33 +236,28 @@ public class UnitSprite extends MobileSprite
 
         // this icon is displayed when the mouse is hovered over us
         _hov = new SharedMesh("hov", _highlight);
-        TextureState tstate = ctx.getRenderer().createTextureState();
-        tstate.setTexture(_hovtex.createSimpleClone());
-        _hov.setRenderState(tstate);
+        _hov.setRenderState(
+            RenderUtil.createTextureState(ctx, _hovtex.createSimpleClone()));
         _hov.updateRenderState();
         _status.attachChild(_hov);
         _hov.setCullMode(CULL_ALWAYS);
 
         _ticks = new SharedMesh("ticks", _highlight);
         int tick = _piece.ticksUntilMovable(_tick), tidx = Math.max(0, 4-tick);
-        tstate = ctx.getRenderer().createTextureState();
-        tstate.setTexture(_ticktex[tidx].createSimpleClone());
-        _ticks.setRenderState(tstate);
+        _ticks.setRenderState(RenderUtil.createTextureState(
+                                  ctx, _ticktex[tidx].createSimpleClone()));
         _ticks.updateRenderState();
         _status.attachChild(_ticks);
 
         _damage = new SharedMesh("damage", _highlight);
-        _damtex = ctx.getRenderer().createTextureState();
-        _damtex.setEnabled(true);
-        _damtex.setTexture(createDamageTexture());
+        _damtex = RenderUtil.createTextureState(ctx, createDamageTexture());
         _damage.setRenderState(_damtex);
         _damage.updateRenderState();
         _status.attachChild(_damage);
 
         _movable = new SharedMesh("movable", _highlight);
-        tstate = ctx.getRenderer().createTextureState();
-        tstate.setTexture(_movetex.createSimpleClone());
-        _movable.setRenderState(tstate);
+        _movable.setRenderState(
+            RenderUtil.createTextureState(ctx, _movetex.createSimpleClone()));
         _movable.updateRenderState();
         _status.attachChild(_movable);
         _movable.setCullMode(tick > 0 ? CULL_ALWAYS : CULL_DYNAMIC);
@@ -285,9 +280,7 @@ public class UnitSprite extends MobileSprite
         // we need to clone our pending texture so that we can translate and
         // scale it independently
         _pendtex = _srcpendtex.createSimpleClone();
-        _pendtst = _ctx.getRenderer().createTextureState();
-        _pendtst.setEnabled(true);
-        _pendtst.setTexture(_pendtex);
+        _pendtst = RenderUtil.createTextureState(ctx, _pendtex);
 
         // this icon is displayed when we have a pending action queued
         _pendquad = RenderUtil.createIcon(4, 4);
@@ -378,27 +371,28 @@ public class UnitSprite extends MobileSprite
 
     protected static void loadTextures (BasicContext ctx)
     {
-        _hovtex = RenderUtil.createTexture(
-            ctx.loadImage("textures/ustatus/selected.png"));
+        _hovtex = ctx.getTextureCache().getTexture(
+            "textures/ustatus/selected.png");
 
         _tgttst = RenderUtil.createTextureState(
-            ctx, ctx.loadImage("textures/ustatus/crosshairs.png"));
-        _srcpendtex = RenderUtil.createTexture(
-            ctx.loadImage("textures/ustatus/pending.png"));
-        _movetex = RenderUtil.createTexture(
-            ctx.loadImage("textures/ustatus/tick_ready.png"));
+            ctx, "textures/ustatus/crosshairs.png");
+        _srcpendtex = ctx.getTextureCache().getTexture(
+            "textures/ustatus/pending.png");
+        _movetex = ctx.getTextureCache().getTexture(
+            "textures/ustatus/tick_ready.png");
         _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
 
         _nugtst = RenderUtil.createTextureState(
-            ctx, ctx.loadImage("textures/ustatus/nugget.png"));
+            ctx, "textures/ustatus/nugget.png");
         _ticktex = new Texture[5];
         for (int ii = 0; ii < 5; ii++) {
-            _ticktex[ii] = RenderUtil.createTexture(
-                ctx.loadImage("textures/ustatus/tick_counter_" + ii + ".png"));
+            _ticktex[ii] = ctx.getTextureCache().getTexture(
+                "textures/ustatus/tick_counter_" + ii + ".png");
             _ticktex[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         }
-        _dfull = ctx.loadBufferedImage("textures/ustatus/health_meter_full.png");
-        _dempty = ctx.loadBufferedImage(
+        _dfull = ctx.getImageCache().getBufferedImage(
+            "textures/ustatus/health_meter_full.png");
+        _dempty = ctx.getImageCache().getBufferedImage(
             "textures/ustatus/health_meter_empty.png");
     }
 

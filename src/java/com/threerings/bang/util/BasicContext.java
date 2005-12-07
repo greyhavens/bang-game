@@ -18,6 +18,8 @@ import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
 
 import com.threerings.bang.client.Model;
+import com.threerings.bang.client.util.ImageCache;
+import com.threerings.bang.client.util.TextureCache;
 
 import static com.threerings.bang.Log.log;
 
@@ -48,6 +50,12 @@ public interface BasicContext extends JmeContext
     /** Returns a reference to our sound manager. */
     public SoundManager getSoundManager ();
 
+    /** Returns a reference to our image cache. */
+    public ImageCache getImageCache ();
+
+    /** Returns a reference to our texture cache. */
+    public TextureCache getTextureCache ();
+
     /** Translates the specified message using the specified message bundle. */
     public String xlate (String bundle, String message);
 
@@ -56,11 +64,4 @@ public interface BasicContext extends JmeContext
 
     /** Loads an image from the cache. */
     public Image loadImage (String rsrcPath);
-
-    /** Loads a buffered image from the cache. <em>Note:</em> you probably want
-     * to use {@link #loadImage} unless you need a buffered image for some
-     * special reason. Using {@link #loadImage} is (or will be) <em>much</em>
-     * faster than loading a buffered image and converting that to something
-     * usable by OpenGL. */
-    public BufferedImage loadBufferedImage (String rsrcPath);
 }

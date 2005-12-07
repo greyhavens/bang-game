@@ -35,7 +35,7 @@ public class ParticleFactory
         _astate.setTestFunction(AlphaState.TF_GREATER);
 
         _tstate = RenderUtil.createTextureState(
-            ctx, ctx.loadImage("textures/effects/flare.jpg"));
+            ctx, "textures/effects/flare.jpg");
 
         _zstate = display.getRenderer().createZBufferState();
         _zstate.setEnabled(false);

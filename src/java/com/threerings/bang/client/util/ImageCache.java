@@ -62,9 +62,18 @@ public class ImageCache
             bufimg = ImageUtil.createErrorImage(64, 64);
         }
 
-        // convert the the image to the format we need for rendering to the
-        // display (TODO: potentially use 16-bit if we're running in a 16-bit
-        // display mode)
+        // create and cache a new JME image with the appropriate data
+        image = createImage(bufimg);
+        _imgcache.put(rsrcPath, new WeakReference<Image>(image));
+        return image;
+    }
+
+    /**
+     * Creates a JME-compatible image from the supplied buffered image.
+     */
+    public Image createImage (BufferedImage bufimg)
+    {
+        // convert the the image to the format that OpenGL prefers
         int width = bufimg.getWidth(), height = bufimg.getHeight();
         boolean hasAlpha = bufimg.getColorModel().hasAlpha();
         BufferedImage dispimg = new BufferedImage(
@@ -80,23 +89,20 @@ public class ImageCache
         gfx.drawImage(bufimg, tx, null);
         gfx.dispose();
 
-        // now extract the image data which is usable by JME
-        ByteBuffer scratch = ByteBuffer.allocateDirect(4 * width * height);
-        scratch.order(ByteOrder.nativeOrder());
+        // now extract the image data, which will be supplied to JME
+        ByteBuffer imgdata = ByteBuffer.allocateDirect(4 * width * height);
+        imgdata.order(ByteOrder.nativeOrder());
         byte data[] = (byte[])dispimg.getRaster().getDataElements(
             0, 0, dispimg.getWidth(), dispimg.getHeight(), null);
-        scratch.clear();
-        scratch.put(data);
-        scratch.flip();
+        imgdata.clear();
+        imgdata.put(data);
+        imgdata.flip();
 
-        // create and cache a new JME image with the appropriate data
-        image = new Image();
+        Image image = new Image();
         image.setType(hasAlpha ? Image.RGBA8888 : Image.RGB888);
         image.setWidth(width);
         image.setHeight(height);
-        image.setData(scratch);
-        _imgcache.put(rsrcPath, new WeakReference<Image>(image));
-
+        image.setData(imgdata);
         return image;
     }
 

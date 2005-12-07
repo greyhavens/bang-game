@@ -49,6 +49,7 @@ import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
+import com.threerings.bang.client.util.TextureCache;
 
 import static com.threerings.bang.Log.log;
 
@@ -115,6 +116,7 @@ public class BasicClient
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _lnf = new BangLookAndFeel();
         _icache = new ImageCache(_ctx);
+        _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
 
         // create our media managers
@@ -248,6 +250,14 @@ public class BasicClient
             return _soundmgr;
         }
 
+        public ImageCache getImageCache () {
+            return _icache;
+        }
+
+        public TextureCache getTextureCache () {
+            return _tcache;
+        }
+
         public FringeConfiguration getFringeConfig () {
             return _fringeconf;
         }
@@ -296,10 +306,6 @@ public class BasicClient
         public Image loadImage (String rsrcPath) {
             return _icache.getImage(rsrcPath);
         }
-
-        public BufferedImage loadBufferedImage (String rsrcPath) {
-            return _icache.getBufferedImage(rsrcPath);
-        }
     }
 
     protected JmeApp _app;
@@ -313,6 +319,7 @@ public class BasicClient
 
     protected BLookAndFeel _lnf;
     protected ImageCache _icache;
+    protected TextureCache _tcache;
     protected ModelCache _mcache;
     protected FringeConfiguration _fringeconf;
 

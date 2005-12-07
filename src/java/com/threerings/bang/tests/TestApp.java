@@ -32,6 +32,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
+import com.threerings.bang.client.util.TextureCache;
 import com.threerings.bang.util.BasicContext;
 
 /**
@@ -46,6 +47,7 @@ public abstract class TestApp extends JmeApp
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _lnf = BLookAndFeel.getDefaultLookAndFeel();
         _icache = new ImageCache(_ctx);
+        _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
         BangUI.init(_ctx);
 
@@ -120,6 +122,14 @@ public abstract class TestApp extends JmeApp
             return null;
         }
 
+        public ImageCache getImageCache () {
+            return _icache;
+        }
+
+        public TextureCache getTextureCache () {
+            return _tcache;
+        }
+
         public String xlate (String bundle, String message) {
             MessageBundle mb = getMessageManager().getBundle(bundle);
             return (mb == null) ? message : mb.xlate(message);
@@ -132,10 +142,6 @@ public abstract class TestApp extends JmeApp
         public Image loadImage (String rsrcPath) {
             return _icache.getImage(rsrcPath);
         }
-
-        public BufferedImage loadBufferedImage (String rsrcPath) {
-            return _icache.getBufferedImage(rsrcPath);
-        }
     }
 
     protected BasicContext _ctx;
@@ -144,6 +150,7 @@ public abstract class TestApp extends JmeApp
     protected MessageManager _msgmgr;
     protected BLookAndFeel _lnf;
     protected ImageCache _icache;
+    protected TextureCache _tcache;
     protected ModelCache _mcache;
 
     /** The prefix prepended to localization bundle names before looking

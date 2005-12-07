@@ -57,8 +57,8 @@ public class WaterNode extends Node
         _mstate = _ctx.getRenderer().createMaterialState();
         setRenderState(_mstate);
         
-        Texture texture = RenderUtil.createTexture(
-            _ctx.loadImage("textures/environ/desertdaysp.png"));
+        Texture texture = _ctx.getTextureCache().getTexture(
+            "textures/environ/desertdaysp.png");
         texture.setEnvironmentalMapMode(Texture.EM_SPHERE);
         TextureState tstate = ctx.getRenderer().createTextureState();
         tstate.setTexture(texture);

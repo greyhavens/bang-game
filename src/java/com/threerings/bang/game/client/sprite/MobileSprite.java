@@ -391,7 +391,7 @@ public class MobileSprite extends PieceSprite
     protected static void loadTextures (BasicContext ctx)
     {
         _shadtex = RenderUtil.createTextureState(
-            ctx, ctx.loadImage("textures/ustatus/shadow.png"));
+            ctx, "textures/ustatus/shadow.png");
     }
 
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */

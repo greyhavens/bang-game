@@ -42,7 +42,7 @@ public class ClaimSprite extends PropSprite
         if (_piece.owner >= 0 && _dnuggets != claim.nuggets) {
             Vector2f[] tcoords = new Vector2f[4];
             Texture tex = RenderUtil.createTextTexture(
-                BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
+                _ctx, BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
                 String.valueOf(claim.nuggets), tcoords);
             _counter.setTextureBuffer(BufferUtils.createFloatBuffer(tcoords));
             // resize our quad to accomodate the text
@@ -58,6 +58,7 @@ public class ClaimSprite extends PropSprite
     protected void createGeometry (BasicContext ctx)
     {
         super.createGeometry(ctx);
+        _ctx = ctx;
 
         // create a billboard to display this mine's current nugget count
         _counter = new Quad("counter", 25, 25);
@@ -75,6 +76,7 @@ public class ClaimSprite extends PropSprite
         _counter.setCullMode(CULL_ALWAYS);
     }
 
+    protected BasicContext _ctx;
     protected Quad _counter;
     protected TextureState _tstate;
     protected int _dnuggets = -1;
