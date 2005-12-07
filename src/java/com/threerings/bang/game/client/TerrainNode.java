@@ -577,13 +577,13 @@ public class TerrainNode extends Node
         for (int x = 0; x < hfwidth; x++) {
             for (int y = 0; y < hfheight; y++) {
                 getHeightfieldVertex(x, y, origin);
-                //origin.z += FastMath.FLT_EPSILON;
+                origin.z += 0.001f;
                 
-                // intersect with pieces
+                // intersect with terrain and pieces
                 results.clear();
+                calculatePick(ray, results);
                 _view.getPieceNode().calculatePick(ray, results);
-                
-                _sbuf[x][y] = results.getNumber() > 0;
+                _sbuf[x][y] = containTriangles(results);
             }
         }
     }
@@ -713,6 +713,20 @@ public class TerrainNode extends Node
     }
 
     /**
+     * Determines whether the pick results contain any triangles.
+     */
+    protected boolean containTriangles (TrianglePickResults results)
+    {
+        for (int i = 0, size = results.getNumber(); i < size; i++) {
+            ArrayList tris = results.getPickData(i).getTargetTris();
+            if (tris != null && tris.size() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Creates and returns a splat block for the specified splat coordinates.
      */
     protected SplatBlock createSplatBlock (int sx, int sy)
@@ -801,6 +815,9 @@ public class TerrainNode extends Node
         block.mesh.setModelBound(new BoundingBox());
         block.mesh.updateModelBound();
 
+        block.node.setWorldBound(new BoundingBox());
+        block.node.updateWorldBound();
+        
         return block;
     }
 
@@ -991,7 +1008,8 @@ public class TerrainNode extends Node
             for (Interator it = codes.interator(); it.hasNext(); ) {
                 int code = it.nextInt();
                 SharedMesh splat = new SharedMesh("splat" + code, mesh);
-
+                splat.setIsCollidable(false);
+                
                 // initialize the texture state
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
