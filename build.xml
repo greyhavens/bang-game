@@ -214,6 +214,11 @@
     <proguard configuration="etc/bang-client.pro"/>
 
     <!-- copy our various bits into the deployment directory -->
+    <copy todir="pages/client">
+      <fileset dir="projects/installers/${default_locale}">
+        <include name="background.png"/>
+      </fileset>
+    </copy>
     <copy todir="pages/client/code">
       <fileset dir="dist" includes="bang-pcode.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
