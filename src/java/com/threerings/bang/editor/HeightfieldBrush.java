@@ -84,7 +84,7 @@ public class HeightfieldBrush extends EditorTool
     @Override // documentation inherited
     public void mouseMoved (MouseEvent e)
     {
-        Vector3f ground = _panel.view.getGroundIntersect(e, null);
+        Vector3f ground = _panel.view.getGroundIntersect(e, true, null);
         _cursor.setPosition(ground.x, ground.y);
     }
     

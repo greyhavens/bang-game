@@ -11,11 +11,13 @@ import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.intersection.PickData;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.light.DirectionalLight;
 import com.jme.light.SimpleLightNode;
@@ -28,6 +30,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.Skybox;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
@@ -278,7 +281,7 @@ public class BoardView extends BComponent
      */
     public void updateHoverState (MouseEvent e)
     {
-        Vector3f ground = getGroundIntersect(e, null); 
+        Vector3f ground = getGroundIntersect(e, false, null); 
 
         int mx = (int)Math.floor(ground.x / TILE_SIZE);
         int my = (int)Math.floor(ground.y / TILE_SIZE);
@@ -307,33 +310,88 @@ public class BoardView extends BComponent
     
     /**
      * Given a mouse event, returns the point at which a ray cast from the
-     * eye through the mouse pointer intersects the ground plane.
+     * eye through the mouse pointer intersects the ground.
      *
+     * @param planar whether or not to intersect with the ground plane as
+     * opposed to the terrain
      * @param result a vector to hold the result, or <code>null</code> to
      * create a new vector
      * @return a reference to the result
      */
-    public Vector3f getGroundIntersect (MouseEvent e, Vector3f result)
+    public Vector3f getGroundIntersect (MouseEvent e, boolean planar,
+        Vector3f result)
     {
         if (result == null) {
             result = new Vector3f();
         }
         
-        // determine which tile the mouse is over
+        // compute the vector from camera location to mouse cursor
         Camera camera = _ctx.getCameraHandler().getCamera();
         Vector2f screenPos = new Vector2f(e.getX(), e.getY());
         _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
-        _worldMouse.subtractLocal(camera.getLocation());
+        Vector3f camloc = camera.getLocation();
+        _worldMouse.subtractLocal(camloc);
 
-        // determine which tile the mouse is over
-        float dist = -1f * _groundNormal.dot(camera.getLocation()) /
+        // see if the ray intersects with the terrain
+        if (!planar) {
+            _pick.clear();
+            Ray ray = new Ray(camloc, _worldMouse);
+            _tnode.calculatePick(ray, _pick);
+            if (getPickIntersection(result)) {
+                result.z += 0.1f;
+                return result;
+            }
+        }
+            
+        // otherwise, intersect with ground plane
+        float dist = -1f * _groundNormal.dot(camloc) /
             _groundNormal.dot(_worldMouse);
-        camera.getLocation().add(_worldMouse.mult(dist), result);
+        camloc.add(_worldMouse.mult(dist), result);
         result.z = 0.1f;
         
         return result;
     }
 
+    /**
+     * Retrieves the pick intersection closest to the origin and places it in
+     * the given destination vector.
+     *
+     * @return true if a triangle intersection was found and placed in the
+     * result vector, false otherwise
+     */
+    protected boolean getPickIntersection (Vector3f result)
+    {
+        float nearest = Float.MAX_VALUE;
+        Vector3f[] verts = new Vector3f[3];
+        Vector3f loc = new Vector3f();
+        for (int i = 0, size = _pick.getNumber(); i < size; i++) {
+            PickData pdata = _pick.getPickData(i);
+            ArrayList tris = pdata.getTargetTris();
+            Object mesh = pdata.getTargetMesh();
+            if (tris == null || tris.size() == 0 ||
+                    !(mesh instanceof TriMesh)) {
+                continue;
+            }
+            for (Object oidx : tris) {
+                int idx = ((Integer)oidx).intValue();
+                if (mesh instanceof SharedMesh) {
+                    ((SharedMesh)mesh).getTarget().getTriangle(idx, verts);
+                
+                } else {
+                    ((TriMesh)mesh).getTriangle(idx, verts);
+                }
+                pdata.getRay().intersectWhere(verts[0], verts[1], verts[2],
+                    loc);
+                float d2 = pdata.getRay().getOrigin().distanceSquared(loc);
+                if (d2 < nearest) {
+                    nearest = d2;
+                    result.set(loc);
+                }
+            }
+        }
+        return nearest < Float.MAX_VALUE;
+    }
+    
     @Override // documentation inherited
     protected void wasAdded ()
     {
