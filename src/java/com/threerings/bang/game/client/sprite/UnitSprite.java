@@ -334,9 +334,8 @@ public class UnitSprite extends MobileSprite
     {
         int elev = super.computeElevation(board, tx, ty);
         if (_piece.isFlyer()) {
-            // flying pieces hover 1 "units" above the ground; not sinking into
-            // holes, but raising up to two units above hills
-            elev = Math.max(elev, 0) + 1 * BangBoard.ELEVATION_UNITS_PER_TILE;
+            // flying pieces hover 1 "units" above the ground
+            elev = elev + 1 * BangBoard.ELEVATION_UNITS_PER_TILE;
         }
         return elev;
     }
