@@ -297,7 +297,7 @@ public class UnitSprite extends MobileSprite
         _pendquad.setRenderState(RenderUtil.alwaysZBuf);
         _pendquad.updateRenderState();
         bbn = new BillboardNode("pending");
-        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
+        bbn.setLocalTranslation(new Vector3f(0, 0, 1.5f * TILE_SIZE));
         bbn.attachChild(_pendquad);
         attachChild(bbn);
         _pendquad.setCullMode(CULL_ALWAYS);
