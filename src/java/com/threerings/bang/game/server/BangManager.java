@@ -392,12 +392,13 @@ public class BangManager extends GameManager
         // give the scenario a shot at its own custom markers
         _scenario.filterMarkers(_bangobj, _starts, pieces);
 
-        // now remove any remaining marker pieces
+        // remove any remaining marker pieces and assign piece ids
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (p instanceof Marker) {
                 iter.remove();
             }
+            p.assignPieceId();
         }
 
         // configure the game object and board with the pieces
@@ -456,6 +457,7 @@ public class BangManager extends GameManager
 
             // configure their big shot selection
             Unit unit = Unit.getUnit(item.getType());
+            unit.assignPieceId();
             unit.init();
             unit.owner = pidx;
             _bangobj.setBigShotsAt(unit, pidx);
@@ -518,6 +520,7 @@ public class BangManager extends GameManager
 
         // initialize and prepare the units
         for (int ii = 0; ii < units.length; ii++) {
+            units[ii].assignPieceId();
             units[ii].init();
             units[ii].owner = pidx;
             _purchases.add(units[ii]);
@@ -590,6 +593,8 @@ public class BangManager extends GameManager
         } finally {
             _bangobj.commitTransaction();
         }
+
+        log.info("Pieces: " + _bangobj.pieces);
 
         // initialize our pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {

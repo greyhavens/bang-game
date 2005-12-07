@@ -441,17 +441,13 @@ public abstract class Piece extends SimpleStreamableObject
     public void assignPieceId ()
     {
         _key = null;
-        pieceId = 0;
-        getKey();
+        pieceId = ++_nextPieceId;
     }
 
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
         if (_key == null) {
-            if (pieceId == 0) {
-                pieceId = ++_nextPieceId;
-            }
             _key = new Integer(pieceId);
         }
         return _key;
