@@ -66,7 +66,7 @@ public class TextureCache
         BufferedImage subimg = image.getSubimage(
             region.x, region.y, region.width, region.height);
         texture = RenderUtil.createTexture(
-            _ctx.getImageCache().createImage(subimg));
+            _ctx.getImageCache().createImage(subimg, true));
         _textures.put(tkey, new WeakReference<Texture>(texture));
         return texture;
     }
