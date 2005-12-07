@@ -9,11 +9,11 @@ appbase = @app_root@/client
 # Configure the update UI
 ui.name = Bang! Howdy
 ui.background = background.png
-ui.progress = 32, 211, 361, 15
-ui.progress_bar = C9B612
-ui.progress_text = FBFAD8
-ui.status = 30, 125, 364, 80
-ui.status_text = FFEC48
+ui.progress = 10, 330, 470, 24
+ui.progress_bar = 663333
+ui.progress_text = FFFFFF
+ui.status = 30, 270, 430, 50
+ui.status_text = 000000
 
 # These all go into the classpath
 code = code/bang-pcode.jar
