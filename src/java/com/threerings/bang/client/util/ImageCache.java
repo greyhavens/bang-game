@@ -63,7 +63,7 @@ public class ImageCache
         }
 
         // create and cache a new JME image with the appropriate data
-        image = createImage(bufimg);
+        image = createImage(bufimg, true);
         _imgcache.put(rsrcPath, new WeakReference<Image>(image));
         return image;
     }
@@ -71,7 +71,7 @@ public class ImageCache
     /**
      * Creates a JME-compatible image from the supplied buffered image.
      */
-    public Image createImage (BufferedImage bufimg)
+    public Image createImage (BufferedImage bufimg, boolean flip)
     {
         // convert the the image to the format that OpenGL prefers
         int width = bufimg.getWidth(), height = bufimg.getHeight();
@@ -81,8 +81,11 @@ public class ImageCache
             BufferedImage.TYPE_3BYTE_BGR);
 
         // flip the image to convert into OpenGL's coordinate system
-        AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
-        tx.translate(0, -height);
+        AffineTransform tx = null;
+        if (flip) {
+            tx = AffineTransform.getScaleInstance(1, -1);
+            tx.translate(0, -height);
+        }
 
         // "convert" the image by rendering the old into the new
         Graphics2D gfx = (Graphics2D)dispimg.getGraphics();

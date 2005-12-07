@@ -191,7 +191,7 @@ public class RenderUtil
         tcoords[2] = new Vector2f(width/tsf, height/tsf);
         tcoords[3] = new Vector2f(width/tsf, 0);
 
-        return createTexture(ctx.getImageCache().createImage(image));
+        return createTexture(ctx.getImageCache().createImage(image, false));
     }
 
     /**
