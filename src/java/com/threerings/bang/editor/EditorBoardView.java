@@ -115,15 +115,6 @@ public class EditorBoardView extends BoardView
         _showHighlights = !_showHighlights;
         updateHighlights();
     }
-
-    /**
-     * Generates the static terrain shadows.
-     */
-    public void generateShadows ()
-    {
-        _tnode.createShadowBuffer();
-        _tnode.refreshTerrain();
-    }
     
     /**
      * Sets the heightfield to the contents of the specified image.

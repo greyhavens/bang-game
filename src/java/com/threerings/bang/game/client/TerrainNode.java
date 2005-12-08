@@ -12,6 +12,8 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.opengl.GL11;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -31,6 +33,8 @@ import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.geom.BufferUtils;
@@ -49,6 +53,7 @@ import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.Terrain;
 
+import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -436,6 +441,18 @@ public class TerrainNode extends Node
 
         // always perform backface culling
         setRenderState(RenderUtil.backCull);
+        
+        final MaterialState mstate = ctx.getRenderer().createMaterialState();
+        setRenderState(new RenderState() {
+            public void apply () {
+                mstate.apply();
+                GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+                GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
+            }
+            public int getType () {
+                return mstate.getType();
+            }
+        });
     }
 
     /**
@@ -469,9 +486,9 @@ public class TerrainNode extends Node
      */
     public void initBoardTerrain ()
     {
-        // create the shadow buffer automatically for static terrain
+        // create shadows automatically for static terrain
         if (isHeightfieldStatic()) {
-            createShadowBuffer();
+            generateShadows();
             
         } else {
             _sbuf = null;
@@ -524,10 +541,10 @@ public class TerrainNode extends Node
                 Rectangle isect = rect.intersection(block.ebounds);
                 if (!isect.isEmpty()) {
                     block.refreshGeometry(isect);
-                    block.mesh.updateModelBound();
                 }
             }
         }
+        updateGeometricState(0, true);
     }
 
     /**
@@ -558,14 +575,26 @@ public class TerrainNode extends Node
     }
 
     /**
-     * Creates the shadow buffer by casting rays from each heightfield vertex.
+     * Creates the shadow buffer by casting rays from each heightfield vertex
+     * and sets the vertex colors for the splats based on the smoothed shadow
+     * values.
      */
-    public void createShadowBuffer ()
+    public void generateShadows ()
     {
         int hfwidth = _board.getHeightfieldWidth(),
             hfheight = _board.getHeightfieldHeight();
         _sbuf = new boolean[hfwidth][hfheight];
         
+        // make sure terrain collision trees are up-to-date
+        for (int x = 0; x < _blocks.length; x++) {
+            for (int y = 0; y < _blocks[x].length; y++) {
+                _blocks[x][y].mesh.updateCollisionTree();
+                _blocks[x][y].mesh.updateModelBound();
+            }
+        }
+        updateGeometricState(0, true);
+        
+        // generate the shadow buffer
         float azimuth = _board.getLightAzimuth(0),
             elevation = _board.getLightElevation(0);
         Vector3f origin = new Vector3f(),
@@ -584,6 +613,13 @@ public class TerrainNode extends Node
                 calculatePick(ray, results);
                 _view.getPieceNode().calculatePick(ray, results);
                 _sbuf[x][y] = containTriangles(results);
+            }
+        }
+        
+        // update the colors of the splats
+        for (int x = 0; x < _blocks.length; x++) {
+            for (int y = 0; y < _blocks[x].length; y++) {
+                _blocks[x][y].refreshColors();
             }
         }
     }
@@ -751,6 +787,7 @@ public class TerrainNode extends Node
             vbufsize = vwidth * vheight * 3;
         block.vbuf = BufferUtils.createFloatBuffer(vbufsize);
         block.nbuf = BufferUtils.createFloatBuffer(vbufsize);
+        block.cbuf = BufferUtils.createFloatBuffer(vwidth * vheight * 4);
 
         // refresh sets the vertices and normals from the heightfield
         block.bounds = new Rectangle(vx, vy, bwidth, bheight);
@@ -806,12 +843,13 @@ public class TerrainNode extends Node
 
         // create a trimesh with the computed values; if the heightfield is
         // static, use a VBO to store the vertices
-        block.mesh = new TriMesh("terrain", block.vbuf, block.nbuf, null,
+        block.mesh = new TriMesh("terrain", block.vbuf, block.nbuf, block.cbuf,
             tbuf0, ibuf);
         if (isHeightfieldStatic()) {
             block.mesh.setVBOInfo(new VBOInfo());
         }
         block.mesh.setTextureBuffer(tbuf1, 1);
+        block.mesh.setSolidColor(ColorRGBA.white);
         block.mesh.setModelBound(new BoundingBox());
         block.mesh.updateModelBound();
 
@@ -867,8 +905,7 @@ public class TerrainNode extends Node
                     weight = Math.max(0f,
                         1f - (xdist*xdist + ydist*ydist)/(1.75f*1.75f));
                 if (_board.getTerrainValue(sx, sy) == code) {
-                    alpha += (isInShadow(sx, sy) ? weight * SHADOW_MULTIPLIER :
-                        weight);
+                    alpha += weight;
                 }
                 total += weight;
             }
@@ -899,24 +936,24 @@ public class TerrainNode extends Node
     {
         byte code = _board.getTerrainValue(x, y);
         Color color = (Color)_tcolors.get(code);
-        if (color == null) {
-            // if we haven't computed it already, determine the overall color
-            // average for the texture
-            Image img = RenderUtil.getGroundTile(Terrain.fromCode(code));
-            ByteBuffer imgdata = img.getData();
-            int r = 0, g = 0, b = 0, bytes = imgdata.limit(), pixels = bytes/3;
-            for (int ii = 0; ii < bytes; ii += 3) {
-                // the bytes are stored unsigned in the image but java is going
-                // to interpret them as signed, so we need to do some fiddling
-                r += btoi(imgdata.get(ii));
-                g += btoi(imgdata.get(ii+1));
-                b += btoi(imgdata.get(ii+2));
-            }
-            color = new Color(r / pixels, g / pixels, b / pixels);
-            _tcolors.put(code, color);
+        if (color != null) {
+            return color;
         }
-        return (isInShadow(x, y) ? ColorUtil.blend(color, Color.black,
-            SHADOW_MULTIPLIER) : color);
+        // if we haven't computed it already, determine the overall color
+        // average for the texture
+        Image img = RenderUtil.getGroundTile(Terrain.fromCode(code));
+        ByteBuffer imgdata = img.getData();
+        int r = 0, g = 0, b = 0, bytes = imgdata.limit(), pixels = bytes/3;
+        for (int ii = 0; ii < bytes; ii += 3) {
+            // the bytes are stored unsigned in the image but java is going
+            // to interpret them as signed, so we need to do some fiddling
+            r += btoi(imgdata.get(ii));
+            g += btoi(imgdata.get(ii+1));
+            b += btoi(imgdata.get(ii+2));
+        }
+        color = new Color(r / pixels, g / pixels, b / pixels);
+        _tcolors.put(code, color);
+        return color;
     }
 
     protected static final int btoi (byte value)
@@ -925,12 +962,37 @@ public class TerrainNode extends Node
     }
 
     /**
-     * Determines whether the specified sub-tile coordinate is in shadow.
+     * Returns the color to use for vertices in shadow based on the board's
+     * light parameters.
      */
-    protected boolean isInShadow (int x, int y)
+    protected ColorRGBA getShadowColor ()
     {
-        return _sbuf != null && x >= 0 && y >= 0 && x < _sbuf.length &&
-            y < _sbuf[x].length && _sbuf[x][y];
+        return ColorRGBA.black;
+    }
+    
+    /**
+     * Returns the smoothed shadow value for the specified sub-tile coordinate.
+     * 0.0 is completely unshadowed, 1.0 is completely shadowed.
+     */
+    protected float getShadowValue (int x, int y)
+    {
+        if (_sbuf == null) {
+            return 0f;
+        }
+        float value = 0f, total = 0f;
+        for (int sx = x - 1, sxn = x + 1; sx <= sxn; sx++) {
+            for (int sy = y - 1, syn = y + 1; sy <= syn; sy++) {
+                float xdist = (x - sx), ydist = (y - sy),
+                    weight = Math.max(0f,
+                        1f - (xdist*xdist + ydist*ydist)/(1.75f*1.75f));
+                if (sx >= 0 && sy >= 0 && sx < _sbuf.length &&
+                        sy < _sbuf[sx].length && _sbuf[sx][sy]) {
+                    value += weight;
+                }
+                total += weight;
+            }
+        }
+        return value / total;
     }
     
     /** Contains all the state associated with a splat block (a collection of
@@ -947,8 +1009,8 @@ public class TerrainNode extends Node
         /** The shared, unparented mesh instance. */
         public TriMesh mesh;
 
-        /** The vertex and normal buffers. */
-        public FloatBuffer vbuf, nbuf;
+        /** The vertex, normal, and color buffers. */
+        public FloatBuffer vbuf, nbuf, cbuf;
 
         /** Maps terrain codes to ground texture states. */
         public HashIntMap groundTextures = new HashIntMap();
@@ -980,6 +1042,24 @@ public class TerrainNode extends Node
             }
         }
 
+        /**
+         * Refreshes the entire color buffer in response to a change in the
+         * shadow map.
+         */
+        public void refreshColors ()
+        {
+            int idx = 0;
+            ColorRGBA color = new ColorRGBA(), scolor = getShadowColor();
+            for (int y = ebounds.y, ymax = y+ebounds.height; y < ymax; y++) {
+                for (int x = ebounds.x, xmax = x+ebounds.width; x < xmax;
+                        x++) {
+                    color.interpolate(ColorRGBA.white, scolor,
+                        getShadowValue(x, y));
+                    BufferUtils.setInBuffer(color, cbuf, idx++);
+                }
+            }
+        }
+        
         /**
          * Refreshes the splats according to terrain changes over the
          * specified rectangle (in sub-tile coordinates).
@@ -1196,9 +1276,6 @@ public class TerrainNode extends Node
 
     /** The size of the board edges that hide the void. */
     protected static final float EDGE_SIZE = 10000f;
-
-    /** The color multiplier for heightfield vertices in shadow. */
-    protected static final float SHADOW_MULTIPLIER = 0.25f;
     
     /** The number of segments in the cursor. */
     protected static final int CURSOR_SEGMENTS = 32;
