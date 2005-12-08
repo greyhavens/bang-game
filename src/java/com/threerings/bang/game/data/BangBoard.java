@@ -608,6 +608,18 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if the specified coordinate is under a prop, false
+     * otherwise.
+     */
+    public boolean isUnderProp (int x, int y)
+    {
+        if (!_bbounds.contains(x, y)) {
+            return false;
+        }
+        return (_tstate[y*_width+x] == O_PROP);
+    }
+
+    /**
      * Computes the supplied piece's move sets based on its current
      * location and the state of the board. A set of attackable locations
      * is also computed, but note that these do not take into account a

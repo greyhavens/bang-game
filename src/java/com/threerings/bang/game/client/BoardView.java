@@ -619,11 +619,14 @@ public class BoardView extends BComponent
     protected void highlightTiles (PointSet set, boolean forFlyer)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
-            TerrainNode.Highlight highlight = _tnode.createHighlight(
-                set.getX(ii), set.getY(ii), false);
+            int tx = set.getX(ii), ty = set.getY(ii);
+            TerrainNode.Highlight highlight =
+                _tnode.createHighlight(tx, ty, false);
             highlight.setDefaultColor(MOVEMENT_HIGHLIGHT_COLOR);
             highlight.setRenderState(_movstate);
-            highlight.setRenderState(RenderUtil.alwaysZBuf);
+            if (_bangobj.board.isUnderProp(tx, ty)) {
+                highlight.setRenderState(RenderUtil.alwaysZBuf);
+            }
             highlight.updateRenderState();
             _hnode.attachChild(highlight);
         }
