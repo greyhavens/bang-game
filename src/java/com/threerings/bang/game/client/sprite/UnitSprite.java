@@ -54,6 +54,14 @@ public class UnitSprite extends MobileSprite
             _hovered = hovered;
             _hov.setCullMode((_selected || _hovered) ?
                              CULL_DYNAMIC : CULL_ALWAYS);
+            if (_pendnode != null) {
+                if (_hovered) {
+                    _pendnode.setSolidColor(JPIECE_COLORS[_piece.owner]);
+                } else {
+                    _pendnode.setColorBuffer(null);
+                }
+                _pendnode.updateRenderState();
+            }
         }
     }
 
@@ -102,9 +110,11 @@ public class UnitSprite extends MobileSprite
         _pendnode = pnode;
         int ticks;
         if (pending && (ticks = _piece.ticksUntilMovable(_tick)) > 0) {
-            _pendnode.setRenderState(_gpendtst);
             _pendtst.setTexture(_pendtexs[ticks-1]);
-            _gpendtst.setTexture(_gpendtexs[ticks-1]);
+            _gpendtst.setTexture(createPendingGroundTexture(ticks-1));
+            _pendnode.setRenderState(_gpendtst);
+//             _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
+            _pendnode.updateRenderState();
         }
     }
 
@@ -157,7 +167,7 @@ public class UnitSprite extends MobileSprite
         // ticks until movable
         if (_pendquad.getCullMode() == CULL_DYNAMIC) {
             _pendtst.setTexture(_pendtexs[ticks-1]);
-            _gpendtst.setTexture(_gpendtexs[ticks-1]);
+            _gpendtst.setTexture(createPendingGroundTexture(ticks-1));
         }
     }
 
@@ -199,25 +209,36 @@ public class UnitSprite extends MobileSprite
             up = _ctx.getCameraHandler().getCamera().getUp(),
             vec = (dir.x*dir.x+dir.y*dir.y > up.x*up.x+up.y*up.y) ? dir : up;
         float angle = FastMath.PI + FastMath.atan2(-vec.x, vec.y);
-        Quaternion rot = new Quaternion();
-        rot.fromAngleAxis(-angle, Vector3f.UNIT_Z);
-        Vector3f trans = rot.mult(new Vector3f(0.5f, 0.5f, 0f));
-        trans.set(0.5f - trans.x, 0.5f - trans.y, 0f);
+        _camrot.fromAngleAxis(-angle, Vector3f.UNIT_Z);
+        _camrot.mult(HALF_UNIT, _camtrans);
+        _camtrans.set(0.5f - _camtrans.x, 0.5f - _camtrans.y, 0f);
 
         Texture mtex = ((TextureState)_movable.getRenderState(
             RenderState.RS_TEXTURE)).getTexture();
-        mtex.setRotation(rot);
-        mtex.setTranslation(trans);
+        mtex.setRotation(_camrot);
+        mtex.setTranslation(_camtrans);
 
         Texture ttex = ((TextureState)_ticks.getRenderState(
             RenderState.RS_TEXTURE)).getTexture();
-        ttex.setRotation(rot);
-        ttex.setTranslation(trans);
+        ttex.setRotation(_camrot);
+        ttex.setTranslation(_camtrans);
 
         Texture dtex = ((TextureState)_damage.getRenderState(
             RenderState.RS_TEXTURE)).getTexture();
-        dtex.setRotation(rot);
-        dtex.setTranslation(trans);
+        dtex.setRotation(_camrot);
+        dtex.setTranslation(_camtrans);
+
+        // we have to do extra fiddly business here because our texture is
+        // additionally scaled and translated to center the texture at half
+        // size within the highlight node; plus we want it to be 180 degrees
+        // rotated from the status orientation
+        Texture gptex = _gpendtst.getTexture();
+        _gcamrot.fromAngleAxis(FastMath.PI-angle, Vector3f.UNIT_Z);
+        _gcamrot.mult(WHOLE_UNIT, _gcamtrans);
+        _gcamtrans.set(1f - _gcamtrans.x - 0.5f,
+                       1f - _gcamtrans.y - 0.5f, 0f);
+        gptex.setRotation(_gcamrot);
+        gptex.setTranslation(_gcamtrans);
     }
 
     @Override // documentation inherited
@@ -264,9 +285,6 @@ public class UnitSprite extends MobileSprite
         _status.attachChild(_movable);
         _movable.setCullMode(tick > 0 ? CULL_ALWAYS : CULL_DYNAMIC);
 
-        // configure our colors
-        configureOwnerColors();
-
         // this icon is displayed when we're a target
         _tgtquad = RenderUtil.createIcon(_tgttst);
         _tgtquad.setLocalTranslation(new Vector3f(0, 0, 0));
@@ -281,7 +299,8 @@ public class UnitSprite extends MobileSprite
 
         // these display pending moves above the unit and on the ground
         _pendtst = RenderUtil.createTextureState(ctx, _pendtexs[0]);
-        _gpendtst = RenderUtil.createTextureState(ctx, _gpendtexs[0]);
+        _gpendtst = RenderUtil.createTextureState(
+            ctx, createPendingGroundTexture(0));
 
         // this icon is displayed when we have a pending action queued
         _pendquad = RenderUtil.createIcon(4, 4);
@@ -291,9 +310,9 @@ public class UnitSprite extends MobileSprite
         _pendquad.setRenderState(RenderUtil.alwaysZBuf);
         _pendquad.updateRenderState();
         bbn = new BillboardNode("pending");
-        bbn.setLocalTranslation(new Vector3f(0, 0, 1.5f * TILE_SIZE));
+        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         bbn.attachChild(_pendquad);
-        attachChild(bbn);
+//         attachChild(bbn);
         _pendquad.setCullMode(CULL_ALWAYS);
 
         // this icon is displayed when we are modified in some way (we're
@@ -308,6 +327,9 @@ public class UnitSprite extends MobileSprite
         bbn.attachChild(_icon);
         attachChild(bbn);
         _icon.setCullMode(CULL_ALWAYS);
+
+        // configure our colors
+        configureOwnerColors();
     }
 
     /**
@@ -339,6 +361,8 @@ public class UnitSprite extends MobileSprite
     {
         _highlight.setDefaultColor(JPIECE_COLORS[_piece.owner]);
         _highlight.updateRenderState();
+        _pendquad.setDefaultColor(JPIECE_COLORS[_piece.owner]);
+        _pendquad.updateRenderState();
     }
 
     protected Texture createDamageTexture ()
@@ -370,6 +394,18 @@ public class UnitSprite extends MobileSprite
         return dtex;
     }
 
+    protected Texture createPendingGroundTexture (int tidx)
+    {
+        Texture gpendtex = _pendtexs[tidx].createSimpleClone();
+        // start with a translation that will render nothing until we are
+        // properly updated with our camera rotation on the next call to
+        // updateWorldData()
+        gpendtex.setTranslation(new Vector3f(-2f, -2f, 0));
+        // the ground textures are "shrunk" by 50% and centered
+        gpendtex.setScale(new Vector3f(2f, 2f, 0));
+        return gpendtex;
+    }
+
     protected static void loadTextures (BasicContext ctx)
     {
         _hovtex = ctx.getTextureCache().getTexture(
@@ -380,20 +416,10 @@ public class UnitSprite extends MobileSprite
         _movetex = ctx.getTextureCache().getTexture(
             "textures/ustatus/tick_ready.png");
         _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-
-        // our pending move textures require some jockeying
         _pendtexs = new Texture[4];
-        _gpendtexs = new Texture[_pendtexs.length];
         for (int ii = 0; ii < _pendtexs.length; ii++) {
             _pendtexs[ii] = ctx.getTextureCache().getTexture(
                 "textures/ustatus/pending.png", 64, 64, 2, ii);
-            // TODO: this texture has not been loaded into video memory yet and
-            // thus has no textureId so the simple clone is going to duplicate
-            // the texture data in video memory; decide if we really care
-            _gpendtexs[ii] = _pendtexs[ii].createSimpleClone();
-            // the ground textures are shrunk by 50% and centered
-            _gpendtexs[ii].setTranslation(new Vector3f(-0.5f, -0.5f, 0));
-            _gpendtexs[ii].setScale(new Vector3f(2f, 2f, 0));
         }
 
         _nugtst = RenderUtil.createTextureState(
@@ -414,6 +440,8 @@ public class UnitSprite extends MobileSprite
     protected Quad _tgtquad, _pendquad;
     protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst, _gpendtst;
+    protected Quaternion _camrot = new Quaternion(), _gcamrot = new Quaternion();
+    protected Vector3f _camtrans = new Vector3f(), _gcamtrans = new Vector3f();
 
     protected Node _status;
     protected SharedMesh _hov, _ticks, _damage, _movable;
@@ -423,16 +451,16 @@ public class UnitSprite extends MobileSprite
     protected short _pendingTick = -1;
     protected boolean _hovered;
 
-    protected static Vector3f _tvec = new Vector3f();
-    protected static Quaternion _tquat = new Quaternion();
-
     protected static BufferedImage _dfull, _dempty;
     protected static Texture _hovtex, _movetex;
     protected static Texture[] _ticktex;
     protected static TextureState _tgttst, _nugtst;
 
     // TODO: these eventually need to be per-unit-type
-    protected static Texture[] _pendtexs, _gpendtexs;
+    protected static Texture[] _pendtexs;
+
+    protected static final Vector3f HALF_UNIT = new Vector3f(0.5f, 0.5f, 0f);
+    protected static final Vector3f WHOLE_UNIT = new Vector3f(1f, 1f, 0f);
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
