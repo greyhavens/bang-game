@@ -242,6 +242,13 @@ public class BoardView extends BComponent
     public void removeSprite (Sprite sprite)
     {
         _pnode.detachChild(sprite);
+        if (sprite instanceof PieceSprite) {
+            Spatial highlight = ((PieceSprite)sprite).getHighlight();
+            if (highlight != null) {
+                _pnode.detachChild(highlight);
+                _plights.remove(highlight);
+            }
+        }
     }
 
     /**
@@ -518,11 +525,6 @@ public class BoardView extends BComponent
             log.fine("Removing sprite [id=" + pieceId + ", why=" + why + "].");
             removeSprite(sprite);
             
-            Spatial highlight = sprite.getHighlight();
-            if (highlight != null) {
-                _pnode.detachChild(highlight);
-                _plights.remove(highlight);
-            }
         } else {
             log.warning("No sprite for removed piece [id=" + pieceId +
                         ", why=" + why + "].");
