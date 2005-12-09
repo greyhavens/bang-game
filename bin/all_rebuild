@@ -32,7 +32,7 @@ done
 
 # make sure we only have one script running at a time
 lockfile -r 0 $LOCKFILE
-if [ $? -ne 0 ] ; then
+if [ $? != 0 ] ; then
     echo "Refusing to run because lockfile ($LOCKFILE) exists."
     echo "Ensure no stale script is running, delete the file and rerun."
     exit 255
@@ -51,6 +51,11 @@ if [ ! -z "$UPDATE" ]; then
     echo "Updating main tree..."
     cd $ROOT
     svn update -q
+    if [ $? != 0 ] ; then
+        echo >&2 "*** svn update failed in" `pwd`
+        rm -f $LOCKFILE
+        exit 255
+    fi
 fi
 
 # rebuild our libraries
@@ -60,6 +65,11 @@ for LIB in samskivert jme-bui narya threerings ; do
         if [ ! -z "$UPDATE" ]; then
             echo "Updating $LIB..."
             svn update -q
+            if [ $? != 0 ] ; then
+                echo >&2 "*** svn update failed in $LIB"
+                rm -f $LOCKFILE
+                exit 255
+            fi
         fi
         echo "Rebuilding $LIB..."
         ant clean dist
