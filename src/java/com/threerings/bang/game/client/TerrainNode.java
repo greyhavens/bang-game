@@ -243,7 +243,7 @@ public class TerrainNode extends Node
     }
 
     /**
-     * Represents a tile-sized highlight draped over the terrain.
+     * Represents a highlight draped over the terrain.
      */
     public class Highlight extends TriMesh
     {
@@ -252,21 +252,23 @@ public class TerrainNode extends Node
 
         protected Highlight (int x, int y, boolean overPieces)
         {
-            this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, true,
-                overPieces);
+            this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, TILE_SIZE,
+                TILE_SIZE, true, overPieces);
         }
 
-        protected Highlight (float x, float y)
+        protected Highlight (float x, float y, float width, float height)
         {
-            this(x, y, false, false);
+            this(x, y, width, height, false, false);
         }
 
-        protected Highlight (float x, float y, boolean onTile,
-            boolean overPieces)
+        protected Highlight (float x, float y, float width, float height,
+            boolean onTile, boolean overPieces)
         {
             super("highlight");
             this.x = x;
             this.y = y;
+            _width = width;
+            _height = height;
             _onTile = onTile;
             _overPieces = overPieces;
 
@@ -277,17 +279,25 @@ public class TerrainNode extends Node
             updateRenderState();
 
             // set the vertices, which change according to position and terrain
-            int size = BangBoard.HEIGHTFIELD_SUBDIVISIONS + (_onTile ? 1 : 2);
-            setVertexBuffer(BufferUtils.createFloatBuffer(size * size * 3));
+            if (_onTile) {
+                _vwidth = _vheight = BangBoard.HEIGHTFIELD_SUBDIVISIONS + 1;
+                
+            } else {
+                _vwidth = (int)FastMath.ceil(_width / SUB_TILE_SIZE) + 2;
+                _vheight = (int)FastMath.ceil(_height / SUB_TILE_SIZE) + 2;
+            }
+            setVertexBuffer(BufferUtils.createFloatBuffer(
+                _vwidth * _vheight * 3));
 
             // set the texture coords, which change for highlights not aligned
             // with tiles
             if (_onTile) {
                 if (_htbuf == null) {
-                    _htbuf = BufferUtils.createFloatBuffer(size * size * 2);
+                    _htbuf = BufferUtils.createFloatBuffer(
+                        _vwidth * _vheight * 2);
                     float step = 1f / BangBoard.HEIGHTFIELD_SUBDIVISIONS;
-                    for (int iy = 0; iy < size; iy++) {
-                        for (int ix = 0; ix < size; ix++) {
+                    for (int iy = 0; iy < _vheight; iy++) {
+                        for (int ix = 0; ix < _vwidth; ix++) {
                             _htbuf.put(ix * step);
                             _htbuf.put(iy * step);
                         }
@@ -297,33 +307,38 @@ public class TerrainNode extends Node
 
             } else {
                 setTextureBuffer(BufferUtils.createFloatBuffer(
-                    size * size * 2));
+                    _vwidth * _vheight * 2));
             }
 
             // update the vertices and possibly the texture coords
             updateVertices();
 
             // set the indices, which never change
-            int on = (_onTile ? 0 : 1);
-            if (_hibufs[on] == null) {
-                int ssize = size - 1;
-                _hibufs[on] = BufferUtils.createIntBuffer(
-                    ssize * ssize * 2 * 3);
-                for (int iy = 0; iy < ssize; iy++) {
-                    for (int ix = 0; ix < ssize; ix++) {
+            IntBuffer ibuf;
+            if (_onTile && _hibuf != null) {
+                ibuf = _hibuf;
+                
+            } else {
+                int swidth = _vwidth - 1, sheight = _vheight - 1;
+                ibuf = BufferUtils.createIntBuffer(swidth * sheight * 2 * 3);
+                for (int iy = 0; iy < sheight; iy++) {
+                    for (int ix = 0; ix < swidth; ix++) {
                         // upper left triangle
-                        _hibufs[on].put(iy*size + ix);
-                        _hibufs[on].put((iy+1)*size + (ix+1));
-                        _hibufs[on].put((iy+1)*size + ix);
+                        ibuf.put(iy*_vwidth + ix);
+                        ibuf.put((iy+1)*_vwidth + (ix+1));
+                        ibuf.put((iy+1)*_vwidth + ix);
 
                         // lower right triangle
-                        _hibufs[on].put(iy*size + ix);
-                        _hibufs[on].put(iy*size + (ix+1));
-                        _hibufs[on].put((iy+1)*size + (ix+1));
+                        ibuf.put(iy*_vwidth + ix);
+                        ibuf.put(iy*_vwidth + (ix+1));
+                        ibuf.put((iy+1)*_vwidth + (ix+1));
                     }
                 }
+                if (_onTile) {
+                    _hibuf = ibuf;
+                }
             }
-            setIndexBuffer(_hibufs[on]);
+            setIndexBuffer(ibuf);
 
             setModelBound(new BoundingBox());
             updateModelBound();
@@ -389,13 +404,12 @@ public class TerrainNode extends Node
                     BangBoard.ELEVATION_UNITS_PER_TILE);
             }
 
-            float x0 = x - TILE_SIZE/2, y0 = y - TILE_SIZE/2;
-            int size = BangBoard.HEIGHTFIELD_SUBDIVISIONS + (_onTile ? 1 : 2),
-                sx0 = (int)(x0 / SUB_TILE_SIZE),
+            float x0 = x - _width/2, y0 = y - _height/2;
+            int sx0 = (int)(x0 / SUB_TILE_SIZE),
                 sy0 = (int)(y0 / SUB_TILE_SIZE);
             Vector3f vertex = new Vector3f();
-            for (int sy = sy0, sy1 = sy0 + size, idx = 0; sy < sy1; sy++) {
-                for (int sx = sx0, sx1 = sx0 + size; sx < sx1; sx++) {
+            for (int sy = sy0, sy1 = sy0 + _vheight, idx = 0; sy < sy1; sy++) {
+                for (int sx = sx0, sx1 = sx0 + _vwidth; sx < sx1; sx++) {
                     if (constantElevation) {
                         vertex.set(sx * SUB_TILE_SIZE, sy * SUB_TILE_SIZE,
                             elevation);
@@ -415,12 +429,13 @@ public class TerrainNode extends Node
             }
             FloatBuffer tbuf = getTextureBuffer();
             Vector2f tcoord = new Vector2f();
-            float step = 1f / BangBoard.HEIGHTFIELD_SUBDIVISIONS,
-                s0 = (sx0 * SUB_TILE_SIZE - x0) / TILE_SIZE,
-                t0 = (sy0 * SUB_TILE_SIZE - y0) / TILE_SIZE;
-            for (int iy = 0, idx = 0; iy < size; iy++) {
-                for (int ix = 0; ix < size; ix++) {
-                    tcoord.set(s0 + ix * step, t0 + iy * step);
+            float sstep = SUB_TILE_SIZE / _width,
+                tstep = SUB_TILE_SIZE / _height,
+                s0 = (sx0 * SUB_TILE_SIZE - x0) / _width,
+                t0 = (sy0 * SUB_TILE_SIZE - y0) / _height;
+            for (int iy = 0, idx = 0; iy < _vheight; iy++) {
+                for (int ix = 0; ix < _vwidth; ix++) {
+                    tcoord.set(s0 + ix * sstep, t0 + iy * tstep);
                     BufferUtils.setInBuffer(tcoord, tbuf, idx++);
                 }
             }
@@ -429,6 +444,12 @@ public class TerrainNode extends Node
         /** If true, the highlight will always be aligned with a tile. */
         protected boolean _onTile;
 
+        /** The dimensions of the highlight in world units. */
+        protected float _width, _height;
+        
+        /** The dimensions of the highlight in vertices. */
+        protected int _vwidth, _vheight;
+        
         /** If true, the highlight will be over pieces occupying the tile. */
         protected boolean _overPieces;
     }
@@ -443,6 +464,7 @@ public class TerrainNode extends Node
         setRenderState(RenderUtil.backCull);
         
         final MaterialState mstate = ctx.getRenderer().createMaterialState();
+        mstate.setAmbient(ColorRGBA.white);
         setRenderState(new RenderState() {
             public void apply () {
                 mstate.apply();
@@ -651,9 +673,10 @@ public class TerrainNode extends Node
      * coordinates.  The highlight must be added to the scene graph before it
      * becomes visible.
      */
-    public Highlight createHighlight (float x, float y)
+    public Highlight createHighlight (float x, float y, float width,
+        float height)
     {
-        return new Highlight(x, y);
+        return new Highlight(x, y, width, height);
     }
 
     /**
@@ -960,15 +983,6 @@ public class TerrainNode extends Node
     {
         return (value < 0) ? 256 + value : value;
     }
-
-    /**
-     * Returns the color to use for vertices in shadow based on the board's
-     * light parameters.
-     */
-    protected ColorRGBA getShadowColor ()
-    {
-        return ColorRGBA.black;
-    }
     
     /**
      * Returns the smoothed shadow value for the specified sub-tile coordinate.
@@ -1049,11 +1063,11 @@ public class TerrainNode extends Node
         public void refreshColors ()
         {
             int idx = 0;
-            ColorRGBA color = new ColorRGBA(), scolor = getShadowColor();
+            ColorRGBA color = new ColorRGBA();
             for (int y = ebounds.y, ymax = y+ebounds.height; y < ymax; y++) {
                 for (int x = ebounds.x, xmax = x+ebounds.width; x < xmax;
                         x++) {
-                    color.interpolate(ColorRGBA.white, scolor,
+                    color.interpolate(ColorRGBA.white, ColorRGBA.black,
                         getShadowValue(x, y));
                     BufferUtils.setInBuffer(color, cbuf, idx++);
                 }
@@ -1257,9 +1271,8 @@ public class TerrainNode extends Node
     /** The shared texture coordinate buffer for highlights on tiles. */
     protected static FloatBuffer _htbuf;
 
-    /** The shared index buffers for highlights (on tiles and arbitrarily
-     * positioned). */
-    protected static IntBuffer[] _hibufs = new IntBuffer[2];
+    /** The shared index buffer for highlights on tiles. */
+    protected static IntBuffer _hibuf;
 
     /** Maps terrain codes to colors. */
     protected static HashIntMap _tcolors = new HashIntMap();

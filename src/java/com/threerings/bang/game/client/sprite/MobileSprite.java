@@ -4,12 +4,18 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.awt.Point;
+
+import java.nio.ByteBuffer;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jme.image.Image;
+import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -193,22 +199,15 @@ public class MobileSprite extends PieceSprite
     {
         super.createGeometry(ctx);
 
-        if (_shadtex == null) {
-            loadTextures(ctx);
-        }
-
         // contains highlights draped over terrain
         _hnode = new Node("highlight");
         
         // the geometry of the highlight is shared between the elements
         _highlight = _view.getTerrainNode().createHighlight(localTranslation.x,
-            localTranslation.y);
+            localTranslation.y, TILE_SIZE, TILE_SIZE);
         
-        // we display a simple shadow texture on the ground beneath us
-        _shadow = new SharedMesh("shadow", _highlight);
-        _shadow.setRenderState(_shadtex);
-        _shadow.updateRenderState();
-        _hnode.attachChild(_shadow);
+        // the shadow is an additional highlight with wider geometry
+        createShadow(ctx);
         
         // load our model
         _model = ctx.loadModel(_type, _name);
@@ -216,7 +215,68 @@ public class MobileSprite extends PieceSprite
         // start in our rest post
         setAction(getRestPose());
     }
-
+    
+    /**
+     * Creates and attaches the shadow for this sprite.
+     */
+    protected void createShadow (BasicContext ctx)
+    {
+        float length = _view.getShadowLength(),
+            rotation = _view.getShadowRotation(),
+            intensity = _view.getShadowIntensity();
+        _shadow = _view.getTerrainNode().createHighlight(localTranslation.x,
+            localTranslation.y, length, length);
+        _shadow.setIsCollidable(false);
+        if (_shadtex == null || _slength != length || _srotation != rotation ||
+                _sintensity != intensity) {
+            createShadowTexture(ctx, length, rotation, intensity);
+        }
+        _shadow.setRenderState(_shadtex);
+        _shadow.updateRenderState();
+        _hnode.attachChild(_shadow);
+    }
+    
+    /**
+     * Creates the shadow texture for the current light parameters.
+     */
+    protected void createShadowTexture (BasicContext ctx, float length,
+        float rotation, float intensity)
+    {
+        _slength = length;
+        _srotation = rotation;
+        _sintensity = intensity;
+        
+        float yscale = length / TILE_SIZE;
+        int size = SHADOW_TEXTURE_SIZE, hsize = size / 2;
+        ByteBuffer pbuf = ByteBuffer.allocateDirect(size * size * 4);
+        byte[] pixel = new byte[] { 0, 0, 0, 0 };
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                float xd = (float)(x - hsize) / hsize,
+                    yd = yscale * (y - hsize) / hsize,
+                    d = FastMath.sqrt(xd*xd + yd*yd),
+                    val = d < 0.25f ? intensity : intensity *
+                        Math.max(0f, 1.333f - 1.333f*d);
+                pixel[3] = (byte)(val * 255);
+                pbuf.put(pixel);
+            }
+        }
+        pbuf.rewind();
+        
+        // we must rotate the shadow into place and translate to recenter
+        Texture stex = new Texture();
+        stex.setImage(new Image(Image.RGBA8888, size, size, pbuf));
+        Quaternion rot = new Quaternion();
+        rot.fromAngleNormalAxis(-rotation, Vector3f.UNIT_Z);
+        stex.setRotation(rot);
+        Vector3f trans = new Vector3f(0.5f, 0.5f, 0f);
+        rot.multLocal(trans);
+        stex.setTranslation(new Vector3f(0.5f - trans.x, 0.5f - trans.y, 0f));
+        
+        _shadtex = ctx.getRenderer().createTextureState();
+        _shadtex.setTexture(stex);
+    }
+    
     @Override // documentation inherited
     protected void createSounds (SoundGroup sounds)
     {
@@ -386,14 +446,15 @@ public class MobileSprite extends PieceSprite
             _highlight.y != localTranslation.y) {
             _highlight.setPosition(localTranslation.x, localTranslation.y);
         }
+        
+        _loc.set(localTranslation.x, localTranslation.y,
+            localTranslation.z + TILE_SIZE/2);
+        _view.getShadowLocation(_loc, _result);
+        if (_shadow.x != _result.x || _shadow.y != _result.y) {
+            _shadow.setPosition(_result.x, _result.y);
+        }
     }
     
-    protected static void loadTextures (BasicContext ctx)
-    {
-        _shadtex = RenderUtil.createTextureState(
-            ctx, "textures/ustatus/shadow.png");
-    }
-
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */
     protected static class CompletedOp implements ObserverList.ObserverOp
     {
@@ -417,17 +478,24 @@ public class MobileSprite extends PieceSprite
     protected Model _model;
     protected Node _hnode;
     protected TerrainNode.Highlight _highlight;
+    protected TerrainNode.Highlight _shadow;
     protected Node[] _meshes;
-    protected SharedMesh _shadow;
     protected Sound _moveSound;
 
     protected String _action;
     protected float _nextAction;
     protected ArrayList<String> _actions = new ArrayList<String>();
 
+    protected Vector3f _loc = new Vector3f();
+    protected Vector2f _result = new Vector2f();
+    
     /** Ensures that we use the same random texture for every animation
      * displayed for this particular instance. */
     protected int _texrando = RandomUtil.getInt(Integer.MAX_VALUE);
 
     protected static TextureState _shadtex;
+    protected static float _slength, _srotation, _sintensity;
+    
+    /** The size of the shadow texture. */
+    protected static final int SHADOW_TEXTURE_SIZE = 128;
 }

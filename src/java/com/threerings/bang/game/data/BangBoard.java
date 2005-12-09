@@ -78,7 +78,7 @@ public class BangBoard extends SimpleStreamableObject
         _lightElevations = new float[] { (float)(Math.PI / 4),
             (float)(-Math.PI / 4)};
         _lightDiffuseColors = new int[] { 0xFFFFFF, 0x0 };
-        _lightAmbientColors = new int[] { 0xBEBEBE, 0x0 };
+        _lightAmbientColors = new int[] { 0x323232, 0x0 };
 
         _pterrain = new byte[width*height];
         _btstate = new byte[width*height];

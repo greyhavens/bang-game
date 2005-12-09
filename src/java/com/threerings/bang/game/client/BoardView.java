@@ -22,6 +22,7 @@ import com.jme.intersection.TrianglePickResults;
 import com.jme.light.DirectionalLight;
 import com.jme.light.SimpleLightNode;
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -192,6 +193,73 @@ public class BoardView extends BComponent
     }
     
     /**
+     * Returns the length of shadows cast by tile-sized objects, which depends
+     * on the elevation of the primary light.
+     */
+    public float getShadowLength ()
+    {
+        float elevation = _board.getLightElevation(0);
+        if (elevation == FastMath.HALF_PI || elevation <= 0f) {
+            return TILE_SIZE;
+            
+        } else {
+            return Math.min(TILE_SIZE + TILE_SIZE / FastMath.tan(elevation),
+                MAX_SHADOW_LENGTH);
+        }
+    }
+    
+    /**
+     * Returns the rotation required to rotate shadows in the direction of the
+     * primary light.
+     */
+    public float getShadowRotation ()
+    {
+        return _board.getLightAzimuth(0);   
+    }
+    
+    /**
+     * Returns the intensity of shadows on the board, which depends on the
+     * total ambient light.
+     *
+     * @return 0.0 for no shadows, 1.0 for completely black shadows
+     */
+    public float getShadowIntensity ()
+    {
+        float total = 0f;
+        float[] hsb = new float[3];
+        for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
+            Color c = new Color(_board.getLightAmbientColor(i));
+            Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
+            total += hsb[2];
+        }
+        return Math.max(0f, 1f - total);
+    }
+    
+    /**
+     * Given the location of the center of a shadow caster and the azimuth and
+     * elevation of the primary light source, computes the location of the
+     * shadow on the ground.
+     *
+     * @return true if the shadow should be shown, false if the light is below
+     * the horizon and the shadow should be hidden
+     */
+    public boolean getShadowLocation (Vector3f center, Vector2f result)
+    {
+        float elevation = _board.getLightElevation(0);
+        if (elevation <= 0f) {
+            return false;
+        }
+        float height = center.z - _tnode.getHeightfieldHeight(
+            center.x, center.y);
+        float distance = Math.min(height / FastMath.tan(elevation),
+            MAX_SHADOW_DISTANCE * height);
+        float azimuth = _board.getLightAzimuth(0);
+        result.set(center.x - distance * FastMath.cos(azimuth),
+            center.y - distance * FastMath.sin(azimuth));
+        return true;
+    }
+    
+    /**
      * Called by the controller when the round has ended.
      */
     public void endRound ()
@@ -225,7 +293,7 @@ public class BoardView extends BComponent
     {
         return _pnode;
     }
-
+    
     /**
      * Adds a sprite to the active view.
      */
@@ -711,6 +779,7 @@ public class BoardView extends BComponent
     protected TerrainNode _tnode;
     protected WaterNode _wnode;
     protected Vector3f _worldMouse;
+    protected Ray _pray = new Ray();
     protected TrianglePickResults _pick = new TrianglePickResults();
     protected Sprite _hover;
     
@@ -755,4 +824,11 @@ public class BoardView extends BComponent
     
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;
+    
+    /** The longest we'll let the shadows get. */
+    protected static final float MAX_SHADOW_LENGTH = TILE_SIZE * 3;
+    
+    /** The furthest we'll let the shadows get (as a multiple of height). */
+    protected static final float MAX_SHADOW_DISTANCE =
+        MAX_SHADOW_LENGTH / (TILE_SIZE * 2);
 }
