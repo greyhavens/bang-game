@@ -420,6 +420,7 @@ public class UnitSprite extends MobileSprite
         for (int ii = 0; ii < _pendtexs.length; ii++) {
             _pendtexs[ii] = ctx.getTextureCache().getTexture(
                 "textures/ustatus/pending.png", 64, 64, 2, ii);
+            _pendtexs[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         }
 
         _nugtst = RenderUtil.createTextureState(
