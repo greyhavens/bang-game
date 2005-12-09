@@ -871,9 +871,7 @@ public class BangBoardView extends BoardView
 
             _highlight = _tnode.createHighlight(x, y, true);
             _unit = unit;
-            _unit.setPendingAction(true, _highlight);
-//             _highlight.setDefaultColor(QMOVE_HIGHLIGHT_COLOR);
-//             _highlight.setRenderState(_movstate);
+            _unit.setPendingNode(_highlight);
             _highlight.updateRenderState();
             _pnode.attachChild(_highlight);
         }
@@ -881,7 +879,7 @@ public class BangBoardView extends BoardView
         public void clear ()
         {
             _pnode.detachChild(_highlight);
-            _unit.setPendingAction(false, null);
+            _unit.setPendingNode(null);
         }
 
         protected UnitSprite _unit;
