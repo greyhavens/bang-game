@@ -134,6 +134,7 @@ public class EditorController extends GameController
         if (track == null) {
             track = new Track();
             track.position(tcoords.x, tcoords.y);
+            track.assignPieceId();
             _bangobj.addToPieces(track);
         }
         
