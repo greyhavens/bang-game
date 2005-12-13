@@ -248,7 +248,7 @@ public class BoardView extends BComponent
             Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
             total += hsb[2];
         }
-        return Math.max(0f, 1f - total);
+        return 0.75f * Math.max(0f, 1f - total);
     }
     
     /**
