@@ -46,20 +46,28 @@ public class GameInputHandler extends GodViewHandler
         view.view.addListener(_swingListener);
         view.addListener(_rollListener);
 
-        // set the pan limits based on the board size
-        _camhand.setPanLimits(
-            0, 0,
-            TILE_SIZE * bangobj.board.getWidth(),
-            TILE_SIZE * bangobj.board.getHeight(), true);
+        // we only set up the camera the first time, then we leave it as is and
+        // manipulate it with pans and zooms
+        if (_camidx == -1) {
+            // set up the starting zoom index
+            _camidx = 0;
 
-        // start the camera in the center of the board, pointing straight down
-        float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
-        float cy = TILE_SIZE * bangobj.board.getHeight() / 2;
-        float height = CAMERA_ZOOMS[0];
-        _camhand.setLocation(new Vector3f(cx, cy, height));
+            // set the pan limits based on the board size
+            _camhand.setPanLimits(
+                0, 0,
+                TILE_SIZE * bangobj.board.getWidth(),
+                TILE_SIZE * bangobj.board.getHeight(), true);
 
-        // rotate the camera by 45 degrees and orient it properly
-        _camhand.orbitCamera(FastMath.PI/4);
+            // start the camera in the center of the board, pointing straight
+            // down
+            float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
+            float cy = TILE_SIZE * bangobj.board.getHeight() / 2;
+            float height = CAMERA_ZOOMS[0];
+            _camhand.setLocation(new Vector3f(cx, cy, height));
+
+            // rotate the camera by 45 degrees and orient it properly
+            _camhand.orbitCamera(FastMath.PI/4);
+        }
     }
 
     public void endGame (BangView view)
@@ -161,7 +169,7 @@ public class GameInputHandler extends GodViewHandler
         }
     };
 
-    protected int _camidx = 0;
+    protected int _camidx = -1;
 
     protected final static float[] CAMERA_ANGLES = {
         FastMath.PI/2, FastMath.PI/3, FastMath.PI/4 };

@@ -249,6 +249,9 @@ public class BangBoardView extends BoardView
             _vstate.reveal();
             adjustEnemyVisibility();
         }
+
+        // clear out queued moves
+        _queuedMoves.clear();
     }
 
     @Override // documentation inherited
