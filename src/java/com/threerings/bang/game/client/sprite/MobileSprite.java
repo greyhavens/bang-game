@@ -148,7 +148,7 @@ public class MobileSprite extends PieceSprite
         _moveSound.stop();
 
         // reorient properly
-        reorient();
+        // reorient();
     }
     
     @Override // documentation inherited
