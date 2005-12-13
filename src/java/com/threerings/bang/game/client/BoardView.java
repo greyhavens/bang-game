@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.lwjgl.opengl.GL11;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.intersection.PickData;
@@ -39,6 +41,7 @@ import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.geom.BufferUtils;
@@ -95,6 +98,19 @@ public class BoardView extends BComponent
             _lights[i].setEnabled(true);
         }
         _node.setRenderState(lstate);
+        
+        // default material 
+        final MaterialState mstate = ctx.getRenderer().createMaterialState();
+        mstate.setAmbient(ColorRGBA.white);
+        _node.setRenderState(new RenderState() {
+            public void apply () {
+                mstate.apply();
+                GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+            }
+            public int getType () {
+                return mstate.getType();
+            }
+        });
         _node.updateRenderState();
         
         // create a sky box
