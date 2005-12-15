@@ -115,14 +115,8 @@ public class SignView extends BContainer
         _name.setText(_umsgs.xlate(config.getName()));
         _descrip.setText(_umsgs.xlate(config.getName() + "_descrip"));
         _move.setText(_umsgs.get("m.move_range", "" + config.moveDistance));
-
-        String fire;
-        if (config.minFireDistance == config.maxFireDistance) {
-            fire = "" + config.minFireDistance;
-        } else {
-            fire = config.minFireDistance + " - " + config.maxFireDistance;
-        }
-        _fire.setText(_umsgs.get("m.fire_range", fire));
+        _fire.setText(_umsgs.get("m.fire_range",
+                                 config.getDisplayFireDistance()));
 
         setVisible(this, _inspector, true);
 

@@ -94,21 +94,21 @@ public class BangClient extends BasicClient
             return;
         }
 
-//         // if they have no big shots then they need the intro for those
-//         boolean hasBigShot = false;
-//         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-//             if (iter.next() instanceof BigShotItem) {
-//                 hasBigShot = true;
-//                 break;
-//             }
-//         }
-//         if (!hasBigShot) {
-//             FirstBigShotView fbsv = new FirstBigShotView(_ctx);
-//             _ctx.getRootNode().addWindow(fbsv);
-//             fbsv.pack();
-//             fbsv.center();
-//             return;
-//         }
+        // if they have no big shots then they need the intro for those
+        boolean hasBigShot = false;
+        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
+            if (iter.next() instanceof BigShotItem) {
+                hasBigShot = true;
+                break;
+            }
+        }
+        if (!hasBigShot) {
+            FirstBigShotView fbsv = new FirstBigShotView(_ctx);
+            _ctx.getRootNode().addWindow(fbsv);
+            fbsv.pack(600, -1);
+            fbsv.center();
+            return;
+        }
 
         // otherwise, display the town view
         _tview = new TownView(_ctx);

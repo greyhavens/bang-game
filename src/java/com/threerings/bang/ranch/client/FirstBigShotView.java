@@ -8,13 +8,18 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
+import com.jmex.bui.BTextField;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
@@ -28,7 +33,7 @@ import com.threerings.bang.ranch.data.RanchCodes;
  * to select one.
  */
 public class FirstBigShotView extends BDecoratedWindow
-    implements ActionListener
+    implements ActionListener, IconPalette.Inspector
 {
     public FirstBigShotView (BangContext ctx)
     {
@@ -49,73 +54,91 @@ public class FirstBigShotView extends BDecoratedWindow
         BTextArea intro = new BTextArea(_msgs.get("m.firstbs_intro"));
         add(intro, GroupLayout.FIXED);
 
-        InfoDisplay info = new InfoDisplay();
-
         UnitConfig[] units  = new UnitConfig[RanchCodes.STARTER_BIGSHOTS.length];
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = UnitConfig.getConfig(RanchCodes.STARTER_BIGSHOTS[ii]);
         }
-        _bigshots = new UnitPalette(ctx, info, units.length);
+        _bigshots = new UnitPalette(ctx, this, units.length);
         _bigshots.setUnits(units);
         add(_bigshots, GroupLayout.FIXED);
-        add(info, GroupLayout.FIXED);
 
-        add(_status, GroupLayout.FIXED);
+        add(_status);
 
-        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        buttons.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
-        add(buttons, GroupLayout.FIXED);
+        BTextArea name = new BTextArea(_msgs.get("m.firstbs_name"));
+        add(name, GroupLayout.FIXED);
+
+        BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        add(ncont, GroupLayout.FIXED);
+
+        // TODO: add a validator that limits the name length and calls
+        // _done.setEnabled() as appropriate
+        ncont.add(_name = new BTextField(""));
+        _name.setPreferredWidth(250);
+        ncont.add(new Spacer(25, 0));
+
+        ncont.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
+        _done.setEnabled(false);
     }
 
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
         String cmd = event.getAction();
-        if (cmd.equals("random")) {
-
-        } else if (cmd.equals("done")) {
-            dismiss();
-            _ctx.getBangClient().checkShowIntro();
+        if (cmd.equals("done")) {
+            pickBigShot();
         }
     }
 
-    protected class InfoDisplay extends BContainer
-        implements IconPalette.Inspector
+    // documentation inherited from interface IconPalette.Inspector
+    public void iconSelected (SelectableIcon icon)
     {
-        public InfoDisplay () {
-            super(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                       GroupLayout.STRETCH));
-            add(_descrip = new BLabel(""));
-            add(_move = new BLabel(""));
-            add(_fire = new BLabel(""));
-        }
+        _config = ((UnitIcon)icon).getUnit();
+        String info = _umsgs.xlate(_config.getName()) + "\n";
+        info += _umsgs.xlate(_config.getName() + "_descrip") + "\n";
+        info += _umsgs.get("m.move_range", "" + _config.moveDistance) + "\n";
+        info += _umsgs.get("m.fire_range", _config.getDisplayFireDistance());
+        _status.setText(info);
+        _done.setEnabled(isReady());
+    }
 
-        public void iconSelected (SelectableIcon icon) {
-            UnitConfig config = ((UnitIcon)icon).getUnit();
-            _descrip.setText(_umsgs.xlate(config.getName() + "_descrip"));
-            _move.setText(_umsgs.get("m.move_range", "" + config.moveDistance));
-            String fire;
-            if (config.minFireDistance == config.maxFireDistance) {
-                fire = "" + config.minFireDistance;
-            } else {
-                fire = config.minFireDistance + " - " + config.maxFireDistance;
+    // documentation inherited from interface IconPalette.Inspector
+    public void selectionCleared ()
+    {
+        _status.setText(_msgs.get("m.firstbs_tip"));
+        _config = null;
+        _done.setEnabled(isReady());
+    }
+
+    protected void pickBigShot ()
+    {
+        PlayerService psvc = (PlayerService)
+            _ctx.getClient().requireService(PlayerService.class);
+        PlayerService.ConfirmListener cl = new PlayerService.ConfirmListener() {
+            public void requestProcessed () {
+                dismiss();
+                // move to the next phase of the intro
+                _ctx.getBangClient().checkShowIntro();
             }
-            _fire.setText(_umsgs.get("m.fire_range", fire));
-        }
+            public void requestFailed (String reason) {
+                _status.setText(_msgs.xlate(reason));
+                _done.setEnabled(true);
+            }
+        };
+        _done.setEnabled(false);
+        psvc.pickFirstBigShot(_ctx.getClient(), _config.type, cl);
+    }
 
-        public void selectionCleared () {
-            _descrip.setText("");
-            _move.setText("");
-            _fire.setText("");
-        }
-
-        protected BLabel _descrip, _move, _fire;
+    protected boolean isReady ()
+    {
+        return (_config != null) /* && !StringUtil.isBlank(_name.getText()) */;
     }
 
     protected BangContext _ctx;
     protected MessageBundle _msgs, _umsgs;
+    protected UnitConfig _config;
 
     protected UnitPalette _bigshots;
     protected BTextArea _status;
+    protected BTextField _name;
     protected BButton _done;
 }

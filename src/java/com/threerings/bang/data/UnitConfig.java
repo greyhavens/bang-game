@@ -130,6 +130,16 @@ public class UnitConfig
         return MessageBundle.qualify("units", "m." + type);
     }
 
+    /**
+     * Returns either "N" or "N - M" to indicate this unit's fire distance.
+     */
+    public String getDisplayFireDistance ()
+    {
+        return (minFireDistance == maxFireDistance) ?
+            String.valueOf(minFireDistance) :
+            minFireDistance + " - " + maxFireDistance;
+    }
+
     /** Returns a string representation of this instance. */
     public String toString ()
     {

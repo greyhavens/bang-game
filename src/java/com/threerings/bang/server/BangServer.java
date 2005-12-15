@@ -79,6 +79,9 @@ public class BangServer extends CrowdServer
     /** Provides visibility into global OOO account actions. */
     public static AccountActionRepository actionrepo;
 
+    /** Manages global player related bits. */
+    public static PlayerManager playmgr;
+
     /** Manages the persistent repository of player data. */
     public static PlayerRepository playrepo;
 
@@ -145,6 +148,7 @@ public class BangServer extends CrowdServer
         itemrepo = new ItemRepository(conprov);
         statrepo = new StatRepository(conprov);
         lookrepo = new LookRepository(conprov);
+        playmgr = new PlayerManager();
         coinmgr = new BangCoinManager(conprov);
         coinexmgr = new BangCoinExchangeManager(conprov);
 
@@ -157,6 +161,7 @@ public class BangServer extends CrowdServer
         // initialize our managers
         parmgr.init(invmgr, plreg);
         boardmgr.init(conprov);
+        playmgr.init();
         coinexmgr.init();
 
         // create our managers

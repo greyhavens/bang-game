@@ -43,7 +43,7 @@ public class IconPalette extends BContainer
      */
     public IconPalette (Inspector inspector, int columns, int selectable)
     {
-        super(new TableLayout(columns, 5, 5));
+        super(new TableLayout(columns, 5, 5, TableLayout.CENTER));
         setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
                                      new EmptyBorder(5, 5, 5, 5)));
         _inspector = inspector;
