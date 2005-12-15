@@ -41,31 +41,25 @@ public class TownView extends BWindow
 
         // display the status view when the player presses escape
         setModal(true);
-        // don't enable the status view until the player has configured their
-        // avatar for the first time
-        if (ctx.getUserObject().handle != null) {
-            new StatusView(_ctx).bind(this);
-        }
+        new StatusView(_ctx).bind(this);
 
         int width = ctx.getDisplay().getWidth();
         int height = ctx.getDisplay().getHeight();
         setBounds(0, 0, width, height);
 
-        // TODO: unhack
-        String tpath = "rsrc/menu/frontier";
-        ClassLoader loader = getClass().getClassLoader();
-        setBackground(new ScaledBackground(
-                          TextureManager.loadImage(
-                              loader.getResource(tpath + "/town.png"), true),
-                          0, 0, 0, 0));
+        String townId = ctx.getUserObject().townId;
+        String bpath = "menu/" + townId + "/town.png";
+        setBackground(new ScaledBackground(ctx.loadImage(bpath), 0, 0, 0, 0));
 
         // load up the polygons
         Properties props = new Properties();
+        String mpath = "rsrc/menu/" + townId + "/menu.properties";
         try {
-            props.load(loader.getResourceAsStream(tpath + "/menu.properties"));
+            ClassLoader loader = getClass().getClassLoader();
+            props.load(loader.getResourceAsStream(mpath));
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to load menu properties " +
-                    "[path=" + tpath + "/menu.properties].", e);
+                    "[path=" + mpath + "].", e);
         }
         Enumeration iter = props.propertyNames();
         while (iter.hasMoreElements()) {
