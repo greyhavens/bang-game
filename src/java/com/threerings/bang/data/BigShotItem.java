@@ -3,6 +3,8 @@
 
 package com.threerings.bang.data;
 
+import com.threerings.util.Name;
+
 import com.threerings.bang.client.ItemIcon;
 
 /**
@@ -23,15 +25,15 @@ public class BigShotItem extends Item
     }
 
     /** Configures the name of this Big Shot unit. */
-    public void setName (String name)
+    public void setName (Name name)
     {
-        _name = name;
+        _name = name.toString();
     }
 
     /** Returns the name of this Big Shot unit. */
-    public String getName ()
+    public Name getName ()
     {
-        return _name;
+        return new Name(_name);
     }
 
     /** Returns the type code for this Big Shot. This is the same as the

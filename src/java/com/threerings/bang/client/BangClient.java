@@ -95,14 +95,7 @@ public class BangClient extends BasicClient
         }
 
         // if they have no big shots then they need the intro for those
-        boolean hasBigShot = false;
-        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-            if (iter.next() instanceof BigShotItem) {
-                hasBigShot = true;
-                break;
-            }
-        }
-        if (!hasBigShot) {
+        if (!user.hasBigShot()) {
             FirstBigShotView fbsv = new FirstBigShotView(_ctx);
             _ctx.getRootNode().addWindow(fbsv);
             fbsv.pack(600, -1);

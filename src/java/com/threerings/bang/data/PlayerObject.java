@@ -111,6 +111,20 @@ public class PlayerObject extends BodyObject
         return (Look)looks.get(look);
     }
 
+    /**
+     * Returns true if this player has at least one {@link BigShotItem} in
+     * their inventory.
+     */
+    public boolean hasBigShot ()
+    {
+        for (Iterator iter = inventory.iterator(); iter.hasNext(); ) {
+            if (iter.next() instanceof BigShotItem) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override // documentation inherited
     public TokenRing getTokens ()
     {

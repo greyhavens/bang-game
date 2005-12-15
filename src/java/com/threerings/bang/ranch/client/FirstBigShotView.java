@@ -17,6 +17,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
+import com.threerings.util.Name;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.PlayerService;
@@ -125,7 +126,9 @@ public class FirstBigShotView extends BDecoratedWindow
             }
         };
         _done.setEnabled(false);
-        psvc.pickFirstBigShot(_ctx.getClient(), _config.type, cl);
+        Name name = new Name(_name.getText());
+        // TODO: any name validation? no one really sees this name
+        psvc.pickFirstBigShot(_ctx.getClient(), _config.type, name, cl);
     }
 
     protected boolean isReady ()

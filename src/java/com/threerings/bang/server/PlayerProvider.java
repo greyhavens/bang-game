@@ -9,6 +9,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
+import com.threerings.util.Name;
 
 /**
  * Defines the server-side of the {@link PlayerService}.
@@ -18,6 +19,6 @@ public interface PlayerProvider extends InvocationProvider
     /**
      * Handles a {@link PlayerService#pickFirstBigShot} request.
      */
-    public void pickFirstBigShot (ClientObject caller, String arg1, InvocationService.ConfirmListener arg2)
+    public void pickFirstBigShot (ClientObject caller, String arg1, Name arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 }
