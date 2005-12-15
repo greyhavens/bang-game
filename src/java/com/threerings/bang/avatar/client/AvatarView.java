@@ -61,7 +61,7 @@ public class AvatarView extends BLabel
     }
 
     @Override // documentation inherited
-    public Dimension getPreferredSize ()
+    public Dimension getPreferredSize (int whint, int hhint)
     {
         return new Dimension(WIDTH/2, HEIGHT/2);
     }

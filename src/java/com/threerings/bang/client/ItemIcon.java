@@ -35,7 +35,7 @@ public class ItemIcon extends SelectableIcon
     }
 
     @Override // documentation inherited
-    public Dimension getPreferredSize ()
+    public Dimension getPreferredSize (int whint, int hhint)
     {
         return new Dimension(128, 143);
     }

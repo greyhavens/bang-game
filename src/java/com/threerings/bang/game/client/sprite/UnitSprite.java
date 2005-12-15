@@ -58,9 +58,9 @@ public class UnitSprite extends MobileSprite
                              CULL_DYNAMIC : CULL_ALWAYS);
             if (_pendnode != null) {
                 if (_hovered) {
-                    _pendnode.setSolidColor(JPIECE_COLORS[_piece.owner]);
+                    _pendnode.setDefaultColor(ColorRGBA.white);
                 } else {
-                    _pendnode.setColorBuffer(null);
+                    _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
                 }
                 _pendnode.updateRenderState();
             }
@@ -80,7 +80,7 @@ public class UnitSprite extends MobileSprite
     public void setTargeted (boolean targeted)
     {
         if (_pendingTick == -1) {
-            _tgtquad.setSolidColor(ColorRGBA.white);
+            _tgtquad.setDefaultColor(ColorRGBA.white);
             _tgtquad.setCullMode(targeted ? CULL_DYNAMIC : CULL_ALWAYS);
         }
     }
@@ -93,7 +93,7 @@ public class UnitSprite extends MobileSprite
     {
         if (pending) {
             if (_pendingTick == -1) {
-                _tgtquad.setSolidColor(ColorRGBA.red);
+                _tgtquad.setDefaultColor(ColorRGBA.red);
             }
             _pendingTick = _tick;
         } else {
@@ -113,7 +113,7 @@ public class UnitSprite extends MobileSprite
         if (_pendnode != null && (ticks = _piece.ticksUntilMovable(_tick)) > 0) {
             _pendtst.setTexture(createPendingTexture(ticks-1));
             _pendnode.setRenderState(_pendtst);
-//             _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
+            _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
             _pendnode.updateRenderState();
         }
     }

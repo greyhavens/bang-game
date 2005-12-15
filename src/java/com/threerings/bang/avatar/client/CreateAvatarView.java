@@ -140,8 +140,9 @@ public class CreateAvatarView extends BDecoratedWindow
             _ctx.getClient().requireService(AvatarService.class);
         AvatarService.ConfirmListener cl = new AvatarService.ConfirmListener() {
             public void requestProcessed () {
-                // TODO: pop up a window explaining the game
                 dismiss();
+                // move to the next phase of the intro
+                _ctx.getBangClient().checkShowIntro();
             }
             public void requestFailed (String reason) {
                 _status.setText(_msgs.xlate(reason));

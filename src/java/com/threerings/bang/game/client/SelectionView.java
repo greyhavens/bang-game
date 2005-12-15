@@ -110,11 +110,13 @@ public class SelectionView extends BDecoratedWindow
     }
 
     @Override // documentation inherited
-    public Dimension getPreferredSize ()
+    public Dimension getPreferredSize (int whint, int hhint)
     {
-        Dimension d = super.getPreferredSize();
         // make sure we fit comfortably in the available height
-        d.height = Math.min(d.height, _ctx.getDisplay().getHeight() - 250);
+        int maxheight = _ctx.getDisplay().getHeight() - 250;
+        hhint = (hhint == -1) ? maxheight : hhint;
+        Dimension d = super.getPreferredSize(whint, hhint);
+        d.height = Math.min(d.height, maxheight);
         return d;
     }
 

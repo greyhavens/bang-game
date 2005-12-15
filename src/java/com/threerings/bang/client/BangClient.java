@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.jmex.bui.BWindow;
@@ -27,11 +28,13 @@ import com.threerings.parlor.game.data.GameAI;
 import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.ranch.client.FirstBigShotView;
 
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
 import com.threerings.bang.game.data.BangConfig;
 
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
@@ -72,12 +75,53 @@ public class BangClient extends BasicClient
         return _ctx;
     }
 
+    /**
+     * Potentially shows the next phase of the client introduction and
+     * tutorial. This is called after first logging on and then at the
+     * completion of each phase of the intro and tutorial.
+     */
+    public void checkShowIntro ()
+    {
+        PlayerObject user = _ctx.getUserObject();
+
+        // if this player does not have a name, it's their first time, so pop
+        // up the create avatar view
+        if (user.handle == null) {
+            CreateAvatarView cav = new CreateAvatarView(_ctx);
+            _ctx.getRootNode().addWindow(cav);
+            cav.pack();
+            cav.center();
+            return;
+        }
+
+//         // if they have no big shots then they need the intro for those
+//         boolean hasBigShot = false;
+//         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
+//             if (iter.next() instanceof BigShotItem) {
+//                 hasBigShot = true;
+//                 break;
+//             }
+//         }
+//         if (!hasBigShot) {
+//             FirstBigShotView fbsv = new FirstBigShotView(_ctx);
+//             _ctx.getRootNode().addWindow(fbsv);
+//             fbsv.pack();
+//             fbsv.center();
+//             return;
+//         }
+
+        // otherwise, display the town view
+        _tview = new TownView(_ctx);
+        _ctx.getRootNode().addWindow(_tview);
+    }
+
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
         // remove the logon display
         clearLogon();
 
+        // we potentially jump right into a game when developing
         if (System.getProperty("test") != null) {
             // create a one player game of bang
             BangConfig config = new BangConfig();
@@ -96,21 +140,12 @@ public class BangClient extends BasicClient
                 }
             };
             _ctx.getParlorDirector().startSolitaire(config, cl);
-
-        } else {
-            // display the town view
-            _tview = new TownView(_ctx);
-            _ctx.getRootNode().addWindow(_tview);
-
-            // if this player does not have a name, it's their first time, so
-            // pop up the create avatar view
-            if (_ctx.getUserObject().handle == null) {
-                CreateAvatarView cav = new CreateAvatarView(_ctx);
-                _ctx.getRootNode().addWindow(cav);
-                cav.pack();
-                cav.center();
-            }
+            return;
         }
+
+        // start up the introduction process, if appropriate, or if no intro is
+        // needed this will show the town view
+        checkShowIntro();
     }
 
     // documentation inherited from interface SessionObserver
@@ -162,12 +197,8 @@ public class BangClient extends BasicClient
     {
         _lview = new LogonView(_ctx);
         _ctx.getRootNode().addWindow(_lview);
-
-        int width = _ctx.getDisplay().getWidth();
-        int height = _ctx.getDisplay().getHeight();
         _lview.pack();
-        _lview.setLocation((width - _lview.getWidth())/2,
-                           (height - _lview.getHeight())/2);
+        _lview.center();
     }
 
     protected void clearLogon ()
@@ -233,6 +264,10 @@ public class BangClient extends BasicClient
             _ctx.getRootNode().removeWindow((BWindow)view);
             _pview = null;
             _ctx.getRootNode().addWindow(_tview);
+        }
+
+        public BangClient getBangClient() {
+            return BangClient.this;
         }
 
         public PlayerObject getUserObject () {

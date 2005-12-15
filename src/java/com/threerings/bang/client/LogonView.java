@@ -45,8 +45,7 @@ public class LogonView extends BWindow
 
         ClassLoader loader = getClass().getClassLoader();
         setBackground(new ScaledBackground(
-                          TextureManager.loadImage(
-                              loader.getResource("rsrc/menu/logon.png"), true),
+                          ctx.loadImage("menu/logon.png"),
                           0, 300, 50, 0)); // magic!
 
         _msgs = ctx.getMessageManager().getBundle("logon");
@@ -120,7 +119,7 @@ public class LogonView extends BWindow
     }
 
     @Override // documentation inherited
-    public Dimension getPreferredSize ()
+    public Dimension getPreferredSize (int whint, int hhint)
     {
         return ((ScaledBackground)_background).getNaturalSize();
     }

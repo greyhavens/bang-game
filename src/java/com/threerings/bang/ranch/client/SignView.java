@@ -168,9 +168,9 @@ public class SignView extends BContainer
     }
 
     @Override // documentation inherited
-    public Dimension getPreferredSize ()
+    public Dimension getPreferredSize (int whint, int hhint)
     {
-        Dimension d = super.getPreferredSize();
+        Dimension d = super.getPreferredSize(whint, hhint);
         d.height = Math.max(d.height, 100);
         return d;
     }
