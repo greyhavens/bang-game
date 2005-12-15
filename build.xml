@@ -271,10 +271,16 @@
   <!-- builds the avatar, media and sounds jar files -->
   <target name="mdist" depends="prepare,bits,sounds,models,avatars">
     <jar file="${deploy.dir}/${app.name}-media.jar"
-         basedir="${deploy.dir}/classes" includes="rsrc/**"
-         excludes="rsrc/sounds/**"/>
+         basedir="${deploy.dir}/classes">
+      <include name="rsrc/**"/>
+      <exclude name="**/source/**"/>
+      <exclude name="rsrc/sounds/**"/>
+    </jar>
     <jar file="${deploy.dir}/${app.name}-sounds.jar"
-         basedir="${deploy.dir}/classes" includes="rsrc/sounds/**"/>
+         basedir="${deploy.dir}/classes">
+      <include name="rsrc/sounds/**"/>
+      <exclude name="**/source/**"/>
+    </jar>
   </target>
 
 </project>
