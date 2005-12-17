@@ -129,10 +129,12 @@ public class EditorPanel extends JPanel
         edit.setMnemonic(KeyEvent.VK_E);
         menubar.add(edit);
         
-        createMenuItem(edit, msgs.get("m.menu_water"), -1, KeyEvent.VK_W,
-            EditorController.EDIT_WATER);
         createMenuItem(edit, msgs.get("m.menu_light"), -1, KeyEvent.VK_L,
             EditorController.EDIT_LIGHT);
+        createMenuItem(edit, msgs.get("m.menu_sky"), -1, KeyEvent.VK_S,
+            EditorController.EDIT_SKY);
+        createMenuItem(edit, msgs.get("m.menu_water"), -1, KeyEvent.VK_W,
+            EditorController.EDIT_WATER);
         createMenuItem(edit, msgs.get("m.menu_board_size"), -1, KeyEvent.VK_B,
             EditorController.EDIT_BOARD_SIZE);
             

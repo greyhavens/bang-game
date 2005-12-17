@@ -326,17 +326,6 @@ public class EditorBoardView extends BoardView
     }
     
     /**
-     * Sets the board's water parameters.
-     */
-    public void setWaterParams (int level, int diffuseColor, int ambientColor)
-    {
-        _board.setWaterParams((byte)level, diffuseColor, ambientColor);
-        _wnode.refreshMaterial();
-        _wnode.refreshSurface();
-        updateHighlights();
-    }
-    
-    /**
      * Sets the parameters of the board's light.
      */
     public void setLightParams (int idx, float azimuth, float elevation,
@@ -345,6 +334,27 @@ public class EditorBoardView extends BoardView
         _board.setLightParams(idx, azimuth, elevation, diffuseColor,
             ambientColor);
         refreshLight(idx);
+    }
+    
+    /**
+     * Sets the parameters of the board's sky.
+     */
+    public void setSkyParams (int horizonColor, int overheadColor,
+        float falloff)
+    {
+        _board.setSkyParams(horizonColor, overheadColor, falloff);
+        _snode.refreshGradient();
+    }
+    
+    /**
+     * Sets the board's water parameters.
+     */
+    public void setWaterParams (int level, int diffuseColor, int ambientColor)
+    {
+        _board.setWaterParams((byte)level, diffuseColor, ambientColor);
+        _wnode.refreshMaterial();
+        _wnode.refreshSurface();
+        updateHighlights();
     }
     
     /**

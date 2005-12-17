@@ -21,6 +21,7 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.renderer.TextureRenderer;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
@@ -28,6 +29,8 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
+
+import com.threerings.jme.JmeCanvasApp;
 
 import com.threerings.util.RandomUtil;
 
@@ -276,6 +279,16 @@ public class RenderUtil
         texture.setTranslation(new Vector3f(x/(float)size, y/(float)size, 0));
     }
 
+    /**
+     * Creates a JME {@link ColorRGBA} object with alpha equal to one from a
+     * packed RGB value.
+     */
+    public static ColorRGBA createColorRGBA (int rgb)
+    {
+        return new ColorRGBA(((rgb >> 16) & 0xFF) / 255f, ((rgb >> 8) & 0xFF) / 255f,
+            (rgb & 0xFF) / 255f, 1f);
+    }
+    
     protected static HashMap<Terrain,ArrayList<Image>> _groundTiles =
         new HashMap<Terrain,ArrayList<Image>>();
 

@@ -68,8 +68,9 @@ public class BoardRecord
         public byte[] heightfield;
         public byte[] terrain;
         public byte waterLevel;
-        public float lightAzimuth, lightElevation;
-        public int lightDiffuseColor, lightAmbientColor; 
+        public int waterDiffuseColor, waterAmbientColor;
+        public float[] lightAzimuths, lightElevations;
+        public int[] lightDiffuseColors, lightAmbientColors;
     }
     
     /**
@@ -215,11 +216,14 @@ public class BoardRecord
                 obb.heightfield.length);
             System.arraycopy(obb.terrain, 0, _board.getTerrain(), 0,
                 obb.terrain.length);
-            _board.setWaterParams(obb.waterLevel, 0x99CCFF, 0x001A33);
-            _board.setLightParams(0, obb.lightAzimuth, obb.lightElevation,
-                obb.lightDiffuseColor, obb.lightAmbientColor);
-            _board.setLightParams(1, (float)Math.PI, (float)(-Math.PI / 4),
-                0x0, 0x0);
+            _board.setWaterParams(obb.waterLevel, obb.waterDiffuseColor,
+                obb.waterAmbientColor);
+            for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
+                _board.setLightParams(i, obb.lightAzimuths[i],
+                    obb.lightElevations[i], obb.lightDiffuseColors[i],
+                    obb.lightAmbientColors[i]);
+            }
+            _board.setSkyParams(0xFFFFFF, 0x00FFFF, 10f);
             */
             _board = (BangBoard)oin.readObject();
             _pieces = new Piece[oin.readInt()];

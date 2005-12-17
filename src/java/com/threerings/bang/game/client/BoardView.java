@@ -113,8 +113,8 @@ public class BoardView extends BComponent
         });
         _node.updateRenderState();
         
-        // create a sky box
-        _node.attachChild(new SkyNode(ctx));
+        // create the sky
+        _node.attachChild(_snode = new SkyNode(ctx));
 
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
@@ -194,6 +194,7 @@ public class BoardView extends BComponent
         refreshLights();
         
         // create the board geometry
+        _snode.createBoardSky(_board);
         _tnode.createBoardTerrain(_board);
         _wnode.createBoardWater(_board);
         
@@ -293,6 +294,14 @@ public class BoardView extends BComponent
         _bangobj.removeListener(_blistener);
     }
 
+    /**
+     * Returns the node containing the sky.
+     */
+    public SkyNode getSkyNode ()
+    {
+        return _snode;
+    }
+    
     /**
      * Returns the node containing the terrain.
      */
@@ -792,6 +801,7 @@ public class BoardView extends BComponent
 
     protected Node _node, _pnode, _hnode;
     protected DirectionalLight[] _lights;
+    protected SkyNode _snode;
     protected TerrainNode _tnode;
     protected WaterNode _wnode;
     protected Vector3f _worldMouse;

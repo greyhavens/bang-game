@@ -80,6 +80,10 @@ public class BangBoard extends SimpleStreamableObject
         _lightDiffuseColors = new int[] { 0xFFFFFF, 0x0 };
         _lightAmbientColors = new int[] { 0x323232, 0x0 };
 
+        _skyHorizonColor = 0xFFFFFF;
+        _skyOverheadColor = 0x00FFFF;
+        _skyFalloff = 10f;
+        
         _pterrain = new byte[width*height];
         _btstate = new byte[width*height];
         _estate = new byte[width*height];
@@ -283,6 +287,46 @@ public class BangBoard extends SimpleStreamableObject
         _lightAmbientColors[idx] = ambientColor;
     }
 
+    /**
+     * Returns the RGB color at the bottom of the sky dome.
+     */
+    public int getSkyHorizonColor ()
+    {
+        return _skyHorizonColor;
+    }
+    
+    /**
+     * Returns the RGB color at the top of the sky dome.
+     */
+    public int getSkyOverheadColor ()
+    {
+        return _skyOverheadColor;
+    }
+    
+    /**
+     * Returns the exponential falloff factor for the transition
+     * between the horizon color and the overhead color.  Higher
+     * numbers represent more rapid falloff.
+     */
+    public float getSkyFalloff ()
+    {
+        return _skyFalloff;
+    }
+    
+    /**
+     * Sets the parameters of the sky dome.
+     *
+     * @param horizonColor the color at the bottom of the sky dome
+     * @param overheadColor the color at the top of the sky dome
+     */
+    public void setSkyParams (int horizonColor, int overheadColor,
+        float falloff)
+    {
+        _skyHorizonColor = horizonColor;
+        _skyOverheadColor = overheadColor;
+        _skyFalloff = falloff;
+    }
+    
     /**
      * Returns the bounds of our board. <em>Do not modify</em> the
      * returned rectangle.
@@ -879,6 +923,13 @@ public class BangBoard extends SimpleStreamableObject
     /** The diffuse and ambient colors of the directional lights. */
     protected int[] _lightDiffuseColors, _lightAmbientColors;
 
+    /** The color of the horizon and the sky overhead. */
+    protected int _skyHorizonColor, _skyOverheadColor;
+    
+    /** The falloff factor that determines how quickly the horizon color fades
+     * into the overhead color. */
+    protected float _skyFalloff;
+    
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight;
 
