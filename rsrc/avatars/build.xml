@@ -4,6 +4,7 @@
   <!-- declare our classpath -->
   <path id="classpath">
     <fileset dir="../../lib" includes="**/*.jar"/>
+    <fileset dir="/export/tools/lib/java" includes="**/*.jar"/>
   </path>
 
   <target name="bundles">

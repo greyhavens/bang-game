@@ -74,6 +74,7 @@
        <exclude name="**/*.obj"/>
        <exclude name="**/*.mtl"/>
        <exclude name="avatars/**"/>
+       <exclude name="tutorials/**/*.xml"/>
        <exclude name="tiles/fringe/config.xml"/>
       </fileset>
       <fileset dir="rsrc">
@@ -113,6 +114,15 @@
     </loadboard>
   </target>
 
+  <!-- compiles our tutorial XML definitions -->
+  <target name="tutorials">
+    <taskdef name="confcomp" classpathref="classpath"
+      classname="com.threerings.tools.CompiledConfigTask"/>
+    <confcomp parser="com.threerings.bang.game.tools.xml.TutorialConfigParser">
+      <fileset dir="rsrc/tutorials" includes="**/*.xml"/>
+    </confcomp>
+  </target>
+
   <!-- builds sphere reflection maps from cube sky box maps -->
   <target name="spheremaps">
     <taskdef name="buildspheremap"
@@ -140,20 +150,17 @@
     <taskdef name="confcomp" classpathref="classpath"
       classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
-      configdef="rsrc/config/media/colordefs.xml"
-      target="rsrc/config/media/colordefs.dat"/>
+      configdef="rsrc/config/media/colordefs.xml"/>
   </target>
 
   <!-- creates the serialized article and aspect catalogs -->
   <target name="catalogs">
     <taskdef name="confcomp" classpathref="classpath"
       classname="com.threerings.tools.CompiledConfigTask"/>
-    <confcomp
-      parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"
-      configdef="rsrc/avatars/articles.xml" target="rsrc/avatars/articles.dat"/>
-    <confcomp
-      parser="com.threerings.bang.avatar.tools.xml.AspectCatalogParser"
-      configdef="rsrc/avatars/aspects.xml" target="rsrc/avatars/aspects.dat"/>
+    <confcomp configdef="rsrc/avatars/articles.xml"
+      parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"/>
+    <confcomp configdef="rsrc/avatars/aspects.xml"
+      parser="com.threerings.bang.avatar.tools.xml.AspectCatalogParser"/>
   </target>
 
   <!-- builds the avatar component bundles -->
@@ -261,7 +268,7 @@
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
   <!-- rebuild all the niggling bits -->
-  <target name="bits" depends="colorpos,fringe,spheremaps"/>
+  <target name="bits" depends="colorpos,fringe,spheremaps,tutorials"/>
 
   <!-- builds the code jar file -->
   <target name="dist" depends="prepare,compile">

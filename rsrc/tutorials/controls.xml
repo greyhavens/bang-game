@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial board="controls_tut" players="2">
+  <!-- show them a unit and have them click to select it -->
+  <add_unit type="gunslinger" location="2,3" owner="0"/>
+  <text message="click_unit"/>
+  <wait event="unit_selected"/>
+
+  <!-- explain the potential move indicators and have them click to move -->
+  <text message="click_to_move"/>
+  <wait event="unit_moved"/>
+
+  <!-- explain the ticks until next move, have them move again -->
+  <text message="observe_ticks_then_move"/>
+  <wait event="unit_moved"/>
+
+  <!-- add an enemy unit and show them how to shoot it -->
+  <add_unit type="steamgunman" location="?,?" owner="1"/>
+  <text message="click_to_highlight_attacks"/>
+  <wait event="unit_selected"/>
+  <text message="click_to_attack"/>
+  <wait event="unit_attacked"/>
+
+</tutorial>
