@@ -4,8 +4,23 @@
 #
 # Completes the checkout of a Bang! build directory
 
+LOCAL_LIBS=../../../lib
+TOOLS_LIBS=/export/tools/lib/java
 ROOT=`dirname $0 | sed s:/bin$::`
 ANT=ant
+
+make_symlinks() {
+    while [ "$1" != "" ]; do
+        if [ -f $TOOLS_LIBS/$1 ]; then
+            # echo Using $TOOLS_LIBS/$1...
+            ln -sf $TOOLS_LIBS/$1 .
+        else
+            # echo Using $LOCAL_LIBS/$1...
+            ln -sf $LOCAL_LIBS/$1 .
+        fi
+        shift
+    done
+}
 
 # sanity check
 if [ ! -d $ROOT/projects ]; then
@@ -15,19 +30,24 @@ fi
 
 # set up the necessary library symlinks
 cd $ROOT/projects/jme-bui/lib
-ln -sf ../../../lib/jme.jar .
-ln -sf ../../../lib/lwjgl.jar .
+make_symlinks \
+    jme.jar \
+    lwjgl.jar
+
 cd $ROOT/projects/samskivert/lib
-ln -sf ../../../lib/servlet-*.jar .
-ln -sf ../../../lib/mail.jar .
-ln -sf ../../../lib/commons-collections.jar .
-ln -sf ../../../lib/commons-digester.jar .
-ln -sf ../../../lib/commons-logging.jar .
-ln -sf ../../../lib/velocity-*.jar .
+make_symlinks \
+    servlet-2.3.jar \
+    mail.jar \
+    commons-collections.jar \
+    commons-digester.jar \
+    commons-logging.jar \
+    velocity-1.5-dev.jar
+
 cd $ROOT/projects/narya/lib
-for lib in `cat LIBS`; do ln -sf ../../../lib/$lib . ; done
+make_symlinks `cat LIBS`
+
 cd $ROOT/projects/getdown/lib
-for lib in `cat LIBS`; do ln -sf ../../../lib/$lib . ; done
+make_symlinks `cat LIBS`
 
 # create the necessary symlinks in $ROOT/lib
 cd $ROOT/projects
