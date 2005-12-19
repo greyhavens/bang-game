@@ -64,20 +64,17 @@ $classpath .= ":" . $ENV{"CLASSPATH"} if (defined $ENV{"CLASSPATH"});
 # now we add other jar files unless the development directory has already
 # been added via CLASSPATH
 my $havenarya = ($classpath =~ m:narya/dist/classes:);
-my $havetoy = ($classpath =~ m:toybox/dist/classes:);
 
 # add zip and jar files from our lib/ directory
-my @dirs = ( "$root/lib" );
+my @dirs = ( "/export/tools/lib/java", "$root/lib" );
 foreach $dir (@dirs) {
     next unless (defined $dir);
     if (opendir(DIR, $dir)) {
         foreach $lib (grep { /.(zip|jar)/ && -f "$dir/$_" } readdir(DIR)) {
-	    next if ($lib =~ m/yohoho-rsrc/);
             # if the development directory is in the classpath, we don't
             # want the jar files because things can only show up once in
             # the classpath
 	    next if ($havenarya && $lib =~ m/narya.*.jar/);
-	    next if ($havetoy && $lib =~ m/toybox.jar/);
             $classpath .= ":$dir/$lib";
         }
         closedir DIR;
