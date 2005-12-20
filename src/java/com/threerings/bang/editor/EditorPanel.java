@@ -158,17 +158,16 @@ public class EditorPanel extends JPanel
         add(sidePanel, HGroupLayout.FIXED);
     }
 
-    /** Called by the controller when the game starts. */
-    public void startGame (BangObject bangobj, EditorConfig cfg)
+    /** Called by the controller when the "editing" game starts. */
+    public void startEditing (BangObject bangobj, EditorConfig cfg)
     {
-        // our view needs to know about the start of the game
-        view.startGame(bangobj, cfg, 0);
+        view.prepareForRound(bangobj, cfg, 0);
     }
 
-    /** Called by the controller when the game ends. */
-    public void endGame ()
+    /** Called by the controller when we're leaving the "editing" game. */
+    public void endEditing ()
     {
-        view.endGame();
+        view.endRound();
     }
 
     // documentation inherited from interface

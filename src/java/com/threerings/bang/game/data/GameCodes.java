@@ -35,6 +35,9 @@ public interface GameCodes extends InvocationCodes
     /** The maximum number of cards a player can hold in a game. */
     public static final int MAX_CARDS = 3;
 
+    /** The code for the tutorial scenario. */
+    public static final String TUTORIAL = "tu";
+
     /** The code for the claim jumping scenario. */
     public static final String CLAIM_JUMPING = "cj";
 

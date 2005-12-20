@@ -57,19 +57,24 @@ public abstract class Scenario
     }
 
     /**
+     * Called to initialize a scenario when it is created.
+     */
+    public void init (BangManager bangmgr)
+    {
+        _bangmgr = bangmgr;
+    }
+
+    /**
      * Called when a round is about to start.
      *
      * @throws InvocationException containing a translatable string
      * indicating why the scenario is booched, which will be displayed to
      * the players and the game will be cancelled.
      */
-    public void init (BangManager bangman, BangObject bangobj,
-                      ArrayList<Piece> starts, PointSet bonusSpots,
-                      PieceSet purchases)
+    public void gameWillStart (BangObject bangobj, ArrayList<Piece> starts,
+                               PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        _bangman = bangman;
-        
         // clear our respawn queue
         _respawns.clear();
 
@@ -89,6 +94,35 @@ public abstract class Scenario
         // original owner when they respawn
         for (Piece piece : purchases.values()) {
             _startingOwners.put(piece.pieceId, piece.owner);
+        }
+    }
+
+    /**
+     * Determines the next phase of the game. Normally a game transitions from
+     * {@link BangObject#SELECT_PHASE} to {@link BangObject#BUYING_PHASE} to
+     * {@link BangObject#IN_PLAY}, but the tutorial scenario skips some of
+     * those phases.
+     */
+    public void startNextPhase (BangObject bangobj)
+    {
+        switch (bangobj.state) {
+        case BangObject.POST_ROUND:
+        case BangObject.PRE_GAME:
+            bangobj.setState(BangObject.SELECT_PHASE);
+            break;
+
+        case BangObject.SELECT_PHASE:
+            bangobj.setState(BangObject.BUYING_PHASE);
+            break;
+
+        case BangObject.BUYING_PHASE:
+            _bangmgr.startGame();
+            break;
+
+        default:
+            log.warning("Unable to start next phase [game=" + bangobj.which() +
+                        ", state=" + bangobj.state + "].");
+            break;
         }
     }
 
@@ -323,11 +357,11 @@ public abstract class Scenario
     {
         Point pt = getPushLocation(bangobj, train, unit);
         if (pt == null) {
-            _bangman.deployEffect(-1, new TrainEffect(unit, unit.x, unit.y));
+            _bangmgr.deployEffect(-1, new TrainEffect(unit, unit.x, unit.y));
             return false;
             
         } else {
-            _bangman.deployEffect(-1, new TrainEffect(unit, pt.x, pt.y));
+            _bangmgr.deployEffect(-1, new TrainEffect(unit, pt.x, pt.y));
             return true;
         }
     }
@@ -535,7 +569,7 @@ public abstract class Scenario
     }
 
     /** The Bang game manager. */
-    protected BangManager _bangman;
+    protected BangManager _bangmgr;
     
     /** Used to track the locations where players are started. */
     protected Point[] _startSpots;

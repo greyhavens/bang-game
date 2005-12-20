@@ -23,7 +23,6 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -52,11 +51,11 @@ public class ClaimJumping extends Scenario
     public static final int NUGGET_COUNT = 2;
 
     @Override // documentation inherited
-    public void init (BangManager bangman, BangObject bangobj,
-        ArrayList<Piece> starts, PointSet bonusSpots, PieceSet purchases)
+    public void gameWillStart (BangObject bangobj, ArrayList<Piece> starts,
+                               PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.init(bangman, bangobj, starts, bonusSpots, purchases);
+        super.gameWillStart(bangobj, starts, bonusSpots, purchases);
 
         _claims = new ArrayList<Claim>();
         _gameOverTick = -1;

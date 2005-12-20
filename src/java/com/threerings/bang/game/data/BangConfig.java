@@ -22,6 +22,10 @@ public class BangConfig extends GameConfig
     /** The desired scenarios for each round (implies the number of rounds). */
     public String[] scenarios;
 
+    /** If true, the scenario will be interpreted as a tutorial identifier and
+     * a tutorial game will be created. */
+    public boolean tutorial = false;
+
     /** Specifies the exact name of the board to be used instead of choosing
      * randomly. This is used when testing. */
     public String board;

@@ -40,6 +40,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
@@ -144,9 +145,9 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
+    public void prepareForRound (BangObject bangobj, BangConfig cfg, int pidx)
     {
-        super.startGame(bangobj, cfg, pidx);
+        super.prepareForRound(bangobj, cfg, pidx);
 
         _pidx = pidx;
         _bangobj.addListener(_ticker);
@@ -252,22 +253,6 @@ public class BangBoardView extends BoardView
 
         // clear out queued moves
         _queuedMoves.clear();
-    }
-
-    @Override // documentation inherited
-    public void endGame ()
-    {
-        super.endGame();
-        clearSelection();
-
-        // remove our event listener
-        _bangobj.removeListener(_ticker);
-
-        // allow everything to be visible
-        if (_vstate != null) {
-            _vstate.reveal();
-            adjustEnemyVisibility();
-        }
     }
 
     @Override // documentation inherited
@@ -559,6 +544,9 @@ public class BangBoardView extends BoardView
         pruneAttackSet(_moveSet, _moveSet, _attackSet);
         pruneAttackSet(attacks, _moveSet, _attackSet);
         highlightTiles(_moveSet, piece.isFlyer());
+
+        // report that the user took an action
+        _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
     }
 
     protected void executeAction ()
@@ -617,6 +605,7 @@ public class BangBoardView extends BoardView
         if (_selection != null) {
             getPieceSprite(_selection).setSelected(false);
             _selection = null;
+            _ctrl.postEvent(TutorialCodes.UNIT_DESELECTED);
         }
         clearMoveSet();
 

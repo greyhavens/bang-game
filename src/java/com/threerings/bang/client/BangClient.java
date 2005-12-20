@@ -33,6 +33,8 @@ import com.threerings.bang.ranch.client.FirstBigShotView;
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.TutorialConfig;
+import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PlayerObject;
@@ -115,9 +117,22 @@ public class BangClient extends BasicClient
         clearLogon();
 
         // we potentially jump right into a game when developing
-        if (System.getProperty("test") != null) {
-            // create a one player game of bang
-            BangConfig config = new BangConfig();
+        BangConfig config = null;
+        if ("tutorial".equals(System.getProperty("test"))) {
+            config = new BangConfig();
+            TutorialConfig tconfig =
+                TutorialUtil.loadTutorial(_rsrcmgr, "controls");
+            config.players = new Name[] {
+                _ctx.getUserObject().getVisibleName(),
+                new Name("Larry") /*, new Name("Moe")*/ };
+            config.ais = new GameAI[] {
+                null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
+            config.scenarios = new String[] { tconfig.ident };
+            config.tutorial = true;
+            config.board = tconfig.board;
+
+        } else if (System.getProperty("test") != null) {
+            config = new BangConfig();
             config.players = new Name[] {
                 _ctx.getUserObject().getVisibleName(),
                 new Name("Larry") /*, new Name("Moe")*/ };
@@ -125,6 +140,9 @@ public class BangClient extends BasicClient
                 null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { "cj" };
             config.board = System.getProperty("board");
+        }
+
+        if (config != null) {
             ConfirmListener cl = new ConfirmListener() {
                 public void requestProcessed () {
                 }

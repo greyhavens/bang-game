@@ -58,6 +58,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
+import com.threerings.bang.game.server.scenario.Tutorial;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -335,12 +336,47 @@ public class BangManager extends GameManager
         startRound();
     }
 
+    @Override // documentation inherited
+    protected void stateDidChange (int state, int oldState)
+    {
+        super.stateDidChange(state, oldState);
+
+        // we do some custom additional stuff
+        switch (state) {
+        case BangObject.SELECT_PHASE:
+            // select big shots for our AIs
+            for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                if (isAI(ii) || (isTest() && _bconfig.teamSize == 4)) {
+                    selectStarters(ii, null, null);
+                }
+            }
+            break;
+
+        case BangObject.BUYING_PHASE:
+            // make purchases for our AIs
+            for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                if (isAI(ii) || (isTest() && _bconfig.teamSize == 4)) {
+                    String[] units = new String[] {
+                        "artillery", "steamgunman", "gunslinger", "dirigible" };
+                    purchaseUnits(ii, units);
+                }
+            }
+            break;
+        }
+    }
+
     /** Starts the pre-game buying phase. */
     protected void startRound ()
     {
         // create the appropriate scenario to handle this round
-        _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);
-        _scenario = ScenarioFactory.createScenario(_bangobj.scenarioId);
+        if (_bconfig.tutorial) {
+            _bangobj.setScenarioId(GameCodes.TUTORIAL);
+            _scenario = new Tutorial();
+        } else {
+            _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);
+            _scenario = ScenarioFactory.createScenario(_bangobj.scenarioId);
+        }
+        _scenario.init(this);
 
         // clear out the various per-player data structures
         _ready.clear();
@@ -409,17 +445,7 @@ public class BangManager extends GameManager
         _bangobj.setBigShots(new Unit[getPlayerSlots()]);
 
         // transition to the pre-game selection phase
-        _bangobj.setState(BangObject.SELECT_PHASE);
-
-        // configure purchases for our AIs
-        for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isAI(ii) || (isTest() && _bconfig.teamSize == 4)) {
-                selectStarters(ii, null, null);
-                String[] units = new String[] {
-                    "artillery", "steamgunman", "gunslinger", "dirigible" };
-                purchaseUnits(ii, units);
-            }
-        }
+        _scenario.startNextPhase(_bangobj);
     }
 
     /**
@@ -473,7 +499,7 @@ public class BangManager extends GameManager
                 return;
             }
         }
-        _bangobj.setState(BangObject.BUYING_PHASE);
+        _scenario.startNextPhase(_bangobj);
     }
 
     /**
@@ -532,7 +558,7 @@ public class BangManager extends GameManager
         // note that this player is ready and potentially fire away
         _ready.add(pidx);
         if (_ready.size() == getPlayerSlots()) {
-            startGame();
+            _scenario.startNextPhase(_bangobj);
         }
     }
 
@@ -557,8 +583,8 @@ public class BangManager extends GameManager
 
             // let the scenario know that we're about to start
             try {
-                _scenario.init(this, _bangobj, _starts, _bonusSpots,
-                    _purchases);
+                _scenario.gameWillStart(
+                    _bangobj, _starts, _bonusSpots, _purchases);
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
                             ", error=" + ie.getMessage() + "].");
@@ -599,7 +625,7 @@ public class BangManager extends GameManager
             ((Piece)iter.next()).init();
         }
 
-        // queue up the board tick
+        // queue up the first board tick
         int avgPer = _bangobj.getAverageUnitCount();
         _ticker.schedule(avgPer * getBaseTick(), false);
         _bangobj.tick = (short)0;
@@ -1287,7 +1313,9 @@ public class BangManager extends GameManager
             // average number of pieces per player
             int avgPer = _bangobj.getAverageUnitCount();
             long now = System.currentTimeMillis();
-            _nextTickTime = now + getBaseTick() * avgPer + _extraTickTime;
+            _nextTickTime = now +
+                // ticks must be at least one second apart
+                Math.max(getBaseTick() * avgPer + _extraTickTime, 1000L);
             _ticker.schedule(_nextTickTime - now);
         }
     };

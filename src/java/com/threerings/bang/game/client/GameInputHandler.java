@@ -40,7 +40,7 @@ public class GameInputHandler extends GodViewHandler
     /**
      * Configures the camera at the start of the game.
      */
-    public void startGame (BangView view, BangObject bangobj, int pidx)
+    public void prepareForRound (BangView view, BangObject bangobj, int pidx)
     {
         // listen for mouse wheel, etc. events
         view.view.addListener(_swingListener);
@@ -70,7 +70,7 @@ public class GameInputHandler extends GodViewHandler
         }
     }
 
-    public void endGame (BangView view)
+    public void endRound (BangView view)
     {
         // stop listening for mouse wheel, etc. events
         view.view.removeListener(_swingListener);

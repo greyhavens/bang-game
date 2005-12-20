@@ -162,7 +162,7 @@ public class BoardView extends BComponent
      * by the controller when we enter an already started game or the game
      * in which we're involved gets started.
      */
-    public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
+    public void prepareForRound (BangObject bangobj, BangConfig cfg, int pidx)
     {
         // add the listener that will react to pertinent events
         _bangobj = bangobj;
@@ -280,15 +280,6 @@ public class BoardView extends BComponent
      * Called by the controller when the round has ended.
      */
     public void endRound ()
-    {
-        // remove our event listener
-        _bangobj.removeListener(_blistener);
-    }
-
-    /**
-     * Called by the controller when our game has ended.
-     */
-    public void endGame ()
     {
         // remove our event listener
         _bangobj.removeListener(_blistener);

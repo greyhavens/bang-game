@@ -432,7 +432,7 @@ public class EditorController extends GameController
         super.gameDidStart();
 
         // our panel needs to do some game starting business
-        _panel.startGame(_bangobj, _config);
+        _panel.startEditing(_bangobj, _config);
 
         // load up any board specified on the command line
         if (EditorApp.appArgs.length > 0 &&
@@ -445,14 +445,14 @@ public class EditorController extends GameController
     protected void gameWillReset ()
     {
         super.gameWillReset();
-        _panel.endGame();
+        _panel.endEditing();
     }
 
     @Override // documentation inherited
     protected void gameDidEnd ()
     {
         super.gameDidEnd();
-        _panel.endGame();
+        _panel.endEditing();
     }
 
     protected void updatePlayerCount ()

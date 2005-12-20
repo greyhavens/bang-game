@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Level;
 
 import com.jme.input.KeyInput;
 import com.jmex.bui.event.KeyEvent;
@@ -69,6 +70,23 @@ public class BangController extends GameController
         _keycmds.put(keyCode, command);
     }
 
+    /**
+     * Notes user interface events as they take place. This information is
+     * passed along to the tutorial controller if one is active, so that it can
+     * respond to such things.
+     */
+    public void postEvent (String event)
+    {
+        if (_tutcont != null) {
+            try {
+                _tutcont.handleEvent(event);
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Tutorial controller choked on '" +
+                        event + "'.", e);
+            }
+        }
+    }
+
     @Override // documentation inherited
     public void init (CrowdContext ctx, PlaceConfig config)
     {
@@ -76,9 +94,14 @@ public class BangController extends GameController
         _ctx = (BangContext)ctx;
         _config = (BangConfig)config;
 
-        // we start the new round after the player has dismissed the
-        // previous round's stats dialogue and the game is reported as
-        // ready to go
+        // if this is a tutorial game, create our tutorial controller
+        if (_config.tutorial) {
+            _tutcont = new TutorialController();
+            _tutcont.init(_ctx, _config);
+        }
+
+        // we start the new round after the player has dismissed the previous
+        // round's stats dialogue and the game is reported as ready to go
         _selphaseMultex = new Multex(new Runnable() {
             public void run () {
                 _view.selectionPhase(_bangobj, _config, _pidx);
@@ -113,13 +136,18 @@ public class BangController extends GameController
         _bangobj = (BangObject)plobj;
         _bangobj.addListener(_ranklist);
 
+        // let our tutorial controller know what's going on
+        if (_tutcont != null) {
+            _tutcont.willEnterPlace(_bangobj);
+        }
+
         // determine our player index
         BodyObject me = (BodyObject)_ctx.getClient().getClientObject();
         _pidx = _bangobj.getPlayerIndex(me.getVisibleName());
 
         // we may be returning to an already started game
-        if (_bangobj.state != BangObject.AWAITING_PLAYERS) {
-            handleStateChange(_bangobj.state);
+        if (_bangobj.state != BangObject.PRE_GAME) {
+            stateDidChange(_bangobj.state);
         }
     }
 
@@ -127,6 +155,10 @@ public class BangController extends GameController
     public void didLeavePlace (PlaceObject plobj)
     {
         super.didLeavePlace(plobj);
+
+        if (_tutcont != null) {
+            _tutcont.didLeavePlace(_bangobj);
+        }
 
         if (_bangobj != null) {
             _bangobj.removeListener(_ranklist);
@@ -286,7 +318,7 @@ public class BangController extends GameController
     }
 
     @Override // documentation inherited
-    protected boolean handleStateChange (int state)
+    protected boolean stateDidChange (int state)
     {
         if (state == BangObject.SELECT_PHASE) {
             _selphaseMultex.satisfied(Multex.CONDITION_ONE);
@@ -297,8 +329,8 @@ public class BangController extends GameController
             return true;
 
         } else if (state == BangObject.POST_ROUND) {
-            // let the view know that the round is over
-            _view.view.endRound();
+            // let the view know that this round is over
+            _view.endRound();
 
             // create the end of round stats display
             String title = _ctx.xlate(GameCodes.GAME_MSGS, "m.round_over_stats");
@@ -310,7 +342,7 @@ public class BangController extends GameController
             return true;
 
         } else {
-            return super.handleStateChange(state);
+            return super.stateDidChange(state);
         }
     }
 
@@ -319,8 +351,9 @@ public class BangController extends GameController
     {
         super.gameDidStart();
 
-        // let the view know that things are underway
-        _view.startGame(_bangobj, _config, _pidx);
+        // when the game "starts", the round is ready to be played, but the
+        // game only "ends" once, at the actual end of the game
+        _view.playingPhase(_bangobj, _config, _pidx);
     }
 
     @Override // documentation inherited
@@ -328,8 +361,8 @@ public class BangController extends GameController
     {
         super.gameWillReset();
 
-        // let the view know that the game is over
-        _view.endGame();
+        // let the view know that the final round is over
+        _view.endRound();
     }
 
     @Override // documentation inherited
@@ -337,8 +370,8 @@ public class BangController extends GameController
     {
         super.gameDidEnd();
 
-        // let the view know that the game is over
-        _view.endGame();
+        // let the view know that the final round is over
+        _view.endRound();
     }
 
     /**
@@ -426,6 +459,9 @@ public class BangController extends GameController
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
+
+    /** A helper that exists if we're in tutorial mode. */
+    protected TutorialController _tutcont;
 
     /** Our player index or -1 if we're not a player. */
     protected int _pidx;

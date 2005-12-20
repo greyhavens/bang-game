@@ -48,54 +48,58 @@ public class BangView extends BWindow
         chat = new OverlayChatView(ctx);
     }
 
+    /** Called by the controller to prepare the view for the next round. */
+    public void prepareForRound (BangObject bangobj, BangConfig cfg, int pidx)
+    {
+        // we call this at the beginning of each phase because the scenario
+        // might decide to skip the selection or buying phase, so we need to
+        // prepare prior to starting whichever phase is first
+        if (_prepared) {
+            return;
+        }
+
+        // tell the board view to start the game so that we can see the board
+        // while we're buying pieces
+        view.prepareForRound(bangobj, cfg, pidx);
+
+        // let the camera handler know that we're getting ready to start
+        GameInputHandler gih = (GameInputHandler)_ctx.getInputHandler();
+        gih.prepareForRound(this, bangobj, pidx);
+
+        // note that we've prepared
+        _prepared = true;
+    }
+
     /** Called by the controller when the big shot and card selection
      * phase starts. */
     public void selectionPhase (BangObject bangobj, BangConfig cfg, int pidx)
     {
-        // tell the board view to start the game so that we can see the
-        // board while we're buying pieces
-        view.startGame(bangobj, cfg, pidx);
-
-        // let the camera handler know that we're getting ready to start
-        GameInputHandler gih = (GameInputHandler)_ctx.getInputHandler();
-        gih.startGame(this, bangobj, pidx);
-
-        // add the selection view to the display
-        _oview = new SelectionView(_ctx, cfg, bangobj, pidx);
-        _ctx.getRootNode().addWindow(_oview);
-        _oview.pack();
-        _oview.center();
+        prepareForRound(bangobj, cfg, pidx);
+        setOverlay(new SelectionView(_ctx, cfg, bangobj, pidx));
     }
 
     /** Called by the controller when the buying phase starts. */
     public void buyingPhase (BangObject bangobj, BangConfig cfg, int pidx)
     {
-        // remove the selection view from the display
-        _ctx.getRootNode().removeWindow(_oview);
-        _oview = null;
-
-        // add the purchase view to the display
-        _oview = new PurchaseView(_ctx, cfg, bangobj, pidx);
-        _ctx.getRootNode().addWindow(_oview);
-        _oview.pack();
-        _oview.center();
+        prepareForRound(bangobj, cfg, pidx);
+        setOverlay(new PurchaseView(_ctx, cfg, bangobj, pidx));
     }
 
-    /** Called by the controller when the game starts. */
-    public void startGame (BangObject bangobj, BangConfig cfg, int pidx)
+    /** Called by the controller when the playing phase starts. */
+    public void playingPhase (BangObject bangobj, BangConfig cfg, int pidx)
     {
-        // remove the purchase (or in test mode, selection) view
-        if (_oview != null) {
-            _ctx.getRootNode().removeWindow(_oview);
-            _oview = null;
-        }
+        prepareForRound(bangobj, cfg, pidx);
+        clearOverlay();
     }
 
-    /** Called by the controller when the game ends. */
-    public void endGame ()
+    /** Called by the controller when a round ends. */
+    public void endRound ()
     {
-        ((GameInputHandler)_ctx.getInputHandler()).endGame(this);
-        view.endGame();
+        ((GameInputHandler)_ctx.getInputHandler()).endRound(this);
+        view.endRound();
+
+        // note that we'll need to prepare for the next round
+        _prepared = false;
     }
 
     // documentation inherited from interface
@@ -180,6 +184,23 @@ public class BangView extends BWindow
         chat.setBounds(10, cypos, cwidth, chat.getHeight());
     }
 
+    protected void setOverlay (BWindow overlay)
+    {
+        clearOverlay();
+        _oview = overlay;
+        _ctx.getRootNode().addWindow(_oview);
+        _oview.pack();
+        _oview.center();
+    }
+
+    protected void clearOverlay ()
+    {
+        if (_oview != null) {
+            _ctx.getRootNode().removeWindow(_oview);
+            _oview = null;
+        }
+    }
+
     /** Giver of life and context. */
     protected BangContext _ctx;
 
@@ -191,4 +212,7 @@ public class BangView extends BWindow
 
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;
+
+    /** Keeps track of whether we've prepared for the current round. */
+    protected boolean _prepared;
 }
