@@ -8,6 +8,7 @@ import com.jme.math.Vector3f;
 import com.threerings.jme.sprite.Path;
 
 import com.threerings.bang.client.Config;
+import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
@@ -24,7 +25,7 @@ public class TrainSprite extends MobileSprite
     }
     
     @Override // documentation inherited
-    protected void createDustManager ()
+    protected void createDustManager (BasicContext ctx)
     {
         // trains do not kick up dust
     }
