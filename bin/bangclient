@@ -19,6 +19,10 @@ while [ ! -z "$1" ]; do
             TEST="-Dtest=true";
             ;;
         
+        -tutorial)
+            TEST="-Dtest=tutorial";
+            ;;
+        
         -build)
             ant
             if [ $? != 0 ]; then
