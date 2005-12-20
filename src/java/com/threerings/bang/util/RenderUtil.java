@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,6 +38,7 @@ import com.threerings.util.RandomUtil;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.util.BasicContext;
 
+import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -140,6 +142,33 @@ public class RenderUtil
         return (tiles == null) ? null : (Image)RandomUtil.pickRandom(tiles);
     }
 
+    /**
+     * Returns the average color of the given terrain type.
+     */
+    public static ColorRGBA getGroundColor (Terrain terrain)
+    {
+        ColorRGBA color = _groundColors.get(terrain);
+        if (color != null) {
+            return color;
+        }
+        // if we haven't computed it already, determine the overall color
+        // average for the texture
+        Image img = getGroundTile(terrain);
+        ByteBuffer imgdata = img.getData();
+        int r = 0, g = 0, b = 0, bytes = imgdata.limit();
+        float divisor = 255f * (bytes / 3);
+        for (int ii = 0; ii < bytes; ii += 3) {
+            // the bytes are stored unsigned in the image but java is going
+            // to interpret them as signed, so we need to do some fiddling
+            r += btoi(imgdata.get(ii));
+            g += btoi(imgdata.get(ii+1));
+            b += btoi(imgdata.get(ii+2));
+        }
+        color = new ColorRGBA(r / divisor, g / divisor, b / divisor, 1f);
+        _groundColors.put(terrain, color);
+        return color;
+    }
+    
     /**
      * Renders the specified text into an image (which will be sized
      * appropriately for the text) and creates a texture from it.
@@ -289,12 +318,20 @@ public class RenderUtil
             (rgb & 0xFF) / 255f, 1f);
     }
     
+    protected static final int btoi (byte value)
+    {
+        return (value < 0) ? 256 + value : value;
+    }
+    
     protected static HashMap<Terrain,ArrayList<Image>> _groundTiles =
         new HashMap<Terrain,ArrayList<Image>>();
 
     protected static HashMap<Terrain,ArrayList<TextureState>> _groundTexs =
         new HashMap<Terrain,ArrayList<TextureState>>();
 
+    protected static HashMap<Terrain,ColorRGBA> _groundColors =
+        new HashMap<Terrain,ColorRGBA>();
+    
     /** The maximum number of different variations we might have for a
      * particular ground tile. */
     protected static final int MAX_TILE_VARIANT = 4;

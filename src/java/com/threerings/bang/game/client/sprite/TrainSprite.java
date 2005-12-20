@@ -24,6 +24,12 @@ public class TrainSprite extends MobileSprite
     }
     
     @Override // documentation inherited
+    protected void createDustManager ()
+    {
+        // trains do not kick up dust
+    }
+    
+    @Override // documentation inherited
     protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
     {
         Train otrain = (Train)opiece, ntrain = (Train)npiece;

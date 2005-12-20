@@ -937,53 +937,25 @@ public class TerrainNode extends Node
     }
     
     /**
-     * Computes and returns the base color value at the given sub-tile
-     * coordinates.
+     * Computes the base color value at the given sub-tile coordinates.
      */
-    protected Color getTerrainColor (float x, float y)
+    protected void getTerrainColor (float x, float y, ColorRGBA result)
     {
         int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
             fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
-        Color ff = getTerrainColor(fx, fy), fc = getTerrainColor(fx, cy),
-            cf = getTerrainColor(cx, fy), cc = getTerrainColor(cx, cy);
+        Terrain ff = Terrain.fromCode(_board.getTerrainValue(fx, fy)),
+            fc = Terrain.fromCode(_board.getTerrainValue(fx, cy)),
+            cf = Terrain.fromCode(_board.getTerrainValue(cx, fy)),
+            cc = Terrain.fromCode(_board.getTerrainValue(cx, cy));
         float ax = x - fx, ay = y - fy;
 
-        return ColorUtil.blend(ColorUtil.blend(cc, cf, ay),
-            ColorUtil.blend(fc, ff, ay), ax);
+        _c1.interpolate(RenderUtil.getGroundColor(ff),
+            RenderUtil.getGroundColor(fc), ay);
+        _c2.interpolate(RenderUtil.getGroundColor(cf),
+            RenderUtil.getGroundColor(cc), ay);
+        result.interpolate(_c1, _c2, ax);
     }
-
-    /**
-     * Returns the base color value at the given sub-tile coordinates.
-     */
-    protected Color getTerrainColor (int x, int y)
-    {
-        byte code = _board.getTerrainValue(x, y);
-        Color color = (Color)_tcolors.get(code);
-        if (color != null) {
-            return color;
-        }
-        // if we haven't computed it already, determine the overall color
-        // average for the texture
-        Image img = RenderUtil.getGroundTile(Terrain.fromCode(code));
-        ByteBuffer imgdata = img.getData();
-        int r = 0, g = 0, b = 0, bytes = imgdata.limit(), pixels = bytes/3;
-        for (int ii = 0; ii < bytes; ii += 3) {
-            // the bytes are stored unsigned in the image but java is going
-            // to interpret them as signed, so we need to do some fiddling
-            r += btoi(imgdata.get(ii));
-            g += btoi(imgdata.get(ii+1));
-            b += btoi(imgdata.get(ii+2));
-        }
-        color = new Color(r / pixels, g / pixels, b / pixels);
-        _tcolors.put(code, color);
-        return color;
-    }
-
-    protected static final int btoi (byte value)
-    {
-        return (value < 0) ? 256 + value : value;
-    }
-    
+ 
     /**
      * Returns the smoothed shadow value for the specified sub-tile coordinate.
      * 0.0 is completely unshadowed, 1.0 is completely shadowed.
@@ -1173,15 +1145,16 @@ public class TerrainNode extends Node
                     step),
                 y2 = (int)FastMath.ceil((rect.y + rect.height - 1 - bounds.y) /
                     step);
+            ColorRGBA color = new ColorRGBA();
             for (int y = y1; y <= y2; y++) {
                 for (int x = x1; x <= x2; x++) {
                     int idx = (y*TEXTURE_SIZE + x)*3;
 
-                    Color color = getTerrainColor(bounds.x + x * step,
-                        bounds.y + y * step);
-                    baseBuffer.put((byte)color.getRed());
-                    baseBuffer.put((byte)color.getGreen());
-                    baseBuffer.put((byte)color.getBlue());
+                    getTerrainColor(bounds.x + x * step, bounds.y + y * step,
+                        color);
+                    baseBuffer.put((byte)(color.r * 255));
+                    baseBuffer.put((byte)(color.g * 255));
+                    baseBuffer.put((byte)(color.b * 255));
                 }
             }
 
@@ -1268,15 +1241,15 @@ public class TerrainNode extends Node
     /** The array of splat blocks containing the terrain geometry/textures. */
     protected SplatBlock[][] _blocks;
 
+    /** Reusable objects for efficiency. */
+    protected ColorRGBA _c1 = new ColorRGBA(), _c2 = new ColorRGBA();
+    
     /** The shared texture coordinate buffer for highlights on tiles. */
     protected static FloatBuffer _htbuf;
 
     /** The shared index buffer for highlights on tiles. */
     protected static IntBuffer _hibuf;
-
-    /** Maps terrain codes to colors. */
-    protected static HashIntMap _tcolors = new HashIntMap();
-
+    
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;
 

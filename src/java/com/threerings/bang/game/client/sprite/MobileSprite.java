@@ -17,12 +17,14 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
+import com.jmex.effects.ParticleManager;
 
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.StringUtil;
@@ -41,6 +43,7 @@ import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -135,8 +138,21 @@ public class MobileSprite extends PieceSprite
      */
     public void move (BangBoard board, List path, float speed)
     {
-        _moveSound.loop(false);
         move(createPath(board, path, speed));
+    }
+    
+    @Override // documentation inherited
+    public void move (Path path)
+    {
+        super.move(path);
+        
+        // start the movement sound
+        _moveSound.loop(false);
+        
+        // turn on the dust
+        if (_dustmgr != null) {
+            _dustmgr.setReleaseRate(32);
+        }
     }
     
     @Override // documentation inherited
@@ -147,6 +163,11 @@ public class MobileSprite extends PieceSprite
         // stop our movement sound
         _moveSound.stop();
 
+        // deactivate the dust
+        if (_dustmgr != null) {
+            _dustmgr.setReleaseRate(0);
+        }
+        
         // reorient properly
         // reorient();
     }
@@ -183,7 +204,7 @@ public class MobileSprite extends PieceSprite
                 }
             }
         }
-
+        
         super.updateWorldData(time);
     }
     
@@ -209,11 +230,53 @@ public class MobileSprite extends PieceSprite
         // the shadow is an additional highlight with wider geometry
         createShadow(ctx);
         
+        // create the dust particle system
+        createDustManager(ctx);
+        
         // load our model
         _model = ctx.loadModel(_type, _name);
 
         // start in our rest post
         setAction(getRestPose());
+    }
+    
+    /**
+     * Creates the dust particle manager, if this unit kicks up dust.
+     */
+    protected void createDustManager (BasicContext ctx)
+    {
+        // flyers don't kick up dust for now; eventually, we may want to add
+        // prop wash effects
+        if (_piece.isFlyer()) {
+            return;
+        }
+        
+        _dustmgr = new ParticleManager(NUM_DUST_PARTICLES);
+        _dustmgr.setInitialVelocity(0.005f);
+        _dustmgr.setEmissionDirection(Vector3f.UNIT_Z);
+        _dustmgr.setEmissionMaximumAngle(FastMath.PI / 2);
+        _dustmgr.setParticlesMinimumLifeTime(500f);
+        _dustmgr.setRandomMod(0f);
+        _dustmgr.setPrecision(FastMath.FLT_EPSILON);
+        _dustmgr.setControlFlow(true);
+        _dustmgr.setReleaseRate(0);
+        _dustmgr.setReleaseVariance(0f);
+        _dustmgr.setParticleSpinSpeed(0.05f);
+        _dustmgr.setStartSize(TILE_SIZE / 5);
+        _dustmgr.setEndSize(TILE_SIZE / 3);
+        if (_dusttex == null) {
+            _dusttex = RenderUtil.createTextureState(
+                ctx, "textures/effects/dust.png");
+        }
+        _dustmgr.getParticles().setRenderState(_dusttex);
+        _dustmgr.getParticles().setRenderState(RenderUtil.blendAlpha);
+        _dustmgr.getParticles().setRenderState(RenderUtil.overlayZBuf);
+        _dustmgr.getParticles().updateRenderState();
+        _dustmgr.getParticles().addController(_dustmgr);
+        
+        // put them in the highlight node so that they are positioned relative
+        // to the board
+        _hnode.attachChild(_dustmgr.getParticles());
     }
     
     /**
@@ -306,9 +369,8 @@ public class MobileSprite extends PieceSprite
                 path = createPath(board, opiece, npiece);
             }
             if (path != null) {
-                // start looping our movement sound
-                _moveSound.loop(false);
                 move(path);
+                
             } else {
                 int elev = computeElevation(board, npiece.x, npiece.y);
                 setLocation(npiece.x, npiece.y, elev);
@@ -372,6 +434,9 @@ public class MobileSprite extends PieceSprite
      */
     protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
     {
+        // store a reference to the board
+        _board = board;
+        
         List path = null;
         if (board != null) {
             path = board.computePath(opiece, npiece.x, npiece.y);
@@ -453,6 +518,17 @@ public class MobileSprite extends PieceSprite
         if (_shadow.x != _result.x || _shadow.y != _result.y) {
             _shadow.setPosition(_result.x, _result.y);
         }
+        
+        if (_dustmgr != null && isMoving()) {
+            _dustmgr.getParticlesOrigin().set(localTranslation);
+            int tx = (int)(localTranslation.x / TILE_SIZE),
+                ty = (int)(localTranslation.y / TILE_SIZE);
+            Terrain terrain = _board.getPredominantTerrain(tx, ty);
+            ColorRGBA color = RenderUtil.getGroundColor(terrain);
+            _dustmgr.getStartColor().set(color.r, color.g, color.b,
+                terrain.dustiness);
+            _dustmgr.getEndColor().set(color.r, color.g, color.b, 0f);
+        }
     }
     
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */
@@ -479,6 +555,7 @@ public class MobileSprite extends PieceSprite
     protected Node _hnode;
     protected TerrainNode.Highlight _highlight;
     protected TerrainNode.Highlight _shadow;
+    protected ParticleManager _dustmgr;
     protected Node[] _meshes;
     protected Sound _moveSound;
 
@@ -488,14 +565,19 @@ public class MobileSprite extends PieceSprite
 
     protected Vector3f _loc = new Vector3f();
     protected Vector2f _result = new Vector2f();
-    
+
+    protected BangBoard _board;
+        
     /** Ensures that we use the same random texture for every animation
      * displayed for this particular instance. */
     protected int _texrando = RandomUtil.getInt(Integer.MAX_VALUE);
 
-    protected static TextureState _shadtex;
+    protected static TextureState _shadtex, _dusttex;
     protected static float _slength, _srotation, _sintensity;
     
     /** The size of the shadow texture. */
     protected static final int SHADOW_TEXTURE_SIZE = 128;
+    
+    /** The number of dust particles. */
+    protected static final int NUM_DUST_PARTICLES = 16; 
 }

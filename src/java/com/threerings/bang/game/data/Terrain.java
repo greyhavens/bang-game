@@ -12,21 +12,21 @@ import java.util.HashMap;
 public enum Terrain
 {
     // indicates a non-playable tile
-    NONE        (-1, -1),
+    NONE        (-1, -1, 0f),
 
     // normal terrain types: DON'T BOOCH increasing terrain code
-    BRUSH       (0, 3*BangBoard.BASE_TRAVERSAL/2),
-    DARK_DIRT   (1, BangBoard.BASE_TRAVERSAL),
-    DIRT        (2, BangBoard.BASE_TRAVERSAL),
-    ROAD        (3, BangBoard.BASE_TRAVERSAL),
-    ROCKY       (4, 3*BangBoard.BASE_TRAVERSAL/2),
-    ROUGH_DIRT  (5, 4*BangBoard.BASE_TRAVERSAL/3),
-    SAND        (6, 3*BangBoard.BASE_TRAVERSAL/2),
-    WATER       (7, -1),
+    BRUSH       (0, 3*BangBoard.BASE_TRAVERSAL/2, 0.2f),
+    DARK_DIRT   (1, BangBoard.BASE_TRAVERSAL, 0.5f),
+    DIRT        (2, BangBoard.BASE_TRAVERSAL, 0.8f),
+    ROAD        (3, BangBoard.BASE_TRAVERSAL, 0.2f),
+    ROCKY       (4, 3*BangBoard.BASE_TRAVERSAL/2, 0.2f),
+    ROUGH_DIRT  (5, 4*BangBoard.BASE_TRAVERSAL/3, 0.5f),
+    SAND        (6, 3*BangBoard.BASE_TRAVERSAL/2, 0.9f),
+    WATER       (7, -1, 0f),
 
     // special "outside the board" tiles
-    OUTER       (99, -1),
-    RIM         (100, -1);
+    OUTER       (99, -1, 0f),
+    RIM         (100, -1, 0f);
 
     /** The code used when encoding terrain types in the {@link BangBoard}. */
     public int code;
@@ -34,6 +34,10 @@ public enum Terrain
     /** The normal traversal cost for this terrain. */
     public int traversalCost;
 
+    /** The amount of stuff that units kick up when they move over this
+     * terrain: 0 for none, 1 for lots. */
+    public float dustiness;
+    
     /** The set of terrain types that can be used when displaying boards. */
     public static EnumSet<Terrain> RENDERABLE = EnumSet.complementOf(
         EnumSet.of(NONE, RIM));
@@ -49,10 +53,11 @@ public enum Terrain
         return _map.get(code);
     }
 
-    Terrain (int code, int traversalCost)
+    Terrain (int code, int traversalCost, float dustiness)
     {
         this.code = code;
         this.traversalCost = traversalCost;
+        this.dustiness = dustiness;
         map(this);
     }
 
