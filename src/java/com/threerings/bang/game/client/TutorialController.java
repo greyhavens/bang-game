@@ -3,6 +3,11 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.system.DisplaySystem;
+import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BTextArea;
+import com.jmex.bui.layout.BorderLayout;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
@@ -30,6 +35,10 @@ public class TutorialController
         // load up the tutorial configuration
         _config = TutorialUtil.loadTutorial(
             ctx.getResourceManager(), config.scenarios[0]);
+
+        // create and add the window in which we'll display info text
+        _tutwin = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
+        _tutwin.add(_info = new BTextArea(), BorderLayout.SOUTH);
     }
 
     /** Called from {@link BangController#willEnterPlace}. */
@@ -55,6 +64,9 @@ public class TutorialController
     /** Called from {@link BangController#didLeavePlace}. */
     public void didLeavePlace (BangObject bangobj)
     {
+        if (_tutwin.isAdded()) {
+            _ctx.getRootNode().removeWindow(_tutwin);
+        }
         if (_bangobj != null) {
             _bangobj.removeListener(_acl);
             _bangobj = null;
@@ -65,9 +77,7 @@ public class TutorialController
     {
         TutorialConfig.Action action = _config.getAction(actionId);
         if (action instanceof TutorialConfig.Text) {
-            String message = ((TutorialConfig.Text)action).message;
-            // TODO: display the specified text
-            log.info("Message for you sir: " + message);
+            displayMessage(((TutorialConfig.Text)action).message);
 
         } else if (action instanceof TutorialConfig.Wait) {
             // wait for the specified event
@@ -83,6 +93,22 @@ public class TutorialController
         if (_pending == null) {
             processedAction(action);
         }
+    }
+
+    protected void displayMessage (String message)
+    {
+        message = "m." + message;
+        _info.setText(_ctx.xlate("tutorials." + _config.ident, message));
+
+        // display our window the first time we need it
+        if (!_tutwin.isAdded()) {
+            _ctx.getRootNode().addWindow(_tutwin);
+        }
+        int width = _ctx.getDisplay().getWidth();
+        int height = _ctx.getDisplay().getHeight();
+        _tutwin.pack(300, -1);
+        _tutwin.setLocation(width-_tutwin.getWidth()-25,
+                            (height-_tutwin.getHeight())/2);
     }
 
     protected void processedAction (TutorialConfig.Action action)
@@ -101,6 +127,9 @@ public class TutorialController
 
     protected BangContext _ctx;
     protected BangObject _bangobj;
+
+    protected BDecoratedWindow _tutwin;
+    protected BTextArea _info;
 
     protected TutorialConfig _config;
     protected TutorialConfig.Wait _pending;
