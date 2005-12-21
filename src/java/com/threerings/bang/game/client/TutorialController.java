@@ -3,6 +3,9 @@
 
 package com.threerings.bang.game.client;
 
+import com.threerings.presents.dobj.AttributeChangeListener;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -33,11 +36,7 @@ public class TutorialController
     public void willEnterPlace (BangObject bangobj)
     {
         _bangobj = bangobj;
-
-        // TODO: add listeners, etc.
-
-        // TEMP
-        processActions();
+        _bangobj.addListener(_acl);
     }
 
     /**
@@ -51,50 +50,50 @@ public class TutorialController
         log.info("Event: " + event);
         if (event.equals(_pending)) {
             _pending = null;
-            processActions();
+            // TODO: send a processed action event
         }
     }
 
     /** Called from {@link BangController#didLeavePlace}. */
     public void didLeavePlace (BangObject bangobj)
     {
+        if (_bangobj != null) {
+            _bangobj.removeListener(_acl);
+            _bangobj = null;
+        }
     }
 
-    /**
-     * Processes the next action in the tutorial, and continues to process
-     * actions until an action that requires waiting is reached.
-     *
-     * @return true if the tutorial is finished, false if we stopped due to a
-     * pending action.
-     */
-    protected boolean processActions ()
+    protected void processAction (int actionId)
     {
-        TutorialConfig.Action action;
-        while ((action = _config.getNextAction()) != null) {
-            log.info("Processing: " + action);
-            if (action instanceof TutorialConfig.Text) {
-                String message = ((TutorialConfig.Text)action).message;
-                // TODO: display the specified text
-                log.info("Message for you sir: " + message);
+        TutorialConfig.Action action = _config.getAction(actionId);
+        log.info("Processing: " + action);
+        if (action instanceof TutorialConfig.Text) {
+            String message = ((TutorialConfig.Text)action).message;
+            // TODO: display the specified text
+            log.info("Message for you sir: " + message);
 
-            } else if (action instanceof TutorialConfig.Wait) {
-                // wait for the specified event
-                _pending = ((TutorialConfig.Wait)action).event;
-                log.info("Waiting for: " + _pending);
-                break;
+        } else if (action instanceof TutorialConfig.Wait) {
+            // wait for the specified event
+            _pending = ((TutorialConfig.Wait)action).event;
+            log.info("Waiting for: " + _pending);
 
-            } else if (action instanceof TutorialConfig.AddUnit) {
-                // wait for the unit to show up in the game
-                _pending = TutorialCodes.UNIT_ADDED;
-                log.info("Waiting for: " + _pending);
-                break;
+        } else if (action instanceof TutorialConfig.AddUnit) {
+            // wait for the unit to show up in the game
+            _pending = TutorialCodes.UNIT_ADDED;
+            log.info("Waiting for: " + _pending);
 
-            } else {
-                log.warning("Unknown action " + action);
+        } else {
+            log.warning("Unknown action " + action);
+        }
+    }
+
+    protected AttributeChangeListener _acl = new AttributeChangeListener() {
+        public void attributeChanged (AttributeChangedEvent event) {
+            if (event.getName().equals(BangObject.ACTION_ID)) {
+                processAction(event.getIntValue());
             }
         }
-        return (action == null);
-    }
+    };
 
     protected BangContext _ctx;
     protected BangObject _bangobj;

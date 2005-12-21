@@ -65,6 +65,35 @@ public abstract class Scenario
     }
 
     /**
+     * Determines the next phase of the game. Normally a game transitions from
+     * {@link BangObject#SELECT_PHASE} to {@link BangObject#BUYING_PHASE} to
+     * {@link BangObject#IN_PLAY}, but the tutorial scenario skips some of
+     * those phases.
+     */
+    public void startNextPhase (BangObject bangobj)
+    {
+        switch (bangobj.state) {
+        case BangObject.POST_ROUND:
+        case BangObject.PRE_GAME:
+            bangobj.setState(BangObject.SELECT_PHASE);
+            break;
+
+        case BangObject.SELECT_PHASE:
+            bangobj.setState(BangObject.BUYING_PHASE);
+            break;
+
+        case BangObject.BUYING_PHASE:
+            _bangmgr.startGame();
+            break;
+
+        default:
+            log.warning("Unable to start next phase [game=" + bangobj.which() +
+                        ", state=" + bangobj.state + "].");
+            break;
+        }
+    }
+
+    /**
      * Called when a round is about to start.
      *
      * @throws InvocationException containing a translatable string
@@ -94,35 +123,6 @@ public abstract class Scenario
         // original owner when they respawn
         for (Piece piece : purchases.values()) {
             _startingOwners.put(piece.pieceId, piece.owner);
-        }
-    }
-
-    /**
-     * Determines the next phase of the game. Normally a game transitions from
-     * {@link BangObject#SELECT_PHASE} to {@link BangObject#BUYING_PHASE} to
-     * {@link BangObject#IN_PLAY}, but the tutorial scenario skips some of
-     * those phases.
-     */
-    public void startNextPhase (BangObject bangobj)
-    {
-        switch (bangobj.state) {
-        case BangObject.POST_ROUND:
-        case BangObject.PRE_GAME:
-            bangobj.setState(BangObject.SELECT_PHASE);
-            break;
-
-        case BangObject.SELECT_PHASE:
-            bangobj.setState(BangObject.BUYING_PHASE);
-            break;
-
-        case BangObject.BUYING_PHASE:
-            _bangmgr.startGame();
-            break;
-
-        default:
-            log.warning("Unable to start next phase [game=" + bangobj.which() +
-                        ", state=" + bangobj.state + "].");
-            break;
         }
     }
 

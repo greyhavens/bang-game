@@ -12,7 +12,7 @@ import com.samskivert.util.StringUtil;
  * Contains the configuration for an in-game tutorial.
  */
 public class TutorialConfig
-    implements Serializable, Cloneable
+    implements Serializable
 {
     public static class Action implements Serializable
     {
@@ -50,22 +50,18 @@ public class TutorialConfig
      * human, and all other players will be computer controlled. */
     public int players;
 
-    /**
-     * Returns the next action to be fired in the tutorial, or null if it is
-     * over.
-     */
-    public Action getNextAction ()
-    {
-        if (_index >= _actions.size()) {
-            return null;
-        }
-        return _actions.get(_index++);
-    }
-
     /** Returns an array containing the actions for this tutorial. */
     public Action getAction (int index)
     {
         return _actions.get(index);
+    }
+
+    /**
+     * Returns the total count of actions in this tutorial.
+     */
+    public int getActionCount ()
+    {
+        return _actions.size();
     }
 
     /** Used when parsing this tutorial from an XML config file. */
@@ -73,18 +69,6 @@ public class TutorialConfig
     {
         action.index = _actions.size();
         _actions.add(action);
-    }
-
-    @Override // documentation inherited
-    public Object clone ()
-    {
-        try {
-            TutorialConfig config = (TutorialConfig)super.clone();
-            // nothing to deep clone at the moment
-            return config;
-        } catch (CloneNotSupportedException cnse) {
-            throw new RuntimeException("CloneNotSupportedNotSupportedException");
-        }
     }
 
     /** Generates a string representation of this instance. */
@@ -99,7 +83,4 @@ public class TutorialConfig
 
     /** Contains the list of actions used in this tutorial. */
     protected ArrayList<Action> _actions = new ArrayList<Action>();
-
-    /** The index of the action we're currently acting on. */
-    protected int _index;
 }

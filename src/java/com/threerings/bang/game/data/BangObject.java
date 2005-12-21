@@ -115,6 +115,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>effect</code> field. */
     public static final String EFFECT = "effect";
 
+    /** The field name of the <code>actionId</code> field. */
+    public static final String ACTION_ID = "actionId";
+
     /** The field name of the <code>funds</code> field. */
     public static final String FUNDS = "funds";
 
@@ -173,6 +176,9 @@ public class BangObject extends GameObject
 
     /** A field we use to broadcast applied effects. */
     public Effect effect;
+
+    /** The currently executing action (only used in the tutorial). */
+    public int actionId;
 
     /** Total cash earned by each player. */
     public int[] funds;
@@ -713,6 +719,22 @@ public class BangObject extends GameObject
         requestAttributeChange(
             EFFECT, value, ovalue);
         this.effect = value;
+    }
+
+    /**
+     * Requests that the <code>actionId</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setActionId (int value)
+    {
+        int ovalue = this.actionId;
+        requestAttributeChange(
+            ACTION_ID, new Integer(value), new Integer(ovalue));
+        this.actionId = value;
     }
 
     /**

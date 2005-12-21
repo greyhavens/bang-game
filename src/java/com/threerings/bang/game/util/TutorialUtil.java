@@ -20,9 +20,7 @@ import static com.threerings.bang.Log.log;
 public class TutorialUtil
 {
     /**
-     * Loads and caches the tutorial with the specified identifier. The
-     * returned configuration will a clone so that it may be manipulated by the
-     * caller.
+     * Loads and caches the tutorial with the specified identifier.
      */
     public static TutorialConfig loadTutorial (
         ResourceManager rmgr, String ident)
@@ -40,7 +38,7 @@ public class TutorialUtil
             }
             _configs.put(ident, config);
         }
-        return (TutorialConfig)config.clone();
+        return config;
     }
 
     /** We keep all loaded tutorial configs in memory. */
