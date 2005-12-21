@@ -179,9 +179,6 @@ public class BangClient extends BasicClient
         // create our custom directors
         _chatdir = new BangChatDirector(_ctx);
 
-        // initialize our user interface helper
-        BangUI.init(_ctx);
-
         // warm up the particle factory
         ParticleFactory.warmup(_ctx);
     }

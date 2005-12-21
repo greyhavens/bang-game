@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import java.awt.Font;
+import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
@@ -24,6 +25,8 @@ import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BasicContext;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Contains various utility routines and general purpose bits related to
  * our user interface.
@@ -31,13 +34,10 @@ import com.threerings.bang.util.BasicContext;
 public class BangUI
 {
     /** A font used to render counters in the game. */
-    public static Font COUNTER_FONT = new Font("Helvetica", Font.BOLD, 48);
+    public static Font COUNTER_FONT;
 
-    /** A font used to render dialog titles. */
-    public static Font DTITLE_FONT = new Font("Dialog", Font.BOLD, 16);
-
-    /** A font used to render player status text. */
-    public static Font PSTATUS_FONT = new Font("Helvetica", Font.BOLD, 11);
+    /** The default look and feel. */
+    public static BLookAndFeel defaultLNF;
 
     /** A look and feel for big splash text. */
     public static BLookAndFeel marqueeLNF;
@@ -71,11 +71,22 @@ public class BangUI
         _ctx = ctx;
         _umsgs = _ctx.getMessageManager().getBundle("units");
 
+        // load up our fonts
+        Font dc = loadFont(ctx, "ui/fonts/dc.ttf");
+        Font oldtown = loadFont(ctx, "ui/fonts/oldtown.ttf");
+        Font tomb = loadFont(ctx, "ui/fonts/tomb.ttf");
+        COUNTER_FONT = dc.deriveFont(Font.BOLD, 48);
+
+        defaultLNF = new BangLookAndFeel();
+        defaultLNF.setTextFactory(
+            new AWTTextFactory(dc.deriveFont(Font.PLAIN, 16), true));
+
         marqueeLNF = new BangLookAndFeel();
         marqueeLNF.setTextFactory(new AWTTextFactory(COUNTER_FONT, true));
 
         dtitleLNF = new BangLookAndFeel();
-        dtitleLNF.setTextFactory(new AWTTextFactory(DTITLE_FONT, true));
+        dtitleLNF.setTextFactory(
+            new AWTTextFactory(oldtown.deriveFont(Font.PLAIN, 30), true));
 
         pstatusLNF = new BangLookAndFeel() {
             public BBackground createButtonBack (int state) {
@@ -96,7 +107,8 @@ public class BangUI
                     getResource(path), 1+dx, 1+dy, 1-dx, 1-dy);
             }
         };
-        pstatusLNF.setTextFactory(new AWTTextFactory(PSTATUS_FONT, false));
+        pstatusLNF.setTextFactory(
+            new AWTTextFactory(new Font("Helvetica", Font.BOLD, 11), false));
 
         scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
         coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
@@ -158,6 +170,19 @@ public class BangUI
         button.setOrientation(BButton.VERTICAL);
         button.setHorizontalAlignment(BButton.CENTER);
         return button;
+    }
+
+    protected static Font loadFont (BasicContext ctx, String path)
+    {
+        Font font = null;
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT,
+                                   ctx.getResourceManager().getResource(path));
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to load font '" + path + "'.", e);
+            font = new Font("Dialog", Font.PLAIN, 16);
+        }
+        return font;
     }
 
     protected static BasicContext _ctx;

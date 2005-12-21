@@ -114,10 +114,12 @@ public class BasicClient
         // these manage local client resources
         _rsrcmgr = new ResourceManager("rsrc");
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
-        _lnf = new BangLookAndFeel();
         _icache = new ImageCache(_ctx);
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
+
+        // initialize our user interface helper
+        BangUI.init(_ctx);
 
         // create our media managers
         _icreator = new ImageManager.OptimalImageCreator() {
@@ -291,7 +293,7 @@ public class BasicClient
         }
 
         public BLookAndFeel getLookAndFeel () {
-            return _lnf;
+            return BangUI.defaultLNF;
         }
 
         public String xlate (String bundle, String message) {
@@ -317,7 +319,6 @@ public class BasicClient
     protected ImageManager _imgmgr;
     protected SoundManager _soundmgr;
 
-    protected BLookAndFeel _lnf;
     protected ImageCache _icache;
     protected TextureCache _tcache;
     protected ModelCache _mcache;
