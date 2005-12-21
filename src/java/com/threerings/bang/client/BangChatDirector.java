@@ -55,6 +55,10 @@ public class BangChatDirector extends ChatDirector
             } else if (argv[0].equals("hfloat")) {
                 Config.display.floatHighlights = !Config.display.floatHighlights;
 
+            } else if (argv[0].equals("stats")) {
+                _ctx.getApp().displayStatistics(
+                    !_ctx.getApp().showingStatistics());
+
             } else {
                 return "m.unknown_debug";
             }
