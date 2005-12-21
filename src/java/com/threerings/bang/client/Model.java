@@ -9,6 +9,8 @@ import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -36,7 +38,6 @@ import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
 
 import com.jmex.bui.icon.BIcon;
-import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.TextureIcon;
 
 import com.threerings.bang.util.BangUtil;
@@ -124,6 +125,15 @@ public class Model
         public float getDuration ()
         {
             return duration / 1000f;
+        }
+
+        /**
+         * Returns true if this animation is resolved or has at least been
+         * queued up to be resolved.
+         */
+        public boolean isResolved ()
+        {
+            return _parts != null;
         }
 
         /**
@@ -229,6 +239,12 @@ public class Model
         // TODO: use a whole different system for non-animating models
         // that uses a SharedMesh
 
+        // start up our background loader thread if it hasn't been
+        if (_loader == null) {
+            _loader = new ModelLoader(ctx);
+            _loader.start();
+        }
+
         String[] actions = getList(_props, "actions", null, true);
         for (int ii = 0; ii < actions.length; ii++) {
             String action = actions[ii];
@@ -243,23 +259,18 @@ public class Model
             // create a placeholder animation record for this action
             Animation anim = new Animation();
             _anims.put(action, anim);
-
-            // and queue it up to be resolved asynchronously
-            if (_loader == null) {
-                _loader = new ModelLoader(ctx);
-                _loader.start();
-            }
-            _loader.queueAction(this, action);
         }
 
-        // use the first frame of the walking pose if this model has no
-        // standing pose defined and use the standing pose for walking if
-        // the opposite is the case
+        // TEMP: use the first frame of the walking pose if this model has no
+        // standing pose defined
         if (!_anims.containsKey("standing") && _anims.containsKey("walking")) {
             _anims.put("standing", _anims.get("walking"));
         }
-        if (!_anims.containsKey("walking") && _anims.containsKey("standing")) {
-            _anims.put("walking", _anims.get("standing"));
+
+        // load up the action we need to create our icon image
+        String iaction = _props.getProperty("icon");
+        if (iaction != null && (_ianim = _anims.get(iaction)) != null) {
+            _loader.queueAction(this, iaction);
         }
     }
 
@@ -268,10 +279,7 @@ public class Model
      */
     public BIcon getIcon ()
     {
-        // temporarily cope with pbuffer failures
-        return (_icon == null) ?
-            new BlankIcon(ICON_SIZE, ICON_SIZE) : 
-            new TextureIcon(_icon, ICON_SIZE, ICON_SIZE);
+        return _icon;
     }
 
     /**
@@ -284,7 +292,8 @@ public class Model
 
     /**
      * Returns the specified named animation or a blank animation if the
-     * specified animation does not exist.
+     * specified animation does not exist. If the specified animation is not
+     * yet resolved, it will be queued up for resolution.
      */
     public Animation getAnimation (String action)
     {
@@ -293,8 +302,29 @@ public class Model
             log.warning("Requested non-existent animation [model=" + _key +
                         ", anim=" + action + "].");
             return BLANK_ANIM;
+        } else if (!anim.isResolved()) {
+            anim.setParts(new Part[0]);
+            _loader.queueAction(this, action);
         }
         return anim;
+    }
+
+    /**
+     * Requests that all of this model's actions be resolved.
+     */
+    public void resolveActions ()
+    {
+        Iterator<Map.Entry<String,Animation>> iter =
+            _anims.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String,Animation> entry = iter.next();
+            String action = entry.getKey();
+            Animation anim = entry.getValue();
+            if (!anim.isResolved()) {
+                anim.setParts(new Part[0]);
+                _loader.queueAction(this, action);
+            }
+        }
     }
 
     /**
@@ -377,9 +407,8 @@ public class Model
         }
         anim.setParts(parts);
 
-        // create the icon image for this model if it's a unit and we just
-        // resolve the standing pose (or whatever standing maps to)
-        if (_key.startsWith("units") && _anims.get("standing") == anim) {
+        // create the icon image for this model if it wants one
+        if (anim == _ianim) {
             try {
                 createIconImage(ctx);
             } catch (Throwable t) {
@@ -521,8 +550,8 @@ public class Model
         rotm.mult(cam.getLeft(), cam.getLeft());
         cam.update();
 
-        _icon = trenderer.setupTexture();
-        _icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
+        Texture icon = trenderer.setupTexture();
+        icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
 
         Node all = new Node("all");
         all.setRenderQueueMode(Renderer.QUEUE_SKIP);
@@ -556,11 +585,14 @@ public class Model
         all.updateGeometricState(0, true);
         all.updateRenderState();
 
-        trenderer.render(all, _icon);
+        trenderer.render(all, icon);
         trenderer.cleanup();
 
         // restore the normal view camera
         ctx.getCameraHandler().getCamera().update();
+
+        // configure our icon with the rendered texture
+        _icon.setTexture(icon);
     }
 
     protected String cleanPath (String path)
@@ -586,8 +618,9 @@ public class Model
     }
 
     protected String _key;
-    protected Texture _icon;
+    protected TextureIcon _icon = new TextureIcon(ICON_SIZE, ICON_SIZE);
     protected Properties _props;
+    protected Animation _ianim;
 
     protected HashMap<String,CloneCreator> _meshes =
         new HashMap<String,CloneCreator>();

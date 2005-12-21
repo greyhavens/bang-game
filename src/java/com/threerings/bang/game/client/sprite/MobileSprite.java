@@ -235,6 +235,7 @@ public class MobileSprite extends PieceSprite
         
         // load our model
         _model = ctx.loadModel(_type, _name);
+        _model.resolveActions();
 
         // start in our rest post
         setAction(getRestPose());
