@@ -31,6 +31,7 @@ public class BankMarshaller extends InvocationMarshaller
         // documentation inherited from interface
         public void gotOffers (CoinExOfferInfo[] arg1, CoinExOfferInfo[] arg2)
         {
+            _invId = null;
             omgr.postEvent(new InvocationResponseEvent(
                                callerOid, requestId, GOT_OFFERS,
                                new Object[] { arg1, arg2 }));
