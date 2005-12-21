@@ -16,11 +16,11 @@ public enum Terrain
 
     // normal terrain types: DON'T BOOCH increasing terrain code
     BRUSH       (0, BangBoard.BASE_TRAVERSAL, 0.2f),
-    DARK_DIRT   (1, 5*BangBoard.BASE_TRAVERSAL/4, 0.5f),
+    DARK_DIRT   (1, 6*BangBoard.BASE_TRAVERSAL/5, 0.5f),
     DIRT        (2, BangBoard.BASE_TRAVERSAL, 0.8f),
     ROAD        (3, BangBoard.BASE_TRAVERSAL, 0.2f),
-    ROCKY       (4, 5*BangBoard.BASE_TRAVERSAL/4, 0.2f),
-    ROUGH_DIRT  (5, 5*BangBoard.BASE_TRAVERSAL/4, 0.5f),
+    ROCKY       (4, 6*BangBoard.BASE_TRAVERSAL/5, 0.2f),
+    ROUGH_DIRT  (5, 6*BangBoard.BASE_TRAVERSAL/5, 0.5f),
     SAND        (6, BangBoard.BASE_TRAVERSAL, 0.9f),
     WATER       (7, -1, 0f),
 
