@@ -111,6 +111,11 @@ public class BangClient extends BasicClient
 
         // otherwise, display the town view
         _tview = new TownView(_ctx);
+        showTownView();
+    }
+
+    public void showTownView ()
+    {
         setMainView(_tview, false);
     }
 
@@ -277,7 +282,7 @@ public class BangClient extends BasicClient
         }
 
         public void clearPlaceView (PlaceView view) {
-            setMainView(_tview, false);
+            // nothing doing
         }
 
         public BangClient getBangClient() {

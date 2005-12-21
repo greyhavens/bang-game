@@ -157,6 +157,7 @@ public class StatusView extends BDecoratedWindow
         } else if (cmd.equals("to_town")) {
             if (_ctx.getLocationDirector().leavePlace()) {
                 dismiss();
+                _ctx.getBangClient().showTownView();
             }
 
         } else if (cmd.equals("resume")) {

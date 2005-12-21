@@ -28,6 +28,7 @@ public class TownButton extends BButton
     {
         setEnabled(false);
         _ctx.getLocationDirector().leavePlace();
+        _ctx.getBangClient().showTownView();
     }
 
     protected BangContext _ctx;

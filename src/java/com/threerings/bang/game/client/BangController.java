@@ -389,10 +389,9 @@ public class BangController extends GameController
      */
     protected void statsDismissed ()
     {
-        log.info("Stats dismissed!");
         // if the game is over, head back to the lobby
         if (_bangobj.state == BangObject.GAME_OVER) {
-            _ctx.getLocationDirector().leavePlace();
+            _ctx.getLocationDirector().moveBack();
 
         } else {
             // otherwise potentially display the selection phase dialog
