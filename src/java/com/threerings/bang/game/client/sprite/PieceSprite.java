@@ -10,6 +10,7 @@ import java.util.List;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
 import com.threerings.jme.sprite.LinePath;
@@ -19,12 +20,14 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.client.Model;
+import com.threerings.bang.util.BasicContext;
+
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -309,6 +312,17 @@ public class PieceSprite extends Sprite
         coords.y += TILE_SIZE/2;
     }
 
+    @Override // documentation inherited
+    protected void setParent (Node parent)
+    {
+        super.setParent(parent);
+
+        // clear our model binding when we're removed
+        if (parent == null && _binding != null) {
+            _binding.detach();
+        }
+    }
+
     protected BoardView _view;
     
     protected Piece _piece;
@@ -316,6 +330,13 @@ public class PieceSprite extends Sprite
 
     protected boolean _selected;
     protected ArrayList<EffectViz> _effects;
+
+    /** Most pieces have an underlying model, so we provide a reference. */
+    protected Model _model;
+
+    /** Sprites must bind animations from their model with this reference so
+     * that we can properly clear the binding when the sprite is removed. */
+    protected Model.Binding _binding;
 
     /** The current elevation of the piece. */
     protected int _elevation;

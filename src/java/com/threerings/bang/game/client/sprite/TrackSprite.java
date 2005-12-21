@@ -57,16 +57,11 @@ public class TrackSprite extends PieceSprite
         
         Track track = (Track)_piece;
         _model = ctx.loadModel("extras/tracks", MODEL_NAMES[track.type]);
-        Node[] meshes = _model.getAnimation("normal").getMeshes(0);
-        for (int ii = 0; ii < meshes.length; ii++) {
-            attachChild(meshes[ii]);
-            meshes[ii].updateRenderState();
-        }
+        _binding = _model.getAnimation("normal").bind(this, 0);
     }
     
     protected BasicContext _ctx;
-    protected Model _model;
-    
+
     /* The models for each type of track. */
     protected static final String[] MODEL_NAMES = { "node", "node", "straight",
         "tee", "cross", "curve" };

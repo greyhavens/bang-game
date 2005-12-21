@@ -192,7 +192,7 @@ public class BoardView extends BComponent
 
         // refresh the lights
         refreshLights();
-        
+
         // create the board geometry
         _snode.createBoardSky(_board);
         _tnode.createBoardTerrain(_board);
@@ -496,6 +496,10 @@ public class BoardView extends BComponent
     protected void wasRemoved ()
     {
         super.wasRemoved();
+
+        // clear our sprites so that piece sprites can clean up after
+        // themselves
+        _pnode.detachAllChildren();
 
         // remove our geometry from the scene graph
         _ctx.getGeometry().detachChild(_node);

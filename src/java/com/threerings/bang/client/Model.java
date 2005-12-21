@@ -39,9 +39,11 @@ import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.TextureIcon;
 
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
+
+import com.threerings.bang.client.util.ModelLoader;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -52,8 +54,53 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class Model
 {
-    /** Information on an animation which is a collection of animated
-     * meshes with a frame count and a duration. */
+    /**
+     * Used to bind an animation's meshs to a node and then later remove them.
+     * The binding will take care of updating the node if the animation was not
+     * fully resolved at the time that it was requested.
+     */
+    public static class Binding
+    {
+        public void detach ()
+        {
+            for (int ii = 0; ii < _meshes.length; ii++) {
+                _node.detachChild(_meshes[ii]);
+            }
+            _anim.clearBinding(this);
+        }
+
+        protected Binding (Animation anim, Node node, int random)
+        {
+            _anim = anim;
+            _node = node;
+            _random = random;
+            _meshes = _anim.getMeshes(_random);
+            for (int ii = 0; ii < _meshes.length; ii++) {
+                _node.attachChild(_meshes[ii]);
+                _meshes[ii].updateRenderState();
+            }
+        }
+
+        protected void update ()
+        {
+            for (int ii = 0; ii < _meshes.length; ii++) {
+                _node.detachChild(_meshes[ii]);
+            }
+            _meshes = _anim.getMeshes(_random);
+            for (int ii = 0; ii < _meshes.length; ii++) {
+                _node.attachChild(_meshes[ii]);
+                _meshes[ii].updateRenderState();
+            }
+        }
+
+        protected Animation _anim;
+        protected Node _node;
+        protected int _random;
+        protected Node[] _meshes;
+    }
+
+    /** Information on an animation which is a collection of animated meshes
+     * with a frame count and a duration. */
     public static class Animation
     {
         /** The number of frames in this animation. */
@@ -80,6 +127,19 @@ public class Model
         }
 
         /**
+         * Binds this animation to the specified node. <em>Note:</em> the
+         * binding <em>must</em> be cleared later via {@link Binding#detach}.
+         *
+         * @see #getMeshes
+         */
+        public Binding bind (Node node, int random)
+        {
+            Binding binding = new Binding(this, node, random);
+            _bindings.add(binding);
+            return binding;
+        }
+
+        /**
          * Returns the meshes for the specified action or a zero-length array
          * if we have no meshes for said action.
          *
@@ -92,6 +152,11 @@ public class Model
          */
         public Node[] getMeshes (int random)
         {
+            // return an empty set of meshes if our parts are not resolved
+            if (_parts == null) {
+                return new Node[0];
+            }
+
             Node[] nodes = new Node[_parts.length];
             for (int ii = 0; ii < nodes.length; ii++) {
                 nodes[ii] = (Node)_parts[ii].creator.createCopy();
@@ -106,8 +171,32 @@ public class Model
             return nodes;
         }
 
+        /**
+         * Configures this animation with its underlying meshes.
+         */
+        public void setParts (Part[] parts)
+        {
+            _parts = parts;
+
+            // update any extant bindings
+            for (Binding binding : _bindings) {
+                binding.update();
+            }
+        }
+
+        /**
+         * Clears the specified binding.
+         */
+        protected void clearBinding (Binding binding)
+        {
+            _bindings.remove(binding);
+        }
+
         /** The animated meshes that make up the animation. */
         protected Part[] _parts;
+
+        /** Use to track the nodes to which this animation is bound. */
+        protected ArrayList<Binding> _bindings = new ArrayList<Binding>();
     }
 
     /** The size along each axis of the model icon. */
@@ -120,17 +209,17 @@ public class Model
     {
         _key = type + "/" + name;
 
-        String path = type + "/" + name + "/";
-        Properties props = new Properties();
+        _props = new Properties();
+        String path = "rsrc/" + _key + "/model.properties";
         try {
-            InputStream pin = getClass().getClassLoader().getResourceAsStream(
-                "rsrc/" + path + "model.properties");
+            InputStream pin =
+                getClass().getClassLoader().getResourceAsStream(path);
             if (pin != null) {
-                props.load(new BufferedInputStream(pin));
+                _props.load(new BufferedInputStream(pin));
             } else {
                 log.info("Faking model info file for " + _key + ".");
                 String mname = name.substring(name.lastIndexOf("/")+1);
-                props.setProperty("meshes", mname);
+                _props.setProperty("meshes", mname);
             }
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Failed to load model info " +
@@ -140,10 +229,9 @@ public class Model
         // TODO: use a whole different system for non-animating models
         // that uses a SharedMesh
 
-        String[] actions = getList(props, "actions", null, true);
+        String[] actions = getList(_props, "actions", null, true);
         for (int ii = 0; ii < actions.length; ii++) {
             String action = actions[ii];
-
             // skip commented out actions
             if (action.equals("#")) {
                 ii++;
@@ -152,37 +240,16 @@ public class Model
                 continue;
             }
 
+            // create a placeholder animation record for this action
             Animation anim = new Animation();
-            anim.frames = BangUtil.getIntProperty(
-                _key, props, action + ".frames", 8);
-            anim.duration = BangUtil.getIntProperty(
-                _key, props, action + ".duration", 250);
-
-            String[] pnames = getList(props, action + ".meshes", "meshes", true);
-            anim._parts = new Part[pnames.length];
-            for (int pp = 0; pp < pnames.length; pp++) {
-                String mesh = pnames[pp];
-                Part part = (anim._parts[pp] = new Part());
-
-                // load up this part's 3D model
-                boolean trans = props.getProperty(
-                    mesh + ".transparent", "false").equalsIgnoreCase("true");
-                part.creator = loadModel(
-                    ctx, path + action + "/" + mesh + ".jme", trans);
-
-                // the model may have multiple textures from which we
-                // select at random
-                String[] tnames =
-                    getList(props, mesh + ".texture", "texture", false);
-                if (tnames.length == 0) {
-                    continue;
-                }
-                part.tstates = new TextureState[tnames.length];
-                for (int tt = 0; tt < part.tstates.length; tt++) {
-                    part.tstates[tt] = getTexture(ctx, path + tnames[tt]);
-                }
-            }
             _anims.put(action, anim);
+
+            // and queue it up to be resolved asynchronously
+            if (_loader == null) {
+                _loader = new ModelLoader(ctx);
+                _loader.start();
+            }
+            _loader.queueAction(this, action);
         }
 
         // use the first frame of the walking pose if this model has no
@@ -193,16 +260,6 @@ public class Model
         }
         if (!_anims.containsKey("walking") && _anims.containsKey("standing")) {
             _anims.put("walking", _anims.get("standing"));
-        }
-
-        // create the icon image for this model if it's a unit
-        if (type.equals("units")) {
-            try {
-                createIconImage(ctx);
-            } catch (Throwable t) {
-                log.log(Level.WARNING, "Failed to create icon image " +
-                        "[type=" + type + ", name=" + name + "].", t);
-            }
         }
     }
 
@@ -238,6 +295,98 @@ public class Model
             return BLANK_ANIM;
         }
         return anim;
+    }
+
+    /**
+     * Resolves the mesh and texture data associated with the specified
+     * action. <em>Note:</em> this is called on the background model loader
+     * thread and must be very careful not to use non-thread-safe services from
+     * the supplied context.
+     */
+    public void resolveAction (final BasicContext ctx, String action)
+    {
+        final Animation anim = _anims.get(action);
+        anim.frames = BangUtil.getIntProperty(
+            _key, _props, action + ".frames", 8);
+        anim.duration = BangUtil.getIntProperty(
+            _key, _props, action + ".duration", 250);
+
+        String path = _key + "/";
+        String[] pnames = getList(_props, action + ".meshes", "meshes", true);
+        final Part[] parts = new Part[pnames.length];
+        final Texture[][] textures = new Texture[pnames.length][];
+        for (int pp = 0; pp < pnames.length; pp++) {
+            String mesh = pnames[pp];
+            Part part = (parts[pp] = new Part());
+
+            // load up this part's 3D model; we can safely do this on the
+            // background thread because our models are super simple and don't
+            // contain embedded texture states or other bits which would cause
+            // the JmeBinaryLoader to try to do OpenGL things on the wrong
+            // thread and we'd be hosed
+            boolean trans = _props.getProperty(
+                mesh + ".transparent", "false").equalsIgnoreCase("true");
+            part.creator = loadModel(
+                ctx, path + action + "/" + mesh + ".jme", trans);
+
+            // the model may have multiple textures from which we
+            // select at random
+            String[] tnames =
+                getList(_props, mesh + ".texture", "texture", false);
+            if (tnames.length == 0) {
+                continue;
+            }
+            textures[pp] = new Texture[tnames.length];
+            for (int tt = 0; tt < tnames.length; tt++) {
+                // we load the texture data on the background thread, but the
+                // creation of the texture states must take place on the main
+                // thread as it does OpenGL things
+                textures[pp][tt] = ctx.getTextureCache().getTexture(
+                    // TODO: make the texture cache thread safe
+                    cleanPath(path + tnames[tt]));
+            }
+        }
+
+        // now finish our resolution on the main thread
+        ctx.getApp().postRunnable(new Runnable() {
+            public void run () {
+                finishResolution(ctx, anim, parts, textures);
+            }
+        });
+    }
+
+    /**
+     * Finishes the resolution of a model animation. <em>Note:</em> this is
+     * called on the main thread where we can safely access OpenGL.
+     */
+    protected void finishResolution (BasicContext ctx, Animation anim,
+                                     Part[] parts, Texture[][] textures)
+    {
+        for (int ii = 0; ii < parts.length; ii++) {
+            if (textures[ii] == null) {
+                continue;
+            }
+            Part part = parts[ii];
+            part.tstates = new TextureState[textures[ii].length];
+            for (int tt = 0; tt < part.tstates.length; tt++) {
+                part.tstates[tt] = ctx.getRenderer().createTextureState();
+                textures[ii][tt].setWrap(Texture.WM_WRAP_S_WRAP_T);
+                part.tstates[tt].setTexture(textures[ii][tt]);
+                part.tstates[tt].setEnabled(true);
+            }
+        }
+        anim.setParts(parts);
+
+        // create the icon image for this model if it's a unit and we just
+        // resolve the standing pose (or whatever standing maps to)
+        if (_key.startsWith("units") && _anims.get("standing") == anim) {
+            try {
+                createIconImage(ctx);
+            } catch (Throwable t) {
+                log.log(Level.WARNING, "Failed to create icon image " +
+                        "[key=" + _key + "].", t);
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -414,34 +563,6 @@ public class Model
         ctx.getCameraHandler().getCamera().update();
     }
 
-    protected TextureState getTexture (BasicContext ctx, String texpath)
-    {
-        texpath = cleanPath(texpath);
-        TextureState ts = _textures.get(texpath);
-        if (ts == null) {
-            ts = ctx.getRenderer().createTextureState();
-            Texture tex = null;
-            try {
-                tex = TextureManager.loadTexture(
-                    getClass().getClassLoader().getResource("rsrc/" + texpath),
-                    Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-                if (tex == null) {
-                    log.warning("Missing texture [path=" + texpath + "].");
-                } else {
-                    tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
-                    ts.setTexture(tex);
-                    ts.setEnabled(true);
-                }
-
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Failure loading texture " +
-                        "[path=" + texpath + "].", e);
-            }
-            _textures.put(texpath, ts);
-        }
-        return ts;
-    }
-
     protected String cleanPath (String path)
     {
         // non-file URLs don't handle blah/foo/../bar so we make those path
@@ -466,6 +587,7 @@ public class Model
 
     protected String _key;
     protected Texture _icon;
+    protected Properties _props;
 
     protected HashMap<String,CloneCreator> _meshes =
         new HashMap<String,CloneCreator>();
@@ -475,12 +597,15 @@ public class Model
 
     protected HashMap<String,Animation> _anims = new HashMap<String,Animation>();
 
+    /** This asynchronous thread loads our models in the background. */
+    protected static ModelLoader _loader;
+
     protected static final Animation BLANK_ANIM = new Animation();
     protected static final String PATH_DOTDOT = "[^/.]+/\\.\\./";
 
     static {
-        BLANK_ANIM._parts = new Part[0];
         BLANK_ANIM.frames = 1;
         BLANK_ANIM.duration = 100;
+        BLANK_ANIM.setParts(new Part[0]);
     }
 }

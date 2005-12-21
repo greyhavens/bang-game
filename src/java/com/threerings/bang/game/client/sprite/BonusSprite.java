@@ -4,11 +4,7 @@
 package com.threerings.bang.game.client.sprite;
 
 import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.scene.Node;
-import com.jme.scene.shape.Dome;
 
-import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -30,24 +26,8 @@ public class BonusSprite extends PieceSprite
         super.createGeometry(ctx);
 
         // load up the model for this bonus
-        Model model = ctx.loadModel("bonuses", _type);
-        Node[] meshes = model.getAnimation("normal").getMeshes(0);
-
-        // TEMP: cope with bonuses for which we yet have no model
-        if (meshes.length == 0 || meshes[0].getName().startsWith("error")) {
-            // create some simple temporary geometry
-            Dome geom =
-                new Dome("bonus", 10, 10, TILE_SIZE/2);
-            attachChild(geom);
-            Quaternion rotate = new Quaternion();
-            rotate.fromAngleAxis(FastMath.PI/2, LEFT);
-            geom.setLocalRotation(rotate);
-
-        } else {
-            for (int ii = 0; ii < meshes.length; ii++) {
-                attachChild(meshes[0]);
-            }
-        }
+        _model = ctx.loadModel("bonuses", _type);
+        _binding = _model.getAnimation("normal").bind(this, 0);
     }
 
     protected String _type;

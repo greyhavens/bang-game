@@ -47,11 +47,7 @@ public class PropSprite extends PieceSprite
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
         _model = ctx.loadModel("props", _config.type);
-        Node[] meshes = _model.getAnimation("normal").getMeshes(0);
-        for (int ii = 0; ii < meshes.length; ii++) {
-            attachChild(meshes[ii]);
-            meshes[ii].updateRenderState();
-        }
+        _binding = _model.getAnimation("normal").bind(this, 0);
 
         setRenderState(RenderUtil.blendAlpha);
         updateRenderState();
@@ -65,8 +61,20 @@ public class PropSprite extends PieceSprite
         coords.y += (TILE_SIZE*_piece.getHeight())/2;
     }
 
+    @Override // documentation inherited
+    protected void setParent (Node parent)
+    {
+        super.setParent(parent);
+
+        // clear our model binding when we're removed
+        if (parent == null && _binding != null) {
+            _binding.detach();
+        }
+    }
+
     protected PropConfig _config;
     protected Model _model;
+    protected Model.Binding _binding;
 
 //     protected static final ColorRGBA FOOT_COLOR =
 //         new ColorRGBA(1, 1, 1, 0.5f);

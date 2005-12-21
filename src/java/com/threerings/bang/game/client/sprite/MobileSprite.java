@@ -384,20 +384,13 @@ public class MobileSprite extends PieceSprite
     protected Model.Animation setAction (String action)
     {
         // remove the old meshes
-        if (_meshes != null) {
-            for (int ii = 0; ii < _meshes.length; ii++) {
-                detachChild(_meshes[ii]);
-            }
+        if (_binding != null) {
+            _binding.detach();
         }
 
         // add the new meshes
         Model.Animation anim = _model.getAnimation(action);
-        _meshes = anim.getMeshes(_texrando);
-        for (int ii = 0; ii < _meshes.length; ii++) {
-            attachChild(_meshes[ii]);
-            _meshes[ii].updateRenderState();
-            _meshes[ii].updateGeometricState(0, true);
-        }
+        _binding = anim.bind(this, _texrando);
         setAnimationSpeed(Config.display.animationSpeed * anim.getSpeed());
         return anim;
     }
@@ -551,12 +544,10 @@ public class MobileSprite extends PieceSprite
     }
 
     protected String _type, _name;
-    protected Model _model;
     protected Node _hnode;
     protected TerrainNode.Highlight _highlight;
     protected TerrainNode.Highlight _shadow;
     protected ParticleManager _dustmgr;
-    protected Node[] _meshes;
     protected Sound _moveSound;
 
     protected String _action;
