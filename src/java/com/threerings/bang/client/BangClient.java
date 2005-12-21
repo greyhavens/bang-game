@@ -151,7 +151,6 @@ public class BangClient extends BasicClient
                 }
             };
             _ctx.getParlorDirector().startSolitaire(config, cl);
-            return;
         }
 
         // start up the introduction process, if appropriate, or if no intro is
