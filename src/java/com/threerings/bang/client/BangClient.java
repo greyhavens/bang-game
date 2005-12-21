@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
 import com.threerings.util.Name;
+
+import com.threerings.jme.effect.FadeInOutEffect;
 
 import com.threerings.cast.CharacterManager;
 import com.threerings.cast.bundle.BundledComponentRepository;
@@ -62,10 +65,11 @@ public class BangClient extends BasicClient
         _client.addClientObserver(this);
 
         // create and display the logon view
-        displayLogon();
+        LogonView lview = new LogonView(_ctx);
+        setMainView(lview, true);
 
         // and start unpacking our resources
-        initResources(_lview);
+        initResources(lview);
     }
 
     /**
@@ -107,15 +111,12 @@ public class BangClient extends BasicClient
 
         // otherwise, display the town view
         _tview = new TownView(_ctx);
-        _ctx.getRootNode().addWindow(_tview);
+        setMainView(_tview, false);
     }
 
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
-        // remove the logon display
-        clearLogon();
-
         // we potentially jump right into a game when developing
         BangConfig config = null;
         if ("tutorial".equals(System.getProperty("test"))) {
@@ -200,18 +201,39 @@ public class BangClient extends BasicClient
         }
     }
 
-    protected void displayLogon ()
+    protected void setMainView (final BWindow view, final boolean packAndCenter)
     {
-        _lview = new LogonView(_ctx);
-        _ctx.getRootNode().addWindow(_lview);
-        _lview.pack();
-        _lview.center();
+        // if we have an existing main view, fade that out
+        if (_mview != null) {
+            FadeInOutEffect fade =
+                new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.25f, false) {
+                protected void fadeComplete () {
+                    _ctx.getRootNode().removeWindow(_mview);
+                    fadeInMainView(view, packAndCenter);
+                    _ctx.getInterface().detachChild(this);
+                }
+            };
+            _ctx.getInterface().attachChild(fade);
+        } else {
+            fadeInMainView(view, packAndCenter);
+        }
     }
 
-    protected void clearLogon ()
+    protected void fadeInMainView (BWindow view, boolean packAndCenter)
     {
-        _ctx.getRootNode().removeWindow(_lview);
-        _lview = null;
+        _mview = view;
+        _ctx.getRootNode().addWindow(_mview);
+        if (packAndCenter) {
+            _mview.pack();
+            _mview.center();
+        }
+        FadeInOutEffect fade =
+            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
+            protected void fadeComplete () {
+                _ctx.getInterface().detachChild(this);
+            }
+        };
+        _ctx.getInterface().attachChild(fade);
     }
 
     /** The context implementation. This provides access to all of the
@@ -235,42 +257,27 @@ public class BangClient extends BasicClient
         }
 
         public void setPlaceView (PlaceView view) {
-            if (_pview != null) {
-                _ctx.getRootNode().removeWindow(_pview);
-            } else if (_tview != null) {
-                _ctx.getRootNode().removeWindow(_tview);
-            }
-
             // wire a status view to this place view (show by pressing esc);
             // the window must be modal prior to adding it to the hierarchy to
             // ensure that it is a default event target (and hears the escape
             // key pressed event)
-            _pview = (BWindow)view;
-            _pview.setModal(true);
-            if (!(_pview instanceof BangView)) {
-                new StatusView(_ctx).bind(_pview);
+            BWindow pview = (BWindow)view;
+            pview.setModal(true);
+            if (!(pview instanceof BangView)) {
+                new StatusView(_ctx).bind(pview);
             }
 
-            // now we can add the window to the hierarchy
-            _ctx.getRootNode().addWindow(_pview);
-
             // size the view to fill the display
-            _pview.setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                             _ctx.getDisplay().getHeight());
+            pview.setBounds(0, 0, _ctx.getDisplay().getWidth(),
+                            _ctx.getDisplay().getHeight());
+
+            // configure the main view; this will fade the previous view out
+            // and fade the new view in
+            setMainView(pview, false);
         }
 
         public void clearPlaceView (PlaceView view) {
-            if (_pview != view) {
-                log.warning("Requested to clear non-current place view " +
-                            "[have=" + _pview + ", got=" + view + "].");
-                // try to cope
-                if (_pview != null) {
-                    _ctx.getRootNode().removeWindow(_pview);
-                }
-            }
-            _ctx.getRootNode().removeWindow((BWindow)view);
-            _pview = null;
-            _ctx.getRootNode().addWindow(_tview);
+            // not needed, we handle replacing the main view automatically
         }
 
         public BangClient getBangClient() {
@@ -297,7 +304,6 @@ public class BangClient extends BasicClient
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
 
-    protected BWindow _pview;
-    protected LogonView _lview;
+    protected BWindow _mview;
     protected TownView _tview;
 }
