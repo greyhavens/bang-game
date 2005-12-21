@@ -72,10 +72,10 @@ public class BangUI
         _umsgs = _ctx.getMessageManager().getBundle("units");
 
         marqueeLNF = new BangLookAndFeel();
-        marqueeLNF.setTextFactory(new AWTTextFactory(COUNTER_FONT));
+        marqueeLNF.setTextFactory(new AWTTextFactory(COUNTER_FONT, true));
 
         dtitleLNF = new BangLookAndFeel();
-        dtitleLNF.setTextFactory(new AWTTextFactory(DTITLE_FONT));
+        dtitleLNF.setTextFactory(new AWTTextFactory(DTITLE_FONT, true));
 
         pstatusLNF = new BangLookAndFeel() {
             public BBackground createButtonBack (int state) {
@@ -96,7 +96,7 @@ public class BangUI
                     getResource(path), 1+dx, 1+dy, 1-dx, 1-dy);
             }
         };
-        pstatusLNF.setTextFactory(new AWTTextFactory(PSTATUS_FONT));
+        pstatusLNF.setTextFactory(new AWTTextFactory(PSTATUS_FONT, false));
 
         scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
         coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
