@@ -39,6 +39,7 @@ import com.threerings.parlor.game.client.GameController;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -253,6 +254,15 @@ public class BangController extends GameController
 
         // clear out our last selected unit as we want to start afresh
         _lastSelection = -1;
+
+        // report to the tutorial controller
+        if (targetId == -1) {
+            postEvent(TutorialCodes.UNIT_MOVED);
+        } else if (tx == Short.MAX_VALUE) {
+            postEvent(TutorialCodes.UNIT_ATTACKED);
+        } else {
+            postEvent(TutorialCodes.UNIT_MOVE_ATTACKED);
+        }
     }
 
     /** Handles a request to place a card. */

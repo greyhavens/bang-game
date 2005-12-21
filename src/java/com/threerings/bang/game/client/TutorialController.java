@@ -46,11 +46,9 @@ public class TutorialController
      */
     public void handleEvent (String event)
     {
-        // if we're waiting for this event, continue our action processing
-        log.info("Event: " + event);
-        if (event.equals(_pending)) {
+        if (_pending != null && event.equals(_pending.event)) {
+            processedAction(_pending);
             _pending = null;
-            // TODO: send a processed action event
         }
     }
 
@@ -66,7 +64,6 @@ public class TutorialController
     protected void processAction (int actionId)
     {
         TutorialConfig.Action action = _config.getAction(actionId);
-        log.info("Processing: " + action);
         if (action instanceof TutorialConfig.Text) {
             String message = ((TutorialConfig.Text)action).message;
             // TODO: display the specified text
@@ -74,17 +71,24 @@ public class TutorialController
 
         } else if (action instanceof TutorialConfig.Wait) {
             // wait for the specified event
-            _pending = ((TutorialConfig.Wait)action).event;
-            log.info("Waiting for: " + _pending);
+            _pending = (TutorialConfig.Wait)action;
 
         } else if (action instanceof TutorialConfig.AddUnit) {
-            // wait for the unit to show up in the game
-            _pending = TutorialCodes.UNIT_ADDED;
-            log.info("Waiting for: " + _pending);
-
+            // nothing to do here
+            
         } else {
             log.warning("Unknown action " + action);
         }
+
+        if (_pending == null) {
+            processedAction(action);
+        }
+    }
+
+    protected void processedAction (TutorialConfig.Action action)
+    {
+        _bangobj.postMessage(TutorialCodes.ACTION_PROCESSED,
+                             new Object[] { action.index });
     }
 
     protected AttributeChangeListener _acl = new AttributeChangeListener() {
@@ -99,5 +103,5 @@ public class TutorialController
     protected BangObject _bangobj;
 
     protected TutorialConfig _config;
-    protected String _pending;
+    protected TutorialConfig.Wait _pending;
 }

@@ -2,7 +2,7 @@
 
 <tutorial ident="controls" board="Dry Canyon" players="2">
   <!-- show them a unit and have them click to select it -->
-  <add_unit type="gunslinger" location="2,3" owner="0"/>
+  <add_unit type="gunslinger" location="10,10" owner="0"/>
   <text message="click_unit"/>
   <wait event="unit_selected"/>
 
@@ -15,7 +15,7 @@
   <wait event="unit_moved"/>
 
   <!-- add an enemy unit and show them how to shoot it -->
-  <add_unit type="steamgunman" location="?,?" owner="1"/>
+  <add_unit type="steamgunman" location="10,10" owner="1"/>
   <text message="click_to_highlight_attacks"/>
   <wait event="unit_selected"/>
   <text message="click_to_attack"/>

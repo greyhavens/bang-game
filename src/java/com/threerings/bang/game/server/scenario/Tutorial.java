@@ -25,6 +25,8 @@ import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.util.TutorialUtil;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Handles the server side operation of tutorial scenarios.
  */
