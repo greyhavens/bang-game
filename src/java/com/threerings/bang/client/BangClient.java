@@ -277,7 +277,7 @@ public class BangClient extends BasicClient
         }
 
         public void clearPlaceView (PlaceView view) {
-            // not needed, we handle replacing the main view automatically
+            setMainView(_tview, false);
         }
 
         public BangClient getBangClient() {
