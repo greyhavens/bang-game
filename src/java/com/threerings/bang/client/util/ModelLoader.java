@@ -67,6 +67,8 @@ public class ModelLoader extends Thread
             _model = model;
             _action = action;
             if (action.equals("standing")) {
+                _priority = 3;
+            } else if (action.equals("normal")) {
                 _priority = 2;
             } else if (action.equals("walking")) {
                 _priority = 1;
