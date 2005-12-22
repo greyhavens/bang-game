@@ -84,8 +84,9 @@ public class StatusView extends BDecoratedWindow
                      new BScrollPane(createBadgeTab(user)));
 
         // add the stats tab
+        PlayerStatsView pstats = new PlayerStatsView(ctx);
         _tabs.addTab(_msgs.get("m.status_stats"),
-                     new BScrollPane(createStatsTab(user)));
+                     new BScrollPane(pstats));
 
         row = new BContainer(GroupLayout.makeHStretch());
         row.add(createButton("quit"), GroupLayout.FIXED);
@@ -115,21 +116,6 @@ public class StatusView extends BDecoratedWindow
                                            new EmptyBorder(5, 5, 5, 5)));
         bcont.add(new BLabel("Not yet implemented"));
         return bcont;
-    }
-
-    protected BContainer createStatsTab (PlayerObject user)
-    {
-        BContainer scont = new BContainer(new TableLayout(2, 5, 5));
-        scont.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
-                                           new EmptyBorder(5, 5, 5, 5)));
-        Stat[] stats = (Stat[])user.stats.toArray(new Stat[user.stats.size()]);
-        // TODO: sort on translated key
-        for (int ii = 0; ii < stats.length; ii++) {
-            String key = stats[ii].getType().key();
-            scont.add(new BLabel(_ctx.xlate(BangCodes.STATS_MSGS, key)));
-            scont.add(new BLabel(stats[ii].valueToString()));
-        }
-        return scont;
     }
 
     /**
