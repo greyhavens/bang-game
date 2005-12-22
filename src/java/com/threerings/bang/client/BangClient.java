@@ -64,12 +64,23 @@ public class BangClient extends BasicClient
         // listen for logon
         _client.addClientObserver(this);
 
-        // create and display the logon view
-        LogonView lview = new LogonView(_ctx);
-        setMainView(lview, true);
-
-        // and start unpacking our resources
-        initResources(lview);
+        // create and display the logon view; which we do by hand instead of
+        // using setMainView() because we don't want to start the resource
+        // resolution until we're faded in
+        final LogonView lview = new LogonView(_ctx);
+        _mview = lview;
+        _ctx.getRootNode().addWindow(_mview);
+        _mview.pack();
+        _mview.center();
+        FadeInOutEffect fade =
+            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
+            protected void fadeComplete () {
+                _ctx.getInterface().detachChild(this);
+                // now start unpacking our resources
+                initResources(lview);
+            }
+        };
+        _ctx.getInterface().attachChild(fade);
     }
 
     /**
@@ -116,7 +127,7 @@ public class BangClient extends BasicClient
 
     public void showTownView ()
     {
-        setMainView(_tview, false);
+        setMainView(_tview);
     }
 
     // documentation inherited from interface SessionObserver
@@ -206,7 +217,7 @@ public class BangClient extends BasicClient
         }
     }
 
-    protected void setMainView (final BWindow view, final boolean packAndCenter)
+    protected void setMainView (final BWindow view)
     {
         // if we have an existing main view, fade that out
         if (_mview != null) {
@@ -214,24 +225,20 @@ public class BangClient extends BasicClient
                 new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.25f, false) {
                 protected void fadeComplete () {
                     _ctx.getRootNode().removeWindow(_mview);
-                    fadeInMainView(view, packAndCenter);
+                    fadeInMainView(view);
                     _ctx.getInterface().detachChild(this);
                 }
             };
             _ctx.getInterface().attachChild(fade);
         } else {
-            fadeInMainView(view, packAndCenter);
+            fadeInMainView(view);
         }
     }
 
-    protected void fadeInMainView (BWindow view, boolean packAndCenter)
+    protected void fadeInMainView (BWindow view)
     {
         _mview = view;
         _ctx.getRootNode().addWindow(_mview);
-        if (packAndCenter) {
-            _mview.pack();
-            _mview.center();
-        }
         FadeInOutEffect fade =
             new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
             protected void fadeComplete () {
@@ -278,7 +285,7 @@ public class BangClient extends BasicClient
 
             // configure the main view; this will fade the previous view out
             // and fade the new view in
-            setMainView(pview, false);
+            setMainView(pview);
         }
 
         public void clearPlaceView (PlaceView view) {
