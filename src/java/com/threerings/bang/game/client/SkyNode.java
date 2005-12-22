@@ -20,6 +20,7 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Dome;
@@ -80,12 +81,12 @@ public class SkyNode extends Node
     }
     
     @Override // documentation inherited
-    public void updateWorldData (float time)
+    public void draw (Renderer renderer)
     {
-        super.updateWorldData(time);
-        
         // match the position of the camera
-        setLocalTranslation(_ctx.getRenderer().getCamera().getLocation());
+        worldTranslation.set(renderer.getCamera().getLocation());
+        
+        super.draw(renderer);
     }
     
     /**
