@@ -13,7 +13,10 @@ import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
+
+import com.threerings.jme.effect.FadeInOutEffect;
 
 import com.threerings.bang.util.BangContext;
 
@@ -48,50 +51,71 @@ public class BangView extends BWindow
         // create our various displays
         add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
         chat = new OverlayChatView(ctx);
+
+        // create a paused fade in effect, we'll do our real fading in once
+        // everything is loaded up and we're ready to show the UI
+        _fadein = new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
+            protected void fadeComplete () {
+                _ctx.getInterface().detachChild(_fadein);
+                _fadein = null;
+            }
+        };
+        _fadein.setPaused(true);
     }
 
-    /** Called by the controller to prepare the view for the next round. */
-    public void prepareForRound (BangObject bangobj, BangConfig cfg, int pidx)
+    /**
+     * Configures the interface for the specified phase. If the main game
+     * display has not yet been configured, this will trigger that
+     * configuration as well.
+     */
+    public void setPhase (int phase)
     {
+        // if we're not added to the UI hierarchy yet, we need to hold off a
+        // moment
+        if (!isAdded()) {
+            _pendingPhase = phase;
+            return;
+        }
+        _pendingPhase = -1;
+
+        BangConfig config = (BangConfig)_ctrl.getPlaceConfig();
+        BodyObject me = (BodyObject)_ctx.getClient().getClientObject();
+        int pidx = _bangobj.getPlayerIndex(me.getVisibleName());
+
         // we call this at the beginning of each phase because the scenario
         // might decide to skip the selection or buying phase, so we need to
         // prepare prior to starting whichever phase is first
-        if (_prepared) {
-            return;
+        if (!_prepared) {
+            // tell the board view to start the game so that we can see the
+            // board while we're buying pieces
+            view.prepareForRound(_bangobj, config, pidx);
+
+            // let the camera handler know that we're getting ready to start
+            GameInputHandler gih = (GameInputHandler)_ctx.getInputHandler();
+            gih.prepareForRound(this, _bangobj, pidx);
+
+            // note that we've prepared
+            _prepared = true;
+
+            // we can start fading things in now
+            if (_fadein != null) {
+                _fadein.setPaused(false);
+            }
         }
 
-        // tell the board view to start the game so that we can see the board
-        // while we're buying pieces
-        view.prepareForRound(bangobj, cfg, pidx);
+        switch (phase) {
+        case BangObject.SELECT_PHASE:
+            setOverlay(new SelectionView(_ctx, config, _bangobj, pidx));
+            break;
 
-        // let the camera handler know that we're getting ready to start
-        GameInputHandler gih = (GameInputHandler)_ctx.getInputHandler();
-        gih.prepareForRound(this, bangobj, pidx);
+        case BangObject.BUYING_PHASE:
+            setOverlay(new PurchaseView(_ctx, config, _bangobj, pidx));
+            break;
 
-        // note that we've prepared
-        _prepared = true;
-    }
-
-    /** Called by the controller when the big shot and card selection
-     * phase starts. */
-    public void selectionPhase (BangObject bangobj, BangConfig cfg, int pidx)
-    {
-        prepareForRound(bangobj, cfg, pidx);
-        setOverlay(new SelectionView(_ctx, cfg, bangobj, pidx));
-    }
-
-    /** Called by the controller when the buying phase starts. */
-    public void buyingPhase (BangObject bangobj, BangConfig cfg, int pidx)
-    {
-        prepareForRound(bangobj, cfg, pidx);
-        setOverlay(new PurchaseView(_ctx, cfg, bangobj, pidx));
-    }
-
-    /** Called by the controller when the playing phase starts. */
-    public void playingPhase (BangObject bangobj, BangConfig cfg, int pidx)
-    {
-        prepareForRound(bangobj, cfg, pidx);
-        clearOverlay();
+        case BangObject.IN_PLAY:
+            clearOverlay();
+            break;
+        }
     }
 
     /** Called by the controller when a round ends. */
@@ -107,10 +131,10 @@ public class BangView extends BWindow
     // documentation inherited from interface
     public void willEnterPlace (PlaceObject plobj)
     {
-        BangObject bangobj = (BangObject)plobj;
+        _bangobj = (BangObject)plobj;
 
         // create our player status displays
-        int pcount = bangobj.players.length;
+        int pcount = _bangobj.players.length;
         _pswins = new BWindow[pcount];
         pstatus = new PlayerStatusView[pcount];
         for (int ii = 0; ii < pcount; ii++) {
@@ -118,7 +142,7 @@ public class BangView extends BWindow
             _pswins[ii].setLayoutManager(GroupLayout.makeHStretch());
             _pswins[ii].setBackground(null);
             _pswins[ii].add(
-                pstatus[ii] = new PlayerStatusView(_ctx, bangobj, _ctrl, ii));
+                pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, _ctrl, ii));
         }
 
         chat.willEnterPlace(plobj);
@@ -145,6 +169,9 @@ public class BangView extends BWindow
     public void wasAdded ()
     {
         super.wasAdded();
+
+        // add our own blackness that we'll fade in when we're ready
+        _ctx.getInterface().attachChild(_fadein);
 
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
@@ -185,11 +212,9 @@ public class BangView extends BWindow
         chat.pack();
         chat.setBounds(10, cypos, cwidth, chat.getHeight());
 
-        // finally if there was an overlay that should be showing, add that
-        if (_oview != null) {
-            _ctx.getRootNode().addWindow(_oview);
-            _oview.pack();
-            _oview.center();
+        // finally if we were waiting to start things up, get going
+        if (_pendingPhase != -1) {
+            setPhase(_pendingPhase);
         }
     }
 
@@ -197,14 +222,9 @@ public class BangView extends BWindow
     {
         clearOverlay();
         _oview = overlay;
-
-        // we can't add our overlay until we're added ourself (to ensure
-        // correct stacking), so we may need to postpone until then
-        if (isAdded()) {
-            _ctx.getRootNode().addWindow(_oview);
-            _oview.pack();
-            _oview.center();
-        }
+        _ctx.getRootNode().addWindow(_oview);
+        _oview.pack();
+        _oview.center();
     }
 
     protected void clearOverlay ()
@@ -221,12 +241,22 @@ public class BangView extends BWindow
     /** Our game controller. */
     protected BangController _ctrl;
 
+    /** The main game distributed object. */
+    protected BangObject _bangobj;
+
     /** Contain per-player displays. */
     protected BWindow[] _pswins;
 
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;
 
+    /** Used to fade ourselves in at the start of the game. */
+    protected FadeInOutEffect _fadein;
+
     /** Keeps track of whether we've prepared for the current round. */
     protected boolean _prepared;
+
+    /** If we were requested to start a particular phase before we were added
+     * to the interface hierarchy, that will be noted here. */
+    protected int _pendingPhase = -1;
 }

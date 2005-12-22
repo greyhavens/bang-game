@@ -105,7 +105,7 @@ public class BangController extends GameController
         // round's stats dialogue and the game is reported as ready to go
         _selphaseMultex = new Multex(new Runnable() {
             public void run () {
-                _view.selectionPhase(_bangobj, _config, _pidx);
+                _view.setPhase(BangObject.SELECT_PHASE);
             }
         }, 2);
 
@@ -335,7 +335,7 @@ public class BangController extends GameController
             return true;
 
         } else if (state == BangObject.BUYING_PHASE) {
-            _view.buyingPhase(_bangobj, _config, _pidx);
+            _view.setPhase(state);
             return true;
 
         } else if (state == BangObject.POST_ROUND) {
@@ -363,7 +363,7 @@ public class BangController extends GameController
 
         // when the game "starts", the round is ready to be played, but the
         // game only "ends" once, at the actual end of the game
-        _view.playingPhase(_bangobj, _config, _pidx);
+        _view.setPhase(BangObject.IN_PLAY);
     }
 
     @Override // documentation inherited
