@@ -20,6 +20,8 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Manages the primary user interface during the game.
  */
@@ -182,15 +184,27 @@ public class BangView extends BWindow
         _ctx.getRootNode().addWindow(chat);
         chat.pack();
         chat.setBounds(10, cypos, cwidth, chat.getHeight());
+
+        // finally if there was an overlay that should be showing, add that
+        if (_oview != null) {
+            _ctx.getRootNode().addWindow(_oview);
+            _oview.pack();
+            _oview.center();
+        }
     }
 
     protected void setOverlay (BWindow overlay)
     {
         clearOverlay();
         _oview = overlay;
-        _ctx.getRootNode().addWindow(_oview);
-        _oview.pack();
-        _oview.center();
+
+        // we can't add our overlay until we're added ourself (to ensure
+        // correct stacking), so we may need to postpone until then
+        if (isAdded()) {
+            _ctx.getRootNode().addWindow(_oview);
+            _oview.pack();
+            _oview.center();
+        }
     }
 
     protected void clearOverlay ()
