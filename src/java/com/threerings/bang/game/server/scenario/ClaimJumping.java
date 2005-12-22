@@ -86,7 +86,12 @@ public class ClaimJumping extends Scenario
 
         // start with a nugget on each of the bonus spots
         for (int ii = 0; ii < bonusSpots.size(); ii++) {
-            dropNugget(bangobj, bonusSpots.getX(ii), bonusSpots.getY(ii));
+            Bonus nugget = dropNugget(
+                bangobj, bonusSpots.getX(ii), bonusSpots.getY(ii));
+            // we need to make sure these nuggets "occupy" the bonus spots they
+            // are being dropped in, lest the server stick another bonus in
+            // their place
+            nugget.spot = (short)ii;
         }
     }
 
@@ -239,13 +244,14 @@ public class ClaimJumping extends Scenario
     /**
      * Drops a nugget at the specified location.
      */
-    protected void dropNugget (BangObject bangobj, int x, int y)
+    protected Bonus dropNugget (BangObject bangobj, int x, int y)
     {
         Bonus drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
         drop.assignPieceId();
         drop.position(x, y);
         bangobj.board.updateShadow(null, drop);
         bangobj.addToPieces(drop);
+        return drop;
     }
 
     /** A list of the active claims. */

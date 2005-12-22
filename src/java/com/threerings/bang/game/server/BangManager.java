@@ -1063,12 +1063,12 @@ public class BangManager extends GameManager
         // now convert reachability into weightings for each of the spots
         for (int ii = 0; ii < weights.length; ii++) {
             if (reachers[ii] == null) {
-                log.info("Spot " + ii + " is a wash.");
+//                 log.info("Spot " + ii + " is a wash.");
                 // if no one can reach it, give it a base probability
                 weights[ii] = 1;
 
             } else if (reachers[ii].size() == 1) {
-                log.info("Spot " + ii + " is a one man spot.");
+//                 log.info("Spot " + ii + " is a one man spot.");
                 // if only one player can reach it, give it a probability
                 // inversely proportional to that player's power
                 int pidx = reachers[ii].get(0);
@@ -1087,9 +1087,24 @@ public class BangManager extends GameManager
                         outlier = true;
                     }
                 }
-                log.info("Spot " + ii + " is a multi-man spot: " + outlier);
+//                 log.info("Spot " + ii + " is a multi-man spot: " + outlier);
                 weights[ii] = outlier ? 1 : 5;
             }
+        }
+
+        // zero out weightings for any spots that already have a bonus
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii] instanceof Bonus) {
+                int spidx = ((Bonus)pieces[ii]).spot;
+                if (spidx >= 0) {
+                    weights[spidx] = 0;
+                }
+            }
+        }
+        // make sure there is at least one available spot
+        if (IntListUtil.sum(weights) == 0) {
+            log.info("Dropping bonus. No unused spots.");
+            return false;
         }
 
         // now select a spot based on our weightings
@@ -1107,8 +1122,9 @@ public class BangManager extends GameManager
         }
 
         // now turn to the bonus factory for guidance
-        Piece bonus = Bonus.selectBonus(_bangobj, bspot, reachers[spidx]);
+        Bonus bonus = Bonus.selectBonus(_bangobj, bspot, reachers[spidx]);
         if (bonus != null) {
+            bonus.spot = (short)spidx;
             bonus.assignPieceId();
             bonus.position(bspot.x, bspot.y);
             _bangobj.addToPieces(bonus);

@@ -30,6 +30,9 @@ import static com.threerings.bang.Log.log;
  */
 public class Bonus extends Piece
 {
+    /** The index of the spot at which this bonus was spawned. */
+    public short spot = (short)-1;
+
 // //         MISSILE(50, // base weight
 // //                 0.0, // damage affinity
 // //                 0.5, // many pieces affinity
