@@ -391,7 +391,10 @@ public class BangController extends GameController
     {
         // if the game is over, head back to the lobby
         if (_bangobj.state == BangObject.GAME_OVER) {
-            _ctx.getLocationDirector().moveBack();
+            if (!_ctx.getLocationDirector().moveBack()) {
+                _ctx.getLocationDirector().leavePlace();
+                _ctx.getBangClient().showTownView();
+            }
 
         } else {
             // otherwise potentially display the selection phase dialog
