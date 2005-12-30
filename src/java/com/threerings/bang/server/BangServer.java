@@ -49,6 +49,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
+import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.server.persist.StatRepository;
 
 import static com.threerings.bang.Log.log;
@@ -90,6 +91,9 @@ public class BangServer extends CrowdServer
 
     /** Manages the persistent repository of stats. */
     public static StatRepository statrepo;
+
+    /** Manages the persistent repository of ratings. */
+    public static RatingRepository ratingrepo;
 
     /** Manages the persistent repository of avatar looks. */
     public static LookRepository lookrepo;
@@ -147,6 +151,7 @@ public class BangServer extends CrowdServer
         playrepo = new PlayerRepository(conprov);
         itemrepo = new ItemRepository(conprov);
         statrepo = new StatRepository(conprov);
+        ratingrepo = new RatingRepository(conprov);
         lookrepo = new LookRepository(conprov);
         playmgr = new PlayerManager();
         coinmgr = new BangCoinManager(conprov);

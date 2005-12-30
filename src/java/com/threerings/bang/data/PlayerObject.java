@@ -48,6 +48,9 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
 
+    /** The field name of the <code>ratings</code> field. */
+    public static final String RATINGS = "ratings";
+
     /** The field name of the <code>look</code> field. */
     public static final String LOOK = "look";
 
@@ -81,6 +84,9 @@ public class PlayerObject extends BodyObject
 
     /** Statistics tracked for this player. */
     public StatSet stats;
+
+    /** Contains all ratings earned by this player. */
+    public DSet ratings;
 
     /** This player's current avatar look. */
     public String look;
@@ -352,6 +358,52 @@ public class PlayerObject extends BodyObject
     {
         requestAttributeChange(STATS, value, this.stats);
         this.stats = (value == null) ? null : (StatSet)value.clone();
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>ratings</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToRatings (DSet.Entry elem)
+    {
+        requestEntryAdd(RATINGS, ratings, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>ratings</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromRatings (Comparable key)
+    {
+        requestEntryRemove(RATINGS, ratings, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>ratings</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateRatings (DSet.Entry elem)
+    {
+        requestEntryUpdate(RATINGS, ratings, elem);
+    }
+
+    /**
+     * Requests that the <code>ratings</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setRatings (DSet value)
+    {
+        requestAttributeChange(RATINGS, value, this.ratings);
+        this.ratings = (value == null) ? null : (DSet)value.clone();
     }
 
     /**
