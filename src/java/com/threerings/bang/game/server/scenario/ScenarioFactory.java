@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.ScenarioCodes;
 
 import static com.threerings.bang.Log.log;
 
@@ -79,9 +79,9 @@ public class ScenarioFactory
         new HashMap<String,ArrayList<String>>();
 
     static {
-        map(GameCodes.CLAIM_JUMPING, BangCodes.FRONTIER_TOWN,
+        map(ScenarioCodes.CLAIM_JUMPING, BangCodes.FRONTIER_TOWN,
             ClaimJumping.class);
-        map(GameCodes.CATTLE_HERDING, BangCodes.FRONTIER_TOWN,
-            CattleHerding.class);
+        map(ScenarioCodes.CATTLE_RUSTLING, BangCodes.FRONTIER_TOWN,
+            CattleRustling.class);
     }
 }

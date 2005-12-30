@@ -34,19 +34,4 @@ public interface GameCodes extends InvocationCodes
 
     /** The maximum number of cards a player can hold in a game. */
     public static final int MAX_CARDS = 3;
-
-    /** The code for the tutorial scenario. */
-    public static final String TUTORIAL = "tu";
-
-    /** The code for the claim jumping scenario. */
-    public static final String CLAIM_JUMPING = "cj";
-
-    /** The code for the cattle herding scenario. */
-    public static final String CATTLE_HERDING = "ch";
-
-    /** The amount of cash earned per nugget at the end of the game. */
-    public static final int CASH_PER_NUGGET = 50;
-
-    /** Cash earned for each branded cow. */
-    public static final int CASH_PER_COW = 50;
 }

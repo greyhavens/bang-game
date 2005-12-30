@@ -17,7 +17,7 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
@@ -104,8 +104,8 @@ public class ClaimJumping extends Scenario
                 if (claim.nuggets <= 0) {
                     continue;
                 }
-                bangobj.grantCash(
-                    claim.owner, GameCodes.CASH_PER_NUGGET * (claim.nuggets));
+                bangobj.grantCash(claim.owner, ScenarioCodes.CASH_PER_NUGGET *
+                                  (claim.nuggets));
                 bangobj.stats[claim.owner].incrementStat(
                     Stat.Type.NUGS_COLLECTED, claim.nuggets);
             }

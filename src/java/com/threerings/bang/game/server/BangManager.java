@@ -56,6 +56,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.game.server.scenario.Tutorial;
@@ -370,7 +371,7 @@ public class BangManager extends GameManager
     {
         // create the appropriate scenario to handle this round
         if (_bconfig.tutorial) {
-            _bangobj.setScenarioId(GameCodes.TUTORIAL);
+            _bangobj.setScenarioId(ScenarioCodes.TUTORIAL);
             _scenario = new Tutorial();
         } else {
             _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);

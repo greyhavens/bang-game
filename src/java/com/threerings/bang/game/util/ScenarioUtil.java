@@ -6,7 +6,7 @@ package com.threerings.bang.game.util;
 import java.util.Iterator;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
@@ -26,24 +26,24 @@ public class ScenarioUtil
         // it'd be nice to have the scenario do this but it's a server side
         // class and this method needs to be called every time a piece moves
         // which would be a pesky amount of computation to do on the server
-        if (bangobj.scenarioId.equals(GameCodes.CLAIM_JUMPING)) {
+        if (bangobj.scenarioId.equals(ScenarioCodes.CLAIM_JUMPING)) {
             // add the cash from nuggets in claims
             for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
                 Piece p = (Piece)iter.next();
                 if (p.owner >= 0 && p instanceof Claim) {
                     Claim c = (Claim)p;
-                    funds[c.owner] += c.nuggets * GameCodes.CASH_PER_NUGGET;
+                    funds[c.owner] += c.nuggets * ScenarioCodes.CASH_PER_NUGGET;
                 }
             }
 
-        } else if (bangobj.scenarioId.equals(GameCodes.CATTLE_HERDING)) {
+        } else if (bangobj.scenarioId.equals(ScenarioCodes.CATTLE_RUSTLING)) {
             // add the cash from branded cattle
             for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
                 Object p = iter.next();
                 if (p instanceof Cow) {
                     Cow c = (Cow)p;
                     if (c.owner >= 0) {
-                        funds[c.owner] += GameCodes.CASH_PER_COW;
+                        funds[c.owner] += ScenarioCodes.CASH_PER_COW;
                     }
                 }
             }

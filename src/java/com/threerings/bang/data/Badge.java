@@ -81,20 +81,20 @@ public class Badge extends Item
             }
         },
 
-        // cattle herded badges
-        ONEC_CATTLE_HERDED {
+        // cattle rustled badges
+        ONEC_CATTLE_RUSTLED {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 100;
+                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 100;
             }
         },
-        ONEM_CATTLE_HERDED {
+        ONEM_CATTLE_RUSTLED {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 1000;
+                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 1000;
             }
         },
-        TENM_CATTLE_HERDED {
+        TENM_CATTLE_RUSTLED {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_HERDED) >= 10000;
+                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10000;
             }
         },
 

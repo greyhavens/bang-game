@@ -15,8 +15,8 @@ import com.threerings.bang.game.util.PointSet;
 import static com.threerings.bang.Log.log;
 
 /**
- * Handles the behavior of the cow piece which is used in cattle herding
- * and other scenarios.
+ * Handles the behavior of the cow piece which is used in cattle rustling and
+ * other scenarios.
  */
 public class Cow extends Piece
 {

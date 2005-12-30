@@ -15,7 +15,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
@@ -29,18 +29,18 @@ import static com.threerings.bang.Log.log;
 /**
  * A gameplay scenario wherein:
  * <ul>
- * <li> Various cattle being standing randomly around the board.
- * <li> Each player has a corral on one side of the board which protrudes
- * into the playable area.
- * <li> When a player moves a unit next to a cattle piece, the cattle
- * moves in a direction opposite the unit.
- * <li> Players earn money for all cattle herded into their corral.
+ * <li> Various cattle start scattered randomly around the board.
+ * <li> When a player moves their Big Shot unit next to a cow, the Big Shot
+ * brands that cow for the player. The cow remains branded by that player until
+ * another player's Big Shot rebrands it.
  * <li> Any units that are killed during the round respawn near the
  * player's starting marker.
- * <li> The round ends when all cattle are herded into a corral.
+ * <li> The round ends after a fixed time limit.
+ * <li> Players earn money for all cattle with their brand at the end of the
+ * round.
  * </ul>
  */
-public class CattleHerding extends Scenario
+public class CattleRustling extends Scenario
 {
     /** The ratio of cattle to the size of the board (width x height). Can
      * also be considered the probability that a cow will be spawned in a
@@ -104,13 +104,13 @@ public class CattleHerding extends Scenario
             return false;
         }
 
-        // score cash for each cow and note herd counts
+        // score cash for each cow and note rustled counts
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
-                bangobj.grantCash(pieces[ii].owner, GameCodes.CASH_PER_COW);
+                bangobj.grantCash(pieces[ii].owner, ScenarioCodes.CASH_PER_COW);
                 bangobj.stats[pieces[ii].owner].incrementStat(
-                    Stat.Type.CATTLE_HERDED, 1);
+                    Stat.Type.CATTLE_RUSTLED, 1);
             }
         }
 
@@ -150,10 +150,10 @@ public class CattleHerding extends Scenario
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 
-        // record the number of cattle they herded
-        int herded = bangobj.stats[pidx].getIntStat(Stat.Type.CATTLE_HERDED);
-        if (herded > 0) {
-            user.stats.incrementStat(Stat.Type.CATTLE_HERDED, herded);
+        // record the number of cattle they rustled
+        int rustled = bangobj.stats[pidx].getIntStat(Stat.Type.CATTLE_RUSTLED);
+        if (rustled > 0) {
+            user.stats.incrementStat(Stat.Type.CATTLE_RUSTLED, rustled);
         }
     }
 
