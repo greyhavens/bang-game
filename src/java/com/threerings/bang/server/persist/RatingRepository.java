@@ -4,6 +4,7 @@
 package com.threerings.bang.server.persist;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -72,5 +73,52 @@ public class RatingRepository extends SimpleRepository
             }
         });
         return rats;
+    }
+
+    /**
+     * Updates the supplied ratings for the specified player.
+     */
+    public void updateRatings (final int playerId, final ArrayList<Rating> rats)
+        throws PersistenceException
+    {
+        execute(new Operation() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                String uquery = "update RATINGS set RATING=?, EXPERIENCE=? " +
+                    "where PLAYER_ID=? and SCENARIO=?";
+                PreparedStatement ustmt = conn.prepareStatement(uquery);
+                String iquery = "insert into RATINGS (PLAYER_ID, SCENARIO, " +
+                    "RATING, EXPERIENCE) values (?, ?, ?, ?)";
+                PreparedStatement istmt = null;
+                try {
+                    for (Rating rating : rats) {
+                        // first try updating
+                        ustmt.setInt(1, rating.rating);
+                        ustmt.setInt(2, rating.experience);
+                        ustmt.setInt(3, playerId);
+                        ustmt.setString(4, rating.scenario);
+                        if (ustmt.executeUpdate() > 0) {
+                            continue;
+                        }
+
+                        // if that didn't work, insert
+                        if (istmt == null) {
+                            istmt = conn.prepareStatement(iquery);
+                        }
+                        istmt.setInt(1, rating.rating);
+                        istmt.setInt(2, rating.experience);
+                        istmt.setInt(3, playerId);
+                        istmt.setString(4, rating.scenario);
+                        JDBCUtil.warnedUpdate(istmt, 1);
+                    }
+
+                } finally {
+                    JDBCUtil.close(ustmt);
+                    JDBCUtil.close(istmt);
+                }
+                return null;
+            }
+        });
     }
 }

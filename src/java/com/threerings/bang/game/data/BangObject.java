@@ -450,6 +450,13 @@ public class BangObject extends GameObject
         stats[pidx].incrementStat(Stat.Type.CASH_EARNED, amount);
     }
 
+    @Override // documentation inherited
+    public boolean isInPlay ()
+    {
+        return (state == BUYING_PHASE || state == SELECT_PHASE ||
+                state == IN_PLAY || state == POST_ROUND);
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>stats</code> field be set to the

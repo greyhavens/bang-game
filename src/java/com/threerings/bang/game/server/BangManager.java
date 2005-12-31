@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -24,6 +25,7 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsServer;
 
@@ -35,6 +37,7 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
+import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.server.BangServer;
@@ -333,6 +336,22 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void playersAllHere ()
     {
+        // create our player records now that we know everyone's in the room
+        // and ready to go
+        _precords = new PlayerRecord[getPlayerSlots()];
+        for (int ii = 0; ii < _precords.length; ii++) {
+            PlayerRecord prec = (_precords[ii] = new PlayerRecord());
+            if (isAI(ii)) {
+                prec.playerId = -1;
+                prec.ratings = new DSet();
+            } else {
+                PlayerObject user = (PlayerObject)getPlayer(ii);
+                prec.playerId = user.playerId;
+                prec.purse = user.getPurse();
+                prec.ratings = user.ratings;
+            }
+        }
+
         // when the players all arrive, go into the buying phase
         startRound();
     }
@@ -495,12 +514,7 @@ public class BangManager extends GameManager
         }
 
         // if everyone has selected their starters, move to the next phase
-        for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
-            if (_bangobj.bigShots[ii] == null) {
-                return;
-            }
-        }
-        _scenario.startNextPhase(_bangobj);
+        checkStartNextPhase();
     }
 
     /**
@@ -558,8 +572,37 @@ public class BangManager extends GameManager
 
         // note that this player is ready and potentially fire away
         _ready.add(pidx);
-        if (_ready.size() == getPlayerSlots()) {
+        checkStartNextPhase();
+    }
+
+    /**
+     * This is called when a player takes an action that might result in the
+     * current phase ending an the next phase starting, or when a player is
+     * removed from the game (in which case the next phase might need to be
+     * started because we were waiting on that player).
+     */
+    protected void checkStartNextPhase ()
+    {
+        switch (_bangobj.state) {
+        case BangObject.SELECT_PHASE:
+            for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
+                if (_bangobj.isActivePlayer(ii) &&
+                    _bangobj.bigShots[ii] == null) {
+                    return;
+                }
+            }
             _scenario.startNextPhase(_bangobj);
+            break;
+
+        case BangObject.BUYING_PHASE:
+            if (_ready.size() == _bangobj.getActivePlayerCount()) {
+                _scenario.startNextPhase(_bangobj);
+            }
+            break;
+
+        default:
+            // nothing to do in this phase
+            break;
         }
     }
 
@@ -573,7 +616,7 @@ public class BangManager extends GameManager
 
         // add the selected big shots to the purchases
         for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
-            if (_bangobj.bigShots[ii] != null) {
+            if (_bangobj.isActivePlayer(ii) && _bangobj.bigShots[ii] != null) {
                 _purchases.add(_bangobj.bigShots[ii]);
             }
         }
@@ -596,6 +639,11 @@ public class BangManager extends GameManager
             }
 
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                // skip players that have abandoned ship
+                if (_bangobj.isActivePlayer(ii)) {
+                    continue;
+                }
+
                 // first filter out this player's pieces
                 ArrayList<Piece> ppieces = new ArrayList<Piece>();
                 for (Piece piece : _purchases.values()) {
@@ -707,6 +755,11 @@ public class BangManager extends GameManager
             // broadcast our updated statistics
             _bangobj.setStats(_bangobj.stats);
 
+            // note that all active players completed this round
+            for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                _precords[ii].playedRound = _bangobj.roundId;
+            }
+
             // if this is the last round, end the game
             if (_bangobj.roundId == _bconfig.getRounds()) {
                 endGame();
@@ -768,24 +821,31 @@ public class BangManager extends GameManager
         // these will track awarded cash and badges
         Award[] awards = new Award[getPlayerSlots()];
 
+        // adjust the players' ratings
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            PlayerRecord prec = _precords[ii];
+
+            // TODO:
+        }
+
         // record various statistics
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            // note: the following user object might be null!
             PlayerObject user = (PlayerObject)getPlayer(ii);
-            StatSet stats = _bangobj.stats[ii];
             awards[ii] = new Award(user);
 
-            // compute this player's "take home" cash; TODO: track which round
-            // each player "left" the game in and use that instead of the final
-            // round id if we support bailing before the final round
-            Purse purse = (user == null) ? Purse.DEFAULT_PURSE : user.getPurse();
-            int maxCash = purse.getPerRoundCash() * _bangobj.roundId;
-            awards[ii].cashEarned = Math.min(_bangobj.funds[ii], maxCash);
-
-            // if this is not a real player, stop here
+            // if this player left the game early, they get nada
             if (user == null || !_gameobj.isActivePlayer(ii)) {
                 continue;
             }
 
+            // compute this player's "take home" cash
+            PlayerRecord prec = _precords[ii];
+            int maxCash = prec.purse.getPerRoundCash() * prec.playedRound;
+            // TODO: div funds by N (10?) before computing?
+            awards[ii].cashEarned = Math.min(_bangobj.funds[ii], maxCash);
+
+            StatSet stats = _bangobj.stats[ii];
             try {
                 // send all the stat updates out in one dobj event
                 user.startTransaction();
@@ -821,11 +881,21 @@ public class BangManager extends GameManager
             }
         }
 
-        // stuff the award data into the game object
+        // stuff the award data into the game object; TODO: only send the
+        // player their own awards?
         _bangobj.setAwards(awards);
 
         // and persist the awards as well
         persistAwards(awards);
+    }
+
+    @Override // documentation inherited
+    protected void playerGameDidEnd (int pidx)
+    {
+        super.playerGameDidEnd(pidx);
+
+        // we may have been waiting on this player
+        checkStartNextPhase();
     }
 
     @Override // documentation inherited
@@ -1312,12 +1382,33 @@ public class BangManager extends GameManager
         }
     }
 
+    /** Contains information on the players in the game which we need to ensure
+     * is around even if the player logs off in the middle of the game. */
+    protected static class PlayerRecord
+    {
+        public int playerId;
+        public Purse purse;
+        public int playedRound;
+
+        public DSet ratings;
+        public HashMap<String,Rating> nratings;
+
+        public Rating getRating (String scenario) {
+            Rating rating = (Rating)ratings.get(scenario);
+            if (rating == null) {
+                rating = new Rating();
+                rating.scenario = scenario;
+            }
+            return rating;
+        }
+    }
+
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
             // cope if the game has been ended and destroyed since we were
             // queued up for execution
-            if (!_bangobj.isActive() || !_bangobj.isInPlay()) {
+            if (!_bangobj.isActive() || _bangobj.state != BangObject.IN_PLAY) {
                 return;
             }
 
@@ -1378,6 +1469,9 @@ public class BangManager extends GameManager
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
+
+    /** Contains info on all of the players in the game. */
+    protected PlayerRecord[] _precords;
 
     /** Contains information on our selection of boards. */
     protected BoardRecord[] _boards;

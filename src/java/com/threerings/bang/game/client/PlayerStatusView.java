@@ -84,7 +84,6 @@ public class PlayerStatusView extends BContainer
         _player.setVerticalAlignment(BLabel.CENTER);
         add(_cash = new BLabel(""), CASH_LOC);
         _cash.setLookAndFeel(BangUI.pstatusLNF);
-        _pieces = new BLabel("");
         add(_ranklbl = new BLabel(createRankIcon(-1)), RANK_RECT);
 
         updateAvatar();
@@ -225,11 +224,6 @@ public class PlayerStatusView extends BContainer
 
     protected void updateStatus ()
     {
-        if (_bangobj.isInPlay() || _bangobj.state == BangObject.POST_ROUND) {
-            _pieces.setText("P" + _bangobj.countLiveUnits(_pidx));
-        } else {
-            _pieces.setText("");
-        }
         _cash.setText("$" + _bangobj.funds[_pidx]);
     }
 
@@ -258,7 +252,7 @@ public class PlayerStatusView extends BContainer
     protected ImageIcon _color, _avatar;
     protected Image _rankimg;
 
-    protected BLabel _player, _cash, _pieces, _ranklbl;
+    protected BLabel _player, _cash, _ranklbl;
     protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];
 
     protected static final Point BACKGROUND_LOC = new Point(33, 13);

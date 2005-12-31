@@ -311,7 +311,8 @@ public class BangBoardView extends BoardView
     protected void handleLeftPress (int mx, int my)
     {
         // nothing doing if the game is not in play or we're not a player
-        if (_bangobj == null || !_bangobj.isInPlay() || _pidx == -1) {
+        if (_bangobj == null || _bangobj.state != BangObject.IN_PLAY ||
+            _pidx == -1) {
             return;
         }
 
@@ -482,7 +483,7 @@ public class BangBoardView extends BoardView
     protected void handleRightPress (int mx, int my)
     {
         // nothing doing if the game is not in play
-        if (_bangobj == null || !_bangobj.isInPlay()) {
+        if (_bangobj == null || _bangobj.state == BangObject.IN_PLAY) {
             return;
         }
 

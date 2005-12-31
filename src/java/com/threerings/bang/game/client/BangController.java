@@ -268,7 +268,7 @@ public class BangController extends GameController
     /** Handles a request to place a card. */
     public void placeCard (int cardId)
     {
-        if (_bangobj == null || !_bangobj.isInPlay()) {
+        if (_bangobj == null || _bangobj.state != BangObject.IN_PLAY) {
             return;
         }
 
