@@ -75,7 +75,7 @@ public class Rating
             // max the opponent out at the default rating to avoid potentially
             // inflating a real rating with one that has a lot of uncertainty
             int opprat = ratings[ii];
-            if (exps[ii] < 20) {
+            if (exps[pidx] >= 20 && exps[ii] < 20) {
                 opprat = Math.min(opprat, DEFAULT_RATING);
             }
             float W = (scores[ii] == scores[pidx]) ? 0.5f :
