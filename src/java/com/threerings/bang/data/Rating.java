@@ -40,7 +40,10 @@ public class Rating
      * each opponent individually and these adjustments are summed and scaled
      * by one over the number of opponents to create the final rating
      * adjustment, which is then added to the player's previous rating and
-     * bounded to the rating range.
+     * bounded to the rating range. <em>Note:</em> provisional players (those
+     * with experience of less than 20) will be treated as having, at most, the
+     * default rating when used as an opponent in calculatons for a
+     * non-provisional player.
      *
      * @param scores the player's relative scores in the match. A player with a
      * higher score will be rated as defeating the player in question, a player
@@ -49,12 +52,16 @@ public class Rating
      * question. If an opponent's score is less than zero, they will be assumed
      * not to have participated and will be ignored.
      * @param ratings the pre-match ratings of each of the opponents.
-     * @param experiences the pre-match experience levels of each of the
+     * @param exps the pre-match experience levels of each of the
      * opponents.
      * @param pidx the index of the player whose rating is to be calculated.
+     *
+     * @return the player's updated rating or -1 if none of the opponents could
+     * be applicably rated against this player due to provisional/
+     * non-provisional mismatch or lack of participation.
      */
     public static int computeRating (
-        int[] scores, int[] ratings, int[] experiences, int pidx)
+        int[] scores, int[] ratings, int[] exps, int pidx)
     {
         float dR = 0; // the total delta rating
         int opponents = 0;
@@ -63,10 +70,21 @@ public class Rating
             if (pidx == ii | scores[ii] < 0) {
                 continue;
             }
-            // TODO
+
+            // if we are non-provisional, and the opponent is provisional, we
+            // max the opponent out at the default rating to avoid potentially
+            // inflating a real rating with one that has a lot of uncertainty
+            int opprat = ratings[ii];
+            if (exps[ii] < 20) {
+                opprat = Math.min(opprat, DEFAULT_RATING);
+            }
+            float W = (scores[ii] == scores[pidx]) ? 0.5f :
+                (scores[ii] > scores[pidx] ? 0f : 1f);
+            dR += computeAdjustment(W, opprat, ratings[pidx], exps[pidx]);
+            opponents++;
         }
 
-        int nrat = (int)Math.round(ratings[pidx] + dR);
+        int nrat = (int)Math.round(ratings[pidx] + dR/opponents);
         return MathUtil.bound(MINIMUM_RATING, nrat, MAXIMUM_RATING);
     }
 
@@ -79,7 +97,7 @@ public class Rating
      *
      * where:
      *
-     * K = if (sessions <= 20) then 64
+     * K = if (sessions < 20) then 64
      *     else if (rating < 2100 and sessions >= 20) then 32
      *     else if (rating >= 2100 and rating < 2400 and sessions >= 20)
      *          then 24
