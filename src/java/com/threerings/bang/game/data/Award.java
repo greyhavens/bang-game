@@ -18,9 +18,6 @@ import com.threerings.bang.data.PlayerObject;
  */
 public class Award extends SimpleStreamableObject
 {
-    /** The player in question (only valid on the server). */
-    public transient PlayerObject player;
-
     /** The amount of cash "taken home" by this player. */
     public int cashEarned;
 
@@ -30,15 +27,6 @@ public class Award extends SimpleStreamableObject
     /** Default constructor used during unserialization. */
     public Award ()
     {
-    }
-
-    /**
-     * Creates an award record for the specified player.
-     */
-    public Award (PlayerObject player)
-    {
-        this.player = player;
-        badges = new ArrayList<Badge>();
     }
 
     /** Provides custom serialization. */

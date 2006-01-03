@@ -106,10 +106,10 @@ public class RatingRepository extends SimpleRepository
                         if (istmt == null) {
                             istmt = conn.prepareStatement(iquery);
                         }
-                        istmt.setInt(1, rating.rating);
-                        istmt.setInt(2, rating.experience);
-                        istmt.setInt(3, playerId);
-                        istmt.setString(4, rating.scenario);
+                        istmt.setInt(1, playerId);
+                        istmt.setString(2, rating.scenario);
+                        istmt.setInt(3, rating.rating);
+                        istmt.setInt(4, rating.experience);
                         JDBCUtil.warnedUpdate(istmt, 1);
                     }
 

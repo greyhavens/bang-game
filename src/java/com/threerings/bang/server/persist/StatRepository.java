@@ -69,8 +69,11 @@ public class StatRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        stats.add(decodeStat(rs.getInt(1),
-                                             (byte[])rs.getObject(2)));
+                        Stat stat = decodeStat(
+                            rs.getInt(1), (byte[])rs.getObject(2));
+                        if (stat != null) {
+                            stats.add(stat);
+                        }
                     }
                 } finally {
                     JDBCUtil.close(stmt);
@@ -105,7 +108,6 @@ public class StatRepository extends SimpleRepository
      * the data.
      */
     protected Stat decodeStat (int statCode, byte[] data)
-        throws PersistenceException, SQLException
     {
         String errmsg = null;
         Exception error = null;
@@ -113,8 +115,9 @@ public class StatRepository extends SimpleRepository
         try {
             Stat.Type type = Stat.getType(statCode);
             if (type == null) {
-                throw new PersistenceException(
-                    "Unable to decode stat [code=" + statCode + "]");
+                log.warning("Unable to decode stat, unknown type " +
+                            "[code=" + statCode + "].");
+                return null;
             }
 
             // decode its contents from the serialized data
@@ -125,15 +128,15 @@ public class StatRepository extends SimpleRepository
 
         } catch (ClassNotFoundException cnfe) {
             error = cnfe;
-            errmsg = "Unable to instantiate item";
+            errmsg = "Unable to instantiate stat";
 
         } catch (IOException ioe) {
             error = ioe;
             errmsg = "Unable to decode stat";
         }
 
-        errmsg += " [code=" + statCode + "]";
-        throw new PersistenceException(errmsg, error);
+        log.log(Level.WARNING, errmsg + " [code=" + statCode + "]", error);
+        return null;
     }
 
     /**

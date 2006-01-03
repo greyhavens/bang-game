@@ -121,6 +121,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>funds</code> field. */
     public static final String FUNDS = "funds";
 
+    /** The field name of the <code>perRoundEarnings</code> field. */
+    public static final String PER_ROUND_EARNINGS = "perRoundEarnings";
+
     /** The field name of the <code>awards</code> field. */
     public static final String AWARDS = "awards";
     // AUTO-GENERATED: FIELDS END
@@ -182,6 +185,10 @@ public class BangObject extends GameObject
 
     /** Total cash earned by each player. */
     public int[] funds;
+
+    /** Cash earned per player per round, this is only broadcast to the client
+     * at the end of the game. */
+    public int[][] perRoundEarnings;
 
     /** Used to report cash and badges awarded at the end of the game. */
     public Award[] awards;
@@ -447,7 +454,23 @@ public class BangObject extends GameObject
     public void grantCash (int pidx, int amount)
     {
         setFundsAt(funds[pidx] + amount, pidx);
+        perRoundEarnings[roundId-1][pidx] += amount;
         stats[pidx].incrementStat(Stat.Type.CASH_EARNED, amount);
+    }
+
+    /**
+     * Returns an adjusted funds array where players that have resigned from
+     * the game are adjusted to zero.
+     */
+    public int[] getFilteredFunds ()
+    {
+        int[] afunds = (int[])funds.clone();
+        for (int ii = 0; ii < afunds.length; ii++) {
+            if (!isActivePlayer(ii)) {
+                afunds[ii] = 0;
+            }
+        }
+        return afunds;
     }
 
     @Override // documentation inherited
@@ -775,6 +798,39 @@ public class BangObject extends GameObject
         requestElementUpdate(
             FUNDS, index, new Integer(value), new Integer(ovalue));
         this.funds[index] = value;
+    }
+
+    /**
+     * Requests that the <code>perRoundEarnings</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setPerRoundEarnings (int[][] value)
+    {
+        int[][] ovalue = this.perRoundEarnings;
+        requestAttributeChange(
+            PER_ROUND_EARNINGS, value, ovalue);
+        this.perRoundEarnings = (value == null) ? null : (int[][])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>perRoundEarnings</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setPerRoundEarningsAt (int[] value, int index)
+    {
+        int[] ovalue = this.perRoundEarnings[index];
+        requestElementUpdate(
+            PER_ROUND_EARNINGS, index, value, ovalue);
+        this.perRoundEarnings[index] = value;
     }
 
     /**

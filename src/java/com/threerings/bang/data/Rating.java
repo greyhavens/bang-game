@@ -3,6 +3,7 @@
 
 package com.threerings.bang.data;
 
+import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.MathUtil;
 import com.threerings.presents.dobj.DSet;
 
@@ -11,7 +12,7 @@ import com.threerings.bang.game.data.ScenarioCodes;
 /**
  * Contains the player's ratings and experience for a particular game scenario.
  */
-public class Rating
+public class Rating extends SimpleStreamableObject
     implements DSet.Entry, Cloneable
 {
     /** The minimum rating value. */
@@ -52,39 +53,42 @@ public class Rating
      * question. If an opponent's score is less than zero, they will be assumed
      * not to have participated and will be ignored.
      * @param ratings the pre-match ratings of each of the opponents.
-     * @param exps the pre-match experience levels of each of the
-     * opponents.
      * @param pidx the index of the player whose rating is to be calculated.
      *
      * @return the player's updated rating or -1 if none of the opponents could
      * be applicably rated against this player due to provisional/
      * non-provisional mismatch or lack of participation.
      */
-    public static int computeRating (
-        int[] scores, int[] ratings, int[] exps, int pidx)
+    public static int computeRating (int[] scores, Rating[] ratings, int pidx)
     {
         float dR = 0; // the total delta rating
         int opponents = 0;
 
         for (int ii = 0; ii < scores.length; ii++) {
-            if (pidx == ii | scores[ii] < 0) {
+            if (pidx == ii || scores[ii] < 0) {
                 continue;
             }
 
             // if we are non-provisional, and the opponent is provisional, we
             // max the opponent out at the default rating to avoid potentially
             // inflating a real rating with one that has a lot of uncertainty
-            int opprat = ratings[ii];
-            if (exps[pidx] >= 20 && exps[ii] < 20) {
+            int opprat = ratings[ii].rating;
+            if (!ratings[pidx].isProvisional() && ratings[ii].isProvisional()) {
                 opprat = Math.min(opprat, DEFAULT_RATING);
             }
             float W = (scores[ii] == scores[pidx]) ? 0.5f :
                 (scores[ii] > scores[pidx] ? 0f : 1f);
-            dR += computeAdjustment(W, opprat, ratings[pidx], exps[pidx]);
+            dR += computeAdjustment(W, opprat, ratings[pidx]);
             opponents++;
         }
 
-        int nrat = (int)Math.round(ratings[pidx] + dR/opponents);
+        // if we have no valid opponents, we cannot compute a rating;
+        // similarly, if we did not play, do not return a rating
+        if (opponents == 0 || scores[pidx] < 0) {
+            return -1;
+        }
+
+        int nrat = (int)Math.round(ratings[pidx].rating + dR/opponents);
         return MathUtil.bound(MINIMUM_RATING, nrat, MAXIMUM_RATING);
     }
 
@@ -97,9 +101,9 @@ public class Rating
      *
      * where:
      *
-     * K = if (sessions < 20) then 64
-     *     else if (rating < 2100 and sessions >= 20) then 32
-     *     else if (rating >= 2100 and rating < 2400 and sessions >= 20)
+     * K = if (experience < 20) then 64
+     *     else if (rating < 2100 and experience >= 20) then 32
+     *     else if (rating >= 2100 and rating < 2400 and experience >= 20)
      *          then 24
      *     else 16
      * W = score for the game just completed, as 1.0, 0.5, and 0.0 for a
@@ -114,32 +118,37 @@ public class Rating
      * 0.5 means they drew, 0 means they lost).
      * @param opprat the opponent's current rating.
      * @param rating the player's current rating.
-     * @param sessions the number of rated games played by this player in the
-     * past.
      *
      * @return the adjustment to the player's rating.
      */
-    public static float computeAdjustment (
-        float W, int opprat, int rating, int sessions)
+    public static float computeAdjustment (float W, int opprat, Rating rating)
     {
         // calculate We, the win expectancy
-        float dR = opprat - rating;
+        float dR = opprat - rating.rating;
         float We = 1.0f / (float)(Math.pow(10.0f, (dR / 400.0f)) + 1);
 
         // calculate K, the score multiplier constant
         int K;
-        if (sessions < 20) {
+        if (rating.experience < 20) {
             K = 64;
-        } else if (rating < 2100) {
-            K = 32; // sessions >= 20
-        } else if (rating < 2400) {
-            K = 24; // sessions >= 20 && rating >= 2100
+        } else if (rating.rating < 2100) {
+            K = 32; // experience >= 20
+        } else if (rating.rating < 2400) {
+            K = 24; // experience >= 20 && rating >= 2100
         } else {
-            K = 16; // sessions >= 20 && rating >= 2400
+            K = 16; // experience >= 20 && rating >= 2400
         }
 
         // compute and return the ratings adjustment
         return K * (W - We);
+    }
+
+    /**
+     * Returns true if this rating is provisional (experience < 20).
+     */
+    public boolean isProvisional ()
+    {
+        return (experience < 20);
     }
 
     @Override // documentation inherited

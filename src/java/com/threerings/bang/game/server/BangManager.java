@@ -313,6 +313,10 @@ public class BangManager extends GameManager
         // create our per-player arrays
         int slots = getPlayerSlots();
         _bangobj.funds = new int[slots];
+        _bangobj.perRoundEarnings = new int[_bconfig.scenarios.length][slots];
+        for (int ii = 0; ii < _bangobj.perRoundEarnings.length; ii++) {
+            Arrays.fill(_bangobj.perRoundEarnings[ii], -1);
+        }
         _bangobj.pdata = new BangObject.PlayerData[slots];
         _bangobj.stats = new StatSet[slots];
         for (int ii = 0; ii < slots; ii++) {
@@ -569,7 +573,6 @@ public class BangManager extends GameManager
 
         // finally decrement their funds
         _bangobj.setFundsAt(_bangobj.funds[pidx] - totalCost, pidx);
-
         // note that this player is ready and potentially fire away
         _ready.add(pidx);
         checkStartNextPhase();
@@ -640,9 +643,13 @@ public class BangManager extends GameManager
 
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 // skip players that have abandoned ship
-                if (_bangobj.isActivePlayer(ii)) {
+                if (!_bangobj.isActivePlayer(ii)) {
                     continue;
                 }
+
+                // note that this player is participating in this round by
+                // changing their perRoundEarnings from -1 to zero
+                _bangobj.perRoundEarnings[_bangobj.roundId-1][ii] = 0;
 
                 // first filter out this player's pieces
                 ArrayList<Piece> ppieces = new ArrayList<Piece>();
@@ -757,7 +764,9 @@ public class BangManager extends GameManager
 
             // note that all active players completed this round
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                _precords[ii].playedRound = _bangobj.roundId;
+                if (_bangobj.isActivePlayer(ii)) {
+                    _precords[ii].finishedRound = _bangobj.roundId;
+                }
             }
 
             // if this is the last round, end the game
@@ -818,30 +827,39 @@ public class BangManager extends GameManager
         // note the duration of the game (in minutes)
         int gameTime = (int)(System.currentTimeMillis() - _startStamp) / 60000;
 
+        // update ratings if appropriate
+        if (_bconfig.rated &&
+            !_bconfig.scenarios[0].equals(ScenarioCodes.TUTORIAL)) {
+            // update each player's per-scenario ratings
+            for (int ii = 0; ii < _bconfig.scenarios.length; ii++) {
+                String scenario = _bconfig.scenarios[ii];
+                computeRatings(scenario, _bangobj.perRoundEarnings[ii]);
+            }
+
+            // update each player's overall rating
+            computeRatings(ScenarioCodes.OVERALL, _bangobj.getFilteredFunds());
+        }
+
         // these will track awarded cash and badges
         Award[] awards = new Award[getPlayerSlots()];
 
-        // adjust the players' ratings
-        for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            PlayerRecord prec = _precords[ii];
-
-            // TODO:
-        }
-
         // record various statistics
-        for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            // note: the following user object might be null!
-            PlayerObject user = (PlayerObject)getPlayer(ii);
-            awards[ii] = new Award(user);
+        for (int ii = 0; ii < awards.length; ii++) {
+            awards[ii] = new Award();
+            awards[ii].badges = new ArrayList<Badge>();
 
             // if this player left the game early, they get nada
-            if (user == null || !_gameobj.isActivePlayer(ii)) {
+            PlayerObject user = (PlayerObject)getPlayer(ii);
+            if (user == null || !_bangobj.isActivePlayer(ii)) {
                 continue;
             }
 
-            // compute this player's "take home" cash
+            // grab their player 
             PlayerRecord prec = _precords[ii];
-            int maxCash = prec.purse.getPerRoundCash() * prec.playedRound;
+            prec.user = user;
+
+            // compute this player's "take home" cash
+            int maxCash = prec.purse.getPerRoundCash() * prec.finishedRound;
             // TODO: div funds by N (10?) before computing?
             awards[ii].cashEarned = Math.min(_bangobj.funds[ii], maxCash);
 
@@ -855,7 +873,7 @@ public class BangManager extends GameManager
                 if (gameTime > 0) {
                     user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
                     user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
-                    if (_gameobj.winners[ii]) {
+                    if (_bangobj.winners[ii]) {
                         user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
                     }
                 }
@@ -881,12 +899,16 @@ public class BangManager extends GameManager
             }
         }
 
+        // broadcast the per-round earnings which will be displayed on one
+        // stats panel
+        _bangobj.setPerRoundEarnings(_bangobj.perRoundEarnings);
+
         // stuff the award data into the game object; TODO: only send the
         // player their own awards?
         _bangobj.setAwards(awards);
 
         // and persist the awards as well
-        persistAwards(awards);
+        postGamePersist(awards);
     }
 
     @Override // documentation inherited
@@ -901,7 +923,7 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void assignWinners (boolean[] winners)
     {
-        int[] windexes = IntListUtil.getMaxIndexes(_bangobj.funds);
+        int[] windexes = IntListUtil.getMaxIndexes(_bangobj.getFilteredFunds());
         for (int ii = 0; ii < windexes.length; ii++) {
             winners[windexes[ii]] = true;
         }
@@ -1239,55 +1261,111 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Persists the supplied cash and badges and sticks them into the
-     * distributed objects of the appropriate players.
+     * Computes updated ratings for the specified scenario, using the supplied
+     * scores and stores them in the appropriate {@link PlayerRecord}.
      */
-    protected void persistAwards (final Award[] awards)
+    protected void computeRatings (String scenario, int[] scores)
+    {
+        // collect each player's rating for this scenario
+        Rating[] ratings = new Rating[getPlayerSlots()];
+        for (int pidx = 0; pidx < ratings.length; pidx++) {
+            ratings[pidx] = _precords[pidx].getRating(scenario);
+        }
+
+        // now compute the adjusted ratings
+        int[] nratings = new int[ratings.length];
+        for (int pidx = 0; pidx < ratings.length; pidx++) {
+            nratings[pidx] = Rating.computeRating(scores, ratings, pidx);
+        }
+
+        // finally store the adjusted ratings back in the ratings objects and
+        // record the increased experience
+        for (int pidx = 0; pidx < ratings.length; pidx++) {
+            // skip this rating if we weren't able to compute a value
+            if (nratings[pidx] < 0) {
+                continue;
+            }
+            ratings[pidx].rating = nratings[pidx];
+            ratings[pidx].experience++;
+            _precords[pidx].nratings.put(ratings[pidx].scenario, ratings[pidx]);
+        }
+    }
+
+    /**
+     * Persists the supplied cash and badges and sticks them into the
+     * distributed objects of the appropriate players. Also updates the
+     * players' ratings if appropriate.
+     */
+    protected void postGamePersist (final Award[] awards)
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
-                for (int ii = 0; ii < awards.length; ii++) {
-                    if (awards[ii].player != null) {
-                        persistAward(awards[ii]);
+                for (int pidx = 0; pidx < awards.length; pidx++) {
+                    PlayerRecord prec = _precords[pidx];
+                    Award award = awards[pidx];
+                    if (prec.playerId < 0) {
+                        continue; // skip AIs
+                    }
+
+                    // grant them their case
+                    if (award.cashEarned > 0) {
+                        try {
+                            BangServer.playrepo.grantScrip(
+                                prec.playerId, award.cashEarned);
+                        } catch (PersistenceException pe) {
+                            log.log(Level.WARNING, "Failed to award scrip to " +
+                                    "player [who=" + prec.playerId +
+                                    ", scrip=" + award.cashEarned + "]", pe);
+                        }
+                    }
+
+                    // grant them their badges
+                    for (Badge badge : award.badges) {
+                        try {
+                            BangServer.itemrepo.insertItem(badge);
+                        } catch (PersistenceException pe) {
+                            log.log(Level.WARNING, "Failed to store badge " +
+                                    badge, pe);
+                        }
+                    }
+
+                    // update their ratings
+                    if (prec.nratings.size() > 0) {
+                        ArrayList<Rating> ratings =
+                            new ArrayList<Rating>(prec.nratings.values());
+                        try {
+                            BangServer.ratingrepo.updateRatings(
+                                prec.playerId, ratings);
+                        } catch (PersistenceException pe) {
+                            log.log(Level.WARNING, "Failed to persist ratings " +
+                                    "[pid=" + prec.playerId + ", ratings=" +
+                                    StringUtil.toString(ratings) + "]", pe);
+                        }
                     }
                 }
                 return true;
             }
 
             public void handleResult () {
-                for (int ii = 0; ii < awards.length; ii++) {
-                    if (awards[ii].player == null) {
+                for (int pidx = 0; pidx < awards.length; pidx++) {
+                    PlayerObject player = _precords[pidx].user;
+                    if (player == null || !player.isActive()) {
+                        // no need to update their player distributed object if
+                        // they've already logged off
                         continue;
                     }
-                    PlayerObject player = awards[ii].player;
-                    if (awards[ii].cashEarned > 0) {
-                        player.setScrip(player.scrip + awards[ii].cashEarned);
+                    if (awards[pidx].cashEarned > 0) {
+                        player.setScrip(player.scrip + awards[pidx].cashEarned);
                     }
-                    for (Badge badge : awards[ii].badges) {
+                    for (Badge badge : awards[pidx].badges) {
                         player.addToInventory(badge);
                     }
-                }
-            }
-
-            protected void persistAward (Award award) {
-                try {
-                    if (award.cashEarned > 0) {
-                        BangServer.playrepo.grantScrip(
-                            award.player.playerId, award.cashEarned);
-                    }
-                } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to award scrip to player " +
-                            "[who=" + award.player.who() +
-                            ", scrip=" + award.cashEarned + "].", pe);
-                }
-
-                for (Badge badge : award.badges) {
-                    try {
-                        BangServer.itemrepo.insertItem(badge);
-                    } catch (PersistenceException pe) {
-                        log.log(Level.WARNING, "Failed to store badge " +
-                                "[for=" + award.player.who() +
-                                ", badge=" + badge + "]", pe);
+                    for (Rating rating : _precords[pidx].nratings.values()) {
+                        if (player.ratings.containsKey(rating.scenario)) {
+                            player.updateRatings(rating);
+                        } else {
+                            player.addToRatings(rating);
+                        }
                     }
                 }
             }
@@ -1388,16 +1466,23 @@ public class BangManager extends GameManager
     {
         public int playerId;
         public Purse purse;
-        public int playedRound;
+        public int finishedRound;
 
         public DSet ratings;
-        public HashMap<String,Rating> nratings;
+        public HashMap<String,Rating> nratings = new HashMap<String,Rating>();
+
+        public PlayerObject user;
 
         public Rating getRating (String scenario) {
-            Rating rating = (Rating)ratings.get(scenario);
+            Rating rating = nratings.get(scenario);
             if (rating == null) {
-                rating = new Rating();
-                rating.scenario = scenario;
+                rating = (Rating)ratings.get(scenario);
+                if (rating == null) {
+                    rating = new Rating();
+                    rating.scenario = scenario;
+                } else {
+                    rating = (Rating)rating.clone();
+                }
             }
             return rating;
         }
