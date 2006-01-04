@@ -19,10 +19,12 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jmex.effects.ParticleManager;
 
@@ -146,6 +148,11 @@ public class MobileSprite extends PieceSprite
     {
         super.move(path);
         
+        // only activate sound/dust for unit paths
+        if (!(path instanceof MoveUnitPath)) {
+            return;
+        }
+        
         // start the movement sound
         _moveSound.loop(false);
         
@@ -219,7 +226,8 @@ public class MobileSprite extends PieceSprite
     protected void createGeometry (BasicContext ctx)
     {
         super.createGeometry(ctx);
-
+        _ctx = ctx;
+        
         // contains highlights draped over terrain
         _hnode = new Node("highlight");
         
@@ -393,6 +401,7 @@ public class MobileSprite extends PieceSprite
         Model.Animation anim = _model.getAnimation(action);
         _binding = anim.bind(this, _texrando);
         setAnimationSpeed(Config.display.animationSpeed * anim.getSpeed());
+        setAnimationRepeatType(anim.repeatType);
         return anim;
     }
 
@@ -403,9 +412,30 @@ public class MobileSprite extends PieceSprite
     {
         _action = _actions.remove(0);
         if (_action.equals(REMOVED)) {
-            // expire our fake action on the next frame and keep using our
-            // previous action
-            _nextAction = 0.001f;
+            // have the unit sink into the ground and fade away
+            _nextAction = REMOVAL_DURATION;
+            
+            setRenderState(RenderUtil.blendAlpha);
+            final MaterialState mstate =
+                _ctx.getRenderer().createMaterialState();
+            final ColorRGBA color = new ColorRGBA(ColorRGBA.white);
+            mstate.setAmbient(color);
+            setRenderState(mstate);
+            _shadow.setDefaultColor(color);
+
+            Vector3f start = new Vector3f(localTranslation),
+                finish = localRotation.mult(Vector3f.UNIT_Z);
+            finish.multLocal(-TILE_SIZE).addLocal(localTranslation);
+            move(new LinePath(this, start, finish, REMOVAL_DURATION) {
+                public void update (float time) {
+                    super.update(time);
+                    color.a -= time / REMOVAL_DURATION;
+                    mstate.getDiffuse().a = color.a;
+                    mstate.getSpecular().a = color.a;
+                    updateRenderState();
+                }    
+            });
+            
         } else {
             Model.Animation anim = setAction(_action);
             _nextAction = anim.getDuration() / Config.display.animationSpeed;
@@ -544,6 +574,8 @@ public class MobileSprite extends PieceSprite
         protected String _action;
     }
 
+    protected BasicContext _ctx;
+    
     protected String _type, _name;
     protected Node _hnode;
     protected TerrainNode.Highlight _highlight;
@@ -571,5 +603,8 @@ public class MobileSprite extends PieceSprite
     protected static final int SHADOW_TEXTURE_SIZE = 128;
     
     /** The number of dust particles. */
-    protected static final int NUM_DUST_PARTICLES = 32; 
+    protected static final int NUM_DUST_PARTICLES = 32;
+    
+    /** The number of seconds it takes dead pieces to fade out. */
+    protected static final float REMOVAL_DURATION = 3f;
 }

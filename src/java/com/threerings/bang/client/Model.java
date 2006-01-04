@@ -28,6 +28,7 @@ import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
+import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.LightState;
@@ -110,6 +111,9 @@ public class Model
         /** The duration of one cycle of the animation in milliseconds. */
         public int duration;
 
+        /** The repeat type of the animation (clamp, cycle, wrap). */
+        public int repeatType;
+        
         /**
          * Returns the "speed" at which this animation's controller should
          * be run.
@@ -341,6 +345,15 @@ public class Model
         anim.duration = BangUtil.getIntProperty(
             _key, _props, action + ".duration", 250);
 
+        String repeatType = _props.getProperty(action + ".repeat_type");
+        if ("clamp".equals(repeatType)) {
+            anim.repeatType = Controller.RT_CLAMP;
+        } else if ("cycle".equals(repeatType)) {
+            anim.repeatType = Controller.RT_CYCLE;
+        } else {
+            anim.repeatType = Controller.RT_WRAP;
+        }
+        
         String path = _key + "/";
         String[] pnames = getList(_props, action + ".meshes", "meshes", true);
         final Part[] parts = new Part[pnames.length];

@@ -247,8 +247,6 @@ public class UnitSprite extends MobileSprite
             loadTextures(ctx);
         }
 
-        _ctx = ctx;
-
         // load up our model
         super.createGeometry(ctx);
 
@@ -425,7 +423,6 @@ public class UnitSprite extends MobileSprite
             "textures/ustatus/health_meter_empty.png");
     }
 
-    protected BasicContext _ctx;
     protected Quad _tgtquad;
     protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst;
