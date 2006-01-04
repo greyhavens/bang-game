@@ -286,6 +286,14 @@ public class BoardView extends BComponent
     }
 
     /**
+     * Returns a reference to the board being viewed.
+     */
+    public BangBoard getBoard ()
+    {
+        return _board;
+    }
+    
+    /**
      * Returns the node containing the sky.
      */
     public SkyNode getSkyNode ()

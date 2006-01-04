@@ -48,6 +48,8 @@ public class RenderUtil
 {
     public static AlphaState blendAlpha;
 
+    public static AlphaState addAlpha;
+    
     public static ZBufferState alwaysZBuf;
 
     public static ZBufferState lequalZBuf;
@@ -61,6 +63,12 @@ public class RenderUtil
      */
     public static void init (BasicContext ctx)
     {
+        addAlpha = ctx.getRenderer().createAlphaState();
+        addAlpha.setBlendEnabled(true);
+        addAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+        addAlpha.setDstFunction(AlphaState.DB_ONE);
+        addAlpha.setEnabled(true);
+        
         blendAlpha = ctx.getRenderer().createAlphaState();
         blendAlpha.setBlendEnabled(true);
         blendAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);

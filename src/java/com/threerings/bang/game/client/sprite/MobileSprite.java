@@ -571,5 +571,5 @@ public class MobileSprite extends PieceSprite
     protected static final int SHADOW_TEXTURE_SIZE = 128;
     
     /** The number of dust particles. */
-    protected static final int NUM_DUST_PARTICLES = 16; 
+    protected static final int NUM_DUST_PARTICLES = 32; 
 }

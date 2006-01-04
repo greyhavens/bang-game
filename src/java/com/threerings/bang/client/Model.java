@@ -550,7 +550,9 @@ public class Model
         rotm.mult(cam.getLeft(), cam.getLeft());
         cam.update();
 
-        Texture icon = trenderer.setupTexture();
+        Texture icon = new Texture();
+        trenderer.setupTexture(icon);
+        
         icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
 
         Node all = new Node("all");
