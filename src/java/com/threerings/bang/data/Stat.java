@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.util.EnumSet;
 
 import com.samskivert.util.HashIntMap;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.presents.dobj.DSet;
+
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -46,7 +47,7 @@ public abstract class Stat
         CASH_EARNED(new IntStat()),
 
         CATTLE_RUSTLED(new IntStat()),
-        NUGS_COLLECTED(new IntStat()),
+        NUGGETS_COLLECTED(new IntStat()),
 
         // stats derived from in-game statistics
         HIGHEST_EARNINGS(new IntStat()),
@@ -71,12 +72,6 @@ public abstract class Stat
             return _code;
         }
 
-        /** Returns the unique string to which this stat's name was
-         * reduced that must not collide with any other stat. */
-        public String codeString () {
-            return _codestr;
-        }
-
         Type (Stat prototype) {
             // configure our prototype
             _prototype = prototype;
@@ -84,14 +79,19 @@ public abstract class Stat
             _prototype._modified = true;
 
             // compute our unique code
-            StringBuffer codestr = new StringBuffer();
-            _code = StringUtil.stringCode(name(), codestr);
-            _codestr = codestr.toString();
+            _code = BangUtil.crc32(name());
+
+            if (_codeToType.containsKey(_code)) {
+                log.warning("Stat type collision! " + this + " and " +
+                            _codeToType.get(_code) + " both map to '" +
+                            _code + "'.");
+            } else {
+                _codeToType.put(_code, this);
+            }
         }
 
         protected Stat _prototype;
         protected int _code;
-        protected String _codestr;
     };
 
     /**
@@ -99,19 +99,6 @@ public abstract class Stat
      */
     public static Type getType (int code)
     {
-        // map our enumerated types back from their codes
-        if (_codeToType == null) {
-            _codeToType = new HashIntMap();
-            for (Type type : EnumSet.allOf(Type.class)) {
-                if (_codeToType.containsKey(type.code())) {
-                    log.warning("Stat type collision! " + type + " and " +
-                                _codeToType.get(type.code()) + " both map to '" +
-                                type.codeString() + "'.");
-                } else {
-                    _codeToType.put(type.code(), type);
-                }
-            }
-        }
         return (Type)_codeToType.get(code);
     }
 
@@ -237,5 +224,8 @@ public abstract class Stat
     protected transient boolean _modified;
 
     /** The table mapping stat codes to enumerated types. */
-    protected static HashIntMap _codeToType;
+    protected static HashIntMap _codeToType = new HashIntMap();
+
+    /** Trigger the loading of the enum when we load this class. */
+    protected static Type _trigger = Type.UNUSED;
 }
