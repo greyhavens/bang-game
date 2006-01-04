@@ -107,7 +107,7 @@ public class ClaimJumping extends Scenario
                 bangobj.grantCash(claim.owner, ScenarioCodes.CASH_PER_NUGGET *
                                   (claim.nuggets));
                 bangobj.stats[claim.owner].incrementStat(
-                    Stat.Type.NUGS_COLLECTED, claim.nuggets);
+                    Stat.Type.NUGGETS_CLAIMED, claim.nuggets);
             }
             return true;
         }
@@ -181,10 +181,10 @@ public class ClaimJumping extends Scenario
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 
-        // record the number of nuggets they collected
-        int nuggets = bangobj.stats[pidx].getIntStat(Stat.Type.NUGS_COLLECTED);
+        // record the number of nuggets they claimed
+        int nuggets = bangobj.stats[pidx].getIntStat(Stat.Type.NUGGETS_CLAIMED);
         if (nuggets > 0) {
-            user.stats.incrementStat(Stat.Type.NUGS_COLLECTED, nuggets);
+            user.stats.incrementStat(Stat.Type.NUGGETS_CLAIMED, nuggets);
         }
     }
 

@@ -114,25 +114,25 @@ public class Badge extends Item
             }
         },
 
-        // nuggets collected badges
-        NUGGETS_COLLECTED_1 {
+        // nuggets claimed badges
+        NUGGETS_CLAIMED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 10;
+                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10;
             }
         },
-        NUGGETS_COLLECTED_2 {
+        NUGGETS_CLAIMED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 100;
+                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 100;
             }
         },
-        NUGGETS_COLLECTED_3 {
+        NUGGETS_CLAIMED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 1000;
+                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 1000;
             }
         },
-        NUGGETS_COLLECTED_4 {
+        NUGGETS_CLAIMED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 10000;
+                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10000;
             }
         },
 
@@ -186,12 +186,14 @@ public class Badge extends Item
                             _code + "'.");
             } else {
                 _codeToType.put(_code, this);
-//                 System.out.println(key() + " = " + this);
+                System.out.println(key() + " = " + this);
             }
         }
 
         protected int _code;
     };
+
+    public static void main (String[] args) {}
 
     /**
      * Determines whether this player qualifies for any new badges and

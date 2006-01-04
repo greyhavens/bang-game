@@ -47,7 +47,7 @@ public abstract class Stat
         CASH_EARNED(new IntStat()),
 
         CATTLE_RUSTLED(new IntStat()),
-        NUGGETS_COLLECTED(new IntStat()),
+        NUGGETS_CLAIMED(new IntStat()),
 
         // stats derived from in-game statistics
         HIGHEST_EARNINGS(new IntStat()),
