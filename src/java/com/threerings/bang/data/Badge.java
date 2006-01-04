@@ -9,7 +9,8 @@ import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
-import com.samskivert.util.StringUtil;
+
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -28,106 +29,126 @@ public class Badge extends Item
         MONTHLY_HIGH_SCORER, // monthly
 
         // games played badges
-        FIFTY_GAMES_PLAYED {
+        GAMES_PLAYED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5;
+            }
+        },
+        GAMES_PLAYED_2 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 50;
             }
         },
-        FIVEC_GAMES_PLAYED {
+        GAMES_PLAYED_3 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 500;
             }
         },
-        ONEM_GAMES_PLAYED {
+        GAMES_PLAYED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 1000;
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 2000;
             }
         },
-        FIVEM_GAMES_PLAYED {
+        GAMES_PLAYED_5 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
             }
         },
-        TENM_GAMES_PLAYED {
+        GAMES_PLAYED_6 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 10000;
             }
         },
-        FIFTYM_GAMES_PLAYED {
+        GAMES_PLAYED_7 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 50000;
             }
         },
 
         // units killed badges
-        FIVEC_UNITS_KILLED {
+        UNITS_KILLED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 50;
+            }
+        },
+        UNITS_KILLED_2 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 500;
             }
         },
-        FIVEM_UNITS_KILLED {
+        UNITS_KILLED_3 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 5000;
             }
         },
-        TENM_UNITS_KILLED {
+        UNITS_KILLED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 10000;
+                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 20000;
             }
         },
-        FIFTYM_UNITS_KILLED {
+        UNITS_KILLED_5 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 50000;
             }
         },
 
         // cattle rustled badges
-        ONEC_CATTLE_RUSTLED {
+        CATTLE_RUSTLED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10;
+            }
+        },
+        CATTLE_RUSTLED_2 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 100;
             }
         },
-        ONEM_CATTLE_RUSTLED {
+        CATTLE_RUSTLED_3 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 1000;
             }
         },
-        TENM_CATTLE_RUSTLED {
+        CATTLE_RUSTLED_4 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10000;
             }
         },
 
         // nuggets collected badges
-        ONEC_NUGGETS_COLLECTED {
+        NUGGETS_COLLECTED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 10;
+            }
+        },
+        NUGGETS_COLLECTED_2 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 100;
             }
         },
-        ONEM_NUGGETS_COLLECTED {
+        NUGGETS_COLLECTED_3 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 1000;
             }
         },
-        TENM_NUGGETS_COLLECTED {
+        NUGGETS_COLLECTED_4 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.NUGS_COLLECTED) >= 10000;
             }
         },
 
         // badges for using (owning) bigshots
-        FRTO_BIGSHOTS_USED, // all Frontier Town bigshots owned (used)
-        INVI_BIGSHOTS_USED, // all Indian Village bigshots owned (used)
-        BOTO_BIGSHOTS_USED, // all Boom Town bigshots owned (used)
-        GHTO_BIGSHOTS_USED, // all Ghost Town bigshots owned (used)
-        CIGO_BIGSHOTS_USED, // all City of Gold bigshots owned (used)
+        FRONTIER_BIGSHOTS_USED, // all Frontier Town bigshots owned (used)
+        INDIAN_BIGSHOTS_USED, // all Indian Village bigshots owned (used)
+        BOOM_BIGSHOTS_USED, // all Boom Town bigshots owned (used)
+        GHOST_BIGSHOTS_USED, // all Ghost Town bigshots owned (used)
+        GOLD_BIGSHOTS_USED, // all City of Gold bigshots owned (used)
 
         // badges for using special units
-        FRTO_SPECIALS_USED, // all Frontier Town special units used
-        INVI_SPECIALS_USED, // all Indian Village special units used
-        BOTO_SPECIALS_USED, // all Boom Town special units used
-        GHTO_SPECIALS_USED, // all Ghost Town special units used
-        CIGO_SPECIALS_USED, // all City of Gold special units used
+        FRONTIER_SPECIALS_USED, // all Frontier Town special units used
+        INDIAN_SPECIALS_USED, // all Indian Village special units used
+        BOOM_SPECIALS_USED, // all Boom Town special units used
+        GHOST_SPECIALS_USED, // all Ghost Town special units used
+        GOLD_SPECIALS_USED, // all City of Gold special units used
 
         UNUSED;
 
@@ -145,40 +166,31 @@ public class Badge extends Item
 
         /** Returns the translation key used by this badge. */
         public String key () {
-            return "m.badge_" + name().toLowerCase();
+            return "m.badge_" + Integer.toHexString(_code);
         }
 
-        /** Returns the unique code for this badge type, which is a
-         * function of its name. */
+        /** Returns the unique code for this badge type, which is a function of
+         * its name. */
         public int code () {
             return _code;
-        }
-
-        /** Returns the unique string to which this badge type's name was
-         * reduced that must not collide with any other badge type. */
-        public String codeString () {
-            return _codestr;
         }
 
         Type () {
             // compute our unique code
             StringBuffer codestr = new StringBuffer();
-            _code = StringUtil.stringCode(name(), codestr);
-            _codestr = codestr.toString();
+            _code = BangUtil.crc32(name());
 
             if (_codeToType.containsKey(_code)) {
                 log.warning("Badge type collision! " + this + " and " +
                             _codeToType.get(_code) + " both map to '" +
-                            _codestr + "'.");
+                            _code + "'.");
             } else {
                 _codeToType.put(_code, this);
-//                 log.info("Mapped " + this + " to " + _code +
-//                          " (" + _codestr + ").");
+//                 System.out.println(key() + " = " + this);
             }
         }
 
         protected int _code;
-        protected String _codestr;
     };
 
     /**

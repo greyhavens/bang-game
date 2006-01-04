@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.zip.CRC32;
 
 import com.samskivert.util.StringUtil;
 
@@ -154,4 +155,16 @@ public class BangUtil
             return defval;
         }
     }
+
+    /**
+     * Computes and returns the CRC32 hash value for the supplied string.
+     */
+    public static int crc32 (String value)
+    {
+        _crc.reset();
+        _crc.update(value.getBytes());
+        return (int)_crc.getValue();
+    }
+
+    protected static CRC32 _crc = new CRC32();
 }
