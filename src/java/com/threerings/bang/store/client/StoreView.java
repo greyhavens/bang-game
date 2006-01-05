@@ -3,18 +3,20 @@
 
 package com.threerings.bang.store.client;
 
+import com.jme.image.Image;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 
-import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.icon.ImageIcon;
-import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.AbsoluteLayout;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
@@ -37,8 +39,7 @@ public class StoreView extends BWindow
 {
     public StoreView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), GroupLayout.makeHStretch());
-        setBorder(new EmptyBorder(5, 5, 5, 5));
+        super(ctx.getLookAndFeel(), new AbsoluteLayout());
 
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
@@ -46,42 +47,28 @@ public class StoreView extends BWindow
 
         String townId = _ctx.getUserObject().townId;
 
-        // the left column contains some fancy graphics
-        BContainer left = new BContainer(GroupLayout.makeVert(GroupLayout.TOP));
-        add(left, GroupLayout.FIXED);
-        String path = "ui/" + townId + "/shopkeeper.png";
-        left.add(new BLabel(new ImageIcon(_ctx.loadImage(path))));
+        // load up our background, shopkeep and other images
+        _background = _ctx.loadImage("ui/store/background.png");
+        _shopkeep = _ctx.loadImage("ui/store/" + townId + "/shopkeep.png");
+        _shopkbg = _ctx.loadImage("ui/store/" + townId + "/shopkeep_bg.png");
+        _shop = _ctx.loadImage("ui/store/" + townId + "/shop.png");
 
-        // then we have a blurb, cash on hand, the list of goods, and the goods
-        // inspector all stacked one atop another
-        BContainer main = new BContainer(GroupLayout.makeVStretch());
-        add(main);
-
+        // add our various interface components
         _status = new BTextArea();
         _status.setPreferredSize(new Dimension(100, 100));
         _status.setBorder(new LineBorder(ColorRGBA.black));
         _status.setText(_msgs.get("m.intro_tip"));
         _status.setLookAndFeel(BangUI.dtitleLNF);
-        main.add(_status, GroupLayout.FIXED);
+        add(_status, new Rectangle(232, 640, 560, 35));
 
-        BContainer mcont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        mcont.add(new WalletLabel(_ctx));
-        main.add(mcont, GroupLayout.FIXED);
+        add(new WalletLabel(_ctx), new Rectangle(40, 77, 150, 25));
 
-        // create our goods inspector first as the goods palette will need it
         _inspector = new GoodsInspector(_ctx, this, _status);
-
-        // the display of goods for sale
-        main.add(new BScrollPane(_goods = new GoodsPalette(_ctx, _inspector)));
-
-        // the bottom contains the goods inspector and "to town" button
-        GroupLayout lay = GroupLayout.makeHStretch();
-        lay.setOffAxisPolicy(GroupLayout.CONSTRAIN);
-        lay.setOffAxisJustification(GroupLayout.BOTTOM);
-        BContainer bottom = new BContainer(lay);
-        bottom.add(_inspector);
-        bottom.add(new TownButton(ctx), GroupLayout.FIXED);
-        main.add(bottom, GroupLayout.FIXED);
+        _inspector.setBorder(new LineBorder(ColorRGBA.black));
+        add(_goods = new GoodsPalette(_ctx, _inspector),
+            new Rectangle(181, 168, 817, 468));
+        add(_inspector, new Rectangle(268, 9, 500, 151));
+        add(new TownButton(ctx), new Point(855, 20));
     }
 
     // documentation inherited from interface PlaceView
@@ -106,6 +93,20 @@ public class StoreView extends BWindow
     }
 
     @Override // documentation inherited
+    protected void renderBackground (Renderer renderer)
+    {
+        super.renderBackground(renderer);
+
+        int width = renderer.getWidth(), height = renderer.getHeight();
+        RenderUtil.blendState.apply();
+        RenderUtil.renderImage(_shopkbg, 12, height-_shopkbg.getHeight()-12);
+        RenderUtil.renderImage(_shopkeep, 12, height-_shopkeep.getHeight()-12);
+        RenderUtil.renderImage(_shop, width-_shop.getWidth()-12,
+                               height-_shop.getHeight()-12);
+        RenderUtil.renderImage(_background, 0, 0);
+    }
+
+    @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
@@ -117,4 +118,6 @@ public class StoreView extends BWindow
     protected GoodsPalette _goods;
     protected GoodsInspector _inspector;
     protected BTextArea _status;
+
+    protected Image _background, _shopkeep, _shopkbg, _shop;
 }

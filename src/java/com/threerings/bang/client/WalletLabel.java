@@ -35,12 +35,12 @@ public class WalletLabel extends MoneyLabel
         }
     }
 
-    @Override // documentation inherited
-    protected void createLabels (BangContext ctx)
-    {
-        add(new BLabel(ctx.xlate(BangCodes.BANG_MSGS, "m.cash_on_hand")));
-        super.createLabels(ctx);
-    }
+//     @Override // documentation inherited
+//     protected void createLabels (BangContext ctx)
+//     {
+//         add(new BLabel(ctx.xlate(BangCodes.BANG_MSGS, "m.cash_on_hand")));
+//         super.createLabels(ctx);
+//     }
 
     @Override // documentation inherited
     protected void wasAdded ()

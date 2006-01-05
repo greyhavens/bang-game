@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BContainer;
-import com.jmex.bui.border.CompoundBorder;
-import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.layout.TableLayout;
 
 import static com.threerings.bang.Log.log;
@@ -43,9 +40,7 @@ public class IconPalette extends BContainer
      */
     public IconPalette (Inspector inspector, int columns, int selectable)
     {
-        super(new TableLayout(columns, 5, 5, TableLayout.CENTER));
-        setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
-                                     new EmptyBorder(5, 5, 5, 5)));
+        super(new TableLayout(columns, 0, 0, TableLayout.CENTER));
         _inspector = inspector;
         _selectable = selectable;
     }

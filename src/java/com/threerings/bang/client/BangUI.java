@@ -6,10 +6,13 @@ package com.threerings.bang.client;
 import java.awt.Font;
 import java.util.logging.Level;
 
+import com.jme.renderer.ColorRGBA;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.background.BBackground;
+import com.jmex.bui.background.BlankBackground;
 import com.jmex.bui.background.TiledBackground;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
@@ -47,6 +50,12 @@ public class BangUI
 
     /** A look and feel for player status text. */
     public static BLookAndFeel pstatusLNF;
+
+    /** A look and feel for (inventory item) icon labels. */
+    public static BLookAndFeel iconLabelLNF;
+
+    /** A look and feel for medium-sized titles. */
+    public static BLookAndFeel mediumTitleLNF;
 
     /** Used to load sounds from the classpath. */
     public static ClipProvider clipprov = new WaveDataClipProvider();
@@ -87,6 +96,16 @@ public class BangUI
         dtitleLNF = new BangLookAndFeel();
         dtitleLNF.setTextFactory(
             new AWTTextFactory(oldtown.deriveFont(Font.PLAIN, 30), true));
+
+        iconLabelLNF = new BangLookAndFeel() {
+            public BBackground createButtonBack (int state) {
+                return new BlankBackground();
+            }
+        };
+        iconLabelLNF.setTextFactory(
+            new AWTTextFactory(dc.deriveFont(Font.BOLD, 16), true));
+        iconLabelLNF.setForeground(
+            true, new ColorRGBA(64f/255f, 15f/255f, 1f/255f, 1f));
 
         pstatusLNF = new BangLookAndFeel() {
             public BBackground createButtonBack (int state) {

@@ -7,6 +7,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.BlankIcon;
@@ -42,6 +43,7 @@ public class GoodsInspector extends BContainer
 
         setLayoutManager(GroupLayout.makeHoriz(GroupLayout.LEFT));
         add(_icon = new BLabel(""));
+        add(new Spacer(15, 15));
 
         BContainer vert;
         add(vert = new BContainer(GroupLayout.makeVStretch()));

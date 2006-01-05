@@ -21,7 +21,7 @@ public class GoodsPalette extends IconPalette
 {
     public GoodsPalette (BangContext ctx, GoodsInspector inspector)
     {
-        super(inspector, 3, 1);
+        super(inspector, 5, 1);
         _ctx = ctx;
     }
 
