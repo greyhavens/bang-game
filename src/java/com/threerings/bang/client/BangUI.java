@@ -59,6 +59,9 @@ public class BangUI
     /** A look and feel for medium-sized titles. */
     public static BLookAndFeel mediumTitleLNF;
 
+    /** A look and feel for the General Store goods description. */
+    public static BLookAndFeel goodsDescripLNF;
+
     /** Used to load sounds from the classpath. */
     public static ClipProvider clipprov = new WaveDataClipProvider();
 
@@ -90,7 +93,7 @@ public class BangUI
 
         defaultLNF = new BangLookAndFeel();
         defaultLNF.setTextFactory(
-            new AWTTextFactory(dc.deriveFont(Font.PLAIN, 16), true));
+            new AWTTextFactory(new Font("Dialog", Font.PLAIN, 16), true));
 
         marqueeLNF = new BangLookAndFeel();
         marqueeLNF.setTextFactory(new AWTTextFactory(COUNTER_FONT, true));
@@ -109,9 +112,24 @@ public class BangUI
             }
         };
         iconLabelLNF.setTextFactory(
-            new AWTTextFactory(dc.deriveFont(Font.BOLD, 16), true));
+            new AWTTextFactory(dc.deriveFont(Font.PLAIN, 15), true));
         iconLabelLNF.setForeground(
             true, new ColorRGBA(64f/255f, 15f/255f, 1f/255f, 1f));
+
+        mediumTitleLNF = new BangLookAndFeel();
+        mediumTitleLNF.setTextFactory(
+            new AWTTextFactory(dc.deriveFont(Font.BOLD, 24), true));
+        mediumTitleLNF.setForeground(true, new ColorRGBA(1f, 1f, 1f, 1f));
+
+        goodsDescripLNF = new BangLookAndFeel() {
+            public BBackground createTextBack () {
+                return new BlankBackground();
+            }
+        };
+        goodsDescripLNF.setTextFactory(
+            new AWTTextFactory(new Font("Dialog", Font.PLAIN, 14), true));
+        goodsDescripLNF.setForeground(
+            true, new ColorRGBA(247f/255f, 225f/255f, 126f/255f, 1f));
 
         pstatusLNF = new BangLookAndFeel() {
             public BBackground createButtonBack (int state) {

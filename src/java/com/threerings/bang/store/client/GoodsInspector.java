@@ -12,7 +12,10 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
@@ -37,30 +40,27 @@ public class GoodsInspector extends BContainer
 {
     public GoodsInspector (BangContext ctx, StoreView parent, BTextArea status)
     {
+        super(new AbsoluteLayout());
+
         _ctx = ctx;
         _parent = parent;
         _status = status;
 
-        setLayoutManager(GroupLayout.makeHoriz(GroupLayout.LEFT));
-        add(_icon = new BLabel(""));
-        add(new Spacer(15, 15));
+        add(_icon = new BLabel(""), new Rectangle(10, 0, 136, 156));
 
-        BContainer vert;
-        add(vert = new BContainer(GroupLayout.makeVStretch()));
+        add(_title = new BLabel(""), new Rectangle(200, 110, 280, 40));
+        _title.setLookAndFeel(BangUI.mediumTitleLNF);
+        _title.setVerticalAlignment(BLabel.TOP); // TEMP
+        add(_descrip = new BTextArea(""), new Rectangle(200, 45, 300, 65));
+        _descrip.setLookAndFeel(BangUI.goodsDescripLNF);
 
-        vert.add(_title = new BLabel(""));
-        _title.setLookAndFeel(BangUI.dtitleLNF);
-        vert.add(_descrip = new BLabel(""));
-        vert.add(_icont = GroupLayout.makeHBox(GroupLayout.LEFT));
-
-        // this is only used for article goods
-        _icont.add(_colors = GroupLayout.makeHBox(GroupLayout.CENTER));
-
-        _icont.add(_cost = new MoneyLabel(ctx));
+        add(_cost = new MoneyLabel(ctx), new Rectangle(200, 15, 200, 25));
         _cost.setMoney(0, 0, false);
-        _icont.add(new BLabel(new BlankIcon(25, 10))); // spacer
+
+        _colors = new BContainer();
+
         BButton buy;
-        _icont.add(buy = new BButton(_ctx.xlate("store", "m.buy")));
+        add(buy = new BButton(_ctx.xlate("store", "m.buy")), new Point(400, 10));
         buy.addListener(this);
     }
 
@@ -147,8 +147,9 @@ public class GoodsInspector extends BContainer
     protected StoreObject _stobj;
     protected Good _good;
 
-    protected BLabel _icon, _title, _descrip;
-    protected BContainer _icont, _colors;
+    protected BLabel _icon, _title;
+    protected BTextArea _descrip;
+    protected BContainer _colors;
     protected Object[] _args = new Object[3];
     protected MoneyLabel _cost;
 
