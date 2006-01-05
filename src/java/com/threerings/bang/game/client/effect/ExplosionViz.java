@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client.effect;
 
+import com.jme.light.PointLight;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -55,6 +56,12 @@ public class ExplosionViz extends ParticleEffectViz
         for (int i = 0; i < _streamers.length; i++) {
             displayParticleManager(target, _streamers[i].pmgr, true);
         }
+        
+        // and the light
+        Vector3f location = new Vector3f(target.getLocalTranslation());
+        location.z += TILE_SIZE/2;
+        _view.createLightFlash(location, LIGHT_FLASH_COLOR,
+            LIGHT_FLASH_DURATION);
         
         // note that the effect was displayed
         effectDisplayed();
@@ -152,8 +159,7 @@ public class ExplosionViz extends ParticleEffectViz
     protected boolean _small;
     protected ParticleManager _dustring, _fireball, _smokepuff;
     protected Streamer[] _streamers;
-    
-    protected static TextureState _firetex;
+    protected PointLight _light;
     
     /** The average number of streamers to throw from the explosion. */
     protected static final int NUM_STREAMERS_AVG = 4;
@@ -169,4 +175,11 @@ public class ExplosionViz extends ParticleEffectViz
     
     /** The amount of time in seconds to keep the streamers alive. */
     protected static final float STREAMER_LIFESPAN = 5f;
+    
+    /** The color of the flash of light generate by the explosion. */
+    protected static final ColorRGBA LIGHT_FLASH_COLOR =
+        new ColorRGBA(1f, 0.75f, 0.25f, 1f);
+    
+    /** The duration of the light flash. */
+    protected static final float LIGHT_FLASH_DURATION = 0.125f;
 }

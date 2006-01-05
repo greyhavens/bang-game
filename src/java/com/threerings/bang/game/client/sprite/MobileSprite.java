@@ -24,6 +24,7 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jmex.effects.ParticleManager;
@@ -230,7 +231,12 @@ public class MobileSprite extends PieceSprite
         
         // contains highlights draped over terrain
         _hnode = new Node("highlight");
-        
+        _hnode.setLightCombineMode(LightState.OFF);
+        _hnode.setRenderState(RenderUtil.overlayZBuf);
+        _hnode.setRenderState(RenderUtil.blendAlpha);
+        _hnode.setRenderState(RenderUtil.backCull);
+        _hnode.updateRenderState();
+            
         // the geometry of the highlight is shared between the elements
         _highlight = _view.getTerrainNode().createHighlight(localTranslation.x,
             localTranslation.y, TILE_SIZE, TILE_SIZE);

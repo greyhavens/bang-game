@@ -91,13 +91,13 @@ public class BoardView extends BComponent
         _node = new Node("board_view");
 
         // let there be lights
-        LightState lstate = _ctx.getRenderer().createLightState();
+        _lstate = _ctx.getRenderer().createLightState();
         _lights = new DirectionalLight[BangBoard.NUM_LIGHTS];
         for (int i = 0; i < _lights.length; i++) {
-            lstate.attach(_lights[i] = new DirectionalLight());
+            _lstate.attach(_lights[i] = new DirectionalLight());
             _lights[i].setEnabled(true);
         }
-        _node.setRenderState(lstate);
+        _node.setRenderState(_lstate);
         
         // default material 
         final MaterialState mstate = ctx.getRenderer().createMaterialState();
@@ -803,6 +803,7 @@ public class BoardView extends BComponent
     protected HashMap _fmasks = new HashMap();
 
     protected Node _node, _pnode, _hnode;
+    protected LightState _lstate;
     protected DirectionalLight[] _lights;
     protected SkyNode _snode;
     protected TerrainNode _tnode;
