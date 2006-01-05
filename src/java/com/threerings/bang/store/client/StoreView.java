@@ -65,9 +65,12 @@ public class StoreView extends BWindow
 
         _inspector = new GoodsInspector(_ctx, this, _status);
         _inspector.setBorder(new LineBorder(ColorRGBA.black));
+        add(_inspector, new Rectangle(268, 9, 500, 151));
+
         add(_goods = new GoodsPalette(_ctx, _inspector),
             new Rectangle(181, 168, 817, 468));
-        add(_inspector, new Rectangle(268, 9, 500, 151));
+
+        add(new GoodsTabs(ctx, _goods), new Rectangle(48, 167, 133, 360));
         add(new TownButton(ctx), new Point(855, 20));
     }
 

@@ -11,9 +11,11 @@ import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BToggleButton;
 import com.jmex.bui.background.BBackground;
 import com.jmex.bui.background.BlankBackground;
 import com.jmex.bui.background.TiledBackground;
+import com.jmex.bui.background.TintedBackground;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
@@ -99,7 +101,11 @@ public class BangUI
 
         iconLabelLNF = new BangLookAndFeel() {
             public BBackground createButtonBack (int state) {
-                return new BlankBackground();
+                if (state == BToggleButton.SELECTED) {
+                    return new TintedBackground(new ColorRGBA(1f, 1f, 1f, 0.5f));
+                } else {
+                    return new BlankBackground();
+                }
             }
         };
         iconLabelLNF.setTextFactory(
