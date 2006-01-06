@@ -11,16 +11,11 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.jme.image.Image;
-import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BToggleButton;
-import com.jmex.bui.background.BBackground;
-import com.jmex.bui.background.BlankBackground;
-import com.jmex.bui.background.TiledBackground;
-import com.jmex.bui.background.TintedBackground;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;

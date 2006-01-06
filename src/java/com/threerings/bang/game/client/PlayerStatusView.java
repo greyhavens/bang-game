@@ -12,7 +12,6 @@ import com.jme.util.TextureManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.background.ScaledBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.BIcon;
@@ -78,7 +77,7 @@ public class PlayerStatusView extends BContainer
         add(_player, NAME_RECT);
 
         _cash = new BLabel("");
-        _cash.setStyleClass("player_status");
+        _cash.setStyleClass("player_status_cash");
         add(_cash, CASH_LOC);
         add(_ranklbl = new BLabel(createRankIcon(-1)), RANK_RECT);
 

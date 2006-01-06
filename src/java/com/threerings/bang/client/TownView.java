@@ -11,7 +11,7 @@ import java.util.logging.Level;
 
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.background.ScaledBackground;
+import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.GroupLayout;
@@ -98,7 +98,8 @@ public class TownView extends BWindow
 
         // load our custom background
         String bpath = "menu/" + _ctx.getUserObject().townId + "/town.png";
-        _backgrounds[DEFAULT] = new ScaledBackground(_ctx.loadImage(bpath));
+        _backgrounds[DEFAULT] =
+            new ImageBackground(ImageBackground.SCALE_XY, _ctx.loadImage(bpath));
     }
 
     protected String getCommand (int mx, int my)

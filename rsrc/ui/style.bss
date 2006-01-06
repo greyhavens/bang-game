@@ -19,17 +19,17 @@ window {
 }
 
 decoratedwindow {
-  background: image "ui/window_background.png";
+  background: image "ui/window_background.png" tilexy;
   padding: 15;
 }
 
 popupwindow {
-  background: image "ui/window_background.png";
+  background: image "ui/window_background.png" tilexy;
   padding: 15;
 }
 
 popupmenu {
-  background: image "ui/button_up.png";
+  background: image "ui/button_up.png" tilexy;
   padding: 4 5 2 5;
 }
 
@@ -40,7 +40,7 @@ component:disabled {
 }
 
 button {
-  background: image "ui/button_up.png";
+  background: image "ui/button_up.png" tilexy;
   padding: 4 5 2 5;
 }
 
@@ -49,22 +49,22 @@ button:hover {
 }
 
 button:disabled {
-  background: image "ui/button_down.png";
+  background: image "ui/button_down.png" tilexy;
   padding: 3 6 3 4;
 }
 
 button:down {
-  background: image "ui/button_down.png";
+  background: image "ui/button_down.png" tilexy;
   padding: 3 6 3 4;
 }
 
 button:selected {
-  background: image "ui/button_down.png";
+  background: image "ui/button_down.png" tilexy;
   padding: 3 6 3 4;
 }
 
 combobox {
-  background: image "ui/button_up.png";
+  background: image "ui/button_up.png" tilexy;
   padding: 4 5 2 5;
 }
 
@@ -165,7 +165,7 @@ main_view {
 // Logon View styles
 
 logon_view {
-  background: image "menu/logon.png";
+  background: image "menu/logon.png" scalexy;
   padding: 300 50 0 0;
 }
 
@@ -173,18 +173,22 @@ logon_view {
 // In-game styles
 
 player_status_win {
-  background: image "ui/pstatus/dashboard.png";
+  background: image "ui/pstatus/dashboard.png" centerxy;
 }
 
 player_status {
   font: "Helvetica" bold 11;
-  background: image "ui/pstatus/card_up.png";
+  background: image "ui/pstatus/card_up.png" tilexy;
   padding: 1;
 }
 
 player_status:down {
-  background: image "ui/pstatus/card_down.png";
+  background: image "ui/pstatus/card_down.png" tilexy;
   padding: 2 0 0 2;
+}
+
+player_status_cash {
+  font: "Helvetica" bold 11;
 }
 
 // temporary hack
