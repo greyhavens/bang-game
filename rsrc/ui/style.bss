@@ -40,8 +40,11 @@ component:disabled {
 }
 
 button {
-  background: image "ui/button_up.png" tilexy;
-  padding: 4 5 2 5;
+  background: image "ui/buttons/small_normal.png" tilexy;
+  font: "Old Town" plain 24;
+  text-align: center;
+  vertical-align: center;
+  padding: 0 15;
 }
 
 button:hover {
@@ -49,17 +52,20 @@ button:hover {
 }
 
 button:disabled {
-  background: image "ui/button_down.png" tilexy;
-  padding: 3 6 3 4;
+  background: image "ui/buttons/small_normal.png" tilexy;
+}
+
+button:hover {
+  background: image "ui/buttons/small_hover.png" tilexy;
 }
 
 button:down {
-  background: image "ui/button_down.png" tilexy;
+  background: image "ui/buttons/small_down.png" tilexy;
   padding: 3 6 3 4;
 }
 
 button:selected {
-  background: image "ui/button_down.png" tilexy;
+  background: image "ui/buttons/small_down.png" tilexy;
   padding: 3 6 3 4;
 }
 
