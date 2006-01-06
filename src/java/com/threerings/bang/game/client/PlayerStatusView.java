@@ -12,7 +12,6 @@ import com.jme.util.TextureManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.background.ScaledBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -39,7 +38,6 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.util.BangContext;
 
@@ -61,6 +59,7 @@ public class PlayerStatusView extends BContainer
                              BangController ctrl, int pidx)
     {
         super(new AbsoluteLayout());
+        setStyleClass("player_status_win");
 
         _ctx = ctx;
         _bangobj = bangobj;
@@ -73,17 +72,14 @@ public class PlayerStatusView extends BContainer
             _ctx.loadImage("ui/pstatus/background" + pidx + ".png"));
         _rankimg = _ctx.loadImage("ui/pstatus/rank" + pidx + ".png");
 
-        // load up the main status image
-        Image bg = _ctx.loadImage("ui/pstatus/dashboard.png");
-        setBackground(new ScaledBackground(bg, 0, 0, 0, 0));
-        setPreferredSize(new Dimension(bg.getWidth(), bg.getHeight()));
-
         // create our interface elements
-        add(_player = new BLabel(_bangobj.players[_pidx].toString()), NAME_RECT);
-        _player.setHorizontalAlignment(BLabel.CENTER);
-        _player.setVerticalAlignment(BLabel.CENTER);
-        add(_cash = new BLabel(""), CASH_LOC);
-        _cash.setLookAndFeel(BangUI.pstatusLNF);
+        _player = new BLabel(_bangobj.players[_pidx].toString());
+        _player.setStyleClass("player_status" + _pidx);
+        add(_player, NAME_RECT);
+
+        _cash = new BLabel("");
+        _cash.setStyleClass("player_status");
+        add(_cash, CASH_LOC);
         add(_ranklbl = new BLabel(createRankIcon(-1)), RANK_RECT);
 
         updateAvatar();
@@ -100,15 +96,6 @@ public class PlayerStatusView extends BContainer
             _rank = rank;
             _ranklbl.setIcon(createRankIcon(rank));
         }
-    }
-
-    @Override // documentation inherited
-    public void wasAdded ()
-    {
-        BLookAndFeel lnf = BangUI.pstatusLNF.deriveLookAndFeel();
-        lnf.setForeground(true, JPIECE_COLORS[_pidx]);
-        _player.setLookAndFeel(lnf);
-        super.wasAdded();
     }
 
     // documentation inherited from interface AttributeChangeListener
@@ -232,7 +219,7 @@ public class PlayerStatusView extends BContainer
         BIcon icon = new ImageIcon(
             _ctx.loadImage("cards/" + card.getType() + "/icon.png"));
         BButton btn = new BButton(icon, "" + card.cardId);
-        btn.setLookAndFeel(BangUI.pstatusLNF);
+        btn.setStyleClass("player_status");
         btn.addListener(this);
         return btn;
     }

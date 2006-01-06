@@ -16,7 +16,7 @@ public class UnitIcon extends SelectableIcon
 {
     public UnitIcon (BasicContext ctx, int itemId, UnitConfig config)
     {
-        BangUI.configUnitLabel(_label, config);
+        BangUI.configUnitLabel(this, config);
         _itemId = itemId;
         _config = config;
     }

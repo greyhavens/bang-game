@@ -10,8 +10,6 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
@@ -20,7 +18,6 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.util.BangContext;
@@ -39,8 +36,7 @@ public class BarberView extends BWindow
 {
     public BarberView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), GroupLayout.makeHStretch());
-        setBorder(new EmptyBorder(5, 5, 5, 5));
+        super(ctx.getStyleSheet(), GroupLayout.makeHStretch());
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
@@ -61,9 +57,8 @@ public class BarberView extends BWindow
 
         _status = new BTextArea();
         _status.setPreferredSize(new Dimension(100, 100));
-        _status.setBorder(new LineBorder(ColorRGBA.black));
         _status.setText(msgs.get("m.welcome"));
-        _status.setLookAndFeel(BangUI.dtitleLNF);
+        _status.setStyleClass("dialog_title");
         main.add(_status, GroupLayout.FIXED);
 
         // put our new look and change clothes interfaces in tabs

@@ -10,9 +10,6 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.border.CompoundBorder;
-import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -55,11 +52,13 @@ public class LobbyView extends BWindow
 {
     public LobbyView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
+        super(ctx.getStyleSheet(), new BorderLayout(5, 5));
+        setStyleClass("main_view");
+
         _ctx = ctx;
 
         _chat = new ChatView(_ctx, _ctx.getChatDirector());
-        _chat.setBorder(new EmptyBorder(5, 0, 5, 5));
+        _chat.setStyleClass("lobby_chat");
         _chat.setPreferredSize(new Dimension(100, 150));
         add(_chat, BorderLayout.SOUTH);
 
@@ -73,12 +72,10 @@ public class LobbyView extends BWindow
         _tbldtr.addSeatednessObserver(this);
 
         BContainer top = new BContainer(GroupLayout.makeHStretch());
-        top.setBorder(new EmptyBorder(5, 5, 5, 0));
 
         BContainer plist = createLabeledList(msgs.get("m.pending_games"));
         _penders = (BContainer)plist.getComponent(1);
-        _penders.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
-                                              new EmptyBorder(5, 5, 5, 5)));
+        _penders.setStyleClass("padded_box");
 
         // add our various configuration options
         BContainer blist = new BContainer(
@@ -122,7 +119,7 @@ public class LobbyView extends BWindow
 
         BContainer ilist = createLabeledList(msgs.get("m.in_progress"));
         _inplay = (BContainer)ilist.getComponent(1);
-        _inplay.setBorder(new LineBorder(ColorRGBA.black));
+        _inplay.setStyleClass("padded_box");
         top.add(ilist);
         add(top, BorderLayout.CENTER);
     }

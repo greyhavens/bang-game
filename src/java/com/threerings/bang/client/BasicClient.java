@@ -16,7 +16,7 @@ import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
-import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BRootNode;
 
 import com.samskivert.util.RunQueue;
@@ -292,8 +292,8 @@ public class BasicClient
             return _app.getContext().getRootNode();
         }
 
-        public BLookAndFeel getLookAndFeel () {
-            return BangUI.defaultLNF;
+        public BStyleSheet getStyleSheet () {
+            return BangUI.stylesheet;
         }
 
         public String xlate (String bundle, String message) {

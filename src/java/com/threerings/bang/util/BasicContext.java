@@ -6,7 +6,7 @@ package com.threerings.bang.util;
 import java.awt.image.BufferedImage;
 
 import com.jme.image.Image;
-import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BStyleSheet;
 
 import com.threerings.util.MessageManager;
 
@@ -35,8 +35,8 @@ public interface BasicContext extends JmeContext
     /** Returns the message manager used to localize messages. */
     public MessageManager getMessageManager ();
 
-    /** Returns the look and feel used to configure the user interface. */
-    public BLookAndFeel getLookAndFeel ();
+    /** Returns the stylesheet used to configure the user interface. */
+    public BStyleSheet getStyleSheet ();
 
     /** Provides access to the tile fringing configuration. */
     public FringeConfiguration getFringeConfig ();

@@ -10,7 +10,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.border.EmptyBorder;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -37,8 +36,9 @@ public class RanchView extends BWindow
 {
     public RanchView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), new BorderLayout(5, 5));
-        setBorder(new EmptyBorder(5, 5, 5, 5));
+        super(ctx.getStyleSheet(), new BorderLayout(5, 5));
+        setStyleClass("main_view");
+
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
 

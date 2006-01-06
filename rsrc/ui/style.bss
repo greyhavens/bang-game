@@ -1,0 +1,243 @@
+//
+// $Id$
+//
+// Le Grande Bang! Howdy style sheet
+
+//
+// Standard UI configuration
+
+root {
+  color: #FFFFFF;
+  font: "Dialog" plain 16;
+}
+
+root:disabled {
+  color: #BBBBBB;
+}
+
+window {
+}
+
+decoratedwindow {
+  background: image "ui/window_background.png";
+  padding: 15;
+}
+
+popupwindow {
+  background: image "ui/window_background.png";
+  padding: 15;
+}
+
+popupmenu {
+  background: image "ui/button_up.png";
+  padding: 4 5 2 5;
+}
+
+component {
+}
+
+component:disabled {
+}
+
+button {
+  background: image "ui/button_up.png";
+  padding: 4 5 2 5;
+}
+
+button:hover {
+  color: #FF0000;
+}
+
+button:disabled {
+  background: image "ui/button_down.png";
+  padding: 3 6 3 4;
+}
+
+button:down {
+  background: image "ui/button_down.png";
+  padding: 3 6 3 4;
+}
+
+button:selected {
+  background: image "ui/button_down.png";
+  padding: 3 6 3 4;
+}
+
+combobox {
+  background: image "ui/button_up.png";
+  padding: 4 5 2 5;
+}
+
+textfield {
+  background: solid #00000088;
+  padding: 5;
+}
+
+textarea {
+  background: solid #00000088;
+  padding: 5;
+}
+
+checkbox {
+  icon: blank 7 7;
+}
+
+checkbox:selected {
+  icon: image "textures/checkbox.png";
+}
+
+scrollbar_hthumb {
+  background: solid #FFFFFF;
+}
+
+scrollbar_vthumb {
+  background: solid #FFFFFF;
+}
+
+scrollbar_hwell {
+  background: image "textures/button_up.png" tilexy;
+  padding: 3;
+}
+
+scrollbar_vwell {
+  background: image "textures/button_up.png" tilexy;
+  padding: 3;
+}
+
+scrollbar_hless {
+  icon: image "textures/scroll_left.png";
+}
+
+scrollbar_vless {
+  icon: image "textures/scroll_up.png";
+}
+
+scrollbar_hmore {
+  icon: image "textures/scroll_right.png";
+}
+
+scrollbar_vmore {
+  icon: image "textures/scroll_down.png";
+}
+
+//
+// Global styles
+
+marquee {
+  font: "Dali" bold 48;
+}
+
+dialog_title {
+  font: "Old Town" plain 30;
+  text-align: center;
+}
+
+medium_title {
+  font: "Dali" bold 24;
+}
+
+center_label {
+  text-align: center;
+}
+
+right_label {
+  text-align: right;
+}
+
+unit_label {
+  text-align: center;
+}
+
+card_label {
+  text-align: center;
+}
+
+padded_box {
+  border: 1 solid #000000;
+  padding: 5;
+}
+
+main_view {
+  padding: 15;
+}
+
+//
+// Logon View styles
+
+logon_view {
+  background: image "menu/logon.png";
+  padding: 300 50 0 0;
+}
+
+//
+// In-game styles
+
+player_status_win {
+  background: image "ui/pstatus/dashboard.png";
+}
+
+player_status {
+  font: "Helvetica" bold 11;
+  background: image "ui/pstatus/card_up.png";
+  padding: 1;
+}
+
+player_status:down {
+  background: image "ui/pstatus/card_down.png";
+  padding: 2 0 0 2;
+}
+
+// temporary hack
+player_status0 {
+  font: "Helvetica" bold 11;
+  color: #0000FF;
+  text-align: center;
+}
+player_status1 {
+  font: "Helvetica" bold 11;
+  color: #FF0000;
+  text-align: center;
+}
+player_status2 {
+  font: "Helvetica" bold 11;
+  color: #00FF00;
+  text-align: center;
+}
+player_status3 {
+  font: "Helvetica" bold 11;
+  color: #FFFF00;
+  text-align: center;
+}
+
+//
+// General Store styles
+
+icon_label {
+  font: "Dali" bold 15;
+  color: #400F01;
+  background: blank;
+  text-align: center;
+}
+
+icon_label:selected {
+  background: solid #FFFFFF88;
+}
+
+goods_descrip {
+  background: blank;
+  font: "Dialog" plain 14;
+  color: #F7E17E;
+}
+
+//
+// Ranch styles
+
+//
+// Bank styles
+
+//
+// Saloon styles
+
+lobby_chat {
+  padding: 0 5 5 5;
+}

@@ -569,7 +569,8 @@ public class BoardView extends BComponent
         if (_marquee != null) {
             clearMarquee();
         }
-        _marquee = new BDecoratedWindow(BangUI.marqueeLNF, null);
+        _marquee = new BDecoratedWindow(BangUI.stylesheet, null);
+        _marquee.setStyleClass("marquee");
         _marquee.add(new BLabel(text), BorderLayout.CENTER);
         _ctx.getRootNode().addWindow(_marquee);
         _marquee.pack();

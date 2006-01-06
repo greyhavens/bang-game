@@ -14,8 +14,8 @@ import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BDecoratedWindow;
-import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BRootNode;
+import com.jmex.bui.BStyleSheet;
 
 import com.threerings.media.image.ImageManager;
 import com.threerings.resource.ResourceManager;
@@ -45,13 +45,13 @@ public abstract class TestApp extends JmeApp
         _ctx = new BasicContextImpl();
         _rsrcmgr = new ResourceManager("rsrc");
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
-        _lnf = BLookAndFeel.getDefaultLookAndFeel();
         _icache = new ImageCache(_ctx);
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
         BangUI.init(_ctx);
 
-        BDecoratedWindow window = new BDecoratedWindow(_lnf, "Test");
+        BDecoratedWindow window =
+            new BDecoratedWindow(BangUI.stylesheet, "Test");
         createInterface(window);
         _ctx.getRootNode().addWindow(window);
         window.pack();
@@ -102,8 +102,8 @@ public abstract class TestApp extends JmeApp
             return _msgmgr;
         }
 
-        public BLookAndFeel getLookAndFeel () {
-            return _lnf;
+        public BStyleSheet getStyleSheet () {
+            return BangUI.stylesheet;
         }
 
         public FringeConfiguration getFringeConfig () {
@@ -148,7 +148,6 @@ public abstract class TestApp extends JmeApp
     protected Config _config = new Config("bang");
     protected ResourceManager _rsrcmgr;
     protected MessageManager _msgmgr;
-    protected BLookAndFeel _lnf;
     protected ImageCache _icache;
     protected TextureCache _tcache;
     protected ModelCache _mcache;

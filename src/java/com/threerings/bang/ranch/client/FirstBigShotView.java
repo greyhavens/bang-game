@@ -19,7 +19,6 @@ import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -38,7 +37,7 @@ public class FirstBigShotView extends BDecoratedWindow
 {
     public FirstBigShotView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), null);
+        super(ctx.getStyleSheet(), null);
         setLayoutManager(GroupLayout.makeVStretch());
 
         _ctx = ctx;
@@ -48,8 +47,7 @@ public class FirstBigShotView extends BDecoratedWindow
         _status = new BTextArea(_msgs.get("m.firstbs_tip"));
 
         BLabel title = new BLabel(_msgs.get("m.firstbs_title"));
-        title.setHorizontalAlignment(BLabel.CENTER);
-        title.setLookAndFeel(BangUI.dtitleLNF);
+        title.setStyleClass("dialog_title");
         add(title, GroupLayout.FIXED);
 
         BTextArea intro = new BTextArea(_msgs.get("m.firstbs_intro"));

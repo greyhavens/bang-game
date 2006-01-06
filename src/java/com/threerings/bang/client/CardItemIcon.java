@@ -15,6 +15,6 @@ public class CardItemIcon extends ItemIcon
     protected void configureLabel (BangContext ctx)
     {
         CardItem card = (CardItem)_item;
-        BangUI.configCardLabel(_label, card);
+        BangUI.configCardLabel(this, card);
     }
 }

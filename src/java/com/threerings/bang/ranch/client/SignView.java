@@ -9,9 +9,6 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
-import com.jmex.bui.border.CompoundBorder;
-import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -20,7 +17,6 @@ import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -42,12 +38,11 @@ public class SignView extends BContainer
     public SignView (BangContext ctx)
     {
         super(GroupLayout.makeVStretch());
+        setStyleClass("padded_box");
+
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("ranch");
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
-
-        setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
-                                     new EmptyBorder(5, 5, 5, 5)));
 
         // this is used to "inspect" a particular unit
         _inspector = new BContainer(new BorderLayout(5, 5));
@@ -57,7 +52,7 @@ public class SignView extends BContainer
                 GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH));
         _unit.setText("");
         _details.add(_name = new BLabel(""));
-        _name.setLookAndFeel(BangUI.dtitleLNF);
+        _name.setStyleClass("dialog_title");
         _details.add(_descrip = new BLabel(""));
         _details.add(_move = new BLabel(""));
         _details.add(_fire = new BLabel(""));
@@ -74,7 +69,7 @@ public class SignView extends BContainer
 
         // this is used when we're simply displaying text
         _marquee = new BTextArea();
-        _marquee.setLookAndFeel(BangUI.dtitleLNF);
+        _marquee.setStyleClass("dialog_title");
 
         // start in marquee mode
         add(_marquee);

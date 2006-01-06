@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.background.ScaledBackground;
 import com.jmex.bui.event.MouseAdapter;
@@ -35,7 +36,7 @@ public class TownView extends BWindow
 {
     public TownView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), GroupLayout.makeVert(GroupLayout.TOP));
+        super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("town");
 
@@ -47,11 +48,8 @@ public class TownView extends BWindow
         int height = ctx.getDisplay().getHeight();
         setBounds(0, 0, width, height);
 
+        // load up our menu regions
         String townId = ctx.getUserObject().townId;
-        String bpath = "menu/" + townId + "/town.png";
-        setBackground(new ScaledBackground(ctx.loadImage(bpath), 0, 0, 0, 0));
-
-        // load up the polygons
         Properties props = new Properties();
         String mpath = "rsrc/menu/" + townId + "/menu.properties";
         try {
@@ -91,6 +89,16 @@ public class TownView extends BWindow
                 // TODO: display highlights when we mouse over a region
             }
        });
+    }
+
+    @Override // documentation inherited
+    protected void configureStyle (BStyleSheet style)
+    {
+        super.configureStyle(style);
+
+        // load our custom background
+        String bpath = "menu/" + _ctx.getUserObject().townId + "/town.png";
+        _backgrounds[DEFAULT] = new ScaledBackground(_ctx.loadImage(bpath));
     }
 
     protected String getCommand (int mx, int my)

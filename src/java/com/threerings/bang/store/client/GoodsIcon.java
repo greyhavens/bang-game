@@ -22,7 +22,6 @@ public class GoodsIcon extends SelectableIcon
     {
         _ctx = ctx;
         setOrientation(VERTICAL);
-        setHorizontalAlignment(CENTER);
         setGood(good);
     }
 

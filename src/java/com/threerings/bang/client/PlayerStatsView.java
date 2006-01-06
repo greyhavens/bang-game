@@ -3,13 +3,8 @@
 
 package com.threerings.bang.client;
 
-import com.jme.renderer.ColorRGBA;
-
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.border.CompoundBorder;
-import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.bang.data.BangCodes;
@@ -25,8 +20,7 @@ public class PlayerStatsView extends BContainer
     public PlayerStatsView (BangContext ctx)
     {
         super(new TableLayout(2, 5, 5));
-        setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
-                                     new EmptyBorder(5, 5, 5, 5)));
+        setStyleClass("padded_box");
         _ctx = ctx;
     }
 

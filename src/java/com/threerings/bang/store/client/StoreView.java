@@ -10,7 +10,6 @@ import com.jme.renderer.Renderer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Point;
@@ -22,7 +21,6 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.util.BangContext;
@@ -39,7 +37,7 @@ public class StoreView extends BWindow
 {
     public StoreView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), new AbsoluteLayout());
+        super(ctx.getStyleSheet(), new AbsoluteLayout());
 
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
@@ -56,15 +54,13 @@ public class StoreView extends BWindow
         // add our various interface components
         _status = new BTextArea();
         _status.setPreferredSize(new Dimension(100, 100));
-        _status.setBorder(new LineBorder(ColorRGBA.black));
         _status.setText(_msgs.get("m.intro_tip"));
-        _status.setLookAndFeel(BangUI.dtitleLNF);
+        _status.setStyleClass("dialog_title");
         add(_status, new Rectangle(232, 640, 560, 35));
 
         add(new WalletLabel(_ctx), new Rectangle(40, 77, 150, 25));
 
         _inspector = new GoodsInspector(_ctx, this, _status);
-        _inspector.setBorder(new LineBorder(ColorRGBA.black));
         add(_inspector, new Rectangle(268, 9, 500, 151));
 
         add(_goods = new GoodsPalette(_ctx, _inspector),

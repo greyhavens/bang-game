@@ -24,7 +24,6 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.ranch.client.UnitPalette;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.util.BangContext;
 
@@ -42,7 +41,7 @@ public class SelectionView extends BDecoratedWindow
         BangContext ctx, BangConfig config, BangObject bangobj)
     {
         BContainer header = new BContainer(new BorderLayout(10, 0));
-        header.setLookAndFeel(BangUI.dtitleLNF);
+        header.setStyleClass("dialog_title");
         MessageBundle msgs =
             ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         String title = bangobj.boardName + ": " +
@@ -57,7 +56,7 @@ public class SelectionView extends BDecoratedWindow
     public SelectionView (BangContext ctx, BangConfig config,
                           BangObject bangobj, int pidx)
     {
-        super(ctx.getLookAndFeel(), null);
+        super(ctx.getStyleSheet(), null);
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);

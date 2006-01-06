@@ -5,8 +5,6 @@ package com.threerings.bang.client.bui;
 
 import com.jmex.bui.BToggleButton;
 
-import com.threerings.bang.client.BangUI;
-
 /**
  * Displays an icon image with text below it that can be selected when
  * clicked on with the mouse.
@@ -16,7 +14,7 @@ public class SelectableIcon extends BToggleButton
     public SelectableIcon ()
     {
         super(null);
-        setLookAndFeel(BangUI.iconLabelLNF);
+        setStyleClass("icon_label");
     }
 
     @Override // documentation inherited

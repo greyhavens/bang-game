@@ -43,7 +43,7 @@ public class BangView extends BWindow
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
-        super(ctx.getLookAndFeel(), new BorderLayout());
+        super(ctx.getStyleSheet(), new BorderLayout());
 
         _ctx = ctx;
         _ctrl = ctrl;
@@ -138,9 +138,8 @@ public class BangView extends BWindow
         _pswins = new BWindow[pcount];
         pstatus = new PlayerStatusView[pcount];
         for (int ii = 0; ii < pcount; ii++) {
-            _pswins[ii] = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
+            _pswins[ii] = new BDecoratedWindow(_ctx.getStyleSheet(), null);
             _pswins[ii].setLayoutManager(GroupLayout.makeHStretch());
-            _pswins[ii].setBackground(null);
             _pswins[ii].add(
                 pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, _ctrl, ii));
         }

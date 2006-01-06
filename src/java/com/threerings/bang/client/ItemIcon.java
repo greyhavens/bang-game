@@ -18,7 +18,6 @@ public class ItemIcon extends SelectableIcon
     public ItemIcon ()
     {
         setOrientation(VERTICAL);
-        setHorizontalAlignment(CENTER);
     }
 
     /** Returns the item associated with this icon. */

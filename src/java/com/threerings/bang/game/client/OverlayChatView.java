@@ -5,7 +5,6 @@ package com.threerings.bang.game.client;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BLookAndFeel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.background.BBackground;
@@ -41,19 +40,19 @@ public class OverlayChatView extends BWindow
 {
     public OverlayChatView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), GroupLayout.makeVert(
+        super(ctx.getStyleSheet(), GroupLayout.makeVert(
                   GroupLayout.NONE, GroupLayout.BOTTOM, GroupLayout.STRETCH));
 
         _ctx = ctx;
         _chatdtr = _ctx.getChatDirector();
 
         _stamps = new long[CHAT_LINES];
-        _lnfs = new BLookAndFeel[CHAT_LINES];
+//         _lnfs = new BLookAndFeel[CHAT_LINES];
         _history = new BLabel[CHAT_LINES];
         for (int ii = 0; ii < _history.length; ii++) {
-            _lnfs[ii] = getLookAndFeel().deriveLookAndFeel();
+//             _lnfs[ii] = getLookAndFeel().deriveLookAndFeel();
             add(_history[ii] = new BLabel(""));
-            _history[ii].setLookAndFeel(_lnfs[ii]);
+//             _history[ii].setLookAndFeel(_lnfs[ii]);
         }
         add(_input = new BTextField());
 
@@ -98,7 +97,7 @@ public class OverlayChatView extends BWindow
     public void requestFocus ()
     {
         _input.requestFocus();
-        _input.setBackground(_inputbg);
+        _input.setBackground(BComponent.DEFAULT, _inputbg);
     }
 
     // documentation inherited from interface ChatDisplay
@@ -141,12 +140,8 @@ public class OverlayChatView extends BWindow
         super.wasAdded();
 
         _inputbg = _input.getBackground();
-        // we need to set a blank background with the same insets to
-        // ensure that the text field is laid out properly
-        _blankbg = new BlankBackground(
-            _inputbg.getLeftInset(), _inputbg.getTopInset(),
-            _inputbg.getRightInset(), _inputbg.getBottomInset());
-        _input.setBackground(_blankbg);
+        _blankbg = new BlankBackground();
+        _input.setBackground(BComponent.DEFAULT, _blankbg);
     }
 
     protected void displayError (String message)
@@ -170,12 +165,12 @@ public class OverlayChatView extends BWindow
         int lidx = _history.length-1;
         for (int ii = 0; ii < lidx; ii++) {
             _stamps[ii] = _stamps[ii+1];
-            _lnfs[ii].setForeground(true, _lnfs[ii+1].getForeground(true));
+//             _lnfs[ii].setForeground(true, _lnfs[ii+1].getForeground(true));
             _history[ii].setText(_history[ii+1].getText());
         }
 
         // now stuff this message at the bottom
-        _lnfs[lidx].setForeground(true, color);
+//         _lnfs[lidx].setForeground(true, color);
         _history[lidx].setText(text);
         _stamps[lidx] = System.currentTimeMillis();
     }
@@ -185,7 +180,7 @@ public class OverlayChatView extends BWindow
         String errmsg = _chatdtr.requestChat(null, text, true);
         if (errmsg.equals(ChatCodes.SUCCESS)) {
             _ctx.getRootNode().requestFocus(null);
-            _input.setBackground(_blankbg);
+            _input.setBackground(BComponent.DEFAULT, _blankbg);
             return true;
 
         } else {
@@ -215,7 +210,7 @@ public class OverlayChatView extends BWindow
     protected Interval _timer;
     protected BLabel[] _history;
     protected long[] _stamps;
-    protected BLookAndFeel[] _lnfs;
+//     protected BLookAndFeel[] _lnfs;
 
     protected static final int CHAT_LINES = 5;
     protected static final long CHAT_EXPIRATION = 20 * 1000L;

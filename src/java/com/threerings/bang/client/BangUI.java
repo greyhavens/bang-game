@@ -4,13 +4,18 @@
 package com.threerings.bang.client;
 
 import java.awt.Font;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.logging.Level;
 
+import com.jme.image.Image;
 import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BLookAndFeel;
+import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.background.BBackground;
 import com.jmex.bui.background.BlankBackground;
@@ -20,6 +25,7 @@ import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.text.AWTTextFactory;
+import com.jmex.bui.text.BTextFactory;
 
 import com.threerings.openal.ClipProvider;
 import com.threerings.openal.WaveDataClipProvider;
@@ -41,26 +47,8 @@ public class BangUI
     /** A font used to render counters in the game. */
     public static Font COUNTER_FONT;
 
-    /** The default look and feel. */
-    public static BLookAndFeel defaultLNF;
-
-    /** A look and feel for big splash text. */
-    public static BLookAndFeel marqueeLNF;
-
-    /** A look and feel for dialog title text. */
-    public static BLookAndFeel dtitleLNF;
-
-    /** A look and feel for player status text. */
-    public static BLookAndFeel pstatusLNF;
-
-    /** A look and feel for (inventory item) icon labels. */
-    public static BLookAndFeel iconLabelLNF;
-
-    /** A look and feel for medium-sized titles. */
-    public static BLookAndFeel mediumTitleLNF;
-
-    /** A look and feel for the General Store goods description. */
-    public static BLookAndFeel goodsDescripLNF;
+    /** The stylesheet used to configure our interface. */
+    public static BStyleSheet stylesheet;
 
     /** Used to load sounds from the classpath. */
     public static ClipProvider clipprov = new WaveDataClipProvider();
@@ -86,72 +74,44 @@ public class BangUI
         _umsgs = _ctx.getMessageManager().getBundle("units");
 
         // load up our fonts
-        Font dc = loadFont(ctx, "ui/fonts/dc.ttf");
-        Font oldtown = loadFont(ctx, "ui/fonts/oldtown.ttf");
-        Font tomb = loadFont(ctx, "ui/fonts/tomb.ttf");
-        COUNTER_FONT = dc.deriveFont(Font.BOLD, 48);
+        _fonts.put("Dali", loadFont(ctx, "ui/fonts/dc.ttf"));
+        _fonts.put("Tombstone", loadFont(ctx, "ui/fonts/tomb.ttf"));
+        _fonts.put("Old Town", loadFont(ctx, "ui/fonts/oldtown.ttf"));
 
-        defaultLNF = new BangLookAndFeel();
-        defaultLNF.setTextFactory(
-            new AWTTextFactory(new Font("Dialog", Font.PLAIN, 16), true));
+        COUNTER_FONT = _fonts.get("Dali").deriveFont(Font.BOLD, 48);
 
-        marqueeLNF = new BangLookAndFeel();
-        marqueeLNF.setTextFactory(new AWTTextFactory(COUNTER_FONT, true));
-
-        dtitleLNF = new BangLookAndFeel();
-        dtitleLNF.setTextFactory(
-            new AWTTextFactory(oldtown.deriveFont(Font.PLAIN, 30), true));
-
-        iconLabelLNF = new BangLookAndFeel() {
-            public BBackground createButtonBack (int state) {
-                if (state == BToggleButton.SELECTED) {
-                    return new TintedBackground(new ColorRGBA(1f, 1f, 1f, 0.5f));
+        // create our stylesheet
+        BStyleSheet.ResourceProvider rprov = new BStyleSheet.ResourceProvider() {
+            public BTextFactory createTextFactory (
+                String family, String style, int size) {
+                int nstyle = Font.PLAIN;
+                if (style.equals(BStyleSheet.BOLD)) {
+                    nstyle = Font.BOLD;
+                } else if (style.equals(BStyleSheet.ITALIC)) {
+                    nstyle = Font.ITALIC;
+                } else if (style.equals(BStyleSheet.BOLD_ITALIC)) {
+                    nstyle = Font.ITALIC|Font.BOLD;
+                }
+                Font font = _fonts.get(family);
+                if (font == null) {
+                    font = new Font(family, nstyle, size);
                 } else {
-                    return new BlankBackground();
+                    font = font.deriveFont(nstyle, size);
                 }
+                return new AWTTextFactory(font, true);
+            }
+            public Image loadImage (String path) throws IOException {
+                return _ctx.loadImage(path);
             }
         };
-        iconLabelLNF.setTextFactory(
-            new AWTTextFactory(dc.deriveFont(Font.PLAIN, 15), true));
-        iconLabelLNF.setForeground(
-            true, new ColorRGBA(64f/255f, 15f/255f, 1f/255f, 1f));
-
-        mediumTitleLNF = new BangLookAndFeel();
-        mediumTitleLNF.setTextFactory(
-            new AWTTextFactory(dc.deriveFont(Font.BOLD, 24), true));
-        mediumTitleLNF.setForeground(true, new ColorRGBA(1f, 1f, 1f, 1f));
-
-        goodsDescripLNF = new BangLookAndFeel() {
-            public BBackground createTextBack () {
-                return new BlankBackground();
-            }
-        };
-        goodsDescripLNF.setTextFactory(
-            new AWTTextFactory(new Font("Dialog", Font.PLAIN, 14), true));
-        goodsDescripLNF.setForeground(
-            true, new ColorRGBA(247f/255f, 225f/255f, 126f/255f, 1f));
-
-        pstatusLNF = new BangLookAndFeel() {
-            public BBackground createButtonBack (int state) {
-                String path;
-                int dx = 0, dy = 0;
-                switch (state) {
-                case BButton.DISABLED:
-                case BButton.DOWN:
-                    dx = 1;
-                    dy = -1;
-                    path = "rsrc/ui/pstatus/card_down.png";
-                    break;
-                default:
-                case BButton.OVER:
-                case BButton.UP: path = "rsrc/ui/pstatus/card_up.png"; break;
-                }
-                return new TiledBackground(
-                    getResource(path), 1+dx, 1+dy, 1-dx, 1-dy);
-            }
-        };
-        pstatusLNF.setTextFactory(
-            new AWTTextFactory(new Font("Helvetica", Font.BOLD, 11), false));
+        try {
+            InputStream is =
+                ctx.getResourceManager().getResource("ui/style.bss");
+            stylesheet =
+                new BStyleSheet(new InputStreamReader(is, "UTF-8"), rprov);
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Failed to load stylesheet", ioe);
+        }
 
         scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
         coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
@@ -179,7 +139,7 @@ public class BangUI
     public static void configUnitLabel (BLabel label, UnitConfig config)
     {
         label.setOrientation(BLabel.VERTICAL);
-        label.setHorizontalAlignment(BLabel.CENTER);
+        label.setStyleClass("unit_label");
         if (config == null) {
             label.setText(_ctx.xlate("units", "m.empty"));
             label.setIcon(new BlankIcon(Model.ICON_SIZE, Model.ICON_SIZE));
@@ -192,10 +152,10 @@ public class BangUI
     /**
      * Configures the supplied label to display the specified card.
      */
-    public static void configCardLabel (BLabel label, CardItem card)
+    public static void configCardLabel (BButton label, CardItem card)
     {
         label.setOrientation(BLabel.VERTICAL);
-        label.setHorizontalAlignment(BLabel.CENTER);
+        label.setStyleClass("card_label");
         String path = "cards/" + card.getType() + "/icon.png";
         label.setIcon(new ImageIcon(_ctx.loadImage(path)));
         String name = _ctx.xlate(BangCodes.CARDS_MSGS, "m." + card.getType());
@@ -211,7 +171,7 @@ public class BangUI
         BButton button = new BButton(_ctx.xlate("units", config.getName()));
         button.setIcon(_ctx.loadModel("units", config.type).getIcon());
         button.setOrientation(BButton.VERTICAL);
-        button.setHorizontalAlignment(BButton.CENTER);
+        button.setStyleClass("unit_label");
         return button;
     }
 
@@ -230,4 +190,5 @@ public class BangUI
 
     protected static BasicContext _ctx;
     protected static MessageBundle _umsgs;
+    protected static HashMap<String,Font> _fonts = new HashMap<String,Font>();
 }

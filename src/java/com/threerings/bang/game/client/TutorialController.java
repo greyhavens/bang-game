@@ -37,7 +37,7 @@ public class TutorialController
             ctx.getResourceManager(), config.scenarios[0]);
 
         // create and add the window in which we'll display info text
-        _tutwin = new BDecoratedWindow(_ctx.getLookAndFeel(), null);
+        _tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null);
         _tutwin.add(_info = new BTextArea(), BorderLayout.SOUTH);
     }
 

@@ -9,8 +9,6 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.Spacer;
-import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
@@ -21,7 +19,6 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.coin.data.CoinExOfferInfo;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.util.BangContext;
@@ -39,8 +36,7 @@ public class BankView extends BWindow
 {
     public BankView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), GroupLayout.makeHStretch());
-        setBorder(new EmptyBorder(5, 5, 5, 5));
+        super(ctx.getStyleSheet(), GroupLayout.makeHStretch());
 
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
@@ -59,9 +55,8 @@ public class BankView extends BWindow
 
         _status = new BTextArea();
         _status.setPreferredSize(new Dimension(100, 100));
-        _status.setBorder(new LineBorder(ColorRGBA.black));
         _status.setText(_ctx.xlate(BANK_MSGS, "m.welcome"));
-        _status.setLookAndFeel(BangUI.dtitleLNF);
+        _status.setStyleClass("dialog_title");
         main.add(_status, GroupLayout.FIXED);
 
         String title = _ctx.xlate(BANK_MSGS, "m.quick_title");
@@ -121,7 +116,7 @@ public class BankView extends BWindow
     {
         BContainer wrapper = new BContainer(new BorderLayout(5, 5));
         BLabel tlabel = new BLabel(title);
-        tlabel.setLookAndFeel(BangUI.dtitleLNF);
+        tlabel.setStyleClass("dialog_title");
         wrapper.add(tlabel, BorderLayout.NORTH);
         BContainer pair = new BContainer(GroupLayout.makeHStretch());
         pair.add(left);

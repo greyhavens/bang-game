@@ -30,7 +30,7 @@ public class CardPalette extends IconPalette
         public CardIcon (CardItem item)
         {
             this.item = item;
-            BangUI.configCardLabel(_label, item);
+            BangUI.configCardLabel(this, item);
         }
     }
 

@@ -37,7 +37,7 @@ public class PurchaseView extends BDecoratedWindow
     public PurchaseView (BangContext ctx, BangConfig config,
                          BangObject bangobj, int pidx)
     {
-        super(ctx.getLookAndFeel(), null);
+        super(ctx.getStyleSheet(), null);
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);

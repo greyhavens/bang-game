@@ -41,7 +41,7 @@ public class OptionsView extends BDecoratedWindow
 {
     public OptionsView (BangContext ctx, LogonView parent)
     {
-        super(ctx.getLookAndFeel(), null);
+        super(ctx.getStyleSheet(), null);
         setLayoutManager(GroupLayout.makeVStretch());
         _modal = true;
 
@@ -65,7 +65,7 @@ public class OptionsView extends BDecoratedWindow
 
         cont = GroupLayout.makeHBox(GroupLayout.LEFT);
         cont.add(_fullscreen = new BCheckBox(_msgs.get("m.fullscreen_mode")));
-        _fullscreen.setChecked(Display.isFullscreen());
+        _fullscreen.setSelected(Display.isFullscreen());
         _fullscreen.addListener(_modelist);
         add(cont);
 
@@ -129,7 +129,7 @@ public class OptionsView extends BDecoratedWindow
     protected void updateDisplayMode (DisplayMode mode)
     {
         if (_mode != null && _mode.equals(mode) &&
-            Display.isFullscreen() == _fullscreen.isChecked()) {
+            Display.isFullscreen() == _fullscreen.isSelected()) {
             return;
         }
         if (mode != null) {
@@ -142,11 +142,11 @@ public class OptionsView extends BDecoratedWindow
         int bpp = Math.max(16, _mode.getBitsPerPixel());
         _ctx.getDisplay().recreateWindow(
             _mode.getWidth(), _mode.getHeight(), bpp,
-            _mode.getFrequency(), _fullscreen.isChecked());
+            _mode.getFrequency(), _fullscreen.isSelected());
         _parent.center();
         center();
         BangPrefs.updateDisplayMode(_mode);
-        BangPrefs.updateFullscreen(_fullscreen.isChecked());
+        BangPrefs.updateFullscreen(_fullscreen.isSelected());
     }
 
     protected static class ModeItem implements Comparable

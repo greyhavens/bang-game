@@ -6,9 +6,6 @@ package com.threerings.bang.lobby.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.CompoundBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -44,9 +41,7 @@ public class TableItem extends BContainer
     public TableItem (BangContext ctx, TableDirector tdtr, Table table)
     {
         super(new TableLayout(3, 5, 5, TableLayout.STRETCH));
-
-        setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
-                                     new EmptyBorder(5, 5, 5, 5)));
+        setStyleClass("padded_box");
 
         _ctx = ctx;
         _self = ((BodyObject)ctx.getClient().getClientObject()).getVisibleName();

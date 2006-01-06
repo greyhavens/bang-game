@@ -24,7 +24,7 @@ public class EscapeMenuView extends BDecoratedWindow
 {
     public EscapeMenuView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), null);
+        super(ctx.getStyleSheet(), null);
         setLayoutManager(GroupLayout.makeVStretch());
 
         _modal = true;

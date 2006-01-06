@@ -9,7 +9,6 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BPasswordField;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.background.ScaledBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
@@ -39,14 +38,11 @@ public class LogonView extends BWindow
 {
     public LogonView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), GroupLayout.makeVert(GroupLayout.TOP));
+        super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.TOP));
+        setStyleClass("logon_view");
+
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.white);
-
-        ClassLoader loader = getClass().getClassLoader();
-        setBackground(new ScaledBackground(
-                          ctx.loadImage("menu/logon.png"),
-                          0, 300, 50, 0)); // magic!
 
         _msgs = ctx.getMessageManager().getBundle("logon");
         BContainer cont = new BContainer(new TableLayout(3, 5, 5));
@@ -116,12 +112,6 @@ public class LogonView extends BWindow
             _status.setText(_msgs.get("m.init_complete"));
             _initialized = true;
         }
-    }
-
-    @Override // documentation inherited
-    public Dimension getPreferredSize (int whint, int hhint)
-    {
-        return ((ScaledBackground)_background).getNaturalSize();
     }
 
     protected ClientAdapter _listener = new ClientAdapter() {

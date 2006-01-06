@@ -20,7 +20,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.NameFactory;
@@ -36,7 +35,7 @@ public class CreateAvatarView extends BDecoratedWindow
 {
     public CreateAvatarView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), null);
+        super(ctx.getStyleSheet(), null);
         setLayoutManager(GroupLayout.makeVStretch());
 
         _ctx = ctx;
@@ -46,8 +45,7 @@ public class CreateAvatarView extends BDecoratedWindow
         _status.setPreferredWidth(PREF_WIDTH);
 
         BLabel title = new BLabel(_msgs.get("m.create_title"));
-        title.setHorizontalAlignment(BLabel.CENTER);
-        title.setLookAndFeel(BangUI.dtitleLNF);
+        title.setStyleClass("dialog_title");
         add(title, GroupLayout.FIXED);
 
         BTextArea intro = new BTextArea(_msgs.get("m.create_intro"));

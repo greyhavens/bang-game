@@ -3,7 +3,6 @@
 
 package com.threerings.bang.client;
 
-import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -11,9 +10,6 @@ import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTabbedPane;
-import com.jmex.bui.border.CompoundBorder;
-import com.jmex.bui.border.EmptyBorder;
-import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
@@ -39,7 +35,7 @@ public class StatusView extends BDecoratedWindow
 {
     public StatusView (BangContext ctx)
     {
-        super(ctx.getLookAndFeel(), null);
+        super(ctx.getStyleSheet(), null);
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
         _modal = true;
@@ -52,10 +48,10 @@ public class StatusView extends BDecoratedWindow
 
         PlayerObject user = ctx.getUserObject();
         BContainer row = new BContainer(GroupLayout.makeHStretch());
-        row.setLookAndFeel(BangUI.dtitleLNF);
+        row.setStyleClass("dialog_title");
         row.add(new BLabel(user.handle.toString()));
         BLabel town = new BLabel(_msgs.get("m." + user.townId));
-        town.setHorizontalAlignment(BLabel.RIGHT);
+        town.setStyleClass("right_label");
         row.add(town);
         add(row, GroupLayout.FIXED);
 
@@ -112,8 +108,7 @@ public class StatusView extends BDecoratedWindow
     protected BContainer createBadgeTab (PlayerObject user)
     {
         BContainer bcont = new BContainer(new TableLayout(2, 5, 5));
-        bcont.setBorder(new CompoundBorder(new LineBorder(ColorRGBA.black),
-                                           new EmptyBorder(5, 5, 5, 5)));
+        bcont.setStyleClass("padded_box");
         bcont.add(new BLabel("Not yet implemented"));
         return bcont;
     }

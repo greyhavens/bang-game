@@ -17,7 +17,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -49,10 +48,9 @@ public class GoodsInspector extends BContainer
         add(_icon = new BLabel(""), new Rectangle(10, 0, 136, 156));
 
         add(_title = new BLabel(""), new Rectangle(200, 110, 280, 40));
-        _title.setLookAndFeel(BangUI.mediumTitleLNF);
-        _title.setVerticalAlignment(BLabel.TOP); // TEMP
+        _title.setStyleClass("medium_title");
         add(_descrip = new BTextArea(""), new Rectangle(200, 45, 300, 65));
-        _descrip.setLookAndFeel(BangUI.goodsDescripLNF);
+        _descrip.setStyleClass("goods_descrip");
 
         add(_cost = new MoneyLabel(ctx), new Rectangle(200, 15, 200, 25));
         _cost.setMoney(0, 0, false);

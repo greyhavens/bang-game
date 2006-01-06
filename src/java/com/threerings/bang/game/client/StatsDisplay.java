@@ -35,7 +35,7 @@ public class StatsDisplay extends BDecoratedWindow
         BangContext ctx, BangController ctrl, BangObject bangobj,
         int pidx, String title)
     {
-        super(ctx.getLookAndFeel(), null);
+        super(ctx.getStyleSheet(), null);
 
         _ctx = ctx;
         _ctrl = ctrl;
@@ -47,7 +47,7 @@ public class StatsDisplay extends BDecoratedWindow
                                               GroupLayout.STRETCH));
 
         BLabel label = new BLabel(title);
-        label.setLookAndFeel(BangUI.dtitleLNF);
+        label.setStyleClass("dialog_title");
         add(label);
 
         BContainer bits = new BContainer(
@@ -77,7 +77,7 @@ public class StatsDisplay extends BDecoratedWindow
                 Stat pstat = (Stat)bangobj.stats[pp].get(type.name());
                 BLabel slabel = new BLabel(
                     pstat == null ? "" : pstat.valueToString());
-                slabel.setHorizontalAlignment(BLabel.RIGHT);
+                slabel.setStyleClass("right_label");
                 bits.add(slabel);
             }
         }
@@ -90,7 +90,7 @@ public class StatsDisplay extends BDecoratedWindow
                 GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
                                      GroupLayout.STRETCH));
             label = new BLabel(msgs.get("m.awards"));
-            label.setLookAndFeel(BangUI.dtitleLNF);
+            label.setStyleClass("dialog_title");
             awards.add(label);
             for (int ii = 0; ii < bangobj.awards.length; ii++) {
                 BContainer pbox = GroupLayout.makeHBox(GroupLayout.LEFT);

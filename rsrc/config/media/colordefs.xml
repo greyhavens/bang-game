@@ -57,7 +57,7 @@
   </class>
 
   <!-- primary makeup recolorations -->
-  <class classId="4" name="makeup_p" source="#922226" range="0.07, 0.7, 1">
+  <class classId="4" name="makeup" source="#922226" range="0.07, 0.7, 1">
     <color colorId="1" name="red" offsets="0, 0, 0"/>
     <color colorId="2" name="brown" offsets="-0.91, -0.2, -0.2"/>
     <color colorId="3" name="white" offsets="0, -1, 0.1"/>
@@ -99,8 +99,6 @@
     <color colorId="17" name="darkBrown" offsets="-0.28, -0.37, -0.27"/>
     <color colorId="18" name="gold" offsets="0.76, 0.6, 0.24"/>
   </class>
-
-
 
   <!-- primary clothing recolorations -->
   <class classId="5" name="clothes_p" source="#922226" range="0.0, 0.4, 1">
