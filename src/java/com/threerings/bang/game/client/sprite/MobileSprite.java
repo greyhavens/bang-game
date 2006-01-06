@@ -20,6 +20,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
@@ -559,6 +560,19 @@ public class MobileSprite extends PieceSprite
                 terrain.dustiness);
             _dustmgr.getEndColor().set(color.r, color.g, color.b, 0f);
         }
+    }
+    
+    /** Computes the world space location of the named emitter. */
+    protected Vector3f getEmitterTranslation (String name)
+    {
+        if (_binding == null) {
+            return Vector3f.ZERO;
+        }
+        Geometry geom = _binding.getMarker(name);
+        if (geom == null) {
+            return Vector3f.ZERO;
+        }
+        return geom.getWorldBound().getCenter();
     }
     
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */

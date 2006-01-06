@@ -311,7 +311,7 @@ public class PieceSprite extends Sprite
         coords.x += TILE_SIZE/2;
         coords.y += TILE_SIZE/2;
     }
-
+    
     @Override // documentation inherited
     protected void setParent (Node parent)
     {
@@ -322,7 +322,7 @@ public class PieceSprite extends Sprite
             _binding.detach();
         }
     }
-
+    
     protected BoardView _view;
     
     protected Piece _piece;

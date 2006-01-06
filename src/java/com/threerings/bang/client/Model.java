@@ -29,7 +29,9 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Controller;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -63,6 +65,11 @@ public class Model
      */
     public static class Binding
     {
+        public Geometry getMarker (String name)
+        {
+            return _markers.get(name);
+        }
+        
         public void detach ()
         {
             for (int ii = 0; ii < _meshes.length; ii++) {
@@ -76,11 +83,7 @@ public class Model
             _anim = anim;
             _node = node;
             _random = random;
-            _meshes = _anim.getMeshes(_random);
-            for (int ii = 0; ii < _meshes.length; ii++) {
-                _node.attachChild(_meshes[ii]);
-                _meshes[ii].updateRenderState();
-            }
+            attachMeshes();
         }
 
         protected void update ()
@@ -88,17 +91,45 @@ public class Model
             for (int ii = 0; ii < _meshes.length; ii++) {
                 _node.detachChild(_meshes[ii]);
             }
+            attachMeshes();   
+        }
+
+        protected void attachMeshes ()
+        {
             _meshes = _anim.getMeshes(_random);
+            _markers = new HashMap<String, Geometry>();
             for (int ii = 0; ii < _meshes.length; ii++) {
+                if (_meshes[ii].getCullMode() == Node.CULL_ALWAYS) {
+                    _markers.put(_meshes[ii].getName(),
+                        getGeometry(_meshes[ii]));
+                }
                 _node.attachChild(_meshes[ii]);
                 _meshes[ii].updateRenderState();
             }
         }
-
+        
+        protected Geometry getGeometry (Node mesh)
+        {
+            for (int ii = 0, nn = mesh.getQuantity(); ii < nn; ii++) {
+                Spatial child = mesh.getChild(ii);
+                if (child instanceof Geometry) {
+                    return (Geometry)child;
+                
+                } else if (child instanceof Node) {
+                    Geometry geom = getGeometry((Node)child);
+                    if (geom != null) {
+                        return geom;
+                    }
+                }
+            }
+            return null;
+        }
+        
         protected Animation _anim;
         protected Node _node;
         protected int _random;
         protected Node[] _meshes;
+        protected HashMap<String, Geometry> _markers;
     }
 
     /** Information on an animation which is a collection of animated meshes
@@ -167,12 +198,12 @@ public class Model
         public Node[] getMeshes (int random)
         {
             // return an empty set of meshes if our parts are not resolved
-            if (_parts == null) {
+            if (_parts == null || _emitters == null) {
                 return new Node[0];
             }
 
-            Node[] nodes = new Node[_parts.length];
-            for (int ii = 0; ii < nodes.length; ii++) {
+            Node[] nodes = new Node[_parts.length + _emitters.length];
+            for (int ii = 0; ii < _parts.length; ii++) {
                 nodes[ii] = (Node)_parts[ii].creator.createCopy();
                 // select a random texture state
                 if (_parts[ii].tstates != null) {
@@ -182,22 +213,30 @@ public class Model
                     nodes[ii].updateRenderState();
                 }
             }
+            for (int ii = 0; ii < _emitters.length; ii++) {
+                int idx = _parts.length + ii;
+                nodes[idx] = (Node)_emitters[ii].creator.createCopy();
+                nodes[idx].setName(_emitters[ii].name);
+                nodes[idx].setIsCollidable(false);
+                nodes[idx].setCullMode(Node.CULL_ALWAYS);
+            }
             return nodes;
         }
-
+        
         /**
          * Configures this animation with its underlying meshes.
          */
-        public void setParts (Part[] parts)
+        public void setPartsAndEmitters (Part[] parts, Emitter[] emitters)
         {
             _parts = parts;
-
+            _emitters = emitters;
+            
             // update any extant bindings
             for (Binding binding : _bindings) {
                 binding.update();
             }
         }
-
+        
         /**
          * Clears the specified binding.
          */
@@ -209,6 +248,9 @@ public class Model
         /** The animated meshes that make up the animation. */
         protected Part[] _parts;
 
+        /** The emitters for effects in the animation. */
+        protected Emitter[] _emitters;
+        
         /** Use to track the nodes to which this animation is bound. */
         protected ArrayList<Binding> _bindings = new ArrayList<Binding>();
     }
@@ -307,7 +349,7 @@ public class Model
                         ", anim=" + action + "].");
             return BLANK_ANIM;
         } else if (!anim.isResolved()) {
-            anim.setParts(new Part[0]);
+            anim.setPartsAndEmitters(new Part[0], new Emitter[0]);
             _loader.queueAction(this, action);
         }
         return anim;
@@ -325,7 +367,7 @@ public class Model
             String action = entry.getKey();
             Animation anim = entry.getValue();
             if (!anim.isResolved()) {
-                anim.setParts(new Part[0]);
+                anim.setPartsAndEmitters(new Part[0], new Emitter[0]);
                 _loader.queueAction(this, action);
             }
         }
@@ -390,10 +432,21 @@ public class Model
             }
         }
 
+        String[] enames = getList(_props, action + ".emitters", "emitters",
+            false);
+        final Emitter[] emitters = new Emitter[enames.length];
+        for (int ee = 0; ee < enames.length; ee++) {
+            String mesh = enames[ee];
+            Emitter emitter = (emitters[ee] = new Emitter());
+            emitter.name = mesh;
+            emitter.creator = loadModel(ctx, path + action + "/" + mesh +
+                ".jme", false);
+        }
+        
         // now finish our resolution on the main thread
         ctx.getApp().postRunnable(new Runnable() {
             public void run () {
-                finishResolution(ctx, anim, parts, textures);
+                finishResolution(ctx, anim, parts, textures, emitters);
             }
         });
     }
@@ -403,7 +456,8 @@ public class Model
      * called on the main thread where we can safely access OpenGL.
      */
     protected void finishResolution (BasicContext ctx, Animation anim,
-                                     Part[] parts, Texture[][] textures)
+                                     Part[] parts, Texture[][] textures,
+                                     Emitter[] emitters)
     {
         for (int ii = 0; ii < parts.length; ii++) {
             if (textures[ii] == null) {
@@ -418,8 +472,8 @@ public class Model
                 part.tstates[tt].setEnabled(true);
             }
         }
-        anim.setParts(parts);
-
+        anim.setPartsAndEmitters(parts, emitters);
+        
         // create the icon image for this model if it wants one
         if (anim == _ianim) {
             try {
@@ -632,6 +686,16 @@ public class Model
         public TextureState[] tstates;
     }
 
+    /** Contains information on an effect emitter. */
+    protected static class Emitter
+    {
+        /** The name of the emitter as defined in the model properties. */
+        public String name;
+        
+        /** Used to create a clone of the emitter marker geometry. */
+        public CloneCreator creator;
+    }
+    
     protected String _key;
     protected TextureIcon _icon = new TextureIcon(ICON_SIZE, ICON_SIZE);
     protected Properties _props;
@@ -640,6 +704,9 @@ public class Model
     protected HashMap<String,CloneCreator> _meshes =
         new HashMap<String,CloneCreator>();
 
+    protected HashMap<String,CloneCreator> _emitters =
+        new HashMap<String,CloneCreator>();
+    
     protected HashMap<String,TextureState> _textures =
         new HashMap<String,TextureState>();
 
@@ -654,6 +721,6 @@ public class Model
     static {
         BLANK_ANIM.frames = 1;
         BLANK_ANIM.duration = 100;
-        BLANK_ANIM.setParts(new Part[0]);
+        BLANK_ANIM.setPartsAndEmitters(new Part[0], new Emitter[0]);
     }
 }
