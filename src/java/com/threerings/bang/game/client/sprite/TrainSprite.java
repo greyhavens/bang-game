@@ -3,27 +3,16 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Controller;
-import com.jme.scene.Geometry;
-import com.jme.scene.state.TextureState;
-import com.jmex.effects.ParticleManager;
 
 import com.threerings.jme.sprite.Path;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Train;
-
-import static com.threerings.bang.Log.*;
-import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays a train piece.
@@ -33,53 +22,6 @@ public class TrainSprite extends MobileSprite
     public TrainSprite (byte type)
     {
         super("extras/train", TYPE_NAMES[type]);
-        _type = type;
-    }
-    
-    @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
-    {
-        super.createGeometry(ctx);
-        
-        // for engines, create the smoke plume particle system
-        if (((Train)_piece).type != Train.ENGINE) {
-            return;
-        }
-        _smokemgr = new ParticleManager(64);
-        _smokemgr.setParticlesMinimumLifeTime(2000f);
-        _smokemgr.setInitialVelocity(0.01f);
-        _smokemgr.setEmissionDirection(Vector3f.UNIT_Z);
-        _smokemgr.setEmissionMaximumAngle(FastMath.PI / 64);
-        _smokemgr.setRandomMod(0f);
-        _smokemgr.setPrecision(FastMath.FLT_EPSILON);
-        _smokemgr.setControlFlow(true);
-        _smokemgr.setReleaseRate(256);
-        _smokemgr.setReleaseVariance(0f);
-        _smokemgr.setParticleSpinSpeed(0.01f);
-        _smokemgr.setStartSize(TILE_SIZE / 8);
-        _smokemgr.setEndSize(TILE_SIZE / 2);
-        _smokemgr.setStartColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0.75f));
-        _smokemgr.setEndColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0f));
-        if (_smoketex == null) {
-            _smoketex = RenderUtil.createTextureState(
-                ctx, "textures/effects/dust.png");
-        }
-        _smokemgr.getParticles().setRenderState(_dusttex);
-        _smokemgr.getParticles().setRenderState(RenderUtil.blendAlpha);
-        _smokemgr.getParticles().setRenderState(RenderUtil.overlayZBuf);
-        _smokemgr.getParticles().updateRenderState();
-        _smokemgr.getParticles().addController(_smokemgr);
-        _smokemgr.getParticles().addController(new Controller() {
-            public void update (float time) {
-                // position the emitter
-                _smokemgr.setParticlesOrigin(
-                    getEmitterTranslation(STACK_EMITTER));
-            }
-        });
-        
-        // put them in the highlight node so that they are positioned relative
-        // to the board
-        _hnode.attachChild(_smokemgr.getParticles());
     }
     
     @Override // documentation inherited
@@ -109,7 +51,7 @@ public class TrainSprite extends MobileSprite
         }
         return new TrainPath(coords, durations, last);
     }
-
+    
     @Override // documentation inherited
     protected void reorient ()
     {
@@ -144,21 +86,7 @@ public class TrainSprite extends MobileSprite
         }
     }
     
-    protected int _type;
-    
-    /** The smoke plume particle system. */
-    protected ParticleManager _smokemgr;
-    
-    /** The smoke texture. */
-    protected static TextureState _smoketex;
-    
-    /** The relative position of the stack emitter. */
-    protected static Vector3f _stackEmitterTranslation;
-    
     /** The model names for each train type. */    
     protected static final String[] TYPE_NAMES = { "locomotive", "caboose",
         "cattle", "freight" };
-    
-    /** The name of the smoke stack emitter marker. */
-    protected static final String STACK_EMITTER = "emitter_stack";
 }

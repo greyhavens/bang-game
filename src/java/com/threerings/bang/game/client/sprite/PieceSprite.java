@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -312,14 +313,49 @@ public class PieceSprite extends Sprite
         coords.y += TILE_SIZE/2;
     }
     
+    /**
+     * Binds the given animation and updates the set of emissions.
+     *
+     * @param random the number used to select a texture
+     */
+    protected void bindAnimation (BasicContext ctx, Model.Animation anim,
+        int random)
+    {
+        _binding = anim.bind(this, random);
+        
+        // stop all running emissions
+        for (SpriteEmission emission : _emissions.values()) {
+            if (emission.isRunning()) {
+                emission.stop();
+            }
+        }
+        
+        // start emissions used in the animation, creating any uncreated
+        for (int ii = 0; ii < anim.emitters.length; ii++) {
+            String name = anim.emitters[ii].name;
+            SpriteEmission emission = _emissions.get(name);
+            if (emission == null) {
+                _emissions.put(name, emission = SpriteEmission.create(name,
+                    anim.emitters[ii].props));
+                emission.init(ctx, _view, this);
+            }
+            emission.start(anim, _binding);
+        }
+    }
+    
     @Override // documentation inherited
     protected void setParent (Node parent)
     {
         super.setParent(parent);
 
-        // clear our model binding when we're removed
-        if (parent == null && _binding != null) {
-            _binding.detach();
+        // clear our model binding and emissions when we're removed
+        if (parent == null) {
+            if (_binding != null) {
+                _binding.detach();
+            }
+            for (SpriteEmission emission : _emissions.values()) {
+                emission.cleanup();
+            }
         }
     }
     
@@ -338,6 +374,10 @@ public class PieceSprite extends Sprite
      * that we can properly clear the binding when the sprite is removed. */
     protected Model.Binding _binding;
 
+    /** The emissions activated by animations. */
+    protected HashMap<String, SpriteEmission> _emissions =
+        new HashMap<String, SpriteEmission>();
+    
     /** The current elevation of the piece. */
     protected int _elevation;
     

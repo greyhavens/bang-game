@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
+import com.samskivert.util.PropertiesUtil;
 import com.samskivert.util.StringUtil;
 
 import com.jme.bounding.BoundingBox;
@@ -136,6 +137,9 @@ public class Model
      * with a frame count and a duration. */
     public static class Animation
     {
+        /** The name of this animation. */
+        public String action;
+        
         /** The number of frames in this animation. */
         public int frames;
 
@@ -144,6 +148,9 @@ public class Model
 
         /** The repeat type of the animation (clamp, cycle, wrap). */
         public int repeatType;
+        
+        /** The emitters used in the animation. */
+        public Emitter[] emitters;
         
         /**
          * Returns the "speed" at which this animation's controller should
@@ -198,11 +205,11 @@ public class Model
         public Node[] getMeshes (int random)
         {
             // return an empty set of meshes if our parts are not resolved
-            if (_parts == null || _emitters == null) {
+            if (_parts == null || emitters == null) {
                 return new Node[0];
             }
 
-            Node[] nodes = new Node[_parts.length + _emitters.length];
+            Node[] nodes = new Node[_parts.length + emitters.length];
             for (int ii = 0; ii < _parts.length; ii++) {
                 nodes[ii] = (Node)_parts[ii].creator.createCopy();
                 // select a random texture state
@@ -213,10 +220,10 @@ public class Model
                     nodes[ii].updateRenderState();
                 }
             }
-            for (int ii = 0; ii < _emitters.length; ii++) {
+            for (int ii = 0; ii < emitters.length; ii++) {
                 int idx = _parts.length + ii;
-                nodes[idx] = (Node)_emitters[ii].creator.createCopy();
-                nodes[idx].setName(_emitters[ii].name);
+                nodes[idx] = (Node)emitters[ii].creator.createCopy();
+                nodes[idx].setName(emitters[ii].name);
                 nodes[idx].setIsCollidable(false);
                 nodes[idx].setCullMode(Node.CULL_ALWAYS);
             }
@@ -226,10 +233,9 @@ public class Model
         /**
          * Configures this animation with its underlying meshes.
          */
-        public void setPartsAndEmitters (Part[] parts, Emitter[] emitters)
+        public void setParts (Part[] parts)
         {
             _parts = parts;
-            _emitters = emitters;
             
             // update any extant bindings
             for (Binding binding : _bindings) {
@@ -247,14 +253,25 @@ public class Model
 
         /** The animated meshes that make up the animation. */
         protected Part[] _parts;
-
-        /** The emitters for effects in the animation. */
-        protected Emitter[] _emitters;
         
         /** Use to track the nodes to which this animation is bound. */
         protected ArrayList<Binding> _bindings = new ArrayList<Binding>();
     }
 
+    /** Contains information on an effect emitter. */
+    public static class Emitter
+    {
+        /** The name of the emitter as defined in the model properties. */
+        public String name;
+        
+        /** The configuration of the emitter. */
+        public Properties props;
+        
+        /** Used to create a clone of the emitter marker geometry (only valid
+         * once the animation has been resolved). */
+        public CloneCreator creator;
+    }
+    
     /** The size along each axis of the model icon. */
     public static final int ICON_SIZE = 128;
 
@@ -304,6 +321,8 @@ public class Model
 
             // create a placeholder animation record for this action
             Animation anim = new Animation();
+            anim.action = action;
+            anim.emitters = getEmitters(action);
             _anims.put(action, anim);
         }
 
@@ -319,7 +338,25 @@ public class Model
             _loader.queueAction(this, iaction);
         }
     }
-
+    
+    /**
+     * Loads the names and properties of the emitters for the specified action.
+     * Does not load the marker geometries (that happens on the loader thread).
+     */
+    protected Emitter[] getEmitters (String action)
+    {
+        String[] enames = getList(_props, action + ".emitters", "emitters",
+            false);
+        Emitter[] emitters = new Emitter[enames.length];
+        for (int ee = 0; ee < enames.length; ee++) {
+            Emitter emitter = (emitters[ee] = new Emitter());
+            emitter.name = enames[ee];
+            emitter.props = PropertiesUtil.getSubProperties(_props,
+                emitter.name);
+        }
+        return emitters;
+    }
+    
     /**
      * Returns a pre-rendered icon version of this model.
      */
@@ -349,7 +386,6 @@ public class Model
                         ", anim=" + action + "].");
             return BLANK_ANIM;
         } else if (!anim.isResolved()) {
-            anim.setPartsAndEmitters(new Part[0], new Emitter[0]);
             _loader.queueAction(this, action);
         }
         return anim;
@@ -367,7 +403,6 @@ public class Model
             String action = entry.getKey();
             Animation anim = entry.getValue();
             if (!anim.isResolved()) {
-                anim.setPartsAndEmitters(new Part[0], new Emitter[0]);
                 _loader.queueAction(this, action);
             }
         }
@@ -383,11 +418,11 @@ public class Model
     {
         final Animation anim = _anims.get(action);
         anim.frames = BangUtil.getIntProperty(
-            _key, _props, action + ".frames", 8);
+            _key, _props, anim.action + ".frames", 8);
         anim.duration = BangUtil.getIntProperty(
-            _key, _props, action + ".duration", 250);
+            _key, _props, anim.action + ".duration", 250);
 
-        String repeatType = _props.getProperty(action + ".repeat_type");
+        String repeatType = _props.getProperty(anim.action + ".repeat_type");
         if ("clamp".equals(repeatType)) {
             anim.repeatType = Controller.RT_CLAMP;
         } else if ("cycle".equals(repeatType)) {
@@ -397,7 +432,7 @@ public class Model
         }
         
         String path = _key + "/";
-        String[] pnames = getList(_props, action + ".meshes", "meshes", true);
+        String[] pnames = getList(_props, anim.action + ".meshes", "meshes", true);
         final Part[] parts = new Part[pnames.length];
         final Texture[][] textures = new Texture[pnames.length][];
         for (int pp = 0; pp < pnames.length; pp++) {
@@ -412,7 +447,7 @@ public class Model
             boolean trans = _props.getProperty(
                 mesh + ".transparent", "false").equalsIgnoreCase("true");
             part.creator = loadModel(
-                ctx, path + action + "/" + mesh + ".jme", trans);
+                ctx, path + anim.action + "/" + mesh + ".jme", trans);
 
             // the model may have multiple textures from which we
             // select at random
@@ -432,32 +467,27 @@ public class Model
             }
         }
 
-        String[] enames = getList(_props, action + ".emitters", "emitters",
-            false);
-        final Emitter[] emitters = new Emitter[enames.length];
-        for (int ee = 0; ee < enames.length; ee++) {
-            String mesh = enames[ee];
-            Emitter emitter = (emitters[ee] = new Emitter());
-            emitter.name = mesh;
-            emitter.creator = loadModel(ctx, path + action + "/" + mesh +
-                ".jme", false);
+        // load the emitter marker geometries
+        for (int ee = 0; ee < anim.emitters.length; ee++) {
+            String mesh = anim.emitters[ee].name;
+            anim.emitters[ee].creator = loadModel(ctx, path + anim.action + "/" +
+                mesh + ".jme", false);
         }
         
         // now finish our resolution on the main thread
         ctx.getApp().postRunnable(new Runnable() {
             public void run () {
-                finishResolution(ctx, anim, parts, textures, emitters);
+                finishResolution(ctx, anim, parts, textures);
             }
         });
     }
-
+    
     /**
      * Finishes the resolution of a model animation. <em>Note:</em> this is
      * called on the main thread where we can safely access OpenGL.
      */
     protected void finishResolution (BasicContext ctx, Animation anim,
-                                     Part[] parts, Texture[][] textures,
-                                     Emitter[] emitters)
+                                     Part[] parts, Texture[][] textures)
     {
         for (int ii = 0; ii < parts.length; ii++) {
             if (textures[ii] == null) {
@@ -472,7 +502,7 @@ public class Model
                 part.tstates[tt].setEnabled(true);
             }
         }
-        anim.setPartsAndEmitters(parts, emitters);
+        anim.setParts(parts);
         
         // create the icon image for this model if it wants one
         if (anim == _ianim) {
@@ -685,16 +715,6 @@ public class Model
         /** A list of texture states from which to select randomly. */
         public TextureState[] tstates;
     }
-
-    /** Contains information on an effect emitter. */
-    protected static class Emitter
-    {
-        /** The name of the emitter as defined in the model properties. */
-        public String name;
-        
-        /** Used to create a clone of the emitter marker geometry. */
-        public CloneCreator creator;
-    }
     
     protected String _key;
     protected TextureIcon _icon = new TextureIcon(ICON_SIZE, ICON_SIZE);
@@ -721,6 +741,5 @@ public class Model
     static {
         BLANK_ANIM.frames = 1;
         BLANK_ANIM.duration = 100;
-        BLANK_ANIM.setPartsAndEmitters(new Part[0], new Emitter[0]);
     }
 }
