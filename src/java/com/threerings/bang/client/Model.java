@@ -741,5 +741,6 @@ public class Model
     static {
         BLANK_ANIM.frames = 1;
         BLANK_ANIM.duration = 100;
+        BLANK_ANIM.emitters = new Emitter[0];
     }
 }

@@ -10,10 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.jme.light.PointLight;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Controller;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 
@@ -89,41 +87,6 @@ public class BangBoardView extends BoardView
             0, _card.getRadius(), _mouse.x, _mouse.y, _attackSet);
         targetTiles(_attackSet);
         log.info("Placing " + _card);
-    }
-
-    /**
-     * Creates a brief flash of light at the specified location with the
-     * given color and duration.
-     */
-    public void createLightFlash (Vector3f location, final ColorRGBA color,
-        final float duration)
-    {
-        final PointLight light = new PointLight();
-        light.setLocation(location);
-        light.setAttenuate(true);
-        light.setConstant(1f);
-        light.setQuadratic(0.01f);
-        light.setEnabled(true);
-        _lstate.attach(light);
-        _node.updateRenderState();
-        
-        _node.addController(new Controller() {
-            public void update (float time) {
-                if ((_elapsed += time) < duration) {
-                    float alpha = _elapsed / duration;
-                    light.getDiffuse().interpolate(color, ColorRGBA.black,
-                        alpha);
-                    light.getAmbient().interpolate(color, ColorRGBA.black,
-                        0.5f + alpha * 0.5f);
-                    
-                } else {
-                    _node.removeController(this);
-                    _lstate.detach(light);
-                    _node.updateRenderState();
-                }
-            }
-            float _elapsed;
-        });
     }
     
     /**

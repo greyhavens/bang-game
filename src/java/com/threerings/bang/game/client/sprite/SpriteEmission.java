@@ -7,9 +7,11 @@ import java.util.Properties;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Geometry;
+import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BoardView;
 
@@ -129,6 +131,28 @@ public abstract class SpriteEmission implements Cloneable
             
         } else {
             result.set(marker.getModelBound().getCenter());
+        }
+    }
+    
+    /**
+     * Determines the current direction by checking the normals of the marker
+     * geometry.
+     *
+     * @param world if true, compute the location in world coordinates;
+     * otherwise, use model coordinates
+     */
+    protected void getEmitterDirection (boolean world, Vector3f result)
+    {
+        Geometry marker = getMarker();
+        if (marker == null) {
+            result.set(Vector3f.UNIT_Z);
+            
+        } else {
+            BufferUtils.populateFromBuffer(result,
+                marker.getNormalBuffer(), 0);
+        }
+        if (world) {
+            _sprite.getWorldRotation().multLocal(result);
         }
     }
     
