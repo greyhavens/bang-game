@@ -84,8 +84,8 @@ public class BoardManager
             // selections from the shuffled list
             int bidx = 0;
             for (int bb = ii; bb < scenarios.length; bb++) {
-                if (scenarios[ii].equals(scenario)) {
-                    choices[ii] = candidates.get(bidx++);
+                if (scenarios[bb].equals(scenario)) {
+                    choices[bb] = candidates.get(bidx++);
                 }
             }
         }
