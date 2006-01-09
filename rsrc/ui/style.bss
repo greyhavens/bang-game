@@ -149,7 +149,9 @@ dialog_title {
 }
 
 medium_title {
-  font: "Dom Casual" plain 24;
+  font: "Dom Casual" bold 24;
+  text-effect: outline;
+  effect-color: #6A482E;
 }
 
 center_label {
@@ -260,7 +262,11 @@ icon_label {
 }
 
 icon_label:selected {
-  background: solid #FFFFFF88;
+  font: "Dom Casual" plain 18;
+  color: #FFFFFF;
+  text-effect: shadow;
+  effect-color: #6A482E;
+  background: image "ui/store/selection_bg.png" tilexy;
 }
 
 goods_descrip {
