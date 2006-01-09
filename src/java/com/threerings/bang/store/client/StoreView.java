@@ -52,22 +52,20 @@ public class StoreView extends BWindow
         _shop = _ctx.loadImage("ui/store/" + townId + "/shop.png");
 
         // add our various interface components
-        _status = new BTextArea();
-        _status.setPreferredSize(new Dimension(100, 100));
-        _status.setText(_msgs.get("m.intro_tip"));
-        _status.setStyleClass("dialog_title");
-        add(_status, new Rectangle(232, 640, 560, 35));
+        BLabel introtip = new BLabel(_msgs.get("m.intro_tip"));
+        introtip.setStyleClass("shop_intro");
+        add(introtip, new Rectangle(232, 640, 570, 35));
 
-        add(new WalletLabel(_ctx), new Rectangle(40, 77, 150, 25));
+        add(new WalletLabel(_ctx, true), new Rectangle(40, 77, 150, 45));
 
-        _inspector = new GoodsInspector(_ctx, this, _status);
+        _inspector = new GoodsInspector(_ctx, this);
         add(_inspector, new Rectangle(268, 9, 500, 151));
 
         add(_goods = new GoodsPalette(_ctx, _inspector),
             new Rectangle(181, 168, 817, 468));
 
         add(new GoodsTabs(ctx, _goods), new Rectangle(48, 167, 133, 360));
-        add(new TownButton(ctx), new Point(855, 20));
+        add(new TownButton(ctx), new Point(870, 25));
     }
 
     // documentation inherited from interface PlaceView
@@ -116,7 +114,6 @@ public class StoreView extends BWindow
 
     protected GoodsPalette _goods;
     protected GoodsInspector _inspector;
-    protected BTextArea _status;
 
     protected Image _background, _shopkeep, _shopkbg, _shop;
 }

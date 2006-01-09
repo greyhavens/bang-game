@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import com.jmex.bui.BLabel;
+import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -18,10 +19,11 @@ import com.threerings.bang.util.BangContext;
 public class WalletLabel extends MoneyLabel
     implements AttributeChangeListener
 {
-    public WalletLabel (BangContext ctx)
+    public WalletLabel (BangContext ctx, boolean showHandle)
     {
         super(ctx);
         _user = ctx.getUserObject();
+        _showHandle = showHandle;
         updateValues(false);
     }
 
@@ -35,12 +37,17 @@ public class WalletLabel extends MoneyLabel
         }
     }
 
-//     @Override // documentation inherited
-//     protected void createLabels (BangContext ctx)
-//     {
-//         add(new BLabel(ctx.xlate(BangCodes.BANG_MSGS, "m.cash_on_hand")));
-//         super.createLabels(ctx);
-//     }
+    @Override // documentation inherited
+    protected void createLabels (BangContext ctx)
+    {
+        super.createLabels(ctx);
+
+        if (_showHandle) {
+            BLabel who = new BLabel(ctx.getUserObject().handle + ":");
+            who.setStyleClass("wallet_name");
+            add(who, BorderLayout.NORTH);
+        }
+    }
 
     @Override // documentation inherited
     protected void wasAdded ()
@@ -62,5 +69,6 @@ public class WalletLabel extends MoneyLabel
         setMoney(_user.scrip, _user.coins, animate);
     }
 
+    protected boolean _showHandle;
     protected PlayerObject _user;
 }

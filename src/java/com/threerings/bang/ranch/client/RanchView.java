@@ -84,7 +84,7 @@ public class RanchView extends BWindow
         BContainer bottom = new BContainer(GroupLayout.makeHStretch());
         add(bottom, BorderLayout.SOUTH);
 
-        bottom.add(new WalletLabel(ctx));
+        bottom.add(new WalletLabel(ctx, false));
         bottom.add(new TownButton(ctx), GroupLayout.FIXED);
 
         // start out with some special welcome text

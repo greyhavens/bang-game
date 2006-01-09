@@ -5,7 +5,7 @@ package com.threerings.bang.client;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.bang.util.BangContext;
 
@@ -17,7 +17,7 @@ public class MoneyLabel extends BContainer
     public MoneyLabel (BangContext ctx)
     {
         _ctx = ctx;
-        setLayoutManager(GroupLayout.makeHoriz(GroupLayout.LEFT));
+        setLayoutManager(new BorderLayout(0, 0));
         createLabels(ctx);
     }
 
@@ -33,8 +33,10 @@ public class MoneyLabel extends BContainer
 
     protected void createLabels (BangContext ctx)
     {
-        add(_scrip = new BLabel(BangUI.scripIcon));
-        add(_coins = new BLabel(BangUI.coinIcon));
+        add(_scrip = new BLabel(BangUI.scripIcon), BorderLayout.WEST);
+        _scrip.setStyleClass("money_label");
+        add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
+        _coins.setStyleClass("money_label");
     }
 
     protected BangContext _ctx;

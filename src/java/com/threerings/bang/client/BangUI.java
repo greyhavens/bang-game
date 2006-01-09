@@ -76,6 +76,20 @@ public class BangUI
         COUNTER_FONT = _fonts.get("Dali").deriveFont(Font.BOLD, 48);
 
         // create our stylesheet
+        reloadStylesheet();
+
+        scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
+        coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
+
+        leftArrow = new ImageIcon(ctx.loadImage("ui/left_arrow.png"));
+        rightArrow = new ImageIcon(ctx.loadImage("ui/right_arrow.png"));
+    }
+
+    /**
+     * Reloads our interface stylesheet. This is used when testing.
+     */
+    public static void reloadStylesheet ()
+    {
         BStyleSheet.ResourceProvider rprov = new BStyleSheet.ResourceProvider() {
             public BTextFactory createTextFactory (
                 String family, String style, int size) {
@@ -100,19 +114,16 @@ public class BangUI
             }
         };
         try {
-            InputStream is =
-                ctx.getResourceManager().getResource("ui/style.bss");
+// TEMP: while testing load the stylesheet from the classpath
+//             InputStream is =
+//                 _ctx.getResourceManager().getResource("ui/style.bss");
+            InputStream is = BangUI.class.getClassLoader().getResourceAsStream(
+                "rsrc/ui/style.bss");
             stylesheet =
                 new BStyleSheet(new InputStreamReader(is, "UTF-8"), rprov);
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Failed to load stylesheet", ioe);
         }
-
-        scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
-        coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
-
-        leftArrow = new ImageIcon(ctx.loadImage("ui/left_arrow.png"));
-        rightArrow = new ImageIcon(ctx.loadImage("ui/right_arrow.png"));
     }
 
     /**
@@ -173,9 +184,10 @@ public class BangUI
     protected static Font loadFont (BasicContext ctx, String path)
     {
         Font font = null;
+        int type = path.endsWith(".pfb") ? Font.TYPE1_FONT : Font.TRUETYPE_FONT;
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT,
-                                   ctx.getResourceManager().getResource(path));
+            font = Font.createFont(
+                type, ctx.getResourceManager().getResource(path));
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to load font '" + path + "'.", e);
             font = new Font("Dialog", Font.PLAIN, 16);

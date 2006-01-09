@@ -44,29 +44,36 @@ button {
   font: "Old Town" plain 24;
   text-align: center;
   vertical-align: center;
-  padding: 0 15;
+  padding: 0 25;
 }
-
-button:hover {
-  color: #FF0000;
-}
-
 button:disabled {
   background: image "ui/buttons/small_normal.png" tilexy;
 }
-
 button:hover {
   background: image "ui/buttons/small_hover.png" tilexy;
 }
-
 button:down {
   background: image "ui/buttons/small_down.png" tilexy;
-  padding: 3 6 3 4;
 }
-
 button:selected {
   background: image "ui/buttons/small_down.png" tilexy;
-  padding: 3 6 3 4;
+}
+
+big_button {
+  background: image "ui/buttons/big_normal.png" tilexy;
+  font: "Old Town" plain 24;
+  text-align: center;
+  vertical-align: center;
+  padding: 0 25;
+}
+big_button:disabled {
+  background: image "ui/buttons/big_normal.png" tilexy;
+}
+big_button:hover {
+  background: image "ui/buttons/big_hover.png" tilexy;
+}
+big_button:down {
+  background: image "ui/buttons/big_down.png" tilexy;
 }
 
 combobox {
@@ -167,6 +174,26 @@ main_view {
   padding: 15;
 }
 
+shop_intro {
+  background: blank;
+  font: "Helvetica" plain 15;
+  color: #CDAB7E;
+  text-align: center;
+  vertical-align: center;
+}
+
+money_label {
+  font: "Helvetica" plain 15;
+  text-align: center;
+}
+
+wallet_name {
+  font: "Helvetica" bold 15;
+  color: #F2DC00;
+  text-align: center;
+  vertical-align: bottom;
+}
+
 //
 // Logon View styles
 
@@ -235,7 +262,7 @@ icon_label:selected {
 
 goods_descrip {
   background: blank;
-  font: "Dialog" plain 14;
+  font: "Helvetica" plain 15;
   color: #F7E17E;
 }
 

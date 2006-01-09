@@ -38,6 +38,9 @@ while [ ! -z "$1" ]; do
     shift
 done
 
+# load resources directly from the rsrc directory
+export CLASSPATH=$BANG_HOME
+
 BANG_HOME=`dirname $0`/..
 CARGS="-Dresource_dir=$BANG_HOME/rsrc"
 CLASS=com.threerings.bang.client.BangApp

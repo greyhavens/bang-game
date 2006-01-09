@@ -73,7 +73,7 @@ public class BarberView extends BWindow
         BContainer bottom = new BContainer(GroupLayout.makeHStretch());
         main.add(bottom, GroupLayout.FIXED);
 
-        bottom.add(new WalletLabel(ctx));
+        bottom.add(new WalletLabel(ctx, false));
         bottom.add(new TownButton(ctx), GroupLayout.FIXED);
     }
 

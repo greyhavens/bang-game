@@ -55,7 +55,7 @@ public class StatusView extends BDecoratedWindow
         row.add(town);
         add(row, GroupLayout.FIXED);
 
-        add(new WalletLabel(ctx), GroupLayout.FIXED);
+        add(new WalletLabel(ctx, false), GroupLayout.FIXED);
 
         // TODO: record in a static variable which tab was last selected and
         // use it when opening the view
