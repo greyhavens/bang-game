@@ -69,11 +69,11 @@ public class BangUI
         _umsgs = _ctx.getMessageManager().getBundle("units");
 
         // load up our fonts
-        _fonts.put("Dali", loadFont(ctx, "ui/fonts/dc.ttf"));
+        _fonts.put("Dom Casual", loadFont(ctx, "ui/fonts/domcasual.pfb"));
         _fonts.put("Tombstone", loadFont(ctx, "ui/fonts/tomb.ttf"));
         _fonts.put("Old Town", loadFont(ctx, "ui/fonts/oldtown.ttf"));
 
-        COUNTER_FONT = _fonts.get("Dali").deriveFont(Font.BOLD, 48);
+        COUNTER_FONT = _fonts.get("Tombstone").deriveFont(Font.BOLD, 48);
 
         // create our stylesheet
         reloadStylesheet();

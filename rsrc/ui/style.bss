@@ -54,9 +54,11 @@ button:hover {
 }
 button:down {
   background: image "ui/buttons/small_down.png" tilexy;
+  padding: 2 26 0 24;
 }
 button:selected {
   background: image "ui/buttons/small_down.png" tilexy;
+  padding: 2 26 0 24;
 }
 
 big_button {
@@ -74,6 +76,7 @@ big_button:hover {
 }
 big_button:down {
   background: image "ui/buttons/big_down.png" tilexy;
+  padding: 2 26 0 24;
 }
 
 combobox {
@@ -137,7 +140,7 @@ scrollbar_vmore {
 // Global styles
 
 marquee {
-  font: "Dali" bold 48;
+  font: "Dom Casual" bold 48;
 }
 
 dialog_title {
@@ -146,7 +149,7 @@ dialog_title {
 }
 
 medium_title {
-  font: "Dali" bold 24;
+  font: "Dom Casual" plain 24;
 }
 
 center_label {
@@ -188,7 +191,7 @@ money_label {
 }
 
 wallet_name {
-  font: "Helvetica" bold 15;
+  font: "Dom Casual" plain 15;
   color: #F2DC00;
   text-align: center;
   vertical-align: bottom;
@@ -250,7 +253,7 @@ player_status3 {
 // General Store styles
 
 icon_label {
-  font: "Dali" bold 15;
+  font: "Dom Casual" plain 16;
   color: #400F01;
   background: blank;
   text-align: center;

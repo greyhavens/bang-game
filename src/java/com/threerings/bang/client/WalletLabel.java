@@ -22,8 +22,12 @@ public class WalletLabel extends MoneyLabel
     public WalletLabel (BangContext ctx, boolean showHandle)
     {
         super(ctx);
+        if (showHandle) {
+            BLabel who = new BLabel(ctx.getUserObject().handle + ":");
+            who.setStyleClass("wallet_name");
+            add(who, BorderLayout.NORTH);
+        }
         _user = ctx.getUserObject();
-        _showHandle = showHandle;
         updateValues(false);
     }
 
@@ -34,18 +38,6 @@ public class WalletLabel extends MoneyLabel
             updateValues(true);
         } else if (event.getName().equals(PlayerObject.COINS)) {
             updateValues(true);
-        }
-    }
-
-    @Override // documentation inherited
-    protected void createLabels (BangContext ctx)
-    {
-        super.createLabels(ctx);
-
-        if (_showHandle) {
-            BLabel who = new BLabel(ctx.getUserObject().handle + ":");
-            who.setStyleClass("wallet_name");
-            add(who, BorderLayout.NORTH);
         }
     }
 
@@ -69,6 +61,5 @@ public class WalletLabel extends MoneyLabel
         setMoney(_user.scrip, _user.coins, animate);
     }
 
-    protected boolean _showHandle;
     protected PlayerObject _user;
 }

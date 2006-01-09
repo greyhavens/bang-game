@@ -56,7 +56,7 @@ public class StoreView extends BWindow
         introtip.setStyleClass("shop_intro");
         add(introtip, new Rectangle(232, 640, 570, 35));
 
-        add(new WalletLabel(_ctx, true), new Rectangle(40, 77, 150, 45));
+        add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 40));
 
         _inspector = new GoodsInspector(_ctx, this);
         add(_inspector, new Rectangle(268, 9, 500, 151));

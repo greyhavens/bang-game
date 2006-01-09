@@ -18,7 +18,10 @@ public class MoneyLabel extends BContainer
     {
         _ctx = ctx;
         setLayoutManager(new BorderLayout(0, 0));
-        createLabels(ctx);
+        add(_scrip = new BLabel(BangUI.scripIcon), BorderLayout.WEST);
+        _scrip.setStyleClass("money_label");
+        add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
+        _coins.setStyleClass("money_label");
     }
 
     /**
@@ -31,14 +34,6 @@ public class MoneyLabel extends BContainer
         _coins.setText(String.valueOf(coins));
     }
 
-    protected void createLabels (BangContext ctx)
-    {
-        add(_scrip = new BLabel(BangUI.scripIcon), BorderLayout.WEST);
-        _scrip.setStyleClass("money_label");
-        add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
-        _coins.setStyleClass("money_label");
-    }
-
     protected BangContext _ctx;
-    protected BLabel _label, _scrip, _coins;
+    protected BLabel _scrip, _coins;
 }
