@@ -39,8 +39,7 @@ public abstract class Good extends SimpleStreamableObject
      */
     public String getIconPath ()
     {
-//        return "goods/" + _type + ".png";
-        return "goods/default.png";
+        return "goods/" + _type + ".png";
     }
 
     /**
