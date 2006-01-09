@@ -85,7 +85,7 @@ public class BoardManager
             int bidx = 0;
             for (int bb = ii; bb < scenarios.length; bb++) {
                 if (scenarios[bb].equals(scenario)) {
-                    choices[bb] = candidates.get(bidx++);
+                    choices[bb] = candidates.get(bidx++ % candidates.size());
                 }
             }
         }
