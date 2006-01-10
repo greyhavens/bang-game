@@ -101,7 +101,7 @@
   </class>
 
   <!-- primary clothing recolorations -->
-  <class classId="5" name="clothes_p" source="#922226" range="0.0, 0.4, 1">
+  <class classId="5" name="clothes_p" source="#922226" range="0.07, 0.4, 1">
     <color colorId="1" name="darkBrown" offsets="-0.91, -0.2, -0.4"/>
     <color colorId="2" name="leather" offsets="0.08, 0.2, -0.3"/>
     <color colorId="3" name="brown" offsets="-0.91, -0.2, -0.2"/>
