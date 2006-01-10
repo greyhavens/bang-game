@@ -15,6 +15,8 @@ import com.threerings.bang.util.BangContext;
  */
 public class ItemIcon extends SelectableIcon
 {
+    public static final Dimension ICON_SIZE = new Dimension(128, 143);
+
     public ItemIcon ()
     {
         setOrientation(VERTICAL);
@@ -37,7 +39,7 @@ public class ItemIcon extends SelectableIcon
     @Override // documentation inherited
     public Dimension getPreferredSize (int whint, int hhint)
     {
-        return new Dimension(128, 143);
+        return ICON_SIZE;
     }
 
     protected void configureLabel (BangContext ctx)

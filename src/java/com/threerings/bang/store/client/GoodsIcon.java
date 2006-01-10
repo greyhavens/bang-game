@@ -18,10 +18,12 @@ import com.threerings.bang.store.data.Good;
  */
 public class GoodsIcon extends SelectableIcon
 {
+    public static final Dimension ICON_SIZE = new Dimension(136, 156);
+
     public GoodsIcon (BangContext ctx, Good good)
     {
         _ctx = ctx;
-        setOrientation(VERTICAL);
+        setOrientation(LABEL_OVER_TOP);
         setGood(good);
     }
 
@@ -33,8 +35,9 @@ public class GoodsIcon extends SelectableIcon
     public void setGood (Good good)
     {
         _good = good;
+        // TODO: pick and use random colorizations
         setIcon(new ImageIcon(_ctx.loadImage(good.getIconPath())));
-//         setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
+        setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
     }
 
     public Dimension getPreferredSize (int whint, int hhint)
@@ -44,6 +47,4 @@ public class GoodsIcon extends SelectableIcon
 
     protected BangContext _ctx;
     protected Good _good;
-
-    protected static final Dimension ICON_SIZE = new Dimension(136, 156);
 }

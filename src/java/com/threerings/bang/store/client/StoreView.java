@@ -61,7 +61,7 @@ public class StoreView extends BWindow
         add(_inspector, new Rectangle(268, 9, 500, 151));
 
         add(_goods = new GoodsPalette(_ctx, _inspector),
-            new Rectangle(181, 168, 817, 468));
+            new Rectangle(181, 140, 817, 495));
 
         add(new GoodsTabs(ctx, _goods), new Rectangle(48, 167, 133, 360));
         add(new TownButton(ctx), new Point(870, 25));

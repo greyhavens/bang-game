@@ -28,7 +28,7 @@ public class GoodsPalette extends IconPalette
 
     public GoodsPalette (BangContext ctx, GoodsInspector inspector)
     {
-        super(inspector, 5, 1);
+        super(inspector, 6, 3, GoodsIcon.ICON_SIZE, 1);
         _ctx = ctx;
     }
 
@@ -48,15 +48,15 @@ public class GoodsPalette extends IconPalette
 
     public void reinitGoods (boolean selectFirst)
     {
-        clearSelections();
-        removeAll();
-        PlayerObject self = _ctx.getUserObject();
+        clear();
 
         // filter out all matching goods
         ArrayList<Good> filtered = new ArrayList<Good>();
+        PlayerObject self = _ctx.getUserObject();
         for (Iterator iter = _stobj.goods.iterator(); iter.hasNext(); ) {
             Good good = (Good)iter.next();
-            if (_filter == null || _filter.isValid(good)) {
+            if ((_filter == null || _filter.isValid(good)) &&
+                good.isAvailable(self)) {
                 filtered.add(good);
             }
         }
@@ -69,13 +69,11 @@ public class GoodsPalette extends IconPalette
             }
         });
         for (int ii = 0; ii < goods.length; ii++) {
-            if (goods[ii].isAvailable(self)) {
-                add(new GoodsIcon(_ctx, goods[ii]));
-            }
+            addIcon(new GoodsIcon(_ctx, goods[ii]));
         }
 
-        if (selectFirst && getComponentCount() > 0) {
-            ((GoodsIcon)getComponent(0)).setSelected(true);
+        if (isAdded() && selectFirst && _icons.size() > 0) {
+            _icons.get(0).setSelected(true);
         }
     }
 

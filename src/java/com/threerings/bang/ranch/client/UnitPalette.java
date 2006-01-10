@@ -11,8 +11,8 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.bui.IconPalette;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -24,7 +24,7 @@ public class UnitPalette extends IconPalette
 {
     public UnitPalette (BangContext ctx, Inspector inspector, int columns)
     {
-        super(inspector, columns, 1);
+        super(inspector, columns, 3, UnitIcon.ICON_SIZE, 1);
         _ctx = ctx;
     }
 
@@ -34,7 +34,7 @@ public class UnitPalette extends IconPalette
     public void setUnits (UnitConfig[] units)
     {
         for (int ii = 0; ii < units.length; ii++) {
-            add(new UnitIcon(_ctx, -1, units[ii]));
+            addIcon(new UnitIcon(_ctx, -1, units[ii]));
         }
     }
 
@@ -94,7 +94,7 @@ public class UnitPalette extends IconPalette
     protected void addUnit (BigShotItem unit)
     {
         UnitConfig config = UnitConfig.getConfig(unit.getType());
-        add(new UnitIcon(_ctx, unit.getItemId(), config));
+        addIcon(new UnitIcon(_ctx, unit.getItemId(), config));
     }
 
     protected void removeUnit (int itemId)
@@ -102,7 +102,7 @@ public class UnitPalette extends IconPalette
         for (int ii = 0; ii < getComponentCount(); ii++) {
             UnitIcon icon = (UnitIcon)getComponent(ii);
             if (icon.getItemId() == itemId) {
-                remove(icon);
+                removeIcon(icon);
                 return;
             }
         }

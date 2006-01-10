@@ -19,7 +19,9 @@ public class ArticleIcon extends ItemIcon
     protected void configureLabel (BangContext ctx)
     {
         Article article = (Article)_item;
-        setIcon(new ImageIcon(ctx.loadImage("ui/unknown_item.png")));
+        // TODO: recolor appropriately
+        String ipath = "goods/articles/"+  article.getName() + ".png";
+        setIcon(new ImageIcon(ctx.loadImage(ipath)));
         String mkey = "m." + article.getName();
         setText(ctx.xlate(AvatarCodes.ARTICLE_MSGS, mkey));
     }

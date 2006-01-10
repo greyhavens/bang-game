@@ -7,7 +7,14 @@ import java.util.ArrayList;
 
 import com.jme.renderer.ColorRGBA;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.Spacer;
+import com.jmex.bui.util.Dimension;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
 import static com.threerings.bang.Log.log;
@@ -35,14 +42,76 @@ public class IconPalette extends BContainer
      * SelectableIcon}.
      *
      * @param columns the number of columns of icons to display.
+     * @param rows the number of rows of icons to display.
+     * @param size the dimensions of the icons we will contain.
      * @param selectable the number of simultaneously selectable icons (must be
      * at least one).
      */
-    public IconPalette (Inspector inspector, int columns, int selectable)
+    public IconPalette (Inspector inspector, int columns, int rows,
+                        Dimension size, int selectable)
     {
-        super(new TableLayout(columns, 0, 0, TableLayout.CENTER));
+        super(new BorderLayout(0, 0));
+        _rows = rows;
+        _cols = columns;
         _inspector = inspector;
         _selectable = selectable;
+
+        add(_icont = new BContainer(new TableLayout(columns, 0, 0)),
+            BorderLayout.CENTER);
+        _icont.setPreferredSize(new Dimension(size.width * columns,
+                                              size.height * rows));
+
+        GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
+        hlay.setGap(50);
+        BContainer buttons = new BContainer(hlay);
+        buttons.setStyleClass("icon_palette_buttons");
+        buttons.add(_back = new BButton("", _listener, "back"));
+        _back.setStyleClass("back_button");
+        buttons.add(_forward = new BButton("", _listener, "forward"));
+        _forward.setStyleClass("fwd_button");
+        add(buttons, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Adds an icon to this palette. Use this method instead of {@link #add} so
+     * that the palette can properly page through the icons when there are
+     * multiple pages.
+     */
+    public void addIcon (SelectableIcon icon)
+    {
+        _icons.add(icon);
+
+        if (isAdded()) {
+            // potentially add this icon to the display if we're on its page
+            int ipage = (_icons.size()-1)/(_rows*_cols);
+            if (_page == ipage) {
+                _icont.add(icon);
+            } else {
+                _forward.setEnabled(true);
+            }
+        }
+    }
+
+    /**
+     * Removes an icon from the palette (and from the display if it is
+     * showing).
+     */
+    public void removeIcon (SelectableIcon icon)
+    {
+        _icons.remove(icon);
+        if (icon.isAdded()) {
+            _icont.remove(icon);
+        }
+    }
+
+    /**
+     * Clears all icons from this palette.
+     */
+    public void clear ()
+    {
+        clearSelections();
+        _icons.clear();
+        _icont.removeAll();
     }
 
     /**
@@ -77,10 +146,40 @@ public class IconPalette extends BContainer
     }
 
     @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // nothing to do if we have no icons
+        if (_icons.size() == 0) {
+            _forward.setEnabled(false);
+            _back.setEnabled(false);
+        } else {
+            // add the icons for the page that's showing
+            displayPage(_page);
+        }
+    }
+
+    @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
         clearSelections();
+        removeAll();
+    }
+
+    protected void displayPage (int page)
+    {
+        clearSelections();
+        _icont.removeAll();
+        int start = page * _rows;
+        int limit = Math.min(_icons.size(), start + _rows * _cols);
+        for (int ii = start; ii < limit; ii++) {
+            _icont.add(_icons.get(ii));
+        }
+        _page = page;
+        _forward.setEnabled(limit < _icons.size());
+        _back.setEnabled(start > 0);
     }
 
     protected void iconUpdated (SelectableIcon icon, boolean selected)
@@ -111,7 +210,23 @@ public class IconPalette extends BContainer
         }
     }
 
+    protected ActionListener _listener = new ActionListener() {
+        public void actionPerformed (ActionEvent event) {
+            if (event.getAction().equals("forward")) {
+                displayPage(_page+1);
+            } else if (event.getAction().equals("back")) {
+                displayPage(_page-1);
+            }
+        }
+    };
+
+    protected ArrayList<SelectableIcon> _icons = new ArrayList<SelectableIcon>();
+    protected int _rows, _cols, _page;
+
+    protected BContainer _icont;
     protected Inspector _inspector;
+    protected BButton _forward, _back;
+
     protected int _selectable;
     protected ArrayList<SelectableIcon> _selections =
         new ArrayList<SelectableIcon>();

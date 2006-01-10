@@ -47,7 +47,7 @@ button {
   padding: 0 25;
 }
 button:disabled {
-  background: image "ui/buttons/small_normal.png" tilexy;
+  background: image "ui/buttons/small_disabled.png" tilexy;
 }
 button:hover {
   background: image "ui/buttons/small_hover.png" tilexy;
@@ -69,7 +69,7 @@ big_button {
   padding: 0 25;
 }
 big_button:disabled {
-  background: image "ui/buttons/big_normal.png" tilexy;
+  background: image "ui/buttons/big_disabled.png" tilexy;
 }
 big_button:hover {
   background: image "ui/buttons/big_hover.png" tilexy;
@@ -77,6 +77,32 @@ big_button:hover {
 big_button:down {
   background: image "ui/buttons/big_down.png" tilexy;
   padding: 2 26 0 24;
+}
+
+fwd_button {
+  background: image "ui/buttons/forward_normal.png" tilexy;
+}
+fwd_button:disabled {
+  background: image "ui/buttons/forward_disabled.png" tilexy;
+}
+fwd_button:hover {
+  background: image "ui/buttons/forward_hover.png" tilexy;
+}
+fwd_button:down {
+  background: image "ui/buttons/forward_down.png" tilexy;
+}
+
+back_button {
+  background: image "ui/buttons/back_normal.png" tilexy;
+}
+back_button:disabled {
+  background: image "ui/buttons/back_disabled.png" tilexy;
+}
+back_button:hover {
+  background: image "ui/buttons/back_hover.png" tilexy;
+}
+back_button:down {
+  background: image "ui/buttons/back_down.png" tilexy;
 }
 
 combobox {
@@ -228,6 +254,10 @@ color_selector {
 
 color_selector_popup {
   background: image "ui/barber/swatch_extend.png" tilexy;
+}
+
+icon_palette_buttons {
+  padding: 0 18;
 }
 
 //

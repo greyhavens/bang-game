@@ -22,8 +22,8 @@ public class SelectableIcon extends BToggleButton
     {
         super.stateDidChange();
 
-        if (_parent instanceof IconPalette) {
-            ((IconPalette)_parent).iconUpdated(this, _selected);
+        if (_parent != null && _parent.getParent() instanceof IconPalette) {
+            ((IconPalette)_parent.getParent()).iconUpdated(this, _selected);
         }
     }
 }

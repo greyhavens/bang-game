@@ -6,6 +6,8 @@ package com.threerings.bang.game.client;
 import java.util.Iterator;
 
 import com.jmex.bui.BLabel;
+import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.IconPalette;
@@ -36,21 +38,21 @@ public class CardPalette extends IconPalette
 
     public CardPalette (BangContext ctx, BangObject bangobj)
     {
-        super(null, 4, GameCodes.MAX_CARDS);
+        super(null, 4, 2, new Dimension(64, 64), GameCodes.MAX_CARDS);
 
         int added = 0;
         PlayerObject user = ctx.getUserObject();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Object item = iter.next();
             if (item instanceof CardItem) {
-                add(new CardIcon((CardItem)item));
+                addIcon(new CardIcon((CardItem)item));
                 added++;
             }
         }
 
         if (added == 0) {
             String msg = ctx.xlate(GameCodes.GAME_MSGS, "m.select_nocards");
-            add(new BLabel(msg));
+            add(new BLabel(msg), BorderLayout.NORTH);
         }
 
         // reduce the number of selectable cards by the number we have waiting
