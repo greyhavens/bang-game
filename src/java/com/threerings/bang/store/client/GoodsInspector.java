@@ -20,7 +20,6 @@ import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.threerings.media.image.Colorization;
-import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
@@ -146,9 +145,8 @@ public class GoodsInspector extends BContainer
 
     protected void updateImage ()
     {
-        _icon.setIcon(new ImageIcon(
-                          _ctx.getImageCache().createImage(
-                              ImageUtil.recolorImage(_srcimg, _zations), true)));
+        _icon.setIcon(new ImageIcon(_ctx.getImageCache().createImage(
+                                        _srcimg, _zations, true)));
     }
 
     protected ActionListener _colorpal = new ActionListener() {

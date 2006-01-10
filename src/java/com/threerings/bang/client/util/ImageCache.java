@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 
 import com.jme.image.Image;
 
+import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.util.BasicContext;
@@ -66,6 +67,17 @@ public class ImageCache
         image = createImage(bufimg, true);
         _imgcache.put(rsrcPath, new WeakReference<Image>(image));
         return image;
+    }
+
+    /**
+     * Colorizes the supplied buffered image (which must be an 8-bit
+     * colormapped image), then converts the colorized image into a form that
+     * JME can display.
+     */
+    public Image createImage (
+        BufferedImage bufimg, Colorization[] zations, boolean flip)
+    {
+        return createImage(ImageUtil.recolorImage(bufimg, zations), flip);
     }
 
     /**

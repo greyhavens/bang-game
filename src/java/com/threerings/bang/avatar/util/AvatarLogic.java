@@ -190,45 +190,55 @@ public class AvatarLogic
         Colorization[][] zations = new Colorization[clength][];
         for (int ii = 0; ii < clength; ii++) {
             int pvalue = avatar[ii+1];
-
-            // decode the fingerprint values
-            _colors[0] = (pvalue >> 16) & 0x1F;
-            _colors[1] = (pvalue >> 21) & 0x1F;
-            _colors[2] = (pvalue >> 26) & 0x1F;
             componentIds[ii] = (pvalue & 0xFFFF);
-
-            // look up the component in the repository
-            CharacterComponent ccomp = null;
-            try {
-                ccomp = _crepo.getComponent(componentIds[ii]);
-            } catch (NoSuchComponentException nsce) {
-                log.warning("Avatar contains non-existent component " +
-                            "[avatar=" + StringUtil.toString(avatar) +
-                            ", idx=" + ii + ", cid=" + componentIds[ii] + "].");
-                continue;
-            }
-
-            // determine which colors are appropriate for this component
-            String[] colors = ccomp.componentClass.colors;
-            zations[ii] = new Colorization[colors.length];
-            for (int cc = 0, ccount = 0; cc < colors.length; cc++) {
-                if (colors[cc].equals(SKIN)) {
-                    zations[ii][cc] = _globals[0];
-                } else if (colors[cc].equals(HAIR)) {
-                    zations[ii][cc] = _globals[1];
-                } else {
-                    zations[ii][cc] = _pository.getColorization(
-                        colors[cc], _colors[ccount++]);
-                }
-            }
-
-//             log.info("Decoded colors for " + ccomp.name + " into " +
-//                      StringUtil.toString(zations[ii]) + " using " +
-//                      StringUtil.toString(colors) + " and " +
-//                      StringUtil.toString(_colors));
+            zations[ii] = decodeColorizations(pvalue);
         }
 
         return new CharacterDescriptor(componentIds, zations);
+    }
+
+    /**
+     * Decodes and returns the colorizations encoded into the supplied encoded
+     * component.
+     */
+    public Colorization[] decodeColorizations (int fqComponentId)
+    {
+        // look up the component in the repository
+        int componentId = (fqComponentId & 0xFFFF);
+        CharacterComponent ccomp = null;
+        try {
+            ccomp = _crepo.getComponent(componentId);
+        } catch (NoSuchComponentException nsce) {
+            log.warning("Avatar contains non-existent component " +
+                        "[compId=" + componentId + "].");
+            return null;
+        }
+
+        // decode the colorization color id values
+        _colors[0] = (fqComponentId >> 16) & 0x1F;
+        _colors[1] = (fqComponentId >> 21) & 0x1F;
+        _colors[2] = (fqComponentId >> 26) & 0x1F;
+
+        // look up the actual colorizations from those
+        String[] colors = ccomp.componentClass.colors;
+        Colorization[] zations = new Colorization[colors.length];
+        for (int cc = 0, ccount = 0; cc < colors.length; cc++) {
+            if (colors[cc].equals(SKIN)) {
+                zations[cc] = _globals[0];
+            } else if (colors[cc].equals(HAIR)) {
+                zations[cc] = _globals[1];
+            } else {
+                zations[cc] = _pository.getColorization(
+                    colors[cc], _colors[ccount++]);
+            }
+        }
+
+//             log.info("Decoded colors for " + ccomp.name + " into " +
+//                      StringUtil.toString(zations) + " using " +
+//                      StringUtil.toString(colors) + " and " +
+//                      StringUtil.toString(_colors));
+
+        return zations;
     }
 
     /**
@@ -329,11 +339,10 @@ public class AvatarLogic
         int idx = 0;
         for (ArticleCatalog.Component comp : article.components) {
             try {
-                CharacterComponent ccomp = _crepo.getComponent(
-                    comp.cclass, comp.name);
+                CharacterComponent ccomp =
+                    _crepo.getComponent(comp.cclass, comp.name);
                 // the zations are already shifted 16 bits left
-                componentIds[idx] = ccomp.componentId | zations;
-                idx++;
+                componentIds[idx++] = ccomp.componentId | zations;
             } catch (NoSuchComponentException nsce) {
                 log.warning("Article references unknown component " +
                             "[article=" + article.name +
