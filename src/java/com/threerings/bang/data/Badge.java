@@ -173,28 +173,6 @@ public class Badge extends Item
             }
         },
 
-        // cattle rustled badges
-        CATTLE_RUSTLED_1 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10;
-            }
-        },
-        CATTLE_RUSTLED_2 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 100;
-            }
-        },
-        CATTLE_RUSTLED_3 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 1000;
-            }
-        },
-        CATTLE_RUSTLED_4 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10000;
-            }
-        },
-
         // nuggets claimed badges
         NUGGETS_CLAIMED_1 {
             public boolean qualifies (PlayerObject user) {
@@ -214,6 +192,28 @@ public class Badge extends Item
         NUGGETS_CLAIMED_4 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10000;
+            }
+        },
+
+        // cattle rustled badges
+        CATTLE_RUSTLED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10;
+            }
+        },
+        CATTLE_RUSTLED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 100;
+            }
+        },
+        CATTLE_RUSTLED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 1000;
+            }
+        },
+        CATTLE_RUSTLED_4 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10000;
             }
         },
 

@@ -19,8 +19,10 @@ public class MoneyLabel extends BContainer
         _ctx = ctx;
         setLayoutManager(new BorderLayout(0, 0));
         add(_scrip = new BLabel(BangUI.scripIcon), BorderLayout.WEST);
+        _scrip.setIconTextGap(5);
         _scrip.setStyleClass("money_label");
         add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
+        _coins.setIconTextGap(5);
         _coins.setStyleClass("money_label");
     }
 

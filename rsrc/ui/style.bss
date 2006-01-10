@@ -145,7 +145,7 @@ marquee {
 
 dialog_title {
   font: "Old Town" plain 30;
-  text-align: center;
+  text-align: left;
 }
 
 medium_title {
@@ -272,6 +272,17 @@ player_status3 {
   font: "Dom Casual" plain 13;
   color: #FFFF00;
   text-align: center;
+}
+
+//
+// Post-game stats display
+
+stats_header {
+  font: "Dom Casual" plain 15;
+}
+
+stats_info {
+  font: "Dom Casual" plain 20;
 }
 
 //
