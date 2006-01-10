@@ -360,6 +360,13 @@ public class BoardView extends BComponent
         _pnode.attachChild(sprite);
         sprite.updateRenderState();
         sprite.updateGeometricState(0.0f, true);
+        if (sprite instanceof PieceSprite) {
+            Spatial highlight = ((PieceSprite)sprite).getHighlight();
+            if (highlight != null) {
+                _pnode.attachChild(highlight);
+                _plights.put(highlight, sprite);
+            }
+        }
     }
 
     /**
@@ -635,12 +642,6 @@ public class BoardView extends BComponent
             log.fine("Creating sprite for " + piece + ".");
             _pieces.put((int)piece.pieceId, sprite);
             addSprite(sprite);
-            
-            Spatial highlight = sprite.getHighlight();
-            if (highlight != null) {
-                _pnode.attachChild(highlight);
-                _plights.put(highlight, sprite);
-            }
         }
         return sprite;
     }
