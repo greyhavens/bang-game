@@ -186,7 +186,6 @@ public class Badge extends Item
                             _code + "'.");
             } else {
                 _codeToType.put(_code, this);
-                System.out.println(key() + " = " + this);
             }
         }
 
