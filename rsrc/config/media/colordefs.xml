@@ -8,15 +8,15 @@
   <!-- funky colors are after the space: restrict them? -->
   <!-- hair recolorations -->
   <class classId="1" name="hair" source="#922226" range="0.05, 0.3, 1">
-    <color colorId="1" name="red" offsets="0.02, -0.1, 0"/>
+    <color colorId="1" name="red" offsets="0.02, -0.1, 0" starter="true"/>
     <color colorId="2" name="grey" offsets="0.13, -0.9, -0.15"/>
     <color colorId="3" name="white" offsets="0.13, -0.8, .15"/>
-    <color colorId="4" name="black" offsets="0.6, -0.7, -0.6"/>
-    <color colorId="5" name="brown" offsets="0.1, 0, -0.4"/>
-    <color colorId="6" name="lightBrown" offsets="0.11, -0.2, -0.2"/>
-    <color colorId="7" name="sandyBlonde" offsets="0.1, -0.1, 0"/>
-    <color colorId="8" name="blonde" offsets="0.13, -0.4, -0.1"/>
-    <color colorId="9" name="toehead" offsets="0.15, -0.4, 0.05"/>
+    <color colorId="4" name="black" offsets="0.6, -0.7, -0.6" starter="true"/>
+    <color colorId="5" name="brown" offsets="0.1, 0, -0.4" starter="true"/>
+    <color colorId="6" name="lightBrown" offsets="0.11, -0.2, -0.2" starter="true"/>
+    <color colorId="7" name="sandyBlonde" offsets="0.1, -0.1, 0" starter="true"/>
+    <color colorId="8" name="blonde" offsets="0.13, -0.4, -0.1" starter="true"/>
+    <color colorId="9" name="toehead" offsets="0.15, -0.4, 0.05" starter="true"/>
 
     <color colorId="10" name="violet" offsets="0.83, -0.2, -0.3"/>
     <color colorId="11" name="purple" offsets="0.76, 0.05, -0.25"/>
@@ -30,7 +30,7 @@
   </class>
 
   <!-- skin recolorations -->
-  <class classId="2" name="skin" source="#C550D7" range="0.08, 0.4, 1">
+  <class classId="2" name="skin" source="#C550D7" range="0.08, 0.4, 1" starter="true">
     <color colorId="1" name="darkest" offsets="-0.75, -0.2, -0.45"/>
     <color colorId="2" name="dark" offsets="-0.75, 0.16, -0.26"/>
     <color colorId="2" name="native" offsets="-0.76, 0.2, -0.2"/>
