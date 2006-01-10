@@ -154,6 +154,10 @@ medium_title {
   effect-color: #6A482E;
 }
 
+left_label {
+  text-align: left;
+}
+
 center_label {
   text-align: center;
 }
@@ -182,6 +186,11 @@ card_label {
 card_label:selected {
   border: 1 solid #FFFFFF;
   padding: 2;
+}
+
+badge_label {
+  font: "Dom Casual" plain 16;
+  text-align: center;
 }
 
 padded_box {

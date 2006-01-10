@@ -49,7 +49,9 @@ public class StatusView extends BDecoratedWindow
         PlayerObject user = ctx.getUserObject();
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         row.setStyleClass("dialog_title");
-        row.add(new BLabel(user.handle.toString()));
+        BLabel who = new BLabel(user.handle.toString());
+        who.setStyleClass("left_label");
+        row.add(who);
         BLabel town = new BLabel(_msgs.get("m." + user.townId));
         town.setStyleClass("right_label");
         row.add(town);
@@ -70,14 +72,14 @@ public class StatusView extends BDecoratedWindow
                      new BScrollPane(new InventoryPalette(ctx)));
 
         // add the big shots tab
-        UnitPalette bigshots = new UnitPalette(ctx, null, 3);
+        UnitPalette bigshots = new UnitPalette(ctx, null, 4);
         bigshots.setUser(user);
         _tabs.addTab(_msgs.get("m.status_big_shots"),
                      new BScrollPane(bigshots));
 
         // add the badges tab
         _tabs.addTab(_msgs.get("m.status_badges"),
-                     new BScrollPane(createBadgeTab(user)));
+                     new BScrollPane(new BadgePalette(ctx)));
 
         // add the stats tab
         PlayerStatsView pstats = new PlayerStatsView(ctx);
@@ -103,14 +105,6 @@ public class StatusView extends BDecoratedWindow
     {
         super.dismiss();
         _selectedTab = _tabs.getSelectedTabIndex();
-    }
-
-    protected BContainer createBadgeTab (PlayerObject user)
-    {
-        BContainer bcont = new BContainer(new TableLayout(2, 5, 5));
-        bcont.setStyleClass("padded_box");
-        bcont.add(new BLabel("Not yet implemented"));
-        return bcont;
     }
 
     /**

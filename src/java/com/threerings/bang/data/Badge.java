@@ -10,6 +10,8 @@ import java.util.Iterator;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 
+import com.threerings.bang.client.BadgeIcon;
+import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -337,6 +339,12 @@ public class Badge extends Item
     protected Badge (int code)
     {
         _code = code;
+    }
+
+    @Override // documentation inherited
+    public ItemIcon createIcon ()
+    {
+        return new BadgeIcon();
     }
 
     @Override // documentation inherited

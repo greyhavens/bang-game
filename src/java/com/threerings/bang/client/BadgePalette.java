@@ -11,16 +11,16 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 /**
- * Displays the user's inventory.
+ * Displays the user's collected bages.
  */
-public class InventoryPalette extends BContainer
+public class BadgePalette extends BContainer
 {
-    public InventoryPalette (BangContext ctx)
+    public BadgePalette (BangContext ctx)
     {
         super(new TableLayout(4, 5, 5));
         setStyleClass("padded_box");
@@ -33,13 +33,12 @@ public class InventoryPalette extends BContainer
         super.wasAdded();
 
         // populate our item display every time we are shown as we may be
-        // hidden, the player's inventory updated, then reshown again
+        // hidden, the player's badges updated, then reshown again
         int added = 0;
         PlayerObject user = _ctx.getUserObject();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Item item = (Item)iter.next();
-            if (item instanceof Badge) {
-                // badges are displayed separately
+            if (!(item instanceof Badge)) {
                 continue;
             }
 
