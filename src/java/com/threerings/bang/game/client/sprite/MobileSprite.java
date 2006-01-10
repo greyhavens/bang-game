@@ -104,8 +104,31 @@ public class MobileSprite extends PieceSprite
      */
     public void willShoot (Piece target, PieceSprite tsprite)
     {
+        _tsprite = tsprite;
     }
 
+    /**
+     * Returns a reference to the last targeted sprite.
+     */ 
+    public PieceSprite getTargetSprite ()
+    {
+        return _tsprite;
+    }
+    
+    /**
+     * Turns the sprite towards its current target.
+     */
+    public void faceTarget ()
+    {
+        // use the vector to the target on the XY plane to determine
+        // the heading, then adjust to the terrain slope
+        Vector3f dir = _tsprite.getLocalTranslation().subtract(
+            localTranslation).normalizeLocal();
+        localRotation.fromAngleNormalAxis(FastMath.atan2(dir.x, -dir.y),
+            Vector3f.UNIT_Z);
+        snapToTerrain();
+    }
+    
     /**
      * Runs the specified action animation.
      */
@@ -176,9 +199,6 @@ public class MobileSprite extends PieceSprite
         if (_dustmgr != null) {
             _dustmgr.setReleaseRate(0);
         }
-        
-        // reorient properly
-        // reorient();
     }
     
     @Override // documentation inherited
@@ -223,7 +243,7 @@ public class MobileSprite extends PieceSprite
         super.snapToTerrain();
         updateHighlight();
     }
-    
+
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
@@ -465,9 +485,6 @@ public class MobileSprite extends PieceSprite
      */
     protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
     {
-        // store a reference to the board
-        _board = board;
-        
         List path = null;
         if (board != null) {
             path = board.computePath(opiece, npiece.x, npiece.y);
@@ -554,7 +571,7 @@ public class MobileSprite extends PieceSprite
             _dustmgr.getParticlesOrigin().set(localTranslation);
             int tx = (int)(localTranslation.x / TILE_SIZE),
                 ty = (int)(localTranslation.y / TILE_SIZE);
-            Terrain terrain = _board.getPredominantTerrain(tx, ty);
+            Terrain terrain = _view.getBoard().getPredominantTerrain(tx, ty);
             ColorRGBA color = RenderUtil.getGroundColor(terrain);
             _dustmgr.getStartColor().set(color.r, color.g, color.b,
                 terrain.dustiness);
@@ -609,9 +626,9 @@ public class MobileSprite extends PieceSprite
 
     protected Vector3f _loc = new Vector3f();
     protected Vector2f _result = new Vector2f();
-
-    protected BangBoard _board;
-        
+    
+    protected PieceSprite _tsprite;
+    
     /** Ensures that we use the same random texture for every animation
      * displayed for this particular instance. */
     protected int _texrando = RandomUtil.getInt(Integer.MAX_VALUE);

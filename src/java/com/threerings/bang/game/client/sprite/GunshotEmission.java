@@ -8,6 +8,7 @@ import java.nio.FloatBuffer;
 
 import java.util.Properties;
 
+import com.jme.math.Line;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -18,6 +19,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.geom.BufferUtils;
+import com.jmex.effects.ParticleManager;
 
 import com.samskivert.util.StringUtil;
 
@@ -70,10 +72,10 @@ public class GunshotEmission extends SpriteEmission
         IntBuffer ibuf = BufferUtils.createIntBuffer(12);
         
         vbuf.put(0f).put(0f).put(0f);
-        vbuf.put(1f).put(0f).put(0.5f);
-        vbuf.put(1f).put(0.5f).put(0f);
-        vbuf.put(1f).put(0f).put(-0.5f);
-        vbuf.put(1f).put(-0.5f).put(0f);
+        vbuf.put(1f).put(0f).put(1f);
+        vbuf.put(1f).put(1f).put(0f);
+        vbuf.put(1f).put(0f).put(-1f);
+        vbuf.put(1f).put(-1f).put(0f);
         
         tbuf.put(0f).put(0.5f);
         tbuf.put(1f).put(1f);

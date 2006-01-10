@@ -824,7 +824,7 @@ public class BangBoardView extends BoardView
         // if we're rotating someone in preparation for a shot; just
         // update their orientation immediately for now
         if (effect.equals(ShotEffect.ROTATED)) {
-            sprite.setOrientation(piece.orientation);
+            ((MobileSprite)sprite).faceTarget();
         }
 
         // if this piece was shot, trigger the reacting or dying animation

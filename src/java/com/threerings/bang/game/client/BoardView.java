@@ -182,9 +182,7 @@ public class BoardView extends BComponent
     public void refreshBoard ()
     {
         // remove any old sprites
-        _pnode.detachAllChildren();
-        _pieces.clear();
-        _plights.clear();
+        removePieceSprites();
 
         // start afresh
         _board = _bangobj.board;
@@ -378,7 +376,7 @@ public class BoardView extends BComponent
             }
         }
     }
-
+    
     /**
      * Returns true if the specified sprite is part of the active view.
      */
@@ -543,7 +541,7 @@ public class BoardView extends BComponent
 
         // clear our sprites so that piece sprites can clean up after
         // themselves
-        _pnode.detachAllChildren();
+        removePieceSprites();
 
         // remove our geometry from the scene graph
         _ctx.getGeometry().detachChild(_node);
@@ -606,7 +604,6 @@ public class BoardView extends BComponent
             clearMarquee();
         }
         _marquee = new BDecoratedWindow(BangUI.stylesheet, null);
-        _marquee.setStyleClass("marquee");
         _marquee.add(new BLabel(text), BorderLayout.CENTER);
         _ctx.getRootNode().addWindow(_marquee);
         _marquee.pack();
@@ -665,6 +662,16 @@ public class BoardView extends BComponent
         return sprite;
     }
 
+    /**
+     * Removes all of the piece sprites.
+     */
+    protected void removePieceSprites ()
+    {
+        for (PieceSprite sprite : _pieces.values()) {
+            removeSprite(sprite);
+        }
+    }
+    
     /**
      * Returns the sprite that the mouse is "hovering" over (the one
      * nearest to the camera that is hit by the ray projecting from the
