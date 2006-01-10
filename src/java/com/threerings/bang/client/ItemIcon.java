@@ -27,10 +27,11 @@ public class ItemIcon extends SelectableIcon
     }
 
     /** Configures this icon with its associated item. */
-    public void setItem (BangContext ctx, Item item)
+    public ItemIcon setItem (BangContext ctx, Item item)
     {
         _item = item;
         configureLabel(ctx);
+        return this;
     }
 
     @Override // documentation inherited

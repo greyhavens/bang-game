@@ -17,6 +17,7 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.BadgeIcon;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
@@ -99,8 +100,7 @@ public class StatsDisplay extends BDecoratedWindow
                 cash.setIcon(BangUI.scripIcon);
                 pbox.add(cash);
                 for (Badge badge : bangobj.awards[ii].badges) {
-                    String key = badge.getType().key();
-                    pbox.add(new BLabel(_ctx.xlate(BangCodes.BADGE_MSGS, key)));
+                    pbox.add(new BadgeIcon().setItem(_ctx, badge));
                 }
                 awards.add(pbox);
             }

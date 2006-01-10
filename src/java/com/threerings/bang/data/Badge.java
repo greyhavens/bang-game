@@ -106,17 +106,17 @@ public class Badge extends Item
         // distance moved badges
         DISTANCE_MOVED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 100;
+                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 1000;
             }
         },
         DISTANCE_MOVED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 5000;
+                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 50000;
             }
         },
         DISTANCE_MOVED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 50000;
+                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 500000;
             }
         },
 
