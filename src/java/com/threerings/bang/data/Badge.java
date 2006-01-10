@@ -54,16 +54,6 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
             }
         },
-        GAMES_PLAYED_6 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 10000;
-            }
-        },
-        GAMES_PLAYED_7 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 50000;
-            }
-        },
 
         // units killed badges
         UNITS_KILLED_1 {
@@ -86,9 +76,98 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 20000;
             }
         },
-        UNITS_KILLED_5 {
+
+        // units lost badges
+        UNITS_LOST_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 50000;
+                return user.stats.getIntStat(Stat.Type.UNITS_LOST) >= 100;
+            }
+        },
+        UNITS_LOST_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.UNITS_LOST) >= 10000;
+            }
+        },
+
+        // shots fired badges
+        SHOTS_FIRED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.SHOTS_FIRED) >= 1000;
+            }
+        },
+        SHOTS_FIRED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.SHOTS_FIRED) >= 25000;
+            }
+        },
+
+        // distance moved badges
+        DISTANCE_MOVED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 100;
+            }
+        },
+        DISTANCE_MOVED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 5000;
+            }
+        },
+        DISTANCE_MOVED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 50000;
+            }
+        },
+
+        // cards played badges
+        CARDS_PLAYED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CARDS_PLAYED) >= 50;
+            }
+        },
+        CARDS_PLAYED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CARDS_PLAYED) >= 500;
+            }
+        },
+        CARDS_PLAYED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CARDS_PLAYED) >= 5000;
+            }
+        },
+
+        // bonuses collected badges
+        BONUSES_COLLECTED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >= 100;
+            }
+        },
+        BONUSES_COLLECTED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(
+                    Stat.Type.BONUSES_COLLECTED) >= 1000;
+            }
+        },
+        BONUSES_COLLECTED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(
+                    Stat.Type.BONUSES_COLLECTED) >= 10000;
+            }
+        },
+
+        // cards played badges
+        CASH_EARNED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CASH_EARNED) >= 10000;
+            }
+        },
+        CASH_EARNED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CASH_EARNED) >= 100000;
+            }
+        },
+        CASH_EARNED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CASH_EARNED) >= 1000000;
             }
         },
 
