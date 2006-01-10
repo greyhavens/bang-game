@@ -111,7 +111,7 @@ public class StatusView extends BDecoratedWindow
     {
         host.addListener(new EscapeListener() {
             public void escapePressed () {
-                _ctx.getRootNode().addWindow(StatusView.this);
+                _ctx.getBangClient().displayPopup(StatusView.this);
                 setSize(610, 500);
                 center();
             }
@@ -127,12 +127,12 @@ public class StatusView extends BDecoratedWindow
 
         } else if (cmd.equals("to_town")) {
             if (_ctx.getLocationDirector().leavePlace()) {
-                dismiss();
+                _ctx.getBangClient().clearPopup();
                 _ctx.getBangClient().showTownView();
             }
 
         } else if (cmd.equals("resume")) {
-            dismiss();
+            _ctx.getBangClient().clearPopup();
         }
     }
 

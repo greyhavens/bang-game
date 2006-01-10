@@ -130,6 +130,30 @@ public class BangClient extends BasicClient
         setMainView(_tview);
     }
 
+    /**
+     * Displays a popup window that will automatically be cleared if we leave
+     * the current "place". This should be used for any overlay view shown atop
+     * the normal place views.
+     */
+    public void displayPopup (BWindow popup)
+    {
+        if (_popup != null) {
+            log.warning("Overriding popup [old=" + _popup + ", new=" + popup + "].");
+        }
+        _ctx.getRootNode().addWindow(_popup = popup);
+    }
+
+    /**
+     * Dismisses a popup displayed with {@link #displayPopup}.
+     */
+    public void clearPopup ()
+    {
+        if (_popup != null) {
+            _ctx.getRootNode().removeWindow(_popup);
+            _popup = null;
+        }
+    }
+
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
@@ -269,6 +293,9 @@ public class BangClient extends BasicClient
         }
 
         public void setPlaceView (PlaceView view) {
+            // clear any lingering popup
+            clearPopup();
+
             // wire a status view to this place view (show by pressing esc);
             // the window must be modal prior to adding it to the hierarchy to
             // ensure that it is a default event target (and hears the escape
@@ -292,7 +319,6 @@ public class BangClient extends BasicClient
             // while testing, reload the stylesheet every time we switch the
             // place view
             BangUI.reloadStylesheet();
-            // nothing doing
         }
 
         public BangClient getBangClient() {
@@ -319,6 +345,6 @@ public class BangClient extends BasicClient
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
 
-    protected BWindow _mview;
+    protected BWindow _mview, _popup;
     protected TownView _tview;
 }
