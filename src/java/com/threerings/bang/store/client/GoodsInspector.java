@@ -3,6 +3,8 @@
 
 package com.threerings.bang.store.client;
 
+import java.awt.image.BufferedImage;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
@@ -16,6 +18,9 @@ import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
+
+import com.threerings.media.image.Colorization;
+import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
@@ -44,7 +49,7 @@ public class GoodsInspector extends BContainer
         _ctx = ctx;
         _parent = parent;
 
-        add(_icon = new BLabel(""), new Rectangle(10, 0, 136, 156));
+        add(_icon = new BLabel(""), new Rectangle(0, 0, 136, 156));
 
         add(_title = new BLabel("", "medium_title"),
             new Rectangle(200, 110, 280, 40));
@@ -53,8 +58,6 @@ public class GoodsInspector extends BContainer
 
         add(_cost = new MoneyLabel(ctx), new Rectangle(200, 15, 150, 25));
         _cost.setMoney(0, 0, false);
-
-        _colors = new BContainer();
 
         BButton buy;
         add(buy = new BButton(_ctx.xlate("store", "m.buy")), new Point(400, 10));
@@ -73,14 +76,20 @@ public class GoodsInspector extends BContainer
     // documentation inherited from interface IconPalette.Inspector
     public void iconSelected (SelectableIcon icon)
     {
-        // clear out any old color selectors
-        _colors.removeAll();
+        // remove our color selectors
+        for (int ii = 0; ii < _colorsel.length; ii++) {
+            if (_colorsel[ii] != null) {
+                remove(_colorsel[ii]);
+                _colorsel[ii] = null;
+            }
+        }
 
+        // configure our main interface with the good info
         _good = ((GoodsIcon)icon).getGood();
-        _icon.setIcon(new ImageIcon(_ctx.loadImage(_good.getIconPath())));
         _title.setText(_ctx.xlate(BangCodes.GOODS_MSGS, _good.getName()));
         _descrip.setText(_ctx.xlate(BangCodes.GOODS_MSGS, _good.getTip()));
         _cost.setMoney(_good.getScripCost(), _good.getCoinCost(), false);
+        _srcimg = _ctx.getImageCache().getBufferedImage(_good.getIconPath());
 
         // do some special jockeying to handle colorizations for articles
         if (_good instanceof ArticleGood) {
@@ -90,20 +99,24 @@ public class GoodsInspector extends BContainer
             String[] cclasses =
                 _ctx.getAvatarLogic().getColorizationClasses(article);
             _args[0] = _args[1] = _args[2] = Integer.valueOf(0);
+
             int index = 0;
             for (int ii = 0; ii < cclasses.length; ii++) {
                 if (cclasses[ii].equals(AvatarLogic.SKIN) ||
                     cclasses[ii].equals(AvatarLogic.HAIR)) {
                     continue;
                 }
+
                 ColorSelector colorsel = new ColorSelector(_ctx, cclasses[ii]);
-                colorsel.setProperty("index", Integer.valueOf(index));
                 colorsel.addListener(_colorpal);
-                _colors.add(colorsel);
+                colorsel.setProperty("index", Integer.valueOf(index));
+                add(_colorsel[index] = colorsel, CS_SPOTS[index]);
                 _args[index] = Integer.valueOf(colorsel.getSelectedColor());
-                index++;
+                _zations[index++] = colorsel.getSelectedColorization();
             }
         }
+
+        updateImage();
     }
 
     // documentation inherited from interface IconPalette.Inspector
@@ -131,13 +144,20 @@ public class GoodsInspector extends BContainer
         _stobj.service.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
     }
 
+    protected void updateImage ()
+    {
+        _icon.setIcon(new ImageIcon(
+                          _ctx.getImageCache().createImage(
+                              ImageUtil.recolorImage(_srcimg, _zations), true)));
+    }
+
     protected ActionListener _colorpal = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             ColorSelector colorsel = (ColorSelector)event.getSource();
             int index = (Integer)colorsel.getProperty("index");
             _args[index] = Integer.valueOf(colorsel.getSelectedColor());
-            // TODO: recolor the icon image
-            return;
+            _zations[index] = colorsel.getSelectedColorization();
+            updateImage();
         }
     };
 
@@ -147,9 +167,18 @@ public class GoodsInspector extends BContainer
 
     protected BLabel _icon, _title;
     protected BTextArea _descrip;
-    protected BContainer _colors;
-    protected Object[] _args = new Object[3];
     protected MoneyLabel _cost;
 
+    protected BufferedImage _srcimg;
     protected StoreView _parent;
+    protected ColorSelector[] _colorsel = new ColorSelector[3];
+
+    protected Object[] _args = new Object[3];
+    protected Colorization[] _zations = new Colorization[3];
+
+    protected static final Point[] CS_SPOTS = {
+        new Point(150, 105),
+        new Point(150, 61),
+        new Point(150, 17),
+    };
 }

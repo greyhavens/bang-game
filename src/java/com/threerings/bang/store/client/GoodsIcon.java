@@ -33,8 +33,8 @@ public class GoodsIcon extends SelectableIcon
     public void setGood (Good good)
     {
         _good = good;
-        setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
         setIcon(new ImageIcon(_ctx.loadImage(good.getIconPath())));
+//         setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
     }
 
     public Dimension getPreferredSize (int whint, int hhint)

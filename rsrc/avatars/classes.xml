@@ -16,18 +16,18 @@
          renderPriority="50"/>
   <class name="male/head" colors="skin" shadow="male/shadow"
          renderPriority="60"/>
-  <class name="male/makeup" colors="skin,makeup"
+  <class name="male/makeup" colors="skin,makeup_p,makeup_s"
          renderPriority="70"/>
   <class name="male/shadow" shadowAlpha="0.26"
          renderPriority="80"/>
-  <class name="male/mouth" colors="skin,makeup" shadow="male/shadow"
+  <class name="male/mouth" colors="skin,makeup_p,makeup_s" shadow="male/shadow"
          renderPriority="90"/>
   <class name="male/eyebrows" colors="skin,hair" shadow="male/shadow"
          renderPriority="100"/>
   <class name="male/nose" colors="skin" shadow="male/shadow"
          renderPriority="110"/>
-  <class name="male/eyes" colors="skin,iris,makeup" shadow="male/shadow"
-         renderPriority="120"/>
+  <class name="male/eyes" colors="skin,iris,makeup_p,makeup_s"
+         renderPriority="120" shadow="male/shadow"/>
   <class name="male/beard" colors="hair"
          renderPriority="130"/>
   <class name="male/mustache" colors="hair"
@@ -60,18 +60,18 @@
          renderPriority="40"/>
   <class name="female/head" colors="skin" shadow="female/shadow"
          renderPriority="50"/>
-  <class name="female/makeup" colors="skin,makeup"
+  <class name="female/makeup" colors="skin,makeup_p,makeup_s"
          renderPriority="60"/>
   <class name="female/shadow" shadowAlpha="0.26"
          renderPriority="70"/>
-  <class name="female/mouth" colors="skin,makeup" shadow="female/shadow"
-         renderPriority="80"/>
+  <class name="female/mouth" colors="skin,makeup_p,makeup_s"
+         renderPriority="80" shadow="female/shadow"/>
   <class name="female/eyebrows" colors="skin,hair" shadow="female/shadow"
          renderPriority="90"/>
   <class name="female/nose" colors="skin" shadow="female/shadow"
          renderPriority="100"/>
-  <class name="female/eyes" colors="skin,iris,makeup" shadow="female/shadow"
-         renderPriority="110"/>
+  <class name="female/eyes" colors="skin,iris,makeup_p,makeup_s"
+         renderPriority="110" shadow="female/shadow"/>
   <class name="female/hair_front" colors="hair,clothes_s"
          renderPriority="120"/>
   <class name="female/clothing_front" colors="skin,clothes_p,clothes_s,clothes_t"

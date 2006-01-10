@@ -222,6 +222,14 @@ wallet_name {
   vertical-align: bottom;
 }
 
+color_selector {
+  background: image "ui/barber/swatch_dot.png";
+}
+
+color_selector_popup {
+  background: image "ui/barber/swatch_extend.png" tilexy;
+}
+
 //
 // Logon View styles
 
