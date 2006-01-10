@@ -49,12 +49,8 @@ public class StatusView extends BDecoratedWindow
         PlayerObject user = ctx.getUserObject();
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         row.setStyleClass("dialog_title");
-        BLabel who = new BLabel(user.handle.toString());
-        who.setStyleClass("left_label");
-        row.add(who);
-        BLabel town = new BLabel(_msgs.get("m." + user.townId));
-        town.setStyleClass("right_label");
-        row.add(town);
+        row.add(new BLabel(user.handle.toString(), "left_label"));
+        row.add(new BLabel(_msgs.get("m." + user.townId), "right_label"));
         add(row, GroupLayout.FIXED);
 
         add(new WalletLabel(ctx, false), GroupLayout.FIXED);

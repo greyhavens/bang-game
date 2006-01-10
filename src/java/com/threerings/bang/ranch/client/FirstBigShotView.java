@@ -46,9 +46,8 @@ public class FirstBigShotView extends BDecoratedWindow
 
         _status = new BTextArea(_msgs.get("m.firstbs_tip"));
 
-        BLabel title = new BLabel(_msgs.get("m.firstbs_title"));
-        title.setStyleClass("dialog_title");
-        add(title, GroupLayout.FIXED);
+        add(new BLabel(_msgs.get("m.firstbs_title"), "dialog_title"),
+            GroupLayout.FIXED);
 
         BTextArea intro = new BTextArea(_msgs.get("m.firstbs_intro"));
         add(intro, GroupLayout.FIXED);

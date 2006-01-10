@@ -51,8 +51,7 @@ public class SignView extends BContainer
             GroupLayout.makeVert(
                 GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH));
         _unit.setText("");
-        _details.add(_name = new BLabel(""));
-        _name.setStyleClass("dialog_title");
+        _details.add(_name = new BLabel("", "dialog_title"));
         _details.add(_descrip = new BLabel(""));
         _details.add(_move = new BLabel(""));
         _details.add(_fire = new BLabel(""));

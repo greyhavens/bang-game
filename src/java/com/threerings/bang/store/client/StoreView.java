@@ -52,9 +52,8 @@ public class StoreView extends BWindow
         _shop = _ctx.loadImage("ui/store/" + townId + "/shop.png");
 
         // add our various interface components
-        BLabel introtip = new BLabel(_msgs.get("m.intro_tip"));
-        introtip.setStyleClass("shop_intro");
-        add(introtip, new Rectangle(232, 640, 570, 35));
+        add(new BLabel(_msgs.get("m.intro_tip"), "shop_intro"),
+            new Rectangle(232, 640, 570, 35));
 
         add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 40));
 

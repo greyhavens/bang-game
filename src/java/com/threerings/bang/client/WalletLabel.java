@@ -23,9 +23,8 @@ public class WalletLabel extends MoneyLabel
     {
         super(ctx);
         if (showHandle) {
-            BLabel who = new BLabel(ctx.getUserObject().handle + ":");
-            who.setStyleClass("wallet_name");
-            add(who, BorderLayout.NORTH);
+            add(new BLabel(ctx.getUserObject().handle + ":", "wallet_name"),
+                BorderLayout.NORTH);
         }
         _user = ctx.getUserObject();
         updateValues(false);

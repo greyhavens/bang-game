@@ -115,9 +115,7 @@ public class BankView extends BWindow
     protected BContainer wrap (String title, BContainer left, BContainer right)
     {
         BContainer wrapper = new BContainer(new BorderLayout(5, 5));
-        BLabel tlabel = new BLabel(title);
-        tlabel.setStyleClass("dialog_title");
-        wrapper.add(tlabel, BorderLayout.NORTH);
+        wrapper.add(new BLabel(title, "dialog_title"), BorderLayout.NORTH);
         BContainer pair = new BContainer(GroupLayout.makeHStretch());
         pair.add(left);
         pair.add(right);

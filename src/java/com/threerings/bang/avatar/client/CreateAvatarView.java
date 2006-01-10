@@ -44,8 +44,7 @@ public class CreateAvatarView extends BDecoratedWindow
         _status = new BTextArea(_msgs.get("m.create_tip"));
         _status.setPreferredWidth(PREF_WIDTH);
 
-        BLabel title = new BLabel(_msgs.get("m.create_title"));
-        title.setStyleClass("dialog_title");
+        BLabel title = new BLabel(_msgs.get("m.create_title"), "dialog_title");
         add(title, GroupLayout.FIXED);
 
         BTextArea intro = new BTextArea(_msgs.get("m.create_intro"));

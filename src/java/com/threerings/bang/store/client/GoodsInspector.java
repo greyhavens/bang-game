@@ -46,8 +46,8 @@ public class GoodsInspector extends BContainer
 
         add(_icon = new BLabel(""), new Rectangle(10, 0, 136, 156));
 
-        add(_title = new BLabel(""), new Rectangle(200, 110, 280, 40));
-        _title.setStyleClass("medium_title");
+        add(_title = new BLabel("", "medium_title"),
+            new Rectangle(200, 110, 280, 40));
         add(_descrip = new BTextArea(""), new Rectangle(200, 45, 300, 65));
         _descrip.setStyleClass("goods_descrip");
 

@@ -72,8 +72,8 @@ public class PlayerStatusView extends BContainer
         _rankimg = _ctx.loadImage("ui/pstatus/rank" + pidx + ".png");
 
         // create our interface elements
-        _player = new BLabel(_bangobj.players[_pidx].toString());
-        _player.setStyleClass("player_status" + _pidx);
+        _player = new BLabel(_bangobj.players[_pidx].toString(),
+                             "player_status" + _pidx);
         add(_player, NAME_RECT);
 
         _cash = new BLabel("");

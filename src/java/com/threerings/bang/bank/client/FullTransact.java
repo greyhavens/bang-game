@@ -187,13 +187,9 @@ public class FullTransact extends BContainer
     {
         public OfferLabel (BContainer table) {
             table.add(_clabel = new BLabel(""));
-            _coins = new BLabel("");
-            _coins.setStyleClass("right_label");
-            table.add(_coins);
+            table.add(_coins = new BLabel("", "right_label"));
             table.add(_slabel = new BLabel(""));
-            _scrip = new BLabel("");
-            _scrip.setStyleClass("right_label");
-            table.add(_scrip);
+            table.add(_scrip = new BLabel("", "right_label"));
         }
 
         public void setOffer (int coins, int scrip)

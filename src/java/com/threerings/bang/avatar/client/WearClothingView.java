@@ -49,9 +49,7 @@ public class WearClothingView extends BContainer
         BButton left = new BButton(BangUI.leftArrow, "down");
         left.addListener(this);
         slotsel.add(left, GroupLayout.FIXED);
-        _slot = new BLabel("");
-        _slot.setStyleClass("right_label");
-        slotsel.add(_slot);
+        slotsel.add(_slot = new BLabel("", "right_label"));
         BButton right = new BButton(BangUI.rightArrow, "up");
         right.addListener(this);
         slotsel.add(right, GroupLayout.FIXED);
