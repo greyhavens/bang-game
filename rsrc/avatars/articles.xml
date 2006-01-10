@@ -39,6 +39,12 @@
   </article>
 
   <!-- male hats -->
+  <article name="male_cowboy_bare" townId="frontier_town"
+           slot="hat" scrip="1500" coins="5">
+    <component cclass="male/hat" name="cowboy"/>
+    <component cclass="male/hat_back" name="cowboy"/>
+  </article>
+
   <article name="male_cowboy_diamond" townId="frontier_town"
            slot="hat" scrip="1500" coins="5">
     <component cclass="male/hat" name="cowboy"/>
@@ -65,6 +71,11 @@
     <component cclass="male/hat" name="cowboy"/>
     <component cclass="male/hat_back" name="cowboy"/>
     <component cclass="male/hat_band" name="ringlets_cowboy"/>
+  </article>
+
+  <article name="male_widebrim_bare" townId="frontier_town"
+           slot="hat" scrip="1500" coins="5">
+    <component cclass="male/hat" name="widebrim"/>
   </article>
 
   <article name="male_widebrim_buckle" townId="frontier_town"
