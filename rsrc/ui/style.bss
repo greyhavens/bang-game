@@ -254,6 +254,7 @@ color_selector {
 
 color_selector_popup {
   background: image "ui/barber/swatch_extend.png" tilexy;
+  padding: 0 5 0 0;
 }
 
 icon_palette_buttons {
