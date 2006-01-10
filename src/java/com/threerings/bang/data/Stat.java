@@ -35,8 +35,6 @@ public abstract class Stat
         GAME_TIME(new IntStat()),
 
         // stats accumulated during a game
-        DISTANCE_MOVED(new IntStat()),
-        SHOTS_FIRED(new IntStat()),
         DAMAGE_DEALT(new IntStat()),
 
         // stats accumulated during a game and persisted
@@ -45,6 +43,8 @@ public abstract class Stat
         BONUSES_COLLECTED(new IntStat()),
         CARDS_PLAYED(new IntStat()),
         CASH_EARNED(new IntStat()),
+        DISTANCE_MOVED(new IntStat()),
+        SHOTS_FIRED(new IntStat()),
 
         CATTLE_RUSTLED(new IntStat()),
         NUGGETS_CLAIMED(new IntStat()),

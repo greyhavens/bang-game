@@ -1612,6 +1612,8 @@ public class BangManager extends GameManager
         Stat.Type.UNITS_LOST,
         Stat.Type.BONUSES_COLLECTED,
         Stat.Type.CARDS_PLAYED,
-        Stat.Type.CASH_EARNED
+        Stat.Type.CASH_EARNED,
+        Stat.Type.SHOTS_FIRED,
+        Stat.Type.DISTANCE_MOVED,
     };
 }
