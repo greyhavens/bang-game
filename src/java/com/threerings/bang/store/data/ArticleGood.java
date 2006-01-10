@@ -29,6 +29,12 @@ public class ArticleGood extends Good
     }
 
     @Override // documentation inherited
+    public String getIconPath ()
+    {
+        return "goods/articles/" + _type + ".png";
+    }
+
+    @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
         // make sure the gender matches

@@ -38,6 +38,12 @@ public class PurseGood extends Good
     }
 
     @Override // documentation inherited
+    public String getIconPath ()
+    {
+        return "goods/purses/" + _type + ".png";
+    }
+
+    @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
         // make sure they don't already have a better purse

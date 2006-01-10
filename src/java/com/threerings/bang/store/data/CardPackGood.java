@@ -40,6 +40,12 @@ public class CardPackGood extends Good
     }
 
     @Override // documentation inherited
+    public String getIconPath ()
+    {
+        return "goods/cards/" + _type + ".png";
+    }
+
+    @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
         // anyone can buy a pack of cards
