@@ -58,7 +58,7 @@ public class PlayerStatusView extends BContainer
                              BangController ctrl, int pidx)
     {
         super(new AbsoluteLayout());
-        setStyleClass("player_status_win");
+        setStyleClass("player_status_cont");
 
         _ctx = ctx;
         _bangobj = bangobj;
@@ -77,7 +77,6 @@ public class PlayerStatusView extends BContainer
         add(_player, NAME_RECT);
 
         _cash = new BLabel("");
-        _cash.setStyleClass("player_status_cash");
         add(_cash, CASH_LOC);
         add(_ranklbl = new BLabel(createRankIcon(-1)), RANK_RECT);
 
@@ -218,7 +217,7 @@ public class PlayerStatusView extends BContainer
         BIcon icon = new ImageIcon(
             _ctx.loadImage("cards/" + card.getType() + "/icon.png"));
         BButton btn = new BButton(icon, "" + card.cardId);
-        btn.setStyleClass("player_status");
+        btn.setStyleClass("card_button");
         btn.addListener(this);
         return btn;
     }

@@ -145,7 +145,9 @@ public class BangUI
     public static void configUnitLabel (BLabel label, UnitConfig config)
     {
         label.setOrientation(BLabel.VERTICAL);
-        label.setStyleClass("unit_label");
+        if (!label.getStyleClass().equals("unit_label")) {
+            label.setStyleClass("unit_label");
+        }
         if (config == null) {
             label.setText(_ctx.xlate("units", "m.empty"));
             label.setIcon(new BlankIcon(Model.ICON_SIZE, Model.ICON_SIZE));
@@ -161,7 +163,9 @@ public class BangUI
     public static void configCardLabel (BButton label, CardItem card)
     {
         label.setOrientation(BLabel.VERTICAL);
-        label.setStyleClass("card_label");
+        if (!label.getStyleClass().equals("card_label")) {
+            label.setStyleClass("card_label");
+        }
         String path = "cards/" + card.getType() + "/icon.png";
         label.setIcon(new ImageIcon(_ctx.loadImage(path)));
         String name = _ctx.xlate(BangCodes.CARDS_MSGS, "m." + card.getType());

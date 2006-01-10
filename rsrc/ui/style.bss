@@ -163,11 +163,25 @@ right_label {
 }
 
 unit_label {
+  font: "Dom Casual" plain 16;
   text-align: center;
+  padding: 2;
+}
+
+unit_label:selected {
+  border: 1 solid #FFFFFF;
+  padding: 2;
 }
 
 card_label {
+  font: "Dom Casual" plain 16;
   text-align: center;
+  padding: 2;
+}
+
+card_label:selected {
+  border: 1 solid #FFFFFF;
+  padding: 2;
 }
 
 padded_box {
@@ -211,42 +225,42 @@ logon_view {
 // In-game styles
 
 player_status_win {
-  background: image "ui/pstatus/dashboard.png" centerxy;
+  background: blank;
 }
 
-player_status {
-  font: "Helvetica" bold 11;
+player_status_cont {
+  background: image "ui/pstatus/dashboard.png" centerxy;
+  font: "Dom Casual" bold 16;
+}
+
+card_button {
   background: image "ui/pstatus/card_up.png" tilexy;
   padding: 1;
 }
 
-player_status:down {
+card_button:down {
   background: image "ui/pstatus/card_down.png" tilexy;
   padding: 2 0 0 2;
 }
 
-player_status_cash {
-  font: "Helvetica" bold 11;
-}
-
 // temporary hack
 player_status0 {
-  font: "Helvetica" bold 11;
+  font: "Dom Casual" plain 13;
   color: #0000FF;
   text-align: center;
 }
 player_status1 {
-  font: "Helvetica" bold 11;
+  font: "Dom Casual" plain 13;
   color: #FF0000;
   text-align: center;
 }
 player_status2 {
-  font: "Helvetica" bold 11;
+  font: "Dom Casual" plain 13;
   color: #00FF00;
   text-align: center;
 }
 player_status3 {
-  font: "Helvetica" bold 11;
+  font: "Dom Casual" plain 13;
   color: #FFFF00;
   text-align: center;
 }
