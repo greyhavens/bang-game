@@ -6,11 +6,16 @@ package com.threerings.bang.store.client;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.media.image.Colorization;
+
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.avatar.util.AvatarLogic;
+
+import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
 
 /**
@@ -35,8 +40,25 @@ public class GoodsIcon extends SelectableIcon
     public void setGood (Good good)
     {
         _good = good;
-        // TODO: pick and use random colorizations
-        setIcon(new ImageIcon(_ctx.loadImage(good.getIconPath())));
+
+        if (_good instanceof ArticleGood) {
+            AvatarLogic al = _ctx.getAvatarLogic();
+            String[] cclasses = al.getColorizationClasses(
+                al.getArticleCatalog().getArticle(_good.getType()));
+            Colorization[] zations = new Colorization[cclasses.length];
+            for (int ii = 0; ii < zations.length; ii++) {
+                zations[ii] = al.getColorPository().getRandomStartingColor(
+                    cclasses[ii]).getColorization();
+            }
+            setIcon(new ImageIcon(
+                        _ctx.getImageCache().createImage(
+                            _ctx.getImageCache().getBufferedImage(
+                                good.getIconPath()),
+                            zations, true)));
+        } else {
+            setIcon(new ImageIcon(_ctx.loadImage(good.getIconPath())));
+        }
+
         setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
     }
 

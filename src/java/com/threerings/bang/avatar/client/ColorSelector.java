@@ -110,9 +110,12 @@ public class ColorSelector extends BComponent
                     _menu = new BPopupMenu(getWindow(), true);
                     _menu.setStyleClass("color_selector_popup");
                     _menu.addListener(_listener);
+                    _menu.addMenuItem(new SwatchMenuItem(_selidx, true));
                     for (int ii = 0; ii < _swatches.length; ii++) {
-                        _menu.addMenuItem(new SwatchMenuItem(ii));
+                        _menu.addMenuItem(new SwatchMenuItem(ii, false));
                     }
+                } else {
+                    ((SwatchMenuItem)_menu.getComponent(0)).index = _selidx;
                 }
                 _menu.popup(getAbsoluteX(), getAbsoluteY()+35, false);
                 break;
@@ -145,11 +148,11 @@ public class ColorSelector extends BComponent
     {
         public int index;
 
-        public SwatchMenuItem (int index)
+        public SwatchMenuItem (int index, boolean circle)
         {
             super(null, null, "");
             this.index = index;
-            _circle = (index == 0) || (index == _swatches.length-1);
+            _circle = circle;
             setIcon(new BlankIcon(_circle ? 32 : 24, 36));
         }
 
