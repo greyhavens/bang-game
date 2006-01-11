@@ -37,6 +37,7 @@ public class BankView extends BWindow
     public BankView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), GroupLayout.makeHStretch());
+        setStyleClass("main_view");
 
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
@@ -64,16 +65,11 @@ public class BankView extends BWindow
                       _qbuy = new QuickTransact(ctx, _status, true)),
                  GroupLayout.FIXED);
 
-        // add a spacer container to suck up whitespace
-        main.add(new Spacer());
+        main.add(new Spacer(10, 10), GroupLayout.FIXED);
 
         title = _ctx.xlate(BANK_MSGS, "m.full_title");
         main.add(wrap(title, _fsell = new FullTransact(ctx, _status, false),
-                      _fbuy = new FullTransact(ctx, _status, true)),
-                 GroupLayout.FIXED);
-
-        // add another spacer container to suck up more whitespace
-        main.add(new Spacer());
+                      _fbuy = new FullTransact(ctx, _status, true)));
 
         // add a row displaying our cash on hand and the back button
         BContainer bottom = new BContainer(GroupLayout.makeHStretch());

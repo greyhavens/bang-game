@@ -41,15 +41,14 @@ public class FullTransact extends BContainer
 {
     public FullTransact (BangContext ctx, BTextArea status, boolean buying)
     {
-        super(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                   GroupLayout.STRETCH));
+        super(GroupLayout.makeVStretch());
         _ctx = ctx;
         _status = status;
         _buying = buying;
         _msgs = ctx.getMessageManager().getBundle(BANK_MSGS);
 
         String msg = buying ? "m.buy" : "m.sell";
-        add(new BLabel(_msgs.get(msg + "_offers")));
+        add(new BLabel(_msgs.get(msg + "_offers")), GroupLayout.FIXED);
 
         // add slots for the top four offers
         BContainer offers = new BContainer(new TableLayout(4, 5, 2));
@@ -58,10 +57,10 @@ public class FullTransact extends BContainer
             _offers[ii] = new OfferLabel(offers);
         }
         _offers[0].setNoOffers();
-        add(offers);
-        add(new Spacer(1, 15));
+        add(offers, GroupLayout.FIXED);
+        add(new Spacer(1, 15), GroupLayout.FIXED);
 
-        add(new BLabel(_msgs.get(msg + "_post_offer")));
+        add(new BLabel(_msgs.get(msg + "_post_offer")), GroupLayout.FIXED);
 
         BContainer moffer = GroupLayout.makeHBox(GroupLayout.LEFT);
         moffer.add(new BLabel(BangUI.coinIcon));
@@ -74,14 +73,12 @@ public class FullTransact extends BContainer
         moffer.add(new BLabel(_msgs.get("m.each")));
         moffer.add(new Spacer(15, 1));
         moffer.add(new BButton(_msgs.get("m.post"), this, "post"));
-        add(moffer);
-        add(new Spacer(1, 15));
+        add(moffer, GroupLayout.FIXED);
+        add(new Spacer(1, 15), GroupLayout.FIXED);
 
-        add(new BLabel(_msgs.get("m.your_offers")));
+        add(new BLabel(_msgs.get("m.your_offers")), GroupLayout.FIXED);
         _myoffers = new BContainer(new TableLayout(5, 5, 15));
-        add(_myoffers);
-// TODO: figure out weird layout bug
-//         add(new BScrollPane(_myoffers));
+        add(new BScrollPane(_myoffers));
     }
 
     public void init (BankObject bankobj)
