@@ -99,6 +99,9 @@ public class GoodsInspector extends BContainer
                 _ctx.getAvatarLogic().getColorizationClasses(article);
             _args[0] = _args[1] = _args[2] = Integer.valueOf(0);
 
+            // grab whatever random colorizations we were using for the icon
+            // and start with those in the inspector
+            int[] colorIds = ((GoodsIcon)icon).colorIds;
             for (int ii = 0; ii < cclasses.length; ii++) {
                 String cclass = cclasses[ii];
                 if (cclass.equals(AvatarLogic.SKIN) ||
@@ -108,9 +111,9 @@ public class GoodsInspector extends BContainer
 
                 // primary, secondary and tertiary colors have to go into the
                 // appropriate index
-                int index = cclass.endsWith("_p") ? 0 :
-                    (cclass.endsWith("_s") ? 1 : 2);
+                int index = AvatarLogic.getColorIndex(cclass);
                 ColorSelector colorsel = new ColorSelector(_ctx, cclass);
+                colorsel.setSelectedColorId(colorIds[index]);
                 colorsel.addListener(_colorpal);
                 colorsel.setProperty("index", Integer.valueOf(index));
                 add(_colorsel[index] = colorsel, CS_SPOTS[index]);

@@ -6,6 +6,7 @@ package com.threerings.bang.store.client;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.media.image.ColorPository;
 import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.BangUI;
@@ -24,6 +25,9 @@ import com.threerings.bang.store.data.Good;
 public class GoodsIcon extends SelectableIcon
 {
     public static final Dimension ICON_SIZE = new Dimension(136, 156);
+
+    /** Contains our randomly selected color ids for colorized goods. */
+    public int[] colorIds;
 
     public GoodsIcon (BangContext ctx, Good good)
     {
@@ -45,10 +49,14 @@ public class GoodsIcon extends SelectableIcon
             AvatarLogic al = _ctx.getAvatarLogic();
             String[] cclasses = al.getColorizationClasses(
                 al.getArticleCatalog().getArticle(_good.getType()));
+            colorIds = new int[3];
             Colorization[] zations = new Colorization[cclasses.length];
             for (int ii = 0; ii < zations.length; ii++) {
-                zations[ii] = al.getColorPository().getRandomStartingColor(
-                    cclasses[ii]).getColorization();
+                ColorPository.ColorRecord crec =
+                    al.getColorPository().getRandomStartingColor(cclasses[ii]);
+                int cidx = AvatarLogic.getColorIndex(crec.cclass.name);
+                colorIds[cidx] = crec.colorId;
+                zations[ii] = crec.getColorization();
             }
             setIcon(new ImageIcon(
                         _ctx.getImageCache().createImage(

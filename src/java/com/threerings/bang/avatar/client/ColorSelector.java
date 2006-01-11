@@ -97,6 +97,16 @@ public class ColorSelector extends BComponent
         _selidx = selidx;
     }
 
+    public void setSelectedColorId (int colorId)
+    {
+        for (int ii = 0; ii < _swatches.length; ii++) {
+            if (_swatches[ii].colorId == colorId) {
+                _selidx = ii;
+                break;
+            }
+        }
+    }
+
     // documentation inherited
     public void dispatchEvent (BEvent event)
     {

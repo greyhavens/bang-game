@@ -122,6 +122,25 @@ public class AvatarLogic
     }
 
     /**
+     * Returns the appropriate index for this color class (which depends on
+     * whether it is primary, secondary or tertiary).
+     */
+    public static int getColorIndex (String cclass)
+    {
+        if (cclass.endsWith("_p")) {
+            return 0;
+        } else if (cclass.endsWith("_s")) {
+            return 1;
+        } else if (cclass.endsWith("_t")) {
+            return 2;
+        } else  {
+            log.warning("Requested color index for non-indexed color " +
+                        "[cclass=" + cclass + "].");
+            return 0;
+        }
+    }
+
+    /**
      * Creates a colorization mask with the specified three colorization ids
      * (which may be zero if the component in question does not require
      * secondary or tertiary colorizations). This value can then be provided to
@@ -228,15 +247,9 @@ public class AvatarLogic
                 zations[cc] = _globals[0];
             } else if (colors[cc].equals(HAIR)) {
                 zations[cc] = _globals[1];
-            } else if (colors[cc].endsWith("_s")) {
-                zations[cc] = _pository.getColorization(colors[cc], _colors[1]);
-            } else if (colors[cc].endsWith("_t")) {
-                zations[cc] = _pository.getColorization(colors[cc], _colors[2]);
-            } else if (colors[cc].endsWith("_p")) {
-                zations[cc] = _pository.getColorization(colors[cc], _colors[0]);
             } else {
-                log.warning("Component contains non-indexed custom color! " +
-                            "[ccomp=" + ccomp + ", color=" + colors[cc] + "].");
+                zations[cc] = _pository.getColorization(
+                    colors[cc], _colors[getColorIndex(colors[cc])]);
             }
         }
 
