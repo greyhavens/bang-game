@@ -29,22 +29,19 @@ public class TutorialConfigParser extends CompiledConfigParser
         String prefix = "tutorial";
         digest.addRule(prefix, new SetPropertyFieldsRule());
 
-        String aprefix = prefix + "/add_unit";
-        digest.addObjectCreate(aprefix, TutorialConfig.AddUnit.class.getName());
-        digest.addRule(aprefix, new SetPropertyFieldsRule());
-        digest.addSetNext(
-            aprefix, "addAction", TutorialConfig.Action.class.getName());
-
-        aprefix = prefix + "/wait";
-        digest.addObjectCreate(aprefix, TutorialConfig.Wait.class.getName());
-        digest.addRule(aprefix, new SetPropertyFieldsRule());
-        digest.addSetNext(
-            aprefix, "addAction", TutorialConfig.Action.class.getName());
-
-        aprefix = prefix + "/text";
-        digest.addObjectCreate(aprefix, TutorialConfig.Text.class.getName());
-        digest.addRule(aprefix, new SetPropertyFieldsRule());
-        digest.addSetNext(
-            aprefix, "addAction", TutorialConfig.Action.class.getName());
+        for (int ii = 0; ii < ACTIONS.length; ii += 2) {
+            String aprefix = prefix + "/" + ACTIONS[ii];
+            digest.addObjectCreate(aprefix, ACTIONS[ii+1]);
+            digest.addRule(aprefix, new SetPropertyFieldsRule());
+            digest.addSetNext(
+                aprefix, "addAction", TutorialConfig.Action.class.getName());
+        }
     }
+
+    protected static final String[] ACTIONS = {
+        "text", TutorialConfig.Text.class.getName(),
+        "wait", TutorialConfig.Wait.class.getName(),
+        "add_unit", TutorialConfig.AddUnit.class.getName(),
+        "move_unit", TutorialConfig.MoveUnit.class.getName(),
+    };
 }

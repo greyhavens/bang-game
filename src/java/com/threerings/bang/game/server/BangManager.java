@@ -152,6 +152,70 @@ public class BangManager extends GameManager
         }
 
         Piece target = (Piece)_bangobj.pieces.get(targetId);
+        moveAndShoot(unit, x, y, target);
+    }
+
+    // documentation inherited from interface BangProvider
+    public void playCard (ClientObject caller, int cardId, short x, short y)
+    {
+        PlayerObject user = (PlayerObject)caller;
+        Card card = (Card)_bangobj.cards.get(cardId);
+        if (card == null ||
+            card.owner != getPlayerIndex(user.getVisibleName())) {
+            log.warning("Rejecting invalid card request [who=" + user.who() +
+                        ", sid=" + cardId + ", card=" + card + "].");
+            return;
+        }
+
+        log.info("Playing card: " + card);
+
+        // remove it from their list
+        _bangobj.removeFromCards(cardId);
+
+        // activate it
+        Effect effect = card.activate(x, y);
+        deployEffect(card.owner, effect);
+
+        // if this card was a starting card, note that it was consumed
+        StartingCard scard = (StartingCard)_scards.get(cardId);
+        if (scard != null) {
+            scard.played = true;
+        }
+
+        // note that this player played a card
+        _bangobj.stats[card.owner].incrementStat(Stat.Type.CARDS_PLAYED, 1);
+    }
+
+    // documentation inherited
+    public void attributeChanged (AttributeChangedEvent event)
+    {
+        String name = event.getName();
+        if (name.equals(BangObject.TICK)) {
+            tick(_bangobj.tick);
+
+        } else if (name.equals(BangObject.EFFECT)) {
+            ((Effect)event.getValue()).apply(_bangobj, _effector);
+
+        } else {
+            super.attributeChanged(event);
+        }
+    }
+
+    /**
+     * Attempts to move the specified unit to the specified coordinates and
+     * optionally fire upon the specified target.
+     *
+     * @param unit the unit to be moved.
+     * @param x the x coordinate to which to move or {@link Short#MAX_VALUE} if
+     * the unit should be moved to the closest valid firing position to the
+     * target.
+     * @param y the y coordinate to which to move, this is ignored if {@link
+     * Short#MAX_VALUE} is supplied for x.
+     * @param target the (optional) target to shoot after moving.
+     */
+    public void moveAndShoot (Unit unit, int x, int y, Piece target)
+        throws InvocationException
+    {
         Piece munit = null, shooter = unit;
         try {
             _bangobj.startTransaction();
@@ -216,55 +280,9 @@ public class BangManager extends GameManager
         }
     }
 
-    // documentation inherited from interface BangProvider
-    public void playCard (ClientObject caller, int cardId, short x, short y)
-    {
-        PlayerObject user = (PlayerObject)caller;
-        Card card = (Card)_bangobj.cards.get(cardId);
-        if (card == null ||
-            card.owner != getPlayerIndex(user.getVisibleName())) {
-            log.warning("Rejecting invalid card request [who=" + user.who() +
-                        ", sid=" + cardId + ", card=" + card + "].");
-            return;
-        }
-
-        log.info("Playing card: " + card);
-
-        // remove it from their list
-        _bangobj.removeFromCards(cardId);
-
-        // activate it
-        Effect effect = card.activate(x, y);
-        deployEffect(card.owner, effect);
-
-        // if this card was a starting card, note that it was consumed
-        StartingCard scard = (StartingCard)_scards.get(cardId);
-        if (scard != null) {
-            scard.played = true;
-        }
-
-        // note that this player played a card
-        _bangobj.stats[card.owner].incrementStat(Stat.Type.CARDS_PLAYED, 1);
-    }
-
-    // documentation inherited
-    public void attributeChanged (AttributeChangedEvent event)
-    {
-        String name = event.getName();
-        if (name.equals(BangObject.TICK)) {
-            tick(_bangobj.tick);
-
-        } else if (name.equals(BangObject.EFFECT)) {
-            ((Effect)event.getValue()).apply(_bangobj, _effector);
-
-        } else {
-            super.attributeChanged(event);
-        }
-    }
-
     /**
-     * Prepares an effect and posts it to the game object, recording
-     * damage done in the process.
+     * Prepares an effect and posts it to the game object, recording damage
+     * done in the process.
      */
     public void deployEffect (int effector, Effect effect)
     {
@@ -743,16 +761,19 @@ public class BangManager extends GameManager
         }
 
         // move our AI pieces randomly
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Unit && pieces[ii].isAlive() &&
-                isAI(pieces[ii].owner) &&
-                pieces[ii].ticksUntilMovable(tick) == 0) {
-                Unit unit = (Unit)pieces[ii];
-                _moves.clear();
-                _bangobj.board.computeMoves(unit, _moves, null);
-                if (_moves.size() > 0) {
-                    int midx = RandomUtil.getInt(_moves.size());
-                    moveUnit(unit, _moves.getX(midx), _moves.getY(midx), null);
+        if (!_bconfig.tutorial) {
+            for (int ii = 0; ii < pieces.length; ii++) {
+                if (pieces[ii] instanceof Unit && pieces[ii].isAlive() &&
+                    isAI(pieces[ii].owner) &&
+                    pieces[ii].ticksUntilMovable(tick) == 0) {
+                    Unit unit = (Unit)pieces[ii];
+                    _moves.clear();
+                    _bangobj.board.computeMoves(unit, _moves, null);
+                    if (_moves.size() > 0) {
+                        int midx = RandomUtil.getInt(_moves.size());
+                        moveUnit(unit, _moves.getX(midx), _moves.getY(midx),
+                                 null);
+                    }
                 }
             }
         }
@@ -944,8 +965,8 @@ public class BangManager extends GameManager
 
         // if we have not specified an exact move, locate one now
         if (x == Short.MAX_VALUE) {
-            // the target must no longer be around, so abandon ship
             if (target == null) {
+                // the target must no longer be around, so abandon ship
                 return null;
             }
 

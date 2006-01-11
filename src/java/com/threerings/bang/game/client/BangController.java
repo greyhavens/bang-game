@@ -380,8 +380,9 @@ public class BangController extends GameController
     {
         super.gameDidEnd();
 
-        // let the view know that the final round is over
+        // let interested parties know that the final round is over
         _view.endRound();
+        _tutcont.gameDidEnd();
     }
 
     /**

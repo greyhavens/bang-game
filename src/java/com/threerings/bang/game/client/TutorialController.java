@@ -4,8 +4,11 @@
 package com.threerings.bang.game.client;
 
 import com.jme.system.DisplaySystem;
+
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BTextArea;
+import com.jmex.bui.event.MouseAdapter;
+import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -39,6 +42,8 @@ public class TutorialController
         // create and add the window in which we'll display info text
         _tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null);
         _tutwin.add(_info = new BTextArea(), BorderLayout.SOUTH);
+        _tutwin.addListener(_clicklist);
+        _info.addListener(_clicklist);
     }
 
     /** Called from {@link BangController#willEnterPlace}. */
@@ -58,6 +63,14 @@ public class TutorialController
         if (_pending != null && event.equals(_pending.event)) {
             processedAction(_pending);
             _pending = null;
+        }
+    }
+
+    /** Called from {@link BangController#gameDidEnd}. */
+    public void gameDidEnd ()
+    {
+        if (_tutwin.isAdded()) {
+            _ctx.getRootNode().removeWindow(_tutwin);
         }
     }
 
@@ -85,7 +98,7 @@ public class TutorialController
 
         } else if (action instanceof TutorialConfig.AddUnit) {
             // nothing to do here
-            
+
         } else {
             log.warning("Unknown action " + action);
         }
@@ -116,6 +129,12 @@ public class TutorialController
         _bangobj.postMessage(TutorialCodes.ACTION_PROCESSED,
                              new Object[] { action.index });
     }
+
+    protected MouseAdapter _clicklist = new MouseAdapter() {
+        public void mousePressed (MouseEvent event) {
+            handleEvent(TutorialCodes.TEXT_CLICKED);
+        }
+    };
 
     protected AttributeChangeListener _acl = new AttributeChangeListener() {
         public void attributeChanged (AttributeChangedEvent event) {

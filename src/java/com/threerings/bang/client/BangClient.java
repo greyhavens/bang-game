@@ -138,7 +138,8 @@ public class BangClient extends BasicClient
     public void displayPopup (BWindow popup)
     {
         if (_popup != null) {
-            log.warning("Overriding popup [old=" + _popup + ", new=" + popup + "].");
+            log.warning("Overriding popup [old=" + _popup +
+                        ", new=" + popup + "].");
         }
         _ctx.getRootNode().addWindow(_popup = popup);
     }
@@ -162,7 +163,8 @@ public class BangClient extends BasicClient
         if ("tutorial".equals(System.getProperty("test"))) {
             config = new BangConfig();
             TutorialConfig tconfig =
-                TutorialUtil.loadTutorial(_rsrcmgr, "controls");
+                TutorialUtil.loadTutorial(_rsrcmgr, "test");
+            config.rated = false;
             config.players = new Name[] {
                 _ctx.getUserObject().getVisibleName(),
                 new Name("Larry") /*, new Name("Moe")*/ };

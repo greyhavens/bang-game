@@ -19,7 +19,7 @@ public class TutorialConfig
         public int index;
 
         public String toString () {
-            return StringUtil.fieldsToString(this);
+            return getClass().getName() + StringUtil.fieldsToString(this);
         }
     }
 
@@ -36,8 +36,16 @@ public class TutorialConfig
     public static class AddUnit extends Action
     {
         public String type;
+        public String id;
         public int[] location;
         public int owner;
+    }
+
+    public static class MoveUnit extends Action
+    {
+        public String id;
+        public int[] location = { Short.MAX_VALUE, Short.MAX_VALUE };
+        public String target;
     }
 
     /** The identifier for this tutorial, which defines its message bundle. */

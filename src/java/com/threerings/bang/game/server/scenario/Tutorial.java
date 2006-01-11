@@ -4,6 +4,9 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -122,6 +125,26 @@ public class Tutorial extends Scenario
             unit.position(aua.location[0], aua.location[1]);
             _bangobj.addToPieces(unit);
             _bangobj.board.updateShadow(null, unit);
+
+            // map the unit by id if asked to do so
+            if (!StringUtil.isBlank(aua.id)) {
+                _units.put(aua.id, unit);
+            }
+
+        } else if (action instanceof TutorialConfig.MoveUnit) {
+            TutorialConfig.MoveUnit mua = (TutorialConfig.MoveUnit)action;
+            Unit unit = _units.get(mua.id);
+            Unit target = null;
+            if (!StringUtil.isBlank(mua.target)) {
+                target = _units.get(mua.target);
+            }
+            try {
+                _bangmgr.moveAndShoot(
+                    unit, mua.location[0], mua.location[1], target);
+            } catch (InvocationException ie) {
+                log.warning("Unable to execute action " + mua + ":" +
+                            ie.getMessage());
+            }
         }
     }
 
@@ -136,4 +159,5 @@ public class Tutorial extends Scenario
     protected TutorialConfig _config;
     protected BangObject _bangobj;
     protected int _nextActionId;
+    protected HashMap<String,Unit> _units = new HashMap<String,Unit>();
 }
