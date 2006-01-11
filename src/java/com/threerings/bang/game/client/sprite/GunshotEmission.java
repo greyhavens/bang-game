@@ -240,9 +240,6 @@ public class GunshotEmission extends SpriteEmission
             vbuf.put(1f).put(-0.5f).put(0f);
             vbuf.put(1f).put(0.5f).put(0f);
 
-            BufferUtils.setInBuffer(TRAIL_END_COLOR, _cbuf, 2);
-            BufferUtils.setInBuffer(TRAIL_END_COLOR, _cbuf, 3);
-            
             ibuf.put(0).put(1).put(2);
             ibuf.put(0).put(2).put(3);
 
@@ -261,16 +258,16 @@ public class GunshotEmission extends SpriteEmission
             getLocalTranslation().set(eloc);
             
             // set the scale based on the distance to the target
-            float tdist = ((MobileSprite)_sprite).getTargetSprite().
+            _tdist = ((MobileSprite)_sprite).getTargetSprite().
                 getLocalTranslation().distance(eloc);
-            _trail.getLocalScale().set(tdist, 0.175f, 1f);
+            getLocalScale().set(0f, 0.175f, 1f);
             
             // set the orientation based on the eye vector and direction
             _ctx.getRenderer().getCamera().getLocation().subtract(eloc,
                 _eye);
             _eye.cross(_edir, _yvec).normalizeLocal();
             _edir.cross(_yvec, _zvec);
-            _trail.getLocalRotation().fromAxes(_edir, _yvec, _zvec);
+            getLocalRotation().fromAxes(_edir, _yvec, _zvec);
             
             _view.getPieceNode().attachChild(this);
             _elapsed = 0f;
@@ -279,18 +276,34 @@ public class GunshotEmission extends SpriteEmission
         public void updateWorldData (float time)
         {
             super.updateWorldData(time);
-            if ((_elapsed += time) >= TRAIL_DURATION) {
+            float lscale, a0, a1;
+            if ((_elapsed += time) >=
+                TRAIL_EXTEND_DURATION + TRAIL_FADE_DURATION) {
                 _view.getPieceNode().detachChild(this);
+                return;
+                
+            } else if (_elapsed >= TRAIL_EXTEND_DURATION) {
+                lscale = a1 = 1f;
+                a0 = (_elapsed - TRAIL_EXTEND_DURATION) / TRAIL_FADE_DURATION;
+                
+            } else {
+                lscale = a1 = _elapsed / TRAIL_EXTEND_DURATION;
+                a0 = 0f;
             }
-            _color.interpolate(TRAIL_START_COLOR, TRAIL_END_COLOR,
-                _elapsed / TRAIL_DURATION);
+            getLocalScale().x = _tdist * lscale;
+            
+            _color.interpolate(TRAIL_START_COLOR, TRAIL_END_COLOR, a0);
             BufferUtils.setInBuffer(_color, _cbuf, 0);
             BufferUtils.setInBuffer(_color, _cbuf, 1);
+            
+            _color.interpolate(TRAIL_START_COLOR, TRAIL_END_COLOR, a1);
+            BufferUtils.setInBuffer(_color, _cbuf, 2);
+            BufferUtils.setInBuffer(_color, _cbuf, 3);
         }
         
         protected FloatBuffer _cbuf;
         
-        protected float _elapsed;
+        protected float _elapsed, _tdist;
         protected Vector3f _eye = new Vector3f(), _yvec = new Vector3f(),
             _zvec = new Vector3f();
         protected ColorRGBA _color = new ColorRGBA();
@@ -333,8 +346,11 @@ public class GunshotEmission extends SpriteEmission
     /** The duration of the muzzle flare. */
     protected static final float FLARE_DURATION = 0.125f;
     
-    /** The duration of the bullet trail. */
-    protected static final float TRAIL_DURATION = 0.2f;
+    /** The amount of time it takes for the bullet trail to extend fully. */
+    protected static final float TRAIL_EXTEND_DURATION = 0.15f;
+    
+    /** The amount of time it takes for the bullet trail to fade away. */
+    protected static final float TRAIL_FADE_DURATION = 0.05f;
     
     /** The starting color of the bullet trail. */
     protected static final ColorRGBA TRAIL_START_COLOR =
