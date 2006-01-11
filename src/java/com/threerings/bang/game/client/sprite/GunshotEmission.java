@@ -58,7 +58,7 @@ public class GunshotEmission extends SpriteEmission
         
         _smokemgr = new ParticleManager(16);
         _smokemgr.setParticlesMinimumLifeTime(500f);
-        _smokemgr.setInitialVelocity(0.005f);
+        _smokemgr.setInitialVelocity(0.01f);
         _smokemgr.setEmissionDirection(Vector3f.UNIT_Z);
         _smokemgr.setEmissionMaximumAngle(FastMath.PI / 16);
         _smokemgr.setRandomMod(0f);
