@@ -16,6 +16,7 @@ import com.jme.util.LoggingSystem;
 import com.samskivert.servlet.user.Password;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
+import com.samskivert.util.RepeatRecordFilter;
 
 import com.threerings.bang.game.client.GameInputHandler;
 import com.threerings.bang.util.RenderUtil;
@@ -61,6 +62,7 @@ public class BangApp extends JmeApp
         // set up the proper logging services
         com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
         OneLineLogFormatter.configureDefaultHandler();
+        RepeatRecordFilter.configureDefaultHandler(100);
     }
 
     public static void main (String[] args)
