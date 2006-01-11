@@ -32,7 +32,7 @@ public class GoodsIcon extends SelectableIcon
     public GoodsIcon (BangContext ctx, Good good)
     {
         _ctx = ctx;
-        setOrientation(LABEL_OVER_TOP);
+        setOrientation(OVERLAPPING);
         setGood(good);
     }
 
