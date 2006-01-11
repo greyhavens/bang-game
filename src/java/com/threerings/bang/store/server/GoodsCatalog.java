@@ -62,8 +62,7 @@ public class GoodsCatalog
 
         // register our packs of cards
         pf = new CardPackProviderFactory();
-        registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(5, 500, 0), pf);
-//         registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(5, 500, 1), pf);
+        registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(5, 500, 1), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(13, 1500, 2), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(52, 5000, 6), pf);
 
