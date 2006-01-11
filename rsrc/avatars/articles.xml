@@ -207,59 +207,59 @@
 
   <!-- female hats -->
   <article name="female_longbrim" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p">
     <component cclass="female/hat" name="longbrim"/>
     <component cclass="female/hat_back" name="longbrim"/>
   </article>
 
   <article name="female_longbrim_thick" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="longbrim"/>
     <component cclass="female/hat_back" name="longbrim"/>
     <component cclass="female/hat_band" name="thick_longbrim"/>
   </article>
 
   <article name="female_longbrim_disks" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="longbrim"/>
     <component cclass="female/hat_back" name="longbrim"/>
     <component cclass="female/hat_band" name="disks_longbrim"/>
   </article>
 
   <article name="female_bowler" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p">
     <component cclass="female/hat" name="bowler"/>
     <component cclass="female/hat_back" name="bowler"/>
   </article>
 
   <article name="female_bowler_thick" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="bowler"/>
     <component cclass="female/hat_back" name="bowler"/>
     <component cclass="female/hat_band" name="thick_bowler"/>
   </article>
 
   <article name="female_railbrim" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p">
     <component cclass="female/hat" name="railbrim"/>
     <component cclass="female/hat_back" name="railbrim"/>
   </article>
 
   <article name="female_railbrim_thick" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="railbrim"/>
     <component cclass="female/hat_back" name="railbrim"/>
     <component cclass="female/hat_band" name="thick_railbrim"/>
   </article>
 
   <article name="female_stetson" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p">
     <component cclass="female/hat" name="stetson"/>
     <component cclass="female/hat_back" name="stetson"/>
   </article>
 
   <article name="female_stetson_thick" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="stetson"/>
     <component cclass="female/hat_back" name="stetson"/>
     <component cclass="female/hat_band" name="thick_stetson"/>
