@@ -3,8 +3,11 @@
 
 package com.threerings.bang.store.client;
 
+import com.jme.renderer.Renderer;
+import com.jmex.bui.Label;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Insets;
 
 import com.threerings.media.image.ColorPository;
 import com.threerings.media.image.Colorization;
@@ -32,7 +35,7 @@ public class GoodsIcon extends SelectableIcon
     public GoodsIcon (BangContext ctx, Good good)
     {
         _ctx = ctx;
-        setOrientation(OVERLAPPING);
+        _text = new Label(this);
         setGood(good);
     }
 
@@ -67,7 +70,7 @@ public class GoodsIcon extends SelectableIcon
             setIcon(new ImageIcon(_ctx.loadImage(good.getIconPath())));
         }
 
-        setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
+        _text.setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
     }
 
     public Dimension getPreferredSize (int whint, int hhint)
@@ -75,6 +78,42 @@ public class GoodsIcon extends SelectableIcon
         return ICON_SIZE;
     }
 
+    // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _text.stateDidChange();
+    }
+
+    // documentation inherited
+    protected void stateDidChange ()
+    {
+        super.stateDidChange();
+        _text.stateDidChange();
+    }
+
+    // documentation inherited
+    protected void layout ()
+    {
+        super.layout();
+
+        // we need to do some jiggery pokery to force the label in a bit from
+        // the edges
+        Insets insets = new Insets(getInsets());
+        insets.left += 5;
+        insets.top += 10;
+        insets.right += 5;
+        _text.layout(insets);
+    }
+
+    // documentation inherited
+    protected void renderComponent (Renderer renderer)
+    {
+        super.renderComponent(renderer);
+        _text.render(renderer);
+    }
+
     protected BangContext _ctx;
     protected Good _good;
+    protected Label _text;
 }

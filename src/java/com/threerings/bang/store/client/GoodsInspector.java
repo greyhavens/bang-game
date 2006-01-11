@@ -105,6 +105,7 @@ public class GoodsInspector extends BContainer
             // grab whatever random colorizations we were using for the icon
             // and start with those in the inspector
             int[] colorIds = ((GoodsIcon)icon).colorIds;
+            _zations = new Colorization[3];
             for (int ii = 0; ii < cclasses.length; ii++) {
                 String cclass = cclasses[ii];
                 if (cclass.equals(AvatarLogic.SKIN) ||
@@ -123,6 +124,9 @@ public class GoodsInspector extends BContainer
                 _args[index] = Integer.valueOf(colorsel.getSelectedColor());
                 _zations[index] = colorsel.getSelectedColorization();
             }
+
+        } else {
+            _zations = null;
         }
 
         updateImage();
@@ -155,8 +159,15 @@ public class GoodsInspector extends BContainer
 
     protected void updateImage ()
     {
-        _icon.setIcon(new ImageIcon(_ctx.getImageCache().createImage(
-                                        _srcimg, _zations, true)));
+        ImageIcon icon;
+        if (_zations != null) {
+            icon = new ImageIcon(_ctx.getImageCache().createImage(
+                                     _srcimg, _zations, true));
+        } else {
+            icon = new ImageIcon(_ctx.getImageCache().createImage(
+                                     _srcimg, true));
+        }
+        _icon.setIcon(icon);
     }
 
     protected ActionListener _colorpal = new ActionListener() {
@@ -182,7 +193,7 @@ public class GoodsInspector extends BContainer
     protected ColorSelector[] _colorsel = new ColorSelector[3];
 
     protected Object[] _args = new Object[3];
-    protected Colorization[] _zations = new Colorization[3];
+    protected Colorization[] _zations;
 
     protected static final Point[] CS_SPOTS = {
         new Point(150, 105),

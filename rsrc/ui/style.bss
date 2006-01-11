@@ -332,6 +332,7 @@ icon_label {
   color: #400F01;
   background: blank;
   text-align: center;
+  vertical-align: top;
 }
 
 icon_label:selected {
