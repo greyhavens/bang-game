@@ -55,8 +55,11 @@ public class GoodsInspector extends BContainer
         add(_descrip = new BTextArea(""), new Rectangle(200, 45, 300, 65));
         _descrip.setStyleClass("goods_descrip");
 
-        add(_cost = new MoneyLabel(ctx), new Rectangle(200, 15, 150, 25));
+        BContainer ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
+        ccont.add(new BLabel(_ctx.xlate("store", "m.price")));
+        ccont.add(_cost = new MoneyLabel(ctx));
         _cost.setMoney(0, 0, false);
+        add(ccont, new Rectangle(200, 15, 200, 25));
 
         BButton buy;
         add(buy = new BButton(_ctx.xlate("store", "m.buy")), new Point(400, 10));

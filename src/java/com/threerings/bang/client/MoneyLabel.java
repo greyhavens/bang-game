@@ -17,7 +17,7 @@ public class MoneyLabel extends BContainer
     public MoneyLabel (BangContext ctx)
     {
         _ctx = ctx;
-        setLayoutManager(new BorderLayout(0, 0));
+        setLayoutManager(new BorderLayout(5, 0));
         add(_scrip = new BLabel(BangUI.scripIcon), BorderLayout.WEST);
         _scrip.setIconTextGap(5);
         _scrip.setStyleClass("money_label");
