@@ -182,7 +182,7 @@
 
   <!-- female clothing -->
   <article name="female_gunslinger" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5">
+           slot="clothing" scrip="1500" coins="5" colors="clothes_p,clothes_s">
     <component cclass="female/clothing_back" name="gunslinger"/>
   </article>
 
