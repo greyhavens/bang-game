@@ -73,6 +73,10 @@ for LIB in samskivert getdown jme-bui narya threerings ; do
         fi
         echo "Rebuilding $LIB..."
         ant clean dist
+        if [ $? != 0 ]; then
+            rm -f $LOCKFILE
+            exit 255
+        fi
         ln -sf $ROOT/projects/$LIB/dist/*.jar $ROOT/lib
     fi
 done
@@ -80,14 +84,15 @@ done
 # build the main thang
 cd $ROOT
 ant distclean dist mdist
+if [ $? != 0 ]; then
+    rm -f $LOCKFILE
+    exit 255
+fi
 
 # build the client if requested
 if [ ! -z "$CLIENT" ]; then
     ant models client
 fi
-
-# now build the editor deployment
-# ant editor
 
 # remove the lockfile
 rm -f $LOCKFILE
