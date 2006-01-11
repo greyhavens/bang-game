@@ -52,7 +52,8 @@ public class GunshotEmission extends SpriteEmission
         if (_fmesh == null) {
             createFlareMesh();
         }
-        _flare = new Flare(ctx);
+        _flare = new Flare();
+        _trail = new Trail();
     }
     
     @Override // documentation inherited
@@ -96,13 +97,17 @@ public class GunshotEmission extends SpriteEmission
      */
     protected void fireShot ()
     {
-        getEmitterLocation(true, _location);
+        getEmitterLocation(true, _eloc);
+        getEmitterDirection(true, _edir);
         
         // fire off a flash of light
-        _view.createLightFlash(_location, LIGHT_FLASH_COLOR, 0.125f);
+        _view.createLightFlash(_eloc, LIGHT_FLASH_COLOR, 0.125f);
         
         // and a muzzle flare
-        _flare.activate(_location);
+        _flare.activate(_eloc, _edir);
+        
+        // and a bullet trail
+        _trail.activate(_eloc, _edir);
     }
     
     /** Fires shots at the configured frames. */
@@ -136,31 +141,29 @@ public class GunshotEmission extends SpriteEmission
     /** Handles the appearance and fading of the muzzle flare. */
     protected class Flare extends SharedMesh
     {
-        public Flare (BasicContext ctx)
+        public Flare ()
         {
             super("flare", _fmesh);
             
             setLightCombineMode(LightState.OFF);
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-            setRenderState(RenderUtil.addAlpha);
             setRenderState(RenderUtil.overlayZBuf);
+            setRenderState(RenderUtil.addAlpha);
             if (_ftex == null) {
-                _ftex = RenderUtil.createTextureState(ctx,
+                _ftex = RenderUtil.createTextureState(_ctx,
                     "textures/effects/flash.png");
             }
             setRenderState(_ftex);
-            updateRenderState();
-            
             setLocalScale(1.5f);
             setDefaultColor(new ColorRGBA());
+            updateRenderState();
         }
         
-        public void activate (Vector3f eloc)
+        public void activate (Vector3f eloc, Vector3f edir)
         {
-            // set the location based on the marker position/direction
+            // set the flare location based on the marker position/direction
             getLocalTranslation().set(eloc);
-            getEmitterDirection(true, _dir);
-            PathUtil.computeAxisRotation(Vector3f.UNIT_Z, _dir,
+            PathUtil.computeAxisRotation(Vector3f.UNIT_Z, edir,
                 getLocalRotation());
             
             _view.getPieceNode().attachChild(this);
@@ -173,12 +176,83 @@ public class GunshotEmission extends SpriteEmission
             if ((_elapsed += time) >= FLARE_DURATION) {
                 _view.getPieceNode().detachChild(this);
             }
-            getDefaultColor().interpolate(ColorRGBA.white, ColorRGBA.black,
-                _elapsed / FLARE_DURATION);
+            getDefaultColor().interpolate(ColorRGBA.white,
+                ColorRGBA.black, _elapsed / FLARE_DURATION);
         }
         
         protected float _elapsed;
-        protected Vector3f _dir = new Vector3f();
+    }
+    
+    /** Handles the appearance and fading of the bullet trail. */
+    protected class Trail extends TriMesh
+    {
+        public Trail ()
+        {
+            super("trail");
+            
+            FloatBuffer vbuf = BufferUtils.createVector3Buffer(4);
+            _cbuf = BufferUtils.createFloatBuffer(4 * 4);
+            IntBuffer ibuf = BufferUtils.createIntBuffer(6);
+        
+            vbuf.put(0f).put(0.5f).put(0f);
+            vbuf.put(0f).put(-0.5f).put(0f);
+            vbuf.put(1f).put(-0.5f).put(0f);
+            vbuf.put(1f).put(0.5f).put(0f);
+
+            BufferUtils.setInBuffer(TRAIL_END_COLOR, _cbuf, 2);
+            BufferUtils.setInBuffer(TRAIL_END_COLOR, _cbuf, 3);
+            
+            ibuf.put(0).put(1).put(2);
+            ibuf.put(0).put(2).put(3);
+
+            reconstruct(vbuf, null, _cbuf, null, ibuf);
+            
+            setLightCombineMode(LightState.OFF);
+            setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+            setRenderState(RenderUtil.overlayZBuf);
+            setRenderState(RenderUtil.blendAlpha);
+            updateRenderState();
+        }
+        
+        public void activate (Vector3f eloc, Vector3f edir)
+        {
+            // set the transation based on the location of the source
+            getLocalTranslation().set(eloc);
+            
+            // set the scale based on the distance to the target
+            float tdist = ((MobileSprite)_sprite).getTargetSprite().
+                getLocalTranslation().distance(eloc);
+            _trail.getLocalScale().set(tdist, 0.175f, 1f);
+            
+            // set the orientation based on the eye vector and direction
+            _ctx.getRenderer().getCamera().getLocation().subtract(eloc,
+                _eye);
+            _eye.cross(_edir, _yvec).normalizeLocal();
+            _edir.cross(_yvec, _zvec);
+            _trail.getLocalRotation().fromAxes(_edir, _yvec, _zvec);
+            
+            _view.getPieceNode().attachChild(this);
+            _elapsed = 0f;
+        }
+        
+        public void updateWorldData (float time)
+        {
+            super.updateWorldData(time);
+            if ((_elapsed += time) >= TRAIL_DURATION) {
+                _view.getPieceNode().detachChild(this);
+            }
+            _color.interpolate(TRAIL_START_COLOR, TRAIL_END_COLOR,
+                _elapsed / TRAIL_DURATION);
+            BufferUtils.setInBuffer(_color, _cbuf, 0);
+            BufferUtils.setInBuffer(_color, _cbuf, 1);
+        }
+        
+        protected FloatBuffer _cbuf;
+        
+        protected float _elapsed;
+        protected Vector3f _eye = new Vector3f(), _yvec = new Vector3f(),
+            _zvec = new Vector3f();
+        protected ColorRGBA _color = new ColorRGBA();
     }
     
     /** The frames at which the shots go off. */
@@ -190,11 +264,14 @@ public class GunshotEmission extends SpriteEmission
     /** The controller that activates the shots at the appropriate frames. */
     protected ShotController _shotctrl = new ShotController();
     
-    /** A result vector to reuse. */
-    protected Vector3f _location = new Vector3f();
+    /** Result vectors to reuse. */
+    protected Vector3f _eloc = new Vector3f(), _edir = new Vector3f();
     
-    /** The muzzle flare. */
+    /** The muzzle flare handler. */
     protected Flare _flare;
+    
+    /** The bullet trail handler. */
+    protected Trail _trail;
     
     /** The shared flare mesh. */
     protected static TriMesh _fmesh;
@@ -208,4 +285,15 @@ public class GunshotEmission extends SpriteEmission
         
     /** The duration of the muzzle flare. */
     protected static final float FLARE_DURATION = 0.125f;
+    
+    /** The duration of the bullet trail. */
+    protected static final float TRAIL_DURATION = 0.2f;
+    
+    /** The starting color of the bullet trail. */
+    protected static final ColorRGBA TRAIL_START_COLOR =
+        new ColorRGBA(0.75f, 0.75f, 0.75f, 0.75f);
+    
+    /** The ending color of the bullet trail. */
+    protected static final ColorRGBA TRAIL_END_COLOR =
+        new ColorRGBA(0.75f, 0.75f, 0.75f, 0f);
 }
