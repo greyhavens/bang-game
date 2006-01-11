@@ -41,6 +41,11 @@ public class ArticleCatalog
         /** The cost of this article in coins. */
         public int coins;
 
+        /** Used to override the "natural" set of colorization classes used for
+         * a component (which is the union of the classes needed by its
+         * subcomponents). */
+        public String[] colors;
+
         /** The list of components that make up this article. */
         public ArrayList<Component> components = new ArrayList<Component>();
 

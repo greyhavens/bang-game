@@ -4,6 +4,8 @@
 package com.threerings.bang.avatar.util;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
@@ -233,10 +235,10 @@ public class AvatarLogic
             }
         }
 
-//             log.info("Decoded colors for " + ccomp.name + " into " +
-//                      StringUtil.toString(zations) + " using " +
-//                      StringUtil.toString(colors) + " and " +
-//                      StringUtil.toString(_colors));
+//         log.info("Decoded colors for " + ccomp.name + " into " +
+//                  StringUtil.toString(zations) + " using " +
+//                  StringUtil.toString(colors) + " and " +
+//                  StringUtil.toString(_colors));
 
         return zations;
     }
@@ -359,10 +361,22 @@ public class AvatarLogic
      */
     public String[] getColorizationClasses (ArticleCatalog.Article article)
     {
-        // look up the component class of the first component
-        ComponentClass cclass = _crepo.getComponentClass(
-            article.components.get(0).cclass);
-        return cclass.colors;
+        // if a specific set of colorizations have not been specified for an
+        // article, we generate the list by computing the union of the classes
+        // used by each of the individual components in the article; then we
+        // cache it because we're cool like that
+        if (article.colors == null) {
+            HashSet<String> classes = new HashSet<String>();
+            for (ArticleCatalog.Component comp : article.components) {
+                ComponentClass cclass = _crepo.getComponentClass(comp.cclass);
+                for (int ii = 0; ii < cclass.colors.length; ii++) {
+                    classes.add(cclass.colors[ii]);
+                }
+            }
+            article.colors = classes.toArray(new String[classes.size()]);
+            Arrays.sort(article.colors);
+        }
+        return article.colors;
     }
 
     protected ComponentRepository _crepo;

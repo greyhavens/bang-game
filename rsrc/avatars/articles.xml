@@ -40,7 +40,7 @@
 
   <!-- male hats -->
   <article name="male_cowboy_bare" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p">
     <component cclass="male/hat" name="cowboy"/>
     <component cclass="male/hat_back" name="cowboy"/>
   </article>
@@ -60,7 +60,7 @@
   </article>
 
   <article name="male_cowboy_plain" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="cowboy"/>
     <component cclass="male/hat_back" name="cowboy"/>
     <component cclass="male/hat_band" name="plain_cowboy"/>
