@@ -4,7 +4,6 @@
 package com.threerings.bang.avatar.util;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 
 import com.samskivert.util.ArrayIntSet;
@@ -224,14 +223,20 @@ public class AvatarLogic
         // look up the actual colorizations from those
         String[] colors = ccomp.componentClass.colors;
         Colorization[] zations = new Colorization[colors.length];
-        for (int cc = 0, ccount = 0; cc < colors.length; cc++) {
+        for (int cc = 0; cc < colors.length; cc++) {
             if (colors[cc].equals(SKIN)) {
                 zations[cc] = _globals[0];
             } else if (colors[cc].equals(HAIR)) {
                 zations[cc] = _globals[1];
+            } else if (colors[cc].endsWith("_s")) {
+                zations[cc] = _pository.getColorization(colors[cc], _colors[1]);
+            } else if (colors[cc].endsWith("_t")) {
+                zations[cc] = _pository.getColorization(colors[cc], _colors[2]);
+            } else if (colors[cc].endsWith("_p")) {
+                zations[cc] = _pository.getColorization(colors[cc], _colors[0]);
             } else {
-                zations[cc] = _pository.getColorization(
-                    colors[cc], _colors[ccount++]);
+                log.warning("Component contains non-indexed custom color! " +
+                            "[ccomp=" + ccomp + ", color=" + colors[cc] + "].");
             }
         }
 
@@ -374,7 +379,6 @@ public class AvatarLogic
                 }
             }
             article.colors = classes.toArray(new String[classes.size()]);
-            Arrays.sort(article.colors);
         }
         return article.colors;
     }

@@ -99,19 +99,23 @@ public class GoodsInspector extends BContainer
                 _ctx.getAvatarLogic().getColorizationClasses(article);
             _args[0] = _args[1] = _args[2] = Integer.valueOf(0);
 
-            int index = 0;
             for (int ii = 0; ii < cclasses.length; ii++) {
-                if (cclasses[ii].equals(AvatarLogic.SKIN) ||
-                    cclasses[ii].equals(AvatarLogic.HAIR)) {
+                String cclass = cclasses[ii];
+                if (cclass.equals(AvatarLogic.SKIN) ||
+                    cclass.equals(AvatarLogic.HAIR)) {
                     continue;
                 }
 
-                ColorSelector colorsel = new ColorSelector(_ctx, cclasses[ii]);
+                // primary, secondary and tertiary colors have to go into the
+                // appropriate index
+                int index = cclass.endsWith("_p") ? 0 :
+                    (cclass.endsWith("_s") ? 1 : 2);
+                ColorSelector colorsel = new ColorSelector(_ctx, cclass);
                 colorsel.addListener(_colorpal);
                 colorsel.setProperty("index", Integer.valueOf(index));
                 add(_colorsel[index] = colorsel, CS_SPOTS[index]);
                 _args[index] = Integer.valueOf(colorsel.getSelectedColor());
-                _zations[index++] = colorsel.getSelectedColorization();
+                _zations[index] = colorsel.getSelectedColorization();
             }
         }
 

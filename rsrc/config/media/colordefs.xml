@@ -13,7 +13,8 @@
     <color colorId="3" name="white" offsets="0.13, -0.8, .15"/>
     <color colorId="4" name="black" offsets="0.6, -0.7, -0.6" starter="true"/>
     <color colorId="5" name="brown" offsets="0.1, 0, -0.4" starter="true"/>
-    <color colorId="6" name="lightBrown" offsets="0.11, -0.2, -0.2" starter="true"/>
+    <color colorId="6" name="lightBrown" offsets="0.11, -0.2, -0.2"
+           starter="true"/>
     <color colorId="7" name="sandyBlonde" offsets="0.1, -0.1, 0" starter="true"/>
     <color colorId="8" name="blonde" offsets="0.13, -0.4, -0.1" starter="true"/>
     <color colorId="9" name="toehead" offsets="0.15, -0.4, 0.05" starter="true"/>
@@ -30,7 +31,8 @@
   </class>
 
   <!-- skin recolorations -->
-  <class classId="2" name="skin" source="#C550D7" range="0.08, 0.4, 1" starter="true">
+  <class classId="2" name="skin" source="#C550D7" range="0.08, 0.4, 1"
+         starter="true">
     <color colorId="1" name="darkest" offsets="-0.75, -0.2, -0.45"/>
     <color colorId="2" name="dark" offsets="-0.75, 0.16, -0.26"/>
     <color colorId="2" name="native" offsets="-0.76, 0.2, -0.2"/>
@@ -41,8 +43,9 @@
     <color colorId="7" name="pasty" offsets="-0.72, -0.4, 0"/>
   </class>
 
-  <!-- iris recolorations -->
-  <class classId="3" name="iris" source="#2141A2" range="0.05, 0.6, 1">
+  <!-- iris recolorations (this is a tertiary color because it's combined -->
+  <!-- with clothes_p and clothes_s -->
+  <class classId="3" name="iris_t" source="#2141A2" range="0.05, 0.6, 1">
     <color colorId="1" name="blue" offsets="0, 0, 0"/>
     <color colorId="2" name="purple" offsets="0.1, 0.2, 0"/>
     <color colorId="3" name="violet" offsets="0.2, -0.3, -0.2"/>
@@ -118,10 +121,12 @@
     <color colorId="14" name="olive" offsets="0.25, -0.5, -0.4" starter="true"/>
     <color colorId="15" name="aqua" offsets="0.5, 0, -0.1"/>
     <color colorId="16" name="blue" offsets="-0.4, 0, 0" starter="true"/>
-    <color colorId="17" name="navyBlue" offsets="0.65, -0.2, -0.2" starter="true"/>
+    <color colorId="17" name="navyBlue" offsets="0.65, -0.2, -0.2"
+           starter="true"/>
     <color colorId="18" name="slate" offsets="0.6, -0.4, -0.3" starter="true"/>
     <color colorId="19" name="violet" offsets="0.83, -0.1, -0.15"/>
-    <color colorId="20" name="purple" offsets="0.76, 0.05, -0.11" starter="true"/>
+    <color colorId="20" name="purple" offsets="0.76, 0.05, -0.11"
+           starter="true"/>
     <color colorId="21" name="white" offsets="0, -1, 0.1"/>
     <color colorId="22" name="grey" offsets="0, -1, -0.2" starter="true"/>
     <color colorId="23" name="black" offsets="0, -1, -0.6"/>
@@ -129,7 +134,8 @@
 
   <!-- secondary clothing recolorations -->
   <class classId="6" name="clothes_s" source="#57AC6A" range="0.1, 0.6, 1">
-    <color colorId="1" name="dkbrn" offsets="-0.28, -0.37, -0.27" starter="true"/>
+    <color colorId="1" name="dkbrn" offsets="-0.28, -0.37, -0.27"
+           starter="true"/>
     <color colorId="2" name="leather" offsets="0.7, 0.2, -0.2" starter="true"/>
     <color colorId="3" name="brown" offsets="-0.28, -0.37, -0.1" starter="true"/>
     <color colorId="4" name="beige" offsets="0.13, -0.4, 0" starter="true"/>
@@ -141,11 +147,13 @@
     <color colorId="10" name="yellow" offsets="0.81, -0.25, 0.2"/>
     <color colorId="11" name="moss" offsets="0.9, -0.5, 0" starter="true"/>
     <color colorId="12" name="lime" offsets="-0.05, -0.1, 0.1"/>
-    <color colorId="13" name="green" offsets="-0.05, -0.25, -0.3" starter="true"/>
+    <color colorId="13" name="green" offsets="-0.05, -0.25, -0.3"
+           starter="true"/>
     <color colorId="14" name="olive" offsets="0, -0.6, -0.25" starter="true"/>
     <color colorId="15" name="aqua" offsets="0.15, 0, 0.15"/>
     <color colorId="16" name="blue" offsets="0.25, -0.15, 0.2" starter="true"/>
-    <color colorId="17" name="navyBlue" offsets="0.28, -0.27, -0.07" starter="true"/>
+    <color colorId="17" name="navyBlue" offsets="0.28, -0.27, -0.07"
+           starter="true"/>
     <color colorId="18" name="slate" offsets="0.23, -0.4, -0.2" starter="true"/>
     <color colorId="19" name="violet" offsets="-0.55, -0.15, 0.09"/>
     <color colorId="20" name="purple" offsets="-0.6, 0.1, 0.1" starter="true"/>
