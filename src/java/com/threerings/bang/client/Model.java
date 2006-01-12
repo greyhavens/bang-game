@@ -432,7 +432,8 @@ public class Model
         }
         
         String path = _key + "/";
-        String[] pnames = getList(_props, anim.action + ".meshes", "meshes", true);
+        String[] pnames = getList(
+            _props, anim.action + ".meshes", "meshes", true);
         final Part[] parts = new Part[pnames.length];
         final Texture[][] textures = new Texture[pnames.length][];
         for (int pp = 0; pp < pnames.length; pp++) {
