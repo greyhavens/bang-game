@@ -70,7 +70,7 @@ public class Model
         {
             return _markers.get(name);
         }
-        
+
         public void detach ()
         {
             for (int ii = 0; ii < _meshes.length; ii++) {
@@ -92,7 +92,7 @@ public class Model
             for (int ii = 0; ii < _meshes.length; ii++) {
                 _node.detachChild(_meshes[ii]);
             }
-            attachMeshes();   
+            attachMeshes();
         }
 
         protected void attachMeshes ()
@@ -108,14 +108,14 @@ public class Model
                 _meshes[ii].updateRenderState();
             }
         }
-        
+
         protected Geometry getGeometry (Node mesh)
         {
             for (int ii = 0, nn = mesh.getQuantity(); ii < nn; ii++) {
                 Spatial child = mesh.getChild(ii);
                 if (child instanceof Geometry) {
                     return (Geometry)child;
-                
+
                 } else if (child instanceof Node) {
                     Geometry geom = getGeometry((Node)child);
                     if (geom != null) {
@@ -125,7 +125,7 @@ public class Model
             }
             return null;
         }
-        
+
         protected Animation _anim;
         protected Node _node;
         protected int _random;
@@ -139,7 +139,7 @@ public class Model
     {
         /** The name of this animation. */
         public String action;
-        
+
         /** The number of frames in this animation. */
         public int frames;
 
@@ -148,10 +148,10 @@ public class Model
 
         /** The repeat type of the animation (clamp, cycle, wrap). */
         public int repeatType;
-        
+
         /** The emitters used in the animation. */
         public Emitter[] emitters;
-        
+
         /**
          * Returns the "speed" at which this animation's controller should
          * be run.
@@ -176,6 +176,15 @@ public class Model
         public boolean isResolved ()
         {
             return _parts != null;
+        }
+
+        /**
+         * Configures this animation as "being resolved" so that we don't queue
+         * it up for resolution more than once.
+         */
+        public void setIsResolving ()
+        {
+            _parts = new Part[0];
         }
 
         /**
@@ -229,20 +238,20 @@ public class Model
             }
             return nodes;
         }
-        
+
         /**
          * Configures this animation with its underlying meshes.
          */
         public void setParts (Part[] parts)
         {
             _parts = parts;
-            
+
             // update any extant bindings
             for (Binding binding : _bindings) {
                 binding.update();
             }
         }
-        
+
         /**
          * Clears the specified binding.
          */
@@ -253,7 +262,7 @@ public class Model
 
         /** The animated meshes that make up the animation. */
         protected Part[] _parts;
-        
+
         /** Use to track the nodes to which this animation is bound. */
         protected ArrayList<Binding> _bindings = new ArrayList<Binding>();
     }
@@ -263,17 +272,25 @@ public class Model
     {
         /** The name of the emitter as defined in the model properties. */
         public String name;
-        
+
         /** The configuration of the emitter. */
         public Properties props;
-        
+
         /** Used to create a clone of the emitter marker geometry (only valid
          * once the animation has been resolved). */
         public CloneCreator creator;
     }
-    
+
     /** The size along each axis of the model icon. */
     public static final int ICON_SIZE = 128;
+
+    /**
+     * Returns the background loader thread used to asynchronously load models.
+     */
+    public static ModelLoader getLoader ()
+    {
+        return _loader;
+    }
 
     /**
      * Creates the model and loads up all of its consituent animations.
@@ -335,10 +352,11 @@ public class Model
         // load up the action we need to create our icon image
         String iaction = _props.getProperty("icon");
         if (iaction != null && (_ianim = _anims.get(iaction)) != null) {
+            _ianim.setIsResolving();
             _loader.queueAction(this, iaction);
         }
     }
-    
+
     /**
      * Loads the names and properties of the emitters for the specified action.
      * Does not load the marker geometries (that happens on the loader thread).
@@ -356,7 +374,7 @@ public class Model
         }
         return emitters;
     }
-    
+
     /**
      * Returns a pre-rendered icon version of this model.
      */
@@ -386,6 +404,7 @@ public class Model
                         ", anim=" + action + "].");
             return BLANK_ANIM;
         } else if (!anim.isResolved()) {
+            anim.setIsResolving();
             _loader.queueAction(this, action);
         }
         return anim;
@@ -403,6 +422,7 @@ public class Model
             String action = entry.getKey();
             Animation anim = entry.getValue();
             if (!anim.isResolved()) {
+                anim.setIsResolving();
                 _loader.queueAction(this, action);
             }
         }
@@ -430,7 +450,7 @@ public class Model
         } else {
             anim.repeatType = Controller.RT_WRAP;
         }
-        
+
         String path = _key + "/";
         String[] pnames = getList(
             _props, anim.action + ".meshes", "meshes", true);
@@ -474,7 +494,7 @@ public class Model
             anim.emitters[ee].creator = loadModel(ctx, path + anim.action + "/" +
                 mesh + ".jme", false);
         }
-        
+
         // now finish our resolution on the main thread
         ctx.getApp().postRunnable(new Runnable() {
             public void run () {
@@ -482,7 +502,7 @@ public class Model
             }
         });
     }
-    
+
     /**
      * Finishes the resolution of a model animation. <em>Note:</em> this is
      * called on the main thread where we can safely access OpenGL.
@@ -504,7 +524,7 @@ public class Model
             }
         }
         anim.setParts(parts);
-        
+
         // create the icon image for this model if it wants one
         if (anim == _ianim) {
             try {
@@ -650,7 +670,7 @@ public class Model
 
         Texture icon = new Texture();
         trenderer.setupTexture(icon);
-        
+
         icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
 
         Node all = new Node("all");
@@ -716,7 +736,7 @@ public class Model
         /** A list of texture states from which to select randomly. */
         public TextureState[] tstates;
     }
-    
+
     protected String _key;
     protected TextureIcon _icon = new TextureIcon(ICON_SIZE, ICON_SIZE);
     protected Properties _props;
@@ -727,7 +747,7 @@ public class Model
 
     protected HashMap<String,CloneCreator> _emitters =
         new HashMap<String,CloneCreator>();
-    
+
     protected HashMap<String,TextureState> _textures =
         new HashMap<String,TextureState>();
 
