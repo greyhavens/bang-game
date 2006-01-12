@@ -7,8 +7,8 @@
   <text message="start_test"/>
   <wait event="text_clicked"/>
 
-  <move_unit id="gun1" target="gun2"/>
-
+  <repair_unit id="gun1"/>
+  
   <text message="end_test"/>
   <wait event="text_clicked"/>
 </tutorial>

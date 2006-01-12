@@ -48,6 +48,11 @@ public class TutorialConfig
         public String target;
     }
 
+    public static class RepairUnit extends Action
+    {
+        public String id;
+    }
+    
     /** The identifier for this tutorial, which defines its message bundle. */
     public String ident;
 

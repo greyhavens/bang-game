@@ -21,6 +21,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
+import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.BangManager;
@@ -145,6 +146,12 @@ public class Tutorial extends Scenario
                 log.warning("Unable to execute action " + mua + ":" +
                             ie.getMessage());
             }
+            
+        } else if (action instanceof TutorialConfig.RepairUnit) {
+            TutorialConfig.RepairUnit rua = (TutorialConfig.RepairUnit)action;
+            RepairEffect effect = new RepairEffect();
+            effect.init(_units.get(rua.id));
+            _bangmgr.deployEffect(-1, effect);
         }
     }
 

@@ -507,16 +507,6 @@ public class BangManager extends GameManager
                 }
             }
 
-            // TEMP: testing stampede card
-            if (isTest()) {
-                for (int ii = 0; ii < 2; ii++) {
-                    Card card = Card.newCard("stampede");
-                    card.init(_bangobj, pidx);
-                    _bangobj.addToCards(card);
-                }
-            }
-            // END TEMP
-
             // if they failed to select a big shot (or are an AI) give
             // them a default
             if (item == null) {
