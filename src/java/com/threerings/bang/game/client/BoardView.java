@@ -703,7 +703,7 @@ public class BoardView extends BComponent
         }
 
         // first update the sprite with its new piece
-        sprite.updated(_bangobj.board, npiece, tick);
+        sprite.updated(npiece, tick);
 
         // then move it...
         if (!sprite.updatePosition(_bangobj.board)) {

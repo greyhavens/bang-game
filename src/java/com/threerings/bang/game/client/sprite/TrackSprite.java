@@ -13,7 +13,6 @@ import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Track;
@@ -28,10 +27,10 @@ public class TrackSprite extends PieceSprite
     implements PieceCodes
 {
     @Override // documentation inherited
-    public void updated (BangBoard board, Piece piece, short tick)
+    public void updated (Piece piece, short tick)
     {
         Track otrack = (Track)_piece, ntrack = (Track)piece;
-        super.updated(board, piece, tick);
+        super.updated(piece, tick);
 
         // refresh the geometry when the type changes
         if (ntrack.type != otrack.type) {

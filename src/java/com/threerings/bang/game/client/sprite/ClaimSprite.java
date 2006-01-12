@@ -16,7 +16,6 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -33,9 +32,9 @@ public class ClaimSprite extends PropSprite
     }
 
     @Override // documentation inherited
-    public void updated (BangBoard board, Piece piece, short tick)
+    public void updated (Piece piece, short tick)
     {
-        super.updated(board, piece, tick);
+        super.updated(piece, tick);
 
         // recompute and display our nugget count
         Claim claim = (Claim)piece;

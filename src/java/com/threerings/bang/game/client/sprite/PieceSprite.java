@@ -178,7 +178,7 @@ public class PieceSprite extends Sprite
      * Called when we receive an event indicating that our piece was updated in
      * some way.
      */
-    public void updated (BangBoard board, Piece piece, short tick)
+    public void updated (Piece piece, short tick)
     {
         _piece = (Piece)piece.clone();
         _tick = tick;

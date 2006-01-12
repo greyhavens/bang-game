@@ -11,7 +11,6 @@ import com.jme.scene.state.TextureState;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -28,9 +27,9 @@ public class CowSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public void updated (BangBoard board, Piece piece, short tick)
+    public void updated (Piece piece, short tick)
     {
-        super.updated(board, piece, tick);
+        super.updated(piece, tick);
 
         // update our colors in the event that our owner changes
         configureOwnerColors();

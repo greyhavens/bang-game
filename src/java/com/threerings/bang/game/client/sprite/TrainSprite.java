@@ -31,14 +31,14 @@ public class TrainSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public void updated (BangBoard board, Piece piece, short tick)
+    public void updated (Piece piece, short tick)
     {
         // note our previous lastX and Y before we're updated
         if (_piece != null) {
             _lastLastX = ((Train)_piece).lastX;
             _lastLastY = ((Train)_piece).lastY;
         }
-        super.updated(board, piece, tick);
+        super.updated(piece, tick);
     }
 
     @Override // documentation inherited

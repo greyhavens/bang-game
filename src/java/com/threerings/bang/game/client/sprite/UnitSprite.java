@@ -121,9 +121,9 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public void updated (BangBoard board, Piece piece, short tick)
+    public void updated (Piece piece, short tick)
     {
-        super.updated(board, piece, tick);
+        super.updated(piece, tick);
 
         Unit unit = (Unit)piece;
         int ticks = unit.ticksUntilMovable(_tick);

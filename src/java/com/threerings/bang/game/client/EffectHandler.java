@@ -99,10 +99,10 @@ public class EffectHandler extends BoardView.BoardAction
 
         // queue the effect up on the piece sprite
         if (_effviz != null) {
-            queueEffect(sprite, _effviz);
+            queueEffect(sprite, piece, _effviz);
         } else {
             // since we're not displaying an effect, we update immediately
-            sprite.updated(_bangobj.board, piece, _tick);
+            sprite.updated(piece, _tick);
         }
 
         // if we're rotating someone in preparation for a shot; just update
@@ -143,7 +143,7 @@ public class EffectHandler extends BoardView.BoardAction
             return;
         }
 
-        sprite.updated(_bangobj.board, piece, _tick);
+        sprite.updated(piece, _tick);
         if (!sprite.updatePosition(_bangobj.board)) {
             return;
         }
@@ -172,11 +172,13 @@ public class EffectHandler extends BoardView.BoardAction
     {
     }
 
-    protected void queueEffect (PieceSprite sprite, EffectViz viz)
+    protected void queueEffect (
+        final PieceSprite sprite, final Piece piece, EffectViz viz)
     {
         final int penderId = notePender();
-        viz.init(_ctx, _view, sprite.getPiece(), new EffectViz.Observer() {
+        viz.init(_ctx, _view, piece, new EffectViz.Observer() {
             public void effectDisplayed () {
+                sprite.updated(piece, _tick);
                 maybeComplete(penderId);
             }
         });
@@ -220,9 +222,10 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     protected BangContext _ctx;
-    protected short _tick;
     protected BangObject _bangobj;
     protected BangBoardView _view;
+    protected short _tick;
+
     protected SoundGroup _sounds;
 
     protected Effect _effect;

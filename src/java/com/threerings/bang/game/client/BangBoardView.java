@@ -750,7 +750,7 @@ public class BangBoardView extends BoardView
             if (sprite != null) {
                 boolean viz = _vstate.getVisible(piece.x, piece.y);
                 if (viz && !isManaged(sprite)) {
-                    sprite.updated(_bangobj.board, piece, _bangobj.tick);
+                    sprite.updated(piece, _bangobj.tick);
                     addSprite(sprite);
                 } else if (!viz && isManaged(sprite)) {
                     removeSprite(sprite);

@@ -79,11 +79,11 @@ public class IconViz extends EffectViz
                     
                 } else if (_elapsed >= RISE_DURATION) {
                     alpha = 1f;
-                    localTranslation.z = TILE_SIZE * 1.5f; 
+                    localTranslation.z = TILE_SIZE * 1; 
                     
                 } else {
                     alpha = _elapsed / RISE_DURATION;
-                    localTranslation.z = TILE_SIZE * (1f + alpha * 0.5f);
+                    localTranslation.z = TILE_SIZE * (0.5f + alpha * 0.5f);
                 }
                 icon.getDefaultColor().a = alpha;
             }
