@@ -112,9 +112,11 @@ public class BoardView extends BComponent
 
         /** Returns a string representation of this action. */
         public String toString () {
+            StringBuffer buf = new StringBuffer();
             String cname = getClass().getName();
-            return cname.substring(cname.lastIndexOf("$")+1) + ":" +
-                getIdent().hashCode();
+            buf.append(cname.substring(cname.lastIndexOf("$")+1)).append(":");
+            buf.append(getIdent() == null ? -1 : getIdent().hashCode());
+            return buf.toString();
         }
     }
 
@@ -233,8 +235,8 @@ public class BoardView extends BComponent
 
         // create sprites for all of the pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            // this will trigger the creation, initialization and whatnot
-            queuePieceUpdate(null, (Piece)iter.next());
+            // create sprites for all of the pieces on the board
+            createPieceSprite((Piece)iter.next(), _bangobj.tick);
         }
         _pnode.updateGeometricState(0, true);
 
@@ -433,6 +435,7 @@ public class BoardView extends BComponent
      */
     public void executeAction (BoardAction action)
     {
+//         log.info("Queueing: " + action);
         _pactions.add(action);
         if (_paction == null) {
             processNextAction();
@@ -453,8 +456,18 @@ public class BoardView extends BComponent
             Thread.dumpStack();
             return;
         }
+//         log.info("Completed " + ident.hashCode());
         _paction = null;
         processNextAction();
+    }
+
+    /**
+     * Called when a piece is updated in the game object, though sometimes not
+     * immediately but after various effects have been visualized.
+     */
+    public void queuePieceCreate (Piece piece, short tick)
+    {
+        executeAction(new PieceCreatedAction(piece, tick));
     }
 
     /**
@@ -671,6 +684,7 @@ public class BoardView extends BComponent
     {
         if (_pactions.size() > 0) {
             _paction = _pactions.remove(0);
+//             log.info("Posting: " + _paction);
             _ctx.getApp().postRunnable(_arunner);
         }
     }
@@ -737,21 +751,25 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Returns (creating if necessary) the piece sprite associated with
-     * the supplied piece. A newly created sprite will automatically be
-     * initialized with the supplied piece and added to the board view.
+     * Creates the piece sprite for the supplied piece. The newly created
+     * sprite will automatically be initialized with the supplied piece and
+     * added to the board view.
+     */
+    protected void createPieceSprite (Piece piece, short tick)
+    {
+        log.fine("Creating sprite for " + piece + ".");
+        PieceSprite sprite = piece.createSprite();
+        sprite.init(_ctx, this, _sounds, piece, tick);
+        _pieces.put((int)piece.pieceId, sprite);
+        addSprite(sprite);
+    }
+
+    /**
+     * Returns the piece sprite associated with the supplied piece.
      */
     protected PieceSprite getPieceSprite (Piece piece)
     {
-        PieceSprite sprite = _pieces.get(piece.pieceId);
-        if (sprite == null) {
-            sprite = piece.createSprite();
-            sprite.init(_ctx, this, _sounds, piece, _bangobj.tick);
-            log.fine("Creating sprite for " + piece + ".");
-            _pieces.put((int)piece.pieceId, sprite);
-            addSprite(sprite);
-        }
-        return sprite;
+        return _pieces.get(piece.pieceId);
     }
 
     /**
@@ -920,6 +938,28 @@ public class BoardView extends BComponent
         }
     }
 
+    /** Used to queue up piece createion so that the piece shows up on the
+     * board in the right sequence with all other board actions. */
+    protected class PieceCreatedAction extends BoardAction
+    {
+        public Piece piece;
+        public short tick;
+
+        public PieceCreatedAction (Piece piece, short tick) {
+            this.piece = piece;
+            this.tick = tick;
+        }
+
+        public Object getIdent () {
+            return piece;
+        }
+
+        public boolean execute () {
+            createPieceSprite(piece, tick);
+            return false;
+        }
+    }
+
     /** Used to queue up piece updates so that each can execute, trigger
      * animations and run to completion before the next one is run. */
     protected class PieceUpdatedAction extends BoardAction
@@ -948,7 +988,7 @@ public class BoardView extends BComponent
     {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                queuePieceUpdate(null, (Piece)event.getEntry());
+                queuePieceCreate((Piece)event.getEntry(), _bangobj.tick);
             }
         }
 
@@ -970,10 +1010,13 @@ public class BoardView extends BComponent
     protected Runnable _arunner = new Runnable() {
         public void run () {
             try {
+//                 log.info("Running: " + _paction);
                 if (_paction.execute()) {
+//                     log.info("Waiting: " + _paction);
                     // the action requires us to wait until it completes
                     return;
                 }
+//                 log.info("Completed: " + _paction);
             } catch (Throwable t) {
                 log.log(Level.WARNING, "Board action choked: " + _paction, t);
             }
