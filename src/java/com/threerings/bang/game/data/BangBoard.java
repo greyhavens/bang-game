@@ -337,16 +337,18 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
-     * Computes and returns a path for the specified piece to the
-     * specified coordinates. Returns null if no path could be found.
+     * Computes and returns a path from the specified coordinates to the
+     * supplied piece's current coordinates. Returns null if no path could be
+     * found.
      */
-    public List computePath (Piece piece, int tx, int ty)
+    public List computePath (int ox, int oy, Piece piece)
     {
-//         log.info("Computing path from " + piece.x + "/" + piece.y + " to " +
-//                  tx + "/" + ty + " maxdist:" + piece.getMoveDistance() + ".");
+//         log.info("Computing path from " + ox + "/" + oy + " to " +
+//                  piece.x + "/" + piece.y +
+//                  " maxdist:" + piece.getMoveDistance() + ".");
         return AStarPathUtil.getPath(
             _tpred, piece.getStepper(), piece, piece.getMoveDistance(),
-            piece.x, piece.y, tx, ty, true);
+            ox, oy, piece.x, piece.y, true);
     }
 
     /**

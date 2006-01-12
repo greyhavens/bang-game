@@ -10,6 +10,7 @@ import com.jme.math.Vector3f;
 import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.OrientingBallisticPath;
 import com.threerings.jme.sprite.Path;
+import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.openal.Sound;
@@ -28,6 +29,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * animates the fired shot.
  */
 public class BallisticShotHandler extends ShotHandler
+    implements PathObserver
 {
     @Override // documentation inherited
     protected void prepareSounds (SoundGroup sounds)
@@ -108,35 +110,35 @@ public class BallisticShotHandler extends ShotHandler
         }
     }
 
-    @Override // documentation inherited
+    // documentation inherited from interface PathObserver
     public void pathCompleted (Sprite sprite, Path path)
     {
-        if (sprite == _ssprite) {
-            sprite.removeObserver(this);
-            _view.removeSprite(sprite);
-            if (!fireNextSegment()) {
-                if (_bangSound != null) {
-                    _bangSound.play(false); // bang!
-                }
-                // stop the bomb whistle
-                _whistleSound.stop();
-                _view.applyEffectDirect(_shot);
+        sprite.removeObserver(this);
+        _view.removeSprite(sprite);
+        if (!fireNextSegment()) {
+            if (_bangSound != null) {
+                _bangSound.play(false); // bang!
             }
-        } else {
-            super.pathCompleted(sprite, path);
+            // stop the bomb whistle
+            _whistleSound.stop();
+
+            // apply the effect and complete our handling if that did not
+            // result in anything that needs waiting for
+            _effect.apply(_bangobj, this);
+            maybeComplete(-1);
         }
     }
 
-    @Override // documentation inherited
+    // documentation inherited from interface PathObserver
     public void pathCancelled (Sprite sprite, Path path)
     {
-        if (sprite == _ssprite) {
-            sprite.removeObserver(this);
-            _view.removeSprite(sprite);
-            _view.applyEffectDirect(_shot);
-        } else {
-            super.pathCancelled(sprite, path);
-        }
+        sprite.removeObserver(this);
+        _view.removeSprite(sprite);
+
+        // apply the effect and complete our handling if that did not
+        // result in anything that needs waiting for
+        _effect.apply(_bangobj, this);
+        maybeComplete(-1);
     }
 
     protected ShotSprite _ssprite;

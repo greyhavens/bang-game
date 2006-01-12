@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +25,6 @@ import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
-import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -98,8 +96,8 @@ public class PieceSprite extends Sprite
         createSounds(sounds);
 
         // position ourselves properly to start
-        setLocation(piece.x, piece.y, 0);
-        setOrientation(piece.orientation);
+        setLocation(_px = piece.x, _py = piece.y, 0);
+        setOrientation(_porient = piece.orientation);
 
         // ensure that we do this the first time even if the sprite starts
         // out at zero zero
@@ -114,7 +112,7 @@ public class PieceSprite extends Sprite
     {
         return null;
     }
-    
+
     /**
      * Configures this sprite's tile location.
      */
@@ -135,8 +133,7 @@ public class PieceSprite extends Sprite
      */
     public void setOrientation (int orientation)
     {
-        // if we're moving, assume the path will do the right thing when
-        // we arrive
+        // if moving, assume the path will do the right thing when we arrive
         if (!isMoving()) {
             Quaternion quat = new Quaternion();
             quat.fromAngleAxis(ROTATIONS[orientation], UP);
@@ -155,13 +152,13 @@ public class PieceSprite extends Sprite
         if (_piece.isFlyer()) {
             return;
         }
-        
+
         // adjust position to terrain height
         Vector3f pos = getLocalTranslation();
         TerrainNode tnode = _view.getTerrainNode();
         pos.z = tnode.getHeightfieldHeight(pos.x, pos.y);
         setLocalTranslation(pos);
-        
+
         // adjust rotation to terrain slope
         Quaternion rot = getLocalRotation();
         Vector3f normal = tnode.getHeightfieldNormal(pos.x, pos.y),
@@ -175,50 +172,48 @@ public class PieceSprite extends Sprite
         mod.fromAngleAxis(angle, cross);
         setLocalRotation(mod.multLocal(rot));
     }
-    
+
     /**
-     * Called when we receive an event indicating that our piece was
-     * updated in some way.
+     * Called when we receive an event indicating that our piece was updated in
+     * some way.
      */
     public void updated (BangBoard board, Piece piece, short tick)
     {
-        // note our new piece and the current tick
-        Piece opiece = _piece;
-        _piece = piece;
+        _piece = (Piece)piece.clone();
         _tick = tick;
+    }
 
+    /**
+     * Called when our piece is updated in such a way that we may have moved.
+     * We compare our internal (to the sprite) last know position and
+     * orientation to the orientation of our current piece, and effect any
+     * necessary movement.
+     *
+     * @return true if this update resulted in the sprite being moved along a
+     * path, in which case the view will wait for the movement to finish before
+     * animating other bits.
+     */
+    public boolean updatePosition (BangBoard board)
+    {
         // move ourselves to our new location
-        if (piece.x != opiece.x || piece.y != opiece.y ||
-            computeElevation(board, piece.x, piece.y) != _elevation) {
-            moveSprite(board, opiece, piece);   
+        if (_piece.x != _px || _piece.x != _py ||
+            computeElevation(board, _piece.x, _piece.x) != _elevation) {
+            moveSprite(board);
+            _px = _piece.x;
+            _py = _piece.y;
         }
 
         // if we're rotated (which only happens in the editor), we need to
         // rotate our model
-        if (opiece.orientation != piece.orientation) {
-            setOrientation(piece.orientation);
+        if (_porient != _piece.orientation) {
+            setOrientation(_porient = _piece.orientation);
             // now reset our location and it will adjust our centering
-            int elev = computeElevation(board, _piece.x, _piece.y);
-            setLocation(piece.x, piece.y, elev);
+            int elev = computeElevation(board, _px, _py);
+            setLocation(_px, _py, elev);
         }
-    }
 
-    /**
-     * Queues up an effect for visualization on this sprite when it has
-     * stopped moving.
-     */
-    public void queueEffect (EffectViz effect)
-    {
-        if (isMoving()) {
-            log.info("Queueing effect [piece=" + _piece.info() +
-                     ", effect=" + effect + "].");
-            if (_effects == null) {
-                _effects = new ArrayList<EffectViz>();
-            }
-            _effects.add(effect);
-        } else {
-            effect.display(this);
-        }
+        // if we started moving as a result, we need to be waited for
+        return isMoving();
     }
 
     /**
@@ -237,14 +232,6 @@ public class PieceSprite extends Sprite
     {
         super.pathCompleted();
         updateCollisionTree();
-
-        // if there are any queued effects, run them
-        if (_effects != null) {
-            for (int ii = 0; ii < _effects.size(); ii++) {
-                _effects.get(ii).display(this);
-            }
-            _effects.clear();
-        }
     }
 
     /**
@@ -272,7 +259,7 @@ public class PieceSprite extends Sprite
         if (width == 1 && height == 1) {
             return board.getHeightfieldElevation(tx, ty);
         }
-        
+
         int elevation = Integer.MIN_VALUE;
         for (int y = ty, ymax = ty + height; y < ymax; y++) {
             for (int x = tx, xmax = tx + width; x < xmax; x++) {
@@ -289,10 +276,10 @@ public class PieceSprite extends Sprite
      * derived classes will want to compute a path and animate the sprite
      * traveling between its old and new locations.
      */
-    protected void moveSprite (BangBoard board, Piece opiece, Piece npiece)
+    protected void moveSprite (BangBoard board)
     {
-        int elev = computeElevation(board, npiece.x, npiece.y);
-        setLocation(npiece.x, npiece.y, elev);
+        int elev = computeElevation(board, _piece.x, _piece.y);
+        setLocation(_piece.x, _piece.y, elev);
     }
 
     /** Converts tile coordinates plus elevation into (3D) world
@@ -312,7 +299,7 @@ public class PieceSprite extends Sprite
         coords.x += TILE_SIZE/2;
         coords.y += TILE_SIZE/2;
     }
-    
+
     /**
      * Binds the given animation and updates the set of emissions.
      *
@@ -322,14 +309,14 @@ public class PieceSprite extends Sprite
         int random)
     {
         _binding = anim.bind(this, random);
-        
+
         // stop all running emissions
         for (SpriteEmission emission : _emissions.values()) {
             if (emission.isRunning()) {
                 emission.stop();
             }
         }
-        
+
         // start emissions used in the animation, creating any uncreated
         for (int ii = 0; ii < anim.emitters.length; ii++) {
             String name = anim.emitters[ii].name;
@@ -342,7 +329,7 @@ public class PieceSprite extends Sprite
             emission.start(anim, _binding);
         }
     }
-    
+
     @Override // documentation inherited
     protected void setParent (Node parent)
     {
@@ -358,14 +345,14 @@ public class PieceSprite extends Sprite
             }
         }
     }
-    
+
     protected BoardView _view;
-    
+
     protected Piece _piece;
+    protected int _px, _py, _porient;
     protected short _tick;
 
     protected boolean _selected;
-    protected ArrayList<EffectViz> _effects;
 
     /** Most pieces have an underlying model, so we provide a reference. */
     protected Model _model;
@@ -377,17 +364,17 @@ public class PieceSprite extends Sprite
     /** The emissions activated by animations. */
     protected HashMap<String, SpriteEmission> _emissions =
         new HashMap<String, SpriteEmission>();
-    
+
     /** The current elevation of the piece. */
     protected int _elevation;
-    
+
     /** When activated, causes all pieces to warp instead of smoothly
      * follow a path. */
     protected static boolean _editorMode;
 
     /** Used for temporary calculations. */
     protected static Vector3f _temp = new Vector3f();
-    
+
     protected static float[] ROTATIONS = {
         0, // NORTH
         FastMath.PI/2, // EAST

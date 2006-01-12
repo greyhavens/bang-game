@@ -71,7 +71,7 @@ public class ExplosionViz extends ParticleEffectViz
     protected void didInit ()
     {
         // create the dust ring for explosions on the ground
-        if (!_ntarget.isFlyer()) {
+        if (!_target.isFlyer()) {
             _dustring = ParticleFactory.getDustRing();
         }
         
@@ -95,8 +95,8 @@ public class ExplosionViz extends ParticleEffectViz
      */
     protected void prepareDustRing (PieceSprite target)
     {
-        Terrain terrain = _view.getBoard().getPredominantTerrain(_ntarget.x,
-            _ntarget.y);
+        Terrain terrain = _view.getBoard().getPredominantTerrain(
+            _target.x, _target.y);
         ColorRGBA color = RenderUtil.getGroundColor(terrain);
         _dustring.getStartColor().set(color.r, color.g, color.b,
             terrain.dustiness);

@@ -23,41 +23,52 @@ public class TrainSprite extends MobileSprite
     {
         super("extras/train", TYPE_NAMES[type]);
     }
-    
+
     @Override // documentation inherited
     protected void createDustManager (BasicContext ctx)
     {
         // trains do not kick up dust
     }
-    
+
     @Override // documentation inherited
-    protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
+    public void updated (BangBoard board, Piece piece, short tick)
     {
-        Train otrain = (Train)opiece, ntrain = (Train)npiece;
-        boolean last = (otrain.lastX != Train.UNSET),
-            next = (ntrain.nextX != Train.UNSET);
+        // note our previous lastX and Y before we're updated
+        if (_piece != null) {
+            _lastLastX = ((Train)_piece).lastX;
+            _lastLastY = ((Train)_piece).lastY;
+        }
+        super.updated(board, piece, tick);
+    }
+
+    @Override // documentation inherited
+    protected Path createPath (BangBoard board)
+    {
+        Train train = (Train)_piece;
+        boolean last = (_lastLastX != Train.UNSET);
+        boolean next = (train.nextX != Train.UNSET);
         int ncoords = 2 + (last ? 1 : 0) + (next ? 1 : 0), idx = 0;
         Vector3f[] coords = new Vector3f[ncoords];
         float[] durations = new float[ncoords - 1];
-        
+
         if (last) {
-            setCoord(board, coords, idx++, otrain.lastX, otrain.lastY);
+            setCoord(board, coords, idx++, _lastLastX, _lastLastY);
         }
         durations[idx] = 1f / Config.display.getMovementSpeed();
-        setCoord(board, coords, idx++, otrain.x, otrain.y);
-        setCoord(board, coords, idx++, ntrain.x, ntrain.y);
+        setCoord(board, coords, idx++, train.lastX, train.lastY);
+        setCoord(board, coords, idx++, train.x, train.y);
         if (next) {
-            setCoord(board, coords, idx, ntrain.nextX, ntrain.nextY);
+            setCoord(board, coords, idx, train.nextX, train.nextY);
         }
         return new TrainPath(coords, durations, last);
     }
-    
+
     @Override // documentation inherited
     protected void reorient ()
     {
         // don't do it; whatever the path left us at is good
     }
-    
+
     /** A special path class for trains that incorporates the previous and next
      * positions. */
     protected class TrainPath extends MoveUnitPath
@@ -69,7 +80,7 @@ public class TrainSprite extends MobileSprite
                 advance();
             }
         }
-        
+
         @Override // documentation inherited
         public void update (float time)
         {
@@ -79,14 +90,16 @@ public class TrainSprite extends MobileSprite
             if (naccum > _durations[_current]) {
                 _sprite.pathCompleted();
                 return;
-                
+
             } else {
                 super.update(time);
             }
         }
     }
-    
-    /** The model names for each train type. */    
+
+    protected short _lastLastX = Train.UNSET, _lastLastY = Train.UNSET;
+
+    /** The model names for each train type. */
     protected static final String[] TYPE_NAMES = { "locomotive", "caboose",
         "cattle", "freight" };
 }

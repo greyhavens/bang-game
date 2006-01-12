@@ -31,11 +31,6 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.SoundUtil;
 
-import com.threerings.bang.game.client.effect.EffectViz;
-import com.threerings.bang.game.client.effect.ExplosionViz;
-import com.threerings.bang.game.client.effect.IconViz;
-import com.threerings.bang.game.client.effect.PlaySoundViz;
-import com.threerings.bang.game.client.effect.RepairViz;
 import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -44,10 +39,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.card.Card;
-import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.effect.RepairEffect;
-import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
@@ -163,82 +155,6 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    public void pieceUpdated (Piece opiece, Piece npiece)
-    {
-        super.pieceUpdated(opiece, npiece);
-
-        // update the shadow we use to do path finding and whatnot
-        _bangobj.board.updateShadow(opiece, npiece);
-
-        // if this piece was inside our attack set or within range to be
-        // inside our move set, recompute the selection as it may have
-        // changed
-        if (_selection != null) {
-            Piece sel = _selection;
-            if ((opiece != null &&
-                 (_attackSet.contains(opiece.x, opiece.y) ||
-                  sel.getDistance(opiece) < sel.getMoveDistance())) ||
-                (npiece != null &&
-                 sel.getDistance(npiece) < sel.getMoveDistance())) {
-                int[] oaction = _action;
-                clearSelection();
-                selectUnit((Unit)sel, false);
-                // if we had already selected a movement, reconfigure that
-                // (it might no longer be valid but handleClickToMove will
-                // ignore us in that case
-                if (oaction != null) {
-                    handleClickToMove(oaction[1], oaction[2]);
-                }
-            }
-        }
-
-        // update board and enemy visibility
-        if (_vstate != null) {
-            adjustBoardVisibility();
-            adjustEnemyVisibility();
-        }
-
-        // make sure all of our queued moves are still valid
-        if (_queuedMoves.size() > 0) {
-            PointSet moves = new PointSet();
-            for (Iterator<Integer> iter = _queuedMoves.keySet().iterator();
-                 iter.hasNext(); ) {
-                Integer pieceId = iter.next();
-                QueuedMove move = _queuedMoves.get(pieceId);
-                Unit unit = (Unit)_bangobj.pieces.get(pieceId);
-                if (unit == null) {
-                    move.clear();
-                    iter.remove();
-                    continue;
-                }
-                _bangobj.board.computeMoves(unit, moves, null);
-
-                // if no specific location was specified, make sure we can
-                // still determine a location from which to fire
-                if (move.mx == Short.MAX_VALUE) {
-                    Piece target = (Piece)_bangobj.pieces.get(move.targetId);
-                    if (target != null) {
-                        Point spot = unit.computeShotLocation(target, moves);
-                        if (spot != null) {
-                            continue;
-                        }
-                    }
-
-                // if a specific location was specified, make sure we can
-                // still reach it
-                } else if (moves.contains(move.mx, move.my)) {
-                    continue;
-                }
-
-                // the move is no longer valid, so clear and remove it
-                // TODO: play a sound?
-                move.clear();
-                iter.remove();
-            }
-        }
-    }
-
-    @Override // documentation inherited
     public void endRound ()
     {
         super.endRound();
@@ -307,6 +223,83 @@ public class BangBoardView extends BoardView
             return _attackSet.contains(piece.x, piece.y) || oursAndMovable;
         }
         return oursAndMovable;
+    }
+
+    @Override // documentation inherited
+    protected boolean pieceUpdated (Piece opiece, Piece npiece, short tick)
+    {
+        boolean wait = super.pieceUpdated(opiece, npiece, tick);
+
+        // update the shadow we use to do path finding and whatnot
+        _bangobj.board.updateShadow(opiece, npiece);
+
+        // if this piece was inside our attack set or within range to be inside
+        // our move set, recompute the selection as it may have changed
+        if (_selection != null) {
+            Piece sel = _selection;
+            if ((opiece != null &&
+                 (_attackSet.contains(opiece.x, opiece.y) ||
+                  sel.getDistance(opiece) < sel.getMoveDistance())) ||
+                (npiece != null &&
+                 sel.getDistance(npiece) < sel.getMoveDistance())) {
+                int[] oaction = _action;
+                clearSelection();
+                selectUnit((Unit)sel, false);
+                // if we had already selected a movement, reconfigure that
+                // (it might no longer be valid but handleClickToMove will
+                // ignore us in that case
+                if (oaction != null) {
+                    handleClickToMove(oaction[1], oaction[2]);
+                }
+            }
+        }
+
+        // update board and enemy visibility
+        if (_vstate != null) {
+            adjustBoardVisibility();
+            adjustEnemyVisibility();
+        }
+
+        // make sure all of our queued moves are still valid
+        if (_queuedMoves.size() > 0) {
+            PointSet moves = new PointSet();
+            for (Iterator<Integer> iter = _queuedMoves.keySet().iterator();
+                 iter.hasNext(); ) {
+                Integer pieceId = iter.next();
+                QueuedMove move = _queuedMoves.get(pieceId);
+                Unit unit = (Unit)_bangobj.pieces.get(pieceId);
+                if (unit == null) {
+                    move.clear();
+                    iter.remove();
+                    continue;
+                }
+                _bangobj.board.computeMoves(unit, moves, null);
+
+                // if no specific location was specified, make sure we can
+                // still determine a location from which to fire
+                if (move.mx == Short.MAX_VALUE) {
+                    Piece target = (Piece)_bangobj.pieces.get(move.targetId);
+                    if (target != null) {
+                        Point spot = unit.computeShotLocation(target, moves);
+                        if (spot != null) {
+                            continue;
+                        }
+                    }
+
+                // if a specific location was specified, make sure we can
+                // still reach it
+                } else if (moves.contains(move.mx, move.my)) {
+                    continue;
+                }
+
+                // the move is no longer valid, so clear and remove it
+                // TODO: play a sound?
+                move.clear();
+                iter.remove();
+            }
+        }
+
+        return wait;
     }
 
     /** Handles a left mouse button click. */
@@ -566,10 +559,7 @@ public class BangBoardView extends BoardView
         // if this unit is not yet movable, "queue" up their action
         UnitSprite sprite = getUnitSprite(actor);
         if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
-            QueuedMove qmove = _queuedMoves.remove(_action[0]);
-            if (qmove != null) {
-                qmove.clear();
-            }
+            clearQueuedMove(_action[0]);
             _queuedMoves.put(_action[0], new QueuedMove(sprite, _action));
         } else {
             // otherwise enact the move/fire combination immediately
@@ -582,6 +572,14 @@ public class BangBoardView extends BoardView
     protected boolean hasQueuedMove (int pieceId)
     {
         return _queuedMoves.containsKey(pieceId);
+    }
+
+    protected void clearQueuedMove (int pieceId)
+    {
+        QueuedMove move = _queuedMoves.remove(pieceId);
+        if (move != null) {
+            move.clear();
+        }
     }
 
     protected void clearMoveSet ()
@@ -685,14 +683,12 @@ public class BangBoardView extends BoardView
             }
         }
 
-        // update all of our piece sprites
+        // update all of our units
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
-            PieceSprite sprite = _pieces.get(p.pieceId);
-            if (sprite == null) {
-                continue;
+            Piece piece = (Piece)iter.next();
+            if (piece instanceof Unit) {
+                queuePieceUpdate(null, piece);
             }
-            sprite.updated(_bangobj.board, p, tick);
         }
     }
 
@@ -702,32 +698,10 @@ public class BangBoardView extends BoardView
     protected void applyEffect (Effect effect)
     {
         EffectHandler handler = effect.createHandler(_bangobj);
-        if (handler != null) {
-            handler.init(_ctx, _bangobj, this, _sounds, effect);
-            
-        } else {
-            effect.apply(_bangobj, _effector);
-        }
+        handler.init(_ctx, _bangobj, this, _sounds, effect);
+        executeAction(handler);
     }
 
-    /**
-     * Applies the effect without looking to see if we should create a handler.
-     */
-    protected void applyEffectDirect (Effect effect)
-    {
-        // apply the effect
-        effect.apply(_bangobj, _effector);
-    }
-
-    /**
-     * Returns a reference to the effect observer that handles updates
-     * generated by effects.
-     */
-    protected Effect.Observer getEffectObserver ()
-    {
-        return _effector;
-    }
-    
     /** Adjusts the visibility settings for the tiles of the board. */
     protected void adjustBoardVisibility ()
     {
@@ -785,71 +759,6 @@ public class BangBoardView extends BoardView
         }
     }
 
-    /** Called to display something useful when an effect is applied and
-     * perhaps play a sound as well. */
-    protected void communicateEffect (Piece piece, String effect)
-    {
-        Piece opiece = (Piece)_bangobj.pieces.get(piece.pieceId);
-        PieceSprite sprite = getPieceSprite(piece);
-        if (sprite == null) {
-            log.warning("Missing sprite for effect [piece=" + piece +
-                        ", effect=" + effect + "].");
-            return;
-        }
-
-        // create the appropriate visual effect
-        EffectViz viz = null;
-        if (effect.equals(ShotEffect.DAMAGED)) {
-            viz = new ExplosionViz(false);
-        } else if (effect.equals(AreaDamageEffect.MISSILED)) {
-            viz = new ExplosionViz(true);
-        } else if (effect.equals(RepairEffect.REPAIRED)) {
-            viz = new RepairViz();
-        }
-
-        // queue the effect up on the piece sprite
-        if (viz != null) {
-            viz.init(_ctx, this, opiece, piece);
-            sprite.queueEffect(viz);
-
-            // if they just got shot, clear any pending shot
-            if (effect.equals("bang")) {
-                ((UnitSprite)sprite).setPendingShot(false);
-            }
-
-        } else {
-            // update the sprite to reflect its change
-            pieceUpdated(null, piece);
-        }
-
-        // if we're rotating someone in preparation for a shot; just
-        // update their orientation immediately for now
-        if (effect.equals(ShotEffect.ROTATED)) {
-            ((MobileSprite)sprite).faceTarget();
-        }
-
-        // if this piece was shot, trigger the reacting or dying animation
-        if ((effect.equals(ShotEffect.DAMAGED) ||
-             effect.equals(AreaDamageEffect.MISSILED)) &&
-            sprite instanceof MobileSprite) {
-            ((MobileSprite)sprite).queueAction(
-                piece.isAlive() ? "reacting" : "dying");
-        }
-
-        // perhaps show an icon animation indicating what happened
-        IconViz iviz = IconViz.createIconViz(piece, effect);
-        if (iviz != null) {
-            iviz.init(_ctx, this, opiece, piece);
-            sprite.queueEffect(iviz);
-        }
-        
-        // also play a sound along with any visual effect
-        String path = "rsrc/" + effect + ".wav";
-        if (SoundUtil.haveSound(path)) {
-            sprite.queueEffect(new PlaySoundViz(_sounds, path));
-        }
-    }
-
     protected class QueuedMove
     {
         public int unitId, mx, my, targetId;
@@ -887,46 +796,6 @@ public class BangBoardView extends BoardView
         protected UnitSprite _unit;
         protected TerrainNode.Highlight _highlight;
     }
-
-    /** Used to remove shot sprites when they reach their target. */
-    protected PathObserver _remover = new PathObserver() {
-        public void pathCompleted (Sprite sprite, Path path) {
-            removeSprite(sprite);
-        }
-        public void pathCancelled (Sprite sprite, Path path) {
-            removeSprite(sprite);
-        }
-    };
-
-    /** Handles the results of effects. */
-    protected Effect.Observer _effector = new Effect.Observer() {
-        public void pieceAdded (Piece piece) {
-            // this will create and add the sprite to the board
-            getPieceSprite(piece);
-        }
-
-        public void pieceAffected (Piece piece, String effect) {
-            // if this piece is now dead, clear out its pending moves
-            if (!piece.isAlive()) {
-                QueuedMove move = _queuedMoves.remove(piece.pieceId);
-                if (move != null) {
-                    move.clear();
-                }
-            }
-            communicateEffect(piece, effect);
-        }
-
-        public void pieceUpdated (Piece opiece, Piece npiece) {
-            BangBoardView.this.pieceUpdated(opiece, npiece);
-        }
-        
-        public void pieceRemoved (Piece piece) {
-            removePieceSprite(piece.pieceId, "deathByEffect");
-        }
-        
-        public void tickDelayed (long extraTime) {
-        }
-    };
 
     /** Listens for ticks and effects and does the right thing. */
     protected AttributeChangeListener _ticker = new AttributeChangeListener() {

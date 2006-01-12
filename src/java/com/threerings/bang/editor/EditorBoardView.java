@@ -493,7 +493,7 @@ public class EditorBoardView extends BoardView
     {
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
-            pieceUpdated(piece, piece);
+            queuePieceUpdate(piece, piece);
         }
     }
     

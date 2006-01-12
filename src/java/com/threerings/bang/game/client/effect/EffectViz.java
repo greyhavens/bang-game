@@ -13,19 +13,30 @@ import com.threerings.bang.util.BangContext;
  */
 public abstract class EffectViz
 {
+    public interface Observer
+    {
+        public void effectDisplayed ();
+    }        
+
     /**
-     * Called by the board view after creating an effect to provide the
-     * effect with needed references.
+     * Initializes this effect and prepares it for display.
      */
-    public void init (BangContext ctx, BangBoardView view,
-                      Piece otarget, Piece ntarget)
+    public void init (BangContext ctx, BangBoardView view, Piece target,
+                      Observer obs)
     {
         _ctx = ctx;
         _view = view;
-        _otarget = otarget;
-        _ntarget = ntarget;
-
+        _target = target;
+        _observer = obs;
         didInit();
+    }
+
+    /**
+     * Returns the piece that was targeted by this effect.
+     */
+    public Piece getTarget ()
+    {
+        return _target;
     }
 
     /**
@@ -42,18 +53,17 @@ public abstract class EffectViz
     public abstract void display (PieceSprite target);
 
     /**
-     * When the effect display is completed (or nearly so), this method
-     * should be called to allow any piece affected by the display to be
-     * updated.
+     * When the effect display is completed (or nearly so), this method should
+     * be called to inform our observer which will then update the associated
+     * piece.
      */
     protected void effectDisplayed ()
     {
-        if (_otarget != null && _ntarget != null) {
-            _view.pieceUpdated(_otarget, _ntarget);
-        }
+        _observer.effectDisplayed();
     }
 
     protected BangContext _ctx;
     protected BangBoardView _view;
-    protected Piece _otarget, _ntarget;
+    protected Piece _target;
+    protected Observer _observer;
 }

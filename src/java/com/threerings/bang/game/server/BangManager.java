@@ -1550,7 +1550,7 @@ public class BangManager extends GameManager
             }
         }
 
-        public void pieceUpdated (Piece opiece, Piece npiece) {
+        public void pieceMoved (Piece piece) {
         }
 
         public void pieceRemoved (Piece piece) {

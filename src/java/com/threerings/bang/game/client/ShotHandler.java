@@ -3,16 +3,12 @@
 
 package com.threerings.bang.game.client;
 
-import com.threerings.jme.sprite.Path;
-import com.threerings.jme.sprite.PathObserver;
-import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -26,20 +22,16 @@ import static com.threerings.bang.client.BangMetrics.*;
  * animates the fired shot.
  */
 public abstract class ShotHandler extends EffectHandler
-    implements PathObserver
 {
     @Override // documentation inherited
-    public void init (BangContext ctx, BangObject bangobj, BangBoardView view,
-                      SoundGroup sounds, Effect effect)
+    public boolean execute ()
     {
-        super.init(ctx, bangobj, view, sounds, effect);
-        _shot = (ShotEffect)effect;
-
+        _shot = (ShotEffect)_effect;
         _shooter = (Piece)_bangobj.pieces.get(_shot.shooterId);
         if (_shooter == null) {
             log.warning("Missing shooter? [shot=" + _shot + "].");
             // abandon ship, we're screwed
-            return;
+            return false;
         }
         if (_shot.targetId != -1) {
             _target = (Piece)_bangobj.pieces.get(_shot.targetId);
@@ -49,47 +41,33 @@ public abstract class ShotHandler extends EffectHandler
         }
 
         // prepare our sounds
-        prepareSounds(sounds);
+        prepareSounds(_sounds);
 
-        // figure out which sprites we need to wait for
-        PieceSprite ssprite = considerPiece(_shooter);
+        // if we have a target, let the shooter's sprite know that it will be
+        // shooting the specified target
         if (_target != null) {
-            PieceSprite tsprite = considerPiece(_target);
-            // let the shooting sprite know that it will be shooting the
-            // specified target at the end of its path
+            PieceSprite ssprite = _view.getPieceSprite(_shooter);
             if (ssprite instanceof MobileSprite) {
-                ((MobileSprite)ssprite).willShoot(_target, tsprite);
+                ((MobileSprite)ssprite).willShoot(
+                    _target, _view.getPieceSprite(_target));
             }
         }
 
-        // if no one was managed, it's a shot fired from an invisible
-        // piece at invisible pieces, ignore it
-        if (_managed == 0) {
-            log.info("Tree feel in the woods, no one was around.");
+        // note that we're not going to be "completed" until we're done doing
+        // all the firing business so that no one fires off an
+        // instant-completion effect and then thinks we're ready to call it
+        // quits
+        _shooting = true;
+        fireShot();
+        _shooting = false;
 
-        } else if (_sprites == 0) {
-            // if we're not waiting for any sprites to finish moving,
-            // fire the shot immediately
-            fireShot();
-        }
+        return !isCompleted();
     }
 
-    // documentation inherited from interface PathObserver
-    public void pathCompleted (Sprite sprite, Path path)
+    @Override // documentation inherited
+    protected boolean isCompleted ()
     {
-        sprite.removeObserver(this);
-        if (--_sprites == 0) {
-            fireShot();
-        }
-    }
-
-    // documentation inherited from interface PathObserver
-    public void pathCancelled (Sprite sprite, Path path)
-    {
-        sprite.removeObserver(this);
-        if (--_sprites == 0) {
-            fireShot();
-        }
+        return !_shooting && super.isCompleted();
     }
 
     /**
@@ -110,40 +88,19 @@ public abstract class ShotHandler extends EffectHandler
         }
     }
 
-    protected PieceSprite considerPiece (Piece piece)
-    {
-        PieceSprite sprite = null;
-        if (piece != null) {
-            sprite = _view.getPieceSprite(piece);
-        }
-        if (sprite == null) {
-            return null;
-        }
-        if (!_view.isManaged(sprite)) {
-            return null;
-        }
-
-        _managed++;
-        if (sprite.isMoving()) {
-            sprite.addObserver(this);
-            _sprites++;
-        }
-        return sprite;
-    }
-
     protected void fireShot ()
     {
         if (_sidx == 0) {
             fireShot(_shooter.x, _shooter.y,
                      _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
-            // don't animate the shooter for collateral damage shots, the
-            // main shot will trigger an animation
+            // don't animate the shooter for collateral damage shots, the main
+            // shot will trigger an animation
             if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
                 // on the first shot, we animate the shooter
                 PieceSprite ssprite = _view.getPieceSprite(_shooter);
                 if (ssprite instanceof MobileSprite) {
-                    ((MobileSprite)ssprite).queueAction(
-                        ShotEffect.SHOT_ACTIONS[_shot.type]);
+                    queueAction((MobileSprite)ssprite,
+                                ShotEffect.SHOT_ACTIONS[_shot.type]);
                 }
             }
 
@@ -154,9 +111,9 @@ public abstract class ShotHandler extends EffectHandler
     }
 
     /**
-     * Determines whether our shot has followed all the segments it needs
-     * to, in which case false is returned. Otherwise the next shot
-     * segment is started and true is returned.
+     * Determines whether our shot has followed all the segments it needs to,
+     * in which case false is returned. Otherwise the next shot segment is
+     * started and true is returned.
      */
     protected boolean fireNextSegment ()
     {
@@ -174,6 +131,7 @@ public abstract class ShotHandler extends EffectHandler
     protected ShotEffect _shot;
     protected Sound _bangSound;
 
+    protected boolean _shooting;
     protected Piece _shooter, _target;
-    protected int _sprites, _managed, _sidx;
+    protected int _sidx;
 }

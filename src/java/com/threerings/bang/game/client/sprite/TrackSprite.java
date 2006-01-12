@@ -32,17 +32,17 @@ public class TrackSprite extends PieceSprite
     {
         Track otrack = (Track)_piece, ntrack = (Track)piece;
         super.updated(board, piece, tick);
-        
+
         // refresh the geometry when the type changes
         if (ntrack.type != otrack.type) {
             detachAllChildren();
             createGeometry(_ctx);
         }
-        
+
         // make sure it's lying on the terrain
         setOrientation(piece.orientation);
     }
-    
+
     @Override // documentation inherited
     public void setOrientation (int orientation)
     {
@@ -54,12 +54,12 @@ public class TrackSprite extends PieceSprite
     protected void createGeometry (BasicContext ctx)
     {
         _ctx = ctx;
-        
+
         Track track = (Track)_piece;
         _model = ctx.loadModel("extras/tracks", MODEL_NAMES[track.type]);
         bindAnimation(ctx, _model.getAnimation("normal"), 0);
     }
-    
+
     protected BasicContext _ctx;
 
     /* The models for each type of track. */

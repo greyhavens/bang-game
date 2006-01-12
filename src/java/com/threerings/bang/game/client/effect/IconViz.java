@@ -24,7 +24,7 @@ import static com.threerings.bang.client.BangMetrics.*;
 /**
  * An effect visualization that floats an icon above the sprite, letting users
  * know what happened in terms of gaining or losing health, switching sides,
- * etc., with consistent symbology. 
+ * etc., with consistent symbology.
  */
 public class IconViz extends EffectViz
 {
@@ -62,7 +62,7 @@ public class IconViz extends EffectViz
         icon.updateRenderState();
         icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         icon.setLightCombineMode(LightState.OFF);
-        icon.setDefaultColor(new ColorRGBA(JPIECE_COLORS[_otarget.owner]));
+        icon.setDefaultColor(new ColorRGBA(JPIECE_COLORS[_target.owner]));
         
         _billboard = new BillboardNode("billboard") {
             public void updateWorldData (float time) {
@@ -96,7 +96,6 @@ public class IconViz extends EffectViz
     public void display (PieceSprite target)
     {
         target.attachChild(_billboard);
-        effectDisplayed();
     }
     
     /** The name of the icon to display. */

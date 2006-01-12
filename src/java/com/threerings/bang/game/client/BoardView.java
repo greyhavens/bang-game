@@ -14,6 +14,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import org.lwjgl.opengl.GL11;
 
@@ -54,6 +55,8 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.threerings.jme.sprite.Path;
+import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.SoundGroup;
 
@@ -84,6 +87,37 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class BoardView extends BComponent
     implements MouseMotionListener
 {
+    /**
+     * Used to queue up board actions that must execute sequentially before
+     * subsequent actions can start (pieces moving, pieces firing at one
+     * another, etc.).
+     */
+    public abstract static class BoardAction
+    {
+        /**
+         * Should return some object that identifies this action so that when
+         * the action is completed, we can check the completion identifier
+         * against the identifier for which we were waiting. Mainly for
+         * debugging.
+         */
+        public abstract Object getIdent ();
+
+        /**
+         * Executes this board action.
+         *
+         * @return true if we should wait for a call to {@link
+         * #actionCompleted}. Prior to executing the next action, false if not.
+         */
+        public abstract boolean execute ();
+
+        /** Returns a string representation of this action. */
+        public String toString () {
+            String cname = getClass().getName();
+            return cname.substring(cname.lastIndexOf("$")+1) + ":" +
+                getIdent().hashCode();
+        }
+    }
+
     public BoardView (BasicContext ctx)
     {
         _ctx = ctx;
@@ -99,8 +133,8 @@ public class BoardView extends BComponent
             _lights[i].setEnabled(true);
         }
         _node.setRenderState(_lstate);
-        
-        // default material 
+
+        // default material
         final MaterialState mstate = ctx.getRenderer().createMaterialState();
         mstate.setAmbient(ColorRGBA.white);
         _node.setRenderState(new RenderState() {
@@ -113,7 +147,7 @@ public class BoardView extends BComponent
             }
         });
         _node.updateRenderState();
-        
+
         // create the sky
         _node.attachChild(_snode = new SkyNode(ctx));
 
@@ -122,7 +156,7 @@ public class BoardView extends BComponent
         _node.attachChild(bnode);
         bnode.attachChild(_tnode = createTerrainNode(ctx));
         bnode.attachChild(_wnode = new WaterNode(ctx));
-        
+
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -144,7 +178,7 @@ public class BoardView extends BComponent
         // this is used to indicate where you can move
         _movstate = RenderUtil.createTextureState(
             ctx, "textures/ustatus/movement.png");
-            
+
         // create a sound group that we'll use for all in-game sounds
         _sounds = ctx.getSoundManager().createGroup(
             BangUI.clipprov, GAME_SOURCE_COUNT);
@@ -157,7 +191,7 @@ public class BoardView extends BComponent
     {
         return _node;
     }
-    
+
     /**
      * Sets up the board view with all the necessary bits. This is called
      * by the controller when we enter an already started game or the game
@@ -196,18 +230,18 @@ public class BoardView extends BComponent
         _snode.createBoardSky(_board);
         _tnode.createBoardTerrain(_board);
         _wnode.createBoardWater(_board);
-        
+
         // create sprites for all of the pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             // this will trigger the creation, initialization and whatnot
-            pieceUpdated(null, (Piece)iter.next());
+            queuePieceUpdate(null, (Piece)iter.next());
         }
         _pnode.updateGeometricState(0, true);
-        
+
         // allow the terrain to perform extra initialization using the pieces
         _tnode.initBoardTerrain();
     }
-    
+
     /**
      * Returns the length of shadows cast by tile-sized objects, which depends
      * on the elevation of the primary light.
@@ -217,22 +251,22 @@ public class BoardView extends BComponent
         float elevation = _board.getLightElevation(0);
         if (elevation == FastMath.HALF_PI || elevation <= 0f) {
             return TILE_SIZE;
-            
+
         } else {
             return Math.min(TILE_SIZE + TILE_SIZE / FastMath.tan(elevation),
                 MAX_SHADOW_LENGTH);
         }
     }
-    
+
     /**
      * Returns the rotation required to rotate shadows in the direction of the
      * primary light.
      */
     public float getShadowRotation ()
     {
-        return _board.getLightAzimuth(0);   
+        return _board.getLightAzimuth(0);
     }
-    
+
     /**
      * Returns the intensity of shadows on the board, which depends on the
      * total ambient light.
@@ -250,7 +284,7 @@ public class BoardView extends BComponent
         }
         return 0.75f * Math.max(0f, 1f - total);
     }
-    
+
     /**
      * Given the location of the center of a shadow caster and the azimuth and
      * elevation of the primary light source, computes the location of the
@@ -274,7 +308,7 @@ public class BoardView extends BComponent
             center.y - distance * FastMath.sin(azimuth));
         return true;
     }
-    
+
     /**
      * Creates a brief flash of light at the specified location with the
      * given color and duration.
@@ -290,7 +324,7 @@ public class BoardView extends BComponent
         light.setEnabled(true);
         _lstate.attach(light);
         _node.updateRenderState();
-        
+
         _node.addController(new Controller() {
             public void update (float time) {
                 if ((_elapsed += time) < duration) {
@@ -299,7 +333,7 @@ public class BoardView extends BComponent
                         alpha);
                     light.getAmbient().interpolate(color, ColorRGBA.black,
                         0.5f + alpha * 0.5f);
-                    
+
                 } else {
                     _node.removeController(this);
                     _lstate.detach(light);
@@ -309,7 +343,7 @@ public class BoardView extends BComponent
             float _elapsed;
         });
     }
-    
+
     /**
      * Called by the controller when the round has ended.
      */
@@ -326,7 +360,7 @@ public class BoardView extends BComponent
     {
         return _board;
     }
-    
+
     /**
      * Returns the node containing the sky.
      */
@@ -334,7 +368,7 @@ public class BoardView extends BComponent
     {
         return _snode;
     }
-    
+
     /**
      * Returns the node containing the terrain.
      */
@@ -342,7 +376,7 @@ public class BoardView extends BComponent
     {
         return _tnode;
     }
-    
+
     /**
      * Returns the node to which our pieces and piece effects are
      * attached.
@@ -351,7 +385,7 @@ public class BoardView extends BComponent
     {
         return _pnode;
     }
-    
+
     /**
      * Adds a sprite to the active view.
      */
@@ -383,7 +417,7 @@ public class BoardView extends BComponent
             }
         }
     }
-    
+
     /**
      * Returns true if the specified sprite is part of the active view.
      */
@@ -393,21 +427,49 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Called when a piece is updated in the game object, though sometimes
-     * not immediately but after various effects have been visualized.
+     * Requests that the specified action be executed. If there are other
+     * actions executing and queued for execution, this action will be executed
+     * after they complete.
      */
-    public void pieceUpdated (Piece opiece, Piece npiece)
+    public void executeAction (BoardAction action)
     {
-        if (npiece != null) {
-            getPieceSprite(npiece).updated(
-                _bangobj.board, npiece, _bangobj.tick);
+        _pactions.add(action);
+        if (_paction == null) {
+            processNextAction();
         }
-    }        
+    }
+
+    /**
+     * This <em>must</em> be called by any action that returns true from {@link
+     * BoardAction#execute} to inform the board that that action is completed
+     * and that subsequent actions may be processed.
+     */
+    public void actionCompleted (Object ident)
+    {
+        if (_paction == null || _paction.getIdent() != ident) {
+            log.warning("Action completed out of sequence! " +
+                        "[pending=" + _paction +
+                        ", completed=" + ident.hashCode() + "].");
+            Thread.dumpStack();
+            return;
+        }
+        _paction = null;
+        processNextAction();
+    }
+
+    /**
+     * Called when a piece is updated in the game object, though sometimes not
+     * immediately but after various effects have been visualized.
+     */
+    public void queuePieceUpdate (Piece opiece, Piece npiece)
+    {
+        executeAction(new PieceUpdatedAction(opiece, npiece, _bangobj.tick));
+    }
 
     // documentation inherited from interface MouseMotionListener
     public void mouseMoved (MouseEvent e)
     {
-        updateHoverState(e);   
+        updateHoverState(e);
     }
 
     // documentation inherited from interface MouseMotionListener
@@ -415,13 +477,13 @@ public class BoardView extends BComponent
     {
         updateHoverState(e);
     }
-    
+
     /**
-     * Updates the hover state based on the supplied mouse event. 
+     * Updates the hover state based on the supplied mouse event.
      */
     public void updateHoverState (MouseEvent e)
     {
-        Vector3f ground = getGroundIntersect(e, false, null); 
+        Vector3f ground = getGroundIntersect(e, false, null);
 
         int mx = (int)Math.floor(ground.x / TILE_SIZE);
         int my = (int)Math.floor(ground.y / TILE_SIZE);
@@ -447,7 +509,7 @@ public class BoardView extends BComponent
             hoverTileChanged(_mouse.x, _mouse.y);
         }
     }
-    
+
     /**
      * Given a mouse event, returns the point at which a ray cast from the
      * eye through the mouse pointer intersects the ground.
@@ -464,7 +526,7 @@ public class BoardView extends BComponent
         if (result == null) {
             result = new Vector3f();
         }
-        
+
         // compute the vector from camera location to mouse cursor
         Camera camera = _ctx.getCameraHandler().getCamera();
         Vector2f screenPos = new Vector2f(e.getX(), e.getY());
@@ -482,13 +544,13 @@ public class BoardView extends BComponent
                 return result;
             }
         }
-            
+
         // otherwise, intersect with ground plane
         float dist = -1f * _groundNormal.dot(camloc) /
             _groundNormal.dot(_worldMouse);
         camloc.add(_worldMouse.mult(dist), result);
         result.z = 0.1f;
-        
+
         return result;
     }
 
@@ -516,7 +578,7 @@ public class BoardView extends BComponent
                 int idx = ((Integer)oidx).intValue();
                 if (mesh instanceof SharedMesh) {
                     ((SharedMesh)mesh).getTarget().getTriangle(idx, verts);
-                
+
                 } else {
                     ((TriMesh)mesh).getTriangle(idx, verts);
                 }
@@ -531,7 +593,7 @@ public class BoardView extends BComponent
         }
         return nearest < Float.MAX_VALUE;
     }
-    
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -556,7 +618,7 @@ public class BoardView extends BComponent
         // clear any marquee we have up
         clearMarquee();
     }
-    
+
     /**
      * Creates and returns the terrain node for this board view, giving
      * subclasses a change to customize the object.
@@ -565,7 +627,7 @@ public class BoardView extends BComponent
     {
         return new TerrainNode(ctx, this);
     }
-    
+
     /**
      * Updates the directional lights according to the board's light
      * parameters.
@@ -576,7 +638,7 @@ public class BoardView extends BComponent
             refreshLight(i);
         }
     }
-    
+
     /**
      * Updates a directional light according to the board's light parameters.
      */
@@ -589,19 +651,65 @@ public class BoardView extends BComponent
             return;
         }
         _lights[idx].setEnabled(true);
-        
+
         float cose = FastMath.cos(_board.getLightElevation(idx));
         _lights[idx].setDirection(new Vector3f(
             -cose * FastMath.cos(_board.getLightAzimuth(idx)),
             -cose * FastMath.sin(_board.getLightAzimuth(idx)),
             -FastMath.sin(_board.getLightElevation(idx))));
-        
+
         float[] drgb = new Color(dcolor).getRGBColorComponents(null),
             argb = new Color(acolor).getRGBColorComponents(null);
         _lights[idx].setDiffuse(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
         _lights[idx].setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
     }
-    
+
+    /**
+     * Processes the next action from the board action queue.
+     */
+    protected void processNextAction ()
+    {
+        if (_pactions.size() > 0) {
+            _paction = _pactions.remove(0);
+            _ctx.getApp().postRunnable(_arunner);
+        }
+    }
+
+    /**
+     * Called when a piece update is actually being effected. Updates are first
+     * queued via {@link #queuePieceUpdate} and then executed one at a time as
+     * board actions (see {@link #executeAction}), waiting for animations and
+     * effects to complete in between.
+     */
+    protected boolean pieceUpdated (Piece opiece, final Piece npiece, short tick)
+    {
+        PieceSprite sprite = getPieceSprite(npiece);
+        if (sprite == null) {
+            return false;
+        }
+
+        // first update the sprite with its new piece
+        sprite.updated(_bangobj.board, npiece, tick);
+
+        // then move it...
+        if (!sprite.updatePosition(_bangobj.board)) {
+            return false;
+        }
+
+        // ...and wait for it to finish moving, then call actionCompleted()
+        sprite.addObserver(new PathObserver() {
+            public void pathCancelled (Sprite sprite, Path path) {
+                sprite.removeObserver(this);
+                actionCompleted(npiece);
+            }
+            public void pathCompleted (Sprite sprite, Path path) {
+                sprite.removeObserver(this);
+                actionCompleted(npiece);
+            }
+        });
+        return true;
+    }
+
     /**
      * Creates a big text marquee in the middle of the screen.
      */
@@ -655,7 +763,7 @@ public class BoardView extends BComponent
         if (sprite != null) {
             log.fine("Removing sprite [id=" + pieceId + ", why=" + why + "].");
             removeSprite(sprite);
-            
+
         } else {
             log.warning("No sprite for removed piece [id=" + pieceId +
                         ", why=" + why + "].");
@@ -672,7 +780,7 @@ public class BoardView extends BComponent
             removeSprite(sprite);
         }
     }
-    
+
     /**
      * Returns the sprite that the mouse is "hovering" over (the one
      * nearest to the camera that is hit by the ray projecting from the
@@ -801,14 +909,36 @@ public class BoardView extends BComponent
     {
         if (spatial instanceof Sprite) {
             return (Sprite)spatial;
-        
+
         } else if (_plights.containsKey(spatial)) {
             return _plights.get(spatial);
-            
+
         } else if (spatial.getParent() != null) {
             return getSprite(spatial.getParent());
         } else {
             return null;
+        }
+    }
+
+    /** Used to queue up piece updates so that each can execute, trigger
+     * animations and run to completion before the next one is run. */
+    protected class PieceUpdatedAction extends BoardAction
+    {
+        public Piece opiece, npiece;
+        public short tick;
+
+        public PieceUpdatedAction (Piece opiece, Piece npiece, short tick) {
+            this.opiece = opiece;
+            this.npiece = npiece;
+            this.tick = tick;
+        }
+
+        public Object getIdent () {
+            return npiece;
+        }
+
+        public boolean execute () {
+            return pieceUpdated(opiece, npiece, tick);
         }
     }
 
@@ -818,22 +948,37 @@ public class BoardView extends BComponent
     {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                pieceUpdated(null, (Piece)event.getEntry());
+                queuePieceUpdate(null, (Piece)event.getEntry());
             }
         }
 
         public void entryUpdated (EntryUpdatedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                pieceUpdated((Piece)event.getOldEntry(),
-                             (Piece)event.getEntry());
+                queuePieceUpdate((Piece)event.getOldEntry(),
+                                 (Piece)event.getEntry());
             }
         }
 
         public void entryRemoved (EntryRemovedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
                 removePieceSprite((Integer)event.getKey(), "pieceRemoved");
-                pieceUpdated((Piece)event.getOldEntry(), null);
+                queuePieceUpdate((Piece)event.getOldEntry(), null);
             }
+        }
+    };
+
+    protected Runnable _arunner = new Runnable() {
+        public void run () {
+            try {
+                if (_paction.execute()) {
+                    // the action requires us to wait until it completes
+                    return;
+                }
+            } catch (Throwable t) {
+                log.log(Level.WARNING, "Board action choked: " + _paction, t);
+            }
+            _paction = null;
+            processNextAction();
         }
     };
 
@@ -857,13 +1002,16 @@ public class BoardView extends BComponent
     protected Ray _pray = new Ray();
     protected TrianglePickResults _pick = new TrianglePickResults();
     protected Sprite _hover;
-    
+
+    protected BoardAction _paction;
+    protected ArrayList<BoardAction> _pactions = new ArrayList<BoardAction>();
+
     /** Used to texture a quad that "targets" a tile. */
     protected TextureState _tgtstate;
 
     /** Used to texture movement highlights. */
     protected TextureState _movstate;
-    
+
     // TODO: rename _hastate
     protected AlphaState _hastate;
 
@@ -879,10 +1027,10 @@ public class BoardView extends BComponent
 
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();
-    
+
     protected HashMap<Spatial,Sprite> _plights =
         new HashMap<Spatial,Sprite>();
-    
+
     /** Used when intersecting the ground. */
     protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
 
@@ -896,13 +1044,13 @@ public class BoardView extends BComponent
     /** The color of the movement highlights. */
     protected static final ColorRGBA MOVEMENT_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 1f, 0.5f, 0.5f);
-    
+
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;
-    
+
     /** The longest we'll let the shadows get. */
     protected static final float MAX_SHADOW_LENGTH = TILE_SIZE * 3;
-    
+
     /** The furthest we'll let the shadows get (as a multiple of height). */
     protected static final float MAX_SHADOW_DISTANCE =
         MAX_SHADOW_LENGTH / (TILE_SIZE * 2);

@@ -109,12 +109,12 @@ public class MobileSprite extends PieceSprite
 
     /**
      * Returns a reference to the last targeted sprite.
-     */ 
+     */
     public PieceSprite getTargetSprite ()
     {
         return _tsprite;
     }
-    
+
     /**
      * Turns the sprite towards its current target.
      */
@@ -128,7 +128,7 @@ public class MobileSprite extends PieceSprite
             Vector3f.UNIT_Z);
         snapToTerrain();
     }
-    
+
     /**
      * Runs the specified action animation.
      */
@@ -151,13 +151,13 @@ public class MobileSprite extends PieceSprite
         // next action, so check both _action and _actions.size()
         return isMoving() || (_action != null) || (_actions.size() > 0);
     }
-    
+
     @Override // documentation inherited
     public Spatial getHighlight ()
     {
         return _hnode;
     }
-    
+
     /**
      * Sets this sprite on a path defined by a list of {@link Point} objects.
      *
@@ -167,26 +167,26 @@ public class MobileSprite extends PieceSprite
     {
         move(createPath(board, path, speed));
     }
-    
+
     @Override // documentation inherited
     public void move (Path path)
     {
         super.move(path);
-        
+
         // only activate sound/dust for unit paths
         if (!(path instanceof MoveUnitPath)) {
             return;
         }
-        
+
         // start the movement sound
         _moveSound.loop(false);
-        
+
         // turn on the dust
         if (_dustmgr != null) {
             _dustmgr.setReleaseRate(32);
         }
     }
-    
+
     @Override // documentation inherited
     public void pathCompleted ()
     {
@@ -200,14 +200,14 @@ public class MobileSprite extends PieceSprite
             _dustmgr.setReleaseRate(0);
         }
     }
-    
+
     @Override // documentation inherited
     public void setOrientation (int orientation)
     {
         super.setOrientation(orientation);
         snapToTerrain();
     }
-    
+
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
@@ -233,10 +233,10 @@ public class MobileSprite extends PieceSprite
                 }
             }
         }
-        
+
         super.updateWorldData(time);
     }
-    
+
     @Override // documentation inherited
     public void snapToTerrain ()
     {
@@ -249,7 +249,7 @@ public class MobileSprite extends PieceSprite
     {
         super.createGeometry(ctx);
         _ctx = ctx;
-        
+
         // contains highlights draped over terrain
         _hnode = new Node("highlight");
         _hnode.setLightCombineMode(LightState.OFF);
@@ -257,17 +257,17 @@ public class MobileSprite extends PieceSprite
         _hnode.setRenderState(RenderUtil.blendAlpha);
         _hnode.setRenderState(RenderUtil.backCull);
         _hnode.updateRenderState();
-            
+
         // the geometry of the highlight is shared between the elements
         _highlight = _view.getTerrainNode().createHighlight(localTranslation.x,
             localTranslation.y, TILE_SIZE, TILE_SIZE);
-        
+
         // the shadow is an additional highlight with wider geometry
         createShadow(ctx);
-        
+
         // create the dust particle system
         createDustManager(ctx);
-        
+
         // load our model
         _model = ctx.loadModel(_type, _name);
         _model.resolveActions();
@@ -275,7 +275,7 @@ public class MobileSprite extends PieceSprite
         // start in our rest post
         setAction(getRestPose());
     }
-    
+
     /**
      * Creates the dust particle manager, if this unit kicks up dust.
      */
@@ -286,7 +286,7 @@ public class MobileSprite extends PieceSprite
         if (_piece.isFlyer()) {
             return;
         }
-        
+
         _dustmgr = new ParticleManager(NUM_DUST_PARTICLES);
         _dustmgr.setInitialVelocity(0.005f);
         _dustmgr.setEmissionDirection(Vector3f.UNIT_Z);
@@ -309,12 +309,12 @@ public class MobileSprite extends PieceSprite
         _dustmgr.getParticles().setRenderState(RenderUtil.overlayZBuf);
         _dustmgr.getParticles().updateRenderState();
         _dustmgr.getParticles().addController(_dustmgr);
-        
+
         // put them in the highlight node so that they are positioned relative
         // to the board
         _hnode.attachChild(_dustmgr.getParticles());
     }
-    
+
     /**
      * Creates and attaches the shadow for this sprite.
      */
@@ -334,7 +334,7 @@ public class MobileSprite extends PieceSprite
         _shadow.updateRenderState();
         _hnode.attachChild(_shadow);
     }
-    
+
     /**
      * Creates the shadow texture for the current light parameters.
      */
@@ -344,7 +344,7 @@ public class MobileSprite extends PieceSprite
         _slength = length;
         _srotation = rotation;
         _sintensity = intensity;
-        
+
         float yscale = length / TILE_SIZE;
         int size = SHADOW_TEXTURE_SIZE, hsize = size / 2;
         ByteBuffer pbuf = ByteBuffer.allocateDirect(size * size * 4);
@@ -361,7 +361,7 @@ public class MobileSprite extends PieceSprite
             }
         }
         pbuf.rewind();
-        
+
         // we must rotate the shadow into place and translate to recenter
         Texture stex = new Texture();
         stex.setImage(new Image(Image.RGBA8888, size, size, pbuf));
@@ -371,11 +371,11 @@ public class MobileSprite extends PieceSprite
         Vector3f trans = new Vector3f(0.5f, 0.5f, 0f);
         rot.multLocal(trans);
         stex.setTranslation(new Vector3f(0.5f - trans.x, 0.5f - trans.y, 0f));
-        
+
         _shadtex = ctx.getRenderer().createTextureState();
         _shadtex.setTexture(stex);
     }
-    
+
     @Override // documentation inherited
     protected void createSounds (SoundGroup sounds)
     {
@@ -387,11 +387,11 @@ public class MobileSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    protected void moveSprite (BangBoard board, Piece opiece, Piece npiece)
+    protected void moveSprite (BangBoard board)
     {
         // no animating when we're in the editor
         if (_editorMode) {
-            super.moveSprite(board, opiece, npiece);
+            super.moveSprite(board);
             return;
         }
 
@@ -401,19 +401,18 @@ public class MobileSprite extends PieceSprite
             // only create a path if we're moving along the ground, if this is
             // solely an elevation move (which happens at the start of the
             // game), we just blip to our new location
-            if (opiece.x != npiece.x || opiece.y != npiece.y) {
-                path = createPath(board, opiece, npiece);
+            if (_px != _piece.x || _py != _piece.y) {
+                path = createPath(board);
             }
             if (path != null) {
                 move(path);
-                
             } else {
-                int elev = computeElevation(board, npiece.x, npiece.y);
-                setLocation(npiece.x, npiece.y, elev);
+                int elev = computeElevation(board, _piece.x, _piece.y);
+                setLocation(_piece.x, _piece.y, elev);
             }
         }
     }
-    
+
     /**
      * Configures the current set of meshes being used by this sprite.
      */
@@ -431,7 +430,7 @@ public class MobileSprite extends PieceSprite
         setAnimationRepeatType(anim.repeatType);
         return anim;
     }
-    
+
     /**
      * Pulls the next action off of our queue and runs it.
      */
@@ -441,7 +440,7 @@ public class MobileSprite extends PieceSprite
         if (_action.equals(REMOVED)) {
             // have the unit sink into the ground and fade away
             _nextAction = REMOVAL_DURATION;
-            
+
             setRenderState(RenderUtil.blendAlpha);
             final MaterialState mstate =
                 _ctx.getRenderer().createMaterialState();
@@ -460,9 +459,9 @@ public class MobileSprite extends PieceSprite
                     mstate.getDiffuse().a = color.a;
                     mstate.getSpecular().a = color.a;
                     updateRenderState();
-                }    
+                }
             });
-            
+
         } else {
             Model.Animation anim = setAction(_action);
             _nextAction = anim.getDuration() / Config.display.animationSpeed;
@@ -483,33 +482,33 @@ public class MobileSprite extends PieceSprite
      * Creates a path that will be used to move this piece from the
      * specified old position to the new one.
      */
-    protected Path createPath (BangBoard board, Piece opiece, Piece npiece)
+    protected Path createPath (BangBoard board)
     {
         List path = null;
         if (board != null) {
-            path = board.computePath(opiece, npiece.x, npiece.y);
+            path = board.computePath(_px, _py, _piece);
         }
 
         if (path != null) {
             if (path.size() < 2) {
-                log.warning("Created short path? [opiece=" + opiece.info() +
-                            ", npiece=" + npiece.info() +
+                log.warning("Created short path? [piece=" + _piece.info() +
                             ", path=" + StringUtil.toString(path) + "].");
                 return null;
             }
             return createPath(board, path, Config.display.getMovementSpeed());
 
         } else {
-            Vector3f start = toWorldCoords(opiece.x, opiece.y,
-                computeElevation(board, opiece.x, opiece.y), new Vector3f());
-            Vector3f end = toWorldCoords(npiece.x, npiece.y,
-                computeElevation(board, npiece.x, npiece.y), new Vector3f());
+            Vector3f start = toWorldCoords(
+                _px, _py, computeElevation(board, _px, _py), new Vector3f());
+            Vector3f end = toWorldCoords(
+                _piece.x, _piece.y, computeElevation(board, _piece.x, _piece.y),
+                new Vector3f());
             float duration = (float)MathUtil.distance(
-                opiece.x, opiece.y, npiece.x, npiece.y) * .003f;
+                _px, _py, _piece.x, _piece.y) * .003f;
             return new LinePath(this, start, end, duration);
         }
     }
-    
+
     /**
      * Creates a path from a list of {@link Point} objects.
      *
@@ -531,17 +530,17 @@ public class MobileSprite extends PieceSprite
         }
         return new MoveUnitPath(this, coords, durations);
     }
-    
+
     /**
      * Sets the coordinate in the given array at the specified index.
      */
-    protected void setCoord (BangBoard board, Vector3f[] coords, int idx,
-        int nx, int ny)
+    protected void setCoord (
+        BangBoard board, Vector3f[] coords, int idx, int nx, int ny)
     {
         coords[idx] = new Vector3f();
         toWorldCoords(nx, ny, computeElevation(board, nx, ny), coords[idx]);
     }
-    
+
     /**
      * Sets the orientation to the one stored in the piece.
      */
@@ -549,7 +548,7 @@ public class MobileSprite extends PieceSprite
     {
         setOrientation(_piece.orientation);
     }
-    
+
     /**
      * Updates the position of the highlight.
      */
@@ -559,14 +558,14 @@ public class MobileSprite extends PieceSprite
             _highlight.y != localTranslation.y) {
             _highlight.setPosition(localTranslation.x, localTranslation.y);
         }
-        
+
         _loc.set(localTranslation.x, localTranslation.y,
             localTranslation.z + TILE_SIZE/2);
         _view.getShadowLocation(_loc, _result);
         if (_shadow.x != _result.x || _shadow.y != _result.y) {
             _shadow.setPosition(_result.x, _result.y);
         }
-        
+
         if (_dustmgr != null && isMoving()) {
             _dustmgr.getParticlesOrigin().set(localTranslation);
             int tx = (int)(localTranslation.x / TILE_SIZE),
@@ -578,7 +577,7 @@ public class MobileSprite extends PieceSprite
             _dustmgr.getEndColor().set(color.r, color.g, color.b, 0f);
         }
     }
-    
+
     /** Computes the world space location of the named emitter. */
     protected Vector3f getEmitterTranslation (String name)
     {
@@ -591,7 +590,7 @@ public class MobileSprite extends PieceSprite
         }
         return geom.getWorldBound().getCenter();
     }
-    
+
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */
     protected static class CompletedOp implements ObserverList.ObserverOp
     {
@@ -612,7 +611,7 @@ public class MobileSprite extends PieceSprite
     }
 
     protected BasicContext _ctx;
-    
+
     protected String _type, _name;
     protected Node _hnode;
     protected TerrainNode.Highlight _highlight;
@@ -626,22 +625,22 @@ public class MobileSprite extends PieceSprite
 
     protected Vector3f _loc = new Vector3f();
     protected Vector2f _result = new Vector2f();
-    
+
     protected PieceSprite _tsprite;
-    
+
     /** Ensures that we use the same random texture for every animation
      * displayed for this particular instance. */
     protected int _texrando = RandomUtil.getInt(Integer.MAX_VALUE);
 
     protected static TextureState _shadtex, _dusttex;
     protected static float _slength, _srotation, _sintensity;
-    
+
     /** The size of the shadow texture. */
     protected static final int SHADOW_TEXTURE_SIZE = 128;
-    
+
     /** The number of dust particles. */
     protected static final int NUM_DUST_PARTICLES = 32;
-    
+
     /** The number of seconds it takes dead pieces to fade out. */
     protected static final float REMOVAL_DURATION = 3f;
 }

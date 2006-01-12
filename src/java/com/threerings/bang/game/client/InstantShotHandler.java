@@ -4,8 +4,8 @@
 package com.threerings.bang.game.client;
 
 /**
- * Waits for all sprites involved in a shot to stop moving and then
- * animates the fired shot.
+ * Waits for all sprites involved in a shot to stop moving and then animates
+ * the fired shot.
  */
 public class InstantShotHandler extends ShotHandler
 {
@@ -16,8 +16,9 @@ public class InstantShotHandler extends ShotHandler
             _bangSound.play(false);
         }
 
-        // apply the shot effect which will damage the target and trigger
-        // the appropriate animations and whatnot
-        _view.applyEffectDirect(_shot);
+        // apply the effect and complete our handling if that did not result in
+        // anything that needs waiting for
+        _effect.apply(_bangobj, this);
+        maybeComplete(-1);
     }
 }
