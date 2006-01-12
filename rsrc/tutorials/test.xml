@@ -7,7 +7,9 @@
   <text message="start_test"/>
   <wait event="text_clicked"/>
 
-  <repair_unit id="gun1"/>
+  <add_bonus type="repair" location="11,10"/>
+  
+  <move_unit id="gun1" location="11,10"/>
   
   <text message="end_test"/>
   <wait event="text_clicked"/>

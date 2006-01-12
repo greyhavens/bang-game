@@ -15,13 +15,14 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
-import com.threerings.bang.game.data.effect.RepairEffect;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.BangManager;
@@ -147,11 +148,14 @@ public class Tutorial extends Scenario
                             ie.getMessage());
             }
             
-        } else if (action instanceof TutorialConfig.RepairUnit) {
-            TutorialConfig.RepairUnit rua = (TutorialConfig.RepairUnit)action;
-            RepairEffect effect = new RepairEffect();
-            effect.init(_units.get(rua.id));
-            _bangmgr.deployEffect(-1, effect);
+        } else if (action instanceof TutorialConfig.AddBonus) {
+            TutorialConfig.AddBonus aba = (TutorialConfig.AddBonus)action;
+            BonusConfig bconfig = BonusConfig.getConfig(aba.type);
+            Bonus bonus = Bonus.createBonus(bconfig);
+            bonus.assignPieceId();
+            bonus.position(aba.location[0], aba.location[1]);
+            _bangobj.addToPieces(bonus);
+            _bangobj.board.updateShadow(null, bonus);
         }
     }
 

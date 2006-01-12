@@ -43,6 +43,6 @@ public class TutorialConfigParser extends CompiledConfigParser
         "wait", TutorialConfig.Wait.class.getName(),
         "add_unit", TutorialConfig.AddUnit.class.getName(),
         "move_unit", TutorialConfig.MoveUnit.class.getName(),
-        "repair_unit", TutorialConfig.RepairUnit.class.getName(),
+        "add_bonus", TutorialConfig.AddBonus.class.getName(),
     };
 }

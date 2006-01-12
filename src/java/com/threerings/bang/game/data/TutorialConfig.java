@@ -48,9 +48,10 @@ public class TutorialConfig
         public String target;
     }
 
-    public static class RepairUnit extends Action
+    public static class AddBonus extends Action
     {
-        public String id;
+        public String type;
+        public int[] location;
     }
     
     /** The identifier for this tutorial, which defines its message bundle. */
