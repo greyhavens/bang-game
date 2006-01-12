@@ -36,7 +36,8 @@ public class StampedeHandler extends EffectHandler
         // set all the buffalo on the paths listed in the effect
         for (int i = 0; i < _stampede.paths.length; i++) {
             MobileSprite sprite = new MobileSprite("extras", "bison");
-            sprite.init(_ctx, _view, _sounds, new DummyPiece(), _bangobj.tick);
+            sprite.init(_ctx, _view, _bangobj.board, _sounds,
+                        new DummyPiece(), _bangobj.tick);
             _view.addSprite(sprite);
             sprite.addObserver(_remover);
             _buffalo++;

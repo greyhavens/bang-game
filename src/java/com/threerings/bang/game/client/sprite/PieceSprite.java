@@ -80,8 +80,8 @@ public class PieceSprite extends Sprite
      * Called when we are first created and immediately before we are
      * added to the display.
      */
-    public void init (BasicContext ctx, BoardView view, SoundGroup sounds,
-                      Piece piece, short tick)
+    public void init (BasicContext ctx, BoardView view, BangBoard board,
+                      SoundGroup sounds, Piece piece, short tick)
     {
         _view = view;
         _piece = piece;
@@ -96,7 +96,8 @@ public class PieceSprite extends Sprite
         createSounds(sounds);
 
         // position ourselves properly to start
-        setLocation(_px = piece.x, _py = piece.y, 0);
+        setLocation(_px = piece.x, _py = piece.y,
+                    computeElevation(board, _px, _py));
         setOrientation(_porient = piece.orientation);
 
         // ensure that we do this the first time even if the sprite starts
