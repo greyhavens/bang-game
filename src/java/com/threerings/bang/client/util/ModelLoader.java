@@ -37,6 +37,14 @@ public class ModelLoader extends Thread
         notify();
     }
 
+    /**
+     * Returns the number of pending loads on the queue.
+     */
+    public synchronized int getQueueSize ()
+    {
+        return _queue.size();
+    }
+
     @Override // documentation inherited
     public void run ()
     {
