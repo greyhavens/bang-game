@@ -148,7 +148,7 @@ public class EffectHandler extends BoardView.BoardAction
         if (!sprite.updatePosition(_bangobj.board)) {
             return;
         }
-        final int penderId = ++_penderId;
+        final int penderId = ++_nextPenderId;
         _penders.add(penderId);
         sprite.addObserver(new PathObserver() {
             public void pathCancelled (Sprite sprite, Path path) {
@@ -175,8 +175,7 @@ public class EffectHandler extends BoardView.BoardAction
 
     protected void queueEffect (PieceSprite sprite, EffectViz viz)
     {
-        final int penderId = ++_penderId;
-        _penders.add(penderId);
+        final int penderId = notePender();
         viz.init(_ctx, _view, sprite.getPiece(), new EffectViz.Observer() {
             public void effectDisplayed () {
                 maybeComplete(penderId);
@@ -192,8 +191,7 @@ public class EffectHandler extends BoardView.BoardAction
      */
     protected void queueAction (MobileSprite sprite, String action)
     {
-        final int penderId = ++_penderId;
-        _penders.add(penderId);
+        final int penderId = notePender();
         sprite.addObserver(new MobileSprite.ActionObserver() {
             public void actionCompleted (Sprite sprite, String action) {
                 sprite.removeObserver(this);
@@ -206,6 +204,12 @@ public class EffectHandler extends BoardView.BoardAction
     protected boolean isCompleted ()
     {
         return (_penders.size() == 0);
+    }
+
+    protected int notePender ()
+    {
+        _penders.add(++_nextPenderId);
+        return _nextPenderId;
     }
 
     protected void maybeComplete (int penderId)
@@ -226,5 +230,5 @@ public class EffectHandler extends BoardView.BoardAction
     protected EffectViz _effviz;
 
     protected ArrayIntSet _penders = new ArrayIntSet();
-    protected int _penderId;
+    protected int _nextPenderId;
 }

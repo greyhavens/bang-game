@@ -89,6 +89,7 @@ public class BallisticShotHandler extends ShotHandler
 //                      " axis " + axis +
 //                      " velvec " + velvec + " (" + velvec.length() + ")");
 
+        _penderId = notePender();
         _ssprite.setLocalTranslation(start);
         _ssprite.addObserver(this);
         _view.addSprite(_ssprite);
@@ -125,7 +126,7 @@ public class BallisticShotHandler extends ShotHandler
             // apply the effect and complete our handling if that did not
             // result in anything that needs waiting for
             _effect.apply(_bangobj, this);
-            maybeComplete(-1);
+            maybeComplete(_penderId);
         }
     }
 
@@ -138,9 +139,10 @@ public class BallisticShotHandler extends ShotHandler
         // apply the effect and complete our handling if that did not
         // result in anything that needs waiting for
         _effect.apply(_bangobj, this);
-        maybeComplete(-1);
+        maybeComplete(_penderId);
     }
 
+    protected int _penderId;
     protected ShotSprite _ssprite;
     protected Sound _whistleSound, _launchSound;
 

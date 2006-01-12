@@ -683,8 +683,8 @@ public class BoardView extends BComponent
      */
     protected boolean pieceUpdated (Piece opiece, final Piece npiece, short tick)
     {
-        PieceSprite sprite = getPieceSprite(npiece);
-        if (sprite == null) {
+        PieceSprite sprite;
+        if (npiece == null || (sprite = getPieceSprite(npiece)) == null) {
             return false;
         }
 
