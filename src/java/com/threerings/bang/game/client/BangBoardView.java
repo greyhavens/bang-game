@@ -33,6 +33,7 @@ import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.client.effect.ExplosionViz;
+import com.threerings.bang.game.client.effect.IconViz;
 import com.threerings.bang.game.client.effect.PlaySoundViz;
 import com.threerings.bang.game.client.effect.RepairViz;
 import com.threerings.bang.game.client.sprite.BonusSprite;
@@ -835,6 +836,13 @@ public class BangBoardView extends BoardView
                 piece.isAlive() ? "reacting" : "dying");
         }
 
+        // perhaps show an icon animation indicating what happened
+        IconViz iviz = IconViz.createIconViz(piece, effect);
+        if (iviz != null) {
+            iviz.init(_ctx, this, opiece, piece);
+            sprite.queueEffect(iviz);
+        }
+        
         // also play a sound along with any visual effect
         String path = "rsrc/" + effect + ".wav";
         if (SoundUtil.haveSound(path)) {
