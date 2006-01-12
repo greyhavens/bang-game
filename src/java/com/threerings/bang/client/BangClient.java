@@ -265,6 +265,12 @@ public class BangClient extends BasicClient
     {
         _mview = view;
         _ctx.getRootNode().addWindow(_mview);
+
+        // don't fade in the game view, it will handle that itself when it's
+        // ready to roll
+        if (view instanceof BangView) {
+            return;
+        }
         FadeInOutEffect fade =
             new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
             protected void fadeComplete () {
