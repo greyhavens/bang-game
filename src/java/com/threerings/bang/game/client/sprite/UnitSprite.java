@@ -27,12 +27,14 @@ import com.jme.util.TextureManager;
 
 import com.threerings.jme.sprite.Path;
 
+import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
+
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -250,8 +252,14 @@ public class UnitSprite extends MobileSprite
         // load up our model
         super.createGeometry(ctx);
 
+        // if we're a range unit, make sure the "bullet" model is loaded
+        Unit unit = (Unit)_piece;
+        if (unit.getConfig().mode == UnitConfig.Mode.RANGE) {
+            ctx.loadModel("bonuses", "missile").resolveActions();
+        }
+
         // make sure the pending move textures for our unit type are loaded
-        String type = ((Unit)_piece).getType();
+        String type = unit.getType();
         _pendtexs = _pendtexmap.get(type);
         if (_pendtexs == null) {
             _pendtexmap.put(type, _pendtexs = new Texture[4]);
