@@ -116,8 +116,14 @@ public class BallisticShotHandler extends ShotHandler
     {
         sprite.removeObserver(this);
         _view.removeSprite(sprite);
+
+        // make a note of our pender id because fireNextSegment() may result in
+        // a new call to fireShot() which will overwrite _penderId, but we want
+        // to wait until we're all done firing the next shot before allowing
+        // this action to finish
+        int penderId = _penderId;
         if (!fireNextSegment()) {
-            if (_bangSound != null) {
+            if (_target != null && _bangSound != null) {
                 _bangSound.play(false); // bang!
             }
             // stop the bomb whistle
@@ -126,8 +132,8 @@ public class BallisticShotHandler extends ShotHandler
             // apply the effect and complete our handling if that did not
             // result in anything that needs waiting for
             _effect.apply(_bangobj, this);
-            maybeComplete(_penderId);
         }
+        maybeComplete(penderId);
     }
 
     // documentation inherited from interface PathObserver
