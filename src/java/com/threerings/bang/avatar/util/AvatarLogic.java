@@ -100,7 +100,7 @@ public class AvatarLogic
     public static final String HAIR = "hair";
 
     /** The colorization class for eye colors. */
-    public static final String EYES = "iris";
+    public static final String EYES = "iris_t";
 
     /** The width of our avatar source images. */
     public static final int WIDTH = 468;

@@ -26,7 +26,7 @@
          renderPriority="100"/>
   <class name="male/nose" colors="skin" shadow="male/shadow"
          renderPriority="110"/>
-  <class name="male/eyes" colors="skin,makeup_p,makeup_s,iris_t"
+  <class name="male/eyes" colors="skin,iris_t"
          renderPriority="120" shadow="male/shadow"/>
   <class name="male/beard" colors="hair"
          renderPriority="130"/>
@@ -70,7 +70,7 @@
          renderPriority="90"/>
   <class name="female/nose" colors="skin" shadow="female/shadow"
          renderPriority="100"/>
-  <class name="female/eyes" colors="skin,makeup_p,makeup_s,iris_t"
+  <class name="female/eyes" colors="skin,iris_t"
          renderPriority="110" shadow="female/shadow"/>
   <class name="female/hair_front" colors="hair,clothes_s"
          renderPriority="120"/>

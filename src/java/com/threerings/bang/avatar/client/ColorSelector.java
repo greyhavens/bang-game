@@ -56,7 +56,8 @@ public class ColorSelector extends BComponent
         BufferedImage square = dots.getSubimage(48, dy, 24, 24);
         BufferedImage selsquare = dots.getSubimage(72, dy, 24, 24);
 
-        _swatches = new Swatch[colors.length];
+        int scount = (colors == null) ? 0 : colors.length;
+        _swatches = new Swatch[scount];
         for (int ii = 0; ii < _swatches.length; ii++) {
             Swatch swatch = _swatches[ii] = new Swatch();
             swatch.colorId = colors[ii].colorId;
