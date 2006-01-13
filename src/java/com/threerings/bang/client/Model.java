@@ -151,7 +151,7 @@ public class Model
 
         /** The emitters used in the animation. */
         public Emitter[] emitters;
-
+        
         /**
          * Returns the "speed" at which this animation's controller should
          * be run.
@@ -175,7 +175,7 @@ public class Model
          */
         public boolean isResolved ()
         {
-            return _parts != null;
+            return _parts != null || _resolving;
         }
 
         /**
@@ -184,7 +184,7 @@ public class Model
          */
         public void setIsResolving ()
         {
-            _parts = new Part[0];
+            _resolving = true;
         }
 
         /**
@@ -214,7 +214,7 @@ public class Model
         public Node[] getMeshes (int random)
         {
             // return an empty set of meshes if our parts are not resolved
-            if (_parts == null || emitters == null) {
+            if (_parts == null) {
                 return new Node[0];
             }
 
@@ -245,7 +245,8 @@ public class Model
         public void setParts (Part[] parts)
         {
             _parts = parts;
-
+            _resolving = false;
+            
             // update any extant bindings
             for (Binding binding : _bindings) {
                 binding.update();
@@ -265,6 +266,9 @@ public class Model
 
         /** Use to track the nodes to which this animation is bound. */
         protected ArrayList<Binding> _bindings = new ArrayList<Binding>();
+        
+        /** Whether or not this animation is in the process of resolving. */
+        protected boolean _resolving;
     }
 
     /** Contains information on an effect emitter. */
