@@ -16,28 +16,35 @@ import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
+import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
+import com.jmex.effects.ParticleManager;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.*;
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays the effect when a unit is repaired.
  */
-public class RepairViz extends EffectViz
+public class RepairViz extends ParticleEffectViz
 {
     @Override // documentation inherited
     public void display (PieceSprite target)
     {
         // start up the glow effect
         _glow.activate(target);
+        
+        // and the swirl effect
+        displayParticleManager(target, _swirls[0].pmgr, true);
+        displayParticleManager(target, _swirls[1].pmgr, true);
         
         // note that the effect was displayed
         effectDisplayed();
@@ -47,6 +54,7 @@ public class RepairViz extends EffectViz
     protected void didInit ()
     {
         _glow = new Glow();
+        _swirls = new Swirl[] { new Swirl(0f), new Swirl(FastMath.PI) };
     }
     
     /** Creates a glow effect by rendering the target to a texture and
@@ -141,9 +149,7 @@ public class RepairViz extends EffectViz
             _trenderer.updateCamera();
             _target.setLightCombineMode(LightState.OFF);
             _target.setCullMode(CULL_NEVER);
-            setCullMode(CULL_ALWAYS);
             _trenderer.render(_target, _texture);
-            setCullMode(CULL_INHERIT);
             _target.setCullMode(CULL_INHERIT);
             _target.setLightCombineMode(LightState.INHERIT);
             rcam.update();
@@ -175,8 +181,49 @@ public class RepairViz extends EffectViz
         protected Vector3f[] _locs;
     }
     
+    /** The swirl of sparkles effect. */
+    protected class Swirl
+    {
+        /** The particle manager for the swirl. */
+        public ParticleManager pmgr;
+        
+        public Swirl (final float a0)
+        {
+            pmgr = ParticleFactory.getSparkles();
+            pmgr.setActive(true);
+            pmgr.setReleaseRate(512);
+            pmgr.setParticlesOrigin(new Vector3f());
+            
+            pmgr.getParticles().addController(new Controller() {
+                public void update (float time) {
+                    // remove swirl if its lifespan has elapsed
+                    if ((_elapsed += time) > GLOW_DURATION) {
+                        pmgr.setActive(false);
+                        pmgr.getParticles().removeController(this);
+                        return;
+                        
+                    } else if (_elapsed > SWIRL_DURATION) {
+                        pmgr.setReleaseRate(0);
+                        return;
+                    }
+                    float t = _elapsed / SWIRL_DURATION,
+                        radius = TILE_SIZE / 2,
+                        angle = a0 + t * FastMath.TWO_PI * SWIRL_REVOLUTIONS;
+                    pmgr.getParticlesOrigin().set(
+                        radius * FastMath.cos(angle),
+                        radius * FastMath.sin(angle),
+                        TILE_SIZE * t - radius);
+                }
+                protected float _elapsed;
+            });
+        }
+    }
+    
     /** The glow effect. */
     protected Glow _glow;
+    
+    /** The swirls of sparkles. */
+    protected Swirl[] _swirls;
     
     /** The size of the texture to render. */
     protected static final int TEXTURE_SIZE = 128;
@@ -190,4 +237,10 @@ public class RepairViz extends EffectViz
     /** The size of the glow as a proportion of the screen radius of the
      * target. */
     protected static final float GLOW_SCALE = 0.0625f;
+
+    /** The duration of the swirl effect. */    
+    protected static final float SWIRL_DURATION = 1.125f;
+    
+    /** The number of revolutions for the swirl to complete. */
+    protected static final float SWIRL_REVOLUTIONS = 1.5f;
 }

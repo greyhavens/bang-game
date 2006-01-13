@@ -28,35 +28,8 @@ public class ParticleFactory
 {
     public static void warmup (BangContext ctx)
     {
-        DisplaySystem display = DisplaySystem.getDisplaySystem();
-        _astate = display.getRenderer().createAlphaState();
-        _astate.setBlendEnabled(true);
-        _astate.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        _astate.setDstFunction(AlphaState.DB_ONE);
-        _astate.setTestEnabled(true);
-        _astate.setTestFunction(AlphaState.TF_GREATER);
-
-        _tstate = RenderUtil.createTextureState(
-            ctx, "textures/effects/flare.jpg");
         _dusttex = RenderUtil.createTextureState(
             ctx, "textures/effects/dust.png");
-            
-        _zstate = display.getRenderer().createZBufferState();
-        _zstate.setEnabled(false);
-    }
-    
-    public static ParticleManager getGlow ()
-    {
-        int count = 0, index = -1;
-        for (int x = 0, tSize = glows.size(); x < tSize; x++) {
-            ParticleManager e = glows.get(x);
-            if (!e.isActive()) {
-                return e;
-            }
-        }
-        ParticleManager glow = createGlow();
-        glows.add(glow);
-        return glow;
     }
 
     public static ParticleManager getDustRing ()
@@ -114,39 +87,20 @@ public class ParticleFactory
         _smokePuffs.add(smokePuff);
         return smokePuff;
     }
-
-    protected static ParticleManager createGlow ()
+    public static ParticleManager getSparkles ()
     {
-        DisplaySystem display = DisplaySystem.getDisplaySystem();
-        ParticleManager manager = new ParticleManager(50);
-        manager.setGravityForce(new Vector3f(0.0f, 0.0f, 0.0f));
-        manager.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
-        manager.setEmissionMaximumAngle(FastMath.TWO_PI);
-        manager.setSpeed(0.1f);
-        manager.setParticlesMinimumLifeTime(100.0f);
-        manager.setStartSize(2.0f);
-        manager.setEndSize(4.0f);
-        manager.setStartColor(
-            new ColorRGBA(0.45490196f, 0.8901961f, 0.41568628f, 1.0f));
-        manager.setEndColor(new ColorRGBA(1.0f, 0.312f, 0.121f, 0.0f));
-        manager.setRandomMod(1.0f);
-        manager.setControlFlow(false);
-        manager.setInitialVelocity(0.02f);
-        manager.setParticleSpinSpeed(0.0f);
-        manager.setRepeatType(Controller.RT_CLAMP);
-
-        manager.warmUp(1000);
-        TriMesh particles = manager.getParticles();
-        particles.addController(manager);
-
-        particles.setRenderState(_tstate);
-        particles.setRenderState(_astate);
-        particles.setRenderState(_zstate);
-        particles.updateRenderState();
-
-        return manager;
+        int count = 0, index = -1;
+        for (int x = 0, tSize = _sparkles.size(); x < tSize; x++) {
+            ParticleManager e = _sparkles.get(x);
+            if (!e.isActive()) {
+                return e;
+            }
+        }
+        ParticleManager sparkles = createSparkles();
+        _sparkles.add(sparkles);
+        return sparkles;
     }
-
+    
     protected static ParticleManager createDustRing ()
     {
         ParticleManager manager = new ParticleManager(64);
@@ -256,8 +210,33 @@ public class ParticleFactory
         return manager;
     }
     
-    protected static ArrayList<ParticleManager> glows =
-        new ArrayList<ParticleManager>();
+    protected static ParticleManager createSparkles ()
+    {
+        ParticleManager manager = new ParticleManager(64);
+        manager.setParticlesMinimumLifeTime(250f);
+        manager.setInitialVelocity(0f);
+        manager.setRandomMod(0f);
+        manager.setPrecision(FastMath.FLT_EPSILON);
+        manager.setControlFlow(true);
+        manager.setReleaseRate(512);
+        manager.setReleaseVariance(0f);
+        manager.setParticleSpinSpeed(0f);
+        manager.setStartSize(TILE_SIZE / 25);
+        manager.setEndSize(TILE_SIZE / 10);
+        manager.setStartColor(new ColorRGBA(0.75f, 0.75f, 0.75f, 1f));
+        manager.setEndColor(new ColorRGBA(0f, 0f, 0f, 1f));
+        
+        TriMesh particles = manager.getParticles();
+        particles.addController(manager);
+
+        particles.setRenderState(_dusttex);
+        particles.setRenderState(RenderUtil.addAlpha);
+        particles.setRenderState(RenderUtil.overlayZBuf);
+        particles.updateRenderState();
+        
+        return manager;
+    }
+    
     protected static ArrayList<ParticleManager> _dustRings =
         new ArrayList<ParticleManager>();
     protected static ArrayList<ParticleManager> _fireballs =
@@ -266,7 +245,7 @@ public class ParticleFactory
         new ArrayList<ParticleManager>();
     protected static ArrayList<ParticleManager> _smokePuffs =
         new ArrayList<ParticleManager>();
-    protected static AlphaState _astate;
-    protected static TextureState _tstate, _dusttex;
-    protected static ZBufferState _zstate;
+    protected static ArrayList<ParticleManager> _sparkles =
+        new ArrayList<ParticleManager>();
+    protected static TextureState _dusttex;
 }
