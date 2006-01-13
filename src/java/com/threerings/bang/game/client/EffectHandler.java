@@ -81,7 +81,7 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // create the appropriate visual effect
-        if (effect.equals(ShotEffect.DAMAGED)) {
+        if (effect.equals(ShotEffect.EXPLODED)) {
             _effviz = new ExplosionViz(false);
             // they just got shot, clear any pending shot
             ((UnitSprite)sprite).setPendingShot(false);

@@ -22,9 +22,12 @@ import static com.threerings.bang.Log.log;
  */
 public class ShotEffect extends Effect
 {
-    /** The identifier for the type of effect that we produce. */
+    /** Indicates that the target was damaged by a normal shot. */
     public static final String DAMAGED = "bang";
 
+    /** Indicates that the target was damaged by a ballistic shot. */
+    public static final String EXPLODED = "exploded";
+    
     /** We also rotate the shooter, thereby affecting it. */
     public static final String ROTATED = "rotated";
 
@@ -135,7 +138,7 @@ public class ShotEffect extends Effect
         }
 
         // rotate the shooter to face the target
-        Piece shooter = (Piece)bangobj.pieces.get(shooterId);
+        Unit shooter = (Unit)bangobj.pieces.get(shooterId);
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (shooter != null && target != null) {
             short orient = PieceUtil.getDirection(shooter, target);
@@ -150,7 +153,9 @@ public class ShotEffect extends Effect
         if (newLastActed != -1) {
             target.lastActed = newLastActed;
         }
-        damage(bangobj, obs, shooter.owner, target, newDamage, DAMAGED);
+        damage(bangobj, obs, shooter.owner, target, newDamage,
+            shooter.getConfig().mode == UnitConfig.Mode.RANGE ?
+                EXPLODED : DAMAGED);
     }
 
     @Override // documentation inherited

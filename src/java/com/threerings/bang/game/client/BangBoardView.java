@@ -471,13 +471,10 @@ public class BangBoardView extends BoardView
     {
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            UnitSprite sprite = getUnitSprite(p);
-            if (sprite == null) {
-                continue;
-            }
-            if (range.contains(p.x, p.y) && _selection.validTarget(p, false) && 
+            if (p instanceof Unit && range.contains(p.x, p.y) &&
+                _selection.validTarget(p, false) && 
                 _selection.computeShotLocation(p, moves) != null) {
-                sprite.setTargeted(true);
+                getUnitSprite(p).setTargeted(true);
                 dest.add(p.x, p.y);
             }
         }
