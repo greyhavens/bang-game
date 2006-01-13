@@ -50,12 +50,6 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     @Override // documentation inherited
-    public Object getIdent ()
-    {
-        return this;
-    }
-
-    @Override // documentation inherited
     public boolean execute ()
     {
         // applying the effect may result in calls to pieceAffected() which may

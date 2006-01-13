@@ -196,10 +196,14 @@ public class PieceSprite extends Sprite
      */
     public boolean updatePosition (BangBoard board)
     {
-        // move ourselves to our new location
-        if (_piece.x != _px || _piece.x != _py ||
-            computeElevation(board, _piece.x, _piece.x) != _elevation) {
+        boolean moved = false;
+
+        // move ourselves to our new location if we have one
+        if (_piece.x != _px || _piece.y != _py) {
+//             log.info("Moving " + _piece.info() + " from +" +
+//                      _piece.x + "+" + _piece.y + " to +" + _px + "+" + _py);
             moveSprite(board);
+            moved = true;
             _px = _piece.x;
             _py = _piece.y;
         }
@@ -211,6 +215,10 @@ public class PieceSprite extends Sprite
             // now reset our location and it will adjust our centering
             int elev = computeElevation(board, _px, _py);
             setLocation(_px, _py, elev);
+        }
+
+        if (!isMoving() && moved) {
+            log.warning("Moved but am not moving?! " + _piece.info());
         }
 
         // if we started moving as a result, we need to be waited for

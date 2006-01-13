@@ -95,14 +95,6 @@ public class BoardView extends BComponent
     public abstract static class BoardAction
     {
         /**
-         * Should return some object that identifies this action so that when
-         * the action is completed, we can check the completion identifier
-         * against the identifier for which we were waiting. Mainly for
-         * debugging.
-         */
-        public abstract Object getIdent ();
-
-        /**
          * Executes this board action.
          *
          * @return true if we should wait for a call to {@link
@@ -112,11 +104,8 @@ public class BoardView extends BComponent
 
         /** Returns a string representation of this action. */
         public String toString () {
-            StringBuffer buf = new StringBuffer();
             String cname = getClass().getName();
-            buf.append(cname.substring(cname.lastIndexOf("$")+1)).append(":");
-            buf.append(getIdent() == null ? -1 : getIdent().hashCode());
-            return buf.toString();
+            return cname.substring(cname.lastIndexOf("$")+1) + ":" + hashCode();
         }
     }
 
@@ -435,7 +424,7 @@ public class BoardView extends BComponent
      */
     public void executeAction (BoardAction action)
     {
-//         log.info("Queueing: " + action);
+//        log.info("Queueing: " + action);
         _pactions.add(action);
         if (_paction == null) {
             processNextAction();
@@ -447,16 +436,15 @@ public class BoardView extends BComponent
      * BoardAction#execute} to inform the board that that action is completed
      * and that subsequent actions may be processed.
      */
-    public void actionCompleted (Object ident)
+    public void actionCompleted (BoardAction action)
     {
-        if (_paction == null || _paction.getIdent() != ident) {
+        if (_paction != action) {
             log.warning("Action completed out of sequence! " +
-                        "[pending=" + _paction +
-                        ", completed=" + ident.hashCode() + "].");
+                        "[pending=" + _paction + ", completed=" + action + "].");
             Thread.dumpStack();
             return;
         }
-//         log.info("Completed " + ident.hashCode());
+//         log.info("Completed " + action);
         _paction = null;
         processNextAction();
     }
@@ -695,10 +683,21 @@ public class BoardView extends BComponent
      * board actions (see {@link #executeAction}), waiting for animations and
      * effects to complete in between.
      */
-    protected boolean pieceUpdated (Piece opiece, final Piece npiece, short tick)
+    protected boolean pieceUpdated (
+        final BoardAction action, Piece opiece, Piece npiece, short tick)
     {
+        // if we have an old piece but no new piece, the piece must have been
+        // removed, so remove its sprite now
+        if (opiece != null && npiece == null) {
+            removePieceSprite(opiece.pieceId, "pieceUpdated(opiece,null)");
+            // nothing else to do here
+            return false;
+        }
+
         PieceSprite sprite;
         if (npiece == null || (sprite = getPieceSprite(npiece)) == null) {
+            log.info("Not updating missing piece [opiece=" + opiece +
+                     ", npiece=" + npiece + ", tick=" + tick + "].");
             return false;
         }
 
@@ -714,11 +713,11 @@ public class BoardView extends BComponent
         sprite.addObserver(new PathObserver() {
             public void pathCancelled (Sprite sprite, Path path) {
                 sprite.removeObserver(this);
-                actionCompleted(npiece);
+                actionCompleted(action);
             }
             public void pathCompleted (Sprite sprite, Path path) {
                 sprite.removeObserver(this);
-                actionCompleted(npiece);
+                actionCompleted(action);
             }
         });
         return true;
@@ -950,10 +949,6 @@ public class BoardView extends BComponent
             this.tick = tick;
         }
 
-        public Object getIdent () {
-            return piece;
-        }
-
         public boolean execute () {
             createPieceSprite(piece, tick);
             return false;
@@ -973,12 +968,19 @@ public class BoardView extends BComponent
             this.tick = tick;
         }
 
-        public Object getIdent () {
-            return npiece;
+        public boolean execute () {
+            return pieceUpdated(this, opiece, npiece, tick);
         }
 
-        public boolean execute () {
-            return pieceUpdated(opiece, npiece, tick);
+        public String toString () {
+            String strval = super.toString();
+            if (opiece != null) {
+                strval += ":" + opiece.info();
+            }
+            if (npiece != null) {
+                strval += "->" + npiece.info();
+            }
+            return strval;
         }
     }
 
@@ -1001,7 +1003,6 @@ public class BoardView extends BComponent
 
         public void entryRemoved (EntryRemovedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                removePieceSprite((Integer)event.getKey(), "pieceRemoved");
                 queuePieceUpdate((Piece)event.getOldEntry(), null);
             }
         }
@@ -1010,7 +1011,7 @@ public class BoardView extends BComponent
     protected Runnable _arunner = new Runnable() {
         public void run () {
             try {
-//                 log.info("Running: " + _paction);
+//                log.info("Running: " + _paction);
                 if (_paction.execute()) {
 //                     log.info("Waiting: " + _paction);
                     // the action requires us to wait until it completes

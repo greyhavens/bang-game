@@ -226,9 +226,10 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    protected boolean pieceUpdated (Piece opiece, Piece npiece, short tick)
+        protected boolean pieceUpdated (
+            BoardAction action, Piece opiece, Piece npiece, short tick)
     {
-        boolean wait = super.pieceUpdated(opiece, npiece, tick);
+        boolean wait = super.pieceUpdated(action, opiece, npiece, tick);
 
         // update the shadow we use to do path finding and whatnot
         _bangobj.board.updateShadow(opiece, npiece);
@@ -249,6 +250,8 @@ public class BangBoardView extends BoardView
                 // (it might no longer be valid but handleClickToMove will
                 // ignore us in that case
                 if (oaction != null) {
+                    log.info("Reissuing click to move +" +
+                             oaction[1] + "+" + oaction[2]);
                     handleClickToMove(oaction[1], oaction[2]);
                 }
             }
@@ -324,9 +327,11 @@ public class BangBoardView extends BoardView
             }
         }
 
-        if (piece != null) {
-            log.info("Clicked " + piece.info());
-        }
+//         if (piece != null) {
+//             log.info("Clicked " + piece.info());
+//         } else {
+//             log.info("Clicked +" + _high.x + "+" + _high.y);
+//         }
 
         // if we are placing a card, activate it
         if (_card != null) {
@@ -349,10 +354,10 @@ public class BangBoardView extends BoardView
         if (_selection != null) {
             // and we have an attack set
             if (_attackSet.size() > 0) {
-                // if they clicked on a piece, use its coordinates,
-                // otherwise use the coordinates over which the mouse is
-                // hovering
-                int ax = _mouse.x, ay = _mouse.y;
+                // if they clicked on a piece, use its coordinates, otherwise
+                // use the coordinates of the highlight tile over which the
+                // mouse is hovering
+                int ax = _high.x, ay = _high.y;
                 if (piece != null) {
                     ax = piece.x;
                     ay = piece.y;
