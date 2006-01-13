@@ -198,8 +198,8 @@ public class RepairViz extends ParticleEffectViz
                 public void update (float time) {
                     // remove swirl if its lifespan has elapsed
                     if ((_elapsed += time) > GLOW_DURATION) {
-                        pmgr.setActive(false);
                         pmgr.getParticles().removeController(this);
+                        removeParticleManager(pmgr);
                         return;
                         
                     } else if (_elapsed > SWIRL_DURATION) {

@@ -142,8 +142,8 @@ public class ExplosionViz extends ParticleEffectViz
                     
                     // remove streamer if its lifespan has elapsed
                     if ((_age += time) > STREAMER_LIFESPAN) {
-                        pmgr.setActive(false);
                         pmgr.getParticles().removeController(this);
+                        removeParticleManager(pmgr);
                     }
                 }
             });

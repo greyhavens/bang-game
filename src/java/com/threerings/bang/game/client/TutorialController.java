@@ -102,6 +102,9 @@ public class TutorialController
         } else if (action instanceof TutorialConfig.MoveUnit) {
             // nothing to do here
 
+        } else if (action instanceof TutorialConfig.AddBonus) {
+            // nothing to do here
+            
         } else {
             log.warning("Unknown action " + action);
         }

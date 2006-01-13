@@ -42,4 +42,12 @@ public abstract class ParticleEffectViz extends EffectViz
         _view.getPieceNode().attachChild(pmgr.getParticles());
         pmgr.getParticles().setCullMode(Node.CULL_NEVER);
     }
+    
+    /**
+     * Removes a particle manager from the view.
+     */
+    protected void removeParticleManager (ParticleManager pmgr)
+    {
+        _view.getPieceNode().detachChild(pmgr.getParticles());
+    }
 }

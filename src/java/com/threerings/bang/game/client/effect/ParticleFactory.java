@@ -103,7 +103,7 @@ public class ParticleFactory
     
     protected static ParticleManager createDustRing ()
     {
-        ParticleManager manager = new ParticleManager(64);
+        ParticleManager manager = new TransientParticleManager(64);
         manager.setParticlesMinimumLifeTime(500f);
         manager.setInitialVelocity(0.02f);
         manager.setEmissionDirection(Vector3f.UNIT_Z);
@@ -130,7 +130,7 @@ public class ParticleFactory
     
     protected static ParticleManager createFireball ()
     {
-        ParticleManager manager = new ParticleManager(16);
+        ParticleManager manager = new TransientParticleManager(16);
         manager.setParticlesMinimumLifeTime(250f);
         manager.setInitialVelocity(0.004f);
         manager.setEmissionMaximumAngle(FastMath.PI);
@@ -184,7 +184,7 @@ public class ParticleFactory
     
     protected static ParticleManager createSmokePuff ()
     {
-        ParticleManager manager = new ParticleManager(32);
+        ParticleManager manager = new TransientParticleManager(32);
         manager.setParticlesMinimumLifeTime(500f);
         manager.getParticlesOrigin().z += (TILE_SIZE * 0.75f);
         manager.setInitialVelocity(0.01f);
@@ -235,6 +235,24 @@ public class ParticleFactory
         particles.updateRenderState();
         
         return manager;
+    }
+    
+    /** Extends the particle manager class to detach the particles from their
+     * parent when the manager becomes inactive. */
+    protected static class TransientParticleManager extends ParticleManager
+    {
+        public TransientParticleManager (int nparticles)
+        {
+            super(nparticles);
+        }
+        
+        public void update (float secondsPassed)
+        {
+            super.update(secondsPassed);
+            if (!isActive()) {
+                getParticles().getParent().detachChild(getParticles());
+            }
+        }
     }
     
     protected static ArrayList<ParticleManager> _dustRings =
