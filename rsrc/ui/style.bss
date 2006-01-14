@@ -129,20 +129,46 @@ checkbox:selected {
 }
 
 scrollbar_hthumb {
-  background: solid #FFFFFF;
+  background: image "ui/scrollbar/thumb_normal.png" tilexy;
+}
+
+scrollbar_hthumb:down {
+  background: image "ui/scrollbar/thumb_down.png" tilexy;
+}
+
+scrollbar_hthumb:disabled {
+  background: image "ui/scrollbar/thumb_disabled.png" tilexy;
 }
 
 scrollbar_vthumb {
-  background: solid #FFFFFF;
+  background: image "ui/scrollbar/thumb_normal.png" tilexy;
+}
+
+scrollbar_vthumb:down {
+  background: image "ui/scrollbar/thumb_down.png" tilexy;
+}
+
+scrollbar_vthumb:disabled {
+  background: image "ui/scrollbar/thumb_disabled.png" tilexy;
 }
 
 scrollbar_hwell {
-  background: image "textures/button_up.png" tilexy;
+  background: image "ui/scrollbar/well_normal.png" tilexy;
+  padding: 3;
+}
+
+scrollbar_hwell:disabled {
+  background: image "ui/scrollbar/well_disabled.png" tilexy;
   padding: 3;
 }
 
 scrollbar_vwell {
-  background: image "textures/button_up.png" tilexy;
+  background: image "ui/scrollbar/well_normal.png" tilexy;
+  padding: 3;
+}
+
+scrollbar_vwell:disabled {
+  background: image "ui/scrollbar/well_disabled.png" tilexy;
   padding: 3;
 }
 
@@ -151,7 +177,15 @@ scrollbar_hless {
 }
 
 scrollbar_vless {
-  icon: image "textures/scroll_up.png";
+  background: image "ui/scrollbar/top_normal.png" tilexy;
+}
+
+scrollbar_vless:down {
+  background: image "ui/scrollbar/top_down.png" tilexy;
+}
+
+scrollbar_vless:disabled {
+  background: image "ui/scrollbar/top_disabled.png" tilexy;
 }
 
 scrollbar_hmore {
@@ -159,7 +193,15 @@ scrollbar_hmore {
 }
 
 scrollbar_vmore {
-  icon: image "textures/scroll_down.png";
+  background: image "ui/scrollbar/bottom_normal.png" tilexy;
+}
+
+scrollbar_vmore:down {
+  background: image "ui/scrollbar/bottom_down.png" tilexy;
+}
+
+scrollbar_vmore:disabled {
+  background: image "ui/scrollbar/bottom_disabled.png" tilexy;
 }
 
 //
