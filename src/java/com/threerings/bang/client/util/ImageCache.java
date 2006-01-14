@@ -7,8 +7,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import java.io.IOException;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -56,9 +54,9 @@ public class ImageCache
         try {
             bufimg = ImageIO.read(
                 _ctx.getResourceManager().getImageResource(rsrcPath));
-        } catch (IOException ioe) {
+        } catch (Throwable t) {
             log.log(Level.WARNING, "Unable to load image resource " +
-                    "[path=" + rsrcPath + "].", ioe);
+                    "[path=" + rsrcPath + "].", t);
             // cope; return an error image of abitrary size
             bufimg = ImageUtil.createErrorImage(64, 64);
         }
@@ -139,9 +137,9 @@ public class ImageCache
         try {
             image = ImageIO.read(
                 _ctx.getResourceManager().getImageResource(rsrcPath));
-        } catch (IOException ioe) {
+        } catch (Throwable t) {
             log.log(Level.WARNING, "Unable to load image resource " +
-                    "[path=" + rsrcPath + "].", ioe);
+                    "[path=" + rsrcPath + "].", t);
             // cope; return an error image of abitrary size
             image = ImageUtil.createErrorImage(64, 64);
         }
