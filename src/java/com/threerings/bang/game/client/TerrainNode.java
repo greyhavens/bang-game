@@ -50,6 +50,7 @@ import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
+import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.Terrain;
 
@@ -500,23 +501,7 @@ public class TerrainNode extends Node
                 attachChild(_blocks[x][y].node);
             }
         }
-    }
-
-    /**
-     * Performs the second part of initial board creation, which is performed
-     * after the pieces are in place.
-     */
-    public void initBoardTerrain ()
-    {
-        // create shadows automatically for static terrain
-        if (isHeightfieldStatic()) {
-            generateShadows();
-            
-        } else {
-            _sbuf = null;
-        }
-        
-        // refresh the terrain now that the shadow buffer is up-to-date
+        refreshShadows();
         refreshTerrain();
         
         setWorldBound(new BoundingBox());
@@ -597,15 +582,25 @@ public class TerrainNode extends Node
     }
 
     /**
-     * Creates the shadow buffer by casting rays from each heightfield vertex
-     * and sets the vertex colors for the splats based on the smoothed shadow
-     * values.
+     * Refreshes the shadow colors obtained from the board.
+     */
+    public void refreshShadows ()
+    {
+        for (int x = 0; x < _blocks.length; x++) {
+            for (int y = 0; y < _blocks[x].length; y++) {
+                _blocks[x][y].refreshColors();
+            }
+        }
+    }
+    
+    /**
+     * Populates the board's shadow map by finding the height of the shadow
+     * volume above each heightfield vertex.
      */
     public void generateShadows ()
     {
         int hfwidth = _board.getHeightfieldWidth(),
             hfheight = _board.getHeightfieldHeight();
-        _sbuf = new boolean[hfwidth][hfheight];
         
         // make sure terrain collision trees are up-to-date
         for (int x = 0; x < _blocks.length; x++) {
@@ -617,8 +612,10 @@ public class TerrainNode extends Node
         updateGeometricState(0, true);
         
         // generate the shadow buffer
+        byte[] shadows = _board.getShadows();
         float azimuth = _board.getLightAzimuth(0),
-            elevation = _board.getLightElevation(0);
+            elevation = _board.getLightElevation(0),
+            hstep = TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE, theight;
         Vector3f origin = new Vector3f(),
             dir = new Vector3f(FastMath.cos(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(azimuth) * FastMath.cos(elevation),
@@ -628,24 +625,27 @@ public class TerrainNode extends Node
         for (int x = 0; x < hfwidth; x++) {
             for (int y = 0; y < hfheight; y++) {
                 getHeightfieldVertex(x, y, origin);
-                origin.z += 0.001f;
+                theight = origin.z;
                 
-                // intersect with terrain and pieces
-                results.clear();
-                calculatePick(ray, results);
-                _view.getPieceNode().calculatePick(ray, results);
-                _sbuf[x][y] = containTriangles(results);
-            }
-        }
-        
-        // update the colors of the splats
-        for (int x = 0; x < _blocks.length; x++) {
-            for (int y = 0; y < _blocks[x].length; y++) {
-                _blocks[x][y].refreshColors();
+                // use a binary search to find the highest shadowed height
+                int lower = 0, upper = 256, middle = 128;
+                while (middle > lower && middle < upper) {
+                    origin.z = theight + middle * hstep;
+                    results.clear();
+                    calculatePick(ray, results);
+                    _view.getPieceNode().calculatePick(ray, results);
+                    if (containTriangles(results)) {
+                        lower = middle;
+                    } else {
+                        upper = middle;
+                    }
+                    middle = (lower + upper) / 2;
+                }
+                _board.setShadowValue(x, y, middle);
             }
         }
     }
-    
+
     /**
      * Creates and returns a cursor over this terrain.  The cursor must be
      * added to the scene graph before it becomes visible.
@@ -779,7 +779,12 @@ public class TerrainNode extends Node
         for (int i = 0, size = results.getNumber(); i < size; i++) {
             ArrayList tris = results.getPickData(i).getTargetTris();
             if (tris != null && tris.size() > 0) {
-                return true;
+                Object sprite = _view.getSprite(
+                    results.getPickData(i).getTargetMesh());
+                if (sprite == null || (sprite instanceof PieceSprite &&
+                    ((PieceSprite)sprite).castsStaticShadow())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -962,17 +967,13 @@ public class TerrainNode extends Node
      */
     protected float getShadowValue (int x, int y)
     {
-        if (_sbuf == null) {
-            return 0f;
-        }
         float value = 0f, total = 0f;
         for (int sx = x - 1, sxn = x + 1; sx <= sxn; sx++) {
             for (int sy = y - 1, syn = y + 1; sy <= syn; sy++) {
                 float xdist = (x - sx), ydist = (y - sy),
                     weight = Math.max(0f,
                         1f - (xdist*xdist + ydist*ydist)/(1.75f*1.75f));
-                if (sx >= 0 && sy >= 0 && sx < _sbuf.length &&
-                        sy < _sbuf[sx].length && _sbuf[sx][sy]) {
+                if (_board.getShadowValue(sx, sy) > 0) {
                     value += weight;
                 }
                 total += weight;

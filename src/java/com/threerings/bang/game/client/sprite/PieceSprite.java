@@ -115,6 +115,15 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Checks whether this sprite should be considered when casting static
+     * shadows.
+     */
+    public boolean castsStaticShadow ()
+    {
+        return false;
+    }
+    
+    /**
      * Configures this sprite's tile location.
      */
     public void setLocation (int tx, int ty, int elevation)

@@ -71,6 +71,8 @@ public class BoardRecord
         public int waterDiffuseColor, waterAmbientColor;
         public float[] lightAzimuths, lightElevations;
         public int[] lightDiffuseColors, lightAmbientColors;
+        public int skyHorizonColor, skyOverheadColor;
+        public float skyFalloff;
     }
     
     /**
@@ -223,7 +225,8 @@ public class BoardRecord
                     obb.lightElevations[i], obb.lightDiffuseColors[i],
                     obb.lightAmbientColors[i]);
             }
-            _board.setSkyParams(0xFFFFFF, 0x00FFFF, 10f);
+            _board.setSkyParams(obb.skyHorizonColor, obb.skyOverheadColor,
+                obb.skyFalloff);
             */
             _board = (BangBoard)oin.readObject();
             _pieces = new Piece[oin.readInt()];

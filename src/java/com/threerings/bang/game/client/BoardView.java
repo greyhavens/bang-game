@@ -228,9 +228,6 @@ public class BoardView extends BComponent
             createPieceSprite((Piece)iter.next(), _bangobj.tick);
         }
         _pnode.updateGeometricState(0, true);
-
-        // allow the terrain to perform extra initialization using the pieces
-        _tnode.initBoardTerrain();
     }
 
     /**
@@ -410,6 +407,25 @@ public class BoardView extends BComponent
     }
 
     /**
+     * Returns the sprite associated with this spatial or null if the
+     * spatial is not part of a sprite.
+     */
+    public Sprite getSprite (Spatial spatial)
+    {
+        if (spatial instanceof Sprite) {
+            return (Sprite)spatial;
+
+        } else if (_plights.containsKey(spatial)) {
+            return _plights.get(spatial);
+
+        } else if (spatial.getParent() != null) {
+            return getSprite(spatial.getParent());
+        } else {
+            return null;
+        }
+    }
+    
+    /**
      * Returns true if the specified sprite is part of the active view.
      */
     public boolean isManaged (PieceSprite sprite)
@@ -466,7 +482,7 @@ public class BoardView extends BComponent
     {
         executeAction(new PieceUpdatedAction(opiece, npiece, _bangobj.tick));
     }
-
+    
     // documentation inherited from interface MouseMotionListener
     public void mouseMoved (MouseEvent e)
     {
@@ -916,25 +932,6 @@ public class BoardView extends BComponent
         _hnode.detachAllChildren();
         _hnode.updateRenderState();
         _hnode.updateGeometricState(0f, true);
-    }
-
-    /**
-     * Returns the sprite associated with this spatial or null if the
-     * spatial is not part of a sprite.
-     */
-    protected Sprite getSprite (Spatial spatial)
-    {
-        if (spatial instanceof Sprite) {
-            return (Sprite)spatial;
-
-        } else if (_plights.containsKey(spatial)) {
-            return _plights.get(spatial);
-
-        } else if (spatial.getParent() != null) {
-            return getSprite(spatial.getParent());
-        } else {
-            return null;
-        }
     }
 
     /** Used to queue up piece createion so that the piece shows up on the

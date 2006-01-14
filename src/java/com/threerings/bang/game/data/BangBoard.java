@@ -69,7 +69,9 @@ public class BangBoard extends SimpleStreamableObject
         _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
         _heightfield = new byte[_hfwidth * _hfheight];
         _terrain = new byte[_hfwidth * _hfheight];
-
+        _shadows = new byte[_hfwidth * _hfheight];
+        fillShadows(0);
+        
         _waterLevel = (byte)-128;
         _waterDiffuseColor = 0x99CCFF;
         _waterAmbientColor = 0x001A33;
@@ -194,9 +196,7 @@ public class BangBoard extends SimpleStreamableObject
     /** Fills the terrain array with the specified terrain. */
     public void fillTerrain (Terrain terrain)
     {
-        for (int i = 0; i < _terrain.length; i++) {
-            _terrain[i] = (byte)terrain.code;
-        }
+        Arrays.fill(_terrain, (byte)terrain.code);
     }
 
     /** Returns a reference to the terrain array. */
@@ -205,6 +205,37 @@ public class BangBoard extends SimpleStreamableObject
         return _terrain;
     }
 
+    /** Returns the height above terrain of the shadow volume at the specified
+     * sub-tile coordinates. */
+    public int getShadowValue (int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
+            return 0;
+
+        } else {
+            return (int)_shadows[y*_hfwidth + x] + 128;
+        }
+    }
+    
+    /** Sets the height above terrain of the shadow volume at the specified
+     * sub-tile coordinates. */
+    public void setShadowValue (int x, int y, int value)
+    {
+        _shadows[y*_hfwidth + x] = (byte)(value - 128);
+    }
+    
+    /** Fills the shadow array with the specified value. */
+    public void fillShadows (int value)
+    {
+        Arrays.fill(_shadows, (byte)(value - 128));
+    }
+    
+    /** Returns a reference to the shadow map. */
+    public byte[] getShadows ()
+    {
+        return _shadows;
+    }
+    
     /** Returns the level of the water on the board in heightfield units (-128
      * for no water. */
     public byte getWaterLevel ()
@@ -913,6 +944,9 @@ public class BangBoard extends SimpleStreamableObject
     /** The terrain codes for each heightfield vertex. */
     protected byte[] _terrain;
 
+    /** The height of the shadow volume at each heightfield vertex. */
+    protected byte[] _shadows;
+    
     /** The level of the water on the board (-128 for no water). */
     protected byte _waterLevel;
 
