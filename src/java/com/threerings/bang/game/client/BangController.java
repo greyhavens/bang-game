@@ -195,7 +195,7 @@ public class BangController extends GameController
      */
     public void handleSelectNextUnit (Object source)
     {
-        if (_bangobj == null || !_bangobj.inPlay()) {
+        if (_bangobj == null || !_bangobj.isInPlay()) {
             return;
         }
 
