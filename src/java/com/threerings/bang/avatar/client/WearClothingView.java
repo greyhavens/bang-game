@@ -42,8 +42,7 @@ public class WearClothingView extends BContainer
         add(_pick = new PickLookView(ctx), BorderLayout.WEST);
 
         BContainer cont = new BContainer(new BorderLayout(5, 5));
-        _articles = new ArticlePalette(ctx, this);
-        cont.add(new BScrollPane(_articles), BorderLayout.CENTER);
+        cont.add(_articles = new ArticlePalette(ctx, this), BorderLayout.CENTER);
 
         BContainer slotsel = new BContainer(GroupLayout.makeHStretch());
         BButton left = new BButton(BangUI.leftArrow, "down");
@@ -53,7 +52,7 @@ public class WearClothingView extends BContainer
         BButton right = new BButton(BangUI.rightArrow, "up");
         right.addListener(this);
         slotsel.add(right, GroupLayout.FIXED);
-        cont.add(slotsel, BorderLayout.SOUTH);
+        cont.add(slotsel, BorderLayout.NORTH);
 
         add(cont, BorderLayout.CENTER);
 

@@ -37,6 +37,8 @@ public class BarberView extends BWindow
     public BarberView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), GroupLayout.makeHStretch());
+        setStyleClass("main_view");
+
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
 

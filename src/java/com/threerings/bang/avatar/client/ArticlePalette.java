@@ -20,6 +20,7 @@ public class ArticlePalette extends IconPalette
     public ArticlePalette (BangContext ctx, Inspector inspector)
     {
         super(inspector, 2, 3, ItemIcon.ICON_SIZE, 1);
+
         _ctx = ctx;
     }
 
@@ -30,7 +31,7 @@ public class ArticlePalette extends IconPalette
      */
     public void setSlot (String slot)
     {
-        removeAll();
+        clear();
 
         PlayerObject player = _ctx.getUserObject();
         for (Iterator iter = player.inventory.iterator(); iter.hasNext(); ) {
