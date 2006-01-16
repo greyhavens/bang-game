@@ -195,6 +195,10 @@ public class BangController extends GameController
      */
     public void handleSelectNextUnit (Object source)
     {
+        if (_bangobj == null || !_bangobj.inPlay()) {
+            return;
+        }
+
         // determine which units are available for selection
         _selections.clear();
         Piece[] pieces = _bangobj.getPieceArray();
