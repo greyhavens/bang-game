@@ -45,6 +45,7 @@ import com.threerings.jme.sprite.SpriteObserver;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
+import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.Terrain;
@@ -153,6 +154,14 @@ public class MobileSprite extends PieceSprite
     }
 
     @Override // documentation inherited
+    public void init (BasicContext ctx, BoardView view, BangBoard board,
+                      SoundGroup sounds, Piece piece, short tick)
+    {
+        super.init(ctx, view, board, sounds, piece, tick);
+        updateHighlight();
+    }
+    
+    @Override // documentation inherited
     public Spatial getHighlight ()
     {
         return _hnode;
@@ -237,11 +246,14 @@ public class MobileSprite extends PieceSprite
         super.updateWorldData(time);
     }
 
-    @Override // documentation inherited
-    public void snapToTerrain ()
+    /**
+     * Called whenever this sprite is moved to a new point along a path.
+     */
+    public void pathUpdate ()
     {
-        super.snapToTerrain();
+        snapToTerrain();
         updateHighlight();
+        updateShadowValue();
     }
 
     @Override // documentation inherited
@@ -267,7 +279,7 @@ public class MobileSprite extends PieceSprite
 
         // create the dust particle system
         createDustManager(ctx);
-
+        
         // load our model
         _model = ctx.loadModel(_type, _name);
         _model.resolveActions();

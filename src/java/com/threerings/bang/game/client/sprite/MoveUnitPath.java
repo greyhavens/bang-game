@@ -80,7 +80,7 @@ public class MoveUnitPath extends LineSegmentPath
         
         // adjust to the terrain at the current coordinates
         MobileSprite sprite = (MobileSprite)_sprite;
-        sprite.snapToTerrain();
+        sprite.pathUpdate();
         
         _elapsed += time;
         if (_actions != null && _elapsed > _times[_index] &&

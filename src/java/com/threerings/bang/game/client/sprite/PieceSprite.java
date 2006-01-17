@@ -10,8 +10,10 @@ import java.util.List;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.scene.state.MaterialState;
 
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
@@ -87,6 +89,16 @@ public class PieceSprite extends Sprite
         _piece = piece;
         _tick = tick;
 
+        // create and set the material that we will use to change shadow values
+        // (if appropriate)
+        if (isShadowable()) {
+            _mstate = ctx.getRenderer().createMaterialState();
+            _mstate.setDiffuse(new ColorRGBA(ColorRGBA.white));
+            _mstate.setAmbient(ColorRGBA.white);
+            setRenderState(_mstate);
+            updateRenderState();
+        }
+        
         // create our sprite geometry
         createGeometry(ctx);
         setAnimationSpeed(20);
@@ -103,6 +115,7 @@ public class PieceSprite extends Sprite
         // ensure that we do this the first time even if the sprite starts
         // out at zero zero
         updateCollisionTree();
+        updateShadowValue();
     }
 
     /**
@@ -112,15 +125,6 @@ public class PieceSprite extends Sprite
     public Spatial getHighlight ()
     {
         return null;
-    }
-
-    /**
-     * Checks whether this sprite should be considered when casting static
-     * shadows.
-     */
-    public boolean castsStaticShadow ()
-    {
-        return false;
     }
     
     /**
@@ -135,6 +139,7 @@ public class PieceSprite extends Sprite
 //             log.info("Moving to " + tx + ", " + ty + ", " + elevation +
 //                      ": " + _temp);
             updateCollisionTree();
+            updateShadowValue();
         }
     }
 
@@ -182,7 +187,47 @@ public class PieceSprite extends Sprite
         mod.fromAngleAxis(angle, cross);
         setLocalRotation(mod.multLocal(rot));
     }
-
+    
+    /**
+     * Checks whether this sprite should be considered when precomputing static
+     * shadows.
+     */
+    public boolean castsStaticShadow ()
+    {
+        return false;
+    }
+    
+    /**
+     * Checks whether this sprite should be darkened by static shadows.
+     */
+    public boolean isShadowable ()
+    {
+        return true;
+    }
+    
+    /**
+     * Determines how much of this piece lies in shadow and darkens it
+     * accordingly.
+     */
+    public void updateShadowValue ()
+    {
+        if (!isShadowable()) {
+            return;
+        }
+        float sheight = _view.getTerrainNode().getShadowHeight(localTranslation.x,
+            localTranslation.y), diffuse;
+        if (sheight >= localTranslation.z + TILE_SIZE) {
+            diffuse = 0f;
+            
+        } else if (sheight > localTranslation.z) {
+            diffuse = 1f - (sheight - localTranslation.z) / TILE_SIZE;
+            
+        } else {
+            diffuse = 1f;
+        }
+        _mstate.getDiffuse().set(diffuse, diffuse, diffuse, 1f);
+    }
+    
     /**
      * Called when we receive an event indicating that our piece was updated in
      * some way.
@@ -379,6 +424,9 @@ public class PieceSprite extends Sprite
      * that we can properly clear the binding when the sprite is removed. */
     protected Model.Binding _binding;
 
+    /** The material state used to manipulate shadow values. */
+    protected MaterialState _mstate;
+    
     /** The emissions activated by animations. */
     protected HashMap<String, SpriteEmission> _emissions =
         new HashMap<String, SpriteEmission>();

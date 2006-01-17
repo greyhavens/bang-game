@@ -770,7 +770,42 @@ public class TerrainNode extends Node
         return _board.getHeightfieldValue(x, y) *
             (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
     }
+    
+    /**
+     * Computes and returns the interpolated shadow height at the specified
+     * world coordinates.
+     */
+    public float getShadowHeight (float x, float y)
+    {
+        // scale down to sub-tile coordinates
+        float stscale = BangBoard.HEIGHTFIELD_SUBDIVISIONS / TILE_SIZE;
+        x *= stscale;
+        y *= stscale;
 
+        // sample at the four closest points and find the fractional components
+        int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
+            fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
+        float ff = getShadowHeight(fx, fy),
+            fc = getShadowHeight(fx, cy),
+            cf = getShadowHeight(cx, fy),
+            cc = getShadowHeight(cx, cy),
+            ax = x - fx, ay = y - fy;
+
+        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
+            FastMath.LERP(ay, cf, cc));
+    }
+    
+    /**
+     * Returns the scaled height of the shadow volume at the specified sub-tile
+     * coordinates.
+     */
+    protected float getShadowHeight (int x, int y)
+    {
+        return (_board.getHeightfieldValue(x, y) +
+            _board.getShadowValue(x, y)) *
+                (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
+    }
+    
     /**
      * Determines whether the pick results contain any triangles.
      */

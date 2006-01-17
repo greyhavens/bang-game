@@ -35,6 +35,12 @@ public class PropSprite extends PieceSprite
     }
     
     @Override // documentation inherited
+    public boolean isShadowable ()
+    {
+        return false;
+    }
+    
+    @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
 //         // draw a footprint if we're in editor mode
