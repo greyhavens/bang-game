@@ -24,6 +24,7 @@ import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
@@ -95,7 +96,8 @@ public class PieceSprite extends Sprite
             _mstate = ctx.getRenderer().createMaterialState();
             _mstate.setDiffuse(new ColorRGBA(ColorRGBA.white));
             _mstate.setAmbient(ColorRGBA.white);
-            setRenderState(_mstate);
+            setRenderState(RenderUtil.createColorMaterialState(_mstate,
+                false));
             updateRenderState();
         }
         
@@ -226,6 +228,7 @@ public class PieceSprite extends Sprite
             diffuse = 1f;
         }
         _mstate.getDiffuse().set(diffuse, diffuse, diffuse, 1f);
+        updateRenderState();
     }
     
     /**

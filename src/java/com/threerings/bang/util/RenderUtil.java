@@ -15,6 +15,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.lwjgl.opengl.GL11;
+
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
@@ -27,6 +29,7 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
@@ -324,6 +327,27 @@ public class RenderUtil
     {
         return new ColorRGBA(((rgb >> 16) & 0xFF) / 255f, ((rgb >> 8) & 0xFF) / 255f,
             (rgb & 0xFF) / 255f, 1f);
+    }
+    
+    /**
+     * Wraps the given material state inside a new state that enables or
+     * disables OpenGL color materials.
+     */
+    public static MaterialState createColorMaterialState (
+        final MaterialState mstate, final boolean enableColorMaterial)
+    {
+        return new MaterialState() {
+            public void apply () {
+                mstate.apply();
+                if (enableColorMaterial) {
+                    GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+                    GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
+                
+                } else {
+                    GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+                }            
+            }
+        };
     }
     
     protected static final int btoi (byte value)

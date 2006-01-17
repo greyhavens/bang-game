@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
-import org.lwjgl.opengl.GL11;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.intersection.PickData;
@@ -126,17 +124,10 @@ public class BoardView extends BComponent
         _node.setRenderState(_lstate);
 
         // default material
-        final MaterialState mstate = ctx.getRenderer().createMaterialState();
+        MaterialState mstate = ctx.getRenderer().createMaterialState();
         mstate.setAmbient(ColorRGBA.white);
-        _node.setRenderState(new RenderState() {
-            public void apply () {
-                mstate.apply();
-                GL11.glDisable(GL11.GL_COLOR_MATERIAL);
-            }
-            public int getType () {
-                return mstate.getType();
-            }
-        });
+        _node.setRenderState(RenderUtil.createColorMaterialState(mstate,
+            false));
         _node.updateRenderState();
 
         // create the sky
@@ -174,7 +165,7 @@ public class BoardView extends BComponent
         _sounds = ctx.getSoundManager().createGroup(
             BangUI.clipprov, GAME_SOURCE_COUNT);
     }
-
+    
     /**
      * Returns our top-level geometry node.
      */

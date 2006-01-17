@@ -464,18 +464,9 @@ public class TerrainNode extends Node
         // always perform backface culling
         setRenderState(RenderUtil.backCull);
         
-        final MaterialState mstate = ctx.getRenderer().createMaterialState();
+        MaterialState mstate = ctx.getRenderer().createMaterialState();
         mstate.setAmbient(ColorRGBA.white);
-        setRenderState(new RenderState() {
-            public void apply () {
-                mstate.apply();
-                GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-                GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
-            }
-            public int getType () {
-                return mstate.getType();
-            }
-        });
+        setRenderState(RenderUtil.createColorMaterialState(mstate, true));
     }
 
     /**
