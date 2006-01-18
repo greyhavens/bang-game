@@ -477,6 +477,9 @@ public class TerrainNode extends Node
     {
         _board = board;
 
+        // make sure we're unlocked
+        unlock(_ctx.getRenderer());
+        
         // clean up any existing geometry
         detachAllChildren();
 
@@ -500,6 +503,12 @@ public class TerrainNode extends Node
         
         updateRenderState();
         updateGeometricState(0, true);
+        
+        // if the heightfield is static, we can lock the node and have it
+        // compiled to a display list
+        if (isHeightfieldStatic()) {
+            lock(_ctx.getRenderer());
+        }
     }
     
     /**

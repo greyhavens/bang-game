@@ -74,10 +74,14 @@ public class SkyNode extends Node
      */
     public void refreshGradient ()
     {
+        unlockMeshes(_ctx.getRenderer());
+        
         TextureState tstate = _ctx.getRenderer().createTextureState();
         tstate.setTexture(createGradientTexture());
         setRenderState(tstate);
         updateRenderState();
+        
+        lockMeshes(_ctx.getRenderer());
     }
     
     @Override // documentation inherited
@@ -85,6 +89,7 @@ public class SkyNode extends Node
     {
         // match the position of the camera
         worldTranslation.set(renderer.getCamera().getLocation());
+        _dome.updateWorldVectors();
         
         super.draw(renderer);
     }
