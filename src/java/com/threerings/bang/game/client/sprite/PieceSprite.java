@@ -272,6 +272,10 @@ public class PieceSprite extends Sprite
             setLocation(_px, _py, elev);
         }
 
+        if (!_editorMode && !isMoving() && moved) {
+            log.warning("Moved but am not moving?! " + _piece.info());
+        }
+
         // if we started moving as a result, we need to be waited for
         return isMoving();
     }
