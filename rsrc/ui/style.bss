@@ -19,7 +19,7 @@ window {
 }
 
 decoratedwindow {
-  background: image "ui/window_background.png" tilexy;
+//  background: image "ui/window_background.png" tilexy;
   padding: 15;
 }
 
@@ -111,6 +111,7 @@ combobox {
 }
 
 textfield {
+  color: #524129;
   background: image "ui/textfield.png" tilexy;
   padding: 5;
 }
