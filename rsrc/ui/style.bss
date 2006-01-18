@@ -111,12 +111,12 @@ combobox {
 }
 
 textfield {
-  background: solid #00000088;
+  background: image "ui/textfield.png" tilexy;
   padding: 5;
 }
 
 textarea {
-  background: solid #00000088;
+  background: image "ui/textfield.png" tilexy;
   padding: 5;
 }
 
@@ -154,22 +154,20 @@ scrollbar_vthumb:disabled {
 
 scrollbar_hwell {
   background: image "ui/scrollbar/well_normal.png" tilexy;
-  padding: 3;
+  padding: 1 2 1 2;
 }
 
 scrollbar_hwell:disabled {
   background: image "ui/scrollbar/well_disabled.png" tilexy;
-  padding: 3;
 }
 
 scrollbar_vwell {
   background: image "ui/scrollbar/well_normal.png" tilexy;
-  padding: 3;
+  padding: 1 2 1 2;
 }
 
 scrollbar_vwell:disabled {
   background: image "ui/scrollbar/well_disabled.png" tilexy;
-  padding: 3;
 }
 
 scrollbar_hless {
