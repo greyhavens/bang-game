@@ -15,6 +15,11 @@ server_host = game.banghowdy.com
 # server_port = 47624
 
 #
+# The URL to which we submit bug reports
+
+bug_submit_url = http://www.banghowdy.com/hemiptera/submit.xhtml
+
+#
 # Specifies the locale for this deployment. This is used to ensure that the
 # same language specific name handling routines are used on client and server.
 

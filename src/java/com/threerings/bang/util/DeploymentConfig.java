@@ -3,6 +3,9 @@
 
 package com.threerings.bang.util;
 
+import java.net.URL;
+import java.util.logging.Level;
+
 import com.samskivert.util.Config;
 
 import static com.threerings.bang.Log.log;
@@ -64,6 +67,20 @@ public class DeploymentConfig
     public static String getDefaultLocale ()
     {
         return config.getValue("default_locale", "en");
+    }
+
+    /**
+     * Returns the URL to which bug reports should be submitted.
+     */
+    public static URL getBugSubmitURL ()
+    {
+        String url = config.getValue("bug_submit_url", "not_specified");
+        try {
+            return new URL(url);
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to parse bug_submit_url: " + url, e);
+            return null;
+        }
     }
 
     /** Our most recent cached deployment version. */
