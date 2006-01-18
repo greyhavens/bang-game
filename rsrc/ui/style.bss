@@ -154,7 +154,7 @@ scrollbar_vthumb:disabled {
 
 scrollbar_hwell {
   background: image "ui/scrollbar/well_normal.png" tilexy;
-  padding: 1 2 1 2;
+  padding: 2 3 2 3;
 }
 
 scrollbar_hwell:disabled {
@@ -163,7 +163,7 @@ scrollbar_hwell:disabled {
 
 scrollbar_vwell {
   background: image "ui/scrollbar/well_normal.png" tilexy;
-  padding: 1 2 1 2;
+  padding: 2 3 2 3;
 }
 
 scrollbar_vwell:disabled {
