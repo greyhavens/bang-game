@@ -116,7 +116,6 @@ public class PieceSprite extends Sprite
 
         // ensure that we do this the first time even if the sprite starts
         // out at zero zero
-        updateCollisionTree();
         updateShadowValue();
     }
 
@@ -140,7 +139,6 @@ public class PieceSprite extends Sprite
             setLocalTranslation(new Vector3f(_temp));
 //             log.info("Moving to " + tx + ", " + ty + ", " + elevation +
 //                      ": " + _temp);
-            updateCollisionTree();
             updateShadowValue();
         }
     }
@@ -274,10 +272,6 @@ public class PieceSprite extends Sprite
             setLocation(_px, _py, elev);
         }
 
-        if (!isMoving() && moved) {
-            log.warning("Moved but am not moving?! " + _piece.info());
-        }
-
         // if we started moving as a result, we need to be waited for
         return isMoving();
     }
@@ -291,13 +285,6 @@ public class PieceSprite extends Sprite
 //         if (_mgr != null) {
 //             ((SpriteManager)_mgr).removeSprite(this);
 //         }
-    }
-
-    @Override // documentation inherited
-    public void pathCompleted ()
-    {
-        super.pathCompleted();
-        updateCollisionTree();
     }
 
     /**
