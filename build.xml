@@ -234,6 +234,14 @@
              classpath="lib/proguard.jar"/>
     <proguard configuration="etc/bang-client.pro"/>
 
+    <!-- create our configuration jar file -->
+    <jar destfile="pages/client/code/config.jar">
+      <fileset dir=".">
+        <include name="deployment.properties"/>
+        <include name="build.properties"/>
+      </fileset>
+    </jar>
+
     <!-- copy our various bits into the deployment directory -->
     <copy todir="pages/client">
       <fileset dir="projects/installers/${default_locale}">

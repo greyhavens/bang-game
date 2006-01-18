@@ -16,6 +16,7 @@ ui.status = 30, 270, 430, 50
 ui.status_text = 000000
 
 # These all go into the classpath
+code = code/config.jar
 code = code/bang-pcode.jar
 code = code/lwjgl.jar
 code = code/lwjgl_util.jar
