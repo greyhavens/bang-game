@@ -8,6 +8,8 @@ import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 
+import com.threerings.presents.client.Client;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -67,6 +69,24 @@ public class DeploymentConfig
     public static String getDefaultLocale ()
     {
         return config.getValue("default_locale", "en");
+    }
+
+    /**
+     * Returns the hostname of the server to which we should connect when
+     * logging in.
+     */
+    public static String getServerHost ()
+    {
+        return config.getValue("server_host", "localhost");
+    }
+
+    /**
+     * Returns the port on which we should connect to the server.
+     * @see #getServerHost
+     */
+    public static int getServerPort ()
+    {
+        return config.getValue("server_port", Client.DEFAULT_SERVER_PORT);
     }
 
     /**

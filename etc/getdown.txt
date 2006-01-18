@@ -52,9 +52,5 @@ jvmarg = -Dresource_dir=%APPDIR%/rsrc
 # The main Java class
 class = com.threerings.bang.client.BangApp
 
-# Some temporary arguments
-apparg = @server_host@
-apparg = @server_port@
-
 # Special configuration used when we run in editor mode
 editor.class = com.threerings.bang.editor.EditorApp

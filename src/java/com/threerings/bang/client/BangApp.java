@@ -18,15 +18,17 @@ import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.RepeatRecordFilter;
 
-import com.threerings.bang.game.client.GameInputHandler;
-import com.threerings.bang.util.RenderUtil;
-import com.threerings.util.Name;
-
 import com.threerings.presents.client.Client;
 import com.threerings.presents.net.UsernamePasswordCreds;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
+
+import com.threerings.util.Name;
+
+import com.threerings.bang.game.client.GameInputHandler;
+import com.threerings.bang.util.DeploymentConfig;
+import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -70,12 +72,12 @@ public class BangApp extends JmeApp
         // configure our debug log
         configureLog("bang.log");
 
-        String server = "localhost";
+        String server = DeploymentConfig.getServerHost();
         if (args.length > 0) {
             server = args[0];
         }
 
-        int port = Client.DEFAULT_SERVER_PORT;
+        int port = DeploymentConfig.getServerPort();
         if (args.length > 1) {
             try {
                 port = Integer.parseInt(args[1]);
