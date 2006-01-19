@@ -265,7 +265,7 @@ padded_box {
   padding: 5;
 }
 
-main_view {
+shop_view {
   padding: 15;
 }
 
