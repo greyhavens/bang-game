@@ -11,6 +11,8 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.TextEvent;
+import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
@@ -68,14 +70,17 @@ public class FullTransact extends BContainer
         BContainer moffer = GroupLayout.makeHBox(GroupLayout.LEFT);
         moffer.add(new BLabel(BangUI.coinIcon));
         moffer.add(_coins = new BTextField(""));
+        _coins.addListener(_textlist);
         _coins.setPreferredWidth(30);
         moffer.add(new BLabel(_msgs.get("m.for")));
         moffer.add(new BLabel(BangUI.scripIcon));
         moffer.add(_scrip = new BTextField(""));
         _scrip.setPreferredWidth(40);
+        _scrip.addListener(_textlist);
         moffer.add(new BLabel(_msgs.get("m.each")));
         moffer.add(new Spacer(15, 1));
-        moffer.add(new BButton(_msgs.get("m.post"), this, "post"));
+        moffer.add(_post = new BButton(_msgs.get("m.post"), this, "post"));
+        _post.setEnabled(false);
         add(moffer, new Point(0, 178));
 
         add(new BLabel(_msgs.get("m.your_offers"), "bank_title"),
@@ -102,28 +107,24 @@ public class FullTransact extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         if ("post".equals(event.getAction())) {
+            // sanity check
+            if (_ccount <= 0 || _price <= 0) {
+                return;
+            }
+
             BankService.ResultListener cl = new BankService.ResultListener() {
                 public void requestProcessed (Object result) {
-                    _status.setText(_ctx.xlate(BANK_MSGS, "m.offer_posted"));
+                    _status.setText(_msgs.get("m.offer_posted"));
                     _coins.setText("");
                     _scrip.setText("");
                     notePostedOffer((CoinExOfferInfo)result);
                 }
                 public void requestFailed (String reason) {
-                    _status.setText(_ctx.xlate(BANK_MSGS, reason));
+                    _status.setText(_msgs.xlate(reason));
                 }
             };
-
-            try {
-                int coins = Integer.parseInt(_coins.getText());
-                int price = Integer.parseInt(_scrip.getText());
-                _bankobj.service.postOffer(
-                    _ctx.getClient(), coins, price, _buying, false, cl);
-
-            } catch (Exception e) {
-                // TODO: complain properly
-                _status.setText(e.getMessage());
-            }
+            _bankobj.service.postOffer(
+                _ctx.getClient(), _ccount, _price, _buying, false, cl);
 
         } else if ("rescind".equals(event.getAction())) {
             BButton rb = (BButton)event.getSource();
@@ -134,7 +135,7 @@ public class FullTransact extends BContainer
                     clearPostedOffer(offer);
                 }
                 public void requestFailed (String reason) {
-                    _status.setText(_ctx.xlate(BANK_MSGS, reason));
+                    _status.setText(_msgs.xlate(reason));
                 }
             };
             _bankobj.service.cancelOffer(_ctx.getClient(), offer.offerId, cl);
@@ -183,6 +184,27 @@ public class FullTransact extends BContainer
             }
         }
     }
+
+    protected void orderUpdated ()
+    {
+        _post.setEnabled(false);
+        try {
+            _ccount = Integer.parseInt(_coins.getText());
+            _price = Integer.parseInt(_scrip.getText());
+            if (_ccount <= 0 || _price <= 0) {
+                return;
+            }
+            _post.setEnabled(true);
+        } catch (Exception e) {
+            // leave the button disabled
+        }
+    }
+
+    protected TextListener _textlist = new TextListener() {
+        public void textChanged (TextEvent event) {
+            orderUpdated();
+        }
+    };
 
     protected class OfferLabel
     {
@@ -235,7 +257,10 @@ public class FullTransact extends BContainer
     protected boolean _buying;
 
     protected BLabel _status;
-    protected OfferLabel[] _offers;
     protected BTextField _coins, _scrip;
+    protected int _ccount, _price;
+    protected BButton _post;
+
     protected BContainer _myoffers;
+    protected OfferLabel[] _offers;
 }
