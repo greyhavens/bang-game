@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import java.awt.Font;
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -69,9 +70,20 @@ public class BangUI
         _umsgs = _ctx.getMessageManager().getBundle("units");
 
         // load up our fonts
-        _fonts.put("Dom Casual", loadFont(ctx, "ui/fonts/domcasual.pfb"));
         _fonts.put("Tombstone", loadFont(ctx, "ui/fonts/tomb.ttf"));
-        _fonts.put("Old Town", loadFont(ctx, "ui/fonts/oldtown.ttf"));
+
+        // we need to stretch Dom Casual out a bit
+        Font dom = loadFont(ctx, "ui/fonts/domcasual.pfb");
+        dom = dom.deriveFont(
+            Font.PLAIN, AffineTransform.getScaleInstance(1.2, 1));
+        _fonts.put("Dom Casual", dom);
+
+        // we want a normal and wide version of Old Town
+        Font town = loadFont(ctx, "ui/fonts/oldtown.ttf");
+        _fonts.put("Old Town", town);
+        town = town.deriveFont(
+            Font.PLAIN, AffineTransform.getScaleInstance(1.4, 1));
+        _fonts.put("Old Town Wide", town);
 
         COUNTER_FONT = _fonts.get("Tombstone").deriveFont(Font.BOLD, 48);
 

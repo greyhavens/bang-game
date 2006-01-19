@@ -57,6 +57,9 @@ public class GoodsIcon extends SelectableIcon
             for (int ii = 0; ii < zations.length; ii++) {
                 ColorPository.ColorRecord crec =
                     al.getColorPository().getRandomStartingColor(cclasses[ii]);
+                if (crec == null) {
+                    continue;
+                }
                 int cidx = AvatarLogic.getColorIndex(crec.cclass.name);
                 colorIds[cidx] = crec.colorId;
                 zations[ii] = crec.getColorization();

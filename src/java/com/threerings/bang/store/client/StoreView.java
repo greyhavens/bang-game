@@ -13,6 +13,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.store.data.StoreObject;
@@ -29,6 +30,10 @@ public class StoreView extends ShopView
         super(ctx, "store");
 
         _msgs = ctx.getMessageManager().getBundle("store");
+
+        String townId = _ctx.getUserObject().townId;
+        add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
+                       "town_name_label"), new Rectangle(851, 637, 165, 20));
 
         // add our various interface components
         add(new BLabel(_msgs.get("m.intro_tip"), "shop_intro"),

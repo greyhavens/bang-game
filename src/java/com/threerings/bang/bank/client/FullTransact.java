@@ -80,7 +80,7 @@ public class FullTransact extends BContainer
 
         add(new BLabel(_msgs.get("m.your_offers"), "bank_title"),
             new Point(0, 139));
-        _myoffers = new BContainer(new TableLayout(5, 5, 15));
+        _myoffers = new BContainer(new TableLayout(5, 3, 15));
         add(new BScrollPane(_myoffers), new Rectangle(12, 3, 310, 132));
     }
 

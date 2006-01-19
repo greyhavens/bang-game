@@ -227,6 +227,7 @@ dialog_title {
 medium_title {
   font: "Dom Casual" bold 24;
   text-effect: outline;
+  color: #FFFFFF;
   effect-color: #6A482E;
 }
 
@@ -376,6 +377,22 @@ stats_info {
 }
 
 //
+// Shared Shop Styles
+
+shopkeep_name_label {
+  font: "Dom Casual" bold 18;
+  color: #006500;
+  text-align: center;
+}
+
+town_name_label {
+  font: "Old Town Wide" plain 17;
+  color: #442801;
+  text-align: center;
+  border: 1 solid #000000;
+}
+
+//
 // General Store styles
 
 icon_label {
@@ -420,6 +437,29 @@ bank_title {
 bank_post_title {
   font: "Dom Casual" bold 17;
   color: #3b4d3d;
+}
+
+rescind_btn { 
+  color: #FFFFFF;
+  background: image "ui/buttons/secondary_normal.png" tilexy;
+  font: "Dom Casual" plain 16;
+  text-align: center;
+  vertical-align: center;
+  padding: 0 15 1 15;
+}
+rescind_btn:disabled {
+  background: image "ui/buttons/secondary_disabled.png" tilexy;
+}
+rescind_btn:hover {
+  background: image "ui/buttons/secondary_hover.png" tilexy;
+}
+rescind_btn:down {
+  background: image "ui/buttons/secondary_down.png" tilexy;
+  padding: 2 16 0 14;
+}
+rescind_btn:selected {
+  background: image "ui/buttons/secondary_down.png" tilexy;
+  padding: 2 16 0 14;
 }
 
 //
