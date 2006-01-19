@@ -63,7 +63,7 @@ public class QuickTransact extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         // this should never happen but better safe than sorry
-        if (_ccount == -1) {
+        if (_ccount <= 0) {
             return;
         }
 
@@ -99,6 +99,9 @@ public class QuickTransact extends BContainer
 
         try {
             _ccount = Integer.parseInt(_coins.getText());
+            if (_ccount <= 0) {
+                return;
+            }
 
             // make sure we have a best offer
             ConsolidatedOffer best = _buying ?
@@ -121,7 +124,7 @@ public class QuickTransact extends BContainer
             _status.setText("");
 
         } catch (Exception e) {
-            _status.setText(_msgs.get("m.invalid_coins"));
+            // just leave the button disabled
         }
     }
 
