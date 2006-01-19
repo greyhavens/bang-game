@@ -14,6 +14,8 @@ import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.StringUtil;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
@@ -54,6 +56,7 @@ public class QuickTransact extends BContainer
     public void init (BankObject bankobj)
     {
         _bankobj = bankobj;
+        _bankobj.addListener(_updater);
     }
 
     // documentation inherited from interface ActionListener
@@ -73,15 +76,13 @@ public class QuickTransact extends BContainer
 
         BankService.ResultListener rl = new BankService.ResultListener() {
             public void requestProcessed (Object result) {
-                _status.setText(_msgs.get("m.trans_completed"));
                 _coins.setText("");
-                _scrip.setText("0");
+                _status.setText(_msgs.get("m.trans_completed"));
             }
             public void requestFailed (String reason) {
                 _status.setText(_msgs.xlate(reason));
             }
         };
-
         _bankobj.service.postOffer(
             _ctx.getClient(), _ccount, best.price, _buying, true, rl);
     }
@@ -114,7 +115,8 @@ public class QuickTransact extends BContainer
                 return;
             }
 
-            _scrip.setText(String.valueOf(best.price * _ccount));
+            _value = best.price * _ccount;
+            _scrip.setText(String.valueOf(_value));
             _trade.setEnabled(true);
             _status.setText("");
 
@@ -128,7 +130,27 @@ public class QuickTransact extends BContainer
         _scrip.setText("");
         _trade.setEnabled(false);
         _ccount = -1;
+        _value = 0;
     }
+
+    // recompute our immediate trade price if something updates and causes our
+    // data to become out of sync
+    protected AttributeChangeListener _updater = new AttributeChangeListener() {
+        public void attributeChanged (AttributeChangedEvent event) {
+            String name = event.getName();
+            // clear out a pending trade if it becomes invalid
+            if ((_buying && name.equals(BankObject.SELL_OFFERS) ||
+                 !_buying && name.equals(BankObject.BUY_OFFERS)) &&
+                _ccount > 0) {
+                ConsolidatedOffer best = _buying ?
+                    _bankobj.getBestSell() : _bankobj.getBestBuy();
+                if (best == null || best.volume < _ccount ||
+                    best.price * _ccount != _value) {
+                    _coins.setText("");
+                }
+            }
+        }
+    };
 
     protected TextListener _coinlist = new TextListener() {
         public void textChanged (TextEvent event) {
@@ -140,7 +162,7 @@ public class QuickTransact extends BContainer
     protected MessageBundle _msgs;
     protected BankObject _bankobj;
     protected boolean _buying;
-    protected int _ccount;
+    protected int _ccount, _value;
 
     protected BLabel _status;
     protected BTextField _coins;
