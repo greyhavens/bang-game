@@ -7,13 +7,15 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.threerings.util.MessageBundle;
 
@@ -39,28 +41,29 @@ import static com.threerings.bang.Log.log;
 public class FullTransact extends BContainer
     implements ActionListener, BankCodes
 {
-    public FullTransact (BangContext ctx, BTextArea status, boolean buying)
+    public FullTransact (BangContext ctx, BLabel status, boolean buying)
     {
-        super(GroupLayout.makeVStretch());
+        super(new AbsoluteLayout());
         _ctx = ctx;
         _status = status;
         _buying = buying;
         _msgs = ctx.getMessageManager().getBundle(BANK_MSGS);
 
         String msg = buying ? "m.buy" : "m.sell";
-        add(new BLabel(_msgs.get(msg + "_offers")), GroupLayout.FIXED);
+        add(new BLabel(_msgs.get(msg + "_offers"), "bank_title"),
+            new Point(0, 385));
 
         // add slots for the top four offers
-        BContainer offers = new BContainer(new TableLayout(4, 5, 2));
+        BContainer offers = new BContainer(new TableLayout(4, 5, 15));
         _offers = new OfferLabel[BangCodes.COINEX_OFFERS_SHOWN];
         for (int ii = 0; ii < _offers.length; ii++) {
             _offers[ii] = new OfferLabel(offers);
         }
         _offers[0].setNoOffers();
-        add(offers, GroupLayout.FIXED);
-        add(new Spacer(1, 15), GroupLayout.FIXED);
+        add(offers, new Rectangle(12, 245, 310, 135));
 
-        add(new BLabel(_msgs.get(msg + "_post_offer")), GroupLayout.FIXED);
+        add(new BLabel(_msgs.get(msg + "_post_offer"), "bank_post_title"),
+            new Point(0, 212));
 
         BContainer moffer = GroupLayout.makeHBox(GroupLayout.LEFT);
         moffer.add(new BLabel(BangUI.coinIcon));
@@ -73,12 +76,12 @@ public class FullTransact extends BContainer
         moffer.add(new BLabel(_msgs.get("m.each")));
         moffer.add(new Spacer(15, 1));
         moffer.add(new BButton(_msgs.get("m.post"), this, "post"));
-        add(moffer, GroupLayout.FIXED);
-        add(new Spacer(1, 15), GroupLayout.FIXED);
+        add(moffer, new Point(0, 178));
 
-        add(new BLabel(_msgs.get("m.your_offers")), GroupLayout.FIXED);
+        add(new BLabel(_msgs.get("m.your_offers"), "bank_title"),
+            new Point(0, 139));
         _myoffers = new BContainer(new TableLayout(5, 5, 15));
-        add(new BScrollPane(_myoffers));
+        add(new BScrollPane(_myoffers), new Rectangle(12, 3, 310, 132));
     }
 
     public void init (BankObject bankobj)
@@ -160,6 +163,7 @@ public class FullTransact extends BContainer
         OfferLabel mine = new OfferLabel(_myoffers);
         mine.setOffer(offer.volume, offer.price);
         BButton rescind = new BButton(_msgs.get("m.rescind"), this, "rescind");
+        rescind.setStyleClass("rescind_btn");
         rescind.setProperty("offer", offer);
         _myoffers.add(rescind);
     }
@@ -230,7 +234,7 @@ public class FullTransact extends BContainer
     protected BankObject _bankobj;
     protected boolean _buying;
 
-    protected BTextArea _status;
+    protected BLabel _status;
     protected OfferLabel[] _offers;
     protected BTextField _coins, _scrip;
     protected BContainer _myoffers;

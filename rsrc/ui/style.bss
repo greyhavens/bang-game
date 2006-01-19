@@ -19,7 +19,7 @@ window {
 }
 
 decoratedwindow {
-//  background: image "ui/window_background.png" tilexy;
+  background: image "ui/window_background.png" tilexy;
   padding: 15;
 }
 
@@ -39,7 +39,15 @@ component {
 component:disabled {
 }
 
+container {
+//  border: 1 solid #FFFFFF;
+}
+
+label {
+}
+
 button {
+  color: #FFFFFF;
   background: image "ui/buttons/small_normal.png" tilexy;
   font: "Old Town" plain 24;
   text-align: center;
@@ -62,6 +70,7 @@ button:selected {
 }
 
 big_button {
+  color: #FFFFFF;
   background: image "ui/buttons/big_normal.png" tilexy;
   font: "Old Town" plain 24;
   text-align: center;
@@ -266,7 +275,7 @@ padded_box {
 }
 
 shop_view {
-  padding: 15;
+  color: #3E1B00;
 }
 
 shop_intro {
@@ -278,6 +287,7 @@ shop_intro {
 }
 
 money_label {
+  color: #FFFFFF;
   font: "Helvetica" plain 15;
   text-align: center;
 }
@@ -395,6 +405,22 @@ goods_descrip {
 
 //
 // Bank styles
+
+bank_status {
+  font: "Helvetica" plain 15;
+  color: #D5B586;
+  text-align: center;
+}
+
+bank_title {
+  font: "Dom Casual" bold 17;
+  color: #927C17;
+}
+
+bank_post_title {
+  font: "Dom Casual" bold 17;
+  color: #3b4d3d;
+}
 
 //
 // Saloon styles

@@ -6,7 +6,6 @@ package com.threerings.bang.bank.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
@@ -27,7 +26,7 @@ import com.threerings.bang.bank.data.BankObject;
 public class QuickTransact extends BContainer
     implements ActionListener, BankCodes
 {
-    public QuickTransact (BangContext ctx, BTextArea status, boolean buying)
+    public QuickTransact (BangContext ctx, BLabel status, boolean buying)
     {
         super(GroupLayout.makeHoriz(GroupLayout.LEFT));
         _ctx = ctx;
@@ -89,7 +88,7 @@ public class QuickTransact extends BContainer
     protected BankObject _bankobj;
     protected boolean _buying;
 
-    protected BTextArea _status;
+    protected BLabel _status;
     protected BTextField _coins;
     protected BLabel _scrip;
 }

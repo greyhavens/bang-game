@@ -5,7 +5,6 @@ package com.threerings.bang.bank.client;
 
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.util.Rectangle;
 import com.jmex.bui.util.Point;
 
@@ -34,23 +33,24 @@ public class BankView extends ShopView
     {
         super(ctx, "bank");
 
-        _status = new BTextArea();
-        _status.setText(_ctx.xlate(BANK_MSGS, "m.welcome"));
-        _status.setStyleClass("dialog_title");
-        add(_status, new Rectangle(400, 25, 200, 5));
+        add(new BLabel(_ctx.xlate(BANK_MSGS, "m.welcome"), "bank_status"),
+            new Rectangle(200, 655, 625, 40));
+
+        _status = new BLabel("", "bank_status");
+        add(_status, new Rectangle(265, 10, 600, 40));
 
         add(_qsell = new QuickTransact(ctx, _status, false),
-            new Rectangle(300, 30, 200, 500));
+            new Rectangle(225, 555, 320, 30));
         add(_qbuy = new QuickTransact(ctx, _status, true),
-            new Rectangle(300, 30, 525, 500));
+            new Rectangle(620, 555, 320, 30));
 
         add(_fsell = new FullTransact(ctx, _status, false),
-            new Rectangle(300, 500, 525, 100));
+            new Rectangle(225, 85, 330, 410));
         add(_fbuy = new FullTransact(ctx, _status, true),
-            new Rectangle(300, 500, 525, 500));
+            new Rectangle(630, 85, 330, 410));
 
-        add(new WalletLabel(ctx, false), new Rectangle(40, 78, 150, 40));
-        add(new TownButton(ctx), new Point(650, 15));
+        add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
+        add(new TownButton(ctx), new Point(880, 20));
     }
 
     // documentation inherited from interface PlaceView
@@ -82,7 +82,7 @@ public class BankView extends ShopView
     {
     }
 
-    protected BTextArea _status;
+    protected BLabel _status;
     protected QuickTransact _qbuy, _qsell;
     protected FullTransact _fbuy, _fsell;
 }
