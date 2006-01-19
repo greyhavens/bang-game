@@ -32,6 +32,7 @@ import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Controller;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
+import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.LightState;
@@ -139,7 +140,7 @@ public class Model
     {
         /** The name of this animation. */
         public String action;
-
+        
         /** The number of frames in this animation. */
         public int frames;
 
@@ -220,14 +221,7 @@ public class Model
 
             Node[] nodes = new Node[_parts.length + emitters.length];
             for (int ii = 0; ii < _parts.length; ii++) {
-                nodes[ii] = (Node)_parts[ii].creator.createCopy();
-                // select a random texture state
-                if (_parts[ii].tstates != null) {
-                    TextureState tstate =
-                        _parts[ii].tstates[random % _parts[ii].tstates.length];
-                    nodes[ii].setRenderState(tstate);
-                    nodes[ii].updateRenderState();
-                }
+                nodes[ii] = _parts[ii].createInstance(random);
             }
             for (int ii = 0; ii < emitters.length; ii++) {
                 int idx = _parts.length + ii;
@@ -238,7 +232,7 @@ public class Model
             }
             return nodes;
         }
-
+        
         /**
          * Configures this animation with its underlying meshes.
          */
@@ -441,6 +435,8 @@ public class Model
     public void resolveAction (final BasicContext ctx, String action)
     {
         final Animation anim = _anims.get(action);
+        boolean isStatic = _props.getProperty(
+            anim.action + ".static", "false").equalsIgnoreCase("true");
         anim.frames = BangUtil.getIntProperty(
             _key, _props, anim.action + ".frames", 8);
         anim.duration = BangUtil.getIntProperty(
@@ -478,6 +474,9 @@ public class Model
             // select at random
             String[] tnames =
                 getList(_props, mesh + ".texture", "texture", false);
+            if (isStatic) {
+                part.targets = new Node[Math.max(tnames.length, 1)];
+            }
             if (tnames.length == 0) {
                 continue;
             }
@@ -739,6 +738,52 @@ public class Model
 
         /** A list of texture states from which to select randomly. */
         public TextureState[] tstates;
+        
+        /** For static parts, contains a {@link Node} for each texture state
+         * to use as a {@link SharedNode} target. */
+        public Node[] targets;
+        
+        /**
+         * Creates either a copy of the original part node or a
+         * {@link SharedNode} reference to a locked target, depending on
+         * whether or not the part is static.
+         *
+         * @param random a random number used to determine which texture to
+         * use
+         */
+        public Node createInstance (int random)
+        {
+            if (targets != null) {
+                int idx = random % targets.length;
+                if (targets[idx] == null) {
+                    targets[idx] = createCopy(random);
+                    targets[idx].lockBounds();
+                    targets[idx].lockMeshes();
+                    
+                    // this is a workaround for a bug in JME--we wouldn't
+                    // normally create a SharedNode of a SharedNode
+                    targets[idx] = new SharedNode("shared", targets[idx]);
+                }
+                return new SharedNode("shared", targets[idx]);
+                
+            } else {
+                return createCopy(random);
+            }
+        }
+        
+        /**
+         * Creates a copy of the original part node with the texture state
+         * derived from the supplied random number.
+         */
+        protected Node createCopy (int random)
+        {
+            Node copy = (Node)creator.createCopy();
+            if (tstates != null) {
+                copy.setRenderState(tstates[random % tstates.length]);
+                copy.updateRenderState();
+            }
+            return copy;
+        }
     }
 
     protected String _key;
