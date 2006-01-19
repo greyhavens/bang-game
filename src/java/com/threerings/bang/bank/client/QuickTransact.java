@@ -7,10 +7,14 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
-import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.TextEvent;
+import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.GroupLayout;
+
+import com.samskivert.util.StringUtil;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.ConsolidatedOffer;
@@ -28,34 +32,38 @@ public class QuickTransact extends BContainer
 {
     public QuickTransact (BangContext ctx, BLabel status, boolean buying)
     {
-        super(GroupLayout.makeHoriz(GroupLayout.LEFT));
+        super(GroupLayout.makeHStretch());
         _ctx = ctx;
         _status = status;
         _buying = buying;
+        _msgs = ctx.getMessageManager().getBundle(BANK_MSGS);
 
         String msg = buying ? "m.buy" : "m.sell";
-        add(new BLabel(_ctx.xlate(BANK_MSGS, msg)));
-        add(new BLabel(BangUI.coinIcon));
-        add(_coins = new BTextField());
+        add(new BLabel(_msgs.get(msg)), GroupLayout.FIXED);
+        add(new BLabel(BangUI.coinIcon), GroupLayout.FIXED);
+        add(_coins = new BTextField(), GroupLayout.FIXED);
         _coins.setPreferredWidth(30);
-        add(new BLabel(_ctx.xlate(BANK_MSGS, "m.for")));
+        _coins.addListener(_coinlist);
+        add(new BLabel(_msgs.get("m.for")), GroupLayout.FIXED);
         add(_scrip = new BLabel(BangUI.scripIcon));
-        _scrip.setText("0");
-        add(new Spacer(15, 1));
-        add(new BButton(_ctx.xlate(BANK_MSGS, msg), this, "go"));
+        _scrip.setIconTextGap(5);
+        add(_trade = new BButton(_msgs.get(msg), this, "go"), GroupLayout.FIXED);
+        _trade.setEnabled(false);
     }
 
     public void init (BankObject bankobj)
     {
         _bankobj = bankobj;
-
-        // TODO: add a listener that keeps _scrip up to date and disables our
-        // action button if it is not possible to execute an immediate trade
     }
 
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
+        // this should never happen but better safe than sorry
+        if (_ccount == -1) {
+            return;
+        }
+
         // determine the best offer price
         ConsolidatedOffer best = _buying ?
             _bankobj.getBestSell() : _bankobj.getBestBuy();
@@ -65,30 +73,77 @@ public class QuickTransact extends BContainer
 
         BankService.ResultListener rl = new BankService.ResultListener() {
             public void requestProcessed (Object result) {
-                _status.setText(_ctx.xlate(BANK_MSGS, "m.trans_completed"));
+                _status.setText(_msgs.get("m.trans_completed"));
                 _coins.setText("");
                 _scrip.setText("0");
             }
             public void requestFailed (String reason) {
-                _status.setText(_ctx.xlate(BANK_MSGS, reason));
+                _status.setText(_msgs.xlate(reason));
             }
         };
 
+        _bankobj.service.postOffer(
+            _ctx.getClient(), _ccount, best.price, _buying, true, rl);
+    }
+
+    protected void coinsUpdated ()
+    {
+        // clear out the trade and only enable it if all is well
+        clearTrade();
+
+        if (StringUtil.isBlank(_coins.getText())) {
+            _status.setText("");
+            return;
+        }
+
         try {
-            int coins = Integer.valueOf(_coins.getText());
-            _bankobj.service.postOffer(_ctx.getClient(), coins, best.price,
-                                       _buying, true, rl);
+            _ccount = Integer.parseInt(_coins.getText());
+
+            // make sure we have a best offer
+            ConsolidatedOffer best = _buying ?
+                _bankobj.getBestSell() : _bankobj.getBestBuy();
+            if (best == null) {
+                _status.setText(_msgs.get("m.no_offers"));
+                return;
+            }
+
+            if (_ccount > best.volume) {
+                String msg = MessageBundle.tcompose(
+                    "m.exceeds_best_offer", _msgs.get("m.coins", best.volume));
+                _status.setText(_msgs.xlate(msg));
+                return;
+            }
+
+            _scrip.setText(String.valueOf(best.price * _ccount));
+            _trade.setEnabled(true);
+            _status.setText("");
+
         } catch (Exception e) {
-            // TODO: make BTextField support input restriction
-            _status.setText(_ctx.xlate(BANK_MSGS, "m.invalid_coins"));
+            _status.setText(_msgs.get("m.invalid_coins"));
         }
     }
 
+    protected void clearTrade ()
+    {
+        _scrip.setText("");
+        _trade.setEnabled(false);
+        _ccount = -1;
+    }
+
+    protected TextListener _coinlist = new TextListener() {
+        public void textChanged (TextEvent event) {
+            coinsUpdated();
+        }
+    };
+
     protected BangContext _ctx;
+    protected MessageBundle _msgs;
     protected BankObject _bankobj;
     protected boolean _buying;
+    protected int _ccount;
 
     protected BLabel _status;
     protected BTextField _coins;
     protected BLabel _scrip;
+    protected BButton _trade;
 }
