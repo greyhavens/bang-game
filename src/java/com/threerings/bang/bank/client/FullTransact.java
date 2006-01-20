@@ -164,7 +164,7 @@ public class FullTransact extends BContainer
         OfferLabel mine = new OfferLabel(_myoffers);
         mine.setOffer(offer.volume, offer.price);
         BButton rescind = new BButton(_msgs.get("m.rescind"), this, "rescind");
-        rescind.setStyleClass("rescind_btn");
+        rescind.setStyleClass("alt_button");
         rescind.setProperty("offer", offer);
         _myoffers.add(rescind);
     }

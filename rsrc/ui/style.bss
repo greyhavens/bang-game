@@ -56,6 +56,7 @@ button {
 }
 button:disabled {
   background: image "ui/buttons/small_disabled.png" tilexy;
+  color: #FFFFFF4C;
 }
 button:hover {
   background: image "ui/buttons/small_hover.png" tilexy;
@@ -79,6 +80,7 @@ big_button {
 }
 big_button:disabled {
   background: image "ui/buttons/big_disabled.png" tilexy;
+  color: #FFFFFF4C;
 }
 big_button:hover {
   background: image "ui/buttons/big_hover.png" tilexy;
@@ -86,6 +88,30 @@ big_button:hover {
 big_button:down {
   background: image "ui/buttons/big_down.png" tilexy;
   padding: 2 26 0 24;
+}
+
+alt_button {
+  color: #FFFFFF;
+  background: image "ui/buttons/secondary_normal.png" tilexy;
+  font: "Dom Casual" plain 16;
+  text-align: center;
+  vertical-align: center;
+  padding: 0 15 1 15;
+}
+alt_button:disabled {
+  background: image "ui/buttons/secondary_disabled.png" tilexy;
+  color: #FFFFFF4C;
+}
+alt_button:hover {
+  background: image "ui/buttons/secondary_hover.png" tilexy;
+}
+alt_button:down {
+  background: image "ui/buttons/secondary_down.png" tilexy;
+  padding: 2 16 0 14;
+}
+alt_button:selected {
+  background: image "ui/buttons/secondary_down.png" tilexy;
+  padding: 2 16 0 14;
 }
 
 fwd_button {
@@ -437,29 +463,6 @@ bank_title {
 bank_post_title {
   font: "Dom Casual" bold 17;
   color: #3b4d3d;
-}
-
-rescind_btn { 
-  color: #FFFFFF;
-  background: image "ui/buttons/secondary_normal.png" tilexy;
-  font: "Dom Casual" plain 16;
-  text-align: center;
-  vertical-align: center;
-  padding: 0 15 1 15;
-}
-rescind_btn:disabled {
-  background: image "ui/buttons/secondary_disabled.png" tilexy;
-}
-rescind_btn:hover {
-  background: image "ui/buttons/secondary_hover.png" tilexy;
-}
-rescind_btn:down {
-  background: image "ui/buttons/secondary_down.png" tilexy;
-  padding: 2 16 0 14;
-}
-rescind_btn:selected {
-  background: image "ui/buttons/secondary_down.png" tilexy;
-  padding: 2 16 0 14;
 }
 
 //

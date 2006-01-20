@@ -32,19 +32,19 @@ public class BankView extends ShopView
 {
     public BankView (BangContext ctx)
     {
-        super(ctx, "bank");
+        super(ctx, BANK_MSGS);
 
-        add(new BLabel(_ctx.xlate(BANK_MSGS, "m.welcome"), "bank_status"),
+        add(new BLabel(_msgs.get("m.welcome"), "bank_status"),
             new Rectangle(200, 655, 625, 40));
 
         String townId = _ctx.getUserObject().townId;
-        add(new BLabel(_ctx.xlate(BANK_MSGS, "m.name_" + townId),
-                       "shopkeep_name_label"), new Rectangle(25, 513, 125, 25));
+        add(new BLabel(_msgs.get("m.name_" + townId), "shopkeep_name_label"),
+            new Rectangle(25, 513, 125, 25));
         add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
                        "town_name_label"), new Rectangle(851, 637, 165, 20));
         
         _status = new BLabel("", "bank_status");
-        add(_status, new Rectangle(265, 10, 600, 40));
+        add(_status, new Rectangle(265, 10, 500, 40));
 
         add(_qsell = new QuickTransact(ctx, _status, false),
             new Rectangle(225, 555, 320, 30));
@@ -57,6 +57,7 @@ public class BankView extends ShopView
             new Rectangle(630, 85, 330, 410));
 
         add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
+        add(createHelpButton(), new Point(790, 20));
         add(new TownButton(ctx), new Point(880, 20));
     }
 

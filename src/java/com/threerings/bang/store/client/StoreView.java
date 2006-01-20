@@ -8,7 +8,6 @@ import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
@@ -28,8 +27,6 @@ public class StoreView extends ShopView
     public StoreView (BangContext ctx)
     {
         super(ctx, "store");
-
-        _msgs = ctx.getMessageManager().getBundle("store");
 
         String townId = _ctx.getUserObject().townId;
         add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
@@ -67,7 +64,6 @@ public class StoreView extends ShopView
         _goods.reinitGoods(false);
     }
 
-    protected MessageBundle _msgs;
     protected GoodsPalette _goods;
     protected GoodsInspector _inspector;
 }
