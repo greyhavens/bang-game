@@ -457,12 +457,12 @@ bank_status {
 
 bank_title {
   font: "Dom Casual" bold 17;
-  color: #927C17;
+  color: #897301;
 }
 
 bank_post_title {
   font: "Dom Casual" bold 17;
-  color: #3b4d3d;
+  color: #414D36;
 }
 
 //
