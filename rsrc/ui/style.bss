@@ -148,6 +148,17 @@ back_button:down {
   background: image "ui/buttons/back_down.png" tilexy;
 }
 
+invisibutton {
+}
+invisibutton:disabled {
+}
+invisibutton:hover {
+}
+invisibutton:down {
+}
+invisibutton:selected {
+}
+
 combobox {
   background: image "ui/combobox/normal.png" tilexy;
   padding: 5 22 5 10;
