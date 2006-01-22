@@ -174,8 +174,7 @@ public class IconPalette extends BContainer
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        clearSelections();
-        removeAll();
+        clear();
     }
 
     protected void displayPage (int page)

@@ -54,6 +54,14 @@ public class HackyTabs extends BComponent
     }
 
     @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        // clear this so that we properly reselect tab zero if we're readded
+        _selidx = -1;
+    }
+
+    @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
         super.renderComponent(renderer);

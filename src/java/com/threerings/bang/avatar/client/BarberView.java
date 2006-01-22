@@ -3,9 +3,17 @@
 
 package com.threerings.bang.avatar.client;
 
+import com.jme.image.Image;
+import com.jme.renderer.Renderer;
+
+import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
+import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.crowd.data.PlaceObject;
 
@@ -42,7 +50,17 @@ public class BarberView extends ShopView
         _wearclothes = new WearClothingView(ctx, _status);
 
         // start with the new look view "selected"
-        add(_newlook, CONTENT_RECT);
+        add(_active = _newlook, CONTENT_RECT);
+
+        // do our hacky fake tab business
+        _faketab = _ctx.loadImage("ui/barber/top_change_clothes.png");
+        BButton btn;
+        add(btn = new BButton("", _selector, "newlook"),
+            new Rectangle(193, 621, 245, 30));
+        btn.setStyleClass("invisibutton");
+        add(btn = new BButton("", _selector, "change"),
+            new Rectangle(450, 621, 235, 30));
+        btn.setStyleClass("invisibutton");
 
         add(new WalletLabel(ctx, true), new Rectangle(40, 37, 150, 35));
         add(createHelpButton(), new Point(745, 25));
@@ -59,10 +77,35 @@ public class BarberView extends ShopView
         _wearclothes.setBarberObject(barbobj);
     }
 
+    @Override // documentation inherited
+    protected void renderComponent (Renderer renderer)
+    {
+        super.renderComponent(renderer);
+
+        // hackity hack hack hack
+        if (_active == _wearclothes) {
+            RenderUtil.renderImage(_faketab, 179, 598);
+        }
+    }
+
+    protected ActionListener _selector = new ActionListener() {
+        public void actionPerformed (ActionEvent event) {
+            if (event.getAction().equals("newlook")) {
+                remove(_active);
+                add(_active = _newlook, CONTENT_RECT);
+            } else {
+                remove(_active);
+                add(_active = _wearclothes, CONTENT_RECT);
+            }
+        }
+    };
+
     protected AvatarView _avatar;
+    protected BComponent _active;
     protected StatusLabel _status;
     protected NewLookView _newlook;
     protected WearClothingView _wearclothes;
+    protected Image _faketab;
 
     protected static Rectangle CONTENT_RECT = new Rectangle(40, 65, 980, 545);
 }
