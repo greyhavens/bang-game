@@ -15,7 +15,7 @@ CREATE TABLE LOOKS
     PLAYER_ID INTEGER NOT NULL,
 
     /** The name given to this look by the player. */
-    NAME VARCHAR(48) NOT NULL,
+    NAME VARCHAR(24) NOT NULL,
 
     /** The array of integers representing the avatar's aspects. */
     ASPECTS BLOB NOT NULL,

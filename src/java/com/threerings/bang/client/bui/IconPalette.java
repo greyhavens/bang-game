@@ -105,6 +105,14 @@ public class IconPalette extends BContainer
     }
 
     /**
+     * Configures the inspector for this palette.
+     */
+    public void setInspector (Inspector inspector)
+    {
+        _inspector = inspector;
+    }
+
+    /**
      * Clears all icons from this palette.
      */
     public void clear ()
@@ -220,7 +228,8 @@ public class IconPalette extends BContainer
         }
     };
 
-    protected ArrayList<SelectableIcon> _icons = new ArrayList<SelectableIcon>();
+    protected ArrayList<SelectableIcon> _icons =
+        new ArrayList<SelectableIcon>();
     protected int _rows, _cols, _page;
 
     protected BContainer _icont;

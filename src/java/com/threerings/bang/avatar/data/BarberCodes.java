@@ -14,5 +14,5 @@ public interface BarberCodes extends InvocationCodes
     public static final String BARBER_MSGS = "barber";
 
     /** The maximum length of a "look" name. */
-    public static final int MAX_LOOK_NAME_LENGTH = 48;
+    public static final int MAX_LOOK_NAME_LENGTH = 24;
 }

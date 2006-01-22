@@ -8,7 +8,6 @@ import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -19,6 +18,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.util.BangContext;
 
@@ -33,7 +33,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 public class WearClothingView extends BContainer
     implements ActionListener, ArticlePalette.Inspector
 {
-    public WearClothingView (BangContext ctx, BTextArea status)
+    public WearClothingView (BangContext ctx, StatusLabel status)
     {
         super(new BorderLayout(5, 5));
         _ctx = ctx;
@@ -42,7 +42,8 @@ public class WearClothingView extends BContainer
         add(_pick = new PickLookView(ctx), BorderLayout.WEST);
 
         BContainer cont = new BContainer(new BorderLayout(5, 5));
-        cont.add(_articles = new ArticlePalette(ctx, this), BorderLayout.CENTER);
+        cont.add(_articles = new ArticlePalette(ctx, this),
+                 BorderLayout.CENTER);
 
         BContainer slotsel = new BContainer(GroupLayout.makeHStretch());
         BButton left = new BButton(BangUI.leftArrow, "down");

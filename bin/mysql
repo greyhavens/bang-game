@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# $Id$
+#
+# A script for invoking mysql
+
+USAGE="Usage: $0 [--slave]"
+ROOT=`dirname $0 | sed s:/bin::`
+
+CONFIG=$ROOT/server.conf
+if [ -f $CONFIG ]; then
+    . $CONFIG
+else
+    echo "No $CONFIG could be found."
+    exit -1
+fi
+
+WHICH=master
+if [ "$1" = "--slave" ]; then
+    shift
+    WHICH=slave
+fi
+
+MYSQLARGS="-u $DBUSER -p$DBPASSWD"
+MYSOCK=/var/run/mysqld/threerings-mysqld.sock
+if [ -f $ROOT/etc/mysql-$WHICH.cnf -a -r $MYSOCK ]; then
+    mysql --defaults-file=$ROOT/etc/mysql-$WHICH.cnf $MYSQLARGS "$@"
+else
+    mysql $MYSQLARGS "$@"
+fi

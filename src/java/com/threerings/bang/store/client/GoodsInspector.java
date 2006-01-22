@@ -62,7 +62,8 @@ public class GoodsInspector extends BContainer
         add(ccont, new Rectangle(200, 15, 200, 25));
 
         BButton buy;
-        add(buy = new BButton(_ctx.xlate("store", "m.buy")), new Point(400, 10));
+        add(buy = new BButton(_ctx.xlate("store", "m.buy")),
+            new Point(400, 10));
         buy.setStyleClass("big_button");
         buy.addListener(this);
     }
@@ -116,9 +117,9 @@ public class GoodsInspector extends BContainer
                 // primary, secondary and tertiary colors have to go into the
                 // appropriate index
                 int index = AvatarLogic.getColorIndex(cclass);
-                ColorSelector colorsel = new ColorSelector(_ctx, cclass);
+                ColorSelector colorsel =
+                    new ColorSelector(_ctx, cclass, _colorpal);
                 colorsel.setSelectedColorId(colorIds[index]);
-                colorsel.addListener(_colorpal);
                 colorsel.setProperty("index", Integer.valueOf(index));
                 add(_colorsel[index] = colorsel, CS_SPOTS[index]);
                 _args[index] = Integer.valueOf(colorsel.getSelectedColor());

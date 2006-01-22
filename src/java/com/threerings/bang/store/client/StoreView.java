@@ -12,7 +12,6 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.store.data.StoreObject;
@@ -28,12 +27,8 @@ public class StoreView extends ShopView
     {
         super(ctx, "store");
 
-        String townId = _ctx.getUserObject().townId;
-        add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
-                       "town_name_label"), new Rectangle(851, 637, 165, 20));
-
         // add our various interface components
-        add(new BLabel(_msgs.get("m.intro_tip"), "shop_intro"),
+        add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
             new Rectangle(232, 640, 570, 35));
 
         add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 40));
@@ -45,6 +40,7 @@ public class StoreView extends ShopView
             new Rectangle(181, 140, 817, 495));
 
         add(new GoodsTabs(ctx, _goods), new Rectangle(48, 167, 133, 360));
+        add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
     }
 

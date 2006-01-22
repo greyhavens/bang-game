@@ -76,8 +76,8 @@ public class AvatarLogic
         new Aspect("eyebrows", new String[] { "eyebrows" }, false, false),
         new Aspect("eyes", new String[] { "eyes" }, false, false),
         new Aspect("nose", new String[] { "nose" }, false, false),
-        new Aspect("mustache", new String[] { "mustache" }, true, true),
         new Aspect("mouth", new String[] { "mouth" }, false, false),
+        new Aspect("mustache", new String[] { "mustache" }, true, true),
         new Aspect("beard", new String[] { "beard", "beard_back" }, true, true),
     };
 

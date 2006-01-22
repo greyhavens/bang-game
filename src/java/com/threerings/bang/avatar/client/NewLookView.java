@@ -8,18 +8,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.jme.image.Image;
+import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
-import com.jmex.bui.BConstants;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
-import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Insets;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
+import com.jmex.bui.util.RenderUtil;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.StringUtil;
@@ -32,6 +36,11 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
+import com.threerings.bang.client.bui.HackyTabs;
+import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.ItemIcon;
+import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -50,37 +59,85 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 public class NewLookView extends BContainer
     implements ActionListener
 {
-    public NewLookView (BangContext ctx, BTextArea status, boolean firstLook)
+    public NewLookView (BangContext ctx, StatusLabel status)
     {
-        super(new BorderLayout(5, 5));
+        super(new AbsoluteLayout());
+
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(BarberCodes.BARBER_MSGS);
-        _firstLook = firstLook;
         _status = status;
 
-        add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
+        add(_avatar = new AvatarView(ctx), new Point(718, 176));
 
-        _toggles = new BContainer(new TableLayout(4, 5, 5));
-        BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
-        wrapper.add(_toggles);
-        add(wrapper, BorderLayout.CENTER);
+        boolean isMale = _ctx.getUserObject().isMale;
+        _gender = isMale ? "male/" : "female/";
 
-        if (!firstLook) {
-            BContainer cost = GroupLayout.makeHBox(GroupLayout.RIGHT);
-            add(cost, BorderLayout.SOUTH);
-            cost.add(new BLabel(_msgs.get("m.look_name")));
-            cost.add(_name = new BTextField(""));
-            // TODO: limit length to BarberCodes.MAX_LOOK_NAME_LENGTH
-            _name.setPreferredWidth(150);
-            cost.add(new Spacer(25, 1));
-            cost.add(new BLabel(_msgs.get("m.look_cost")));
-            cost.add(_cost = new MoneyLabel(ctx));
-            _cost.setMoney(0, 0, false);
-            cost.add(new Spacer(25, 1));
-            cost.add(_buy = new BButton(_msgs.get("m.buy"), this, "buy"));
+        Image icon = _ctx.loadImage("ui/barber/caption_name.png");
+        add(new BLabel(new ImageIcon(icon)), new Point(731, 135));
+        add(_name = new BTextField(""), new Rectangle(790, 133, 164, 30));
+        // TODO: limit to BarberCodes.MAX_LOOK_NAME_LENGTH
+
+        BContainer cost = GroupLayout.makeHBox(GroupLayout.LEFT);
+        cost.add(new BLabel(_msgs.get("m.look_price")));
+        cost.add(_cost = new MoneyLabel(ctx));
+        _cost.setMoney(0, 0, false);
+        add(cost, new Point(704, 51));
+
+        add(_buy = new BButton(_msgs.get("m.buy"), this, "buy"),
+            new Point(870, 43));
+        _buy.setStyleClass("big_button");
+
+        _palette = new IconPalette(null, 4, 3, ChoiceIcon.ICON_SIZE, 1);
+        add(_palette, new Rectangle(139, 5, ChoiceIcon.ICON_SIZE.width*4, 495));
+
+        // create handlers for each aspect
+        for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
+            if (isMale || !AvatarLogic.ASPECTS[ii].maleOnly) {
+                AvatarLogic.Aspect aspect = AvatarLogic.ASPECTS[ii];
+                _handlers.put(aspect.name, new AspectHandler(aspect));
+            }
         }
 
-        setGender(_ctx.getUserObject().isMale);
+        // create our color selectors
+        add(_collabel = new BLabel("", "colorsel_label"),
+            new Rectangle(487, 510, 145, 35));
+        ActionListener al = new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                updateAvatar();
+            }
+        };
+        _colsels.put("head", new ColorSelector(_ctx, AvatarLogic.SKIN, al));
+        _colsels.put("hair", new ColorSelector(_ctx, AvatarLogic.HAIR, al));
+        _colsels.put("eyes", new ColorSelector(_ctx, AvatarLogic.EYES, al));
+// TODO: give women a colorization for lips?
+//         _colsels.put("mouth", new ColorSelector(_ctx, AvatarLogic.MAKEUP));
+
+        // create our tab display which will trigger the avatar display
+        ArrayList<String> tabs = new ArrayList<String>();
+        for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
+            if (!AvatarLogic.ASPECTS[ii].maleOnly || isMale) {
+                tabs.add(AvatarLogic.ASPECTS[ii].name);
+            }
+        }
+        String[] tarray = tabs.toArray(new String[tabs.size()]);
+        final Image tabbg = _ctx.loadImage("ui/barber/side_new_look.png");
+        final Image malebg = isMale ?
+            _ctx.loadImage("ui/barber/side_new_look_male.png") : null;
+        add(new HackyTabs(ctx, "ui/barber/tab_", tarray, 54, 30) {
+            protected void renderBackground (Renderer renderer) {
+                super.renderBackground(renderer);
+                RenderUtil.blendState.apply();
+                RenderUtil.renderImage(
+                    tabbg, 0, _height - tabbg.getHeight() - 42);
+                if (malebg != null) {
+                    RenderUtil.renderImage(
+                        malebg, 0, _height - malebg.getHeight() - 42);
+                }
+            }
+            protected void tabSelected (int index) {
+                _handlers.get(AvatarLogic.ASPECTS[index].name).selected();
+            }
+        }, new Rectangle(10, 35, 140, 470));
     }
 
     /**
@@ -93,36 +150,21 @@ public class NewLookView extends BContainer
     }
 
     /**
-     * Can be used to change the gender of the avatar we're configuring. This
-     * is only used when creating a character for the first time.
-     */
-    public void setGender (boolean isMale)
-    {
-        _gender = isMale ? "male/" : "female/";
-        _toggles.removeAll();
-        for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
-            if (isMale || !AvatarLogic.ASPECTS[ii].maleOnly) {
-                new AspectToggle(AvatarLogic.ASPECTS[ii], _toggles);
-            }
-        }
-        updateAvatar();
-    }
-
-    /**
      * Creates a {@link LookConfig} for the currently configured look.
      */
     public LookConfig getLookConfig ()
     {
         LookConfig config = new LookConfig();
         config.name = (_name == null) ? "" : _name.getText();
-        config.hair = _hair.getSelectedColor();
-        config.skin = _skin.getSelectedColor();
+        config.hair = _colsels.get("hair").getSelectedColor();
+        config.skin = _colsels.get("head").getSelectedColor();
 
         // look up the selection for each aspect class
         config.aspects = new String[AvatarLogic.ASPECTS.length];
         for (int ii = 0; ii < config.aspects.length; ii++) {
-            Choice choice = _selections.get(AvatarLogic.ASPECTS[ii].name); 
-            config.aspects[ii] = (choice == null) ? null : choice.aspect.name;
+            AspectCatalog.Aspect choice =
+                _handlers.get(AvatarLogic.ASPECTS[ii].name).getChoice();
+            config.aspects[ii] = (choice == null) ? null : choice.name;
         }
 
         // TODO: get per-aspect colorizations
@@ -158,6 +200,20 @@ public class NewLookView extends BContainer
         _barbobj.service.purchaseLook(_ctx.getClient(), getLookConfig(), cl);
     }
 
+    protected void setActiveColor (ColorSelector colsel)
+    {
+        if (_active != null) {
+            remove(_active);
+        }
+        _active = colsel;
+        if (_active != null) {
+            _collabel.setText(_msgs.get("m.col_" + colsel.getColorClass()));
+            add(_active, new Point(637, 510));
+        } else {
+            _collabel.setText("");
+        }
+    }
+
     protected void updateAvatar ()
     {
         int scrip = AvatarCodes.BASE_LOOK_SCRIP_COST,
@@ -166,15 +222,17 @@ public class NewLookView extends BContainer
         // obtain the component ids of the various aspect selections and total
         // up the cost of this look while we're at it
         ArrayIntSet compids = new ArrayIntSet();
-        for (Choice choice : _selections.values()) {
+        for (AspectHandler handler : _handlers.values()) {
+            AspectCatalog.Aspect choice = handler.getChoice();
             if (choice == null) {
                 continue;
             }
-            scrip += choice.aspect.scrip;
-            coins += choice.aspect.coins;
-            for (int ii = 0; ii < choice.components.length; ii++) {
-                if (choice.components[ii] != null) {
-                    compids.add(choice.components[ii].componentId);
+            scrip += choice.scrip;
+            coins += choice.coins;
+            CharacterComponent[] components = handler.getChoiceComponents();
+            for (int ii = 0; ii < components.length; ii++) {
+                if (components[ii] != null) {
+                    compids.add(components[ii].componentId);
                 }
             }
         }
@@ -194,7 +252,8 @@ public class NewLookView extends BContainer
         }
 
         int[] avatar = new int[compids.size()+1];
-        avatar[0] = (_hair.getSelectedColor() << 5) | _skin.getSelectedColor();
+        avatar[0] = (_colsels.get("hair").getSelectedColor() << 5) |
+            _colsels.get("head").getSelectedColor();
         compids.toIntArray(avatar, 1);
 
         // update the avatar and cost displays
@@ -204,59 +263,42 @@ public class NewLookView extends BContainer
         }
     }
 
-    protected class AspectToggle
-        implements ActionListener
+    protected static class ChoiceIcon extends ItemIcon
     {
-        public AspectToggle (AvatarLogic.Aspect aspect, BContainer table)
+        public AspectCatalog.Aspect aspect;
+
+        public CharacterComponent[] components;
+
+        public ChoiceIcon (AspectCatalog.Aspect aspect)
+        {
+            this.aspect = aspect;
+            setText(aspect == null ? "none" : aspect.name);
+        }
+    }
+
+    protected class AspectHandler
+        implements IconPalette.Inspector
+    {
+        public AspectHandler (AvatarLogic.Aspect aspect)
         {
             _aspect = aspect;
-
-            BButton left = new BButton(BangUI.leftArrow, "down");
-            left.addListener(this);
-            table.add(left);
-
-            table.add(new BLabel(_ctx.xlate(AvatarCodes.AVATAR_MSGS,
-                                            "m." + aspect.name)));
-
-            BButton right = new BButton(BangUI.rightArrow, "up");
-            right.addListener(this);
-            table.add(right);
-
-            if (_aspect.name.equals("head")) {
-                table.add(_skin = new ColorSelector(_ctx, AvatarLogic.SKIN));
-                _skin.addListener(this);
-            } else if (_aspect.name.equals("hair")) {
-                table.add(_hair = new ColorSelector(_ctx, AvatarLogic.HAIR));
-                _hair.addListener(this);
-            } else if (_aspect.name.equals("eyes")) {
-                table.add(_eyes = new ColorSelector(_ctx, AvatarLogic.EYES));
-                _eyes.addListener(this);
-// TODO: give women a colorization for lips?
-//             } else if (_aspect.name.equals("mouth")) {
-//                 table.add(_lips = new ColorSelector(_ctx, AvatarLogic.LIPS));
-//                 _lips.addListener(this);
-            } else {
-                table.add(new Spacer(5, 5));
-            }
 
             ComponentRepository crepo =
                 _ctx.getCharacterManager().getComponentRepository();
             Collection<AspectCatalog.Aspect> aspects =
                 _ctx.getAvatarLogic().getAspectCatalog().getAspects(
                     _gender + _aspect.name);
-            for (AspectCatalog.Aspect entry : aspects) {
-                // if this is the first look view, skip aspects that have
-                // non-zero cost
-                if (_firstLook && (entry.scrip > 0 || entry.coins > 0)) {
-                    continue;
-                }
 
-                Choice choice = new Choice();
-                choice.aspect = entry;
+            if (aspect.optional) {
+                _icons.add(new ChoiceIcon(null));
+            }
+
+            for (AspectCatalog.Aspect entry : aspects) {
+                ChoiceIcon choice = new ChoiceIcon(entry);
                 choice.components =
-                    new CharacterComponent[_aspect.classes.length];
-                for (int ii = 0; ii < _aspect.classes.length; ii++) {
-                    String cclass = _gender + _aspect.classes[ii];
+                    new CharacterComponent[aspect.classes.length];
+                for (int ii = 0; ii < aspect.classes.length; ii++) {
+                    String cclass = _gender + aspect.classes[ii];
                     try {
                         choice.components[ii] =
                             crepo.getComponent(cclass, entry.name);
@@ -265,72 +307,65 @@ public class NewLookView extends BContainer
                         // underlying component types
                     }
                 }
-                _choices.add(choice);
+                _icons.add(choice);
             }
 
-            if (_aspect.optional) {
-                _choices.add(null);
-            }
-
-            // TODO: sort components based on cost
+            // TODO: sort components based on cost?
 
             // configure our default selection
-            if (_choices.size() > 0) {
-                // TODO: configure _selidx based on existing avatar?
-                _selidx = RandomUtil.getInt(_choices.size());
-                noteSelection();
+            if (_icons.size() > 0) {
+                // TODO: configure default choice based on existing avatar?
+                _choice = (ChoiceIcon)RandomUtil.pickRandom(_icons);
             }
         }
 
-        // documentation inherited from interface ActionListener
-        public void actionPerformed (ActionEvent event)
+        public AspectCatalog.Aspect getChoice ()
         {
-            // bail if we have nothing to do
-            if (_choices.size() == 0) {
-                return;
+            return _choice.aspect;
+        }
+
+        public CharacterComponent[] getChoiceComponents ()
+        {
+            return _choice.components;
+        }
+
+        public void selected ()
+        {
+            _palette.clear();
+            _palette.setInspector(this);
+            for (ChoiceIcon icon : _icons) {
+                _palette.addIcon(icon);
             }
-
-            String action = event.getAction();
-            int csize = _choices.size();
-            if (action.equals("down")) {
-                _selidx = (_selidx + csize - 1) % csize;
-            } else if (action.equals("up")) {
-                _selidx = (_selidx + 1) % csize;
-            } else if (action.equals("select")) {
-                // nothing special, this is a colorization change
-            }
-
-            // note our new selection
-            noteSelection();
-
-            // and update the avatar portrait
+            _choice.setSelected(true);
+            setActiveColor(_colsels.get(_aspect.name));
             updateAvatar();
         }
 
-        protected void noteSelection ()
+        // documentation inherited from interface IconPalette.Inspector
+        public void iconSelected (SelectableIcon icon)
         {
-            _selections.put(_aspect.name, _choices.get(_selidx));
+            _choice = (ChoiceIcon)icon;
+            updateAvatar();
+        }
+
+        // documentation inherited from interface IconPalette.Inspector
+        public void selectionCleared ()
+        {
+            // TODO: disallow deselection
         }
 
         protected AvatarLogic.Aspect _aspect;
-        protected int _selidx;
-        protected ArrayList<Choice> _choices = new ArrayList<Choice>();
-    }
-
-    protected static class Choice
-    {
-        public AspectCatalog.Aspect aspect;
-        public CharacterComponent[] components;
+        protected ArrayList<ChoiceIcon> _icons = new ArrayList<ChoiceIcon>();
+        protected ChoiceIcon _choice;
     }
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
-    protected boolean _firstLook;
-    protected BTextArea _status;
+    protected StatusLabel _status;
 
     protected AvatarView _avatar;
-    protected BContainer _toggles;
-    protected ColorSelector _skin, _hair, _eyes;
+    protected IconPalette _palette;
+    protected ColorSelector _active;
 
     protected BTextField _name;
     protected MoneyLabel _cost;
@@ -339,6 +374,10 @@ public class NewLookView extends BContainer
     protected BarberObject _barbobj;
     protected String _gender;
 
-    protected CharacterComponent _ccomp;
-    protected HashMap<String,Choice> _selections = new HashMap<String,Choice>();
+    protected BLabel _collabel;
+    protected HashMap<String,ColorSelector> _colsels =
+        new HashMap<String,ColorSelector>();
+
+    protected HashMap<String,AspectHandler> _handlers =
+        new HashMap<String,AspectHandler>();
 }

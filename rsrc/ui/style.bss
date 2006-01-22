@@ -164,11 +164,13 @@ combobox:down {
 
 textfield {
   color: #524129;
+  font: "Dom Casual" plain 20;
   background: image "ui/textfield.png" tilexy;
   padding: 5;
 }
 
 textarea {
+  color: #524129;
   background: image "ui/textfield.png" tilexy;
   padding: 5;
 }
@@ -322,10 +324,9 @@ shop_view {
   color: #3E1B00;
 }
 
-shop_intro {
-  background: blank;
+shop_status {
   font: "Helvetica" plain 15;
-  color: #CDAB7E;
+  color: #D5B586;
   text-align: center;
   vertical-align: center;
 }
@@ -350,6 +351,10 @@ color_selector {
 color_selector_popup {
   background: image "ui/barber/swatch_extend.png" tilexy;
   padding: 0 5 0 0;
+}
+
+color_selector_item {
+  padding: 0 0 0 0;
 }
 
 icon_palette_buttons {
@@ -432,7 +437,6 @@ town_name_label {
   font: "Old Town Wide" plain 17;
   color: #442801;
   text-align: center;
-  border: 1 solid #000000;
 }
 
 //
@@ -461,16 +465,7 @@ goods_descrip {
 }
 
 //
-// Ranch styles
-
-//
 // Bank styles
-
-bank_status {
-  font: "Helvetica" plain 15;
-  color: #D5B586;
-  text-align: center;
-}
 
 bank_title {
   font: "Dom Casual" bold 17;
@@ -483,8 +478,19 @@ bank_post_title {
 }
 
 //
+// Barber styles
+
+colorsel_label {
+  font: "Dom Casual" plain 20;
+  text-align: right;
+}
+
+//
 // Saloon styles
 
 lobby_chat {
   padding: 0 5 5 5;
 }
+
+//
+// Ranch styles

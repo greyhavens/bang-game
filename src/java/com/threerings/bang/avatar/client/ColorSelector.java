@@ -35,9 +35,12 @@ import com.threerings.bang.util.BangContext;
  */
 public class ColorSelector extends BComponent
 {
-    public ColorSelector (BangContext ctx, String colorClass)
+    public ColorSelector (
+        BangContext ctx, String colorClass, ActionListener listener)
     {
         setStyleClass("color_selector");
+        addListener(listener);
+        _colorClass = colorClass;
 
         ColorPository cpos = ctx.getAvatarLogic().getColorPository();
         ColorPository.ColorRecord[] colors = cpos.enumerateColors(colorClass);
@@ -81,6 +84,11 @@ public class ColorSelector extends BComponent
         if (_swatches.length > 0) {
             setSelectedColor(RandomUtil.getInt(_swatches.length));
         }
+    }
+
+    public String getColorClass ()
+    {
+        return _colorClass;
     }
 
     public int getSelectedColor ()
@@ -162,6 +170,7 @@ public class ColorSelector extends BComponent
         public SwatchMenuItem (int index, boolean circle)
         {
             super(null, null, "");
+            setStyleClass("color_selector_item");
             this.index = index;
             _circle = circle;
             setIcon(new BlankIcon(_circle ? 32 : 24, 36));
@@ -194,6 +203,7 @@ public class ColorSelector extends BComponent
         }
     };
 
+    protected String _colorClass;
     protected int _selidx = -1;
     protected Swatch[] _swatches;
     protected BPopupMenu _menu;

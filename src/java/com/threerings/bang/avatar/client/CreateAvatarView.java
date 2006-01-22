@@ -83,7 +83,7 @@ public class CreateAvatarView extends BDecoratedWindow
         BTextArea tip = new BTextArea(_msgs.get("m.avatar_tip"));
         tip.setPreferredWidth(PREF_WIDTH);
         add(tip, GroupLayout.FIXED);
-        add(_look = new NewLookView(ctx, _status, true));
+        add(_look = new FirstLookView(ctx, null)); // TODO: sort out status
 
         add(_status, GroupLayout.FIXED);
 
@@ -198,7 +198,7 @@ public class CreateAvatarView extends BDecoratedWindow
     protected BComboBox _gender;
     protected BTextField _handle;
     protected BComboBox _prefix, _root, _suffix;
-    protected NewLookView _look;
+    protected FirstLookView _look;
     protected BButton _done;
 
     protected static final int PREF_WIDTH = 640;

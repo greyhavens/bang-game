@@ -14,6 +14,7 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Rectangle;
 import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.util.MessageBundle;
@@ -22,6 +23,7 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -85,6 +87,11 @@ public abstract class ShopView extends BWindow
         _shopkeep = _ctx.loadImage(tpath + "/shopkeep.png");
         _shopkbg = _ctx.loadImage(tpath + "/shopkeep_bg.png");
         _shop = _ctx.loadImage(tpath + "/shop.png");
+
+        // add our town label
+        String townId = _ctx.getUserObject().townId;
+        add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
+                       "town_name_label"), new Rectangle(851, 637, 165, 20));
     }
 
     @Override // documentation inherited
@@ -94,7 +101,7 @@ public abstract class ShopView extends BWindow
 
         // if this is the first time the player has entered this shop, show
         // them the intro popup
-        showHelp();
+//         showHelp();
     }
 
     @Override // documentation inherited
