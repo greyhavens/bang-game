@@ -120,6 +120,8 @@ public class IconPalette extends BContainer
         clearSelections();
         _icons.clear();
         _icont.removeAll();
+        _back.setEnabled(false);
+        _forward.setEnabled(false);
     }
 
     /**

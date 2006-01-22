@@ -35,7 +35,9 @@ public class GoodsPalette extends IconPalette
     public void init (StoreObject stobj)
     {
         _stobj = stobj;
-        reinitGoods(true);
+        if (_filter != null) {
+            reinitGoods(true);
+        }
     }
 
     public void setFilter (Filter filter)
