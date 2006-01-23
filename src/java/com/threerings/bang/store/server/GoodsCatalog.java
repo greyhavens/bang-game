@@ -177,7 +177,8 @@ public class GoodsCatalog
                     }
                     // our arguments are colorization ids
                     int zations = AvatarLogic.composeZations(
-                        (Integer)_args[0], (Integer)_args[1], (Integer)_args[2]);
+                        (Integer)_args[0], (Integer)_args[1],
+                        (Integer)_args[2]);
                     Item item = _alogic.createArticle(
                         _user.playerId, article, zations);
                     if (item == null) {

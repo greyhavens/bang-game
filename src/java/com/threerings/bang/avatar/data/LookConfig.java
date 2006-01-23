@@ -22,6 +22,6 @@ public class LookConfig extends SimpleStreamableObject
     /** The aspect selections. */
     public String[] aspects;
 
-    /** The aspect colorizations. */
+    /** The aspect colorizations (already properly encoded). */
     public int[] colors;
 }

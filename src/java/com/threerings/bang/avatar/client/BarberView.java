@@ -93,9 +93,11 @@ public class BarberView extends ShopView
             if (event.getAction().equals("newlook")) {
                 remove(_active);
                 add(_active = _newlook, CONTENT_RECT);
+                _status.setText("");
             } else {
                 remove(_active);
                 add(_active = _wearclothes, CONTENT_RECT);
+                _status.setText("");
             }
         }
     };

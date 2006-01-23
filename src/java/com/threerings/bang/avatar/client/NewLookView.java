@@ -107,11 +107,22 @@ public class NewLookView extends BContainer
                 updateAvatar();
             }
         };
-        _colsels.put("head", new ColorSelector(_ctx, AvatarLogic.SKIN, al));
-        _colsels.put("hair", new ColorSelector(_ctx, AvatarLogic.HAIR, al));
-        _colsels.put("eyes", new ColorSelector(_ctx, AvatarLogic.EYES, al));
+
+        ColorSelector s, h, e;
+        _colsels.put("head", s = new ColorSelector(_ctx, AvatarLogic.SKIN, al));
+        _colsels.put("hair", h = new ColorSelector(_ctx, AvatarLogic.HAIR, al));
+        _colsels.put("eyes", e = new ColorSelector(_ctx, AvatarLogic.EYES, al));
 // TODO: give women a colorization for lips?
 //         _colsels.put("mouth", new ColorSelector(_ctx, AvatarLogic.MAKEUP));
+
+        // configure our color selections based on the current look
+        Look look = _ctx.getUserObject().getLook();
+        if (look != null) {
+            s.setSelectedColorId(AvatarLogic.decodeSkin(look.aspects[0]));
+            h.setSelectedColorId(AvatarLogic.decodeHair(look.aspects[0]));
+            // TODO: search through the look for an eye component and extract
+            // eye color? what a PITA
+        }
 
         // create our tab display which will trigger the avatar display
         ArrayList<String> tabs = new ArrayList<String>();
@@ -162,14 +173,17 @@ public class NewLookView extends BContainer
 
         // look up the selection for each aspect class
         config.aspects = new String[AvatarLogic.ASPECTS.length];
-        for (int ii = 0; ii < config.aspects.length; ii++) {
-            AspectCatalog.Aspect choice =
-                _handlers.get(AvatarLogic.ASPECTS[ii].name).getChoice();
-            config.aspects[ii] = (choice == null) ? null : choice.name;
-        }
-
-        // TODO: get per-aspect colorizations
         config.colors = new int[config.aspects.length];
+        for (int ii = 0; ii < config.aspects.length; ii++) {
+            if (AvatarLogic.ASPECTS[ii].maleOnly &&
+                !_ctx.getUserObject().isMale) {
+                continue;
+            }
+            String aspect = AvatarLogic.ASPECTS[ii].name;
+            AspectCatalog.Aspect choice = _handlers.get(aspect).getChoice();
+            config.aspects[ii] = (choice == null) ? null : choice.name;
+            config.colors[ii] = getColorizations(aspect);
+        }
 
         return config;
     }
@@ -215,6 +229,19 @@ public class NewLookView extends BContainer
         }
     }
 
+    protected int getColorizations (String aspect)
+    {
+        // we need to skip hair and head because those have color selectors but
+        // they're used for the globals
+        if ("hair".equals(aspect) || "head".equals(aspect)) {
+            return 0;
+        }
+
+        ColorSelector cs = _colsels.get(aspect);
+        return (cs == null) ? 0 : AvatarLogic.composeZation(
+            cs.getColorClass(), cs.getSelectedColor());
+    }
+
     protected void updateAvatar ()
     {
         int scrip = AvatarCodes.BASE_LOOK_SCRIP_COST,
@@ -230,10 +257,12 @@ public class NewLookView extends BContainer
             }
             scrip += choice.scrip;
             coins += choice.coins;
+
+            int zations = getColorizations(handler.getAspect().name);
             CharacterComponent[] components = handler.getChoiceComponents();
             for (int ii = 0; ii < components.length; ii++) {
                 if (components[ii] != null) {
-                    compids.add(components[ii].componentId);
+                    compids.add(zations | components[ii].componentId);
                 }
             }
         }
@@ -290,10 +319,13 @@ public class NewLookView extends BContainer
                 _ctx.getAvatarLogic().getAspectCatalog().getAspects(
                     _gender + _aspect.name);
 
+            // default to the NONE if we have one, then later override it if we
+            // see that their current look contains one of our components
             if (aspect.optional) {
-                _icons.add(new ChoiceIcon(null));
+                _icons.add(_choice = new ChoiceIcon(null));
             }
 
+            Look look = _ctx.getUserObject().getLook();
             for (AspectCatalog.Aspect entry : aspects) {
                 ChoiceIcon choice = new ChoiceIcon(entry);
                 choice.components =
@@ -308,16 +340,26 @@ public class NewLookView extends BContainer
                         // underlying component types
                     }
                 }
+                // if we have a default look and it contains one of our
+                // component ids, then this should be our default choice
+                if (look != null &&
+                    look.containsAspect(choice.components[0].componentId)) {
+                    _choice = choice;
+                }
                 _icons.add(choice);
             }
 
-            // TODO: sort components based on cost?
-
-            // configure our default selection
-            if (_icons.size() > 0) {
-                // TODO: configure default choice based on existing avatar?
-                _choice = (ChoiceIcon)RandomUtil.pickRandom(_icons);
+            // this shouldn't happen, but just in case
+            if (_choice == null && _icons.size() > 0) {
+                _choice = _icons.get(0);
             }
+
+            // TODO: sort components based on cost?
+        }
+
+        public AvatarLogic.Aspect getAspect ()
+        {
+            return _aspect;
         }
 
         public AspectCatalog.Aspect getChoice ()

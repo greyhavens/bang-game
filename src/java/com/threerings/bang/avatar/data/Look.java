@@ -30,7 +30,7 @@ public class Look extends SimpleStreamableObject
     public String name;
 
     /** The immutable avatar aspects associated with this look (character
-     * component ids). */
+     * component ids). These are not in any particular order. */
     public int[] aspects;
 
     /** An array of item ids of the various articles used in this look (the
@@ -103,6 +103,20 @@ public class Look extends SimpleStreamableObject
         }
 
         articles[idx] = article.getItemId();
+    }
+
+    /**
+     * Returns true if the specified aspect component is used in this look.
+     */
+    public boolean containsAspect (int componentId)
+    {
+        for (int ii = 0; ii < aspects.length; ii++) {
+            // mask off the colorizations when comparing
+            if ((aspects[ii] & 0xFFFF) == componentId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override // documentation inherited

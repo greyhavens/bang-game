@@ -86,7 +86,8 @@ public class AvatarLogic
         new Aspect("hat", new String[] {
             "hat", "hat_back", "hat_band" }, true, false),
         new Aspect("clothing", new String[] {
-            "clothing_back", "clothing_front", "clothing_props" }, false, false),
+            "clothing_back", "clothing_front", "clothing_props" },
+                   false, false),
         new Aspect("glasses", new String[] { "glasses" }, true, false),
         new Aspect("jewelry", new String[] { "jewelry" }, true, false),
         new Aspect("makeup", new String[] { "makeup" }, true, false),
@@ -141,6 +142,20 @@ public class AvatarLogic
     }
 
     /**
+     * Creates a colorization mask with the specified colorization id in the
+     * appropriate position for the specified colorization class.
+     */
+    public static int composeZation (String cclass, int colorId)
+    {
+        switch (getColorIndex(cclass)) {
+        default:
+        case 0: return composeZations(colorId, 0, 0);
+        case 1: return composeZations(0, colorId, 0);
+        case 2: return composeZations(0, 0, colorId);
+        }
+    }
+
+    /**
      * Creates a colorization mask with the specified three colorization ids
      * (which may be zero if the component in question does not require
      * secondary or tertiary colorizations). This value can then be provided to
@@ -149,6 +164,36 @@ public class AvatarLogic
     public static int composeZations (int primary, int secondary, int tertiary)
     {
         return (primary << 16) | (secondary << 21) | (tertiary << 26);
+    }
+
+    /** Decodes the global skin colorization. */
+    public static int decodeSkin (int value)
+    {
+        return value & 0x1F;
+    }
+
+    /** Decodes the global hair colorization. */
+    public static int decodeHair (int value)
+    {
+        return (value >> 5) & 0x1F;
+    }
+
+    /** Decodes the primary colorization. */
+    public static int decodePrimary (int value)
+    {
+        return (value >> 16) & 0x1F;
+    }
+
+    /** Decodes the secondary colorization. */
+    public static int decodeSecondary (int value)
+    {
+        return (value >> 21) & 0x1F;
+    }
+
+    /** Decodes the tertiary colorization. */
+    public static int decodeTertiary (int value)
+    {
+        return (value >> 26) & 0x1F;
     }
 
     /**
@@ -197,8 +242,8 @@ public class AvatarLogic
     public CharacterDescriptor decodeAvatar (int[] avatar)
     {
         // decode the skin and hair colorizations
-        _globals[0] = _pository.getColorization(SKIN, avatar[0] & 0x1F);
-        _globals[1] = _pository.getColorization(HAIR, (avatar[0] >> 5) & 0x1F);
+        _globals[0] = _pository.getColorization(SKIN, decodeSkin(avatar[0]));
+        _globals[1] = _pository.getColorization(HAIR, decodeHair(avatar[0]));
 
         // compact the array to remove unused entries
         avatar = IntListUtil.compact(avatar);
@@ -235,9 +280,9 @@ public class AvatarLogic
         }
 
         // decode the colorization color id values
-        _colors[0] = (fqComponentId >> 16) & 0x1F;
-        _colors[1] = (fqComponentId >> 21) & 0x1F;
-        _colors[2] = (fqComponentId >> 26) & 0x1F;
+        _colors[0] = decodePrimary(fqComponentId);
+        _colors[1] = decodeSecondary(fqComponentId);
+        _colors[2] = decodeTertiary(fqComponentId);
 
         // look up the actual colorizations from those
         String[] colors = ccomp.componentClass.colors;
@@ -293,7 +338,7 @@ public class AvatarLogic
             AspectCatalog.Aspect aspect =
                 _aspcat.getAspect(acname, config.aspects[ii]);
             if (aspect == null) {
-                log.warning("Requested to purchase a look with unknown aspect " +
+                log.warning("Requested to purchase look with unknown aspect " +
                             "[who=" + user.who() + ", class=" + acname +
                             ", choice=" + config.aspects[ii] + "].");
                 return null;
@@ -312,7 +357,7 @@ public class AvatarLogic
                     int compmask = ccomp.componentId;
                     if (config.colors[ii] != 0) {
                         // TODO: additional costs for some colors?
-                        compmask |= config.colors[ii] << 16;
+                        compmask |= config.colors[ii];
                     }
                     compids.add(compmask);
                 } catch (NoSuchComponentException nsce) {
