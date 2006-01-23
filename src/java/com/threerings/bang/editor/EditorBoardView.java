@@ -349,10 +349,13 @@ public class EditorBoardView extends BoardView
     /**
      * Sets the board's water parameters.
      */
-    public void setWaterParams (int level, int diffuseColor, int ambientColor)
+    public void setWaterParams (int level, int color)
     {
-        _board.setWaterParams((byte)level, diffuseColor, ambientColor);
-        _wnode.refreshMaterial();
+        int ocolor = _board.getWaterColor();
+        _board.setWaterParams((byte)level, color);
+        if (ocolor != color) {
+            _wnode.refreshSphereMap();
+        }
         _wnode.refreshSurface();
         updateHighlights();
     }
@@ -395,8 +398,7 @@ public class EditorBoardView extends BoardView
                     _board.getTerrainValue(x+xoff, y+yoff));
             }
         }
-        nboard.setWaterParams(_board.getWaterLevel(),
-            _board.getWaterDiffuseColor(), _board.getWaterAmbientColor());
+        nboard.setWaterParams(_board.getWaterLevel(), _board.getWaterColor());
         for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
             nboard.setLightParams(i, _board.getLightAzimuth(i),
                 _board.getLightElevation(i), _board.getLightDiffuseColor(i),

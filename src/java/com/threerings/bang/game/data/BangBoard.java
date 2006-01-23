@@ -73,8 +73,7 @@ public class BangBoard extends SimpleStreamableObject
         fillShadows(0);
         
         _waterLevel = (byte)-128;
-        _waterDiffuseColor = 0x99CCFF;
-        _waterAmbientColor = 0x001A33;
+        _waterColor = 0x003232;
 
         _lightAzimuths = new float[] { 0f, (float)Math.PI };
         _lightElevations = new float[] { (float)(Math.PI / 4),
@@ -243,24 +242,17 @@ public class BangBoard extends SimpleStreamableObject
         return _waterLevel;
     }
 
-    /** Returns the diffuse color of the water. */
-    public int getWaterDiffuseColor ()
+    /** Returns the color of the water. */
+    public int getWaterColor ()
     {
-        return _waterDiffuseColor;
+        return _waterColor;
     }
 
-    /** Returns the ambient color of the water. */
-    public int getWaterAmbientColor ()
-    {
-        return _waterAmbientColor;
-    }
-
-    /** Sets the water level. */
-    public void setWaterParams (byte level, int diffuseColor, int ambientColor)
+    /** Sets the water parameters. */
+    public void setWaterParams (byte level, int color)
     {
         _waterLevel = level;
-        _waterDiffuseColor = diffuseColor;
-        _waterAmbientColor = ambientColor;
+        _waterColor = color;
     }
 
     /**
@@ -950,8 +942,8 @@ public class BangBoard extends SimpleStreamableObject
     /** The level of the water on the board (-128 for no water). */
     protected byte _waterLevel;
 
-    /** The diffuse and ambient colors of the water. */
-    protected int _waterDiffuseColor, _waterAmbientColor;
+    /** The color of the water. */
+    protected int _waterColor;
 
     /** The azimuths and elevations of the directional lights. */
     protected float[] _lightAzimuths, _lightElevations;

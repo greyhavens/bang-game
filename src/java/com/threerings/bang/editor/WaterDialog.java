@@ -39,11 +39,8 @@ public class WaterDialog extends JDialog
         _level.addChangeListener(this);
         center.add(lpanel);
         
-        center.add(_diffuseColor = new ColorPanel(ctx, "m.diffuse_color"));
-        _diffuseColor.addChangeListener(this);
-        
-        center.add(_ambientColor = new ColorPanel(ctx, "m.ambient_color"));
-        _ambientColor.addChangeListener(this);
+        center.add(_color = new ColorPanel(ctx, "m.color"));
+        _color.addChangeListener(this);
         
         getContentPane().add(center, BorderLayout.CENTER);
         
@@ -66,16 +63,14 @@ public class WaterDialog extends JDialog
      */
     public void fromBoard (BangBoard board)
     {
-        _diffuseColor.setRGB(board.getWaterDiffuseColor());
-        _ambientColor.setRGB(board.getWaterAmbientColor());
+        _color.setRGB(board.getWaterColor());
         _level.setValue(board.getWaterLevel());
     }
     
     // documentation inherited from interface ChangeListener
     public void stateChanged (ChangeEvent e)
     {
-        _panel.view.setWaterParams(_level.getValue(), _diffuseColor.getRGB(),
-            _ambientColor.getRGB());
+        _panel.view.setWaterParams(_level.getValue(), _color.getRGB());
     }
     
     /** The application context. */
@@ -87,6 +82,6 @@ public class WaterDialog extends JDialog
     /** The water level slider. */
     protected JSlider _level;
     
-    /** The diffuse and ambient color panels. */
-    public ColorPanel _diffuseColor, _ambientColor;
+    /** The color panels. */
+    public ColorPanel _color;
 }
