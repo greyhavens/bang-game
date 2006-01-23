@@ -49,7 +49,8 @@ public class QuickTransact extends BContainer
         add(new BLabel(_msgs.get("m.for")), GroupLayout.FIXED);
         add(_scrip = new BLabel(BangUI.scripIcon));
         _scrip.setIconTextGap(5);
-        add(_trade = new BButton(_msgs.get(msg), this, "go"), GroupLayout.FIXED);
+        add(_trade = new BButton(_msgs.get(msg), this, "go"),
+            GroupLayout.FIXED);
         _trade.setEnabled(false);
     }
 
@@ -111,6 +112,7 @@ public class QuickTransact extends BContainer
                 return;
             }
 
+            // make sure they can be covered by the best offer
             if (_ccount > best.volume) {
                 String msg = MessageBundle.tcompose(
                     "m.exceeds_best_offer", _msgs.get("m.coins", best.volume));
@@ -120,11 +122,21 @@ public class QuickTransact extends BContainer
 
             _value = best.price * _ccount;
             _scrip.setText(String.valueOf(_value));
+
+            // make sure they have sufficient funds
+            if (_buying && _ccount * best.price > _ctx.getUserObject().scrip) {
+                _status.setText(_msgs.get("m.insufficient_scrip"));
+                return;
+            } else if (!_buying && _ccount > _ctx.getUserObject().coins) {
+                _status.setText(_msgs.get("m.insufficient_coins"));
+                return;
+            }
+
             _trade.setEnabled(true);
             _status.setText("");
 
         } catch (Exception e) {
-            // just leave the button disabled
+            // just leave the button disabled as they entered a bogus value
         }
     }
 

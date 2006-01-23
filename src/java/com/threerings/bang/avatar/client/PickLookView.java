@@ -36,7 +36,7 @@ public class PickLookView extends BContainer
         super(new AbsoluteLayout());
 
         _ctx = ctx;
-        add(_avatar = new AvatarView(ctx), new Point(0, 40));
+        add(_avatar = new AvatarView(ctx), new Point(0, 43));
         _looks = new BComboBox();
         _looks.addListener(this);
     }
@@ -104,11 +104,11 @@ public class PickLookView extends BContainer
         if (looks.length > 1 || _barbobj != null) {
             Image icon = _ctx.loadImage("ui/barber/caption_look.png");
             add(new BLabel(new ImageIcon(icon)), new Point(13, 0));
-            add(_looks, new Rectangle(73, 0, 164, 29));
+            add(_looks, new Rectangle(72, 0, 164, 29));
         } else {
             add(new BLabel(_ctx.xlate(AvatarCodes.AVATAR_MSGS,
                                       "m.get_looks_at_barber")),
-                new Rectangle(0, 0, 234, 30));
+                new Rectangle(0, 0, 234, 29));
         }
     }
 

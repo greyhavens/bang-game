@@ -35,11 +35,8 @@ public class WearClothingView extends BContainer
     public WearClothingView (BangContext ctx, StatusLabel status)
     {
         super(new AbsoluteLayout());
-        _ctx = ctx;
-        _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
 
-        add(_pick = new PickLookView(ctx), new Point(718, 135));
-
+        add(_pick = new PickLookView(ctx), new Point(719, 135));
         add(_articles = new ArticlePalette(ctx, this),
             new Rectangle(139, 5, ItemIcon.ICON_SIZE.width*4,
                           ItemIcon.ICON_SIZE.height*3+27));
@@ -49,7 +46,7 @@ public class WearClothingView extends BContainer
         for (int ii = 0; ii < tabs.length; ii++) {
             tabs[ii] = AvatarLogic.SLOTS[ii].name;
         }
-        final Image tabbg = _ctx.loadImage("ui/barber/side_change_clothes.png");
+        final Image tabbg = ctx.loadImage("ui/barber/side_change_clothes.png");
         add(new HackyTabs(ctx, "ui/barber/tab_", tabs, 54, 30) {
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
@@ -61,9 +58,6 @@ public class WearClothingView extends BContainer
                 setSlot(index);
             }
         }, new Rectangle(10, 35, 140, 470));
-
-//         // start out with the first slot
-//         setSlot(0);
     }
 
     /**
@@ -93,14 +87,10 @@ public class WearClothingView extends BContainer
     protected void setSlot (int slotidx)
     {
         _slotidx = slotidx;
-        String slot = AvatarLogic.SLOTS[slotidx].name;
-        _articles.setSlot(slot);
+        _articles.setSlot(AvatarLogic.SLOTS[slotidx].name);
     }
 
-    protected BangContext _ctx;
-    protected MessageBundle _msgs;
     protected int _slotidx;
-
     protected PickLookView _pick;
     protected ArticlePalette _articles;
 }

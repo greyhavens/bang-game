@@ -111,7 +111,8 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     }
 
     @Override // documentation inherited
-    protected void updatePublishedInfo (boolean buy, boolean sell, int lastPrice)
+    protected void updatePublishedInfo (
+        boolean buy, boolean sell, int lastPrice)
     {
         ConsolidatedOffer[] buys = null;
         if (buy) {
@@ -174,6 +175,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         if (player.scrip < cost) {
             listener.requestFailed(new InvocationException(
                                        BangCodes.INSUFFICIENT_FUNDS));
+            return;
         }
 
         // update their player object to indicate that it is spent

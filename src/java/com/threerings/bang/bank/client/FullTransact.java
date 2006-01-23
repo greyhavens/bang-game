@@ -112,6 +112,15 @@ public class FullTransact extends BContainer
                 return;
             }
 
+//             // if we don't have sufficient funds, complain and stop
+//             if (_buying && _ccount * _price > _ctx.getUserObject().scrip) {
+//                 _status.setText(_msgs.get("m.insufficient_scrip"));
+//                 return;
+//             } else if (!_buying && _ccount > _ctx.getUserObject().coins) {
+//                 _status.setText(_msgs.get("m.insufficient_coins"));
+//                 return;
+//             }
+
             BankService.ResultListener cl = new BankService.ResultListener() {
                 public void requestProcessed (Object result) {
                     _status.setText(_msgs.get("m.offer_posted"));
@@ -133,6 +142,7 @@ public class FullTransact extends BContainer
             BankService.ConfirmListener cl = new BankService.ConfirmListener() {
                 public void requestProcessed () {
                     clearPostedOffer(offer);
+                    _status.setText(_msgs.get("m.offer_canceled"));
                 }
                 public void requestFailed (String reason) {
                     _status.setText(_msgs.xlate(reason));
@@ -226,7 +236,7 @@ public class FullTransact extends BContainer
         public void setNoOffers ()
         {
             clearOffer();
-            _coins.setText(_msgs.get("m.no_offers"));
+            _coins.setText(_msgs.get("m.no_offers_tbl"));
         }
 
         public void clearOffer ()
