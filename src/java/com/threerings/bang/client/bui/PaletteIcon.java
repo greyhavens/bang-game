@@ -11,11 +11,11 @@ import com.jmex.bui.util.Insets;
 /**
  * Displays an icon of a standard size with text done the way we like it.
  */
-public class ItemIcon extends SelectableIcon
+public class PaletteIcon extends SelectableIcon
 {
     public static final Dimension ICON_SIZE = new Dimension(136, 156);
 
-    public ItemIcon ()
+    public PaletteIcon ()
     {
         _text = new Label(this);
     }

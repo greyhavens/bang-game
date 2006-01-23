@@ -6,20 +6,17 @@ package com.threerings.bang.client;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
-import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.util.BangContext;
 
 /**
  * Displays an icon and descriptive text for a particular inventory item.
  */
-public class ItemIcon extends SelectableIcon
+public class ItemIcon extends PaletteIcon
 {
-    public static final Dimension ICON_SIZE = new Dimension(128, 143);
-
     public ItemIcon ()
     {
-        setOrientation(VERTICAL);
     }
 
     /** Returns the item associated with this icon. */
@@ -34,12 +31,6 @@ public class ItemIcon extends SelectableIcon
         _item = item;
         configureLabel(ctx);
         return this;
-    }
-
-    @Override // documentation inherited
-    public Dimension getPreferredSize (int whint, int hhint)
-    {
-        return ICON_SIZE;
     }
 
     protected void configureLabel (BangContext ctx)

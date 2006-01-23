@@ -160,6 +160,8 @@ invisibutton:selected {
 }
 
 combobox {
+  font: "Helvetica" plain 15;
+  color: #FFFFFF;
   background: image "ui/combobox/normal.png" tilexy;
   padding: 5 22 5 10;
   text-align: center;

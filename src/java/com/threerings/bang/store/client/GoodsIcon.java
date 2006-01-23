@@ -9,7 +9,7 @@ import com.threerings.media.image.ColorPository;
 import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.client.bui.ItemIcon;
+import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
@@ -21,7 +21,7 @@ import com.threerings.bang.store.data.Good;
 /**
  * Displays a salable good.
  */
-public class GoodsIcon extends ItemIcon
+public class GoodsIcon extends PaletteIcon
 {
     /** Contains our randomly selected color ids for colorized goods. */
     public int[] colorIds;

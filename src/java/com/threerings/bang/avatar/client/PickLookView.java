@@ -5,12 +5,16 @@ package com.threerings.bang.avatar.client;
 
 import java.util.Iterator;
 
+import com.jme.image.Image;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.AbsoluteLayout;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.StringUtil;
 
@@ -29,10 +33,10 @@ public class PickLookView extends BContainer
 {
     public PickLookView (BangContext ctx)
     {
-        super(GroupLayout.makeVert(GroupLayout.CENTER));
+        super(new AbsoluteLayout());
 
         _ctx = ctx;
-        add(_avatar = new AvatarView(ctx));
+        add(_avatar = new AvatarView(ctx), new Point(0, 40));
         _looks = new BComboBox();
         _looks.addListener(this);
     }
@@ -98,10 +102,13 @@ public class PickLookView extends BContainer
         // if we have more than one look, add the looks combo, otherwise add a
         // blurb for the barber
         if (looks.length > 1 || _barbobj != null) {
-            add(_looks);
+            Image icon = _ctx.loadImage("ui/barber/caption_look.png");
+            add(new BLabel(new ImageIcon(icon)), new Point(13, 0));
+            add(_looks, new Rectangle(73, 0, 164, 29));
         } else {
             add(new BLabel(_ctx.xlate(AvatarCodes.AVATAR_MSGS,
-                                      "m.get_looks_at_barber")));
+                                      "m.get_looks_at_barber")),
+                new Rectangle(0, 0, 234, 30));
         }
     }
 

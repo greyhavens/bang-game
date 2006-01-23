@@ -3,19 +3,18 @@
 
 package com.threerings.bang.avatar.client;
 
-import com.jmex.bui.BButton;
-import com.jmex.bui.BComboBox;
+import com.jme.image.Image;
+import com.jme.renderer.Renderer;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BLabel;
-import com.jmex.bui.BScrollPane;
-import com.jmex.bui.event.ActionEvent;
-import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.layout.BorderLayout;
-import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.AbsoluteLayout;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
+import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.HackyTabs;
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
@@ -31,34 +30,40 @@ import com.threerings.bang.avatar.util.AvatarLogic;
  * Allows the customization of looks with clothing and accessories.
  */
 public class WearClothingView extends BContainer
-    implements ActionListener, ArticlePalette.Inspector
+    implements ArticlePalette.Inspector
 {
     public WearClothingView (BangContext ctx, StatusLabel status)
     {
-        super(new BorderLayout(5, 5));
+        super(new AbsoluteLayout());
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
 
-        add(_pick = new PickLookView(ctx), BorderLayout.WEST);
+        add(_pick = new PickLookView(ctx), new Point(718, 135));
 
-        BContainer cont = new BContainer(new BorderLayout(5, 5));
-        cont.add(_articles = new ArticlePalette(ctx, this),
-                 BorderLayout.CENTER);
+        add(_articles = new ArticlePalette(ctx, this),
+            new Rectangle(139, 5, ItemIcon.ICON_SIZE.width*4,
+                          ItemIcon.ICON_SIZE.height*3+27));
 
-        BContainer slotsel = new BContainer(GroupLayout.makeHStretch());
-        BButton left = new BButton(BangUI.leftArrow, "down");
-        left.addListener(this);
-        slotsel.add(left, GroupLayout.FIXED);
-        slotsel.add(_slot = new BLabel("", "right_label"));
-        BButton right = new BButton(BangUI.rightArrow, "up");
-        right.addListener(this);
-        slotsel.add(right, GroupLayout.FIXED);
-        cont.add(slotsel, BorderLayout.NORTH);
+        // create our tab display which will trigger the avatar display
+        String[] tabs = new String[AvatarLogic.SLOTS.length];
+        for (int ii = 0; ii < tabs.length; ii++) {
+            tabs[ii] = AvatarLogic.SLOTS[ii].name;
+        }
+        final Image tabbg = _ctx.loadImage("ui/barber/side_change_clothes.png");
+        add(new HackyTabs(ctx, "ui/barber/tab_", tabs, 54, 30) {
+            protected void renderBackground (Renderer renderer) {
+                super.renderBackground(renderer);
+                RenderUtil.blendState.apply();
+                RenderUtil.renderImage(
+                    tabbg, 0, _height - tabbg.getHeight() - 42);
+            }
+            protected void tabSelected (int index) {
+                setSlot(index);
+            }
+        }, new Rectangle(10, 35, 140, 470));
 
-        add(cont, BorderLayout.CENTER);
-
-        // start out with the first slot
-        setSlot(0);
+//         // start out with the first slot
+//         setSlot(0);
     }
 
     /**
@@ -68,18 +73,6 @@ public class WearClothingView extends BContainer
     public void setBarberObject (BarberObject barbobj)
     {
         _pick.setBarberObject(barbobj);
-    }
-
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        String action = event.getAction();
-        if ("down".equals(action)) {
-            setSlot((_slotidx + AvatarLogic.SLOTS.length - 1) %
-                    AvatarLogic.SLOTS.length);
-        } else if ("up".equals(action)) {
-            setSlot((_slotidx + 1) % AvatarLogic.SLOTS.length);
-        }
     }
 
     // documentation inherited from interface ArticlePalette.Inspector
@@ -101,7 +94,6 @@ public class WearClothingView extends BContainer
     {
         _slotidx = slotidx;
         String slot = AvatarLogic.SLOTS[slotidx].name;
-        _slot.setText(_msgs.get("m." + slot));
         _articles.setSlot(slot);
     }
 
@@ -111,5 +103,4 @@ public class WearClothingView extends BContainer
 
     protected PickLookView _pick;
     protected ArticlePalette _articles;
-    protected BLabel _slot;
 }

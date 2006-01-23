@@ -42,7 +42,7 @@ public class StatusView extends BDecoratedWindow
         setLayoutManager(GroupLayout.makeVStretch());
         addListener(new EscapeListener() {
             public void escapePressed() {
-                dismiss();
+                _ctx.getBangClient().clearPopup();
             }
         });
 

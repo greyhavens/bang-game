@@ -38,7 +38,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.HackyTabs;
 import com.threerings.bang.client.bui.IconPalette;
-import com.threerings.bang.client.bui.ItemIcon;
+import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
@@ -74,7 +74,7 @@ public class NewLookView extends BContainer
 
         Image icon = _ctx.loadImage("ui/barber/caption_name.png");
         add(new BLabel(new ImageIcon(icon)), new Point(731, 135));
-        add(_name = new BTextField(""), new Rectangle(790, 133, 164, 30));
+        add(_name = new BTextField(""), new Rectangle(791, 135, 164, 29));
         // TODO: limit to BarberCodes.MAX_LOOK_NAME_LENGTH
 
         BContainer cost = GroupLayout.makeHBox(GroupLayout.LEFT);
@@ -88,7 +88,8 @@ public class NewLookView extends BContainer
         _buy.setStyleClass("big_button");
 
         _palette = new IconPalette(null, 4, 3, ChoiceIcon.ICON_SIZE, 1);
-        add(_palette, new Rectangle(139, 5, ChoiceIcon.ICON_SIZE.width*4, 495));
+        add(_palette, new Rectangle(139, 5, ChoiceIcon.ICON_SIZE.width*4,
+                                    ChoiceIcon.ICON_SIZE.height*3+27));
 
         // create handlers for each aspect
         for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
@@ -263,7 +264,7 @@ public class NewLookView extends BContainer
         }
     }
 
-    protected static class ChoiceIcon extends ItemIcon
+    protected static class ChoiceIcon extends PaletteIcon
     {
         public AspectCatalog.Aspect aspect;
 

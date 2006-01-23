@@ -19,7 +19,7 @@ public class ArticlePalette extends IconPalette
 {
     public ArticlePalette (BangContext ctx, Inspector inspector)
     {
-        super(inspector, 2, 3, ItemIcon.ICON_SIZE, 1);
+        super(inspector, 4, 3, ItemIcon.ICON_SIZE, 1);
 
         _ctx = ctx;
     }
