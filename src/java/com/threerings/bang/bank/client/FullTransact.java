@@ -112,14 +112,14 @@ public class FullTransact extends BContainer
                 return;
             }
 
-//             // if we don't have sufficient funds, complain and stop
-//             if (_buying && _ccount * _price > _ctx.getUserObject().scrip) {
-//                 _status.setText(_msgs.get("m.insufficient_scrip"));
-//                 return;
-//             } else if (!_buying && _ccount > _ctx.getUserObject().coins) {
-//                 _status.setText(_msgs.get("m.insufficient_coins"));
-//                 return;
-//             }
+            // if we don't have sufficient funds, complain and stop
+            if (_buying && _ccount * _price > _ctx.getUserObject().scrip) {
+                _status.setText(_msgs.get("m.insufficient_scrip"));
+                return;
+            } else if (!_buying && _ccount > _ctx.getUserObject().coins) {
+                _status.setText(_msgs.get("m.insufficient_coins"));
+                return;
+            }
 
             BankService.ResultListener cl = new BankService.ResultListener() {
                 public void requestProcessed (Object result) {
