@@ -342,7 +342,11 @@ public class EditorBoardView extends BoardView
     public void setSkyParams (int horizonColor, int overheadColor,
         float falloff)
     {
+        int oocolor = _board.getSkyOverheadColor();
         _board.setSkyParams(horizonColor, overheadColor, falloff);
+        if (oocolor != overheadColor) {
+            _wnode.refreshSphereMap();
+        }
         _snode.refreshGradient();
     }
     

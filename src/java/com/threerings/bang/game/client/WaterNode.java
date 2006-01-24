@@ -34,7 +34,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
-
+import com.jme.util.geom.Debugger;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -53,7 +53,6 @@ public class WaterNode extends Node
         super("water");
         _ctx = ctx;
         
-        //setLightCombineMode(LightState.OFF);
         setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         setRenderState(RenderUtil.blendAlpha);
         setRenderState(RenderUtil.backCull);
@@ -192,7 +191,7 @@ public class WaterNode extends Node
         }
         
         getLocalTranslation().set(0f, 0f,
-            _board.getWaterLevel() *
+            (_board.getWaterLevel() - 1) *
                 TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
         
         updateWorldBound();
@@ -322,7 +321,7 @@ public class WaterNode extends Node
     protected static final int SPHERE_MAP_SIZE = 256;
     
     /** The minimum alpha of the water. */
-    protected static final float WATER_ALPHA = 0.8f;
+    protected static final float WATER_ALPHA = 0.95f;
     
     /** The air/water Snell ratio. */
     protected static final float SNELL_RATIO = 1.34f;
