@@ -3,13 +3,17 @@
 <tutorial ident="test" board="Dry Canyon" players="2">
   <add_unit id="gun1" type="gunslinger" location="10,10" owner="0"/>
   <add_unit id="gun2" type="gunslinger" location="11,11" owner="1"/>
-
+  <add_unit id="sgun" type="shotgunner" location="11,10" owner="0"/>
+  <add_unit id="tact" type="tactician" location="12,11" owner="1"/>
+  
   <text message="start_test"/>
   <wait event="text_clicked"/>
 
-  <add_bonus type="repair" location="11,10"/>
-  
-  <move_unit id="gun1" location="11,10"/>
+  <move_unit id="gun1" target="gun2"/>
+  <wait event="text_clicked"/>
+  <move_unit id="sgun" target="tact"/>
+  <wait event="text_clicked"/>
+  <move_unit id="tact" target="gun1"/>
   
   <text message="end_test"/>
   <wait event="text_clicked"/>
