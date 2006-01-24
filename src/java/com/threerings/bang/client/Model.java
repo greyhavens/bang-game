@@ -171,6 +171,19 @@ public class Model
         }
 
         /**
+         * Gets an emitter by name.
+         */
+        public Emitter getEmitter (String name)
+        {
+            for (int ii = 0; ii < emitters.length; ii++) {
+                if (emitters[ii].name.equals(name)) {
+                    return emitters[ii];
+                }
+            }
+            return null;
+        }
+        
+        /**
          * Returns true if this animation is resolved or has at least been
          * queued up to be resolved.
          */
@@ -368,7 +381,7 @@ public class Model
             Emitter emitter = (emitters[ee] = new Emitter());
             emitter.name = enames[ee];
             emitter.props = PropertiesUtil.getSubProperties(_props,
-                emitter.name);
+                action + "." + emitter.name, emitter.name);
         }
         return emitters;
     }

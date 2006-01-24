@@ -6,6 +6,7 @@ package com.threerings.bang.game.client.sprite;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 import com.jme.math.FastMath;
@@ -97,6 +98,14 @@ public class GunshotEmission extends SpriteEmission
     public void start (Model.Animation anim, Model.Binding binding)
     {
         super.start(anim, binding);
+        
+        // get the animation's shot frame numbers
+        _shotFrames = _animShotFrames.get(anim);
+        if (_shotFrames == null) {
+            _animShotFrames.put(anim, _shotFrames = StringUtil.parseIntArray(
+                anim.getEmitter(_name).props.getProperty("shot_frames", "")));
+        }
+        
         _shotctrl.add();
     }
     
@@ -309,7 +318,11 @@ public class GunshotEmission extends SpriteEmission
         protected ColorRGBA _color = new ColorRGBA();
     }
     
-    /** The frames at which the shots go off. */
+    /** For each animation, the frames at which the shots go off. */
+    protected HashMap<Model.Animation, int[]> _animShotFrames =
+        new HashMap<Model.Animation, int[]>();
+    
+    /** The frames at which the shots go off for the current animation. */
     protected int[] _shotFrames;
     
     /** The duration of a single frame in seconds. */
