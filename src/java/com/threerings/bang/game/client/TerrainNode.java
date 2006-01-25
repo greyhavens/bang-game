@@ -819,7 +819,7 @@ public class TerrainNode extends Node
                 if (sprite == null || (sprite instanceof PieceSprite &&
                     ((PieceSprite)sprite).castsStaticShadow())) {
                     return true;
-                }
+                }   
             }
         }
         return false;
@@ -916,9 +916,6 @@ public class TerrainNode extends Node
         block.mesh.setModelBound(new BoundingBox());
         block.mesh.updateModelBound();
 
-        block.node.setWorldBound(new BoundingBox());
-        block.node.updateWorldBound();
-        
         return block;
     }
 
