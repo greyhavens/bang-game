@@ -35,10 +35,10 @@ public abstract class Stat
         GAME_TIME(new IntStat()),
         CONSEC_WINS(new IntStat()),
         CONSEC_LOSSES(new IntStat()),
-        LATE_NIGHTS(new IntStat()),
+        LATE_NIGHTS(new IntStat(), true, true),
 
         // transient (per-session) statistics
-        SESSION_GAMES_PLAYED(new IntStat()),
+        SESSION_GAMES_PLAYED(new IntStat(), false, true),
 
         // stats accumulated during a game
         DAMAGE_DEALT(new IntStat()),
@@ -83,7 +83,27 @@ public abstract class Stat
             return _code;
         }
 
+        /** Returns true if this stat is persisted between sessions. */
+        public boolean isPersistent ()
+        {
+            return _persist;
+        }
+
+        /** Returns true if this stat is not shown in the stats display. */
+        public boolean isHidden ()
+        {
+            return _hidden;
+        }
+
+        // most stats are persistent and not hidden
         Type (Stat prototype) {
+            this(prototype, true, false);
+        }
+
+        Type (Stat prototype, boolean persist, boolean hidden) {
+            _persist = persist;
+            _hidden = hidden;
+
             // configure our prototype
             _prototype = prototype;
             _prototype._type = this;
@@ -103,6 +123,7 @@ public abstract class Stat
 
         protected Stat _prototype;
         protected int _code;
+        protected boolean _persist, _hidden;
     };
 
     /**

@@ -93,7 +93,8 @@ public class StatRepository extends SimpleRepository
     {
         for (int ii = 0; ii < stats.length; ii++) {
             try {
-                if (stats[ii].isModified()) {
+                if (stats[ii].getType().isPersistent() &&
+                    stats[ii].isModified()) {
                     updateStat(playerId, stats[ii]);
                 }
             } catch (Exception e) {

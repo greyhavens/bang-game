@@ -886,6 +886,11 @@ public class BangManager extends GameManager
                     user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
                     if (_bangobj.winners[ii]) {
                         user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
+                        user.stats.incrementStat(Stat.Type.CONSEC_WINS, 1);
+                        user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 0);
+                    } else {
+                        user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 1);
+                        user.stats.incrementStat(Stat.Type.CONSEC_WINS, 0);
                     }
                 }
 
