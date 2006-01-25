@@ -576,17 +576,14 @@ public class BoardView extends BComponent
         Vector3f loc = new Vector3f();
         for (int i = 0, size = _pick.getNumber(); i < size; i++) {
             PickData pdata = _pick.getPickData(i);
-            ArrayList tris = pdata.getTargetTris();
-            Object mesh = pdata.getTargetMesh();
-            if (tris == null || tris.size() == 0 ||
-                    !(mesh instanceof TriMesh)) {
+            if (notReallyAHit(pdata)) {
                 continue;
             }
-            for (Object oidx : tris) {
+            Object mesh = pdata.getTargetMesh();
+            for (Object oidx : pdata.getTargetTris()) {
                 int idx = ((Integer)oidx).intValue();
                 if (mesh instanceof SharedMesh) {
                     ((SharedMesh)mesh).getTarget().getTriangle(idx, verts);
-
                 } else {
                     ((TriMesh)mesh).getTriangle(idx, verts);
                 }
@@ -821,7 +818,11 @@ public class BoardView extends BComponent
         float dist = Float.MAX_VALUE;
         Sprite hit = null;
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
-            Sprite s = getSprite(_pick.getPickData(ii).getTargetMesh());
+            PickData pdata = _pick.getPickData(ii);
+            if (notReallyAHit(pdata)) {
+                continue;
+            }
+            Sprite s = getSprite(pdata.getTargetMesh());
             if (!isHoverable(s)) {
                 continue;
             }
@@ -850,7 +851,11 @@ public class BoardView extends BComponent
         _pick.clear();
         _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
-            Geometry tmesh = _pick.getPickData(ii).getTargetMesh();
+            PickData pdata = _pick.getPickData(ii);
+            if (notReallyAHit(pdata)) {
+                continue;
+            }
+            Geometry tmesh = pdata.getTargetMesh();
             if (tmesh instanceof TerrainNode.Highlight) {
                 TerrainNode.Highlight highlight = (TerrainNode.Highlight)tmesh;
                 _high.x = highlight.getTileX();
@@ -923,6 +928,14 @@ public class BoardView extends BComponent
         _hnode.detachAllChildren();
         _hnode.updateRenderState();
         _hnode.updateGeometricState(0f, true);
+    }
+
+    /** JME peskily returns bogus hits when we do triangle level picking. */
+    protected boolean notReallyAHit (PickData pdata)
+    {
+        ArrayList tris = pdata.getTargetTris();
+        Object mesh = pdata.getTargetMesh();
+        return (tris == null || tris.size() == 0 || !(mesh instanceof TriMesh));
     }
 
     /** Used to queue up piece createion so that the piece shows up on the
