@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import com.jme.image.Image;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -79,6 +80,7 @@ public abstract class ShopView extends BWindow
         super(ctx.getStyleSheet(), new AbsoluteLayout());
         setStyleClass("shop_view");
         _ctx = ctx;
+        _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
         _msgs = ctx.getMessageManager().getBundle(ident);
 
         // load up our background, shopkeep and other images
@@ -120,12 +122,11 @@ public abstract class ShopView extends BWindow
     {
         super.renderBackground(renderer);
 
-        int width = renderer.getWidth(), height = renderer.getHeight();
         RenderUtil.blendState.apply();
-        RenderUtil.renderImage(_shopkbg, 12, height-_shopkbg.getHeight()-12);
-        RenderUtil.renderImage(_shopkeep, 12, height-_shopkeep.getHeight()-12);
-        RenderUtil.renderImage(_shop, width-_shop.getWidth()-12,
-                               height-_shop.getHeight()-12);
+        RenderUtil.renderImage(_shopkbg, 12, _height-_shopkbg.getHeight()-12);
+        RenderUtil.renderImage(_shopkeep, 12, _height-_shopkeep.getHeight()-12);
+        RenderUtil.renderImage(_shop, _width-_shop.getWidth()-12,
+                               _height-_shop.getHeight()-12);
         RenderUtil.renderImage(_background, 0, 0);
     }
 

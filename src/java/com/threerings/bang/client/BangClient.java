@@ -314,9 +314,15 @@ public class BangClient extends BasicClient
                 new StatusView(_ctx).bind(pview);
             }
 
-            // size the view to fill the display
-            pview.setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                            _ctx.getDisplay().getHeight());
+            // shop views are hard-coded to 1024x768
+            if (pview instanceof ShopView) {
+                pview.setSize(1024, 768);
+                pview.center();
+            } else {
+                // size the view to fill the display
+                pview.setBounds(0, 0, _ctx.getDisplay().getWidth(),
+                                _ctx.getDisplay().getHeight());
+            }
 
             // configure the main view; this will fade the previous view out
             // and fade the new view in
