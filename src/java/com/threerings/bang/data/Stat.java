@@ -29,10 +29,16 @@ public abstract class Stat
      */
     public static enum Type
     {
-        // meta statistics
+        // general statistics
         GAMES_PLAYED(new IntStat()),
         GAMES_WON(new IntStat()),
         GAME_TIME(new IntStat()),
+        CONSEC_WINS(new IntStat()),
+        CONSEC_LOSSES(new IntStat()),
+        LATE_NIGHTS(new IntStat()),
+
+        // transient (per-session) statistics
+        SESSION_GAMES_PLAYED(new IntStat()),
 
         // stats accumulated during a game
         DAMAGE_DEALT(new IntStat()),
@@ -52,6 +58,11 @@ public abstract class Stat
         // stats derived from in-game statistics
         HIGHEST_EARNINGS(new IntStat()),
         MOST_KILLS(new IntStat()),
+
+        // stats accumulated outside a game
+        CHAT_SENT(new IntStat()),
+        CHAT_RECEIVED(new IntStat()),
+        GAMES_HOSTED(new IntStat()),
 
         UNUSED(new IntStat());
 

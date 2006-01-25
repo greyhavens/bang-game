@@ -25,7 +25,6 @@ public class Badge extends Item
     /** Defines the various badge types. */
     public static enum Type
     {
-        // temporary names: these will be replaced with more descriptive monikers
         DAILY_HIGH_SCORER, // daily high scorer
         WEEKLY_HIGH_SCORER, // weekly
         MONTHLY_HIGH_SCORER, // monthly
@@ -91,6 +90,33 @@ public class Badge extends Item
             }
         },
 
+        // consecutive event badges
+        CONSEC_WINS_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 5;
+            }
+        },
+        CONSEC_WINS_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 15;
+            }
+        },
+        CONSEC_WINS_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 30;
+            }
+        },
+        CONSEC_LOSSES_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CONSEC_LOSSES) >= 5;
+            }
+        },
+        CONSEC_LOSSES_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CONSEC_LOSSES) >= 15;
+            }
+        },
+
         // shots fired badges
         SHOTS_FIRED_1 {
             public boolean qualifies (PlayerObject user) {
@@ -116,7 +142,8 @@ public class Badge extends Item
         },
         DISTANCE_MOVED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 500000;
+                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >=
+                    500000;
             }
         },
 
@@ -140,7 +167,8 @@ public class Badge extends Item
         // bonuses collected badges
         BONUSES_COLLECTED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >= 100;
+                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >=
+                    100;
             }
         },
         BONUSES_COLLECTED_2 {
@@ -191,7 +219,8 @@ public class Badge extends Item
         },
         NUGGETS_CLAIMED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10000;
+                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >=
+                    10000;
             }
         },
 
@@ -217,6 +246,70 @@ public class Badge extends Item
             }
         },
 
+        // social badges
+        GAMES_HOSTED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_HOSTED) >= 50;
+            }
+        },
+        GAMES_HOSTED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.GAMES_HOSTED) >= 250;
+            }
+        },
+        CHAT_SENT_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CHAT_SENT) >= 1000;
+            }
+        },
+        CHAT_SENT_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CHAT_SENT) >= 5000;
+            }
+        },
+        CHAT_RECEIVED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CHAT_RECEIVED) >= 1000;
+            }
+        },
+        CHAT_RECEIVED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CHAT_RECEIVED) >= 5000;
+            }
+        },
+
+        // avatar-related badges
+        LOOKS_BOUGHT_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.looks.size() > 5;
+            }
+        },
+        LOOKS_BOUGHT_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.looks.size() > 15;
+            }
+        },
+        LOOKS_BOUGHT_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.looks.size() > 30;
+            }
+        },
+        DUDS_BOUGHT_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.getDudsCount() >= 5;
+            }
+        },
+        DUDS_BOUGHT_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.getDudsCount() >= 20;
+            }
+        },
+        DUDS_BOUGHT_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.getDudsCount() >= 50;
+            }
+        },
+
         // badges for using (owning) bigshots
         FRONTIER_BIGSHOTS_USED, // all Frontier Town bigshots owned (used)
         INDIAN_BIGSHOTS_USED, // all Indian Village bigshots owned (used)
@@ -230,6 +323,17 @@ public class Badge extends Item
         BOOM_SPECIALS_USED, // all Boom Town special units used
         GHOST_SPECIALS_USED, // all Ghost Town special units used
         GOLD_SPECIALS_USED, // all City of Gold special units used
+
+        // wacky badges
+        IRON_HORSE,
+        SAINT_NICK,
+        NIGHT_OWL {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.LATE_NIGHTS) >= 5000;
+            }
+        },
+        HIGH_NOON,
+        NEW_SHERRIF_IN_TOWN,
 
         UNUSED;
 
@@ -273,7 +377,11 @@ public class Badge extends Item
         protected int _code;
     };
 
-    public static void main (String[] args) {}
+    public static void main (String[] args) {
+        for (Type type : EnumSet.allOf(Type.class)) {
+            System.err.println(type.key() + " = " + type);
+        }
+    }
 
     /**
      * Determines whether this player qualifies for any new badges and

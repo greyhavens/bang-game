@@ -155,6 +155,20 @@ public class PlayerObject extends BodyObject
         return "'" + handle + "' " + super.who();
     }
 
+    /**
+     * Counts the number of avatar articles in this player's inventory.
+     */
+    public int getDudsCount ()
+    {
+        int count = 0;
+        for (Iterator iter = inventory.iterator(); iter.hasNext(); ) {
+            if (iter.next() instanceof Article) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>playerId</code> field be set to the
