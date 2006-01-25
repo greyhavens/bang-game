@@ -5,17 +5,20 @@ package com.threerings.bang.client.bui;
 
 import java.util.ArrayList;
 
+import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.Spacer;
-import com.jmex.bui.util.Dimension;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.BEvent;
+import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 
 import static com.threerings.bang.Log.log;
 
@@ -110,6 +113,7 @@ public class IconPalette extends BContainer
     public void setInspector (Inspector inspector)
     {
         _inspector = inspector;
+        requestFocus();
     }
 
     /**
@@ -155,6 +159,42 @@ public class IconPalette extends BContainer
         }
     }
 
+    // documentation inherited
+    public boolean acceptsFocus ()
+    {
+        return isEnabled();
+    }
+
+    // documentation inherited
+    public void dispatchEvent (BEvent event)
+    {
+        if (event instanceof KeyEvent) {
+            KeyEvent kev = (KeyEvent)event;
+            if (kev.getType() == KeyEvent.KEY_PRESSED) {
+                switch (kev.getKeyCode()) {
+                case KeyInput.KEY_LEFT:
+                    moveSelection(-1);
+                    break;
+                case KeyInput.KEY_RIGHT:
+                    moveSelection(1);
+                    break;
+                case KeyInput.KEY_UP:
+                    moveSelection(-_cols);
+                    break;
+                case KeyInput.KEY_DOWN:
+                    moveSelection(_cols);
+                    break;
+                default:
+                    super.dispatchEvent(event);
+                    break;
+                }
+            }
+
+        } else {
+            super.dispatchEvent(event);
+        }
+    }
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -177,18 +217,48 @@ public class IconPalette extends BContainer
         clear();
     }
 
+    protected void moveSelection (int delta)
+    {
+        // no icons means nothing do to
+        if (_icons.size() == 0) {
+            return;
+        }
+
+        // if we have only one row of icons, ignore requests to move up and
+        // down a whole row
+        if (_icons.size() <= _cols && Math.abs(delta) != 1) {
+            return;
+        }
+
+        // if we have no current selection, just select the first icon
+        if (_selections.size() == 0) {
+            displayPage(0);
+            _icons.get(0).setSelected(true);
+        }
+
+        int selidx = _icons.indexOf(_selections.get(0));
+        selidx = (selidx + delta + _icons.size()) % _icons.size();
+        displayPage(selidx / (_rows*_cols));
+        _icons.get(selidx).setSelected(true);
+    }
+
     protected void displayPage (int page)
     {
-        clearSelections();
-        _icont.removeAll();
-        int start = page * _rows;
-        int limit = Math.min(_icons.size(), start + _rows * _cols);
-        for (int ii = start; ii < limit; ii++) {
-            _icont.add(_icons.get(ii));
+        if (_page != page) {
+            clearSelections();
+            _icont.removeAll();
+            int start = page * _rows;
+            int limit = Math.min(_icons.size(), start + _rows * _cols);
+            for (int ii = start; ii < limit; ii++) {
+                _icont.add(_icons.get(ii));
+            }
+            _page = page;
+            _forward.setEnabled(limit < _icons.size());
+            _back.setEnabled(start > 0);
         }
-        _page = page;
-        _forward.setEnabled(limit < _icons.size());
-        _back.setEnabled(start > 0);
+
+        // rerequest focus as the user just clicked a forward or back button
+        requestFocus();
     }
 
     protected void iconUpdated (SelectableIcon icon, boolean selected)

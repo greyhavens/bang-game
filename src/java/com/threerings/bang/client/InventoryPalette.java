@@ -5,26 +5,27 @@ package com.threerings.bang.client;
 
 import java.util.Iterator;
 
-import com.jmex.bui.BContainer;
-import com.jmex.bui.BLabel;
-import com.jmex.bui.layout.TableLayout;
-
-import com.threerings.bang.data.Badge;
+import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.util.BangContext;
 
 /**
- * Displays the user's inventory.
+ * Displays some subset of the user's inventory.
  */
-public class InventoryPalette extends BContainer
+public class InventoryPalette extends IconPalette
 {
-    public InventoryPalette (BangContext ctx)
+    public static interface Predicate
     {
-        super(new TableLayout(4, 5, 5));
-        setStyleClass("padded_box");
+        public boolean includeItem (Item item);
+    }
+
+    public InventoryPalette (BangContext ctx, Predicate itemp)
+    {
+        super(null, 5, 3, ItemIcon.ICON_SIZE, 0);
         _ctx = ctx;
+        _itemp = itemp;
     }
 
     @Override // documentation inherited
@@ -38,8 +39,7 @@ public class InventoryPalette extends BContainer
         PlayerObject user = _ctx.getUserObject();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Item item = (Item)iter.next();
-            if (item instanceof Badge) {
-                // badges are displayed separately
+            if (!_itemp.includeItem(item)) {
                 continue;
             }
 
@@ -48,13 +48,8 @@ public class InventoryPalette extends BContainer
                 continue;
             }
             icon.setItem(_ctx, item);
-            add(icon);
+            addIcon(icon);
             added++;
-        }
-
-        if (added == 0) {
-            String msg = _ctx.xlate(BangCodes.BANG_MSGS, "m.status_empty");
-            add(new BLabel(msg));
         }
     }
 
@@ -64,8 +59,9 @@ public class InventoryPalette extends BContainer
         super.wasRemoved();
 
         // clear out our item display
-        removeAll();
+        clear();
     }
 
     protected BangContext _ctx;
+    protected Predicate _itemp;
 }

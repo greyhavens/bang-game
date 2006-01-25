@@ -47,7 +47,7 @@ public class WearClothingView extends BContainer
             tabs[ii] = AvatarLogic.SLOTS[ii].name;
         }
         final Image tabbg = ctx.loadImage("ui/barber/side_change_clothes.png");
-        add(new HackyTabs(ctx, "ui/barber/tab_", tabs, 54, 30) {
+        add(new HackyTabs(ctx, true, "ui/barber/tab_", tabs, 54, 30) {
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
                 RenderUtil.blendState.apply();

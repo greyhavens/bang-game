@@ -6,12 +6,15 @@ package com.threerings.bang.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTabbedPane;
+import com.jmex.bui.BWindow;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
@@ -20,8 +23,13 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.avatar.client.PickLookView;
 import com.threerings.bang.ranch.client.UnitPalette;
 
+import com.threerings.bang.client.bui.HackyTabs;
+import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.client.util.EscapeListener;
+import com.threerings.bang.data.Article;
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangContext;
@@ -30,16 +38,17 @@ import com.threerings.bang.util.BangContext;
  * Displays a summary of a player's status, including: cash on hand,
  * inventory items, big shots.
  */
-public class StatusView extends BDecoratedWindow
+public class StatusView extends BWindow
     implements ActionListener
 {
     public StatusView (BangContext ctx)
     {
-        super(ctx.getStyleSheet(), null);
+        super(ctx.getStyleSheet(), new AbsoluteLayout());
+        setStyleClass("status_view");
+
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
-        _modal = true;
-        setLayoutManager(GroupLayout.makeVStretch());
+        setModal(true);
         addListener(new EscapeListener() {
             public void escapePressed() {
                 _ctx.getBangClient().clearPopup();
@@ -47,60 +56,51 @@ public class StatusView extends BDecoratedWindow
         });
 
         PlayerObject user = ctx.getUserObject();
-        BContainer row = new BContainer(GroupLayout.makeHStretch());
-        row.setStyleClass("dialog_title");
-        row.add(new BLabel(user.handle.toString(), "left_label"));
-        row.add(new BLabel(_msgs.get("m." + user.townId), "right_label"));
-        add(row, GroupLayout.FIXED);
 
-        add(new WalletLabel(ctx, false), GroupLayout.FIXED);
+//         BContainer row = new BContainer(GroupLayout.makeHStretch());
+//         row.setStyleClass("dialog_title");
+//         row.add(new BLabel(user.handle.toString(), "left_label"));
+//         row.add(new BLabel(_msgs.get("m." + user.townId), "right_label"));
+//         add(row, GroupLayout.FIXED);
 
-        // TODO: record in a static variable which tab was last selected and
-        // use it when opening the view
-        _tabs = new BTabbedPane();
-        add(_tabs);
+        add(new PickLookView(ctx), new Point(22, 231));
+        add(new WalletLabel(ctx, true), new Rectangle(77, 63, 150, 40));
 
-        // add the avatar tab
-        _tabs.addTab(_msgs.get("m.status_avatar"), new PickLookView(ctx));
+        BContainer btns = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)btns.getLayoutManager()).setGap(15);
+        btns.add(new BButton(_msgs.get("m.status_quit"), this, "quit"));
+        btns.add(new BButton(_msgs.get("m.status_to_town"), this, "to_town"));
+        btns.add(new BButton(_msgs.get("m.status_resume"), this, "resume"));
+        add(btns, new Rectangle(652, 8, 310, 35));
 
-        // add the inventory tab
-        _tabs.addTab(_msgs.get("m.status_inventory"),
-                     new BScrollPane(new InventoryPalette(ctx)));
+        // create our tabs
+        _items = new InventoryPalette(ctx, new InventoryPalette.Predicate() {
+            public boolean includeItem (Item item) {
+                return !(item instanceof Badge) && !(item instanceof Article);
+            }
+        });
+        _badges = new InventoryPalette(ctx, new InventoryPalette.Predicate() {
+            public boolean includeItem (Item item) {
+                return (item instanceof Badge);
+            }
+        });
+        _duds = new InventoryPalette(ctx, new InventoryPalette.Predicate() {
+            public boolean includeItem (Item item) {
+                return (item instanceof Article);
+            }
+        });
+        _bigshots = new UnitPalette(ctx, null, 4);
+        _bigshots.setUser(user);
+        _stats = new PlayerStatsView(ctx);
 
-        // add the big shots tab
-        UnitPalette bigshots = new UnitPalette(ctx, null, 4);
-        bigshots.setUser(user);
-        _tabs.addTab(_msgs.get("m.status_big_shots"),
-                     new BScrollPane(bigshots));
+        add(new HackyTabs(ctx, false, "ui/status/tab_", TABS, 136, 17) {
+            protected void tabSelected (int index) {
+                StatusView.this.selectTab(index);
+            }
+        }, new Rectangle(267, 579, 15+5*140, 66));
 
-        // add the badges tab
-        _tabs.addTab(_msgs.get("m.status_badges"),
-                     new BScrollPane(new BadgePalette(ctx)));
-
-        // add the stats tab
-        PlayerStatsView pstats = new PlayerStatsView(ctx);
-        _tabs.addTab(_msgs.get("m.status_stats"),
-                     new BScrollPane(pstats));
-
-        row = new BContainer(GroupLayout.makeHStretch());
-        row.add(createButton("quit"), GroupLayout.FIXED);
-        row.add(new BContainer()); // spacer
-        if (user.location != -1) {
-            row.add(createButton("to_town"), GroupLayout.FIXED);
-            row.add(new BContainer()); // spacer
-        }
-        row.add(createButton("resume"), GroupLayout.FIXED);
-        add(row, GroupLayout.FIXED);
-
-        // finally select the most recently selected tab
-        _tabs.selectTab(_selectedTab);
-    }
-
-    @Override // documentation inherited
-    public void dismiss ()
-    {
-        super.dismiss();
-        _selectedTab = _tabs.getSelectedTabIndex();
+        // start with the inventory tab selected
+        selectTab(_selectedTab);
     }
 
     /**
@@ -112,7 +112,7 @@ public class StatusView extends BDecoratedWindow
         host.addListener(new EscapeListener() {
             public void escapePressed () {
                 _ctx.getBangClient().displayPopup(StatusView.this);
-                setSize(610, 500);
+                pack();
                 center();
             }
         });
@@ -136,17 +136,39 @@ public class StatusView extends BDecoratedWindow
         }
     }
 
-    protected BButton createButton (String action)
+    protected void selectTab (int tabidx)
     {
-        BButton button = new BButton(_msgs.get("m.status_" + action), action);
-        button.addListener(this);
-        return button;
+        BComponent tab;
+        switch (_selectedTab = tabidx) {
+        default:
+        case 0: tab = _items; break;
+        case 1: tab = _bigshots; break;
+        case 2: tab = _badges; break;
+        case 3: tab = _duds; break;
+        case 4: tab = _stats; break;
+        }
+        if (tab != _tab) {
+            if (_tab != null) {
+                remove(_tab);
+            }
+            add(_tab = tab, TVIEW_BOUNDS);
+        }
     }
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
-    protected BTabbedPane _tabs;
+
+    protected BComponent _tab;
+    protected InventoryPalette _items, _badges, _duds;
+    protected UnitPalette _bigshots;
+    protected PlayerStatsView _stats;
 
     /** We track which tab was last selected across instances. */
     protected static int _selectedTab;
+
+    protected static final String[] TABS = {
+        "items", "bigshots", "badges", "duds", "stats" };
+    protected static final Rectangle TVIEW_BOUNDS =
+        new Rectangle(287, 70, PaletteIcon.ICON_SIZE.width * 5,
+                      PaletteIcon.ICON_SIZE.height * 3 + 37);
 }

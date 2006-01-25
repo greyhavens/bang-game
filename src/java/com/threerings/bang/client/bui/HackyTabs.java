@@ -18,11 +18,12 @@ import com.threerings.bang.util.BangContext;
  */
 public class HackyTabs extends BComponent
 {
-    public HackyTabs (BangContext ctx, String imgpref, String[] tabs,
-                      int height, int border)
+    public HackyTabs (BangContext ctx, boolean vertical, String imgpref,
+                      String[] tabs, int size, int border)
     {
         _ctx = ctx;
-        _theight = height;
+        _vertical = vertical;
+        _tsize = size;
         _tborder = border;
 
         addListener(_mlistener);
@@ -49,7 +50,8 @@ public class HackyTabs extends BComponent
     protected void wasAdded ()
     {
         super.wasAdded();
-        // start with the top tab selected
+
+        // start with the zeroth tab selected
         selectTab(0);
     }
 
@@ -57,6 +59,7 @@ public class HackyTabs extends BComponent
     protected void wasRemoved ()
     {
         super.wasRemoved();
+
         // clear this so that we properly reselect tab zero if we're readded
         _selidx = -1;
     }
@@ -67,15 +70,20 @@ public class HackyTabs extends BComponent
         super.renderComponent(renderer);
 
         RenderUtil.blendState.apply();
-        int iy = getHeight() - _theight*_selidx - _tabs[_selidx].getHeight();
-        RenderUtil.renderImage(_tabs[_selidx], 0, iy);
+        int ix = 0, iy = 0;
+        if (_vertical) {
+            iy = getHeight() - _tsize*_selidx - _tabs[_selidx].getHeight();
+        } else {
+            ix = _tsize*_selidx;
+        }
+        RenderUtil.renderImage(_tabs[_selidx], ix, iy);
     }
 
     protected MouseAdapter _mlistener = new MouseAdapter() {
         public void mousePressed (MouseEvent event) {
             int mx = event.getX() - getAbsoluteX(),
                 my = getHeight() - (event.getY() - getAbsoluteY());
-            int tabidx = (my-_tborder)/_theight;
+            int tabidx = ((_vertical ? my : mx) - _tborder) / _tsize;
             if (tabidx >= 0 && tabidx < _tabs.length) {
                 selectTab(tabidx);
             }
@@ -83,7 +91,8 @@ public class HackyTabs extends BComponent
     };
 
     protected BangContext _ctx;
-    protected int _theight, _tborder;
+    protected boolean _vertical;
+    protected int _tsize, _tborder;
     protected Image[] _tabs;
     protected int _selidx = -1;
 }

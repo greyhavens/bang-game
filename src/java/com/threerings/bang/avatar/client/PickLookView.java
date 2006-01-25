@@ -103,8 +103,8 @@ public class PickLookView extends BContainer
         // blurb for the barber
         if (looks.length > 1 || _barbobj != null) {
             Image icon = _ctx.loadImage("ui/barber/caption_look.png");
-            add(new BLabel(new ImageIcon(icon)), new Point(13, 0));
-            add(_looks, new Rectangle(72, 0, 164, 29));
+            add(new BLabel(new ImageIcon(icon)), new Point(8, 0));
+            add(_looks, new Rectangle(67, 0, 164, 29));
         } else {
             add(new BLabel(_ctx.xlate(AvatarCodes.AVATAR_MSGS,
                                       "m.get_looks_at_barber")),

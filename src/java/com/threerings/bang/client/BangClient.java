@@ -140,6 +140,7 @@ public class BangClient extends BasicClient
         if (_popup != null) {
             log.warning("Overriding popup [old=" + _popup +
                         ", new=" + popup + "].");
+            Thread.dumpStack();
         }
         _ctx.getRootNode().addWindow(_popup = popup);
     }

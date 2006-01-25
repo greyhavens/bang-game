@@ -19,7 +19,7 @@ public class GoodsTabs extends HackyTabs
 {
     public GoodsTabs (BangContext ctx, GoodsPalette palette)
     {
-        super(ctx, "ui/store/tab_", TABS, 76, 30);
+        super(ctx, true, "ui/store/tab_", TABS, 76, 30);
         _palette = palette;
     }
 

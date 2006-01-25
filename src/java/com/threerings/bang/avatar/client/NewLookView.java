@@ -73,8 +73,8 @@ public class NewLookView extends BContainer
         _gender = isMale ? "male/" : "female/";
 
         Image icon = _ctx.loadImage("ui/barber/caption_name.png");
-        add(new BLabel(new ImageIcon(icon)), new Point(731, 135));
-        add(_name = new BTextField(""), new Rectangle(791, 135, 164, 29));
+        add(new BLabel(new ImageIcon(icon)), new Point(726, 135));
+        add(_name = new BTextField(""), new Rectangle(786, 135, 164, 29));
         // TODO: limit to BarberCodes.MAX_LOOK_NAME_LENGTH
 
         BContainer cost = GroupLayout.makeHBox(GroupLayout.LEFT);
@@ -135,7 +135,7 @@ public class NewLookView extends BContainer
         final Image tabbg = _ctx.loadImage("ui/barber/side_new_look.png");
         final Image malebg = isMale ?
             _ctx.loadImage("ui/barber/side_new_look_male.png") : null;
-        add(new HackyTabs(ctx, "ui/barber/tab_", tarray, 54, 30) {
+        add(new HackyTabs(ctx, true, "ui/barber/tab_", tarray, 54, 30) {
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
                 RenderUtil.blendState.apply();
@@ -387,8 +387,16 @@ public class NewLookView extends BContainer
         // documentation inherited from interface IconPalette.Inspector
         public void iconSelected (SelectableIcon icon)
         {
-            _choice = (ChoiceIcon)icon;
-            updateAvatar();
+            if (_choice != icon) {
+                _choice = (ChoiceIcon)icon;
+                // post a runnable to update the avatar so that this UI action
+                // can complete and the interface remains more responsive
+                _ctx.getApp().postRunnable(new Runnable() {
+                    public void run () {
+                        updateAvatar();
+                    }
+                });
+            }
         }
 
         // documentation inherited from interface IconPalette.Inspector

@@ -383,6 +383,14 @@ logon_view {
 }
 
 //
+// Status View styles
+
+status_view { 
+  background: image "ui/status/background.png" centerxy;
+  padding: 65 0 0 0;
+}
+
+//
 // In-game styles
 
 player_status_win {
