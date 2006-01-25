@@ -263,16 +263,17 @@ public class PieceSprite extends Sprite
             _py = _piece.y;
         }
 
-        // if we're rotated (which only happens in the editor), we need to
-        // rotate our model
-        if (_porient != _piece.orientation) {
-            setOrientation(_porient = _piece.orientation);
-            // now reset our location and it will adjust our centering
-            int elev = computeElevation(board, _px, _py);
-            setLocation(_px, _py, elev);
-        }
-
-        if (!_editorMode && !isMoving() && moved) {
+        // if we're rotated or the ground has moved underneath us (which only
+        // happens in the editor), we need to update our model
+        if (_editorMode) {
+            int elevation = computeElevation(board, _px, _py);
+            if (_porient != _piece.orientation || _elevation != elevation) {
+                setOrientation(_porient = _piece.orientation);
+                // now reset our location and it will adjust our centering
+                setLocation(_px, _py, elevation);
+            }
+            
+        } else if (!isMoving() && moved) {
             log.warning("Moved but am not moving?! " + _piece.info());
         }
 

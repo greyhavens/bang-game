@@ -73,17 +73,6 @@ public class PropSprite extends PieceSprite
         coords.y += (TILE_SIZE*_piece.getHeight())/2;
     }
 
-    @Override // documentation inherited
-    protected void setParent (Node parent)
-    {
-        super.setParent(parent);
-
-        // clear our model binding when we're removed
-        if (parent == null && _binding != null) {
-            _binding.detach();
-        }
-    }
-
     protected PropConfig _config;
     protected Model _model;
     protected Model.Binding _binding;
