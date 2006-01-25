@@ -35,12 +35,13 @@ public class PlayerStatsView extends BContainer
         Stat[] stats = (Stat[])user.stats.toArray(new Stat[user.stats.size()]);
         // TODO: sort on translated key
         for (int ii = 0; ii < stats.length; ii++) {
-            if (stats[ii].getType().isHidden() &&
-                !_ctx.getUserObject().tokens.isAdmin()) {
+            boolean hidden = stats[ii].getType().isHidden();
+            if (hidden && !_ctx.getUserObject().tokens.isAdmin()) {
                 continue;
             }
             String key = stats[ii].getType().key();
-            add(new BLabel(_ctx.xlate(BangCodes.STATS_MSGS, key)));
+            add(new BLabel(hidden ? key :
+                           _ctx.xlate(BangCodes.STATS_MSGS, key)));
             add(new BLabel(stats[ii].valueToString()));
         }
     }
