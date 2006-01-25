@@ -11,6 +11,8 @@ import java.util.logging.Level;
 
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
+import com.jme.system.DisplaySystem;
+import com.jme.system.PropertiesIO;
 import com.jme.util.LoggingSystem;
 
 import com.samskivert.servlet.user.Password;
@@ -136,15 +138,22 @@ public class BangApp extends JmeApp
     }
 
     @Override // documentation inherited
-    protected void readDisplayConfig ()
+    protected DisplaySystem createDisplay ()
     {
-        BangPrefs.configureDisplayMode(_properties);
+        PropertiesIO props = new PropertiesIO(getConfigPath("jme.cfg"));
+        BangPrefs.configureDisplayMode(props);
+        _api = props.getRenderer();
+        DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
+        display.createWindow(props.getWidth(), props.getHeight(),
+                             props.getDepth(), props.getFreq(),
+                             props.getFullscreen());
+        return display;
     }
 
     @Override // documentation inherited
-    protected InputHandler createInputHandler (CameraHandler camhand, String api)
+    protected InputHandler createInputHandler (CameraHandler camhand)
     {
-        return new GameInputHandler(camhand, api);
+        return new GameInputHandler(camhand);
     }
 
     @Override // documentation inherited

@@ -1,3 +1,4 @@
+
 //
 // $Id$
 
@@ -32,9 +33,9 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class GameInputHandler extends GodViewHandler
 {
-    public GameInputHandler (CameraHandler camhand, String api)
+    public GameInputHandler (CameraHandler camhand)
     {
-        super(camhand, api);
+        super(camhand);
     }
 
     /**
@@ -131,7 +132,8 @@ public class GameInputHandler extends GodViewHandler
     protected void rollCamera (int nextidx, float angvel)
     {
         float curang = CAMERA_ANGLES[_camidx], curzoom = CAMERA_ZOOMS[_camidx];
-        float nextang = CAMERA_ANGLES[nextidx], nextzoom = CAMERA_ZOOMS[nextidx];
+        float nextang = CAMERA_ANGLES[nextidx],
+            nextzoom = CAMERA_ZOOMS[nextidx];
         float deltaAngle = nextang-curang, deltaZoom = nextzoom-curzoom;
         _camidx = nextidx;
         _camhand.moveCamera(
@@ -140,7 +142,7 @@ public class GameInputHandler extends GodViewHandler
                           angvel, deltaZoom));
     }
 
-    protected void setKeyBindings (String api)
+    protected void setKeyBindings ()
     {
         KeyBindingManager keyboard = KeyBindingManager.getKeyBindingManager();
 

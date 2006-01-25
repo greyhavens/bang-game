@@ -15,7 +15,6 @@ import com.jme.math.Vector3f;
 import com.threerings.jme.JmeCanvasApp;
 
 import com.threerings.bang.client.BangApp;
-import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -87,12 +86,6 @@ public class EditorApp extends JmeCanvasApp
     protected EditorApp ()
     {
         super(1024, 768);
-    }
-
-    @Override // documentation inherited
-    protected void readDisplayConfig ()
-    {
-        BangPrefs.configureDisplayMode(_properties);
     }
 
     @Override // documentation inherited
