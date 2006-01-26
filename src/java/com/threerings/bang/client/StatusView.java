@@ -97,7 +97,7 @@ public class StatusView extends BWindow
             protected void tabSelected (int index) {
                 StatusView.this.selectTab(index);
             }
-        }, new Rectangle(267, 579, 15+5*140, 66));
+        }, new Rectangle(267, 575, 15+5*140, 66));
 
         // start with the inventory tab selected
         selectTab(_selectedTab);

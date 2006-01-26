@@ -17,6 +17,7 @@ public class PaletteIcon extends SelectableIcon
 
     public PaletteIcon ()
     {
+        setStyleClass("palette_icon");
         _text = new Label(this);
     }
 
@@ -30,35 +31,31 @@ public class PaletteIcon extends SelectableIcon
         return ICON_SIZE;
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();
         _text.stateDidChange();
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void stateDidChange ()
     {
         super.stateDidChange();
         _text.stateDidChange();
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void layout ()
     {
         super.layout();
 
         // we need to do some jiggery pokery to force the label in a bit from
         // the edges
-        Insets insets = new Insets(getInsets());
-        insets.left += 5;
-        insets.top += 10;
-        insets.right += 5;
-        _text.layout(insets);
+        _text.layout(new Insets(5, 10, 5, 0));
     }
 
-    // documentation inherited
+    @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
         super.renderComponent(renderer);

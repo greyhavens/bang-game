@@ -23,8 +23,8 @@ public class WalletLabel extends MoneyLabel
     {
         super(ctx);
         if (showHandle) {
-            add(new BLabel(ctx.getUserObject().handle + ":", "wallet_name"),
-                BorderLayout.NORTH);
+            add(new BLabel(ctx.xlate(BangCodes.BANG_MSGS, "m.your_wallet"),
+                           "wallet_name"), BorderLayout.NORTH);
         }
         _user = ctx.getUserObject();
         updateValues(false);

@@ -14,7 +14,6 @@ public class SelectableIcon extends BToggleButton
     public SelectableIcon ()
     {
         super(null);
-        setStyleClass("icon_label");
     }
 
     @Override // documentation inherited

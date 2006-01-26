@@ -370,7 +370,30 @@ color_selector_item {
   padding: 0 0 0 0;
 }
 
-icon_palette_buttons {
+//
+// Icon Palette styles
+
+palette_background {
+  // TODO: tile the background
+}
+
+palette_icon {
+  font: "Dom Casual" plain 16;
+  color: #400F01;
+  background: blank;
+  text-align: center;
+  vertical-align: top;
+}
+
+palette_icon:selected {
+  font: "Dom Casual" plain 18;
+  color: #FFFFFF;
+  text-effect: shadow;
+  effect-color: #6A482E;
+  background: image "ui/palette/selected.png" tilexy;
+}
+
+palette_buttons {
   padding: 0 18;
 }
 
@@ -388,6 +411,11 @@ logon_view {
 status_view { 
   background: image "ui/status/background.png" centerxy;
   padding: 65 0 0 0;
+}
+
+badge_icon {
+  parent: palette_icon;
+  padding: 24 4 4 4;
 }
 
 //
@@ -462,22 +490,6 @@ town_name_label {
 
 //
 // General Store styles
-
-icon_label {
-  font: "Dom Casual" plain 16;
-  color: #400F01;
-  background: blank;
-  text-align: center;
-  vertical-align: top;
-}
-
-icon_label:selected {
-  font: "Dom Casual" plain 18;
-  color: #FFFFFF;
-  text-effect: shadow;
-  effect-color: #6A482E;
-  background: image "ui/store/selection_bg.png" tilexy;
-}
 
 goods_descrip {
   background: blank;
