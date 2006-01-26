@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -19,6 +20,15 @@ import static com.threerings.bang.Log.log;
  */
 public class Prop extends BigPiece
 {
+    /** The fine x offset of this piece. */
+    public byte fx;
+    
+    /** The fine y offset of this piece. */
+    public byte fy;
+    
+    /** The fine orientation offset of this piece. */
+    public byte forient;
+    
     /**
      * Instantiates a prop of the specified type.
      */
@@ -56,6 +66,26 @@ public class Prop extends BigPiece
     }
 
     @Override // documentation inherited
+    public void persistTo (ObjectOutputStream oout)
+        throws IOException
+    {
+        super.persistTo(oout);
+        oout.writeByte(fx);
+        oout.writeByte(fy);
+        oout.writeByte(forient);
+    }
+    
+    @Override // documentation inherited
+    public void unpersistFrom (ObjectInputStream oin)
+        throws IOException
+    {
+        super.unpersistFrom(oin);
+        fx = oin.readByte();
+        fy = oin.readByte();
+        forient = oin.readByte();
+    }
+    
+    @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new PropSprite(_type);
@@ -67,6 +97,53 @@ public class Prop extends BigPiece
         return !lapper.isFlyer();
     }
 
+    /**
+     * Rotates this piece in fine units, which divide the 90 degree rotations
+     * up by 256.
+     *
+     * @param amount the amount by which to rotate, where positive amounts
+     * rotate counter-clockwise and negative amounts rotate clockwise
+     */
+    public void rotateFine (int amount)
+    {
+        int nforient = forient + amount;
+        if (nforient < -128) {
+            rotate(CW);
+            nforient += 256;
+            
+        } else if (nforient > 127) {
+            rotate(CCW);
+            nforient -= 256;
+        }
+        forient = (byte)nforient;
+    }
+    
+    @Override // documentation inherited
+    public boolean rotate (int direction)
+    {
+        super.rotate(direction);
+        forient = 0;
+        return true;
+    }
+    
+    /**
+     * Positions this piece in fine coordinates, which divide the tile
+     * coordinates up by 256.
+     */
+    public void positionFine (int px, int py)
+    {
+        position(px / 256, py / 256);
+        fx = (byte)((px % 256) - 128);
+        fy = (byte)((py % 256) - 128);
+    }
+    
+    @Override // documentation inherited
+    protected void updatePosition (int nx, int ny)
+    {
+        super.updatePosition(nx, ny);
+        fx = fy = 0;
+    }
+    
     /**
      * Provides the prop with its configuration.
      */

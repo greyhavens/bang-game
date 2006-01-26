@@ -5,8 +5,11 @@ package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.AStarPathUtil;
 
@@ -52,7 +55,7 @@ public abstract class Piece extends SimpleStreamableObject
 
     /** The percentage damage this piece has taken. */
     public int damage;
-
+    
     /**
      * Returns the cost to purchase this piece.
      */
@@ -426,6 +429,30 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Writes the persistent state of this piece to the specified stream.
+     */
+    public void persistTo (ObjectOutputStream oout)
+        throws IOException
+    {
+        oout.writeInt(pieceId);
+        oout.writeShort(x);
+        oout.writeShort(y);
+        oout.writeShort(orientation);
+    }
+    
+    /**
+     * Reads the persistent state of this piece from the specified stream.
+     */
+    public void unpersistFrom (ObjectInputStream oin)
+        throws IOException
+    {
+        pieceId = oin.readInt();
+        short x = oin.readShort(), y = oin.readShort();
+        orientation = oin.readShort();
+        position(x, y);
+    }
+    
+    /**
      * Creates the appropriate derivation of {@link PieceSprite} to render
      * this piece.
      */
@@ -443,7 +470,7 @@ public abstract class Piece extends SimpleStreamableObject
         _key = null;
         pieceId = ++_nextPieceId;
     }
-
+    
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {

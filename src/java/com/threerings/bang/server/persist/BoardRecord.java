@@ -258,10 +258,7 @@ public class BoardRecord
                                   "[type=" + piece.getClass().getName() +
                                   ", piece=" + piece + "].");
         }
-        oout.writeInt(piece.pieceId);
-        oout.writeShort(piece.x);
-        oout.writeShort(piece.y);
-        oout.writeShort(piece.orientation);
+        piece.persistTo(oout);
     }
 
     /** Helper method. */
@@ -277,10 +274,7 @@ public class BoardRecord
         } else {
             piece = Prop.getProp(type);
         }
-        piece.pieceId = oin.readInt();
-        short x = oin.readShort(), y = oin.readShort();
-        piece.orientation = oin.readShort();
-        piece.position(x, y);
+        piece.unpersistFrom(oin);
         return piece;
     }
 

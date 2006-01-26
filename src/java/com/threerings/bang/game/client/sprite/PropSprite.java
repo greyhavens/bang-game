@@ -3,7 +3,9 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
+import com.jme.math.Quaternion;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -11,6 +13,8 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
 import com.threerings.bang.client.Model;
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -23,6 +27,14 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class PropSprite extends PieceSprite
 {
+    /** The ratio between radians and fine rotation units. */
+    public static final float FINE_ROTATION_SCALE =
+        (FastMath.PI * 0.25f) / 128;
+    
+    /** The ratio between world units and fine translation units. */
+    public static final float FINE_POSITION_SCALE =
+        (TILE_SIZE * 0.5f) / 128;
+        
     public PropSprite (String type)
     {
         _config = PropConfig.getConfig(type);
@@ -38,6 +50,47 @@ public class PropSprite extends PieceSprite
     public boolean isShadowable ()
     {
         return false;
+    }
+    
+    @Override // documentation inherited
+    public boolean updatePosition (BangBoard board)
+    {
+        super.updatePosition(board);
+        
+        // update fine positioning as well
+        Prop prop = (Prop)_piece;
+        if (_fx != prop.fx || _fy != prop.fy) {
+            setLocation(_px, _py, _elevation);
+        }
+        if (_forient != prop.forient) {
+            setOrientation(_porient);
+        }
+        
+        return false;
+    }
+    
+    @Override // documentation inherited
+    public void setLocation (int tx, int ty, int elevation)
+    {
+        // adjust by fine coordinates
+        _elevation = elevation;
+        toWorldCoords(tx, ty, elevation, _temp);
+        Prop prop = (Prop)_piece;
+        _temp.x += (_fx = prop.fx) * FINE_POSITION_SCALE;
+        _temp.y += (_fy = prop.fy) * FINE_POSITION_SCALE;
+        if (!_temp.equals(localTranslation)) {
+            setLocalTranslation(new Vector3f(_temp));
+        }
+    }
+
+    @Override // documentation inherited
+    public void setOrientation (int orientation)
+    {
+        Quaternion quat = new Quaternion();
+        Prop prop = (Prop)_piece;
+        quat.fromAngleAxis(ROTATIONS[orientation] -
+            (_forient = prop.forient) * FINE_ROTATION_SCALE, UP);
+        setLocalRotation(quat);
     }
     
     @Override // documentation inherited
@@ -76,7 +129,9 @@ public class PropSprite extends PieceSprite
     protected PropConfig _config;
     protected Model _model;
     protected Model.Binding _binding;
-
+    
+    protected int _fx, _fy, _forient;
+    
 //     protected static final ColorRGBA FOOT_COLOR =
 //         new ColorRGBA(1, 1, 1, 0.5f);
 }

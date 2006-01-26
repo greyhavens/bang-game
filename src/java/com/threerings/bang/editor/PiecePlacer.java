@@ -10,6 +10,7 @@ import java.awt.Point;
 import javax.swing.JPanel;
 
 import com.jme.input.KeyInput;
+import com.jme.math.Vector3f;
 
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.KeyListener;
@@ -19,9 +20,13 @@ import com.threerings.crowd.util.CrowdContext;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Prop;
+
+import static com.threerings.bang.Log.*;
 
 /**
  * Allows the user to place and manipulate pieces on the board.
@@ -59,6 +64,8 @@ public class PiecePlacer extends EditorTool
                     _panel, EditorController.REMOVE_PIECE, _dragPiece.getKey());
                 _dragPiece = null;
             } else {
+                _fineDrag = _dragPiece instanceof Prop &&
+                    (e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0;
                 _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
             }
         
@@ -89,15 +96,35 @@ public class PiecePlacer extends EditorTool
     }
     
     @Override // documentation inherited
+    public void mouseDragged (MouseEvent e)
+    {
+        if (_dragPiece != null && _fineDrag) {
+            Piece p = (Piece)_dragPiece.clone();
+            _panel.view.getGroundIntersect(e, false, _loc);
+            ((Prop)p).positionFine(
+                (int)(_loc.x / PropSprite.FINE_POSITION_SCALE) -
+                    _dragOffset.x,
+                (int)(_loc.y / PropSprite.FINE_POSITION_SCALE) -
+                    _dragOffset.y);
+            getBangObject().updatePieces(p);
+        }
+    }
+    
+    @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {
         // if we're over a piece, rotate it
         Piece piece = _panel.view.getHoverPiece();
         if (piece != null) {
             piece = (Piece)piece.clone();
-            if (piece.rotate(e.getDelta() > 0 ? Piece.CCW : Piece.CW)) {
-                getBangObject().updatePieces(piece);
+            if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0 &&
+                piece instanceof Prop) {
+                ((Prop)piece).rotateFine(e.getDelta()*8);
+                
+            } else {
+                piece.rotate(e.getDelta() > 0 ? Piece.CCW : Piece.CW);
             }
+            getBangObject().updatePieces(piece);
         }
     }
 
@@ -107,7 +134,7 @@ public class PiecePlacer extends EditorTool
         _hoverTile.setLocation(tx, ty);
         
         // if we are dragging a piece, move that feller around
-        if (_dragPiece != null) {
+        if (_dragPiece != null && !_fineDrag) {
             Piece p = (Piece)_dragPiece.clone();
             p.position(tx - _dragOffset.x, ty - _dragOffset.y);
             getBangObject().updatePieces(p);
@@ -128,17 +155,23 @@ public class PiecePlacer extends EditorTool
     {
         int code = e.getKeyCode(), rot;
         switch (code) {
-             case KeyInput.KEY_LEFT: rot = Piece.CCW; break;
-             case KeyInput.KEY_RIGHT: rot = Piece.CW; break;
+             case KeyInput.KEY_LEFT: rot = Piece.CW; break;
+             case KeyInput.KEY_RIGHT: rot = Piece.CCW; break;
              default: return;
         }
         Piece piece = _panel.view.getHoverPiece();
         if (piece == null) {
             return;
         }
-        if ((piece = (Piece)piece.clone()).rotate(rot)) {
-            getBangObject().updatePieces(piece);
+        Piece p = (Piece)piece.clone();
+        if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0 &&
+            piece instanceof Prop) {
+            ((Prop)piece).rotateFine(rot == Piece.CW ? -8 : +8);
+                
+        } else {
+            piece.rotate(rot);
         }
+        getBangObject().updatePieces(piece);
     }
     
     // documentation inherited from interface KeyListener
@@ -179,4 +212,10 @@ public class PiecePlacer extends EditorTool
 
     /** The button that started our drag or -1. */
     protected int _dragButton = -1;
+    
+    /** Whether or not we are performing a fine drag operation. */
+    protected boolean _fineDrag;
+    
+    /** A temporary vector to reuse. */
+    protected Vector3f _loc = new Vector3f();
 }
