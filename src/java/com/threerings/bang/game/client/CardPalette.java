@@ -5,15 +5,11 @@ package com.threerings.bang.game.client;
 
 import java.util.Iterator;
 
-import com.jmex.bui.BLabel;
-import com.jmex.bui.layout.BorderLayout;
-import com.jmex.bui.util.Dimension;
-
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.IconPalette;
-import com.threerings.bang.client.bui.SelectableIcon;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangObject;
@@ -25,34 +21,19 @@ import com.threerings.bang.game.data.GameCodes;
  */
 public class CardPalette extends IconPalette
 {
-    public static class CardIcon extends SelectableIcon
-    {
-        public CardItem item;
-
-        public CardIcon (CardItem item)
-        {
-            this.item = item;
-            BangUI.configCardLabel(this, item);
-        }
-    }
-
     public CardPalette (BangContext ctx, BangObject bangobj)
     {
-        super(null, 4, 2, new Dimension(64, 64), GameCodes.MAX_CARDS);
+        super(null, 4, 1, ItemIcon.ICON_SIZE, GameCodes.MAX_CARDS);
 
-        int added = 0;
         PlayerObject user = ctx.getUserObject();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Object item = iter.next();
             if (item instanceof CardItem) {
-                addIcon(new CardIcon((CardItem)item));
-                added++;
+                CardItem card = (CardItem)item;
+                ItemIcon icon = card.createIcon();
+                icon.setItem(ctx, card);
+                addIcon(icon);
             }
-        }
-
-        if (added == 0) {
-            String msg = ctx.xlate(GameCodes.GAME_MSGS, "m.select_nocards");
-            add(new BLabel(msg), BorderLayout.NORTH);
         }
 
         // reduce the number of selectable cards by the number we have waiting
@@ -63,7 +44,7 @@ public class CardPalette extends IconPalette
 
     public CardItem getSelectedCard (int index)
     {
-        CardIcon icon = (CardIcon)getSelectedIcon(index);
-        return icon == null ? null : icon.item;
+        ItemIcon icon = (ItemIcon)getSelectedIcon(index);
+        return icon == null ? null : (CardItem)icon.getItem();
     }
 }

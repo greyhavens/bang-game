@@ -121,11 +121,8 @@ public class IconPalette extends BContainer
      */
     public void clear ()
     {
-        clearSelections();
+        clearDisplay();
         _icons.clear();
-        _icont.removeAll();
-        _back.setEnabled(false);
-        _forward.setEnabled(false);
     }
 
     /**
@@ -206,7 +203,7 @@ public class IconPalette extends BContainer
             _back.setEnabled(false);
         } else {
             // add the icons for the page that's showing
-            displayPage(_page);
+            displayPage(_page, true);
         }
     }
 
@@ -214,7 +211,7 @@ public class IconPalette extends BContainer
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        clear();
+        clearDisplay();
     }
 
     protected void moveSelection (int delta)
@@ -232,19 +229,19 @@ public class IconPalette extends BContainer
 
         // if we have no current selection, just select the first icon
         if (_selections.size() == 0) {
-            displayPage(0);
+            displayPage(0, false);
             _icons.get(0).setSelected(true);
         }
 
         int selidx = _icons.indexOf(_selections.get(0));
         selidx = (selidx + delta + _icons.size()) % _icons.size();
-        displayPage(selidx / (_rows*_cols));
+        displayPage(selidx / (_rows*_cols), false);
         _icons.get(selidx).setSelected(true);
     }
 
-    protected void displayPage (int page)
+    protected void displayPage (int page, boolean force)
     {
-        if (_page != page) {
+        if (_page != page || force) {
             clearSelections();
             _icont.removeAll();
             int start = page * _rows;
@@ -259,6 +256,14 @@ public class IconPalette extends BContainer
 
         // rerequest focus as the user just clicked a forward or back button
         requestFocus();
+    }
+
+    protected void clearDisplay ()
+    {
+        clearSelections();
+        _icont.removeAll();
+        _back.setEnabled(false);
+        _forward.setEnabled(false);
     }
 
     protected void iconUpdated (SelectableIcon icon, boolean selected)
@@ -292,9 +297,9 @@ public class IconPalette extends BContainer
     protected ActionListener _listener = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             if (event.getAction().equals("forward")) {
-                displayPage(_page+1);
+                displayPage(_page+1, false);
             } else if (event.getAction().equals("back")) {
-                displayPage(_page-1);
+                displayPage(_page-1, false);
             }
         }
     };

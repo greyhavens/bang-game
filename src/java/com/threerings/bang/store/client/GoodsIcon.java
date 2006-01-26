@@ -42,6 +42,7 @@ public class GoodsIcon extends PaletteIcon
         _good = good;
 
         if (_good instanceof ArticleGood) {
+            setStyleClass("article_icon"); // adjust insets
             AvatarLogic al = _ctx.getAvatarLogic();
             String[] cclasses = al.getColorizationClasses(
                 al.getArticleCatalog().getArticle(_good.getType()));

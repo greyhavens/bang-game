@@ -14,11 +14,6 @@ import com.threerings.bang.util.BangContext;
  */
 public class BadgeIcon extends ItemIcon
 {
-    public BadgeIcon ()
-    {
-        setStyleClass("badge_icon");
-    }
-
     protected void configureLabel (BangContext ctx)
     {
         Badge badge = (Badge)_item;

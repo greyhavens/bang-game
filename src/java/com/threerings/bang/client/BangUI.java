@@ -102,7 +102,7 @@ public class BangUI
      */
     public static void reloadStylesheet ()
     {
-        BStyleSheet.ResourceProvider rprov = new BStyleSheet.ResourceProvider() {
+        BStyleSheet.ResourceProvider rp = new BStyleSheet.ResourceProvider() {
             public BTextFactory createTextFactory (
                 String family, String style, int size) {
                 int nstyle = Font.PLAIN;
@@ -132,7 +132,7 @@ public class BangUI
             InputStream is = BangUI.class.getClassLoader().getResourceAsStream(
                 "rsrc/ui/style.bss");
             stylesheet =
-                new BStyleSheet(new InputStreamReader(is, "UTF-8"), rprov);
+                new BStyleSheet(new InputStreamReader(is, "UTF-8"), rp);
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Failed to load stylesheet", ioe);
         }

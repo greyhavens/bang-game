@@ -383,6 +383,7 @@ palette_icon {
   background: blank;
   text-align: center;
   vertical-align: top;
+  padding: 24 4 4 4;
 }
 
 palette_icon:selected {
@@ -411,11 +412,6 @@ logon_view {
 status_view { 
   background: image "ui/status/background.png" centerxy;
   padding: 65 0 0 0;
-}
-
-badge_icon {
-  parent: palette_icon;
-  padding: 24 4 4 4;
 }
 
 //
@@ -490,6 +486,15 @@ town_name_label {
 
 //
 // General Store styles
+
+article_icon {
+  parent: palette_icon;
+  padding: 0, 0, 0, 0;
+}
+
+article_icon:selected {
+  parent: "palette_icon:selected";
+}
 
 goods_descrip {
   background: blank;

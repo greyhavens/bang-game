@@ -7,7 +7,6 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BScrollPane;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -70,11 +69,11 @@ public class SelectionView extends BDecoratedWindow
         // create the big shot selection display
         _units = new UnitPalette(ctx, null, 4);
         _units.setUser(_ctx.getUserObject());
-        add(new BScrollPane(_units));
+        add(_units);
 
         // create the card selection display
         add(new BLabel(_msgs.get("m.select_cards")), GroupLayout.FIXED);
-        add(new BScrollPane(_cards = new CardPalette(ctx, bangobj)));
+        add(_cards = new CardPalette(ctx, bangobj));
 
         BContainer footer = new BContainer(new BorderLayout(10, 0));
         _ready = new BButton(_msgs.get("m.ready"));
