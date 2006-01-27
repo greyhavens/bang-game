@@ -83,6 +83,8 @@ big_button {
   background: image "ui/buttons/big_normal.png" tilexy;
   font: "Old Town" plain 24;
   text-align: center;
+  text-effect: shadow;
+  effect-color: #000000;
   vertical-align: center;
   padding: 0 25;
 }
@@ -412,6 +414,12 @@ logon_view {
 status_view { 
   background: image "ui/status/background.png" centerxy;
   padding: 65 0 0 0;
+}
+
+status_handle {
+  font: "Dom Casual" plain 22;
+  text-align: center;
+  color: #4d2a04;
 }
 
 stats_view { 

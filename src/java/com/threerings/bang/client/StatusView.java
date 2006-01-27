@@ -7,31 +7,29 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BScrollPane;
-import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.util.Point;
-import com.jmex.bui.util.Rectangle;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.client.PickLookView;
 import com.threerings.bang.ranch.client.UnitPalette;
 
-import com.threerings.bang.client.bui.HackyTabs;
-import com.threerings.bang.client.bui.PaletteIcon;
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
+
+import com.threerings.bang.client.bui.HackyTabs;
+import com.threerings.bang.client.bui.PaletteIcon;
+import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -56,12 +54,12 @@ public class StatusView extends BWindow
         });
 
         PlayerObject user = ctx.getUserObject();
-
-//         BContainer row = new BContainer(GroupLayout.makeHStretch());
-//         row.setStyleClass("dialog_title");
-//         row.add(new BLabel(user.handle.toString(), "left_label"));
-//         row.add(new BLabel(_msgs.get("m." + user.townId), "right_label"));
-//         add(row, GroupLayout.FIXED);
+        add(new BLabel(user.handle.toString(), "status_handle"),
+            new Rectangle(40, 590, 195, 33));
+        BButton btn = new BButton(_msgs.get("m.status_poster"), this, "poster");
+        btn.setStyleClass("big_button");
+        btn.setEnabled(false); // TODO
+        add(btn, new Point(40, 150));
 
         add(new PickLookView(ctx), new Point(22, 231));
         add(new WalletLabel(ctx, true), new Rectangle(77, 63, 150, 40));
