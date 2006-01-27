@@ -67,7 +67,7 @@ public class NewLookView extends BContainer
         _msgs = _ctx.getMessageManager().getBundle(BarberCodes.BARBER_MSGS);
         _status = status;
 
-        add(_avatar = new AvatarView(ctx), new Point(719, 178));
+        add(_avatar = new AvatarView(ctx), new Point(707, 171));
 
         boolean isMale = _ctx.getUserObject().isMale;
         _gender = isMale ? "male/" : "female/";

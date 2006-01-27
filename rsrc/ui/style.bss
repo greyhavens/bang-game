@@ -531,6 +531,10 @@ bank_post_title {
 //
 // Barber styles
 
+avatar_view {
+  padding: 7 12 7 12;
+}
+
 colorsel_label {
   font: "Dom Casual" plain 20;
   text-align: right;

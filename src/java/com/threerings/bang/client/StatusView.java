@@ -59,9 +59,9 @@ public class StatusView extends BWindow
         BButton btn = new BButton(_msgs.get("m.status_poster"), this, "poster");
         btn.setStyleClass("big_button");
         btn.setEnabled(false); // TODO
-        add(btn, new Point(40, 150));
+        add(btn, new Point(40, 147));
 
-        add(new PickLookView(ctx), new Point(22, 231));
+        add(new PickLookView(ctx), new Point(10, 231));
         add(new WalletLabel(ctx, true), new Rectangle(77, 63, 150, 40));
 
         BContainer btns = GroupLayout.makeHBox(GroupLayout.CENTER);
