@@ -66,7 +66,18 @@ public class PiecePlacer extends EditorTool
             } else {
                 _fineDrag = _dragPiece instanceof Prop &&
                     (e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0;
-                _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
+                if (_fineDrag) {
+                    Prop p = (Prop)_dragPiece;
+                    _panel.view.getGroundIntersect(e, false, _loc);
+                    _dragOffset.setLocation(
+                        (int)(_loc.x / PropSprite.FINE_POSITION_SCALE) -
+                            (p.x * 256 + p.fx),
+                        (int)(_loc.y / PropSprite.FINE_POSITION_SCALE) -
+                            (p.y * 256 + p.fy));
+                    
+                } else {
+                    _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
+                }
             }
         
         // otherwise, create a piece and start dragging
