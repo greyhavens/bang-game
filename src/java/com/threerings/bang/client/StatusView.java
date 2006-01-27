@@ -63,6 +63,8 @@ public class StatusView extends BWindow
 
         add(new PickLookView(ctx), new Point(10, 231));
         add(new WalletLabel(ctx, true), new Rectangle(77, 63, 150, 40));
+        add(_tabinfo = new BLabel("", "status_tabinfo"),
+            new Rectangle(290, 55, 453, 40));
 
         BContainer btns = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)btns.getLayoutManager()).setGap(15);
@@ -150,6 +152,7 @@ public class StatusView extends BWindow
                 remove(_tab);
             }
             add(_tab = tab, TVIEW_BOUNDS);
+            _tabinfo.setText(_msgs.get("m.status_" + TABS[tabidx] + "_info"));
         }
     }
 
@@ -157,6 +160,8 @@ public class StatusView extends BWindow
     protected MessageBundle _msgs;
 
     protected BComponent _tab;
+    protected BLabel _tabinfo;
+
     protected InventoryPalette _items, _badges, _duds;
     protected UnitPalette _bigshots;
     protected PlayerStatsView _stats;

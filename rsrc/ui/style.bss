@@ -422,6 +422,13 @@ status_handle {
   color: #4d2a04;
 }
 
+status_tabinfo {
+  font: "Helvetica" plain 15;
+  text-align: center;
+  vertical-align: top;
+  color: #ffefc0;
+}
+
 stats_view { 
   padding: 5;
   color: #000000;
