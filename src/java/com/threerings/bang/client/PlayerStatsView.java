@@ -20,7 +20,7 @@ public class PlayerStatsView extends BContainer
     public PlayerStatsView (BangContext ctx)
     {
         super(new TableLayout(2, 5, 5));
-        setStyleClass("padded_box");
+        setStyleClass("stats_view");
         _ctx = ctx;
     }
 

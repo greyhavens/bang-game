@@ -414,6 +414,11 @@ status_view {
   padding: 65 0 0 0;
 }
 
+stats_view { 
+  padding: 5;
+  color: #000000;
+}
+
 //
 // In-game styles
 
@@ -489,7 +494,7 @@ town_name_label {
 
 article_icon {
   parent: palette_icon;
-  padding: 0, 0, 0, 0;
+  padding: 0 0 0 0;
 }
 
 article_icon:selected {
