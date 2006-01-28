@@ -18,8 +18,8 @@ public class PurseIcon extends ItemIcon
     protected void configureLabel (BangContext ctx)
     {
         Purse purse = (Purse)_item;
-        setIcon(new ImageIcon(ctx.loadImage("ui/unknown_item.png")));
-        String mkey = "m." + Purse.PURSE_TYPES[purse.getTownIndex()];
-        setText(ctx.xlate(BangCodes.GOODS_MSGS, mkey));
+        String type = Purse.PURSE_TYPES[purse.getTownIndex()];
+        setIcon(new ImageIcon(ctx.loadImage("goods/purses/" + type + ".png")));
+        setText(ctx.xlate(BangCodes.GOODS_MSGS, "m." + type));
     }
 }
