@@ -49,9 +49,11 @@ public class IconPalette extends BContainer
      * @param size the dimensions of the icons we will contain.
      * @param selectable the number of simultaneously selectable icons (must be
      * at least one).
+     * @param paintbg if true, the palette will paint a background under the
+     * icons, if false it will let whatever's underneath show through.
      */
     public IconPalette (Inspector inspector, int columns, int rows,
-                        Dimension size, int selectable)
+                        Dimension size, int selectable, boolean paintbg)
     {
         super(new BorderLayout(0, 0));
         _rows = rows;
@@ -60,9 +62,12 @@ public class IconPalette extends BContainer
         _selectable = selectable;
 
         add(_icont = new BContainer(new TableLayout(columns, 0, 0)),
-            BorderLayout.CENTER);
+            BorderLayout.NORTH);
         _icont.setPreferredSize(new Dimension(size.width * columns,
                                               size.height * rows));
+        if (paintbg) {
+            _icont.setStyleClass("palette_background");
+        }
 
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
         hlay.setGap(50);
@@ -72,7 +77,7 @@ public class IconPalette extends BContainer
         _back.setStyleClass("back_button");
         buttons.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
-        add(buttons, BorderLayout.SOUTH);
+        add(buttons, BorderLayout.CENTER);
     }
 
     /**

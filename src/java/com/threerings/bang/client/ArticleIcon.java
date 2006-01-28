@@ -15,6 +15,11 @@ import com.threerings.bang.util.BangContext;
  */
 public class ArticleIcon extends ItemIcon
 {
+    public ArticleIcon ()
+    {
+        setStyleClass("article_icon"); // adjust insets
+    }
+
     @Override // documentation inherited
     protected void configureLabel (BangContext ctx)
     {

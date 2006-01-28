@@ -24,7 +24,7 @@ public class UnitPalette extends IconPalette
 {
     public UnitPalette (BangContext ctx, Inspector inspector, int columns)
     {
-        super(inspector, columns, 3, UnitIcon.ICON_SIZE, 1);
+        super(inspector, columns, 3, UnitIcon.ICON_SIZE, 1, true);
         _ctx = ctx;
     }
 

@@ -23,7 +23,7 @@ public class CardPalette extends IconPalette
 {
     public CardPalette (BangContext ctx, BangObject bangobj)
     {
-        super(null, 4, 1, ItemIcon.ICON_SIZE, GameCodes.MAX_CARDS);
+        super(null, 4, 1, ItemIcon.ICON_SIZE, GameCodes.MAX_CARDS, true);
 
         PlayerObject user = ctx.getUserObject();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {

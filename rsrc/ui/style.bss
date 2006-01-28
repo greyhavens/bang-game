@@ -19,17 +19,17 @@ window {
 }
 
 decoratedwindow {
-  background: image "ui/window_background.png" tilexy;
+  background: image "ui/window_background.png" framexy;
   padding: 15;
 }
 
 popupwindow {
-  background: image "ui/window_background.png" tilexy;
+  background: image "ui/window_background.png" framexy;
   padding: 15;
 }
 
 popupmenu {
-  background: image "ui/popupmenu/background.png" tilexy;
+  background: image "ui/popupmenu/background.png" framexy;
   padding: 5 5 5 5;
 }
 
@@ -38,7 +38,7 @@ menuitem {
 }
 
 menuitem:hover {
-  background: image "ui/popupmenu/highlight.png" tilexy;
+  background: image "ui/popupmenu/highlight.png" framexy;
 }
 
 component {
@@ -56,31 +56,31 @@ label {
 
 button {
   color: #FFFFFF;
-  background: image "ui/buttons/small_normal.png" tilexy;
+  background: image "ui/buttons/small_normal.png" framexy;
   font: "Old Town" plain 24;
   text-align: center;
   vertical-align: center;
   padding: 0 25;
 }
 button:disabled {
-  background: image "ui/buttons/small_disabled.png" tilexy;
+  background: image "ui/buttons/small_disabled.png" framexy;
   color: #FFFFFF4C;
 }
 button:hover {
-  background: image "ui/buttons/small_hover.png" tilexy;
+  background: image "ui/buttons/small_hover.png" framexy;
 }
 button:down {
-  background: image "ui/buttons/small_down.png" tilexy;
+  background: image "ui/buttons/small_down.png" framexy;
   padding: 2 26 0 24;
 }
 button:selected {
-  background: image "ui/buttons/small_down.png" tilexy;
+  background: image "ui/buttons/small_down.png" framexy;
   padding: 2 26 0 24;
 }
 
 big_button {
   color: #FFFFFF;
-  background: image "ui/buttons/big_normal.png" tilexy;
+  background: image "ui/buttons/big_normal.png" framexy;
   font: "Old Town" plain 24;
   text-align: center;
   text-effect: shadow;
@@ -89,65 +89,65 @@ big_button {
   padding: 0 25;
 }
 big_button:disabled {
-  background: image "ui/buttons/big_disabled.png" tilexy;
+  background: image "ui/buttons/big_disabled.png" framexy;
   color: #FFFFFF4C;
 }
 big_button:hover {
-  background: image "ui/buttons/big_hover.png" tilexy;
+  background: image "ui/buttons/big_hover.png" framexy;
 }
 big_button:down {
-  background: image "ui/buttons/big_down.png" tilexy;
+  background: image "ui/buttons/big_down.png" framexy;
   padding: 2 26 0 24;
 }
 
 alt_button {
   color: #FFFFFF;
-  background: image "ui/buttons/secondary_normal.png" tilexy;
+  background: image "ui/buttons/secondary_normal.png" framexy;
   font: "Dom Casual" plain 16;
   text-align: center;
   vertical-align: center;
   padding: 0 15 1 15;
 }
 alt_button:disabled {
-  background: image "ui/buttons/secondary_disabled.png" tilexy;
+  background: image "ui/buttons/secondary_disabled.png" framexy;
   color: #FFFFFF4C;
 }
 alt_button:hover {
-  background: image "ui/buttons/secondary_hover.png" tilexy;
+  background: image "ui/buttons/secondary_hover.png" framexy;
 }
 alt_button:down {
-  background: image "ui/buttons/secondary_down.png" tilexy;
+  background: image "ui/buttons/secondary_down.png" framexy;
   padding: 2 16 0 14;
 }
 alt_button:selected {
-  background: image "ui/buttons/secondary_down.png" tilexy;
+  background: image "ui/buttons/secondary_down.png" framexy;
   padding: 2 16 0 14;
 }
 
 fwd_button {
-  background: image "ui/buttons/forward_normal.png" tilexy;
+  background: image "ui/buttons/forward_normal.png" framexy;
 }
 fwd_button:disabled {
-  background: image "ui/buttons/forward_disabled.png" tilexy;
+  background: image "ui/buttons/forward_disabled.png" framexy;
 }
 fwd_button:hover {
-  background: image "ui/buttons/forward_hover.png" tilexy;
+  background: image "ui/buttons/forward_hover.png" framexy;
 }
 fwd_button:down {
-  background: image "ui/buttons/forward_down.png" tilexy;
+  background: image "ui/buttons/forward_down.png" framexy;
 }
 
 back_button {
-  background: image "ui/buttons/back_normal.png" tilexy;
+  background: image "ui/buttons/back_normal.png" framexy;
 }
 back_button:disabled {
-  background: image "ui/buttons/back_disabled.png" tilexy;
+  background: image "ui/buttons/back_disabled.png" framexy;
 }
 back_button:hover {
-  background: image "ui/buttons/back_hover.png" tilexy;
+  background: image "ui/buttons/back_hover.png" framexy;
 }
 back_button:down {
-  background: image "ui/buttons/back_down.png" tilexy;
+  background: image "ui/buttons/back_down.png" framexy;
 }
 
 invisibutton {
@@ -164,29 +164,29 @@ invisibutton:selected {
 combobox {
   font: "Helvetica" plain 15;
   color: #FFFFFF;
-  background: image "ui/combobox/normal.png" tilexy;
+  background: image "ui/combobox/normal.png" framexy;
   padding: 5 22 5 10;
   text-align: center;
 }
 
 combobox:hover {
-  background: image "ui/combobox/hover.png" tilexy;
+  background: image "ui/combobox/hover.png" framexy;
 }
 
 combobox:down {
-  background: image "ui/combobox/hover.png" tilexy;
+  background: image "ui/combobox/hover.png" framexy;
 }
 
 textfield {
   color: #524129;
   font: "Dom Casual" plain 20;
-  background: image "ui/textfield.png" tilexy;
+  background: image "ui/textfield.png" framexy;
   padding: 5;
 }
 
 textarea {
   color: #524129;
-  background: image "ui/textfield.png" tilexy;
+  background: image "ui/textfield.png" framexy;
   padding: 5;
 }
 
@@ -199,45 +199,45 @@ checkbox:selected {
 }
 
 scrollbar_hthumb {
-  background: image "ui/scrollbar/thumb_normal.png" tilexy;
+  background: image "ui/scrollbar/thumb_normal.png" framexy;
 }
 
 scrollbar_hthumb:down {
-  background: image "ui/scrollbar/thumb_down.png" tilexy;
+  background: image "ui/scrollbar/thumb_down.png" framexy;
 }
 
 scrollbar_hthumb:disabled {
-  background: image "ui/scrollbar/thumb_disabled.png" tilexy;
+  background: image "ui/scrollbar/thumb_disabled.png" framexy;
 }
 
 scrollbar_vthumb {
-  background: image "ui/scrollbar/thumb_normal.png" tilexy;
+  background: image "ui/scrollbar/thumb_normal.png" framexy;
 }
 
 scrollbar_vthumb:down {
-  background: image "ui/scrollbar/thumb_down.png" tilexy;
+  background: image "ui/scrollbar/thumb_down.png" framexy;
 }
 
 scrollbar_vthumb:disabled {
-  background: image "ui/scrollbar/thumb_disabled.png" tilexy;
+  background: image "ui/scrollbar/thumb_disabled.png" framexy;
 }
 
 scrollbar_hwell {
-  background: image "ui/scrollbar/well_normal.png" tilexy;
+  background: image "ui/scrollbar/well_normal.png" framexy;
   padding: 2 3 2 3;
 }
 
 scrollbar_hwell:disabled {
-  background: image "ui/scrollbar/well_disabled.png" tilexy;
+  background: image "ui/scrollbar/well_disabled.png" framexy;
 }
 
 scrollbar_vwell {
-  background: image "ui/scrollbar/well_normal.png" tilexy;
+  background: image "ui/scrollbar/well_normal.png" framexy;
   padding: 2 3 2 3;
 }
 
 scrollbar_vwell:disabled {
-  background: image "ui/scrollbar/well_disabled.png" tilexy;
+  background: image "ui/scrollbar/well_disabled.png" framexy;
 }
 
 scrollbar_hless {
@@ -245,15 +245,15 @@ scrollbar_hless {
 }
 
 scrollbar_vless {
-  background: image "ui/scrollbar/top_normal.png" tilexy;
+  background: image "ui/scrollbar/top_normal.png" framexy;
 }
 
 scrollbar_vless:down {
-  background: image "ui/scrollbar/top_down.png" tilexy;
+  background: image "ui/scrollbar/top_down.png" framexy;
 }
 
 scrollbar_vless:disabled {
-  background: image "ui/scrollbar/top_disabled.png" tilexy;
+  background: image "ui/scrollbar/top_disabled.png" framexy;
 }
 
 scrollbar_hmore {
@@ -261,15 +261,15 @@ scrollbar_hmore {
 }
 
 scrollbar_vmore {
-  background: image "ui/scrollbar/bottom_normal.png" tilexy;
+  background: image "ui/scrollbar/bottom_normal.png" framexy;
 }
 
 scrollbar_vmore:down {
-  background: image "ui/scrollbar/bottom_down.png" tilexy;
+  background: image "ui/scrollbar/bottom_down.png" framexy;
 }
 
 scrollbar_vmore:disabled {
-  background: image "ui/scrollbar/bottom_disabled.png" tilexy;
+  background: image "ui/scrollbar/bottom_disabled.png" framexy;
 }
 
 //
@@ -364,7 +364,7 @@ color_selector {
 }
 
 color_selector_popup {
-  background: image "ui/barber/swatch_extend.png" tilexy;
+  background: image "ui/barber/swatch_extend.png" framexy;
   padding: 0 5 0 0;
 }
 
@@ -376,7 +376,11 @@ color_selector_item {
 // Icon Palette styles
 
 palette_background {
-  // TODO: tile the background
+  background: image "ui/palette/background.png" tilexy;
+}
+
+palette_buttons {
+  padding: 1 18 1 18;
 }
 
 palette_icon {
@@ -393,11 +397,7 @@ palette_icon:selected {
   color: #FFFFFF;
   text-effect: shadow;
   effect-color: #6A482E;
-  background: image "ui/palette/selected.png" tilexy;
-}
-
-palette_buttons {
-  padding: 0 18;
+  background: image "ui/palette/selected.png" framexy;
 }
 
 //
@@ -447,12 +447,12 @@ player_status_cont {
 }
 
 card_button {
-  background: image "ui/pstatus/card_up.png" tilexy;
+  background: image "ui/pstatus/card_up.png" framexy;
   padding: 1;
 }
 
 card_button:down {
-  background: image "ui/pstatus/card_down.png" tilexy;
+  background: image "ui/pstatus/card_down.png" framexy;
   padding: 2 0 0 2;
 }
 
