@@ -24,6 +24,7 @@ import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.threerings.jme.camera.SplinePath;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.util.MessageBundle;
 
@@ -130,6 +131,16 @@ public class TownView extends BWindow
             addListener(new MouseAdapter() {
                 public void mousePressed (MouseEvent me) {
                     if (_hsprite != null) {
+                        // move the camera into the sprite
+                        _pos.set(_hsprite.getLocalTranslation());
+                        _pos.z += TILE_SIZE / 2;
+                        _hsprite.getLocalRotation().mult(Vector3f.UNIT_Y,
+                            _dir);
+                        _ctx.getCameraHandler().moveCamera(
+                            new SplinePath(_ctx.getCameraHandler(),
+                                _pos, _dir, 0.75f));
+                                
+                        // fire the associated command
                         String type = ((Prop)_hsprite.getPiece()).getType();
                         fireCommand(_commands.get(type));
                     }
@@ -226,7 +237,8 @@ public class TownView extends BWindow
     protected HashMap<String, String> _commands =
         new HashMap<String, String>();
     
-    protected Vector3f _loc = new Vector3f();
+    protected Vector3f _loc = new Vector3f(), _pos = new Vector3f(),
+        _dir = new Vector3f();
     protected Quaternion _rot = new Quaternion();
     
     /** The resource path of the town board. */
