@@ -539,6 +539,7 @@ bank_post_title {
 // Barber styles
 
 avatar_view {
+  background: image "ui/barber/avatar_background.png" centerxy;
   padding: 7 12 7 12;
 }
 
