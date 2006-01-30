@@ -138,7 +138,7 @@ public class TownView extends BWindow
                             _dir);
                         _ctx.getCameraHandler().moveCamera(
                             new SplinePath(_ctx.getCameraHandler(),
-                                _pos, _dir, 0.75f));
+                                _pos, _dir, 0.75f, 0.5f));
                                 
                         // fire the associated command
                         String type = ((Prop)_hsprite.getPiece()).getType();
