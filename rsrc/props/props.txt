@@ -5,6 +5,7 @@ buildings/office
 buildings/saloon
 buildings/stables
 buildings/jail
+buildings/barber
 natural/cactus1
 natural/cactus2
 natural/rocks1
