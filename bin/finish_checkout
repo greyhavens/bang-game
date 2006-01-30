@@ -6,7 +6,8 @@
 
 LOCAL_LIBS=../../../lib
 TOOLS_LIBS=/export/tools/lib/java
-ROOT=`dirname $0 | sed s:/bin$::`
+ROOT=`dirname $0`
+ROOT=`cd $ROOT ; cd .. ; pwd`
 ANT=ant
 
 make_symlinks() {
@@ -24,8 +25,8 @@ make_symlinks() {
 
 # sanity check
 if [ ! -d $ROOT/projects ]; then
-    echo "Run this script with a full path (not as ./finish_checkout)."
-    exit -1
+    echo "Could not locate $ROOT/projects. Funny business!"
+    exit 255
 fi
 
 # determine our subversion repository URL
