@@ -28,6 +28,28 @@ if [ ! -d $ROOT/projects ]; then
     exit -1
 fi
 
+# determine our subversion repository URL
+SVNROOT=`grep ' url' $ROOT/.svn/entries | awk -F\" '{ print $2 }' | \
+    sed 's:/bang.*:/:'`
+
+# check out the various project directories
+cd $ROOT/projects
+if [ ! -d narya ]; then
+    svn checkout $SVNROOT/narya/trunk narya
+fi
+if [ ! -d threerings ]; then
+    svn checkout $SVNROOT/threerings/trunk/projects/threerings threerings
+fi
+if [ ! -d getdown ]; then
+    svn checkout $SVNROOT/getdown/trunk getdown
+fi
+if [ ! -d samskivert ]; then
+    svn checkout svn://samskivert.com/samskivert/trunk samskivert
+fi
+if [ ! -d jme-bui ]; then
+    svn checkout svn://samskivert.com/jme-bui/trunk jme-bui
+fi
+
 # set up the necessary library symlinks
 cd $ROOT/projects/jme-bui/lib
 make_symlinks \
