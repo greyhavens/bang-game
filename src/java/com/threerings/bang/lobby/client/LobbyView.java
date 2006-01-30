@@ -3,6 +3,11 @@
 
 package com.threerings.bang.lobby.client;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Iterator;
+import org.apache.commons.io.IOUtils;
+
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
@@ -35,12 +40,11 @@ import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.jme.chat.ChatView;
 
+import com.threerings.bang.client.BangClient;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.lobby.data.LobbyObject;
 import com.threerings.bang.util.BangContext;
-
-import java.util.Iterator;
 
 import static com.threerings.bang.Log.log;
 
@@ -79,17 +83,14 @@ public class LobbyView extends BWindow
 
         // add our various configuration options
         BContainer blist = new BContainer(
-            new TableLayout(7, 5, 5, TableLayout.CENTER));
+            new TableLayout(5, 5, 5, TableLayout.CENTER));
         blist.add(new BLabel(msgs.get("m.player_count")));
         _seats = new BComboBox(SEATS);
         blist.add(_seats);
 
-        blist.add(new BLabel(msgs.get("m.team_size")));
-        _tsize = new BComboBox(TEAM_SIZE);
-        blist.add(_tsize);
-
         blist.add(new BLabel(msgs.get("m.scenario")));
-        _scenarios = new BComboBox(new Object[] { new ScenarioLabel("random") });
+        _scenarios = new BComboBox(
+            new Object[] { new ScenarioLabel("random") });
         blist.add(_scenarios);
 
         blist.add(_board = new BTextField());
@@ -99,17 +100,16 @@ public class LobbyView extends BWindow
         _rounds = new BComboBox(ROUNDS);
         blist.add(_rounds);
 
+        blist.add(new BLabel(msgs.get("m.team_size")));
+        _tsize = new BComboBox(TEAM_SIZE);
+        blist.add(_tsize);
+
         // configure the controls with the defaults
         BangConfig defconf = new BangConfig();
         _seats.selectItem(Integer.valueOf(defconf.seats));
         _rounds.selectItem(Integer.valueOf(3));
         _tsize.selectItem(Integer.valueOf(defconf.teamSize));
         _scenarios.selectItem(0);
-
-        // put the create button in the rightmost column
-        blist.add(new BLabel(""));
-        blist.add(new BLabel(""));
-        blist.add(new BLabel(""));
 
         _create = new BButton(msgs.get("m.create"), "create");
         _create.addListener(this);
@@ -266,10 +266,35 @@ public class LobbyView extends BWindow
             }
         }
         config.teamSize = (Integer)_tsize.getSelectedItem();
+
+        // if they specified the name of a board file, try using that
         String bname = _board.getText();
-        if (!StringUtil.isBlank(bname)) {
+        if (bname.endsWith(".board")) {
+            String error = null;
+            File board = new File(
+                BangClient.localDataDir(
+                    "rsrc" + File.separator + "boards" + File.separator +
+                    String.valueOf(tconfig.desiredPlayerCount)), bname);
+            if (!board.exists()) {
+                error = "File not found.";
+            }
+            try {
+                config.bdata = IOUtils.toByteArray(new FileInputStream(board));
+            } catch (Exception e) {
+                error = e.getMessage();
+            }
+            if (error != null) {
+                String msg = MessageBundle.tcompose(
+                    "m.board_load_failed", board.getPath(), error);
+                _ctx.getChatDirector().displayFeedback("lobby", msg);
+                return;
+            }
+
+        } else if (!StringUtil.isBlank(bname)) {
+            // or maybe they just specified the name of a board
             config.board = bname;
         }
+
         _tbldtr.createTable(tconfig, config);
     }
 

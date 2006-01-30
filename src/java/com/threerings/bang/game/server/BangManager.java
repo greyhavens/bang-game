@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.server;
 
+import java.io.ByteArrayInputStream;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -311,15 +313,34 @@ public class BangManager extends GameManager
                 new BangDispatcher(this), false));
         _bconfig = (BangConfig)_gameconfig;
 
-        // select the boards we'll use for each round
+        // for testing boards may be specified by name or binary board data
         if (!StringUtil.isBlank(_bconfig.board)) {
             BoardRecord brec = BangServer.boardmgr.getBoard(
                 _bconfig.players.length, _bconfig.board);
             if (brec != null) {
                 _boards = new BoardRecord[_bconfig.scenarios.length];
                 Arrays.fill(_boards, brec);
+            } else {
+                String msg = MessageBundle.tcompose(
+                    "m.no_such_board", _bconfig.board);
+                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
+            }
+
+        } else if (_bconfig.bdata != null) {
+            try {
+                BoardRecord brec = new BoardRecord();
+                brec.load(new ByteArrayInputStream(_bconfig.bdata));
+                _boards = new BoardRecord[_bconfig.scenarios.length];
+                Arrays.fill(_boards, brec);
+            } catch (Exception e) {
+                String msg = MessageBundle.tcompose(
+                    "m.board_load_failed", e.getMessage());
+                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
+                log.log(Level.WARNING, "Failed to load board from data.", e);
             }
         }
+
+        // if no boards were specified otherwise, pick them randomly
         if (_boards == null) {
             _boards = BangServer.boardmgr.selectBoards(
                 _bconfig.players.length, _bconfig.scenarios);
@@ -519,7 +540,6 @@ public class BangManager extends GameManager
             unit.init();
             unit.owner = pidx;
             _bangobj.setBigShotsAt(unit, pidx);
-            log.info(getPlayerName(pidx) + " selected " + item + ".");
 
         } finally {
             _bangobj.commitTransaction();

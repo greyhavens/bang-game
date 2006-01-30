@@ -30,6 +30,9 @@ public class BangConfig extends GameConfig
      * randomly. This is used when testing. */
     public String board;
 
+    /** Used when testing with a specific board. */
+    public byte[] bdata;
+
     /** Whether or not fog of war is activated. */
     public boolean fog = false;
 
@@ -37,6 +40,12 @@ public class BangConfig extends GameConfig
     public int getRounds ()
     {
         return scenarios.length;
+    }
+
+    /** Helper for {@link #toString}. */
+    public String bdataToString ()
+    {
+        return (bdata == null) ? "<none>" : (bdata.length + " bytes");
     }
 
     @Override // documentation inherited

@@ -60,22 +60,7 @@ public class BoardRecord
 
     /** The serialized board data. */
     public byte[] data;
-    
-    /** The last iteration of the bang board. */
-    public static class OldBangBoard extends SimpleStreamableObject
-    {
-        public int width, height;
-        public byte[] heightfield;
-        public byte[] terrain;
-        public byte[] shadows;
-        public byte waterLevel;
-        public int waterDiffuseColor, waterAmbientColor;
-        public float[] lightAzimuths, lightElevations;
-        public int[] lightDiffuseColors, lightAmbientColors;
-        public int skyHorizonColor, skyOverheadColor;
-        public float skyFalloff;
-    }
-    
+
     /**
      * Serializes the supplied board and piece information and stuffs it
      * into the {@link #data} member.
@@ -210,26 +195,6 @@ public class BoardRecord
         try {
             ObjectInputStream oin = new ObjectInputStream(
                 new ByteArrayInputStream(data));
-            /*
-            oin.addTranslation("com.threerings.bang.game.data.BangBoard",
-                "com.threerings.bang.server.persist.BoardRecord$OldBangBoard");
-            OldBangBoard obb = (OldBangBoard)oin.readObject();
-            _board = new BangBoard(obb.width, obb.height);
-            System.arraycopy(obb.heightfield, 0, _board.getHeightfield(), 0,
-                obb.heightfield.length);
-            System.arraycopy(obb.terrain, 0, _board.getTerrain(), 0,
-                obb.terrain.length);
-            System.arraycopy(obb.shadows, 0, _board.getShadows(), 0,
-                obb.shadows.length);
-            _board.setWaterParams(obb.waterLevel, obb.waterDiffuseColor);
-            for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
-                _board.setLightParams(i, obb.lightAzimuths[i],
-                    obb.lightElevations[i], obb.lightDiffuseColors[i],
-                    obb.lightAmbientColors[i]);
-            }
-            _board.setSkyParams(obb.skyHorizonColor, obb.skyOverheadColor,
-                obb.skyFalloff);
-            */
             _board = (BangBoard)oin.readObject();
             _pieces = new Piece[oin.readInt()];
             for (int ii = 0; ii < _pieces.length; ii++) {
