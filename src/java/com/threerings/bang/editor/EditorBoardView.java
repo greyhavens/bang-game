@@ -337,6 +337,15 @@ public class EditorBoardView extends BoardView
     }
     
     /**
+     * Sets the shadow intensity.
+     */
+    public void setShadowIntensity (float intensity)
+    {
+        _board.setShadowIntensity(intensity);
+        _tnode.refreshShadows();
+    }
+    
+    /**
      * Sets the parameters of the board's sky.
      */
     public void setSkyParams (int horizonColor, int overheadColor,
@@ -353,15 +362,28 @@ public class EditorBoardView extends BoardView
     /**
      * Sets the board's water parameters.
      */
-    public void setWaterParams (int level, int color)
+    public void setWaterParams (int level, int color, float amplitude)
     {
         int ocolor = _board.getWaterColor();
-        _board.setWaterParams((byte)level, color);
+        float oamplitude = _board.getWaterAmplitude();
+        _board.setWaterParams((byte)level, color, amplitude);
         if (ocolor != color) {
             _wnode.refreshSphereMap();
         }
+        if (oamplitude != amplitude) {
+            _wnode.refreshWaveAmplitudes();
+        }
         _wnode.refreshSurface();
         updateHighlights();
+    }
+    
+    /**
+     * Sets the board's wind parameters.
+     */
+    public void setWindParams (float direction, float speed)
+    {
+        _board.setWindParams(direction, speed);
+        _wnode.refreshWaveAmplitudes();
     }
     
     /**
@@ -402,12 +424,17 @@ public class EditorBoardView extends BoardView
                     _board.getTerrainValue(x+xoff, y+yoff));
             }
         }
-        nboard.setWaterParams(_board.getWaterLevel(), _board.getWaterColor());
         for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
             nboard.setLightParams(i, _board.getLightAzimuth(i),
                 _board.getLightElevation(i), _board.getLightDiffuseColor(i),
                 _board.getLightAmbientColor(i));    
         }
+        nboard.setShadowIntensity(_board.getShadowIntensity());
+        nboard.setSkyParams(_board.getSkyHorizonColor(),
+            _board.getSkyOverheadColor(), _board.getSkyFalloff());
+        nboard.setWaterParams(_board.getWaterLevel(), _board.getWaterColor(),
+            _board.getWaterAmplitude());
+        nboard.setWindParams(_board.getWindDirection(), _board.getWindSpeed());
         _bangobj.setBoard(nboard);
         
         // then move the pieces

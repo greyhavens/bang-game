@@ -73,6 +73,9 @@ public class WaterNode extends Node
         // refresh the sphere map
         refreshSphereMap();
         
+        // and the wave amplitudes
+        refreshWaveAmplitudes();
+        
         // initialize the array of blocks
         int bwidth = (int)Math.ceil(_board.getWidth() /
                 (double)HEIGHT_MAP_TILES),
@@ -146,6 +149,22 @@ public class WaterNode extends Node
         tstate.setTexture(texture);
         setRenderState(tstate);
         updateRenderState();
+    }
+    
+    /**
+     * Updates the wave amplitudes based on the amplitude scale and environment
+     * parameters.
+     */
+    public void refreshWaveAmplitudes ()
+    {
+        // create the initial set of wave amplitudes
+        float wdir = _board.getWindDirection(), wspeed = _board.getWindSpeed();
+        Vector2f wvec = new Vector2f(wspeed * FastMath.cos(wdir),
+            wspeed * FastMath.sin(wdir));
+        WaveUtil.getInitialAmplitudes(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
+            PATCH_SIZE, PATCH_SIZE, new WaveUtil.PhillipsSpectrum(
+                _board.getWaterAmplitude(), wvec, GRAVITY, 0.5f),
+            _iramps, _iiamps);
     }
     
     /**
@@ -244,14 +263,8 @@ public class WaterNode extends Node
      */
     protected void createWavePatch ()
     {
-        // create the initial set of wave amplitudes
-        WaveUtil.getInitialAmplitudes(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
-            PATCH_SIZE, PATCH_SIZE,
-            new WaveUtil.PhillipsSpectrum(25f, new Vector2f(20f, 0f), 25f, 0.05f),
-            _iramps, _iiamps);
-        
         // reuse the dispersion model and index buffer
-        _disp = new WaveUtil.DeepWaterModel(20f);
+        _disp = new WaveUtil.DeepWaterModel(GRAVITY);
         int vwidth = HEIGHT_MAP_SIZE + 1, vheight = HEIGHT_MAP_SIZE + 1,
             vsize = vwidth * vheight;
         IntBuffer ibuf = BufferUtils.createIntBuffer(HEIGHT_MAP_SIZE *
@@ -325,4 +338,7 @@ public class WaterNode extends Node
     
     /** The air/water Snell ratio. */
     protected static final float SNELL_RATIO = 1.34f;
+    
+    /** The acceleration due to gravity in Bang! units. */
+    protected static final float GRAVITY = 16f;
 }

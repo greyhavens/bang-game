@@ -248,7 +248,7 @@ public class BoardView extends BComponent
 
     /**
      * Returns the intensity of shadows on the board, which depends on the
-     * total ambient light.
+     * total light and the board's configured shadow intensity.
      *
      * @return 0.0 for no shadows, 1.0 for completely black shadows
      */
@@ -261,7 +261,7 @@ public class BoardView extends BComponent
             Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
             total += hsb[2];
         }
-        return 0.75f * Math.max(0f, 1f - total);
+        return 0.7f * _board.getShadowIntensity() * Math.max(0f, 1f - total);
     }
 
     /**

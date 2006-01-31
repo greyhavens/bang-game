@@ -31,6 +31,7 @@ import com.threerings.bang.game.data.BangBoard;
  * Allows the user to edit the board's light configuration.
  */
 public class LightDialog extends JDialog
+    implements ChangeListener
 {
     public LightDialog (EditorContext ctx, EditorPanel panel)
     {
@@ -44,6 +45,12 @@ public class LightDialog extends JDialog
         for (int i = 0; i < _lpanels.length; i++) {
             center.add(_lpanels[i] = new LightPanel(i));
         }
+        
+        JPanel spanel = new JPanel();
+        spanel.add(new JLabel(_ctx.xlate("editor", "m.shadow_intensity")));
+        spanel.add(_shadow = new JSlider(0, 100, 100));
+        _shadow.addChangeListener(this);
+        center.add(spanel);
         
         getContentPane().add(center, BorderLayout.CENTER);
         
@@ -69,6 +76,13 @@ public class LightDialog extends JDialog
         for (int i = 0; i < _lpanels.length; i++) {
             _lpanels[i].fromBoard(board);
         }
+        _shadow.setValue((int)(board.getShadowIntensity() * 100f));
+    }
+    
+    // documentation inherited from interface ChangeListener
+    public void stateChanged (ChangeEvent e)
+    {
+        _panel.view.setShadowIntensity(_shadow.getValue() / 100f);
     }
     
     /** Controls the parameters for a single light. */
@@ -134,4 +148,7 @@ public class LightDialog extends JDialog
     
     /** The panels for each light. */
     protected LightPanel[] _lpanels;
+    
+    /** The shadow intensity slider. */
+    protected JSlider _shadow;
 }

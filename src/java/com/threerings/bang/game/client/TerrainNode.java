@@ -1011,7 +1011,7 @@ public class TerrainNode extends Node
                 total += weight;
             }
         }
-        return value / total;
+        return (value / total) * _board.getShadowIntensity();
     }
     
     /** Contains all the state associated with a splat block (a collection of

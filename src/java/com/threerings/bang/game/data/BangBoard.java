@@ -71,10 +71,12 @@ public class BangBoard extends SimpleStreamableObject
         _terrain = new byte[_hfwidth * _hfheight];
         _shadows = new byte[_hfwidth * _hfheight];
         fillShadows(0);
+        _shadowIntensity = 1f;
         
         _waterLevel = (byte)-128;
         _waterColor = 0x003232;
-
+        _waterAmplitude = 25f;
+        
         _lightAzimuths = new float[] { 0f, (float)Math.PI };
         _lightElevations = new float[] { (float)(Math.PI / 4),
             (float)(-Math.PI / 4)};
@@ -84,6 +86,8 @@ public class BangBoard extends SimpleStreamableObject
         _skyHorizonColor = 0xFFFFFF;
         _skyOverheadColor = 0x00FFFF;
         _skyFalloff = 10f;
+        
+        _windSpeed = 20f;
         
         _pterrain = new byte[width*height];
         _btstate = new byte[width*height];
@@ -235,6 +239,18 @@ public class BangBoard extends SimpleStreamableObject
         return _shadows;
     }
     
+    /** Returns the intensity of the shadows on the board. */
+    public float getShadowIntensity ()
+    {
+        return _shadowIntensity;
+    }
+    
+    /** Sets the intensity of the shadows on the board. */
+    public void setShadowIntensity (float intensity)
+    {
+        _shadowIntensity = intensity;
+    }
+    
     /** Returns the level of the water on the board in heightfield units (-128
      * for no water. */
     public byte getWaterLevel ()
@@ -248,11 +264,18 @@ public class BangBoard extends SimpleStreamableObject
         return _waterColor;
     }
 
+    /** Returns the amplitude of the water waves. */
+    public float getWaterAmplitude ()
+    {
+        return _waterAmplitude;
+    }
+    
     /** Sets the water parameters. */
-    public void setWaterParams (byte level, int color)
+    public void setWaterParams (byte level, int color, float amplitude)
     {
         _waterLevel = level;
         _waterColor = color;
+        _waterAmplitude = amplitude;
     }
 
     /**
@@ -348,6 +371,34 @@ public class BangBoard extends SimpleStreamableObject
         _skyHorizonColor = horizonColor;
         _skyOverheadColor = overheadColor;
         _skyFalloff = falloff;
+    }
+    
+    /**
+     * Returns the direction in which the wind is blowing.
+     */
+    public float getWindDirection ()
+    {
+        return _windDirection;
+    }
+    
+    /**
+     * Returns the speed at which the wind is blowing.
+     */
+    public float getWindSpeed ()
+    {
+        return _windSpeed;
+    }
+    
+    /**
+     * Sets the wind parameters.
+     *
+     * @param direction the direction in which the wind is blowing
+     * @param speed the speed at which the wind is blowing
+     */
+    public void setWindParams (float direction, float speed)
+    {
+        _windDirection = direction;
+        _windSpeed = speed;
     }
     
     /**
@@ -939,12 +990,18 @@ public class BangBoard extends SimpleStreamableObject
     /** The height of the shadow volume at each heightfield vertex. */
     protected byte[] _shadows;
     
+    /** The intensity of the shadows on the board. */
+    protected float _shadowIntensity;
+    
     /** The level of the water on the board (-128 for no water). */
     protected byte _waterLevel;
 
     /** The color of the water. */
     protected int _waterColor;
 
+    /** The amplitude scale of the waves in the water. */
+    protected float _waterAmplitude;
+    
     /** The azimuths and elevations of the directional lights. */
     protected float[] _lightAzimuths, _lightElevations;
 
@@ -957,6 +1014,9 @@ public class BangBoard extends SimpleStreamableObject
     /** The falloff factor that determines how quickly the horizon color fades
      * into the overhead color. */
     protected float _skyFalloff;
+
+    /** The speed and direction of the wind. */
+    protected float _windDirection, _windSpeed;
     
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight;

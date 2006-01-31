@@ -296,8 +296,8 @@ public class WaveUtil
         for (int ii = 0, idx = 0; ii <= numSamplesX; ii++) {
             for (int jj = 0; jj <= numSamplesY; jj++) {
                 BufferUtils.setInBuffer(normal.set(
-                        rgradx[ii % numSamplesX][jj % numSamplesY],
-                        rgrady[ii % numSamplesX][jj % numSamplesY],
+                        -rgradx[ii % numSamplesX][jj % numSamplesY],
+                        -rgrady[ii % numSamplesX][jj % numSamplesY],
                         1f).normalizeLocal(),
                     nbuf, idx++);
             }

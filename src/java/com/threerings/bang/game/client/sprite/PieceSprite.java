@@ -215,16 +215,17 @@ public class PieceSprite extends Sprite
             return;
         }
         float sheight = _view.getTerrainNode().getShadowHeight(localTranslation.x,
-            localTranslation.y), diffuse;
+            localTranslation.y), shadowed;
         if (sheight >= localTranslation.z + TILE_SIZE) {
-            diffuse = 0f;
+            shadowed = 1f;
             
         } else if (sheight > localTranslation.z) {
-            diffuse = 1f - (sheight - localTranslation.z) / TILE_SIZE;
+            shadowed = (sheight - localTranslation.z) / TILE_SIZE;
             
         } else {
-            diffuse = 1f;
+            shadowed = 0f;
         }
+        float diffuse = 1f - _view.getBoard().getShadowIntensity() * shadowed;
         _mstate.getDiffuse().set(diffuse, diffuse, diffuse, 1f);
         updateRenderState();
     }
