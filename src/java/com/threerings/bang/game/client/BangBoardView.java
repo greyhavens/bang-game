@@ -533,6 +533,9 @@ public class BangBoardView extends BoardView
 
         // select the sprite and center it in the view
         PieceSprite sprite = getPieceSprite(_selection);
+        if (sprite == null) {
+            return; // we might still be setting up
+        }
         sprite.setSelected(true);
         if (scrollCamera) {
             ((GameInputHandler)_ctx.getInputHandler()).aimCamera(
