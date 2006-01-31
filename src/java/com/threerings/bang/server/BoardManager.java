@@ -72,7 +72,8 @@ public class BoardManager
             // number of players; then shuffle that list
             String scenario = scenarios[ii];
             BoardList[] candvec = _byscenario.get(scenario);
-            BoardList candidates = (candvec == null) ? null : candvec[players-1];
+            BoardList candidates =
+                (candvec == null) ? null : candvec[players-1];
             if (candidates == null) {
                 log.warning("Aiya! Missing boards [players=" + players +
                             ", scenario=" + scenario + "].");

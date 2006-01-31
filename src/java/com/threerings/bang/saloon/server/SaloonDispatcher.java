@@ -1,0 +1,60 @@
+//
+// $Id$
+
+package com.threerings.bang.saloon.server;
+
+import com.threerings.bang.saloon.client.SaloonService;
+import com.threerings.bang.saloon.data.Criterion;
+import com.threerings.bang.saloon.data.SaloonMarshaller;
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.data.InvocationMarshaller;
+import com.threerings.presents.server.InvocationDispatcher;
+import com.threerings.presents.server.InvocationException;
+
+/**
+ * Dispatches requests to the {@link SaloonProvider}.
+ */
+public class SaloonDispatcher extends InvocationDispatcher
+{
+    /**
+     * Creates a dispatcher that may be registered to dispatch invocation
+     * service requests for the specified provider.
+     */
+    public SaloonDispatcher (SaloonProvider provider)
+    {
+        this.provider = provider;
+    }
+
+    // documentation inherited
+    public InvocationMarshaller createMarshaller ()
+    {
+        return new SaloonMarshaller();
+    }
+
+    // documentation inherited
+    public void dispatchRequest (
+        ClientObject source, int methodId, Object[] args)
+        throws InvocationException
+    {
+        switch (methodId) {
+        case SaloonMarshaller.FIND_MATCH:
+            ((SaloonProvider)provider).findMatch(
+                source,
+                (Criterion)args[0], (InvocationService.ResultListener)args[1]
+            );
+            return;
+
+        case SaloonMarshaller.LEAVE_MATCH:
+            ((SaloonProvider)provider).leaveMatch(
+                source,
+                ((Integer)args[0]).intValue()
+            );
+            return;
+
+        default:
+            super.dispatchRequest(source, methodId, args);
+        }
+    }
+}

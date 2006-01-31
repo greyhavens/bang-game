@@ -191,11 +191,12 @@ textarea {
 }
 
 checkbox {
-  icon: blank 7 7;
+  background: image "ui/checkbox/default.png" centery;
+  padding: 0 0 0 15;
 }
 
 checkbox:selected {
-  icon: image "textures/checkbox.png";
+  background: image "ui/checkbox/selected.png" centery;
 }
 
 scrollbar_hthumb {

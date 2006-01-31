@@ -38,10 +38,10 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
-import com.threerings.bang.lobby.data.LobbyConfig;
-import com.threerings.bang.lobby.server.LobbyManager;
 import com.threerings.bang.ranch.data.RanchConfig;
 import com.threerings.bang.ranch.server.RanchManager;
+import com.threerings.bang.saloon.data.SaloonConfig;
+import com.threerings.bang.saloon.server.SaloonManager;
 import com.threerings.bang.store.data.StoreConfig;
 import com.threerings.bang.store.server.StoreManager;
 
@@ -109,7 +109,7 @@ public class BangServer extends CrowdServer
     public static RanchManager ranchmgr;
 
     /** Manages the Saloon and match-making. */
-    public static LobbyManager saloonmgr;
+    public static SaloonManager saloonmgr;
 
     /** Manages the General Store and item purchase. */
     public static StoreManager storemgr;
@@ -173,8 +173,8 @@ public class BangServer extends CrowdServer
         PlaceRegistry.CreationObserver crobs =
             new PlaceRegistry.CreationObserver() {
             public void placeCreated (PlaceObject place, PlaceManager pmgr) {
-                if (pmgr instanceof LobbyManager) {
-                    saloonmgr = (LobbyManager)pmgr;
+                if (pmgr instanceof SaloonManager) {
+                    saloonmgr = (SaloonManager)pmgr;
                 } else if (pmgr instanceof StoreManager) {
                     storemgr = (StoreManager)pmgr;
                 } else if (pmgr instanceof BankManager) {
@@ -186,7 +186,7 @@ public class BangServer extends CrowdServer
                 }
             }
         };
-        plreg.createPlace(new LobbyConfig(), crobs);
+        plreg.createPlace(new SaloonConfig(), crobs);
         plreg.createPlace(new StoreConfig(), crobs);
         plreg.createPlace(new BankConfig(), crobs);
         plreg.createPlace(new RanchConfig(), crobs);

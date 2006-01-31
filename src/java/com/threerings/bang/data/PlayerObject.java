@@ -95,6 +95,20 @@ public class PlayerObject extends BodyObject
     public DSet looks;
 
     /**
+     * Returns the player's rating for the specified scenario. This method will
+     * never return null.
+     */
+    public Rating getRating (String scenario)
+    {
+        Rating rating = (Rating)ratings.get(scenario);
+        if (rating == null) {
+            rating = new Rating();
+            rating.scenario = scenario;
+        }
+        return rating;
+    }
+
+    /**
      * Returns the purse owned by this player or the default purse if the
      * player does not yet have one.
      */

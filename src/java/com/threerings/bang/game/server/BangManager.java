@@ -1373,7 +1373,8 @@ public class BangManager extends GameManager
                             BangServer.ratingrepo.updateRatings(
                                 prec.playerId, ratings);
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to persist ratings " +
+                            log.log(Level.WARNING,
+                                    "Failed to persist ratings " +
                                     "[pid=" + prec.playerId + ", ratings=" +
                                     StringUtil.toString(ratings) + "]", pe);
                         }
@@ -1516,7 +1517,7 @@ public class BangManager extends GameManager
                 if (rating == null) {
                     rating = new Rating();
                     rating.scenario = scenario;
-                } else {
+                } else if (rating.experience > 0) {
                     rating = (Rating)rating.clone();
                 }
             }
