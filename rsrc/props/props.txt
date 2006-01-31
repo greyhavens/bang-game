@@ -8,6 +8,8 @@ buildings/jail
 buildings/barber
 natural/cactus1
 natural/cactus2
+natural/cactus_flower_red
+natural/cactus_flower_orange
 natural/rocks1
 natural/cactus_round
 natural/tree_joshua
