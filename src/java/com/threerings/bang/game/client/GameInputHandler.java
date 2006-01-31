@@ -47,28 +47,27 @@ public class GameInputHandler extends GodViewHandler
         view.view.addListener(_swingListener);
         view.addListener(_rollListener);
 
-        // we only set up the camera the first time, then we leave it as is and
-        // manipulate it with pans and zooms
-        if (_camidx == -1) {
-            // set up the starting zoom index
-            _camidx = 0;
+        // set up the starting zoom index
+        _camidx = 0;
 
-            // set the pan limits based on the board size
-            _camhand.setPanLimits(
-                0, 0,
-                TILE_SIZE * bangobj.board.getWidth(),
-                TILE_SIZE * bangobj.board.getHeight(), true);
+        // set the pan limits based on the board size
+        _camhand.setPanLimits(
+            0, 0,
+            TILE_SIZE * bangobj.board.getWidth(),
+            TILE_SIZE * bangobj.board.getHeight(), true);
 
-            // start the camera in the center of the board, pointing straight
-            // down
-            float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
-            float cy = TILE_SIZE * bangobj.board.getHeight() / 2;
-            float height = CAMERA_ZOOMS[0];
-            _camhand.setLocation(new Vector3f(cx, cy, height));
+        // reset the camera's orientation
+        _camhand.resetAxes();
+        
+        // start the camera in the center of the board, pointing straight
+        // down
+        float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
+        float cy = TILE_SIZE * bangobj.board.getHeight() / 2;
+        float height = CAMERA_ZOOMS[0];
+        _camhand.setLocation(new Vector3f(cx, cy, height));
 
-            // rotate the camera by 45 degrees and orient it properly
-            _camhand.orbitCamera(FastMath.PI/4);
-        }
+        // rotate the camera by 45 degrees and orient it properly
+        _camhand.orbitCamera(FastMath.PI/4);
     }
 
     public void endRound (BangView view)

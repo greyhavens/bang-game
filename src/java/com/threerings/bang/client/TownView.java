@@ -149,7 +149,7 @@ public class TownView extends BWindow
             
             MaterialState mstate = ctx.getRenderer().createMaterialState();
             mstate.setEmissive(ColorRGBA.white);
-            _hstate = RenderUtil.createColorMaterialState(mstate, false);
+            _hstate = RenderUtil.createColorMaterialState(mstate, true);
         }
         
         /**
