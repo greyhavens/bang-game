@@ -113,6 +113,16 @@ public class IconPalette extends BContainer
     }
 
     /**
+     * Selects the first icon if there is at least one icon in the palette.
+     */
+    public void selectFirstIcon ()
+    {
+        if (_icons.size() > 0) {
+            _icons.get(0).setSelected(true);
+        }
+    }
+
+    /**
      * Configures the inspector for this palette.
      */
     public void setInspector (Inspector inspector)

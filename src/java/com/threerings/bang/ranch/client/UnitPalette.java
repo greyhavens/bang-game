@@ -22,9 +22,10 @@ import com.threerings.bang.util.BangContext;
  */
 public class UnitPalette extends IconPalette
 {
-    public UnitPalette (BangContext ctx, Inspector inspector, int columns)
+    public UnitPalette (BangContext ctx, Inspector inspector,
+                        int columns, int rows)
     {
-        super(inspector, columns, 3, UnitIcon.ICON_SIZE, 1, true);
+        super(inspector, columns, rows, UnitIcon.ICON_SIZE, 1, true);
         _ctx = ctx;
     }
 

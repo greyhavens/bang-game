@@ -67,7 +67,7 @@ public class SelectionView extends BDecoratedWindow
         add(new BLabel(_msgs.get("m.select_bigshot")), GroupLayout.FIXED);
 
         // create the big shot selection display
-        _units = new UnitPalette(ctx, null, 4);
+        _units = new UnitPalette(ctx, null, 4, 1);
         _units.setUser(_ctx.getUserObject());
         add(_units);
 

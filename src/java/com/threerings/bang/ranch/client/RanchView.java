@@ -19,9 +19,12 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
+import com.threerings.bang.client.bui.HackyTabs;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.ranch.data.RanchObject;
 
 import static com.threerings.bang.Log.log;
@@ -35,52 +38,49 @@ public class RanchView extends ShopView
 {
     public RanchView (BangContext ctx)
     {
-        super(ctx, "ranch");
+        super(ctx, RanchCodes.RANCH_MSGS);
 
         // add our various interface components
         add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
-            new Rectangle(232, 640, 570, 35));
+            new Rectangle(232, 661, 570, 35));
 
-        add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 40));
+        add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 35));
         add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
+        add(_status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
 
         _inspector = new UnitInspector(_ctx);
-        add(_inspector, new Rectangle(700, 100, 300, 500));
+        add(_inspector, new Rectangle(178, 160, 258, 491));
 
-        // center panel: tabbed view with...
-        add(_tabs = new BTabbedPane(GroupLayout.CENTER),
-            new Rectangle(0, 100, 700, 500));
-
-        // ...recruited big shots...
-        _bigshots = new UnitPalette(ctx, _inspector, 4);
+        // create our various tabs: recruited big shots...
+        _bigshots = new UnitPalette(ctx, _inspector, 4, 3);
         _bigshots.setUser(_ctx.getUserObject());
-        _tabs.addTab(_msgs.get("t.bigshots"), _bigshots);
 
         // ...recruitable big shots...
         String townId = _ctx.getUserObject().townId;
-        _recruits = new UnitPalette(ctx, _inspector, 4);
+        _recruits = new UnitPalette(ctx, _inspector, 4, 3);
         _recruits.setUnits(UnitConfig.getTownUnits(
                                townId, UnitConfig.Rank.BIGSHOT));
-        _tabs.addTab(_msgs.get("t.recruits"), _recruits);
 
         // ...and normal + special units
-        _units = new UnitPalette(ctx, _inspector, 4);
+        _units = new UnitPalette(ctx, _inspector, 4, 3);
         EnumSet<UnitConfig.Rank> ranks = EnumSet.of(
             UnitConfig.Rank.NORMAL, UnitConfig.Rank.SPECIAL);
         _units.setUnits(UnitConfig.getTownUnits(townId, ranks));
-        _tabs.addTab(_msgs.get("t.units"), _units);
+
+        // create our tabs
+        add(new HackyTabs(ctx, false, "ui/ranch/tab_", TABS, 136, 17) {
+            protected void tabSelected (int index) {
+                RanchView.this.selectTab(index);
+            }
+        }, new Rectangle(433, 585, 15+3*140, 66));
     }
 
-    // documentation inherited from interface PlaceView
+    @Override // documentation inherited
     public void willEnterPlace (PlaceObject plobj)
     {
+        super.willEnterPlace(plobj);
         _inspector.init((RanchObject)plobj);
-    }
-
-    // documentation inherited from interface PlaceView
-    public void didLeavePlace (PlaceObject plobj)
-    {
     }
 
     @Override // documentation inherited
@@ -94,18 +94,41 @@ public class RanchView extends ShopView
         _recruits.shutdown();
     }
 
+    protected void selectTab (int tabidx)
+    {
+        UnitPalette newtab;
+        switch (tabidx) {
+        default:
+        case 0: newtab = _bigshots; break;
+        case 1: newtab = _recruits; break;
+        case 2: newtab = _units; break;
+        }
+
+        System.err.println("selecting " + tabidx);
+        if (newtab != _seltab) {
+            if (_seltab != null) {
+                remove(_seltab);
+            }
+            add(_seltab = newtab, TAB_LOC);
+            newtab.selectFirstIcon();
+            _status.setStatus(_msgs.get("m." + TABS[tabidx] + "_tip"), false);
+        }
+    }
+
     /**
      * Called by the {@link SignView} when we've recruited a new Big Shot.
      */
     protected void unitRecruited (int itemId)
     {
-        _tabs.selectTab(0);
+        selectTab(0);
         _bigshots.selectUnit(itemId);
     }
 
     protected UnitInspector _inspector;
-    protected BTabbedPane _tabs;
+    protected UnitPalette _seltab;
     protected UnitPalette _bigshots, _units, _recruits;
+    protected StatusLabel _status;
 
-    protected static final String[] TAB = { "bigshots", "recruits", "units" };
+    protected static final String[] TABS = { "bigshots", "recruits", "units" };
+    protected static final Point TAB_LOC = new Point(453, 90);
 }

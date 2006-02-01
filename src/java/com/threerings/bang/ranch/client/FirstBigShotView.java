@@ -52,11 +52,11 @@ public class FirstBigShotView extends BDecoratedWindow
         BTextArea intro = new BTextArea(_msgs.get("m.firstbs_intro"));
         add(intro, GroupLayout.FIXED);
 
-        UnitConfig[] units  = new UnitConfig[RanchCodes.STARTER_BIGSHOTS.length];
+        UnitConfig[] units = new UnitConfig[RanchCodes.STARTER_BIGSHOTS.length];
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = UnitConfig.getConfig(RanchCodes.STARTER_BIGSHOTS[ii]);
         }
-        _bigshots = new UnitPalette(ctx, this, units.length);
+        _bigshots = new UnitPalette(ctx, this, units.length, 1);
         _bigshots.setUnits(units);
         add(_bigshots, GroupLayout.FIXED);
 

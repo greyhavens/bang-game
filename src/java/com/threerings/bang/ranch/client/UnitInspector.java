@@ -5,9 +5,12 @@ package com.threerings.bang.ranch.client;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
@@ -30,25 +33,37 @@ public class UnitInspector extends BContainer
 {
     public UnitInspector (BangContext ctx)
     {
-        super(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                   GroupLayout.STRETCH));
+        GroupLayout glay = GroupLayout.makeVert(
+            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
+        glay.setGap(0);
+        setLayoutManager(glay);
 
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("ranch");
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
 
         add(_uname = new BLabel("", "ranch_unit_name"));
+        _uname.setPreferredSize(new Dimension(258, 40));
         add(_uicon = new BLabel("", "ranch_unit_icon"));
+        _uicon.setPreferredSize(new Dimension(258, 314));
+
+        add(new Spacer(10, 10));
 
         BContainer row = new BContainer(GroupLayout.makeHStretch());
-        row.add(_umake = new BLabel("", "ranch_unit_info"));
-        row.add(_umode = new BLabel("", "ranch_unit_info"));
+        row.add(new BLabel(_msgs.get("m.make"), "ranch_unit_label"));
+        row.add(_umake = new BLabel("", "ranch_unit_data"));
+        row.add(new BLabel(_msgs.get("m.move"), "ranch_unit_label"));
+        row.add(_umove = new BLabel("", "ranch_unit_data"));
         add(row);
 
         row = new BContainer(GroupLayout.makeHStretch());
-        row.add(_umove = new BLabel("", "ranch_unit_info"));
-        row.add(_ufire = new BLabel("", "ranch_unit_info"));
+        row.add(new BLabel(_msgs.get("m.mode"), "ranch_unit_label"));
+        row.add(_umode = new BLabel("", "ranch_unit_data"));
+        row.add(new BLabel(_msgs.get("m.shoot"), "ranch_unit_label"));
+        row.add(_ufire = new BLabel("", "ranch_unit_data"));
         add(row);
+
+        add(new Spacer(10, 15));
 
         add(_udescrip = new BLabel("", "ranch_unit_info"), GroupLayout.FIXED);
     }
@@ -75,14 +90,11 @@ public class UnitInspector extends BContainer
 
         _udescrip.setText(_umsgs.xlate(config.getName() + "_descrip"));
 
-        String msg = "m." + config.make.toString().toLowerCase();
-        _umake.setText(_umsgs.get("m.make", _umsgs.get(msg)));
-        msg = "m." + config.mode.toString().toLowerCase();
-        _umode.setText(_umsgs.get("m.mode", _umsgs.get(msg)));
+        _umake.setText(_umsgs.get("m." + config.make.toString().toLowerCase()));
+        _umode.setText(_umsgs.get("m." + config.mode.toString().toLowerCase()));
 
-        _umove.setText(_umsgs.get("m.move_range", "" + config.moveDistance));
-        _ufire.setText(_umsgs.get("m.fire_range",
-                                 config.getDisplayFireDistance()));
+        _umove.setText("" + config.moveDistance);
+        _ufire.setText(config.getDisplayFireDistance());
 
 //         // Big Shots have some additional user interface bits
 //         boolean showRecruit = false, showCustomize = false;
