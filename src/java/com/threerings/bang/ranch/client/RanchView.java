@@ -104,7 +104,6 @@ public class RanchView extends ShopView
         case 2: newtab = _units; break;
         }
 
-        System.err.println("selecting " + tabidx);
         if (newtab != _seltab) {
             if (_seltab != null) {
                 remove(_seltab);
@@ -130,5 +129,6 @@ public class RanchView extends ShopView
     protected StatusLabel _status;
 
     protected static final String[] TABS = { "bigshots", "recruits", "units" };
-    protected static final Point TAB_LOC = new Point(453, 90);
+    protected static final Rectangle TAB_LOC = new Rectangle(
+        453, 77, UnitIcon.ICON_SIZE.width*4, UnitIcon.ICON_SIZE.height*3+40);
 }
