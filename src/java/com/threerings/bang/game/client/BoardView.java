@@ -123,11 +123,13 @@ public class BoardView extends BComponent
         }
         _node.setRenderState(_lstate);
 
-        // default material
+        // default states
         MaterialState mstate = ctx.getRenderer().createMaterialState();
+        mstate.setDiffuse(ColorRGBA.white);
         mstate.setAmbient(ColorRGBA.white);
         _node.setRenderState(RenderUtil.createColorMaterialState(mstate,
             false));
+        _node.setRenderState(RenderUtil.lequalZBuf);
         _node.updateRenderState();
 
         // create the sky
