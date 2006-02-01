@@ -16,12 +16,10 @@ import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 
-import com.threerings.crowd.util.CrowdContext;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.client.sprite.PropSprite;
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
@@ -189,13 +187,6 @@ public class PiecePlacer extends EditorTool
     public void keyReleased (KeyEvent e)
     {
         // nada
-    }
-    
-    /** Returns a reference to the game object. */
-    protected BangObject getBangObject ()
-    {
-        return (BangObject)((CrowdContext)
-            _ctx).getLocationDirector().getPlaceObject();
     }
     
     // documentation inherited

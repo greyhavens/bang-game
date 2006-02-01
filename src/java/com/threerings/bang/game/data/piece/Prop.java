@@ -12,6 +12,7 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
+import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -106,16 +107,7 @@ public class Prop extends BigPiece
      */
     public void rotateFine (int amount)
     {
-        int nforient = forient + amount;
-        if (nforient < -128) {
-            rotate(CW);
-            nforient += 256;
-            
-        } else if (nforient > 127) {
-            rotate(CCW);
-            nforient -= 256;
-        }
-        forient = (byte)nforient;
+        forient = PieceUtil.rotateFine(this, forient, amount);
     }
     
     @Override // documentation inherited

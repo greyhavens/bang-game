@@ -417,6 +417,14 @@ public class BoardView extends BComponent
     }
     
     /**
+     * Returns the piece sprite associated with the supplied piece.
+     */
+    public PieceSprite getPieceSprite (Piece piece)
+    {
+        return _pieces.get(piece.pieceId);
+    }
+    
+    /**
      * Returns true if the specified sprite is part of the active view.
      */
     public boolean isManaged (PieceSprite sprite)
@@ -765,14 +773,6 @@ public class BoardView extends BComponent
         sprite.init(_ctx, this, _bangobj.board, _sounds, piece, tick);
         _pieces.put((int)piece.pieceId, sprite);
         addSprite(sprite);
-    }
-
-    /**
-     * Returns the piece sprite associated with the supplied piece.
-     */
-    protected PieceSprite getPieceSprite (Piece piece)
-    {
-        return _pieces.get(piece.pieceId);
     }
 
     /**

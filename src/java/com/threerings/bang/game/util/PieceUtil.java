@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.PieceCodes;
 
 /**
  * Utility methods relating to pieces.
  */
 public class PieceUtil
+    implements PieceCodes
 {
     /**
      * Returns a list of the pieces in the supplied collection that
@@ -44,5 +46,24 @@ public class PieceUtil
         double stheta = ((theta + Math.PI/2) * 2) / Math.PI;
         // then round and modulate
         return (short)(((int)Math.round(stheta) + 4) % 4);
+    }
+    
+    /**
+     * Given a piece, its current fine rotation, and a fine amount by which to
+     * rotate the piece, performs any necessary coarse rotations on the piece
+     * and returns the new fine rotation.
+     */
+    public static byte rotateFine (Piece piece, byte forient, int amount)
+    {
+        int nforient = forient + amount;
+        if (nforient < -128) {
+            piece.rotate(CW);
+            nforient += 256;
+            
+        } else if (nforient > 127) {
+            piece.rotate(CCW);
+            nforient -= 256;
+        }
+        return (byte)nforient;
     }
 }

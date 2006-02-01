@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.border.EtchedBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -20,6 +21,7 @@ import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
+import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.util.BasicContext;
 
 /**
@@ -39,10 +41,10 @@ public class PieceChooser extends JPanel
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
         
+        addPiece(root, "viewpoint", new Viewpoint());
         addPiece(root, "markers/start", new Marker(Marker.START));
         addPiece(root, "markers/bonus", new Marker(Marker.BONUS));
         addPiece(root, "markers/cattle", new Marker(Marker.CATTLE));
-        addPiece(root, "markers/camera", new Marker(Marker.CAMERA));
         
         for (int i = 0; i < TOWN_IDS.length; i++) {
             DefaultMutableTreeNode town = new DefaultMutableTreeNode(
@@ -56,6 +58,7 @@ public class PieceChooser extends JPanel
         }
 
         _tree = new JTree(root);
+        _tree.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         _tree.setRootVisible(false);
         _tree.getSelectionModel().setSelectionMode(
             TreeSelectionModel.SINGLE_TREE_SELECTION);

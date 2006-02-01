@@ -11,9 +11,11 @@ import com.jmex.bui.event.MouseListener;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.event.MouseWheelListener;
 
+import com.threerings.crowd.util.CrowdContext;
 import com.threerings.jme.sprite.Sprite;
-
 import com.threerings.util.MessageBundle;
+
+import com.threerings.bang.game.data.BangObject;
 
 /**
  * The superclass of editor tools, which have option panels to display in the
@@ -121,6 +123,13 @@ public abstract class EditorTool
     public String toString ()
     {
         return _msgs.get("m.tool_" + getName());
+    }
+    
+    /** Returns a reference to the game object. */
+    protected BangObject getBangObject ()
+    {
+        return (BangObject)((CrowdContext)
+            _ctx).getLocationDirector().getPlaceObject();
     }
     
     /**

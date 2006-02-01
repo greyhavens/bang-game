@@ -489,7 +489,7 @@ public abstract class Piece extends SimpleStreamableObject
     @Override // documentation inherited
     public boolean equals (Object other)
     {
-        return pieceId == ((Piece)other).pieceId;
+        return other instanceof Piece && pieceId == ((Piece)other).pieceId;
     }
 
     @Override // documentation inherited

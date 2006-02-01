@@ -29,7 +29,7 @@ public class CameraDolly extends EditorTool
         super(ctx, panel);
         _panel.view.addListener(this);
         
-        ctx.getRootNode().addController(new Controller() {
+        ctx.getRootNode().addController(_updater = new Controller() {
             public void update (float time) {
                 updateCamera(time);
             }
@@ -44,6 +44,33 @@ public class CameraDolly extends EditorTool
         _target = new Vector3f(
             _panel.view.getTerrainNode().getWorldBound().getCenter());
         _target.z = 0.0f;
+    }
+    
+    /**
+     * Saves the dolly's position and takes it offline.
+     */ 
+    public void suspend ()
+    {
+        if (_savedpos != null) {
+            return;
+        }
+        _savedpos = getCameraPosition();
+        _panel.view.removeListener(this);
+        _ctx.getRootNode().removeController(_updater);
+    }
+    
+    /**
+     * Brings the dolly back online and restores the saved position.
+     */
+    public void resume ()
+    {
+        if (_savedpos == null) {
+            return;
+        }
+        setCameraPosition(_savedpos);
+        _savedpos = null;
+        _panel.view.addListener(this);
+        _ctx.getRootNode().addController(_updater);
     }
     
     // documentation inherited
@@ -88,13 +115,11 @@ public class CameraDolly extends EditorTool
         switch(_lastButton) {
             case MouseEvent.BUTTON1: // left rotates
                 pos.azimuth += dx*ANGULAR_SCALE;
-                pos.elevation = Math.min(Math.max(pos.elevation +
-                    dy*ANGULAR_SCALE, MIN_ELEVATION), MAX_ELEVATION);
+                pos.addToElevation(dy * ANGULAR_SCALE);
                 break;
                 
             case MouseEvent.BUTTON2: // right "zooms"
-                pos.distance = Math.min(Math.max(pos.distance +
-                    dy * LINEAR_SCALE, MIN_DISTANCE), MAX_DISTANCE);
+                pos.addToDistance(dy * LINEAR_SCALE);
                 break;
         }
         setCameraPosition(pos);
@@ -111,8 +136,7 @@ public class CameraDolly extends EditorTool
         }
         
         Position pos = getCameraPosition();
-        pos.distance = Math.min(Math.max(pos.distance + e.getDelta() * 10 *
-            LINEAR_SCALE, MIN_DISTANCE), MAX_DISTANCE);
+        pos.addToDistance(e.getDelta() * 10 * LINEAR_SCALE);
         setCameraPosition(pos);
     }
     
@@ -121,12 +145,12 @@ public class CameraDolly extends EditorTool
     {
         int code = e.getKeyCode();
         switch (code) {
-             case KeyInput.KEY_Q: _dvel = +LINEAR_SPEED; _dcode = code; break;
-             case KeyInput.KEY_W: _evel = +ANGULAR_SPEED; _ecode = code; break;
-             case KeyInput.KEY_E: _dvel = -LINEAR_SPEED; _dcode = code; break;
-             case KeyInput.KEY_A: _avel = -ANGULAR_SPEED; _acode = code; break;
-             case KeyInput.KEY_S: _evel = -ANGULAR_SPEED; _ecode = code; break;
-             case KeyInput.KEY_D: _avel = +ANGULAR_SPEED; _acode = code; break;
+            case KeyInput.KEY_Q: _dvel = +LINEAR_SPEED; _dcode = code; break;
+            case KeyInput.KEY_W: _evel = +ANGULAR_SPEED; _ecode = code; break;
+            case KeyInput.KEY_E: _dvel = -LINEAR_SPEED; _dcode = code; break;
+            case KeyInput.KEY_A: _avel = -ANGULAR_SPEED; _acode = code; break;
+            case KeyInput.KEY_S: _evel = -ANGULAR_SPEED; _ecode = code; break;
+            case KeyInput.KEY_D: _avel = +ANGULAR_SPEED; _acode = code; break;
         }
     }
     
@@ -157,10 +181,8 @@ public class CameraDolly extends EditorTool
     {
         Position pos = getCameraPosition();
         pos.azimuth += _avel * time;
-        pos.elevation = Math.min(Math.max(pos.elevation + _evel*time,
-            MIN_ELEVATION), MAX_ELEVATION);
-        pos.distance = Math.min(Math.max(pos.distance + _dvel*time,
-            MIN_DISTANCE), MAX_DISTANCE);
+        pos.addToElevation(_evel * time);
+        pos.addToDistance(_dvel * time);
         setCameraPosition(pos);
     }
     
@@ -212,6 +234,18 @@ public class CameraDolly extends EditorTool
             this.elevation = elevation;
             this.distance = distance;
         }
+        
+        public void addToDistance (float delta)
+        {
+            distance = Math.min(Math.max(distance + delta, MIN_DISTANCE),
+                MAX_DISTANCE);
+        }
+        
+        public void addToElevation (float delta)
+        {
+            elevation = Math.min(Math.max(elevation + delta, MIN_ELEVATION),
+                MAX_ELEVATION);
+        }
     }
     
     /** The last mouse coordinates and button pressed. */
@@ -228,6 +262,12 @@ public class CameraDolly extends EditorTool
     
     /** The last keys pressed for azimuth, elevation, and distance. */
     protected int _acode, _ecode, _dcode;
+    
+    /** The camera update controller. */
+    protected Controller _updater;
+    
+    /** When suspended, the saved position to restore on resumption. */
+    protected Position _savedpos;
     
     /** The angular scale (radians per pixel). */
     protected static final float ANGULAR_SCALE = FastMath.PI / 1000;

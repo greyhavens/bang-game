@@ -27,6 +27,7 @@ import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
+import com.threerings.bang.game.data.piece.Viewpoint;
 
 import static com.threerings.bang.Log.log;
 
@@ -253,6 +254,8 @@ public class BoardRecord
         } else if (piece instanceof Track) {
             oout.writeUTF("__track__");
             oout.writeByte(((Track)piece).type);
+        } else if (piece instanceof Viewpoint) {
+            oout.writeUTF("__viewpoint__");
         } else {
             throw new IOException("Unknown piece type " +
                                   "[type=" + piece.getClass().getName() +
@@ -271,6 +274,8 @@ public class BoardRecord
             piece = new Marker(oin.readInt());
         } else if (type.equals("__track__")) {
             piece = new Track(oin.readByte());
+        } else if (type.equals("__viewpoint__")) {
+            piece = new Viewpoint();
         } else {
             piece = Prop.getProp(type);
         }

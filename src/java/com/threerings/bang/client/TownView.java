@@ -31,11 +31,12 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
-import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
+import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
@@ -172,25 +173,22 @@ public class TownView extends BWindow
         {
             super.wasAdded();
             
-            // find the camera marker, hide it, and set the camera position
-            // based on its location
+            // find the viewpoint and bind the camera to it
             for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
                 Piece piece = (Piece)it.next();
-                if (piece instanceof Marker &&
-                    ((Marker)piece).getType() == Marker.CAMERA) {
-                    PieceSprite sprite = getPieceSprite(piece);
-                    sprite.setCullMode(PieceSprite.CULL_ALWAYS);
-                    sprite.setIsCollidable(false);
-                    _loc.set(sprite.getLocalTranslation());
-                    _loc.z += TILE_SIZE / 2;
-                    _rot.fromAngleNormalAxis(FastMath.HALF_PI,
-                        Vector3f.UNIT_X);
-                    sprite.getLocalRotation().mult(_rot, _rot);
-                    Camera camera = _ctx.getCameraHandler().getCamera();
-                    camera.setFrame(_loc, _rot);
+                if (piece instanceof Viewpoint) {
+                    _vpsprite = (ViewpointSprite)getPieceSprite(piece);
+                    _vpsprite.bindCamera(_ctx.getCameraHandler().getCamera());
                     return;
                 }
             }
+        }
+        
+        @Override // documentation inherited
+        protected void wasRemoved ()
+        {
+            super.wasRemoved();
+            _vpsprite.unbindCamera();
         }
         
         @Override // documentation inherited
@@ -227,6 +225,7 @@ public class TownView extends BWindow
         
         protected MaterialState _hstate;
         protected PieceSprite _hsprite;
+        protected ViewpointSprite _vpsprite;
     }
     
     protected BangContext _ctx;
@@ -240,8 +239,4 @@ public class TownView extends BWindow
     protected Vector3f _loc = new Vector3f(), _pos = new Vector3f(),
         _dir = new Vector3f();
     protected Quaternion _rot = new Quaternion();
-    
-    /** The resource path of the town board. */
-    public static final String TOWN_BOARD = "boards/0/frontier_town.board";
-    
 }
