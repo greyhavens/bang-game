@@ -12,6 +12,9 @@ import com.threerings.bang.client.ItemIcon;
  */
 public class BigShotItem extends Item
 {
+    /** The maximum big shot name length. */
+    public static final int MAX_NAME_LENGTH = 18;
+
     /** A blank constructor used during unserialization. */
     public BigShotItem ()
     {

@@ -7,11 +7,12 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.TextEvent;
+import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.StringUtil;
@@ -23,6 +24,7 @@ import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -38,20 +40,22 @@ public class FirstBigShotView extends BDecoratedWindow
     public FirstBigShotView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), null);
+
         setLayoutManager(GroupLayout.makeVStretch());
+        ((GroupLayout)getLayoutManager()).setOffAxisPolicy(GroupLayout.NONE);
+        ((GroupLayout)getLayoutManager()).setGap(15);
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
 
-        _status = new BTextArea(_msgs.get("m.firstbs_tip"));
+        _status = new BLabel(_msgs.get("m.firstbs_tip"));
 
         add(new BLabel(_msgs.get("m.firstbs_title"), "dialog_title"),
             GroupLayout.FIXED);
+        add(new BLabel(_msgs.get("m.firstbs_intro")), GroupLayout.FIXED);
 
-        BTextArea intro = new BTextArea(_msgs.get("m.firstbs_intro"));
-        add(intro, GroupLayout.FIXED);
-
+        add(new BLabel(_msgs.get("m.firstbs_pick")), GroupLayout.FIXED);
         UnitConfig[] units = new UnitConfig[RanchCodes.STARTER_BIGSHOTS.length];
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = UnitConfig.getConfig(RanchCodes.STARTER_BIGSHOTS[ii]);
@@ -62,16 +66,23 @@ public class FirstBigShotView extends BDecoratedWindow
 
         add(_status);
 
-        BTextArea name = new BTextArea(_msgs.get("m.firstbs_name"));
-        add(name, GroupLayout.FIXED);
+        add(_nlbl = new BLabel(_msgs.get("m.firstbs_name")), GroupLayout.FIXED);
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
         add(ncont, GroupLayout.FIXED);
 
-        // TODO: add a validator that limits the name length and calls
-        // _done.setEnabled() as appropriate
         ncont.add(_name = new BTextField(""));
         _name.setPreferredWidth(250);
+        _name.addListener(new TextListener() {
+            public void textChanged (TextEvent event) {
+                if (_name.getText().length() > BigShotItem.MAX_NAME_LENGTH) {
+                    _nlbl.setText(_msgs.get("m.firstbs_name_to_long"));
+                } else {
+                    _nlbl.setText(_msgs.get("m.firstbs_name"));
+                }
+                _done.setEnabled(isReady());
+            }
+        });
         ncont.add(new Spacer(25, 0));
 
         ncont.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
@@ -91,11 +102,7 @@ public class FirstBigShotView extends BDecoratedWindow
     public void iconSelected (SelectableIcon icon)
     {
         _config = ((UnitIcon)icon).getUnit();
-        String info = _umsgs.xlate(_config.getName()) + "\n";
-        info += _umsgs.xlate(_config.getName() + "_descrip") + "\n";
-        info += _umsgs.get("m.move_range", "" + _config.moveDistance) + "\n";
-        info += _umsgs.get("m.fire_range", _config.getDisplayFireDistance());
-        _status.setText(info);
+        _status.setText(_umsgs.xlate(_config.getName() + "_descrip"));
         _done.setEnabled(isReady());
     }
 
@@ -130,7 +137,8 @@ public class FirstBigShotView extends BDecoratedWindow
 
     protected boolean isReady ()
     {
-        return (_config != null) /* && !StringUtil.isBlank(_name.getText()) */;
+        return (_config != null) && _name.getText().length() > 0 &&
+            _name.getText().length() < BigShotItem.MAX_NAME_LENGTH;
     }
 
     protected BangContext _ctx;
@@ -138,7 +146,7 @@ public class FirstBigShotView extends BDecoratedWindow
     protected UnitConfig _config;
 
     protected UnitPalette _bigshots;
-    protected BTextArea _status;
+    protected BLabel _status, _nlbl;
     protected BTextField _name;
     protected BButton _done;
 }

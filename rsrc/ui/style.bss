@@ -52,6 +52,7 @@ container {
 }
 
 label {
+//  border: 1 solid #FFFFFF;
 }
 
 button {
@@ -570,7 +571,6 @@ ranch_unit_name {
 
 ranch_unit_icon {
   text-align: center;
-//  border: 1 solid #000000;
 }
 
 ranch_unit_label {
