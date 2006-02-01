@@ -25,7 +25,6 @@ import com.threerings.bang.saloon.data.SaloonCodes;
  * Displays the set of configurable game criterion.
  */
 public class CriterionView extends BContainer
-    implements ActionListener
 {
     public CriterionView (BangContext ctx, SaloonController ctrl)
     {
@@ -68,23 +67,24 @@ public class CriterionView extends BContainer
         _range.selectItem(0);
 
         row = new BContainer(new BorderLayout());
-        row.add(new BButton(msgs.get("m.help"), this, "help"),
-                BorderLayout.WEST);
-        row.add(new BButton(msgs.get("m.go"), this, "match"),
+        row.add(new BButton(msgs.get("m.go"), _golist, "match"),
                 BorderLayout.EAST);
         add(row);
 
         // TODO: preserve our settings in persistent preferences
     }
 
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
+    protected String[] xlate (MessageBundle msgs, String[] umsgs)
     {
-        String action = event.getAction();
-        if (action.equals("help")) {
-            // TODO show explanatory dialog
+        String[] tmsgs = new String[umsgs.length];
+        for (int ii = 0; ii < tmsgs.length; ii++) {
+            tmsgs[ii] = msgs.get("m." + umsgs[ii]);
+        }
+        return tmsgs;
+    }
 
-        } else if (action.equals("match")) {
+    protected ActionListener _golist = new ActionListener() {
+        public void actionPerformed (ActionEvent event) {
             // create a criterion instance from our UI configuration
             Criterion criterion = new Criterion();
             criterion.rounds = Criterion.compose(
@@ -101,16 +101,7 @@ public class CriterionView extends BContainer
             // pass the buck onto the controller to do the rest
             _ctrl.findMatch(criterion);
         }
-    }
-
-    protected String[] xlate (MessageBundle msgs, String[] umsgs)
-    {
-        String[] tmsgs = new String[umsgs.length];
-        for (int ii = 0; ii < tmsgs.length; ii++) {
-            tmsgs[ii] = msgs.get("m." + umsgs[ii]);
-        }
-        return tmsgs;
-    }
+    };
 
     protected BangContext _ctx;
     protected SaloonController _ctrl;

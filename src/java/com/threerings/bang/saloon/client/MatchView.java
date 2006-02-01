@@ -70,11 +70,15 @@ public class MatchView extends BContainer
             add(_rows[ii] = new PlayerRow());
         }
 
-        add(new BButton(_msgs.get("m.cancel"), new ActionListener() {
+        // add a cancel button
+        BContainer row = new BContainer(new BorderLayout());
+        row.add(new BButton(_msgs.get("m.cancel"), new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 _ctrl.leaveMatch(_mobj.getOid());
             }
-        }, "cancel"));
+        }, "cancel"), BorderLayout.EAST);
+        add(row);
+
         updateDisplay();
     }
 

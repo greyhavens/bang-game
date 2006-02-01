@@ -13,7 +13,6 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
-import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.util.BangContext;
 
@@ -33,7 +32,6 @@ public class SaloonView extends ShopView
         // add our various interface components
         add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
             new Rectangle(232, 640, 570, 35));
-        add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 40));
         add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
 
