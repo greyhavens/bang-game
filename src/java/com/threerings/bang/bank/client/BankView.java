@@ -38,8 +38,8 @@ public class BankView extends ShopView
 
         String townId = _ctx.getUserObject().townId;
         add(new BLabel(_msgs.get("m.name_" + townId), "shopkeep_name_label"),
-            new Rectangle(25, 513, 125, 25));
-        
+            new Rectangle(12, 513, 155, 25));
+
         _status = new BLabel("", "shop_status");
         add(_status, new Rectangle(265, 10, 500, 40));
 

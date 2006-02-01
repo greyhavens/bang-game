@@ -44,7 +44,11 @@ public class RanchView extends ShopView
         add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
             new Rectangle(232, 661, 570, 35));
 
-        add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 35));
+        String townId = _ctx.getUserObject().townId;
+        add(new BLabel(_msgs.get("m.name_" + townId), "shopkeep_name_label"),
+            new Rectangle(12, 513, 155, 25));
+
+        add(new WalletLabel(_ctx, true), new Rectangle(40, 73, 150, 35));
         add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
         add(_status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
@@ -57,7 +61,6 @@ public class RanchView extends ShopView
         _bigshots.setUser(_ctx.getUserObject());
 
         // ...recruitable big shots...
-        String townId = _ctx.getUserObject().townId;
         _recruits = new UnitPalette(ctx, _inspector, 4, 3);
         _recruits.setUnits(UnitConfig.getTownUnits(
                                townId, UnitConfig.Rank.BIGSHOT));
