@@ -39,6 +39,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -195,6 +196,28 @@ public class BangClient extends BasicClient
                 }
             };
             _ctx.getParlorDirector().startSolitaire(config, cl);
+            return;
+        }
+
+        // check for a "go" parameter
+        String where = System.getProperty("go");
+        if (where != null) {
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            if ("ranch".equals(where)) {
+                _ctx.getLocationDirector().moveTo(bbd.ranchOid);
+            } else if ("bank".equals(where)) {
+                _ctx.getLocationDirector().moveTo(bbd.bankOid);
+            } else if ("store".equals(where)) {
+                _ctx.getLocationDirector().moveTo(bbd.storeOid);
+            } else if ("saloon".equals(where)) {
+                _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+            } else if ("barber".equals(where)) {
+                _ctx.getLocationDirector().moveTo(bbd.barberOid);
+            } else {
+                log.warning("Unknown go argument '" + where + "'.");
+            }
+            return;
         }
 
         // start up the introduction process, if appropriate, or if no intro is

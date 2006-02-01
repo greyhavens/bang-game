@@ -4,23 +4,30 @@
 #
 # Command line launcher for the Bang! development client
 
-# parse our arguments
+BANG_HOME=`dirname $0`
+BANG_HOME=`cd $BANG_HOME/.. ; pwd`
 ARGS="localhost 47624"
+JARGS="-Dresource_dir=$BANG_HOME/rsrc"
 
+# parse our arguments
 while [ ! -z "$1" ]; do
     case "$1" in
+        -go=*)
+            GO=`echo $1 | sed 's:-go=::g'`;
+            JARGS="$JARGS -Dgo=$GO";
+            ;;
+        
         -test=*)
             BOARD=`echo $1 | sed 's:-test=::g'`;
-            BOARD="-Dboard=$BOARD";
-            TEST="-Dtest=true";
+            JARGS="$JARGS -Dboard=$BOARD -Dtest=true";
             ;;
         
         -test)
-            TEST="-Dtest=true";
+            JARGS="$JARGS -Dtest=true";
             ;;
         
         -tutorial)
-            TEST="-Dtest=tutorial";
+            JARGS="$JARGS -Dtest=tutorial";
             ;;
         
         -build)
@@ -40,16 +47,8 @@ done
 
 # load resources directly from the rsrc directory
 export CLASSPATH=$BANG_HOME
-
-BANG_HOME=`dirname $0`/..
-CARGS="-Dresource_dir=$BANG_HOME/rsrc"
 CLASS=com.threerings.bang.client.BangApp
-if [ -z "$BOARD" ]; then
-    $BANG_HOME/bin/runjava -- -Dno_log_redir=true \
-        $CARGS $TEST $CLASS $ARGS
-else
-    $BANG_HOME/bin/runjava -- -Dno_log_redir=true \
-        $CARGS $TEST "$BOARD" $CLASS $ARGS
-fi
+$BANG_HOME/bin/runjava -- -Dno_log_redir=true $JARGS $CLASS $ARGS
 
+# restore key repeat, which LWJGL borks if the game crashes
 xset r on
