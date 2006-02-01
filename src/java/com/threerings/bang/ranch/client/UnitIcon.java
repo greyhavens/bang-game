@@ -18,9 +18,15 @@ public class UnitIcon extends PaletteIcon
 {
     public UnitIcon (BasicContext ctx, int itemId, UnitConfig config)
     {
+        this(ctx, itemId, config, ctx.xlate("units", config.getName()));
+    }
+
+    public UnitIcon (
+        BasicContext ctx, int itemId, UnitConfig config, String name)
+    {
         _itemId = itemId;
         _config = config;
-        setText(ctx.xlate("units", config.getName()));
+        setText(name);
         setIcon(ctx.loadModel("units", config.type).getIcon());
     }
 

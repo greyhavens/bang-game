@@ -95,7 +95,8 @@ public class UnitPalette extends IconPalette
     protected void addUnit (BigShotItem unit)
     {
         UnitConfig config = UnitConfig.getConfig(unit.getType());
-        addIcon(new UnitIcon(_ctx, unit.getItemId(), config));
+        addIcon(new UnitIcon(_ctx, unit.getItemId(), config,
+                             unit.getName().toString()));
     }
 
     protected void removeUnit (int itemId)

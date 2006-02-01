@@ -26,6 +26,11 @@ public class PaletteIcon extends SelectableIcon
         _text.setText(text);
     }
 
+    public String getText ()
+    {
+        return _text.getText();
+    }
+
     public Dimension getPreferredSize (int whint, int hhint)
     {
         return ICON_SIZE;

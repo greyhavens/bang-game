@@ -77,15 +77,16 @@ public class UnitInspector extends BContainer
         _ranchobj = ranchobj;
     }
 
-    /**
-     * Configures the unit we're inspecting.
-     */
-    public void setUnit (int itemId, UnitConfig config)
+    // documentation inherited from interface IconPalette.Inspector
+    public void iconSelected (SelectableIcon icon)
     {
-        _itemId = itemId;
+        UnitIcon uicon = (UnitIcon)icon;
+        UnitConfig config = uicon.getUnit();
+
+        _itemId = uicon.getItemId();
         _config = config;
 
-        _uname.setText(_umsgs.xlate(config.getName()));
+        _uname.setText(uicon.getText());
         _uicon.setIcon(_ctx.loadModel("units", config.type).getIcon());
 
         _udescrip.setText(_umsgs.xlate(config.getName() + "_descrip"));
@@ -108,13 +109,6 @@ public class UnitInspector extends BContainer
 //         }
 //         setVisible(_details, _recruit, showRecruit);
 //         setVisible(_details, _customize, showCustomize);
-    }
-
-    // documentation inherited from interface IconPalette.Inspector
-    public void iconSelected (SelectableIcon icon)
-    {
-        UnitIcon uicon = (UnitIcon)icon;
-        setUnit(uicon.getItemId(), uicon.getUnit());
     }
 
     // documentation inherited from interface IconPalette.Inspector
