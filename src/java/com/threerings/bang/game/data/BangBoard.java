@@ -562,6 +562,9 @@ public class BangBoard extends SimpleStreamableObject
                     }
                 }
 
+            } else if (!_bbounds.contains(piece.x, piece.y)) {
+                return;
+                
             } else if (piece instanceof Track) {
                 int idx = _width*piece.y+piece.x;
                 if (((Track)piece).preventsGroundOverlap()) {
