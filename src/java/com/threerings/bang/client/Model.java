@@ -44,7 +44,9 @@ import com.jmex.model.XMLparser.JmeBinaryReader;
 
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.TextureIcon;
+import com.threerings.jme.sprite.Sprite;
 
+import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -108,6 +110,12 @@ public class Model
                 _node.attachChild(_meshes[ii]);
                 _meshes[ii].updateRenderState();
             }
+
+            // now that the meshes are attached, configure the animation speed
+            // and repeat type
+            Sprite.setAnimationSpeed(
+                _node, Config.display.animationSpeed * _anim.getSpeed());
+            Sprite.setAnimationRepeatType(_node, _anim.repeatType);
         }
 
         protected Geometry getGeometry (Node mesh)
@@ -507,8 +515,8 @@ public class Model
         // load the emitter marker geometries
         for (int ee = 0; ee < anim.emitters.length; ee++) {
             String mesh = anim.emitters[ee].name;
-            anim.emitters[ee].creator = loadModel(ctx, path + anim.action + "/" +
-                mesh + ".jme", false);
+            anim.emitters[ee].creator = loadModel(
+                ctx, path + anim.action + "/" + mesh + ".jme", false);
         }
 
         // now finish our resolution on the main thread

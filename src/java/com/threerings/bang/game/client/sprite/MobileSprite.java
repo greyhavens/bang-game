@@ -438,8 +438,6 @@ public class MobileSprite extends PieceSprite
         // add the new meshes
         Model.Animation anim = _model.getAnimation(action);
         bindAnimation(_ctx, anim, _texrando);
-        setAnimationSpeed(Config.display.animationSpeed * anim.getSpeed());
-        setAnimationRepeatType(anim.repeatType);
         return anim;
     }
 
