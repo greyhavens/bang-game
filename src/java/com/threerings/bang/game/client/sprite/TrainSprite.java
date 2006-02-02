@@ -106,9 +106,6 @@ public class TrainSprite extends MobileSprite
             }
         }
     }
-
-    /** The next car in the train, if it's on the board. */
-    protected TrainSprite _next;
     
     /** The position two ticks back, used to form curves. */
     protected short _lastLastX = Train.UNSET, _lastLastY = Train.UNSET;
