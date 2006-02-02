@@ -34,11 +34,21 @@ public class TrainSprite extends MobileSprite
     public void updated (Piece piece, short tick)
     {
         // note our previous lastX and Y before we're updated
-        if (_piece != null) {
-            _lastLastX = ((Train)_piece).lastX;
-            _lastLastY = ((Train)_piece).lastY;
-        }
+        Train train = (Train)_piece;
+        _lastLastX = train.lastX;
+        _lastLastY = train.lastY;
+        
         super.updated(piece, tick);
+    }
+    
+    @Override // documentation inherited
+    public boolean updatePosition (BangBoard board)
+    {   
+        super.updatePosition(board);
+        
+        // unless we're the last car on the train, proceed immediately to the
+        // next car's update so that all cars move simultaneously
+        return ((Train)_piece).isLast();
     }
 
     @Override // documentation inherited
@@ -97,6 +107,10 @@ public class TrainSprite extends MobileSprite
         }
     }
 
+    /** The next car in the train, if it's on the board. */
+    protected TrainSprite _next;
+    
+    /** The position two ticks back, used to form curves. */
     protected short _lastLastX = Train.UNSET, _lastLastY = Train.UNSET;
 
     /** The model names for each train type. */

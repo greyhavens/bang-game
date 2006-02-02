@@ -85,4 +85,12 @@ public class Train extends Piece
         nextX = (short)nx;
         nextY = (short)ny;
     }
+    
+    /**
+     * Determines whether this is the last train in the sequence.
+     */
+    public boolean isLast ()
+    {
+        return type == CABOOSE || lastX == UNSET;
+    }
 }
