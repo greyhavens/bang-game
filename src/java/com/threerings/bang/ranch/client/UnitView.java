@@ -3,6 +3,7 @@
 
 package com.threerings.bang.ranch.client;
 
+import com.jme.image.Image;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
@@ -33,23 +34,27 @@ public class UnitView extends BGeomView
         _ctx = ctx;
         _geom.setRenderState(RenderUtil.lequalZBuf);
         _geom.updateRenderState();
+        _frame = ctx.loadImage("ui/barber/avatar_frame.png");
 
         // position and point up our camera
-        Vector3f loc = new Vector3f(TILE_SIZE/2, -TILE_SIZE, TILE_SIZE);
+        Vector3f loc = new Vector3f(
+            10*TILE_SIZE/16, -18*TILE_SIZE/16, 7*TILE_SIZE/16);
         _camera.setLocation(loc);
         Matrix3f rotm = new Matrix3f();
         rotm.fromAngleAxis(-FastMath.PI/2, _camera.getLeft());
         rotm.mult(_camera.getDirection(), _camera.getDirection());
         rotm.mult(_camera.getUp(), _camera.getUp());
         rotm.mult(_camera.getLeft(), _camera.getLeft());
+
         rotm.fromAngleAxis(FastMath.PI/6, _camera.getUp());
         rotm.mult(_camera.getDirection(), _camera.getDirection());
         rotm.mult(_camera.getUp(), _camera.getUp());
         rotm.mult(_camera.getLeft(), _camera.getLeft());
-        rotm.fromAngleAxis(FastMath.PI/6, _camera.getLeft());
-        rotm.mult(_camera.getDirection(), _camera.getDirection());
-        rotm.mult(_camera.getUp(), _camera.getUp());
-        rotm.mult(_camera.getLeft(), _camera.getLeft());
+
+//         rotm.fromAngleAxis(FastMath.PI/6, _camera.getLeft());
+//         rotm.mult(_camera.getDirection(), _camera.getDirection());
+//         rotm.mult(_camera.getUp(), _camera.getUp());
+//         rotm.mult(_camera.getLeft(), _camera.getLeft());
         _camera.update();
     }
 
@@ -70,7 +75,7 @@ public class UnitView extends BGeomView
     @Override // documentation inherited
     protected Dimension computePreferredSize (int whint, int hhint)
     {
-        return new Dimension(258, 314);
+        return new Dimension(234, 300);
     }
 
     @Override // documentation inherited
@@ -83,7 +88,16 @@ public class UnitView extends BGeomView
         }
     }
 
+    @Override // documentation inherited
+    protected void renderComponent (Renderer renderer)
+    {
+        com.jmex.bui.util.RenderUtil.blendState.apply();
+        com.jmex.bui.util.RenderUtil.renderImage(_frame, 0, 0);
+        super.renderComponent(renderer);
+    }
+
     protected BangContext _ctx;
     protected Node _unode;
     protected Model.Binding _binding;
+    protected Image _frame;
 }
