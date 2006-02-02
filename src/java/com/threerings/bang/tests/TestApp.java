@@ -110,8 +110,8 @@ public abstract class TestApp extends JmeApp
             return null;
         }
 
-        public BangApp getApp () {
-            return null;
+        public JmeApp getApp () {
+            return TestApp.this;
         }
 
         public ImageManager getImageManager () {
