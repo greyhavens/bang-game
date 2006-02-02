@@ -569,10 +569,6 @@ ranch_unit_name {
   vertical-align: center;
 }
 
-ranch_unit_icon {
-  text-align: center;
-}
-
 ranch_unit_label {
   font: "Dom Casual" plain 19;
   color: #4C2804;
@@ -595,4 +591,9 @@ ranch_unit_info {
 ranch_unit_cost {
   text-align: right;
   color: #FFFFFF;
+}
+
+unit_view {
+  background: image "ui/barber/avatar_background.png" centerxy;
+  padding: 7 12 7 12;
 }

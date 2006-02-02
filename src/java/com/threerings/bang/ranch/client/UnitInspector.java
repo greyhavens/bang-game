@@ -47,8 +47,8 @@ public class UnitInspector extends BContainer
 
         add(_uname = new BLabel("", "ranch_unit_name"));
         _uname.setPreferredSize(new Dimension(258, 40));
-        add(_uicon = new BLabel("", "ranch_unit_icon"));
-        _uicon.setPreferredSize(new Dimension(258, 314));
+
+        add(_uview = new UnitView(_ctx));
 
         add(new Spacer(10, 10));
 
@@ -102,16 +102,16 @@ public class UnitInspector extends BContainer
         _itemId = uicon.getItemId();
         _config = config;
 
+        // set up the myriad labels
         _uname.setText(uicon.getText());
-        _uicon.setIcon(_ctx.loadModel("units", config.type).getIcon());
-
         _udescrip.setText(_umsgs.xlate(config.getName() + "_descrip"));
-
         _umake.setText(_umsgs.get("m." + config.make.toString().toLowerCase()));
         _umode.setText(_umsgs.get("m." + config.mode.toString().toLowerCase()));
-
         _umove.setText("" + config.moveDistance);
         _ufire.setText(config.getDisplayFireDistance());
+
+        // configure the fancy 3D unit display
+        _uview.setUnit(config);
 
         // Big Shots have some additional user interface bits
         boolean showRecruit = false, showCustomize = false;
@@ -164,6 +164,7 @@ public class UnitInspector extends BContainer
 
     protected BContainer _recruit, _customize;
     protected MoneyLabel _cost;
-    protected BLabel _uicon, _uname, _udescrip;
+    protected UnitView _uview;
+    protected BLabel _uname, _udescrip;
     protected BLabel _umake, _umode, _umove, _ufire;
 }
