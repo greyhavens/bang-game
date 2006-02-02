@@ -589,4 +589,10 @@ ranch_unit_info {
   font: "Helvetica" plain 15;
   color: #4C2804;
   text-align: center;
+  vertical-align: top;
+}
+
+ranch_unit_cost {
+  text-align: right;
+  color: #FFFFFF;
 }

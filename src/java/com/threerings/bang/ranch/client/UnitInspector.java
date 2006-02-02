@@ -3,14 +3,17 @@
 
 package com.threerings.bang.ranch.client;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Point;
 
 import com.threerings.util.MessageBundle;
 
@@ -66,6 +69,19 @@ public class UnitInspector extends BContainer
         add(new Spacer(10, 15));
 
         add(_udescrip = new BLabel("", "ranch_unit_info"), GroupLayout.FIXED);
+        _udescrip.setPreferredSize(new Dimension(1, 75));
+
+        add(new Spacer(10, 15));
+
+        // we'll use this group when recruiting
+        _recruit = new BContainer(new AbsoluteLayout());
+        row = new BContainer(GroupLayout.makeHoriz(GroupLayout.LEFT));
+        row.add(new BLabel(_msgs.get("m.cost"), "ranch_unit_cost"));
+        row.add(_cost = new MoneyLabel(ctx));
+        _recruit.add(row, new Point(65, 53));
+        BButton btn = new BButton(_msgs.get("m.recruit"), this, "recruit");
+        btn.setStyleClass("big_button");
+        _recruit.add(btn, new Point(105, 0));
     }
 
     /**
@@ -97,18 +113,22 @@ public class UnitInspector extends BContainer
         _umove.setText("" + config.moveDistance);
         _ufire.setText(config.getDisplayFireDistance());
 
-//         // Big Shots have some additional user interface bits
-//         boolean showRecruit = false, showCustomize = false;
-//         if (config.rank == UnitConfig.Rank.BIGSHOT) {
-//             if (itemId == -1) {
-//                 showRecruit = true;
-//                 _cost.setMoney(config.scripCost, config.coinCost, false);
-//             } else {
-//                 showCustomize = true;
-//             }
-//         }
-//         setVisible(_details, _recruit, showRecruit);
-//         setVisible(_details, _customize, showCustomize);
+        // Big Shots have some additional user interface bits
+        boolean showRecruit = false, showCustomize = false;
+        if (config.rank == UnitConfig.Rank.BIGSHOT) {
+            if (_itemId == -1) {
+                showRecruit = true;
+                _cost.setMoney(config.scripCost, config.coinCost, false);
+            } else {
+                showCustomize = true;
+            }
+        }
+        if (showRecruit && !_recruit.isAdded()) {
+            add(_recruit);
+        } else if (!showRecruit && _recruit.isAdded()) {
+            remove(_recruit);
+        }
+        // TODO: handle customize
     }
 
     // documentation inherited from interface IconPalette.Inspector
@@ -123,28 +143,16 @@ public class UnitInspector extends BContainer
         if ("recruit".equals(event.getAction())) {
             if (_config != null && _itemId == -1 &&
                 _config.rank == UnitConfig.Rank.BIGSHOT) {
-                recruit(_config);
+                RecruitDialog rd = new RecruitDialog(
+                    _ctx, (RanchView)getParent(), _ranchobj, _config);
+                _ctx.getBangClient().displayPopup(rd);
+                rd.pack(400, -1);
+                rd.center();
             }
 
         } else if ("customize".equals(event.getAction())) {
             // setText("Not yet implemented. Sorry.");
         }
-    }
-
-    protected void recruit (UnitConfig config)
-    {
-        RanchService.ResultListener rl = new RanchService.ResultListener() {
-            public void requestProcessed (Object result) {
-                BigShotItem unit = (BigShotItem)result;
-                RanchView parent = (RanchView)getParent().getParent();
-                parent.unitRecruited(unit.getItemId());
-                // setText(_msgs.get("m.recruited_bigshot"));
-            }
-            public void requestFailed (String cause) {
-                // setText(_msgs.xlate(cause));
-            }
-        };
-        _ranchobj.service.recruitBigShot(_ctx.getClient(), config.type, rl);
     }
 
     protected BangContext _ctx;

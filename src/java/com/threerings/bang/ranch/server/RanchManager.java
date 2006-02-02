@@ -6,6 +6,7 @@ package com.threerings.bang.ranch.server;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ListUtil;
 import com.threerings.util.MessageBundle;
+import com.threerings.util.Name;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
@@ -34,8 +35,8 @@ public class RanchManager extends PlaceManager
     implements RanchCodes, RanchProvider
 {
     // documentation inherited from interface RanchProvider
-    public void recruitBigShot (
-        ClientObject caller, String type, RanchService.ResultListener listener)
+    public void recruitBigShot (ClientObject caller, String type, Name name,
+                                RanchService.ResultListener listener)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
@@ -53,9 +54,19 @@ public class RanchManager extends PlaceManager
             throw new InvocationException(ACCESS_DENIED);
         }
 
-        // create and deliver the unit to the player; all the heavy
-        // lifting is handled by the financiial action
-        new RecruitBigShotAction(user, config, listener).start();
+        // the client should prevent this
+        if (name.toString().length() > BigShotItem.MAX_NAME_LENGTH) {
+            log.warning("Requested to recruit bigshot with long name " +
+                        "[who=" + user.who() + ", type=" + type +
+                        ", name=" + name + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // create and deliver the unit to the player; all the heavy lifting is
+        // handled by the financiial action
+        BigShotItem unit = new BigShotItem(user.playerId, config.type);
+        unit.setName(name);
+        new RecruitBigShotAction(user, config, unit, listener).start();
     }
 
     @Override // documentation inherited
@@ -93,11 +104,11 @@ public class RanchManager extends PlaceManager
     /** Used to recruit and deliver a big shot to a player. */
     protected static final class RecruitBigShotAction extends FinancialAction
     {
-        public RecruitBigShotAction (PlayerObject user, UnitConfig config,
-                                     RanchService.ResultListener listener) {
+        public RecruitBigShotAction (
+            PlayerObject user, UnitConfig config, BigShotItem unit,
+            RanchService.ResultListener listener) {
             super(user, config.scripCost, config.coinCost);
-            _config = config;
-            _unit = new BigShotItem(user.playerId, config.type);
+            _unit = unit;
             _listener = listener;
         }
 
@@ -106,7 +117,7 @@ public class RanchManager extends PlaceManager
         }
         protected String getCoinDescrip () {
             return MessageBundle.compose(
-                "m.bigshot_purchase", _config.getName());
+                "m.bigshot_purchase", UnitConfig.getName(_unit.getType()));
         }
 
         protected void persistentAction () throws PersistenceException {
@@ -124,7 +135,6 @@ public class RanchManager extends PlaceManager
             _listener.requestFailed(INTERNAL_ERROR);
         }
 
-        protected UnitConfig _config;
         protected BigShotItem _unit;
         protected RanchService.ResultListener _listener;
     }

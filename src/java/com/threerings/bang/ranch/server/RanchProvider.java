@@ -9,6 +9,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
+import com.threerings.util.Name;
 
 /**
  * Defines the server-side of the {@link RanchService}.
@@ -18,6 +19,6 @@ public interface RanchProvider extends InvocationProvider
     /**
      * Handles a {@link RanchService#recruitBigShot} request.
      */
-    public void recruitBigShot (ClientObject caller, String arg1, InvocationService.ResultListener arg2)
+    public void recruitBigShot (ClientObject caller, String arg1, Name arg2, InvocationService.ResultListener arg3)
         throws InvocationException;
 }

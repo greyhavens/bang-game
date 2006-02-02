@@ -54,7 +54,7 @@ public class RanchView extends ShopView
         add(_status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
 
         _inspector = new UnitInspector(_ctx);
-        add(_inspector, new Rectangle(178, 160, 258, 491));
+        add(_inspector, new Rectangle(178, 60, 258, 591));
 
         // create our various tabs: recruited big shots...
         _bigshots = new UnitPalette(ctx, _inspector, 4, 3);
@@ -72,7 +72,7 @@ public class RanchView extends ShopView
         _units.setUnits(UnitConfig.getTownUnits(townId, ranks));
 
         // create our tabs
-        add(new HackyTabs(ctx, false, "ui/ranch/tab_", TABS, 136, 17) {
+        add(_tabs = new HackyTabs(ctx, false, "ui/ranch/tab_", TABS, 136, 17) {
             protected void tabSelected (int index) {
                 RanchView.this.selectTab(index);
             }
@@ -118,14 +118,16 @@ public class RanchView extends ShopView
     }
 
     /**
-     * Called by the {@link SignView} when we've recruited a new Big Shot.
+     * Called by the {@link RecruitDialog} when we've recruited a new Big Shot.
      */
     protected void unitRecruited (int itemId)
     {
-        selectTab(0);
+        _tabs.selectTab(0);
         _bigshots.selectUnit(itemId);
+        _status.setStatus(_msgs.get("m.recruited_bigshot"), false);
     }
 
+    protected HackyTabs _tabs;
     protected UnitInspector _inspector;
     protected UnitPalette _seltab;
     protected UnitPalette _bigshots, _units, _recruits;

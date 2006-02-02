@@ -201,23 +201,18 @@ public class BangClient extends BasicClient
 
         // check for a "go" parameter
         String where = System.getProperty("go");
-        if (where != null) {
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
-            if ("ranch".equals(where)) {
-                _ctx.getLocationDirector().moveTo(bbd.ranchOid);
-            } else if ("bank".equals(where)) {
-                _ctx.getLocationDirector().moveTo(bbd.bankOid);
-            } else if ("store".equals(where)) {
-                _ctx.getLocationDirector().moveTo(bbd.storeOid);
-            } else if ("saloon".equals(where)) {
-                _ctx.getLocationDirector().moveTo(bbd.saloonOid);
-            } else if ("barber".equals(where)) {
-                _ctx.getLocationDirector().moveTo(bbd.barberOid);
-            } else {
-                log.warning("Unknown go argument '" + where + "'.");
-            }
-            return;
+        BangBootstrapData bbd = (BangBootstrapData)
+            _ctx.getClient().getBootstrapData();
+        if ("ranch".equals(where)) {
+            _ctx.getLocationDirector().moveTo(bbd.ranchOid);
+        } else if ("bank".equals(where)) {
+            _ctx.getLocationDirector().moveTo(bbd.bankOid);
+        } else if ("store".equals(where)) {
+            _ctx.getLocationDirector().moveTo(bbd.storeOid);
+        } else if ("saloon".equals(where)) {
+            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+        } else if ("barber".equals(where)) {
+            _ctx.getLocationDirector().moveTo(bbd.barberOid);
         }
 
         // start up the introduction process, if appropriate, or if no intro is

@@ -76,7 +76,7 @@ public class FirstBigShotView extends BDecoratedWindow
         _name.addListener(new TextListener() {
             public void textChanged (TextEvent event) {
                 if (_name.getText().length() > BigShotItem.MAX_NAME_LENGTH) {
-                    _nlbl.setText(_msgs.get("m.firstbs_name_to_long"));
+                    _nlbl.setText(_msgs.get("m.name_to_long"));
                 } else {
                     _nlbl.setText(_msgs.get("m.firstbs_name"));
                 }

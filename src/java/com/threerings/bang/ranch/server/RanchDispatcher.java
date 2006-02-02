@@ -11,6 +11,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.util.Name;
 
 /**
  * Dispatches requests to the {@link RanchProvider}.
@@ -41,7 +42,7 @@ public class RanchDispatcher extends InvocationDispatcher
         case RanchMarshaller.RECRUIT_BIG_SHOT:
             ((RanchProvider)provider).recruitBigShot(
                 source,
-                (String)args[0], (InvocationService.ResultListener)args[1]
+                (String)args[0], (Name)args[1], (InvocationService.ResultListener)args[2]
             );
             return;
 

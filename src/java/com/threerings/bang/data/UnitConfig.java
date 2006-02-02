@@ -104,6 +104,12 @@ public class UnitConfig
     /** A custom class for this unit, if one was specified. */
     public String unitClass;
 
+    /** Returns a translatable name for the specified unit type. */
+    public static String getName (String type)
+    {
+        return MessageBundle.qualify("units", "m." + type);
+    }
+
     /**
      * Computes and returns the damage adjustment to be used when a unit
      * of this type attacks a unit of the specified type.
@@ -127,7 +133,7 @@ public class UnitConfig
     /** Returns a translatable name for this unit. */
     public String getName ()
     {
-        return MessageBundle.qualify("units", "m." + type);
+        return getName(type);
     }
 
     /**

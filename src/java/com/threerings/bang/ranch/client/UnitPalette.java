@@ -11,6 +11,7 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
@@ -70,8 +71,8 @@ public class UnitPalette extends IconPalette
      */
     public void selectUnit (int itemId)
     {
-        for (int ii = 0; ii < getComponentCount(); ii++) {
-            UnitIcon icon = (UnitIcon)getComponent(ii);
+        for (SelectableIcon sicon : _icons) {
+            UnitIcon icon = (UnitIcon)sicon;
             if (icon.getItemId() == itemId) {
                 icon.setSelected(true);
                 return;
@@ -101,8 +102,8 @@ public class UnitPalette extends IconPalette
 
     protected void removeUnit (int itemId)
     {
-        for (int ii = 0; ii < getComponentCount(); ii++) {
-            UnitIcon icon = (UnitIcon)getComponent(ii);
+        for (SelectableIcon sicon : _icons) {
+            UnitIcon icon = (UnitIcon)sicon;
             if (icon.getItemId() == itemId) {
                 removeIcon(icon);
                 return;
