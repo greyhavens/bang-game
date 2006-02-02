@@ -112,7 +112,8 @@ public class UnitSprite extends MobileSprite
     {
         _pendnode = pnode;
         int ticks;
-        if (_pendnode != null && (ticks = _piece.ticksUntilMovable(_tick)) > 0) {
+        if (_pendnode != null &&
+            (ticks = _piece.ticksUntilMovable(_tick)) > 0) {
             _pendtst.setTexture(createPendingTexture(ticks-1));
             _pendnode.setRenderState(_pendtst);
             _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
