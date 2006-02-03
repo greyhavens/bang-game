@@ -89,7 +89,7 @@ public class StatusView extends BWindow
                 return (item instanceof Article);
             }
         });
-        _bigshots = new UnitPalette(ctx, null, 4, 3);
+        _bigshots = new UnitPalette(ctx, null, 4, 3, true);
         _bigshots.setUser(user);
         _stats = new PlayerStatsView(ctx);
 

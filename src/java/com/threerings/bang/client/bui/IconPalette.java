@@ -51,9 +51,12 @@ public class IconPalette extends BContainer
      * at least one).
      * @param paintbg if true, the palette will paint a background under the
      * icons, if false it will let whatever's underneath show through.
+     * @param navbuttons if true, forward and back buttons will be shown to
+     * allow navigation between pages of icons.
      */
     public IconPalette (Inspector inspector, int columns, int rows,
-                        Dimension size, int selectable, boolean paintbg)
+                        Dimension size, int selectable, boolean paintbg,
+                        boolean navbuttons)
     {
         super(new BorderLayout(0, 0));
         _rows = rows;
@@ -77,7 +80,9 @@ public class IconPalette extends BContainer
         _back.setStyleClass("back_button");
         buttons.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
-        add(buttons, BorderLayout.CENTER);
+        if (navbuttons) {
+            add(buttons, BorderLayout.CENTER);
+        }
     }
 
     /**

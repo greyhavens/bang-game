@@ -400,6 +400,24 @@ color_selector_item {
 }
 
 //
+// Dialog Window styles
+
+dialog_window {
+  parent: decoratedwindow;
+  padding: 15 50;
+}
+
+dialog_text {
+  color: #4C2602;
+  text-align: center;
+}
+
+dialog_label {
+  font: "Old Town Wide" plain 24;
+  text-align: center;
+}
+
+//
 // Icon Palette styles
 
 palette_background {
@@ -575,21 +593,6 @@ colorsel_label {
   text-align: right;
 }
 
-fa_window {
-  parent: decoratedwindow;
-  padding: 15 50;
-}
-
-fa_text {
-  color: #4C2602;
-  text-align: center;
-}
-
-fa_label {
-  font: "Old Town Wide" plain 24;
-  text-align: center;
-}
-
 fa_inner_box {
   background: image "ui/window/border_ornate.png" framexy;
   padding: 20 50;
@@ -641,4 +644,9 @@ ranch_unit_cost {
 unit_view {
   background: image "ui/barber/avatar_background.png" centerxy;
   padding: 7 12 7 12;
+}
+
+fb_unit_palette {
+  background: image "ui/window/border_ornate.png" framexy;
+  padding: 8 8;
 }

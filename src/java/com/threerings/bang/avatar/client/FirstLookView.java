@@ -201,8 +201,8 @@ public class FirstLookView extends BContainer
             left.addListener(this);
             table.add(left);
 
-            table.add(new BLabel(_ctx.xlate(AvatarCodes.AVATAR_MSGS,
-                                            "m." + aspect.name), "fa_label"));
+            String lb = _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m." + aspect.name);
+            table.add(new BLabel(lb, "dialog_label"));
 
             BButton right = new BButton(BangUI.rightArrow, "up");
             right.setStyleClass("arrow_button");

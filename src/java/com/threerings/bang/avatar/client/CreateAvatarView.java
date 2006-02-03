@@ -38,7 +38,7 @@ public class CreateAvatarView extends BDecoratedWindow
     public CreateAvatarView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), null);
-        setStyleClass("fa_window");
+        setStyleClass("dialog_window");
         setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER));
         ((GroupLayout)getLayoutManager()).setGap(15);
 
@@ -46,7 +46,7 @@ public class CreateAvatarView extends BDecoratedWindow
         _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
 
         add(new BLabel(_msgs.get("m.create_title"), "scroll_title"));
-        add(new BLabel(_msgs.get("m.create_intro"), "fa_text"));
+        add(new BLabel(_msgs.get("m.create_intro"), "dialog_text"));
 
         GroupLayout glay = GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
@@ -55,7 +55,7 @@ public class CreateAvatarView extends BDecoratedWindow
         inner.setStyleClass("fa_inner_box");
         add(inner);
         _status = new StatusLabel(ctx);
-        _status.setStyleClass("fa_text");
+        _status.setStyleClass("dialog_text");
         _status.setStatus(_msgs.get("m.create_tip"), false);
         add(_status);
         add(_done = new BButton(_msgs.get("m.done"), this, "done"));
@@ -63,7 +63,7 @@ public class CreateAvatarView extends BDecoratedWindow
         // this all goes in the inner box
         BContainer hcont = GroupLayout.makeHBox(GroupLayout.LEFT);
         hcont.add(new Spacer(20, 1));
-        hcont.add(new BLabel(_msgs.get("m.persuasion"), "fa_label"));
+        hcont.add(new BLabel(_msgs.get("m.persuasion"), "dialog_label"));
         String[] gensel = new String[] {
             _msgs.get("m.male"), _msgs.get("m.female") };
         hcont.add(_gender = new BComboBox(gensel));
@@ -74,7 +74,7 @@ public class CreateAvatarView extends BDecoratedWindow
 
         hcont = GroupLayout.makeHBox(GroupLayout.LEFT);
         hcont.add(new Spacer(20, 1));
-        hcont.add(new BLabel(_msgs.get("m.handle"), "fa_label"));
+        hcont.add(new BLabel(_msgs.get("m.handle"), "dialog_label"));
         hcont.add(_handle = new BTextField(""));
         _handle.setPreferredWidth(125);
         // TODO: wire up handle validation stuff

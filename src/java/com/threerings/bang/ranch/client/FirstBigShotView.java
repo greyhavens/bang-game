@@ -40,52 +40,49 @@ public class FirstBigShotView extends BDecoratedWindow
     public FirstBigShotView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), null);
-
-        setLayoutManager(GroupLayout.makeVStretch());
-        ((GroupLayout)getLayoutManager()).setOffAxisPolicy(GroupLayout.NONE);
+        setStyleClass("dialog_window");
+        setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER));
         ((GroupLayout)getLayoutManager()).setGap(15);
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
 
-        _status = new BLabel(_msgs.get("m.firstbs_tip"));
+        _status = new BLabel(_msgs.get("m.firstbs_tip"), "dialog_text");
 
-        add(new BLabel(_msgs.get("m.firstbs_title"), "scroll_title"),
-            GroupLayout.FIXED);
-        add(new BLabel(_msgs.get("m.firstbs_intro")), GroupLayout.FIXED);
+        add(new BLabel(_msgs.get("m.firstbs_title"), "scroll_title"));
+        add(new BLabel(_msgs.get("m.firstbs_intro"), "dialog_text"));
 
-        add(new BLabel(_msgs.get("m.firstbs_pick")), GroupLayout.FIXED);
         UnitConfig[] units = new UnitConfig[RanchCodes.STARTER_BIGSHOTS.length];
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = UnitConfig.getConfig(RanchCodes.STARTER_BIGSHOTS[ii]);
         }
-        _bigshots = new UnitPalette(ctx, this, units.length, 1);
+        _bigshots = new UnitPalette(ctx, this, units.length, 1, false);
+        _bigshots.setStyleClass("fb_unit_palette");
         _bigshots.setUnits(units);
-        add(_bigshots, GroupLayout.FIXED);
-
-        add(_status);
-
-        add(_nlbl = new BLabel(_msgs.get("m.firstbs_name")), GroupLayout.FIXED);
+        add(_bigshots);
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
         add(ncont, GroupLayout.FIXED);
 
+        ncont.add(new BLabel(_msgs.get("m.firstbs_name"), "dialog_label"));
         ncont.add(_name = new BTextField(""));
-        _name.setPreferredWidth(250);
+        _name.setPreferredWidth(150);
         _name.addListener(new TextListener() {
             public void textChanged (TextEvent event) {
                 if (_name.getText().length() > BigShotItem.MAX_NAME_LENGTH) {
-                    _nlbl.setText(_msgs.get("m.name_to_long"));
+                    _status.setText(_msgs.get("m.name_to_long"));
                 } else {
-                    _nlbl.setText(_msgs.get("m.firstbs_name"));
+                    _status.setText(_msgs.get("m.firstbs_tip"));
                 }
                 _done.setEnabled(isReady());
             }
         });
         ncont.add(new Spacer(25, 0));
 
-        ncont.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
+        add(_status);
+
+        add(_done = new BButton(_msgs.get("m.done"), this, "done"));
         _done.setEnabled(false);
     }
 
@@ -111,7 +108,7 @@ public class FirstBigShotView extends BDecoratedWindow
     {
         _status.setText(_msgs.get("m.firstbs_tip"));
         _config = null;
-        _done.setEnabled(isReady());
+        _done.setEnabled(false);
     }
 
     protected void pickBigShot ()
@@ -138,7 +135,7 @@ public class FirstBigShotView extends BDecoratedWindow
     protected boolean isReady ()
     {
         return (_config != null) && _name.getText().length() > 0 &&
-            _name.getText().length() < BigShotItem.MAX_NAME_LENGTH;
+            _name.getText().length() <= BigShotItem.MAX_NAME_LENGTH;
     }
 
     protected BangContext _ctx;
@@ -146,7 +143,7 @@ public class FirstBigShotView extends BDecoratedWindow
     protected UnitConfig _config;
 
     protected UnitPalette _bigshots;
-    protected BLabel _status, _nlbl;
+    protected BLabel _status;
     protected BTextField _name;
     protected BButton _done;
 }
