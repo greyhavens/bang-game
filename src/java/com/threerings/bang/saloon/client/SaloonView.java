@@ -3,6 +3,7 @@
 
 package com.threerings.bang.saloon.client;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
@@ -36,8 +37,10 @@ public class SaloonView extends ShopView
         add(new TownButton(ctx), new Point(870, 25));
 
         add(_crview = new CriterionView(ctx, _ctrl), new Point(700, 300));
-
         add(_status = new StatusLabel(ctx), new Rectangle(450, 80, 400, 50));
+
+        add(new BButton(_msgs.get("m.test_game"), _ctrl,
+                        SaloonController.TEST_GAME), new Point(700, 250));
     }
 
     /**
