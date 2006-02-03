@@ -35,7 +35,7 @@ public class ItemIcon extends PaletteIcon
 
     protected void configureLabel (BangContext ctx)
     {
-        setIcon(new ImageIcon(ctx.loadImage("ui/unknown_item.png")));
+        setIcon(new ImageIcon(ctx.loadImage("ui/icons/unknown_item.png")));
         setText(_item.toString());
     }
 
