@@ -10,16 +10,18 @@ import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BTextField;
 import com.jmex.bui.BTextArea;
+import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.NameFactory;
@@ -36,60 +38,60 @@ public class CreateAvatarView extends BDecoratedWindow
     public CreateAvatarView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), null);
-        setLayoutManager(GroupLayout.makeVStretch());
+        setStyleClass("fa_window");
+        setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER));
+        ((GroupLayout)getLayoutManager()).setGap(15);
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
 
-        _status = new BTextArea(_msgs.get("m.create_tip"));
-        _status.setPreferredWidth(PREF_WIDTH);
+        add(new BLabel(_msgs.get("m.create_title"), "scroll_title"));
+        add(new BLabel(_msgs.get("m.create_intro"), "fa_text"));
 
-        BLabel title = new BLabel(_msgs.get("m.create_title"), "dialog_title");
-        add(title, GroupLayout.FIXED);
+        GroupLayout glay = GroupLayout.makeVert(
+            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
+        glay.setGap(15);
+        BContainer inner = new BContainer(glay);
+        inner.setStyleClass("fa_inner_box");
+        add(inner);
+        _status = new StatusLabel(ctx);
+        _status.setStyleClass("fa_text");
+        _status.setStatus(_msgs.get("m.create_tip"), false);
+        add(_status);
+        add(_done = new BButton(_msgs.get("m.done"), this, "done"));
 
-        BTextArea intro = new BTextArea(_msgs.get("m.create_intro"));
-        intro.setPreferredWidth(PREF_WIDTH);
-        add(intro, GroupLayout.FIXED);
-
+        // this all goes in the inner box
         BContainer hcont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        hcont.add(new Spacer(25, 5));
-        hcont.add(new BLabel(_msgs.get("m.persuasion")));
+        hcont.add(new Spacer(20, 1));
+        hcont.add(new BLabel(_msgs.get("m.persuasion"), "fa_label"));
         String[] gensel = new String[] {
             _msgs.get("m.male"), _msgs.get("m.female") };
         hcont.add(_gender = new BComboBox(gensel));
         _gender.addListener(_sexer);
-        hcont.add(new Spacer(5, 5));
+        inner.add(hcont);
 
-        hcont.add(new BLabel(_msgs.get("m.handle")));
+        inner.add(_look = new FirstLookView(ctx, _status));
+
+        hcont = GroupLayout.makeHBox(GroupLayout.LEFT);
+        hcont.add(new Spacer(20, 1));
+        hcont.add(new BLabel(_msgs.get("m.handle"), "fa_label"));
         hcont.add(_handle = new BTextField(""));
         _handle.setPreferredWidth(125);
         // TODO: wire up handle validation stuff
 
-        hcont.add(new Spacer(5, 5));
-        hcont.add(new BButton("*", this, "random"));
-
+        hcont.add(new Spacer(25, 5));
         hcont.add(_prefix = new BComboBox());
         _prefix.addListener(_namer);
-
         _root = new BComboBox();
         _root.addListener(_namer);
         hcont.add(_root);
-
         hcont.add(_suffix = new BComboBox());
         _suffix.addListener(_namer);
 
-        add(hcont, GroupLayout.FIXED);
-
-        BTextArea tip = new BTextArea(_msgs.get("m.avatar_tip"));
-        tip.setPreferredWidth(PREF_WIDTH);
-        add(tip, GroupLayout.FIXED);
-        add(_look = new FirstLookView(ctx, null)); // TODO: sort out status
-
-        add(_status, GroupLayout.FIXED);
-
-        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        buttons.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
-        add(buttons, GroupLayout.FIXED);
+        hcont.add(new Spacer(15, 5));
+        ImageIcon dicon = new ImageIcon(ctx.loadImage("ui/icons/dice.png"));
+        hcont.add(new BButton(dicon, this, "random"));
+        inner.add(hcont);
 
         // start with a random gender which will trigger name list and avatar
         // display configuration
@@ -142,7 +144,7 @@ public class CreateAvatarView extends BDecoratedWindow
                 _ctx.getBangClient().checkShowIntro();
             }
             public void requestFailed (String reason) {
-                _status.setText(_msgs.xlate(reason));
+                _status.setStatus(_msgs.xlate(reason), true);
                 _failed = true;
                 _done.setEnabled(true);
             }
@@ -158,7 +160,7 @@ public class CreateAvatarView extends BDecoratedWindow
     protected void maybeClearStatus ()
     {
         if (_failed) {
-            _status.setText("");
+            _status.setStatus("", false);
         }
     }
 
@@ -192,7 +194,7 @@ public class CreateAvatarView extends BDecoratedWindow
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
-    protected BTextArea _status;
+    protected StatusLabel _status;
     protected boolean _failed;
 
     protected BComboBox _gender;

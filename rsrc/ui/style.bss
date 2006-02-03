@@ -19,12 +19,12 @@ window {
 }
 
 decoratedwindow {
-  background: image "ui/window_background.png" framexy;
+  background: image "ui/window/background.png" framexy;
   padding: 15;
 }
 
 popupwindow {
-  background: image "ui/window_background.png" framexy;
+  background: image "ui/window/background.png" framexy;
   padding: 15;
 }
 
@@ -149,6 +149,21 @@ back_button:hover {
 }
 back_button:down {
   background: image "ui/buttons/back_down.png" framexy;
+}
+
+arrow_button {
+  parent: alt_button;
+  padding: 5 1;
+}
+arrow_button:hover {
+  parent: "alt_button:hover";
+}
+arrow_button:down {
+  parent: "alt_button:down";
+  padding: 6 2 4 0;
+}
+arrow_button:disabled {
+  parent: "alt_button:disabled";
 }
 
 invisibutton {
@@ -279,6 +294,16 @@ scrollbar_vmore:disabled {
 
 marquee {
   font: "Dom Casual" bold 48;
+}
+
+scroll_title {
+  font: "Old Town Wide" plain 30;
+  text-align: center;
+  background: image "ui/window/scroll_title.png" framexy;
+  padding: 0 50 10 50;
+  text-effect: shadow;
+  color: #4C2602;
+  effect-color: #D1C581;
 }
 
 dialog_title {
@@ -548,6 +573,26 @@ avatar_view {
 colorsel_label {
   font: "Dom Casual" plain 20;
   text-align: right;
+}
+
+fa_window {
+  parent: decoratedwindow;
+  padding: 15 50;
+}
+
+fa_text {
+  color: #4C2602;
+  text-align: center;
+}
+
+fa_label {
+  font: "Old Town Wide" plain 24;
+  text-align: center;
+}
+
+fa_inner_box {
+  background: image "ui/window/border_ornate.png" framexy;
+  padding: 20 50;
 }
 
 //

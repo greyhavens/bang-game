@@ -51,7 +51,7 @@ public class FirstBigShotView extends BDecoratedWindow
 
         _status = new BLabel(_msgs.get("m.firstbs_tip"));
 
-        add(new BLabel(_msgs.get("m.firstbs_title"), "dialog_title"),
+        add(new BLabel(_msgs.get("m.firstbs_title"), "scroll_title"),
             GroupLayout.FIXED);
         add(new BLabel(_msgs.get("m.firstbs_intro")), GroupLayout.FIXED);
 

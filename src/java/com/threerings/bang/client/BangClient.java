@@ -107,7 +107,7 @@ public class BangClient extends BasicClient
         if (user.handle == null) {
             CreateAvatarView cav = new CreateAvatarView(_ctx);
             _ctx.getRootNode().addWindow(cav);
-            cav.pack();
+            cav.pack(800, -1);
             cav.center();
             return;
         }

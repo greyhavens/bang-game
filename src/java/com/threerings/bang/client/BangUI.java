@@ -90,11 +90,11 @@ public class BangUI
         // create our stylesheet
         reloadStylesheet();
 
-        scripIcon = new ImageIcon(ctx.loadImage("ui/scrip.png"));
-        coinIcon = new ImageIcon(ctx.loadImage("ui/coins.png"));
+        scripIcon = new ImageIcon(ctx.loadImage("ui/icons/scrip.png"));
+        coinIcon = new ImageIcon(ctx.loadImage("ui/icons/coins.png"));
 
-        leftArrow = new ImageIcon(ctx.loadImage("ui/left_arrow.png"));
-        rightArrow = new ImageIcon(ctx.loadImage("ui/right_arrow.png"));
+        leftArrow = new ImageIcon(ctx.loadImage("ui/icons/left_arrow.png"));
+        rightArrow = new ImageIcon(ctx.loadImage("ui/icons/right_arrow.png"));
     }
 
     /**

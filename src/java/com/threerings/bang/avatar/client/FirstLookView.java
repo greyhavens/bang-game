@@ -52,14 +52,15 @@ public class FirstLookView extends BContainer
 {
     public FirstLookView (BangContext ctx, StatusLabel status)
     {
-        super(new BorderLayout(5, 5));
+        super(new BorderLayout(50, 5));
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(BarberCodes.BARBER_MSGS);
         _status = status;
 
         add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
 
-        _toggles = new BContainer(new TableLayout(4, 5, 5));
+        _toggles = new BContainer(
+            new TableLayout(4, 5, 20, TableLayout.LEFT, true));
         BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
         wrapper.add(_toggles);
         add(wrapper, BorderLayout.CENTER);
@@ -196,13 +197,15 @@ public class FirstLookView extends BContainer
             _aspect = aspect;
 
             BButton left = new BButton(BangUI.leftArrow, "down");
+            left.setStyleClass("arrow_button");
             left.addListener(this);
             table.add(left);
 
             table.add(new BLabel(_ctx.xlate(AvatarCodes.AVATAR_MSGS,
-                                            "m." + aspect.name)));
+                                            "m." + aspect.name), "fa_label"));
 
             BButton right = new BButton(BangUI.rightArrow, "up");
+            right.setStyleClass("arrow_button");
             right.addListener(this);
             table.add(right);
 
