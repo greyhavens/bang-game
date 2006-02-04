@@ -18,7 +18,6 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.icon.BIcon;
-import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.text.AWTTextFactory;
 import com.jmex.bui.text.BTextFactory;
@@ -162,10 +161,10 @@ public class BangUI
         }
         if (config == null) {
             label.setText(_ctx.xlate("units", "m.empty"));
-            label.setIcon(new BlankIcon(Model.ICON_SIZE, Model.ICON_SIZE));
+            label.setIcon(null);
         } else {
             label.setText(_ctx.xlate("units", config.getName()));
-            label.setIcon(_ctx.loadModel("units", config.type).getIcon());
+            label.setIcon(getUnitIcon(config));
         }
     }
 
@@ -185,13 +184,22 @@ public class BangUI
     }
 
     /**
+     * Returns the icon that represents the specified unit.
+     */
+    public static BIcon getUnitIcon (UnitConfig config)
+    {
+        return new ImageIcon(
+            _ctx.loadImage("units/" + config.type + "/icon.png"));
+    }
+
+    /**
      * Creates a label with the icon for the specified unit and the unit's
      * name displayed below.
      */
     public static BButton createUnitButton (UnitConfig config)
     {
         BButton button = new BButton(_ctx.xlate("units", config.getName()));
-        button.setIcon(_ctx.loadModel("units", config.type).getIcon());
+        button.setIcon(getUnitIcon(config));
         button.setOrientation(BButton.VERTICAL);
         button.setStyleClass("unit_label");
         return button;

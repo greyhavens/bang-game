@@ -3,10 +3,9 @@
 
 package com.threerings.bang.ranch.client;
 
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
-import com.threerings.bang.client.Model;
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BasicContext;
@@ -28,8 +27,7 @@ public class UnitIcon extends PaletteIcon
         _itemId = itemId;
         _config = config;
         setText(name);
-        setIcon(new ImageIcon(
-                    ctx.loadImage("units/" + config.type + "/icon.png")));
+        setIcon(BangUI.getUnitIcon(config));
     }
 
     public int getItemId ()

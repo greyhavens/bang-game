@@ -28,7 +28,6 @@ import com.jme.renderer.Camera;
 import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Controller;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
@@ -42,8 +41,6 @@ import com.jme.util.TextureManager;
 import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
 
-import com.jmex.bui.icon.BIcon;
-import com.jmex.bui.icon.TextureIcon;
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.bang.client.Config;
@@ -300,9 +297,6 @@ public class Model
         public CloneCreator creator;
     }
 
-    /** The size along each axis of the model icon. */
-    public static final int ICON_SIZE = 128;
-
     /**
      * Returns the background loader thread used to asynchronously load models.
      */
@@ -367,13 +361,6 @@ public class Model
         if (!_anims.containsKey("standing") && _anims.containsKey("walking")) {
             _anims.put("standing", _anims.get("walking"));
         }
-
-        // load up the action we need to create our icon image
-        String iaction = _props.getProperty("icon");
-        if (iaction != null && (_ianim = _anims.get(iaction)) != null) {
-            _ianim.setIsResolving();
-            _loader.queueAction(this, iaction);
-        }
     }
 
     /**
@@ -392,14 +379,6 @@ public class Model
                 action + "." + emitter.name, emitter.name);
         }
         return emitters;
-    }
-
-    /**
-     * Returns a pre-rendered icon version of this model.
-     */
-    public BIcon getIcon ()
-    {
-        return _icon;
     }
 
     /**
@@ -548,16 +527,6 @@ public class Model
             }
         }
         anim.setParts(parts);
-
-        // create the icon image for this model if it wants one
-        if (anim == _ianim) {
-            try {
-                createIconImage(ctx);
-            } catch (Throwable t) {
-                log.log(Level.WARNING, "Failed to create icon image " +
-                        "[key=" + _key + "].", t);
-            }
-        }
     }
 
     @Override // documentation inherited
@@ -666,79 +635,6 @@ public class Model
         return cc;
     }
 
-    protected void createIconImage (BasicContext ctx)
-    {
-        TextureRenderer trenderer =
-            ctx.getDisplay().createTextureRenderer(
-                ICON_SIZE, ICON_SIZE, false, true, false, false,
-                TextureRenderer.RENDER_TEXTURE_2D, 0);
-        trenderer.setBackgroundColor(new ColorRGBA(.9f, .9f, .9f, 0f));
-
-        Vector3f loc = new Vector3f(TILE_SIZE/2, -TILE_SIZE, TILE_SIZE);
-        Camera cam = trenderer.getCamera();
-        cam.setLocation(loc);
-        Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/2, cam.getLeft());
-        rotm.mult(cam.getDirection(), cam.getDirection());
-        rotm.mult(cam.getUp(), cam.getUp());
-        rotm.mult(cam.getLeft(), cam.getLeft());
-        rotm.fromAngleAxis(FastMath.PI/6, cam.getUp());
-        rotm.mult(cam.getDirection(), cam.getDirection());
-        rotm.mult(cam.getUp(), cam.getUp());
-        rotm.mult(cam.getLeft(), cam.getLeft());
-        rotm.fromAngleAxis(FastMath.PI/6, cam.getLeft());
-        rotm.mult(cam.getDirection(), cam.getDirection());
-        rotm.mult(cam.getUp(), cam.getUp());
-        rotm.mult(cam.getLeft(), cam.getLeft());
-        cam.update();
-
-        Texture icon = new Texture();
-        trenderer.setupTexture(icon);
-
-        icon.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-
-        Node all = new Node("all");
-        all.setRenderQueueMode(Renderer.QUEUE_SKIP);
-
-        all.attachChild(new Box("origin", new Vector3f(-0.01f, -0.01f, -0.01f),
-                                new Vector3f(.01f, .01f, .01f)));
-
-        PointLight light = new PointLight();
-        light.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-        light.setAmbient(new ColorRGBA(0.75f, 0.75f, 0.75f, 1.0f));
-        light.setLocation(new Vector3f(100, 100, 100));
-        light.setAttenuate(true);
-        light.setConstant(0.25f);
-        light.setEnabled(true);
-
-        LightState lights = ctx.getRenderer().createLightState();
-        lights.setEnabled(true);
-        lights.attach(light);
-        all.setRenderState(lights);
-
-        Node[] meshes = getAnimation("standing").getMeshes(0);
-        for (int ii = 0; ii < meshes.length; ii++) {
-            all.attachChild(meshes[ii]);
-        }
-
-        ZBufferState buf = ctx.getRenderer().createZBufferState();
-        buf.setEnabled(true);
-        buf.setFunction(ZBufferState.CF_LEQUAL);
-        all.setRenderState(buf);
-
-        all.updateGeometricState(0, true);
-        all.updateRenderState();
-
-        trenderer.render(all, icon);
-        trenderer.cleanup();
-
-        // restore the normal view camera
-        ctx.getCameraHandler().getCamera().update();
-
-        // configure our icon with the rendered texture
-        _icon.setTexture(icon);
-    }
-
     protected String cleanPath (String path)
     {
         // non-file URLs don't handle blah/foo/../bar so we make those path
@@ -808,7 +704,6 @@ public class Model
     }
 
     protected String _key;
-    protected TextureIcon _icon = new TextureIcon(ICON_SIZE, ICON_SIZE);
     protected Properties _props;
     protected Animation _ianim;
 
