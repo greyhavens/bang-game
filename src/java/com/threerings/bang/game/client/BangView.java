@@ -16,8 +16,6 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.jme.effect.FadeInOutEffect;
-
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -51,16 +49,6 @@ public class BangView extends BWindow
         // create our various displays
         add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
         chat = new OverlayChatView(ctx);
-
-        // create a paused fade in effect, we'll do our real fading in once
-        // everything is loaded up and we're ready to show the UI
-        _fadein = new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
-            protected void fadeComplete () {
-                _ctx.getInterface().detachChild(_fadein);
-                _fadein = null;
-            }
-        };
-        _fadein.setPaused(true);
     }
 
     /**
@@ -96,11 +84,6 @@ public class BangView extends BWindow
 
             // note that we've prepared
             _prepared = true;
-
-            // we can start fading things in now
-            if (_fadein != null) {
-                _fadein.setPaused(false);
-            }
         }
 
         switch (phase) {
@@ -169,9 +152,6 @@ public class BangView extends BWindow
     public void wasAdded ()
     {
         super.wasAdded();
-
-        // add our own blackness that we'll fade in when we're ready
-        _ctx.getInterface().attachChild(_fadein);
 
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
@@ -249,9 +229,6 @@ public class BangView extends BWindow
 
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;
-
-    /** Used to fade ourselves in at the start of the game. */
-    protected FadeInOutEffect _fadein;
 
     /** Keeps track of whether we've prepared for the current round. */
     protected boolean _prepared;

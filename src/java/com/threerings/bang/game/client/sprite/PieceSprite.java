@@ -215,8 +215,8 @@ public class PieceSprite extends Sprite
         if (!isShadowable()) {
             return;
         }
-        float sheight = _view.getTerrainNode().getShadowHeight(localTranslation.x,
-            localTranslation.y), shadowed;
+        float sheight = _view.getTerrainNode().getShadowHeight(
+            localTranslation.x, localTranslation.y), shadowed;
         if (sheight >= localTranslation.z + TILE_SIZE) {
             shadowed = 1f;
             
@@ -376,6 +376,7 @@ public class PieceSprite extends Sprite
         }
 
         // bind the new animation
+        _view.addResolvingSprite(this);
         _binding = anim.bind(this, random, new Model.Binding.Observer() {
             public void wasBound (Model.Animation anim) {
                 // now that the meshes are attached, configure the animation
@@ -395,6 +396,8 @@ public class PieceSprite extends Sprite
                     }
                     emission.start(anim, _binding);
                 }
+
+                _view.clearResolvingSprite(PieceSprite.this);
             }
         });
     }

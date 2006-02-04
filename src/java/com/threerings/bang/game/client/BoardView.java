@@ -53,6 +53,7 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
@@ -64,6 +65,7 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.Model;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -166,6 +168,16 @@ public class BoardView extends BComponent
         // create a sound group that we'll use for all in-game sounds
         _sounds = ctx.getSoundManager().createGroup(
             BangUI.clipprov, GAME_SOURCE_COUNT);
+
+        // create a paused fade in effect, we'll do our real fading in once
+        // everything is loaded up and we're ready to show the board
+        _fadein = new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
+            protected void fadeComplete () {
+                _ctx.getInterface().detachChild(_fadein);
+                _fadein = null;
+            }
+        };
+        _fadein.setPaused(true);
     }
     
     /**
@@ -221,6 +233,30 @@ public class BoardView extends BComponent
             createPieceSprite((Piece)iter.next(), _bangobj.tick);
         }
         _pnode.updateGeometricState(0, true);
+    }
+
+    /**
+     * Informs the board that this sprite is currently resolving.
+     */
+    public void addResolvingSprite (PieceSprite resolver)
+    {
+        _resolvingSprites++;
+    }
+
+    /**
+     * Informs the board that this sprite is finished resolving.
+     */
+    public void clearResolvingSprite (PieceSprite resolved)
+    {
+        _resolvingSprites--;
+
+        // if we're done resolving and we need to fade in, do so
+        if (_resolvingSprites == 0) {
+            // we can start fading things in now
+            if (_fadein != null) {
+                _fadein.setPaused(false);
+            }
+        }
     }
 
     /**
@@ -616,6 +652,9 @@ public class BoardView extends BComponent
 
         // add our geometry into the scene graph
         _ctx.getGeometry().attachChild(_node);
+
+        // add our own blackness that we'll fade in when we're ready
+        _ctx.getInterface().attachChild(_fadein);
     }
 
     @Override // documentation inherited
@@ -1074,6 +1113,12 @@ public class BoardView extends BComponent
 
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();
+
+    /** Used to track sprites that are loading their animations. */
+    protected int _resolvingSprites;
+
+    /** Used to fade ourselves in at the start of the game. */
+    protected FadeInOutEffect _fadein;
 
     protected HashMap<Spatial,Sprite> _plights =
         new HashMap<Spatial,Sprite>();
