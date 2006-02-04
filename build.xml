@@ -221,8 +221,14 @@
              classpath="lib/proguard.jar"/>
     <proguard configuration="etc/bang-client.pro"/>
 
+    <!-- create our directories if necessary -->
+    <mkdir dir="${web_dir}/client"/>
+    <mkdir dir="${web_dir}/client/code"/>
+    <mkdir dir="${web_dir}/client/rsrc"/>
+    <mkdir dir="${web_dir}/client/native"/>
+
     <!-- create our configuration jar file -->
-    <jar destfile="pages/client/code/config.jar">
+    <jar destfile="${web_dir}/client/code/config.jar">
       <fileset dir=".">
         <include name="deployment.properties"/>
         <include name="build.properties"/>
@@ -230,29 +236,29 @@
     </jar>
 
     <!-- copy our various bits into the deployment directory -->
-    <copy todir="pages/client">
+    <copy todir="${web_dir}/client">
       <fileset dir="projects/installers/${default_locale}">
         <include name="background.png"/>
       </fileset>
     </copy>
-    <copy todir="pages/client/code">
+    <copy todir="${web_dir}/client/code">
       <fileset dir="dist" includes="bang-pcode.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
       <fileset dir="lib" includes="lwjgl_util.jar"/>
     </copy>
-    <copy todir="pages/client/rsrc">
+    <copy todir="${web_dir}/client/rsrc">
       <fileset dir="rsrc" includes="**/*.jar"/>
       <fileset dir="rsrc" includes="config/resource/manager.properties"/>
       <fileset dir="dist" includes="bang-*.jar" excludes="bang-*code.jar"/>
     </copy>
-    <copy todir="pages/client/native">
+    <copy todir="${web_dir}/client/native">
       <fileset dir="lib/i686-Linux" includes="*.so"/>
       <fileset dir="lib/i686-Windows" includes="*.dll"/>
       <fileset dir="lib/PowerPC-MacOS" includes="*"/>
     </copy>
 
     <!-- copy the getdown.txt file into the right place -->
-    <copy todir="pages/client" overwrite="true" encoding="UTF-8">
+    <copy todir="${web_dir}/client" overwrite="true" encoding="UTF-8">
       <fileset dir="etc" includes="getdown.txt"/>
       <filterset>
         <filter token="app_root" value="${root_url}"/>
@@ -269,7 +275,7 @@
        <pathelement path="lib/getdown.jar"/>
      </classpath>
     </taskdef>
-    <digest appdir="pages/client"/>
+    <digest appdir="${web_dir}/client"/>
   </target>
 
   <!-- a target for rebuilding everything -->

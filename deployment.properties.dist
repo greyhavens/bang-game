@@ -4,9 +4,11 @@
 # Configuration for the Bang! client/editor deployment
 
 #
-# The base URL for downloading and patching the client
+# The base URL for downloading and patching the client and the document root
+# for said server
 
-root_url = http://www.banghowdy.com
+root_url = http://localhost
+web_dir = pages
 
 #
 # The host and port to use when connecting to the server
