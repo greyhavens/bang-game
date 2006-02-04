@@ -73,26 +73,6 @@ public class StatusView extends BWindow
         btns.add(new BButton(_msgs.get("m.status_resume"), this, "resume"));
         add(btns, new Rectangle(652, 8, 310, 35));
 
-        // create our tabs
-        _items = new InventoryPalette(ctx, new InventoryPalette.Predicate() {
-            public boolean includeItem (Item item) {
-                return !(item instanceof Badge) && !(item instanceof Article);
-            }
-        });
-        _badges = new InventoryPalette(ctx, new InventoryPalette.Predicate() {
-            public boolean includeItem (Item item) {
-                return (item instanceof Badge);
-            }
-        });
-        _duds = new InventoryPalette(ctx, new InventoryPalette.Predicate() {
-            public boolean includeItem (Item item) {
-                return (item instanceof Article);
-            }
-        });
-        _bigshots = new UnitPalette(ctx, null, 4, 3, true);
-        _bigshots.setUser(user);
-        _stats = new PlayerStatsView(ctx);
-
         add(new HackyTabs(ctx, false, "ui/status/tab_", TABS, 136, 17) {
             protected void tabSelected (int index) {
                 StatusView.this.selectTab(index);
@@ -138,15 +118,47 @@ public class StatusView extends BWindow
 
     protected void selectTab (int tabidx)
     {
+        // create our tabs on the fly
         BComponent tab;
         switch (_selectedTab = tabidx) {
         default:
-        case 0: tab = _items; break;
-        case 1: tab = _bigshots; break;
-        case 2: tab = _badges; break;
-        case 3: tab = _duds; break;
-        case 4: tab = _stats; break;
+        case 0:
+            if (_items == null) {
+                _items = new InventoryPalette(_ctx, INV_PRED);
+            }
+            tab = _items;
+            break;
+
+        case 1:
+            if (_bigshots == null) {
+                _bigshots = new UnitPalette(_ctx, null, 4, 3, true);
+                _bigshots.setUser(_ctx.getUserObject());
+            }
+            tab = _bigshots;
+            break;
+
+        case 2:
+            if (_badges == null) {
+                _badges = new InventoryPalette(_ctx, BADGE_PRED);
+            }
+            tab = _badges;
+            break;
+
+        case 3:
+            if (_duds == null) {
+                _duds = new InventoryPalette(_ctx, DUDS_PRED);
+            }
+            tab = _duds;
+            break;
+
+        case 4:
+            if (_stats == null) {
+                _stats = new PlayerStatsView(_ctx);
+            }
+            tab = _stats;
+            break;
         }
+
         if (tab != _tab) {
             if (_tab != null) {
                 remove(_tab);
@@ -174,4 +186,25 @@ public class StatusView extends BWindow
     protected static final Rectangle TVIEW_BOUNDS =
         new Rectangle(287, 70, PaletteIcon.ICON_SIZE.width * 5,
                       PaletteIcon.ICON_SIZE.height * 3 + 37);
+
+    protected static final InventoryPalette.Predicate INV_PRED =
+        new InventoryPalette.Predicate() {
+        public boolean includeItem (Item item) {
+            return !(item instanceof Badge) && !(item instanceof Article);
+        }
+    };
+
+    protected static final InventoryPalette.Predicate BADGE_PRED =
+        new InventoryPalette.Predicate() {
+        public boolean includeItem (Item item) {
+            return (item instanceof Badge);
+        }
+    };
+
+    protected static final InventoryPalette.Predicate DUDS_PRED =
+        new InventoryPalette.Predicate() {
+        public boolean includeItem (Item item) {
+            return (item instanceof Article);
+        }
+    };
 }
