@@ -24,6 +24,7 @@ import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.SplinePath;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.util.MessageBundle;
@@ -85,11 +86,11 @@ public class TownView extends BWindow
 
         // create the town display
         add(_bview = new TownBoardView(_ctx), BorderLayout.CENTER);
-       
+
         // attempt to load the board
         try {
             _bview.loadBoard("menu/" + townId + "/town.board");
-        
+
         } catch (IOException ioe) {
             log.warning("Failed to load town board! [error=" + ioe + "].");
         }
@@ -140,19 +141,29 @@ public class TownView extends BWindow
                         _ctx.getCameraHandler().moveCamera(
                             new SplinePath(_ctx.getCameraHandler(),
                                 _pos, _dir, 0.75f, 0.5f));
-                                
-                        // fire the associated command
-                        String type = ((Prop)_hsprite.getPiece()).getType();
-                        fireCommand(_commands.get(type));
+
+                        // wait until we've finished animating the camera
+                        // before we fire the associated command otherwise
+                        // things are jerky as it tries to load up the UI while
+                        // we're moving
+                        final String type =
+                            ((Prop)_hsprite.getPiece()).getType();
+                        _ctx.getCameraHandler().addCameraObserver(
+                            new CameraPath.Observer() {
+                            public boolean pathCompleted (CameraPath path) {
+                                fireCommand(_commands.get(type));
+                                return false; // removes our observer
+                            }
+                        });
                     }
                 }
             });
-            
+
             MaterialState mstate = ctx.getRenderer().createMaterialState();
             mstate.setEmissive(ColorRGBA.white);
             _hstate = RenderUtil.createColorMaterialState(mstate, false);
         }
-        
+
         /**
          * Attempts to load the town menu board from the specified resource
          * path.
@@ -167,12 +178,12 @@ public class TownView extends BWindow
             bangobj.pieces = new PieceDSet(brec.getPieces());
             prepareForRound(bangobj, null, 0);
         }
-        
+
         @Override // documentation inherited
         protected void wasAdded ()
         {
             super.wasAdded();
-            
+
             // find the viewpoint and bind the camera to it
             for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
                 Piece piece = (Piece)it.next();
@@ -183,20 +194,20 @@ public class TownView extends BWindow
                 }
             }
         }
-        
+
         @Override // documentation inherited
         protected void wasRemoved ()
         {
             super.wasRemoved();
             _vpsprite.unbindCamera();
         }
-        
+
         @Override // documentation inherited
         protected void removePieceSprites ()
         {
             // don't remove the piece sprites, even when the view is removed
         }
-        
+
         @Override // documentation inherited
         protected void hoverSpriteChanged (Sprite hover)
         {
@@ -222,20 +233,20 @@ public class TownView extends BWindow
             _hsprite.setRenderState(_hstate);
             _hsprite.updateRenderState();
         }
-        
+
         protected MaterialState _hstate;
         protected PieceSprite _hsprite;
         protected ViewpointSprite _vpsprite;
     }
-    
+
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected TownBoardView _bview;
-    
+
     /** Maps prop types to commands. */
     protected HashMap<String, String> _commands =
         new HashMap<String, String>();
-    
+
     protected Vector3f _loc = new Vector3f(), _pos = new Vector3f(),
         _dir = new Vector3f();
     protected Quaternion _rot = new Quaternion();
