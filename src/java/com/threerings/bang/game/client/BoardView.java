@@ -493,7 +493,8 @@ public class BoardView extends BComponent
     {
         if (_paction != action) {
             log.warning("Action completed out of sequence! " +
-                        "[pending=" + _paction + ", completed=" + action + "].");
+                        "[pending=" + _paction +
+                        ", completed=" + action + "].");
             Thread.dumpStack();
             return;
         }
