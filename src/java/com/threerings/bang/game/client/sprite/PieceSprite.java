@@ -22,6 +22,7 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -364,11 +365,9 @@ public class PieceSprite extends Sprite
      *
      * @param random the number used to select a texture
      */
-    protected void bindAnimation (BasicContext ctx, Model.Animation anim,
-        int random)
+    protected void bindAnimation (
+        final BasicContext ctx, Model.Animation anim, int random)
     {
-        _binding = anim.bind(this, random);
-
         // stop all running emissions
         for (SpriteEmission emission : _emissions.values()) {
             if (emission.isRunning()) {
@@ -376,17 +375,28 @@ public class PieceSprite extends Sprite
             }
         }
 
-        // start emissions used in the animation, creating any uncreated
-        for (int ii = 0; ii < anim.emitters.length; ii++) {
-            String name = anim.emitters[ii].name;
-            SpriteEmission emission = _emissions.get(name);
-            if (emission == null) {
-                _emissions.put(name, emission = SpriteEmission.create(name,
-                    anim.emitters[ii].props));
-                emission.init(ctx, _view, this);
+        // bind the new animation
+        _binding = anim.bind(this, random, new Model.Binding.Observer() {
+            public void wasBound (Model.Animation anim) {
+                // now that the meshes are attached, configure the animation
+                // speed and repeat type
+                setAnimationSpeed(
+                    Config.display.animationSpeed * anim.getSpeed());
+                setAnimationRepeatType(anim.repeatType);
+
+                // start emissions used in the animation, creating any uncreated
+                for (int ii = 0; ii < anim.emitters.length; ii++) {
+                    String name = anim.emitters[ii].name;
+                    SpriteEmission emission = _emissions.get(name);
+                    if (emission == null) {
+                        _emissions.put(name, emission = SpriteEmission.create(
+                                           name, anim.emitters[ii].props));
+                        emission.init(ctx, _view, PieceSprite.this);
+                    }
+                    emission.start(anim, _binding);
+                }
             }
-            emission.start(anim, _binding);
-        }
+        });
     }
 
     @Override // documentation inherited

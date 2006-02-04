@@ -66,6 +66,13 @@ public class Model
      */
     public static class Binding
     {
+        /** Used to notify interested parties when our animation is finally
+         * bound. */
+        public interface Observer
+        {
+            public void wasBound (Animation anim);
+        }
+
         public Geometry getMarker (String name)
         {
             return _markers.get(name);
@@ -79,11 +86,12 @@ public class Model
             _anim.clearBinding(this);
         }
 
-        protected Binding (Animation anim, Node node, int random)
+        protected Binding (Animation anim, Node node, int random, Observer obs)
         {
             _anim = anim;
             _node = node;
             _random = random;
+            _obs = obs;
             attachMeshes();
         }
 
@@ -108,11 +116,13 @@ public class Model
                 _meshes[ii].updateRenderState();
             }
 
-            // now that the meshes are attached, configure the animation speed
-            // and repeat type
-            Sprite.setAnimationSpeed(
-                _node, Config.display.animationSpeed * _anim.getSpeed());
-            Sprite.setAnimationRepeatType(_node, _anim.repeatType);
+            // the first time through we'll be resolving and won't call this,
+            // then we'll call it when the resolution is done; subsequent
+            // bindings will be resolved the first time through and will report
+            // binding completion immediately
+            if (!_anim._resolving && _obs != null) {
+                _obs.wasBound(_anim);
+            }
         }
 
         protected Geometry getGeometry (Node mesh)
@@ -135,6 +145,7 @@ public class Model
         protected Animation _anim;
         protected Node _node;
         protected int _random;
+        protected Observer _obs;
         protected Node[] _meshes;
         protected HashMap<String, Geometry> _markers;
     }
@@ -145,7 +156,7 @@ public class Model
     {
         /** The name of this animation. */
         public String action;
-        
+
         /** The number of frames in this animation. */
         public int frames;
 
@@ -157,7 +168,7 @@ public class Model
 
         /** The emitters used in the animation. */
         public Emitter[] emitters;
-        
+
         /**
          * Returns the "speed" at which this animation's controller should
          * be run.
@@ -187,7 +198,7 @@ public class Model
             }
             return null;
         }
-        
+
         /**
          * Returns true if this animation is resolved or has at least been
          * queued up to be resolved.
@@ -209,12 +220,14 @@ public class Model
         /**
          * Binds this animation to the specified node. <em>Note:</em> the
          * binding <em>must</em> be cleared later via {@link Binding#detach}.
+         * When the binding is finally bound, the optional observer will be
+         * notified.
          *
          * @see #getMeshes
          */
-        public Binding bind (Node node, int random)
+        public Binding bind (Node node, int random, Binding.Observer obs)
         {
-            Binding binding = new Binding(this, node, random);
+            Binding binding = new Binding(this, node, random, obs);
             _bindings.add(binding);
             return binding;
         }
@@ -250,7 +263,7 @@ public class Model
             }
             return nodes;
         }
-        
+
         /**
          * Configures this animation with its underlying meshes.
          */
@@ -258,7 +271,7 @@ public class Model
         {
             _parts = parts;
             _resolving = false;
-            
+
             // update any extant bindings
             for (Binding binding : _bindings) {
                 binding.update();
@@ -278,7 +291,7 @@ public class Model
 
         /** Use to track the nodes to which this animation is bound. */
         protected ArrayList<Binding> _bindings = new ArrayList<Binding>();
-        
+
         /** Whether or not this animation is in the process of resolving. */
         protected boolean _resolving;
     }
@@ -655,11 +668,11 @@ public class Model
 
         /** A list of texture states from which to select randomly. */
         public TextureState[] tstates;
-        
+
         /** For static parts, contains a {@link Node} for each texture state
          * to use as a {@link SharedNode} target. */
         public Node[] targets;
-        
+
         /**
          * Creates either a copy of the original part node or a
          * {@link SharedNode} reference to a locked target, depending on
@@ -676,18 +689,18 @@ public class Model
                     targets[idx] = createCopy(random);
                     targets[idx].lockBounds();
                     targets[idx].lockMeshes();
-                    
+
                     // this is a workaround for a bug in JME--we wouldn't
                     // normally create a SharedNode of a SharedNode
                     targets[idx] = new SharedNode("shared", targets[idx]);
                 }
                 return new SharedNode("shared", targets[idx]);
-                
+
             } else {
                 return createCopy(random);
             }
         }
-        
+
         /**
          * Creates a copy of the original part node with the texture state
          * derived from the supplied random number.
@@ -709,14 +722,12 @@ public class Model
 
     protected HashMap<String,CloneCreator> _meshes =
         new HashMap<String,CloneCreator>();
-
     protected HashMap<String,CloneCreator> _emitters =
         new HashMap<String,CloneCreator>();
-
     protected HashMap<String,TextureState> _textures =
         new HashMap<String,TextureState>();
-
-    protected HashMap<String,Animation> _anims = new HashMap<String,Animation>();
+    protected HashMap<String,Animation> _anims =
+        new HashMap<String,Animation>();
 
     /** This asynchronous thread loads our models in the background. */
     protected static ModelLoader _loader;
