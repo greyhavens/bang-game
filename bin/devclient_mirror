@@ -8,10 +8,12 @@ MIRROR=/export/tools/bin/mirror
 ROOT=`dirname $0 | sed s:/bin$::`
 cd $ROOT
 
+WEB_DIR=`grep web_dir $ROOT/deployment.properties | awk -F= '{ print $2 }'`
+
 # mirror the client files
 echo "** Mirroring devclient..."
-$MIRROR `find pages/client -name '*.jar'` \
-    pages/client/rsrc/config/resource/manager.properties \
-    pages/client/native/* \
-    pages/client/*.*
+$MIRROR `find $WEB_DIR/client -name '*.jar'` \
+    $WEB_DIR/client/rsrc/config/resource/manager.properties \
+    $WEB_DIR/client/native/* \
+    $WEB_DIR/client/*.*
 echo "*** Finished mirror at" `date`
