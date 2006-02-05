@@ -17,6 +17,7 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.CollectionUtil;
@@ -43,8 +44,8 @@ public class OptionsView extends BDecoratedWindow
     public OptionsView (BangContext ctx, LogonView parent)
     {
         super(ctx.getStyleSheet(), null);
-        setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                              GroupLayout.STRETCH));
+        setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
+        ((GroupLayout)getLayoutManager()).setGap(25);
         setModal(true);
 
         _ctx = ctx;
@@ -57,26 +58,19 @@ public class OptionsView extends BDecoratedWindow
             }
         });
 
-        BContainer cont = GroupLayout.makeHBox(GroupLayout.CENTER);
-        cont.add(new BLabel(_msgs.get("m.title"), "scroll_title"));
-        add(cont);
+        add(new BLabel(_msgs.get("m.title"), "scroll_title"));
 
-        cont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        cont.add(new BLabel(_msgs.get("m.video_mode")));
+        BContainer cont = new BContainer(new TableLayout(2, 10, 10));
+        cont.add(new BLabel(_msgs.get("m.video_mode"), "right_label"));
         cont.add(_modes = new BComboBox());
-        add(cont);
 
-        cont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        cont.add(_fullscreen = new BCheckBox(_msgs.get("m.fullscreen_mode")));
+        cont.add(new BLabel(_msgs.get("m.fullscreen"), "right_label"));
+        cont.add(_fullscreen = new BCheckBox(""));;
         _fullscreen.setSelected(Display.isFullscreen());
         _fullscreen.addListener(_modelist);
         add(cont);
 
-        cont = GroupLayout.makeHBox(GroupLayout.RIGHT);
-        BButton btn;
-        cont.add(btn = new BButton(_msgs.get("m.dismiss"), "dismiss"));
-        btn.addListener(this);
-        add(cont);
+        add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
 
         _mode = Display.getDisplayMode();
         refreshDisplayModes();
@@ -95,7 +89,7 @@ public class OptionsView extends BDecoratedWindow
     protected Dimension computePreferredSize (int whint, int hhint)
     {
         Dimension d = super.computePreferredSize(whint, hhint);
-        d.width = Math.max(d.width, 400);
+        d.width = Math.max(d.width, 350);
         return d;
     }
 
