@@ -17,6 +17,7 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.RunAnywhere;
@@ -42,8 +43,9 @@ public class OptionsView extends BDecoratedWindow
     public OptionsView (BangContext ctx, LogonView parent)
     {
         super(ctx.getStyleSheet(), null);
-        setLayoutManager(GroupLayout.makeVStretch());
-        _modal = true;
+        setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
+                                              GroupLayout.STRETCH));
+        setModal(true);
 
         _ctx = ctx;
         _parent = parent;
@@ -55,12 +57,13 @@ public class OptionsView extends BDecoratedWindow
             }
         });
 
-        add(new BLabel(_msgs.get("m.title")));
+        BContainer cont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        cont.add(new BLabel(_msgs.get("m.title"), "scroll_title"));
+        add(cont);
 
-        BContainer cont = GroupLayout.makeHBox(GroupLayout.LEFT);
+        cont = GroupLayout.makeHBox(GroupLayout.LEFT);
         cont.add(new BLabel(_msgs.get("m.video_mode")));
         cont.add(_modes = new BComboBox());
-        _modes.addListener(_modelist);
         add(cont);
 
         cont = GroupLayout.makeHBox(GroupLayout.LEFT);
@@ -77,6 +80,7 @@ public class OptionsView extends BDecoratedWindow
 
         _mode = Display.getDisplayMode();
         refreshDisplayModes();
+        _modes.addListener(_modelist);
     }
 
     // documentation inherited from interface ActionListener
@@ -87,6 +91,14 @@ public class OptionsView extends BDecoratedWindow
         }
     }
 
+    @Override // documentation inherited
+    protected Dimension computePreferredSize (int whint, int hhint)
+    {
+        Dimension d = super.computePreferredSize(whint, hhint);
+        d.width = Math.max(d.width, 400);
+        return d;
+    }
+
     protected void refreshDisplayModes ()
     {
         try {
@@ -95,7 +107,8 @@ public class OptionsView extends BDecoratedWindow
             for (Iterator<DisplayMode> iter = modes.iterator();
                  iter.hasNext(); ) {
                 DisplayMode mode = iter.next();
-                if (mode.getWidth() < 800 || mode.getHeight() < 600) {
+                // our minimum display size is 1024x768
+                if (mode.getWidth() < 1024 || mode.getHeight() < 768) {
                     iter.remove();
                 }
             }
@@ -113,7 +126,7 @@ public class OptionsView extends BDecoratedWindow
             for (int ii = 0; ii < items.length; ii++) {
                 DisplayMode mode = (DisplayMode)modes.get(ii);
                 items[ii] = new ModeItem(mode);
-                if (mode.equals(_mode)) {
+                if (isCurrent(mode)) {
                     current = items[ii];
                 }
             }
@@ -136,17 +149,36 @@ public class OptionsView extends BDecoratedWindow
             log.info("Switching to " + mode + " (from " + _mode + ")");
             _mode = mode;
         }
+
         // we fake up non-full screen display modes above, but there's no
         // way to set the bit depth to anything but zero, so we have to
         // adjust that here so that JME doesn't freak out
         int bpp = Math.max(16, _mode.getBitsPerPixel());
+        int width = _mode.getWidth(), height = _mode.getHeight();
         _ctx.getDisplay().recreateWindow(
-            _mode.getWidth(), _mode.getHeight(), bpp,
-            _mode.getFrequency(), _fullscreen.isSelected());
+            width, height, bpp, _mode.getFrequency(), _fullscreen.isSelected());
+
+        // reconfigure the camera frustum in case the aspect ratio changed
+        _ctx.getCameraHandler().getCamera().setFrustumPerspective(
+            45.0f, width/(float)height, 1, 10000);
+
+        // recenter the logon view and options window
         _parent.center();
         center();
+
+        // store these settings for later
         BangPrefs.updateDisplayMode(_mode);
         BangPrefs.updateFullscreen(_fullscreen.isSelected());
+    }
+
+    protected boolean isCurrent (DisplayMode mode)
+    {
+        return (_mode.getWidth() == mode.getWidth() &&
+                _mode.getHeight() == mode.getHeight() &&
+                (_mode.getFrequency() == 0 ||
+                 _mode.getFrequency() == mode.getFrequency()) &&
+                (_mode.getBitsPerPixel() == 0 ||
+                 _mode.getBitsPerPixel() == mode.getBitsPerPixel()));
     }
 
     protected static class ModeItem implements Comparable
