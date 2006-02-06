@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import org.lwjgl.opengl.ARBImaging;
+import org.lwjgl.opengl.GL11;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.intersection.PickData;
@@ -30,6 +33,8 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.util.geom.BufferUtils;
+
 import com.jme.scene.Controller;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
@@ -44,11 +49,12 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.util.Dimension;
+import com.jmex.bui.text.BText;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -57,6 +63,8 @@ import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.jme.util.LinearTimeFunction;
+import com.threerings.jme.util.TimeFunction;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -111,6 +119,7 @@ public class BoardView extends BComponent
 
     public BoardView (BasicContext ctx)
     {
+        setStyleClass("board_view");
         _ctx = ctx;
 
         // create our top-level node
@@ -202,9 +211,6 @@ public class BoardView extends BComponent
 
         // freshen up
         refreshBoard();
-
-        // clear any previous round's marquee
-        clearMarquee();
     }
 
     /**
@@ -219,6 +225,9 @@ public class BoardView extends BComponent
         _board = _bangobj.board;
         _board.shadowPieces(_bangobj.pieces.iterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
+
+        // create our marquee
+        createMarquee(_bangobj.boardName);
 
         // refresh the lights
         refreshLights();
@@ -672,7 +681,42 @@ public class BoardView extends BComponent
         _ctx.getGeometry().detachChild(_node);
 
         // clear any marquee we have up
-        clearMarquee();
+        clearMarquee(0f);
+    }
+
+    @Override // documentation inherited
+    protected void renderComponent (Renderer renderer)
+    {
+        super.renderComponent(renderer);
+
+        // render our marquee if we've got one
+        if (_marquee != null) {
+            // do our fading if appropriate
+            if (_marqueeFader != null) {
+                GL11.glEnable(GL11.GL_BLEND);
+                float alpha = _marqueeFader.getValue(
+                    _ctx.getApp().getFrameTime());
+                // TODO: sort out whether it is possible to have OpenGL
+                // multiply the source pixel by a constant color before
+                // blending it with the destination
+//                 ARBImaging.glBlendColor(1f, 1f, 1f, alpha);
+//                 GL11.glBlendFunc(GL11.GL_CONSTANT_COLOR,
+//                                  GL11.GL_ONE_MINUS_SRC_ALPHA);
+            }
+
+            Dimension msize = _marquee.getSize();
+            _marquee.render(renderer, (_width-msize.width)/2,
+                            (_height-msize.height)/2);
+
+            // if we're done fading, clear everything out
+            if (_marqueeFader != null) {
+                GL11.glDisable(GL11.GL_BLEND);
+                if (_marqueeFader.isComplete()) {
+                    _marqueeFader = null;
+                    _marquee = null;
+                }
+            }
+        }
     }
 
     /**
@@ -697,6 +741,7 @@ public class BoardView extends BComponent
      */
     protected void fadeInComplete ()
     {
+        clearMarquee(1f);
         _fadein = null;
     }
 
@@ -799,23 +844,18 @@ public class BoardView extends BComponent
      */
     protected void createMarquee (String text)
     {
-        if (_marquee != null) {
-            clearMarquee();
-        }
-        _marquee = new BDecoratedWindow(BangUI.stylesheet, null);
-        _marquee.add(new BLabel(text), BorderLayout.CENTER);
-        _ctx.getRootNode().addWindow(_marquee);
-        _marquee.pack();
-        _marquee.center();
+        _marquee = _ctx.getStyleSheet().getTextFactory(this, "marquee").
+            createText(text, ColorRGBA.white);
     }
 
     /**
      * Clears our marquee display.
      */
-    protected void clearMarquee ()
+    protected void clearMarquee (float fadeTime)
     {
-        if (_marquee != null) {
-            _ctx.getRootNode().removeWindow(_marquee);
+        if (fadeTime > 0f) {
+            _marqueeFader = new LinearTimeFunction(0f, 1f, fadeTime);
+        } else {
             _marquee = null;
         }
     }
@@ -1092,9 +1132,8 @@ public class BoardView extends BComponent
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected BDecoratedWindow _marquee;
-
-    protected HashMap _fmasks = new HashMap();
+    protected BText _marquee;
+    protected TimeFunction _marqueeFader;
 
     protected Node _node, _pnode, _hnode;
     protected LightState _lstate;

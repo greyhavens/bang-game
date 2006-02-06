@@ -86,9 +86,16 @@ public class TownView extends BWindow
 
         // create the town display
         add(_bview = new TownBoardView(_ctx), BorderLayout.CENTER);
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
 
         // attempt to load the board
         try {
+            String townId = _ctx.getUserObject().townId;
             _bview.loadBoard("menu/" + townId + "/town.board");
         } catch (IOException ioe) {
             log.warning("Failed to load town board! [error=" + ioe + "].");
@@ -144,15 +151,16 @@ public class TownView extends BWindow
             BoardRecord brec = new BoardRecord();
             brec.load(_ctx.getResourceManager().getResource(path));
             BangObject bangobj = new BangObject();
+            bangobj.boardName = brec.name;
             bangobj.board = brec.getBoard();
             bangobj.pieces = new PieceDSet(brec.getPieces());
             prepareForRound(bangobj, null, 0);
         }
 
         @Override // documentation inherited
-        protected void wasAdded ()
+        public void refreshBoard ()
         {
-            super.wasAdded();
+            super.refreshBoard();
 
             // if this is the first time this town is being shown, do our
             // aerial sweep, otherwise just go right to the main view

@@ -292,10 +292,6 @@ scrollbar_vmore:disabled {
 //
 // Global styles
 
-marquee {
-  font: "Dom Casual" bold 48;
-}
-
 scroll_title {
   font: "Old Town Wide" plain 30;
   text-align: center;
@@ -481,6 +477,10 @@ stats_view {
 
 //
 // In-game styles
+
+board_view:marquee {
+  font: "Old Town" plain 96;
+}
 
 player_status_win {
   background: blank;
