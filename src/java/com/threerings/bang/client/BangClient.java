@@ -74,7 +74,7 @@ public class BangClient extends BasicClient
         _mview.pack();
         _mview.center();
         FadeInOutEffect fade =
-            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
+            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true) {
             protected void fadeComplete () {
                 _ctx.getInterface().detachChild(this);
                 // now start unpacking our resources
@@ -268,7 +268,7 @@ public class BangClient extends BasicClient
         // if we have an existing main view, fade that out
         if (_mview != null) {
             FadeInOutEffect fade =
-                new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.25f, false) {
+                new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.5f, true) {
                 protected void fadeComplete () {
                     _ctx.getRootNode().removeWindow(_mview);
                     fadeInMainView(view);
@@ -286,13 +286,13 @@ public class BangClient extends BasicClient
         _mview = view;
         _ctx.getRootNode().addWindow(_mview);
 
-        // don't fade in the game view, it will handle that itself when it's
-        // ready to roll
-        if (view instanceof BangView) {
+        // don't fade in the game or town views, they will handle that
+        // themselves when they're ready to roll
+        if (view instanceof BangView || view instanceof TownView) {
             return;
         }
         FadeInOutEffect fade =
-            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
+            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true) {
             protected void fadeComplete () {
                 _ctx.getInterface().detachChild(this);
             }
