@@ -122,13 +122,14 @@ public class BangClient extends BasicClient
         }
 
         // otherwise, display the town view
-        _tview = new TownView(_ctx);
         showTownView();
     }
 
     public void showTownView ()
     {
-        setMainView(_tview);
+        if (!(_mview instanceof TownView)) {
+            setMainView(new TownView(_ctx));
+        }
     }
 
     /**
@@ -379,5 +380,4 @@ public class BangClient extends BasicClient
     protected AvatarLogic _alogic;
 
     protected BWindow _mview, _popup;
-    protected TownView _tview;
 }

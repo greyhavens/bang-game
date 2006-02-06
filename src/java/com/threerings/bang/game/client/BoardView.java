@@ -171,10 +171,11 @@ public class BoardView extends BComponent
 
         // create a paused fade in effect, we'll do our real fading in once
         // everything is loaded up and we're ready to show the board
-        _fadein = new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, false) {
+        _fadein = new FadeInOutEffect(
+            ColorRGBA.black, 1f, 0f, getFadeInTime(), false) {
             protected void fadeComplete () {
                 _ctx.getInterface().detachChild(_fadein);
-                _fadein = null;
+                fadeInComplete();
             }
         };
         _fadein.setPaused(true);
@@ -681,6 +682,22 @@ public class BoardView extends BComponent
     protected TerrainNode createTerrainNode (BasicContext ctx)
     {
         return new TerrainNode(ctx, this);
+    }
+
+    /**
+     * Returns our fade-in time in seconds.
+     */
+    protected float getFadeInTime ()
+    {
+        return 2f;
+    }
+
+    /**
+     * This is called when our initial fade-in of the board is complete.
+     */
+    protected void fadeInComplete ()
+    {
+        _fadein = null;
     }
 
     /**

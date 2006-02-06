@@ -28,15 +28,15 @@ public class ViewpointSprite extends PieceSprite
         if (!_editorMode) {
             return;
         }
-        Pyramid pyramid = new Pyramid("marker", TILE_SIZE, TILE_SIZE);
+
+        Pyramid pyramid = new Pyramid("marker", TILE_SIZE/2, TILE_SIZE/2);
         pyramid.getLocalTranslation().set(0f, 0f, TILE_SIZE/2);
         pyramid.setSolidColor(ColorRGBA.gray);
         pyramid.setModelBound(new BoundingBox());
         pyramid.updateModelBound();
-        pyramid.setLightCombineMode(LightState.OFF);
         attachChild(pyramid);
     }
-    
+
     /**
      * Hides this sprite and binds the camera to the viewpoint.
      */
@@ -44,8 +44,9 @@ public class ViewpointSprite extends PieceSprite
     {
         if (_boundcam == camera) {
             return;
-            
-        } else if (_boundcam != null) {
+        }
+
+        if (_boundcam != null) {
             unbindCamera();
         }
         _boundcam = camera;
@@ -53,7 +54,7 @@ public class ViewpointSprite extends PieceSprite
         setIsCollidable(false);
         updateBoundCamera();
     }
-    
+
     /**
      * Unbinds the camera from this viewpoint.
      */
@@ -71,7 +72,7 @@ public class ViewpointSprite extends PieceSprite
     public boolean updatePosition (BangBoard board)
     {
         super.updatePosition(board);
-        
+
         // update fine positioning as well
         Viewpoint vp = (Viewpoint)_piece;
         if (_fx != vp.fx || _fy != vp.fy) {
@@ -80,15 +81,15 @@ public class ViewpointSprite extends PieceSprite
         if (_forient != vp.forient || _pitch != vp.pitch) {
             setOrientation(_porient);
         }
-        
+
         // copy the new state to the bound camera
         if (_boundcam != null) {
             updateBoundCamera();
         }
-        
+
         return false;
     }
-    
+
     @Override // documentation inherited
     public void setLocation (int tx, int ty, int elevation)
     {
@@ -111,13 +112,21 @@ public class ViewpointSprite extends PieceSprite
             (_pitch = vp.pitch) * PropSprite.FINE_ROTATION_SCALE, LEFT);
         getLocalRotation().multLocal(_rot);
     }
-    
+
     @Override // documentation inherited
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
         return ((Viewpoint)_piece).elevation;
     }
-    
+
+    /**
+     * Returns the direction in which this sprite is "pointing".
+     */
+    public Vector3f getViewDirection ()
+    {
+        return getLocalRotation().mult(FORWARD);
+    }
+
     /**
      * Updates the camera frame based on the location and orientation of the
      * sprite.
@@ -130,13 +139,13 @@ public class ViewpointSprite extends PieceSprite
         getLocalRotation().mult(_rot, _rot);
         _boundcam.setFrame(_temp, _rot);
     }
-    
-    /** The camera to which this viewpoint is bound, if any. */    
+
+    /** The camera to which this viewpoint is bound, if any. */
     protected Camera _boundcam;
-    
+
     /** The displayed fine x, fine y, fine orientation, and pitch. */
     protected int _fx, _fy, _forient, _pitch;
-    
+
     /** Temporary rotation result. */
     protected Quaternion _rot = new Quaternion();
 }

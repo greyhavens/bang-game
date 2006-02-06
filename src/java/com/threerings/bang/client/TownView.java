@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -79,9 +80,8 @@ public class TownView extends BWindow
         }
         Enumeration iter = props.propertyNames();
         while (iter.hasMoreElements()) {
-            String command = (String)iter.nextElement(),
-                ptype = props.getProperty(command);
-            _commands.put(ptype, command);
+            String command = (String)iter.nextElement();
+            _commands.put(props.getProperty(command), command);
         }
 
         // create the town display
@@ -90,7 +90,6 @@ public class TownView extends BWindow
         // attempt to load the board
         try {
             _bview.loadBoard("menu/" + townId + "/town.board");
-
         } catch (IOException ioe) {
             log.warning("Failed to load town board! [error=" + ioe + "].");
         }
@@ -100,30 +99,22 @@ public class TownView extends BWindow
     {
         BangBootstrapData bbd = (BangBootstrapData)
             _ctx.getClient().getBootstrapData();
-
         if ("logoff".equals(command)) {
             _ctx.getApp().stop();
-
-        } else if ("to_ranch".equals(command)) {
+        } else if ("ranch".equals(command)) {
             _ctx.getLocationDirector().moveTo(bbd.ranchOid);
-
-        } else if ("to_bank".equals(command)) {
+        } else if ("bank".equals(command)) {
             _ctx.getLocationDirector().moveTo(bbd.bankOid);
-
-        } else if ("to_store".equals(command)) {
+        } else if ("store".equals(command)) {
             _ctx.getLocationDirector().moveTo(bbd.storeOid);
-
-        } else if ("to_saloon".equals(command)) {
+        } else if ("saloon".equals(command)) {
             _ctx.getLocationDirector().moveTo(bbd.saloonOid);
-
-        } else if ("to_barber".equals(command)) {
+        } else if ("barber".equals(command)) {
             _ctx.getLocationDirector().moveTo(bbd.barberOid);
         }
     }
 
-    /**
-     * A simple viewer for the town board.
-     */
+    /** A simple viewer for the town board. */
     protected class TownBoardView extends BoardView
     {
         public TownBoardView (BangContext ctx)
@@ -133,28 +124,7 @@ public class TownView extends BWindow
             addListener(new MouseAdapter() {
                 public void mousePressed (MouseEvent me) {
                     if (_hsprite != null) {
-                        // move the camera into the sprite
-                        _pos.set(_hsprite.getLocalTranslation());
-                        _pos.z += TILE_SIZE / 2;
-                        _hsprite.getLocalRotation().mult(Vector3f.UNIT_Y,
-                            _dir);
-                        _ctx.getCameraHandler().moveCamera(
-                            new SplinePath(_ctx.getCameraHandler(),
-                                _pos, _dir, 0.75f, 0.5f));
-
-                        // wait until we've finished animating the camera
-                        // before we fire the associated command otherwise
-                        // things are jerky as it tries to load up the UI while
-                        // we're moving
-                        final String type =
-                            ((Prop)_hsprite.getPiece()).getType();
-                        _ctx.getCameraHandler().addCameraObserver(
-                            new CameraPath.Observer() {
-                            public boolean pathCompleted (CameraPath path) {
-                                fireCommand(_commands.get(type));
-                                return false; // removes our observer
-                            }
-                        });
+                        enterBuilding(((Prop)_hsprite.getPiece()).getType());
                     }
                 }
             });
@@ -184,14 +154,16 @@ public class TownView extends BWindow
         {
             super.wasAdded();
 
-            // find the viewpoint and bind the camera to it
-            for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
-                Piece piece = (Piece)it.next();
-                if (piece instanceof Viewpoint) {
-                    _vpsprite = (ViewpointSprite)getPieceSprite(piece);
-                    _vpsprite.bindCamera(_ctx.getCameraHandler().getCamera());
-                    return;
-                }
+            // if this is the first time this town is being shown, do our
+            // aerial sweep, otherwise just go right to the main view
+            String townId = TownView.this._ctx.getUserObject().townId;
+            String view = _presented.contains(townId) ? "main" : "aerial";
+            _presented.add(townId);
+
+            Viewpoint vp = getViewpoint(view);
+            if (vp != null) {
+                _vpsprite = (ViewpointSprite)getPieceSprite(vp);
+                _vpsprite.bindCamera(_ctx.getCameraHandler().getCamera());
             }
         }
 
@@ -199,7 +171,31 @@ public class TownView extends BWindow
         protected void wasRemoved ()
         {
             super.wasRemoved();
-            _vpsprite.unbindCamera();
+
+            // unbind our camera (doesn't really do anything)
+            if (_vpsprite != null) {
+                _vpsprite.unbindCamera();
+                _vpsprite = null;
+            }
+        }
+
+        @Override // documentation inherited
+        protected float getFadeInTime ()
+        {
+            return _presented.contains(
+                TownView.this._ctx.getUserObject().townId) ? 0.5f : 3f;
+        }
+
+        @Override // documentation inherited
+        protected void fadeInComplete ()
+        {
+            super.fadeInComplete();
+
+            if (_vpsprite != null &&
+                !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
+                // sweep the camera from the aerial viewpoint to the main
+                moveToViewpoint("main", 4f, 0.5f);
+            }
         }
 
         @Override // documentation inherited
@@ -212,11 +208,14 @@ public class TownView extends BWindow
         protected void hoverSpriteChanged (Sprite hover)
         {
             super.hoverSpriteChanged(hover);
+
+            // clear our previous highlight
             if (_hsprite != null) {
-                // clear the highlight material
                 _hsprite.clearRenderState(RenderState.RS_MATERIAL);
                 _hsprite.updateRenderState();
             }
+
+            // make sure the sprite we're over is a building
             _hsprite = null;
             if (!(hover instanceof PieceSprite)) {
                 return;
@@ -228,15 +227,65 @@ public class TownView extends BWindow
             if (!_commands.containsKey(((Prop)piece).getType())) {
                 return;
             }
+
             // highlight the sprite
             _hsprite = (PieceSprite)hover;
             _hsprite.setRenderState(_hstate);
             _hsprite.updateRenderState();
         }
 
+        protected Viewpoint getViewpoint (String name)
+        {
+            for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
+                Piece piece = (Piece)it.next();
+                if ((piece instanceof Viewpoint) &&
+                    name.equals(((Viewpoint)piece).name)) {
+                    return (Viewpoint)piece;
+                }
+            }
+            return null;
+        }
+
+        protected void enterBuilding (String type)
+        {
+            final String cmd = _commands.get(type);
+            if (!moveToViewpoint(cmd, 0.75f, 0.5f)) {
+                log.warning("Missing target viewpoint [cmd=" + cmd  + "].");
+                fireCommand(cmd);
+                return;
+            }
+
+            // wait until we've finished animating the camera before we fire
+            // the associated command otherwise things are jerky as it tries to
+            // load up the UI while we're moving
+            _ctx.getCameraHandler().addCameraObserver(
+                new CameraPath.Observer() {
+                public boolean pathCompleted (CameraPath path) {
+                    fireCommand(cmd);
+                    return false; // removes our observer
+                }
+            });
+        }
+
+        protected boolean moveToViewpoint (
+            String view, float duration, float tension)
+        {
+            Viewpoint piece = getViewpoint(view);
+            if (piece == null) {
+                return false;
+            }
+            ViewpointSprite sprite = (ViewpointSprite)getPieceSprite(piece);
+            _ctx.getCameraHandler().moveCamera(
+                new SplinePath(_ctx.getCameraHandler(),
+                               sprite.getLocalTranslation(),
+                               sprite.getViewDirection(), duration, tension));
+            return true;
+        }
+
         protected MaterialState _hstate;
         protected PieceSprite _hsprite;
         protected ViewpointSprite _vpsprite;
+        protected Vector3f _pos = new Vector3f();
     }
 
     protected BangContext _ctx;
@@ -247,7 +296,6 @@ public class TownView extends BWindow
     protected HashMap<String, String> _commands =
         new HashMap<String, String>();
 
-    protected Vector3f _loc = new Vector3f(), _pos = new Vector3f(),
-        _dir = new Vector3f();
-    protected Quaternion _rot = new Quaternion();
+    /** Used to ensure that we only "present" each town once per session. */
+    protected static HashSet<String> _presented = new HashSet<String>();
 }
