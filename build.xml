@@ -14,6 +14,7 @@
   <property name="deploy.dir"   value="dist"/>
   <property name="javadoc.dir"  value="${deploy.dir}/docs"/>
   <property name="savedoc.dir"  value="docs"/>
+  <property name="nartool.path"   value="projects/narya/bin"/>
 
   <!-- declare our classpath -->
   <path id="classpath">
@@ -58,6 +59,30 @@
     </service>
   </target>
 
+  <!-- generates sender and decoder classes for all invocation -->
+  <!-- receiver declarations -->
+  <target name="genreceiver">
+    <!-- make sure the receiver class files are all compiled to 1.4 -->
+    <delete>
+      <fileset dir="${deploy.dir}/classes" includes="**/*Receiver.class"/>
+    </delete>
+    <javac srcdir="src/java" destdir="${deploy.dir}/classes"
+           debug="on" optimize="${build.optimize}" deprecation="on"
+           source="1.4" target="1.4">
+      <classpath refid="classpath"/>
+      <include name="**/*Receiver.java"/>
+    </javac>
+    <apply executable="${nartool.path}/genreceiver"
+      failonerror="true" parallel="true">
+      <arg value="--classpath"/>
+      <arg value="${deploy.dir}/classes:lib/narya-distrib.jar:lib/narya-base.jar"/>
+      <arg value="--sourcedir"/>
+      <arg value="src/java"/>
+      <fileset dir="src/java" includes="**/*Receiver.java"
+        excludes="**/InvocationReceiver.java"/>
+    </apply>
+  </target>
+  
   <!-- prepares the application directories -->
   <target name="prepare">
     <mkdir dir="${deploy.dir}"/>

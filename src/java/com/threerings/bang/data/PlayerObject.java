@@ -56,6 +56,9 @@ public class PlayerObject extends BodyObject
 
     /** The field name of the <code>looks</code> field. */
     public static final String LOOKS = "looks";
+
+    /** The field name of the <code>pardners</code> field. */
+    public static final String PARDNERS = "pardners";
     // AUTO-GENERATED: FIELDS END
 
     /** This user's persistent unique id. */
@@ -94,6 +97,9 @@ public class PlayerObject extends BodyObject
     /** The avatar looks this player has available. */
     public DSet looks;
 
+    /** {@link PardnerEntry}s for each of the player's pardners. */
+    public DSet pardners;
+    
     /**
      * Returns the player's rating for the specified scenario. This method will
      * never return null.
@@ -494,6 +500,52 @@ public class PlayerObject extends BodyObject
     {
         requestAttributeChange(LOOKS, value, this.looks);
         this.looks = (value == null) ? null : (DSet)value.clone();
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>pardners</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToPardners (DSet.Entry elem)
+    {
+        requestEntryAdd(PARDNERS, pardners, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>pardners</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromPardners (Comparable key)
+    {
+        requestEntryRemove(PARDNERS, pardners, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>pardners</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updatePardners (DSet.Entry elem)
+    {
+        requestEntryUpdate(PARDNERS, pardners, elem);
+    }
+
+    /**
+     * Requests that the <code>pardners</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setPardners (DSet value)
+    {
+        requestAttributeChange(PARDNERS, value, this.pardners);
+        this.pardners = (value == null) ? null : (DSet)value.clone();
     }
     // AUTO-GENERATED: METHODS END
 }

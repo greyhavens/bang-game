@@ -60,6 +60,9 @@ public interface BangCodes extends InvocationCodes
      * numbers at some point). */
     public static final int MAX_PLAYERS = 8;
 
+    /** The maximum number of pardners you can have. */
+    public static final int MAX_PARDNERS = 75;
+    
     /** An error code reported when a financial transaction cannot complete. */
     public static final String INSUFFICIENT_FUNDS =
         MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");

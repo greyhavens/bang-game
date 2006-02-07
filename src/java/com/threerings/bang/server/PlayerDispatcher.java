@@ -39,10 +39,31 @@ public class PlayerDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case PlayerMarshaller.INVITE_PARDNER:
+            ((PlayerProvider)provider).invitePardner(
+                source,
+                (Name)args[0], (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
         case PlayerMarshaller.PICK_FIRST_BIG_SHOT:
             ((PlayerProvider)provider).pickFirstBigShot(
                 source,
                 (String)args[0], (Name)args[1], (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
+        case PlayerMarshaller.REMOVE_PARDNER:
+            ((PlayerProvider)provider).removePardner(
+                source,
+                (Name)args[0], (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
+        case PlayerMarshaller.RESPOND_TO_PARDNER_INVITE:
+            ((PlayerProvider)provider).respondToPardnerInvite(
+                source,
+                (Name)args[0], ((Boolean)args[1]).booleanValue(), (InvocationService.ConfirmListener)args[2]
             );
             return;
 

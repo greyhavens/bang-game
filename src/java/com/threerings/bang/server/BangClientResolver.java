@@ -74,5 +74,8 @@ public class BangClientResolver extends CrowdClientResolver
         buser.look = player.look;
         buser.looks = new DSet(
             BangServer.lookrepo.loadLooks(player.playerId).iterator());
+        
+        // load up this player's pardners
+        BangServer.playmgr.loadPardners(buser);
     }
 }

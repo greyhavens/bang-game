@@ -166,7 +166,7 @@ public class BangServer extends CrowdServer
         // initialize our managers
         parmgr.init(invmgr, plreg);
         boardmgr.init(conprov);
-        playmgr.init();
+        playmgr.init(conprov);
         coinexmgr.init();
 
         // create our managers

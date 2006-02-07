@@ -51,7 +51,7 @@ import static com.threerings.bang.Log.log;
  * all of the necessary configuration and getting the client bootstrapped.
  */
 public class BangClient extends BasicClient
-    implements SessionObserver
+    implements SessionObserver, PlayerReceiver
 {
     /**
      * Initializes a new client and provides it with a frame in which to
@@ -65,6 +65,10 @@ public class BangClient extends BasicClient
         // listen for logon
         _client.addClientObserver(this);
 
+        // register as receiver for player notifications
+        _client.getInvocationDirector().registerReceiver(
+            new PlayerDecoder(this));
+        
         // create and display the logon view; which we do by hand instead of
         // using setMainView() because we don't want to start the resource
         // resolution until we're faded in
@@ -233,6 +237,12 @@ public class BangClient extends BasicClient
         System.exit(0);
     }
 
+    // documentation inherited from interface PlayerReceiver
+    public void receivedPardnerInvite (Name handle)
+    {
+        
+    }
+    
     @Override // documentation inherited
     protected void createContextServices (RunQueue rqueue)
     {
