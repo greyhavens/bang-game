@@ -286,7 +286,8 @@ public class TownView extends BWindow
             _ctx.getCameraHandler().moveCamera(
                 new SplinePath(_ctx.getCameraHandler(),
                                sprite.getLocalTranslation(),
-                               sprite.getViewDirection(), duration, tension));
+                               sprite.getViewDirection(), Vector3f.UNIT_Z,
+                               duration, tension));
             return true;
         }
 
