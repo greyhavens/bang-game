@@ -73,11 +73,11 @@ public class StatusView extends BWindow
         btns.add(new BButton(_msgs.get("m.status_resume"), this, "resume"));
         add(btns, new Rectangle(652, 8, 310, 35));
 
-        add(new HackyTabs(ctx, false, "ui/status/tab_", TABS, 136, 17) {
+        add(new HackyTabs(ctx, false, "ui/status/tab_", TABS, 137, 17) {
             protected void tabSelected (int index) {
                 StatusView.this.selectTab(index);
             }
-        }, new Rectangle(267, 575, 15+5*140, 66));
+        }, new Rectangle(265, 575, 15+5*140, 66));
 
         // start with the inventory tab selected
         selectTab(_selectedTab);
