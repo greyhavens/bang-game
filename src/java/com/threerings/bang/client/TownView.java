@@ -95,8 +95,7 @@ public class TownView extends BWindow
 
         // attempt to load the board
         try {
-            String townId = _ctx.getUserObject().townId;
-            _bview.loadBoard("menu/" + townId + "/town.board");
+            _bview.loadBoard(_ctx.getUserObject().townId);
         } catch (IOException ioe) {
             log.warning("Failed to load town board! [error=" + ioe + "].");
         }
@@ -145,13 +144,17 @@ public class TownView extends BWindow
          * Attempts to load the town menu board from the specified resource
          * path.
          */
-        public void loadBoard (String path)
+        public void loadBoard (String townId)
             throws IOException
         {
             BoardRecord brec = new BoardRecord();
-            brec.load(_ctx.getResourceManager().getResource(path));
+            brec.load(_ctx.getResourceManager().getResource(
+                          "menu/" + townId + "/town.board"));
             BangObject bangobj = new BangObject();
-            bangobj.boardName = brec.name;
+            // we only want to configure the board name the first time we're
+            // shown as it will trigger a marquee being displayed with the town
+            // name
+            bangobj.boardName = _presented.contains(townId) ? null : brec.name;
             bangobj.board = brec.getBoard();
             bangobj.pieces = new PieceDSet(brec.getPieces());
             prepareForRound(bangobj, null, 0);
@@ -191,7 +194,7 @@ public class TownView extends BWindow
         protected float getFadeInTime ()
         {
             return _presented.contains(
-                TownView.this._ctx.getUserObject().townId) ? 0.5f : 3f;
+                TownView.this._ctx.getUserObject().townId) ? 1f : 3f;
         }
 
         @Override // documentation inherited

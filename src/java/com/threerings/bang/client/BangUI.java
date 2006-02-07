@@ -42,6 +42,9 @@ public class BangUI
     /** A font used to render counters in the game. */
     public static Font COUNTER_FONT;
 
+    /** A font used to render the marquee over the board. */
+    public static Font MARQUEE_FONT;
+
     /** The stylesheet used to configure our interface. */
     public static BStyleSheet stylesheet;
 
@@ -85,6 +88,7 @@ public class BangUI
         _fonts.put("Old Town Wide", town);
 
         COUNTER_FONT = _fonts.get("Tombstone").deriveFont(Font.BOLD, 48);
+        MARQUEE_FONT = _fonts.get("Old Town").deriveFont(Font.PLAIN, 96);
 
         // create our stylesheet
         reloadStylesheet();

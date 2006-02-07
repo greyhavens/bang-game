@@ -33,6 +33,9 @@ import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
+import com.jme.util.geom.BufferUtils;
+
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.jme.JmeCanvasApp;
 
@@ -52,7 +55,7 @@ public class RenderUtil
     public static AlphaState blendAlpha;
 
     public static AlphaState addAlpha;
-    
+
     public static ZBufferState alwaysZBuf;
 
     public static ZBufferState lequalZBuf;
@@ -71,7 +74,7 @@ public class RenderUtil
         addAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
         addAlpha.setDstFunction(AlphaState.DB_ONE);
         addAlpha.setEnabled(true);
-        
+
         blendAlpha = ctx.getRenderer().createAlphaState();
         blendAlpha.setBlendEnabled(true);
         blendAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
@@ -179,7 +182,32 @@ public class RenderUtil
         _groundColors.put(terrain, color);
         return color;
     }
-    
+
+    /**
+     * Creates a {@link Quad} with a texture configured to display the supplied
+     * text. The text will be white, but its color may be set with {@link
+     * Quad#setDefaultColor}.
+     */
+    public static Quad createTextQuad (BasicContext ctx, Font font, String text)
+    {
+        Vector2f[] tcoords = new Vector2f[4];
+        Dimension size = new Dimension();
+        TextureState tstate = ctx.getRenderer().createTextureState();
+        Texture tex = createTextTexture(
+            ctx, font, ColorRGBA.white, text, tcoords, size);
+        tstate.setTexture(tex);
+
+        Quad quad = new Quad("text", size.width, size.height);
+        tstate.setEnabled(true);
+        quad.setRenderState(tstate);
+
+        quad.setTextureBuffer(BufferUtils.createFloatBuffer(tcoords));
+        quad.setRenderState(blendAlpha);
+        quad.updateRenderState();
+
+        return quad;
+    }
+
     /**
      * Renders the specified text into an image (which will be sized
      * appropriately for the text) and creates a texture from it.
@@ -190,7 +218,7 @@ public class RenderUtil
      */
     public static Texture createTextTexture (
         BasicContext ctx, Font font, ColorRGBA color, String text,
-        Vector2f[] tcoords)
+        Vector2f[] tcoords, Dimension size)
     {
         Graphics2D gfx = _scratch.createGraphics();
         Color acolor = new Color(color.r, color.g, color.b, color.a);
@@ -209,6 +237,11 @@ public class RenderUtil
         int width = (int)(Math.max(bounds.getX(), 0) + bounds.getWidth());
         int height = (int)(layout.getLeading() + layout.getAscent() +
                            layout.getDescent());
+
+        if (size != null) {
+            size.width = width;
+            size.height = height;
+        }
 
         // now determine the size of our texture image which must be
         // square and a power of two (yay!)
@@ -325,10 +358,11 @@ public class RenderUtil
      */
     public static ColorRGBA createColorRGBA (int rgb)
     {
-        return new ColorRGBA(((rgb >> 16) & 0xFF) / 255f, ((rgb >> 8) & 0xFF) / 255f,
-            (rgb & 0xFF) / 255f, 1f);
+        return new ColorRGBA(((rgb >> 16) & 0xFF) / 255f,
+                             ((rgb >> 8) & 0xFF) / 255f,
+                             (rgb & 0xFF) / 255f, 1f);
     }
-    
+
     /**
      * Wraps the given material state inside a new state that enables or
      * disables OpenGL color materials.
@@ -342,19 +376,19 @@ public class RenderUtil
                 if (enableColorMaterial) {
                     GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                     GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE);
-                
+
                 } else {
                     GL11.glDisable(GL11.GL_COLOR_MATERIAL);
-                }            
+                }
             }
         };
     }
-    
+
     protected static final int btoi (byte value)
     {
         return (value < 0) ? 256 + value : value;
     }
-    
+
     protected static HashMap<Terrain,ArrayList<Image>> _groundTiles =
         new HashMap<Terrain,ArrayList<Image>>();
 
@@ -363,7 +397,7 @@ public class RenderUtil
 
     protected static HashMap<Terrain,ColorRGBA> _groundColors =
         new HashMap<Terrain,ColorRGBA>();
-    
+
     /** The maximum number of different variations we might have for a
      * particular ground tile. */
     protected static final int MAX_TILE_VARIANT = 4;

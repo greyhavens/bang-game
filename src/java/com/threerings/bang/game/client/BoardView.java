@@ -16,9 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
-import org.lwjgl.opengl.ARBImaging;
-import org.lwjgl.opengl.GL11;
-
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.intersection.PickData;
@@ -226,8 +223,10 @@ public class BoardView extends BComponent
         _board.shadowPieces(_bangobj.pieces.iterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
 
-        // create our marquee
-        createMarquee(_bangobj.boardName);
+        // create a marquee with our board name if we've got one
+        if (_bangobj.boardName != null) {
+            createMarquee(_bangobj.boardName);
+        }
 
         // refresh the lights
         refreshLights();
@@ -263,7 +262,7 @@ public class BoardView extends BComponent
         // if we're done resolving and we need to fade in, do so
         if (_resolvingSprites == 0) {
             // we can start fading things in now
-            if (_fadein != null) {
+            if (_fadein != null && _fadein.isPaused()) {
                 _fadein.setPaused(false);
             }
         }
@@ -684,41 +683,6 @@ public class BoardView extends BComponent
         clearMarquee(0f);
     }
 
-    @Override // documentation inherited
-    protected void renderComponent (Renderer renderer)
-    {
-        super.renderComponent(renderer);
-
-        // render our marquee if we've got one
-        if (_marquee != null) {
-            // do our fading if appropriate
-            if (_marqueeFader != null) {
-                GL11.glEnable(GL11.GL_BLEND);
-                float alpha = _marqueeFader.getValue(
-                    _ctx.getApp().getFrameTime());
-                // TODO: sort out whether it is possible to have OpenGL
-                // multiply the source pixel by a constant color before
-                // blending it with the destination
-//                 ARBImaging.glBlendColor(1f, 1f, 1f, alpha);
-//                 GL11.glBlendFunc(GL11.GL_CONSTANT_COLOR,
-//                                  GL11.GL_ONE_MINUS_SRC_ALPHA);
-            }
-
-            Dimension msize = _marquee.getSize();
-            _marquee.render(renderer, (_width-msize.width)/2,
-                            (_height-msize.height)/2);
-
-            // if we're done fading, clear everything out
-            if (_marqueeFader != null) {
-                GL11.glDisable(GL11.GL_BLEND);
-                if (_marqueeFader.isComplete()) {
-                    _marqueeFader = null;
-                    _marquee = null;
-                }
-            }
-        }
-    }
-
     /**
      * Creates and returns the terrain node for this board view, giving
      * subclasses a change to customize the object.
@@ -844,8 +808,16 @@ public class BoardView extends BComponent
      */
     protected void createMarquee (String text)
     {
-        _marquee = _ctx.getStyleSheet().getTextFactory(this, "marquee").
-            createText(text, ColorRGBA.white);
+        clearMarquee(0);
+
+        // create the marquee, center it and display it
+        _marquee = RenderUtil.createTextQuad(_ctx, BangUI.MARQUEE_FONT, text);
+        _marquee.setLocalTranslation(
+            new Vector3f(_ctx.getRenderer().getWidth()/2f,
+                         _ctx.getRenderer().getHeight()/2f, 0));
+        _marquee.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+        _marquee.setZOrder(-2);
+        _ctx.getInterface().attachChild(_marquee);
     }
 
     /**
@@ -853,10 +825,20 @@ public class BoardView extends BComponent
      */
     protected void clearMarquee (float fadeTime)
     {
-        if (fadeTime > 0f) {
-            _marqueeFader = new LinearTimeFunction(0f, 1f, fadeTime);
-        } else {
+        if (_marquee != null) {
+            Quad omarquee = _marquee;
+            _ctx.getInterface().detachChild(_marquee);
             _marquee = null;
+
+            if (fadeTime > 0f) {
+                TimeFunction tf = new LinearTimeFunction(1f, 0f, fadeTime);
+                _ctx.getInterface().attachChild(
+                    new FadeInOutEffect(omarquee, ColorRGBA.white, tf, true) {
+                    protected void fadeComplete () {
+                        _ctx.getInterface().detachChild(this);
+                    }
+                });
+            }
         }
     }
 
@@ -1132,8 +1114,7 @@ public class BoardView extends BComponent
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected BText _marquee;
-    protected TimeFunction _marqueeFader;
+    protected Quad _marquee;
 
     protected Node _node, _pnode, _hnode;
     protected LightState _lstate;
