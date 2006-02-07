@@ -42,7 +42,7 @@ public class ClaimSprite extends PropSprite
             Vector2f[] tcoords = new Vector2f[4];
             Texture tex = RenderUtil.createTextTexture(
                 _ctx, BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
-                String.valueOf(claim.nuggets), tcoords);
+                String.valueOf(claim.nuggets), tcoords, null);
             _counter.setTextureBuffer(BufferUtils.createFloatBuffer(tcoords));
             // resize our quad to accomodate the text
             _counter.resize(10 * tcoords[2].x, 10 * tcoords[2].y);
