@@ -590,6 +590,12 @@ public class EditorBoardView extends BoardView
     }
     
     @Override // documentation inherited
+    protected void createMarquee (String text)
+    {
+        // no marquee required for editor
+    }
+    
+    @Override // documentation inherited
     protected void hoverTileChanged (int tx, int ty)
     {
         super.hoverTileChanged(tx, ty);
