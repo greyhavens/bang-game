@@ -128,6 +128,17 @@ public class ViewpointSprite extends PieceSprite
     }
 
     /**
+     * Returns the orientation of the view.
+     */
+    public Quaternion getViewRotation ()
+    {
+        Quaternion lrot = getLocalRotation(),
+            vrot = new Quaternion();
+        vrot.fromAxes(lrot.mult(LEFT), lrot.mult(UP), lrot.mult(FORWARD));
+        return vrot;
+    }
+    
+    /**
      * Updates the camera frame based on the location and orientation of the
      * sprite.
      */

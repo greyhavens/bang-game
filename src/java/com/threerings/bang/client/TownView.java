@@ -26,6 +26,7 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.jme.camera.CameraPath;
+import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.camera.SplinePath;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.util.MessageBundle;
@@ -287,10 +288,10 @@ public class TownView extends BWindow
             }
             ViewpointSprite sprite = (ViewpointSprite)getPieceSprite(piece);
             _ctx.getCameraHandler().moveCamera(
-                new SplinePath(_ctx.getCameraHandler(),
-                               sprite.getLocalTranslation(),
-                               sprite.getViewDirection(), Vector3f.UNIT_Z,
-                               duration, tension));
+                new PanPath(_ctx.getCameraHandler(),
+                            sprite.getLocalTranslation(),
+                            sprite.getViewRotation(),
+                            duration));
             return true;
         }
 
