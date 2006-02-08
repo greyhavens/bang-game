@@ -3,7 +3,10 @@
 
 package com.threerings.bang.client;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -11,9 +14,13 @@ import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
 
 import com.samskivert.util.Config;
+import com.samskivert.util.Interval;
 import com.samskivert.util.RunQueue;
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
+
+import com.threerings.getdown.util.LaunchUtil;
 
 import com.threerings.jme.effect.FadeInOutEffect;
 
@@ -42,6 +49,7 @@ import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.util.ReportingListener;
+import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
@@ -57,6 +65,66 @@ import static com.threerings.bang.Log.log;
 public class BangClient extends BasicClient
     implements SessionObserver, PlayerReceiver, BangCodes
 {
+    /**
+     * Checks the supplied logon failure message for client version related
+     * failure and decodes the necessary business to instruct Getdown to update
+     * the client on the next invocation.
+     */
+    public static boolean checkForUpgrade (BangContext ctx, String message)
+    {
+        if (!message.startsWith(BangAuthCodes.VERSION_MISMATCH)) {
+            return false;
+        }
+
+        int didx = message.indexOf("|~");
+        if (didx == -1) {
+            log.warning("Bogus version mismatch: '" + message + "'.");
+            return false;
+        }
+
+        // create the file that instructs Getdown to upgrade
+        String vers = message.substring(didx+2);
+        File vfile = new File(localDataDir("version.txt"));
+        try {
+            PrintStream ps = new PrintStream(new FileOutputStream(vfile));
+            ps.println(vers);
+            ps.close();
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Error creating '" + vfile + "'", ioe);
+            return false;
+        }
+
+        // if we can relaunch Getdown automatically, do so
+        File dop = new File(localDataDir("getdown-dop.jar"));
+        if (!LaunchUtil.mustMonitorChildren() && dop.exists()) {
+            String[] args = new String[] {
+                LaunchUtil.getJVMPath(),
+                "-jar",
+                dop.toString(),
+                localDataDir("")
+            };
+            log.info("Running " + StringUtil.join(args, "\n  "));
+            try {
+                Runtime.getRuntime().exec(args, null);
+            } catch (IOException ioe) {
+                log.log(Level.WARNING, "Failed to run getdown", ioe);
+                return false;
+            }
+
+            // now stick a fork in ourselves in about 3 seconds
+            new Interval(ctx.getClient().getRunQueue()) {
+                public void expired () {
+                    log.info("Exiting due to out-of-dateness.");
+                    System.exit(0);
+                }
+            }.schedule(3000L);
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Initializes a new client and provides it with a frame in which to
      * display everything.

@@ -126,6 +126,13 @@ public class LogonView extends BWindow
         public void clientFailedToLogon (Client client, Exception cause) {
             String msg = cause.getMessage();
             if (cause instanceof LogonException) {
+                // if the failure is due to a need for a client update, check
+                // for that and take the appropriate action
+                if (BangClient.checkForUpgrade(_ctx, msg)) {
+                    // mogrify the logon failed message to let the client know
+                    // that we're going to automatically restart
+                    msg = "m.version_mismatch_auto";
+                }
                 msg = _msgs.get(msg);
             }
             _status.setStatus(_msgs.get("m.logon_failed", msg), true);
