@@ -7,7 +7,7 @@
   !define DEPLOYMENT "client"
   !define NAME "Bang! Howdy"
   !define INSTALL_DIR "Bang Howdy"
-  !define HOST "http://www.banghowdy.com"
+  !define HOST "http://download.threerings.net/bang"
   !ifndef OUTFILENAME
     !define OUTFILENAME "bang-install.exe"
   !endif
