@@ -28,10 +28,13 @@
 -libraryjars lib/lwjgl.jar
 -libraryjars lib/lwjgl_fmod3.jar
 
--dontoptimize
--dontobfuscate
+# -dontoptimize
+# -dontobfuscate
 
 -outjars dist/bang-pcode.jar
+-printseeds dist/proguard.seeds
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
 
 -keep public class * implements java.io.Serializable {
     static final long serialVersionUID;

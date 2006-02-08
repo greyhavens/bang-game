@@ -8,6 +8,7 @@
 
   <!-- read in our deployment properties -->
   <property file="deployment.properties"/>
+  <property file="build.properties"/>
 
   <!-- things you probably don't want to change -->
   <property name="src.dir"      value="src/java"/>
@@ -75,7 +76,8 @@
     <apply executable="${nartool.path}/genreceiver"
       failonerror="true" parallel="true">
       <arg value="--classpath"/>
-      <arg value="${deploy.dir}/classes:lib/narya-distrib.jar:lib/narya-base.jar"/>
+      <arg
+       value="${deploy.dir}/classes:lib/narya-distrib.jar:lib/narya-base.jar"/>
       <arg value="--sourcedir"/>
       <arg value="src/java"/>
       <fileset dir="src/java" includes="**/*Receiver.java"
@@ -119,8 +121,8 @@
 
   <!-- converts our models into JME format -->
   <target name="models">
-    <taskdef name="convert" classname="com.threerings.jme.tools.ConvertModelTask"
-             classpathref="classpath"/>
+    <taskdef name="convert" classpathref="classpath"
+             classname="com.threerings.jme.tools.ConvertModelTask"/>
     <convert>
       <fileset dir="rsrc" includes="**/*.MD3"/>
       <fileset dir="rsrc" includes="**/*.obj"/>
@@ -239,21 +241,21 @@
     </copy>
   </target>
 
-  <!-- builds the client getdown distribution -->
-  <target name="client" depends="dist">
+  <!-- helper target for client and devclient -->
+  <target name="baseclient" depends="dist">
     <!-- generate the all-in-wonder jar file -->
     <taskdef resource="proguard/ant/task.properties"
              classpath="lib/proguard.jar"/>
-    <proguard configuration="etc/bang-client.pro"/>
+    <proguard configuration="etc/bang-${client}.pro"/>
 
     <!-- create our directories if necessary -->
-    <mkdir dir="${web_dir}/client"/>
-    <mkdir dir="${web_dir}/client/code"/>
-    <mkdir dir="${web_dir}/client/rsrc"/>
-    <mkdir dir="${web_dir}/client/native"/>
+    <mkdir dir="${client_dir}"/>
+    <mkdir dir="${client_dir}/code"/>
+    <mkdir dir="${client_dir}/rsrc"/>
+    <mkdir dir="${client_dir}/native"/>
 
     <!-- create our configuration jar file -->
-    <jar destfile="${web_dir}/client/code/config.jar">
+    <jar destfile="${client_dir}/code/config.jar">
       <fileset dir=".">
         <include name="deployment.properties"/>
         <include name="build.properties"/>
@@ -261,32 +263,33 @@
     </jar>
 
     <!-- copy our various bits into the deployment directory -->
-    <copy todir="${web_dir}/client">
+    <copy todir="${client_dir}">
       <fileset dir="projects/installers/${default_locale}">
         <include name="background.png"/>
       </fileset>
     </copy>
-    <copy todir="${web_dir}/client/code">
+    <copy todir="${client_dir}/code">
       <fileset dir="dist" includes="bang-pcode.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
       <fileset dir="lib" includes="lwjgl_util.jar"/>
     </copy>
-    <copy todir="${web_dir}/client/rsrc">
+    <copy todir="${client_dir}/rsrc">
       <fileset dir="rsrc" includes="**/*.jar"/>
       <fileset dir="rsrc" includes="config/resource/manager.properties"/>
       <fileset dir="dist" includes="bang-*.jar" excludes="bang-*code.jar"/>
     </copy>
-    <copy todir="${web_dir}/client/native">
+    <copy todir="${client_dir}/native">
       <fileset dir="lib/i686-Linux" includes="*.so"/>
       <fileset dir="lib/i686-Windows" includes="*.dll"/>
       <fileset dir="lib/PowerPC-MacOS" includes="*"/>
     </copy>
 
     <!-- copy the getdown.txt file into the right place -->
-    <copy todir="${web_dir}/client" overwrite="true" encoding="UTF-8">
+    <copy todir="${client_dir}" overwrite="true" encoding="UTF-8">
       <fileset dir="etc" includes="getdown.txt"/>
       <filterset>
         <filter token="app_root" value="${root_url}"/>
+        <filter token="client" value="${client}"/>
         <filter token="server_host" value="${server_host}"/>
         <filter token="server_port" value="${server_port}"/>
       </filterset>
@@ -300,7 +303,35 @@
        <pathelement path="lib/getdown.jar"/>
      </classpath>
     </taskdef>
-    <digest appdir="${web_dir}/client"/>
+    <digest appdir="${client_dir}"/>
+  </target>
+
+  <!-- builds the development client getdown distribution -->
+  <target name="devclient">
+    <antcall target="baseclient">
+      <param name="client" value="devclient"/>
+      <param name="client_dir" value="${web_dir}/devclient"/>
+    </antcall>
+  </target>
+
+  <!-- builds the production client getdown distribution -->
+  <target name="client">
+    <exec executable="bin/getversion" outputproperty="latest_version"
+          failonerror="true">
+      <arg line="client"/>
+      <arg line="${root_url}"/>
+    </exec>
+    <echo message="Previous version used for renaming: ${latest_version}"/>
+    <echo message="Generating Proguard config file for ${version}..."/>
+    <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
+      <arg line="etc/bang-client.pro.in"/>
+      <arg line="version=${version}"/>
+      <arg line="prev_version=${latest_version}"/>
+    </exec>
+    <antcall target="baseclient">
+      <param name="client" value="client"/>
+      <param name="client_dir" value="${web_dir}/client/${version}"/>
+    </antcall>
   </target>
 
   <!-- a target for rebuilding everything -->

@@ -4,7 +4,7 @@
 # Bang! development client deployment descriptor
 
 # General information
-appbase = @app_root@/client
+appbase = @app_root@/@client@
 
 # Configure the update UI
 ui.name = Bang! Howdy

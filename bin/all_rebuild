@@ -27,6 +27,9 @@ while [ ! -z "$1" ]; do
     if [ $1 = "--client" ]; then
         CLIENT=true
     fi
+    if [ $1 = "--devclient" ]; then
+        DEVCLIENT=true
+    fi
     shift
 done
 
@@ -89,9 +92,27 @@ if [ $? != 0 ]; then
     exit 255
 fi
 
-# build the client if requested
+# build the production client if requested
 if [ ! -z "$CLIENT" ]; then
+    # update the build version as we're building the production client
+    BUILD_VERSION=`/export/tools/bin/buildstamp`
+    echo "Updating build version to $BUILD_VERSION"
+    echo "version=$BUILD_VERSION" > $ROOT/build.properties
+    echo "config_version=$BUILD_VERSION" >> $ROOT/build.properties
+
+    cd $ROOT
     ant models client
+
+    cd $ROOT/projects/installers
+    ant client
+fi
+
+# build the development client if requested
+if [ ! -z "$DEVCLIENT" ]; then
+    cd $ROOT
+    ant models devclient
+    cd $ROOT/projects/installers
+    ant devclient
 fi
 
 # remove the lockfile
