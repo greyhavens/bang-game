@@ -1,5 +1,5 @@
 ;
-; $Id: yohoho-installer.nsi 18205 2004-12-06 19:25:44Z ray $
+; $Id$
 ;
 ; Bang! Howdy Installer for Windows x86
 
@@ -7,7 +7,7 @@
   !define DEPLOYMENT "client"
   !define NAME "Bang! Howdy"
   !define INSTALL_DIR "Bang Howdy"
-  !define HOST "http://dev.banghowdy.com"
+  !define HOST "http://www.banghowdy.com"
   !ifndef OUTFILENAME
     !define OUTFILENAME "bang-install.exe"
   !endif

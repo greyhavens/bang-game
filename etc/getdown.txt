@@ -4,6 +4,7 @@
 # Bang! development client deployment descriptor
 
 # General information
+@version_line@
 appbase = @app_root@/@client@
 
 # Configure the update UI

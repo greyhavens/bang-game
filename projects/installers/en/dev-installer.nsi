@@ -1,14 +1,20 @@
 ;
-; $Id: dev-installer.nsi 18205 2004-12-06 19:25:44Z ray $
+; $Id$
 ;
 ; Bang! Howdy Dev Installer for Windows x86
 
   !define LOCALE "en"
-  !define DEPLOYMENT "client"
+  !define DEPLOYMENT "devclient"
   !define NAME "Bang! Howdy (Dev)"
-  !define INSTALL_DIR "${NAME}"
+  !define INSTALL_DIR "Bang Howdy Dev"
   !define HOST "http://dev.banghowdy.com"
-  !define OUTFILENAME "dev-install.exe"
+  !ifndef OUTFILENAME
+    !define OUTFILENAME "dev-install.exe"
+  !endif
+
+  ; comment this out to enable the code that automatically downloads
+  ; the JVM from the web and installs it
+  ; !define BUNDLE_JVM true
 
   !include "..\data\installer-common.nsi"
 

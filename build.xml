@@ -292,6 +292,7 @@
         <filter token="client" value="${client}"/>
         <filter token="server_host" value="${server_host}"/>
         <filter token="server_port" value="${server_port}"/>
+        <filter token="version_line" value="${version_line}"/>
       </filterset>
     </copy>
 
@@ -311,6 +312,7 @@
     <antcall target="baseclient">
       <param name="client" value="devclient"/>
       <param name="client_dir" value="${web_dir}/devclient"/>
+      <param name="version_line" value=""/>
     </antcall>
   </target>
 
@@ -322,15 +324,18 @@
       <arg line="${root_url}"/>
     </exec>
     <echo message="Previous version used for renaming: ${latest_version}"/>
+
     <echo message="Generating Proguard config file for ${version}..."/>
     <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
       <arg line="etc/bang-client.pro.in"/>
       <arg line="version=${version}"/>
       <arg line="prev_version=${latest_version}"/>
     </exec>
+
     <antcall target="baseclient">
       <param name="client" value="client"/>
       <param name="client_dir" value="${web_dir}/client/${version}"/>
+      <param name="version_line" value="version = ${version}"/>
     </antcall>
     <delete file="etc/bang-client.pro"/>
   </target>
