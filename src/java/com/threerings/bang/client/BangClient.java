@@ -467,7 +467,7 @@ public class BangClient extends BasicClient
             return _alogic;
         }
     }
-
+    
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
 

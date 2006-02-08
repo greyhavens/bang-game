@@ -99,12 +99,6 @@ public class OptionDialog extends BDecoratedWindow
         setModal(true);
         _ctx = ctx;
         _receiver = receiver;
-        
-        addListener(new EscapeListener() {
-            public void escapePressed() {
-                _ctx.getBangClient().clearPopup();
-            }
-        });
 
         add(new BLabel(_ctx.xlate(bundle, text)), BorderLayout.CENTER);
         

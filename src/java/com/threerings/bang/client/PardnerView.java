@@ -24,7 +24,9 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 import com.threerings.util.MessageBundle;
+import com.threerings.util.Name;
 
+import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
@@ -134,6 +136,24 @@ public class PardnerView extends BContainer
     }
     
     /**
+     * Requests that the named pardner be removed after having verified that
+     * that's what the user really wants.
+     */
+    protected void removePardner (final Name handle)
+    {
+        _psvc.removePardner(_ctx.getClient(), handle,
+            new PlayerService.ConfirmListener() {
+                public void requestProcessed () {
+                    _status.setStatus(BANG_MSGS, MessageBundle.tcompose(
+                        "m.pardner_removed", handle), false);
+                }
+                public void requestFailed (String cause) {
+                    _status.setStatus(BANG_MSGS, cause, true);
+                }
+            });
+    }
+    
+    /**
      * Displays the status and controls for a single pardner.
      */
     protected class PardnerPanel extends BContainer
@@ -148,12 +168,15 @@ public class PardnerView extends BContainer
             this.entry = entry;
             
             add(_handle = new BLabel(entry.handle.toString()));
+            add(_status = new BLabel(""), GroupLayout.FIXED);
             add(_chat = new BButton(_ctx.xlate(BANG_MSGS,
                 "m.pardner_chat")), GroupLayout.FIXED);
             _chat.addListener(this);
             add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
                 "m.pardner_remove")), GroupLayout.FIXED);
             _remove.addListener(this);
+            
+            updateStatus();
         }
         
         public void actionPerformed (ActionEvent ae)
@@ -161,7 +184,15 @@ public class PardnerView extends BContainer
             if (ae.getSource() == _chat) {
             
             } else { // ae.getSource() == _remove
-            
+                OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
+                    MessageBundle.tcompose("m.confirm_remove", entry.handle),
+                    new OptionDialog.DialogResponseReceiver() {
+                        public void resultPosted (int button, Object result) {
+                            if (button == OptionDialog.OK_BUTTON) {
+                                removePardner(entry.handle);
+                            }
+                        }
+                    });
             }
         }
         
@@ -179,7 +210,20 @@ public class PardnerView extends BContainer
         
         public void update (PardnerEntry nentry)
         {
-            this.entry = nentry;
+            PardnerEntry oentry = entry;
+            entry = nentry;
+            if (oentry.status != nentry.status) {
+                updateStatus();
+                _ptainer.remove(this);
+                addToContainer();
+            }
+        }
+        
+        protected void updateStatus ()
+        {
+            _status.setText(_ctx.xlate(BANG_MSGS,
+                "m.pardner_status." + entry.status));
+            _chat.setEnabled(entry.isAvailable());
         }
         
         protected void addToContainer ()
@@ -196,7 +240,7 @@ public class PardnerView extends BContainer
             _ptainer.add(this);
         }
         
-        BLabel _handle;
+        BLabel _handle, _status;
         BButton _chat, _remove;
     }
     

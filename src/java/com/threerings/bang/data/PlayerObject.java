@@ -189,6 +189,20 @@ public class PlayerObject extends BodyObject
         return count;
     }
 
+    /**
+     * Determines how many of this player's pardners are online.
+     */
+    public int getOnlinePardnerCount ()
+    {
+        int count = 0;
+        for (Iterator it = pardners.iterator(); it.hasNext(); ) {
+            if (((PardnerEntry)it.next()).isOnline()) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>playerId</code> field be set to the
