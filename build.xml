@@ -332,6 +332,7 @@
       <param name="client" value="client"/>
       <param name="client_dir" value="${web_dir}/client/${version}"/>
     </antcall>
+    <delete file="etc/bang-client.pro"/>
   </target>
 
   <!-- a target for rebuilding everything -->

@@ -6,7 +6,8 @@
 # version to copy when doing config-only releases and which version against
 # which to build Proguard diffs when doing full releases.
 
-my $root = `dirname $0`; chomp($root); $root = "$root/..";
+my $root = `dirname $0`; chomp($root);
+chomp($root = `cd $root/.. ; pwd`);
 my $usage = "Usage: client_ident root_url\n";
 my $client_ident = shift or die $usage;
 my $root_url = shift or die $usage;
@@ -14,10 +15,10 @@ my $root_url = shift or die $usage;
 # enumerate the Proguard .map files and find the most recent one for which we
 # have a published client
 my $code_ver;
-foreach $dup (reverse sort glob("$root/etc/proguard/*.map")) {
-    my ($version) = ($dup =~ m/(\S+).map/);
+foreach $pmap (reverse sort glob("$root/etc/proguard/*.map")) {
+    my ($version) = ($pmap =~ m/(\d+).map/);
     my $code_url = "$root_url/$client_ident/$version/getdown.txt";
-    # print "Checking '$dup' ($code_url)...\n";
+    # print "Checking '$pmap' ($code_url)...\n";
     if (system("curl -fIs $code_url > /dev/null") == 0) {
         $code_ver = $version;
         last;
