@@ -297,6 +297,7 @@ public class BangServer extends CrowdServer
             server.run();
         } catch (Exception e) {
             log.log(Level.WARNING, "Unable to initialize server.", e);
+            System.exit(-1);
         }
     }
 
