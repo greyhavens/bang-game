@@ -179,6 +179,7 @@ public class BangClient extends BasicClient
                 null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { tconfig.ident };
             config.tutorial = true;
+            config.teamSize = 3;
             config.board = tconfig.board;
 
         } else if (System.getProperty("test") != null) {
@@ -189,6 +190,7 @@ public class BangClient extends BasicClient
             config.ais = new GameAI[] {
                 null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { "cj" };
+            config.teamSize = 3;
             config.board = System.getProperty("board");
         }
 

@@ -87,8 +87,7 @@ public class NewLookView extends BContainer
             new Point(870, 43));
         _buy.setStyleClass("big_button");
 
-        _palette = new IconPalette(
-            null, 4, 3, ChoiceIcon.ICON_SIZE, 1, false, true);
+        _palette = new IconPalette(null, 4, 3, ChoiceIcon.ICON_SIZE, 1);
         add(_palette, new Rectangle(139, 5, ChoiceIcon.ICON_SIZE.width*4,
                                     ChoiceIcon.ICON_SIZE.height*3+27));
 

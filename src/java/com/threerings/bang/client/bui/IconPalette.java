@@ -46,42 +46,68 @@ public class IconPalette extends BContainer
      *
      * @param columns the number of columns of icons to display.
      * @param rows the number of rows of icons to display.
-     * @param size the dimensions of the icons we will contain.
+     * @param isize the dimensions of the icons we will contain.
      * @param selectable the number of simultaneously selectable icons (must be
      * at least one).
-     * @param paintbg if true, the palette will paint a background under the
-     * icons, if false it will let whatever's underneath show through.
-     * @param navbuttons if true, forward and back buttons will be shown to
-     * allow navigation between pages of icons.
      */
     public IconPalette (Inspector inspector, int columns, int rows,
-                        Dimension size, int selectable, boolean paintbg,
-                        boolean navbuttons)
+                        Dimension isize, int selectable)
     {
         super(new BorderLayout(0, 0));
+
         _rows = rows;
         _cols = columns;
         _inspector = inspector;
         _selectable = selectable;
 
-        add(_icont = new BContainer(new TableLayout(columns, 0, 0)),
-            BorderLayout.NORTH);
-        _icont.setPreferredSize(new Dimension(size.width * columns,
-                                              size.height * rows));
-        if (paintbg) {
-            _icont.setStyleClass("palette_background");
-        }
+        // we need an extra container around our icon container so that we can
+        // paint a border if need be
+        _iicont = GroupLayout.makeVBox(GroupLayout.CENTER);
+        add(_iicont, BorderLayout.NORTH);
+        _iicont.add(_icont = new BContainer(new TableLayout(columns, 0, 0)));
+        _icont.setPreferredSize(
+            new Dimension(isize.width * columns, isize.height * rows));
 
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
         hlay.setGap(50);
-        BContainer buttons = new BContainer(hlay);
-        buttons.setStyleClass("palette_buttons");
-        buttons.add(_back = new BButton("", _listener, "back"));
+        _bcont = new BContainer(hlay);
+        _bcont.setStyleClass("palette_buttons");
+        _bcont.add(_back = new BButton("", _listener, "back"));
         _back.setStyleClass("back_button");
-        buttons.add(_forward = new BButton("", _listener, "forward"));
+        _bcont.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
-        if (navbuttons) {
-            add(buttons, BorderLayout.CENTER);
+        add(_bcont, BorderLayout.CENTER);
+    }
+
+    /**
+     * Enables or disables the painting of a background image behind the icons
+     * in this palette. The default is not to paint a background.
+     */
+    public void setPaintBackground (boolean paintbg)
+    {
+        _icont.setStyleClass(paintbg ? "palette_background" : null);
+    }
+
+    /**
+     * Enables or disables the painting of a fancy border around the icons (but
+     * not enclosing the forward/back buttons). The default is not to paint a
+     * border.
+     */
+    public void setPaintBorder (boolean paintborder)
+    {
+        _iicont.setStyleClass(paintborder ? "palette_border" : null);
+    }
+
+    /**
+     * Configures whether or not the navigation buttons are show. The default
+     * is to show the navigation buttons.
+     */
+    public void setShowNavigation (boolean shownav)
+    {
+        if (!_bcont.isAdded() && shownav) {
+            add(_bcont, BorderLayout.CENTER);
+        } else if (_bcont.isAdded() && !shownav) {
+            remove(_bcont);
         }
     }
 
@@ -93,6 +119,7 @@ public class IconPalette extends BContainer
     public void addIcon (SelectableIcon icon)
     {
         _icons.add(icon);
+        icon.setPalette(this);
 
         if (isAdded()) {
             // potentially add this icon to the display if we're on its page
@@ -111,6 +138,7 @@ public class IconPalette extends BContainer
      */
     public void removeIcon (SelectableIcon icon)
     {
+        icon.setPalette(null);
         _icons.remove(icon);
         if (icon.isAdded()) {
             _icont.remove(icon);
@@ -328,7 +356,7 @@ public class IconPalette extends BContainer
         new ArrayList<SelectableIcon>();
     protected int _rows, _cols, _page;
 
-    protected BContainer _icont;
+    protected BContainer _iicont, _icont, _bcont;
     protected Inspector _inspector;
     protected BButton _forward, _back;
 

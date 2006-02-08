@@ -11,11 +11,14 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 import com.samskivert.util.ArrayIntSet;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
@@ -39,16 +42,14 @@ public class SelectionView extends BDecoratedWindow
     public static BContainer createRoundHeader (
         BangContext ctx, BangConfig config, BangObject bangobj)
     {
-        BContainer header = new BContainer(new BorderLayout(10, 0));
-        header.setStyleClass("dialog_title");
-        MessageBundle msgs =
-            ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
-        String title = bangobj.boardName + ": " +
-            msgs.get("m.scenario_" + bangobj.scenarioId);
-        header.add(new BLabel(title), BorderLayout.WEST);
-        String rmsg = msgs.get("m.round", "" + (bangobj.roundId + 1),
-                               "" + config.getRounds());
-        header.add(new BLabel(rmsg), BorderLayout.EAST);
+        BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
+        String msg = MessageBundle.compose(
+            "m.round_header",
+            MessageBundle.taint(String.valueOf((bangobj.roundId + 1))),
+            "m.scenario_" + bangobj.scenarioId,
+            MessageBundle.taint(bangobj.boardName));
+        header.add(
+            new BLabel(ctx.xlate(GameCodes.GAME_MSGS, msg), "scroll_title"));
         return header;
     }
 
@@ -62,24 +63,43 @@ public class SelectionView extends BDecoratedWindow
         _bangobj = bangobj;
         _pidx = pidx;
 
-        setLayoutManager(GroupLayout.makeVStretch());
-        add(createRoundHeader(ctx, config, bangobj), GroupLayout.FIXED);
-        add(new BLabel(_msgs.get("m.select_bigshot")), GroupLayout.FIXED);
+        setLayoutManager(new BorderLayout(25, 15));
+        add(createRoundHeader(ctx, config, bangobj), BorderLayout.NORTH);
+        
+        BContainer side = GroupLayout.makeVBox(GroupLayout.TOP);
+        add(side, BorderLayout.WEST);
+        ImageIcon frame =
+            new ImageIcon(ctx.loadImage("ui/pregame/bigshot_frame.png"));
+        side.add(new BLabel(frame));
+
+        BContainer cards = GroupLayout.makeHBox(GroupLayout.CENTER);
+        cards.add(new BLabel("", "card_icon"));
+        cards.add(new BLabel("", "card_icon"));
+        cards.add(new BLabel("", "card_icon"));
+        side.add(cards);
+
+        BContainer cent = GroupLayout.makeVBox(GroupLayout.TOP);
+        ((GroupLayout)cent.getLayoutManager()).setOffAxisJustification(
+            GroupLayout.LEFT);
+        add(cent, BorderLayout.CENTER);
 
         // create the big shot selection display
-        _units = new UnitPalette(ctx, null, 4, 1, true);
+        cent.add(new BLabel(_msgs.get("m.select_bigshot"), "pick_label"));
+        _units = new UnitPalette(ctx, _enabler, 4, 1);
+        _units.setPaintBorder(true);
+        _units.setStyleClass("pick_palette");
         _units.setUser(_ctx.getUserObject());
-        add(_units);
+        cent.add(_units);
 
         // create the card selection display
-        add(new BLabel(_msgs.get("m.select_cards")), GroupLayout.FIXED);
-        add(_cards = new CardPalette(ctx, bangobj));
+        cent.add(new BLabel(_msgs.get("m.select_cards"), "pick_label"));
+        cent.add(_cards = new CardPalette(ctx, bangobj));
+        _cards.setStyleClass("pick_palette");
 
-        BContainer footer = new BContainer(new BorderLayout(10, 0));
-        _ready = new BButton(_msgs.get("m.ready"));
-        _ready.addListener(this);
-        footer.add(_ready, BorderLayout.EAST);
-        add(footer, GroupLayout.FIXED);
+        BContainer footer = GroupLayout.makeHBox(GroupLayout.CENTER);
+        footer.add(_ready = new BButton(_msgs.get("m.ready"), this, "ready"));
+        _ready.setEnabled(false);
+        add(footer, BorderLayout.SOUTH);
     }
 
     // documentation inherited from interface ActionListener
@@ -92,6 +112,8 @@ public class SelectionView extends BDecoratedWindow
 
         // don't allow double clickage
         _ready.setEnabled(false);
+        // prevent reenabling by a click on the big shot selection palette
+        _ready = null;
 
         // determine which cards are selected
         ArrayIntSet cardIds = new ArrayIntSet();
@@ -108,22 +130,27 @@ public class SelectionView extends BDecoratedWindow
     }
 
     @Override // documentation inherited
-    public Dimension getPreferredSize (int whint, int hhint)
-    {
-        // make sure we fit comfortably in the available height
-        int maxheight = _ctx.getDisplay().getHeight() - 250;
-        hhint = (hhint == -1) ? maxheight : hhint;
-        Dimension d = super.getPreferredSize(whint, hhint);
-        d.height = Math.min(d.height, maxheight);
-        return d;
-    }
-
-    @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
         _units.shutdown();
     }
+
+    protected void updateReady ()
+    {
+        if (_ready != null) {
+            _ready.setEnabled(_units.getSelectedUnit() != null);
+        }
+    }
+
+    protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
+        public void iconSelected (SelectableIcon icon) {
+            updateReady();
+        }
+        public void selectionCleared () {
+            updateReady();
+        }
+    };
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;

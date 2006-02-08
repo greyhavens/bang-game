@@ -28,7 +28,7 @@ public class GoodsPalette extends IconPalette
 
     public GoodsPalette (BangContext ctx, GoodsInspector inspector)
     {
-        super(inspector, 6, 3, GoodsIcon.ICON_SIZE, 1, false, true);
+        super(inspector, 6, 3, GoodsIcon.ICON_SIZE, 1);
         _ctx = ctx;
     }
 

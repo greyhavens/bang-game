@@ -57,16 +57,16 @@ public class RanchView extends ShopView
         add(_inspector, new Rectangle(178, 60, 258, 591));
 
         // create our various tabs: recruited big shots...
-        _bigshots = new UnitPalette(ctx, _inspector, 4, 3, true);
+        _bigshots = new UnitPalette(ctx, _inspector, 4, 3);
         _bigshots.setUser(_ctx.getUserObject());
 
         // ...recruitable big shots...
-        _recruits = new UnitPalette(ctx, _inspector, 4, 3, true);
+        _recruits = new UnitPalette(ctx, _inspector, 4, 3);
         _recruits.setUnits(UnitConfig.getTownUnits(
                                townId, UnitConfig.Rank.BIGSHOT));
 
         // ...and normal + special units
-        _units = new UnitPalette(ctx, _inspector, 4, 3, true);
+        _units = new UnitPalette(ctx, _inspector, 4, 3);
         EnumSet<UnitConfig.Rank> ranks = EnumSet.of(
             UnitConfig.Rank.NORMAL, UnitConfig.Rank.SPECIAL);
         _units.setUnits(UnitConfig.getTownUnits(townId, ranks));

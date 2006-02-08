@@ -16,13 +16,20 @@ public class SelectableIcon extends BToggleButton
         super(null);
     }
 
+    protected void setPalette (IconPalette palette)
+    {
+        _palette = palette;
+    }
+
     @Override // documentation inherited
     protected void stateDidChange ()
     {
         super.stateDidChange();
 
-        if (_parent != null && _parent.getParent() instanceof IconPalette) {
-            ((IconPalette)_parent.getParent()).iconUpdated(this, _selected);
+        if (_palette != null) {
+            _palette.iconUpdated(this, _selected);
         }
     }
+
+    protected IconPalette _palette;
 }

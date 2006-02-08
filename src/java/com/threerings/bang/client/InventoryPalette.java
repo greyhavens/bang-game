@@ -23,7 +23,8 @@ public class InventoryPalette extends IconPalette
 
     public InventoryPalette (BangContext ctx, Predicate itemp)
     {
-        super(null, 5, 3, ItemIcon.ICON_SIZE, 0, true, true);
+        super(null, 5, 3, ItemIcon.ICON_SIZE, 0);
+        setPaintBackground(true);
         _ctx = ctx;
         _itemp = itemp;
     }

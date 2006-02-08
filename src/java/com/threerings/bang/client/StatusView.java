@@ -131,7 +131,7 @@ public class StatusView extends BWindow
 
         case 1:
             if (_bigshots == null) {
-                _bigshots = new UnitPalette(_ctx, null, 4, 3, true);
+                _bigshots = new UnitPalette(_ctx, null, 4, 3);
                 _bigshots.setUser(_ctx.getUserObject());
             }
             tab = _bigshots;

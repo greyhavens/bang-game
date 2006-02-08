@@ -57,8 +57,9 @@ public class FirstBigShotView extends BDecoratedWindow
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = UnitConfig.getConfig(RanchCodes.STARTER_BIGSHOTS[ii]);
         }
-        _bigshots = new UnitPalette(ctx, this, units.length, 1, false);
-        _bigshots.setStyleClass("fb_unit_palette");
+        _bigshots = new UnitPalette(ctx, this, units.length, 1);
+        _bigshots.setShowNavigation(false);
+        _bigshots.setPaintBorder(true);
         _bigshots.setUnits(units);
         add(_bigshots);
 
