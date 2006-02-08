@@ -30,6 +30,7 @@ import com.threerings.presents.net.UsernamePasswordCreds;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
 
@@ -94,6 +95,7 @@ public class LogonView extends BWindow
                 new UsernamePasswordCreds(
                     new Name(username),
                     Password.makeFromClear(password).getEncrypted()));
+            _ctx.getClient().setVersion("" + DeploymentConfig.getVersion());
             _ctx.getClient().logon();
 
         } else if ("options".equals(event.getAction())) {
