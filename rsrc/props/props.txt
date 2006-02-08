@@ -16,3 +16,8 @@ natural/tree_joshua
 natural/tree_oak
 special/claim
 special/wagon
+structures/grave_cross
+structures/grave_cross_lily
+structures/grave_tombstone
+structures/grave_tombstone_lily
+structures/pop_sign_frontier_town
