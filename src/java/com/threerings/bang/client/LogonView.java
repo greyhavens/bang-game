@@ -26,6 +26,7 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.net.UsernamePasswordCreds;
 
+import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -44,7 +45,7 @@ public class LogonView extends BWindow
         _ctx = ctx;
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.white);
 
-        _msgs = ctx.getMessageManager().getBundle("logon");
+        _msgs = ctx.getMessageManager().getBundle(BangAuthCodes.AUTH_MSGS);
         BContainer cont = new BContainer(new TableLayout(3, 5, 5));
         cont.add(new BLabel(_msgs.get("m.username")));
         cont.add(_username = new BTextField());

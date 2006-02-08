@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.user.OOOUser;
@@ -25,9 +26,10 @@ import com.threerings.crowd.data.TokenRing;
 
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.util.DeploymentConfig;
 
-import static com.threerings.presents.data.AuthCodes.*;
 import static com.threerings.bang.Log.log;
+import static com.threerings.bang.data.BangAuthCodes.*;
 
 /**
  * Delegates authentication to the OOO user manager.
@@ -89,9 +91,29 @@ public class OOOAuthenticator extends Authenticator
             }
             UsernamePasswordCreds creds = (UsernamePasswordCreds)
                 req.getCredentials();
-            String username = creds.getUsername().toString();
+
+            // make sure they've got the correct version
+            long cvers = 0L;
+            long svers = DeploymentConfig.getVersion();
+            try {
+                cvers = Long.parseLong(req.getVersion());
+            } catch (Exception e) {
+                // ignore it and fail below
+            }
+            if (svers != cvers) {
+                if (cvers > svers) {
+                    rdata.code = NEWER_VERSION;
+                } else {
+                    rdata.code =
+                        MessageBundle.tcompose(VERSION_MISMATCH, "" + svers);
+                }
+                log.info("Refusing wrong version [creds=" + creds +
+                         ", cvers=" + cvers + ", svers=" + svers + "].");
+                return;
+            }
 
             // load up their user account record
+            String username = creds.getUsername().toString();
             OOOUser user = (OOOUser)_authrep.loadUser(username);
             if (user == null) {
                 rdata.code = NO_SUCH_USER;

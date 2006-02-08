@@ -130,6 +130,7 @@ public class BangApp extends JmeApp
                 new UsernamePasswordCreds(
                     new Name(username),
                     Password.makeFromClear(password).getEncrypted()));
+            client.setVersion(String.valueOf(DeploymentConfig.getVersion()));
             client.logon();
         }
 

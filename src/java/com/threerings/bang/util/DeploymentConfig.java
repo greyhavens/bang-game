@@ -26,36 +26,9 @@ public class DeploymentConfig
     public static Config build = new Config("build");
 
     /**
-     * Returns the deployment version currently in effect for this deployment.
-     * On the client, this value will not change (except when the client is
-     * updated), on the server, we reread the build.properties file every
-     * minute to allow for updates on a running server.
+     * Returns the version associated with this build of the deployment's code.
      */
-    public static long getDeploymentVersion ()
-    {
-        long now = System.currentTimeMillis();
-        if (now - _lastVersionCheck > VERSION_CHECK_INTERVAL) {
-            // reload our build.properties file
-            build = new Config("build");
-            // and check for a version update
-            long version = build.getValue("config_version", 0L);
-            if (version != _deploymentVersion) {
-                if (_deploymentVersion > 0L) {
-                    log.info("Updating deployment version: " + version);
-                }
-                _deploymentVersion = version;
-            }
-            _lastVersionCheck = now;
-        }
-        return _deploymentVersion;
-    }
-
-    /**
-     * Returns the version associated with this build of the deployment's
-     * code. The deployment version may change if the configuration changes,
-     * but the build version will only change with a code change.
-     */
-    public static long getBuildVersion ()
+    public static long getVersion ()
     {
         return build.getValue("version", 0L);
     }
