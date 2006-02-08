@@ -52,6 +52,7 @@ public class RanchView extends ShopView
         add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
         add(_status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
+        _status.setStyleClass("shop_status");
 
         _inspector = new UnitInspector(_ctx);
         add(_inspector, new Rectangle(178, 60, 258, 591));

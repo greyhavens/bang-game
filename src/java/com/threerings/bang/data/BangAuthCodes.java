@@ -25,6 +25,9 @@ public interface BangAuthCodes extends AuthCodes
      * be able to logon from it. */
     public static final String MACHINE_TAINTED = "m.machine_tainted";
 
+    /** A code indicating that this server is not open to the public. */
+    public static final String NON_PUBLIC_SERVER = "m.non_public_server";
+
     /** A code indicating a bounced check or reversed payment. */
     public static final String DEADBEAT = "m.deadbeat";
 

@@ -48,7 +48,7 @@ component:disabled {
 }
 
 container {
-//  border: 1 solid #FFFFFF;
+//  border: 1 solid #000000;
 }
 
 label {
@@ -362,11 +362,15 @@ shop_view {
   color: #3E1B00;
 }
 
-shop_status {
-  font: "Helvetica" plain 15;
-  color: #D5B586;
+status_label {
   text-align: center;
   vertical-align: center;
+}
+
+shop_status {
+  parent: "status_label";
+  font: "Helvetica" plain 15;
+  color: #D5B586;
 }
 
 money_label {

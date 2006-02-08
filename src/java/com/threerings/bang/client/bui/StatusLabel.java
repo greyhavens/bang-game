@@ -16,7 +16,7 @@ public class StatusLabel extends BLabel
     {
         super("");
         _ctx = ctx;
-        setStyleClass("shop_status");
+        setStyleClass("status_label");
     }
 
     /**

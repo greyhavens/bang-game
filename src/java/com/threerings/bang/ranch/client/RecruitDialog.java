@@ -74,6 +74,7 @@ public class RecruitDialog extends BDecoratedWindow
         cont.add(row, GroupLayout.FIXED);
 
         cont.add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
+        _status.setStyleClass("shop_status");
 
         cont.add(new Spacer(1, 1));
 

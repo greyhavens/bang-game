@@ -38,6 +38,7 @@ public class SaloonView extends ShopView
 
         add(_crview = new CriterionView(ctx, _ctrl), new Point(700, 300));
         add(_status = new StatusLabel(ctx), new Rectangle(450, 80, 400, 50));
+        _status.setStyleClass("shop_status");
 
         add(new BButton(_msgs.get("m.test_game"), _ctrl,
                         SaloonController.TEST_GAME), new Point(700, 250));

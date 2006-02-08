@@ -120,6 +120,13 @@ public class OOOAuthenticator extends Authenticator
                 return;
             }
 
+            // check whether we're restricting non-insider login
+            if (ServerConfig.config.getValue("insiders_only", false) &&
+                !user.holdsToken(OOOUser.INSIDER)) {
+                rdata.code = NON_PUBLIC_SERVER;
+                return;
+            }
+
             // now check their password
             if (!user.password.equals(creds.getPassword())) {
                 rdata.code = INVALID_PASSWORD;

@@ -41,6 +41,7 @@ public class BarberView extends ShopView
         add(new BLabel(_msgs.get("m.welcome"), "shop_status"),
             new Rectangle(203, 655, 610, 40));
         add(_status = new StatusLabel(ctx), new Rectangle(230, 10, 500, 50));
+        _status.setStyleClass("shop_status");
 
         // we need to handle displaying the avatar specially
         _avatar = new AvatarView(ctx);

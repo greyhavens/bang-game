@@ -24,8 +24,10 @@ import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientAdapter;
+import com.threerings.presents.client.LogonException;
 import com.threerings.presents.net.UsernamePasswordCreds;
 
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
 
@@ -60,7 +62,8 @@ public class LogonView extends BWindow
         cont.add(logon);
         add(cont);
 
-        add(_status = new BLabel(""));
+        add(_status = new StatusLabel(ctx));
+        _status.setPreferredSize(new Dimension(420, 40));
 
         cont = new BContainer(new TableLayout(2, 5, 5));
         BButton btn;
@@ -86,7 +89,7 @@ public class LogonView extends BWindow
 
             String username = _username.getText();
             String password = _password.getText();
-            _status.setText(_msgs.get("m.logging_on"));
+            _status.setStatus(_msgs.get("m.logging_on"), false);
             _ctx.getClient().setCredentials(
                 new UsernamePasswordCreds(
                     new Name(username),
@@ -108,21 +111,24 @@ public class LogonView extends BWindow
     public void progress (int percent)
     {
         if (percent < 100) {
-            _status.setText(_msgs.get("m.init_progress", ""+percent));
+            _status.setStatus(_msgs.get("m.init_progress", ""+percent), false);
         } else {
-            _status.setText(_msgs.get("m.init_complete"));
+            _status.setStatus(_msgs.get("m.init_complete"), false);
             _initialized = true;
         }
     }
 
     protected ClientAdapter _listener = new ClientAdapter() {
         public void clientDidLogon (Client client) {
-            _status.setText(_msgs.get("m.logged_on"));
+            _status.setStatus(_msgs.get("m.logged_on"), false);
         }
 
         public void clientFailedToLogon (Client client, Exception cause) {
-            String msg = _msgs.get("m.logon_failed", cause.getMessage());
-            _status.setText(msg);
+            String msg = cause.getMessage();
+            if (cause instanceof LogonException) {
+                msg = _msgs.get(msg);
+            }
+            _status.setStatus(_msgs.get("m.logon_failed", msg), true);
         }
     };
 
@@ -130,6 +136,6 @@ public class LogonView extends BWindow
     protected MessageBundle _msgs;
     protected BTextField _username;
     protected BPasswordField _password;
-    protected BLabel _status;
+    protected StatusLabel _status;
     protected boolean _initialized;
 }
