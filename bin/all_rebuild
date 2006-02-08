@@ -10,7 +10,8 @@ if [ "`whoami`" = "root" ]; then
     exit 255
 fi
 
-ROOT=`dirname $0`/..
+ROOT=`dirname $0`
+ROOT=`cd $ROOT ; cd .. ; pwd`
 LOCKFILE=/tmp/rebuild-bang.lock
 
 export JAVA_HOME=/usr/local/jdk1.5
