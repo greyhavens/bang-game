@@ -22,8 +22,7 @@ if [ "$1" = "--slave" ]; then
 fi
 
 MYSQLARGS="-u $DBUSER -p$DBPASSWD"
-MYSOCK=/var/run/mysqld/threerings-mysqld.sock
-if [ -f $ROOT/etc/mysql-$WHICH.cnf -a -r $MYSOCK ]; then
+if [ -f $ROOT/etc/mysql-$WHICH.cnf ]; then
     mysql --defaults-file=$ROOT/etc/mysql-$WHICH.cnf $MYSQLARGS "$@"
 else
     mysql $MYSQLARGS "$@"

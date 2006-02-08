@@ -6,7 +6,8 @@
 # Redhat 9.
 
 # Locate our ocean directory
-BANG_HOME=`dirname $0 | sed s:/bin$::`
+BANG_HOME=`dirname $0`/..
+BANG_HOME=`cd $BANG_HOME ; pwd`
 if [ ! -f $BANG_HOME/server.properties ]; then
     echo "Unable to infer BANG_HOME. No server.properties file?"
     exit 1
@@ -57,7 +58,7 @@ case "$1" in
         echo -n "Starting $DAEMON: "
         touch $PIDFILE
         chown $BANG_USER $PIDFILE
-        su - $BANG_USER -c "$DAEMON $PIDFILE" >/dev/null 2>&1 </dev/null &
+        su - $BANG_USER -c "$DAEMON $PIDFILE" >/tmp/startbang.log 2>&1 </dev/null &
         echo "started."
         ;;
 

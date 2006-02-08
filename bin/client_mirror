@@ -62,5 +62,6 @@ $MIRROR $VERBOSE `find $CLIENT_DIR/$version -type f`
 # mirror the updated installers
 $MIRROR $VERBOSE $ROOT/pages/$client_ident/*-install.???
 
-# TODO: copy getdown.txt to $ROOT/pages/$client_ident and mirror? Or do that in
-# a separate finalize_release script
+# update the getdown.txt used by a fresh installation
+cp $CLIENT_DIR/$version/getdown.txt $CLIENT_DIR
+$MIRROR $VERBOSE $CLIENT_DIR/getdown.txt

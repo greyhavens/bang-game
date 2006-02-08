@@ -10,6 +10,7 @@ DESC="Bang game server"
 
 BANG_HOME=`dirname $0 | sed s:/bin$::`
 BANG_USER=www-data
+TOOLS_HOME=/export/tools
 
 LOGFILE=$BANG_HOME/log/stdout.log
 LOG_EMAIL=nightly-logs@threerings.net
@@ -44,8 +45,8 @@ fi
 # Start with the standard Java classes
 CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
 
-# Add all JAR files in $BANG_HOME/lib to the CLASSPATH
-for jar in $BANG_HOME/lib/*.jar $BANG_HOME/dist/bang-code.jar \
+# Add all necessary JAR files to the CLASSPATH
+for jar in $TOOLS_HOME/lib/java/*.jar $BANG_HOME/lib/*.jar $BANG_HOME/dist/bang-code.jar \
     $BANG_HOME/dist/bang-media.jar; do
     if [ -e $jar ]; then
         CLASSPATH=$jar:$CLASSPATH

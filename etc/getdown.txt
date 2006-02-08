@@ -5,7 +5,7 @@
 
 # General information
 @version_line@
-appbase = @app_root@/@client@
+@appbase_line@
 
 # Configure the update UI
 ui.name = Bang! Howdy

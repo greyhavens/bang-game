@@ -273,6 +273,7 @@
       <fileset dir="lib" includes="lwjgl.jar"/>
       <fileset dir="lib" includes="lwjgl_util.jar"/>
     </copy>
+    <delete file="dist/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
       <fileset dir="rsrc" includes="**/*.jar"/>
       <fileset dir="rsrc" includes="config/resource/manager.properties"/>
@@ -288,10 +289,7 @@
     <copy todir="${client_dir}" overwrite="true" encoding="UTF-8">
       <fileset dir="etc" includes="getdown.txt"/>
       <filterset>
-        <filter token="app_root" value="${root_url}"/>
-        <filter token="client" value="${client}"/>
-        <filter token="server_host" value="${server_host}"/>
-        <filter token="server_port" value="${server_port}"/>
+        <filter token="appbase_line" value="${appbase_line}"/>
         <filter token="version_line" value="${version_line}"/>
       </filterset>
     </copy>
@@ -312,6 +310,7 @@
     <antcall target="baseclient">
       <param name="client" value="devclient"/>
       <param name="client_dir" value="${web_dir}/devclient"/>
+      <param name="appbase_line" value="appbase = ${root_url}/devclient"/>
       <param name="version_line" value=""/>
     </antcall>
   </target>
@@ -324,7 +323,6 @@
       <arg line="${root_url}"/>
     </exec>
     <echo message="Previous version used for renaming: ${latest_version}"/>
-
     <echo message="Generating Proguard config file for ${version}..."/>
     <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
       <arg line="etc/bang-client.pro.in"/>
@@ -335,6 +333,7 @@
     <antcall target="baseclient">
       <param name="client" value="client"/>
       <param name="client_dir" value="${web_dir}/client/${version}"/>
+      <param name="appbase_line" value="appbase = ${root_url}/client/%VERSION%"/>
       <param name="version_line" value="version = ${version}"/>
     </antcall>
     <delete file="etc/bang-client.pro"/>
