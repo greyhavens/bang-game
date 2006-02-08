@@ -70,7 +70,8 @@ public class BangClient extends BasicClient
      * failure and decodes the necessary business to instruct Getdown to update
      * the client on the next invocation.
      */
-    public static boolean checkForUpgrade (BangContext ctx, String message)
+    public static boolean checkForUpgrade (
+        final BangContext ctx, String message)
     {
         if (!message.startsWith(BangAuthCodes.VERSION_MISMATCH)) {
             return false;
@@ -115,7 +116,7 @@ public class BangClient extends BasicClient
             new Interval(ctx.getClient().getRunQueue()) {
                 public void expired () {
                     log.info("Exiting due to out-of-dateness.");
-                    System.exit(0);
+                    ctx.getApp().stop();
                 }
             }.schedule(3000L);
 
@@ -309,7 +310,8 @@ public class BangClient extends BasicClient
     // documentation inherited from interface SessionObserver
     public void clientDidLogoff (Client client)
     {
-        System.exit(0);
+        // TODO: go back to the logon page?
+        _ctx.getApp().stop();
     }
 
     // documentation inherited from interface PlayerReceiver
