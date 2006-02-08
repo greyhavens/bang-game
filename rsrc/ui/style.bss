@@ -480,6 +480,17 @@ stats_view {
   color: #000000;
 }
 
+pardner_view { 
+  padding: 5;
+  color: #000000;
+}
+
+pardner_status {
+  font: "Helvetica" plain 15;
+  color: #000000;
+  text-align: center;
+}
+
 //
 // Pre-game styles
 

@@ -152,10 +152,10 @@ public class StatusView extends BWindow
             break;
 
         case 4:
-            if (_stats == null) {
-                _stats = new PlayerStatsView(_ctx);
+            if (_pardners == null) {
+                _pardners = new PardnerView(_ctx);
             }
-            tab = _stats;
+            tab = _pardners;
             break;
         }
 
@@ -176,13 +176,13 @@ public class StatusView extends BWindow
 
     protected InventoryPalette _items, _badges, _duds;
     protected UnitPalette _bigshots;
-    protected PlayerStatsView _stats;
+    protected PardnerView _pardners;
 
     /** We track which tab was last selected across instances. */
     protected static int _selectedTab;
 
     protected static final String[] TABS = {
-        "items", "bigshots", "badges", "duds", "stats" };
+        "items", "bigshots", "badges", "duds", "pardners" };
     protected static final Rectangle TVIEW_BOUNDS =
         new Rectangle(287, 70, PaletteIcon.ICON_SIZE.width * 5,
                       PaletteIcon.ICON_SIZE.height * 3 + 37);

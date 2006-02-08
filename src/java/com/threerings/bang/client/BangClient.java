@@ -12,6 +12,7 @@ import com.jmex.bui.BWindow;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.jme.effect.FadeInOutEffect;
@@ -39,7 +40,10 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
+import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -51,7 +55,7 @@ import static com.threerings.bang.Log.log;
  * all of the necessary configuration and getting the client bootstrapped.
  */
 public class BangClient extends BasicClient
-    implements SessionObserver, PlayerReceiver
+    implements SessionObserver, PlayerReceiver, BangCodes
 {
     /**
      * Initializes a new client and provides it with a frame in which to
@@ -165,6 +169,9 @@ public class BangClient extends BasicClient
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
+        // get a reference to the player service
+        _psvc = (PlayerService)_client.requireService(PlayerService.class);
+        
         // we potentially jump right into a game when developing
         BangConfig config = null;
         if ("tutorial".equals(System.getProperty("test"))) {
@@ -179,7 +186,6 @@ public class BangClient extends BasicClient
                 null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { tconfig.ident };
             config.tutorial = true;
-            config.teamSize = 3;
             config.board = tconfig.board;
 
         } else if (System.getProperty("test") != null) {
@@ -190,7 +196,6 @@ public class BangClient extends BasicClient
             config.ais = new GameAI[] {
                 null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { "cj" };
-            config.teamSize = 3;
             config.board = System.getProperty("board");
         }
 
@@ -240,9 +245,18 @@ public class BangClient extends BasicClient
     }
 
     // documentation inherited from interface PlayerReceiver
-    public void receivedPardnerInvite (Name handle)
+    public void receivedPardnerInvite (final Name handle)
     {
-        
+        OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
+            MessageBundle.tcompose("m.pardner_invite", handle),
+            "m.pardner_accept", "m.pardner_reject",
+            new OptionDialog.DialogResponseReceiver() {
+                public void resultPosted (int button, Object result) {
+                    _psvc.respondToPardnerInvite(_client, handle, button == 0,
+                        new ReportingListener(_ctx, BANG_MSGS,
+                            "e.response_failed"));
+                }
+            });
     }
     
     @Override // documentation inherited
@@ -390,6 +404,7 @@ public class BangClient extends BasicClient
     protected BangChatDirector _chatdir;
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
-
+    protected PlayerService _psvc;
+    
     protected BWindow _mview, _popup;
 }
