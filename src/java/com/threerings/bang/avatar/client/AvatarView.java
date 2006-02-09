@@ -6,6 +6,9 @@ package com.threerings.bang.avatar.client;
 import java.awt.Graphics2D;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.jme.image.Image;
@@ -14,6 +17,8 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.RenderUtil;
+
+import com.samskivert.util.IntListUtil;
 
 import com.threerings.media.util.MultiFrameImage;
 
@@ -31,10 +36,20 @@ import static com.threerings.bang.avatar.util.AvatarLogic.*;
 public class AvatarView extends BLabel
 {
     /**
-     * Creates an unscaled image for the specified avatar.
+     * Gets an unscaled image for the specified avatar, retrieving an
+     * existing image from the cache if possible but otherwise creating
+     * and caching the image.
      */
-    public static BufferedImage createImage (BangContext ctx, int[] avatar)
+    public static BufferedImage getImage (BangContext ctx, int[] avatar)
     {
+        // first check the cache
+        AvatarKey key = new AvatarKey(avatar);
+        WeakReference<BufferedImage> iref = _icache.get(key);
+        BufferedImage image;
+        if (iref != null && (image = iref.get()) != null) {
+            return image;
+        }
+        
         CharacterDescriptor cdesc = ctx.getAvatarLogic().decodeAvatar(avatar);
         ActionFrames af;
         try {
@@ -48,8 +63,8 @@ public class AvatarView extends BLabel
         // composite the myriad components and render them into an image
         MultiFrameImage mfi = af.getFrames(0);
         int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0);
-        BufferedImage image = ctx.getImageManager().createImage(
-            WIDTH, HEIGHT, Transparency.BITMASK);
+        image = ctx.getImageManager().createImage(WIDTH, HEIGHT,
+            Transparency.BITMASK);
         Graphics2D gfx = (Graphics2D)image.createGraphics();
         try {
 //             gfx.setColor(java.awt.Color.black);
@@ -58,6 +73,8 @@ public class AvatarView extends BLabel
         } finally {
             gfx.dispose();
         }
+        
+        _icache.put(key, new WeakReference<BufferedImage>(image));
         return image;
     }
 
@@ -81,7 +98,7 @@ public class AvatarView extends BLabel
      */
     public void setAvatar (int[] avatar)
     {
-        BufferedImage image = createImage(_ctx, avatar);
+        BufferedImage image = getImage(_ctx, avatar);
         if (image == null) {
             return;
         }
@@ -107,6 +124,31 @@ public class AvatarView extends BLabel
         RenderUtil.renderImage(_frame, 0, 0);
     }
 
+    /** Wraps avatar fingerprints for use as hash keys. */
+    protected static class AvatarKey
+    {
+        public AvatarKey (int[] avatar)
+        {
+            _avatar = avatar;
+        }
+        
+        public int hashCode ()
+        {
+            return IntListUtil.sum(_avatar);
+        }
+        
+        public boolean equals (Object other)
+        {
+            return Arrays.equals(_avatar, ((AvatarKey)other)._avatar);
+        }
+        
+        protected int[] _avatar;
+    }
+    
     protected BangContext _ctx;
     protected Image _frame;
+    
+    /** The avatar image cache. */
+    protected static HashMap<AvatarKey, WeakReference<BufferedImage>> _icache =
+        new HashMap<AvatarKey, WeakReference<BufferedImage>>();
 }

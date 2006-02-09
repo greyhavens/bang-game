@@ -450,8 +450,8 @@ public class PlayerManager
             _updaters.put(player.handle, this);
             
             entry = new PardnerEntry(player.handle);
-            updateStatus();
             updateAvatar();
+            updateStatus();
         }
         
         public void attributeChanged (AttributeChangedEvent ace)
@@ -470,23 +470,25 @@ public class PlayerManager
         public void entryUpdated (EntryUpdatedEvent eue)
         {
             // if the current look is updated, update the avatar
-            if (!eue.getName().equals(PlayerObject.LOOKS)) {
-                return;
-            }
-            Look look = (Look)eue.getEntry();
-            if (look.name.equals(_player.look)) {
-                updateAvatar();
-                updatePardnerEntries();
+            String name = eue.getName();
+            if (name.equals(PlayerObject.LOOKS)) {
+                Look look = (Look)eue.getEntry();
+                if (look.name.equals(_player.look)) {
+                    updateAvatar();
+                    updatePardnerEntries();
+                }
+            
+            } else if (name.equals(PlayerObject.PARDNERS) &&
+                _player.getOnlinePardnerCount() == 0) {
+                remove();
             }
         }
         
         public void entryRemoved (EntryRemovedEvent ere)
         {
             // if the last pardner is removed, clear out the updater
-            if (!ere.getName().equals(PlayerObject.PARDNERS)) {
-                return;
-            }
-            if (_player.pardners.size() == 0) {
+            if (ere.getName().equals(PlayerObject.PARDNERS) &&
+                _player.getOnlinePardnerCount() == 0) {
                 remove();
             }
         }
@@ -525,6 +527,7 @@ public class PlayerManager
         {
             if (!_player.isActive()) {
                 entry.status = PardnerEntry.OFFLINE;
+                entry.avatar = null;
                 return;
             }
             Object plobj = BangServer.omgr.getObject(_player.location);

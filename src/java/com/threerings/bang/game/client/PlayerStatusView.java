@@ -199,7 +199,7 @@ public class PlayerStatusView extends BContainer
         BangOccupantInfo boi = (BangOccupantInfo)
             _bangobj.getOccupantInfo(_bangobj.players[_pidx]);
         if (boi != null) {
-            BufferedImage aimage = AvatarView.createImage(_ctx, boi.avatar);
+            BufferedImage aimage = AvatarView.getImage(_ctx, boi.avatar);
             _avatar = new ImageIcon(
                 aimage.getScaledInstance(
                     AvatarLogic.WIDTH/10, AvatarLogic.HEIGHT/10,

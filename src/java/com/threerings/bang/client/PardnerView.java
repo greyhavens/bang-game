@@ -3,6 +3,9 @@
 
 package com.threerings.bang.client;
 
+import java.awt.Image;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -14,6 +17,7 @@ import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
@@ -26,6 +30,7 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangCodes;
@@ -167,7 +172,7 @@ public class PardnerView extends BContainer
                 GroupLayout.NONE));
             this.entry = entry;
             
-            add(_handle = new BLabel(entry.handle.toString()));
+            add(_avhandle = new BLabel(entry.handle.toString()));
             add(_status = new BLabel(""), GroupLayout.FIXED);
             add(_chat = new BButton(_ctx.xlate(BANG_MSGS,
                 "m.pardner_chat")), GroupLayout.FIXED);
@@ -176,6 +181,7 @@ public class PardnerView extends BContainer
                 "m.pardner_remove")), GroupLayout.FIXED);
             _remove.addListener(this);
             
+            updateAvatar();
             updateStatus();
         }
         
@@ -217,6 +223,21 @@ public class PardnerView extends BContainer
                 _ptainer.remove(this);
                 addToContainer();
             }
+            if (!Arrays.equals(oentry.avatar, nentry.avatar)) {
+                updateAvatar();
+            }
+        }
+        
+        protected void updateAvatar ()
+        {
+            if (entry.avatar == null) {
+                _avhandle.setIcon(null);
+                return;
+            }
+            Image image = AvatarView.getImage(_ctx,
+                entry.avatar).getScaledInstance(AVATAR_WIDTH, AVATAR_HEIGHT,
+                Image.SCALE_SMOOTH);
+            _avhandle.setIcon(new ImageIcon(image));
         }
         
         protected void updateStatus ()
@@ -239,8 +260,8 @@ public class PardnerView extends BContainer
             }
             _ptainer.add(this);
         }
-        
-        BLabel _handle, _status;
+     
+        BLabel _avhandle, _status;
         BButton _chat, _remove;
     }
     
@@ -253,4 +274,8 @@ public class PardnerView extends BContainer
     
     protected HashMap<Comparable, PardnerPanel> _ppanels =
         new HashMap<Comparable, PardnerPanel>();
+    
+    protected static final int AVATAR_WIDTH = 117;
+        
+    protected static final int AVATAR_HEIGHT = 150;
 }
