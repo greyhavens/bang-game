@@ -256,7 +256,7 @@ public class UnitSprite extends MobileSprite
         // if we're a range unit, make sure the "bullet" model is loaded
         Unit unit = (Unit)_piece;
         if (unit.getConfig().mode == UnitConfig.Mode.RANGE) {
-            ctx.loadModel("bonuses", "missile").resolveActions();
+            ctx.loadModel("units", "artillery/shell").resolveActions();
         }
 
         // make sure the pending move textures for our unit type are loaded
