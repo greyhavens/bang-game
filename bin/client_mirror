@@ -6,7 +6,7 @@
 
 MIRROR=/export/tools/bin/mirror
 ROOT=`dirname $0`/..
-export JAVA_HOME=/usr/local/java
+export JAVA_HOME=/usr/local/jdk1.5
 
 # "parse" our arguments
 VERBOSE=""
