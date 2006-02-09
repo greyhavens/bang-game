@@ -51,6 +51,7 @@ import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.server.persist.StatRepository;
+import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
 
@@ -192,7 +193,8 @@ public class BangServer extends CrowdServer
         plreg.createPlace(new RanchConfig(), crobs);
         plreg.createPlace(new BarberConfig(), crobs);
 
-        log.info("Bang server initialized.");
+        log.info("Bang server v" + DeploymentConfig.getVersion() +
+                 " initialized.");
     }
 
     @Override // documentation inherited
