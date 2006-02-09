@@ -96,12 +96,12 @@ public class BangClient extends BasicClient
         }
 
         // if we can relaunch Getdown automatically, do so
-        File dop = new File(localDataDir("getdown-dop.jar"));
-        if (!LaunchUtil.mustMonitorChildren() && dop.exists()) {
+        File pro = new File(localDataDir("getdown-pro.jar"));
+        if (!LaunchUtil.mustMonitorChildren() && pro.exists()) {
             String[] args = new String[] {
                 LaunchUtil.getJVMPath(),
                 "-jar",
-                dop.toString(),
+                pro.toString(),
                 localDataDir("")
             };
             log.info("Running " + StringUtil.join(args, "\n  "));

@@ -135,7 +135,7 @@ public class LogonView extends BWindow
                     // that we're going to automatically restart
                     msg = "m.version_mismatch_auto";
                 }
-                msg = _msgs.get(msg);
+                msg = _msgs.xlate(msg);
             }
             _status.setStatus(_msgs.get("m.logon_failed", msg), true);
         }
