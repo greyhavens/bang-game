@@ -72,15 +72,6 @@ public class PieceSprite extends Sprite
     }
 
     /**
-     * Returns true if this sprite can be clicked and selected, false if
-     * not.
-     */
-    public boolean isSelectable ()
-    {
-        return false;
-    }
-
-    /**
      * Called when we are first created and immediately before we are
      * added to the display.
      */

@@ -174,13 +174,6 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public boolean isSelectable ()
-    {
-//        return (_piece.ticksUntilMovable(_tick) == 0);
-        return true;
-    }
-
-    @Override // documentation inherited
     public void move (Path path)
     {
         super.move(path);

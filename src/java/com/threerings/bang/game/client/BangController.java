@@ -36,6 +36,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.parlor.game.client.GameController;
 
+import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
@@ -203,9 +204,9 @@ public class BangController extends GameController
         _selections.clear();
         Piece[] pieces = _bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
-            if ((pieces[ii].owner != _pidx) ||
-                !(pieces[ii] instanceof Unit) ||
-                _view.view.hasQueuedMove(pieces[ii].pieceId)) {
+            if ((pieces[ii].owner != _pidx) || !(pieces[ii] instanceof Unit) ||
+                _view.view.hasQueuedMove(pieces[ii].pieceId) ||
+                !_view.view.isSelectable(pieces[ii])) {
                 continue;
             }
             _selections.add((Unit)pieces[ii]);

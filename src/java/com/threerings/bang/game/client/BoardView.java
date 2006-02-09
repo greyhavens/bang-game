@@ -56,6 +56,8 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.samskivert.util.IntIntMap;
+
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
@@ -527,9 +529,20 @@ public class BoardView extends BComponent
      */
     public void queuePieceUpdate (Piece opiece, Piece npiece)
     {
+        int pieceId = (opiece == null) ? npiece.pieceId : opiece.pieceId;
+        _pendmap.increment(pieceId, 1);
         executeAction(new PieceUpdatedAction(opiece, npiece, _bangobj.tick));
     }
-    
+
+    /**
+     * Returns true if the specified piece has an update pending, false
+     * otherwise.
+     */
+    public boolean pieceUpdatePending (int pieceId)
+    {
+        return _pendmap.get(pieceId) > 0;
+    }
+
     // documentation inherited from interface MouseMotionListener
     public void mouseMoved (MouseEvent e)
     {
@@ -766,6 +779,10 @@ public class BoardView extends BComponent
     protected boolean pieceUpdated (
         final BoardAction action, Piece opiece, Piece npiece, short tick)
     {
+        // note that we've processed this pending update
+        int pieceId = (opiece == null) ? npiece.pieceId : opiece.pieceId;
+        _pendmap.increment(pieceId, -1);
+
         // if we have an old piece but no new piece, the piece must have been
         // removed, so remove its sprite now
         if (opiece != null && npiece == null) {
@@ -1129,6 +1146,9 @@ public class BoardView extends BComponent
 
     protected BoardAction _paction;
     protected ArrayList<BoardAction> _pactions = new ArrayList<BoardAction>();
+
+    /** Used to track pending piece updates. */
+    protected IntIntMap _pendmap = new IntIntMap();
 
     /** Used to texture a quad that "targets" a tile. */
     protected TextureState _tgtstate;

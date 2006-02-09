@@ -97,6 +97,18 @@ public class BangBoardView extends BoardView
         }
     }
 
+    /**
+     * Returns true if the specified piece is OK to be selected, false if it is
+     * currently animating or has a pending animation.
+     */
+    public boolean isSelectable (Piece piece)
+    {
+        PieceSprite psprite;
+        return !(pieceUpdatePending(piece.pieceId) ||
+                 (psprite = getPieceSprite(piece)) == null ||
+                 psprite.isMoving());
+    }
+
     // documentation inherited from interface MouseListener
     public void mouseClicked (MouseEvent e)
     {
@@ -217,8 +229,7 @@ public class BangBoardView extends BoardView
         if (!piece.isAlive()) {
             return false;
         }
-        boolean oursAndMovable =
-            (piece.owner == _pidx) && usprite.isSelectable();
+        boolean oursAndMovable = (piece.owner == _pidx) && isSelectable(piece);
         if (_attackSet.size() > 0) {
             return _attackSet.contains(piece.x, piece.y) || oursAndMovable;
         }
@@ -342,10 +353,9 @@ public class BangBoardView extends BoardView
             return;
         }
 
-        // select the piece under the mouse if it meets our various and
-        // sundry conditions
+        // select the piece under the mouse if it meets our sundry conditions
         if (piece != null &&  sprite != null && piece.owner == _pidx &&
-            sprite.isSelectable()) {
+            isSelectable(piece)) {
             selectUnit((Unit)piece, false);
             return;
         }
@@ -467,7 +477,8 @@ public class BangBoardView extends BoardView
      * which we can compute a valid firing location adds to the supplied
      * destination set, and marks their sprite as being targeted as well.
      */
-    protected void pruneAttackSet (PointSet range, PointSet moves, PointSet dest)
+    protected void pruneAttackSet (
+        PointSet range, PointSet moves, PointSet dest)
     {
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
