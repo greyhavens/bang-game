@@ -48,7 +48,7 @@ public class UnitInspector extends BContainer
         add(_uname = new BLabel("", "ranch_unit_name"));
         _uname.setPreferredSize(new Dimension(258, 40));
 
-        add(_uview = new UnitView(_ctx));
+        add(_uview = new UnitView(_ctx, false));
 
         add(new Spacer(10, 10));
 

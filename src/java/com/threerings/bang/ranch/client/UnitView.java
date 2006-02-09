@@ -26,15 +26,16 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class UnitView extends BGeomView
 {
-    public UnitView (BangContext ctx)
+    public UnitView (BangContext ctx, boolean small)
     {
         super(new Node("Unit Model"));
-        setStyleClass("unit_view");
+        String prefix = small ? "small_" : "big_";
+        setStyleClass(prefix + "unit_view");
 
         _ctx = ctx;
         _geom.setRenderState(RenderUtil.lequalZBuf);
         _geom.updateRenderState();
-        _frame = ctx.loadImage("ui/barber/avatar_frame.png");
+        _frame = ctx.loadImage("ui/frames/" + prefix + "frame.png");
 
         // position and point up our camera
         Vector3f loc = new Vector3f(
@@ -73,9 +74,10 @@ public class UnitView extends BGeomView
     }
 
     @Override // documentation inherited
-    protected Dimension computePreferredSize (int whint, int hhint)
+    public Dimension getPreferredSize (int whint, int hhint)
     {
-        return new Dimension(234, 300);
+        // avoid accounting for insets and all the other bits
+        return new Dimension(_frame.getWidth(), _frame.getHeight());
     }
 
     @Override // documentation inherited

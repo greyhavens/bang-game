@@ -11,7 +11,6 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 import com.samskivert.util.ArrayIntSet;
 
@@ -25,6 +24,7 @@ import com.threerings.bang.game.data.GameCodes;
 
 import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.ranch.client.UnitPalette;
+import com.threerings.bang.ranch.client.UnitView;
 
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.util.BangContext;
@@ -68,14 +68,13 @@ public class SelectionView extends BDecoratedWindow
         
         BContainer side = GroupLayout.makeVBox(GroupLayout.TOP);
         add(side, BorderLayout.WEST);
-        ImageIcon frame =
-            new ImageIcon(ctx.loadImage("ui/pregame/bigshot_frame.png"));
-        side.add(new BLabel(frame));
+        side.add(_uname = new BLabel("", "pick_unit_name"));
+        side.add(_uview = new UnitView(ctx, true));
 
         BContainer cards = GroupLayout.makeHBox(GroupLayout.CENTER);
-        cards.add(new BLabel("", "card_icon"));
-        cards.add(new BLabel("", "card_icon"));
-        cards.add(new BLabel("", "card_icon"));
+        for (int ii = 0; ii < _cardsels.length; ii++) {
+            cards.add(_cardsels[ii] = new BLabel("", "card_icon"));
+        }
         side.add(cards);
 
         BContainer cent = GroupLayout.makeVBox(GroupLayout.TOP);
@@ -89,17 +88,19 @@ public class SelectionView extends BDecoratedWindow
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
         _units.setUser(_ctx.getUserObject());
+        _units.selectFirstIcon();
         cent.add(_units);
 
         // create the card selection display
         cent.add(new BLabel(_msgs.get("m.select_cards"), "pick_label"));
-        cent.add(_cards = new CardPalette(ctx, bangobj));
+        cent.add(_cards = new CardPalette(ctx, bangobj, _cardsels));
         _cards.setStyleClass("pick_palette");
 
         BContainer footer = GroupLayout.makeHBox(GroupLayout.CENTER);
         footer.add(_ready = new BButton(_msgs.get("m.ready"), this, "ready"));
-        _ready.setEnabled(false);
         add(footer, BorderLayout.SOUTH);
+
+        updateReady();
     }
 
     // documentation inherited from interface ActionListener
@@ -145,6 +146,8 @@ public class SelectionView extends BDecoratedWindow
 
     protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
         public void iconSelected (SelectableIcon icon) {
+            _uname.setText(icon.getText());
+            _uview.setUnit(((UnitIcon)icon).getUnit());
             updateReady();
         }
         public void selectionCleared () {
@@ -157,7 +160,12 @@ public class SelectionView extends BDecoratedWindow
     protected BangObject _bangobj;
     protected int _pidx;
 
+    protected BLabel _uname;
+    protected UnitView _uview;
     protected UnitPalette _units;
+
     protected CardPalette _cards;
+    protected BLabel[] _cardsels = new BLabel[GameCodes.MAX_CARDS];
+
     protected BButton _ready;
 }

@@ -265,6 +265,7 @@ public class BangClient extends BasicClient
             config.ais = new GameAI[] {
                 null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
             config.scenarios = new String[] { "cj" };
+            config.teamSize = 3;
             config.board = System.getProperty("board");
         }
 

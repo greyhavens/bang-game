@@ -290,7 +290,6 @@ public class IconPalette extends BContainer
     protected void displayPage (int page, boolean force)
     {
         if (_page != page || force) {
-            clearSelections();
             _icont.removeAll();
             int start = page * _rows;
             int limit = Math.min(_icons.size(), start + _rows * _cols);
@@ -317,28 +316,38 @@ public class IconPalette extends BContainer
     protected void iconUpdated (SelectableIcon icon, boolean selected)
     {
         if (selected && !_selections.contains(icon)) {
-            // add the newly selected icon to the list of selections
-            _selections.add(icon);
-
-            // and pop the first one off the list if necessary
-            while (_selections.size() > _selectable) {
-                _selections.remove(0).setSelected(false);
-            }
-
-            // inform our inspector that this icon was selected
-            if (icon != null && _inspector != null) {
-                _inspector.iconSelected(icon);
-            }
+            iconSelected(icon);
 
         } else if (!selected && _selections.contains(icon)) {
-            // the icon was deselected, remove it from the selections list
-            _selections.remove(icon);
+            iconDeselected(icon);
+        }
+    }
 
-            // if this was the last selected icon, inform our inspector that
-            // the seleciton was cleared
-            if (_inspector != null && _selections.size() == 0) {
-                _inspector.selectionCleared();
-            }
+    protected void iconSelected (SelectableIcon icon)
+    {
+        // add the newly selected icon to the list of selections
+        _selections.add(icon);
+
+        // and pop the first one off the list if necessary
+        while (_selections.size() > _selectable) {
+            _selections.remove(0).setSelected(false);
+        }
+
+        // inform our inspector that this icon was selected
+        if (icon != null && _inspector != null) {
+            _inspector.iconSelected(icon);
+        }
+    }
+
+    protected void iconDeselected (SelectableIcon icon)
+    {
+        // the icon was deselected, remove it from the selections list
+        _selections.remove(icon);
+
+        // if this was the last selected icon, inform our inspector that
+        // the seleciton was cleared
+        if (_inspector != null && _selections.size() == 0) {
+            _inspector.selectionCleared();
         }
     }
 

@@ -87,7 +87,7 @@ public class AvatarView extends BLabel
     {
         super("", "avatar_view");
         _ctx = ctx;
-        _frame = ctx.loadImage("ui/barber/avatar_frame.png");
+        _frame = ctx.loadImage("ui/frames/big_frame.png");
         if (avatar != null) {
             setAvatar(avatar);
         }
