@@ -385,8 +385,13 @@ public class NewLookView extends BContainer
         }
 
         // documentation inherited from interface IconPalette.Inspector
-        public void iconSelected (SelectableIcon icon)
+        public void iconUpdated (SelectableIcon icon, boolean selected)
         {
+            // TODO: disallow deselection
+            if (!selected) {
+                return;
+            }
+
             if (_choice != icon) {
                 _choice = (ChoiceIcon)icon;
                 // post a runnable to update the avatar so that this UI action
@@ -397,12 +402,6 @@ public class NewLookView extends BContainer
                     }
                 });
             }
-        }
-
-        // documentation inherited from interface IconPalette.Inspector
-        public void selectionCleared ()
-        {
-            // TODO: disallow deselection
         }
 
         protected AvatarLogic.Aspect _aspect;

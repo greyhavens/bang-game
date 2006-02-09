@@ -94,8 +94,13 @@ public class UnitInspector extends BContainer
     }
 
     // documentation inherited from interface IconPalette.Inspector
-    public void iconSelected (SelectableIcon icon)
+    public void iconUpdated (SelectableIcon icon, boolean selected)
     {
+        // don't worry about deselection
+        if (!selected) {
+            return;
+        }
+
         UnitIcon uicon = (UnitIcon)icon;
         UnitConfig config = uicon.getUnit();
 
@@ -129,12 +134,6 @@ public class UnitInspector extends BContainer
             remove(_recruit);
         }
         // TODO: handle customize
-    }
-
-    // documentation inherited from interface IconPalette.Inspector
-    public void selectionCleared ()
-    {
-        // nada
     }
 
     // documentation inherited from interface ActionListener

@@ -78,7 +78,7 @@ public class PlayerStatusView extends BContainer
 
         _cash = new BLabel("");
         add(_cash, CASH_LOC);
-        add(_ranklbl = new BLabel(createRankIcon(-1)), RANK_RECT);
+        add(_ranklbl = new BLabel(createRankIcon(-2)), RANK_RECT);
 
         updateAvatar();
         updateStatus();
@@ -86,7 +86,8 @@ public class PlayerStatusView extends BContainer
 
     /**
      * Sets the rank displayed for this player to the specified index (0 is 1st
-     * place, 1 is 2nd, etc.).
+     * place, 1 is 2nd, etc.). -2 is blank and -1 is a star which are used
+     * during the pre-game phase.
      */
     public void setRank (int rank)
     {
@@ -210,6 +211,19 @@ public class PlayerStatusView extends BContainer
     protected void updateStatus ()
     {
         _cash.setText("$" + _bangobj.funds[_pidx]);
+
+        switch (_bangobj.state) {
+        case BangObject.SELECT_PHASE:
+            // when we're in the select phase, display whether or not this
+            // player has selected their bigshot and cards
+            setRank(_bangobj.bigShots[_pidx] == null ? -2 : -1);
+            break;
+
+        case BangObject.BUYING_PHASE:
+            // TODO: publish something when the player 
+            setRank(-2);
+            break;
+        }
     }
 
     protected BButton createButton (Card card)
@@ -225,14 +239,14 @@ public class PlayerStatusView extends BContainer
     protected SubimageIcon createRankIcon (int rank)
     {
         return new SubimageIcon(
-            _rankimg, (rank + 1) * RANK_RECT.width, 0,
+            _rankimg, (rank + 2) * RANK_RECT.width, 0,
             RANK_RECT.width, RANK_RECT.height);
     }
 
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected BangController _ctrl;
-    protected int _pidx, _rank = -1;
+    protected int _pidx, _rank = -2;
 
     protected ImageIcon _color, _avatar;
     protected Image _rankimg;

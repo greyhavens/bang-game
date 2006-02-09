@@ -97,19 +97,16 @@ public class FirstBigShotView extends BDecoratedWindow
     }
 
     // documentation inherited from interface IconPalette.Inspector
-    public void iconSelected (SelectableIcon icon)
+    public void iconUpdated (SelectableIcon icon, boolean selected)
     {
-        _config = ((UnitIcon)icon).getUnit();
-        _status.setText(_umsgs.xlate(_config.getName() + "_descrip"));
+        if (selected) {
+            _config = ((UnitIcon)icon).getUnit();
+            _status.setText(_umsgs.xlate(_config.getName() + "_descrip"));
+        } else {
+            _status.setText(_msgs.get("m.firstbs_tip"));
+            _config = null;
+        }
         _done.setEnabled(isReady());
-    }
-
-    // documentation inherited from interface IconPalette.Inspector
-    public void selectionCleared ()
-    {
-        _status.setText(_msgs.get("m.firstbs_tip"));
-        _config = null;
-        _done.setEnabled(false);
     }
 
     protected void pickBigShot ()

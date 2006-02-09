@@ -65,7 +65,7 @@ public class SelectionView extends BDecoratedWindow
 
         setLayoutManager(new BorderLayout(25, 15));
         add(createRoundHeader(ctx, config, bangobj), BorderLayout.NORTH);
-        
+
         BContainer side = GroupLayout.makeVBox(GroupLayout.TOP);
         add(side, BorderLayout.WEST);
         side.add(_uname = new BLabel("", "pick_unit_name"));
@@ -83,7 +83,7 @@ public class SelectionView extends BDecoratedWindow
         add(cent, BorderLayout.CENTER);
 
         // create the big shot selection display
-        cent.add(new BLabel(_msgs.get("m.select_bigshot"), "pick_label"));
+        cent.add(new BLabel(_msgs.get("m.select_bigshot"), "pick_subtitle"));
         _units = new UnitPalette(ctx, _enabler, 4, 1);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
@@ -92,7 +92,7 @@ public class SelectionView extends BDecoratedWindow
         cent.add(_units);
 
         // create the card selection display
-        cent.add(new BLabel(_msgs.get("m.select_cards"), "pick_label"));
+        cent.add(new BLabel(_msgs.get("m.select_cards"), "pick_subtitle"));
         cent.add(_cards = new CardPalette(ctx, bangobj, _cardsels));
         _cards.setStyleClass("pick_palette");
 
@@ -145,12 +145,11 @@ public class SelectionView extends BDecoratedWindow
     }
 
     protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
-        public void iconSelected (SelectableIcon icon) {
-            _uname.setText(icon.getText());
-            _uview.setUnit(((UnitIcon)icon).getUnit());
-            updateReady();
-        }
-        public void selectionCleared () {
+        public void iconUpdated (SelectableIcon icon, boolean selected) {
+            if (selected) {
+                _uname.setText(icon.getText());
+                _uview.setUnit(((UnitIcon)icon).getUnit());
+            }
             updateReady();
         }
     };

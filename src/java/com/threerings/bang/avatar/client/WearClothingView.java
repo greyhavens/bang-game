@@ -70,17 +70,14 @@ public class WearClothingView extends BContainer
     }
 
     // documentation inherited from interface ArticlePalette.Inspector
-    public void iconSelected (SelectableIcon icon)
+    public void iconUpdated (SelectableIcon icon, boolean selected)
     {
-        Article article = (Article)((ItemIcon)icon).getItem();
-        _pick.getSelection().setArticle(article);
-        _pick.refreshDisplay();
-    }
-
-    // documentation inherited from interface ArticlePalette.Inspector
-    public void selectionCleared ()
-    {
-        _pick.getSelection().articles[_slotidx] = 0;
+        if (selected) {
+            Article article = (Article)((ItemIcon)icon).getItem();
+            _pick.getSelection().setArticle(article);
+        } else {
+            _pick.getSelection().articles[_slotidx] = 0;
+        }
         _pick.refreshDisplay();
     }
 

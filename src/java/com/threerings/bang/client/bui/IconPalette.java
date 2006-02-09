@@ -31,12 +31,9 @@ public class IconPalette extends BContainer
      * selected. */
     public interface Inspector
     {
-        /** Called to indicate that the supplied icon has been selected in the
-         * icon palette. */
-        public void iconSelected (SelectableIcon icon);
-
-        /** Called when there is no longer a selection. */
-        public void selectionCleared ();
+        /** Called to indicate that the supplied icon has been selected or
+         * deselected in the icon palette. */
+        public void iconUpdated (SelectableIcon icon, boolean selected);
     }
 
     /**
@@ -77,6 +74,15 @@ public class IconPalette extends BContainer
         _bcont.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
         add(_bcont, BorderLayout.CENTER);
+    }
+
+    /**
+     * Configures the number of simultaneous selections allowed by this icon
+     * palette.
+     */
+    public void setSelectable (int selectable)
+    {
+        _selectable = selectable;
     }
 
     /**
@@ -146,6 +152,14 @@ public class IconPalette extends BContainer
     }
 
     /**
+     * Returns an array containing the icons displayed by this palette.
+     */
+    public SelectableIcon[] getIcons ()
+    {
+        return _icons.toArray(new SelectableIcon[_icons.size()]);
+    }
+
+    /**
      * Selects the first icon if there is at least one icon in the palette.
      */
     public void selectFirstIcon ()
@@ -198,9 +212,6 @@ public class IconPalette extends BContainer
         int sels = _selections.size();
         while (_selections.size() > 0) {
             _selections.remove(0).setSelected(false);
-        }
-        if (sels > 0 && _inspector != null && isAdded()) {
-            _inspector.selectionCleared();
         }
     }
 
@@ -335,7 +346,7 @@ public class IconPalette extends BContainer
 
         // inform our inspector that this icon was selected
         if (icon != null && _inspector != null) {
-            _inspector.iconSelected(icon);
+            _inspector.iconUpdated(icon, true);
         }
     }
 
@@ -344,10 +355,9 @@ public class IconPalette extends BContainer
         // the icon was deselected, remove it from the selections list
         _selections.remove(icon);
 
-        // if this was the last selected icon, inform our inspector that
-        // the seleciton was cleared
-        if (_inspector != null && _selections.size() == 0) {
-            _inspector.selectionCleared();
+        // inform our inspector that an icon was deselected
+        if (_inspector != null) {
+            _inspector.iconUpdated(icon, false);
         }
     }
 

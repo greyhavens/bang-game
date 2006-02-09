@@ -77,8 +77,13 @@ public class GoodsInspector extends BContainer
     }
 
     // documentation inherited from interface IconPalette.Inspector
-    public void iconSelected (SelectableIcon icon)
+    public void iconUpdated (SelectableIcon icon, boolean selected)
     {
+        // nothing to do on deselection
+        if (!selected) {
+            return;
+        }
+
         // remove our color selectors
         for (int ii = 0; ii < _colorsel.length; ii++) {
             if (_colorsel[ii] != null) {
@@ -131,12 +136,6 @@ public class GoodsInspector extends BContainer
         }
 
         updateImage();
-    }
-
-    // documentation inherited from interface IconPalette.Inspector
-    public void selectionCleared ()
-    {
-        // nada
     }
 
     // documentation inherited from interface ActionListener

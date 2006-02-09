@@ -4,8 +4,9 @@
 package com.threerings.bang.game.client;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
@@ -14,17 +15,25 @@ import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
+import com.samskivert.util.CollectionUtil;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.ranch.client.UnitIcon;
+import com.threerings.bang.ranch.client.UnitPalette;
+import com.threerings.bang.ranch.client.UnitView;
+
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.util.BangContext;
+
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -43,18 +52,52 @@ public class PurchaseView extends BDecoratedWindow
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         _bangobj = bangobj;
         _pidx = pidx;
+        _tconfigs = new UnitConfig[config.teamSize];
 
-        setLayoutManager(GroupLayout.makeVStretch());
+        setLayoutManager(new BorderLayout(25, 15));
         add(SelectionView.createRoundHeader(ctx, config, bangobj),
-            GroupLayout.FIXED);
-        add(new BLabel(_msgs.get("m.pv_assemble")), GroupLayout.FIXED);
+            BorderLayout.NORTH);
 
-        BContainer ulist = new BContainer(new TableLayout(7, 5, 5));
-        add(ulist);
+        BContainer side = GroupLayout.makeVBox(GroupLayout.TOP);
+        add(side, BorderLayout.WEST);
+        side.add(_uname = new BLabel("", "pick_unit_name"));
+        side.add(_uview = new UnitView(ctx, true));
+        // TODO: we need our big shot's custom name
+        _uname.setText(_bangobj.bigShots[_pidx].getConfig().type);
+        _uview.setUnit(_bangobj.bigShots[_pidx].getConfig());
 
-        // sort our units by cost
-        UnitConfig[] units = UnitConfig.getTownUnits(_bangobj.townId);
-        Arrays.sort(units, new Comparator<UnitConfig>() {
+        // add a label for each selectable unit
+        _team = new BLabel[config.teamSize];
+        for (int ii = 0; ii < _team.length; ii++) {
+            side.add(_team[ii] = new BLabel("", "pick_team_choice"));
+        }
+
+        BContainer cent = GroupLayout.makeVBox(GroupLayout.TOP);
+        ((GroupLayout)cent.getLayoutManager()).setOffAxisJustification(
+            GroupLayout.LEFT);
+        add(cent, BorderLayout.CENTER);
+
+        // create the big shot selection display
+        cent.add(new BLabel(_msgs.get("m.pv_assemble"), "pick_subtitle"));
+        _units = new UnitPalette(ctx, _inspector, 4, 2);
+        _units.setPaintBorder(true);
+        _units.setStyleClass("pick_palette");
+        _units.setSelectable(config.teamSize);
+        _units.selectFirstIcon();
+        cent.add(_units);
+
+        // determine which units are available for selection
+        ArrayList<UnitConfig> units = new ArrayList<UnitConfig>();
+        CollectionUtil.addAll(units, UnitConfig.getTownUnits(_bangobj.townId));
+        for (Iterator<UnitConfig> iter = units.iterator(); iter.hasNext(); ) {
+            // filter out bigshots and unrecruitable special units
+            UnitConfig uc = iter.next();
+            if (uc.rank == UnitConfig.Rank.BIGSHOT || uc.scripCost < 0) {
+                iter.remove();
+            }
+        }
+        // sort the units by cost
+        Collections.sort(units, new Comparator<UnitConfig>() {
             public int compare (UnitConfig u1, UnitConfig u2) {
                 if (u1.scripCost == u2.scripCost) {
                     return u1.type.compareTo(u2.type);
@@ -63,113 +106,58 @@ public class PurchaseView extends BDecoratedWindow
                 }
             }
         });
+        _units.setUnits(units.toArray(new UnitConfig[units.size()]));
 
-        // add a palette of buttons for each available unit type
-        for (int ii = 0; ii < units.length; ii++) {
-            UnitConfig uc = units[ii];
-            // skip bigshots and unrecruitable special units
-            if (uc.rank == UnitConfig.Rank.BIGSHOT || uc.scripCost < 0) {
+        // go through and jam the price onto the label of each of the units
+        SelectableIcon[] icons = _units.getIcons();
+        for (int ii = 0; ii < icons.length; ii++) {
+            UnitIcon uicon = (UnitIcon)icons[ii];
+            uicon.setText(uicon.getText() + " $" + uicon.getUnit().scripCost);
+        }
+
+        BContainer footer = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)footer.getLayoutManager()).setGap(25);
+        add(footer, BorderLayout.SOUTH);
+        String cmsg =  _msgs.get("m.pv_cash", "" + _bangobj.funds[_pidx]);
+        footer.add(new BLabel(cmsg, "money_label"));
+        cmsg = _msgs.get("m.pv_cost", "0");
+        footer.add(_tlabel = new BLabel(cmsg, "money_label"));
+        footer.add(_ready = new BButton(_msgs.get("m.ready"), this, "ready"));
+        _ready.setEnabled(false);
+    }
+
+    protected void selectionUpdated ()
+    {
+        int uidx = 0, selected = 0;
+        _total = 0;
+
+        SelectableIcon[] icons = _units.getIcons();
+        for (int ii = 0; ii < icons.length; ii++) {
+            if (!icons[ii].isSelected()) {
                 continue;
             }
-            ulist.add(createRecruitButton(uc));
+            UnitIcon icon = (UnitIcon)icons[ii];
+            _tconfigs[uidx] = icon.getUnit();
+            _team[uidx].setText(_ctx.xlate("units", _tconfigs[uidx].getName()));
+            _total += _tconfigs[uidx].scripCost;
+            uidx++;
+            selected++;
         }
 
-        BContainer team = new BContainer(
-            new TableLayout(1 + config.teamSize, 3, 10));
-        add(team, GroupLayout.FIXED);
-
-        team.add(new BLabel(_msgs.get("m.pv_bigshot")));
-        team.add(new BLabel(_msgs.get("m.pv_team")));
-        for (int ii = 1; ii < config.teamSize; ii++) {
-            team.add(new BLabel(""));
+        for (int ii = uidx; ii < _team.length; ii++) {
+            _tconfigs[ii] = null;
+            _team[ii].setText("");
         }
 
-        // display their selected big shot
-        team.add(BangUI.createUnitLabel(_bangobj.bigShots[_pidx].getConfig()));
-
-        // display slots for each potential team member
-        _team = new BLabel[config.teamSize];
-        _tconfigs = new UnitConfig[config.teamSize];
-        for (int ii = 0; ii < _team.length; ii++) {
-            team.add(_team[ii] = BangUI.createUnitLabel(null));
-        }
-
-        // add delete buttons
-        team.add(new BLabel("")); // none for the big shot
-        for (int ii = 0; ii < config.teamSize; ii++) {
-            // TODO: make this an icon
-            BButton delete = new BButton(_msgs.get("m.pv_delete"));
-            delete.setAction("delete");
-            delete.addListener(this);
-            delete.setProperty("index", ii);
-            team.add(delete);
-        }
-
-        GroupLayout glay = GroupLayout.makeHStretch();
-        glay.setGap(25);
-        BContainer footer = new BContainer(glay);
-        add(footer, GroupLayout.FIXED);
-        String cmsg =  _msgs.get("m.pv_cash", "" + _bangobj.funds[_pidx]);
-        footer.add(new BLabel(cmsg), GroupLayout.FIXED);
-        footer.add(_tlabel = new BLabel(_msgs.get("m.pv_cost", "0")));
-
-        _ready = new BButton(_msgs.get("m.ready"));
-        _ready.setAction("ready");
-        _ready.addListener(this);
-        footer.add(_ready, GroupLayout.FIXED);
-    }
-
-    protected BComponent createRecruitButton (UnitConfig unit)
-    {
-        BButton button = BangUI.createUnitButton(unit);
-        button.setAction("buy");
-        button.addListener(this);
-        button.setProperty("unit", unit);
-        button.setText(button.getText() + " $" + unit.scripCost);
-        button.setEnabled(_bangobj.funds[_pidx] >= unit.scripCost);
-        return button;
-    }
-
-    protected void updateTotal ()
-    {
-        _total = 0;
-        for (int ii = 0; ii < _tconfigs.length; ii++) {
-            if (_tconfigs[ii] != null) {
-                _total += _tconfigs[ii].scripCost;
-            }
-        }
         _tlabel.setText(_msgs.get("m.pv_cost", "" + _total));
-        _ready.setEnabled(_total <= _bangobj.funds[_pidx]);
+        _ready.setEnabled(selected > 0 && _total <= _bangobj.funds[_pidx]);
     }
 
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent e)
     {
         String cmd = e.getAction();
-        if (cmd.equals("buy")) {
-            BButton button = (BButton)e.getSource();
-            UnitConfig config = (UnitConfig)button.getProperty("unit");
-            if (_total + config.scripCost > _bangobj.funds[_pidx]) {
-                // nothing doing
-                return;
-            }
-            for (int ii = 0; ii < _tconfigs.length; ii++) {
-                if (_tconfigs[ii] == null) {
-                    _tconfigs[ii] = config;
-                    BangUI.configUnitLabel(_team[ii], config);
-                    updateTotal();
-                    return;
-                }
-            }
-
-        } else if (cmd.equals("delete")) {
-            BButton button = (BButton)e.getSource();
-            int index = (Integer)button.getProperty("index");
-            _tconfigs[index] = null;
-            BangUI.configUnitLabel(_team[index], null);
-            updateTotal();
-
-        } else if (cmd.equals("ready")) {
+        if (cmd.equals("ready")) {
             _ready.setEnabled(false);
             ArrayList<String> units = new ArrayList<String>();
             for (int ii = 0; ii < _tconfigs.length; ii++) {
@@ -182,24 +170,25 @@ public class PurchaseView extends BDecoratedWindow
         }
     }
 
+    protected UnitPalette.Inspector _inspector = new UnitPalette.Inspector() {
+        public void iconUpdated (SelectableIcon icon, boolean selected) {
+            selectionUpdated();
+        }
+    };
+
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BangObject _bangobj;
     protected int _pidx;
 
-    protected int _total;
-    protected BLabel _tlabel;
-    protected BButton _ready;
+    protected BLabel _uname;
+    protected UnitView _uview;
+    protected UnitPalette _units;
 
     protected BLabel[] _team;
     protected UnitConfig[] _tconfigs;
 
-    protected static final String[] COLUMNS = {
-        "unit", "cost", "count", "", ""
-    };
-    protected static final UnitConfig[] UNIT_CONFIGS = {
-        UnitConfig.getConfig("steamgunman"), UnitConfig.getConfig("artillery"),
-        UnitConfig.getConfig("dirigible"), UnitConfig.getConfig("gunslinger"),
-        UnitConfig.getConfig("sharpshooter"), UnitConfig.getConfig("shotgunner")
-    };
+    protected int _total;
+    protected BLabel _tlabel;
+    protected BButton _ready;
 }
