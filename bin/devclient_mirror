@@ -12,8 +12,8 @@ WEB_DIR=`grep web_dir $ROOT/deployment.properties | awk -F= '{ print $2 }'`
 
 # mirror the client files
 echo "** Mirroring devclient..."
-$MIRROR `find $WEB_DIR/client -name '*.jar'` \
-    $WEB_DIR/client/rsrc/config/resource/manager.properties \
-    $WEB_DIR/client/native/* \
-    $WEB_DIR/client/*.*
+$MIRROR `find $WEB_DIR/devclient -name '*.jar'` \
+    $WEB_DIR/devclient/rsrc/config/resource/manager.properties \
+    $WEB_DIR/devclient/native/* \
+    $WEB_DIR/devclient/*.*
 echo "*** Finished mirror at" `date`
