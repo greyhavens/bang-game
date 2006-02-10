@@ -49,7 +49,7 @@ public class StatusView extends BWindow
         setModal(true);
         addListener(new EscapeListener() {
             public void escapePressed() {
-                _ctx.getBangClient().clearPopup();
+                _ctx.getBangClient().clearPopup(true);
             }
         });
 
@@ -91,9 +91,7 @@ public class StatusView extends BWindow
     {
         host.addListener(new EscapeListener() {
             public void escapePressed () {
-                _ctx.getBangClient().displayPopup(StatusView.this);
-                pack();
-                center();
+                _ctx.getBangClient().displayPopup(StatusView.this, true);
             }
         });
     }
@@ -107,12 +105,12 @@ public class StatusView extends BWindow
 
         } else if (cmd.equals("to_town")) {
             if (_ctx.getLocationDirector().leavePlace()) {
-                _ctx.getBangClient().clearPopup();
+                _ctx.getBangClient().clearPopup(true);
                 _ctx.getBangClient().showTownView();
             }
 
         } else if (cmd.equals("resume")) {
-            _ctx.getBangClient().clearPopup();
+            _ctx.getBangClient().clearPopup(true);
         }
     }
 

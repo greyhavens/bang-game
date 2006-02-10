@@ -24,6 +24,7 @@ import com.threerings.util.Name;
 import com.threerings.getdown.util.LaunchUtil;
 
 import com.threerings.jme.effect.FadeInOutEffect;
+import com.threerings.jme.effect.WindowSlider;
 
 import com.threerings.cast.CharacterManager;
 import com.threerings.cast.bundle.BundledComponentRepository;
@@ -154,7 +155,7 @@ public class BangClient extends BasicClient
         FadeInOutEffect fade =
             new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true) {
             protected void fadeComplete () {
-                _ctx.getInterface().detachChild(this);
+                super.fadeComplete();
                 // now start unpacking our resources
                 initResources(lview);
             }
@@ -234,8 +235,12 @@ public class BangClient extends BasicClient
      * Displays a popup window that will automatically be cleared if we leave
      * the current "place". This should be used for any overlay view shown atop
      * the normal place views.
+     *
+     * @param animate if true the popup will be {@link BWindow#pack}ed and slid
+     * onto the screen from some direction. Otherwise the caller is responsible
+     * for {@link BWindow#pack}ing and {@link BWindow#center}ing the window.
      */
-    public void displayPopup (BWindow popup)
+    public void displayPopup (BWindow popup, boolean animate)
     {
         if (_popup != null) {
             log.warning("Overriding popup [old=" + _popup +
@@ -243,15 +248,32 @@ public class BangClient extends BasicClient
             Thread.dumpStack();
         }
         _ctx.getRootNode().addWindow(_popup = popup);
+
+        if (animate) {
+            _popup.pack();
+            _ctx.getInterface().attachChild(
+                new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f));
+        }
     }
 
     /**
      * Dismisses a popup displayed with {@link #displayPopup}.
      */
-    public void clearPopup ()
+    public void clearPopup (boolean animate)
     {
         if (_popup != null) {
-            _ctx.getRootNode().removeWindow(_popup);
+            if (animate) {
+                final BWindow opopup = _popup;
+                _ctx.getInterface().attachChild(
+                    new WindowSlider(_popup, WindowSlider.TO_RIGHT, 0.25f) {
+                        protected void slideComplete () {
+                            super.slideComplete();
+                            _ctx.getRootNode().removeWindow(opopup);
+                        }
+                    });
+            } else {
+                _ctx.getRootNode().removeWindow(_popup);
+            }
             _popup = null;
         }
     }
@@ -409,9 +431,9 @@ public class BangClient extends BasicClient
             FadeInOutEffect fade =
                 new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.5f, true) {
                 protected void fadeComplete () {
+                    super.fadeComplete();
                     _ctx.getRootNode().removeWindow(_mview);
                     fadeInMainView(view);
-                    _ctx.getInterface().detachChild(this);
                 }
             };
             _ctx.getInterface().attachChild(fade);
@@ -430,13 +452,8 @@ public class BangClient extends BasicClient
         if (view instanceof BangView || view instanceof TownView) {
             return;
         }
-        FadeInOutEffect fade =
-            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true) {
-            protected void fadeComplete () {
-                _ctx.getInterface().detachChild(this);
-            }
-        };
-        _ctx.getInterface().attachChild(fade);
+        _ctx.getInterface().attachChild(
+            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true));
     }
 
     /** The context implementation. This provides access to all of the
@@ -461,7 +478,7 @@ public class BangClient extends BasicClient
 
         public void setPlaceView (PlaceView view) {
             // clear any lingering popup
-            clearPopup();
+            clearPopup(false);
 
             // wire a status view to this place view (show by pressing esc);
             // the window must be modal prior to adding it to the hierarchy to

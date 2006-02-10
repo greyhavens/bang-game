@@ -94,8 +94,8 @@ public class PardnerChatView extends BDecoratedWindow
         }
         _tabs.selectTab(tab.idx);
         if (!isAdded()) {
-            _ctx.getBangClient().clearPopup();
-            _ctx.getBangClient().displayPopup(this);
+            _ctx.getBangClient().clearPopup(false);
+            _ctx.getBangClient().displayPopup(this, false);
             pack(-1, -1);
             center();
         }
@@ -166,7 +166,7 @@ public class PardnerChatView extends BDecoratedWindow
             }
             
         } else if (src == _close) {
-            _ctx.getBangClient().clearPopup();
+            _ctx.getBangClient().clearPopup(false);
         }
     }
 

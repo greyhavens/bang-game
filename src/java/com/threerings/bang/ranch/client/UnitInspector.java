@@ -144,7 +144,7 @@ public class UnitInspector extends BContainer
                 _config.rank == UnitConfig.Rank.BIGSHOT) {
                 RecruitDialog rd = new RecruitDialog(
                     _ctx, (RanchView)getParent(), _ranchobj, _config);
-                _ctx.getBangClient().displayPopup(rd);
+                _ctx.getBangClient().displayPopup(rd, true);
                 rd.pack(400, -1);
                 rd.center();
             }

@@ -182,7 +182,7 @@ public class BoardView extends BComponent
         _fadein = new FadeInOutEffect(
             ColorRGBA.black, 1f, 0f, getFadeInTime(), false) {
             protected void fadeComplete () {
-                _ctx.getInterface().detachChild(_fadein);
+                super.fadeComplete();
                 fadeInComplete();
             }
         };
@@ -850,11 +850,7 @@ public class BoardView extends BComponent
             if (fadeTime > 0f) {
                 TimeFunction tf = new LinearTimeFunction(1f, 0f, fadeTime);
                 _ctx.getInterface().attachChild(
-                    new FadeInOutEffect(omarquee, ColorRGBA.white, tf, true) {
-                    protected void fadeComplete () {
-                        _ctx.getInterface().detachChild(this);
-                    }
-                });
+                    new FadeInOutEffect(omarquee, ColorRGBA.white, tf, true));
             }
         }
     }

@@ -87,7 +87,7 @@ public class OptionDialog extends BDecoratedWindow
     {
         OptionDialog dialog =
             new OptionDialog(ctx, bundle, text, buttons, receiver);
-        ctx.getBangClient().displayPopup(dialog);
+        ctx.getBangClient().displayPopup(dialog, false);
         dialog.pack(400, -1);
         dialog.center();
     }
@@ -116,7 +116,7 @@ public class OptionDialog extends BDecoratedWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        _ctx.getBangClient().clearPopup();
+        _ctx.getBangClient().clearPopup(false);
         _receiver.resultPosted(ListUtil.indexOf(_buttons, event.getSource()),
             null);
     }
