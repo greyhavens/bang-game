@@ -157,7 +157,12 @@ public class UnitConfig
      */
     public static UnitConfig getConfig (String type)
     {
-        return _types.get(type);
+        UnitConfig config = _types.get(type);
+        if (config == null) {
+            log.warning("Requested unknown unit config '" + type + "'!");
+            Thread.dumpStack();
+        }
+        return config;
     }
 
     /**
