@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Runs the client from the pages/devclient distribution directory. This should
+# only be used on a developer's machine for testing a Proguard optimized build.
+
+ROOT=`dirname $0`
+ROOT=`cd $ROOT/.. ; pwd`
+
+BUILD=$ROOT/pages/devclient
+CLASSPATH=`echo $BUILD/*/*.jar | sed 's/ /:/g'`
+
+java -classpath $CLASSPATH -Xmx128M -Dno_log_redir=true \
+    -Djava.library.path=$BUILD/native \
+    -Dappdir=$BUILD -Dresource_dir=$BUILD/rsrc \
+    com.threerings.bang.client.BangApp
