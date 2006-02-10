@@ -132,6 +132,12 @@ public class TownView extends BWindow
                 public void mousePressed (MouseEvent me) {
                     if (_hsprite != null) {
                         enterBuilding(((Prop)_hsprite.getPiece()).getType());
+                        // clear out the hover sprite so that we don't booch it
+                        // if we double click
+                        hoverSpriteChanged(null);
+                    } else if (_ctx.getCameraHandler().cameraIsMoving()) {
+                        System.err.println("Skipping path.");
+                        _ctx.getCameraHandler().skipPath();
                     }
                 }
             });
@@ -205,6 +211,9 @@ public class TownView extends BWindow
 
             if (_vpsprite != null &&
                 !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
+                // clear out any hover sprite that was established in the
+                // moment before we start our cinematic entrance
+                hoverSpriteChanged(null);
                 // sweep the camera from the aerial viewpoint to the main
                 moveToViewpoint("main", 4f, 0.5f);
             }
@@ -226,9 +235,14 @@ public class TownView extends BWindow
                 _hsprite.clearRenderState(RenderState.RS_MATERIAL);
                 _hsprite.updateRenderState();
             }
+            _hsprite = null;
+
+            // if the camera is moving, no hovering
+            if (_ctx.getCameraHandler().cameraIsMoving()) {
+                return;
+            }
 
             // make sure the sprite we're over is a building
-            _hsprite = null;
             if (!(hover instanceof PieceSprite)) {
                 return;
             }
