@@ -245,6 +245,12 @@ public class BangBoardView extends BoardView
         // update the shadow we use to do path finding and whatnot
         _bangobj.board.updateShadow(opiece, npiece);
 
+        // if this piece was selected and it got removed, clear the selection
+        if (opiece != null && npiece == null && _selection != null &&
+            _selection.pieceId == opiece.pieceId) {
+            clearSelection();
+        }
+
         // if this piece was inside our attack set or within range to be inside
         // our move set, recompute the selection as it may have changed
         if (_selection != null) {
@@ -624,7 +630,10 @@ public class BangBoardView extends BoardView
     protected void clearSelection ()
     {
         if (_selection != null) {
-            getPieceSprite(_selection).setSelected(false);
+            PieceSprite psprite = getPieceSprite(_selection);
+            if (psprite != null) {
+                psprite.setSelected(false);
+            }
             _selection = null;
             _ctrl.postEvent(TutorialCodes.UNIT_DESELECTED);
         }
