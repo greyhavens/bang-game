@@ -30,7 +30,6 @@ public class ViewpointSprite extends PieceSprite
         }
 
         Pyramid pyramid = new Pyramid("marker", TILE_SIZE/2, TILE_SIZE/2);
-        pyramid.getLocalTranslation().set(0f, 0f, TILE_SIZE/2);
         pyramid.setSolidColor(ColorRGBA.gray);
         pyramid.setModelBound(new BoundingBox());
         pyramid.updateModelBound();
@@ -99,6 +98,7 @@ public class ViewpointSprite extends PieceSprite
         Viewpoint vp = (Viewpoint)_piece;
         _temp.x += (_fx = vp.fx) * PropSprite.FINE_POSITION_SCALE;
         _temp.y += (_fy = vp.fy) * PropSprite.FINE_POSITION_SCALE;
+        _temp.z += TILE_SIZE * 0.5f;
         getLocalTranslation().set(_temp);
     }
 
@@ -144,11 +144,7 @@ public class ViewpointSprite extends PieceSprite
      */
     protected void updateBoundCamera ()
     {
-        _temp.set(getLocalTranslation());
-        _temp.z += TILE_SIZE / 2;
-        _rot.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
-        getLocalRotation().mult(_rot, _rot);
-        _boundcam.setFrame(_temp, _rot);
+        _boundcam.setFrame(getLocalTranslation(), getViewRotation());
     }
 
     /** The camera to which this viewpoint is bound, if any. */

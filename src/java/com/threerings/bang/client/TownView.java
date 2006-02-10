@@ -27,7 +27,6 @@ import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.PanPath;
-import com.threerings.jme.camera.SplinePath;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.util.MessageBundle;
 
@@ -241,7 +240,7 @@ public class TownView extends BWindow
                 // moment before we start our cinematic entrance
                 hoverSpriteChanged(null);
                 // sweep the camera from the aerial viewpoint to the main
-                moveToViewpoint("main", 4f, 0.5f);
+                moveToViewpoint("main", 4f);
 
                 // wait until we've finished animating the camera and then
                 // check to see if we should display a tutorial or intro
@@ -314,7 +313,7 @@ public class TownView extends BWindow
         protected void enterBuilding (String type)
         {
             final String cmd = _commands.get(type);
-            if (!moveToViewpoint(cmd, 0.75f, 0.5f)) {
+            if (!moveToViewpoint(cmd, 0.75f)) {
                 log.warning("Missing target viewpoint [cmd=" + cmd  + "].");
                 fireCommand(cmd);
                 return;
@@ -333,7 +332,7 @@ public class TownView extends BWindow
         }
 
         protected boolean moveToViewpoint (
-            String view, float duration, float tension)
+            String view, float duration)
         {
             Viewpoint piece = getViewpoint(view);
             if (piece == null) {
