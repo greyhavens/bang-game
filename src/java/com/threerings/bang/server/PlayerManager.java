@@ -152,7 +152,7 @@ public class PlayerManager
                     return;
                 }
                 for (Handle handle : inviters) {
-                    PlayerSender.sendPardnerInvite(player, handle);
+                    sendPardnerInvite(player, handle, true);
                 }
                 player.removeListener(this);
             }

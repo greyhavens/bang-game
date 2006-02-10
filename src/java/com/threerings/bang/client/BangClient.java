@@ -242,39 +242,44 @@ public class BangClient extends BasicClient
      */
     public void displayPopup (BWindow popup, boolean animate)
     {
-        if (_popup != null) {
-            log.warning("Overriding popup [old=" + _popup +
-                        ", new=" + popup + "].");
-            Thread.dumpStack();
-        }
-        _ctx.getRootNode().addWindow(_popup = popup);
+        _ctx.getRootNode().addWindow(popup);
+        _popups.add(popup);
 
         if (animate) {
-            _popup.pack();
+            popup.pack();
             _ctx.getInterface().attachChild(
                 new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f));
         }
     }
 
     /**
+     * Dismisses all popups.
+     */
+    public void clearPopups (boolean animate)
+    {
+        while (_popups.size() > 0) {
+            clearPopup(_popups.get(0), animate);
+        }
+    }
+    
+    /**
      * Dismisses a popup displayed with {@link #displayPopup}.
      */
-    public void clearPopup (boolean animate)
+    public void clearPopup (final BWindow popup, boolean animate)
     {
-        if (_popup != null) {
-            if (animate) {
-                final BWindow opopup = _popup;
-                _ctx.getInterface().attachChild(
-                    new WindowSlider(_popup, WindowSlider.TO_RIGHT, 0.25f) {
-                        protected void slideComplete () {
-                            super.slideComplete();
-                            _ctx.getRootNode().removeWindow(opopup);
-                        }
-                    });
-            } else {
-                _ctx.getRootNode().removeWindow(_popup);
-            }
-            _popup = null;
+        if (!_popups.remove(popup)) {
+            return;
+        }
+        if (animate) {
+            _ctx.getInterface().attachChild(
+                new WindowSlider(popup, WindowSlider.TO_RIGHT, 0.25f) {
+                    protected void slideComplete () {
+                        super.slideComplete();
+                        _ctx.getRootNode().removeWindow(popup);
+                    }
+                });
+        } else {
+            _ctx.getRootNode().removeWindow(popup);
         }
     }
 
@@ -477,8 +482,8 @@ public class BangClient extends BasicClient
         }
 
         public void setPlaceView (PlaceView view) {
-            // clear any lingering popup
-            clearPopup(false);
+            // clear any lingering popups
+            clearPopups(false);
 
             // wire a status view to this place view (show by pressing esc);
             // the window must be modal prior to adding it to the hierarchy to
@@ -536,7 +541,8 @@ public class BangClient extends BasicClient
     protected AvatarLogic _alogic;
     protected PlayerService _psvc;
     
-    protected BWindow _mview, _popup;
+    protected BWindow _mview;
+    protected ArrayList<BWindow> _popups = new ArrayList<BWindow>();
     protected PardnerChatView _pcview;
 
     protected ArrayList<Name> _invites = new ArrayList<Name>();

@@ -64,6 +64,7 @@ public class PardnerView extends BContainer
         nbox.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_name")),
             GroupLayout.FIXED);
         nbox.add(_name = new BTextField());
+        _name.addListener(this);
         nbox.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_submit"), this, "submit"), GroupLayout.FIXED);
         abox.add(nbox);

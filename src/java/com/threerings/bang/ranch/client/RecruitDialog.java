@@ -49,7 +49,7 @@ public class RecruitDialog extends BDecoratedWindow
 
         addListener(new EscapeListener() {
             public void escapePressed() {
-                _ctx.getBangClient().clearPopup(true);
+                _ctx.getBangClient().clearPopup(RecruitDialog.this, true);
             }
         });
 
@@ -97,14 +97,14 @@ public class RecruitDialog extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         if ("cancel".equals(event.getAction())) {
-            _ctx.getBangClient().clearPopup(true);
+            _ctx.getBangClient().clearPopup(this, true);
 
         } else if ("recruit".equals(event.getAction())) {
             RanchService.ResultListener rl = new RanchService.ResultListener() {
                 public void requestProcessed (Object result) {
                     BigShotItem unit = (BigShotItem)result;
                     _view.unitRecruited(unit.getItemId());
-                    _ctx.getBangClient().clearPopup(true);
+                    _ctx.getBangClient().clearPopup(RecruitDialog.this, true);
                 }
                 public void requestFailed (String cause) {
                     _status.setStatus(_msgs.xlate(cause), true);

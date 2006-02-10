@@ -116,7 +116,7 @@ public class OptionDialog extends BDecoratedWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        _ctx.getBangClient().clearPopup(false);
+        _ctx.getBangClient().clearPopup(this, false);
         _receiver.resultPosted(ListUtil.indexOf(_buttons, event.getSource()),
             null);
     }
