@@ -70,7 +70,7 @@ public class Model
          * bound. */
         public interface Observer
         {
-            public void wasBound (Animation anim);
+            public void wasBound (Animation anim, Binding binding);
         }
 
         public Geometry getMarker (String name)
@@ -121,7 +121,7 @@ public class Model
             // bindings will be resolved the first time through and will report
             // binding completion immediately
             if (!_anim._resolving && _obs != null) {
-                _obs.wasBound(_anim);
+                _obs.wasBound(_anim, this);
             }
         }
 
