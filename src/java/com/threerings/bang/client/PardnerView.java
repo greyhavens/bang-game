@@ -188,7 +188,9 @@ public class PardnerView extends BContainer
         public void actionPerformed (ActionEvent ae)
         {
             if (ae.getSource() == _chat) {
-            
+                _ctx.getBangClient().getPardnerChatView().displayTab(
+                    entry.handle);
+                
             } else { // ae.getSource() == _remove
                 OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
                     MessageBundle.tcompose("m.confirm_remove", entry.handle),

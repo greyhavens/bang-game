@@ -159,6 +159,10 @@ public class BangClient extends BasicClient
             }
         };
         _ctx.getInterface().attachChild(fade);
+        
+        // create the pardner chat view, which will listen for tells from
+        // pardners and pop up when possible
+        _pcview = new PardnerChatView(_ctx);
     }
 
     /**
@@ -210,6 +214,14 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Determines whether we can display a pop-up at the moment.
+     */
+    public boolean canDisplayPopup ()
+    {
+        return !(_mview instanceof BangView);
+    }
+    
+    /**
      * Displays a popup window that will automatically be cleared if we leave
      * the current "place". This should be used for any overlay view shown atop
      * the normal place views.
@@ -235,6 +247,14 @@ public class BangClient extends BasicClient
         }
     }
 
+    /**
+     * Returns a reference to the {@link PardnerChatView}.
+     */
+    public PardnerChatView getPardnerChatView ()
+    {
+        return _pcview;
+    }
+    
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
@@ -478,4 +498,5 @@ public class BangClient extends BasicClient
     protected PlayerService _psvc;
     
     protected BWindow _mview, _popup;
+    protected PardnerChatView _pcview;
 }
