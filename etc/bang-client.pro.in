@@ -5,36 +5,36 @@
 
 -injars /export/tools/lib/java/commons-io.jar(!META-INF/*)
 -injars /export/tools/lib/java/commons-collections.jar(!META-INF/*)
--injars lib/getdown.jar(!META-INF/*,!**/tools/**)
--injars lib/narya-base.jar(!META-INF/*,!**/tools/**)
--injars lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
--injars lib/narya-media.jar(!META-INF/*,!**/tools/**)
--injars lib/narya-parlor.jar(!META-INF/*,!**/tools/**)
--injars lib/narya-cast.jar(!META-INF/*,!**/tools/**)
--injars lib/narya-jme.jar(!META-INF/*,!**/tools/**)
--injars lib/narya-openal.jar(!META-INF/*,!**/tools/**)
--injars lib/samskivert.jar(!META-INF/*,!**/velocity/**,!**/xml/**)
--injars lib/jme.jar(!META-INF/*)
--injars lib/jme-effects.jar(!META-INF/*)
--injars lib/jme-model.jar(!META-INF/*)
--injars lib/jme-terrain.jar(!META-INF/*)
--injars lib/jme-awt.jar(!META-INF/*)
--injars lib/jme-bui.jar(!META-INF/*)
--injars lib/threerings.jar(**/coin/**)
--injars lib/hemiptera.jar(!**/web/**,!**/persist/**,!install.properties)
--injars dist/bang-code.jar(!META-INF/*,!**/tools/**,!**/tests/**)
+-injars ../lib/getdown.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/narya-base.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/narya-media.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/narya-parlor.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/narya-cast.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/narya-jme.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/narya-openal.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/samskivert.jar(!META-INF/*,!**/velocity/**,!**/xml/**)
+-injars ../lib/jme.jar(!META-INF/*)
+-injars ../lib/jme-effects.jar(!META-INF/*)
+-injars ../lib/jme-model.jar(!META-INF/*)
+-injars ../lib/jme-terrain.jar(!META-INF/*)
+-injars ../lib/jme-awt.jar(!META-INF/*)
+-injars ../lib/jme-bui.jar(!META-INF/*)
+-injars ../lib/threerings.jar(**/coin/**)
+-injars ../lib/hemiptera.jar(!**/web/**,!**/persist/**,!install.properties)
+-injars ../dist/bang-code.jar(!META-INF/*,!**/tools/**,!**/tests/**)
 
 -libraryjars <java.home>/lib/rt.jar
--libraryjars lib/lwjgl.jar
--libraryjars lib/lwjgl_fmod3.jar
+-libraryjars ../lib/lwjgl.jar
+-libraryjars ../lib/lwjgl_fmod3.jar
 
 # -dontoptimize
 # -dontobfuscate
 
--outjars dist/bang-pcode.jar
--printseeds dist/proguard.seeds
--applymapping etc/proguard/@prev_version@.map
--printmapping etc/proguard/@version@.map
+-outjars ../dist/bang-pcode.jar
+-printseeds ../dist/proguard.seeds
+-applymapping proguard/@prev_version@.map
+-printmapping proguard/@version@.map
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 
@@ -74,4 +74,12 @@
 
 -keep public class com.threerings.bang.editor.EditorManager {
     *;
+}
+
+-keep public class com.threerings.bang.data.Badge {
+    static <fields>;
+}
+
+-keep public class com.threerings.bang.data.Stat {
+    static <fields>;
 }

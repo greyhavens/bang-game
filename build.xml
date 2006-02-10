@@ -333,7 +333,8 @@
     <antcall target="baseclient">
       <param name="client" value="client"/>
       <param name="client_dir" value="${web_dir}/client/${version}"/>
-      <param name="appbase_line" value="appbase = ${root_url}/client/%VERSION%"/>
+      <param name="appbase_line"
+             value="appbase = ${root_url}/client/%VERSION%"/>
       <param name="version_line" value="version = ${version}"/>
     </antcall>
     <delete file="etc/bang-client.pro"/>
