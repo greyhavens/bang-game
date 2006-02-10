@@ -31,7 +31,7 @@ public class OptionDialog extends BDecoratedWindow
     public static final int CANCEL_BUTTON = 1;
     
     /** The callback mechanism for receiving dialog results. */
-    public interface DialogResponseReceiver
+    public interface ResponseReceiver
     {
         /**
          * Reports the result of the dialog.
@@ -51,7 +51,7 @@ public class OptionDialog extends BDecoratedWindow
      * @param receiver a receiver to notify with the result
      */
     public static void showConfirmDialog (BangContext ctx, String bundle,
-        String text, DialogResponseReceiver receiver)
+        String text, ResponseReceiver receiver)
     {
         showConfirmDialog(ctx, bundle, text, "m.ok", "m.cancel", receiver);
     }
@@ -67,7 +67,7 @@ public class OptionDialog extends BDecoratedWindow
      * @param receiver a receiver to notify with the result
      */
     public static void showConfirmDialog (BangContext ctx, String bundle,
-        String text, String ok, String cancel, DialogResponseReceiver receiver)
+        String text, String ok, String cancel, ResponseReceiver receiver)
     {
         showConfirmDialog(ctx, bundle, text, new String[] { ok, cancel },
             receiver);
@@ -83,7 +83,7 @@ public class OptionDialog extends BDecoratedWindow
      * @param receiver a receiver to notify with the result
      */
     public static void showConfirmDialog (BangContext ctx, String bundle,
-        String text, String[] buttons, DialogResponseReceiver receiver)
+        String text, String[] buttons, ResponseReceiver receiver)
     {
         OptionDialog dialog =
             new OptionDialog(ctx, bundle, text, buttons, receiver);
@@ -93,7 +93,7 @@ public class OptionDialog extends BDecoratedWindow
     }
     
     protected OptionDialog (BangContext ctx, String bundle, String text,
-        String[] buttons, DialogResponseReceiver receiver)
+        String[] buttons, ResponseReceiver receiver)
     {
         super(ctx.getStyleSheet(), null);
         setModal(true);
@@ -122,6 +122,6 @@ public class OptionDialog extends BDecoratedWindow
     }
 
     protected BangContext _ctx;
-    protected DialogResponseReceiver _receiver;
+    protected ResponseReceiver _receiver;
     protected BButton[] _buttons;
 }

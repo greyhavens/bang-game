@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -179,7 +180,7 @@ public class BangClient extends BasicClient
      * tutorial. This is called after first logging on and then at the
      * completion of each phase of the intro and tutorial.
      */
-    public void checkShowIntro ()
+    public boolean checkShowIntro ()
     {
         PlayerObject user = _ctx.getUserObject();
 
@@ -190,7 +191,7 @@ public class BangClient extends BasicClient
             _ctx.getRootNode().addWindow(cav);
             cav.pack(800, -1);
             cav.center();
-            return;
+            return true;
         }
 
         // if they have no big shots then they need the intro for those
@@ -199,11 +200,15 @@ public class BangClient extends BasicClient
             _ctx.getRootNode().addWindow(fbsv);
             fbsv.pack(600, -1);
             fbsv.center();
-            return;
+            return true;
         }
 
-        // otherwise, display the town view
-        showTownView();
+        // if there are any pending pardner invitations, show those
+        if (_invites.size() > 0) {
+            displayPardnerInvite(_invites.remove(0));
+        }
+
+        return false;
     }
 
     public void showTownView ()
@@ -216,9 +221,13 @@ public class BangClient extends BasicClient
     /**
      * Determines whether we can display a pop-up at the moment.
      */
-    public boolean canDisplayPopup ()
+    public boolean canDisplayPopup (MainView.Type type)
     {
-        return !(_mview instanceof BangView);
+        if (_mview instanceof MainView) {
+            return ((MainView)_mview).allowsPopup(type);
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -317,9 +326,9 @@ public class BangClient extends BasicClient
             _ctx.getLocationDirector().moveTo(bbd.barberOid);
         }
 
-        // start up the introduction process, if appropriate, or if no intro is
-        // needed this will show the town view
-        checkShowIntro();
+        // show the town view to start, this will call checkShowIntro() once
+        // the town view has "presented" the first town
+        showTownView();
     }
 
     // documentation inherited from interface SessionObserver
@@ -338,16 +347,13 @@ public class BangClient extends BasicClient
     // documentation inherited from interface PlayerReceiver
     public void receivedPardnerInvite (final Name handle)
     {
-        OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
-            MessageBundle.tcompose("m.pardner_invite", handle),
-            "m.pardner_accept", "m.pardner_reject",
-            new OptionDialog.DialogResponseReceiver() {
-                public void resultPosted (int button, Object result) {
-                    _psvc.respondToPardnerInvite(_client, handle, button == 0,
-                        new ReportingListener(_ctx, BANG_MSGS,
-                            "e.response_failed"));
-                }
-            });
+        if (canDisplayPopup(MainView.Type.PARDNER_INVITE)) {
+            displayPardnerInvite(handle);
+        } else {
+            // stick it on a list and we'll show the invite next the we're in
+            // the town view
+            _invites.add(handle);
+        }
     }
     
     @Override // documentation inherited
@@ -378,6 +384,22 @@ public class BangClient extends BasicClient
             // TODO: report to the client
             log.log(Level.WARNING, "Initialization failed.", ioe);
         }
+    }
+
+    protected void displayPardnerInvite (final Name handle)
+    {
+        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
+            public void resultPosted (int button, Object result) {
+                _psvc.respondToPardnerInvite(
+                    _client, handle, button == 0,
+                    new ReportingListener(
+                        _ctx, BANG_MSGS, "e.response_failed"));
+                checkShowIntro();
+            }
+        };
+        String title = MessageBundle.tcompose("m.pardner_invite", handle);
+        OptionDialog.showConfirmDialog(
+            _ctx, BANG_MSGS, title, "m.pardner_accept", "m.pardner_reject", rr);
     }
 
     protected void setMainView (final BWindow view)
@@ -499,4 +521,6 @@ public class BangClient extends BasicClient
     
     protected BWindow _mview, _popup;
     protected PardnerChatView _pcview;
+
+    protected ArrayList<Name> _invites = new ArrayList<Name>();
 }

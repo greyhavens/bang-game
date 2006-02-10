@@ -53,6 +53,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * and wherever else we might dream up.
  */
 public class TownView extends BWindow
+    implements MainView
 {
     public TownView (BangContext ctx)
     {
@@ -62,7 +63,12 @@ public class TownView extends BWindow
 
         // display the status view when the player presses escape
         setModal(true);
-        new StatusView(_ctx).bind(this);
+
+        // only bind the status view if we've already run the avatar creation
+        // intro
+        if (_ctx.getUserObject().handle != null) {
+            new StatusView(_ctx).bind(this);
+        }
 
         int width = ctx.getDisplay().getWidth();
         int height = ctx.getDisplay().getHeight();
@@ -89,6 +95,22 @@ public class TownView extends BWindow
         add(_bview = new TownBoardView(_ctx), BorderLayout.CENTER);
     }
 
+    // documentation inherited from interface MainView
+    public boolean allowsPopup (Type type)
+    {
+        switch (type) {
+        case CHAT: return true;
+        case PARDNER_INVITE: return _active;
+        default: return true;
+        }
+    }
+
+    // documentation inherited from interface MainView
+    public boolean allowsPardnerInvite ()
+    {
+        return _active;
+    }
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -100,6 +122,11 @@ public class TownView extends BWindow
         } catch (IOException ioe) {
             log.warning("Failed to load town board! [error=" + ioe + "].");
         }
+    }
+
+    protected void finishedIntroPan ()
+    {
+        _active = !_ctx.getBangClient().checkShowIntro();
     }
 
     protected void fireCommand (String command)
@@ -136,7 +163,6 @@ public class TownView extends BWindow
                         // if we double click
                         hoverSpriteChanged(null);
                     } else if (_ctx.getCameraHandler().cameraIsMoving()) {
-                        System.err.println("Skipping path.");
                         _ctx.getCameraHandler().skipPath();
                     }
                 }
@@ -216,6 +242,19 @@ public class TownView extends BWindow
                 hoverSpriteChanged(null);
                 // sweep the camera from the aerial viewpoint to the main
                 moveToViewpoint("main", 4f, 0.5f);
+
+                // wait until we've finished animating the camera and then
+                // check to see if we should display a tutorial or intro
+                _ctx.getCameraHandler().addCameraObserver(
+                    new CameraPath.Observer() {
+                        public boolean pathCompleted (CameraPath path) {
+                            finishedIntroPan();
+                            return false; // removes our observer
+                        }
+                    });
+
+            } else {
+                finishedIntroPan();
             }
         }
 
@@ -237,8 +276,8 @@ public class TownView extends BWindow
             }
             _hsprite = null;
 
-            // if the camera is moving, no hovering
-            if (_ctx.getCameraHandler().cameraIsMoving()) {
+            // if we're not yet enabled or the camera is moving, no hovering
+            if (!_active || _ctx.getCameraHandler().cameraIsMoving()) {
                 return;
             }
 
@@ -318,6 +357,7 @@ public class TownView extends BWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected TownBoardView _bview;
+    protected boolean _active;
 
     /** Maps prop types to commands. */
     protected HashMap<String, String> _commands =

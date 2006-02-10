@@ -82,7 +82,8 @@ public class PardnerChatView extends BDecoratedWindow
      */
     public boolean displayTab (Name handle)
     {
-        if (!isAdded() && !_ctx.getBangClient().canDisplayPopup()) {
+        if (!isAdded() &&
+            !_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
             return false;
         } 
         PardnerTab tab = _pardners.get(handle);

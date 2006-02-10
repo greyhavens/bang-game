@@ -194,7 +194,7 @@ public class PardnerView extends BContainer
             } else { // ae.getSource() == _remove
                 OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
                     MessageBundle.tcompose("m.confirm_remove", entry.handle),
-                    new OptionDialog.DialogResponseReceiver() {
+                    new OptionDialog.ResponseReceiver() {
                         public void resultPosted (int button, Object result) {
                             if (button == OptionDialog.OK_BUTTON) {
                                 removePardner(entry.handle);

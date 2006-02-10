@@ -32,7 +32,7 @@ import com.threerings.bang.util.BangContext;
  * etc.)
  */
 public abstract class ShopView extends BWindow
-    implements PlaceView
+    implements PlaceView, MainView
 {
     /**
      * Displays the introduction help for this shop.
@@ -66,6 +66,12 @@ public abstract class ShopView extends BWindow
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
+    }
+
+    // documentation inherited from interface MainView
+    public boolean allowsPopup (Type type)
+    {
+        return true;
     }
 
     /**
