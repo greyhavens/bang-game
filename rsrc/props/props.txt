@@ -22,4 +22,4 @@ structures/grave_tombstone
 structures/grave_tombstone_lily
 structures/pop_sign_frontier_town
 structures/wheel_wagon
-structures/bail
+structures/bale
