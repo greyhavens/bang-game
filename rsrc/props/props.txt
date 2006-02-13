@@ -6,6 +6,7 @@ buildings/saloon
 buildings/stables
 buildings/jail
 buildings/barber
+buildings/ranch
 natural/cactus1
 natural/cactus2
 natural/cactus_flower_red
