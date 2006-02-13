@@ -106,9 +106,9 @@ public class PickLookView extends BContainer
             add(new BLabel(new ImageIcon(icon)), new Point(20, 0));
             add(_looks, new Rectangle(79, 0, 164, 29));
         } else {
-            add(new BLabel(_ctx.xlate(AvatarCodes.AVATAR_MSGS,
-                                      "m.get_looks_at_barber")),
-                new Rectangle(0, 0, 258, 29));
+            String msg =
+                _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.get_looks_at_barber");
+            add(new BLabel(msg, "look_upsell"), new Rectangle(0, 0, 258, 29));
         }
     }
 

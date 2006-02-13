@@ -73,8 +73,9 @@ public class ItemRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        items.add(decodeItem(rs.getInt(1), rs.getInt(2),
-                                             playerId, (byte[])rs.getObject(3)));
+                        items.add(decodeItem(
+                                      rs.getInt(1), rs.getInt(2),
+                                      playerId, (byte[])rs.getObject(3)));
                     }
                 } finally {
                     JDBCUtil.close(stmt);

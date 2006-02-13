@@ -110,9 +110,9 @@ public class IconPalette extends BContainer
      */
     public void setShowNavigation (boolean shownav)
     {
-        if (!_bcont.isAdded() && shownav) {
+        if (_bcont.getParent() == null && shownav) {
             add(_bcont, BorderLayout.CENTER);
-        } else if (_bcont.isAdded() && !shownav) {
+        } else if (_bcont.getParent() != null && !shownav) {
             remove(_bcont);
         }
     }

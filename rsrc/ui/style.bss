@@ -495,6 +495,13 @@ pardner_status {
   text-align: center;
 }
 
+look_upsell {
+  font: "Helvetica" plain 11;
+  text-align: center;
+  vertical-align: center;
+  color: #4d2a04;
+}
+
 //
 // Pre-game styles
 

@@ -104,19 +104,18 @@ public class BarberManager extends PlaceManager
             if (articles[ii] == 0) {
                 if (AvatarLogic.SLOTS[ii].optional) {
                     continue;
-                } else {
-                    log.warning("Requested to configure look with missing " +
-                                "non-optional articles [who=" + user.who() +
-                                ", idx=" + ii + ", look=" + name +
-                                ", art=" + StringUtil.toString(articles) + "].");
-                    return;
                 }
+                log.warning("Requested to configure look with missing " +
+                            "non-optional articles [who=" + user.who() +
+                            ", idx=" + ii + ", look=" + name +
+                            ", art=" + StringUtil.toString(articles) + "].");
+                return;
             }
 
             Article article = (Article)user.inventory.get(articles[ii]);
             if (article == null ||
                 !article.getSlot().equals(AvatarLogic.SLOTS[ii].name)) {
-                log.warning("Requested to configure look with invalid article " +
+                log.warning("Asked to configure look with invalid article " +
                             "[who=" + user.who() + ", article=" + article +
                             ", slot=" + AvatarLogic.SLOTS[ii].name + "].");
                 return;
@@ -168,8 +167,11 @@ public class BarberManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // TODO: sort out their initial clothing article
-        look.articles = new int[0];
+        // create their default clothing article, we'll fill in its item id
+        // after we've inserted the article into the database
+        look.articles = new int[AvatarLogic.SLOTS.length];
+        final Article article =
+            BangServer.alogic.createDefaultClothing(user.playerId, isMale);
 
         // the client should prevent selection of components that have cost
         if (cost[0] > AvatarCodes.BASE_LOOK_SCRIP_COST ||
@@ -184,12 +186,27 @@ public class BarberManager extends PlaceManager
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
+                    // first configure their chosen handle
                     if (!BangServer.playrepo.configurePlayer(
                             user.playerId, handle, user.isMale)) {
                         _error = AvatarCodes.ERR_DUP_HANDLE;
-                    } else {
-                        BangServer.lookrepo.insertLook(user.playerId, look);
+                        return true;
                     }
+
+                    // insert their default clothing article into the database
+                    BangServer.itemrepo.insertItem(article);
+
+                    // and fill its assigned item id into their default look
+                    for (int ii = 0; ii < look.articles.length; ii++) {
+                        if (AvatarLogic.SLOTS[ii].name.equals(
+                                article.getSlot())) {
+                            look.articles[ii] = article.getItemId();
+                        }
+                    }
+
+                    // finally insert their default look into the database
+                    BangServer.lookrepo.insertLook(user.playerId, look);
+
                 } catch (PersistenceException pe) {
                     log.log(Level.WARNING, "Error creating avatar " +
                             "[for=" + user.who() + ", look=" + look + "].", pe);
@@ -205,6 +222,7 @@ public class BarberManager extends PlaceManager
                     user.setLook("");
                     user.addToLooks(look);
                     user.setHandle(handle);
+                    user.addToInventory(article);
                     // register the player with their handle as we were unable
                     // to do so when they logged on
                     BangServer.registerPlayer(user);

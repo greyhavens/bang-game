@@ -58,14 +58,20 @@ public class FirstLookView extends BContainer
         _msgs = _ctx.getMessageManager().getBundle(BarberCodes.BARBER_MSGS);
         _status = status;
 
-        add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
+        // create our default clothing articles
+        int pid = ctx.getUserObject().playerId;
+        _defarts[0] = ctx.getAvatarLogic().createDefaultClothing(pid, true);
+        _defarts[1] = ctx.getAvatarLogic().createDefaultClothing(pid, false);
 
+        // create our user interface
+        add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
         _toggles = new BContainer(
             new TableLayout(4, 5, 20, TableLayout.LEFT, true));
         BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
         wrapper.add(_toggles);
         add(wrapper, BorderLayout.CENTER);
 
+        // start out with the random gender selection
         setGender(_ctx.getUserObject().isMale);
     }
 
@@ -85,6 +91,7 @@ public class FirstLookView extends BContainer
     public void setGender (boolean isMale)
     {
         _gender = isMale ? "male/" : "female/";
+        _defart = _defarts[isMale ? 0 : 1];
         _toggles.removeAll();
         for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
             if (isMale || !AvatarLogic.ASPECTS[ii].maleOnly) {
@@ -173,18 +180,9 @@ public class FirstLookView extends BContainer
             }
         }
 
-        // copy in any required articles from their active look
-        PlayerObject user = _ctx.getUserObject();
-        Look current = user.getLook();
-        if (current != null && current.articles.length != 0) {
-            for (int ii = 0; ii < AvatarLogic.SLOTS.length; ii++) {
-                if (AvatarLogic.SLOTS[ii].optional) {
-                    continue;
-                }
-                Article article = (Article)
-                    user.inventory.get(current.articles[ii]);
-                compids.add(article.getComponents());
-            }
+        // copy in the components from the default article
+        if (_defart != null) {
+            compids.add(_defart.getComponents());
         }
 
         int[] avatar = new int[compids.size()+1];
@@ -339,6 +337,9 @@ public class FirstLookView extends BContainer
 
     protected BarberObject _barbobj;
     protected String _gender;
+
+    protected Article[] _defarts = new Article[2];
+    protected Article _defart;
 
     protected CharacterComponent _ccomp;
     protected HashMap<String,Choice> _selections = new HashMap<String,Choice>();

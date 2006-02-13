@@ -4,7 +4,7 @@
 <articles>
   <!-- male clothing -->
   <article name="male_suit_bow" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5">
+           slot="clothing" scrip="1500" coins="5" starter="true">
     <component cclass="male/clothing_back" name="suit_bow"/>
   </article>
 
@@ -187,7 +187,7 @@
   </article>
 
   <article name="female_squaw" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5">
+           slot="clothing" scrip="1500" coins="5" starter="true">
     <component cclass="female/clothing_back" name="squaw"/>
   </article>
 

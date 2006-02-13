@@ -46,6 +46,10 @@ public class ArticleCatalog
          * subcomponents). */
         public String[] colors;
 
+        /** Whether or not this is a starter clothing article. (There should
+         * only be one starter for each gender.) */
+        public boolean starter;
+
         /** The list of components that make up this article. */
         public ArrayList<Component> components = new ArrayList<Component>();
 

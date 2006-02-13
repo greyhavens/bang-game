@@ -398,25 +398,32 @@ public class AvatarLogic
                         "[pid=" + playerId + ", article=" + article + "].");
             return null;
         }
+        return new Article(playerId, article.slot, article.name,
+                           getComponentIds(article, zations));
+    }
 
-        // look up the component ids of the various components in the article
-        int[] componentIds = new int[article.components.size()];
-        int idx = 0;
-        for (ArticleCatalog.Component comp : article.components) {
-            try {
-                CharacterComponent ccomp =
-                    _crepo.getComponent(comp.cclass, comp.name);
-                // the zations are already shifted 16 bits left
-                componentIds[idx++] = ccomp.componentId | zations;
-            } catch (NoSuchComponentException nsce) {
-                log.warning("Article references unknown component " +
-                            "[article=" + article.name +
-                            ", cclass=" + comp.cclass +
-                            ", name=" + comp.name + "].");
+    /**
+     * Creates the default clothing article for the specified gender.
+     */
+    public Article createDefaultClothing (int playerId, boolean forMale)
+    {
+        // look up the starter article
+        String prefix = forMale ? "male" : "female";
+        ArticleCatalog.Article article = null;
+        for (ArticleCatalog.Article art : _artcat.getArticles()) {
+            if (art.name.startsWith(prefix) && art.starter) {
+                article = art;
             }
         }
+        if (article == null) {
+            log.warning("Missing starter clothing article " +
+                        "[gender=" + prefix + "].");
+            return null;
+        }
 
-        return new Article(playerId, article.slot, article.name, componentIds);
+        int zations = 0;
+        return new Article(playerId, "clothing", article.name,
+                           getComponentIds(article, zations));
     }
 
     /**
@@ -439,6 +446,32 @@ public class AvatarLogic
             article.colors = classes.toArray(new String[classes.size()]);
         }
         return article.colors;
+    }
+
+    /**
+     * Looks up the appropriate component ids for the specified article,
+     * combines them with the supplied colorizations and returns an array
+     * suitable for using in an {@link Article} instance.
+     */
+    protected int[] getComponentIds (
+        ArticleCatalog.Article article, int zations)
+    {
+        int[] componentIds = new int[article.components.size()];
+        int idx = 0;
+        for (ArticleCatalog.Component comp : article.components) {
+            try {
+                CharacterComponent ccomp =
+                    _crepo.getComponent(comp.cclass, comp.name);
+                // the zations are already shifted 16 bits left
+                componentIds[idx++] = ccomp.componentId | zations;
+            } catch (NoSuchComponentException nsce) {
+                log.warning("Article references unknown component " +
+                            "[article=" + article.name +
+                            ", cclass=" + comp.cclass +
+                            ", name=" + comp.name + "].");
+            }
+        }
+        return componentIds;
     }
 
     protected ComponentRepository _crepo;
