@@ -19,7 +19,7 @@
 -injars ../lib/jme-model.jar(!META-INF/*)
 -injars ../lib/jme-terrain.jar(!META-INF/*)
 -injars ../lib/jme-awt.jar(!META-INF/*)
--injars ../lib/jme-bui.jar(!META-INF/*,!*/tests/*)
+-injars ../lib/jme-bui.jar(!META-INF/*,!**/tests/**)
 -injars ../lib/threerings.jar(**/coin/**)
 -injars ../lib/hemiptera.jar(!**/web/**,!**/persist/**,!install.properties)
 -injars ../dist/bang-code.jar(!META-INF/*,!**/tools/**,!**/tests/**)
