@@ -143,7 +143,7 @@ public class BangClient extends BasicClient
         // register as receiver for player notifications
         _client.getInvocationDirector().registerReceiver(
             new PlayerDecoder(this));
-        
+
         // create and display the logon view; which we do by hand instead of
         // using setMainView() because we don't want to start the resource
         // resolution until we're faded in
@@ -161,7 +161,7 @@ public class BangClient extends BasicClient
             }
         };
         _ctx.getInterface().attachChild(fade);
-        
+
         // create the pardner chat view, which will listen for tells from
         // pardners and pop up when possible
         _pcview = new PardnerChatView(_ctx);
@@ -188,19 +188,13 @@ public class BangClient extends BasicClient
         // if this player does not have a name, it's their first time, so pop
         // up the create avatar view
         if (user.handle == null) {
-            CreateAvatarView cav = new CreateAvatarView(_ctx);
-            _ctx.getRootNode().addWindow(cav);
-            cav.pack(800, -1);
-            cav.center();
+            displayPopup(new CreateAvatarView(_ctx), true, 800);
             return true;
         }
 
         // if they have no big shots then they need the intro for those
         if (!user.hasBigShot()) {
-            FirstBigShotView fbsv = new FirstBigShotView(_ctx);
-            _ctx.getRootNode().addWindow(fbsv);
-            fbsv.pack(600, -1);
-            fbsv.center();
+            displayPopup(new FirstBigShotView(_ctx), true, 600);
             return true;
         }
 
@@ -230,7 +224,23 @@ public class BangClient extends BasicClient
             return false;
         }
     }
-    
+
+    /**
+     * Like {@link #displayPopup(BWindow,boolean)} but allows the specification
+     * of a desired width for the popup.
+     */
+    public void displayPopup (BWindow popup, boolean animate, int twidth)
+    {
+        _ctx.getRootNode().addWindow(popup);
+        _popups.add(popup);
+
+        if (animate) {
+            popup.pack(twidth, -1);
+            _ctx.getInterface().attachChild(
+                new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f));
+        }
+    }
+
     /**
      * Displays a popup window that will automatically be cleared if we leave
      * the current "place". This should be used for any overlay view shown atop
@@ -242,14 +252,7 @@ public class BangClient extends BasicClient
      */
     public void displayPopup (BWindow popup, boolean animate)
     {
-        _ctx.getRootNode().addWindow(popup);
-        _popups.add(popup);
-
-        if (animate) {
-            popup.pack();
-            _ctx.getInterface().attachChild(
-                new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f));
-        }
+        displayPopup(popup, animate, -1);
     }
 
     /**
@@ -261,7 +264,7 @@ public class BangClient extends BasicClient
             clearPopup(_popups.get(0), animate);
         }
     }
-    
+
     /**
      * Dismisses a popup displayed with {@link #displayPopup}.
      */
@@ -290,13 +293,13 @@ public class BangClient extends BasicClient
     {
         return _pcview;
     }
-    
+
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
         // get a reference to the player service
         _psvc = (PlayerService)_client.requireService(PlayerService.class);
-        
+
         // we potentially jump right into a game when developing
         BangConfig config = null;
         if ("tutorial".equals(System.getProperty("test"))) {
@@ -382,7 +385,7 @@ public class BangClient extends BasicClient
             _invites.add(handle);
         }
     }
-    
+
     @Override // documentation inherited
     protected void createContextServices (RunQueue rqueue)
     {
@@ -532,7 +535,7 @@ public class BangClient extends BasicClient
             return _alogic;
         }
     }
-    
+
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
 
@@ -540,7 +543,7 @@ public class BangClient extends BasicClient
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
     protected PlayerService _psvc;
-    
+
     protected BWindow _mview;
     protected ArrayList<BWindow> _popups = new ArrayList<BWindow>();
     protected PardnerChatView _pcview;

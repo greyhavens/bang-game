@@ -115,8 +115,8 @@ public class FirstBigShotView extends BDecoratedWindow
             _ctx.getClient().requireService(PlayerService.class);
         PlayerService.ConfirmListener cl = new PlayerService.ConfirmListener() {
             public void requestProcessed () {
-                dismiss();
                 // move to the next phase of the intro
+                _ctx.getBangClient().clearPopup(FirstBigShotView.this, true);
                 _ctx.getBangClient().checkShowIntro();
             }
             public void requestFailed (String reason) {

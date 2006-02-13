@@ -15,8 +15,11 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.TextEvent;
+import com.jmex.bui.event.TextListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.text.LengthLimitedDocument;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
@@ -59,6 +62,7 @@ public class CreateAvatarView extends BDecoratedWindow
         _status.setStatus(_msgs.get("m.create_tip"), false);
         add(_status);
         add(_done = new BButton(_msgs.get("m.done"), this, "done"));
+        _done.setEnabled(false);
 
         // this all goes in the inner box
         BContainer hcont = GroupLayout.makeHBox(GroupLayout.LEFT);
@@ -77,7 +81,12 @@ public class CreateAvatarView extends BDecoratedWindow
         hcont.add(new BLabel(_msgs.get("m.handle"), "dialog_label"));
         hcont.add(_handle = new BTextField(""));
         _handle.setPreferredWidth(125);
-        // TODO: wire up handle validation stuff
+        _handle.setDocument(new HandleDocument());
+        _handle.addListener(new TextListener() {
+            public void textChanged (TextEvent event) {
+                handleUpdated(_handle.getText());
+            }
+        });
 
         hcont.add(new Spacer(25, 5));
         hcont.add(_prefix = new BComboBox());
@@ -133,22 +142,37 @@ public class CreateAvatarView extends BDecoratedWindow
         _root.selectItem(RandomUtil.getInt(_root.getItemCount()));
     }
 
+    protected void handleUpdated (String text)
+    {
+        boolean valid = NameFactory.getValidator().isValidHandle(
+            new Handle(text));
+        _done.setEnabled(valid);
+        String status = "m.create_defstatus";
+        if (!valid && _handle.getText().length() >=
+            NameFactory.getValidator().getMinHandleLength()) {
+            status = "m.invalid_handle";
+        }
+        _status.setStatus(_msgs.get(status), false);
+    }
+
     protected void createAvatar ()
     {
         AvatarService asvc = (AvatarService)
             _ctx.getClient().requireService(AvatarService.class);
         AvatarService.ConfirmListener cl = new AvatarService.ConfirmListener() {
             public void requestProcessed () {
-                dismiss();
                 // move to the next phase of the intro
+                _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
                 _ctx.getBangClient().checkShowIntro();
             }
             public void requestFailed (String reason) {
                 _status.setStatus(_msgs.xlate(reason), true);
                 _failed = true;
+                _handle.setEnabled(true);
                 _done.setEnabled(true);
             }
         };
+        _handle.setEnabled(false);
         _done.setEnabled(false);
 
         Handle handle = new Handle(_handle.getText());
@@ -160,9 +184,50 @@ public class CreateAvatarView extends BDecoratedWindow
     protected void maybeClearStatus ()
     {
         if (_failed) {
-            _status.setStatus("", false);
+            _status.setStatus(_msgs.get("m.create_defstatus"), false);
         }
     }
+
+    protected static class HandleDocument extends LengthLimitedDocument
+    {
+        public HandleDocument () {
+            super(NameFactory.getValidator().getMaxHandleLength());
+        }
+
+        public boolean replace (int offset, int length, String text) {
+            StringBuffer buf = new StringBuffer();
+            for (int ii = 0, ll = text.length(); ii < ll; ii++) {
+                char c = text.charAt(ii);
+                // filter out non-letters and whitespace
+                if (!Character.isLetter(c) && !Character.isWhitespace(c)) {
+                    continue;
+                }
+                // if they're just starting to type from a blank slate,
+                // capitalize the first letter they type; doing it at any other
+                // time has the potential to result in unintended behavior
+                if (getLength() == 0 && Character.isLowerCase(c)) {
+                    buf.append(Character.toUpperCase(c));
+                } else {
+                    buf.append(c);
+                }
+            }
+            text = buf.toString();
+
+            // if we've reduced this to a NOOP, we have to indicate that we've
+            // rejected the edit
+            if (length == 0 && text.length() == 0) {
+                return false;
+            }
+
+            return super.replace(offset, length, text);
+        }
+
+        protected boolean validateEdit (String oldText, String newText) {
+            // disallow consecutive spaces
+            return super.validateEdit(oldText, newText) &&
+                !newText.matches(".*\\s\\s.*");
+        }
+    };
 
     protected ActionListener _namer = new ActionListener() {
         public void actionPerformed (ActionEvent event) {

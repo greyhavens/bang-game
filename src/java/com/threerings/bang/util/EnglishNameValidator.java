@@ -66,5 +66,5 @@ public class EnglishNameValidator extends NameValidator
     protected static final int MIN_HANDLE_CHARS = 4;
 
     /** The maximum number of characters for a player handle. */
-    protected static final int MAX_HANDLE_CHARS = 32;
+    protected static final int MAX_HANDLE_CHARS = 18;
 }
