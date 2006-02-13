@@ -72,7 +72,7 @@ public class MobileSprite extends PieceSprite
     /** A fake action that is queued up to indicate that this sprite
      * should be removed when all other actions are completed. */
     public static final String REMOVED = "__removed__";
-
+    
     /**
      * Creates a mobile sprite with the specified model type and name.
      */
@@ -233,6 +233,11 @@ public class MobileSprite extends PieceSprite
                     _observers.apply(new CompletedOp(this, action));
                 }
 
+                // if we were removed, don't bother updating the action
+                if (getParent() == null) {
+                    return;
+                }
+                
                 // start the next action if we have one, otherwise rest
                 if (_actions.size() > 0) {
                     startNextAction();
@@ -472,6 +477,10 @@ public class MobileSprite extends PieceSprite
                 }
             });
 
+        } else if (_action.equals("dying") && !hasAction("dying")) {
+            // burst into pieces of wreckage
+            
+            
         } else {
             Model.Animation anim = setAction(_action);
             _nextAction = anim.getDuration() / Config.display.animationSpeed;
@@ -485,7 +494,7 @@ public class MobileSprite extends PieceSprite
      */
     protected String getRestPose ()
     {
-        return "standing";
+        return _piece.isAlive() ? "standing" : "dead";
     }
 
     /**
