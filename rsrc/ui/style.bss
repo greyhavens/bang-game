@@ -573,6 +573,12 @@ player_status3 {
   text-align: center;
 }
 
+round_timer {
+  font: "Old Town" plain 48;
+  text-align: center;
+  vertical-align: center;
+}
+
 //
 // Post-game stats display
 

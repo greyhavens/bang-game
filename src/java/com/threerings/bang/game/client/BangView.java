@@ -49,6 +49,7 @@ public class BangView extends BWindow
         // create our various displays
         add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
         chat = new OverlayChatView(ctx);
+        _timer = new RoundTimerView(ctx);
     }
 
     /**
@@ -128,6 +129,9 @@ public class BangView extends BWindow
                 pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, _ctrl, ii));
         }
 
+        // initialize the round timer
+        _timer.init(_bangobj);
+
         chat.willEnterPlace(plobj);
     }
 
@@ -141,6 +145,7 @@ public class BangView extends BWindow
             _ctx.getRootNode().removeWindow(_pswins[ii]);
         }
         _ctx.getRootNode().removeWindow(chat);
+        _ctx.getRootNode().removeWindow(_timer);
 
         if (_oview != null) {
             _ctx.getRootNode().removeWindow(_oview);
@@ -187,6 +192,10 @@ public class BangView extends BWindow
             }
         }
 
+        // add the round timer
+        _ctx.getRootNode().addWindow(_timer);
+        _timer.setBounds((width - 100) / 2, height - 50, 100, 50);
+
         // and add our chat display
         _ctx.getRootNode().addWindow(chat);
         chat.pack();
@@ -223,6 +232,9 @@ public class BangView extends BWindow
 
     /** The main game distributed object. */
     protected BangObject _bangobj;
+
+    /** Displays the end of round timer. */
+    protected RoundTimerView _timer;
 
     /** Contain per-player displays. */
     protected BWindow[] _pswins;
