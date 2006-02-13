@@ -35,44 +35,27 @@ SVNROOT=`grep ' url' $ROOT/.svn/entries | awk -F\" '{ print $2 }' | \
 
 # check out the various project directories
 cd $ROOT/projects
-if [ ! -d narya ]; then
-    svn checkout $SVNROOT/narya/trunk narya
-fi
+for PROJECT in samskivert jme-bui; do
+    if [ ! -d $PROJECT ]; then
+        svn checkout svn://samskivert.com/$PROJECT/trunk $PROJECT
+    fi
+done
+for PROJECT in narya getdown; do
+    if [ ! -d $PROJECT ]; then
+        svn checkout $SVNROOT/$PROJECT/trunk $PROJECT
+    fi
+done
 if [ ! -d threerings ]; then
     svn checkout $SVNROOT/threerings/trunk/projects/threerings threerings
 fi
-if [ ! -d getdown ]; then
-    svn checkout $SVNROOT/getdown/trunk getdown
-fi
-if [ ! -d samskivert ]; then
-    svn checkout svn://samskivert.com/samskivert/trunk samskivert
-fi
-if [ ! -d jme-bui ]; then
-    svn checkout svn://samskivert.com/jme-bui/trunk jme-bui
-fi
 
-# set up the necessary library symlinks
-cd $ROOT/projects/jme-bui/lib
-make_symlinks \
-    jme.jar \
-    lwjgl.jar
+# set up the necessary library dependency symlinks
+for PROJECT in jme-bui samskivert narya getdown; do
+    cd $ROOT/projects/$PROJECT/lib
+    make_symlinks `cat LIBS`
+done
 
-cd $ROOT/projects/samskivert/lib
-make_symlinks \
-    servlet-2.3.jar \
-    mail.jar \
-    commons-collections.jar \
-    commons-digester.jar \
-    commons-logging.jar \
-    velocity-1.5-dev.jar
-
-cd $ROOT/projects/narya/lib
-make_symlinks `cat LIBS`
-
-cd $ROOT/projects/getdown/lib
-make_symlinks `cat LIBS`
-
-# create the necessary symlinks in $ROOT/lib
+# build the projects and link their jar files into $ROOT/lib
 cd $ROOT/projects
 for PROJECT in jme-bui samskivert narya threerings getdown; do
     cd $ROOT/projects/$PROJECT
