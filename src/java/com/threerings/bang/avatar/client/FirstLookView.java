@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BConstants;
@@ -105,13 +106,15 @@ public class FirstLookView extends BContainer
 
         // look up the selection for each aspect class
         config.aspects = new String[AvatarLogic.ASPECTS.length];
-        for (int ii = 0; ii < config.aspects.length; ii++) {
-            Choice choice = _selections.get(AvatarLogic.ASPECTS[ii].name); 
-            config.aspects[ii] = (choice == null) ? null : choice.aspect.name;
-        }
-
-        // TODO: get per-aspect colorizations
         config.colors = new int[config.aspects.length];
+        for (int ii = 0; ii < config.aspects.length; ii++) {
+            Choice choice = _selections.get(AvatarLogic.ASPECTS[ii].name);
+            if (choice == null) {
+                continue;
+            }
+            config.aspects[ii] = choice.aspect.name;
+            config.colors[ii] = getColorizations(AvatarLogic.ASPECTS[ii].name);
+        }
 
         return config;
     }
@@ -151,15 +154,21 @@ public class FirstLookView extends BContainer
         // obtain the component ids of the various aspect selections and total
         // up the cost of this look while we're at it
         ArrayIntSet compids = new ArrayIntSet();
-        for (Choice choice : _selections.values()) {
+        Iterator<Map.Entry<String,Choice>> iter =
+            _selections.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String,Choice> entry = iter.next();
+            String aspect = entry.getKey();
+            Choice choice = entry.getValue();
             if (choice == null) {
                 continue;
             }
             scrip += choice.aspect.scrip;
             coins += choice.aspect.coins;
+            int zations = getColorizations(aspect);
             for (int ii = 0; ii < choice.components.length; ii++) {
                 if (choice.components[ii] != null) {
-                    compids.add(choice.components[ii].componentId);
+                    compids.add(zations | choice.components[ii].componentId);
                 }
             }
         }
@@ -186,6 +195,17 @@ public class FirstLookView extends BContainer
         _avatar.setAvatar(avatar);
         if (_cost != null) {
             _cost.setMoney(scrip, coins, false);
+        }
+    }
+
+    protected int getColorizations (String aspect)
+    {
+        // for now we just suppotr eye color
+        if (aspect.equals("eyes")) {
+            return AvatarLogic.composeZation(
+                _eyes.getColorClass(), _eyes.getSelectedColor());
+        } else {
+            return 0;
         }
     }
 
@@ -257,11 +277,8 @@ public class FirstLookView extends BContainer
                 _choices.add(null);
             }
 
-            // TODO: sort components based on cost
-
             // configure our default selection
             if (_choices.size() > 0) {
-                // TODO: configure _selidx based on existing avatar?
                 _selidx = RandomUtil.getInt(_choices.size());
                 noteSelection();
             }

@@ -153,14 +153,14 @@ back_button:down {
 
 arrow_button {
   parent: alt_button;
-  padding: 5 1;
+  padding: 4 1;
 }
 arrow_button:hover {
   parent: "alt_button:hover";
 }
 arrow_button:down {
   parent: "alt_button:down";
-  padding: 6 2 4 0;
+  padding: 5 2 3 0;
 }
 arrow_button:disabled {
   parent: "alt_button:disabled";

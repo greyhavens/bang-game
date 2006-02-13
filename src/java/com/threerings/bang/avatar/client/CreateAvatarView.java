@@ -76,10 +76,10 @@ public class CreateAvatarView extends BDecoratedWindow
 
         inner.add(_look = new FirstLookView(ctx, _status));
 
-        hcont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        hcont.add(new Spacer(20, 1));
-        hcont.add(new BLabel(_msgs.get("m.handle"), "dialog_label"));
-        hcont.add(_handle = new BTextField(""));
+        hcont = new BContainer(GroupLayout.makeHStretch());
+        hcont.add(new BLabel(_msgs.get("m.handle"), "dialog_label"),
+                  GroupLayout.FIXED);
+        hcont.add(_handle = new BTextField(""), GroupLayout.FIXED);
         _handle.setPreferredWidth(125);
         _handle.setDocument(new HandleDocument());
         _handle.addListener(new TextListener() {
@@ -88,18 +88,21 @@ public class CreateAvatarView extends BDecoratedWindow
             }
         });
 
-        hcont.add(new Spacer(25, 5));
-        hcont.add(_prefix = new BComboBox());
+        ImageIcon dicon = new ImageIcon(ctx.loadImage("ui/icons/dice.png"));
+        BButton btn;
+        hcont.add(btn = new BButton(dicon, this, "random"), GroupLayout.FIXED);
+        btn.setStyleClass("arrow_button");
+
+        hcont.add(new Spacer(33, 5), GroupLayout.FIXED);
+
+        hcont.add(_prefix = new BComboBox(), GroupLayout.FIXED);
         _prefix.addListener(_namer);
         _root = new BComboBox();
         _root.addListener(_namer);
         hcont.add(_root);
-        hcont.add(_suffix = new BComboBox());
+        hcont.add(_suffix = new BComboBox(), GroupLayout.FIXED);
         _suffix.addListener(_namer);
 
-        hcont.add(new Spacer(15, 5));
-        ImageIcon dicon = new ImageIcon(ctx.loadImage("ui/icons/dice.png"));
-        hcont.add(new BButton(dicon, this, "random"));
         inner.add(hcont);
 
         // start with a random gender which will trigger name list and avatar

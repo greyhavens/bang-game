@@ -29,6 +29,8 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.avatar.util.AvatarLogic;
+
 /**
  * Displays a popup menu in which the user can select a particular colorization
  * from a colorization class.
@@ -45,11 +47,13 @@ public class ColorSelector extends BComponent
         ColorPository cpos = ctx.getAvatarLogic().getColorPository();
         ColorPository.ColorRecord[] colors = cpos.enumerateColors(colorClass);
 
-        int dy = 0;
+        int dy = 0; // HAIR
         if (colorClass.endsWith("_s")) {
             dy = 24;
         } else if (colorClass.endsWith("_t")) {
             dy = 48;
+        } else if (colorClass.equals(AvatarLogic.SKIN)) {
+            dy = 72;
         }
 
         BufferedImage dots =
