@@ -14,6 +14,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.Effect;
@@ -63,11 +64,11 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public void gameWillStart (BangObject bangobj, ArrayList<Piece> markers,
-                               PointSet bonusSpots, PieceSet purchases)
+    public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
+                                PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.gameWillStart(bangobj, markers, bonusSpots, purchases);
+        super.roundWillStart(bangobj, markers, bonusSpots, purchases);
 
         // determine how many cattle we want to put on the board
         int cattle = 0, cps = 0;
@@ -98,23 +99,20 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public boolean tick (BangObject bangobj, short tick)
+    public void roundDidEnd (BangObject bangobj)
     {
-        if (!super.tick(bangobj, tick)) {
-            return false;
-        }
+        super.roundDidEnd(bangobj);
 
-        // score cash for each cow and note rustled counts
+        // award cash for each cow and note rustled counts
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
-                bangobj.grantCash(pieces[ii].owner, ScenarioCodes.CASH_PER_COW);
+                bangobj.grantCash(
+                    pieces[ii].owner, ScenarioCodes.CASH_PER_COW);
                 bangobj.stats[pieces[ii].owner].incrementStat(
                     Stat.Type.CATTLE_RUSTLED, 1);
             }
         }
-
-        return true;
     }
 
     @Override // documentation inherited
@@ -164,9 +162,10 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    protected long getMaxScenarioTime ()
+    protected short getBaseDuration ()
     {
-        return 5 * 60 * 1000L;
+        // cattle herding should be a bit shorter than the normal 240
+        return 200;
     }
 
     /**

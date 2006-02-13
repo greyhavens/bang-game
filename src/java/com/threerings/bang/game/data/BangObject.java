@@ -106,6 +106,12 @@ public class BangObject extends GameObject
     /** The field name of the <code>tick</code> field. */
     public static final String TICK = "tick";
 
+    /** The field name of the <code>lastTick</code> field. */
+    public static final String LAST_TICK = "lastTick";
+
+    /** The field name of the <code>duration</code> field. */
+    public static final String DURATION = "duration";
+
     /** The field name of the <code>pieces</code> field. */
     public static final String PIECES = "pieces";
 
@@ -168,8 +174,17 @@ public class BangObject extends GameObject
     /** The big shots selected for use by each player. */
     public Unit[] bigShots;
 
-    /** The curent board tick count. */
+    /** The current board tick count. */
     public short tick;
+
+    /** The tick after which the game will end. This may not be {@link
+     * #duration} - 1 because some scenarios may opt to end the game early. */
+    public short lastTick;
+
+    /** The maximum number of ticks that will be allowed to elapse before the
+     * game is ended. Some scenarios may choose to end the game early (see
+     * {@link #lastTick}). */
+    public short duration;
 
     /** Contains information on all pieces on the board. */
     public PieceDSet pieces;
@@ -628,6 +643,38 @@ public class BangObject extends GameObject
         requestAttributeChange(
             TICK, new Short(value), new Short(ovalue));
         this.tick = value;
+    }
+
+    /**
+     * Requests that the <code>lastTick</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setLastTick (short value)
+    {
+        short ovalue = this.lastTick;
+        requestAttributeChange(
+            LAST_TICK, new Short(value), new Short(ovalue));
+        this.lastTick = value;
+    }
+
+    /**
+     * Requests that the <code>duration</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setDuration (short value)
+    {
+        short ovalue = this.duration;
+        requestAttributeChange(
+            DURATION, new Short(value), new Short(ovalue));
+        this.duration = value;
     }
 
     /**

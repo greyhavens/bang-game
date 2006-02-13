@@ -51,14 +51,13 @@ public class ClaimJumping extends Scenario
     public static final int NUGGET_COUNT = 2;
 
     @Override // documentation inherited
-    public void gameWillStart (BangObject bangobj, ArrayList<Piece> starts,
-                               PointSet bonusSpots, PieceSet purchases)
+    public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
+                                PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.gameWillStart(bangobj, starts, bonusSpots, purchases);
+        super.roundWillStart(bangobj, starts, bonusSpots, purchases);
 
         _claims = new ArrayList<Claim>();
-        _gameOverTick = -1;
 
         // locate all the claims, assign them to players and fill them
         // with nuggets
@@ -70,7 +69,8 @@ public class ClaimJumping extends Scenario
                 // determine which start marker to which it is nearest
                 int midx = getOwner(claim, starts);
                 if (midx == -1 || assigned.contains(midx)) {
-                    throw new InvocationException("m.no_start_marker_for_claim");
+                    throw new InvocationException(
+                        "m.no_start_marker_for_claim");
                 }
                 // if we have a player in the game associated with this
                 // start marker, configure this claim for play
@@ -96,23 +96,49 @@ public class ClaimJumping extends Scenario
     }
 
     @Override // documentation inherited
-    public boolean tick (BangObject bangobj, short tick)
+    public void tick (BangObject bangobj, short tick)
     {
-        if (super.tick(bangobj, tick) || checkRoundOver(bangobj, tick)) {
-            // score cash for all nuggets in each player's claim
-            for (Claim claim : _claims) {
-                if (claim.nuggets <= 0) {
-                    continue;
-                }
-                bangobj.grantCash(claim.owner, ScenarioCodes.CASH_PER_NUGGET *
-                                  (claim.nuggets));
-                bangobj.stats[claim.owner].incrementStat(
-                    Stat.Type.NUGGETS_CLAIMED, claim.nuggets);
+        super.tick(bangobj, tick);
+
+        // check to see if there are empty claims
+        boolean empty = false;
+        for (Claim claim : _claims) {
+            if (claim.nuggets == 0) {
+                empty = true;
+                break;
             }
-            return true;
         }
 
-        return false;
+        // if we are not already ending early, and one or more claims are
+        // empty, adjust the lastTick...
+        short realLastTick = (short)(bangobj.duration - 1);
+        if (bangobj.lastTick == realLastTick && empty) {
+            short lastTick = (short)(tick + EMPTY_CLAIM_TICKS);
+            if (lastTick < realLastTick) {
+                bangobj.setLastTick(lastTick);
+            }
+
+        // ...if no claims are empty clear the early ending tick
+        } else if (bangobj.lastTick != realLastTick && !empty) {
+            bangobj.setLastTick(realLastTick);
+        }
+    }
+
+    @Override // documentation inherited
+    public void roundDidEnd (BangObject bangobj)
+    {
+        super.roundDidEnd(bangobj);
+
+        // score cash for all nuggets in each players' claim
+        for (Claim claim : _claims) {
+            if (claim.nuggets <= 0) {
+                continue;
+            }
+            bangobj.grantCash(
+                claim.owner, ScenarioCodes.CASH_PER_NUGGET * (claim.nuggets));
+            bangobj.stats[claim.owner].incrementStat(
+                Stat.Type.NUGGETS_CLAIMED, claim.nuggets);
+        }
     }
 
     @Override // documentation inherited
@@ -195,53 +221,6 @@ public class ClaimJumping extends Scenario
     }
 
     /**
-     * Determines whether or not the round should be ended on this tick.
-     * Handles starting timers as appropriate and informing the players of
-     * their progress.
-     */
-    protected boolean checkRoundOver (BangObject bangobj, short tick)
-    {
-        // check to see if there are empty claims
-        boolean empty = false;
-        for (Claim claim : _claims) {
-            if (claim.nuggets == 0) {
-                empty = true;
-                break;
-            }
-        }
-
-        // if we have no timer and one or more claims are empty; start it
-        if (_gameOverTick < 0 && empty) {
-            _gameOverTick = (short)(tick + END_GAME_TIMER);
-            String msg = MessageBundle.tcompose(
-                "m.starting_timer", "" + END_GAME_TIMER);
-            SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
-        }
-
-        // if we have a timer started...
-        if (_gameOverTick > 0) {
-            // ...and no empty claims, stop it
-            if (!empty) {
-                _gameOverTick = -1;
-                SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.timer_stopped");
-
-            } else if (tick >= _gameOverTick) {
-                // end the game if the timer expires
-                SpeakProvider.sendInfo(bangobj, GAME_MSGS, "m.timer_expired");
-                return true;
-
-            } else if ((_gameOverTick - tick) % 10 == 5) {
-                int ticks = _gameOverTick - tick;
-                String msg = MessageBundle.tcompose(
-                    "m.ticking_timer", "" + ticks);
-                SpeakProvider.sendInfo(bangobj, GAME_MSGS, msg);
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Drops a nugget at the specified location.
      */
     protected Bonus dropNugget (BangObject bangobj, int x, int y)
@@ -265,7 +244,7 @@ public class ClaimJumping extends Scenario
     protected Bonus _nuggetBonus =
         Bonus.createBonus(BonusConfig.getConfig("nugget"));
 
-    /** The number of ticks after which we end the game while at least one
-     * claim is empty. */
-    protected static final int END_GAME_TIMER = 28;
+    /** The number of ticks after which we end the game if at least one claim
+     * remains empty for that duration. */
+    protected static final int EMPTY_CLAIM_TICKS = 28;
 }

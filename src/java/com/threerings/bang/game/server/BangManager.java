@@ -656,10 +656,17 @@ public class BangManager extends GameManager
         try {
             _bangobj.startTransaction();
 
-            // let the scenario know that we're about to start
             try {
-                _scenario.gameWillStart(
+                // let the scenario know that we're about to start the round
+                _scenario.roundWillStart(
                     _bangobj, _starts, _bonusSpots, _purchases);
+
+                // configure the duration of the round
+                _bangobj.setDuration(_scenario.getDuration(_bconfig));
+                _bangobj.setLastTick((short)(_bangobj.duration - 1));
+                log.info("Duration: " + _bangobj.duration +
+                         " last: " + _bangobj.lastTick);
+
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
                             ", error=" + ie.getMessage() + "].");
@@ -788,8 +795,14 @@ public class BangManager extends GameManager
             }
         }
 
-        // tick the scenario and determine whether we should end the game
-        if (_scenario.tick(_bangobj, tick)) {
+        // tick the scenario which will do all the standard processing
+        _scenario.tick(_bangobj, tick);
+
+        // determine whether we should end the game
+        if (tick >= _bangobj.lastTick) {
+            // let the scenario do any end of round business
+            _scenario.roundDidEnd(_bangobj);
+
             // broadcast our updated statistics
             _bangobj.setStats(_bangobj.stats);
 

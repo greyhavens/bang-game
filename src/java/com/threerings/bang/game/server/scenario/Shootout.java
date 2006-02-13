@@ -25,18 +25,18 @@ import com.threerings.bang.game.util.PointSet;
 public class Shootout extends Scenario
 {
     @Override // documentation inherited
-    public void gameWillStart (BangObject bangobj, ArrayList<Piece> markers,
-                               PointSet bonusSpots, PieceSet purchases)
+    public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
+                                PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.gameWillStart(bangobj, markers, bonusSpots, purchases);
+        super.roundWillStart(bangobj, markers, bonusSpots, purchases);
 
         // create a fresh knockout array
         _knockoutOrder = new int[bangobj.players.length];
     }
 
     @Override // documentation inherited
-    public boolean tick (BangObject bangobj, short tick)
+    public void tick (BangObject bangobj, short tick)
     {
         super.tick(bangobj, tick);
 
@@ -66,10 +66,9 @@ public class Shootout extends Scenario
         if (_havers.size() < 2) {
             // score cash for the last player standing
             bangobj.grantCash(_havers.get(0), SCORE_CASH * (score + 1));
-            return true;
+            // set the last tick to now to end the round
+            bangobj.setLastTick(tick);
         }
-
-        return false;
     }
 
     /** Used to calculate winners. */

@@ -63,11 +63,11 @@ public class Tutorial extends Scenario
     }
 
     @Override // documentation inherited
-    public void gameWillStart (BangObject bangobj, ArrayList<Piece> markers,
-                               PointSet bonusSpots, PieceSet purchases)
+    public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
+                                PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.gameWillStart(bangobj, markers, bonusSpots, purchases);
+        super.roundWillStart(bangobj, markers, bonusSpots, purchases);
 
         // register to receive various tutorial specific messages
         _bangmgr.registerMessageHandler(TutorialCodes.ACTION_PROCESSED, this);
@@ -77,7 +77,8 @@ public class Tutorial extends Scenario
         _config = TutorialUtil.loadTutorial(
             BangServer.rsrcmgr, bconfig.scenarios[0]);
 
-        // set up our game object listeners
+        // set up our game object listeners; we only ever have one round in a
+        // scenario, so this is OK to do in roundWillStart()
         _bangobj = bangobj;
         _bangobj.addListener(_acl);
 
@@ -86,12 +87,14 @@ public class Tutorial extends Scenario
     }
 
     @Override // documentation inherited
-    public boolean tick (BangObject bangobj, short tick)
+    public void tick (BangObject bangobj, short tick)
     {
-        if (super.tick(bangobj, tick)) {
-            return true;
+        super.tick(bangobj, tick);
+
+        // end the scenario if we've reached the last action
+        if (_nextActionId >= _config.getActionCount()) {
+            bangobj.setLastTick(tick);
         }
-        return _nextActionId >= _config.getActionCount();
     }
 
     // documentation inherited from PlaceManager.MessageHandler
@@ -107,11 +110,11 @@ public class Tutorial extends Scenario
     }
 
     @Override // documentation inherited
-    protected long getMaxScenarioTime ()
+    protected short getBaseDuration ()
     {
         // tutorials don't normally expire after a set time, but we do end them
         // eventually if the player dallies too long
-        return 30 * 60 * 1000L;
+        return 400;
     }
 
     protected void processAction (int actionId)
