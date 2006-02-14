@@ -664,8 +664,6 @@ public class BangManager extends GameManager
                 // configure the duration of the round
                 _bangobj.setDuration(_scenario.getDuration(_bconfig));
                 _bangobj.setLastTick((short)(_bangobj.duration - 1));
-                log.info("Duration: " + _bangobj.duration +
-                         " last: " + _bangobj.lastTick);
 
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
