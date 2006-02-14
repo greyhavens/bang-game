@@ -129,8 +129,8 @@ public class UnitSprite extends MobileSprite
         Unit unit = (Unit)piece;
         int ticks = unit.ticksUntilMovable(_tick);
 
-        // clear our pending shot once we've been ticked
-        if (_pendingTick != -1 && tick > _pendingTick) {
+        // clear our pending shot once we've been ticked (or if we die)
+        if (!piece.isAlive() || (_pendingTick != -1 && tick > _pendingTick)) {
             setPendingShot(false);
         }
 
