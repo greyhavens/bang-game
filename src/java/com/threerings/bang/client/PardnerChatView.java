@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
@@ -196,7 +197,7 @@ public class PardnerChatView extends BDecoratedWindow
             _handle = handle;
             this.idx = idx;
             
-            _content.setPreferredSize(new Dimension(400, 400));
+            setPreferredSize(new Dimension(400, 400));
         }
         
         /**
@@ -220,7 +221,7 @@ public class PardnerChatView extends BDecoratedWindow
          */
         public void appendSent (String msg)
         {
-            _content.add(new ChatBubble(_micon, msg, true));
+            append(new ChatBubble(_micon, msg, true));
         }
 
         /**
@@ -235,7 +236,7 @@ public class PardnerChatView extends BDecoratedWindow
                 _picon = getAvatarIcon(avatar);
                 _pavatar = avatar;
             }
-            _content.add(new ChatBubble(_picon, msg.message, false));
+            append(new ChatBubble(_picon, msg.message, false));
         }
         
         /**
@@ -243,7 +244,16 @@ public class PardnerChatView extends BDecoratedWindow
          */ 
         public void appendSystem (SystemMessage msg)
         {
-            _content.add(new BLabel(_ctx.xlate(msg.bundle, msg.message)));
+            append(new BLabel(_ctx.xlate(msg.bundle, msg.message)));
+        }
+        
+        protected void append (BComponent comp)
+        {
+            // add the new component, validate the viewport to make sure the scroll
+            // bounds are up-to-date, and scroll to visible
+            _content.add(comp);
+            _vport.validate();
+            getVerticalScrollBar().getModel().setValue(Integer.MAX_VALUE);
         }
         
         protected Name _handle;
