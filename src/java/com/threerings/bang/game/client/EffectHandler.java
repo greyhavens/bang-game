@@ -10,6 +10,7 @@ import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.SoundUtil;
 
@@ -18,6 +19,7 @@ import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.client.effect.IconViz;
 import com.threerings.bang.game.client.effect.PlaySoundViz;
 import com.threerings.bang.game.client.effect.RepairViz;
+import com.threerings.bang.game.client.effect.WreckViz;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.RepairEffect;
@@ -28,6 +30,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -81,15 +84,27 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // create the appropriate visual effect
-        if (effect.equals(ShotEffect.EXPLODED)) {
+        boolean wasShot = false;
+        if (effect.equals(ShotEffect.DAMAGED)) {
+            wasShot = true;
+        } else if (effect.equals(ShotEffect.EXPLODED)) {
+            wasShot = true;
             _effviz = new ExplosionViz(false);
             // they just got shot, clear any pending shot
             ((UnitSprite)sprite).setPendingShot(false);
         } else if (effect.equals(AreaDamageEffect.MISSILED)) {
+            wasShot = true;
             _effviz = new ExplosionViz(true);
         } else if (effect.equals(RepairEffect.REPAIRED)) {
             _effviz = new RepairViz();
         }
+
+        // add wreck effect for steam-powered units
+        if (wasShot && piece instanceof Unit &&
+            ((Unit)piece).getConfig().make == UnitConfig.Make.STEAM &&
+            (_effviz instanceof ExplosionViz || !piece.isAlive())) {
+            _effviz = new WreckViz(_effviz);
+        } 
 
         // queue the effect up on the piece sprite
         if (_effviz != null) {
@@ -106,11 +121,15 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // if this piece was shot, trigger the reacting or dying animation
-        if ((effect.equals(ShotEffect.DAMAGED) ||
-             effect.equals(AreaDamageEffect.MISSILED)) &&
-            sprite instanceof MobileSprite) {
-            queueAction((MobileSprite)sprite,
-                        piece.isAlive() ? "reacting" : "dying");
+        if (wasShot && sprite instanceof MobileSprite) {
+            MobileSprite msprite = (MobileSprite)sprite;
+            if (piece.isAlive()) {
+                queueAction(msprite, "reacting");
+                
+            } else {
+                queueAction(msprite, msprite.hasAction("dying") ?
+                    "dying" : "dead");
+            }
         }
 
         // perhaps show an icon animation indicating what happened

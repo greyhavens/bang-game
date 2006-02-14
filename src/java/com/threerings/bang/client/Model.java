@@ -395,6 +395,14 @@ public class Model
     }
 
     /**
+     * Returns a reference to the configuration properties of this model.
+     */
+    public Properties getProperties ()
+    {
+        return _props;
+    }
+    
+    /**
      * Returns true if we have meshes for the specified action.
      */
     public boolean hasAnimation (String action)

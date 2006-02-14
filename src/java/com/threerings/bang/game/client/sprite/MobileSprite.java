@@ -100,6 +100,15 @@ public class MobileSprite extends PieceSprite
     }
 
     /**
+     * Returns an array containing the types of wreckage to be thrown from this
+     * sprite when it blows up.
+     */
+    public String[] getWreckageTypes ()
+    {
+        return _wtypes;
+    }
+    
+    /**
      * Called to inform us that we will be shooting the specified target
      * sprite when we finish our path.
      */
@@ -288,6 +297,8 @@ public class MobileSprite extends PieceSprite
         // load our model
         _model = ctx.loadModel(_type, _name);
         _model.resolveActions();
+        _wtypes = StringUtil.parseStringArray(
+            _model.getProperties().getProperty("wreckage", ""));
 
         // start in our rest post
         setAction(getRestPose());
@@ -477,15 +488,6 @@ public class MobileSprite extends PieceSprite
                 }
             });
 
-        } else if (_action.equals("dying") && !hasAction("dying")) {
-            // TODO: burst into pieces of wreckage
-
-            // for now, we need to acknowledge that our action was immediately
-            // completed
-            if (_observers != null) {
-                _observers.apply(new CompletedOp(this, _action));
-            }
-
         } else {
             Model.Animation anim = setAction(_action);
             _nextAction = anim.getDuration() / Config.display.animationSpeed;
@@ -637,6 +639,7 @@ public class MobileSprite extends PieceSprite
     protected BasicContext _ctx;
 
     protected String _type, _name;
+    protected String[] _wtypes;
     protected Node _hnode;
     protected TerrainNode.Highlight _highlight;
     protected TerrainNode.Highlight _shadow;

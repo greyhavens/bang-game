@@ -87,6 +87,7 @@ public class ParticleFactory
         _smokePuffs.add(smokePuff);
         return smokePuff;
     }
+    
     public static ParticleManager getSparkles ()
     {
         int count = 0, index = -1;
@@ -99,6 +100,20 @@ public class ParticleFactory
         ParticleManager sparkles = createSparkles();
         _sparkles.add(sparkles);
         return sparkles;
+    }
+    
+    public static ParticleManager getSteamCloud ()
+    {
+        int count = 0, index = -1;
+        for (int x = 0, tSize = _steamClouds.size(); x < tSize; x++) {
+            ParticleManager e = _steamClouds.get(x);
+            if (!e.isActive()) {
+                return e;
+            }
+        }
+        ParticleManager steamCloud = createSteamCloud();
+        _steamClouds.add(steamCloud);
+        return steamCloud;
     }
     
     protected static ParticleManager createDustRing ()
@@ -237,6 +252,34 @@ public class ParticleFactory
         return manager;
     }
     
+    protected static ParticleManager createSteamCloud ()
+    {
+        ParticleManager manager = new TransientParticleManager(32);
+        manager.setParticlesMinimumLifeTime(500f);
+        manager.getParticlesOrigin().z += (TILE_SIZE * 0.75f);
+        manager.setInitialVelocity(0.001f);
+        manager.setEmissionDirection(Vector3f.UNIT_Z);
+        manager.setEmissionMaximumAngle(FastMath.PI / 4);
+        manager.setRandomMod(0f);
+        manager.setPrecision(FastMath.FLT_EPSILON);
+        manager.setControlFlow(false);
+        manager.setStartSize(TILE_SIZE / 2);
+        manager.setEndSize(TILE_SIZE);
+        manager.setStartColor(new ColorRGBA(0.75f, 0.75f, 0.75f, 0.75f));
+        manager.setEndColor(new ColorRGBA(0.75f, 0.75f, 0.75f, 0f));
+        manager.setRepeatType(Controller.RT_CLAMP);
+        
+        TriMesh particles = manager.getParticles();
+        particles.addController(manager);
+
+        particles.setRenderState(_dusttex);
+        particles.setRenderState(RenderUtil.blendAlpha);
+        particles.setRenderState(RenderUtil.overlayZBuf);
+        particles.updateRenderState();
+        
+        return manager;
+    }
+    
     /** Extends the particle manager class to detach the particles from their
      * parent when the manager becomes inactive. */
     protected static class TransientParticleManager extends ParticleManager
@@ -264,6 +307,8 @@ public class ParticleFactory
     protected static ArrayList<ParticleManager> _smokePuffs =
         new ArrayList<ParticleManager>();
     protected static ArrayList<ParticleManager> _sparkles =
+        new ArrayList<ParticleManager>();
+    protected static ArrayList<ParticleManager> _steamClouds =
         new ArrayList<ParticleManager>();
     protected static TextureState _dusttex;
 }
