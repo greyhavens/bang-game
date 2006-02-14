@@ -137,7 +137,7 @@ public class LogonView extends BWindow
                 }
                 msg = _msgs.xlate(msg);
             }
-            _status.setStatus(_msgs.get("m.logon_failed", msg), true);
+            _status.setStatus(msg, true);
         }
     };
 
