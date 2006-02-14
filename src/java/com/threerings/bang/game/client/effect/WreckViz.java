@@ -6,8 +6,11 @@ package com.threerings.bang.game.client.effect;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
+import com.jme.scene.state.MaterialState;
 import com.jmex.effects.ParticleManager;
 
 import com.threerings.util.RandomUtil;
@@ -17,6 +20,7 @@ import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -87,9 +91,19 @@ public class WreckViz extends ParticleEffectViz
         {
             super("wreckage");
             
+            // initialize the render state for transparency control
+            setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+            setRenderState(RenderUtil.blendAlpha);
+            _mstate = _ctx.getRenderer().createMaterialState();
+            _mstate.setDiffuse(new ColorRGBA(ColorRGBA.white));
+            _mstate.setAmbient(new ColorRGBA(ColorRGBA.white));
+            setRenderState(RenderUtil.createColorMaterialState(_mstate,
+                false));
+            updateRenderState();
+            
             // fire the piece in a random direction
             float azimuth = RandomUtil.getFloat(FastMath.TWO_PI),
-                elevation = getRandomFloat(FastMath.HALF_PI);
+                elevation = RandomUtil.getFloat(FastMath.PI * 0.45f);
             _linear = new Vector3f(
                 FastMath.cos(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(azimuth) * FastMath.cos(elevation),
@@ -118,6 +132,23 @@ public class WreckViz extends ParticleEffectViz
                     RandomUtil.getInt(Integer.MAX_VALUE), null);
         }
         
+        public void updateWorldVectors ()
+        {
+            // the first time we update with the parent, get the relative vecs
+            if (!_wvinit && getParent() != null) {
+                super.updateWorldVectors();
+                localTranslation.set(worldTranslation);
+                localScale.set(worldScale);
+                worldRotation.multLocal(_linear);
+                _wvinit = true;
+                
+            } else {
+                worldTranslation.set(localTranslation);
+                worldRotation.set(localRotation);
+                worldScale.set(localScale);
+            }
+        }
+        
         public void updateWorldData (float time)
         {
             super.updateWorldData(time);
@@ -130,6 +161,24 @@ public class WreckViz extends ParticleEffectViz
             _spin.multLocal(getLocalRotation()).multLocal(time * 0.5f);
             getLocalRotation().addLocal(_spin);
             getLocalRotation().normalize();
+            
+            // have the wreckage bounce if it reaches the terrain
+            float height = _view.getTerrainNode().getHeightfieldHeight(
+                loc.x, loc.y);
+            if (loc.z < height) {
+                loc.z = height;
+                Vector3f normal = _view.getTerrainNode().getHeightfieldNormal(
+                    loc.x, loc.y);
+                _linear.negateLocal();
+                normal.multLocal(_linear.dot(normal) * 2f);
+                normal.subtract(_linear, _linear).multLocal(0.75f);
+                _angular.multLocal(0.75f);
+            }
+            
+            // fade it out over time
+            float alpha = 1f - (_age / WRECKAGE_LIFESPAN);
+            _mstate.getDiffuse().a = alpha;
+            _mstate.getAmbient().a = alpha;
             
             // remove streamer if its lifespan has elapsed
             if ((_age += time) > WRECKAGE_LIFESPAN) {
@@ -144,6 +193,12 @@ public class WreckViz extends ParticleEffectViz
         
         /** The piece's linear and angular velocities. */
         protected Vector3f _linear, _angular;
+        
+        /** The piece's material state, used to control alpha. */
+        protected MaterialState _mstate;
+        
+        /** Set when the piece has its initial world vectors. */
+        protected boolean _wvinit;
         
         /** Temporary quaternion representing spin. */
         protected Quaternion _spin = new Quaternion();
@@ -170,5 +225,5 @@ public class WreckViz extends ParticleEffectViz
         new Vector3f(0f, 0f, -100f);
     
     /** The amount of time in seconds to keep the wreckage alive. */
-    protected static final float WRECKAGE_LIFESPAN = 5f;
+    protected static final float WRECKAGE_LIFESPAN = 3f;
 }
