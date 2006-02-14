@@ -211,6 +211,15 @@ public class TownView extends BWindow
         }
 
         @Override // documentation inherited
+        protected void wasAdded ()
+        {
+            super.wasAdded();
+            
+            // disable camera input handler
+            _ctx.getInputHandler().setEnabled(false);
+        }
+        
+        @Override // documentation inherited
         protected void wasRemoved ()
         {
             super.wasRemoved();
@@ -220,6 +229,9 @@ public class TownView extends BWindow
                 _vpsprite.unbindCamera();
                 _vpsprite = null;
             }
+            
+            // reenable the input handler
+            _ctx.getInputHandler().setEnabled(true);
         }
 
         @Override // documentation inherited
