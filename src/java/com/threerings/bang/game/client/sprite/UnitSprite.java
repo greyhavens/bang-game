@@ -443,7 +443,8 @@ public class UnitSprite extends MobileSprite
     protected Quad _tgtquad;
     protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst;
-    protected Quaternion _camrot = new Quaternion(), _gcamrot = new Quaternion();
+    protected Quaternion _camrot = new Quaternion();
+    protected Quaternion _gcamrot = new Quaternion();
     protected Vector3f _camtrans = new Vector3f(), _gcamtrans = new Vector3f();
     protected Texture[] _pendtexs;
 
