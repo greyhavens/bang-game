@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
@@ -470,6 +471,24 @@ public class BangBoard extends SimpleStreamableObject
     public ArrayList<Point> getOccupiableSpots (
         int count, int cx, int cy, int maxdist)
     {
+        return getOccupiableSpots(count, cx, cy, maxdist, null);
+    }
+
+    /**
+     * Returns a set of coordinates for locations near to the specified
+     * coordinates into which a piece can be spawned. First the
+     * coordinates immediately surrounding the location are searched, then
+     * one unit away, and so on. Within a particular "shell" the
+     * coordinates are searched randomly. The list may be fewer than the
+     * requested count if an insufficient number of spots could be located
+     * within the specified maximum distance.
+     *
+     * @param rnd a random number generator, or <code>null</code> to use the
+     * default
+     */
+    public ArrayList<Point> getOccupiableSpots (
+        int count, int cx, int cy, int maxdist, Random rnd)
+    {
         ArrayList<Point> ospots = new ArrayList<Point>();
         PointSet spots = new PointSet();
       SEARCH:
@@ -477,7 +496,11 @@ public class BangBoard extends SimpleStreamableObject
             spots.clear();
             spots.addFrame(cx, cy, dist, getBounds());
             int[] coords = spots.toIntArray();
-            ArrayUtil.shuffle(coords);
+            if (rnd == null) {
+                ArrayUtil.shuffle(coords);
+            } else {
+                ArrayUtil.shuffle(coords, rnd);
+            }
             for (int ii = 0; ii < coords.length; ii++) {
                 int hx = PointSet.decodeX(coords[ii]);
                 int hy = PointSet.decodeY(coords[ii]);
@@ -491,7 +514,7 @@ public class BangBoard extends SimpleStreamableObject
         }
         return ospots;
     }
-
+    
     /**
      * Returns the coordinates of a location near to the specified
      * coordinates into which a piece can be spawned. First the
@@ -502,10 +525,26 @@ public class BangBoard extends SimpleStreamableObject
      */
     public Point getOccupiableSpot (int cx, int cy, int maxdist)
     {
-        ArrayList<Point> spots = getOccupiableSpots(1, cx, cy, maxdist);
-        return (spots.size() > 0) ? spots.get(0) : null;
+        return getOccupiableSpot(cx, cy, maxdist, null);
     }
 
+    /**
+     * Returns the coordinates of a location near to the specified
+     * coordinates into which a piece can be spawned. First the
+     * coordinates immediately surrounding the location are searched, then
+     * one unit away, and so on. Within a particular "shell" the
+     * coordinates are searched randomly. Returns null if no occupiable
+     * spot could be located.
+     *
+     * @param rnd a random number generator, or <code>null</code> to use the
+     * default
+     */
+    public Point getOccupiableSpot (int cx, int cy, int maxdist, Random rnd)
+    {
+        ArrayList<Point> spots = getOccupiableSpots(1, cx, cy, maxdist, rnd);
+        return (spots.size() > 0) ? spots.get(0) : null;           
+    }
+    
     /**
      * Adds the supplied set of pieces to our board "shadow" data. This is
      * done at the start of the game; all subsequent changes are

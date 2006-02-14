@@ -3,6 +3,10 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Point;
+
+import java.util.Random;
+
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.io.SimpleStreamableObject;
@@ -101,6 +105,20 @@ public abstract class Effect extends SimpleStreamableObject
         log.fine("Damaging " + target.info() + " -> " + newDamage + ".");
         target.damage = newDamage;
 
+        // flying targets must land when they die
+        if (!target.isAlive() && target.isFlyer()) {
+            if (!bangobj.board.isOccupiable(target.x, target.y)) {
+                Point pt = bangobj.board.getOccupiableSpot(target.x, target.y,
+                    5, new Random(bangobj.tick));
+                if (pt != null) {
+                    bangobj.board.updateShadow(target, null);
+                    target.position(pt.x, pt.y);
+                    bangobj.board.updateShadow(null, target);
+                }
+            }
+            reportMove(obs, target);
+        }
+        
         // report that the target was affected
         reportEffect(obs, target, effect);
 

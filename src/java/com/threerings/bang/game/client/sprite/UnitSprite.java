@@ -345,13 +345,28 @@ public class UnitSprite extends MobileSprite
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
         int elev = super.computeElevation(board, tx, ty);
-        if (_piece.isFlyer()) {
-            // flying pieces hover 1 "units" above the ground
-            elev = elev + 1 * BangBoard.ELEVATION_UNITS_PER_TILE;
+        if (_piece.isFlyer() && _piece.isAlive()) {
+            // flying pieces hover 1 "units" above the ground while they're
+            // alive
+            elev += FLYER_HEIGHT * BangBoard.ELEVATION_UNITS_PER_TILE;
         }
         return elev;
     }
 
+    @Override // documentation inherited
+    protected void setCoord (
+        BangBoard board, Vector3f[] coords, int idx, int nx, int ny)
+    {
+        // make an exception for the death flights of flyers: only the
+        // last coordinate is on the ground
+        int elev = computeElevation(board, nx, ny);
+        if (_piece.isFlyer() && !_piece.isAlive() && idx != coords.length-1) {
+            elev += FLYER_HEIGHT * BangBoard.ELEVATION_UNITS_PER_TILE;
+        }
+        coords[idx] = new Vector3f();
+        toWorldCoords(nx, ny, elev, coords[idx]);
+    }
+    
     /** Sets up our colors according to our owning player. */
     protected void configureOwnerColors ()
     {
@@ -457,4 +472,7 @@ public class UnitSprite extends MobileSprite
     /** Defines the amount by which the damage arc image is inset from a
      * full quarter circle (on each side): 8 degrees. */
     protected static final float ARC_INSETS = 7;
+    
+    /** The height above terrain in tile lengths at which flyers fly. */
+    protected static final int FLYER_HEIGHT = 1;
 }

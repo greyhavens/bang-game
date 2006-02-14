@@ -4,7 +4,7 @@
   <add_unit id="gun1" type="gunslinger" location="10,10" owner="0"/>
   <add_unit id="gun2" type="artillery" location="11,11" owner="1"/>
   <add_unit id="sgun" type="shotgunner" location="11,10" owner="0"/>
-  <add_unit id="tact" type="steamgunman" location="12,11" owner="1"/>
+  <add_unit id="tact" type="dirigible" location="14,11" owner="1"/>
   
   <text message="start_test"/>
   <wait event="text_clicked"/>
