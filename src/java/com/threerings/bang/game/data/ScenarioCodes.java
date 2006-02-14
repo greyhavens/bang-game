@@ -17,14 +17,14 @@ public interface ScenarioCodes
     /** The code for the claim jumping scenario. */
     public static final String CLAIM_JUMPING = "cj";
 
-    /** The amount of cash earned per nugget at the end of the game. */
-    public static final int CASH_PER_NUGGET = 50;
+    /** The amount of points earned per nugget at the end of the game. */
+    public static final int POINTS_PER_NUGGET = 50;
 
     /** The code for the cattle rustling scenario. */
     public static final String CATTLE_RUSTLING = "cr";
 
-    /** Cash earned for each branded cow. */
-    public static final int CASH_PER_COW = 50;
+    /** Points earned for each branded cow. */
+    public static final int POINTS_PER_COW = 50;
 
     /** Scenarios available in Frontier Town. */
     public static final String[] FRONTIER_TOWN_SCENARIOS = {

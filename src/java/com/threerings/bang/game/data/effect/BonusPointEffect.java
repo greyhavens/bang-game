@@ -9,7 +9,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
- * Grants a bonus point to the acquiring player.
+ * Grants bonus points to the acquiring player.
  */
 public class BonusPointEffect extends Effect
 {
@@ -31,8 +31,8 @@ public class BonusPointEffect extends Effect
         if (piece == null) {
             return;
         }
-        // grant some cash to the activating player
-        bangobj.grantCash(piece.owner, BONUS_CASH);
+        // grant points to the activating player
+        bangobj.grantPoints(piece.owner, BONUS_POINTS);
     }
 
     @Override // documentation inherited
@@ -45,5 +45,5 @@ public class BonusPointEffect extends Effect
         reportEffect(obs, piece, BONUS_POINT);
     }
 
-    protected static final int BONUS_CASH = 50;
+    protected static final int BONUS_POINTS = 50;
 }

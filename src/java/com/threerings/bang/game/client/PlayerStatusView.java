@@ -76,8 +76,8 @@ public class PlayerStatusView extends BContainer
                              "player_status" + _pidx);
         add(_player, NAME_RECT);
 
-        _cash = new BLabel("");
-        add(_cash, CASH_LOC);
+        _points = new BLabel("");
+        add(_points, CASH_LOC);
         add(_ranklbl = new BLabel(createRankIcon(-2)), RANK_RECT);
 
         updateAvatar();
@@ -210,7 +210,7 @@ public class PlayerStatusView extends BContainer
 
     protected void updateStatus ()
     {
-        _cash.setText("$" + _bangobj.funds[_pidx]);
+        _points.setText("" + _bangobj.points[_pidx]);
 
         switch (_bangobj.state) {
         case BangObject.SELECT_PHASE:
@@ -251,7 +251,7 @@ public class PlayerStatusView extends BContainer
     protected ImageIcon _color, _avatar;
     protected Image _rankimg;
 
-    protected BLabel _player, _cash, _ranklbl;
+    protected BLabel _player, _points, _ranklbl;
     protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];
 
     protected static final Point BACKGROUND_LOC = new Point(33, 13);

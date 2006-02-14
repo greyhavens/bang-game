@@ -116,7 +116,7 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void purchaseUnits (ClientObject caller, String[] units)
+    public void selectTeam (ClientObject caller, String[] units)
     {
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
@@ -125,7 +125,7 @@ public class BangManager extends GameManager
                         "[who=" + user.who() + "].");
             return;
         }
-        purchaseUnits(pidx, units);
+        selectTeam(pidx, units);
     }
 
     // documentation inherited from interface BangProvider
@@ -351,7 +351,7 @@ public class BangManager extends GameManager
 
         // create our per-player arrays
         int slots = getPlayerSlots();
-        _bangobj.funds = new int[slots];
+        _bangobj.points = new int[slots];
         _bangobj.perRoundEarnings = new int[_bconfig.scenarios.length][slots];
         for (int ii = 0; ii < _bangobj.perRoundEarnings.length; ii++) {
             Arrays.fill(_bangobj.perRoundEarnings[ii], -1);
@@ -361,11 +361,6 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < slots; ii++) {
             _bangobj.pdata[ii] = new BangObject.PlayerData();
             _bangobj.stats[ii] = new StatSet();
-        }
-
-        // start with some cash if we're testing
-        if (isTest()) {
-            Arrays.fill(_bangobj.funds, 100);
         }
     }
 
@@ -409,7 +404,7 @@ public class BangManager extends GameManager
         case BangObject.SELECT_PHASE:
             // select big shots for our AIs
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                if (isAI(ii) || (isTest() && _bconfig.teamSize == 4)) {
+                if (isAI(ii)) {
                     selectStarters(ii, null, null);
                 }
             }
@@ -418,10 +413,10 @@ public class BangManager extends GameManager
         case BangObject.BUYING_PHASE:
             // make purchases for our AIs
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                if (isAI(ii) || (isTest() && _bconfig.teamSize == 4)) {
+                if (isAI(ii)) {
                     String[] units = new String[] {
-                        "artillery", "steamgunman", "gunslinger", "dirigible" };
-                    purchaseUnits(ii, units);
+                        "steamgunman", "gunslinger", "dirigible" };
+                    selectTeam(ii, units);
                 }
             }
             break;
@@ -553,20 +548,8 @@ public class BangManager extends GameManager
      * Configures the specified player's purchases for this round and
      * starts the game if they are the last to configure.
      */
-    protected void purchaseUnits (int pidx, String[] types)
+    protected void selectTeam (int pidx, String[] types)
     {
-        // create an array of units from the requested types
-        Unit[] units = new Unit[types.length];
-        for (int ii = 0; ii < units.length; ii++) {
-            units[ii] = Unit.getUnit(types[ii]);
-            if (units[ii].getCost() < 0) {
-                log.warning("Player requested to purchase illegal unit " +
-                            "[who=" + _bangobj.players[pidx] +
-                            ", unit=" + types[ii] + "].");
-                return; // nothing doing
-            }
-        }
-
         // make sure they haven't already purchased units
         for (Piece piece : _purchases.values()) {
             if (piece.owner == pidx) {
@@ -576,20 +559,32 @@ public class BangManager extends GameManager
             }
         }
 
-        // TODO: make sure they didn't request too many pieces
-
-        // total up the cost
-        int totalCost = 0;
-        for (int ii = 0; ii < units.length; ii++) {
-            totalCost += units[ii].getCost();
-        }
-        if (totalCost > _bangobj.funds[pidx]) {
-            log.warning("Rejecting bogus purchase request " +
+        // make sure they didn't request too many pieces
+        if (types.length > _bconfig.teamSize) {
+            log.warning("Rejecting bogus team request " +
                         "[who=" + _bangobj.players[pidx] +
-                        ", total=" + totalCost +
-                        ", funds=" + _bangobj.funds[pidx] + "].");
+                        ", types=" + StringUtil.toString(types) +
+                        ", teamSize=" + _bconfig.teamSize + "].");
             return;
         }
+
+        // create an array of units from the requested types
+        Unit[] units = new Unit[types.length];
+        for (int ii = 0; ii < units.length; ii++) {
+            units[ii] = Unit.getUnit(types[ii]);
+            if (units[ii].getCost() < 0) {
+                log.warning("Player requested to purchase illegal unit " +
+                            "[who=" + _bangobj.players[pidx] +
+                            ", unit=" + types[ii] + "].");
+                return;
+            }
+        }
+
+        // TODO: make sure they didn't request units to which they don't have
+        // access
+
+        // TODO: make sure they didn't request more than their allowed number
+        // of each unit (currently one)
 
         // initialize and prepare the units
         for (int ii = 0; ii < units.length; ii++) {
@@ -599,8 +594,6 @@ public class BangManager extends GameManager
             _purchases.add(units[ii]);
         }
 
-        // finally decrement their funds
-        _bangobj.setFundsAt(_bangobj.funds[pidx] - totalCost, pidx);
         // note that this player is ready and potentially fire away
         _ready.add(pidx);
         checkStartNextPhase();
@@ -879,7 +872,7 @@ public class BangManager extends GameManager
             }
 
             // update each player's overall rating
-            computeRatings(ScenarioCodes.OVERALL, _bangobj.getFilteredFunds());
+            computeRatings(ScenarioCodes.OVERALL, _bangobj.getFilteredPoints());
         }
 
         // these will track awarded cash and badges
@@ -901,9 +894,8 @@ public class BangManager extends GameManager
             prec.user = user;
 
             // compute this player's "take home" cash
-            int maxCash = prec.purse.getPerRoundCash() * prec.finishedRound;
-            // TODO: div funds by N (10?) before computing?
-            awards[ii].cashEarned = Math.min(_bangobj.funds[ii], maxCash);
+            awards[ii].cashEarned = (int)Math.round(
+                50 * prec.finishedRound * prec.purse.getPurseBonus());
 
             StatSet stats = _bangobj.stats[ii];
             try {
@@ -930,10 +922,12 @@ public class BangManager extends GameManager
                     Stat.Type type = ACCUM_STATS[ss];
                     user.stats.incrementStat(type, stats.getIntStat(type));
                 }
-                user.stats.maxStat(Stat.Type.HIGHEST_EARNINGS,
-                                   stats.getIntStat(Stat.Type.CASH_EARNED));
+                user.stats.maxStat(Stat.Type.HIGHEST_POINTS,
+                                   stats.getIntStat(Stat.Type.POINTS_EARNED));
                 user.stats.maxStat(Stat.Type.MOST_KILLS,
                                    stats.getIntStat(Stat.Type.UNITS_KILLED));
+                user.stats.incrementStat(
+                    Stat.Type.CASH_EARNED, awards[ii].cashEarned);
 
                 // allow the scenario to record statistics as well
                 _scenario.recordStats(_bangobj, gameTime, ii, user);
@@ -970,7 +964,8 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void assignWinners (boolean[] winners)
     {
-        int[] windexes = IntListUtil.getMaxIndexes(_bangobj.getFilteredFunds());
+        int[] windexes =
+            IntListUtil.getMaxIndexes(_bangobj.getFilteredPoints());
         for (int ii = 0; ii < windexes.length; ii++) {
             winners[windexes[ii]] = true;
         }
@@ -1299,9 +1294,9 @@ public class BangManager extends GameManager
         // record the damage dealt statistic
         _bangobj.stats[pidx].incrementStat(Stat.Type.DAMAGE_DEALT, total);
 
-        // award cash for the damage dealt
+        // award points for the damage dealt
         total /= 10; // you get $1 for each 10 points of damage
-        _bangobj.grantCash(pidx, total);
+        _bangobj.grantPoints(pidx, total);
 
         // finally clear out the damage index
         damage.clear();
@@ -1660,7 +1655,7 @@ public class BangManager extends GameManager
         Stat.Type.UNITS_LOST,
         Stat.Type.BONUSES_COLLECTED,
         Stat.Type.CARDS_PLAYED,
-        Stat.Type.CASH_EARNED,
+        Stat.Type.POINTS_EARNED,
         Stat.Type.SHOTS_FIRED,
         Stat.Type.DISTANCE_MOVED,
     };

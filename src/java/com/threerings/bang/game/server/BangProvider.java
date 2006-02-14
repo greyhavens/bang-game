@@ -27,12 +27,12 @@ public interface BangProvider extends InvocationProvider
     public void playCard (ClientObject caller, int arg1, short arg2, short arg3);
 
     /**
-     * Handles a {@link BangService#purchaseUnits} request.
-     */
-    public void purchaseUnits (ClientObject caller, String[] arg1);
-
-    /**
      * Handles a {@link BangService#selectStarters} request.
      */
     public void selectStarters (ClientObject caller, int arg1, int[] arg2);
+
+    /**
+     * Handles a {@link BangService#selectTeam} request.
+     */
+    public void selectTeam (ClientObject caller, String[] arg1);
 }

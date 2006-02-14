@@ -24,16 +24,16 @@ public class Purse extends Item
         "gold_purse",
     };
 
-    /** The per-round-cash earned by the various purses. This is public so
-     * that we can use this information when displaying the purses for
-     * sale in the General Store. */
-    public static final int[] PER_ROUND_CASH  = {
-        50, // default
-        60, // frontier town
-        70, // indian village
-        85, // boom town
-        100, // ghost town
-        120, // city of gold
+    /** The bonus mulitpliers for the various purses. This is public so that we
+     * can use this information when displaying the purses for sale in the
+     * General Store. */
+    public static final float[] PURSE_BONUS  = {
+        1f, // default
+        1.1f, // frontier town
+        1.2f, // indian village
+        1.3f, // boom town
+        1.4f, // ghost town
+        1.5f, // city of gold
     };
 
     /** A default constructor used for serialization. */
@@ -59,12 +59,11 @@ public class Purse extends Item
     }
 
     /**
-     * Returns the amount of money that a player holding this purse may
-     * retain (per round) from a game.
+     * Returns a "bonus" multiplier for awarded cash due to this purse.
      */
-    public int getPerRoundCash ()
+    public float getPurseBonus ()
     {
-        return PER_ROUND_CASH[_townIndex];
+        return PURSE_BONUS[_townIndex];
     }
 
     @Override // documentation inherited

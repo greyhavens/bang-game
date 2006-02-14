@@ -53,8 +53,8 @@ public class PurseGood extends Good
     @Override // documentation inherited
     public String getTip ()
     {
-        String msg = MessageBundle.tcompose(
-            "m.purse_tip", String.valueOf(Purse.PER_ROUND_CASH[_townIndex]));
+        int pct = Math.round(Purse.PURSE_BONUS[_townIndex] * 100) - 100;
+        String msg = MessageBundle.tcompose("m.purse_tip", String.valueOf(pct));
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 

@@ -417,25 +417,25 @@ public class BangController extends GameController
      */
     protected void updateRank ()
     {
-        if (_bangobj.funds == null) {
+        if (_bangobj.points == null) {
             return;
         }
 
-        // compute each player's total funds including unscored funds
-        int[] funds = (int[])_bangobj.funds.clone();
-        ScenarioUtil.computeUnscoredFunds(_bangobj, funds);
+        // compute each player's total points including unscored points
+        int[] points = (int[])_bangobj.points.clone();
+        ScenarioUtil.computeUnscoredPoints(_bangobj, points);
 
-        // determine each player's rank based on those funds
-        int[] sfunds = (int[])funds.clone();
-        Arrays.sort(sfunds);
-        ArrayUtil.reverse(sfunds);
+        // determine each player's rank based on those points
+        int[] spoints = (int[])points.clone();
+        Arrays.sort(spoints);
+        ArrayUtil.reverse(spoints);
         int rank = 0;
-        for (int rr = 0; rr < sfunds.length; rr++) {
-            if (rr > 0 && sfunds[rr] == sfunds[rr-1]) {
+        for (int rr = 0; rr < spoints.length; rr++) {
+            if (rr > 0 && spoints[rr] == spoints[rr-1]) {
                 continue;
             }
-            for (int ii = 0; ii < funds.length; ii++) {
-                if (funds[ii] == sfunds[rr]) {
+            for (int ii = 0; ii < points.length; ii++) {
+                if (points[ii] == spoints[rr]) {
                     _view.pstatus[ii].setRank(rank);
                 }
             }

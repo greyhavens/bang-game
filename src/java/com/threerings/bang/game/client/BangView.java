@@ -93,7 +93,7 @@ public class BangView extends BWindow
             break;
 
         case BangObject.BUYING_PHASE:
-            setOverlay(new PurchaseView(_ctx, config, _bangobj, pidx));
+            ((SelectionView)_oview).setPickTeamMode(config);
             break;
 
         case BangObject.IN_PLAY:

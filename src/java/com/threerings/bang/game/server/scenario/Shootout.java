@@ -50,12 +50,12 @@ public class Shootout extends Scenario
             }
         }
 
-        // score cash for anyone who is knocked out as of this tick
+        // score points for anyone who is knocked out as of this tick
         int score = IntListUtil.getMaxValue(_knockoutOrder) + 1;
         for (int ii = 0; ii < _knockoutOrder.length; ii++) {
             if (_knockoutOrder[ii] == 0 && !_havers.contains(ii)) {
                 _knockoutOrder[ii] = score;
-                bangobj.grantCash(ii, SCORE_CASH * score);
+                bangobj.grantPoints(ii, SCORE_POINTS * score);
                 String msg = MessageBundle.tcompose(
                     "m.knocked_out", bangobj.players[ii]);
                 SpeakProvider.sendInfo(bangobj, GameCodes.GAME_MSGS, msg);
@@ -64,8 +64,8 @@ public class Shootout extends Scenario
 
         // the game ends when one or zero players are left standing
         if (_havers.size() < 2) {
-            // score cash for the last player standing
-            bangobj.grantCash(_havers.get(0), SCORE_CASH * (score + 1));
+            // score points for the last player standing
+            bangobj.grantPoints(_havers.get(0), SCORE_POINTS * (score + 1));
             // set the last tick to now to end the round
             bangobj.setLastTick(tick);
         }
@@ -77,5 +77,5 @@ public class Shootout extends Scenario
     /** Used to track the order in which players are knocked out. */
     protected int[] _knockoutOrder;
 
-    protected static final int SCORE_CASH = 50;
+    protected static final int SCORE_POINTS = 50;
 }

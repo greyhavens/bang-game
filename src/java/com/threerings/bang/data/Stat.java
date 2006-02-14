@@ -48,6 +48,7 @@ public abstract class Stat
         UNITS_LOST(new IntStat()),
         BONUSES_COLLECTED(new IntStat()),
         CARDS_PLAYED(new IntStat()),
+        POINTS_EARNED(new IntStat()),
         CASH_EARNED(new IntStat()),
         DISTANCE_MOVED(new IntStat()),
         SHOTS_FIRED(new IntStat()),
@@ -56,7 +57,7 @@ public abstract class Stat
         NUGGETS_CLAIMED(new IntStat()),
 
         // stats derived from in-game statistics
-        HIGHEST_EARNINGS(new IntStat()),
+        HIGHEST_POINTS(new IntStat()),
         MOST_KILLS(new IntStat()),
 
         // stats accumulated outside a game

@@ -43,25 +43,25 @@ public class BangMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #purchaseUnits} requests. */
-    public static final int PURCHASE_UNITS = 3;
-
-    // documentation inherited from interface
-    public void purchaseUnits (Client arg1, String[] arg2)
-    {
-        sendRequest(arg1, PURCHASE_UNITS, new Object[] {
-            arg2
-        });
-    }
-
     /** The method id used to dispatch {@link #selectStarters} requests. */
-    public static final int SELECT_STARTERS = 4;
+    public static final int SELECT_STARTERS = 3;
 
     // documentation inherited from interface
     public void selectStarters (Client arg1, int arg2, int[] arg3)
     {
         sendRequest(arg1, SELECT_STARTERS, new Object[] {
             new Integer(arg2), arg3
+        });
+    }
+
+    /** The method id used to dispatch {@link #selectTeam} requests. */
+    public static final int SELECT_TEAM = 4;
+
+    // documentation inherited from interface
+    public void selectTeam (Client arg1, String[] arg2)
+    {
+        sendRequest(arg1, SELECT_TEAM, new Object[] {
+            arg2
         });
     }
 

@@ -129,13 +129,13 @@ public class ClaimJumping extends Scenario
     {
         super.roundDidEnd(bangobj);
 
-        // score cash for all nuggets in each players' claim
+        // score points for all nuggets in each players' claim
         for (Claim claim : _claims) {
             if (claim.nuggets <= 0) {
                 continue;
             }
-            bangobj.grantCash(
-                claim.owner, ScenarioCodes.CASH_PER_NUGGET * (claim.nuggets));
+            bangobj.grantPoints(
+                claim.owner, ScenarioCodes.POINTS_PER_NUGGET * (claim.nuggets));
             bangobj.stats[claim.owner].incrementStat(
                 Stat.Type.NUGGETS_CLAIMED, claim.nuggets);
         }

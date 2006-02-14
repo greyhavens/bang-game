@@ -21,33 +21,34 @@ import com.threerings.bang.game.data.piece.Piece;
 public class ScenarioUtil
 {
     /**
-     * Computes the unscored but in-progress cash for each of the players,
+     * Computes the unscored but in-progress points for each of the players,
      * which tends to be scenario dependent: nuggets in claims, branded cattle,
-     * etc. Adds it to the supplied funds array.
+     * etc. Adds it to the supplied points array.
      */
-    public static void computeUnscoredFunds (BangObject bangobj, int[] funds)
+    public static void computeUnscoredPoints (BangObject bangobj, int[] points)
     {
         // it'd be nice to have the scenario do this but it's a server side
         // class and this method needs to be called every time a piece moves
         // which would be a pesky amount of computation to do on the server
         if (bangobj.scenarioId.equals(ScenarioCodes.CLAIM_JUMPING)) {
-            // add the cash from nuggets in claims
+            // add the points from nuggets in claims
             for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
                 Piece p = (Piece)iter.next();
                 if (p.owner >= 0 && p instanceof Claim) {
                     Claim c = (Claim)p;
-                    funds[c.owner] += c.nuggets * ScenarioCodes.CASH_PER_NUGGET;
+                    points[c.owner] +=
+                        c.nuggets * ScenarioCodes.POINTS_PER_NUGGET;
                 }
             }
 
         } else if (bangobj.scenarioId.equals(ScenarioCodes.CATTLE_RUSTLING)) {
-            // add the cash from branded cattle
+            // add the points from branded cattle
             for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
                 Object p = iter.next();
                 if (p instanceof Cow) {
                     Cow c = (Cow)p;
                     if (c.owner >= 0) {
-                        funds[c.owner] += ScenarioCodes.CASH_PER_COW;
+                        points[c.owner] += ScenarioCodes.POINTS_PER_COW;
                     }
                 }
             }

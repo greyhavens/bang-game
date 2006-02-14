@@ -124,8 +124,8 @@ public class BangObject extends GameObject
     /** The field name of the <code>actionId</code> field. */
     public static final String ACTION_ID = "actionId";
 
-    /** The field name of the <code>funds</code> field. */
-    public static final String FUNDS = "funds";
+    /** The field name of the <code>points</code> field. */
+    public static final String POINTS = "points";
 
     /** The field name of the <code>perRoundEarnings</code> field. */
     public static final String PER_ROUND_EARNINGS = "perRoundEarnings";
@@ -198,11 +198,11 @@ public class BangObject extends GameObject
     /** The currently executing action (only used in the tutorial). */
     public int actionId;
 
-    /** Total cash earned by each player. */
-    public int[] funds;
+    /** Total points earned by each player. */
+    public int[] points;
 
-    /** Cash earned per player per round, this is only broadcast to the client
-     * at the end of the game. */
+    /** Points earned per player per round, this is only broadcast to the
+     * client at the end of the game. */
     public int[][] perRoundEarnings;
 
     /** Used to report cash and badges awarded at the end of the game. */
@@ -449,30 +449,30 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Grants the specified amount of cash to the specified player,
-     * updating their {@link #funds} and updating the appropriate earned
-     * cash statistic.
+     * Grants the specified number of points to the specified player, updating
+     * their {@link #points} and updating the appropriate earned points
+     * statistic.
      */
-    public void grantCash (int pidx, int amount)
+    public void grantPoints (int pidx, int amount)
     {
-        setFundsAt(funds[pidx] + amount, pidx);
+        setPointsAt(points[pidx] + amount, pidx);
         perRoundEarnings[roundId-1][pidx] += amount;
-        stats[pidx].incrementStat(Stat.Type.CASH_EARNED, amount);
+        stats[pidx].incrementStat(Stat.Type.POINTS_EARNED, amount);
     }
 
     /**
-     * Returns an adjusted funds array where players that have resigned from
+     * Returns an adjusted points array where players that have resigned from
      * the game are adjusted to zero.
      */
-    public int[] getFilteredFunds ()
+    public int[] getFilteredPoints ()
     {
-        int[] afunds = (int[])funds.clone();
-        for (int ii = 0; ii < afunds.length; ii++) {
+        int[] apoints = (int[])points.clone();
+        for (int ii = 0; ii < apoints.length; ii++) {
             if (!isActivePlayer(ii)) {
-                afunds[ii] = 0;
+                apoints[ii] = 0;
             }
         }
-        return afunds;
+        return apoints;
     }
 
     @Override // documentation inherited
@@ -802,36 +802,36 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Requests that the <code>funds</code> field be set to the
+     * Requests that the <code>points</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setFunds (int[] value)
+    public void setPoints (int[] value)
     {
-        int[] ovalue = this.funds;
+        int[] ovalue = this.points;
         requestAttributeChange(
-            FUNDS, value, ovalue);
-        this.funds = (value == null) ? null : (int[])value.clone();
+            POINTS, value, ovalue);
+        this.points = (value == null) ? null : (int[])value.clone();
     }
 
     /**
      * Requests that the <code>index</code>th element of
-     * <code>funds</code> field be set to the specified value.
+     * <code>points</code> field be set to the specified value.
      * The local value will be updated immediately and an event will be
      * propagated through the system to notify all listeners that the
      * attribute did change. Proxied copies of this object (on clients)
      * will apply the value change when they received the attribute
      * changed notification.
      */
-    public void setFundsAt (int value, int index)
+    public void setPointsAt (int value, int index)
     {
-        int ovalue = this.funds[index];
+        int ovalue = this.points[index];
         requestElementUpdate(
-            FUNDS, index, new Integer(value), new Integer(ovalue));
-        this.funds[index] = value;
+            POINTS, index, new Integer(value), new Integer(ovalue));
+        this.points[index] = value;
     }
 
     /**
