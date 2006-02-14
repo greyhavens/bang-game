@@ -478,9 +478,14 @@ public class MobileSprite extends PieceSprite
             });
 
         } else if (_action.equals("dying") && !hasAction("dying")) {
-            // burst into pieces of wreckage
-            
-            
+            // TODO: burst into pieces of wreckage
+
+            // for now, we need to acknowledge that our action was immediately
+            // completed
+            if (_observers != null) {
+                _observers.apply(new CompletedOp(this, _action));
+            }
+
         } else {
             Model.Animation anim = setAction(_action);
             _nextAction = anim.getDuration() / Config.display.animationSpeed;

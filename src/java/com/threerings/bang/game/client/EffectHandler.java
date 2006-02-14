@@ -170,6 +170,8 @@ public class EffectHandler extends BoardView.BoardAction
         final PieceSprite sprite, final Piece piece, EffectViz viz)
     {
         final int penderId = notePender();
+//         log.info("Queueing effect " + this +
+//                  " [viz=" + viz + ", pid=" + penderId + "].");
         viz.init(_ctx, _view, piece, new EffectViz.Observer() {
             public void effectDisplayed () {
                 sprite.updated(piece, _tick);
@@ -187,6 +189,8 @@ public class EffectHandler extends BoardView.BoardAction
     protected void queueAction (MobileSprite sprite, String action)
     {
         final int penderId = notePender();
+//         log.info("Queueing effect " + this +
+//                  " [action=" + action + ", pid=" + penderId + "].");
         sprite.addObserver(new MobileSprite.ActionObserver() {
             public void actionCompleted (Sprite sprite, String action) {
                 sprite.removeObserver(this);
@@ -211,7 +215,11 @@ public class EffectHandler extends BoardView.BoardAction
     {
         _penders.remove(penderId);
         if (isCompleted()) {
+//             log.info("Completing " + this);
             _view.actionCompleted(this);
+//         } else {
+//             log.info("Not completing " + this +
+//                      " [penders=" + _penders + "].");
         }
     }
 

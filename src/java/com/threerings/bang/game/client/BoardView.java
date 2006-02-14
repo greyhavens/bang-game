@@ -492,6 +492,15 @@ public class BoardView extends BComponent
         _pactions.add(action);
         if (_paction == null) {
             processNextAction();
+
+        } else if (_pstart != 0L) {
+            long since = System.currentTimeMillis() - _pstart;
+            if (since > 5000L) {
+                log.warning("Board action stuck on the queue? " +
+                            "[action=" + _paction +
+                            ", since=" + since + "ms].");
+                _pstart = 0L; // avoid repeat warnings
+            }
         }
     }
 
@@ -510,6 +519,7 @@ public class BoardView extends BComponent
             return;
         }
 //         log.info("Completed " + action);
+        _pstart = 0L;
         _paction = null;
         processNextAction();
     }
@@ -1107,6 +1117,7 @@ public class BoardView extends BComponent
         public void run () {
             try {
 //                log.info("Running: " + _paction);
+                _pstart = System.currentTimeMillis();
                 if (_paction.execute()) {
 //                     log.info("Waiting: " + _paction);
                     // the action requires us to wait until it completes
@@ -1116,6 +1127,7 @@ public class BoardView extends BComponent
             } catch (Throwable t) {
                 log.log(Level.WARNING, "Board action choked: " + _paction, t);
             }
+            _pstart = 0L;
             _paction = null;
             processNextAction();
         }
@@ -1141,6 +1153,7 @@ public class BoardView extends BComponent
     protected Sprite _hover;
 
     protected BoardAction _paction;
+    protected long _pstart;
     protected ArrayList<BoardAction> _pactions = new ArrayList<BoardAction>();
 
     /** Used to track pending piece updates. */
