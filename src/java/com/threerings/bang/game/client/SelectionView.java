@@ -198,6 +198,10 @@ public class SelectionView extends BDecoratedWindow
                 }
             }
 
+            // clear out and disable the palettes
+            _units.setSelectable(0);
+            _cards.setSelectable(0);
+
             int bigShotId = icon.getItemId();
             _bangobj.service.selectStarters(
                 _ctx.getClient(), bigShotId, cardIds.toIntArray());
@@ -206,6 +210,9 @@ public class SelectionView extends BDecoratedWindow
             // don't allow double clickage
             _ready.setEnabled(false);
             _waiting = true;
+
+            // disable the team selection palette
+            _units.setSelectable(0);
 
             ArrayList<String> units = new ArrayList<String>();
             for (int ii = 0; ii < _tconfigs.length; ii++) {

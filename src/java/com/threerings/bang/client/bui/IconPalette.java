@@ -83,6 +83,11 @@ public class IconPalette extends BContainer
     public void setSelectable (int selectable)
     {
         _selectable = selectable;
+
+        // reduce the current selection to the new selectable count
+        while (_selections.size() > _selectable) {
+            _selections.remove(_selections.size()-1).setSelected(false);
+        }
     }
 
     /**
@@ -345,7 +350,7 @@ public class IconPalette extends BContainer
         }
 
         // inform our inspector that this icon was selected
-        if (icon != null && _inspector != null) {
+        if (_selectable > 0 && icon != null && _inspector != null) {
             _inspector.iconUpdated(icon, true);
         }
     }

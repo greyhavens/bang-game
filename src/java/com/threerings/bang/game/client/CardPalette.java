@@ -67,7 +67,11 @@ public class CardPalette extends IconPalette
     protected void iconUpdated (SelectableIcon icon, boolean selected)
     {
         super.iconUpdated(icon, selected);
-        updateSelections();
+
+        // stop updating once we've been "disabled"
+        if (_selectable > 0) {
+            updateSelections();
+        }
     }
 
     protected void updateSelections ()
