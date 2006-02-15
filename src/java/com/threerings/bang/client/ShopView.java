@@ -23,7 +23,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
@@ -40,7 +39,7 @@ public abstract class ShopView extends BWindow
     public void showHelp ()
     {
         if (_intro == null) {
-            _intro = new BWindow(BangUI.stylesheet, new BorderLayout(5, 15));
+            _intro = new BWindow(_ctx.getStyleSheet(), new BorderLayout(5, 15));
             _intro.setModal(true);
             _intro.setStyleClass("decoratedwindow");
             _intro.add(new BLabel(_msgs.get("m.intro_title"), "dialog_title"),

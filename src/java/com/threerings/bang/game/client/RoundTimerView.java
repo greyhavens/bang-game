@@ -10,7 +10,6 @@ import com.jmex.bui.layout.BorderLayout;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
-import com.threerings.bang.client.BangUI;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.util.BangContext;
 
@@ -22,7 +21,7 @@ public class RoundTimerView extends BWindow
 {
     public RoundTimerView (BangContext ctx)
     {
-        super(BangUI.stylesheet, new BorderLayout());
+        super(ctx.getStyleSheet(), new BorderLayout());
         _ctx = ctx;
         add(_clock = new BLabel("", "round_timer"), BorderLayout.CENTER);
     }
