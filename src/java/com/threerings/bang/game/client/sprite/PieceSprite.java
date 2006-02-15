@@ -369,8 +369,7 @@ public class PieceSprite extends Sprite
         // bind the new animation
         _view.addResolvingSprite(this);
         _binding = anim.bind(this, random, new Model.Binding.Observer() {
-            public void wasBound (Model.Animation anim,
-                Model.Binding binding) {
+            public void wasBound (Model.Animation anim, Model.Binding binding) {
                 // now that the meshes are attached, configure the animation
                 // speed and repeat type
                 setAnimationSpeed(
