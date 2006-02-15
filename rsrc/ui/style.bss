@@ -582,12 +582,18 @@ round_timer {
 //
 // Post-game stats display
 
-stats_header {
-  font: "Dom Casual" plain 15;
+endgame_player {
+  font: "Dom Casual" plain 18;
+  text-align: center;
 }
 
-stats_info {
-  font: "Dom Casual" plain 20;
+endgame_title {
+  font: "Dom Casual" plain 18;
+}
+
+endgame_cash {
+  font: "Dom Casual" plain 18;
+  text-align: center;
 }
 
 //

@@ -28,7 +28,6 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
@@ -144,8 +143,7 @@ public class BangController extends GameController
         }
 
         // determine our player index
-        BodyObject me = (BodyObject)_ctx.getClient().getClientObject();
-        _pidx = _bangobj.getPlayerIndex(me.getVisibleName());
+        _pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
 
         // we may be returning to an already started game
         if (_bangobj.state != BangObject.PRE_GAME) {
@@ -304,24 +302,12 @@ public class BangController extends GameController
     {
         super.attributeChanged(event);
 
-        // once the awards are set, we can display the end of game stats
+        // once the awards are set, we can display the end of game view
         if (event.getName().equals(BangObject.AWARDS)) {
-            StringBuffer winners = new StringBuffer();
-            for (int ii = 0; ii < _bangobj.winners.length; ii++) {
-                if (_bangobj.winners[ii]) {
-                    if (winners.length() > 0) {
-                        winners.append(", ");
-                    }
-                    winners.append(_bangobj.players[ii]);
-                }
-            }
-            String title = MessageBundle.tcompose("m.game_over_stats", winners);
-            title = _ctx.xlate(GameCodes.GAME_MSGS, title);
-            StatsDisplay stats =
-                new StatsDisplay(_ctx, this, _bangobj, _pidx, title);
-            _ctx.getRootNode().addWindow(stats);
-            stats.pack();
-            stats.center();
+            GameOverView gov = new GameOverView(_ctx, this, _bangobj);
+            _ctx.getRootNode().addWindow(gov);
+            gov.pack();
+            gov.center();
         }
     }
 

@@ -881,18 +881,28 @@ public class BangManager extends GameManager
 
         // record various statistics
         for (int ii = 0; ii < awards.length; ii++) {
-            awards[ii] = new Award();
+            Award award = (awards[ii] = new Award());
+            award.pidx = ii;
+            for (int rr = 0; rr < _ranks.length; rr++) {
+                if (_ranks[rr].pidx == ii) {
+                    award.rank = rr;
+                    break;
+                }
+            }
 
-            // if this player left the game early, they get nada
+            // compute this player's "take home" cash (if they're not an AI)
+            PlayerRecord prec = _precords[ii];
+            if (prec.playerId > 0) {
+                award.cashEarned = computeEarnings(ii);
+            }
+
+            // if this player left the game early, don't update their stats or
+            // award them a new badge
             PlayerObject user = (PlayerObject)getPlayer(ii);
             if (user == null || !_bangobj.isActivePlayer(ii)) {
                 continue;
             }
-            PlayerRecord prec = _precords[ii];
             prec.user = user;
-
-            // compute this player's "take home" cash
-            awards[ii].cashEarned = computeEarnings(ii);
 
             StatSet stats = _bangobj.stats[ii];
             try {
@@ -924,13 +934,13 @@ public class BangManager extends GameManager
                 user.stats.maxStat(Stat.Type.MOST_KILLS,
                                    stats.getIntStat(Stat.Type.UNITS_KILLED));
                 user.stats.incrementStat(
-                    Stat.Type.CASH_EARNED, awards[ii].cashEarned);
+                    Stat.Type.CASH_EARNED, award.cashEarned);
 
                 // allow the scenario to record statistics as well
                 _scenario.recordStats(_bangobj, gameTime, ii, user);
 
                 // determine whether this player qualifies for a new badge
-                awards[ii].badge = Badge.checkQualifies(user);
+                award.badge = Badge.checkQualifies(user);
 
             } finally {
                 user.commitTransaction();
@@ -941,8 +951,8 @@ public class BangManager extends GameManager
         // stats panel
         _bangobj.setPerRoundEarnings(_bangobj.perRoundEarnings);
 
-        // stuff the award data into the game object; TODO: only send the
-        // player their own awards?
+        // sort by rank and then stuff the award data into the game object
+        Arrays.sort(awards);
         _bangobj.setAwards(awards);
 
         // and persist the awards as well
@@ -1331,6 +1341,9 @@ public class BangManager extends GameManager
             earnings += BASE_EARNINGS[defeated];
         }
 
+        // TODO: scale based on some stat that indicates that they actually
+        // played, like damage inflicted
+
         // and scale earnings based on their purse
         return Math.round(_precords[pidx].purse.getPurseBonus() * earnings);
     }
@@ -1376,8 +1389,8 @@ public class BangManager extends GameManager
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 for (int pidx = 0; pidx < awards.length; pidx++) {
-                    PlayerRecord prec = _precords[pidx];
                     Award award = awards[pidx];
+                    PlayerRecord prec = _precords[award.pidx];
                     if (prec.playerId < 0) {
                         continue; // skip AIs
                     }
