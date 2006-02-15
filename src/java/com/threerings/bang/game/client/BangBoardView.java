@@ -226,6 +226,9 @@ public class BangBoardView extends BoardView
         }
 
         // clear out queued moves
+        for (QueuedMove move : _queuedMoves.values()) {
+            move.clear();
+        }
         _queuedMoves.clear();
     }
 
