@@ -882,7 +882,6 @@ public class BangManager extends GameManager
         // record various statistics
         for (int ii = 0; ii < awards.length; ii++) {
             awards[ii] = new Award();
-            awards[ii].badges = new ArrayList<Badge>();
 
             // if this player left the game early, they get nada
             PlayerObject user = (PlayerObject)getPlayer(ii);
@@ -930,8 +929,8 @@ public class BangManager extends GameManager
                 // allow the scenario to record statistics as well
                 _scenario.recordStats(_bangobj, gameTime, ii, user);
 
-                // determine whether this player qualifies for new badges
-                Badge.checkBadges(user, awards[ii].badges);
+                // determine whether this player qualifies for a new badge
+                awards[ii].badge = Badge.checkQualifies(user);
 
             } finally {
                 user.commitTransaction();
@@ -1395,13 +1394,13 @@ public class BangManager extends GameManager
                         }
                     }
 
-                    // grant them their badges
-                    for (Badge badge : award.badges) {
+                    // grant them their badge
+                    if (award.badge != null) {
                         try {
-                            BangServer.itemrepo.insertItem(badge);
+                            BangServer.itemrepo.insertItem(award.badge);
                         } catch (PersistenceException pe) {
                             log.log(Level.WARNING, "Failed to store badge " +
-                                    badge, pe);
+                                    award.badge, pe);
                         }
                     }
 
@@ -1434,8 +1433,8 @@ public class BangManager extends GameManager
                     if (awards[pidx].cashEarned > 0) {
                         player.setScrip(player.scrip + awards[pidx].cashEarned);
                     }
-                    for (Badge badge : awards[pidx].badges) {
-                        player.addToInventory(badge);
+                    if (awards[pidx].badge != null) {
+                        player.addToInventory(awards[pidx].badge);
                     }
                     for (Rating rating : _precords[pidx].nratings.values()) {
                         if (player.ratings.containsKey(rating.scenario)) {

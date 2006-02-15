@@ -3,15 +3,9 @@
 
 package com.threerings.bang.game.data;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.bang.data.Badge;
-import com.threerings.bang.data.PlayerObject;
 
 /**
  * Used to record and report awards at the end of a game.
@@ -21,34 +15,11 @@ public class Award extends SimpleStreamableObject
     /** The amount of cash "taken home" by this player. */
     public int cashEarned;
 
-    /** The badges earned by this player. */
-    public transient ArrayList<Badge> badges;
+    /** The badge earned by this player if any. */
+    public Badge badge;
 
     /** Default constructor used during unserialization. */
     public Award ()
     {
-    }
-
-    /** Provides custom serialization. */
-    public void writeObject (ObjectOutputStream out)
-        throws IOException
-    {
-        out.defaultWriteObject();
-        out.writeInt(badges.size());
-        for (Badge badge : badges) {
-            out.writeObject(badge);
-        }
-    }
-
-    /** Provides custom serialization. */
-    public void readObject (ObjectInputStream in)
-        throws IOException, ClassNotFoundException
-    {
-        in.defaultReadObject();
-        int count = in.readInt();
-        badges = new ArrayList<Badge>(count);
-        for (int ii = 0; ii < count; ii++) {
-            badges.add((Badge)in.readObject());
-        }
     }
 }

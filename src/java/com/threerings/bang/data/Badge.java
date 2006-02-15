@@ -384,10 +384,11 @@ public class Badge extends Item
     }
 
     /**
-     * Determines whether this player qualifies for any new badges and
-     * adds those for which they qualify to the supplied list.
+     * Determines whether this player qualifies for any new badges and returns
+     * the first badge for which they qualify or null if they qualify for no
+     * new badges.
      */
-    public static void checkBadges (PlayerObject user, ArrayList<Badge> badges)
+    public static Badge checkQualifies (PlayerObject user)
     {
         // first enumerate the badges they already hold
         _badgeCodes.clear();
@@ -408,8 +409,10 @@ public class Badge extends Item
             }
             Badge badge = type.newBadge();
             badge.setOwnerId(user.playerId);
-            badges.add(badge);
+            return badge;
         }
+
+        return null;
     }
 
     /** Creates a blank instance for serialization. */
@@ -471,6 +474,6 @@ public class Badge extends Item
     /** Trigger the loading of the enum when we load this class. */
     protected static Type _trigger = Type.UNUSED;
 
-    /** Used by {@link #checkBadges}. */
+    /** Used by {@link #checkQualifies}. */
     protected static ArrayIntSet _badgeCodes = new ArrayIntSet();
 }
