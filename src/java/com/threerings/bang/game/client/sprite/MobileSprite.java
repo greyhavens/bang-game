@@ -423,7 +423,7 @@ public class MobileSprite extends PieceSprite
             return;
         }
 
-        // TODO: append an additional path if we're currently moving
+        // TODO: append an additional path if we're currently moving?
         if (!isMoving()) {
             Path path = null;
             // only create a path if we're moving along the ground, if this is
@@ -521,7 +521,13 @@ public class MobileSprite extends PieceSprite
                             ", path=" + StringUtil.toString(path) + "].");
                 return null;
             }
-            return createPath(board, path, Config.display.getMovementSpeed());
+            // if we're dead, take our final path in slow motion (this only
+            // happens to flying units that are heading somewhere to explode)
+            float speed = Config.display.getMovementSpeed();
+            if (!_piece.isAlive()) {
+                speed /= 2;
+            }
+            return createPath(board, path, speed);
 
         } else {
             Vector3f start = toWorldCoords(

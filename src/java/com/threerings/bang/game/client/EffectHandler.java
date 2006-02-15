@@ -128,9 +128,13 @@ public class EffectHandler extends BoardView.BoardAction
             MobileSprite msprite = (MobileSprite)sprite;
             if (piece.isAlive()) {
                 queueAction(msprite, "reacting");
+            } else if (msprite.hasAction("dying")) {
+                queueAction(msprite,  "dying");
             } else {
-                queueAction(
-                    msprite, msprite.hasAction("dying") ? "dying" : "dead");
+                // units with no dying animation will react while the explosion
+                // is going off and then switch to their dead pose
+                queueAction(msprite, "reacting");
+                queueAction(msprite, "dead");
             }
         }
 

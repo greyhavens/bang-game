@@ -107,14 +107,12 @@ public abstract class Effect extends SimpleStreamableObject
 
         // flying targets must land when they die
         if (!target.isAlive() && target.isFlyer()) {
-            if (!bangobj.board.isOccupiable(target.x, target.y)) {
-                Point pt = bangobj.board.getOccupiableSpot(target.x, target.y,
-                    5, new Random(bangobj.tick));
-                if (pt != null) {
-                    bangobj.board.updateShadow(target, null);
-                    target.position(pt.x, pt.y);
-                    bangobj.board.updateShadow(null, target);
-                }
+            Point pt = bangobj.board.getOccupiableSpot(
+                target.x, target.y, 5, new Random(bangobj.tick));
+            if (pt != null) {
+                bangobj.board.updateShadow(target, null);
+                target.position(pt.x, pt.y);
+                bangobj.board.updateShadow(null, target);
             }
             reportMove(obs, target);
         }
