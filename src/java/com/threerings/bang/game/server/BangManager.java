@@ -15,6 +15,7 @@ import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
@@ -888,14 +889,11 @@ public class BangManager extends GameManager
             if (user == null || !_bangobj.isActivePlayer(ii)) {
                 continue;
             }
-
-            // grab their player 
             PlayerRecord prec = _precords[ii];
             prec.user = user;
 
             // compute this player's "take home" cash
-            awards[ii].cashEarned = (int)Math.round(
-                50 * prec.finishedRound * prec.purse.getPurseBonus());
+            awards[ii].cashEarned = computeEarnings(ii);
 
             StatSet stats = _bangobj.stats[ii];
             try {
@@ -964,11 +962,31 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void assignWinners (boolean[] winners)
     {
-        int[] windexes =
-            IntListUtil.getMaxIndexes(_bangobj.getFilteredPoints());
-        for (int ii = 0; ii < windexes.length; ii++) {
-            winners[windexes[ii]] = true;
+        // compute the final ranking of each player, resolving ties using kill
+        // count, then a random ordering
+        int[] points = _bangobj.getFilteredPoints();
+        _ranks = new RankRecord[points.length];
+        for (int ii = 0; ii < _ranks.length; ii++) {
+            int kills = _bangobj.stats[ii].getIntStat(Stat.Type.UNITS_KILLED);
+            _ranks[ii] = new RankRecord(ii, points[ii], kills);
         }
+
+        // first shuffle, then sort so that ties are resolved randomly
+        ArrayUtil.shuffle(_ranks);
+        Arrays.sort(_ranks);
+
+        // now ensure that each player has at least one more point than the
+        // player ranked immediately below them to communicate any last ditch
+        // tie resolution to the players
+        for (int ii = _ranks.length-2; ii >= 0; ii--) {
+            int highidx = _ranks[ii].pidx, lowidx = _ranks[ii+1].pidx;
+            if (_bangobj.points[highidx] == _bangobj.points[lowidx]) {
+                _bangobj.setPointsAt(_bangobj.points[highidx]+1, highidx);
+            }
+        }
+
+        // finally pass the winner info up to the parlor services
+        winners[_ranks[0].pidx] = true;
     }
 
     /**
@@ -1146,18 +1164,6 @@ public class BangManager extends GameManager
     {
         Piece[] pieces = _bangobj.getPieceArray();
 
-//         int[] nonactors = new int[pcount];
-//         short prevTick = (short)(_bangobj.tick-1);
-//         for (int ii = 0; ii < pieces.length; ii++) {
-//             Piece p = pieces[ii];
-//             if (p.isAlive() && p.owner >= 0) {
-//                 if (p.ticksUntilMovable(prevTick) == 0) {
-//                     nonactors[p.owner]++;
-//                 }
-//             }
-//         }
-//         log.info("Non-actors: " + StringUtil.toString(nonactors));
-
         // have a 1 in 4 chance of adding a bonus for each live player for
         // which there is not already a bonus on the board
         int bprob = (_bangobj.gdata.livePlayers - _bangobj.gdata.bonuses);
@@ -1265,10 +1271,6 @@ public class BangManager extends GameManager
             _bangobj.addToPieces(bonus);
             _bangobj.board.updateShadow(null, bonus);
 
-//         String msg = MessageBundle.tcompose(
-//             "m.placed_bonus", "" + bspot.x, "" + bspot.y);
-//         SpeakProvider.sendInfo(_bangobj, GAME_MSGS, msg);
-
             log.info("Placed bonus: " + bonus.info());
         }
 
@@ -1294,12 +1296,44 @@ public class BangManager extends GameManager
         // record the damage dealt statistic
         _bangobj.stats[pidx].incrementStat(Stat.Type.DAMAGE_DEALT, total);
 
-        // award points for the damage dealt
-        total /= 10; // you get $1 for each 10 points of damage
+        // award points for the damage dealt: 1 point for each 10 units
+        total /= 10;
         _bangobj.grantPoints(pidx, total);
 
         // finally clear out the damage index
         damage.clear();
+    }
+
+    /**
+     * Computes the take-home cash for the specified player index. This is
+     * based on their final rank, their purse, the number of rounds played and
+     * the number of players.
+     */
+    protected int computeEarnings (int pidx)
+    {
+        int earnings = 0;
+        for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
+            // stop if we get to a round this player didn't finish
+            if (_precords[pidx].finishedRound == rr) {
+                break;
+            }
+
+            // total up the players they defeated in each round
+            int defeated = 0;
+            for (int ii = _ranks.length-1; ii >= 0; ii--) {
+                if (_ranks[ii].pidx == pidx) {
+                    break;
+                }
+                // require that the defeated opponent finished the round
+                if (_precords[_ranks[ii].pidx].finishedRound > rr) {
+                    defeated++;
+                }
+            }
+            earnings += BASE_EARNINGS[defeated];
+        }
+
+        // and scale earnings based on their purse
+        return Math.round(_precords[pidx].purse.getPurseBonus() * earnings);
     }
 
     /**
@@ -1531,6 +1565,29 @@ public class BangManager extends GameManager
         }
     }
 
+    /** Used to rank the players at the end of the game. */
+    protected static class RankRecord implements Comparable<RankRecord>
+    {
+        public int pidx, points, kills;
+
+        public RankRecord (int pidx, int points, int kills) {
+            this.pidx = pidx;
+            this.points = points;
+            this.kills = kills;
+        }
+
+        public int compareTo (RankRecord other) {
+            int delta;
+            if ((delta = (points - other.points)) != 0) {
+                return delta;
+            }
+            if ((delta = (kills - other.kills)) != 0) {
+                return delta;
+            }
+            return 0;
+        }
+    }
+
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
@@ -1601,6 +1658,9 @@ public class BangManager extends GameManager
     /** Contains info on all of the players in the game. */
     protected PlayerRecord[] _precords;
 
+    /** Used at the end of the game to rank the players. */
+    protected RankRecord[] _ranks;
+
     /** Contains information on our selection of boards. */
     protected BoardRecord[] _boards;
 
@@ -1659,4 +1719,7 @@ public class BangManager extends GameManager
         Stat.Type.SHOTS_FIRED,
         Stat.Type.DISTANCE_MOVED,
     };
+
+    /** Defines the base earnings (per-round) for each rank. */
+    protected static final int[] BASE_EARNINGS = { 75, 80, 90, 100 };
 }
