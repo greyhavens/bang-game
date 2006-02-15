@@ -347,13 +347,8 @@ public class BangController extends GameController
             // let the view know that this round is over
             _view.endRound();
 
-            // create the end of round stats display
-            String title = _ctx.xlate(GameCodes.GAME_MSGS, "m.round_over_stats");
-            StatsDisplay stats =
-                new StatsDisplay(_ctx, this, _bangobj, _pidx, title);
-            _ctx.getRootNode().addWindow(stats);
-            stats.pack();
-            stats.center();
+            // fade out the current board and prepare to fade in the next
+            _view.view.doInterRoundMarqueeFade();
             return true;
 
         } else {
@@ -393,21 +388,26 @@ public class BangController extends GameController
     }
 
     /**
+     * Called by the board view after it has faded out the board at the end of
+     * a round.
+     */
+    protected void interRoundFadeComplete ()
+    {
+        // potentially display the selection phase dialog for the next round
+        _selphaseMultex.satisfied(Multex.CONDITION_TWO);
+    }
+
+    /**
      * Called by the stats dialog when it has been dismissed.
      */
     protected void statsDismissed ()
     {
-        // if the game is over, head back to the lobby
-        if (_bangobj.state == BangObject.GAME_OVER) {
-            if (!_ctx.getLocationDirector().moveBack()) {
-                _ctx.getLocationDirector().leavePlace();
-                _ctx.getBangClient().showTownView();
-            }
-
-        } else {
-            // otherwise potentially display the selection phase dialog
-            // for the next round
-            _selphaseMultex.satisfied(Multex.CONDITION_TWO);
+        // head back to the saloon
+        if (!_ctx.getLocationDirector().moveBack()) {
+            // or show the town view if we're in testing mode and were not
+            // previously in the saloon
+            _ctx.getLocationDirector().leavePlace();
+            _ctx.getBangClient().showTownView();
         }
     }
 

@@ -19,9 +19,12 @@ import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.jme.util.LinearTimeFunction;
+import com.threerings.jme.util.TimeFunction;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -37,6 +40,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
@@ -95,6 +99,47 @@ public class BangBoardView extends BoardView
         if (piece != null) {
             getUnitSprite(piece).setPendingShot(false);
         }
+    }
+
+    /**
+     * Fades in a "round over" marquee, fades out the board, sets up the fade
+     * in for the new board and calls back to the controller to let it know
+     * that everything is ready for the next round to start.
+     */
+    public void doInterRoundMarqueeFade ()
+    {
+        // we'll use this to fade out the board once the marquee is faded in
+        final FadeInOutEffect fadeout = new FadeInOutEffect(
+            ColorRGBA.black, 0f, 1f, 2f, true) {
+            protected void fadeComplete () {
+                super.fadeComplete();
+                // let the controller know we're done
+                _ctrl.interRoundFadeComplete();
+                // and prepare to fade the new board in
+                createPausedFadeIn();
+                _ctx.getInterface().attachChild(_fadein);
+            }
+        };
+
+        // create a marquee, but detach it
+        createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.round_over"));
+        _ctx.getInterface().detachChild(_marquee);
+
+        // then reattach it with a fade in function
+        TimeFunction tf = new LinearTimeFunction(0f, 1f, 2f);
+        _ctx.getInterface().attachChild(
+            new FadeInOutEffect(_marquee, ColorRGBA.white, tf, true) {
+                protected void fadeComplete () {
+                    super.fadeComplete();
+                    log.info("Marquee faded in");
+                    // once we've faded in fully, attach it normally...
+                    _ctx.getInterface().attachChild(_marquee);
+                    // ...and fade it back out...
+                    clearMarquee(0f);
+                    // ...and fade the whole screen to black
+                    _ctx.getInterface().attachChild(fadeout);
+                }
+            });
     }
 
     /**
