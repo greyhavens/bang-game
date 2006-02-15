@@ -113,11 +113,11 @@ public class BangBoardView extends BoardView
             ColorRGBA.black, 0f, 1f, 2f, true) {
             protected void fadeComplete () {
                 super.fadeComplete();
-                // let the controller know we're done
-                _ctrl.interRoundFadeComplete();
                 // and prepare to fade the new board in
                 createPausedFadeIn();
                 _ctx.getInterface().attachChild(_fadein);
+                // let the controller start up the next phase
+                _ctrl.interRoundFadeComplete();
             }
         };
 
@@ -131,7 +131,6 @@ public class BangBoardView extends BoardView
             new FadeInOutEffect(_marquee, ColorRGBA.white, tf, true) {
                 protected void fadeComplete () {
                     super.fadeComplete();
-                    log.info("Marquee faded in");
                     // once we've faded in fully, attach it normally...
                     _ctx.getInterface().attachChild(_marquee);
                     // ...and fade it back out...
