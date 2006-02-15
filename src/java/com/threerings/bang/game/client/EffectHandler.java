@@ -84,23 +84,26 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // create the appropriate visual effect
-        boolean wasShot = false;
+        boolean wasDamaged = false;
         if (effect.equals(ShotEffect.DAMAGED)) {
-            wasShot = true;
+            wasDamaged = true;
         } else if (effect.equals(ShotEffect.EXPLODED)) {
-            wasShot = true;
+            wasDamaged = true;
             _effviz = new ExplosionViz(false);
-            // they just got shot, clear any pending shot
-            ((UnitSprite)sprite).setPendingShot(false);
         } else if (effect.equals(AreaDamageEffect.MISSILED)) {
-            wasShot = true;
+            wasDamaged = true;
             _effviz = new ExplosionViz(true);
         } else if (effect.equals(RepairEffect.REPAIRED)) {
             _effviz = new RepairViz();
         }
 
+        // if they were damaged, go ahead and clear any pending shot
+        if (wasDamaged) {
+            ((UnitSprite)sprite).setPendingShot(false);
+        }
+
         // add wreck effect for steam-powered units
-        if (wasShot && piece instanceof Unit &&
+        if (wasDamaged && piece instanceof Unit &&
             ((Unit)piece).getConfig().make == UnitConfig.Make.STEAM &&
             (_effviz instanceof ExplosionViz || !piece.isAlive())) {
             _effviz = new WreckViz(_effviz);
@@ -121,14 +124,13 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // if this piece was shot, trigger the reacting or dying animation
-        if (wasShot && sprite instanceof MobileSprite) {
+        if (wasDamaged && sprite instanceof MobileSprite) {
             MobileSprite msprite = (MobileSprite)sprite;
             if (piece.isAlive()) {
                 queueAction(msprite, "reacting");
-                
             } else {
-                queueAction(msprite, msprite.hasAction("dying") ?
-                    "dying" : "dead");
+                queueAction(
+                    msprite, msprite.hasAction("dying") ? "dying" : "dead");
             }
         }
 

@@ -55,7 +55,8 @@ public class StatsDisplay extends BDecoratedWindow
             new TableLayout(bangobj.players.length + 1, 5, 25));
         bits.add(new BLabel(""));
         for (int pp = 0; pp < bangobj.players.length; pp++) {
-            bits.add(new BLabel(bangobj.players[pp].toString(), "stats_header"));
+            bits.add(
+                new BLabel(bangobj.players[pp].toString(), "stats_header"));
         }
 
         // enumerate all the stat types accumulated during the game
@@ -97,12 +98,12 @@ public class StatsDisplay extends BDecoratedWindow
             hbox.add(cash);
             awards.add(hbox);
 
-            if (bangobj.awards[pidx].badges.size() > 0) {
-                awards.add(new BLabel(msgs.get("m.stats_badges"), "stats_info"));
+            if (bangobj.awards[pidx].badge != null) {
+                awards.add(
+                    new BLabel(msgs.get("m.stats_badges"), "stats_info"));
                 hbox = GroupLayout.makeHBox(GroupLayout.LEFT);
-                for (Badge badge : bangobj.awards[pidx].badges) {
-                    hbox.add(new BadgeIcon().setItem(_ctx, badge));
-                }
+                hbox.add(new BadgeIcon().setItem(
+                             _ctx, bangobj.awards[pidx].badge));
                 awards.add(hbox);
             }
 
