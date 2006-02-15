@@ -159,6 +159,7 @@ public class Match
         BangConfig config = new BangConfig();
         config.seats = getPlayerCount();
         config.players = new Name[config.seats];
+        config.teamSize = TEAM_SIZES[config.seats-2];
         for (int ii = 0, idx = 0; ii < players.length; ii++) {
             if (players[ii] != null) {
                 config.players[idx++] = players[ii].handle;
@@ -172,4 +173,7 @@ public class Match
 
     protected Criterion _criterion;
     protected int _minRating, _avgRating, _maxRating;
+
+    // team sizes for two, three and four player games
+    protected static final int[] TEAM_SIZES = { 5, 4, 3 };
 }
