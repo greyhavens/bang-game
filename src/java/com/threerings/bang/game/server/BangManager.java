@@ -842,6 +842,11 @@ public class BangManager extends GameManager
     {
         super.gameDidEnd();
 
+        // if the game was cancelled, don't do any of this
+        if (_bangobj.state == BangObject.CANCELLED) {
+            return;
+        }
+
         // process any played cards
         ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
         ArrayList<StartingCard> removals = new ArrayList<StartingCard>();
