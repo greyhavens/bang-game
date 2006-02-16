@@ -807,7 +807,31 @@ public class BangManager extends GameManager
                     pieces[ii].ticksUntilMovable(tick) == 0) {
                     Unit unit = (Unit)pieces[ii];
                     _moves.clear();
-                    _bangobj.board.computeMoves(unit, _moves, null);
+                    _attacks.clear();
+                    _bangobj.board.computeMoves(unit, _moves, _attacks);
+
+                    // if we can attack someone, do that
+                    Piece target = null;
+                    for (int tt = 0; tt < pieces.length; tt++) {
+                        Piece p = pieces[tt];
+                        if (p instanceof Unit && _attacks.contains(p.x, p.y) &&
+                            unit.validTarget(p, false)) {
+                            target = p;
+                            break;
+                        }
+                    }
+                    if (target != null) {
+                        log.info("Shooting " + target.info() +
+                                 " with " + unit.info());
+                        try {
+                            moveAndShoot(unit, Short.MAX_VALUE, 0, target);
+                            continue;
+                        } catch (InvocationException ie) {
+                            // fall through and move
+                        }
+                    }
+
+                    // otherwise just move
                     if (_moves.size() > 0) {
                         int midx = RandomUtil.getInt(_moves.size());
                         moveUnit(unit, _moves.getX(midx), _moves.getY(midx),
