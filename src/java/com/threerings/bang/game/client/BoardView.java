@@ -1261,5 +1261,5 @@ public class BoardView extends BComponent
         MAX_SHADOW_LENGTH / (TILE_SIZE * 2);
 
     /** Used when debugging board actions. */
-    protected static final boolean ACTION_DEBUG = true;
+    protected static final boolean ACTION_DEBUG = false;
 }
