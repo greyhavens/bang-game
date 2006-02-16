@@ -26,6 +26,8 @@ import com.threerings.util.CompiledConfig;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 
+import com.threerings.cast.CharacterManager;
+import com.threerings.cast.bundle.BundledComponentRepository;
 import com.threerings.media.image.ImageManager;
 import com.threerings.resource.ResourceManager;
 
@@ -40,8 +42,10 @@ import com.threerings.parlor.util.ParlorContext;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
-import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.openal.SoundManager;
+
+import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -86,7 +90,8 @@ public class BasicClient
     /**
      * Initializes various standard client services.
      */
-    protected void initClient (BasicContextImpl ctx, JmeApp app, RunQueue rqueue)
+    protected void initClient (
+        BasicContextImpl ctx, JmeApp app, RunQueue rqueue)
     {
         _app = app;
         _ctx = ctx;
@@ -122,7 +127,8 @@ public class BasicClient
         BangUI.init(_ctx);
 
         // create our media managers
-        _icreator = new ImageManager.OptimalImageCreator() {
+        _imgmgr = new ImageManager(
+            _rsrcmgr, new ImageManager.OptimalImageCreator() {
             public BufferedImage createImage (int w, int h, int t) {
                 // TODO: take screen depth into account
                 switch (t) {
@@ -132,19 +138,8 @@ public class BasicClient
                     return new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
                 }
             }
-        };
-        _imgmgr = new ImageManager(_rsrcmgr, _icreator);
+        });
         _soundmgr = SoundManager.createSoundManager(rqueue);
-
-        // load up our fringe configuration
-        try {
-            _fringeconf = (FringeConfiguration)
-                CompiledConfig.loadConfig(
-                    _rsrcmgr.getResource("tiles/fringe/config.dat"));
-        } catch (IOException ioe) {
-            // TODO: report to the client
-            log.log(Level.WARNING, "Failed to load fringe config.", ioe);
-        }
 
         // these manage "online" state
         _locdir = new LocationDirector(_ctx);
@@ -192,6 +187,17 @@ public class BasicClient
      */
     protected void postResourcesInit ()
     {
+        try {
+            _charmgr = new CharacterManager(
+                _imgmgr, new BundledComponentRepository(
+                    _rsrcmgr, _imgmgr, AvatarCodes.AVATAR_RSRC_SET));
+            _alogic = new AvatarLogic(
+                _rsrcmgr, _charmgr.getComponentRepository());
+
+        } catch (IOException ioe) {
+            // TODO: report to the client
+            log.log(Level.WARNING, "Initialization failed.", ioe);
+        }
     }
 
     /**
@@ -260,10 +266,6 @@ public class BasicClient
             return _tcache;
         }
 
-        public FringeConfiguration getFringeConfig () {
-            return _fringeconf;
-        }
-
         public DisplaySystem getDisplay () {
             return _app.getContext().getDisplay();
         }
@@ -296,6 +298,14 @@ public class BasicClient
             return BangUI.stylesheet;
         }
 
+        public CharacterManager getCharacterManager () {
+            return _charmgr;
+        }
+
+        public AvatarLogic getAvatarLogic () {
+            return _alogic;
+        }
+
         public String xlate (String bundle, String message) {
             MessageBundle mb = getMessageManager().getBundle(bundle);
             return (mb == null) ? message : mb.xlate(message);
@@ -315,14 +325,14 @@ public class BasicClient
 
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;
-    protected ImageManager.OptimalImageCreator _icreator;
     protected ImageManager _imgmgr;
     protected SoundManager _soundmgr;
 
     protected ImageCache _icache;
     protected TextureCache _tcache;
     protected ModelCache _mcache;
-    protected FringeConfiguration _fringeconf;
+    protected CharacterManager _charmgr;
+    protected AvatarLogic _alogic;
 
     protected Client _client;
     protected LocationDirector _locdir;

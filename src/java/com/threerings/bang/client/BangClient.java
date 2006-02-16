@@ -26,9 +26,6 @@ import com.threerings.getdown.util.LaunchUtil;
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.effect.WindowSlider;
 
-import com.threerings.cast.CharacterManager;
-import com.threerings.cast.bundle.BundledComponentRepository;
-
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.SessionObserver;
@@ -39,8 +36,6 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.avatar.client.CreateAvatarView;
-import com.threerings.bang.avatar.data.AvatarCodes;
-import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.ranch.client.FirstBigShotView;
 
 import com.threerings.bang.game.client.BangView;
@@ -398,24 +393,6 @@ public class BangClient extends BasicClient
         ParticleFactory.warmup(_ctx);
     }
 
-    @Override // documentation inherited
-    protected void postResourcesInit ()
-    {
-        super.postResourcesInit();
-
-        try {
-            _charmgr = new CharacterManager(
-                _imgmgr, new BundledComponentRepository(
-                    _rsrcmgr, _imgmgr, AvatarCodes.AVATAR_RSRC_SET));
-            _alogic = new AvatarLogic(
-                _rsrcmgr, _charmgr.getComponentRepository());
-
-        } catch (IOException ioe) {
-            // TODO: report to the client
-            log.log(Level.WARNING, "Initialization failed.", ioe);
-        }
-    }
-
     protected void displayPardnerInvite (final Name handle)
     {
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
@@ -526,22 +503,12 @@ public class BangClient extends BasicClient
         public PlayerObject getUserObject () {
             return (PlayerObject)getClient().getClientObject();
         }
-
-        public CharacterManager getCharacterManager () {
-            return _charmgr;
-        }
-
-        public AvatarLogic getAvatarLogic () {
-            return _alogic;
-        }
     }
 
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
 
     protected BangChatDirector _chatdir;
-    protected CharacterManager _charmgr;
-    protected AvatarLogic _alogic;
     protected PlayerService _psvc;
 
     protected BWindow _mview;

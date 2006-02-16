@@ -8,14 +8,15 @@ import java.awt.image.BufferedImage;
 import com.jme.image.Image;
 import com.jmex.bui.BStyleSheet;
 
-import com.threerings.util.MessageManager;
-
+import com.threerings.cast.CharacterManager;
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.JmeContext;
-import com.threerings.jme.tile.FringeConfiguration;
 import com.threerings.media.image.ImageManager;
 import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
+import com.threerings.util.MessageManager;
+
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.util.ImageCache;
@@ -38,9 +39,6 @@ public interface BasicContext extends JmeContext
     /** Returns the stylesheet used to configure the user interface. */
     public BStyleSheet getStyleSheet ();
 
-    /** Provides access to the tile fringing configuration. */
-    public FringeConfiguration getFringeConfig ();
-
     /** Returns a reference to our top-level application. */
     public JmeApp getApp ();
 
@@ -55,6 +53,12 @@ public interface BasicContext extends JmeContext
 
     /** Returns a reference to our texture cache. */
     public TextureCache getTextureCache ();
+
+    /** Returns a reference to our character manager. */
+    public CharacterManager getCharacterManager ();
+
+    /** Returns an object used to encode and decode avatar information. */
+    public AvatarLogic getAvatarLogic ();
 
     /** Translates the specified message using the specified message bundle. */
     public String xlate (String bundle, String message);
