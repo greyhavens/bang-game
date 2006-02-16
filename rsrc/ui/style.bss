@@ -582,9 +582,16 @@ round_timer {
 //
 // Post-game stats display
 
-endgame_player {
-  font: "Dom Casual" plain 18;
+endgame_player_big {
+  font: "Dom Casual" plain 24;
   text-align: center;
+  color: #442801;
+}
+
+endgame_player_small {
+  font: "Dom Casual" plain 14;
+  text-align: center;
+  color: #442801;
 }
 
 endgame_title {

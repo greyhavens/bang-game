@@ -35,14 +35,14 @@ public class FinalistViewTest extends TestApp
     protected void createInterface (BDecoratedWindow window)
     {
         window.setLayoutManager(GroupLayout.makeHoriz(GroupLayout.CENTER));
-        window.add(new FinalistView(
-                       _ctx, 0, new Name("Wild Annie"), TEST_AVATAR, 0));
-        window.add(new FinalistView(
-                       _ctx, 1, new Name("Wild Annie"), TEST_AVATAR, 1));
-        window.add(new FinalistView(
-                       _ctx, 2, new Name("Wild Annie"), TEST_AVATAR, 2));
-        window.add(new FinalistView(
-                       _ctx, 3, new Name("Wild Annie"), TEST_AVATAR, 3));
+        window.add(new FinalistView(_ctx, 0, new Name("Rabid Jerrymanderer"),
+                                    TEST_AVATAR, 0));
+        window.add(new FinalistView(_ctx, 1, new Name("WwWwWwWwWwWwWwWwWw"),
+                                    TEST_AVATAR, 1));
+        window.add(new FinalistView(_ctx, 2, new Name("Wyjq WyjqWyjq Wyjq"),
+                                    TEST_AVATAR, 2));
+        window.add(new FinalistView(_ctx, 3, new Name("Wild Annie"),
+                                    TEST_AVATAR, 3));
     }
 
     protected static final int[] TEST_AVATAR = {
