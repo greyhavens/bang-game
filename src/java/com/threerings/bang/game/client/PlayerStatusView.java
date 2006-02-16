@@ -223,6 +223,12 @@ public class PlayerStatusView extends BContainer
             // TODO: publish something when the player 
             setRank(-2);
             break;
+
+        case BangObject.GAME_OVER:
+            // clear out our rankings when the game is over as the real
+            // rankings will be displayed
+            setRank(-2);
+            break;
         }
     }
 
