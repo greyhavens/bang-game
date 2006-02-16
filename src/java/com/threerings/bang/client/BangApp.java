@@ -65,7 +65,7 @@ public class BangApp extends JmeApp
 
         // set up the proper logging services
         com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
-        OneLineLogFormatter.configureDefaultHandler();
+        OneLineLogFormatter.configureDefaultHandler(false);
         RepeatRecordFilter.configureDefaultHandler(100);
     }
 
