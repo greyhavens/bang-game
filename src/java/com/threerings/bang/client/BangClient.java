@@ -320,10 +320,10 @@ public class BangClient extends BasicClient
             config = new BangConfig();
             config.players = new Name[] {
                 _ctx.getUserObject().getVisibleName(),
-                new Name("Larry") /*, new Name("Moe")*/ };
+                new Name("Larry"), new Name("Moe"), new Name("Curly") };
             config.ais = new GameAI[] {
-                null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
-            config.scenarios = new String[] { "cj" };
+                null, new GameAI(1, 50), new GameAI(0, 50), new GameAI(0, 50) };
+            config.scenarios = new String[] { "cj", "cj" };
             config.teamSize = 3;
             config.board = System.getProperty("board");
         }
