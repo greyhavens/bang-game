@@ -25,7 +25,7 @@ import com.threerings.media.util.MultiFrameImage;
 import com.threerings.cast.ActionFrames;
 import com.threerings.cast.CharacterDescriptor;
 
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.avatar.util.AvatarLogic.*;
@@ -40,8 +40,9 @@ public class AvatarView extends BLabel
      * existing image from the cache if possible but otherwise creating
      * and caching the image.
      */
-    public static BufferedImage getImage (BangContext ctx, int[] avatar)
+    public static BufferedImage getImage (BasicContext ctx, int[] avatar)
     {
+        log.info("Avatar " + com.samskivert.util.StringUtil.toString(avatar));
         // first check the cache
         AvatarKey key = new AvatarKey(avatar);
         WeakReference<BufferedImage> iref = _icache.get(key);
@@ -78,12 +79,12 @@ public class AvatarView extends BLabel
         return image;
     }
 
-    public AvatarView (BangContext ctx)
+    public AvatarView (BasicContext ctx)
     {
         this(ctx, null);
     }
 
-    public AvatarView (BangContext ctx, int[] avatar)
+    public AvatarView (BasicContext ctx, int[] avatar)
     {
         super("", "avatar_view");
         _ctx = ctx;
@@ -145,7 +146,7 @@ public class AvatarView extends BLabel
         protected int[] _avatar;
     }
     
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
     protected Image _frame;
     
     /** The avatar image cache. */
