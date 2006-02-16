@@ -511,7 +511,7 @@ pick_subtitle {
 }
 
 pick_unit_name {
-  font: "Dom Casual" bold 20;
+  font: "Dom Casual" plain 20;
   text-effect: shadow;
   color: #FFFFFF;
   effect-color: #47311C;
@@ -671,7 +671,7 @@ lobby_chat {
 // Ranch styles
 
 ranch_unit_name {
-  font: "Dom Casual" bold 24;
+  font: "Dom Casual" plain 24;
   text-effect: shadow;
   color: #FFFFFF;
   effect-color: #6A482E;
