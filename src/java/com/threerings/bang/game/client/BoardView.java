@@ -223,6 +223,11 @@ public class BoardView extends BComponent
             createMarquee(_bangobj.boardName);
         }
 
+        // prevent the fade from being started until we're done queueing up all
+        // of our sprite resolutions
+        FadeInOutEffect fadein = _fadein;
+        _fadein = null;
+
         // refresh the lights
         refreshLights();
 
@@ -237,6 +242,20 @@ public class BoardView extends BComponent
             createPieceSprite((Piece)iter.next(), _bangobj.tick);
         }
         _pnode.updateGeometricState(0, true);
+
+        // restore the fade-in reference
+        _fadein = fadein;
+
+        // if there are no sprites left to resolve, start our fade in
+        if (_resolvingSprites == 0) {
+            if (_fadein != null && _fadein.isPaused()) {
+                log.info("Nothing to resolve, fading in.");
+                _fadein.setPaused(false);
+            }
+        } else {
+            log.info("Waiting for " + _resolvingSprites +
+                     " sprites to resolve before fading in.");
+        }
     }
 
     /**
@@ -258,6 +277,7 @@ public class BoardView extends BComponent
         if (_resolvingSprites == 0) {
             // we can start fading things in now
             if (_fadein != null && _fadein.isPaused()) {
+                log.info("All sprites resolved, fading in.");
                 _fadein.setPaused(false);
             }
         }
