@@ -42,7 +42,6 @@ public class AvatarView extends BLabel
      */
     public static BufferedImage getImage (BasicContext ctx, int[] avatar)
     {
-        log.info("Avatar " + com.samskivert.util.StringUtil.toString(avatar));
         // first check the cache
         AvatarKey key = new AvatarKey(avatar);
         WeakReference<BufferedImage> iref = _icache.get(key);
