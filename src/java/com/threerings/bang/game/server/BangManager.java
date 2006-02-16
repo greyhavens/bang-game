@@ -769,24 +769,6 @@ public class BangManager extends GameManager
             }
         }
 
-        // move our AI pieces randomly
-        if (!_bconfig.tutorial) {
-            for (int ii = 0; ii < pieces.length; ii++) {
-                if (pieces[ii] instanceof Unit && pieces[ii].isAlive() &&
-                    isAI(pieces[ii].owner) &&
-                    pieces[ii].ticksUntilMovable(tick) == 0) {
-                    Unit unit = (Unit)pieces[ii];
-                    _moves.clear();
-                    _bangobj.board.computeMoves(unit, _moves, null);
-                    if (_moves.size() > 0) {
-                        int midx = RandomUtil.getInt(_moves.size());
-                        moveUnit(unit, _moves.getX(midx), _moves.getY(midx),
-                                 null);
-                    }
-                }
-            }
-        }
-
         // tick the scenario which will do all the standard processing
         _scenario.tick(_bangobj, tick);
 
@@ -815,6 +797,24 @@ public class BangManager extends GameManager
             // cancel the board tick
             _ticker.cancel();
             return;
+        }
+
+        // move our AI pieces randomly
+        if (!_bconfig.tutorial) {
+            for (int ii = 0; ii < pieces.length; ii++) {
+                if (pieces[ii] instanceof Unit && pieces[ii].isAlive() &&
+                    isAI(pieces[ii].owner) &&
+                    pieces[ii].ticksUntilMovable(tick) == 0) {
+                    Unit unit = (Unit)pieces[ii];
+                    _moves.clear();
+                    _bangobj.board.computeMoves(unit, _moves, null);
+                    if (_moves.size() > 0) {
+                        int midx = RandomUtil.getInt(_moves.size());
+                        moveUnit(unit, _moves.getX(midx), _moves.getY(midx),
+                                 null);
+                    }
+                }
+            }
         }
 
         try {
@@ -994,8 +994,8 @@ public class BangManager extends GameManager
         // tie resolution to the players
         for (int ii = _ranks.length-2; ii >= 0; ii--) {
             int highidx = _ranks[ii].pidx, lowidx = _ranks[ii+1].pidx;
-            if (_bangobj.points[highidx] == _bangobj.points[lowidx]) {
-                _bangobj.setPointsAt(_bangobj.points[highidx]+1, highidx);
+            if (_bangobj.points[highidx] <= _bangobj.points[lowidx]) {
+                _bangobj.setPointsAt(_bangobj.points[lowidx]+1, highidx);
             }
         }
 
