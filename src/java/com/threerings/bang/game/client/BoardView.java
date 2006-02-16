@@ -501,7 +501,10 @@ public class BoardView extends BComponent
      */
     public void executeAction (BoardAction action)
     {
-//        log.info("Queueing: " + action);
+        if (ACTION_DEBUG) {
+            log.info("Queueing: " + action);
+        }
+
         _pactions.add(action);
         if (_paction == null) {
             processNextAction();
@@ -531,7 +534,10 @@ public class BoardView extends BComponent
             Thread.dumpStack();
             return;
         }
-//         log.info("Completed " + action);
+
+        if (ACTION_DEBUG) {
+            log.info("Completed " + action);
+        }
         _pstart = 0L;
         _paction = null;
         processNextAction();
@@ -804,7 +810,9 @@ public class BoardView extends BComponent
     {
         if (_pactions.size() > 0) {
             _paction = _pactions.remove(0);
-//             log.info("Posting: " + _paction);
+            if (ACTION_DEBUG) {
+                log.info("Posting: " + _paction);
+            }
             _ctx.getApp().postRunnable(_arunner);
         }
     }
@@ -1145,14 +1153,23 @@ public class BoardView extends BComponent
     protected Runnable _arunner = new Runnable() {
         public void run () {
             try {
-//                log.info("Running: " + _paction);
+                if (ACTION_DEBUG) {
+                    log.info("Running: " + _paction);
+                }
+
                 _pstart = System.currentTimeMillis();
                 if (_paction.execute()) {
-//                     log.info("Waiting: " + _paction);
+                    if (ACTION_DEBUG) {
+                        log.info("Waiting: " + _paction);
+                    }
                     // the action requires us to wait until it completes
                     return;
                 }
-//                 log.info("Completed: " + _paction);
+
+                if (ACTION_DEBUG) {
+                    log.info("Completed: " + _paction);
+                }
+
             } catch (Throwable t) {
                 log.log(Level.WARNING, "Board action choked: " + _paction, t);
             }
@@ -1242,4 +1259,7 @@ public class BoardView extends BComponent
     /** The furthest we'll let the shadows get (as a multiple of height). */
     protected static final float MAX_SHADOW_DISTANCE =
         MAX_SHADOW_LENGTH / (TILE_SIZE * 2);
+
+    /** Used when debugging board actions. */
+    protected static final boolean ACTION_DEBUG = true;
 }
