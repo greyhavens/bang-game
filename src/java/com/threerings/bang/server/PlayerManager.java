@@ -4,6 +4,7 @@
 package com.threerings.bang.server;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -126,16 +127,18 @@ public class PlayerManager
     {
         // set list of active pardners in dset, collect list of inviters
         ArrayList<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
-        final ArrayList<Handle> inviters = new ArrayList<Handle>();
         ArrayList<PardnerRepository.PardnerRecord> records =
             _pardrepo.getPardnerRecords(player.playerId);
+        final ArrayList<PardnerRepository.PardnerRecord> inviters =
+            new ArrayList<PardnerRepository.PardnerRecord>();
         for (int ii = 0, nn = records.size(); ii < nn; ii++) {
             PardnerRepository.PardnerRecord record = records.get(ii);
             if (record.active) {
-                pardners.add(getPardnerEntry(record.handle));
+                pardners.add(getPardnerEntry(record.handle,
+                    record.lastSession));
                 
             } else {
-                inviters.add(record.handle);
+                inviters.add(record);
             }
         }
         player.pardners = new DSet(pardners.iterator());
@@ -151,8 +154,9 @@ public class PlayerManager
                         PlayerDecoder.RECEIVER_CODE)) {
                     return;
                 }
-                for (Handle handle : inviters) {
-                    sendPardnerInvite(player, handle, true);
+                for (PardnerRepository.PardnerRecord inviter : inviters) {
+                    sendPardnerInvite(player, inviter.handle,
+                        inviter.lastSession, true);
                 }
                 player.removeListener(this);
             }
@@ -183,7 +187,8 @@ public class PlayerManager
         // the invite in the db
         PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
         if (invitee != null) {
-            String error = sendPardnerInvite(invitee, inviter.handle, false);
+            String error = sendPardnerInvite(invitee, inviter.handle,
+                new Date(), false);
             if (error == null) {
                 listener.requestProcessed();
             
@@ -307,7 +312,7 @@ public class PlayerManager
      * for the pardner, one will be created, mapped, and used to keep the
      * {@link PardnerEntry} up-to-date.
      */
-    protected PardnerEntry getPardnerEntry (Name handle)
+    protected PardnerEntry getPardnerEntry (Name handle, Date lastSession)
     {
         PardnerEntryUpdater updater = _updaters.get(handle);
         if (updater != null) {
@@ -318,7 +323,7 @@ public class PlayerManager
             return (new PardnerEntryUpdater(player)).entry;
             
         } else {
-            return new PardnerEntry(handle);
+            return new PardnerEntry(handle, lastSession);
         }
     }
     
@@ -332,14 +337,14 @@ public class PlayerManager
      * translatable error message indicating what went wrong
      */
     protected String sendPardnerInvite (PlayerObject invitee, Name inviter,
-        boolean fromdb)
+        Date lastSession, boolean fromdb)
     {
         InviteKey key = new InviteKey(invitee.playerId, inviter);
         if (_invites.containsKey(key)) {
             return MessageBundle.tcompose("e.already_invited", invitee.handle);
         }
         PlayerSender.sendPardnerInvite(invitee, inviter);
-        new Invite(key, invitee, fromdb).add();
+        new Invite(key, lastSession, invitee, fromdb).add();
         return null;
     }
     
@@ -377,15 +382,20 @@ public class PlayerManager
         /** The key of this invitation. */
         public InviteKey key;
         
+        /** The time at which the inviter was last on. */
+        public Date lastSession;
+        
         /** The invitee player object. */
         public PlayerObject invitee;
         
         /** Whether or not this invitation originated from the database. */
         public boolean fromdb;
         
-        public Invite (InviteKey key, PlayerObject invitee, boolean fromdb)
+        public Invite (InviteKey key, Date lastSession, PlayerObject invitee,
+            boolean fromdb)
         {
             this.key = key;
+            this.lastSession = lastSession;
             this.invitee = invitee;
             this.fromdb = fromdb;
         }
@@ -398,11 +408,11 @@ public class PlayerManager
 
         public void accept (PlayerService.ConfirmListener listener)
         {
-            invitee.addToPardners(getPardnerEntry(key.inviter));
+            invitee.addToPardners(getPardnerEntry(key.inviter, lastSession));
             PlayerObject invobj =
                 (PlayerObject)BangServer.lookupBody(key.inviter);
             if (invobj != null) {
-                invobj.addToPardners(getPardnerEntry(invitee.handle));
+                invobj.addToPardners(getPardnerEntry(invitee.handle, null));
                 SpeakProvider.sendInfo(invobj, BANG_MSGS,
                     MessageBundle.tcompose("m.pardner_accepted",
                         invitee.handle));
@@ -528,23 +538,16 @@ public class PlayerManager
             if (!_player.isActive()) {
                 entry.status = PardnerEntry.OFFLINE;
                 entry.avatar = null;
+                entry.setLastSession(new Date());
                 return;
             }
             Object plobj = BangServer.omgr.getObject(_player.location);
-            if (plobj instanceof BarberObject) {
-                entry.status = PardnerEntry.IN_BARBER;
-            } else if (plobj instanceof BankObject) {
-                entry.status = PardnerEntry.IN_BANK;
-            } else if (plobj instanceof BangObject) {
+            if (plobj instanceof BangObject) {
                 entry.status = PardnerEntry.IN_GAME;
-            } else if (plobj instanceof RanchObject) {
-                entry.status = PardnerEntry.IN_RANCH;
             } else if (plobj instanceof SaloonObject) {
                 entry.status = PardnerEntry.IN_SALOON;
-            } else if (plobj instanceof StoreObject) {
-                entry.status = PardnerEntry.IN_STORE;
             } else {
-                entry.status = PardnerEntry.IN_TOWN;
+                entry.status = PardnerEntry.ONLINE;
             }
         }
         

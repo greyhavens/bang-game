@@ -9,18 +9,32 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import java.text.SimpleDateFormat;
+
+import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextField;
+import com.jmex.bui.Label;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.TextEvent;
+import com.jmex.bui.event.TextListener;
+import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.text.BText;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Insets;
+
+import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -31,7 +45,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
@@ -42,101 +58,162 @@ import com.threerings.bang.util.BangContext;
 /**
  * Displays a player's pardners.
  */
-public class PardnerView extends BContainer
-    implements ActionListener, SetListener, BangCodes
+public class PardnerView extends IconPalette
+    implements ActionListener, TextListener, SetListener, BangCodes
 {
     public PardnerView (BangContext ctx)
     {
-        super(new BorderLayout(5, 5));
+        super(null, 4, 2, ICON_SIZE, 1);
         setStyleClass("pardner_view");
         _ctx = ctx;
         _psvc = (PlayerService)ctx.getClient().requireService(
             PlayerService.class);
         
-        _ptainer = new BContainer(GroupLayout.makeVert(GroupLayout.NONE,
-            GroupLayout.TOP, GroupLayout.STRETCH));
-        add(new BScrollPane(_ptainer), BorderLayout.CENTER);
-        
-        BContainer abox = new BContainer(GroupLayout.makeVert(GroupLayout.NONE,
-            GroupLayout.CENTER, GroupLayout.STRETCH));
-        abox.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
-        BContainer nbox = new BContainer(GroupLayout.makeHStretch());
-        nbox.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_name")),
-            GroupLayout.FIXED);
-        nbox.add(_name = new BTextField());
+        // insert our controls between the palette and the buttons
+        remove(_bcont);
+        BContainer ccont = new BContainer(GroupLayout.makeVert(
+            GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH));
+        ccont.add(new Spacer(1, 10));
+        BContainer bcont = new BContainer(GroupLayout.makeHoriz(
+            GroupLayout.CENTER));
+        bcont.add(_chat = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_chat"),
+            this, "chat"));
+        bcont.add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
+            "m.pardner_remove"), this, "remove"));
+        ccont.add(bcont);
+        ccont.add(new Spacer(1, 5));
+        GroupLayout layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
+        layout.setGap(10);
+        bcont = new BContainer(layout);
+        bcont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
+        bcont.add(_name = new BTextField());
+        _name.setPreferredWidth(324);
         _name.addListener(this);
-        nbox.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
-            "m.pardner_submit"), this, "submit"), GroupLayout.FIXED);
-        abox.add(nbox);
-        abox.add(_status = new StatusLabel(_ctx));
-        _status.setStyleClass("pardner_status");
-        BComponent spacer = new BContainer();
-        spacer.setPreferredSize(new Dimension(1, 30));
-        abox.add(spacer);
-        
-        add(abox, BorderLayout.SOUTH);
+        bcont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
+            "m.pardner_submit"), this, "submit"));
+        ccont.add(bcont);
+        ccont.add(new Spacer(1, 0));
+        ccont.add(_bcont);
+        add(ccont, BorderLayout.CENTER);
     }
-
-    @Override // documentation inherited
-    public void wasAdded ()
+    
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent ae)
     {
-        super.wasAdded();
-
-        // clear out and refresh our list of pardners
-        _ptainer.removeAll();
-        _ppanels.clear();
-        PlayerObject user = _ctx.getUserObject();
-        for (Iterator it = user.pardners.iterator(); it.hasNext(); ) {
-            new PardnerPanel((PardnerEntry)it.next()).insert();
+        Object src = ae.getSource();
+        if (src == _chat) {
+            PardnerIcon icon = (PardnerIcon)getSelectedIcon();
+            _ctx.getBangClient().getPardnerChatView().displayTab(
+                icon.entry.handle);
+                    
+        } else if (src == _remove) {
+            final PardnerIcon icon = (PardnerIcon)getSelectedIcon();
+            OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
+                MessageBundle.tcompose("m.confirm_remove", icon.entry.handle),
+                new OptionDialog.ResponseReceiver() {
+                    public void resultPosted (int button, Object result) {
+                        if (button == OptionDialog.OK_BUTTON) {
+                            removePardner(icon.entry.handle);
+                        }
+                    }
+                });
+                
+        } else { // src == _name || src == _submit
+            if (_submit.isEnabled()) {
+                invitePardner(new Handle(_name.getText()));
+            }
         }
-        
-        // register as a listener for changes to the pardner list
-        user.addListener(this);
     }
-
-    @Override // documentation inherited
-    public void wasRemoved ()
+    
+    // documentation inherited from interface TextListener
+    public void textChanged (TextEvent te)
     {
-        super.wasRemoved();
-        _ctx.getUserObject().removeListener(this);
+        _submit.setEnabled(!StringUtil.isBlank(_name.getText()));
     }
     
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent eae)
     {
-        new PardnerPanel((PardnerEntry)eae.getEntry()).insert();
+        new PardnerIcon((PardnerEntry)eae.getEntry()).insert();
     }
     
     // documentation inherited from interface SetListener
     public void entryRemoved (EntryRemovedEvent ere)
     {
-        _ppanels.get(ere.getKey()).remove();
+        _picons.get(ere.getKey()).remove();
     }
     
     // documentation inherited from interface SetListener
     public void entryUpdated (EntryUpdatedEvent eue)
     {
         PardnerEntry entry = (PardnerEntry)eue.getEntry();
-        _ppanels.get(entry.getKey()).update(entry);
+        _picons.get(entry.getKey()).update(entry);
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // clear out and refresh our list of pardners
+        clear();
+        _picons.clear();
+        PlayerObject user = _ctx.getUserObject();
+        for (Iterator it = user.pardners.iterator(); it.hasNext(); ) {
+            new PardnerIcon((PardnerEntry)it.next()).insert();
+        }
+        
+        // these start out as disabled/empty
+        _chat.setEnabled(false);
+        _remove.setEnabled(false);
+        _submit.setEnabled(false);
+        _name.setText("");
+        
+        // register as a listener for changes to the pardner list
+        user.addListener(this);
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _ctx.getUserObject().removeListener(this);
     }
     
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent ae)
+    @Override // documentation inherited
+    protected void iconSelected (SelectableIcon icon)
     {
-        final Handle handle = new Handle(_name.getText());
-        
+        super.iconSelected(icon);
+        _chat.setEnabled(((PardnerIcon)icon).entry.isAvailable());
+        _remove.setEnabled(true);
+    }
+    
+    @Override // documentation inherited
+    protected void iconDeselected (SelectableIcon icon)
+    {
+        super.iconDeselected(icon);
+        _chat.setEnabled(false);
+        _remove.setEnabled(false);
+    }
+    
+    /**
+     * Attempts to invite the named player as a pardner.
+     */
+    protected void invitePardner (final Name handle)
+    {
         _submit.setEnabled(false);
+        _name.setEnabled(false);
         _psvc.invitePardner(_ctx.getClient(), handle,
             new InvocationService.ConfirmListener() {
                 public void requestProcessed () {
-                    _status.setStatus(BANG_MSGS, MessageBundle.tcompose(
-                        "m.pardner_invited", handle), false);
+                    // TODO: display success
                     _name.setText("");
-                    _submit.setEnabled(true);
+                    _name.setEnabled(true);
                 }
                 public void requestFailed (String cause) {
-                    _status.setStatus(BANG_MSGS, cause, true);
+                    // TODO: display failure
                     _submit.setEnabled(true);
+                    _name.setEnabled(true);
                 } 
             });
     }
@@ -150,71 +227,42 @@ public class PardnerView extends BContainer
         _psvc.removePardner(_ctx.getClient(), handle,
             new PlayerService.ConfirmListener() {
                 public void requestProcessed () {
-                    _status.setStatus(BANG_MSGS, MessageBundle.tcompose(
-                        "m.pardner_removed", handle), false);
+                    // TODO: display success
                 }
                 public void requestFailed (String cause) {
-                    _status.setStatus(BANG_MSGS, cause, true);
+                    // TODO: display failure
                 }
             });
     }
     
-    /**
-     * Displays the status and controls for a single pardner.
-     */
-    protected class PardnerPanel extends BContainer
-        implements ActionListener
+    /** Displays a single pardner. */
+    protected class PardnerIcon extends SelectableIcon
     {
         PardnerEntry entry;
         
-        public PardnerPanel (PardnerEntry entry)
+        public PardnerIcon (PardnerEntry entry)
         {
-            super(GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.LEFT,
-                GroupLayout.NONE));
             this.entry = entry;
+            setStyleClass("pardner_icon");
             
-            add(_avhandle = new BLabel(entry.handle.toString()));
-            add(_status = new BLabel(""), GroupLayout.FIXED);
-            add(_chat = new BButton(_ctx.xlate(BANG_MSGS,
-                "m.pardner_chat")), GroupLayout.FIXED);
-            _chat.addListener(this);
-            add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
-                "m.pardner_remove")), GroupLayout.FIXED);
-            _remove.addListener(this);
+            _handle = _ctx.getStyleSheet().getTextFactory(this,
+                null).createText(entry.handle.toString(),
+                    _ctx.getStyleSheet().getColor(this, null));
             
             updateAvatar();
             updateStatus();
         }
-        
-        public void actionPerformed (ActionEvent ae)
-        {
-            if (ae.getSource() == _chat) {
-                _ctx.getBangClient().getPardnerChatView().displayTab(
-                    entry.handle);
-                
-            } else { // ae.getSource() == _remove
-                OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
-                    MessageBundle.tcompose("m.confirm_remove", entry.handle),
-                    new OptionDialog.ResponseReceiver() {
-                        public void resultPosted (int button, Object result) {
-                            if (button == OptionDialog.OK_BUTTON) {
-                                removePardner(entry.handle);
-                            }
-                        }
-                    });
-            }
-        }
-        
+
         public void insert ()
         {
-            addToContainer();
-            _ppanels.put(entry.getKey(), this);
+            addToPalette();
+            _picons.put(entry.getKey(), this);
         }
         
         public void remove ()
         {
-            _ptainer.remove(this);
-            _ppanels.remove(entry.getKey());
+            removeIcon(this);
+            _picons.remove(entry.getKey());
         }
         
         public void update (PardnerEntry nentry)
@@ -223,62 +271,116 @@ public class PardnerView extends BContainer
             entry = nentry;
             if (oentry.status != nentry.status) {
                 updateStatus();
-                _ptainer.remove(this);
-                addToContainer();
+                removeIcon(this);
+                addToPalette();
             }
             if (!Arrays.equals(oentry.avatar, nentry.avatar)) {
                 updateAvatar();
             }
         }
         
+        public Dimension getPreferredSize (int whint, int hhint)
+        {
+            return ICON_SIZE;
+        }
+        
+        @Override // documentation inherited
+        protected void layout ()
+        {
+            super.layout();
+            _label.layout(new Insets(25, 15, 25, 32));
+        }
+    
+        // documentation inherited
+        protected void renderComponent (Renderer renderer)
+        {
+            super.renderComponent(renderer);
+            if (_location != null) {
+                _location.render(renderer, 6, 67);
+            }
+            _scroll.render(renderer, 8, 8);
+            _handle.render(renderer, (_width - _handle.getSize().width) / 2,
+                20);
+            if (_last != null) {
+                _last.render(renderer, (_width - _last.getSize().width) / 2,
+                    10);
+            }
+        }
+    
         protected void updateAvatar ()
         {
+            Image image;
             if (entry.avatar == null) {
-                _avhandle.setIcon(null);
-                return;
+                image = _ctx.getImageManager().getImage(
+                    "ui/pardners/silhouette.png");
+                
+            } else {
+                image = AvatarView.getImage(_ctx,
+                    entry.avatar).getScaledInstance(AVATAR_SIZE.width,
+                        AVATAR_SIZE.height, Image.SCALE_SMOOTH);
             }
-            Image image = AvatarView.getImage(_ctx,
-                entry.avatar).getScaledInstance(AVATAR_WIDTH, AVATAR_HEIGHT,
-                Image.SCALE_SMOOTH);
-            _avhandle.setIcon(new ImageIcon(image));
+            setIcon(new ImageIcon(image));
         }
         
         protected void updateStatus ()
         {
-            _status.setText(_ctx.xlate(BANG_MSGS,
-                "m.pardner_status." + entry.status));
-            _chat.setEnabled(entry.isAvailable());
+            // update the location icon
+            if (entry.status == PardnerEntry.IN_GAME ||
+                entry.status == PardnerEntry.IN_SALOON) {
+                _location = new ImageIcon(_ctx.getImageManager().getImage(
+                    "ui/pardners/in_" + (entry.status == PardnerEntry.IN_GAME ?
+                        "game" : "saloon") + ".png"));
+            
+            } else {
+                _location = null;
+            }
+            
+            // and the scroll icon
+            _scroll = new ImageIcon(_ctx.getImageManager().getImage(
+                "ui/frames/" + (entry.status == PardnerEntry.OFFLINE ?
+                    "taller" : "smaller") + "_scroll.png"));
+            
+            // and the last session date
+            if (entry.status == PardnerEntry.OFFLINE) {
+                String lastSession =
+                    LAST_SESSION_FORMAT.format(entry.getLastSession());
+                _last = _ctx.getStyleSheet().getTextFactory(this,
+                    "last_session").createText(lastSession,
+                    _ctx.getStyleSheet().getColor(this, "last_session"));
+                
+            } else {
+                _last = null;
+            }
         }
         
-        protected void addToContainer ()
+        protected void addToPalette ()
         {
             // insert according to order defined by PardnerEntry.compareTo
-            for (int ii = 0, nn = _ptainer.getComponentCount(); ii < nn;
-                    ii++) {
-                PardnerPanel opanel = (PardnerPanel)_ptainer.getComponent(ii);
-                if (entry.compareTo(opanel.entry) < 0) {
-                    _ptainer.add(ii, this);
+            for (int ii = 0, nn = getIconCount(); ii < nn; ii++) {
+                PardnerIcon oicon = (PardnerIcon)PardnerView.this.getIcon(ii);
+                if (entry.compareTo(oicon.entry) < 0) {
+                    addIcon(ii, this);
                     return;
                 }
             }
-            _ptainer.add(this);
+            addIcon(this);
         }
-     
-        BLabel _avhandle, _status;
-        BButton _chat, _remove;
+        
+        protected BIcon _scroll, _location;
+        protected BText _handle, _last;
     }
     
     protected BangContext _ctx;
     protected PlayerService _psvc;
-    protected BContainer _ptainer;
+    protected BButton _chat, _remove, _submit;
     protected BTextField _name;
-    protected BButton _submit;
-    protected StatusLabel _status;
     
-    protected HashMap<Comparable, PardnerPanel> _ppanels =
-        new HashMap<Comparable, PardnerPanel>();
+    protected HashMap<Comparable, PardnerIcon> _picons =
+        new HashMap<Comparable, PardnerIcon>();
     
-    protected static final int AVATAR_WIDTH = 117;
-        
-    protected static final int AVATAR_HEIGHT = 150;
+    protected static final Dimension ICON_SIZE = new Dimension(167, 186);
+    protected static final Dimension AVATAR_SIZE = new Dimension(117, 134);
+    
+    protected static final SimpleDateFormat LAST_SESSION_FORMAT =
+        new SimpleDateFormat("M/d/yy");
 }

@@ -484,22 +484,37 @@ stats_view {
   color: #000000;
 }
 
-pardner_view { 
-  padding: 5;
-  color: #000000;
-}
-
-pardner_status {
-  font: "Helvetica" plain 15;
-  color: #000000;
-  text-align: center;
-}
-
 look_upsell {
   font: "Helvetica" plain 11;
   text-align: center;
   vertical-align: center;
   color: #4d2a04;
+}
+
+//
+// Pardner View styles
+
+pardner_view { 
+  padding: 5;
+  color: #7e4e26;
+  font: "Old Town" plain 24;
+}
+
+pardner_icon {
+  font: "Dom Casual" plain 16;
+  color: #4a2805;
+  background: blank;
+  text-align: center;
+  vertical-align: top;
+}
+
+pardner_icon:selected {
+  background: image "ui/palette/selected.png" framexy;
+}
+
+pardner_icon:last_session {
+  color: #7e4e26;
+  font: "Old Town" plain 14;
 }
 
 //

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.samskivert.io.PersistenceException;
 
@@ -42,12 +43,16 @@ public class PardnerRepository extends SimpleRepository
         /** The handle of the other player. */
         public Handle handle;
         
+        /** The time of the player's last session. */
+        public Date lastSession;
+        
         /** Whether the pardnership is active or merely proposed. */
         public boolean active;
         
-        public PardnerRecord (Handle handle, boolean active)
+        public PardnerRecord (Handle handle, Date lastSession, boolean active)
         {
             this.handle = handle;
+            this.lastSession = lastSession;
             this.active = active;
         }
     }
@@ -81,14 +86,15 @@ public class PardnerRepository extends SimpleRepository
                 try {
                     // this is actually faster than two queries
                     ResultSet rs = stmt.executeQuery(
-                        "select HANDLE, ACTIVE from PARDNERS straight join " +
-                        "PLAYERS where (ACTIVE=1 and PLAYER_ID1=" + playerId +
-                        " and PLAYER_ID=PLAYER_ID2) or (PLAYER_ID2=" +
-                        playerId + " and PLAYER_ID=PLAYER_ID1)");
+                        "select HANDLE, LAST_SESSION, ACTIVE from PARDNERS " +
+                        "straight join PLAYERS where (ACTIVE=1 and " +
+                        "PLAYER_ID1=" + playerId + " and " +
+                        "PLAYER_ID=PLAYER_ID2) or (PLAYER_ID2=" + playerId +
+                        " and PLAYER_ID=PLAYER_ID1)");
                     while (rs.next()) {
                         list.add(new PardnerRecord(
                             new Handle(JDBCUtil.unjigger(rs.getString(1))),
-                            rs.getBoolean(2)));
+                            rs.getDate(2), rs.getBoolean(3)));
                     }
                     return null;
 

@@ -75,7 +75,7 @@ public class IconPalette extends BContainer
         _forward.setStyleClass("fwd_button");
         add(_bcont, BorderLayout.CENTER);
     }
-
+    
     /**
      * Configures the number of simultaneous selections allowed by this icon
      * palette.
@@ -129,26 +129,39 @@ public class IconPalette extends BContainer
      */
     public void addIcon (SelectableIcon icon)
     {
-        _icons.add(icon);
+        addIcon(_icons.size(), icon);
+    }
+
+    /**
+     * Adds an icon to this palette. Use this method instead of {@link #add} so
+     * that the palette can properly page through the icons when there are
+     * multiple pages.
+     *
+     * @param idx the index at which to add the icon
+     */
+    public void addIcon (int idx, SelectableIcon icon)
+    {
+        _icons.add(idx, icon);
         icon.setPalette(this);
 
         if (isAdded()) {
-            // potentially add this icon to the display if we're on its page
-            int ipage = (_icons.size()-1)/(_rows*_cols);
-            if (_page == ipage) {
-                _icont.add(icon);
+            // update the current page of icons if necessary
+            int ipage = idx/(_rows*_cols);
+            if (ipage <= _page) {
+                displayPage(_page, true);
             } else {
                 _forward.setEnabled(true);
             }
         }
     }
-
+    
     /**
      * Removes an icon from the palette (and from the display if it is
      * showing).
      */
     public void removeIcon (SelectableIcon icon)
     {
+        icon.setSelected(false);
         icon.setPalette(null);
         _icons.remove(icon);
         if (icon.isAdded()) {
@@ -156,6 +169,22 @@ public class IconPalette extends BContainer
         }
     }
 
+    /**
+     * Returns the number of icons in the palette.
+     */
+    public int getIconCount ()
+    {
+        return _icons.size();
+    }
+    
+    /**
+     * Returns the icon at the specified index.
+     */
+    public SelectableIcon getIcon (int idx)
+    {
+        return _icons.get(idx);
+    }
+    
     /**
      * Returns an array containing the icons displayed by this palette.
      */
