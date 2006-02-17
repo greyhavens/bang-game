@@ -70,10 +70,13 @@ public class PardnerView extends IconPalette
             PlayerService.class);
         
         // insert our controls between the palette and the buttons
-        remove(_bcont);
-        BContainer ccont = new BContainer(GroupLayout.makeVert(
-            GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH));
-        ccont.add(new Spacer(1, 10));
+        GroupLayout layout = GroupLayout.makeVert(GroupLayout.NONE,
+            GroupLayout.BOTTOM, GroupLayout.STRETCH);
+        layout.setGap(0);
+        BContainer ccont = new BContainer(layout);
+        ccont.add(_status = new StatusLabel(_ctx));
+        _status.setStyleClass("pardner_status");
+        ccont.add(new Spacer(1, 2));
         BContainer bcont = new BContainer(GroupLayout.makeHoriz(
             GroupLayout.CENTER));
         bcont.add(_chat = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_chat"),
@@ -81,8 +84,8 @@ public class PardnerView extends IconPalette
         bcont.add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_remove"), this, "remove"));
         ccont.add(bcont);
-        ccont.add(new Spacer(1, 5));
-        GroupLayout layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
+        ccont.add(new Spacer(1, 15));
+        layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
         layout.setGap(10);
         bcont = new BContainer(layout);
         bcont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
@@ -92,8 +95,7 @@ public class PardnerView extends IconPalette
         bcont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_submit"), this, "submit"));
         ccont.add(bcont);
-        ccont.add(new Spacer(1, 0));
-        ccont.add(_bcont);
+        ccont.add(new Spacer(1, 15));
         add(ccont, BorderLayout.CENTER);
     }
     
@@ -206,12 +208,13 @@ public class PardnerView extends IconPalette
         _psvc.invitePardner(_ctx.getClient(), handle,
             new InvocationService.ConfirmListener() {
                 public void requestProcessed () {
-                    // TODO: display success
+                    _status.setStatus(BANG_MSGS, MessageBundle.tcompose(
+                        "m.pardner_invited", handle), false);
                     _name.setText("");
                     _name.setEnabled(true);
                 }
                 public void requestFailed (String cause) {
-                    // TODO: display failure
+                    _status.setStatus(BANG_MSGS, cause, true);
                     _submit.setEnabled(true);
                     _name.setEnabled(true);
                 } 
@@ -227,10 +230,11 @@ public class PardnerView extends IconPalette
         _psvc.removePardner(_ctx.getClient(), handle,
             new PlayerService.ConfirmListener() {
                 public void requestProcessed () {
-                    // TODO: display success
+                    _status.setStatus(BANG_MSGS, MessageBundle.tcompose(
+                        "m.pardner_removed", handle), false);
                 }
                 public void requestFailed (String cause) {
-                    // TODO: display failure
+                    _status.setStatus(BANG_MSGS, cause, true);
                 }
             });
     }
@@ -288,7 +292,7 @@ public class PardnerView extends IconPalette
         protected void layout ()
         {
             super.layout();
-            _label.layout(new Insets(25, 15, 25, 32));
+            _label.layout(new Insets(25, 5, 25, 31));
         }
     
         // documentation inherited
@@ -300,10 +304,10 @@ public class PardnerView extends IconPalette
             }
             _scroll.render(renderer, 8, 8);
             _handle.render(renderer, (_width - _handle.getSize().width) / 2,
-                20);
+                _last == null ? 16 : 24);
             if (_last != null) {
                 _last.render(renderer, (_width - _last.getSize().width) / 2,
-                    10);
+                    12);
             }
         }
     
@@ -342,11 +346,12 @@ public class PardnerView extends IconPalette
             
             // and the last session date
             if (entry.status == PardnerEntry.OFFLINE) {
-                String lastSession =
-                    LAST_SESSION_FORMAT.format(entry.getLastSession());
+                String msg = _ctx.xlate(BANG_MSGS, MessageBundle.tcompose(
+                    "m.pardner_last_session", LAST_SESSION_FORMAT.format(
+                        entry.getLastSession())));
                 _last = _ctx.getStyleSheet().getTextFactory(this,
-                    "last_session").createText(lastSession,
-                    _ctx.getStyleSheet().getColor(this, "last_session"));
+                    "last_session").createText(msg,
+                        _ctx.getStyleSheet().getColor(this, "last_session"));
                 
             } else {
                 _last = null;
@@ -374,12 +379,13 @@ public class PardnerView extends IconPalette
     protected PlayerService _psvc;
     protected BButton _chat, _remove, _submit;
     protected BTextField _name;
+    protected StatusLabel _status;
     
     protected HashMap<Comparable, PardnerIcon> _picons =
         new HashMap<Comparable, PardnerIcon>();
     
     protected static final Dimension ICON_SIZE = new Dimension(167, 186);
-    protected static final Dimension AVATAR_SIZE = new Dimension(117, 134);
+    protected static final Dimension AVATAR_SIZE = new Dimension(117, 150);
     
     protected static final SimpleDateFormat LAST_SESSION_FORMAT =
         new SimpleDateFormat("M/d/yy");

@@ -73,7 +73,7 @@ public class IconPalette extends BContainer
         _back.setStyleClass("back_button");
         _bcont.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
-        add(_bcont, BorderLayout.CENTER);
+        add(_bcont, BorderLayout.SOUTH);
     }
     
     /**

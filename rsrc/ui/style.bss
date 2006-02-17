@@ -495,13 +495,12 @@ look_upsell {
 // Pardner View styles
 
 pardner_view { 
-  padding: 5;
   color: #7e4e26;
   font: "Old Town" plain 24;
 }
 
 pardner_icon {
-  font: "Dom Casual" plain 16;
+  font: "Dom Casual" plain 15;
   color: #4a2805;
   background: blank;
   text-align: center;
@@ -514,7 +513,14 @@ pardner_icon:selected {
 
 pardner_icon:last_session {
   color: #7e4e26;
-  font: "Old Town" plain 14;
+  font: "Old Town" plain 15;
+}
+
+pardner_status {
+  font: "Dom Casual" plain 20;
+  color: #4a2805;
+  text-align: center;
+  vertical-align: top;
 }
 
 //
