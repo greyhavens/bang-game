@@ -115,7 +115,7 @@ public class StatsDisplay extends BDecoratedWindow
         dismiss.addListener(new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 _ctx.getRootNode().removeWindow(StatsDisplay.this);
-                _ctrl.statsDismissed();
+                _ctrl.statsDismissed(false);
             }
         });
         buttons.add(dismiss);

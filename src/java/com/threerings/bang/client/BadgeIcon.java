@@ -7,14 +7,15 @@ import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays a badge inventory item.
  */
 public class BadgeIcon extends ItemIcon
 {
-    protected void configureLabel (BangContext ctx)
+    @Override // documentation inherited
+    protected void configureLabel (BasicContext ctx)
     {
         Badge badge = (Badge)_item;
         String id = Integer.toHexString(badge.getType().code());

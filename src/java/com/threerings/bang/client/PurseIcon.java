@@ -7,7 +7,7 @@ import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Purse;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays a purse in the inventory display.
@@ -15,7 +15,7 @@ import com.threerings.bang.util.BangContext;
 public class PurseIcon extends ItemIcon
 {
     @Override // documentation inherited
-    protected void configureLabel (BangContext ctx)
+    protected void configureLabel (BasicContext ctx)
     {
         Purse purse = (Purse)_item;
         String type = Purse.PURSE_TYPES[purse.getTownIndex()];

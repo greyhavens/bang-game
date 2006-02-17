@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.icon.BIcon;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Dimension;
@@ -53,10 +55,15 @@ public class FinalistView extends BContainer
         // create our avatar imagery
         boolean winner = (rank == 0);
         int scale =  winner ? 2 : 4;
-        _avatar = new ImageIcon(
-            AvatarView.getImage(ctx, avatar).getScaledInstance(
-                AvatarLogic.WIDTH / scale, AvatarLogic.HEIGHT / scale,
-                BufferedImage.SCALE_SMOOTH));
+        int awidth = AvatarLogic.WIDTH / scale;
+        int aheight = AvatarLogic.HEIGHT / scale;
+        if (avatar != null) {
+            _avatar = new ImageIcon(
+                AvatarView.getImage(ctx, avatar).getScaledInstance(
+                    awidth, aheight, BufferedImage.SCALE_SMOOTH));
+        } else {
+            _avatar = new BlankIcon(awidth, aheight);
+        }
 
         // load up our frame and scroll banner
         String prefix = winner ? "ui/frames/big_" : "ui/frames/smaller_";
@@ -88,7 +95,7 @@ public class FinalistView extends BContainer
         _medal.render(renderer, 0, getHeight()-_medal.getHeight());
     }
 
-    protected ImageIcon _avatar, _frame, _banner, _medal;
+    protected BIcon _avatar, _frame, _banner, _medal;
 
     protected static final Dimension[] MEDAL_SIZE = {
         new Dimension(102, 138),

@@ -386,12 +386,10 @@ public class BangController extends GameController
     /**
      * Called by the stats dialog when it has been dismissed.
      */
-    protected void statsDismissed ()
+    protected void statsDismissed (boolean toTown)
     {
-        // head back to the saloon
-        if (!_ctx.getLocationDirector().moveBack()) {
-            // or show the town view if we're in testing mode and were not
-            // previously in the saloon
+        // head back to the saloon or to town
+        if (toTown || !_ctx.getLocationDirector().moveBack()) {
             _ctx.getLocationDirector().leavePlace();
             _ctx.getBangClient().showTownView();
         }

@@ -8,7 +8,7 @@ import com.jmex.bui.util.Dimension;
 
 import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.Item;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays an icon and descriptive text for a particular inventory item.
@@ -26,14 +26,14 @@ public class ItemIcon extends PaletteIcon
     }
 
     /** Configures this icon with its associated item. */
-    public ItemIcon setItem (BangContext ctx, Item item)
+    public ItemIcon setItem (BasicContext ctx, Item item)
     {
         _item = item;
         configureLabel(ctx);
         return this;
     }
 
-    protected void configureLabel (BangContext ctx)
+    protected void configureLabel (BasicContext ctx)
     {
         setIcon(new ImageIcon(ctx.loadImage("ui/icons/unknown_item.png")));
         setText(_item.toString());

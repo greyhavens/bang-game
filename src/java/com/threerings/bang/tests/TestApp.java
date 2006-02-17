@@ -115,14 +115,21 @@ public abstract class TestApp extends JmeApp
         }
         BangUI.init(_ctx);
 
-        BDecoratedWindow window = new BDecoratedWindow(BangUI.stylesheet, null);
+        BDecoratedWindow window = createWindow();
         createInterface(window);
         _ctx.getRootNode().addWindow(window);
         window.pack();
         window.center();
     }
 
-    protected abstract void createInterface (BDecoratedWindow window);
+    protected BDecoratedWindow createWindow ()
+    {
+        return new BDecoratedWindow(BangUI.stylesheet, null);
+    }
+
+    protected void createInterface (BDecoratedWindow window)
+    {
+    }
 
     /**
      * The context implementation. This provides access to all of the

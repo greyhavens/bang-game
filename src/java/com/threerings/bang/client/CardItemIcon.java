@@ -7,14 +7,15 @@ import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays a card inventory item.
  */
 public class CardItemIcon extends ItemIcon
 {
-    protected void configureLabel (BangContext ctx)
+    @Override // documentation inherited
+    protected void configureLabel (BasicContext ctx)
     {
         CardItem card = (CardItem)_item;
         String path = "cards/" + card.getType() + "/card.png";

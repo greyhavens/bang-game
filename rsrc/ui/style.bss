@@ -616,12 +616,21 @@ endgame_player_small {
 }
 
 endgame_title {
-  font: "Dom Casual" plain 18;
+  font: "Old Town Wide" plain 24;
+  text-align: center;
+  color: #4C2602;
 }
 
 endgame_cash {
-  font: "Dom Casual" plain 18;
+  font: "Dom Casual" plain 30;
   text-align: center;
+  text-effect: shadow;
+  effect-color: #000000;
+}
+
+endgame_smallcash {
+  parent: "endgame_cash";
+  font: "Dom Casual" plain 24;
 }
 
 //
