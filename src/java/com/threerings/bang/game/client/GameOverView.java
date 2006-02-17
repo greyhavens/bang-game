@@ -142,6 +142,7 @@ public class GameOverView extends BDecoratedWindow
                                          purse.getPurseBonus()));
             rrow.add(label = new BLabel(txt, "endgame_smallcash"));
             label.setIcon(BangUI.scripIcon);
+            label.setIconTextGap(3);
 
             rrow.add(new BLabel("+", "endgame_smallcash"));
 
@@ -163,10 +164,12 @@ public class GameOverView extends BDecoratedWindow
             txt = cfmt.format(award.cashEarned);
             rrow.add(label = new BLabel(txt, "endgame_smallcash"));
             label.setIcon(BangUI.scripIcon);
+            label.setIconTextGap(3);
 
             rrow.add(new Spacer(1, 1));
 
-            label = new BLabel( cfmt.format(user.scrip), "endgame_cash");
+            label = new BLabel(cfmt.format(user.scrip), "endgame_cash");
+            label.setIconTextGap(6);
             label.setIcon(new ImageIcon(
                               ctx.loadImage("ui/icons/big_scrip.png")));
             rrow.add(label);
