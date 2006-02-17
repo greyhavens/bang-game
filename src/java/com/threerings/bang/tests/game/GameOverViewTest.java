@@ -15,6 +15,7 @@ import com.threerings.util.Name;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Purse;
 
 import com.threerings.bang.tests.TestApp;
 
@@ -43,16 +44,20 @@ public class GameOverViewTest extends TestApp
     {
         PlayerObject user = new PlayerObject();
         user.handle = new Handle("Wild Annie");
-        user.inventory = new DSet();
+        user.inventory = new DSet(new Purse[] { new Purse(-1, 1) });
+        user.scrip = 125378;
 
         BangObject bangobj = new BangObject();
         bangobj.players = new Name[] {
-            user.handle, new Name("Scary Jerry"), new Name("Monkey Butter"),
-            new Name("Elvis") };
+            user.handle,
+            new Name("Scary Jerry"),
+            new Name("Monkey Butter"),
+            new Name("Elvis")
+        };
         bangobj.awards = new Award[bangobj.players.length];
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
-            bangobj.awards[ii].pidx = 3-ii;
+            bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
             bangobj.awards[ii].badge = Badge.Type.IRON_HORSE.newBadge();

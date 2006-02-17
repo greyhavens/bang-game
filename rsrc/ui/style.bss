@@ -603,6 +603,11 @@ round_timer {
 //
 // Post-game stats display
 
+endgame_border {
+  background: image "ui/window/border_ornate.png" framexy;
+  padding: 16 32;
+}
+
 endgame_player_big {
   font: "Dom Casual" plain 24;
   text-align: center;
@@ -619,6 +624,18 @@ endgame_title {
   font: "Old Town Wide" plain 24;
   text-align: center;
   color: #4C2602;
+}
+
+endgame_header {
+  font: "Dom Casual" plain 18;
+  text-align: center;
+  color: #7D4924;
+}
+
+endgame_smallheader {
+  font: "Dom Casual" plain 15;
+  text-align: center;
+  color: #7D4924;
 }
 
 endgame_cash {

@@ -3,19 +3,27 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.image.BufferedImage;
+import java.text.NumberFormat;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BadgeIcon;
+import com.threerings.bang.client.BangUI;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
@@ -61,6 +69,8 @@ public class GameOverView extends BDecoratedWindow
         Award award = null;
 
         add(new BLabel(msgs.get("m.endgame_title"), "scroll_title"));
+        add(_results = GroupLayout.makeVBox(GroupLayout.TOP));
+        _results.add(new Spacer(1, -80)); // kids, don't try this at home
 
         // display the players' avatars in rank order
         GroupLayout gl = GroupLayout.makeHoriz(GroupLayout.CENTER);
@@ -82,30 +92,89 @@ public class GameOverView extends BDecoratedWindow
             who.add(new FinalistView(ctx, apidx, bangobj.players[apidx], avatar,
                                      bangobj.awards[ii].rank));
         }
-        add(who);
+        _results.add(who);
 
         // display our earnings and awarded badge (if any)
         if (award != null) {
             BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
             ((GroupLayout)row.getLayoutManager()).setGap(25);
-            add(row);
+            ((GroupLayout)row.getLayoutManager()).setOffAxisPolicy(
+                GroupLayout.STRETCH);
+            _results.add(row);
 
-            BContainer econt = new BContainer(new BorderLayout());
-            econt.setStyleClass("palette_backgound");
-            String txt = msgs.get("m.endgame_earnings");
-            econt.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
-            txt = "$" + award.cashEarned;
-            econt.add(new BLabel(txt, "endgame_cash"), BorderLayout.WEST);
-            Purse purse = user.getPurse();
-            econt.add(purse.createIcon().setItem(ctx, purse),
-                      BorderLayout.CENTER);
-            txt = "$" + user.scrip;
-            econt.add(new BLabel(txt, "endgame_cash"), BorderLayout.EAST);
+            int rank = bangobj.awards[pidx].rank;
+            BContainer econt = new BContainer(new BorderLayout(0, 15));
+            econt.setStyleClass("endgame_border");
             row.add(econt);
+
+            String rankstr = msgs.get("m.endgame_rank" + rank);
+            String txt = msgs.get("m.endgame_earnings", rankstr);
+            econt.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
+
+            BContainer rrow = new BContainer(new TableLayout(7, 5, 5));
+            // we need to center this verticaly
+            BContainer vbox = GroupLayout.makeVBox(GroupLayout.CENTER);
+            vbox.add(rrow);
+            econt.add(vbox, BorderLayout.CENTER);
+
+            rrow.add(new BLabel(msgs.get("m.endgame_reward", rankstr),
+                                "endgame_smallheader"));
+            rrow.add(new Spacer(1, 1));
+
+            Purse purse = user.getPurse();
+            String type = Purse.PURSE_TYPES[purse.getTownIndex()];
+            if (purse.getTownIndex() == 0) { // no purse
+                txt = msgs.get("m.endgame_nopurse");
+            } else {
+                txt = ctx.xlate(BangCodes.GOODS_MSGS, "m." + type);
+            }
+            rrow.add(new BLabel(txt, "endgame_smallheader"));
+
+            rrow.add(new Spacer(1, 1));
+            rrow.add(new BLabel(msgs.get("m.endgame_total"),
+                                "endgame_smallheader"));
+            rrow.add(new Spacer(30, 1));
+            rrow.add(new BLabel(msgs.get("m.endgame_have"),
+                                "endgame_header"));
+
+            NumberFormat cfmt = NumberFormat.getInstance();
+            BLabel label;
+            txt = cfmt.format(Math.round(award.cashEarned /
+                                         purse.getPurseBonus()));
+            rrow.add(label = new BLabel(txt, "endgame_smallcash"));
+            label.setIcon(BangUI.scripIcon);
+
+            rrow.add(new BLabel("+", "endgame_smallcash"));
+
+            NumberFormat pfmt = NumberFormat.getPercentInstance();
+            txt = pfmt.format(purse.getPurseBonus() - 1);
+            rrow.add(label = new BLabel(txt, "endgame_smallcash"));
+            if (purse.getTownIndex() == 0) { // no purse
+                label.setIcon(new BlankIcon(64, 64));
+            } else {
+                BufferedImage pimg = ctx.getImageCache().getBufferedImage(
+                    "goods/purses/" + type + ".png");
+                label.setIcon(new ImageIcon(
+                                  pimg.getScaledInstance(
+                                      64, 64, BufferedImage.SCALE_SMOOTH)));
+            }
+
+            rrow.add(new BLabel("=", "endgame_smallcash"));
+
+            txt = cfmt.format(award.cashEarned);
+            rrow.add(label = new BLabel(txt, "endgame_smallcash"));
+            label.setIcon(BangUI.scripIcon);
+
+            rrow.add(new Spacer(1, 1));
+
+            label = new BLabel( cfmt.format(user.scrip), "endgame_cash");
+            label.setIcon(new ImageIcon(
+                              ctx.loadImage("ui/icons/big_scrip.png")));
+            rrow.add(label);
 
             if (award.badge != null) {
                 BContainer bcont = new BContainer(new BorderLayout());
-                bcont.setStyleClass("palette_backgound");
+                bcont.setStyleClass("endgame_border");
                 txt = msgs.get("m.endgame_badge");
                 bcont.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
                 bcont.add(new BadgeIcon().setItem(ctx, award.badge),
@@ -133,4 +202,5 @@ public class GameOverView extends BDecoratedWindow
 
     protected BasicContext _ctx;
     protected BangController _ctrl;
+    protected BContainer _results;
 }
