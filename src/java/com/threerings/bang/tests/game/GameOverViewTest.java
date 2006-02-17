@@ -49,10 +49,10 @@ public class GameOverViewTest extends TestApp
 
         BangObject bangobj = new BangObject();
         bangobj.players = new Name[] {
-            user.handle,
             new Name("Scary Jerry"),
             new Name("Monkey Butter"),
-            new Name("Elvis")
+            user.handle,
+            new Name("Elvis"),
         };
         bangobj.awards = new Award[bangobj.players.length];
         for (int ii = 0; ii < bangobj.awards.length; ii++) {

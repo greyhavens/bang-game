@@ -70,7 +70,7 @@ public class GameOverView extends BDecoratedWindow
 
         add(new BLabel(msgs.get("m.endgame_title"), "scroll_title"));
         add(_results = GroupLayout.makeVBox(GroupLayout.TOP));
-        _results.add(new Spacer(1, -80)); // kids, don't try this at home
+        _results.add(new Spacer(1, -70)); // kids, don't try this at home
 
         // display the players' avatars in rank order
         GroupLayout gl = GroupLayout.makeHoriz(GroupLayout.CENTER);
@@ -102,12 +102,11 @@ public class GameOverView extends BDecoratedWindow
                 GroupLayout.STRETCH);
             _results.add(row);
 
-            int rank = bangobj.awards[pidx].rank;
             BContainer econt = new BContainer(new BorderLayout(0, 15));
             econt.setStyleClass("endgame_border");
             row.add(econt);
 
-            String rankstr = msgs.get("m.endgame_rank" + rank);
+            String rankstr = msgs.get("m.endgame_rank" + award.rank);
             String txt = msgs.get("m.endgame_earnings", rankstr);
             econt.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
 
