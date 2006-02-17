@@ -1619,10 +1619,10 @@ public class BangManager extends GameManager
 
         public int compareTo (RankRecord other) {
             int delta;
-            if ((delta = (points - other.points)) != 0) {
+            if ((delta = (other.points - points)) != 0) {
                 return delta;
             }
-            if ((delta = (kills - other.kills)) != 0) {
+            if ((delta = (other.kills - kills)) != 0) {
                 return delta;
             }
             return 0;
