@@ -521,8 +521,7 @@ public abstract class Scenario
      */
     protected short getBaseDuration ()
     {
-//        return BASE_SCENARIO_TICKS;
-        return 10;
+        return BASE_SCENARIO_TICKS;
     }
 
     /**
