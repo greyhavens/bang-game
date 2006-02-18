@@ -5,13 +5,14 @@ package com.threerings.bang.game.client.sprite;
 
 import com.jme.math.Quaternion;
 import com.jme.scene.Controller;
+import com.jme.scene.Spatial;
 
 import com.threerings.jme.sprite.Sprite;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
- * Spins a sprite around the up vector. Used for bonuses.
+ * Spins a sprite (or any spatial) around the up vector. Used for bonuses.
  */
 public class Spinner extends Controller
 {
@@ -19,9 +20,9 @@ public class Spinner extends Controller
      * Creates a spinner that rotates at the specified number of radians
      * per second.
      */
-    public Spinner (Sprite sprite, float speed)
+    public Spinner (Spatial target, float speed)
     {
-        _sprite = sprite;
+        _target = target;
         _speed = speed;
     }
 
@@ -30,10 +31,10 @@ public class Spinner extends Controller
     {
         _angle += _speed * time;
         _rotation.fromAngleAxis(_angle, UP);
-        _sprite.getLocalRotation().set(_rotation);
+        _target.getLocalRotation().set(_rotation);
     }
 
-    protected Sprite _sprite;
+    protected Spatial _target;
     protected float _angle, _speed;
     protected Quaternion _rotation = new Quaternion();
 }

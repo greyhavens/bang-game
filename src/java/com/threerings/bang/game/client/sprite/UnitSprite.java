@@ -27,11 +27,13 @@ import com.jme.util.TextureManager;
 
 import com.threerings.jme.sprite.Path;
 
+import com.threerings.bang.client.Model;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
+import com.threerings.bang.game.client.sprite.Spinner;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -157,13 +159,11 @@ public class UnitSprite extends MobileSprite
             _odamage = unit.damage;
         }
 
-        // update our icon if necessary
-        if (unit.benuggeted && _icon.getCullMode() == CULL_ALWAYS) {
-            _icon.setRenderState(_nugtst);
-            _icon.updateRenderState();
-            _icon.setCullMode(CULL_DYNAMIC);
-        } else if (!unit.benuggeted && _icon.getCullMode() != CULL_ALWAYS) {
-            _icon.setCullMode(CULL_ALWAYS);
+        // display our nugget if appropriate
+        if (unit.benuggeted && _nugget.getParent() == null) {
+            attachChild(_nugget);
+        } else if (!unit.benuggeted && _nugget.getParent() != null) {
+            detachChild(_nugget);
         }
 
         // if our pending node is showing, update it to reflect our correct
@@ -311,18 +311,13 @@ public class UnitSprite extends MobileSprite
         _pendtst = RenderUtil.createTextureState(
             ctx, createPendingTexture(0));
 
-        // this icon is displayed when we are modified in some way (we're
-        // carrying a nugget, for example)
-        _icon = RenderUtil.createIcon(5, 5);
-        _icon.setLocalTranslation(new Vector3f(0, 0, 0));
-        _icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _icon.setRenderState(RenderUtil.alwaysZBuf);
-        _icon.updateRenderState();
-        bbn = new BillboardNode("icon");
-        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
-        bbn.attachChild(_icon);
-        attachChild(bbn);
-        _icon.setCullMode(CULL_ALWAYS);
+        // the nugget is shown when we're carrying a nugget
+        _nugget = new Node("nugget");
+        _nugget.addController(new Spinner(_nugget, FastMath.PI/2));
+        _nugget.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
+        _nugget.setLocalScale(0.5f);
+        Model nugmod = ctx.loadModel("bonuses", "nugget");
+        _nugbind = nugmod.getAnimation("normal").bind(_nugget, 0, null);
 
         // configure our colors
         configureOwnerColors();
@@ -338,6 +333,19 @@ public class UnitSprite extends MobileSprite
 
         } else {
             _status.setCullMode(CULL_ALWAYS);
+        }
+    }
+
+    @Override // documentation inherited
+    protected void setParent (Node parent)
+    {
+        super.setParent(parent);
+
+        // clear our nugget model binding when we're removed
+        if (parent == null) {
+            if (_nugbind != null) {
+                _nugbind.detach();
+            }
         }
     }
 
@@ -426,8 +434,6 @@ public class UnitSprite extends MobileSprite
             "textures/ustatus/tick_ready.png");
         _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
 
-        _nugtst = RenderUtil.createTextureState(
-            ctx, "textures/ustatus/nugget.png");
         _ticktex = new Texture[5];
         for (int ii = 0; ii < 5; ii++) {
             _ticktex[ii] = ctx.getTextureCache().getTexture(
@@ -450,16 +456,18 @@ public class UnitSprite extends MobileSprite
 
     protected Node _status;
     protected SharedMesh _hov, _ticks, _damage, _movable;
-    protected Quad _icon;
     protected TextureState _damtex;
     protected int _odamage;
     protected short _pendingTick = -1;
     protected boolean _hovered;
 
+    protected Node _nugget;
+    protected Model.Binding _nugbind;
+
     protected static BufferedImage _dfull, _dempty;
     protected static Texture _hovtex, _movetex;
     protected static Texture[] _ticktex;
-    protected static TextureState _tgttst, _nugtst;
+    protected static TextureState _tgttst;
 
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();
