@@ -43,9 +43,8 @@ public class GameInputHandler extends GodViewHandler
      */
     public void prepareForRound (BangView view, BangObject bangobj, int pidx)
     {
-        // listen for mouse wheel, etc. events
+        // listen for mouse wheel events
         view.view.addListener(_swingListener);
-        view.addListener(_rollListener);
 
         // set up the starting zoom index
         _camidx = 0;
@@ -72,9 +71,8 @@ public class GameInputHandler extends GodViewHandler
 
     public void endRound (BangView view)
     {
-        // stop listening for mouse wheel, etc. events
+        // stop listening for mouse wheel events
         view.view.removeListener(_swingListener);
-        view.removeListener(_rollListener);
     }
 
     /**
@@ -155,18 +153,6 @@ public class GameInputHandler extends GodViewHandler
     protected MouseWheelListener _swingListener = new MouseWheelListener() {
         public void mouseWheeled (MouseEvent e) {
             swingCamera((e.getDelta() > 0) ? -FastMath.PI/2 : FastMath.PI/2);
-        }
-    };
-
-    protected KeyListener _rollListener = new KeyListener() {
-        public void keyPressed (KeyEvent event) {
-            switch (event.getKeyCode()) {
-            case KeyInput.KEY_C:
-                rollCamera();
-                break;
-            }
-        }
-        public void keyReleased (KeyEvent event) {
         }
     };
 
