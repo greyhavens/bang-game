@@ -146,9 +146,9 @@ public class UnitSprite extends MobileSprite
             _movable.setCullMode(CULL_ALWAYS);
         } else {
             tstate.setTexture(_ticktex[4].createSimpleClone());
-            //_ticks.updateRenderState();
             _movable.setCullMode(CULL_DYNAMIC);
         }
+        _ticks.updateRenderState();
 
         // update our colors in the event that our owner changes
         configureOwnerColors();
