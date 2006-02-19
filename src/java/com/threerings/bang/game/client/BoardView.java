@@ -838,13 +838,19 @@ public class BoardView extends BComponent
         _lights[idx].setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
     }
 
+    /**
+     * Processes all ready actions in the action queue.
+     */
     protected void processActions ()
     {
-        for (int ii = 0, ll = _pactions.size(); ii < ll; ii++) {
-            BoardAction action = _pactions.get(ii);
+        Iterator<BoardAction> iter = _pactions.iterator();
+        while (iter.hasNext()) {
+            BoardAction action = iter.next();
             if (action.canExecute(_punits)) {
-                _pactions.remove(ii--);
-                ll--;
+                iter.remove();
+                // this only queues up the action for processing, so we need
+                // not worry that the action will complete immediately and
+                // result in a recursive call to processActions()
                 processAction(action);
             }
         }
