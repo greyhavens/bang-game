@@ -3,9 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.samskivert.util.Interval;
 
 import com.threerings.jme.sprite.Path;

@@ -135,18 +135,6 @@ public class BoardView extends BComponent
             }
         }
 
-        /** Returns true if this action can be executed, false if it operates
-         * on a piece that is currently involved in another action. */
-        public boolean clear (ArrayIntSet penders)
-        {
-            for (int ii = 0; ii < pieceIds.length; ii++) {
-                if (penders.contains(pieceIds[ii])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         /**
          * Executes this board action.
          *
