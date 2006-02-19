@@ -50,6 +50,7 @@ public class EffectHandler extends BoardView.BoardAction
         _view = view;
         _sounds = sounds;
         _effect = effect;
+        pieceIds = effect.getAffectedPieces();
     }
 
     @Override // documentation inherited

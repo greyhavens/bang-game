@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.samskivert.util.Interval;
@@ -34,22 +35,20 @@ public class StampedeHandler extends EffectHandler
         _stampede = (StampedeEffect)_effect;
 
         // set all the buffalo on the paths listed in the effect
-        for (int i = 0; i < _stampede.paths.length; i++) {
+        for (int ii = 0; ii < _stampede.paths.length; ii++) {
             MobileSprite sprite = new MobileSprite("extras", "bison");
             sprite.init(_ctx, _view, _bangobj.board, _sounds,
                         new DummyPiece(), _bangobj.tick);
             _view.addSprite(sprite);
             sprite.addObserver(_remover);
             _buffalo++;
-            sprite.move(_bangobj.board, _stampede.paths[i],
-                StampedeEffect.BUFFALO_SPEED);
+            sprite.move(_bangobj.board, _stampede.paths[ii],
+                        StampedeEffect.BUFFALO_SPEED);
         }
 
         // activate each collision on its listed tick
-        for (int i = 0, size = _stampede.collisions.size(); i < size; i++) {
-            StampedeEffect.Collision collision =
-                (StampedeEffect.Collision)_stampede.collisions.get(i);
-            new CollisionInterval(collision).schedule();
+        for (int ii = 0; ii < _stampede.collisions.length; ii++) {
+            new CollisionInterval(_stampede.collisions[ii]).schedule();
         }
 
         return !isCompleted();
@@ -83,7 +82,7 @@ public class StampedeHandler extends EffectHandler
 
         public void expired ()
         {
-            // this may queue up 
+            // this may queue up
             Effect.collide(_bangobj, StampedeHandler.this, _stampede.causer,
                            _collision.targetId, StampedeEffect.COLLISION_DAMAGE,
                            _collision.x, _collision.y, StampedeEffect.DAMAGED);

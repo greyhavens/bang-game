@@ -34,6 +34,12 @@ public class PlagueEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return pieceIds;
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // everyone gets to keep the "average" count or at least two

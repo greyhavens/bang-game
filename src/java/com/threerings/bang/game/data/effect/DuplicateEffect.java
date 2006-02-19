@@ -35,6 +35,12 @@ public class DuplicateEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return new int[] { pieceId, duplicate.pieceId };
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);

@@ -23,8 +23,8 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class Effect extends SimpleStreamableObject
 {
-    /** Provides a mechanism for observing the individual effects that
-     * take place when applying an effect to the board and pieces. */
+    /** Provides a mechanism for observing the individual effects that take
+     * place when applying an effect to the board and pieces. */
     public static interface Observer
     {
         /**
@@ -90,12 +90,11 @@ public abstract class Effect extends SimpleStreamableObject
     }
 
     /**
-     * Damages the supplied piece by the specified amount, properly
-     * removing it from the board if appropriate and reporting the
-     * specified effect.
+     * Damages the supplied piece by the specified amount, properly removing it
+     * from the board if appropriate and reporting the specified effect.
      *
-     * @param shooter the index of the player doing the damage or -1 if
-     * the damage was not originated by a player.
+     * @param shooter the index of the player doing the damage or -1 if the
+     * damage was not originated by a player.
      * @param newDamage the new total damage to assign to the damaged piece.
      */
     public static void damage (BangObject bangobj, Observer obs, int shooter,
@@ -113,15 +112,15 @@ public abstract class Effect extends SimpleStreamableObject
                 bangobj.board.updateShadow(target, null);
                 target.position(pt.x, pt.y);
                 bangobj.board.updateShadow(null, target);
+                reportMove(obs, target);
             }
-            reportMove(obs, target);
         }
-        
+
         // report that the target was affected
         reportEffect(obs, target, effect);
 
-        // if the target is dead and we have a shooter and we're on the
-        // server, record the kill
+        // if the target is dead and we have a shooter and we're on the server,
+        // record the kill
         if (shooter != -1 && !target.isAlive() &&
             bangobj.getManager().isManager(bangobj)) {
             // record the kill statistics
@@ -136,20 +135,22 @@ public abstract class Effect extends SimpleStreamableObject
         }
     }
 
-    /** Initializes this effect (called only on the server) with the piece
-     * that activated the bonus. */
+    /** Initializes this effect (called only on the server) with the piece that
+     * activated the bonus. */
     public void init (Piece piece)
     {
     }
 
+    /** Returns an array of the ids of all pieces affected by this effect. */
+    public abstract int[] getAffectedPieces ();
+
     /**
-     * Prepares this effect for application. This is executed on the
-     * server before the effect is applied on the server and then
-     * distributed to the client for application there. The effect should
-     * determine which pieces it will impact as well as decide where it
-     * will be placing new pieces (and update the board shadow to reflect
-     * those piece additions, though it should not actually add the pieces
-     * until it is applied).
+     * Prepares this effect for application. This is executed on the server
+     * before the effect is applied on the server and then distributed to the
+     * client for application there. The effect should determine which pieces
+     * it will impact as well as decide where it will be placing new pieces
+     * (and update the board shadow to reflect those piece additions, though it
+     * should not actually add the pieces until it is applied).
      *
      * @param dammap a mapping that should be used to record damage done
      * to a particular player's units (player index -> accumulated
@@ -158,20 +159,18 @@ public abstract class Effect extends SimpleStreamableObject
     public abstract void prepare (BangObject bangobj, IntIntMap dammap);
 
     /**
-     * Applies this effect to the board and pieces. Any modifications to
-     * pieces or the board should be made directly as this is executed on
-     * both the client and server. <em>Note:</em> effects should always
-     * compute and store the final result of their effects in {@link
-     * #prepare} and then simply apply those results in {@link #apply}
-     * rather than do any computation in {@link #apply} as we cannot rely
-     * on the values in the piece during the apply to be the same as they
-     * would be on the server when the effect is applied. The only truly
-     * safe time to inspect the condition of the affected pieces is during
-     * {@link #prepare}.
+     * Applies this effect to the board and pieces. Any modifications to pieces
+     * or the board should be made directly as this is executed on both the
+     * client and server. <em>Note:</em> effects should always compute and
+     * store the final result of their effects in {@link #prepare} and then
+     * simply apply those results in {@link #apply} rather than do any
+     * computation in {@link #apply} as we cannot rely on the values in the
+     * piece during the apply to be the same as they would be on the server
+     * when the effect is applied. The only truly safe time to inspect the
+     * condition of the affected pieces is during {@link #prepare}.
      *
-     * @param observer an observer to inform of piece additions, updates
-     * and removals (for display purposes on the client). This may be
-     * null.
+     * @param observer an observer to inform of piece additions, updates and
+     * removals (for display purposes on the client). This may be null.
      */
     public abstract void apply (BangObject bangobj, Observer observer);
 

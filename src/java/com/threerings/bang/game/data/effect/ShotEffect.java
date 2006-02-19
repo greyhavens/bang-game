@@ -116,6 +116,12 @@ public class ShotEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return new int[] { shooterId, targetId };
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         if (targetId == -1) { // we were deflected into la la land, no problem
@@ -154,8 +160,8 @@ public class ShotEffect extends Effect
             target.lastActed = newLastActed;
         }
         damage(bangobj, obs, shooter.owner, target, newDamage,
-            shooter.getConfig().mode == UnitConfig.Mode.RANGE ?
-                EXPLODED : DAMAGED);
+               shooter.getConfig().mode == UnitConfig.Mode.RANGE ?
+               EXPLODED : DAMAGED);
     }
 
     @Override // documentation inherited

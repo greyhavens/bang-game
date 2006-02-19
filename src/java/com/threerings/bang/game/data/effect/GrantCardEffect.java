@@ -28,6 +28,12 @@ public class GrantCardEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return new int[0];
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // make sure our player has room for another card

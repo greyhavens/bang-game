@@ -39,6 +39,12 @@ public class StaredownEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return new int[] { pieceId };
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {

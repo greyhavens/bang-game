@@ -32,6 +32,12 @@ public class SaintElmosEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return pieceIds;
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // roll through and note all dead pieces

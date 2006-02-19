@@ -59,6 +59,12 @@ public abstract class AreaEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return pieces;
+    }
+
+    @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
         for (int ii = 0; ii < pieces.length; ii++) {

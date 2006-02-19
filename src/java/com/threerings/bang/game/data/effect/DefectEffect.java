@@ -35,6 +35,12 @@ public class DefectEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return pieceIds;
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // determine which of our opponents is the strongest and steal one

@@ -56,6 +56,7 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.jme.effect.FadeInOutEffect;
@@ -101,6 +102,51 @@ public class BoardView extends BComponent
      */
     public abstract static class BoardAction
     {
+        /** Configured to the time at which this action was started. */
+        public long start;
+
+        /** The board action must fill in this array with the ids of all pieces
+         * involved in the action. This will be used to ensure that a piece is
+         * only involved in one board action at a time. */
+        public int[] pieceIds;
+
+        /** Returns true if this action can be executed, false if it operates
+         * on a piece that is currently involved in another action. */
+        public boolean canExecute (ArrayIntSet penders)
+        {
+            for (int ii = 0; ii < pieceIds.length; ii++) {
+                if (penders.contains(pieceIds[ii])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /** Marks the pieces involved in this action as pending or not pending
+         * as desired. */
+        public void setPending (ArrayIntSet penders, boolean pending)
+        {
+            for (int ii = 0; ii < pieceIds.length; ii++) {
+                if (pending) {
+                    penders.add(pieceIds[ii]);
+                } else {
+                    penders.remove(pieceIds[ii]);
+                }
+            }
+        }
+
+        /** Returns true if this action can be executed, false if it operates
+         * on a piece that is currently involved in another action. */
+        public boolean clear (ArrayIntSet penders)
+        {
+            for (int ii = 0; ii < pieceIds.length; ii++) {
+                if (penders.contains(pieceIds[ii])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /**
          * Executes this board action.
          *
@@ -505,17 +551,22 @@ public class BoardView extends BComponent
             log.info("Queueing: " + action);
         }
 
-        _pactions.add(action);
-        if (_paction == null) {
-            processNextAction();
+        // if we can execute this action immediately, do so
+        if (action.canExecute(_punits)) {
+            processAction(action);
+        } else {
+            _pactions.add(action);
+        }
 
-        } else if (_pstart != 0L) {
-            long since = System.currentTimeMillis() - _pstart;
-            if (since > 5000L) {
+        // scan the running actions and issue a warning for long runners
+        long now = System.currentTimeMillis(), since;
+        for (int ii = 0, ll = _ractions.size(); ii < ll; ii++) {
+            BoardAction running = _ractions.get(ii);
+            if ((since = now - running.start) > 5000L) {
                 log.warning("Board action stuck on the queue? " +
-                            "[action=" + _paction +
+                            "[action=" + running +
                             ", since=" + since + "ms].");
-                _pstart = 0L; // avoid repeat warnings
+                running.start = 0L; // avoid repeat warnings
             }
         }
     }
@@ -527,10 +578,8 @@ public class BoardView extends BComponent
      */
     public void actionCompleted (BoardAction action)
     {
-        if (_paction != action) {
-            log.warning("Action completed out of sequence! " +
-                        "[pending=" + _paction +
-                        ", completed=" + action + "].");
+        if (!_ractions.remove(action)) {
+            log.warning("Action re-completed! [action=" + action + "].");
             Thread.dumpStack();
             return;
         }
@@ -538,9 +587,8 @@ public class BoardView extends BComponent
         if (ACTION_DEBUG) {
             log.info("Completed " + action);
         }
-        _pstart = 0L;
-        _paction = null;
-        processNextAction();
+        action.setPending(_punits, false);
+        processActions();
     }
 
     /**
@@ -802,18 +850,59 @@ public class BoardView extends BComponent
         _lights[idx].setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
     }
 
+    protected void processActions ()
+    {
+        for (int ii = 0, ll = _pactions.size(); ii < ll; ii++) {
+            BoardAction action = _pactions.get(ii);
+            if (action.canExecute(_punits)) {
+                _pactions.remove(ii--);
+                ll--;
+                processAction(action);
+            }
+        }
+    }
+
     /**
      * Processes the next action from the board action queue.
      */
-    protected void processNextAction ()
+    protected void processAction (final BoardAction action)
     {
-        if (_pactions.size() > 0) {
-            _paction = _pactions.remove(0);
-            if (ACTION_DEBUG) {
-                log.info("Posting: " + _paction);
-            }
-            _ctx.getApp().postRunnable(_arunner);
+        if (ACTION_DEBUG) {
+            log.info("Posting: " + action);
         }
+
+        // mark the pieces involved in this action as pending
+        action.setPending(_punits, true);
+        _ractions.add(action);
+
+        _ctx.getApp().postRunnable(new Runnable() {
+            public void run () {
+                try {
+                    if (ACTION_DEBUG) {
+                        log.info("Running: " + action);
+                    }
+
+                    action.start = System.currentTimeMillis();
+                    if (action.execute()) {
+                        if (ACTION_DEBUG) {
+                            log.info("Waiting: " + action);
+                        }
+                        // the action requires us to wait until it completes
+                        return;
+                    }
+
+                    if (ACTION_DEBUG) {
+                        log.info("Completed: " + action);
+                    }
+
+                } catch (Throwable t) {
+                    log.log(Level.WARNING, "Board action choked: " + action, t);
+                }
+
+                // note that this action is completed
+                actionCompleted(action);
+            }
+        });
     }
 
     /**
@@ -1088,6 +1177,7 @@ public class BoardView extends BComponent
         public PieceCreatedAction (Piece piece, short tick) {
             this.piece = piece;
             this.tick = tick;
+            this.pieceIds = new int[] { piece.pieceId };
         }
 
         public boolean execute () {
@@ -1107,6 +1197,8 @@ public class BoardView extends BComponent
             this.opiece = opiece;
             this.npiece = npiece;
             this.tick = tick;
+            this.pieceIds = new int[] {
+                opiece == null ? npiece.pieceId : opiece.pieceId };
         }
 
         public boolean execute () {
@@ -1149,35 +1241,6 @@ public class BoardView extends BComponent
         }
     };
 
-    protected Runnable _arunner = new Runnable() {
-        public void run () {
-            try {
-                if (ACTION_DEBUG) {
-                    log.info("Running: " + _paction);
-                }
-
-                _pstart = System.currentTimeMillis();
-                if (_paction.execute()) {
-                    if (ACTION_DEBUG) {
-                        log.info("Waiting: " + _paction);
-                    }
-                    // the action requires us to wait until it completes
-                    return;
-                }
-
-                if (ACTION_DEBUG) {
-                    log.info("Completed: " + _paction);
-                }
-
-            } catch (Throwable t) {
-                log.log(Level.WARNING, "Board action choked: " + _paction, t);
-            }
-            _pstart = 0L;
-            _paction = null;
-            processNextAction();
-        }
-    };
-
     protected BasicContext _ctx;
     protected BangObject _bangobj;
     protected BangBoard _board;
@@ -1197,9 +1260,9 @@ public class BoardView extends BComponent
     protected TrianglePickResults _pick = new TrianglePickResults();
     protected Sprite _hover;
 
-    protected BoardAction _paction;
-    protected long _pstart;
+    protected ArrayList<BoardAction> _ractions = new ArrayList<BoardAction>();
     protected ArrayList<BoardAction> _pactions = new ArrayList<BoardAction>();
+    protected ArrayIntSet _punits = new ArrayIntSet();
 
     /** Used to track pending piece updates. */
     protected IntIntMap _pendmap = new IntIntMap();

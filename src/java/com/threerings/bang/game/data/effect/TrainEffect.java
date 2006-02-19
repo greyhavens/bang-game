@@ -46,6 +46,12 @@ public class TrainEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return new int[] { targetId };
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         Piece target = (Piece)bangobj.pieces.get(targetId);

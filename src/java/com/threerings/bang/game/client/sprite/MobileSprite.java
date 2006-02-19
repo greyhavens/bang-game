@@ -30,6 +30,7 @@ import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jmex.effects.ParticleManager;
 
+import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.StringUtil;
 
@@ -177,13 +178,15 @@ public class MobileSprite extends PieceSprite
     }
 
     /**
-     * Sets this sprite on a path defined by a list of {@link Point} objects.
+     * Sets this sprite on a path defined by an array of {@link Point} objects.
      *
      * @param speed the speed at which to move, in tiles per second
      */
-    public void move (BangBoard board, List path, float speed)
+    public void move (BangBoard board, Point[] path, float speed)
     {
-        move(createPath(board, path, speed));
+        ArrayList<Point> plist = new ArrayList<Point>();
+        CollectionUtil.addAll(plist, path);
+        move(createPath(board, plist, speed));
     }
 
     @Override // documentation inherited

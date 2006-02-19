@@ -52,6 +52,12 @@ public class DropNuggetEffect extends Effect
     }
 
     @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        return new int[] { dropperId };
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         Piece dropper = (Piece)bangobj.pieces.get(dropperId);
