@@ -330,7 +330,6 @@ public class UnitSprite extends MobileSprite
     {
         if (_piece.isAlive() /* && !isMoving() */) {
             _status.setCullMode(CULL_DYNAMIC);
-
         } else {
             _status.setCullMode(CULL_ALWAYS);
         }

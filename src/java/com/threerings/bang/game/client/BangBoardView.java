@@ -316,8 +316,8 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-        protected boolean pieceUpdated (
-            BoardAction action, Piece opiece, Piece npiece, short tick)
+    protected boolean pieceUpdated (
+        BoardAction action, Piece opiece, Piece npiece, short tick)
     {
         boolean wait = super.pieceUpdated(action, opiece, npiece, tick);
 
