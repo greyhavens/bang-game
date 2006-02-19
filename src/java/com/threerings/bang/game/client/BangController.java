@@ -12,11 +12,9 @@ import java.util.Comparator;
 import java.util.logging.Level;
 
 import com.jme.input.KeyInput;
-import com.jmex.bui.event.KeyEvent;
-import com.jmex.bui.event.KeyListener;
+import com.jme.math.FastMath;
 
 import com.samskivert.util.ArrayUtil;
-import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Multex;
 import com.samskivert.util.StringUtil;
 
@@ -35,6 +33,9 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.parlor.game.client.GameController;
 
+import com.threerings.bang.client.GlobalKeyManager;
+import com.threerings.bang.util.BangContext;
+
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -45,7 +46,6 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.util.ScenarioUtil;
-import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -66,9 +66,14 @@ public class BangController extends GameController
      * key is pressed (assuming no key-listening component has focus like the
      * chat box).
      */
-    public void mapCommand (int keyCode, String command)
+    public void mapCommand (int keyCode, final String command)
     {
-        _keycmds.put(keyCode, command);
+        _ctx.getKeyManager().registerCommand(
+            keyCode, new GlobalKeyManager.Command() {
+            public void invoke (int keyCode) {
+                handleAction(new ActionEvent(BangController.this, 0, command));
+            }
+        });
     }
 
     /**
@@ -113,21 +118,12 @@ public class BangController extends GameController
         // that condition already satisfied
         _selphaseMultex.satisfied(Multex.CONDITION_TWO);
 
-        // wire up our command listener
-        _view.addListener(new KeyListener() {
-            public void keyPressed (KeyEvent event) {
-                String cmd = (String)_keycmds.get(event.getKeyCode());
-                if (cmd != null) {
-                    handleAction(new ActionEvent(this, 0, cmd));
-                }
-            }
-            public void keyReleased (KeyEvent event) {
-            }
-        });
-
         mapCommand(KeyInput.KEY_SPACE, "StartChat");
         mapCommand(KeyInput.KEY_ESCAPE, "ShowOptions");
         mapCommand(KeyInput.KEY_TAB, "SelectNextUnit");
+        mapCommand(KeyInput.KEY_C, "AdjustZoom");
+        mapCommand(KeyInput.KEY_Q, "SwingCameraLeft");
+        mapCommand(KeyInput.KEY_E, "SwingCameraRight");
     }
 
     @Override // documentation inherited
@@ -173,19 +169,41 @@ public class BangController extends GameController
         _ctx.getLocationDirector().moveBack();
     }
 
-    /** Instructs the controller to activate the chat input. */
+    /** Activates the chat input. */
     public void handleStartChat (Object source)
     {
         _view.chat.requestFocus();
     }
 
-    /** Instructs the controller to display the in-game options view. */
+    /** Displays the in-game options view. */
     public void handleShowOptions (Object source)
     {
-        InGameOptionsView oview = new InGameOptionsView(_ctx);
-        _ctx.getRootNode().addWindow(oview);
-        oview.pack();
-        oview.center();
+        if (_options == null) {
+            _options = new InGameOptionsView(_ctx);
+        }
+        if (_options.isAdded()) {
+            _ctx.getBangClient().clearPopup(_options, true);
+        } else {
+            _ctx.getBangClient().displayPopup(_options, true);
+        }
+    }
+
+    /** Moves the camera to the next zoom level. */
+    public void handleAdjustZoom (Object source)
+    {
+        ((GameInputHandler)_ctx.getInputHandler()).rollCamera();
+    }
+
+    /** Swings the camera around counter-clockwise. */
+    public void handleSwingCameraLeft (Object source)
+    {
+        ((GameInputHandler)_ctx.getInputHandler()).swingCamera(-FastMath.PI/2);
+    }
+
+    /** Swings the camera around clockwise. */
+    public void handleSwingCameraRight (Object source)
+    {
+        ((GameInputHandler)_ctx.getInputHandler()).swingCamera(FastMath.PI/2);
     }
 
     /**
@@ -485,9 +503,6 @@ public class BangController extends GameController
     /** Used to start the new round after two conditions have been met. */
     protected Multex _selphaseMultex;
 
-    /** Maps keys to controller commands. */
-    protected HashIntMap _keycmds = new HashIntMap();
-
     /** The units we cycle through when we press tab. */
     protected ArrayList<Unit> _selections = new ArrayList<Unit>();
 
@@ -497,6 +512,9 @@ public class BangController extends GameController
 
     /** Listens for game state changes that might indicate rank changes. */
     protected RankUpdater _ranklist = new RankUpdater();
+
+    /** Displays basic in-game options. */
+    protected InGameOptionsView _options;
 
     /** Used to by {@link #handleSelectNextUnit}. */
     protected static Comparator<Unit> UNIT_COMPARATOR = new Comparator<Unit>() {
