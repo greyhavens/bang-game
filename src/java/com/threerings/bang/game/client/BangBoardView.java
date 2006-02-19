@@ -216,6 +216,20 @@ public class BangBoardView extends BoardView
         }
     }
 
+    /**
+     * Called by the {@link BangView} when the actual round has started. When
+     * we're done resolving sprites, we'll report back to the controller that
+     * we're ready.
+     */
+    public void startRound ()
+    {
+        addResolutionObserver(new ResolutionObserver() {
+            public void mediaResolved () {
+                _ctrl.readyForRound();
+            }
+        });
+    }
+
     @Override // documentation inherited
     public void endRound ()
     {

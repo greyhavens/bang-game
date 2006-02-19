@@ -375,24 +375,40 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void playersAllHere ()
     {
-        // create our player records now that we know everyone's in the room
-        // and ready to go
-        _precords = new PlayerRecord[getPlayerSlots()];
-        for (int ii = 0; ii < _precords.length; ii++) {
-            PlayerRecord prec = (_precords[ii] = new PlayerRecord());
-            if (isAI(ii)) {
-                prec.playerId = -1;
-                prec.ratings = new DSet();
-            } else {
-                PlayerObject user = (PlayerObject)getPlayer(ii);
-                prec.playerId = user.playerId;
-                prec.purse = user.getPurse();
-                prec.ratings = user.ratings;
+        switch (_bangobj.state) {
+        case BangObject.PRE_GAME:
+            // create our player records now that we know everyone's in the
+            // room and ready to go
+            _precords = new PlayerRecord[getPlayerSlots()];
+            for (int ii = 0; ii < _precords.length; ii++) {
+                PlayerRecord prec = (_precords[ii] = new PlayerRecord());
+                if (isAI(ii)) {
+                    prec.playerId = -1;
+                    prec.ratings = new DSet();
+                } else {
+                    PlayerObject user = (PlayerObject)getPlayer(ii);
+                    prec.playerId = user.playerId;
+                    prec.purse = user.getPurse();
+                    prec.ratings = user.ratings;
+                }
             }
-        }
+            // when the players all arrive, go into the buying phase
+            startRound();
+            break;
 
-        // when the players all arrive, go into the buying phase
-        startRound();
+        case BangObject.IN_PLAY:
+            // queue up the first board tick
+            int avgPer = _bangobj.getAverageUnitCount();
+            _ticker.schedule(avgPer * getBaseTick(), false);
+            _bangobj.tick = (short)0;
+            break;
+
+        default:
+            log.warning("playersAllHere() called during invalid phase! " +
+                        "[where=" + where() +
+                        ", state=" + _bangobj.state + "].");
+            break;
+        }
     }
 
     @Override // documentation inherited
@@ -708,10 +724,10 @@ public class BangManager extends GameManager
             ((Piece)iter.next()).init();
         }
 
-        // queue up the first board tick
-        int avgPer = _bangobj.getAverageUnitCount();
-        _ticker.schedule(avgPer * getBaseTick(), false);
-        _bangobj.tick = (short)0;
+        // we reuse the playerIsReady() mechanism to wait for the players to
+        // all report that they're fully ready to go (they need to resolve
+        // their unit models)
+        Arrays.fill(_playerOids, 0);
     }
 
     /**

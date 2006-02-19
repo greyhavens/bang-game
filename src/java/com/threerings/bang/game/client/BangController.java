@@ -384,6 +384,18 @@ public class BangController extends GameController
     }
 
     /**
+     * Called by the board view after it has faded in the board and resolved
+     * all of the unit animations to let us know that we're fully operational
+     * and ready to play.
+     */
+    protected void readyForRound ()
+    {
+        // we re-use the playerReady mechanism to communicate this to the game
+        // manager
+        playerReady();
+    }        
+
+    /**
      * Called by the stats dialog when it has been dismissed.
      */
     protected void statsDismissed (boolean toTown)

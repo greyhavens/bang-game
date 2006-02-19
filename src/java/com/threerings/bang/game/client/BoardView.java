@@ -58,6 +58,7 @@ import com.jmex.bui.layout.BorderLayout;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.ObserverList;
 
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;
@@ -120,19 +121,6 @@ public class BoardView extends BComponent
                 }
             }
             return true;
-        }
-
-        /** Marks the pieces involved in this action as pending or not pending
-         * as desired. */
-        public void setPending (ArrayIntSet penders, boolean pending)
-        {
-            for (int ii = 0; ii < pieceIds.length; ii++) {
-                if (pending) {
-                    penders.add(pieceIds[ii]);
-                } else {
-                    penders.remove(pieceIds[ii]);
-                }
-            }
         }
 
         /**
@@ -257,11 +245,6 @@ public class BoardView extends BComponent
             createMarquee(_bangobj.boardName);
         }
 
-        // prevent the fade from being started until we're done queueing up all
-        // of our sprite resolutions
-        FadeInOutEffect fadein = _fadein;
-        _fadein = null;
-
         // refresh the lights
         refreshLights();
 
@@ -277,19 +260,13 @@ public class BoardView extends BComponent
         }
         _pnode.updateGeometricState(0, true);
 
-        // restore the fade-in reference
-        _fadein = fadein;
-
-        // if there are no sprites left to resolve, start our fade in
-        if (_resolvingSprites == 0) {
-            if (_fadein != null && _fadein.isPaused()) {
-                log.info("Nothing to resolve, fading in.");
+        // fade the board in when the sprites are all resolved
+        addResolutionObserver(new ResolutionObserver() {
+            public void mediaResolved () {
+                log.info("All sprites resolved, fading in.");
                 _fadein.setPaused(false);
             }
-        } else {
-            log.info("Waiting for " + _resolvingSprites +
-                     " sprites to resolve before fading in.");
-        }
+        });
     }
 
     /**
@@ -307,13 +284,14 @@ public class BoardView extends BComponent
     {
         _resolvingSprites--;
 
-        // if we're done resolving and we need to fade in, do so
-        if (_resolvingSprites == 0) {
-            // we can start fading things in now
-            if (_fadein != null && _fadein.isPaused()) {
-                log.info("All sprites resolved, fading in.");
-                _fadein.setPaused(false);
-            }
+        // if we're done resolving, notify any resolution observers
+        if (_resolvingSprites == 0 && _resolutionObs.size() > 0) {
+            _resolutionObs.apply(new ObserverList.ObserverOp() {
+                public boolean apply (Object observer) {
+                    ((ResolutionObserver)observer).mediaResolved();
+                    return false; // clear the observer
+                }
+            });
         }
     }
 
@@ -550,7 +528,7 @@ public class BoardView extends BComponent
         long now = System.currentTimeMillis(), since;
         for (int ii = 0, ll = _ractions.size(); ii < ll; ii++) {
             BoardAction running = _ractions.get(ii);
-            if ((since = now - running.start) > 5000L) {
+            if (running.start > 0L && (since = now - running.start) > 5000L) {
                 log.warning("Board action stuck on the queue? " +
                             "[action=" + running +
                             ", since=" + since + "ms].");
@@ -575,7 +553,7 @@ public class BoardView extends BComponent
         if (ACTION_DEBUG) {
             log.info("Completed " + action);
         }
-        action.setPending(_punits, false);
+        _punits.remove(action.pieceIds);
         processActions();
     }
 
@@ -770,6 +748,20 @@ public class BoardView extends BComponent
     }
 
     /**
+     * Adds a sprite resolution observer which will be notified when all
+     * pending sprites are fully resolved. If there are no pending sprites, the
+     * observer will be notified immediately (before this call returns).
+     */
+    protected void addResolutionObserver (ResolutionObserver obs)
+    {
+        if (_resolvingSprites == 0) {
+            obs.mediaResolved();
+        } else {
+            _resolutionObs.add(obs);
+        }
+    }
+
+    /**
      * Creates a fade-in effect and pauses it, we will unpause once the board
      * is fully resolved.
      */
@@ -866,7 +858,7 @@ public class BoardView extends BComponent
         }
 
         // mark the pieces involved in this action as pending
-        action.setPending(_punits, true);
+        _punits.add(action.pieceIds);
         _ractions.add(action);
 
         _ctx.getApp().postRunnable(new Runnable() {
@@ -1235,6 +1227,12 @@ public class BoardView extends BComponent
         }
     };
 
+    /** Used to delay actions until we're done resolving our sprites. */
+    protected interface ResolutionObserver
+    {
+        public void mediaResolved ();
+    };
+
     protected BasicContext _ctx;
     protected BangObject _bangobj;
     protected BangBoard _board;
@@ -1285,6 +1283,11 @@ public class BoardView extends BComponent
 
     /** Used to track sprites that are loading their animations. */
     protected int _resolvingSprites;
+
+    /** Used to keep track of observers that want to know when our sprites are
+     * resolved and we're ready to roll. */
+    protected ObserverList _resolutionObs =
+        new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
 
     /** Used to fade ourselves in at the start of the game. */
     protected FadeInOutEffect _fadein;

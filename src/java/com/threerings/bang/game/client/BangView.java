@@ -98,6 +98,7 @@ public class BangView extends BWindow
 
         case BangObject.IN_PLAY:
             clearOverlay();
+            view.startRound();
             break;
         }
     }
