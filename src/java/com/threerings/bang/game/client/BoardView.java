@@ -595,7 +595,6 @@ public class BoardView extends BComponent
         int my = (int)Math.floor(ground.y / TILE_SIZE);
         ground.x = (float)mx *TILE_SIZE + TILE_SIZE/2;
         ground.y = (float)my * TILE_SIZE + TILE_SIZE/2;
-//         _cursor.setLocalTranslation(ground);
 
         // update the sprite over which the mouse is hovering
         Sprite hover = updateHoverSprite();
