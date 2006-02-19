@@ -282,6 +282,12 @@ public class Unit extends Piece
         super.toString(buf);
     }
 
+    @Override // documentation inherited
+    protected String infoType ()
+    {
+        return _config.type;
+    }
+
     protected transient UnitConfig _config;
     protected transient short _respawnTick = -1;
 }

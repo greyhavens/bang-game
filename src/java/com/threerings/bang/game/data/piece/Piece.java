@@ -55,6 +55,23 @@ public abstract class Piece extends SimpleStreamableObject
 
     /** The percentage damage this piece has taken. */
     public int damage;
+
+    /**
+     * Combines the supplied x and y coordintes into a single integer.
+     */
+    public static int coord (short x, short y)
+    {
+        return (x << 16) | y;
+    }
+
+    /**
+     * Used by the bang manager when loading a serialized board. This
+     * should not be called otherwise.
+     */
+    public static void setNextPieceId (int nextPieceId)
+    {
+        _nextPieceId = nextPieceId;
+    }
     
     /**
      * Returns the cost to purchase this piece.
@@ -235,9 +252,8 @@ public abstract class Piece extends SimpleStreamableObject
     /** Returns a brief description of this piece. */
     public String info ()
     {
-        String cname = getClass().getName();
-        return cname.substring(cname.lastIndexOf(".")+1) + " id:" +
-            pieceId + " o:" + owner + " x:" + x + " y:" + y + " d:" + damage;
+        return infoType() + " id:" + pieceId + " o:" + owner +
+            " x:" + x + " y:" + y + " d:" + damage;
     }
 
     /** Returns the stepper used to compute paths for this type of piece. */
@@ -595,6 +611,13 @@ public abstract class Piece extends SimpleStreamableObject
         return ddamage;
     }
 
+    /** Helper function for {@link #info}. */
+    protected String infoType ()
+    {
+        String cname = getClass().getName();
+        return cname.substring(cname.lastIndexOf(".")+1);
+    }
+
     /**
      * Returns the number of percentage points of damage this piece does
      * to pieces of the specified type.
@@ -604,23 +627,6 @@ public abstract class Piece extends SimpleStreamableObject
         log.warning(getClass() + " requested to damage " +
                     target.getClass() + "?");
         return 10;
-    }
-
-    /**
-     * Combines the supplied x and y coordintes into a single integer.
-     */
-    public static int coord (short x, short y)
-    {
-        return (x << 16) | y;
-    }
-
-    /**
-     * Used by the bang manager when loading a serialized board. This
-     * should not be called otherwise.
-     */
-    public static void setNextPieceId (int nextPieceId)
-    {
-        _nextPieceId = nextPieceId;
     }
 
     protected transient Integer _key;
