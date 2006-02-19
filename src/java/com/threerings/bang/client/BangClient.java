@@ -144,6 +144,9 @@ public class BangClient extends BasicClient
         // pardners and pop up when possible
         _pcview = new PardnerChatView(_ctx);
 
+        // register our global "clear the top-most popup" key bindings
+        _ctx.getKeyManager().registerCommand(KeyInput.KEY_ESCAPE, _clearPopup);
+
         // create and display the logon view; which we do by hand instead of
         // using setMainView() because we don't want to start the resource
         // resolution until we're faded in
@@ -545,6 +548,15 @@ public class BangClient extends BasicClient
         }
     };
 
+    protected GlobalKeyManager.Command _clearPopup =
+        new GlobalKeyManager.Command() {
+        public void invoke (int keyCode) {
+            if (_popups.size() > 0) {
+                clearPopup(_popups.get(_popups.size()-1), true);
+            }
+        }
+    };
+
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
 
@@ -562,7 +574,7 @@ public class BangClient extends BasicClient
     protected static final int[] STATUS_KEYMAP = {
         KeyInput.KEY_I, 0,
         KeyInput.KEY_U, 1,
-        KeyInput.KEY_B, 2,
+        KeyInput.KEY_S, 2,
         KeyInput.KEY_D, 3,
         KeyInput.KEY_P, 4,
     };

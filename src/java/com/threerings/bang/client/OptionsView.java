@@ -29,7 +29,6 @@ import org.lwjgl.opengl.DisplayMode;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -51,12 +50,6 @@ public class OptionsView extends BDecoratedWindow
         _ctx = ctx;
         _parent = parent;
         _msgs = ctx.getMessageManager().getBundle("options");
-
-        addListener(new EscapeListener() {
-            public void escapePressed() {
-                dismiss();
-            }
-        });
 
         add(new BLabel(_msgs.get("m.title"), "scroll_title"));
 

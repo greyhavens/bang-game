@@ -14,7 +14,6 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.ListUtil;
 
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 

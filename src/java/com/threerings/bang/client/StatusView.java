@@ -29,7 +29,6 @@ import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.client.bui.HackyTabs;
 import com.threerings.bang.client.bui.PaletteIcon;
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -47,11 +46,6 @@ public class StatusView extends BWindow
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
         setModal(true);
-        addListener(new EscapeListener() {
-            public void escapePressed() {
-                _ctx.getBangClient().clearPopup(StatusView.this, true);
-            }
-        });
 
         PlayerObject user = ctx.getUserObject();
         add(new BLabel(user.handle.toString(), "status_handle"),

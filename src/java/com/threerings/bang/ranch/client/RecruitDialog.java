@@ -21,7 +21,6 @@ import com.threerings.util.Name;
 
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.StatusLabel;
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -46,12 +45,6 @@ public class RecruitDialog extends BDecoratedWindow
         _view = view;
         _ranchobj = ranchobj;
         _config = config;
-
-        addListener(new EscapeListener() {
-            public void escapePressed() {
-                _ctx.getBangClient().clearPopup(RecruitDialog.this, true);
-            }
-        });
 
         add(new UnitIcon(ctx, -1, config), BorderLayout.WEST);
         BContainer cont = new BContainer(GroupLayout.makeVStretch());

@@ -37,7 +37,6 @@ import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 
-import com.threerings.bang.client.util.EscapeListener;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
