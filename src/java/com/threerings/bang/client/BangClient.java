@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
 
@@ -139,6 +140,10 @@ public class BangClient extends BasicClient
         _client.getInvocationDirector().registerReceiver(
             new PlayerDecoder(this));
 
+        // create the pardner chat view, which will listen for tells from
+        // pardners and pop up when possible
+        _pcview = new PardnerChatView(_ctx);
+
         // create and display the logon view; which we do by hand instead of
         // using setMainView() because we don't want to start the resource
         // resolution until we're faded in
@@ -156,10 +161,6 @@ public class BangClient extends BasicClient
             }
         };
         _ctx.getInterface().attachChild(fade);
-
-        // create the pardner chat view, which will listen for tells from
-        // pardners and pop up when possible
-        _pcview = new PardnerChatView(_ctx);
     }
 
     /**
@@ -295,6 +296,12 @@ public class BangClient extends BasicClient
         // get a reference to the player service
         _psvc = (PlayerService)_client.requireService(PlayerService.class);
 
+        // register our status view key bindings
+        for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
+            _ctx.getKeyManager().registerCommand(
+                STATUS_KEYMAP[ii], _showStatus);
+        }
+
         // we potentially jump right into a game when developing
         BangConfig config = null;
         if ("tutorial".equals(System.getProperty("test"))) {
@@ -365,6 +372,11 @@ public class BangClient extends BasicClient
     // documentation inherited from interface SessionObserver
     public void clientDidLogoff (Client client)
     {
+        // clear our status view key bindings
+        for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
+            _ctx.getKeyManager().clearCommand(STATUS_KEYMAP[ii]);
+        }
+
         // TODO: go back to the logon page?
         _ctx.getApp().stop();
     }
@@ -465,17 +477,8 @@ public class BangClient extends BasicClient
             // clear any lingering popups
             clearPopups(false);
 
-            // wire a status view to this place view (show by pressing esc);
-            // the window must be modal prior to adding it to the hierarchy to
-            // ensure that it is a default event target (and hears the escape
-            // key pressed event)
-            BWindow pview = (BWindow)view;
-            pview.setModal(true);
-            if (!(pview instanceof BangView)) {
-                new StatusView(_ctx).bind(pview);
-            }
-
             // shop views are hard-coded to 1024x768
+            BWindow pview = (BWindow)view;
             if (pview instanceof ShopView) {
                 pview.setSize(1024, 768);
                 pview.center();
@@ -505,6 +508,43 @@ public class BangClient extends BasicClient
         }
     }
 
+    protected GlobalKeyManager.Command _showStatus =
+        new GlobalKeyManager.Command() {
+        public void invoke (int keyCode) {
+            // only show the status view after we've run the avatar creation
+            // intro and if we're not in a game
+            if (_ctx.getUserObject().handle == null ||
+                _mview instanceof BangView) {
+                return;
+            }
+
+            // create the status view the first time we show it
+            if (_status == null) {
+                _status = new StatusView(_ctx);
+            }
+
+            // determine which tab we want to show
+            int tabidx = 0;
+            for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
+                if (STATUS_KEYMAP[ii] == keyCode) {
+                    tabidx = STATUS_KEYMAP[ii+1];
+                    break;
+                }
+            }
+
+            if (_status.isAdded()) {
+                if (tabidx == _status.getSelectedTab()) {
+                    _ctx.getBangClient().clearPopup(_status, true);
+                } else {
+                    _status.setSelectedTab(tabidx);
+                }
+            } else {
+                _ctx.getBangClient().displayPopup(_status, true);
+                _status.setSelectedTab(tabidx);
+            }
+        }
+    };
+
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
 
@@ -514,6 +554,16 @@ public class BangClient extends BasicClient
     protected BWindow _mview;
     protected ArrayList<BWindow> _popups = new ArrayList<BWindow>();
     protected PardnerChatView _pcview;
+    protected StatusView _status;
 
     protected ArrayList<Name> _invites = new ArrayList<Name>();
+
+    // TODO: sort out how we'll localize these
+    protected static final int[] STATUS_KEYMAP = {
+        KeyInput.KEY_I, 0,
+        KeyInput.KEY_U, 1,
+        KeyInput.KEY_B, 2,
+        KeyInput.KEY_D, 3,
+        KeyInput.KEY_P, 4,
+    };
 }

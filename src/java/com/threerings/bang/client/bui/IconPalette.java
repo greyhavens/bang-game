@@ -256,7 +256,7 @@ public class IconPalette extends BContainer
     }
 
     // documentation inherited
-    public void dispatchEvent (BEvent event)
+    public boolean dispatchEvent (BEvent event)
     {
         if (event instanceof KeyEvent) {
             KeyEvent kev = (KeyEvent)event;
@@ -275,14 +275,13 @@ public class IconPalette extends BContainer
                     moveSelection(_cols);
                     break;
                 default:
-                    super.dispatchEvent(event);
-                    break;
+                    return super.dispatchEvent(event);
                 }
+                return true;
             }
-
-        } else {
-            super.dispatchEvent(event);
         }
+
+        return super.dispatchEvent(event);
     }
 
     @Override // documentation inherited

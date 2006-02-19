@@ -123,7 +123,8 @@ public class BasicClient
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
 
-        // initialize our user interface helper
+        // initialize our user interface bits
+        _keymgr.init(_ctx);
         BangUI.init(_ctx);
 
         // create our media managers
@@ -250,6 +251,10 @@ public class BasicClient
             return _app;
         }
 
+        public GlobalKeyManager getKeyManager () {
+            return _keymgr;
+        }
+
         public ImageManager getImageManager () {
             return _imgmgr;
         }
@@ -322,6 +327,7 @@ public class BasicClient
 
     protected JmeApp _app;
     protected BasicContextImpl _ctx;
+    protected GlobalKeyManager _keymgr = new GlobalKeyManager();
 
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;

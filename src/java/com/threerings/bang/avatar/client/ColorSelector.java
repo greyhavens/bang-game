@@ -121,10 +121,8 @@ public class ColorSelector extends BComponent
     }
 
     // documentation inherited
-    public void dispatchEvent (BEvent event)
+    public boolean dispatchEvent (BEvent event)
     {
-        super.dispatchEvent(event);
-
         if (event instanceof MouseEvent) {
             MouseEvent mev = (MouseEvent)event;
             switch (mev.getType()) {
@@ -141,9 +139,11 @@ public class ColorSelector extends BComponent
                     ((SwatchMenuItem)_menu.getComponent(0)).index = _selidx;
                 }
                 _menu.popup(getAbsoluteX(), getAbsoluteY()+35, false);
-                break;
+                return true;
             }
         }
+
+        return super.dispatchEvent(event);
     }
 
     @Override // documentation inherited

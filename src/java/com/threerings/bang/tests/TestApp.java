@@ -36,6 +36,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
@@ -69,6 +70,7 @@ public abstract class TestApp extends JmeApp
         _icache = new ImageCache(_ctx);
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
+        _keymgr.init(_ctx);
 
         ResourceManager.InitObserver obs = new ResourceManager.InitObserver() {
             public void progress (final int percent, long remaining) {
@@ -181,6 +183,10 @@ public abstract class TestApp extends JmeApp
             return TestApp.this;
         }
 
+        public GlobalKeyManager getKeyManager () {
+            return _keymgr;
+        }
+
         public ImageManager getImageManager () {
             return _imgmgr;
         }
@@ -229,6 +235,7 @@ public abstract class TestApp extends JmeApp
     protected ModelCache _mcache;
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
+    protected GlobalKeyManager _keymgr = new GlobalKeyManager();
 
     /** The prefix prepended to localization bundle names before looking
      * them up in the classpath. */

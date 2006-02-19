@@ -60,15 +60,6 @@ public class TownView extends BWindow
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("town");
 
-        // display the status view when the player presses escape
-        setModal(true);
-
-        // only bind the status view if we've already run the avatar creation
-        // intro
-        if (_ctx.getUserObject().handle != null) {
-            new StatusView(_ctx).bind(this);
-        }
-
         int width = ctx.getDisplay().getWidth();
         int height = ctx.getDisplay().getHeight();
         setBounds(0, 0, width, height);

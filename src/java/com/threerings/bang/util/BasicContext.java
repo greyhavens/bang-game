@@ -18,6 +18,7 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.TextureCache;
@@ -41,6 +42,9 @@ public interface BasicContext extends JmeContext
 
     /** Returns a reference to our top-level application. */
     public JmeApp getApp ();
+
+    /** Provides a mechanism for registering global key bindings. */
+    public GlobalKeyManager getKeyManager ();
 
     /** Returns a reference to our image manager. */
     public ImageManager getImageManager ();

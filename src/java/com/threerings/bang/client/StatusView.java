@@ -73,7 +73,7 @@ public class StatusView extends BWindow
         btns.add(new BButton(_msgs.get("m.status_resume"), this, "resume"));
         add(btns, new Rectangle(652, 8, 310, 35));
 
-        add(new HackyTabs(ctx, false, "ui/status/tab_", TABS, 137, 17) {
+        add(_tabs = new HackyTabs(ctx, false, "ui/status/tab_", TABS, 137, 17) {
             protected void tabSelected (int index) {
                 StatusView.this.selectTab(index);
             }
@@ -81,19 +81,6 @@ public class StatusView extends BWindow
 
         // start with the inventory tab selected
         selectTab(_selectedTab);
-    }
-
-    /**
-     * Binds this menu to a component. The component should either be the
-     * default event target, or a modal window.
-     */
-    public void bind (BComponent host)
-    {
-        host.addListener(new EscapeListener() {
-            public void escapePressed () {
-                _ctx.getBangClient().displayPopup(StatusView.this, true);
-            }
-        });
     }
 
     // documentation inherited from interface ActionListener
@@ -112,6 +99,22 @@ public class StatusView extends BWindow
         } else if (cmd.equals("resume")) {
             _ctx.getBangClient().clearPopup(this, true);
         }
+    }
+
+    /**
+     * Returns the currently selected tab.
+     */
+    public int getSelectedTab ()
+    {
+        return _selectedTab;
+    }
+
+    /**
+     * Selects the specified tab.
+     */
+    public void setSelectedTab (int tabidx)
+    {
+        _tabs.selectTab(tabidx);
     }
 
     protected void selectTab (int tabidx)
@@ -169,6 +172,7 @@ public class StatusView extends BWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
 
+    protected HackyTabs _tabs;
     protected BComponent _tab;
     protected BLabel _tabinfo;
 
