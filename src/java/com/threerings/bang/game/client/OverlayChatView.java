@@ -47,12 +47,9 @@ public class OverlayChatView extends BWindow
         _chatdtr = _ctx.getChatDirector();
 
         _stamps = new long[CHAT_LINES];
-//         _lnfs = new BLookAndFeel[CHAT_LINES];
-        _history = new BLabel[CHAT_LINES];
+        _history = new MessageLabel[CHAT_LINES];
         for (int ii = 0; ii < _history.length; ii++) {
-//             _lnfs[ii] = getLookAndFeel().deriveLookAndFeel();
-            add(_history[ii] = new BLabel(""));
-//             _history[ii].setLookAndFeel(_lnfs[ii]);
+            add(_history[ii] = new MessageLabel());
         }
         add(_input = new BTextField());
 
@@ -165,13 +162,11 @@ public class OverlayChatView extends BWindow
         int lidx = _history.length-1;
         for (int ii = 0; ii < lidx; ii++) {
             _stamps[ii] = _stamps[ii+1];
-//             _lnfs[ii].setForeground(true, _lnfs[ii+1].getForeground(true));
-            _history[ii].setText(_history[ii+1].getText());
+            _history[ii].inherit(_history[ii+1]);
         }
 
         // now stuff this message at the bottom
-//         _lnfs[lidx].setForeground(true, color);
-        _history[lidx].setText(text);
+        _history[lidx].setText(text, color);
         _stamps[lidx] = System.currentTimeMillis();
     }
 
@@ -200,6 +195,30 @@ public class OverlayChatView extends BWindow
         }
     }
 
+    protected static class MessageLabel extends BLabel
+    {
+        public MessageLabel () {
+            super("", "overlay_chat");
+        }
+
+        public void setText (String text, ColorRGBA color) {
+            _color = color;
+            setText(text);
+        }
+
+        public void inherit (MessageLabel other) {
+            _color = other._color;
+            setText(other.getText());
+        }
+
+        @Override // documentation inherited
+        public ColorRGBA getColor () {
+            return _color;
+        }
+
+        protected ColorRGBA _color;
+    }
+
     protected BangContext _ctx;
     protected ChatDirector _chatdtr;
     protected BangObject _bangobj;
@@ -208,9 +227,8 @@ public class OverlayChatView extends BWindow
     protected BBackground _inputbg, _blankbg;
 
     protected Interval _timer;
-    protected BLabel[] _history;
+    protected MessageLabel[] _history;
     protected long[] _stamps;
-//     protected BLookAndFeel[] _lnfs;
 
     protected static final int CHAT_LINES = 5;
     protected static final long CHAT_EXPIRATION = 20 * 1000L;

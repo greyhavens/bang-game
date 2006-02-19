@@ -161,36 +161,20 @@ public class BangView extends BWindow
 
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
-        int cwidth = width - 20, cypos = 10;
+        int gap = 0, wcount = _pswins.length;
 
         // now that we've been added to the interface hierarchy, we can add the
         // player status windows which should be "above" this one
-        for (int ii = 0; ii < _pswins.length; ii++) {
+        for (int ii = 0; ii < wcount; ii++) {
             BWindow pwin = _pswins[ii];
             _ctx.getRootNode().addWindow(pwin);
             pwin.pack();
-            int pwidth = pwin.getWidth(), pheight = pwin.getHeight();
-            switch (ii) {
-            case 0:
-                pwin.setLocation(10, height - pheight - 10);
-                break;
-            case 1:
-                pwin.setLocation(width - pwidth - 10, height - pheight - 10);
-                break;
-            case 2:
-                pwin.setLocation(width - pwidth - 10, 10);
-                // having the third player status window requires that we make
-                // the chat display a bit skinnier
-                cwidth -= (pwidth+10);
-                break;
-            case 3:
-                pwin.setLocation(10, 10);
-                // having the fourth player status window requires that we move
-                // the chat window up, but we can stretch it wide again
-                cypos += (pheight + 10);
-                cwidth = width - 20;
-                break;
+            // compute the gap once we've laid out our first status window
+            int wwidth = _pswins[ii].getWidth();
+            if (gap == 0) {
+                gap = ((width - 10) - (wcount * wwidth)) / (wcount-1);
             }
+            pwin.setLocation(5 + (wwidth+gap) * ii, 5);
         }
 
         // add the round timer
@@ -200,7 +184,7 @@ public class BangView extends BWindow
         // and add our chat display
         _ctx.getRootNode().addWindow(chat);
         chat.pack();
-        chat.setBounds(10, cypos, cwidth, chat.getHeight());
+        chat.setBounds(5, 50, width - 10, chat.getHeight());
 
         // finally if we were waiting to start things up, get going
         if (_pendingPhase != -1) {
