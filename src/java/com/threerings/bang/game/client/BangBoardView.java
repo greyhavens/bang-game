@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
+import com.jme.scene.Node;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
@@ -29,14 +31,18 @@ import com.threerings.jme.util.TimeFunction;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.bang.client.Model;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.sprite.BonusSprite;
+import com.threerings.bang.game.client.sprite.Bouncer;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.sprite.Spinner;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -248,6 +254,32 @@ public class BangBoardView extends BoardView
         if (sprite instanceof MobileSprite) {
             sprite.removeObserver(_bonusClearer);
         }
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // create our cursor
+        _cursor = new Node("cursor");
+        _cursor.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
+        // _cursor.setLocalScale(0.75f);
+        Model model = _ctx.loadModel("bonuses", "bonus_point");
+        _cursbind = model.getAnimation("normal").bind(_cursor, 0, null);
+        _cursor.addController(new Spinner(_cursor, FastMath.PI));
+        _cursor.addController(new Bouncer(_cursor, TILE_SIZE, TILE_SIZE/4));
+        _cursor.setRenderState(RenderUtil.lequalZBuf);
+        _cursor.updateRenderState();
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        // clear out our cursor
+        _cursbind.detach();
     }
 
     @Override // documentation inherited
@@ -601,6 +633,7 @@ public class BangBoardView extends BoardView
             return; // we might still be setting up
         }
         sprite.setSelected(true);
+        sprite.attachChild(_cursor);
         if (scrollCamera) {
             ((GameInputHandler)_ctx.getInputHandler()).aimCamera(
                 sprite.getWorldTranslation());
@@ -680,6 +713,7 @@ public class BangBoardView extends BoardView
             PieceSprite psprite = getPieceSprite(_selection);
             if (psprite != null) {
                 psprite.setSelected(false);
+                psprite.detachChild(_cursor);
             }
             _selection = null;
             _ctrl.postEvent(TutorialCodes.UNIT_DESELECTED);
@@ -917,6 +951,8 @@ public class BangBoardView extends BoardView
     protected BangContext _ctx;
     protected BangController _ctrl;
 
+    protected Node _cursor;
+    protected Model.Binding _cursbind;
     protected Piece _selection;
 
     protected PointSet _moveSet = new PointSet();
