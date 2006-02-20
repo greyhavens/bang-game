@@ -20,6 +20,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
+import com.jme.system.DisplaySystem;
+import com.jmex.bui.BWindow;
+import com.jmex.bui.layout.BorderLayout;
+
 import com.samskivert.swing.Controller;
 import com.samskivert.swing.ControllerProvider;
 import com.samskivert.swing.HGroupLayout;
@@ -184,15 +188,17 @@ public class EditorPanel extends JPanel
     public void willEnterPlace (PlaceObject plobj)
     {
         // add the main bang view
-        _ctx.getGeometry().attachChild(view.getNode());
-        _ctx.getRootNode().pushDefaultEventTarget(view);
+        _vwin = new BWindow(_ctx.getStyleSheet(), new BorderLayout());
+        _vwin.add(view, BorderLayout.CENTER);
+        _ctx.getRootNode().addWindow(_vwin);
+        DisplaySystem ds = DisplaySystem.getDisplaySystem();
+        _vwin.setBounds(0, 0, ds.getWidth(), ds.getHeight());
     }
 
     // documentation inherited from interface
     public void didLeavePlace (PlaceObject plobj)
     {
-        _ctx.getGeometry().detachChild(view.getNode());
-        _ctx.getRootNode().popDefaultEventTarget(view);
+        _ctx.getRootNode().removeWindow(_vwin);
     }
 
     @Override // documentation inherited
@@ -235,4 +241,7 @@ public class EditorPanel extends JPanel
 
     /** Our game controller. */
     protected EditorController _ctrl;
+
+    /** A window that contains the editor view. */
+    protected BWindow _vwin;
 }

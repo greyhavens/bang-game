@@ -7,9 +7,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import com.jmex.bui.event.MouseEvent;
-import com.jmex.bui.event.MouseListener;
-import com.jmex.bui.event.MouseMotionListener;
-import com.jmex.bui.event.MouseWheelListener;
 
 import com.threerings.crowd.util.CrowdContext;
 import com.threerings.jme.sprite.Sprite;
@@ -22,7 +19,6 @@ import com.threerings.bang.game.data.BangObject;
  * user interface and perform operations on input received from the view.
  */
 public abstract class EditorTool
-    implements MouseListener, MouseMotionListener, MouseWheelListener
 {
     public EditorTool (EditorContext ctx, EditorPanel panel)
     {
@@ -30,31 +26,15 @@ public abstract class EditorTool
         _msgs = ctx.getMessageManager().getBundle("editor");
         _panel = panel;
     }
-    
+
     /**
      * Returns the name of this tool.
      */
     public abstract String getName ();
-    
-    /**
-     * Activates this tool.
-     */
-    public void activate ()
-    {
-        _panel.view.addListener(this);
-    }
-    
-    /**
-     * Deactivates this tool.
-     */
-    public void deactivate ()
-    {
-        _panel.view.removeListener(this);
-    }
-    
+
     /**
      * Returns the panel displaying this tool's options.
-     */ 
+     */
     public JPanel getOptions ()
     {
         if (_options == null) {
@@ -62,47 +42,56 @@ public abstract class EditorTool
         }
         return _options;
     }
-    
-    // documentation inherited from interface MouseListener
-    public void mouseClicked (MouseEvent e)
+
+    /**
+     * Called when we are made the active tool.
+     */
+    public void activate ()
     {
     }
 
-    // documentation inherited from interface MouseListener
+    /**
+     * Called when we are no longer the active tool.
+     */
+    public void deactivate ()
+    {
+    }
+
+    /**
+     * Called by the tool palette when we're the active tool.
+     */
     public void mousePressed (MouseEvent e)
     {
     }
 
-    // documentation inherited from interface MouseListener
+    /**
+     * Called by the tool palette when we're the active tool.
+     */
     public void mouseReleased (MouseEvent e)
     {
     }
 
-    // documentation inherited from interface MouseListener
-    public void mouseEntered (MouseEvent e)
-    {
-    }
-
-    // documentation inherited from interface MouseListener
-    public void mouseExited (MouseEvent e)
-    {
-    }
-    
-    // documentation inherited from interface MouseMotionListener
+    /**
+     * Called by the tool palette when we're the active tool.
+     */
     public void mouseMoved (MouseEvent e)
     {
     }
-    
-    // documentation inherited from interface MouseMotionListener
+
+    /**
+     * Called by the tool palette when we're the active tool.
+     */
     public void mouseDragged (MouseEvent e)
     {
     }
-    
-    // documentation inherited from interface MouseWheelListener
+
+    /**
+     * Called by the tool palette when we're the active tool.
+     */
     public void mouseWheeled (MouseEvent e)
     {
     }
-    
+
     /**
      * Notifies the tool that the tile over which the mouse is hovering has
      * changed.
@@ -118,25 +107,25 @@ public abstract class EditorTool
     public void hoverSpriteChanged (Sprite hover)
     {
     }
-    
+
     // documentation inherited
     public String toString ()
     {
         return _msgs.get("m.tool_" + getName());
     }
-    
+
     /** Returns a reference to the game object. */
     protected BangObject getBangObject ()
     {
         return (BangObject)((CrowdContext)
             _ctx).getLocationDirector().getPlaceObject();
     }
-    
+
     /**
      * Creates the options panel for this tool.
-     */    
+     */
     protected abstract JPanel createOptions ();
-    
+
     protected EditorContext _ctx;
     protected MessageBundle _msgs;
     protected EditorPanel _panel;

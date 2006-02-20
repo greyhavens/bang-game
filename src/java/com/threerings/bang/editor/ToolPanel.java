@@ -17,6 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
+import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.event.MouseWheelListener;
+import com.jmex.bui.event.MouseAdapter;
 import com.samskivert.swing.Controller;
 import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.util.SwingUtil;
@@ -61,12 +64,14 @@ public class ToolPanel extends JPanel
         addSelectAction(panel, KeyEvent.VK_6, 5);
         
         // and the tool options below
-        cameraDolly.activate();
         add(_scroll = new JScrollPane(cameraDolly.getOptions()),
             BorderLayout.CENTER);
         _scroll.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createEmptyBorder(6, 0, 0, 0), _scroll.getBorder()));
         SwingUtil.refresh(this);
+
+        // add our event dispatcher
+        panel.view.addListener(_dispatcher);
     }
     
     /**
@@ -120,7 +125,37 @@ public class ToolPanel extends JPanel
             }
         });
     }
-    
+
+    protected EditorTool getTool (MouseEvent e)
+    {
+        if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0) {
+            return cameraDolly;
+        } else {
+            return getActiveTool();
+        }
+    }
+
+    protected class EventDispatcher extends MouseAdapter
+        implements MouseWheelListener
+    {
+        public void mousePressed (MouseEvent e) {
+            getTool(e).mousePressed(e);
+        }
+        public void mouseReleased (MouseEvent e) {
+            getTool(e).mouseReleased(e);
+        }
+        public void mouseMoved (MouseEvent e) {
+            getTool(e).mouseMoved(e);
+        }
+        public void mouseDragged (MouseEvent e) {
+            getTool(e).mouseDragged(e);
+        }
+        public void mouseWheeled (MouseEvent e) {
+            getTool(e).mouseWheeled(e);
+        }
+    }
+
     protected JComboBox _tools;
     protected JScrollPane _scroll;
+    protected EventDispatcher _dispatcher = new EventDispatcher();
 }

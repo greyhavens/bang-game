@@ -23,19 +23,18 @@ public class CameraDolly extends EditorTool
 {
     /** The name of this tool. */
     public static final String NAME = "camera_dolly";
-    
+
     public CameraDolly (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
-        _panel.view.addListener(this);
-        
+
         ctx.getRootNode().addController(_updater = new Controller() {
             public void update (float time) {
                 updateCamera(time);
             }
         });
     }
-    
+
     /**
      * Recenters the camera, pointing it at the center of the board.
      */
@@ -45,10 +44,10 @@ public class CameraDolly extends EditorTool
             _panel.view.getTerrainNode().getWorldBound().getCenter());
         _target.z = 0.0f;
     }
-    
+
     /**
      * Saves the dolly's position and takes it offline.
-     */ 
+     */
     public void suspend ()
     {
         if (_savedpos != null) {
@@ -58,7 +57,7 @@ public class CameraDolly extends EditorTool
         _panel.view.removeListener(this);
         _ctx.getRootNode().removeController(_updater);
     }
-    
+
     /**
      * Brings the dolly back online and restores the saved position.
      */
@@ -69,47 +68,26 @@ public class CameraDolly extends EditorTool
         }
         setCameraPosition(_savedpos);
         _savedpos = null;
-        _panel.view.addListener(this);
         _ctx.getRootNode().addController(_updater);
     }
-    
+
     // documentation inherited
     public String getName ()
     {
         return NAME;
     }
-    
-    @Override // documentation inherited
-    public void activate ()
-    {
-        _active = true;
-    }
-    
-    @Override // documentation inherited
-    public void deactivate ()
-    {
-        _active = false;
-    }
-    
+
     @Override // documentation inherited
     public void mousePressed (MouseEvent e)
     {
-        if (!_active) {
-            return;
-        }
-        
         _lastX = e.getX();
         _lastY = e.getY();
         _lastButton = e.getButton();
     }
-    
+
     @Override // documentation inherited
     public void mouseDragged (MouseEvent e)
     {
-        if (!_active) {
-            return;
-        }
-        
         int dx = _lastX - e.getX(), dy =  _lastY - e.getY();
         Position pos = getCameraPosition();
         switch(_lastButton) {
@@ -117,29 +95,25 @@ public class CameraDolly extends EditorTool
                 pos.azimuth += dx*ANGULAR_SCALE;
                 pos.addToElevation(dy * ANGULAR_SCALE);
                 break;
-                
+
             case MouseEvent.BUTTON2: // right "zooms"
                 pos.addToDistance(dy * LINEAR_SCALE);
                 break;
         }
         setCameraPosition(pos);
-        
+
         _lastX = e.getX();
         _lastY = e.getY();
     }
-    
+
     @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {
-        if (!_active) {
-            return;
-        }
-        
         Position pos = getCameraPosition();
         pos.addToDistance(e.getDelta() * 10 * LINEAR_SCALE);
         setCameraPosition(pos);
     }
-    
+
     // documentation inherited from interface KeyListener
     public void keyPressed (KeyEvent e)
     {
@@ -153,7 +127,7 @@ public class CameraDolly extends EditorTool
             case KeyInput.KEY_D: _avel = +ANGULAR_SPEED; _acode = code; break;
         }
     }
-    
+
     // documentation inherited from interface KeyListener
     public void keyReleased (KeyEvent e)
     {
@@ -167,13 +141,13 @@ public class CameraDolly extends EditorTool
              case KeyInput.KEY_D: _avel = (_acode == code) ? 0f : _avel; break;
         }
     }
-    
+
     // documentation inherited
     protected JPanel createOptions ()
     {
         return new JPanel();
     }
-    
+
     /**
      * Updates the position of the camera since the elapsed time.
      */
@@ -185,7 +159,7 @@ public class CameraDolly extends EditorTool
         pos.addToDistance(_dvel * time);
         setCameraPosition(pos);
     }
-    
+
     /**
      * Gets the azimuth, elevation, and distance from the camera.
      */
@@ -195,7 +169,7 @@ public class CameraDolly extends EditorTool
         if (_target == null) {
             recenter();
         }
-        
+
         // use the vector from target to camera to determine position
         Vector3f vec = _ctx.getCameraHandler().getCamera().
             getLocation().subtract(_target);
@@ -204,7 +178,7 @@ public class CameraDolly extends EditorTool
         return new Position(FastMath.atan2(vec.y, vec.x), FastMath.asin(vec.z),
             distance);
     }
-    
+
     /**
      * Sets the camera's position based on the current parameters.
      */
@@ -218,78 +192,75 @@ public class CameraDolly extends EditorTool
             dir = vec.negate(),
             left = Vector3f.UNIT_Z.cross(dir).normalize(),
             up = dir.cross(left);
-            
+
         _ctx.getCameraHandler().getCamera().setFrame(loc, left, up, dir);
     }
-    
+
     /** Represents a camera position in spherical coordinates about the
      * target. */
     protected static class Position
     {
         public float azimuth, elevation, distance;
-        
+
         public Position (float azimuth, float elevation, float distance)
         {
             this.azimuth = azimuth;
             this.elevation = elevation;
             this.distance = distance;
         }
-        
+
         public void addToDistance (float delta)
         {
             distance = Math.min(Math.max(distance + delta, MIN_DISTANCE),
                 MAX_DISTANCE);
         }
-        
+
         public void addToElevation (float delta)
         {
             elevation = Math.min(Math.max(elevation + delta, MIN_ELEVATION),
                 MAX_ELEVATION);
         }
     }
-    
+
     /** The last mouse coordinates and button pressed. */
     protected int _lastX, _lastY, _lastButton;
-    
+
     /** The point at which the camera is looking. */
     protected Vector3f _target;
- 
-    /** Whether or not the tool is currently active. */
-    protected boolean _active;
-    
+
     /** Camera azimuth, elevation, and distance velocities. */
     protected float _avel, _evel, _dvel;
-    
+
     /** The last keys pressed for azimuth, elevation, and distance. */
     protected int _acode, _ecode, _dcode;
-    
+
     /** The camera update controller. */
     protected Controller _updater;
-    
+
     /** When suspended, the saved position to restore on resumption. */
     protected Position _savedpos;
-    
+
     /** The angular scale (radians per pixel). */
     protected static final float ANGULAR_SCALE = FastMath.PI / 1000;
-    
+
     /** The angular speed (radians per second). */
     protected static final float ANGULAR_SPEED = FastMath.PI / 2;
-    
+
     /** The linear scale (world units per pixel). */
-    protected static final float LINEAR_SCALE = 1.0f; 
-    
+    protected static final float LINEAR_SCALE = 1.0f;
+
     /** The linear speed (world units per second). */
     protected static final float LINEAR_SPEED = 300f;
-    
+
     /** The minimum distance from the target. */
     protected static final float MIN_DISTANCE = 50.0f;
-    
+
     /** The maximum distance from the target. */
     protected static final float MAX_DISTANCE = 500.0f;
-    
+
     /** The minimum elevation. */
-    protected static final float MIN_ELEVATION = FastMath.PI / 16.0f; 
-    
+    protected static final float MIN_ELEVATION = FastMath.PI / 16.0f;
+
     /** The maximum elevation. */
     protected static final float MAX_ELEVATION = FastMath.PI * 7.0f / 16.0f;
 }
