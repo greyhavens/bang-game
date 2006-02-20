@@ -7,6 +7,7 @@
 
 ROOT=`dirname $0`/..
 
-$ROOT/bin/all_rebuild --update --devclient > /tmp/rebuild-bang.log
+$ROOT/bin/finish_checkout > /tmp/rebuild-bang.log
+$ROOT/bin/all_rebuild --update --devclient >> /tmp/rebuild-bang.log
 $ROOT/bin/release_mirror >> /tmp/rebuild-bang.log
 $ROOT/bin/devclient_mirror >> /tmp/rebuild-bang.log
