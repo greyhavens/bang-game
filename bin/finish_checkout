@@ -10,6 +10,8 @@ ROOT=`dirname $0`
 ROOT=`cd $ROOT ; cd .. ; pwd`
 ANT=ant
 
+export JAVA_HOME=/usr/local/jdk1.5
+
 make_symlinks() {
     while [ "$1" != "" ]; do
         if [ -f $TOOLS_LIBS/$1 ]; then
