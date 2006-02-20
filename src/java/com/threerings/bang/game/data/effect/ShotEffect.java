@@ -143,18 +143,22 @@ public class ShotEffect extends Effect
             return;
         }
 
-        // rotate the shooter to face the target
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
+        if (shooter == null) {
+            log.warning("Missing shooter " + this + ".");
+            return;
+        }
         Piece target = (Piece)bangobj.pieces.get(targetId);
+        if (target == null) {
+            log.warning("Missing shot target " + this + ".");
+            return;
+        }
+
+        // rotate the shooter to face the target
         if (shooter != null && target != null) {
             short orient = PieceUtil.getDirection(shooter, target);
             shooter.orientation = orient;
             reportEffect(obs, shooter, ROTATED);
-        }
-
-        if (target == null) {
-            log.warning("Missing shot target " + this + ".");
-            return;
         }
         if (newLastActed != -1) {
             target.lastActed = newLastActed;
