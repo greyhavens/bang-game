@@ -55,7 +55,7 @@ public class StyleTest extends TestApp
             }
         });
         cont.setPreferredSize(new Dimension(400, 250));
-        window.add(cont, BorderLayout.CENTER);
+        window.add(cont);
 
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
     }

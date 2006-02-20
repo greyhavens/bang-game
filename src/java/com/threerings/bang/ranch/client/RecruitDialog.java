@@ -38,6 +38,7 @@ public class RecruitDialog extends BDecoratedWindow
                           RanchObject ranchobj, UnitConfig config)
     {
         super(ctx.getStyleSheet(), null);
+        setLayoutManager(new BorderLayout(5, 5));
         setModal(true);
 
         _ctx = ctx;

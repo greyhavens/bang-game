@@ -144,8 +144,9 @@ public class BangClient extends BasicClient
         // pardners and pop up when possible
         _pcview = new PardnerChatView(_ctx);
 
-        // register our global "clear the top-most popup" key bindings
+        // register our global key bindings
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_ESCAPE, _clearPopup);
+        _functionPopup = new FKeyPopups(_ctx);
 
         // create and display the logon view; which we do by hand instead of
         // using setMainView() because we don't want to start the resource
@@ -205,6 +206,9 @@ public class BangClient extends BasicClient
         return false;
     }
 
+    /**
+     * Displays the town view, first fading out any existing main view.
+     */
     public void showTownView ()
     {
         if (!(_mview instanceof TownView)) {
@@ -217,6 +221,12 @@ public class BangClient extends BasicClient
      */
     public boolean canDisplayPopup (MainView.Type type)
     {
+        // only allow status view after we've created our avatar
+        if (type == MainView.Type.STATUS &&
+            _ctx.getUserObject().handle == null) {
+            return false;
+        }
+
         if (_mview instanceof MainView) {
             return ((MainView)_mview).allowsPopup(type);
         } else {
@@ -300,10 +310,7 @@ public class BangClient extends BasicClient
         _psvc = (PlayerService)_client.requireService(PlayerService.class);
 
         // register our status view key bindings
-        for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
-            _ctx.getKeyManager().registerCommand(
-                STATUS_KEYMAP[ii], _showStatus);
-        }
+        StatusView.bindKeys(_ctx);
 
         // we potentially jump right into a game when developing
         BangConfig config = null;
@@ -328,7 +335,7 @@ public class BangClient extends BasicClient
                 new Name("Larry"), new Name("Moe"), new Name("Curly") };
             config.ais = new GameAI[] {
                 null, new GameAI(1, 50), new GameAI(0, 50), new GameAI(0, 50) };
-            config.scenarios = new String[] { "cj", "cj" };
+            config.scenarios = new String[] { "cj" };
             config.teamSize = 3;
             config.board = System.getProperty("board");
         }
@@ -376,9 +383,7 @@ public class BangClient extends BasicClient
     public void clientDidLogoff (Client client)
     {
         // clear our status view key bindings
-        for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
-            _ctx.getKeyManager().clearCommand(STATUS_KEYMAP[ii]);
-        }
+        StatusView.clearKeys(_ctx);
 
         // TODO: go back to the logon page?
         _ctx.getApp().stop();
@@ -511,43 +516,6 @@ public class BangClient extends BasicClient
         }
     }
 
-    protected GlobalKeyManager.Command _showStatus =
-        new GlobalKeyManager.Command() {
-        public void invoke (int keyCode) {
-            // only show the status view after we've run the avatar creation
-            // intro and if we're not in a game
-            if (_ctx.getUserObject().handle == null ||
-                _mview instanceof BangView) {
-                return;
-            }
-
-            // create the status view the first time we show it
-            if (_status == null) {
-                _status = new StatusView(_ctx);
-            }
-
-            // determine which tab we want to show
-            int tabidx = 0;
-            for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
-                if (STATUS_KEYMAP[ii] == keyCode) {
-                    tabidx = STATUS_KEYMAP[ii+1];
-                    break;
-                }
-            }
-
-            if (_status.isAdded()) {
-                if (tabidx == _status.getSelectedTab()) {
-                    _ctx.getBangClient().clearPopup(_status, true);
-                } else {
-                    _status.setSelectedTab(tabidx);
-                }
-            } else {
-                _ctx.getBangClient().displayPopup(_status, true);
-                _status.setSelectedTab(tabidx);
-            }
-        }
-    };
-
     protected GlobalKeyManager.Command _clearPopup =
         new GlobalKeyManager.Command() {
         public void invoke (int keyCode) {
@@ -556,6 +524,7 @@ public class BangClient extends BasicClient
             }
         }
     };
+    protected FKeyPopups _functionPopup;
 
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
@@ -566,16 +535,6 @@ public class BangClient extends BasicClient
     protected BWindow _mview;
     protected ArrayList<BWindow> _popups = new ArrayList<BWindow>();
     protected PardnerChatView _pcview;
-    protected StatusView _status;
 
     protected ArrayList<Name> _invites = new ArrayList<Name>();
-
-    // TODO: sort out how we'll localize these
-    protected static final int[] STATUS_KEYMAP = {
-        KeyInput.KEY_I, 0,
-        KeyInput.KEY_U, 1,
-        KeyInput.KEY_S, 2,
-        KeyInput.KEY_D, 3,
-        KeyInput.KEY_P, 4,
-    };
 }

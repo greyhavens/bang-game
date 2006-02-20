@@ -44,23 +44,6 @@ import com.threerings.bang.util.BangContext;
 public class SelectionView extends BDecoratedWindow
     implements ActionListener
 {
-    /**
-     * Creates a nice header to display on pre-game dialogs.
-     */
-    public static BContainer createRoundHeader (
-        BangContext ctx, BangConfig config, BangObject bangobj)
-    {
-        BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
-        String msg = MessageBundle.compose(
-            "m.round_header",
-            MessageBundle.taint(String.valueOf((bangobj.roundId + 1))),
-            "m.scenario_" + bangobj.scenarioId,
-            MessageBundle.taint(bangobj.boardName));
-        header.add(
-            new BLabel(ctx.xlate(GameCodes.GAME_MSGS, msg), "scroll_title"));
-        return header;
-    }
-
     public SelectionView (BangContext ctx, BangConfig config,
                           BangObject bangobj, int pidx)
     {
@@ -74,7 +57,15 @@ public class SelectionView extends BDecoratedWindow
 
         // set up our main structural bits
         setLayoutManager(new BorderLayout(25, 15));
-        add(createRoundHeader(ctx, config, bangobj), BorderLayout.NORTH);
+
+        BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
+        String msg = MessageBundle.compose(
+            "m.round_header",
+            MessageBundle.taint(String.valueOf((bangobj.roundId + 1))),
+            "m.scenario_" + bangobj.scenarioId,
+            MessageBundle.taint(bangobj.boardName));
+        header.add(new BLabel(_msgs.xlate(msg), "window_title"));
+        add(header, BorderLayout.NORTH);
 
         _side = GroupLayout.makeVBox(GroupLayout.TOP);
         _side.add(_uname = new BLabel("", "pick_unit_name"));

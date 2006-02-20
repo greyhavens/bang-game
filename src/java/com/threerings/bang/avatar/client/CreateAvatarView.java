@@ -48,7 +48,7 @@ public class CreateAvatarView extends BDecoratedWindow
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
 
-        add(new BLabel(_msgs.get("m.create_title"), "scroll_title"));
+        add(new BLabel(_msgs.get("m.create_title"), "window_title"));
         add(new BLabel(_msgs.get("m.create_intro"), "dialog_text"));
 
         GroupLayout glay = GroupLayout.makeVert(

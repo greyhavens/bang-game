@@ -3,6 +3,8 @@
 
 package com.threerings.bang.client;
 
+import com.jme.input.KeyInput;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -38,6 +40,63 @@ import com.threerings.bang.util.BangContext;
 public class StatusView extends BWindow
     implements ActionListener
 {
+    /**
+     * Binds global key commands that popup the status view when particular
+     * keys are pressed.
+     */
+    public static void bindKeys (final BangContext ctx)
+    {
+        GlobalKeyManager.Command showStatus = new GlobalKeyManager.Command() {
+            public void invoke (int keyCode) {
+                // make sure we can display the status view right now
+                if (!ctx.getBangClient().canDisplayPopup(
+                        MainView.Type.STATUS)) {
+                    return;
+                }
+
+                // create the status view the first time we show it
+                if (_status == null) {
+                    _status = new StatusView(ctx);
+                }
+
+                // determine which tab we want to show
+                int tabidx = 0;
+                for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
+                    if (STATUS_KEYMAP[ii] == keyCode) {
+                        tabidx = STATUS_KEYMAP[ii+1];
+                        break;
+                    }
+                }
+
+                if (_status.isAdded()) {
+                    if (tabidx == _status.getSelectedTab()) {
+                        ctx.getBangClient().clearPopup(_status, true);
+                    } else {
+                        _status.setSelectedTab(tabidx);
+                    }
+                } else {
+                    ctx.getBangClient().displayPopup(_status, true);
+                    _status.setSelectedTab(tabidx);
+                }
+            }
+            protected StatusView _status;
+        };
+
+        for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
+            ctx.getKeyManager().registerCommand(STATUS_KEYMAP[ii], showStatus);
+        }
+    }
+
+    /**
+     * Clears the status view key bindings.
+     */
+    public static void clearKeys (BangContext ctx)
+    {
+        for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
+            ctx.getKeyManager().clearCommand(STATUS_KEYMAP[ii]);
+        }
+    }
+
     public StatusView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), new AbsoluteLayout());
@@ -202,5 +261,14 @@ public class StatusView extends BWindow
         public boolean includeItem (Item item) {
             return (item instanceof Article);
         }
+    };
+
+    // TODO: sort out how we'll localize these
+    protected static final int[] STATUS_KEYMAP = {
+        KeyInput.KEY_I, 0,
+        KeyInput.KEY_S, 1,
+        KeyInput.KEY_B, 2,
+        KeyInput.KEY_D, 3,
+        KeyInput.KEY_P, 4,
     };
 }

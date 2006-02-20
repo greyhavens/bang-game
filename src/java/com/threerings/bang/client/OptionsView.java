@@ -42,7 +42,7 @@ public class OptionsView extends BDecoratedWindow
 {
     public OptionsView (BangContext ctx, LogonView parent)
     {
-        super(ctx.getStyleSheet(), null);
+        super(ctx.getStyleSheet(), ctx.xlate("options", "m.title"));
         setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
         ((GroupLayout)getLayoutManager()).setGap(25);
         setModal(true);
@@ -50,8 +50,6 @@ public class OptionsView extends BDecoratedWindow
         _ctx = ctx;
         _parent = parent;
         _msgs = ctx.getMessageManager().getBundle("options");
-
-        add(new BLabel(_msgs.get("m.title"), "scroll_title"));
 
         BContainer cont = new BContainer(new TableLayout(2, 10, 10));
         cont.add(new BLabel(_msgs.get("m.video_mode"), "right_label"));

@@ -6,7 +6,6 @@ package com.threerings.bang.game.client;
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.layout.BorderLayout;
@@ -123,9 +122,9 @@ public class BangView extends BWindow
         _pswins = new BWindow[pcount];
         pstatus = new PlayerStatusView[pcount];
         for (int ii = 0; ii < pcount; ii++) {
-            _pswins[ii] = new BDecoratedWindow(_ctx.getStyleSheet(), null);
+            _pswins[ii] = new BWindow(
+                _ctx.getStyleSheet(), GroupLayout.makeHStretch());
             _pswins[ii].setStyleClass("player_status_win");
-            _pswins[ii].setLayoutManager(GroupLayout.makeHStretch());
             _pswins[ii].add(
                 pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, _ctrl, ii));
         }

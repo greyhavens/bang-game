@@ -89,9 +89,13 @@ public class TownView extends BWindow
     public boolean allowsPopup (Type type)
     {
         switch (type) {
-        case CHAT: return true;
-        case PARDNER_INVITE: return _active;
-        default: return true;
+        case STATUS:
+        case PARDNER_INVITE:
+            return _active;
+
+        default:
+        case CHAT:
+            return true;
         }
     }
 

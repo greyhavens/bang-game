@@ -48,7 +48,6 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 
 import com.jmex.bui.BComponent;
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.text.BText;

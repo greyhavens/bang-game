@@ -6,9 +6,7 @@ package com.threerings.bang.tests;
 import java.util.logging.Level;
 
 import com.jme.util.LoggingSystem;
-
 import com.jmex.bui.BDecoratedWindow;
-import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.ranch.client.UnitIcon;
@@ -33,11 +31,8 @@ public class ModelIconTest extends TestApp
 
     protected void createInterface (BDecoratedWindow window)
     {
-        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("steamgunman")),
-                   BorderLayout.WEST);
-        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("gunslinger")),
-                   BorderLayout.CENTER);
-        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("dirigible")),
-                   BorderLayout.EAST);
+        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("steamgunman")));
+        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("gunslinger")));
+        window.add(new UnitIcon(_ctx, -1, UnitConfig.getConfig("dirigible")));
     }
 }

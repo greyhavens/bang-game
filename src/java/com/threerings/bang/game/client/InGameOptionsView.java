@@ -7,7 +7,6 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
@@ -21,8 +20,7 @@ public class InGameOptionsView extends BDecoratedWindow
 {
     public InGameOptionsView (BangContext ctx)
     {
-        super(ctx.getStyleSheet(), null);
-        setLayoutManager(GroupLayout.makeVStretch());
+        super(ctx.getStyleSheet(), ctx.xlate("options", "m.title"));
 
         _modal = true;
         _ctx = ctx;

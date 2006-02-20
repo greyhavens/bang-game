@@ -292,7 +292,7 @@ scrollbar_vmore:disabled {
 //
 // Global styles
 
-scroll_title {
+window_title {
   font: "Old Town Wide" plain 30;
   text-align: center;
   background: image "ui/window/scroll_title.png" framexy;
@@ -300,11 +300,6 @@ scroll_title {
   text-effect: shadow;
   color: #4C2602;
   effect-color: #D1C581;
-}
-
-dialog_title {
-  font: "Old Town" plain 30;
-  text-align: left;
 }
 
 medium_title {
@@ -410,6 +405,11 @@ dialog_window {
 dialog_text {
   color: #4C2602;
   text-align: center;
+}
+
+dialog_text_left {
+  parent: "dialog_text";
+  text-align: left;
 }
 
 dialog_label {

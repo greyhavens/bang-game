@@ -68,7 +68,7 @@ public class GameOverView extends BDecoratedWindow
         int pidx = bangobj.getPlayerIndex(user.getVisibleName());
         Award award = null;
 
-        add(new BLabel(msgs.get("m.endgame_title"), "scroll_title"));
+        add(new BLabel(msgs.get("m.endgame_title"), "window_title"));
         add(_results = GroupLayout.makeVBox(GroupLayout.TOP));
         _results.add(new Spacer(1, -70)); // kids, don't try this at home
 

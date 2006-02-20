@@ -9,7 +9,6 @@ import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.ListUtil;
@@ -99,7 +98,7 @@ public class OptionDialog extends BDecoratedWindow
         _ctx = ctx;
         _receiver = receiver;
 
-        add(new BLabel(_ctx.xlate(bundle, text)), BorderLayout.CENTER);
+        add(new BLabel(_ctx.xlate(bundle, text)));
         
         BContainer bpanel = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.CENTER));
@@ -109,7 +108,7 @@ public class OptionDialog extends BDecoratedWindow
                 new BButton(ctx.xlate(bundle, buttons[ii])));
             _buttons[ii].addListener(this);
         }
-        add(bpanel, BorderLayout.SOUTH);
+        add(bpanel, GroupLayout.FIXED);
     }
 
     // documentation inherited from interface ActionListener

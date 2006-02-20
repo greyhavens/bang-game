@@ -20,7 +20,6 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
@@ -58,7 +57,7 @@ public class PardnerChatView extends BDecoratedWindow
         
         _ctx.getChatDirector().addChatDisplay(this);
         
-        add(_tabs = new BTabbedPane(), BorderLayout.CENTER);
+        add(_tabs = new BTabbedPane());
         
         BContainer bottom = new BContainer(GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH));
@@ -69,7 +68,7 @@ public class PardnerChatView extends BDecoratedWindow
             "m.chat_close")));
         _close.addListener(this);
         bottom.add(buttons);
-        add(bottom, BorderLayout.SOUTH);
+        add(bottom, GroupLayout.FIXED);
     }
     
     /**

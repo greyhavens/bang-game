@@ -41,7 +41,7 @@ public class TutorialController
 
         // create and add the window in which we'll display info text
         _tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null);
-        _tutwin.add(_info = new BTextArea(), BorderLayout.SOUTH);
+        _tutwin.add(_info = new BTextArea());
         _tutwin.addListener(_clicklist);
         _info.addListener(_clicklist);
     }
