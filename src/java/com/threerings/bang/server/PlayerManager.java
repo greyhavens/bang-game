@@ -6,6 +6,7 @@ package com.threerings.bang.server;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -68,11 +69,11 @@ public class PlayerManager
         throws PersistenceException
     {
         _pardrepo = new PardnerRepository(conprov);
-        
+
         // register ourselves as the provider of the (bootstrap) PlayerService
         BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), true);
     }
-    
+
     // documentation inherited from interface PlayerProvider
     public void pickFirstBigShot (ClientObject caller, String type, Name name,
                                   final PlayerService.ConfirmListener listener)
@@ -116,7 +117,7 @@ public class PlayerManager
             }
         });
     }
-    
+
     /**
      * Populates the identified player's set of pardners, performing any
      * notifications and updates that were being held until the player
@@ -129,23 +130,40 @@ public class PlayerManager
         ArrayList<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
         ArrayList<PardnerRepository.PardnerRecord> records =
             _pardrepo.getPardnerRecords(player.playerId);
+
+        // TEMP: sanity check since I've seen duplicates
+        HashSet<Handle> temp = new HashSet<Handle>();
+        Iterator<PardnerRepository.PardnerRecord> iter = records.iterator();
+        while (iter.hasNext()) {
+            PardnerRepository.PardnerRecord record = iter.next();
+            if (temp.contains(record.handle)) {
+                log.warning("Player has duplicate pardner record "  +
+                            "[pid=" + player.playerId +
+                            ", record=" + record + "].");
+                iter.remove();
+            } else {
+                temp.add(record.handle);
+            }
+        }
+        // END TEMP
+
         final ArrayList<PardnerRepository.PardnerRecord> inviters =
             new ArrayList<PardnerRepository.PardnerRecord>();
         for (int ii = 0, nn = records.size(); ii < nn; ii++) {
             PardnerRepository.PardnerRecord record = records.get(ii);
             if (record.active) {
-                pardners.add(getPardnerEntry(record.handle,
-                    record.lastSession));
-                
+                pardners.add(
+                    getPardnerEntry(record.handle, record.lastSession));
             } else {
                 inviters.add(record);
             }
         }
+
         player.pardners = new DSet(pardners.iterator());
         if (player.getOnlinePardnerCount() > 0) {
             new PardnerEntryUpdater(player).updatePardnerEntries();
         }
-        
+
         // send invitations as soon as the receiver is registered
         player.addListener(new SetAdapter() {
             public void entryAdded (EntryAddedEvent eae) {
@@ -162,7 +180,7 @@ public class PlayerManager
             }
         });
     }
-    
+
     // documentation inherited from interface PlayerProvider
     public void invitePardner (ClientObject caller, final Name handle,
         final PlayerService.ConfirmListener listener)
@@ -173,16 +191,16 @@ public class PlayerManager
         final PlayerObject inviter = (PlayerObject)caller;
         if (inviter.handle.equals(handle)) {
             throw new InvocationException("e.pardner_self");
-        
+
         } else if (inviter.pardners.containsKey(handle)) {
             throw new InvocationException(MessageBundle.tcompose(
                 "e.already_pardner", handle));
-            
+
         } else if (inviter.pardners.size() >= MAX_PARDNERS) {
             throw new InvocationException(MessageBundle.tcompose(
                 "e.too_many_pardners", String.valueOf(MAX_PARDNERS)));
         }
-        
+
         // if the invitee is online, send the invite directly; if not, store
         // the invite in the db
         PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
@@ -191,11 +209,11 @@ public class PlayerManager
                 new Date(), false);
             if (error == null) {
                 listener.requestProcessed();
-            
+
             } else {
                 listener.requestFailed(error);
             }
-            return; 
+            return;
         }
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
@@ -205,7 +223,7 @@ public class PlayerManager
             public void handleSuccess () {
                 if (_error == null) {
                     listener.requestProcessed();
-                
+
                 } else {
                     listener.requestFailed(_error);
                 }
@@ -231,7 +249,7 @@ public class PlayerManager
         if (invite == null) {
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
+
         // if we're rejecting a non-db invite, there's no need to update the
         // db; otherwise, we must add, update, or remove pardners
         if (!resp && !invite.fromdb) {
@@ -244,11 +262,11 @@ public class PlayerManager
                     if (invite.fromdb) {
                         _pardrepo.updatePardners(player.playerId, inviter,
                             true);
-                            
+
                     } else {
                         _pardrepo.addPardners(player.playerId, inviter, true);
                     }
-                    
+
                 } else {
                     _pardrepo.removePardners(player.playerId, inviter);
                 }
@@ -256,7 +274,7 @@ public class PlayerManager
             public void handleSuccess () {
                 if (resp) {
                     invite.accept(listener);
-                    
+
                 } else {
                     invite.reject(listener);
                 }
@@ -280,7 +298,7 @@ public class PlayerManager
         if (entry == null) {
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
+
         // remove from database and notify affected party on success
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
@@ -304,7 +322,7 @@ public class PlayerManager
             }
         });
     }
-    
+
     /**
      * Creates (if the pardner is offline) or retrieves (if the pardner is
      * online) the up-to-date {@link PardnerEntry} for the named pardner.
@@ -321,17 +339,17 @@ public class PlayerManager
         PlayerObject player = (PlayerObject)BangServer.lookupBody(handle);
         if (player != null) {
             return (new PardnerEntryUpdater(player)).entry;
-            
+
         } else {
             return new PardnerEntry(handle, lastSession);
         }
     }
-    
+
     /**
      * Sends a pardner invite to the specified player from the named inviter.
      *
      * @param fromdb if false, the invitation comes directly from an online
-     * player; if true, the invitation comes from a stored entry in the 
+     * player; if true, the invitation comes from a stored entry in the
      * database
      * @return null if the invitation was sent successfully, otherwise a
      * translatable error message indicating what went wrong
@@ -347,50 +365,50 @@ public class PlayerManager
         new Invite(key, lastSession, invitee, fromdb).add();
         return null;
     }
-    
+
     /** Pairs inviter and invitee identification for use as a map key. */
     protected static class InviteKey
     {
         /** The player id of the invitee. */
         public int playerId;
-        
+
         /** The name of the inviter. */
         public Name inviter;
-        
+
         public InviteKey (int playerId, Name inviter)
         {
             this.playerId = playerId;
             this.inviter = inviter;
         }
-        
+
         public boolean equals (Object other)
         {
             InviteKey okey = (InviteKey)other;
             return okey.playerId == playerId && okey.inviter.equals(inviter);
         }
-        
+
         public int hashCode ()
         {
             return playerId + inviter.hashCode();
         }
     }
-    
+
     /** Represents a standing invitation. */
     protected class Invite
         implements ObjectDeathListener
     {
         /** The key of this invitation. */
         public InviteKey key;
-        
+
         /** The time at which the inviter was last on. */
         public Date lastSession;
-        
+
         /** The invitee player object. */
         public PlayerObject invitee;
-        
+
         /** Whether or not this invitation originated from the database. */
         public boolean fromdb;
-        
+
         public Invite (InviteKey key, Date lastSession, PlayerObject invitee,
             boolean fromdb)
         {
@@ -399,7 +417,7 @@ public class PlayerManager
             this.invitee = invitee;
             this.fromdb = fromdb;
         }
-        
+
         public void add ()
         {
             invitee.addListener(this);
@@ -420,7 +438,7 @@ public class PlayerManager
             remove();
             listener.requestProcessed();
         }
-        
+
         public void reject (PlayerService.ConfirmListener listener)
         {
             PlayerObject invobj =
@@ -433,50 +451,50 @@ public class PlayerManager
             remove();
             listener.requestProcessed();
         }
-        
+
         public void objectDestroyed (ObjectDestroyedEvent ode)
         {
             remove();
         }
-        
+
         protected void remove ()
         {
             invitee.removeListener(this);
             _invites.remove(key);
         }
     }
-    
+
     /** Listens to users with pardners, updating their pardner list entries. */
     protected class PardnerEntryUpdater extends SetAdapter
         implements AttributeChangeListener, ObjectDeathListener
     {
         /** The up-to-date entry for the player. */
         public PardnerEntry entry;
-        
+
         public PardnerEntryUpdater (PlayerObject player)
         {
             _player = player;
             _player.addListener(this);
             _updaters.put(player.handle, this);
-            
+
             entry = new PardnerEntry(player.handle);
             updateAvatar();
             updateStatus();
         }
-        
+
         public void attributeChanged (AttributeChangedEvent ace)
         {
             String name = ace.getName();
             if (name.equals(PlayerObject.LOCATION)) {
                 updateStatus();
                 updatePardnerEntries();
-                
+
             } else if (name.equals(PlayerObject.LOOK)) {
                 updateAvatar();
-                updatePardnerEntries();   
+                updatePardnerEntries();
             }
         }
-        
+
         public void entryUpdated (EntryUpdatedEvent eue)
         {
             // if the current look is updated, update the avatar
@@ -487,13 +505,13 @@ public class PlayerManager
                     updateAvatar();
                     updatePardnerEntries();
                 }
-            
+
             } else if (name.equals(PlayerObject.PARDNERS) &&
                 _player.getOnlinePardnerCount() == 0) {
                 remove();
             }
         }
-        
+
         public void entryRemoved (EntryRemovedEvent ere)
         {
             // if the last pardner is removed, clear out the updater
@@ -502,14 +520,14 @@ public class PlayerManager
                 remove();
             }
         }
-        
+
         public void objectDestroyed (ObjectDestroyedEvent ode)
         {
             updateStatus();
             updatePardnerEntries();
             remove();
         }
-        
+
         public void updatePardnerEntries ()
         {
             for (Iterator it = _player.pardners.iterator(); it.hasNext(); ) {
@@ -520,19 +538,19 @@ public class PlayerManager
                 }
             }
         }
-        
+
         protected void remove ()
         {
             _player.removeListener(this);
             _updaters.remove(_player.handle);
         }
-        
+
         protected void updateAvatar ()
         {
             Look look = (Look)_player.looks.get(_player.look);
             entry.avatar = look.getAvatar(_player);
         }
-        
+
         protected void updateStatus ()
         {
             if (!_player.isActive()) {
@@ -550,19 +568,19 @@ public class PlayerManager
                 entry.status = PardnerEntry.ONLINE;
             }
         }
-        
+
         protected PlayerObject _player;
         protected PardnerEntry _entry;
     }
-    
+
     /** Provides access to the pardner database. */
     protected PardnerRepository _pardrepo;
-    
+
     /** Maps the names of users to updaters responsible for keeping their
      * {@link PardnerEntry}s up-to-date. */
     protected HashMap<Name, PardnerEntryUpdater> _updaters =
         new HashMap<Name, PardnerEntryUpdater>();
-    
+
     /** The currently standing pardner invitations. */
     protected HashMap<InviteKey, Invite> _invites =
         new HashMap<InviteKey, Invite>();

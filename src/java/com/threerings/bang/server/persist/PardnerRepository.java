@@ -42,21 +42,27 @@ public class PardnerRepository extends SimpleRepository
     {
         /** The handle of the other player. */
         public Handle handle;
-        
+
         /** The time of the player's last session. */
         public Date lastSession;
-        
+
         /** Whether the pardnership is active or merely proposed. */
         public boolean active;
-        
-        public PardnerRecord (Handle handle, Date lastSession, boolean active)
-        {
+
+        /** Creates a new pardner record. */
+        public PardnerRecord (Handle handle, Date lastSession, boolean active) {
             this.handle = handle;
             this.lastSession = lastSession;
             this.active = active;
         }
+
+        /** Returns a string representation of this instance. */
+        public String toString () {
+            return "[handle=" + handle + ", last=" + lastSession +
+                ", active=" + active + "]";
+        }
     }
-    
+
     /**
      * Constructs a new pardner repository with the specified connection
      * provider.
@@ -139,7 +145,7 @@ public class PardnerRepository extends SimpleRepository
                         return MessageBundle.tcompose("e.already_invited",
                             handle2);
                     }
-                    
+
                 } finally {
                     JDBCUtil.close(stmt);
                 }
@@ -148,7 +154,7 @@ public class PardnerRepository extends SimpleRepository
             }
         });
     }
-    
+
     /**
      * Updates the status of the identified pardnership where the playerId for
      * one is known and only the name for the other is known.
@@ -185,7 +191,7 @@ public class PardnerRepository extends SimpleRepository
             }
         });
     }
-    
+
     /**
      * Remove a pardner mapping from the database where the playerId for one
      * is known and only the name for the other is known.
@@ -220,7 +226,7 @@ public class PardnerRepository extends SimpleRepository
             }
         });
     }
-    
+
     /**
      * Returns the player id corresponding to the given handle, or -1
      * if no such player exists.
@@ -239,7 +245,7 @@ public class PardnerRepository extends SimpleRepository
         rs.close();
         return playerId;
     }
-    
+
     /**
      * Creates a 'where' clause that matches the two given player ids in either
      * order.
