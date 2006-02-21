@@ -4,26 +4,8 @@
 #
 # Completes the checkout of a Bang! build directory
 
-LOCAL_LIBS=../../../lib
-TOOLS_LIBS=/export/tools/lib/java
 ROOT=`dirname $0`
 ROOT=`cd $ROOT ; cd .. ; pwd`
-ANT=ant
-
-export JAVA_HOME=/usr/local/jdk1.5
-
-make_symlinks() {
-    while [ "$1" != "" ]; do
-        if [ -f $TOOLS_LIBS/$1 ]; then
-            # echo Using $TOOLS_LIBS/$1...
-            ln -sf $TOOLS_LIBS/$1 .
-        else
-            # echo Using $LOCAL_LIBS/$1...
-            ln -sf $LOCAL_LIBS/$1 .
-        fi
-        shift
-    done
-}
 
 # sanity check
 if [ ! -d $ROOT/projects ]; then
@@ -51,17 +33,5 @@ if [ ! -d threerings ]; then
     svn checkout $SVNROOT/threerings/trunk/projects/threerings threerings
 fi
 
-# set up the necessary library dependency symlinks
-for PROJECT in jme-bui samskivert narya getdown; do
-    cd $ROOT/projects/$PROJECT/lib
-    make_symlinks `cat LIBS`
-done
-
-# build the projects and link their jar files into $ROOT/lib
-cd $ROOT/projects
-for PROJECT in jme-bui samskivert narya threerings getdown; do
-    cd $ROOT/projects/$PROJECT
-    $ANT clean dist
-    cd $ROOT/lib
-    ln -sf ../projects/$PROJECT/dist/*.jar .
-done
+# now run all_rebuild to make sure everything works
+$ROOT/bin/all_rebuild
