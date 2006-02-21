@@ -178,7 +178,8 @@ public class BangView extends BWindow
 
         // add the round timer
         _ctx.getRootNode().addWindow(_timer);
-        _timer.setBounds((width - 100) / 2, height - 50, 100, 50);
+        _timer.pack();
+        _timer.setLocation(0, height - _timer.getHeight());
 
         // and add our chat display
         _ctx.getRootNode().addWindow(chat);
