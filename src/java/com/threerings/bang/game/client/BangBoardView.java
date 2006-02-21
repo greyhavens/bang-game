@@ -234,7 +234,9 @@ public class BangBoardView extends BoardView
     public void endRound ()
     {
         super.endRound();
+
         clearSelection();
+        clearPlacingCard();
 
         // remove our event listener
         _bangobj.removeListener(_ticker);
@@ -599,17 +601,13 @@ public class BangBoardView extends BoardView
         }
 
         // if we are placing a card, clear it out
-        if (_card != null) {
-            log.info("Clearing " + _card);
-            _card = null;
-            clearAttackSet();
+        if (clearPlacingCard()) {
             return;
         }
 
         // if there is a piece under the cursor, show their possible shots
-        PieceSprite sprite = null;
         if (_hover instanceof PieceSprite) {
-            sprite = (PieceSprite)_hover;
+            PieceSprite sprite = (PieceSprite)_hover;
             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
             if (sprite instanceof UnitSprite && piece.isAlive()) {
                 clearSelection();
@@ -737,6 +735,18 @@ public class BangBoardView extends BoardView
         // clear out any pending action
         _action = null;
         clearAttackSet();
+    }
+
+    protected boolean clearPlacingCard ()
+    {
+        if (_card == null) {
+            return false;
+        }
+
+        log.info("Clearing " + _card);
+        _card = null;
+        clearAttackSet();
+        return true;
     }
 
     @Override // documentation inherited
