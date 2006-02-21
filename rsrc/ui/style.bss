@@ -513,7 +513,7 @@ pardner_icon:selected {
 
 pardner_icon:last_session {
   color: #7e4e26;
-  font: "Old Town" plain 15;
+  font: "Old Town Wide" plain 15;
 }
 
 pardner_status {
