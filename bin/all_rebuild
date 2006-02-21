@@ -14,8 +14,8 @@ ROOT=`dirname $0`
 ROOT=`cd $ROOT ; cd .. ; pwd`
 LOCKFILE=/tmp/rebuild-bang.lock
 
-# we'll use this to keep our library symlinks up to date
-. /export/tools/lib/sh/make_symlinks
+# load up some handy shell functions
+. /export/tools/lib/sh/build_helper
 
 export JAVA_HOME=/usr/local/jdk1.5
 export PATH=$JAVA_HOME/bin:$PATH
@@ -48,11 +48,6 @@ fi
 # bookkeeping
 echo "*** Starting build in $ROOT at" `date`
 
-# this is needed when running in a cronjob
-if [ -f $HOME/bin/svnssh ]; then
-    export SVN_SSH=$HOME/bin/svnssh
-fi
-
 if [ ! -z "$UPDATE" ]; then
     # update the whole enchilada
     echo "Updating main tree..."
@@ -66,34 +61,7 @@ if [ ! -z "$UPDATE" ]; then
 fi
 
 # rebuild our libraries
-for LIB in samskivert getdown jme-bui narya threerings ; do
-    if [ -d $ROOT/projects/$LIB ]; then
-        # update from the version control repository if asked
-        cd $ROOT/projects/$LIB
-        if [ ! -z "$UPDATE" ]; then
-            echo "Updating $LIB..."
-            svn update -q
-            if [ $? != 0 ] ; then
-                echo >&2 "*** svn update failed in $LIB"
-                rm -f $LOCKFILE
-                exit 255
-            fi
-        fi
-
-        # make sure our library symlinks are up to date
-        cd $ROOT/projects/$LIB/lib
-        make_symlinks `cat LIBS`
-
-        cd $ROOT/projects/$LIB
-        echo "Rebuilding $LIB..."
-        ant clean dist
-        if [ $? != 0 ]; then
-            rm -f $LOCKFILE
-            exit 255
-        fi
-        ln -sf $ROOT/projects/$LIB/dist/*.jar $ROOT/lib
-    fi
-done
+build_libraries samskivert getdown jme-bui narya threerings
 
 # build the main thang
 cd $ROOT
