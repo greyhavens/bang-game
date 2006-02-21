@@ -6,7 +6,7 @@ package com.threerings.bang.tests.game;
 import java.util.logging.Level;
 
 import com.jme.util.LoggingSystem;
-import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BWindow;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.Name;
@@ -32,7 +32,7 @@ public class FinalistViewTest extends TestApp
         }
     }
 
-    protected void createInterface (BDecoratedWindow window)
+    protected void createInterface (BWindow window)
     {
         window.setLayoutManager(GroupLayout.makeHoriz(GroupLayout.CENTER));
         window.add(new FinalistView(_ctx, 0, new Name("Rabid Jerrymanderer"),

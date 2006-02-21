@@ -19,6 +19,7 @@ import com.jme.system.DisplaySystem;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BRootNode;
 import com.jmex.bui.BStyleSheet;
+import com.jmex.bui.BWindow;
 
 import com.threerings.cast.CharacterManager;
 import com.threerings.cast.bundle.BundledComponentRepository;
@@ -117,19 +118,19 @@ public abstract class TestApp extends JmeApp
         }
         BangUI.init(_ctx);
 
-        BDecoratedWindow window = createWindow();
+        BWindow window = createWindow();
         createInterface(window);
         _ctx.getRootNode().addWindow(window);
         window.pack();
         window.center();
     }
 
-    protected BDecoratedWindow createWindow ()
+    protected BWindow createWindow ()
     {
         return new BDecoratedWindow(BangUI.stylesheet, null);
     }
 
-    protected void createInterface (BDecoratedWindow window)
+    protected void createInterface (BWindow window)
     {
     }
 

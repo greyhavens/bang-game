@@ -9,14 +9,14 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.util.LoggingSystem;
 
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BScrollBar;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
-import com.jmex.bui.util.Dimension;
+import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.util.Dimension;
 
 /**
  * A simple app for testing stylesheet stuff.
@@ -35,7 +35,7 @@ public class StyleTest extends TestApp
         }
     }
 
-    protected void createInterface (BDecoratedWindow window)
+    protected void createInterface (BWindow window)
     {
         BContainer cont = new BContainer(new BorderLayout());
         cont.add(_text = new BTextArea(), BorderLayout.CENTER);

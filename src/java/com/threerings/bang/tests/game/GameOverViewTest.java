@@ -6,7 +6,7 @@ package com.threerings.bang.tests.game;
 import java.util.logging.Level;
 
 import com.jme.util.LoggingSystem;
-import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BWindow;
 
 import com.threerings.presents.dobj.DSet;
 
@@ -40,7 +40,7 @@ public class GameOverViewTest extends TestApp
         }
     }
 
-    protected BDecoratedWindow createWindow ()
+    protected BWindow createWindow ()
     {
         PlayerObject user = new PlayerObject();
         user.handle = new Handle("Wild Annie");
