@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.effect;
 
 import java.awt.Point;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,14 +15,13 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ListUtil;
 
 import com.threerings.io.SimpleStreamableObject;
-
 import com.threerings.util.RandomUtil;
-import com.threerings.util.StreamablePoint;
 
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.StampedeHandler;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.util.PointList;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
@@ -68,11 +68,6 @@ public class StampedeEffect extends Effect
         }
     }
 
-    /** Used for type safety. */
-    public static class PointList extends ArrayList<StreamablePoint>
-    {
-    }
-
     /** The id of the player causing the damage or -1. */
     public transient int causer;
 
@@ -83,7 +78,7 @@ public class StampedeEffect extends Effect
     public transient int radius;
 
     /** The paths to be followed by each buffalo. */
-    public StreamablePoint[][] paths;
+    public PointList[] paths;
 
     /** The list of collisions between buffalo and units. */
     public Collision[] collisions;
@@ -160,12 +155,7 @@ public class StampedeEffect extends Effect
                 }
             }
         }
-
-        paths = new StreamablePoint[bestPaths.length][];
-        for (int ii = 0; ii < paths.length; ii++) {
-            paths[ii] = bestPaths[ii].toArray(
-                new StreamablePoint[bestPaths[ii].size()]);
-        }
+        paths = bestPaths;
 
         // create the list of collisions
         createCollisions(bangobj, dammap);
@@ -178,7 +168,7 @@ public class StampedeEffect extends Effect
         // their course
         int maxlen = 0;
         for (int i = 0; i < paths.length; i++) {
-            maxlen = Math.max(maxlen, paths[i].length);
+            maxlen = Math.max(maxlen, paths[i].size());
         }
         reportDelay(obs, (long)((maxlen-1) * 1000 / BUFFALO_SPEED));
 
@@ -229,14 +219,14 @@ public class StampedeEffect extends Effect
         }
 
         // scatter the initial locations about the origin
-        StreamablePoint[] locs = new StreamablePoint[paths.length];
+        Point[] locs = new Point[paths.length];
         int[] dirs = new int[paths.length];
         boolean[] reversed = new boolean[paths.length];
         int extent = radius + 1;
         for (int i = 0; i < locs.length; i++) {
-            StreamablePoint loc;
+            Point loc;
             do {
-                loc = new StreamablePoint(
+                loc = new Point(
                     ox + RandomUtil.getInt(+extent, -extent),
                     oy + RandomUtil.getInt(+extent, -extent));
 
@@ -275,9 +265,9 @@ public class StampedeEffect extends Effect
      */
     protected int stepStampede (
         BangBoard board, int dir, PointList[] paths,
-        StreamablePoint[] locs, int[] dirs, boolean[] reversed)
+        Point[] locs, int[] dirs, boolean[] reversed)
     {
-        StreamablePoint[] nlocs = new StreamablePoint[paths.length];
+        Point[] nlocs = new Point[paths.length];
         int minSquareDist = Integer.MAX_VALUE;
         for (int i = 0; i < paths.length; i++) {
             if (locs[i] == null) {
@@ -304,7 +294,7 @@ public class StampedeEffect extends Effect
             int ndir = dirs[i];
             nlocs[i] = locs[i];
             for (int j = 0; j < ndirs.length; j++) {
-                StreamablePoint nloc = new StreamablePoint(
+                Point nloc = new Point(
                     locs[i].x + DX[ndirs[j]], locs[i].y + DY[ndirs[j]]);
                 if (board.isGroundOccupiable(nloc.x, nloc.y, true) &&
                     !ListUtil.contains(nlocs, nloc)) {
@@ -382,7 +372,7 @@ public class StampedeEffect extends Effect
         // find the maximum path length
         int maxlen = 0;
         for (int ii = 0; ii < paths.length; ii++) {
-            maxlen = Math.max(maxlen, paths[ii].length);
+            maxlen = Math.max(maxlen, paths[ii].size());
         }
 
         // step through the paths, updating units and generating collisions
@@ -426,7 +416,7 @@ public class StampedeEffect extends Effect
             return false;
         }
         for (int ii = 0; ii < paths.length; ii++) {
-            if (paths[ii].length > step && paths[ii][step].equals(loc)) {
+            if (paths[ii].size() > step && paths[ii].get(step).equals(loc)) {
                 return true;
             }
         }
