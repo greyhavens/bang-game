@@ -573,9 +573,7 @@ card_button:down {
 }
 
 round_timer {
-  font: "Old Town" plain 48;
-  text-align: center;
-  vertical-align: center;
+  background: image "ui/gauge/background.png" centerxy;
 }
 
 overlay_chat {
