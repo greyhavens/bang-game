@@ -1,4 +1,3 @@
-
 //
 // $Id$
 
@@ -17,6 +16,7 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseWheelListener;
 
 import com.threerings.jme.camera.CameraHandler;
+import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.GodViewHandler;
 import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.camera.SwingPath;
@@ -41,7 +41,8 @@ public class GameInputHandler extends GodViewHandler
     /**
      * Configures the camera at the start of the game.
      */
-    public void prepareForRound (BangView view, BangObject bangobj, int pidx)
+    public void prepareForRound (
+        final BangView view, BangObject bangobj, int pidx)
     {
         // listen for mouse wheel events
         view.view.addListener(_swingListener);
@@ -67,8 +68,20 @@ public class GameInputHandler extends GodViewHandler
 
         // rotate the camera by 45 degrees and orient it properly
         _camhand.orbitCamera(FastMath.PI/4);
+
+        // add a camera observer that updates the board view's hover state
+        // after the camera completes a path
+        _camhand.addCameraObserver(new CameraPath.Observer() {
+            public boolean pathCompleted (CameraPath path) {
+                view.view.updateHoverState();
+                return true;
+            }
+        });
     }
 
+    /**
+     * Called when the round ends.
+     */
     public void endRound (BangView view)
     {
         // stop listening for mouse wheel events

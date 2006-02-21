@@ -603,28 +603,31 @@ public class BoardView extends BComponent
     public void updateHoverState (MouseEvent e)
     {
         Vector3f ground = getGroundIntersect(e, false, null);
-
         int mx = (int)Math.floor(ground.x / TILE_SIZE);
         int my = (int)Math.floor(ground.y / TILE_SIZE);
-        ground.x = (float)mx *TILE_SIZE + TILE_SIZE/2;
-        ground.y = (float)my * TILE_SIZE + TILE_SIZE/2;
-
-        // update the sprite over which the mouse is hovering
-        Sprite hover = updateHoverSprite();
-        if (hover != _hover) {
-            hoverSpriteChanged(hover);
-        }
-
-        // if we have highlight tiles, determine which of those the mouse
-        // is over
-        if (_hnode.getQuantity() > 0) {
-            updateHighlightHover();
-        }
 
         if (mx != _mouse.x || my != _mouse.y) {
             _mouse.x = mx;
             _mouse.y = my;
             hoverTileChanged(_mouse.x, _mouse.y);
+        }
+
+        // now update the rest based on our saved coordinates
+        updateHoverState();
+    }
+
+    /**
+     * Updates the hover state based on the last stored mouse coordinates.
+     */
+    public void updateHoverState ()
+    {
+        // update the sprite over which the mouse is hovering
+        updateHoverSprite();
+
+        // if we have highlight tiles, determine which of those the mouse
+        // is over
+        if (_hnode.getQuantity() > 0) {
+            updateHighlightHover();
         }
     }
 
@@ -1017,14 +1020,11 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Returns the sprite that the mouse is "hovering" over (the one
-     * nearest to the camera that is hit by the ray projecting from the
-     * camera to the ground plane at the current mouse coordinates). This
-     * method also recomputes the "highlight tile" over which the mouse is
-     * hovering as those can differ from the "hover" tile due to their
-     * elevation.
+     * Updates the sprite that the mouse is "hovering" over (the one nearest to
+     * the camera that is hit by the ray projecting from the camera to the
+     * ground plane at the current mouse coordinates).
      */
-    protected Sprite updateHoverSprite ()
+    protected void updateHoverSprite ()
     {
         Vector3f camloc = _ctx.getCameraHandler().getCamera().getLocation();
         _pick.clear();
@@ -1046,7 +1046,9 @@ public class BoardView extends BComponent
                 dist = sdist;
             }
         }
-        return hit;
+        if (hit != _hover) {
+            hoverSpriteChanged(hit);
+        }
     }
 
     /** Helper function for {@link #updateHoverSprite}. */
