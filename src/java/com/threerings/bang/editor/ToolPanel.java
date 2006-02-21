@@ -128,7 +128,7 @@ public class ToolPanel extends JPanel
 
     protected EditorTool getTool (MouseEvent e)
     {
-        if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0) {
+        if ((e.getModifiers() & MouseEvent.CTRL_DOWN_MASK) != 0) {
             return cameraDolly;
         } else {
             return getActiveTool();
