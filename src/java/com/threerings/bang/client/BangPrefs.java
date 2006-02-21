@@ -94,6 +94,22 @@ public class BangPrefs
     }
 
     /**
+     * Indicates whether or not to show the grid in the game.
+     */
+    public static boolean showGrid ()
+    {
+        return config.getValue("show_grid", true);
+    }
+
+    /**
+     * Updates our stored grid showing preference.
+     */
+    public static void setShowGrid (boolean showGrid)
+    {
+        config.setValue("show_grid", showGrid);
+    }
+
+    /**
      * Returns the closest display mode to our specified default.
      */
     protected static DisplayMode getClosest (
@@ -103,22 +119,22 @@ public class BangPrefs
         try {
             DisplayMode[] modes = Display.getAvailableDisplayModes();
             for (int ii = 0; ii < modes.length; ii++) {
-                DisplayMode mode = modes[ii];
+                DisplayMode m = modes[ii];
                 // apparently LWJGL can't cope with >24 bpp
-                if (mode.getBitsPerPixel() > 24) {
+                if (m.getBitsPerPixel() > 24) {
                     continue;
                 }
                 if (c == null) {
-                    c = mode;
-                } else if (closer(c.getWidth(), mode.getWidth(), width)) {
-                    c = mode;
-                } else if (closer(c.getHeight(), mode.getHeight(), height)) {
-                    c = mode;
-                } else if (closer(c.getBitsPerPixel(), mode.getBitsPerPixel(),
+                    c = m;
+                } else if (closer(c.getWidth(), m.getWidth(), width)) {
+                    c = m;
+                } else if (closer(c.getHeight(), m.getHeight(), height)) {
+                    c = m;
+                } else if (closer(c.getBitsPerPixel(), m.getBitsPerPixel(),
                                   depth)) {
-                    c = mode;
-                } else if (closer(c.getFrequency(), mode.getFrequency(), freq)) {
-                    c = mode;
+                    c = m;
+                } else if (closer(c.getFrequency(), m.getFrequency(), freq)) {
+                    c = m;
                 }
             }
             return c;

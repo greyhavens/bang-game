@@ -124,6 +124,7 @@ public class BangController extends GameController
         mapCommand(KeyInput.KEY_C, "AdjustZoom");
         mapCommand(KeyInput.KEY_Q, "SwingCameraLeft");
         mapCommand(KeyInput.KEY_E, "SwingCameraRight");
+        mapCommand(KeyInput.KEY_G, "ToggleGrid");
     }
 
     @Override // documentation inherited
@@ -204,6 +205,12 @@ public class BangController extends GameController
     public void handleSwingCameraRight (Object source)
     {
         ((GameInputHandler)_ctx.getInputHandler()).swingCamera(FastMath.PI/2);
+    }
+
+    /** Toggles the grid in the game. */
+    public void handleToggleGrid (Object source)
+    {
+        _view.view.toggleGrid(true);
     }
 
     /**

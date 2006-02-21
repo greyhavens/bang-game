@@ -1,0 +1,90 @@
+//
+// $Id$
+
+package com.threerings.bang.game.client;
+
+import java.awt.Rectangle;
+import java.nio.FloatBuffer;
+
+import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Line;
+import com.jme.scene.state.LightState;
+import com.jme.util.geom.BufferUtils;
+
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.util.RenderUtil;
+
+/**
+ * Displays a grid along the tile boundaries.
+ */
+public class GridNode extends Line
+{
+    public GridNode (BangBoard board, TerrainNode tnode)
+    {
+        super("grid");
+        _tnode = tnode;
+        _board = board;
+
+        setDefaultColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.4f));
+        setLightCombineMode(LightState.OFF);
+        setRenderState(RenderUtil.blendAlpha);
+        setRenderState(RenderUtil.overlayZBuf);
+        updateRenderState();
+
+        Rectangle parea = _board.getPlayableArea();
+        int vertices = (parea.height + 1) *
+            (parea.width * BangBoard.HEIGHTFIELD_SUBDIVISIONS) * 2 +
+            (parea.width + 1) *
+            (parea.height * BangBoard.HEIGHTFIELD_SUBDIVISIONS) * 2;
+        setVertexBuffer(BufferUtils.createFloatBuffer(vertices * 3));
+        generateIndices();
+        updateVertices();
+    }
+
+    /**
+     * Updates the vertices of the grid (callde when the heightfield changes in
+     * the editor).
+     */
+    public void updateVertices ()
+    {
+        Vector3f vertex = new Vector3f();
+        FloatBuffer vbuf = getVertexBuffer();
+        int idx = 0;
+        int ppt = BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+
+        // horizontal grid lines
+        Rectangle parea = _board.getPlayableArea();
+        for (int ty = 0; ty <= parea.height; ty++) {
+            int y = (ty + parea.y) * ppt;
+            for (int ox = 0, width = parea.width * ppt; ox < width; ox++) {
+                int x = parea.x * ppt + ox;
+                _tnode.getHeightfieldVertex(x, y, vertex);
+                vertex.z += 0.1f;
+                BufferUtils.setInBuffer(vertex, vbuf, idx++);
+
+                _tnode.getHeightfieldVertex(x + 1, y, vertex);
+                vertex.z += 0.1f;
+                BufferUtils.setInBuffer(vertex, vbuf, idx++);
+            }
+        }
+
+        // vertical grid lines
+        for (int tx = 0; tx <= parea.width; tx++) {
+            int x = (tx + parea.x) * ppt;
+            for (int oy = 0, height = parea.height * ppt; oy < height; oy++) {
+                int y = parea.y * ppt + oy;
+                _tnode.getHeightfieldVertex(x, y, vertex);
+                vertex.z += 0.1f;
+                BufferUtils.setInBuffer(vertex, vbuf, idx++);
+
+                _tnode.getHeightfieldVertex(x, y + 1, vertex);
+                vertex.z += 0.1f;
+                BufferUtils.setInBuffer(vertex, vbuf, idx++);
+            }
+        }
+    }
+
+    protected BangBoard _board;
+    protected TerrainNode _tnode;
+}

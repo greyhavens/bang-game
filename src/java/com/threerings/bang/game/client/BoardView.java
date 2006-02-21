@@ -72,6 +72,7 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -252,6 +253,16 @@ public class BoardView extends BComponent
         _tnode.createBoardTerrain(_board);
         _wnode.createBoardWater(_board);
 
+        // update the tile grid
+        if (BangPrefs.showGrid()) {
+            if (_grid != null && _grid.getParent() != null) {
+                _node.detachChild(_grid);
+            }
+            _grid = null;
+            updateGrid();
+            _hnode.attachChild(_grid);
+        }
+
         // create sprites for all of the pieces
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             // create sprites for all of the pieces on the board
@@ -263,9 +274,30 @@ public class BoardView extends BComponent
         addResolutionObserver(new ResolutionObserver() {
             public void mediaResolved () {
                 log.info("All sprites resolved, fading in.");
-                _fadein.setPaused(false);
+                if (_fadein != null) {
+                    _fadein.setPaused(false);
+                }
             }
         });
+    }
+
+    /**
+     * Shows or hides the tile grid.
+     */
+    public void toggleGrid (boolean persistent)
+    {
+        if (_grid == null || _grid.getParent() == null) {
+            updateGrid();
+            _node.attachChild(_grid);
+            if (persistent) {
+                BangPrefs.setShowGrid(true);
+            }
+        } else {
+            _node.detachChild(_grid);
+            if (persistent) {
+                BangPrefs.setShowGrid(false);
+            }
+        }
     }
 
     /**
@@ -747,6 +779,17 @@ public class BoardView extends BComponent
     protected TerrainNode createTerrainNode (BasicContext ctx)
     {
         return new TerrainNode(ctx, this);
+    }
+
+    /**
+     * Updates the tile grid over the entire board.
+     */
+    protected void updateGrid ()
+    {
+        if (_grid == null) {
+            _grid = new GridNode(_board, _tnode);
+        }
+        _grid.updateVertices();
     }
 
     /**
@@ -1275,6 +1318,9 @@ public class BoardView extends BComponent
     /** The tile coordinates of the highlight tile that the mouse is
      * hovering over or (-1, -1). */
     protected Point _high = new Point(-1, -1);
+
+    /** The grid indicating where the tile boundaries lie. */
+    protected GridNode _grid;
 
     /** Used to load all in-game sounds. */
     protected SoundGroup _sounds;

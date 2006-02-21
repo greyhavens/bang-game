@@ -96,7 +96,9 @@ public class BangBoard extends SimpleStreamableObject
         _tstate = new byte[width*height];
         _pgrid = new byte[width*height];
 
-        _bbounds = new Rectangle(0, 0, _width, _height);
+        _playarea = new Rectangle(BORDER_SIZE, BORDER_SIZE,
+                                  _width - 2*BORDER_SIZE,
+                                  _height - 2*BORDER_SIZE);
     }
 
     /** A default constructor for unserialization. */
@@ -403,12 +405,12 @@ public class BangBoard extends SimpleStreamableObject
     }
     
     /**
-     * Returns the bounds of our board. <em>Do not modify</em> the
-     * returned rectangle.
+     * Returns the bounds of the playable area on the board. <em>Do not
+     * modify</em> the returned rectangle.
      */
-    public Rectangle getBounds ()
+    public Rectangle getPlayableArea ()
     {
-        return _bbounds;
+        return _playarea;
     }
 
     /**
@@ -494,7 +496,7 @@ public class BangBoard extends SimpleStreamableObject
       SEARCH:
         for (int dist = 1; dist <= maxdist; dist++) {
             spots.clear();
-            spots.addFrame(cx, cy, dist, getBounds());
+            spots.addFrame(cx, cy, dist, _playarea);
             int[] coords = spots.toIntArray();
             if (rnd == null) {
                 ArrayUtil.shuffle(coords);
@@ -556,7 +558,7 @@ public class BangBoard extends SimpleStreamableObject
         for (int yy = 0; yy < _height; yy++) {
             for (int xx = 0; xx < _width; xx++) {
                 byte tvalue;
-                if (isUnderWater(xx, yy, MAX_OCCUPIABLE_WATER_LEVEL)) {
+                if (isUnderDeepWater(xx, yy)) {
                     tvalue = O_IMPASS;
                 } else if (exceedsMaxHeightDelta(xx, yy)) {
                     tvalue = O_ROUGH;
@@ -593,7 +595,7 @@ public class BangBoard extends SimpleStreamableObject
                      yy < ly; yy++) {
                     for (int xx = pbounds.x, lx = xx + pbounds.width;
                          xx < lx; xx++) {
-                        if (_bbounds.contains(xx, yy)) {
+                        if (_playarea.contains(xx, yy)) {
                             _tstate[_width*yy+xx] = O_PROP;
                             _btstate[_width*yy+xx] = O_PROP;
                             _estate[_width*yy+xx] = 2;
@@ -601,7 +603,7 @@ public class BangBoard extends SimpleStreamableObject
                     }
                 }
 
-            } else if (!_bbounds.contains(piece.x, piece.y)) {
+            } else if (!_playarea.contains(piece.x, piece.y)) {
                 return;
                 
             } else if (piece instanceof Track) {
@@ -694,6 +696,15 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
+     * Checks whether any portion of the specified tile is beneath sufficient
+     * water that we can't walk on it.
+     */
+    public boolean isUnderDeepWater (int tx, int ty)
+    {
+        return isUnderWater(tx, ty, MAX_OCCUPIABLE_WATER_LEVEL);
+    }
+
+    /**
      * Checks whether any portion of the specified tile is beneath the
      * specified level of water.
      */
@@ -729,7 +740,7 @@ public class BangBoard extends SimpleStreamableObject
      */
     public boolean isGroundOccupiable (int x, int y, boolean rough)
     {
-        if (!_bbounds.contains(x, y)) {
+        if (!_playarea.contains(x, y)) {
             return false;
         }
         byte btstate = _btstate[y*_width+x];
@@ -742,7 +753,7 @@ public class BangBoard extends SimpleStreamableObject
      */
     public boolean canOccupy (Piece piece, int x, int y)
     {
-        if (!_bbounds.contains(x, y)) {
+        if (!_playarea.contains(x, y)) {
             return false;
         }
         // we accord flyer status to trains as they need to go "over" some
@@ -763,7 +774,7 @@ public class BangBoard extends SimpleStreamableObject
      */
     public boolean isOccupiable (int x, int y)
     {
-        if (!_bbounds.contains(x, y)) {
+        if (!_playarea.contains(x, y)) {
             return false;
         }
         return (_tstate[y*_width+x] == O_FLAT);
@@ -775,7 +786,7 @@ public class BangBoard extends SimpleStreamableObject
      */
     public boolean isUnderProp (int x, int y)
     {
-        if (!_bbounds.contains(x, y)) {
+        if (!_playarea.contains(x, y)) {
             return false;
         }
         return (_tstate[y*_width+x] == O_PROP);
@@ -843,22 +854,22 @@ public class BangBoard extends SimpleStreamableObject
     {
         for (int dd = minFireDistance; dd <= maxFireDistance; dd++) {
             for (int xx = px, yy = py - dd; yy < py; xx++, yy++) {
-                if (_bbounds.contains(xx, yy)) {
+                if (_playarea.contains(xx, yy)) {
                     attacks.add(xx, yy);
                 }
             }
             for (int xx = px + dd, yy = py; xx > px; xx--, yy++) {
-                if (_bbounds.contains(xx, yy)) {
+                if (_playarea.contains(xx, yy)) {
                     attacks.add(xx, yy);
                 }
             }
             for (int xx = px, yy = py + dd; yy > py; xx--, yy--) {
-                if (_bbounds.contains(xx, yy)) {
+                if (_playarea.contains(xx, yy)) {
                     attacks.add(xx, yy);
                 }
             }
             for (int xx = px - dd, yy = py; xx < px; xx++, yy--) {
-                if (_bbounds.contains(xx, yy)) {
+                if (_playarea.contains(xx, yy)) {
                     attacks.add(xx, yy);
                 }
             }
@@ -888,7 +899,10 @@ public class BangBoard extends SimpleStreamableObject
         _estate = new byte[size];
         _tstate = new byte[size];
         _pgrid = new byte[size];
-        _bbounds = new Rectangle(0, 0, _width, _height);
+
+        _playarea = new Rectangle(BORDER_SIZE, BORDER_SIZE,
+                                  _width - 2*BORDER_SIZE,
+                                  _height - 2*BORDER_SIZE);
 
         updateMinEdgeHeight();
         updatePredominantTerrain();
@@ -955,7 +969,7 @@ public class BangBoard extends SimpleStreamableObject
         Piece piece, PointSet moves, int xx, int yy, byte remain)
     {
         // make sure this coordinate is occupiable
-        if (!_bbounds.contains(xx, yy) || !canOccupy(piece, xx, yy)) {
+        if (!_playarea.contains(xx, yy) || !canOccupy(piece, xx, yy)) {
             return;
         }
 
@@ -985,7 +999,7 @@ public class BangBoard extends SimpleStreamableObject
         PointSet attacks, int xx, int yy, byte remain, boolean checkThisSpot)
     {
         // make sure this coordinate is on the board
-        if (!_bbounds.contains(xx, yy)) {
+        if (!_playarea.contains(xx, yy)) {
             return;
         }
 
@@ -1076,8 +1090,8 @@ public class BangBoard extends SimpleStreamableObject
     /** A temporary array for computing move and fire sets. */
     protected transient byte[] _pgrid;
 
-    /** A rectangle containing our bounds, used when path finding. */
-    protected transient Rectangle _bbounds;
+    /** A rectangle containing our playable area. */
+    protected transient Rectangle _playarea;
 
     /** Indicates that this tile is flat and traversable. */
     protected static final byte O_FLAT = -1;

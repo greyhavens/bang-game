@@ -68,18 +68,16 @@ public class EditorBoardView extends BoardView
     public void refreshBoard ()
     {
         super.refreshBoard();
-        
+
         // recenter the camera
         _panel.tools.cameraDolly.recenter();
-        
-        // make sure highlights and grid are reset to new size
+
+        // make sure highlights are reset to new size
         _hnode.detachAllChildren();
         _highlights = null;
-        _grid = null;
         updateHighlights();
-        updateGrid();
     }
-    
+
     /**
      * Activates or deactivates wireframe rendering.
      */
@@ -91,22 +89,13 @@ public class EditorBoardView extends BoardView
             wstate = _ctx.getRenderer().createWireframeState();
             wstate.setFace(WireframeState.WS_FRONT_AND_BACK);
             _node.setRenderState(wstate);
-            
+
         } else {
             wstate.setEnabled(!wstate.isEnabled());
         }
         _node.updateRenderState();
     }
-    
-    /**
-     * Shows or hides the tile grid.
-     */
-    public void toggleGrid ()
-    {
-        _showGrid = !_showGrid;
-        updateGrid();
-    }
-    
+
     /**
      * Shows or hides the unoccupiable tile highlights.
      */
@@ -115,7 +104,7 @@ public class EditorBoardView extends BoardView
         _showHighlights = !_showHighlights;
         updateHighlights();
     }
-    
+
     /**
      * Sets the heightfield to the contents of the specified image.
      */
@@ -129,7 +118,7 @@ public class EditorBoardView extends BoardView
             BufferedImage.TYPE_BYTE_GRAY);
         grayimg.createGraphics().drawImage(image, 0, hfheight, hfwidth,
             0, 0, 0, image.getWidth(), image.getHeight(), null);
-        
+
         // transfer the pixels to the heightfield array
         int[] vals = grayimg.getData().getPixels(0, 0, hfwidth, hfheight,
             (int[])null);
@@ -137,10 +126,10 @@ public class EditorBoardView extends BoardView
         for (int i = 0; i < hf.length; i++) {
             hf[i] = (byte)(vals[i] - 128);
         }
-        
+
         heightfieldChanged();
     }
-    
+
     /**
      * Creates and returns an image representation of the heightfield.
      */
@@ -150,7 +139,7 @@ public class EditorBoardView extends BoardView
             hfheight = _board.getHeightfieldHeight();
         BufferedImage grayimg = new BufferedImage(hfwidth, hfheight,
             BufferedImage.TYPE_BYTE_GRAY);
-        
+
         // transfer the heightfield values to the bitmap one line at a time
         // upside-down
         int[] vals = new int[hfwidth];
@@ -163,7 +152,7 @@ public class EditorBoardView extends BoardView
 
         return grayimg;
     }
-    
+
     /**
      * Paints a the circle specified in node space coordinates with the given
      * terrain.
@@ -171,18 +160,18 @@ public class EditorBoardView extends BoardView
     public void paintTerrain (float x, float y, float radius, Terrain terrain)
     {
         byte code = (byte)terrain.code;
-        
+
         // find the boundaries of the circle in sub-tile coordinates
         float stscale = TILE_SIZE / BangBoard.HEIGHTFIELD_SUBDIVISIONS,
             rr = radius*radius;
         int x1 = (int)((x-radius)/stscale), y1 = (int)((y-radius)/stscale),
             x2 = (int)((x+radius)/stscale), y2 = (int)((y+radius)/stscale);
-        
+
         x1 = clamp(x1, 0, _board.getHeightfieldWidth() - 1);
         x2 = clamp(x2, 0, _board.getHeightfieldWidth() - 1);
         y1 = clamp(y1, 0, _board.getHeightfieldHeight() - 1);
         y2 = clamp(y2, 0, _board.getHeightfieldHeight() - 1);
-        
+
         // scan over the sub-tile coordinates, setting any that fall in the
         // circle
         Vector2f vec = new Vector2f();
@@ -194,11 +183,11 @@ public class EditorBoardView extends BoardView
                 }
             }
         }
-        
+
         // update the terrain splats
         _tnode.refreshTerrain(x1, y1, x2, y2);
     }
-    
+
     /**
      * Paints a circle of values into the heightfield, either raising/lowering
      * the values or setting them directly.
@@ -214,12 +203,12 @@ public class EditorBoardView extends BoardView
             rr = radius*radius;
         int x1 = (int)((x-radius)/stscale), y1 = (int)((y-radius)/stscale),
             x2 = (int)((x+radius)/stscale), y2 = (int)((y+radius)/stscale);
-        
+
         x1 = clamp(x1, 0, _board.getHeightfieldWidth() - 1);
         x2 = clamp(x2, 0, _board.getHeightfieldWidth() - 1);
         y1 = clamp(y1, 0, _board.getHeightfieldHeight() - 1);
         y2 = clamp(y2, 0, _board.getHeightfieldHeight() - 1);
-        
+
         // scan over the sub-tile coordinates, setting any that fall in the
         // circle
         Vector2f vec = new Vector2f();
@@ -232,17 +221,17 @@ public class EditorBoardView extends BoardView
                         _board.addHeightfieldValue(tx, ty,
                             Math.round(w*value));
                     }
-                    
+
                 } else if (vec.lengthSquared() <= rr) {
                     _board.setHeightfieldValue(tx, ty, (byte)value);
                 }
             }
         }
-        
+
         // update the heightfield bits
         heightfieldChanged(x1 - 1, y1 - 1, x2 + 1, y2 + 1);
     }
-    
+
     /**
      * Adds some random noise to the heightfield (just enough to create some
      * interesting texture.
@@ -251,23 +240,23 @@ public class EditorBoardView extends BoardView
     {
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight();
-        
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 _board.addHeightfieldValue(x, y, RandomUtil.getInt(+2, -2));
             }
         }
-        
+
         heightfieldChanged();
     }
-    
+
     /**
      * Smooths the heightfield using a simple blur.
      */
     public void smoothHeightfield ()
     {
         byte[] smoothed = new byte[_board.getHeightfield().length];
-        
+
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight(), idx = 0;
         for (int y = 0; y < height; y++) {
@@ -285,12 +274,12 @@ public class EditorBoardView extends BoardView
                     _board.getHeightfieldValue(x+1, y+1)) / 9);
             }
         }
-        
+
         System.arraycopy(smoothed, 0, _board.getHeightfield(), 0,
             smoothed.length);
         heightfieldChanged();
     }
-    
+
     /**
      * Generates a heightfield using JME's midpoint displacement class.
      */
@@ -300,7 +289,7 @@ public class EditorBoardView extends BoardView
             _board.getHeightfieldHeight()));
         setHeightfield(new MidPointHeightMap(size, roughness));
     }
-    
+
     /**
      * Generates a heightfield using JME's fault fractal class.
      */
@@ -312,7 +301,7 @@ public class EditorBoardView extends BoardView
         setHeightfield(new FaultFractalHeightMap(size, iterations, minDelta,
             maxDelta, filter));
     }
-    
+
     /**
      * Generates a heightfield using JME's particle deposition class.
      */
@@ -324,7 +313,7 @@ public class EditorBoardView extends BoardView
         setHeightfield(new ParticleDepositionHeightMap(size, jumps, peakWalk,
             minParticles, maxParticles, caldera));
     }
-    
+
     /**
      * Sets the parameters of the board's light.
      */
@@ -335,7 +324,7 @@ public class EditorBoardView extends BoardView
             ambientColor);
         refreshLight(idx);
     }
-    
+
     /**
      * Sets the shadow intensity.
      */
@@ -344,7 +333,7 @@ public class EditorBoardView extends BoardView
         _board.setShadowIntensity(intensity);
         _tnode.refreshShadows();
     }
-    
+
     /**
      * Sets the parameters of the board's sky.
      */
@@ -358,7 +347,7 @@ public class EditorBoardView extends BoardView
         }
         _snode.refreshGradient();
     }
-    
+
     /**
      * Sets the board's water parameters.
      */
@@ -376,7 +365,7 @@ public class EditorBoardView extends BoardView
         _wnode.refreshSurface();
         updateHighlights();
     }
-    
+
     /**
      * Sets the board's wind parameters.
      */
@@ -385,7 +374,7 @@ public class EditorBoardView extends BoardView
         _board.setWindParams(direction, speed);
         _wnode.refreshWaveAmplitudes();
     }
-    
+
     /**
      * Creates a fresh new board.
      */
@@ -398,7 +387,7 @@ public class EditorBoardView extends BoardView
         _panel.info.clear();
         _panel.info.updatePlayers(0);
     }
-    
+
     /**
      * Changes the board size, preserving as much of its contents as possible.
      */
@@ -408,7 +397,7 @@ public class EditorBoardView extends BoardView
         if (width == _board.getWidth() && height == _board.getHeight()) {
             return;
         }
-        
+
         // first transfer the board
         BangBoard nboard = new BangBoard(width, height);
         int hfwidth = nboard.getHeightfieldWidth(),
@@ -419,7 +408,7 @@ public class EditorBoardView extends BoardView
             for (int x = 0; x < hfwidth; x++) {
                 nboard.setHeightfieldValue(x, y,
                     _board.getHeightfieldValue(x+xoff, y+yoff));
-                
+
                 nboard.setTerrainValue(x, y,
                     _board.getTerrainValue(x+xoff, y+yoff));
             }
@@ -427,7 +416,7 @@ public class EditorBoardView extends BoardView
         for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
             nboard.setLightParams(i, _board.getLightAzimuth(i),
                 _board.getLightElevation(i), _board.getLightDiffuseColor(i),
-                _board.getLightAmbientColor(i));    
+                _board.getLightAmbientColor(i));
         }
         nboard.setShadowIntensity(_board.getShadowIntensity());
         nboard.setSkyParams(_board.getSkyHorizonColor(),
@@ -436,7 +425,7 @@ public class EditorBoardView extends BoardView
             _board.getWaterAmplitude());
         nboard.setWindParams(_board.getWindDirection(), _board.getWindSpeed());
         _bangobj.setBoard(nboard);
-        
+
         // then move the pieces
         xoff = (width - _board.getWidth())/2;
         yoff = (height - _board.getHeight())/2;
@@ -444,7 +433,7 @@ public class EditorBoardView extends BoardView
             Piece piece = (Piece)it.next();
             piece.position(piece.x + xoff, piece.y + yoff);
         }
-        
+
         // finally, refresh
         refreshBoard();
     }
@@ -464,7 +453,7 @@ public class EditorBoardView extends BoardView
      * Sets the heightfield to the contents of the given JME height map (whose
      * size must be equal to or greater than that of the heightfield).
      *
-     * @param above whether or not to 
+     * @param above whether or not to
      */
     protected void setHeightfield (AbstractHeightMap map)
     {
@@ -476,10 +465,10 @@ public class EditorBoardView extends BoardView
                     (byte)(map.getTrueHeightAtPoint(x, y) - 128));
             }
         }
-        
+
         heightfieldChanged();
     }
-    
+
     /**
      * Called when the entire heightfield has changed.
      */
@@ -491,7 +480,7 @@ public class EditorBoardView extends BoardView
         updateGrid();
         updateHighlights();
     }
-    
+
     /**
      * Called when part of the heightfield (as specified in sub-tile
      * coordinates) has changed.
@@ -499,7 +488,7 @@ public class EditorBoardView extends BoardView
     protected void heightfieldChanged (int x1, int y1, int x2, int y2)
     {
         _tnode.refreshHeightfield(x1, y1, x2, y2);
-        
+
         int txmax = _board.getWidth() - 1, tymax = _board.getHeight() - 1,
             tx1 = clamp(x1 / BangBoard.HEIGHTFIELD_SUBDIVISIONS, 0, txmax),
             ty1 = clamp(y1 / BangBoard.HEIGHTFIELD_SUBDIVISIONS, 0, tymax),
@@ -510,7 +499,7 @@ public class EditorBoardView extends BoardView
         updateGrid();
         updateHighlights(tx1, ty1, tx2, ty2);
     }
-    
+
     /**
      * Clamps v between a and b (inclusive).
      */
@@ -518,7 +507,7 @@ public class EditorBoardView extends BoardView
     {
         return Math.min(Math.max(v, a), b);
     }
-    
+
     /**
      * Updates all the pieces in response to a change in terrain.
      */
@@ -529,26 +518,7 @@ public class EditorBoardView extends BoardView
             queuePieceUpdate(piece, piece);
         }
     }
-    
-    /**
-     * Updates the tile grid over the entire board.
-     */
-    protected void updateGrid ()
-    {
-        if (_showGrid) {
-            if (_grid == null) {
-                _grid = new TileGrid();
-            }
-            _grid.updateVertices();
-            if (_grid.getParent() == null) {
-                _hnode.attachChild(_grid);
-            }
 
-        } else if (_grid != null && _grid.getParent() != null) {
-            _hnode.detachChild(_grid);
-        }
-    }
-    
     /**
      * Updates the highlights over the entire board.
      */
@@ -556,7 +526,7 @@ public class EditorBoardView extends BoardView
     {
         updateHighlights(0, 0, _board.getWidth() - 1, _board.getHeight() - 1);
     }
-    
+
     /**
      * Updates the highlights over the specified tile coordinate rectangle.
      */
@@ -568,9 +538,11 @@ public class EditorBoardView extends BoardView
         }
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
-                if (_showHighlights && (_board.isUnderWater(x, y,
-                        BangBoard.MAX_OCCUPIABLE_WATER_LEVEL) ||
-                            _board.exceedsMaxHeightDelta(x, y))) {
+                boolean impassable =
+                    _board.isUnderDeepWater(x, y) ||
+                    _board.exceedsMaxHeightDelta(x, y) ||
+                    !_board.getPlayableArea().contains(x, y);
+                if (_showHighlights && impassable) {
                     if (_highlights[x][y] == null) {
                         _highlights[x][y] = _tnode.createHighlight(x, y,
                             false);
@@ -580,7 +552,7 @@ public class EditorBoardView extends BoardView
                     if (_highlights[x][y].getParent() == null) {
                         _hnode.attachChild(_highlights[x][y]);
                     }
-                    
+
                 } else if (_highlights[x][y] != null &&
                     _highlights[x][y].getParent() != null) {
                     _hnode.detachChild(_highlights[x][y]);
@@ -588,13 +560,13 @@ public class EditorBoardView extends BoardView
             }
         }
     }
-    
+
     @Override // documentation inherited
     protected void createMarquee (String text)
     {
         // no marquee required for editor
     }
-    
+
     @Override // documentation inherited
     protected void hoverTileChanged (int tx, int ty)
     {
@@ -609,85 +581,16 @@ public class EditorBoardView extends BoardView
         _panel.tools.getActiveTool().hoverSpriteChanged(hover);
     }
 
-    /** A grid indicating where the tile boundaries lie. */
-    protected class TileGrid extends Line
-    {
-        public TileGrid ()
-        {
-            super("grid");
-            
-            setDefaultColor(ColorRGBA.gray);
-            setLightCombineMode(LightState.OFF);
-            setRenderState(RenderUtil.overlayZBuf);
-            updateRenderState();
-            
-            int vertices = (_board.getHeight() + 1) *
-                (_board.getHeightfieldWidth() - 1) * 2 +
-                (_board.getWidth() + 1) *
-                (_board.getHeightfieldHeight() - 1) * 2;
-            setVertexBuffer(BufferUtils.createFloatBuffer(vertices * 3));
-            generateIndices();
-            
-            updateVertices();
-        }
-        
-        /**
-         * Updates the vertices of the grid when the heightfield changes.
-         */
-        public void updateVertices ()
-        {
-            Vector3f vertex = new Vector3f();
-            FloatBuffer vbuf = getVertexBuffer();
-            int idx = 0;
-            
-            // horizontal grid lines
-            for (int ty = 0, height = _board.getHeight(); ty <= height; ty++) {
-                int y = ty * BangBoard.HEIGHTFIELD_SUBDIVISIONS;
-                for (int x = 0, width = _board.getHeightfieldWidth() - 1;
-                        x < width; x++) {
-                    _tnode.getHeightfieldVertex(x, y, vertex);
-                    vertex.z += 0.1f;
-                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
-                    
-                    _tnode.getHeightfieldVertex(x + 1, y, vertex);
-                    vertex.z += 0.1f;
-                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
-                }
-            }
-            
-            // vertical grid lines
-            for (int tx = 0, width = _board.getWidth(); tx <= width; tx++) {
-                int x = tx * BangBoard.HEIGHTFIELD_SUBDIVISIONS;
-                for (int y = 0, height = _board.getHeightfieldHeight() - 1;
-                        y < height; y++) {
-                    _tnode.getHeightfieldVertex(x, y, vertex);
-                    vertex.z += 0.1f;
-                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
-                    
-                    _tnode.getHeightfieldVertex(x, y + 1, vertex);
-                    vertex.z += 0.1f;
-                    BufferUtils.setInBuffer(vertex, vbuf, idx++);
-                }
-            }
-        }
-    }
-    
     /** The panel that contains additional interface elements with which
      * we interact. */
     protected EditorPanel _panel;
 
     /** Highlights indicating which tiles are occupiable. */
     protected TerrainNode.Highlight[][] _highlights;
-    
-    /** The grid indicating where the tile boundaries lie. */
-    protected TileGrid _grid;
-    
-    /** Whether or not to show the tile grid. */
-    protected boolean _showGrid;
-    
+
     /** Whether or not to show the highlights. */
     protected boolean _showHighlights;
-    
+
     /** The color to use for highlights. */
     protected static final ColorRGBA HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0f, 0f, 0.25f);
