@@ -313,17 +313,15 @@ public class PardnerView extends IconPalette
     
         protected void updateAvatar ()
         {
-            Image image;
             if (entry.avatar == null) {
-                image = _ctx.getImageManager().getImage(
-                    "ui/pardners/silhouette.png");
+                setIcon(new ImageIcon(
+                    _ctx.loadImage("ui/pardners/silhouette.png")));
                 
             } else {
-                image = AvatarView.getImage(_ctx,
+                setIcon(new ImageIcon(AvatarView.getImage(_ctx,
                     entry.avatar).getScaledInstance(AVATAR_SIZE.width,
-                        AVATAR_SIZE.height, Image.SCALE_SMOOTH);
+                        AVATAR_SIZE.height, Image.SCALE_SMOOTH)));
             }
-            setIcon(new ImageIcon(image));
         }
         
         protected void updateStatus ()
@@ -331,7 +329,7 @@ public class PardnerView extends IconPalette
             // update the location icon
             if (entry.status == PardnerEntry.IN_GAME ||
                 entry.status == PardnerEntry.IN_SALOON) {
-                _location = new ImageIcon(_ctx.getImageManager().getImage(
+                _location = new ImageIcon(_ctx.loadImage(
                     "ui/pardners/in_" + (entry.status == PardnerEntry.IN_GAME ?
                         "game" : "saloon") + ".png"));
             
@@ -340,7 +338,7 @@ public class PardnerView extends IconPalette
             }
             
             // and the scroll icon
-            _scroll = new ImageIcon(_ctx.getImageManager().getImage(
+            _scroll = new ImageIcon(_ctx.loadImage(
                 "ui/frames/" + (entry.status == PardnerEntry.OFFLINE ?
                     "taller" : "smaller") + "_scroll.png"));
             
