@@ -237,6 +237,7 @@ public class BangBoardView extends BoardView
 
         clearSelection();
         clearPlacingCard();
+        clearHighlights();
 
         // remove our event listener
         _bangobj.removeListener(_ticker);
