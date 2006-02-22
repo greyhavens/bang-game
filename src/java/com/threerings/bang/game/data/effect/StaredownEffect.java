@@ -51,7 +51,7 @@ public class StaredownEffect extends Effect
             Piece p = (Piece)iter.next();
             if (p.x == x && p.y == y && p.isAlive()) {
                 pieceId = p.pieceId;
-                newLastActed = (short)(p.lastActed+1);
+                newLastActed = bangobj.tick;
                 break;
             }
         }

@@ -663,22 +663,23 @@ context_help_text {
 player_status {
   font: "Dom Casual" plain 13;
   text-align: center;
+  padding: 1 0 0 0;
 }
 player_status0 {
   parent: "player_status";
-  color: #0000FF;
+  color: #0000CC;
 }
 player_status1 {
   parent: "player_status";
-  color: #FF0000;
+  color: #CC0000;
 }
 player_status2 {
   parent: "player_status";
-  color: #00FF00;
+  color: #00AA00;
 }
 player_status3 {
   parent: "player_status";
-  color: #FFFF00;
+  color: #888800;
 }
 
 //
