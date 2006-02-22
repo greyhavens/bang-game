@@ -230,6 +230,12 @@ public class TownView extends BWindow
         }
 
         @Override // documentation inherited
+        protected boolean shouldShowGrid ()
+        {
+            return false;
+        }
+
+        @Override // documentation inherited
         protected float getFadeInTime ()
         {
             return _presented.contains(

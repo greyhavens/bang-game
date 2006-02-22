@@ -252,8 +252,8 @@ public class BoardView extends BComponent
         _tnode.createBoardTerrain(_board);
         _wnode.createBoardWater(_board);
 
-        // update the tile grid
-        if (BangPrefs.config.getValue("show_grid", true)) {
+        // display the tile grid if appropriate
+        if (shouldShowGrid()) {
             if (_grid != null && _grid.getParent() != null) {
                 _grid.removeFromParent();
             }
@@ -773,6 +773,14 @@ public class BoardView extends BComponent
     protected TerrainNode createTerrainNode (BasicContext ctx)
     {
         return new TerrainNode(ctx, this);
+    }
+
+    /**
+     * Returns whether or not we should show the grid by default.
+     */
+    protected boolean shouldShowGrid ()
+    {
+        return BangPrefs.config.getValue("show_grid", true);
     }
 
     /**
