@@ -647,7 +647,7 @@ overlay_chat {
 context_help_title {
   font: "Dom Casual" bold 20;
   color: #000000;
-  text-align: left;
+  text-align: center;
 }
 
 context_help_text {

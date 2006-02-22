@@ -26,7 +26,7 @@ public class ContextHelpView extends BDecoratedWindow
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
-        setLayoutManager(new BorderLayout());
+        setLayoutManager(new BorderLayout(5, 5));
         add(_title = new BLabel("", "context_help_title"), BorderLayout.NORTH);
         add(_text = new BLabel("", "context_help_text"), BorderLayout.CENTER);
         setHelpItem(null);
