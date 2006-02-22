@@ -235,7 +235,8 @@ public class PardnerChatView extends BDecoratedWindow
         Graphics2D gfx = img.createGraphics();
         Area bubble = new Area(new RoundRectangle2D.Float(8, 0, 81, 44, 30,
             30));
-        bubble.add(new Area(new Arc2D.Float(-12, -8, 24, 24, -40f, 30f, Arc2D.PIE)));
+        bubble.add(new Area(new Arc2D.Float(-12, -8, 24, 24, -40f, 30f,
+            Arc2D.PIE)));
         gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_ON);
         gfx.setColor(new Color(0xF1EFE3));

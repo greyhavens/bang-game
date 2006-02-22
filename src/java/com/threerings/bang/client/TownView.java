@@ -240,7 +240,7 @@ public class TownView extends BWindow
         protected void fadeInComplete ()
         {
             super.fadeInComplete();
-
+            
             if (_vpsprite != null &&
                 !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
                 // clear out any hover sprite that was established in the
@@ -255,12 +255,14 @@ public class TownView extends BWindow
                     new CameraPath.Observer() {
                         public boolean pathCompleted (CameraPath path) {
                             finishedIntroPan();
+                            hoverSpriteChanged(_hover);
                             return false; // removes our observer
                         }
                     });
 
             } else {
                 finishedIntroPan();
+                hoverSpriteChanged(_hover);
             }
         }
 
