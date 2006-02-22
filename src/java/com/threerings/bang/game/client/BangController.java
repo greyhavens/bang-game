@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Multex;
 import com.samskivert.util.StringUtil;
@@ -74,6 +75,7 @@ public class BangController extends GameController
                 handleAction(new ActionEvent(BangController.this, 0, command));
             }
         });
+        _mapped.add(keyCode);
     }
 
     /**
@@ -170,6 +172,11 @@ public class BangController extends GameController
         if (_bangobj != null) {
             _bangobj.removeListener(_ranklist);
             _bangobj = null;
+        }
+
+        // clear our key mappings
+        for (int ii = 0; ii < _mapped.size(); ii++) {
+            _ctx.getKeyManager().clearCommand(_mapped.get(ii));
         }
     }
 
@@ -538,6 +545,9 @@ public class BangController extends GameController
 
     /** Displays basic in-game options. */
     protected InGameOptionsView _options;
+
+    /** Keeps track of mapped keys. */
+    protected ArrayIntSet _mapped = new ArrayIntSet();
 
     /** Used to by {@link #handleSelectNextUnit}. */
     protected static Comparator<Unit> UNIT_COMPARATOR = new Comparator<Unit>() {
