@@ -498,9 +498,6 @@ public class TerrainNode extends Node
         refreshShadows();
         refreshTerrain();
         
-        setWorldBound(new BoundingBox());
-        updateWorldBound();
-        
         updateRenderState();
         updateGeometricState(0, true);
         

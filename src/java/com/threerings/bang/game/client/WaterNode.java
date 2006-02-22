@@ -83,7 +83,6 @@ public class WaterNode extends Node
                 (double)HEIGHT_MAP_TILES);
         _blocks = new SharedMesh[bwidth][bheight];
         _bcount = 0;
-        setWorldBound(new BoundingBox());
         refreshSurface();
     }
     
