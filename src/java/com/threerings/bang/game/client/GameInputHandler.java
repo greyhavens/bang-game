@@ -50,11 +50,11 @@ public class GameInputHandler extends GodViewHandler
         // set up the starting zoom index
         _camidx = 0;
 
-//         // set the pan limits based on the board size
-//         _camhand.setPanLimits(
-//             0, 0,
-//             TILE_SIZE * bangobj.board.getWidth(),
-//             TILE_SIZE * bangobj.board.getHeight(), true);
+        // set the pan limits based on the board size
+        _camhand.setPanLimits(
+            0, 0,
+            TILE_SIZE * bangobj.board.getWidth(),
+            TILE_SIZE * bangobj.board.getHeight(), true);
 
         // reset the camera's orientation
         _camhand.resetAxes();
