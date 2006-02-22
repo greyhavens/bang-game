@@ -32,6 +32,12 @@ public class ClaimSprite extends PropSprite
     }
 
     @Override // documentation inherited
+    public String getHelpIdent (int pidx)
+    {
+        return (pidx == _piece.owner) ? "own_claim" : "other_claim";
+    }
+
+    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);

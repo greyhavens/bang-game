@@ -72,6 +72,18 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Returns the help text identifier for this piece, or null if it has no
+     * associated help.
+     *
+     * @param pidx our player's index for sprites that return different help
+     * depending on whether they are ours or an opponent's.
+     */
+    public String getHelpIdent (int pidx)
+    {
+        return null;
+    }
+
+    /**
      * Called when we are first created and immediately before we are
      * added to the display.
      */

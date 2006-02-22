@@ -333,6 +333,18 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
+    protected void hoverSpriteChanged (Sprite hover)
+    {
+        super.hoverSpriteChanged(hover);
+
+        // display contextual help on units and other special sprites
+        if (hover instanceof PieceSprite) {
+            _ctrl.setHoveredItem(((PieceSprite)hover).getHelpIdent(_pidx));
+        } else {
+            _ctrl.setHoveredItem(null);
+        }
+    }
+
     protected boolean pieceUpdated (
         BoardAction action, Piece opiece, Piece npiece, short tick)
     {

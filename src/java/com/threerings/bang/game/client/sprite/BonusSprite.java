@@ -21,6 +21,12 @@ public class BonusSprite extends PieceSprite
     }
 
     @Override // documentation inherited
+    public String getHelpIdent (int pidx)
+    {
+        return "bonus_" + _type;
+    }
+
+    @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
         super.createGeometry(ctx);

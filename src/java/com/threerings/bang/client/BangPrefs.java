@@ -94,22 +94,6 @@ public class BangPrefs
     }
 
     /**
-     * Indicates whether or not to show the grid in the game.
-     */
-    public static boolean showGrid ()
-    {
-        return config.getValue("show_grid", true);
-    }
-
-    /**
-     * Updates our stored grid showing preference.
-     */
-    public static void setShowGrid (boolean showGrid)
-    {
-        config.setValue("show_grid", showGrid);
-    }
-
-    /**
      * Returns the closest display mode to our specified default.
      */
     protected static DisplayMode getClosest (

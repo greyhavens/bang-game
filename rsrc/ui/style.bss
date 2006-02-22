@@ -644,6 +644,12 @@ overlay_chat {
   font: "Dom Casual" plain 20;
 }
 
+context_help_text {
+  color: #4C2602;
+  text-align: left;
+  vertical-align: top;
+}
+
 //
 // Player Status View
 

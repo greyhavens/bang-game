@@ -15,6 +15,7 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -37,6 +38,9 @@ public class BangView extends BWindow
     /** Our player status views. */
     public PlayerStatusView[] pstatus;
 
+    /** A window that displays contextual help. */
+    public ContextHelpView help;
+
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
@@ -49,6 +53,7 @@ public class BangView extends BWindow
         add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
         chat = new OverlayChatView(ctx);
         _timer = new RoundTimerView(ctx);
+        help = new ContextHelpView(ctx);
     }
 
     /**
@@ -102,7 +107,9 @@ public class BangView extends BWindow
         }
     }
 
-    /** Called by the controller when a round ends. */
+    /**
+     * Called by the controller when a round ends.
+     */
     public void endRound ()
     {
         ((GameInputHandler)_ctx.getInputHandler()).endRound(this);
@@ -110,6 +117,23 @@ public class BangView extends BWindow
 
         // note that we'll need to prepare for the next round
         _prepared = false;
+    }
+
+    /**
+     * Toggles the display of the contextual help window.
+     */
+    public void toggleHelpView (boolean persist)
+    {
+        if (help.isAdded()) {
+            _ctx.getRootNode().removeWindow(help);
+        } else {
+            _ctx.getRootNode().addWindow(help);
+            help.pack();
+            help.setLocation(10, 100);
+        }
+        if (persist) {
+            BangPrefs.config.setValue("context_help", help.isAdded());
+        }
     }
 
     // documentation inherited from interface
@@ -146,6 +170,10 @@ public class BangView extends BWindow
         }
         _ctx.getRootNode().removeWindow(chat);
         _ctx.getRootNode().removeWindow(_timer);
+
+        if (help.isAdded()) {
+            _ctx.getRootNode().removeWindow(help);
+        }
 
         if (_oview != null) {
             _ctx.getRootNode().removeWindow(_oview);
@@ -189,6 +217,11 @@ public class BangView extends BWindow
         // finally if we were waiting to start things up, get going
         if (_pendingPhase != -1) {
             setPhase(_pendingPhase);
+        }
+
+        // start with help showing if requested
+        if (BangPrefs.config.getValue("context_help", true)) {
+            toggleHelpView(false);
         }
     }
 

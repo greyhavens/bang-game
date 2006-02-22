@@ -254,13 +254,12 @@ public class BoardView extends BComponent
         _wnode.createBoardWater(_board);
 
         // update the tile grid
-        if (BangPrefs.showGrid()) {
+        if (BangPrefs.config.getValue("show_grid", true)) {
             if (_grid != null && _grid.getParent() != null) {
-                _node.detachChild(_grid);
+                _grid.removeFromParent();
             }
             _grid = null;
-            updateGrid();
-            _hnode.attachChild(_grid);
+            toggleGrid(false);
         }
 
         // create sprites for all of the pieces
@@ -273,7 +272,6 @@ public class BoardView extends BComponent
         // fade the board in when the sprites are all resolved
         addResolutionObserver(new ResolutionObserver() {
             public void mediaResolved () {
-                log.info("All sprites resolved, fading in.");
                 if (_fadein != null) {
                     _fadein.setPaused(false);
                 }
@@ -289,14 +287,11 @@ public class BoardView extends BComponent
         if (_grid == null || _grid.getParent() == null) {
             updateGrid();
             _node.attachChild(_grid);
-            if (persistent) {
-                BangPrefs.setShowGrid(true);
-            }
         } else {
-            _node.detachChild(_grid);
-            if (persistent) {
-                BangPrefs.setShowGrid(false);
-            }
+            _grid.removeFromParent();
+        }
+        if (persistent) {
+            BangPrefs.config.setValue("show_grid", _grid.getParent() != null);
         }
     }
 

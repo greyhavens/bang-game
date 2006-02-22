@@ -72,6 +72,12 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
+        public String getHelpIdent (int pidx)
+    {
+        return "unit_" + ((Unit)_piece).getType();
+    }
+
+    @Override // documentation inherited
     public void setSelected (boolean selected)
     {
         super.setSelected(selected);

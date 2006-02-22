@@ -27,6 +27,12 @@ public class CowSprite extends MobileSprite
     }
 
     @Override // documentation inherited
+    public String getHelpIdent (int pidx)
+    {
+        return "cow";
+    }
+
+    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
