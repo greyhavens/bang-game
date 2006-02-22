@@ -11,8 +11,8 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * An effect that causes the piece in question to hustle up and move in
- * one fewer ticks than normal for some number of turns.
+ * An effect that causes the piece in question to hustle up and move in one
+ * fewer ticks than normal until it is killed and respawned.
  */
 public class HustleEffect extends Effect
 {
@@ -22,11 +22,6 @@ public class HustleEffect extends Effect
         @Override // documentation inherited
         public int adjustTicksPerMove (int ticksPerMove) {
             return ticksPerMove-1;
-        }
-
-        @Override // documentation inherited
-        protected int duration () {
-            return 4;
         }
     }
 

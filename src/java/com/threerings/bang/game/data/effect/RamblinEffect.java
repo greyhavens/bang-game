@@ -11,8 +11,8 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * An effect that causes the piece in question to ramble along and move
- * one square further for the remainder of the round.
+ * An effect that causes the piece in question to ramble along and move one
+ * square further until it is killed and respawned.
  */
 public class RamblinEffect extends Effect
 {
