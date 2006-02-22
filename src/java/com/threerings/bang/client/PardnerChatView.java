@@ -298,8 +298,7 @@ public class PardnerChatView extends BDecoratedWindow
             _handle = handle;
             this.idx = idx;
             
-            _vport.setInsets(new Insets(15, 10, 20, 15));
-            
+            _vport.setStyleClass("pardner_chat_viewport");
             setPreferredSize(new Dimension(400, 400));
         }
         
