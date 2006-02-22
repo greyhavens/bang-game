@@ -14,11 +14,6 @@ LangString already_installed ${LANG_ENGLISH} \
 LangString reinstall ${LANG_ENGLISH} \
   "Do you want to re-install ${NAME}?"
 
-LangString must_be_admin ${LANG_ENGLISH} \
-  "You must be logged in as the Administrator user or a user with similar \
-  privileges to install ${NAME}.$\rPlease log in as such a user and \
-  run the installer again."
-
 LangString no_create_instdir ${LANG_ENGLISH} \
   "Could not create installation directory. Please try again."
 

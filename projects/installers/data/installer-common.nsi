@@ -112,8 +112,8 @@ Function .onInit
   Call IsUserAdmin
   Pop $R0
   StrCmp $R0 "true" ProceedInstall
-  MessageBox MB_OK|MB_ICONSTOP "$(must_be_admin)"
-  Quit
+  ; Install in their home directory instead
+  StrCpy $INSTDIR "$APPDATA\Three Rings Design\${INSTALL_DIR}"
 
   ProceedInstall:
   ClearErrors
