@@ -40,8 +40,10 @@ import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.Bouncer;
+import com.threerings.bang.game.client.sprite.ClaimSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.Spinner;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangConfig;
@@ -154,7 +156,8 @@ public class BangBoardView extends BoardView
     public boolean isSelectable (Piece piece)
     {
         PieceSprite psprite;
-        return !(pieceUpdatePending(piece.pieceId) ||
+        return !(piece.owner != _pidx ||
+                 pieceUpdatePending(piece.pieceId) ||
                  (psprite = getPieceSprite(piece)) == null ||
                  psprite.isMoving());
     }
@@ -317,25 +320,31 @@ public class BangBoardView extends BoardView
         if (!super.isHoverable(sprite)) {
             return false;
         }
-        if (!(sprite instanceof UnitSprite)) {
-            return false;
+        if (sprite instanceof PieceSprite) {
+            return ((PieceSprite)sprite).isHoverable();
         }
-        UnitSprite usprite = (UnitSprite)sprite;
-        Piece piece = usprite.getPiece();
-        if (!piece.isAlive()) {
-            return false;
-        }
-        boolean oursAndMovable = (piece.owner == _pidx) && isSelectable(piece);
-        if (_attackSet.size() > 0) {
-            return _attackSet.contains(piece.x, piece.y) || oursAndMovable;
-        }
-        return oursAndMovable;
+        return false;
     }
 
     @Override // documentation inherited
     protected void hoverSpriteChanged (Sprite hover)
     {
+        // if we were hovering over a unit, clear its hover state
+        if (_hover instanceof UnitSprite) {
+            ((UnitSprite)_hover).setHovered(false);
+        }
+
         super.hoverSpriteChanged(hover);
+
+        // if we're hovering over a unit we can click, mark it as such
+        if (hover instanceof UnitSprite) {
+            UnitSprite usprite = (UnitSprite)hover;
+            Piece piece = usprite.getPiece();
+            if (piece.isAlive() && (isSelectable(piece) ||
+                                    _attackSet.contains(piece.x, piece.y))) {
+                usprite.setHovered(true);
+            }
+        }
 
         // display contextual help on units and other special sprites
         if (hover instanceof PieceSprite) {
@@ -440,13 +449,12 @@ public class BangBoardView extends BoardView
         }
 
         // check for a piece under the mouse
-        PieceSprite sprite = null;
+        UnitSprite sprite = null;
         Piece piece = null;
-        if (_hover instanceof PieceSprite) {
-            sprite = (PieceSprite)_hover;
+        if (_hover instanceof UnitSprite) {
+            sprite = (UnitSprite)_hover;
             piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
-            // we currently don't do anything with non-player pieces
-            if (piece != null && piece.owner == -1) {
+            if (piece != null && !piece.isAlive()) {
                 sprite = null;
                 piece = null;
             }
@@ -468,8 +476,7 @@ public class BangBoardView extends BoardView
         }
 
         // select the piece under the mouse if it meets our sundry conditions
-        if (piece != null &&  sprite != null && piece.owner == _pidx &&
-            isSelectable(piece)) {
+        if (piece != null &&  sprite != null && isSelectable(piece)) {
             selectUnit((Unit)piece, false);
             return;
         }
@@ -618,20 +625,23 @@ public class BangBoardView extends BoardView
             return;
         }
 
-        // if there is a piece under the cursor, show their possible shots
-        if (_hover instanceof PieceSprite) {
-            PieceSprite sprite = (PieceSprite)_hover;
-            Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
-            if (sprite instanceof UnitSprite && piece.isAlive()) {
-                clearSelection();
-                PointSet moveSet = new PointSet();
-                _attackSet.clear();
-                _bangobj.board.computeMoves(piece, moveSet, _attackSet);
-                for (int ii = 0; ii < moveSet.size(); ii++) {
-                    _attackSet.add(moveSet.get(ii));
-                }
-            }
-        }
+        // clear any unit selection
+        clearSelection();
+
+//         // if there is a piece under the cursor, show their possible shots
+//         if (_hover instanceof PieceSprite) {
+//             PieceSprite sprite = (PieceSprite)_hover;
+//             Piece piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
+//             if (sprite instanceof UnitSprite && piece.isAlive()) {
+//                 clearSelection();
+//                 PointSet moveSet = new PointSet();
+//                 _attackSet.clear();
+//                 _bangobj.board.computeMoves(piece, moveSet, _attackSet);
+//                 for (int ii = 0; ii < moveSet.size(); ii++) {
+//                     _attackSet.add(moveSet.get(ii));
+//                 }
+//             }
+//         }
     }
 
     /**

@@ -38,6 +38,12 @@ public class ClaimSprite extends PropSprite
     }
 
     @Override // documentation inherited
+    public boolean isHoverable ()
+    {
+        return true;
+    }
+
+    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);

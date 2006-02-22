@@ -27,6 +27,12 @@ public class BonusSprite extends PieceSprite
     }
 
     @Override // documentation inherited
+    public boolean isHoverable ()
+    {
+        return true;
+    }
+
+    @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
         super.createGeometry(ctx);

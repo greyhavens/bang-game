@@ -76,7 +76,6 @@ import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -1138,13 +1137,7 @@ public class BoardView extends BComponent
      */
     protected void hoverSpriteChanged (Sprite hover)
     {
-        if (_hover instanceof UnitSprite) {
-            ((UnitSprite)_hover).setHovered(false);
-        }
         _hover = hover;
-        if (_hover instanceof UnitSprite) {
-            ((UnitSprite)_hover).setHovered(true);
-        }
     }
 
     /** Creates geometry to highlight the supplied set of tiles. */

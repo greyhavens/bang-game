@@ -5,7 +5,10 @@ package com.threerings.bang.game.client;
 
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.util.Dimension;
+
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
@@ -19,10 +22,14 @@ public class ContextHelpView extends BDecoratedWindow
 {
     public ContextHelpView (BangContext ctx)
     {
-        super(ctx.getStyleSheet(),
-              ctx.xlate(GameCodes.GAME_MSGS, "m.context_help_title"));
+        super(ctx.getStyleSheet(), null);
         _ctx = ctx;
-        add(_text = new BLabel("", "context_help_text"));
+        _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
+
+        setLayoutManager(new BorderLayout());
+        add(_title = new BLabel("", "context_help_title"), BorderLayout.NORTH);
+        add(_text = new BLabel("", "context_help_text"), BorderLayout.CENTER);
+        setHelpItem(null);
     }
 
     /**
@@ -31,26 +38,22 @@ public class ContextHelpView extends BDecoratedWindow
     public void setHelpItem (String item)
     {
         if (item == null) {
-            _text.setText(_ctx.xlate(GameCodes.GAME_MSGS, "m.help_default"));
+            _title.setText(_msgs.get("m.help_title"));
+            _text.setText(_msgs.get("m.help_default"));
 
         } else if (item.startsWith("unit_")) {
             String type = item.substring(5);
-            String name = _ctx.xlate(BangCodes.UNITS_MSGS, "m." + type);
-            String descrip = _ctx.xlate(
-                BangCodes.UNITS_MSGS, "m." + type + "_descrip");
-            _text.setText(name + "\n" + descrip);
+            _title.setText(_ctx.xlate(BangCodes.UNITS_MSGS, "m." + type));
+            _text.setText(_ctx.xlate(BangCodes.UNITS_MSGS,
+                                     "m." + type + "_descrip"));
 
         } else {
-            _text.setText(_ctx.xlate(GameCodes.GAME_MSGS, "m.help_" + item));
+            _title.setText(_msgs.get("m.help_" + item + "_title"));
+            _text.setText(_msgs.get("m.help_" + item));
         }
     }
 
-    @Override // documentation inherited
-    protected Dimension computePreferredSize (int whint, int hhint)
-    {
-        return new Dimension(250, 250);
-    }
-
     protected BangContext _ctx;
-    protected BLabel _text;
+    protected MessageBundle _msgs;
+    protected BLabel _title, _text;
 }

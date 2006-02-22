@@ -644,7 +644,14 @@ overlay_chat {
   font: "Dom Casual" plain 20;
 }
 
+context_help_title {
+  font: "Dom Casual" bold 20;
+  color: #000000;
+  text-align: left;
+}
+
 context_help_text {
+  font: "Dom Casual" plain 20;
   color: #4C2602;
   text-align: left;
   vertical-align: top;

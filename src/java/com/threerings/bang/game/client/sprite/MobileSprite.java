@@ -169,6 +169,12 @@ public class MobileSprite extends PieceSprite
         super.init(ctx, view, board, sounds, piece, tick);
         updateHighlight();
     }
+
+    @Override // documentation inherited
+    public boolean isHoverable ()
+    {
+        return true;
+    }
     
     @Override // documentation inherited
     public Spatial getHighlight ()

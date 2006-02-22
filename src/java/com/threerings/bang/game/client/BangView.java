@@ -128,8 +128,11 @@ public class BangView extends BWindow
             _ctx.getRootNode().removeWindow(help);
         } else {
             _ctx.getRootNode().addWindow(help);
-            help.pack();
-            help.setLocation(10, 100);
+            help.setHelpItem(null);
+            help.pack(300, -1);
+            help.setLocation(
+                _ctx.getDisplay().getWidth() - help.getWidth() - 5,
+                _ctx.getDisplay().getHeight() - help.getHeight() - 5);
         }
         if (persist) {
             BangPrefs.config.setValue("context_help", help.isAdded());

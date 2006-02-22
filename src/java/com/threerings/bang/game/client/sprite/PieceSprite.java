@@ -61,16 +61,6 @@ public class PieceSprite extends Sprite
         return _piece.pieceId;
     }
 
-    /** Indicates to this piece that it is selected by the user. May
-     * someday trigger a special "selected" rendering mode, but presently
-     * does nothing. */
-    public void setSelected (boolean selected)
-    {
-        if (_selected != selected) {
-            _selected = selected;
-        }
-    }
-
     /**
      * Returns the help text identifier for this piece, or null if it has no
      * associated help.
@@ -104,7 +94,7 @@ public class PieceSprite extends Sprite
                 false));
             updateRenderState();
         }
-        
+
         // create our sprite geometry
         createGeometry(ctx);
         setAnimationSpeed(20);
@@ -131,7 +121,17 @@ public class PieceSprite extends Sprite
     {
         return null;
     }
-    
+
+    /** Indicates to this piece that it is selected by the user. May
+     * someday trigger a special "selected" rendering mode, but presently
+     * does nothing. */
+    public void setSelected (boolean selected)
+    {
+        if (_selected != selected) {
+            _selected = selected;
+        }
+    }
+
     /**
      * Configures this sprite's tile location.
      */
@@ -191,7 +191,7 @@ public class PieceSprite extends Sprite
         mod.fromAngleAxis(angle, cross);
         setLocalRotation(mod.multLocal(rot));
     }
-    
+
     /**
      * Checks whether this sprite should be considered when precomputing static
      * shadows.
@@ -200,7 +200,7 @@ public class PieceSprite extends Sprite
     {
         return false;
     }
-    
+
     /**
      * Checks whether this sprite should be darkened by static shadows.
      */
@@ -208,7 +208,19 @@ public class PieceSprite extends Sprite
     {
         return true;
     }
-    
+
+    /**
+     * Returns true if this sprite can be hovered over with the mouse, which
+     * will display contextual help. We provide this method instead of calling
+     * <code>getHelpIdent() != null</code> because the latter may create a
+     * string object and we don't want to create a bunch of garbage when hit
+     * testing numerous sprites every time the mouse is moved.
+     */
+    public boolean isHoverable ()
+    {
+        return false;
+    }
+
     /**
      * Determines how much of this piece lies in shadow and darkens it
      * accordingly.
@@ -222,10 +234,10 @@ public class PieceSprite extends Sprite
             localTranslation.x, localTranslation.y), shadowed;
         if (sheight >= localTranslation.z + TILE_SIZE) {
             shadowed = 1f;
-            
+
         } else if (sheight > localTranslation.z) {
             shadowed = (sheight - localTranslation.z) / TILE_SIZE;
-            
+
         } else {
             shadowed = 0f;
         }
@@ -233,7 +245,7 @@ public class PieceSprite extends Sprite
         _mstate.getDiffuse().set(diffuse, diffuse, diffuse, 1f);
         updateRenderState();
     }
-    
+
     /**
      * Called when we receive an event indicating that our piece was updated in
      * some way.
@@ -277,7 +289,7 @@ public class PieceSprite extends Sprite
                 // now reset our location and it will adjust our centering
                 setLocation(_px, _py, elevation);
             }
-            
+
         } else if (!isMoving() && moved) {
             log.warning("Moved but am not moving?! " + _piece.info());
         }
@@ -438,7 +450,7 @@ public class PieceSprite extends Sprite
 
     /** The material state used to manipulate shadow values. */
     protected MaterialState _mstate;
-    
+
     /** The emissions activated by animations. */
     protected HashMap<String, SpriteEmission> _emissions =
         new HashMap<String, SpriteEmission>();
