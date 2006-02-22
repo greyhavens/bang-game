@@ -177,6 +177,27 @@ invisibutton:down {
 invisibutton:selected {
 }
 
+tabbedpane {
+  background: image "ui/window/border_ornate.png" framexy;
+}
+
+tab {
+  color: #8c562a;
+  background: image "ui/tabs/small_normal.png" framex;
+  font: "Old Town" plain 24;
+  text-align: center;
+  vertical-align: center;
+  padding: 0 25;
+}
+tab:down {
+  color: #462300;
+  background: image "ui/tabs/small_down.png" framex;
+}
+tab:selected {
+  color: #462300;
+  background: image "ui/tabs/small_down.png" framex;
+}
+
 combobox {
   font: "Helvetica" plain 15;
   color: #FFFFFF;
@@ -292,7 +313,7 @@ scrollbar_vmore:disabled {
 //
 // Global styles
 
-window_title {
+scroll_title {
   font: "Old Town Wide" plain 30;
   text-align: center;
   background: image "ui/window/scroll_title.png" framexy;
@@ -300,6 +321,11 @@ window_title {
   text-effect: shadow;
   color: #4C2602;
   effect-color: #D1C581;
+}
+
+dialog_title {
+  font: "Old Town" plain 30;
+  text-align: left;
 }
 
 medium_title {
@@ -407,11 +433,6 @@ dialog_text {
   text-align: center;
 }
 
-dialog_text_left {
-  parent: "dialog_text";
-  text-align: left;
-}
-
 dialog_label {
   font: "Old Town Wide" plain 24;
   text-align: center;
@@ -513,7 +534,7 @@ pardner_icon:selected {
 
 pardner_icon:last_session {
   color: #7e4e26;
-  font: "Old Town Wide" plain 15;
+  font: "Old Town" plain 15;
 }
 
 pardner_status {
@@ -521,6 +542,45 @@ pardner_status {
   color: #4a2805;
   text-align: center;
   vertical-align: top;
+}
+
+// Pardner chat styles
+
+pardner_chat_view {
+  background: image "ui/window/grip_background.png" framexy;
+  padding: 30 15 15 15;
+}
+
+system_chat_entry {
+  font: "Dom Casual" plain 18;
+  color: #000000;
+  text-align: center;
+  background: solid #00FF0080;
+  border: 1 solid #000000;
+  padding: 14;
+}
+
+sent_chat_bubble {
+  font: "Dom Casual" plain 18;
+  color: #003b27;
+  text-align: center;
+  padding: 0 14 0 22;
+}
+
+received_chat_bubble {
+  font: "Dom Casual" plain 18;
+  color: #09103a;
+  text-align: center;
+  padding: 0 22 0 14;
+}
+
+send_button {
+  padding: 0 16;
+  parent: "button";
+}
+send_button:disabled {
+  padding: 0 16;
+  parent: "button:disabled";
 }
 
 //
@@ -572,45 +632,36 @@ card_button:down {
   padding: 2 0 0 2;
 }
 
-round_timer {
-  background: image "ui/gauge/background.png" centerxy;
-}
-
-overlay_chat {
-  font: "Dom Casual" plain 20;
-}
-
-//
-// Player Status View
-
-player_status {
+// temporary hack
+player_status0 {
   font: "Dom Casual" plain 13;
+  color: #0000FF;
   text-align: center;
 }
-player_status0 {
-  parent: "player_status";
-  color: #0000FF;
-}
 player_status1 {
-  parent: "player_status";
+  font: "Dom Casual" plain 13;
   color: #FF0000;
+  text-align: center;
 }
 player_status2 {
-  parent: "player_status";
+  font: "Dom Casual" plain 13;
   color: #00FF00;
+  text-align: center;
 }
 player_status3 {
-  parent: "player_status";
+  font: "Dom Casual" plain 13;
   color: #FFFF00;
+  text-align: center;
+}
+
+round_timer {
+  font: "Old Town" plain 48;
+  text-align: center;
+  vertical-align: center;
 }
 
 //
 // Post-game stats display
-
-endgame_border {
-  background: image "ui/window/border_ornate.png" framexy;
-  padding: 16 32;
-}
 
 endgame_player_big {
   font: "Dom Casual" plain 24;
@@ -625,33 +676,12 @@ endgame_player_small {
 }
 
 endgame_title {
-  font: "Old Town Wide" plain 24;
-  text-align: center;
-  color: #4C2602;
-}
-
-endgame_header {
   font: "Dom Casual" plain 18;
-  text-align: center;
-  color: #7D4924;
-}
-
-endgame_smallheader {
-  font: "Dom Casual" plain 15;
-  text-align: center;
-  color: #7D4924;
 }
 
 endgame_cash {
-  font: "Dom Casual" plain 30;
+  font: "Dom Casual" plain 18;
   text-align: center;
-  text-effect: shadow;
-  effect-color: #000000;
-}
-
-endgame_smallcash {
-  parent: "endgame_cash";
-  font: "Dom Casual" plain 24;
 }
 
 //
