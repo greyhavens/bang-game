@@ -87,10 +87,7 @@ public class BangBoardView extends BoardView
 
         // set up the display of our card attack set
         _card = card;
-        _attackSet.clear();
-        _bangobj.board.computeAttacks(
-            0, _card.getRadius(), _mouse.x, _mouse.y, _attackSet);
-        targetTiles(_attackSet);
+        updatePlacingCard(_mouse.x, _mouse.y);
         log.info("Placing " + _card);
     }
     
@@ -760,6 +757,19 @@ public class BangBoardView extends BoardView
         clearAttackSet();
     }
 
+    protected void updatePlacingCard (int tx, int ty)
+    {
+        clearHighlights();
+        _attackSet.clear();
+        if (_card.getRadius() > 0) {
+            _bangobj.board.computeAttacks(
+                0, _card.getRadius(), _mouse.x, _mouse.y, _attackSet);
+        } else {
+            _attackSet.add(_mouse.x, _mouse.y);
+        }
+        targetTiles(_attackSet);
+    }
+
     protected boolean clearPlacingCard ()
     {
         if (_card == null) {
@@ -777,11 +787,7 @@ public class BangBoardView extends BoardView
     {
         // if we have an active card, update its area of effect
         if (_card != null) {
-            clearHighlights();
-            _attackSet.clear();
-            _bangobj.board.computeAttacks(
-                0, _card.getRadius(), tx, ty, _attackSet);
-            targetTiles(_attackSet);
+            updatePlacingCard(tx, ty);
         }
     }
 

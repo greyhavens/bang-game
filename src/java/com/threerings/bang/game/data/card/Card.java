@@ -137,7 +137,7 @@ public abstract class Card extends SimpleStreamableObject
     protected static HashMap<String,Card> _cards = new HashMap<String,Card>();
 
     static {
-        register(new AreaRepair());
+        register(new Repair());
         register(new DustDevil());
         register(new Missile());
         register(new Stampede());

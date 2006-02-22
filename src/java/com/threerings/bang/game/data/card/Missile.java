@@ -15,20 +15,23 @@ public class Missile extends Card
 {
     public int power = 60;
 
-    public int radius = 2;
+    public int radius = 1;
 
     @Override // documentation inherited
     public void init (BangObject bangobj, int owner)
     {
         super.init(bangobj, owner);
 
-        // if our player is "in the nooksak", give them a big missile
-        if (bangobj.pdata[owner].power < 30) {
-            power = 100;
-            radius = 4;
-        } else if (bangobj.pdata[owner].powerFactor < 0.34) {
-            power = 80;
-            radius = 3;
+        // if they're getting this card during a game, potentially adjust it
+        // based on their current rank
+        if (bangobj.state == BangObject.IN_PLAY) {
+            if (bangobj.pdata[owner].power < 30) {
+                power = 80;
+                radius = 3;
+            } else if (bangobj.pdata[owner].powerFactor < 0.34) {
+                power = 70;
+                radius = 2;
+            }
         }
     }
 
