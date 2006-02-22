@@ -313,7 +313,7 @@ scrollbar_vmore:disabled {
 //
 // Global styles
 
-scroll_title {
+window_title {
   font: "Old Town Wide" plain 30;
   text-align: center;
   background: image "ui/window/scroll_title.png" framexy;
@@ -321,11 +321,6 @@ scroll_title {
   text-effect: shadow;
   color: #4C2602;
   effect-color: #D1C581;
-}
-
-dialog_title {
-  font: "Old Town" plain 30;
-  text-align: left;
 }
 
 medium_title {
@@ -433,6 +428,11 @@ dialog_text {
   text-align: center;
 }
 
+dialog_text_left {
+  parent: "dialog_text";
+  text-align: left;
+}
+
 dialog_label {
   font: "Old Town Wide" plain 24;
   text-align: center;
@@ -534,7 +534,7 @@ pardner_icon:selected {
 
 pardner_icon:last_session {
   color: #7e4e26;
-  font: "Old Town" plain 15;
+  font: "Old Town Wide" plain 15;
 }
 
 pardner_status {
@@ -632,36 +632,45 @@ card_button:down {
   padding: 2 0 0 2;
 }
 
-// temporary hack
-player_status0 {
-  font: "Dom Casual" plain 13;
-  color: #0000FF;
-  text-align: center;
-}
-player_status1 {
-  font: "Dom Casual" plain 13;
-  color: #FF0000;
-  text-align: center;
-}
-player_status2 {
-  font: "Dom Casual" plain 13;
-  color: #00FF00;
-  text-align: center;
-}
-player_status3 {
-  font: "Dom Casual" plain 13;
-  color: #FFFF00;
-  text-align: center;
+round_timer {
+  background: image "ui/gauge/background.png" centerxy;
 }
 
-round_timer {
-  font: "Old Town" plain 48;
+overlay_chat {
+  font: "Dom Casual" plain 20;
+}
+
+//
+// Player Status View
+
+player_status {
+  font: "Dom Casual" plain 13;
   text-align: center;
-  vertical-align: center;
+}
+player_status0 {
+  parent: "player_status";
+  color: #0000FF;
+}
+player_status1 {
+  parent: "player_status";
+  color: #FF0000;
+}
+player_status2 {
+  parent: "player_status";
+  color: #00FF00;
+}
+player_status3 {
+  parent: "player_status";
+  color: #FFFF00;
 }
 
 //
 // Post-game stats display
+
+endgame_border {
+  background: image "ui/window/border_ornate.png" framexy;
+  padding: 16 32;
+}
 
 endgame_player_big {
   font: "Dom Casual" plain 24;
@@ -676,12 +685,33 @@ endgame_player_small {
 }
 
 endgame_title {
+  font: "Old Town Wide" plain 24;
+  text-align: center;
+  color: #4C2602;
+}
+
+endgame_header {
   font: "Dom Casual" plain 18;
+  text-align: center;
+  color: #7D4924;
+}
+
+endgame_smallheader {
+  font: "Dom Casual" plain 15;
+  text-align: center;
+  color: #7D4924;
 }
 
 endgame_cash {
-  font: "Dom Casual" plain 18;
+  font: "Dom Casual" plain 30;
   text-align: center;
+  text-effect: shadow;
+  effect-color: #000000;
+}
+
+endgame_smallcash {
+  parent: "endgame_cash";
+  font: "Dom Casual" plain 24;
 }
 
 //
