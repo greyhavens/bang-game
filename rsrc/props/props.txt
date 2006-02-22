@@ -7,6 +7,11 @@ buildings/stables
 buildings/jail
 buildings/barber
 buildings/ranch
+natural/desert_flowers_white
+natural/desert_flowers_yellow
+natural/cattle_ribs
+natural/cattel_skull
+natural/tumbleweed
 natural/cactus1
 natural/cactus2
 natural/cactus_flower_red
