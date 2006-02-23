@@ -921,11 +921,11 @@ public class TerrainNode extends Node
     /**
      * Checks whether the heightfield can be assumed to be static (and thus a
      * candidate for rendering optimization).  Default implementation returns
-     * <code>false</code>.
+     * <code>true</code>.
      */
     protected boolean isHeightfieldStatic ()
     {
-        return false;
+        return true;
     }
 
     /**

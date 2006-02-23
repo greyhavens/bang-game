@@ -562,6 +562,16 @@ public class EditorBoardView extends BoardView
     }
 
     @Override // documentation inherited
+    protected TerrainNode createTerrainNode (BasicContext ctx)
+    {
+        return new TerrainNode(ctx, this) {
+            protected boolean isHeightfieldStatic () {
+                return false;
+            }
+        };
+    }
+    
+    @Override // documentation inherited
     protected void createMarquee (String text)
     {
         // no marquee required for editor

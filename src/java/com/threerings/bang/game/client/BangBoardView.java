@@ -298,18 +298,6 @@ public class BangBoardView extends BoardView
         // clear out our cursor
         _cursbind.detach();
     }
-
-    @Override // documentation inherited
-    protected TerrainNode createTerrainNode (BasicContext ctx)
-    {
-        // for now at least, terrain heightfields do not change in the course
-        // of a game
-        return new TerrainNode(ctx, this) {
-            protected boolean isHeightfieldStatic () {
-                return true;
-            }
-        };
-    }
     
     @Override // documentation inherited
     protected boolean isHoverable (Sprite sprite)
