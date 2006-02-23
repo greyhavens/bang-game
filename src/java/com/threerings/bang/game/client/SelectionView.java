@@ -37,6 +37,8 @@ import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Displays an interface for selecting a big shot and a starting hand of
  * cards from a player's inventory.
@@ -126,6 +128,7 @@ public class SelectionView extends BDecoratedWindow
 
         // create the big shot selection display
         _center.add(new BLabel(_msgs.get("m.pv_assemble"), "pick_subtitle"));
+        _units.shutdown();
         _units = new UnitPalette(_ctx, _teamins, 4, 2);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
@@ -220,6 +223,7 @@ public class SelectionView extends BDecoratedWindow
     protected void wasRemoved ()
     {
         super.wasRemoved();
+
         _units.shutdown();
     }
 

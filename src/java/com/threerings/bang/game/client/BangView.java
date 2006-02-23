@@ -228,6 +228,17 @@ public class BangView extends BWindow
         }
     }
 
+    @Override // documentation inherited
+    public void wasRemoved ()
+    {
+        super.wasRemoved();
+        
+        // make sure that we clean up per-round state
+        if (_prepared) {
+            endRound();
+        }
+    }
+    
     protected void setOverlay (BWindow overlay)
     {
         clearOverlay();

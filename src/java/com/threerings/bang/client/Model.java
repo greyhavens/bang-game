@@ -120,7 +120,7 @@ public class Model
             // then we'll call it when the resolution is done; subsequent
             // bindings will be resolved the first time through and will report
             // binding completion immediately
-            if (!_anim._resolving && _obs != null) {
+            if (!_anim.isResolving() && _obs != null) {
                 _obs.wasBound(_anim, this);
             }
         }
@@ -205,16 +205,24 @@ public class Model
          */
         public boolean isResolved ()
         {
-            return _parts != null || _resolving;
+            return _parts != null || _bindings != null;
         }
 
+        /**
+         * Returns true if this animation is in the process of resolving.
+         */
+        public boolean isResolving ()
+        {
+            return _bindings != null;
+        }
+        
         /**
          * Configures this animation as "being resolved" so that we don't queue
          * it up for resolution more than once.
          */
         public void setIsResolving ()
         {
-            _resolving = true;
+            _bindings = new ArrayList<Binding>();
         }
 
         /**
@@ -228,7 +236,9 @@ public class Model
         public Binding bind (Node node, int random, Binding.Observer obs)
         {
             Binding binding = new Binding(this, node, random, obs);
-            _bindings.add(binding);
+            if (_bindings != null) {
+                _bindings.add(binding);
+            }
             return binding;
         }
 
@@ -270,30 +280,31 @@ public class Model
         public void setParts (Part[] parts)
         {
             _parts = parts;
-            _resolving = false;
 
             // update any extant bindings
-            for (Binding binding : _bindings) {
+            ArrayList<Binding> obindings = _bindings;
+            _bindings = null;
+            for (Binding binding : obindings) {
                 binding.update();
             }
         }
 
         /**
-         * Clears the specified binding.
+         * Clears the specified binding if it's being tracked.
          */
         protected void clearBinding (Binding binding)
         {
-            _bindings.remove(binding);
+            if (_bindings != null) {
+                _bindings.remove(binding);
+            }
         }
 
         /** The animated meshes that make up the animation. */
         protected Part[] _parts;
 
-        /** Use to track the nodes to which this animation is bound. */
-        protected ArrayList<Binding> _bindings = new ArrayList<Binding>();
-
-        /** Whether or not this animation is in the process of resolving. */
-        protected boolean _resolving;
+        /** Use to track the nodes to which this animation is bound while the
+         * animation is in the process of resolving. */
+        protected ArrayList<Binding> _bindings;
     }
 
     /** Contains information on an effect emitter. */

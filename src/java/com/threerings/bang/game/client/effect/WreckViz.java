@@ -15,6 +15,7 @@ import com.jmex.effects.ParticleManager;
 
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.client.Model;
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -127,7 +128,7 @@ public class WreckViz extends ParticleEffectViz
 
         public void bind (String type)
         {
-            _ctx.loadModel("units",
+            _binding = _ctx.loadModel("units",
                 "wreckage/" + type).getAnimation("normal").bind(this,
                     RandomUtil.getInt(Integer.MAX_VALUE), null);
         }
@@ -182,6 +183,7 @@ public class WreckViz extends ParticleEffectViz
             
             // remove streamer if its lifespan has elapsed
             if ((_age += time) > WRECKAGE_LIFESPAN) {
+                _binding.detach();
                 getParent().detachChild(this);
             }
         }
@@ -197,14 +199,17 @@ public class WreckViz extends ParticleEffectViz
         /** The piece's material state, used to control alpha. */
         protected MaterialState _mstate;
         
+        /** The piece's animation binding. */
+        protected Model.Binding _binding;
+        
         /** Set when the piece has its initial world vectors. */
         protected boolean _wvinit;
-        
+
         /** Temporary quaternion representing spin. */
         protected Quaternion _spin = new Quaternion();
         
         /** The piece's age in seconds. */
-        protected float _age;
+        protected float _age;        
     }
     
     protected EffectViz _wrapviz;

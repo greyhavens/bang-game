@@ -141,7 +141,7 @@ public class BangManager extends GameManager
         if (piece == null || !(piece instanceof Unit) || piece.owner != pidx) {
             log.warning("Rejecting illegal move request [who=" + user.who() +
                         ", piece=" + piece + "].");
-            return;
+            throw new InvocationException(INTERNAL_ERROR);
         }
         Unit unit = (Unit)piece;
         int ticksTilMove = unit.ticksUntilMovable(_bangobj.tick);
@@ -151,7 +151,7 @@ public class BangManager extends GameManager
                         ", ticksTilMove=" + ticksTilMove +
                         ", tick=" + _bangobj.tick +
                         ", lastActed=" + unit.lastActed + "].");
-            return;
+            throw new InvocationException(INTERNAL_ERROR);
         }
 
         Piece target = (Piece)_bangobj.pieces.get(targetId);
