@@ -4,6 +4,8 @@
 package com.threerings.bang.game.client.sprite;
 
 import com.jme.math.FastMath;
+import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 
 import com.threerings.bang.util.BasicContext;
 
@@ -24,6 +26,12 @@ public class BonusSprite extends PieceSprite
     public String getHelpIdent (int pidx)
     {
         return "bonus_" + _type;
+    }
+
+    @Override // documentation inherited
+    public Shadow getShadowType ()
+    {
+        return Shadow.DYNAMIC;
     }
 
     @Override // documentation inherited

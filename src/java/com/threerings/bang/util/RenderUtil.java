@@ -20,6 +20,8 @@ import org.lwjgl.opengl.GL11;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
+import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -287,7 +289,8 @@ public class RenderUtil
      * Creates a texture state using the image with the supplied path. The
      * texture is loaded via the texture cache.
      */
-    public static TextureState createTextureState (BasicContext ctx, String path)
+    public static TextureState createTextureState (
+        BasicContext ctx, String path)
     {
         return createTextureState(ctx, ctx.getTextureCache().getTexture(path));
     }
@@ -353,6 +356,54 @@ public class RenderUtil
     }
 
     /**
+     * Creates the shadow texture for the specified light parameters.
+     */
+    public static TextureState createShadowTexture (
+        BasicContext ctx, float length, float rotation, float intensity)
+    {
+        // reuse our existing texture if possible
+        if (_shadtex != null && _slength == length &&
+            _srotation == rotation && _sintensity == intensity) {
+            return _shadtex;
+        }
+
+        _slength = length;
+        _srotation = rotation;
+        _sintensity = intensity;
+
+        float yscale = length / TILE_SIZE;
+        int size = SHADOW_TEXTURE_SIZE, hsize = size / 2;
+        ByteBuffer pbuf = ByteBuffer.allocateDirect(size * size * 4);
+        byte[] pixel = new byte[] { 0, 0, 0, 0 };
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                float xd = (float)(x - hsize) / hsize,
+                    yd = yscale * (y - hsize) / hsize,
+                    d = FastMath.sqrt(xd*xd + yd*yd),
+                    val = d < 0.25f ? intensity : intensity *
+                        Math.max(0f, 1.333f - 1.333f*d);
+                pixel[3] = (byte)(val * 255);
+                pbuf.put(pixel);
+            }
+        }
+        pbuf.rewind();
+
+        // we must rotate the shadow into place and translate to recenter
+        Texture stex = new Texture();
+        stex.setImage(new Image(Image.RGBA8888, size, size, pbuf));
+        Quaternion rot = new Quaternion();
+        rot.fromAngleNormalAxis(-rotation, Vector3f.UNIT_Z);
+        stex.setRotation(rot);
+        Vector3f trans = new Vector3f(0.5f, 0.5f, 0f);
+        rot.multLocal(trans);
+        stex.setTranslation(new Vector3f(0.5f - trans.x, 0.5f - trans.y, 0f));
+
+        _shadtex = ctx.getRenderer().createTextureState();
+        _shadtex.setTexture(stex);
+        return _shadtex;
+    }
+
+    /**
      * Creates a JME {@link ColorRGBA} object with alpha equal to one from a
      * packed RGB value.
      */
@@ -398,6 +449,12 @@ public class RenderUtil
     protected static HashMap<Terrain,ColorRGBA> _groundColors =
         new HashMap<Terrain,ColorRGBA>();
 
+    /** Our most recently created shadow texture. */
+    protected static TextureState _shadtex;
+
+    /** The parameters used to create our shadow texture. */
+    protected static float _slength, _srotation, _sintensity;
+
     /** The maximum number of different variations we might have for a
      * particular ground tile. */
     protected static final int MAX_TILE_VARIANT = 4;
@@ -409,4 +466,7 @@ public class RenderUtil
 
     /** Used to fill an image with transparency. */
     protected static Color BLANK = new Color(1.0f, 1.0f, 1.0f, 0f);
+
+    /** The size of the shadow texture. */
+    protected static final int SHADOW_TEXTURE_SIZE = 128;
 }

@@ -662,7 +662,8 @@ public class TerrainNode extends Node
      */
     public Highlight createHighlight (int x, int y, boolean overPieces)
     {
-        return new Highlight(x, y, overPieces && Config.display.floatHighlights);
+        return new Highlight(x, y, overPieces &&
+                             Config.display.floatHighlights);
     }
 
     /**
@@ -814,7 +815,8 @@ public class TerrainNode extends Node
                 Object sprite = _view.getSprite(
                     results.getPickData(i).getTargetMesh());
                 if (sprite == null || (sprite instanceof PieceSprite &&
-                    ((PieceSprite)sprite).castsStaticShadow())) {
+                                       ((PieceSprite)sprite).getShadowType() ==
+                                       PieceSprite.Shadow.STATIC)) {
                     return true;
                 }   
             }

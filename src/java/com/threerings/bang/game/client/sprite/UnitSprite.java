@@ -272,7 +272,7 @@ public class UnitSprite extends MobileSprite
 
         // this composite of icons combines to display our status
         _status = new Node("status");
-        _hnode.attachChild(_status);
+        attachHighlight(_status);
 
         // this icon is displayed when the mouse is hovered over us
         _hov = new SharedMesh("hov", _highlight);

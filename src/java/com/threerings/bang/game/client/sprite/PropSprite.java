@@ -30,33 +30,33 @@ public class PropSprite extends PieceSprite
     /** The ratio between radians and fine rotation units. */
     public static final float FINE_ROTATION_SCALE =
         (FastMath.PI * 0.25f) / 128;
-    
+
     /** The ratio between world units and fine translation units. */
     public static final float FINE_POSITION_SCALE =
         (TILE_SIZE * 0.5f) / 128;
-        
+
     public PropSprite (String type)
     {
         _config = PropConfig.getConfig(type);
     }
 
     @Override // documentation inherited
-    public boolean castsStaticShadow ()
+    public Shadow getShadowType ()
     {
-        return true;
+        return Shadow.STATIC;
     }
-    
+
     @Override // documentation inherited
     public boolean isShadowable ()
     {
         return false;
     }
-    
+
     @Override // documentation inherited
     public boolean updatePosition (BangBoard board)
     {
         super.updatePosition(board);
-        
+
         // update fine positioning as well
         Prop prop = (Prop)_piece;
         if (_fx != prop.fx || _fy != prop.fy) {
@@ -65,10 +65,10 @@ public class PropSprite extends PieceSprite
         if (_forient != prop.forient) {
             setOrientation(_porient);
         }
-        
+
         return false;
     }
-    
+
     @Override // documentation inherited
     public void setLocation (int tx, int ty, int elevation)
     {
@@ -92,7 +92,7 @@ public class PropSprite extends PieceSprite
             (_forient = prop.forient) * FINE_ROTATION_SCALE, UP);
         setLocalRotation(quat);
     }
-    
+
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
@@ -129,9 +129,9 @@ public class PropSprite extends PieceSprite
     protected PropConfig _config;
     protected Model _model;
     protected Model.Binding _binding;
-    
+
     protected int _fx, _fy, _forient;
-    
+
 //     protected static final ColorRGBA FOOT_COLOR =
 //         new ColorRGBA(1, 1, 1, 0.5f);
 }

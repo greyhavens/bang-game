@@ -5,27 +5,14 @@ package com.threerings.bang.game.client.sprite;
 
 import java.awt.Point;
 
-import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.jme.image.Image;
-import com.jme.image.Texture;
 import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
-import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Controller;
 import com.jme.scene.Geometry;
-import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
-import com.jme.scene.Spatial;
-import com.jme.scene.shape.Quad;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jmex.effects.ParticleManager;
@@ -43,13 +30,13 @@ import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.sprite.SpriteObserver;
 
-import com.threerings.bang.client.Config;
-import com.threerings.bang.client.Model;
-import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
+
+import com.threerings.bang.client.Config;
+import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -163,23 +150,15 @@ public class MobileSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    public void init (BasicContext ctx, BoardView view, BangBoard board,
-                      SoundGroup sounds, Piece piece, short tick)
-    {
-        super.init(ctx, view, board, sounds, piece, tick);
-        updateHighlight();
-    }
-
-    @Override // documentation inherited
     public boolean isHoverable ()
     {
         return true;
     }
-    
+
     @Override // documentation inherited
-    public Spatial getHighlight ()
+    public Shadow getShadowType ()
     {
-        return _hnode;
+        return Shadow.DYNAMIC;
     }
 
     /**
@@ -282,20 +261,9 @@ public class MobileSprite extends PieceSprite
         super.createGeometry(ctx);
         _ctx = ctx;
 
-        // contains highlights draped over terrain
-        _hnode = new Node("highlight");
-        _hnode.setLightCombineMode(LightState.OFF);
-        _hnode.setRenderState(RenderUtil.overlayZBuf);
-        _hnode.setRenderState(RenderUtil.blendAlpha);
-        _hnode.setRenderState(RenderUtil.backCull);
-        _hnode.updateRenderState();
-
         // the geometry of the highlight is shared between the elements
-        _highlight = _view.getTerrainNode().createHighlight(localTranslation.x,
-            localTranslation.y, TILE_SIZE, TILE_SIZE);
-
-        // the shadow is an additional highlight with wider geometry
-        createShadow(ctx);
+        _highlight = _view.getTerrainNode().createHighlight(
+            localTranslation.x, localTranslation.y, TILE_SIZE, TILE_SIZE);
 
         // create the dust particle system
         createDustManager(ctx);
@@ -346,68 +314,7 @@ public class MobileSprite extends PieceSprite
 
         // put them in the highlight node so that they are positioned relative
         // to the board
-        _hnode.attachChild(_dustmgr.getParticles());
-    }
-
-    /**
-     * Creates and attaches the shadow for this sprite.
-     */
-    protected void createShadow (BasicContext ctx)
-    {
-        float length = _view.getShadowLength(),
-            rotation = _view.getShadowRotation(),
-            intensity = _view.getShadowIntensity();
-        _shadow = _view.getTerrainNode().createHighlight(localTranslation.x,
-            localTranslation.y, length, length);
-        _shadow.setIsCollidable(false);
-        if (_shadtex == null || _slength != length || _srotation != rotation ||
-                _sintensity != intensity) {
-            createShadowTexture(ctx, length, rotation, intensity);
-        }
-        _shadow.setRenderState(_shadtex);
-        _shadow.updateRenderState();
-        _hnode.attachChild(_shadow);
-    }
-
-    /**
-     * Creates the shadow texture for the current light parameters.
-     */
-    protected void createShadowTexture (BasicContext ctx, float length,
-        float rotation, float intensity)
-    {
-        _slength = length;
-        _srotation = rotation;
-        _sintensity = intensity;
-
-        float yscale = length / TILE_SIZE;
-        int size = SHADOW_TEXTURE_SIZE, hsize = size / 2;
-        ByteBuffer pbuf = ByteBuffer.allocateDirect(size * size * 4);
-        byte[] pixel = new byte[] { 0, 0, 0, 0 };
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                float xd = (float)(x - hsize) / hsize,
-                    yd = yscale * (y - hsize) / hsize,
-                    d = FastMath.sqrt(xd*xd + yd*yd),
-                    val = d < 0.25f ? intensity : intensity *
-                        Math.max(0f, 1.333f - 1.333f*d);
-                pixel[3] = (byte)(val * 255);
-                pbuf.put(pixel);
-            }
-        }
-        pbuf.rewind();
-
-        // we must rotate the shadow into place and translate to recenter
-        Texture stex = new Texture();
-        stex.setImage(new Image(Image.RGBA8888, size, size, pbuf));
-        Quaternion rot = new Quaternion();
-        rot.fromAngleNormalAxis(-rotation, Vector3f.UNIT_Z);
-        stex.setRotation(rot);
-        Vector3f trans = new Vector3f(0.5f, 0.5f, 0f);
-        rot.multLocal(trans);
-        stex.setTranslation(new Vector3f(0.5f - trans.x, 0.5f - trans.y, 0f));
-
-        _shadtex = ctx.getRenderer().createTextureState();
-        _shadtex.setTexture(stex);
+        attachHighlight(_dustmgr.getParticles());
     }
 
     @Override // documentation inherited
@@ -592,16 +499,11 @@ public class MobileSprite extends PieceSprite
      */
     protected void updateHighlight ()
     {
+        super.updateHighlight();
+
         if (_highlight.x != localTranslation.x ||
             _highlight.y != localTranslation.y) {
             _highlight.setPosition(localTranslation.x, localTranslation.y);
-        }
-
-        _loc.set(localTranslation.x, localTranslation.y,
-            localTranslation.z + TILE_SIZE/2);
-        _view.getShadowLocation(_loc, _result);
-        if (_shadow.x != _result.x || _shadow.y != _result.y) {
-            _shadow.setPosition(_result.x, _result.y);
         }
 
         if (_dustmgr != null && isMoving()) {
@@ -652,9 +554,7 @@ public class MobileSprite extends PieceSprite
 
     protected String _type, _name;
     protected String[] _wtypes;
-    protected Node _hnode;
     protected TerrainNode.Highlight _highlight;
-    protected TerrainNode.Highlight _shadow;
     protected ParticleManager _dustmgr;
     protected Sound _moveSound;
 
@@ -662,20 +562,13 @@ public class MobileSprite extends PieceSprite
     protected float _nextAction;
     protected ArrayList<String> _actions = new ArrayList<String>();
 
-    protected Vector3f _loc = new Vector3f();
-    protected Vector2f _result = new Vector2f();
-
     protected PieceSprite _tsprite;
 
     /** Ensures that we use the same random texture for every animation
      * displayed for this particular instance. */
     protected int _texrando = RandomUtil.getInt(Integer.MAX_VALUE);
 
-    protected static TextureState _shadtex, _dusttex;
-    protected static float _slength, _srotation, _sintensity;
-
-    /** The size of the shadow texture. */
-    protected static final int SHADOW_TEXTURE_SIZE = 128;
+    protected static TextureState _dusttex;
 
     /** The number of dust particles. */
     protected static final int NUM_DUST_PARTICLES = 32;

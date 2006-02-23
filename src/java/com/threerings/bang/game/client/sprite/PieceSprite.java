@@ -4,15 +4,15 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 
 import com.threerings.jme.sprite.LinePath;
@@ -40,6 +40,9 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class PieceSprite extends Sprite
 {
+    /** The types of shadow that can be cast by this piece. */
+    public enum Shadow { NONE, STATIC, DYNAMIC };
+
     /**
      * Called by the editor to make pieces warp to their new locations for
      * rapid draggability.
@@ -108,9 +111,12 @@ public class PieceSprite extends Sprite
                     computeElevation(board, _px, _py));
         setOrientation(_porient = piece.orientation);
 
-        // ensure that we do this the first time even if the sprite starts
-        // out at zero zero
+        // ensure that we have a valid shadow value the first time even if the
+        // sprite starts out at zero zero
         updateShadowValue();
+
+        // update our highlight geometry if we have any
+        updateHighlight();
     }
 
     /**
@@ -119,7 +125,7 @@ public class PieceSprite extends Sprite
      */
     public Spatial getHighlight ()
     {
-        return null;
+        return _hnode;
     }
 
     /** Indicates to this piece that it is selected by the user. May
@@ -193,12 +199,13 @@ public class PieceSprite extends Sprite
     }
 
     /**
-     * Checks whether this sprite should be considered when precomputing static
-     * shadows.
+     * Indicates the type of shadow cast by this sprite. This is used to
+     * determine which sprites cast precomputed shadows and which have shadow
+     * geometry rendered in realtime.
      */
-    public boolean castsStaticShadow ()
+    public Shadow getShadowType ()
     {
-        return false;
+        return Shadow.NONE;
     }
 
     /**
@@ -230,6 +237,7 @@ public class PieceSprite extends Sprite
         if (!isShadowable()) {
             return;
         }
+
         float sheight = _view.getTerrainNode().getShadowHeight(
             localTranslation.x, localTranslation.y), shadowed;
         if (sheight >= localTranslation.z + TILE_SIZE) {
@@ -303,10 +311,6 @@ public class PieceSprite extends Sprite
      */
     public void removed ()
     {
-//         // remove ourselves from the sprite manager and go away
-//         if (_mgr != null) {
-//             ((SpriteManager)_mgr).removeSprite(this);
-//         }
     }
 
     /**
@@ -315,6 +319,31 @@ public class PieceSprite extends Sprite
      */
     protected void createGeometry (BasicContext ctx)
     {
+        if (getShadowType() == Shadow.DYNAMIC) {
+            // the dynamic shadow is a highlight with wider geometry
+            float length = _view.getShadowLength(),
+                rotation = _view.getShadowRotation(),
+                intensity = _view.getShadowIntensity();
+            _shadow = _view.getTerrainNode().createHighlight(
+                localTranslation.x, localTranslation.y, length, length);
+            _shadow.setIsCollidable(false);
+            _shadow.setRenderState(RenderUtil.createShadowTexture(
+                                       ctx, length, rotation, intensity));
+            _shadow.updateRenderState();
+            attachHighlight(_shadow);
+        }
+    }
+
+    /**
+     * Attaches geometry to our highlight node, creating the highlight node if
+     * necessary.
+     */
+    protected void attachHighlight (Spatial spatial)
+    {
+        if (_hnode == null) {
+            _hnode = createHighlightNode();
+        }
+        _hnode.attachChild(spatial);
     }
 
     /**
@@ -323,6 +352,21 @@ public class PieceSprite extends Sprite
      */
     protected void createSounds (SoundGroup sounds)
     {
+    }
+
+    /**
+     * Creates a highlight node, which is used by some sprites to render onto
+     * the terrain below themselves.
+     */
+    protected Node createHighlightNode ()
+    {
+        Node hnode = new Node("highlight");
+        hnode.setLightCombineMode(LightState.OFF);
+        hnode.setRenderState(RenderUtil.overlayZBuf);
+        hnode.setRenderState(RenderUtil.blendAlpha);
+        hnode.setRenderState(RenderUtil.backCull);
+        hnode.updateRenderState();
+        return hnode;
     }
 
     /**
@@ -417,6 +461,21 @@ public class PieceSprite extends Sprite
         });
     }
 
+    /**
+     * Updates the position of our highlights if we have them.
+     */
+    protected void updateHighlight ()
+    {
+        if (_shadow != null) {
+            _loc.set(localTranslation.x, localTranslation.y,
+                     localTranslation.z + TILE_SIZE/2);
+            _view.getShadowLocation(_loc, _result);
+            if (_shadow.x != _result.x || _shadow.y != _result.y) {
+                _shadow.setPosition(_result.x, _result.y);
+            }
+        }
+    }
+
     @Override // documentation inherited
     protected void setParent (Node parent)
     {
@@ -457,6 +516,18 @@ public class PieceSprite extends Sprite
 
     /** The current elevation of the piece. */
     protected int _elevation;
+
+    /** A place to hang all highlight geometry. */
+    protected Node _hnode;
+
+    /** Our shadow if we have one. */
+    protected TerrainNode.Highlight _shadow;
+
+    /** Used when updating our shadow location. */
+    protected Vector3f _loc = new Vector3f();
+
+    /** Used when updating our shadow location. */
+    protected Vector2f _result = new Vector2f();
 
     /** When activated, causes all pieces to warp instead of smoothly
      * follow a path. */

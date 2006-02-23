@@ -49,12 +49,12 @@ public class CowSprite extends MobileSprite
         }
 
         super.createGeometry(ctx);
-        
+
         // this is used to indicate who owns us
-        _own = new SharedMesh("own", _highlight);
-        _own.setRenderState(_owntex);
-        _own.updateRenderState();
-        _hnode.attachChild(_own);
+        _owner = new SharedMesh("owner", _highlight);
+        _owner.setRenderState(_owntex);
+        _owner.updateRenderState();
+        attachHighlight(_owner);
 
         // configure our colors
         configureOwnerColors();
@@ -64,11 +64,11 @@ public class CowSprite extends MobileSprite
     protected void configureOwnerColors ()
     {
         if (_piece.owner < 0) {
-            _own.setCullMode(CULL_ALWAYS);
+            _owner.setCullMode(CULL_ALWAYS);
         } else {
             _highlight.setDefaultColor(JPIECE_COLORS[_piece.owner]);
             _highlight.updateRenderState();
-            _own.setCullMode(CULL_DYNAMIC);
+            _owner.setCullMode(CULL_DYNAMIC);
         }
     }
 
@@ -78,7 +78,7 @@ public class CowSprite extends MobileSprite
             ctx, "textures/ustatus/selected.png");
     }
 
-    protected SharedMesh _own;
+    protected SharedMesh _owner;
 
     protected static TextureState _owntex;
 }
