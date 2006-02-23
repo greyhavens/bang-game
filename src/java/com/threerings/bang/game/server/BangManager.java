@@ -398,8 +398,7 @@ public class BangManager extends GameManager
 
         case BangObject.IN_PLAY:
             // queue up the first board tick
-            int avgPer = _bangobj.getAverageUnitCount();
-            _ticker.schedule(avgPer * getBaseTick(), false);
+            _ticker.schedule(getTickTime(), false);
             _bangobj.tick = (short)0;
             break;
 
@@ -1554,17 +1553,32 @@ public class BangManager extends GameManager
         });
     }
 
-    /** Used to accelerate things when testing. */
-    protected long getBaseTick ()
+    /**
+     * Returns the number of milliseconds until the next tick. This is scaled
+     * based on the number of pieces in play.
+     */
+    protected long getTickTime ()
     {
-        // start out with a base tick of two seconds and scale it down as
-        // the game progresses; cap it at ten minutes
-        long delta = System.currentTimeMillis() - _startStamp;
-        delta = Math.min(delta, TIME_SCALE_CAP);
-        // scale from 1/1 to 1/2 over the course of ten minutes
-        float factor = 1f + 1f * delta / TIME_SCALE_CAP;
-        long abase = (long)Math.round(BASE_TICK_TIME / factor);
-        return abase;
+        if (_bconfig.tutorial) {
+            // hard code ticks at four seconds for tutorials
+            return 4000L;
+
+        } else {
+            // start out with a base tick of two seconds and scale it down as
+            // the game progresses; cap it at ten minutes
+            long delta = System.currentTimeMillis() - _startStamp;
+            delta = Math.min(delta, TIME_SCALE_CAP);
+
+            // scale from 1/1 to 1/2 over the course of ten minutes
+            float factor = 1f + 1f * delta / TIME_SCALE_CAP;
+            long baseTime = (long)Math.round(BASE_TICK_TIME / factor);
+
+            // scale this base time by the average number of units in play
+            long tickTime = baseTime * _bangobj.getAverageUnitCount();
+
+            // make sure the tick is at least one second long
+            return Math.max(tickTime, 1000L);
+        }
     }
 
     /** Indicates that we're testing and to do wacky stuff. */
@@ -1659,14 +1673,10 @@ public class BangManager extends GameManager
             _extraTickTime = 0L;
             _bangobj.setTick((short)nextTick);
 
-            // queue ourselves up to expire in a time proportional to the
-            // average number of pieces per player
-            int avgPer = _bangobj.getAverageUnitCount();
-            long now = System.currentTimeMillis();
-            _nextTickTime = now +
-                // ticks must be at least one second apart
-                Math.max(getBaseTick() * avgPer + _extraTickTime, 1000L);
-            _ticker.schedule(_nextTickTime - now);
+            // queue up the next tick
+            long tickTime = getTickTime() + _extraTickTime;
+            _ticker.schedule(tickTime);
+            _nextTickTime = System.currentTimeMillis() + tickTime;
         }
     };
 
@@ -1698,7 +1708,6 @@ public class BangManager extends GameManager
             long now = System.currentTimeMillis();
             if (now >= _nextTickTime) {
                 _extraTickTime = Math.max(_extraTickTime, extraTime);
-
             } else {
                 _nextTickTime += extraTime;
                 _ticker.schedule(_nextTickTime - now);
