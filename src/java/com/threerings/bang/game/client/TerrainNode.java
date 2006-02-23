@@ -901,7 +901,6 @@ public class TerrainNode extends Node
         block.mesh = new TriMesh("terrain", block.vbuf, block.nbuf, block.cbuf,
             tbuf0, ibuf);
         block.mesh.setTextureBuffer(tbuf1, 1);
-        block.mesh.setSolidColor(ColorRGBA.white);
         block.mesh.setModelBound(new BoundingBox());
         block.mesh.updateModelBound();
         if (isHeightfieldStatic()) {
