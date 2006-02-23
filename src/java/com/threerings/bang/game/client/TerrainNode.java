@@ -27,6 +27,7 @@ import com.jme.scene.CompositeMesh;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
@@ -477,9 +478,6 @@ public class TerrainNode extends Node
     {
         _board = board;
 
-        // make sure we're unlocked
-        unlock(_ctx.getRenderer());
-        
         // clean up any existing geometry
         detachAllChildren();
 
@@ -495,17 +493,9 @@ public class TerrainNode extends Node
                 attachChild(_blocks[x][y].node);
             }
         }
-        refreshShadows();
-        refreshTerrain();
         
         updateRenderState();
         updateGeometricState(0, true);
-        
-        // if the heightfield is static, we can lock the node and have it
-        // compiled to a display list
-        if (isHeightfieldStatic()) {
-            lock(_ctx.getRenderer());
-        }
     }
     
     /**
@@ -856,7 +846,10 @@ public class TerrainNode extends Node
         block.ebounds = new Rectangle(vx - (le ? 2 : 0), vy - (be ? 2 : 0),
             vwidth, vheight);
         block.refreshGeometry(block.ebounds);
-
+        
+        // set the colors based on shadow values
+        block.refreshColors();
+        
         // set the texture coordinates
         FloatBuffer tbuf0 = BufferUtils.createFloatBuffer(vwidth*vheight*2),
             tbuf1 = BufferUtils.createFloatBuffer(vwidth*vheight*2);
@@ -904,17 +897,30 @@ public class TerrainNode extends Node
         }
 
         // create a trimesh with the computed values; if the heightfield is
-        // static, use a VBO to store the vertices
+        // static, use a VBO to store the vertices and compile to display list
         block.mesh = new TriMesh("terrain", block.vbuf, block.nbuf, block.cbuf,
             tbuf0, ibuf);
-        if (isHeightfieldStatic()) {
-            block.mesh.setVBOInfo(new VBOInfo());
-        }
         block.mesh.setTextureBuffer(tbuf1, 1);
         block.mesh.setSolidColor(ColorRGBA.white);
         block.mesh.setModelBound(new BoundingBox());
         block.mesh.updateModelBound();
-
+        if (isHeightfieldStatic()) {
+            // in order to ensure that texture coords are sent when compiling
+            // the shared geometry to a display list, we must include a dummy
+            // texture state
+            TextureState tstate = _ctx.getRenderer().createTextureState();
+            tstate.setTexture(null, 0);
+            tstate.setTexture(null, 1);
+            block.mesh.setRenderState(tstate);
+            
+            block.mesh.setVBOInfo(new VBOInfo());
+            block.mesh.lockBounds();
+            block.mesh.lockMeshes();
+        }
+        
+        // create the splat meshes
+        block.refreshSplats(block.bounds);
+        
         return block;
     }
 
