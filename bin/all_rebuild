@@ -13,12 +13,10 @@ fi
 ROOT=`dirname $0`
 ROOT=`cd $ROOT ; cd .. ; pwd`
 LOCKFILE=/tmp/rebuild-bang.lock
+export JAVA_HOME=/usr/local/jdk1.5
 
 # load up some handy shell functions
 . /export/tools/lib/sh/build_helper
-
-export JAVA_HOME=/usr/local/jdk1.5
-export PATH=$JAVA_HOME/bin:$PATH
 
 # make sure directories are created sanely
 umask 002
@@ -62,6 +60,14 @@ fi
 
 # rebuild our libraries
 build_libraries samskivert getdown jme-bui narya threerings
+
+# run proguard on getdown
+cd $ROOT/projects/getdown
+$ANT proguard
+if [ $? != 0 ]; then
+    rm -f $LOCKFILE
+    exit 255
+fi
 
 # build the main thang
 cd $ROOT
