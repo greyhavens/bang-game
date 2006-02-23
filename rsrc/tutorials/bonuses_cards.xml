@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="controls" board="Dry Canyon" players="2">
+<tutorial ident="bonuses_cards" board="Dry Canyon" players="2">
   <!-- show them a unit and have them click to select it -->
   <add_unit type="gunslinger" location="10,10" owner="0"/>
   <text message="click_unit" step="1"/>

@@ -209,11 +209,11 @@ public class TownView extends BWindow
         protected void wasAdded ()
         {
             super.wasAdded();
-            
+
             // disable camera input handler
             _ctx.getInputHandler().setEnabled(false);
         }
-        
+
         @Override // documentation inherited
         protected void wasRemoved ()
         {
@@ -224,7 +224,10 @@ public class TownView extends BWindow
                 _vpsprite.unbindCamera();
                 _vpsprite = null;
             }
-            
+
+            // make sure we complete any active camera path
+            _ctx.getCameraHandler().skipPath();
+
             // reenable the input handler
             _ctx.getInputHandler().setEnabled(true);
         }
@@ -246,7 +249,7 @@ public class TownView extends BWindow
         protected void fadeInComplete ()
         {
             super.fadeInComplete();
-            
+
             if (_vpsprite != null &&
                 !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
                 // clear out any hover sprite that was established in the

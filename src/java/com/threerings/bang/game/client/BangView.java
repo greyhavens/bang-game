@@ -223,7 +223,7 @@ public class BangView extends BWindow
         }
 
         // start with help showing if requested
-        if (BangPrefs.config.getValue("context_help", true)) {
+        if (BangPrefs.config.getValue("context_help", false)) {
             toggleHelpView(false);
         }
     }

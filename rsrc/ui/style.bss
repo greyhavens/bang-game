@@ -228,12 +228,15 @@ textarea {
 }
 
 checkbox {
-  background: image "ui/checkbox/default.png" centery;
-  padding: 0 0 0 15;
+  background: image "ui/checkbox/unchecked.png" centery;
 }
 
 checkbox:selected {
-  background: image "ui/checkbox/selected.png" centery;
+  background: image "ui/checkbox/checked.png" centery;
+}
+
+checkbox:disabled {
+  background: image "ui/checkbox/unchecked_disabled.png" centery;
 }
 
 scrollbar_hthumb {
@@ -642,6 +645,25 @@ round_timer {
 
 overlay_chat {
   font: "Dom Casual" plain 20;
+}
+
+tutorial_title {
+  font: "Old Town Wide" plain 20;
+  color: #000000;
+  text-align: center;
+}
+
+tutorial_text {
+  font: "Dom Casual" plain 20;
+  color: #4C2602;
+  text-align: left;
+  vertical-align: top;
+}
+
+tutorial_steps {
+  font: "Helvetica" plain 12;
+  color: #7D4924;
+  text-align: right;
 }
 
 context_help_title {

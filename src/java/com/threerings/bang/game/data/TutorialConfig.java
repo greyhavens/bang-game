@@ -26,6 +26,7 @@ public class TutorialConfig
     public static class Text extends Action
     {
         public String message;
+        public int step;
     }
 
     public static class Wait extends Action
@@ -78,11 +79,23 @@ public class TutorialConfig
         return _actions.size();
     }
 
+    /**
+     * Returns the total number of "steps" in this tutorial. This is for
+     * display to the user.
+     */
+    public int getSteps ()
+    {
+        return _steps;
+    }
+
     /** Used when parsing this tutorial from an XML config file. */
     public void addAction (Action action)
     {
         action.index = _actions.size();
         _actions.add(action);
+        if (action instanceof Text) {
+            _steps = Math.max(_steps, ((Text)action).step);
+        }
     }
 
     /** Generates a string representation of this instance. */
@@ -94,6 +107,10 @@ public class TutorialConfig
         StringUtil.toString(buf, _actions);
         return buf.append("]").toString();
     }
+
+    /** The total number of steps in this tutorial. This is inferred to be the
+     * step number of the highest numbered step. */
+    protected int _steps;
 
     /** Contains the list of actions used in this tutorial. */
     protected ArrayList<Action> _actions = new ArrayList<Action>();

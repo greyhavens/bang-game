@@ -62,7 +62,18 @@ public interface BangCodes extends InvocationCodes
 
     /** The maximum number of pardners you can have. */
     public static final int MAX_PARDNERS = 75;
-    
+
+    /** Enumerates the identifiers for our tutorials and the order in which
+     * they should be displayed and completed. */
+    public static final String[] TUTORIALS = {
+        "controls",
+        "bonuses_cards",
+        "bigshots",
+        "cattle_rustling",
+        "claim_jumping",
+        "gold_rush",
+    };
+
     /** An error code reported when a financial transaction cannot complete. */
     public static final String INSUFFICIENT_FUNDS =
         MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");

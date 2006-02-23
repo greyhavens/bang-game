@@ -351,7 +351,9 @@ public class BangController extends GameController
         super.attributeChanged(event);
 
         // once the awards are set, we can display the end of game view
-        if (event.getName().equals(BangObject.AWARDS)) {
+        if (event.getName().equals(BangObject.AWARDS) &&
+            // we handle things specially in the tutorial
+            !_config.tutorial) {
             GameOverView gov = new GameOverView(_ctx, this, _bangobj);
             _ctx.getRootNode().addWindow(gov);
             gov.pack();

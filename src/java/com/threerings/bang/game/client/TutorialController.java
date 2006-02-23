@@ -6,18 +6,22 @@ package com.threerings.bang.game.client;
 import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BDecoratedWindow;
-import com.jmex.bui.BTextArea;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
@@ -38,10 +42,19 @@ public class TutorialController
         // load up the tutorial configuration
         _config = TutorialUtil.loadTutorial(
             ctx.getResourceManager(), config.scenarios[0]);
+        _msgs = _ctx.getMessageManager().getBundle(
+            "tutorials." + _config.ident);
+        _gmsgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
         // create and add the window in which we'll display info text
         _tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null);
-        _tutwin.add(_info = new BTextArea());
+        _tutwin.setLayoutManager(new BorderLayout(5, 5));
+        _tutwin.add(_title = new BLabel("", "tutorial_title"),
+                    BorderLayout.NORTH);
+        _tutwin.add(_info = new BLabel("", "tutorial_text"),
+                    BorderLayout.CENTER);
+        _tutwin.add(_steps = new BLabel("", "tutorial_steps"),
+                    BorderLayout.SOUTH);
         _tutwin.addListener(_clicklist);
         _info.addListener(_clicklist);
     }
@@ -72,6 +85,12 @@ public class TutorialController
         if (_tutwin.isAdded()) {
             _ctx.getRootNode().removeWindow(_tutwin);
         }
+
+        // display the pick tutorial view in "finished tutorial" mode
+        PickTutorialView view = new PickTutorialView(_ctx, _config.ident);
+        _ctx.getRootNode().addWindow(view);
+        view.pack(-1, -1);
+        view.center();
     }
 
     /** Called from {@link BangController#didLeavePlace}. */
@@ -90,7 +109,8 @@ public class TutorialController
     {
         TutorialConfig.Action action = _config.getAction(actionId);
         if (action instanceof TutorialConfig.Text) {
-            displayMessage(((TutorialConfig.Text)action).message);
+            TutorialConfig.Text text = (TutorialConfig.Text)action;
+            displayMessage(text.message, text.step);
 
         } else if (action instanceof TutorialConfig.Wait) {
             // wait for the specified event
@@ -114,10 +134,17 @@ public class TutorialController
         }
     }
 
-    protected void displayMessage (String message)
+    protected void displayMessage (String message, int step)
     {
-        message = "m." + message;
-        _info.setText(_ctx.xlate("tutorials." + _config.ident, message));
+        String titkey = "m." + message + "_title";
+        if (_msgs.exists(titkey)) {
+            _title.setText(_msgs.get(titkey));
+        }
+        _info.setText(_msgs.get("m." + message));
+        if (step > 0) {
+            _steps.setText(_gmsgs.get("m.tutorial_step", String.valueOf(step),
+                                      String.valueOf(_config.getSteps())));
+        }
 
         // display our window the first time we need it
         if (!_tutwin.isAdded()) {
@@ -125,9 +152,9 @@ public class TutorialController
         }
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
-        _tutwin.pack(300, -1);
-        _tutwin.setLocation(width-_tutwin.getWidth()-25,
-                            (height-_tutwin.getHeight())/2);
+        _tutwin.pack(500, -1);
+        _tutwin.setLocation((width-_tutwin.getWidth())/2,
+                            height-_tutwin.getHeight() - 10);
     }
 
     protected void processedAction (TutorialConfig.Action action)
@@ -152,9 +179,10 @@ public class TutorialController
 
     protected BangContext _ctx;
     protected BangObject _bangobj;
+    protected MessageBundle _msgs, _gmsgs;
 
     protected BDecoratedWindow _tutwin;
-    protected BTextArea _info;
+    protected BLabel _title, _info, _steps;
 
     protected TutorialConfig _config;
     protected TutorialConfig.Wait _pending;
