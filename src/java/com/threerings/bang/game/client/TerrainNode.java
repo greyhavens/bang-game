@@ -1117,8 +1117,12 @@ public class TerrainNode extends Node
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
                 tstate.setTexture(createAlphaTexture(code, rect), 0);
-                Texture ground = getGroundTexture(code).getTexture().
-                    createSimpleClone();
+                Texture ground = getGroundTexture(code).getTexture();
+                // before creating a clone, make sure the texture is bound
+                if (ground.getTextureId() == 0) {
+                    RenderUtil.createTextureState(_ctx, ground).apply();
+                }
+                ground = ground.createSimpleClone();
                 ground.setApply(Texture.AM_COMBINE);
                 ground.setCombineFuncAlpha(Texture.ACF_REPLACE);
                 ground.setCombineSrc0Alpha(Texture.ACS_PREVIOUS);

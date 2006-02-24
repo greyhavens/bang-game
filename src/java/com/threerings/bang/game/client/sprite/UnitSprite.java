@@ -267,6 +267,7 @@ public class UnitSprite extends MobileSprite
                 _pendtexs[ii] = ctx.getTextureCache().getTexture(
                     "units/" + type + "/pending.png", 64, 64, 2, ii);
                 _pendtexs[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+                RenderUtil.createTextureState(ctx, _pendtexs[ii]).apply();
             }
         }
 
@@ -430,20 +431,25 @@ public class UnitSprite extends MobileSprite
 
     protected static void loadTextures (BasicContext ctx)
     {
+        // we also need to ensure that the textures are bound to ids before
+        // we clone them
         _hovtex = ctx.getTextureCache().getTexture(
             "textures/ustatus/selected.png");
+        RenderUtil.createTextureState(ctx, _hovtex).apply();
 
         _tgttst = RenderUtil.createTextureState(
             ctx, "textures/ustatus/crosshairs.png");
         _movetex = ctx.getTextureCache().getTexture(
             "textures/ustatus/tick_ready.png");
         _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-
+        RenderUtil.createTextureState(ctx, _movetex).apply();
+        
         _ticktex = new Texture[5];
         for (int ii = 0; ii < 5; ii++) {
             _ticktex[ii] = ctx.getTextureCache().getTexture(
                 "textures/ustatus/tick_counter_" + ii + ".png");
             _ticktex[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+            RenderUtil.createTextureState(ctx, _ticktex[ii]).apply();
         }
         _dfull = ctx.getImageCache().getBufferedImage(
             "textures/ustatus/health_meter_full.png");
