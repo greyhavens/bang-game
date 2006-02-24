@@ -3,7 +3,11 @@
 
 package com.threerings.bang.client;
 
+import com.jme.renderer.ColorRGBA;
+import com.jme.util.TextureManager;
+
 import com.jmex.bui.BButton;
+import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BPasswordField;
@@ -14,8 +18,6 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
-import com.jme.renderer.ColorRGBA;
-import com.jme.util.TextureManager;
 
 import com.samskivert.servlet.user.Password;
 
@@ -43,36 +45,41 @@ public class LogonView extends BWindow
     public LogonView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.TOP));
+        ((GroupLayout)getLayoutManager()).setOffAxisJustification(
+            GroupLayout.RIGHT);
         setStyleClass("logon_view");
 
         _ctx = ctx;
-        _ctx.getRenderer().setBackgroundColor(ColorRGBA.white);
+        _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
 
         _msgs = ctx.getMessageManager().getBundle(BangAuthCodes.AUTH_MSGS);
-        BContainer cont = new BContainer(new TableLayout(3, 5, 5));
-        cont.add(new BLabel(_msgs.get("m.username")));
-        cont.add(_username = new BTextField());
+        BContainer row = GroupLayout.makeHBox(GroupLayout.LEFT);
+        BContainer grid = new BContainer(new TableLayout(2, 5, 5));
+        grid.add(new BLabel(_msgs.get("m.username"), "logon_label"));
+        grid.add(_username = new BTextField());
         _username.setPreferredWidth(150);
-        cont.add(new BLabel(""));
-        cont.add(new BLabel(_msgs.get("m.password")));
-        cont.add(_password = new BPasswordField());
+        grid.add(new BLabel(_msgs.get("m.password"), "logon_label"));
+        grid.add(_password = new BPasswordField());
         _password.addListener(this);
+        row.add(grid);
 
-        BButton logon = new BButton(_msgs.get("m.logon"), "logon");
-        logon.addListener(this);
-        cont.add(logon);
-        add(cont);
+        BContainer col = GroupLayout.makeVBox(GroupLayout.TOP);
+        col.add(_logon = new BButton(_msgs.get("m.logon"), this, "logon"));
+        _logon.setStyleClass("big_button");
+        _logon.setEnabled(false);
+        col.add(_remember = new BCheckBox(_msgs.get("m.remember")));
+        _remember.setStyleClass("logon_remember");
+        row.add(col);
+        add(row);
 
         add(_status = new StatusLabel(ctx));
-        _status.setPreferredSize(new Dimension(420, 40));
+        _status.setStyleClass("logon_status");
+        _status.setPreferredSize(new Dimension(360, 40));
 
-        cont = new BContainer(new TableLayout(2, 5, 5));
-        BButton btn;
-        cont.add(btn = new BButton(_msgs.get("m.options"), "options"));
-        btn.addListener(this);
-        cont.add(btn = new BButton(_msgs.get("m.exit"), "exit"));
-        btn.addListener(this);
-        add(cont);
+        row = GroupLayout.makeHBox(GroupLayout.LEFT);
+        row.add(new BButton(_msgs.get("m.options"), this, "options"));
+        row.add(new BButton(_msgs.get("m.exit"), this, "exit"));
+        add(row);
 
         // add our logon listener
         _ctx.getClient().addClientObserver(_listener);
@@ -116,6 +123,7 @@ public class LogonView extends BWindow
             _status.setStatus(_msgs.get("m.init_progress", ""+percent), false);
         } else {
             _status.setStatus(_msgs.get("m.init_complete"), false);
+            _logon.setEnabled(true);
             _initialized = true;
         }
     }
@@ -143,8 +151,13 @@ public class LogonView extends BWindow
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
+
     protected BTextField _username;
     protected BPasswordField _password;
+
+    protected BButton _logon;
+    protected BCheckBox _remember;
+
     protected StatusLabel _status;
     protected boolean _initialized;
 }

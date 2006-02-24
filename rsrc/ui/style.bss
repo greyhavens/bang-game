@@ -48,7 +48,7 @@ component:disabled {
 }
 
 container {
-//  border: 1 solid #000000;
+//  border: 1 solid #FFFFFF;
 }
 
 label {
@@ -228,15 +228,15 @@ textarea {
 }
 
 checkbox {
-  background: image "ui/checkbox/unchecked.png" centery;
+  icon: image "ui/checkbox/unchecked.png";
 }
 
 checkbox:selected {
-  background: image "ui/checkbox/checked.png" centery;
+  icon: image "ui/checkbox/checked.png";
 }
 
 checkbox:disabled {
-  background: image "ui/checkbox/unchecked_disabled.png" centery;
+  icon: image "ui/checkbox/unchecked_disabled.png";
 }
 
 scrollbar_hthumb {
@@ -478,8 +478,30 @@ palette_icon:selected {
 // Logon View styles
 
 logon_view {
-  background: image "menu/logon.png" scalexy;
-  padding: 300 50 0 0;
+  background: image "ui/logon.png" scalexy;
+  padding: 350 217 0 330;
+}
+
+logon_label {
+  font: "Dom Casual" plain 24;
+  text-effect: outline;
+  color: #FFFFFF;
+  effect-color: #6A482E;
+}
+
+logon_remember {
+  parent: "checkbox";
+  font: "Helvetica" plain 10;
+}
+
+logon_remember:selected {
+  parent: "checkbox:selected";
+}
+
+logon_status {
+  parent: "status_label";
+  font: "Helvetica" plain 14;
+  color: #E8BB2E;
 }
 
 //
