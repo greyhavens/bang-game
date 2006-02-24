@@ -20,6 +20,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.servlet.user.Password;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -29,6 +30,7 @@ import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.LogonException;
 import com.threerings.presents.net.UsernamePasswordCreds;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
@@ -54,22 +56,21 @@ public class LogonView extends BWindow
 
         _msgs = ctx.getMessageManager().getBundle(BangAuthCodes.AUTH_MSGS);
         BContainer row = GroupLayout.makeHBox(GroupLayout.LEFT);
+        ((GroupLayout)row.getLayoutManager()).setOffAxisJustification(
+            GroupLayout.BOTTOM);
         BContainer grid = new BContainer(new TableLayout(2, 5, 5));
         grid.add(new BLabel(_msgs.get("m.username"), "logon_label"));
-        grid.add(_username = new BTextField());
+        grid.add(_username = new BTextField(
+                     BangPrefs.config.getValue("username", "")));
         _username.setPreferredWidth(150);
         grid.add(new BLabel(_msgs.get("m.password"), "logon_label"));
         grid.add(_password = new BPasswordField());
         _password.addListener(this);
         row.add(grid);
 
-        BContainer col = GroupLayout.makeVBox(GroupLayout.TOP);
-        col.add(_logon = new BButton(_msgs.get("m.logon"), this, "logon"));
+        row.add(_logon = new BButton(_msgs.get("m.logon"), this, "logon"));
         _logon.setStyleClass("big_button");
         _logon.setEnabled(false);
-        col.add(_remember = new BCheckBox(_msgs.get("m.remember")));
-        _remember.setStyleClass("logon_remember");
-        row.add(col);
         add(row);
 
         add(_status = new StatusLabel(ctx));
@@ -83,6 +84,19 @@ public class LogonView extends BWindow
 
         // add our logon listener
         _ctx.getClient().addClientObserver(_listener);
+    }
+
+    @Override // documentation inherited
+    public void wasAdded ()
+    {
+        super.wasAdded();
+
+        // focus the appropriate textfield
+        if (StringUtil.isBlank(_username.getText())) {
+            _username.requestFocus();
+        } else {
+            _password.requestFocus();
+        }
     }
 
     // documentation inherited from interface ActionListener
@@ -131,6 +145,7 @@ public class LogonView extends BWindow
     protected ClientAdapter _listener = new ClientAdapter() {
         public void clientDidLogon (Client client) {
             _status.setStatus(_msgs.get("m.logged_on"), false);
+            BangPrefs.config.setValue("username", _username.getText());
         }
 
         public void clientFailedToLogon (Client client, Exception cause) {
@@ -154,9 +169,7 @@ public class LogonView extends BWindow
 
     protected BTextField _username;
     protected BPasswordField _password;
-
     protected BButton _logon;
-    protected BCheckBox _remember;
 
     protected StatusLabel _status;
     protected boolean _initialized;

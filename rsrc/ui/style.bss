@@ -489,15 +489,6 @@ logon_label {
   effect-color: #6A482E;
 }
 
-logon_remember {
-  parent: "checkbox";
-  font: "Helvetica" plain 10;
-}
-
-logon_remember:selected {
-  parent: "checkbox:selected";
-}
-
 logon_status {
   parent: "status_label";
   font: "Helvetica" plain 14;
