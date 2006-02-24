@@ -84,7 +84,7 @@
         excludes="**/InvocationReceiver.java"/>
     </apply>
   </target>
-  
+
   <!-- prepares the application directories -->
   <target name="prepare">
     <mkdir dir="${deploy.dir}"/>
@@ -94,6 +94,10 @@
     <copy todir="${deploy.dir}/classes">
       <fileset dir="${src.dir}" includes="**/*.properties"/>
     </copy>
+  </target>
+
+  <!-- copies our resources into the build directory -->
+  <target name="rsrc">
     <copy todir="${deploy.dir}/classes/rsrc">
       <fileset dir="rsrc">
        <include name="**/*"/>
@@ -102,7 +106,7 @@
        <exclude name="**/*.mtl"/>
        <exclude name="avatars/**"/>
        <exclude name="tutorials/**/*.xml"/>
-       <exclude name="tiles/fringe/config.xml"/>
+       <exclude name="config/**/*.xml"/>
       </fileset>
       <fileset dir="rsrc">
        <include name="avatars/*.dat"/>
@@ -148,15 +152,6 @@
     <confcomp parser="com.threerings.bang.game.tools.xml.TutorialConfigParser">
       <fileset dir="rsrc/tutorials" includes="**/*.xml"/>
     </confcomp>
-  </target>
-  
-  <!-- creates the serialized fringe config -->
-  <target name="fringe">
-    <taskdef name="conffringe"
-      classname="com.threerings.jme.tile.tools.CompileFringeConfigurationTask"
-      classpathref="classpath"/>
-    <conffringe config="rsrc/tiles/fringe/config.xml"
-                target="rsrc/tiles/fringe/config.dat"/>
   </target>
 
   <!-- creates the serialized color repository config -->
@@ -210,7 +205,7 @@
   </target>
 
   <!-- build the java class files -->
-  <target name="compile" depends="prepare">
+  <target name="compile" depends="prepare,rsrc">
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
            debug="on" optimize="off" deprecation="on">
       <classpath refid="classpath"/>
@@ -344,7 +339,7 @@
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
   <!-- rebuild all the niggling bits -->
-  <target name="bits" depends="colorpos,fringe,tutorials"/>
+  <target name="bits" depends="colorpos,tutorials"/>
 
   <!-- builds the code jar file -->
   <target name="dist" depends="prepare,compile">
@@ -353,7 +348,7 @@
   </target>
 
   <!-- builds the avatar, media and sounds jar files -->
-  <target name="mdist" depends="prepare,bits,sounds,models,avatars">
+  <target name="mdist" depends="prepare,models,sounds,bits,avatars,rsrc">
     <jar file="${deploy.dir}/${app.name}-media.jar"
          basedir="${deploy.dir}/classes">
       <include name="rsrc/**"/>
