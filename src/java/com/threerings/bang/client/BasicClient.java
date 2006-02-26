@@ -322,7 +322,7 @@ public class BasicClient
         }
 
         public BImage loadImage (String rsrcPath) {
-            return new BImage(_tcache.getTexture(rsrcPath));
+            return new BImage(_tcache.getUITexture(rsrcPath));
         }
     }
 

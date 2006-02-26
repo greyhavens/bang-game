@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import com.jme.renderer.ColorRGBA;
 import com.jme.util.LoggingSystem;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BScrollBar;
 import com.jmex.bui.BTextArea;
@@ -16,6 +17,7 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
 /**
@@ -56,6 +58,11 @@ public class StyleTest extends TestApp
         });
         cont.setPreferredSize(new Dimension(400, 250));
         window.add(cont);
+
+        cont = new BContainer(new BorderLayout());
+        cont.add(new BButton("East"), BorderLayout.EAST);
+        cont.add(new BButton("West"), BorderLayout.WEST);
+        window.add(cont, GroupLayout.FIXED);
 
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.gray);
     }

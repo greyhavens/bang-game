@@ -222,7 +222,7 @@ public abstract class TestApp extends JmeApp
         }
 
         public BImage loadImage (String rsrcPath) {
-            return new BImage(_tcache.getTexture(rsrcPath));
+            return new BImage(_tcache.getUITexture(rsrcPath));
         }
     }
 

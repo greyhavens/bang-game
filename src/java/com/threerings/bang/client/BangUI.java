@@ -126,7 +126,7 @@ public class BangUI
                 return new AWTTextFactory(font, true);
             }
             public BImage loadImage (String path) throws IOException {
-                return new BImage(_ctx.getTextureCache().getTexture(path));
+                return new BImage(_ctx.getTextureCache().getUITexture(path));
             }
         };
         try {
