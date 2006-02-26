@@ -5,7 +5,7 @@ package com.threerings.bang.util;
 
 import java.awt.image.BufferedImage;
 
-import com.jme.image.Image;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BStyleSheet;
 
 import com.threerings.cast.CharacterManager;
@@ -71,5 +71,5 @@ public interface BasicContext extends JmeContext
     public Model loadModel (String type, String name);
 
     /** Loads an image from the cache. */
-    public Image loadImage (String rsrcPath);
+    public BImage loadImage (String rsrcPath);
 }

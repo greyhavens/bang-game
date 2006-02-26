@@ -3,17 +3,16 @@
 
 package com.threerings.bang.avatar.client;
 
-import com.jme.image.Image;
 import com.jme.renderer.Renderer;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
-import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.crowd.data.PlaceObject;
 
@@ -85,7 +84,7 @@ public class BarberView extends ShopView
 
         // hackity hack hack hack
         if (_active == _wearclothes) {
-            RenderUtil.renderImage(_faketab, 179, 598);
+            _faketab.render(renderer, 179, 598);
         }
     }
 
@@ -108,7 +107,7 @@ public class BarberView extends ShopView
     protected StatusLabel _status;
     protected NewLookView _newlook;
     protected WearClothingView _wearclothes;
-    protected Image _faketab;
+    protected BImage _faketab;
 
     protected static Rectangle CONTENT_RECT = new Rectangle(40, 65, 980, 545);
 }

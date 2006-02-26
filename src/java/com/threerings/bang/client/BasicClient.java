@@ -11,13 +11,14 @@ import javax.imageio.ImageIO;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
-import com.jme.image.Image;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
-import com.jmex.bui.BStyleSheet;
+
+import com.jmex.bui.BImage;
 import com.jmex.bui.BRootNode;
+import com.jmex.bui.BStyleSheet;
 
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
@@ -320,8 +321,8 @@ public class BasicClient
             return _mcache.getModel(type, name);
         }
 
-        public Image loadImage (String rsrcPath) {
-            return _icache.getImage(rsrcPath);
+        public BImage loadImage (String rsrcPath) {
+            return new BImage(_tcache.getTexture(rsrcPath));
         }
     }
 

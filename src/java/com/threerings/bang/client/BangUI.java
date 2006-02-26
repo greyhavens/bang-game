@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import com.jme.image.Image;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BToggleButton;
@@ -124,8 +125,8 @@ public class BangUI
                 }
                 return new AWTTextFactory(font, true);
             }
-            public Image loadImage (String path) throws IOException {
-                return _ctx.loadImage(path);
+            public BImage loadImage (String path) throws IOException {
+                return new BImage(_ctx.getTextureCache().getTexture(path));
             }
         };
         try {

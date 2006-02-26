@@ -3,13 +3,13 @@
 
 package com.threerings.bang.avatar.client;
 
-import com.jme.image.Image;
 import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
-import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.util.MessageBundle;
 
@@ -46,13 +46,11 @@ public class WearClothingView extends BContainer
         for (int ii = 0; ii < tabs.length; ii++) {
             tabs[ii] = AvatarLogic.SLOTS[ii].name;
         }
-        final Image tabbg = ctx.loadImage("ui/barber/side_change_clothes.png");
+        final BImage tabbg = ctx.loadImage("ui/barber/side_change_clothes.png");
         add(new HackyTabs(ctx, true, "ui/barber/tab_", tabs, 54, 30) {
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
-                RenderUtil.blendState.apply();
-                RenderUtil.renderImage(
-                    tabbg, 0, _height - tabbg.getHeight() - 42);
+                tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42);
             }
             protected void tabSelected (int index) {
                 setSlot(index);

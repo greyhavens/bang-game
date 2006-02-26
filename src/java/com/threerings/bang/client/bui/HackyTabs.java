@@ -3,12 +3,12 @@
 
 package com.threerings.bang.client.bui;
 
-import com.jme.image.Image;
 import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BComponent;
+import com.jmex.bui.BImage;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
-import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.bang.util.BangContext;
 
@@ -29,7 +29,7 @@ public class HackyTabs extends BComponent
         addListener(_mlistener);
 
         // load up our tab images
-        _tabs = new Image[tabs.length];
+        _tabs = new BImage[tabs.length];
         for (int ii = 0; ii < tabs.length; ii++) {
             _tabs[ii] = _ctx.loadImage(imgpref + tabs[ii] + ".png");
         }
@@ -69,14 +69,13 @@ public class HackyTabs extends BComponent
     {
         super.renderComponent(renderer);
 
-        RenderUtil.blendState.apply();
         int ix = 0, iy = 0;
         if (_vertical) {
             iy = getHeight() - _tsize*_selidx - _tabs[_selidx].getHeight();
         } else {
             ix = _tsize*_selidx;
         }
-        RenderUtil.renderImage(_tabs[_selidx], ix, iy);
+        _tabs[_selidx].render(renderer, ix, iy);
     }
 
     protected MouseAdapter _mlistener = new MouseAdapter() {
@@ -93,6 +92,6 @@ public class HackyTabs extends BComponent
     protected BangContext _ctx;
     protected boolean _vertical;
     protected int _tsize, _tborder;
-    protected Image[] _tabs;
+    protected BImage[] _tabs;
     protected int _selidx = -1;
 }

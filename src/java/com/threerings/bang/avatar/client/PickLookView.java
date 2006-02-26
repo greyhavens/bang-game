@@ -5,9 +5,9 @@ package com.threerings.bang.avatar.client;
 
 import java.util.Iterator;
 
-import com.jme.image.Image;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -102,7 +102,7 @@ public class PickLookView extends BContainer
         // if we have more than one look, add the looks combo, otherwise add a
         // blurb for the barber
         if (looks.length > 1 || _barbobj != null) {
-            Image icon = _ctx.loadImage("ui/barber/caption_look.png");
+            BImage icon = _ctx.loadImage("ui/barber/caption_look.png");
             add(new BLabel(new ImageIcon(icon)), new Point(20, 0));
             add(_looks, new Rectangle(79, 0, 164, 29));
         } else {

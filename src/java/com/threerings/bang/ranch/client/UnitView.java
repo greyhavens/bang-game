@@ -3,7 +3,6 @@
 
 package com.threerings.bang.ranch.client;
 
-import com.jme.image.Image;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
@@ -12,6 +11,7 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 
 import com.jmex.bui.BGeomView;
+import com.jmex.bui.BImage;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.bang.client.Model;
@@ -93,13 +93,12 @@ public class UnitView extends BGeomView
     @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
-        com.jmex.bui.util.RenderUtil.blendState.apply();
-        com.jmex.bui.util.RenderUtil.renderImage(_frame, 0, 0);
+        _frame.render(renderer, 0, 0);
         super.renderComponent(renderer);
     }
 
     protected BangContext _ctx;
     protected Node _unode;
     protected Model.Binding _binding;
-    protected Image _frame;
+    protected BImage _frame;
 }

@@ -3,11 +3,12 @@
 
 package com.threerings.bang.client;
 
-import com.jme.image.Image;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
@@ -16,7 +17,6 @@ import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Rectangle;
-import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.util.MessageBundle;
 
@@ -127,12 +127,11 @@ public abstract class ShopView extends BWindow
     {
         super.renderBackground(renderer);
 
-        RenderUtil.blendState.apply();
-        RenderUtil.renderImage(_shopkbg, 12, _height-_shopkbg.getHeight()-12);
-        RenderUtil.renderImage(_shopkeep, 12, _height-_shopkeep.getHeight()-12);
-        RenderUtil.renderImage(_shop, _width-_shop.getWidth()-12,
-                               _height-_shop.getHeight()-12);
-        RenderUtil.renderImage(_background, 0, 0);
+        _shopkbg.render(renderer, 12, _height-_shopkbg.getHeight()-12);
+        _shopkeep.render(renderer, 12, _height-_shopkeep.getHeight()-12);
+        _shop.render(renderer,
+                     _width-_shop.getWidth()-12, _height-_shop.getHeight()-12);
+        _background.render(renderer, 0, 0);
     }
 
     /**
@@ -157,5 +156,5 @@ public abstract class ShopView extends BWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BWindow _intro;
-    protected Image _background, _shopkeep, _shopkbg, _shop;
+    protected BImage _background, _shopkeep, _shopkbg, _shop;
 }

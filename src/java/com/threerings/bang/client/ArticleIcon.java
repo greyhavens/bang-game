@@ -3,7 +3,10 @@
 
 package com.threerings.bang.client;
 
+import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
+
+import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 
@@ -25,11 +28,12 @@ public class ArticleIcon extends ItemIcon
     {
         Article article = (Article)_item;
         String ipath = "goods/articles/"+  article.getName() + ".png";
-        setIcon(new ImageIcon(
-                    ctx.getImageCache().createImage(
-                        ctx.getImageCache().getBufferedImage(ipath),
-                        ctx.getAvatarLogic().decodeColorizations(
-                            article.getComponents()[0]), true)));
+        BImage image = new BImage(
+            ImageUtil.recolorImage(
+                ctx.getImageCache().getBufferedImage(ipath),
+                ctx.getAvatarLogic().decodeColorizations(
+                    article.getComponents()[0])));
+        setIcon(new ImageIcon(image));
         String mkey = "m." + article.getName();
         setText(ctx.xlate(AvatarCodes.ARTICLE_MSGS, mkey));
     }

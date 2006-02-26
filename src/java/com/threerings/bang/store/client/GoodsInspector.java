@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.Spacer;
@@ -20,6 +21,7 @@ import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.threerings.media.image.Colorization;
+import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
@@ -159,15 +161,13 @@ public class GoodsInspector extends BContainer
 
     protected void updateImage ()
     {
-        ImageIcon icon;
+        BImage image;
         if (_zations != null) {
-            icon = new ImageIcon(_ctx.getImageCache().createImage(
-                                     _srcimg, _zations, true));
+            image = new BImage(ImageUtil.recolorImage(_srcimg, _zations));;
         } else {
-            icon = new ImageIcon(_ctx.getImageCache().createImage(
-                                     _srcimg, true));
+            image = new BImage(_srcimg);
         }
-        _icon.setIcon(icon);
+        _icon.setIcon(new ImageIcon(image));
     }
 
     protected ActionListener _colorpal = new ActionListener() {

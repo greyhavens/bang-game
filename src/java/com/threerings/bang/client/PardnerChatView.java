@@ -6,7 +6,6 @@ package com.threerings.bang.client;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
@@ -23,6 +22,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTabbedPane;
@@ -74,11 +74,11 @@ public class PardnerChatView extends BDecoratedWindow
         _ctx = ctx;
         setStyleClass("pardner_chat_view");
         setModal(true);
-        
+
         ((GroupLayout)getLayoutManager()).setOffAxisPolicy(GroupLayout.STRETCH);
-        
+
         _ctx.getChatDirector().addChatDisplay(this);
-        
+
         // shrink the tab background so that the tabs overlap the top edge and
         // the scroll bar falls outside
         _tabs = new BTabbedPane() {
@@ -91,7 +91,7 @@ public class PardnerChatView extends BDecoratedWindow
             }
         };
         add(_tabs);
-        
+
         BContainer bottom = new BContainer(GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH));
         BContainer tcont = new BContainer(GroupLayout.makeHoriz(
@@ -112,11 +112,11 @@ public class PardnerChatView extends BDecoratedWindow
             "m.status_resume"), this, "resume"));
         bottom.add(buttons);
         add(bottom, GroupLayout.FIXED);
-        
+
         // render the chat bubble backgrounds
         createBubbleBackgrounds();
     }
-    
+
     /**
      * Displays a tab for talking to the named pardner.  If the chat view isn't
      * visible, show it (if possible).  If the tab doesn't exist, create it.
@@ -130,7 +130,7 @@ public class PardnerChatView extends BDecoratedWindow
         if (!isAdded() &&
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
             return false;
-        } 
+        }
         PardnerTab tab = _pardners.get(handle);
         if (tab == null) {
             _tabs.addTab(handle.toString(),
@@ -145,12 +145,12 @@ public class PardnerChatView extends BDecoratedWindow
         }
         return true;
     }
-    
+
     @Override // documentation inherited
     public void wasAdded ()
     {
         super.wasAdded();
-        
+
         // update the avatar icon
         PlayerObject player = _ctx.getUserObject();
         Look look = (Look)player.looks.get(player.look);
@@ -160,14 +160,14 @@ public class PardnerChatView extends BDecoratedWindow
             _mavatar = avatar;
         }
     }
-    
+
     @Override // documentation inherited
     public void wasRemoved ()
     {
         super.wasRemoved();
         clear();
     }
-    
+
     // documentation inherited from interface ChatDisplay
     public void clear ()
     {
@@ -176,7 +176,7 @@ public class PardnerChatView extends BDecoratedWindow
         _text.setText("");
         _send.setEnabled(false);
     }
-    
+
     // documentation inherited from interface ChatDisplay
     public void displayMessage (ChatMessage msg)
     {
@@ -185,13 +185,13 @@ public class PardnerChatView extends BDecoratedWindow
             if (displayTab(umsg.speaker)) {
                 _pardners.get(umsg.speaker).appendReceived(umsg);
             }
-    
+
         } else if (msg instanceof SystemMessage && isAdded()) {
             SystemMessage smsg = (SystemMessage)msg;
             ((PardnerTab)_tabs.getSelectedTab()).appendSystem(smsg);
         }
     }
-    
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent ae)
     {
@@ -205,15 +205,15 @@ public class PardnerChatView extends BDecoratedWindow
                 if (!ChatCodes.SUCCESS.equals(error)) {
                     _ctx.getChatDirector().displayFeedback(CHAT_MSGS, error);
                 }
-                
+
             } else {
                 ((PardnerTab)_tabs.getSelectedTab()).requestTell(msg);
             }
-            
+
         } else if (src == _resume ||
             (src == _close && _tabs.getTabCount() == 1)) {
             _ctx.getBangClient().clearPopup(this, false);
-            
+
         } else if (src == _close) {
             _tabs.removeTab(_tabs.getSelectedTabIndex());
         }
@@ -224,7 +224,7 @@ public class PardnerChatView extends BDecoratedWindow
     {
         _send.setEnabled(!StringUtil.isBlank(_text.getText()));
     }
-    
+
     /**
      * Renders the chat bubble backgrounds.
      */
@@ -243,21 +243,21 @@ public class PardnerChatView extends BDecoratedWindow
         gfx.fill(bubble);
         gfx.setColor(new Color(0x896A4B));
         gfx.draw(bubble);
-        
+
         // flip image up and down for first and rest of sent
-        _sfbg = new ImageBackground(ImageBackground.FRAME_XY,
-            TextureManager.loadImage(img, false));
-        _srbg = new ImageBackground(ImageBackground.FRAME_XY,
-            TextureManager.loadImage(img, true));
-        
+        _sfbg = new ImageBackground(
+            ImageBackground.FRAME_XY, new BImage(img, false));
+        _srbg = new ImageBackground(
+            ImageBackground.FRAME_XY, new BImage(img, true));
+
         // flip left-to-right for received
         mirrorImage(img);
-        _rfbg = new ImageBackground(ImageBackground.FRAME_XY,
-            TextureManager.loadImage(img, false));
-        _rrbg = new ImageBackground(ImageBackground.FRAME_XY,
-            TextureManager.loadImage(img, true)); 
+        _rfbg = new ImageBackground(
+            ImageBackground.FRAME_XY, new BImage(img, false));
+        _rrbg = new ImageBackground(
+            ImageBackground.FRAME_XY, new BImage(img, true));
     }
-    
+
     /**
      * Flips the given {@link BufferedImage} left-to-right.
      */
@@ -271,7 +271,7 @@ public class PardnerChatView extends BDecoratedWindow
             img.setRGB(0, y, w, 1, pbuf, 0, w);
         }
     }
-    
+
     /**
      * Gets a scaled avatar icon for the specified avatar (which can be
      * <code>null</code>, in which case <code>null</code> is returned).
@@ -279,10 +279,11 @@ public class PardnerChatView extends BDecoratedWindow
     protected BIcon getAvatarIcon (int[] avatar)
     {
         return (avatar == null) ? null : new ImageIcon(
-            AvatarView.getImage(_ctx, avatar).getScaledInstance(
-                AVATAR_WIDTH, AVATAR_HEIGHT, Image.SCALE_SMOOTH));
+            new BImage(
+                AvatarView.getImage(_ctx, avatar).getScaledInstance(
+                    AVATAR_WIDTH, AVATAR_HEIGHT, BufferedImage.SCALE_SMOOTH)));
     }
-    
+
     /**
      * Handles the display for single pardner.
      */
@@ -290,7 +291,7 @@ public class PardnerChatView extends BDecoratedWindow
     {
         /** The index of the tab. */
         public int idx;
-        
+
         public PardnerTab (Name handle, int idx)
         {
             super(new BContainer(GroupLayout.makeVert(
@@ -298,11 +299,11 @@ public class PardnerChatView extends BDecoratedWindow
             _content = (BContainer)getChild();
             _handle = handle;
             this.idx = idx;
-            
+
             _vport.setStyleClass("pardner_chat_viewport");
             setPreferredSize(new Dimension(400, 400));
         }
-        
+
         /**
          * Attempts to send a tell to this tab's pardner.
          */
@@ -318,7 +319,7 @@ public class PardnerChatView extends BDecoratedWindow
                     }
                 });
         }
-        
+
         /**
          * Appends a message sent by the local user.
          */
@@ -351,10 +352,10 @@ public class PardnerChatView extends BDecoratedWindow
             _last.addMessage(msg.message);
             scrollToEnd();
         }
-        
+
         /**
          * Appends a message received from the system.
-         */ 
+         */
         public void appendSystem (SystemMessage msg)
         {
             _last = null;
@@ -362,32 +363,32 @@ public class PardnerChatView extends BDecoratedWindow
                 "system_chat_entry"));
             scrollToEnd();
         }
-        
+
         protected void scrollToEnd ()
         {
             _vport.validate();
             getVerticalScrollBar().getModel().setValue(Integer.MAX_VALUE);
         }
-        
+
         protected Name _handle;
         protected BContainer _content;
         protected ChatEntry _last;
-        
+
         protected BIcon _picon;
         protected int[] _pavatar;
     }
-    
+
     /** A chat entry that displays an avatar icon along with one or more
      * messages in bubbles. */
     protected class ChatEntry extends BContainer
     {
         /** Whether or not this entry was sent from the local player. */
         public boolean sent;
-        
+
         public ChatEntry (BIcon icon, boolean sent)
         {
             this.sent = sent;
-            
+
             GroupLayout layout = GroupLayout.makeHoriz(GroupLayout.STRETCH,
                 GroupLayout.CENTER, GroupLayout.NONE);
             layout.setOffAxisJustification(GroupLayout.TOP);
@@ -398,12 +399,12 @@ public class PardnerChatView extends BDecoratedWindow
             layout.setOffAxisJustification(sent ?
                 GroupLayout.LEFT : GroupLayout.RIGHT);
             add(_mcont = new BContainer(layout));
-            
+
             if (icon != null) {
                 add(sent ? 0 : 1, new BLabel(icon), GroupLayout.FIXED);
             }
         }
-        
+
         public void addMessage (String msg)
         {
             BLabel label = new BLabel(msg,
@@ -413,26 +414,26 @@ public class PardnerChatView extends BDecoratedWindow
                 _mcont.getComponentCount() == 1 ?
                     (sent ? _sfbg : _rfbg) : (sent ? _srbg : _rrbg));
         }
-        
+
         protected BContainer _mcont;
     }
-    
+
     protected BangContext _ctx;
-    
+
     protected BTabbedPane _tabs;
     protected BTextField _text;
     protected BButton _send, _mute, _close, _resume;
-    
+
     protected HashMap<Name, PardnerTab> _pardners =
         new HashMap<Name, PardnerTab>();
-    
+
     /** Chat bubble backgrounds for sent and received messages, first bubble
      * in sequence and rest of bubbles in sequence. */
     protected ImageBackground _sfbg, _srbg, _rfbg, _rrbg;
-    
+
     protected BIcon _micon;
     protected int[] _mavatar;
-    
+
     /** The dimensions of the avatars in the chat window. */
     protected static final int AVATAR_WIDTH = 58, AVATAR_HEIGHT = 75;
 }

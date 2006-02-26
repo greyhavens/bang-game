@@ -10,13 +10,13 @@ import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 
-import com.jme.image.Image;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BRootNode;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BWindow;
@@ -221,8 +221,8 @@ public abstract class TestApp extends JmeApp
             return _mcache.getModel(type, name);
         }
 
-        public Image loadImage (String rsrcPath) {
-            return _icache.getImage(rsrcPath);
+        public BImage loadImage (String rsrcPath) {
+            return new BImage(_tcache.getTexture(rsrcPath));
         }
     }
 

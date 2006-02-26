@@ -109,7 +109,7 @@ public class RenderUtil
                 if (texpath == null) {
                     continue;
                 }
-                Image teximg = ctx.loadImage(path);
+                Image teximg = ctx.getImageCache().getImage(path);
                 Texture texture = createTexture(teximg);
                 texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
                 TextureState tstate = ctx.getRenderer().createTextureState();

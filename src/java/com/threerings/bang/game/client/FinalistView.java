@@ -5,10 +5,10 @@ package com.threerings.bang.game.client;
 
 import java.awt.image.BufferedImage;
 
-import com.jme.image.Image;
 import com.jme.renderer.Renderer;
 
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
@@ -16,7 +16,6 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Rectangle;
-import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.util.Name;
 
@@ -52,8 +51,7 @@ public class FinalistView extends BContainer
             "ui/postgame/medals" + rank + ".png");
         int mwidth = MEDAL_SIZE[rank].width, mheight = MEDAL_SIZE[rank].height;
         _medal = new ImageIcon(
-            ctx.getImageCache().createImage(
-                medal.getSubimage(mwidth * pidx, 0, mwidth, mheight), true));
+            new BImage(medal.getSubimage(mwidth * pidx, 0, mwidth, mheight)));
 
         // load up our background
         _background = ctx.loadImage("ui/postgame/background" + rank + ".png");
@@ -65,8 +63,7 @@ public class FinalistView extends BContainer
         int aheight = AvatarLogic.HEIGHT / scale;
         if (avatar != null) {
             _avatar = new ImageIcon(
-                AvatarView.getImage(ctx, avatar).getScaledInstance(
-                    awidth, aheight, BufferedImage.SCALE_SMOOTH));
+                AvatarView.getImage(ctx, avatar, awidth, aheight));
         } else {
             _avatar = new BlankIcon(awidth, aheight);
         }
@@ -94,7 +91,7 @@ public class FinalistView extends BContainer
         super.renderBackground(renderer);
 
         int ax = (_width - _avatar.getWidth())/2, ay = _banner.getHeight()/2;
-        RenderUtil.renderImage(_background, ax, ay);
+        _background.render(renderer, ax, ay);
         _avatar.render(renderer, ax, ay);
         _frame.render(renderer, ax-(_frame.getWidth()-_avatar.getWidth())/2,
                       ay-(_frame.getHeight()-_avatar.getHeight())/2);
@@ -103,7 +100,7 @@ public class FinalistView extends BContainer
     }
 
     protected BIcon _avatar, _frame, _banner, _medal;
-    protected Image _background;
+    protected BImage _background;
 
     protected static final Dimension[] MEDAL_SIZE = {
         new Dimension(102, 138),

@@ -11,12 +11,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import com.jme.image.Image;
 import com.jme.renderer.Renderer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
-import com.jmex.bui.util.RenderUtil;
 
 import com.samskivert.util.IntListUtil;
 
@@ -35,6 +34,17 @@ import static com.threerings.bang.avatar.util.AvatarLogic.*;
  */
 public class AvatarView extends BLabel
 {
+    /**
+     * Obtains and scales an image for the specified avatar. The source image
+     * will be cached.
+     */
+    public static BImage getImage (
+        BasicContext ctx, int[] avatar, int width, int height)
+    {
+        return new BImage(getImage(ctx, avatar).getScaledInstance(
+                              width, height, BufferedImage.SCALE_SMOOTH));
+    }
+
     /**
      * Gets an unscaled image for the specified avatar, retrieving an
      * existing image from the cache if possible but otherwise creating
@@ -104,10 +114,11 @@ public class AvatarView extends BLabel
         }
 
         // scale that image appropriately
-        java.awt.Image scaled = image.getScaledInstance(
-            WIDTH/2, HEIGHT/2, BufferedImage.SCALE_SMOOTH);
+        BImage scaled = new BImage(
+            image.getScaledInstance(
+                WIDTH/2, HEIGHT/2, BufferedImage.SCALE_SMOOTH));
 
-        // TODO: fade between the two images
+        // TODO: fade between the two images?
         setIcon(new ImageIcon(scaled));
     }
 
@@ -121,7 +132,7 @@ public class AvatarView extends BLabel
     protected void renderComponent (Renderer renderer)
     {
         super.renderComponent(renderer);
-        RenderUtil.renderImage(_frame, 0, 0);
+        _frame.render(renderer, 0, 0);
     }
 
     /** Wraps avatar fingerprints for use as hash keys. */
@@ -146,7 +157,7 @@ public class AvatarView extends BLabel
     }
     
     protected BasicContext _ctx;
-    protected Image _frame;
+    protected BImage _frame;
     
     /** The avatar image cache. */
     protected static HashMap<AvatarKey, WeakReference<BufferedImage>> _icache =

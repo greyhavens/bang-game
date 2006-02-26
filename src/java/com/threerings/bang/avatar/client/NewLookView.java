@@ -8,10 +8,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.jme.image.Image;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
@@ -23,7 +23,6 @@ import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Insets;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
-import com.jmex.bui.util.RenderUtil;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.StringUtil;
@@ -72,7 +71,7 @@ public class NewLookView extends BContainer
         boolean isMale = _ctx.getUserObject().isMale;
         _gender = isMale ? "male/" : "female/";
 
-        Image icon = _ctx.loadImage("ui/barber/caption_name.png");
+        BImage icon = _ctx.loadImage("ui/barber/caption_name.png");
         add(new BLabel(new ImageIcon(icon)), new Point(726, 135));
         add(_name = new BTextField(""), new Rectangle(786, 135, 164, 29));
         // TODO: limit to BarberCodes.MAX_LOOK_NAME_LENGTH
@@ -132,18 +131,16 @@ public class NewLookView extends BContainer
             }
         }
         String[] tarray = tabs.toArray(new String[tabs.size()]);
-        final Image tabbg = _ctx.loadImage("ui/barber/side_new_look.png");
-        final Image malebg = isMale ?
+        final BImage tabbg = _ctx.loadImage("ui/barber/side_new_look.png");
+        final BImage malebg = isMale ?
             _ctx.loadImage("ui/barber/side_new_look_male.png") : null;
         add(new HackyTabs(ctx, true, "ui/barber/tab_", tarray, 54, 30) {
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
-                RenderUtil.blendState.apply();
-                RenderUtil.renderImage(
-                    tabbg, 0, _height - tabbg.getHeight() - 42);
+                tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42);
                 if (malebg != null) {
-                    RenderUtil.renderImage(
-                        malebg, 0, _height - malebg.getHeight() - 42);
+                    malebg.render(
+                        renderer, 0, _height - malebg.getHeight() - 42);
                 }
             }
             protected void tabSelected (int index) {

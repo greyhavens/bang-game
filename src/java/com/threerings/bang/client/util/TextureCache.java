@@ -38,7 +38,7 @@ public class TextureCache
             return texture;
         }
 
-        texture = RenderUtil.createTexture(_ctx.loadImage(path));
+        texture = RenderUtil.createTexture(_ctx.getImageCache().getImage(path));
         _textures.put(tkey, new WeakReference<Texture>(texture));
         return texture;
     }

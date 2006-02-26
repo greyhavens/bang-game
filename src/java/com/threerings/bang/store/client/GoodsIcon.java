@@ -3,10 +3,12 @@
 
 package com.threerings.bang.store.client;
 
+import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.media.image.ColorPository;
 import com.threerings.media.image.Colorization;
+import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
@@ -58,11 +60,11 @@ public class GoodsIcon extends PaletteIcon
                 colorIds[cidx] = crec.colorId;
                 zations[ii] = crec.getColorization();
             }
-            setIcon(new ImageIcon(
-                        _ctx.getImageCache().createImage(
-                            _ctx.getImageCache().getBufferedImage(
-                                good.getIconPath()),
-                            zations, true)));
+            BImage image = new BImage(
+                ImageUtil.recolorImage(
+                    _ctx.getImageCache().getBufferedImage(good.getIconPath()),
+                    zations));
+            setIcon(new ImageIcon(image));
         } else {
             setIcon(new ImageIcon(_ctx.loadImage(good.getIconPath())));
         }

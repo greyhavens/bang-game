@@ -68,7 +68,7 @@ public class PardnerView extends IconPalette
         _ctx = ctx;
         _psvc = (PlayerService)ctx.getClient().requireService(
             PlayerService.class);
-        
+
         // insert our controls between the palette and the buttons
         GroupLayout layout = GroupLayout.makeVert(GroupLayout.NONE,
             GroupLayout.BOTTOM, GroupLayout.STRETCH);
@@ -98,7 +98,7 @@ public class PardnerView extends IconPalette
         ccont.add(new Spacer(1, 15));
         add(ccont, BorderLayout.CENTER);
     }
-    
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent ae)
     {
@@ -107,7 +107,7 @@ public class PardnerView extends IconPalette
             PardnerIcon icon = (PardnerIcon)getSelectedIcon();
             _ctx.getBangClient().getPardnerChatView().displayTab(
                 icon.entry.handle);
-                    
+
         } else if (src == _remove) {
             final PardnerIcon icon = (PardnerIcon)getSelectedIcon();
             OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
@@ -119,32 +119,32 @@ public class PardnerView extends IconPalette
                         }
                     }
                 });
-                
+
         } else { // src == _name || src == _submit
             if (_submit.isEnabled()) {
                 invitePardner(new Handle(_name.getText()));
             }
         }
     }
-    
+
     // documentation inherited from interface TextListener
     public void textChanged (TextEvent te)
     {
         _submit.setEnabled(!StringUtil.isBlank(_name.getText()));
     }
-    
+
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent eae)
     {
         new PardnerIcon((PardnerEntry)eae.getEntry()).insert();
     }
-    
+
     // documentation inherited from interface SetListener
     public void entryRemoved (EntryRemovedEvent ere)
     {
         _picons.get(ere.getKey()).remove();
     }
-    
+
     // documentation inherited from interface SetListener
     public void entryUpdated (EntryUpdatedEvent eue)
     {
@@ -164,13 +164,13 @@ public class PardnerView extends IconPalette
         for (Iterator it = user.pardners.iterator(); it.hasNext(); ) {
             new PardnerIcon((PardnerEntry)it.next()).insert();
         }
-        
+
         // these start out as disabled/empty
         _chat.setEnabled(false);
         _remove.setEnabled(false);
         _submit.setEnabled(false);
         _name.setText("");
-        
+
         // register as a listener for changes to the pardner list
         user.addListener(this);
     }
@@ -181,7 +181,7 @@ public class PardnerView extends IconPalette
         super.wasRemoved();
         _ctx.getUserObject().removeListener(this);
     }
-    
+
     @Override // documentation inherited
     protected void iconSelected (SelectableIcon icon)
     {
@@ -189,7 +189,7 @@ public class PardnerView extends IconPalette
         _chat.setEnabled(((PardnerIcon)icon).entry.isAvailable());
         _remove.setEnabled(true);
     }
-    
+
     @Override // documentation inherited
     protected void iconDeselected (SelectableIcon icon)
     {
@@ -197,7 +197,7 @@ public class PardnerView extends IconPalette
         _chat.setEnabled(false);
         _remove.setEnabled(false);
     }
-    
+
     /**
      * Attempts to invite the named player as a pardner.
      */
@@ -217,10 +217,10 @@ public class PardnerView extends IconPalette
                     _status.setStatus(BANG_MSGS, cause, true);
                     _submit.setEnabled(true);
                     _name.setEnabled(true);
-                } 
+                }
             });
     }
-    
+
     /**
      * Requests that the named pardner be removed after having verified that
      * that's what the user really wants.
@@ -238,21 +238,21 @@ public class PardnerView extends IconPalette
                 }
             });
     }
-    
+
     /** Displays a single pardner. */
     protected class PardnerIcon extends SelectableIcon
     {
         PardnerEntry entry;
-        
+
         public PardnerIcon (PardnerEntry entry)
         {
             this.entry = entry;
             setStyleClass("pardner_icon");
-            
+
             _handle = _ctx.getStyleSheet().getTextFactory(this,
                 null).createText(entry.handle.toString(),
                     _ctx.getStyleSheet().getColor(this, null));
-            
+
             updateAvatar();
             updateStatus();
         }
@@ -262,13 +262,13 @@ public class PardnerView extends IconPalette
             addToPalette();
             _picons.put(entry.getKey(), this);
         }
-        
+
         public void remove ()
         {
             removeIcon(this);
             _picons.remove(entry.getKey());
         }
-        
+
         public void update (PardnerEntry nentry)
         {
             PardnerEntry oentry = entry;
@@ -282,19 +282,19 @@ public class PardnerView extends IconPalette
                 updateAvatar();
             }
         }
-        
+
         public Dimension getPreferredSize (int whint, int hhint)
         {
             return ICON_SIZE;
         }
-        
+
         @Override // documentation inherited
         protected void layout ()
         {
             super.layout();
             _label.layout(new Insets(25, 5, 25, 31));
         }
-    
+
         // documentation inherited
         protected void renderComponent (Renderer renderer)
         {
@@ -310,20 +310,19 @@ public class PardnerView extends IconPalette
                     12);
             }
         }
-    
+
         protected void updateAvatar ()
         {
             if (entry.avatar == null) {
                 setIcon(new ImageIcon(
                     _ctx.loadImage("ui/pardners/silhouette.png")));
-                
             } else {
-                setIcon(new ImageIcon(AvatarView.getImage(_ctx,
-                    entry.avatar).getScaledInstance(AVATAR_SIZE.width,
-                        AVATAR_SIZE.height, Image.SCALE_SMOOTH)));
+                int w = AVATAR_SIZE.width, h = AVATAR_SIZE.height;
+                setIcon(new ImageIcon(AvatarView.getImage(
+                                          _ctx, entry.avatar, w, h)));
             }
         }
-        
+
         protected void updateStatus ()
         {
             // update the location icon
@@ -332,16 +331,16 @@ public class PardnerView extends IconPalette
                 _location = new ImageIcon(_ctx.loadImage(
                     "ui/pardners/in_" + (entry.status == PardnerEntry.IN_GAME ?
                         "game" : "saloon") + ".png"));
-            
+
             } else {
                 _location = null;
             }
-            
+
             // and the scroll icon
             _scroll = new ImageIcon(_ctx.loadImage(
                 "ui/frames/" + (entry.status == PardnerEntry.OFFLINE ?
                     "taller" : "smaller") + "_scroll.png"));
-            
+
             // and the last session date
             if (entry.status == PardnerEntry.OFFLINE) {
                 String msg = _ctx.xlate(BANG_MSGS, MessageBundle.tcompose(
@@ -350,12 +349,12 @@ public class PardnerView extends IconPalette
                 _last = _ctx.getStyleSheet().getTextFactory(this,
                     "last_session").createText(msg,
                         _ctx.getStyleSheet().getColor(this, "last_session"));
-                
+
             } else {
                 _last = null;
             }
         }
-        
+
         protected void addToPalette ()
         {
             // insert according to order defined by PardnerEntry.compareTo
@@ -368,23 +367,23 @@ public class PardnerView extends IconPalette
             }
             addIcon(this);
         }
-        
+
         protected BIcon _scroll, _location;
         protected BText _handle, _last;
     }
-    
+
     protected BangContext _ctx;
     protected PlayerService _psvc;
     protected BButton _chat, _remove, _submit;
     protected BTextField _name;
     protected StatusLabel _status;
-    
+
     protected HashMap<Comparable, PardnerIcon> _picons =
         new HashMap<Comparable, PardnerIcon>();
-    
+
     protected static final Dimension ICON_SIZE = new Dimension(167, 186);
     protected static final Dimension AVATAR_SIZE = new Dimension(117, 150);
-    
+
     protected static final SimpleDateFormat LAST_SESSION_FORMAT =
         new SimpleDateFormat("M/d/yy");
 }

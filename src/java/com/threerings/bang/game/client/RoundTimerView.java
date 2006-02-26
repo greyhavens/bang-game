@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import com.jme.math.FastMath;
 import com.jme.renderer.Renderer;
 
+import com.jmex.bui.BImage;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
@@ -100,8 +101,7 @@ public class RoundTimerView extends BWindow
         }
 
         // now convert this into a JME displayable image
-        _overlay = new ImageIcon(
-            _ctx.getImageCache().createImage(_overimg, true));
+        _overlay = new ImageIcon(new BImage(_overimg));
     }
 
     // documentation inherited from interface AttributeChangeListener

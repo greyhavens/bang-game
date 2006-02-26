@@ -7,10 +7,10 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import com.jme.image.Image;
 import com.jme.renderer.Renderer;
 
 import com.jmex.bui.BComponent;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BMenuItem;
 import com.jmex.bui.BPopupMenu;
 import com.jmex.bui.BStyleSheet;
@@ -20,7 +20,6 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BlankIcon;
-import com.jmex.bui.util.RenderUtil;
 
 import com.threerings.media.image.ColorPository;
 import com.threerings.media.image.Colorization;
@@ -69,14 +68,14 @@ public class ColorSelector extends BComponent
             Swatch swatch = _swatches[ii] = new Swatch();
             swatch.colorId = colors[ii].colorId;
             swatch.zation = colors[ii].getColorization();
-            swatch.circle = ctx.getImageCache().createImage(
-                ImageUtil.recolorImage(circle, swatch.zation), true);
-            swatch.selectedCircle = ctx.getImageCache().createImage(
-                ImageUtil.recolorImage(selcircle, swatch.zation), true);
-            swatch.square = ctx.getImageCache().createImage(
-                ImageUtil.recolorImage(square, swatch.zation), true);
-            swatch.selectedSquare = ctx.getImageCache().createImage(
-                ImageUtil.recolorImage(selsquare, swatch.zation), true);
+            swatch.circle = new BImage(
+                ImageUtil.recolorImage(circle, swatch.zation));
+            swatch.selectedCircle = new BImage(
+                ImageUtil.recolorImage(selcircle, swatch.zation));
+            swatch.square = new BImage(
+                ImageUtil.recolorImage(square, swatch.zation));
+            swatch.selectedSquare = new BImage(
+                ImageUtil.recolorImage(selsquare, swatch.zation));
         }
 
         Arrays.sort(_swatches, new Comparator<Swatch>() {
@@ -152,8 +151,7 @@ public class ColorSelector extends BComponent
         super.renderComponent(renderer);
 
         if (_selidx >= 0) {
-            RenderUtil.blendState.apply();
-            RenderUtil.renderImage(_swatches[_selidx].circle, 4, 5);
+            _swatches[_selidx].circle.render(renderer, 4, 5);
         }
     }
 
@@ -161,10 +159,10 @@ public class ColorSelector extends BComponent
     {
         public int colorId;
         public Colorization zation;
-        public Image circle;
-        public Image selectedCircle;
-        public Image square;
-        public Image selectedSquare;
+        public BImage circle;
+        public BImage selectedCircle;
+        public BImage square;
+        public BImage selectedSquare;
     }
 
     protected class SwatchMenuItem extends BMenuItem

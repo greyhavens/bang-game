@@ -5,12 +5,11 @@ package com.threerings.bang.game.client;
 
 import java.awt.image.BufferedImage;
 
-import com.jme.image.Image;
 import com.jme.renderer.Renderer;
-import com.jme.util.TextureManager;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -202,9 +201,9 @@ public class PlayerStatusView extends BContainer
         if (boi != null) {
             BufferedImage aimage = AvatarView.getImage(_ctx, boi.avatar);
             _avatar = new ImageIcon(
-                aimage.getScaledInstance(
-                    AvatarLogic.WIDTH/10, AvatarLogic.HEIGHT/10,
-                    BufferedImage.SCALE_SMOOTH));
+                new BImage(aimage.getScaledInstance(
+                               AvatarLogic.WIDTH/10, AvatarLogic.HEIGHT/10,
+                               BufferedImage.SCALE_SMOOTH)));
         }
     }
 
@@ -255,7 +254,7 @@ public class PlayerStatusView extends BContainer
     protected int _pidx, _rank = -2;
 
     protected ImageIcon _color, _avatar;
-    protected Image _rankimg;
+    protected BImage _rankimg;
 
     protected BLabel _player, _points, _ranklbl;
     protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];

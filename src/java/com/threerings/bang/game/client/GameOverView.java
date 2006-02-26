@@ -9,6 +9,7 @@ import java.text.NumberFormat;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
@@ -154,9 +155,9 @@ public class GameOverView extends BDecoratedWindow
             } else {
                 BufferedImage pimg = ctx.getImageCache().getBufferedImage(
                     "goods/purses/" + type + ".png");
-                label.setIcon(new ImageIcon(
-                                  pimg.getScaledInstance(
-                                      64, 64, BufferedImage.SCALE_SMOOTH)));
+                BImage scaled = new BImage(
+                    pimg.getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH));
+                label.setIcon(new ImageIcon(scaled));
             }
 
             rrow.add(new BLabel("=", "endgame_smallcash"));
