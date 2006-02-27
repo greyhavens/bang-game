@@ -261,6 +261,7 @@
     <copy todir="${client_dir}">
       <fileset dir="projects/installers/${default_locale}">
         <include name="background.png"/>
+        <include name="progress.png"/>
       </fileset>
     </copy>
     <copy todir="${client_dir}/code">

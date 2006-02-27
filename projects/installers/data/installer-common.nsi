@@ -242,6 +242,7 @@ Section "Install" InstStuff
   File "${DATADIR}\getdown-pro.jar"
   File "${DATADIR}\jRegistryKey.dll"
   File "${RSRCDIR}\background.png"
+  File "${RSRCDIR}\progress.png"
   File "${RSRCDIR}\app_icon.ico"
 
   !ifdef ASSUME_OFFLINE_INSTALL

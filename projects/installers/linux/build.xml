@@ -12,13 +12,14 @@
     <mkdir dir="${temp.dir}"/>
 
     <copy todir="${temp.dir}">
-      <fileset dir="../data" includes="getdown-pro.jar"/>
+      <fileset dir="../../getdown/dist" includes="getdown-pro.jar"/>
       <fileset dir="../${default_locale}" includes="license.txt"/>
       <fileset dir="." includes="bang"/>
       <fileset dir="." includes="bangeditor"/>
       <fileset dir="." includes="desktop.png"/>
       <fileset dir="${web.home}/${bclient_ident}">
         <include name="background.png"/>
+        <include name="progress.png"/>
       </fileset>
     </copy>
 

@@ -9,8 +9,9 @@
 
 # Configure the update UI
 ui.name = Bang! Howdy
-ui.background = background.png
-ui.progress = 17, 322, 458, 22
+ui.background_image = background.png
+ui.progress_image = progress.png
+ui.progress = 17, 321, 458, 22
 ui.progress_bar = 663333
 ui.progress_text = FFFFFF
 ui.status = 57, 245, 373, 68
