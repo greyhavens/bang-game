@@ -24,7 +24,7 @@
     </copy>
 
     <echo file="${temp.dir}/getdown.txt"
-          message="appbase = ${root_url}/${bclient_ident}"/>
+          message="appbase = ${root_url}/${bclient_ident}/${line.separator}"/>
 
     <copy todir="${temp.dir}" overwrite="true" encoding="UTF-8">
       <fileset dir="." includes="finish_install.sh"/>
