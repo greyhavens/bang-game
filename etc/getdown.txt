@@ -10,11 +10,11 @@
 # Configure the update UI
 ui.name = Bang! Howdy
 ui.background = background.png
-ui.progress = 10, 330, 470, 24
+ui.progress = 17, 322, 458, 22
 ui.progress_bar = 663333
 ui.progress_text = FFFFFF
-ui.status = 30, 270, 430, 50
-ui.status_text = 000000
+ui.status = 57, 245, 373, 68
+ui.status_text = FFFFFF
 
 # These all go into the classpath
 code = code/config.jar
