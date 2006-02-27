@@ -92,7 +92,7 @@
       <arg file="${img.dir}"/>
       <!-- Volume name -->
       <arg line="-volname"/>
-      <arg line="'${app.name}'"/>
+      <arg line="'${base.name}'"/>
       <!-- Output File (.dmg extension is automatically added) -->
       <arg file="${tmp.dmg}"/>
     </exec>
