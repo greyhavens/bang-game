@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import com.jme.image.Image;
+import com.jmex.bui.BImage;
 
 import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
@@ -38,7 +39,8 @@ public class ImageCache
     /**
      * Loads up an image from the cache if possible or from the resource
      * manager otherwise, in which case it is prepared for use by JME and
-     * OpenGL.
+     * OpenGL. <em>Note:</em> these images are cached separately from the
+     * {@link BImage} and {@link BufferedImage} caches.
      */
     public Image getImage (String rsrcPath)
     {
@@ -64,6 +66,40 @@ public class ImageCache
         // create and cache a new JME image with the appropriate data
         image = createImage(bufimg, true);
         _imgcache.put(rsrcPath, new WeakReference<Image>(image));
+        return image;
+    }
+
+    /**
+     * Loads up an image from the cache if possible or from the resource
+     * manager otherwise, in which case it is prepared for use by BUI.
+     * <em>Note:</em> these images are cached separately from the {@link Image}
+     * and {@link BufferedImage} caches.
+     */
+    public BImage getBImage (String rsrcPath)
+    {
+        // first check the cache
+        WeakReference<BImage> iref = _buicache.get(rsrcPath);
+        BImage image;
+        if (iref != null && (image = iref.get()) != null) {
+            return image;
+        }
+        log.info("Creating BImage [" + rsrcPath + "].");
+
+        // load the image data from the resource manager
+        BufferedImage bufimg;
+        try {
+            bufimg = ImageIO.read(
+                _ctx.getResourceManager().getImageResource(rsrcPath));
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Unable to load image resource " +
+                    "[path=" + rsrcPath + "].", t);
+            // cope; return an error image of abitrary size
+            bufimg = ImageUtil.createErrorImage(64, 64);
+        }
+
+        // create and cache a new BUI image with the appropriate data
+        image = new BImage(bufimg, true);
+        _buicache.put(rsrcPath, new WeakReference<BImage>(image));
         return image;
     }
 
@@ -122,12 +158,12 @@ public class ImageCache
     /**
      * Loads up a buffered image from the cache if possible or from the
      * resource manager otherwise. <em>Note:</em> these images are cached
-     * separately from the normal image cache.
+     * separately from the {@link Image} and {@link BImage} caches.
      */
     public BufferedImage getBufferedImage (String rsrcPath)
     {
         // first check the cache
-        WeakReference<BufferedImage> iref = _bimgcache.get(rsrcPath);
+        WeakReference<BufferedImage> iref = _bufcache.get(rsrcPath);
         BufferedImage image;
         if (iref != null && (image = iref.get()) != null) {
             return image;
@@ -144,14 +180,21 @@ public class ImageCache
             image = ImageUtil.createErrorImage(64, 64);
         }
 
-        _bimgcache.put(rsrcPath, new WeakReference<BufferedImage>(image));
+        _bufcache.put(rsrcPath, new WeakReference<BufferedImage>(image));
         return image;
     }
 
     protected BasicContext _ctx;
 
+    /** A cache of {@link Image} instances. */
     protected HashMap<String,WeakReference<Image>> _imgcache =
         new HashMap<String,WeakReference<Image>>();
-    protected HashMap<String,WeakReference<BufferedImage>> _bimgcache =
+
+    /** A cache of {@link BImage} instances. */
+    protected HashMap<String,WeakReference<BImage>> _buicache =
+        new HashMap<String,WeakReference<BImage>>();
+
+    /** A cache of {@link BufferedImage} instances. */
+    protected HashMap<String,WeakReference<BufferedImage>> _bufcache =
         new HashMap<String,WeakReference<BufferedImage>>();
 }

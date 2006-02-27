@@ -44,18 +44,6 @@ public class TextureCache
     }
 
     /**
-     * Loads up a texture for use in a user interface component.
-     */
-    public Texture getUITexture (String path)
-    {
-        Texture texture = getTexture(path);
-        texture.setFilter(Texture.FM_NEAREST);
-        texture.setCorrection(Texture.CM_AFFINE);
-        texture.setMipmapState(Texture.MM_NONE);
-        return texture;
-    }
-
-    /**
      * Creates a texture using the specified region from the image with the
      * specified path.
      */
