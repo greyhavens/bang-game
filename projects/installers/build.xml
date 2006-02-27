@@ -6,8 +6,13 @@
   <property name="web.home" value="${base.dir}/pages"/>
   <property file="${base.dir}/deployment.properties"/>
 
+  <target name="prepare">
+    <copy todir="data"
+          file="${base.dir}/projects/getdown/dist/getdown-pro.jar"/>
+  </target>
+
   <!-- builds and installs the dev installers -->
-  <target name="devclient">
+  <target name="devclient" depends="prepare">
     <exec dir="${default_locale}" executable="makensis" failonerror="true">
       <arg line="-V2"/>
       <arg line="dev-installer.nsi"/>
@@ -19,7 +24,7 @@
   </target>
 
   <!-- builds and installs the test installers -->
-  <target name="tclient">
+  <target name="tclient" depends="prepare">
     <exec dir="${default_locale}" executable="makensis" failonerror="true">
       <arg line="-V2"/>
       <arg line="test-installer.nsi"/>
@@ -32,7 +37,7 @@
   </target>
 
   <!-- builds and installs the production installers -->
-  <target name="client">
+  <target name="client" depends="prepare">
     <exec dir="${default_locale}" executable="makensis" failonerror="true">
       <arg line="-V2"/>
       <arg line="bang-installer.nsi"/>
