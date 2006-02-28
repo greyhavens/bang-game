@@ -69,11 +69,9 @@ public class PickTutorialView extends BDecoratedWindow
         ImageIcon incomp = new ImageIcon(
             ctx.loadImage("ui/tutorials/incomplete.png"));
 
-        BContainer table = new BContainer(new TableLayout(3, 5, 15));
+        BContainer table = new BContainer(new TableLayout(2, 5, 15));
         add(table);
         for (int ii = 0; ii < BangCodes.TUTORIALS.length; ii++) {
-            String tlabel = _msgs.get("m.tut_" + BangCodes.TUTORIALS[ii]);
-            table.add(new BLabel(tlabel, "tutorial_text"));
             ImageIcon icon;
             String btext;
             if (false) { // check for completed tutorial
@@ -83,7 +81,12 @@ public class PickTutorialView extends BDecoratedWindow
                 icon = incomp;
                 btext = "m.tut_play";
             }
-            table.add(new BLabel(icon));
+
+            String ttext = _msgs.get("m.tut_" + BangCodes.TUTORIALS[ii]);
+            BLabel tlabel = new BLabel(ttext, "tutorial_text");
+            tlabel.setIcon(icon);
+            table.add(tlabel);
+
             BButton play = new BButton(
                 _msgs.get(btext), this, BangCodes.TUTORIALS[ii]);
             play.setStyleClass("alt_button");
