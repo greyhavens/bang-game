@@ -1063,7 +1063,8 @@ public class BoardView extends BComponent
     /**
      * Updates the sprite that the mouse is "hovering" over (the one nearest to
      * the camera that is hit by the ray projecting from the camera to the
-     * ground plane at the current mouse coordinates).
+     * ground plane at the current mouse coordinates, if present, or any
+     * hoverable sprite occupying the hover tile).
      */
     protected void updateHoverSprite ()
     {
@@ -1085,6 +1086,17 @@ public class BoardView extends BComponent
             if (sdist < dist) {
                 hit = s;
                 dist = sdist;
+            }
+        }
+        if (hit == null) {
+            for (Iterator<PieceSprite> it = _pieces.values().iterator();
+                    it.hasNext(); ) {
+                PieceSprite ps = it.next();
+                if (ps.getPiece().intersects(_mouse.x, _mouse.y) &&
+                        isHoverable(ps)) {
+                    hit = ps;
+                    break;
+                }
             }
         }
         if (hit != _hover) {
