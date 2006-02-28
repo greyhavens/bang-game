@@ -670,7 +670,6 @@ tutorial_text {
   font: "Dom Casual" plain 20;
   color: #4C2602;
   text-align: left;
-//  vertical-align: top;
 }
 
 tutorial_steps {
