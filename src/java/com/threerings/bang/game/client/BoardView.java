@@ -76,6 +76,7 @@ import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -531,6 +532,31 @@ public class BoardView extends BComponent
         return _pnode.hasChild(sprite);
     }
 
+    /**
+     * Computes the maximum height of any props occupying the given
+     * tile coordinates, or <code>-Float.MAX_VALUE</code> if there
+     * are no props there.
+     */
+    public float getPropHeight (int tx, int ty)
+    {
+        float mheight = -Float.MAX_VALUE;
+        for (Iterator<PieceSprite> it = _pieces.values().iterator();
+                it.hasNext(); ) {
+            PieceSprite ps = it.next();
+            if (!(ps instanceof PropSprite) ||
+                !ps.getPiece().intersects(tx, ty)) {
+                continue;
+            }
+            Object bound = ps.getWorldBound();
+            if (!(bound instanceof BoundingBox)) {
+                continue;
+            }
+            BoundingBox bbox = (BoundingBox)bound;
+            mheight = Math.max(mheight, bbox.getCenter().z + bbox.zExtent);
+        }
+        return mheight;
+    }
+    
     /**
      * Requests that the specified action be executed. If there are other
      * actions executing and queued for execution, this action will be executed

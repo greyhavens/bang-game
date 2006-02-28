@@ -358,14 +358,11 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
-        int elev = super.computeElevation(board, tx, ty);
         if (_piece.isFlyer() && _piece.isAlive()) {
-            // flying pieces hover 1 "units" above the ground while they're
-            // alive (and they float over the water)
-            elev = Math.max(board.getWaterLevel(), elev) +
-                FLYER_HEIGHT * BangBoard.ELEVATION_UNITS_PER_TILE;
+            return computeFlightElevation(board, tx, ty);
+        } else {
+            return super.computeElevation(board, tx, ty);
         }
-        return elev;
     }
 
     @Override // documentation inherited
@@ -374,12 +371,25 @@ public class UnitSprite extends MobileSprite
     {
         // make an exception for the death flights of flyers: only the
         // last coordinate is on the ground
-        int elev = computeElevation(board, nx, ny);
+        int elev;
         if (_piece.isFlyer() && !_piece.isAlive() && idx != coords.length-1) {
-            elev += FLYER_HEIGHT * BangBoard.ELEVATION_UNITS_PER_TILE;
+            elev = computeFlightElevation(board, nx, ny);
+        } else {
+            elev = computeElevation(board, nx, ny);
         }
         coords[idx] = new Vector3f();
         toWorldCoords(nx, ny, elev, coords[idx]);
+    }
+    
+    /** Computes the elevation of a flying piece. */
+    protected int computeFlightElevation (BangBoard board, int tx, int ty)
+    {
+        int groundel = Math.max(board.getWaterLevel(),
+            super.computeElevation(board, tx, ty)) +
+                FLYER_GROUND_HEIGHT * BangBoard.ELEVATION_UNITS_PER_TILE,
+            propel = (int)((_view.getPropHeight(tx, ty) / TILE_SIZE +
+                FLYER_PROP_HEIGHT) * BangBoard.ELEVATION_UNITS_PER_TILE);
+        return Math.max(groundel, propel);
     }
     
     /** Sets up our colors according to our owning player. */
@@ -494,6 +504,9 @@ public class UnitSprite extends MobileSprite
      * full quarter circle (on each side): 8 degrees. */
     protected static final float ARC_INSETS = 7;
     
-    /** The height above terrain in tile lengths at which flyers fly. */
-    protected static final int FLYER_HEIGHT = 1;
+    /** The height above ground at which flyers fly (in tile lengths). */
+    protected static final int FLYER_GROUND_HEIGHT = 1;
+    
+    /** The height above props at which flyers fly (in tile lengths). */
+    protected static final float FLYER_PROP_HEIGHT = 0.25f;
 }
