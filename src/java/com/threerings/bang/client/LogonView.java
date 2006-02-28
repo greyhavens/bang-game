@@ -20,8 +20,10 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.servlet.user.Password;
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -68,9 +70,15 @@ public class LogonView extends BWindow
         _password.addListener(this);
         row.add(grid);
 
-        row.add(_logon = new BButton(_msgs.get("m.logon"), this, "logon"));
+        BContainer col = GroupLayout.makeVBox(GroupLayout.CENTER);
+        row.add(col);
+        col.add(_logon = new BButton(_msgs.get("m.logon"), this, "logon"));
         _logon.setStyleClass("big_button");
         _logon.setEnabled(false);
+        BButton btn;
+        col.add(btn = new BButton(_msgs.get("m.new_account"),
+                                  this, "new_account"));
+        btn.setStyleClass("logon_new");
         add(row);
 
         add(_status = new StatusLabel(ctx));
@@ -124,6 +132,18 @@ public class LogonView extends BWindow
             _ctx.getRootNode().addWindow(oview);
             oview.pack();
             oview.center();
+
+        } else if ("new_account".equals(event.getAction())) {
+            ResultListener rl = new ResultListener() {
+                public void requestCompleted (Object result) {
+                }
+                public void requestFailed (Exception cause) {
+                    _status.setStatus(
+                        _msgs.get("m.browser_launch_failed"), true);
+                }
+            };
+            BrowserUtil.browseURL(DeploymentConfig.getNewAccountURL(), rl);
+            _status.setStatus(_msgs.get("m.browser_launched"), false);
 
         } else if ("exit".equals(event.getAction())) {
             _ctx.getApp().stop();

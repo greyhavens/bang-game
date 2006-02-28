@@ -489,6 +489,21 @@ logon_label {
   effect-color: #6A482E;
 }
 
+logon_new {
+  font: "Helvetica" plain 12;
+  color: #FFFFFF;
+  padding: 1 1;
+}
+
+logon_new:hover {
+  color: #E8BB2E;
+}
+
+logon_new:down {
+  color: #E8BB2E;
+  padding: 2 2 0 0;
+}
+
 logon_status {
   parent: "status_label";
   font: "Helvetica" plain 14;

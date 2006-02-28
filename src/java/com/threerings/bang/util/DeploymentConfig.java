@@ -67,11 +67,25 @@ public class DeploymentConfig
      */
     public static URL getBugSubmitURL ()
     {
-        String url = config.getValue("bug_submit_url", "not_specified");
+        return getURL("bug_submit_url");
+    }
+
+    /**
+     * Returns the URL to send players to create a new account.
+     */
+    public static URL getNewAccountURL ()
+    {
+        return getURL("new_account_url");
+    }
+
+    /** Helper function for getting URL properties. */
+    protected static URL getURL (String key)
+    {
+        String url = config.getValue(key, "not_specified");
         try {
             return new URL(url);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to parse bug_submit_url: " + url, e);
+            log.log(Level.WARNING, "Failed to parse " + key + ": " + url, e);
             return null;
         }
     }
