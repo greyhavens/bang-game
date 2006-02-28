@@ -40,6 +40,7 @@ resource = [mac os x] native/openal.dylib
 
 # Our media resources
 resource = background.png
+resource = progress.png
 resource = rsrc/avatars/female/components.jar
 resource = rsrc/avatars/male/components.jar
 resource = rsrc/avatars/metadata.jar
