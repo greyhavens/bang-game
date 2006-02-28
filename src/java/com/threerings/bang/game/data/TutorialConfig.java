@@ -37,16 +37,21 @@ public class TutorialConfig
     public static class AddUnit extends Action
     {
         public String type;
-        public String id;
+        public int id;
         public int[] location;
         public int owner;
     }
 
+    public static class CenterOnUnit extends Action
+    {
+        public int id;
+    }
+
     public static class MoveUnit extends Action
     {
-        public String id;
+        public int id;
         public int[] location = { Short.MAX_VALUE, Short.MAX_VALUE };
-        public String target;
+        public int target;
     }
 
     public static class AddBonus extends Action

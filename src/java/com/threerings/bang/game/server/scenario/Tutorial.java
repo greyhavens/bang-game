@@ -124,25 +124,22 @@ public class Tutorial extends Scenario
         if (action instanceof TutorialConfig.AddUnit) {
             TutorialConfig.AddUnit aua = (TutorialConfig.AddUnit)action;
             Unit unit = Unit.getUnit(aua.type);
-            unit.assignPieceId();
+            // use a particular id if asked to do so
+            if (aua.id > 0) {
+                unit.pieceId = aua.id;
+            } else {
+                unit.assignPieceId();
+            }
             unit.init();
             unit.owner = aua.owner;
             unit.position(aua.location[0], aua.location[1]);
             _bangobj.addToPieces(unit);
             _bangobj.board.updateShadow(null, unit);
 
-            // map the unit by id if asked to do so
-            if (!StringUtil.isBlank(aua.id)) {
-                _units.put(aua.id, unit);
-            }
-
         } else if (action instanceof TutorialConfig.MoveUnit) {
             TutorialConfig.MoveUnit mua = (TutorialConfig.MoveUnit)action;
-            Unit unit = _units.get(mua.id);
-            Unit target = null;
-            if (!StringUtil.isBlank(mua.target)) {
-                target = _units.get(mua.target);
-            }
+            Unit unit = (Unit)_bangobj.pieces.get(mua.id);
+            Unit target = (Unit)_bangobj.pieces.get(mua.target);
             try {
                 _bangmgr.moveAndShoot(
                     unit, mua.location[0], mua.location[1], target);
@@ -173,5 +170,4 @@ public class Tutorial extends Scenario
     protected TutorialConfig _config;
     protected BangObject _bangobj;
     protected int _nextActionId;
-    protected HashMap<String,Unit> _units = new HashMap<String,Unit>();
 }

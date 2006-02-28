@@ -34,6 +34,7 @@ public class RoundTimerView extends BWindow
     {
         super(ctx.getStyleSheet(), new BorderLayout());
         setStyleClass("round_timer");
+        setLayer(1);
 
         _ctx = ctx;
         _pin = new ImageIcon(ctx.loadImage("ui/gauge/pin.png"));

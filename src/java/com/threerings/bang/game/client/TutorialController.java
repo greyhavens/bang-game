@@ -5,6 +5,7 @@ package com.threerings.bang.game.client;
 
 import com.jme.system.DisplaySystem;
 
+import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.MouseAdapter;
@@ -24,6 +25,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import static com.threerings.bang.Log.log;
@@ -35,9 +37,10 @@ import static com.threerings.bang.Log.log;
 public class TutorialController
 {
     /** Called from {@link BangController#init}. */
-    public void init (BangContext ctx, BangConfig config)
+    public void init (BangContext ctx, BangConfig config, BangBoardView view)
     {
         _ctx = ctx;
+        _view = view;
 
         // load up the tutorial configuration
         _config = TutorialUtil.loadTutorial(
@@ -48,13 +51,18 @@ public class TutorialController
 
         // create and add the window in which we'll display info text
         _tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null);
-        _tutwin.setLayoutManager(new BorderLayout(5, 5));
+        _tutwin.setLayer(1);
+        _tutwin.setLayoutManager(new BorderLayout(5, 15));
         _tutwin.add(_title = new BLabel("", "tutorial_title"),
                     BorderLayout.NORTH);
         _tutwin.add(_info = new BLabel("", "tutorial_text"),
                     BorderLayout.CENTER);
-        _tutwin.add(_steps = new BLabel("", "tutorial_steps"),
-                    BorderLayout.SOUTH);
+
+        BContainer south = new BContainer(new BorderLayout(15, 5));
+        _tutwin.add(south, BorderLayout.SOUTH);
+        south.add(_click = new BLabel("", "tutorial_steps"), BorderLayout.WEST);
+        south.add(_steps = new BLabel("", "tutorial_steps"), BorderLayout.EAST);
+
         _tutwin.addListener(_clicklist);
         _info.addListener(_clicklist);
     }
@@ -116,8 +124,20 @@ public class TutorialController
             // wait for the specified event
             _pending = (TutorialConfig.Wait)action;
 
+            // let them know if we're waiting for them to click
+            if (_pending.event.equals(TutorialCodes.TEXT_CLICKED)) {
+                _click.setText(_gmsgs.get("m.tutorial_click"));
+            }
+
         } else if (action instanceof TutorialConfig.AddUnit) {
             // nothing to do here
+
+        } else if (action instanceof TutorialConfig.CenterOnUnit) {
+            int pieceId = ((TutorialConfig.CenterOnUnit)action).id;
+            Piece p = (Piece)_bangobj.pieces.get(pieceId);
+            if (p != null) {
+                _view.centerCameraOnUnit(p);
+            }
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
             // nothing to do here
@@ -165,6 +185,7 @@ public class TutorialController
 
     protected MouseAdapter _clicklist = new MouseAdapter() {
         public void mousePressed (MouseEvent event) {
+            _click.setText("");
             handleEvent(TutorialCodes.TEXT_CLICKED);
         }
     };
@@ -178,11 +199,12 @@ public class TutorialController
     };
 
     protected BangContext _ctx;
+    protected BangBoardView _view;
     protected BangObject _bangobj;
     protected MessageBundle _msgs, _gmsgs;
 
     protected BDecoratedWindow _tutwin;
-    protected BLabel _title, _info, _steps;
+    protected BLabel _title, _info, _click, _steps;
 
     protected TutorialConfig _config;
     protected TutorialConfig.Wait _pending;

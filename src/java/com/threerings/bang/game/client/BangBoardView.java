@@ -655,8 +655,7 @@ public class BangBoardView extends BoardView
         sprite.setSelected(true);
         sprite.attachChild(_cursor);
         if (scrollCamera) {
-            ((GameInputHandler)_ctx.getInputHandler()).aimCamera(
-                sprite.getWorldTranslation());
+            centerCameraOnUnit(_selection);
         }
 
         // highlight our potential moves and attackable pieces
@@ -669,6 +668,15 @@ public class BangBoardView extends BoardView
 
         // report that the user took an action
         _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
+    }
+
+    protected void centerCameraOnUnit (Piece piece)
+    {
+        PieceSprite sprite = getPieceSprite(piece);
+        if (sprite != null) {
+            ((GameInputHandler)_ctx.getInputHandler()).aimCamera(
+                sprite.getWorldTranslation());
+        }
     }
 
     protected void executeAction ()
@@ -687,6 +695,7 @@ public class BangBoardView extends BoardView
         if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
             clearQueuedMove(_action[0]);
             _queuedMoves.put(_action[0], new QueuedMove(sprite, _action));
+            _ctrl.postEvent(TutorialCodes.UNIT_ORDERED);
         } else {
             // otherwise enact the move/fire combination immediately
             _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);

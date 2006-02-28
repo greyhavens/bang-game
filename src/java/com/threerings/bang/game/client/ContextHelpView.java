@@ -23,6 +23,8 @@ public class ContextHelpView extends BDecoratedWindow
     public ContextHelpView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), null);
+        setLayer(1);
+
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 

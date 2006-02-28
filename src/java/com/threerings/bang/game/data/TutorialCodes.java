@@ -29,6 +29,9 @@ public interface TutorialCodes
     public static final String UNIT_MOVED = "unit_moved";
 
     /** A game state action monitored by the tutorial system. */
+    public static final String UNIT_ORDERED = "unit_ordered";
+
+    /** A game state action monitored by the tutorial system. */
     public static final String UNIT_ATTACKED = "unit_attacked";
 
     /** A game state action monitored by the tutorial system. */

@@ -114,7 +114,7 @@ public class BangController extends GameController
         // if this is a tutorial game, create our tutorial controller
         if (_config.tutorial) {
             _tutcont = new TutorialController();
-            _tutcont.init(_ctx, _config);
+            _tutcont.init(_ctx, _config, _view.view);
         }
 
         // we start the new round after the player has dismissed the previous

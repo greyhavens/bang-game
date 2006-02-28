@@ -1,19 +1,19 @@
 <?xml version="1.0" standalone="yes"?>
 
 <tutorial ident="test" board="Dry Canyon" players="2">
-  <add_unit id="gun1" type="gunslinger" location="10,10" owner="0"/>
-  <add_unit id="gun2" type="artillery" location="11,11" owner="1"/>
-  <add_unit id="sgun" type="shotgunner" location="11,10" owner="0"/>
-  <add_unit id="tact" type="dirigible" location="14,11" owner="1"/>
+  <add_unit id="1000" type="gunslinger" location="10,10" owner="0"/>
+  <add_unit id="1001" type="artillery" location="11,11" owner="1"/>
+  <add_unit id="1002" type="shotgunner" location="11,10" owner="0"/>
+  <add_unit id="1003" type="dirigible" location="14,11" owner="1"/>
   
   <text message="start_test"/>
   <wait event="text_clicked"/>
 
-  <move_unit id="gun1" target="gun2"/>
+  <move_unit id="1000" target="1001"/>
   <wait event="text_clicked"/>
-  <move_unit id="sgun" target="tact"/>
+  <move_unit id="1002" target="1003"/>
   <wait event="text_clicked"/>
-  <move_unit id="tact" target="gun1"/>
+  <move_unit id="1003" target="1000"/>
   
   <text message="end_test"/>
   <wait event="text_clicked"/>

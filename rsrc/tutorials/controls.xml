@@ -1,9 +1,16 @@
 <?xml version="1.0" standalone="yes"?>
 
 <tutorial ident="controls" board="Dry Canyon" players="2">
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <text message="camera" step="2"/>
+  <wait event="text_clicked"/>
+
   <!-- show them a unit and have them click to select it -->
-  <add_unit type="gunslinger" location="10,10" owner="0"/>
-  <text message="click_unit" step="1"/>
+  <add_unit id="1000" type="gunslinger" location="10,10" owner="0"/>
+  <center_on_unit id="1000"/>
+  <text message="click_unit" step="3"/>
   <wait event="unit_selected"/>
 
   <!-- explain the potential move indicators and have them click to move -->
@@ -14,11 +21,33 @@
   <text message="observe_ticks_then_move"/>
   <wait event="unit_moved"/>
 
+  <!-- explain preloaded moves, have them preload a move -->
+  <text message="preload_move"/>
+  <wait event="unit_ordered"/>
+
+  <!-- have them look at the preloaded move indicator -->
+  <text message="examine_pending"/>
+  <wait event="text_clicked"/>
+
   <!-- add an enemy unit and show them how to shoot it -->
-  <add_unit type="steamgunman" location="10,10" owner="1"/>
-  <text message="click_to_highlight_attacks" step="2"/>
+  <add_unit id="1001" type="steamgunman" location="10,10" owner="1"/>
+  <text message="click_to_highlight_attacks" step="4"/>
   <wait event="unit_selected"/>
+
   <text message="click_to_attack"/>
   <wait event="unit_attacked"/>
+
+  <text message="move_and_attack"/>
+  <wait event="unit_move_attacked"/>
+
+  <!-- explain damage and unit respawnning -->
+  <text message="damage_and_respawn" step="5"/>
+  <wait event="text_clicked"/>
+
+  <text message="damage_and_respawn_2"/>
+  <wait event="text_clicked"/>
+
+  <text message="done"/>
+  <wait event="text_clicked"/>
 
 </tutorial>
