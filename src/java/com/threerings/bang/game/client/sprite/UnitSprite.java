@@ -361,8 +361,9 @@ public class UnitSprite extends MobileSprite
         int elev = super.computeElevation(board, tx, ty);
         if (_piece.isFlyer() && _piece.isAlive()) {
             // flying pieces hover 1 "units" above the ground while they're
-            // alive
-            elev += FLYER_HEIGHT * BangBoard.ELEVATION_UNITS_PER_TILE;
+            // alive (and they float over the water)
+            elev = Math.max(board.getWaterLevel(), elev) +
+                FLYER_HEIGHT * BangBoard.ELEVATION_UNITS_PER_TILE;
         }
         return elev;
     }
