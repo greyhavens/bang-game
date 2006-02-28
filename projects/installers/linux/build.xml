@@ -18,8 +18,8 @@
       <fileset dir="." includes="bangeditor"/>
       <fileset dir="." includes="desktop.png"/>
       <fileset dir="${web.home}/${bclient_ident}">
-        <include name="background.png"/>
-        <include name="progress.png"/>
+        <include name="../${default_locale}/background.png"/>
+        <include name="../${default_locale}/progress.png"/>
       </fileset>
     </copy>
 
