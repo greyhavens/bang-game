@@ -679,24 +679,20 @@ public class BoardView extends BComponent
         Vector2f screenPos = new Vector2f(e.getX(), e.getY());
         _worldMouse = _ctx.getDisplay().getWorldCoordinates(screenPos, 0);
         Vector3f camloc = camera.getLocation();
-        _worldMouse.subtractLocal(camloc);
+        _worldMouse.subtractLocal(camloc).normalizeLocal();
 
         // see if the ray intersects with the terrain
-        if (!planar) {
-            _pick.clear();
-            Ray ray = new Ray(camloc, _worldMouse);
-            _tnode.calculatePick(ray, _pick);
-            if (getPickIntersection(result)) {
-                result.z += 0.1f;
-                return result;
-            }
+        if (!planar && _tnode.calculatePick(new Ray(camloc, _worldMouse),
+                result)) {
+            result.z += 0.1f;
+            return result;
         }
 
         // otherwise, intersect with ground plane
-        float dist = -1f * _groundNormal.dot(camloc) /
-            _groundNormal.dot(_worldMouse);
-        camloc.add(_worldMouse.mult(dist), result);
-        result.z = 0.1f;
+        float dist = (-_groundNormal.dot(camloc) + _tnode.getHeightfieldValue(
+            -1, -1)) / _groundNormal.dot(_worldMouse);
+        result.scaleAdd(dist, _worldMouse, camloc);
+        result.z += 0.1f;
 
         return result;
     }

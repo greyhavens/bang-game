@@ -19,6 +19,7 @@ import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.math.FastMath;
+import com.jme.math.Plane;
 import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -75,6 +76,7 @@ public class TerrainNode extends Node
         {
             super("cursor");
 
+            setMode(LOOP);
             setDefaultColor(ColorRGBA.white);
             setLightCombineMode(LightState.OFF);
             setRenderState(RenderUtil.lequalZBuf);
@@ -108,140 +110,38 @@ public class TerrainNode extends Node
          */
         public void update ()
         {
-            ArrayList<Vector3f> verts = new ArrayList<Vector3f>();
+            _verts.clear();
             if (_board != null) {
                 float step = FastMath.TWO_PI / CURSOR_SEGMENTS, angle = 0.0f;
                 for (int i = 0; i < CURSOR_SEGMENTS; i++) {
-                    addSegment(verts,
-                        new Vector2f(x + radius*FastMath.cos(angle),
-                            y + radius*FastMath.sin(angle)),
-                        new Vector2f(x + radius*FastMath.cos(angle+step),
-                            y + radius*FastMath.sin(angle+step)));
+                    addVertex(_v1.set(x + radius*FastMath.cos(angle),
+                        y + radius*FastMath.sin(angle)));
+                    _v2.set(x + radius*FastMath.cos(angle+step),
+                        y + radius*FastMath.sin(angle+step));
+                    while (getBoundaryIntersection(_v1, _v2, _between)) {
+                        addVertex(_v1.set(_between));
+                    }
                     angle += step;
                 }
             }
             setVertexBuffer(BufferUtils.createFloatBuffer(
-                verts.toArray(new Vector3f[verts.size()])));
+                _verts.toArray(new Vector3f[_verts.size()])));
             generateIndices();
         }
 
         /**
-         * Adds a segment to the line, breaking it up into intermediate
-         * segments if it crosses edge boundaries.
+         * Adds the three-dimensional vertex corresponding to the given
+         * two-dimensional location to the vertex list.
          */
-        protected void addSegment (ArrayList<Vector3f> verts, Vector2f v1,
-            Vector2f v2)
+        protected void addVertex (Vector2f v)
         {
-            Vector2f between = getHorizontalIntermediate(v1, v2);
-            if (between == null) {
-                between = getVerticalIntermediate(v1, v2);
-                if (between == null) {
-                    between = getDiagonalIntermediate(v1, v2);
-                }
-            }
-
-            if (between == null) {
-                verts.add(new Vector3f(v1.x, v1.y, getHeightfieldHeight(v1.x,
-                    v1.y) + 1.0f));
-                verts.add(new Vector3f(v2.x, v2.y, getHeightfieldHeight(v2.x,
-                    v2.y) + 1.0f));
-
-            } else {
-                addSegment(verts, v1, between);
-                addSegment(verts, between, v2);
-            }
+            _verts.add(new Vector3f(v.x, v.y,
+                getHeightfieldHeight(v.x, v.y) + 0.1f));
         }
-
-        /**
-         * If the two vertices lie on either side of a horizontal boundary,
-         * return the point on the boundary between them (otherwise null).
-         */
-        protected Vector2f getHorizontalIntermediate (Vector2f v1, Vector2f v2)
-        {
-            int b1 = getBoundaryIndex(v1.y, SUB_TILE_SIZE),
-                b2 = getBoundaryIndex(v2.y, SUB_TILE_SIZE),
-                bmin = Math.min(b1, b2), bmax = Math.max(b1, b2);
-            for (int b = bmin+1; b < bmax; b++) {
-                if (b % 2 != 0) {
-                    continue;
-                }
-                float y = (b/2)*SUB_TILE_SIZE, t = (y - v1.y) / (v2.y - v1.y);
-                return new Vector2f(v1.x + t*(v2.x - v1.x), y);
-            }
-            return null;
-        }
-
-        /**
-         * If the two vertices lie on either side of a vertical boundary,
-         * return the point on the boundary between them (otherwise null).
-         */
-        protected Vector2f getVerticalIntermediate (Vector2f v1, Vector2f v2)
-        {
-            int b1 = getBoundaryIndex(v1.x, SUB_TILE_SIZE),
-                b2 = getBoundaryIndex(v2.x, SUB_TILE_SIZE),
-                bmin = Math.min(b1, b2), bmax = Math.max(b1, b2);
-            for (int b = bmin+1; b < bmax; b++) {
-                if (b % 2 != 0) {
-                    continue;
-                }
-                float x = (b/2)*SUB_TILE_SIZE, t = (x - v1.x) / (v2.x - v1.x);
-                return new Vector2f(x, v1.y + t*(v2.y - v1.y));
-            }
-            return null;
-        }
-
-        /**
-         * If the two vertices lie on either side of a diagonal boundary,
-         * return the point on the boundary between them (otherwise null).
-         */
-        protected Vector2f getDiagonalIntermediate (Vector2f v1, Vector2f v2)
-        {
-            float r2 = FastMath.sqrt(2.0f), d1 = (v1.y - v1.x)/(2 * r2),
-                d2 = (v2.y - v2.x)/(2 * r2), step = SUB_TILE_SIZE * r2;
-
-            int b1 = getBoundaryIndex(d1, step),
-                b2 = getBoundaryIndex(d2, step),
-                bmin = Math.min(b1, b2), bmax = Math.max(b1, b2);
-            for (int b = bmin+1; b < bmax; b++) {
-                if (b % 2 != 0) {
-                    continue;
-                }
-                float d = (b/2)*step, t = (d - d1) / (d2 - d1);
-                return new Vector2f(v1.x + t*(v2.x - v1.x),
-                    v1.y + t*(v2.y - v1.y));
-            }
-            return null;
-        }
-
-        /**
-         * Returns a boundary index for the specified value.  Starting at zero,
-         * every other index represents a boundary between two regions.  The
-         * other indices represent regions between the boundaries.
-         *
-         * @param step the size of the regions between boundaries
-         */
-        protected int getBoundaryIndex (float v, float step)
-        {
-            int base = (int)Math.floor(v / step), adjust;
-            if (epsilonEquals(v, base*step)) {
-                adjust = 0; // lower boundary
-
-            } else if (epsilonEquals(v, (base+1)*step)) {
-                adjust = 2; // upper boundary
-
-            } else {
-                adjust = 1; // region between
-            }
-            return base*2 + adjust;
-        }
-
-        /**
-         * Checks whether the two values are "close enough" to equal.
-         */
-        protected boolean epsilonEquals (float a, float b)
-        {
-            return FastMath.abs(a - b) < 0.001f;
-        }
+        
+        protected ArrayList<Vector3f> _verts = new ArrayList<Vector3f>();
+        protected Vector2f _v1 = new Vector2f(), _v2 = new Vector2f(),
+            _between = new Vector2f();
     }
 
     /**
@@ -496,6 +396,20 @@ public class TerrainNode extends Node
         
         updateRenderState();
         updateGeometricState(0, true);
+        
+        // compute the bounding box planes with some extra space
+        updateWorldBound();
+        float bbxmax = _board.getWidth() * TILE_SIZE,
+            bbymax = _board.getHeight() * TILE_SIZE,
+            bbzmax = 129 * TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE;
+        _bbplanes = new Plane[] {
+            new Plane(Vector3f.UNIT_X, -SUB_TILE_SIZE),
+            new Plane(Vector3f.UNIT_Y, -SUB_TILE_SIZE),
+            new Plane(Vector3f.UNIT_Z, -bbzmax),
+            new Plane(Vector3f.UNIT_X.negate(), -bbxmax),
+            new Plane(Vector3f.UNIT_Y.negate(), -bbymax),
+            new Plane(Vector3f.UNIT_Z.negate(), -bbzmax),
+        };
     }
     
     /**
@@ -614,12 +528,15 @@ public class TerrainNode extends Node
                 getHeightfieldVertex(x, y, origin);
                 theight = origin.z;
                 
-                // use a binary search to find the highest shadowed height
+                // determine the shadow height from self-shadowing
+                int sheight = (int)((getSelfShadowHeight(ray) - theight) /
+                    hstep);
+                
+                // use a binary search to find the highest piece shadow
                 int lower = 0, upper = 256, middle = 128;
                 while (middle > lower && middle < upper) {
                     origin.z = theight + middle * hstep;
                     results.clear();
-                    calculatePick(ray, results);
                     _view.getPieceNode().calculatePick(ray, results);
                     if (containTriangles(results)) {
                         lower = middle;
@@ -628,7 +545,8 @@ public class TerrainNode extends Node
                     }
                     middle = (lower + upper) / 2;
                 }
-                _board.setShadowValue(x, y, middle);
+                
+                _board.setShadowValue(x, y, Math.max(sheight, middle));
             }
         }
     }
@@ -668,6 +586,55 @@ public class TerrainNode extends Node
     }
 
     /**
+     * Computes the location at which the given ray intersects the terrain.
+     *
+     * @return true if an intersection was found, otherwise false
+     */
+    public boolean calculatePick (Ray ray, Vector3f result)
+    {
+        // make sure the ray intersects the bounding box
+        if (worldBound == null || !worldBound.intersects(ray)) {
+            return false;
+        }
+        
+        // check for special case of vertical ray
+        Vector3f origin = ray.getOrigin(), dir = ray.getDirection();
+        if (dir.x == 0f && dir.y == 0f) {
+            float height = getHeightfieldHeight(origin.x, origin.y);
+            if ((origin.z > height) != (dir.z < 0f)) {
+                return false;
+            }
+            result.set(origin.x, origin.y, height);
+            return true;
+        }
+        
+        // step from entrance to exit until we find a transition
+        Vector3f entrance = new Vector3f(), exit = new Vector3f();
+        computeEntranceExit(ray, entrance, exit);
+        float slope = dir.z / FastMath.sqrt(dir.x*dir.x + dir.y*dir.y),
+            r1 = entrance.z, r2,
+            h1 = getHeightfieldHeight(entrance.x, entrance.y), h2;
+        boolean over = r1 > h1;
+        Vector2f v1 = new Vector2f(entrance.x, entrance.y),
+            v2 = new Vector2f(exit.x, exit.y), between = new Vector2f();
+        for (boolean cont = true; cont; ) {
+            cont = getBoundaryIntersection(v1, v2, between);
+            r2 = r1 + slope * getDistance(v1, between);
+            h2 = getHeightfieldHeight(between.x, between.y);
+            if ((r2 > h2) != over) {
+                float t = (h1 - r1) / (r2 + h1 - r1 - h2);
+                result.set(v1.x + t*(between.x - v1.x),
+                    v1.y + t*(between.y - v1.y), h1 + t*(h2 - h1));
+                return true;
+            }
+            v1.set(between);
+            r1 = r2;
+            h1 = h2;
+        }
+        return false;
+    }
+    
+    /**
      * Returns the interpolated height at the specified set of node space
      * coordinates.
      */
@@ -687,8 +654,14 @@ public class TerrainNode extends Node
             cc = getHeightfieldValue(cx, cy),
             ax = x - fx, ay = y - fy;
 
-        return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
-            FastMath.LERP(ay, cf, cc));
+        if (ax < ay) {
+            return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
+                FastMath.LERP(ay, cc + ff - fc, cc));
+            
+        } else {
+            return FastMath.LERP(ax, FastMath.LERP(ay, ff, cc + ff - cf),
+                FastMath.LERP(ay, cf, cc));
+        }
     }
 
     /**
@@ -755,7 +728,7 @@ public class TerrainNode extends Node
      */
     public float getHeightfieldValue (int x, int y)
     {
-        return _board.getHeightfieldValue(x, y) *
+        return (_board == null) ? 0f : _board.getHeightfieldValue(x, y) *
             (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
     }
     
@@ -792,6 +765,36 @@ public class TerrainNode extends Node
         return (_board.getHeightfieldValue(x, y) +
             _board.getShadowValue(x, y)) *
                 (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
+    }
+    
+    /**
+     * Computes the height of the shadow volume from terrain self-shadowing.
+     *
+     * @param ray the ray from the point of interest to the light source
+     */
+    protected float getSelfShadowHeight (Ray ray)
+    {
+        // check for special case of vertical ray
+        Vector3f origin = ray.getOrigin(), dir = ray.getDirection();
+        if (dir.x == 0f && dir.y == 0f) {
+            return -Float.MAX_VALUE;
+        }
+        
+        // step from exit to origin updating height of volume
+        Vector3f xydir = new Vector3f(dir.x, dir.y, 0f).normalizeLocal(),
+            entrance = new Vector3f(), exit = new Vector3f();
+        computeEntranceExit(new Ray(origin, xydir), entrance, exit);
+        float slope = dir.z / FastMath.sqrt(dir.x*dir.x + dir.y*dir.y),
+            height = getHeightfieldHeight(exit.x, exit.y);
+        Vector2f v1 = new Vector2f(exit.x, exit.y),
+            v2 = new Vector2f(origin.x, origin.y), between = new Vector2f();
+        for (boolean cont = true; cont; ) {
+            cont = getBoundaryIntersection(v1, v2, between);
+            height = Math.max(getHeightfieldHeight(between.x, between.y),
+                height - slope * v1.subtractLocal(between).length());
+            v1.set(between);
+        }
+        return height;
     }
     
     /**
@@ -1016,6 +1019,196 @@ public class TerrainNode extends Node
             }
         }
         return (value / total) * _board.getShadowIntensity();
+    }
+    
+    /**
+     * Computes the points at which the given ray enters and exits the bounding
+     * volume.  If the ray originates from within the bounding volume, the
+     * entrance point will be stored as the ray's origin.
+     */
+    protected void computeEntranceExit (Ray ray, Vector3f entrance,
+        Vector3f exit)
+    {
+        // test against the six sides of the bounding box
+        float tentrance = 0f, texit = -1f;
+        for (int ii = 0; ii < _bbplanes.length; ii++) {
+            float ndd = _bbplanes[ii].normal.dot(ray.direction);
+            if (FastMath.abs(ndd) < FastMath.FLT_EPSILON) {
+                continue;
+            }
+            float t = (-_bbplanes[ii].normal.dot(ray.origin) +
+                _bbplanes[ii].constant) / ndd;
+            if (Float.isNaN(t) || t <= 0f) {
+                continue;
+            }
+            _isect.scaleAdd(t, ray.direction, ray.origin);
+            if (!boundsContain(_isect, ii % 3)) {
+                continue;
+            }
+            if (texit < 0f) {
+                texit = t;
+                
+            } else {
+                tentrance = Math.min(t, texit);
+                texit = Math.max(t, texit);
+            }
+        }
+        entrance.scaleAdd(tentrance, ray.direction, ray.origin);
+        exit.scaleAdd(texit, ray.direction, ray.origin);
+    }
+    
+    /**
+     * Determines whether the bounding box contains the given point.
+     *
+     * @param skip the index modulo three of the plane indices to skip
+     */
+    protected boolean boundsContain (Vector3f pt, int skip)
+    {
+        for (int ii = 0; ii < _bbplanes.length; ii++) {
+            if (ii % 3 != skip && 
+                _bbplanes[ii].whichSide(pt) == Plane.NEGATIVE_SIDE) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * If the two vertices lie on either side of a horizontal, vertical, or
+     * diagonal boundary, find the location of the boundary crossing nearest to
+     * the first point.
+     *
+     * @return true if there was a boundary between the two points, false if
+     * not (in which case the result will contain v2)
+     */
+    protected static boolean getBoundaryIntersection (Vector2f v1, Vector2f v2,
+        Vector2f result)
+    {
+        float t = Math.min(getHorizontalIntersection(v1, v2),
+            Math.min(getVerticalIntersection(v1, v2),
+                getDiagonalIntersection(v1, v2)));
+        if (t == Float.MAX_VALUE) {
+            result.set(v2);
+            return false;
+        }
+        result.set(v1.x + t*(v2.x - v1.x), v1.y + t*(v2.y - v1.y));
+        return true;
+    }
+    
+    /**
+     * If the two vertices lie on either side of a horizontal boundary, find
+     * the location of the boundary crossing nearest to the first point.
+     *
+     * @return <code>Float.MAX_VALUE</code> if there was no boundary between
+     * the points, otherwise a number from 0 to 1 indicating the distance to
+     * the boundary as a proportion of the distance between v1 and v2
+     */
+    protected static float getHorizontalIntersection (Vector2f v1,
+        Vector2f v2)
+    {
+        int b1 = getBoundaryIndex(v1.y, SUB_TILE_SIZE),
+            b2 = getBoundaryIndex(v2.y, SUB_TILE_SIZE);
+        if (b1 == b2) {
+            return Float.MAX_VALUE;
+        }
+        int step = (b1 < b2) ? +1 : -1;
+        for (int b = b1 + step; b != b2; b += step) {
+            if (b % 2 != 0) {
+                continue;
+            }
+            return ((b/2)*SUB_TILE_SIZE - v1.y) / (v2.y - v1.y);
+        }
+        return Float.MAX_VALUE;
+    }
+
+    /**
+     * If the two vertices lie on either side of a vertical boundary, find
+     * the location of the boundary crossing nearest to the first point.
+     *
+     * @return <code>Float.MAX_VALUE</code> if there was no boundary between
+     * the points, otherwise a number from 0 to 1 indicating the distance to
+     * the boundary as a proportion of the distance between v1 and v2
+     */
+    protected static float getVerticalIntersection (Vector2f v1, Vector2f v2)
+    {
+        int b1 = getBoundaryIndex(v1.x, SUB_TILE_SIZE),
+            b2 = getBoundaryIndex(v2.x, SUB_TILE_SIZE);
+        if (b1 == b2) {
+            return Float.MAX_VALUE;
+        }
+        int step = (b1 < b2) ? +1 : -1;
+        for (int b = b1 + step; b != b2; b += step) {
+            if (b % 2 != 0) {
+                continue;
+            }
+            return ((b/2)*SUB_TILE_SIZE - v1.x) / (v2.x - v1.x);
+        }
+        return Float.MAX_VALUE;
+    }
+
+    /**
+     * If the two vertices lie on either side of a diagonal boundary, find
+     * the location of the boundary crossing nearest to the first point.
+     *
+     * @return <code>Float.MAX_VALUE</code> if there was no boundary between
+     * the points, otherwise a number from 0 to 1 indicating the distance to
+     * the boundary as a proportion of the distance between v1 and v2
+     */
+    protected static float getDiagonalIntersection (Vector2f v1, Vector2f v2)
+    {
+        float d1 = v1.y - v1.x, d2 = v2.y - v2.x;
+        int b1 = getBoundaryIndex(d1, SUB_TILE_SIZE),
+            b2 = getBoundaryIndex(d2, SUB_TILE_SIZE);
+        if (b1 == b2) {
+            return Float.MAX_VALUE;
+        }
+        int step = (b1 < b2) ? +1 : -1;
+        for (int b = b1 + step; b != b2; b += step) {
+            if (b % 2 != 0) {
+                continue;
+            }
+            return ((b/2)*SUB_TILE_SIZE - d1) / (d2 - d1);
+        }
+        return Float.MAX_VALUE;
+    }
+    
+    /**
+     * Returns a boundary index for the specified value.  Starting at zero,
+     * every other index represents a boundary between two regions.  The
+     * other indices represent regions between the boundaries.
+     *
+     * @param step the size of the regions between boundaries
+     */
+    protected static int getBoundaryIndex (float v, float step)
+    {
+        int base = (int)Math.floor(v / step), adjust;
+        if (epsilonEquals(v, base*step)) {
+            adjust = 0; // lower boundary
+
+        } else if (epsilonEquals(v, (base+1)*step)) {
+            adjust = 2; // upper boundary
+
+        } else {
+            adjust = 1; // region between
+        }
+        return base*2 + adjust;
+    }
+
+    /**
+     * Checks whether the two values are "close enough" to equal.
+     */
+    protected static boolean epsilonEquals (float a, float b)
+    {
+        return FastMath.abs(a - b) < 0.001f;
+    }
+        
+    /**
+     * Returns the distance between two 2D points.
+     */
+    protected static float getDistance (Vector2f v1, Vector2f v2)
+    {
+        float dx = v1.x - v2.x, dy = v1.y - v2.y;
+        return FastMath.sqrt(dx*dx + dy*dy);
     }
     
     /** Contains all the state associated with a splat block (a collection of
@@ -1290,6 +1483,12 @@ public class TerrainNode extends Node
 
     /** The shared index buffer for highlights on tiles. */
     protected static IntBuffer _hibuf;
+    
+    /** The planes of the node's bounding box. */
+    protected Plane[] _bbplanes;
+    
+    /** A temporary result vector. */
+    protected Vector3f _isect = new Vector3f();
     
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;
