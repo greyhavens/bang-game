@@ -83,7 +83,6 @@ public class ImageCache
         if (iref != null && (image = iref.get()) != null) {
             return image;
         }
-        log.info("Creating BImage [" + rsrcPath + "].");
 
         // load the image data from the resource manager
         BufferedImage bufimg;
