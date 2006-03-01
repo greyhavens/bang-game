@@ -591,8 +591,13 @@ public class BangBoardView extends BoardView
             if (p instanceof Unit && range.contains(p.x, p.y) &&
                 _selection.validTarget(p, false) && 
                 _selection.computeShotLocation(p, moves) != null) {
-                getUnitSprite(p).setTargeted(true);
-                dest.add(p.x, p.y);
+                UnitSprite sprite = getUnitSprite(p);
+                if (sprite != null) {
+                    sprite.setTargeted(true);
+                    dest.add(p.x, p.y);
+                } else {
+                    log.warning("No sprite for unit! [unit=" + p + "].");
+                }
             }
         }
     }

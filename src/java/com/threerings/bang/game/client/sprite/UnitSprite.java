@@ -174,7 +174,7 @@ public class UnitSprite extends MobileSprite
 
         // if our pending node is showing, update it to reflect our correct
         // ticks until movable
-        if (_pendnode != null) {
+        if (_pendnode != null && ticks > 0) {
             _pendtst.setTexture(createPendingTexture(ticks-1));
         }
     }
