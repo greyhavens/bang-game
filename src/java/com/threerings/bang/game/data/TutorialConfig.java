@@ -59,6 +59,11 @@ public class TutorialConfig
         public String type;
         public int[] location;
     }
+
+    public static class ShowView extends Action
+    {
+        public String name;
+    }
     
     /** The identifier for this tutorial, which defines its message bundle. */
     public String ident;

@@ -1215,6 +1215,11 @@ public class BangManager extends GameManager
      */
     protected boolean addBonus ()
     {
+        // no automatic bonuses in tutorials
+        if (_bconfig.tutorial) {
+            return false;
+        }
+
         Piece[] pieces = _bangobj.getPieceArray();
 
         // have a 1 in 4 chance of adding a bonus for each live player for

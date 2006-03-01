@@ -36,4 +36,13 @@ public interface TutorialCodes
 
     /** A game state action monitored by the tutorial system. */
     public static final String UNIT_MOVE_ATTACKED = "unit_move_attacked";
+
+    /** A game state action monitored by the tutorial system. */
+    public static final String BONUS_ACTIVATED = "bonus_activated";
+
+    /** A game state action monitored by the tutorial system. */
+    public static final String CARD_SELECTED = "card_selected";
+
+    /** A game state action monitored by the tutorial system. */
+    public static final String CARD_PLAYED = "card_played";
 }

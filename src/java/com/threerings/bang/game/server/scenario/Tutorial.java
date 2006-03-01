@@ -114,7 +114,7 @@ public class Tutorial extends Scenario
     {
         // tutorials don't normally expire after a set time, but we do end them
         // eventually if the player dallies too long
-        return 400;
+        return 4000;
     }
 
     protected void processAction (int actionId)

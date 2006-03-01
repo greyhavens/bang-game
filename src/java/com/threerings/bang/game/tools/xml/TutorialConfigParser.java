@@ -45,5 +45,6 @@ public class TutorialConfigParser extends CompiledConfigParser
         "center_on_unit", TutorialConfig.CenterOnUnit.class.getName(),
         "move_unit", TutorialConfig.MoveUnit.class.getName(),
         "add_bonus", TutorialConfig.AddBonus.class.getName(),
+        "show_view", TutorialConfig.ShowView.class.getName(),
     };
 }
