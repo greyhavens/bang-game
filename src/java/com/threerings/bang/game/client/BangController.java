@@ -236,7 +236,7 @@ public class BangController extends GameController
     public void handleToggleHelp (Object source)
     {
         _view.toggleHelpView(true);
-        postEvent("help_toggled");
+        postEvent(TutorialCodes.HELP_TOGGLED);
     }
 
     /**

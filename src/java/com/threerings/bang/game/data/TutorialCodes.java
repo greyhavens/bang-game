@@ -17,6 +17,9 @@ public interface TutorialCodes
     public static final String TEXT_CLICKED = "text_clicked";
 
     /** A user interface action monitored by the tutorial system. */
+    public static final String HELP_TOGGLED = "help_toggled";
+
+    /** A user interface action monitored by the tutorial system. */
     public static final String UNIT_SELECTED = "unit_selected";
 
     /** A user interface action monitored by the tutorial system. */
