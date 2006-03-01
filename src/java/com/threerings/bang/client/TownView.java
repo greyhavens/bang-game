@@ -3,6 +3,12 @@
 
 package com.threerings.bang.client;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+
 import java.io.IOException;
 
 import java.util.Enumeration;
@@ -12,6 +18,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.math.Quaternion;
@@ -19,6 +26,8 @@ import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
+import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.MouseAdapter;
@@ -250,6 +259,9 @@ public class TownView extends BWindow
         {
             super.fadeInComplete();
 
+            // make sure the population sign is up-to-date
+            updatePopulationSign(51234);
+            
             if (_vpsprite != null &&
                 !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
                 // clear out any hover sprite that was established in the
@@ -365,6 +377,48 @@ public class TownView extends BWindow
             return true;
         }
 
+        protected void updatePopulationSign (int pop)
+        {
+            // get a reference to the buffered sign image
+            String path = "props/structures/pop_sign_" +
+                TownView.this._ctx.getUserObject().townId + "/sign.png";
+            BufferedImage bimg = _ctx.getImageCache().getBufferedImage(path);
+            if (bimg == null) {
+                log.warning("Couldn't find population sign image [path=" +
+                    path + "].");
+                return;
+            }
+            
+            // write population into image
+            BufferedImage img = new BufferedImage(bimg.getWidth(),
+                bimg.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D gfx = img.createGraphics();
+            gfx.drawImage(bimg, 0, 0, null);
+            gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+            gfx.setColor(Color.white);
+            gfx.setFont(new Font("Dom Casual", Font.PLAIN, 40));
+            String pstr = Integer.toString(pop);
+            gfx.drawString(pstr,
+                (img.getWidth() - gfx.getFontMetrics().stringWidth(pstr)) / 2,
+                img.getHeight() - 32);
+            gfx.dispose();
+            
+            // get a reference to the population sign texture and update
+            Texture ptex = _ctx.getTextureCache().getTexture(path);
+            int tid = ptex.getTextureId();
+            if (tid != 0) {
+                // to delete the texture, we need an OpenGL texture state
+                TextureState tstate = _ctx.getRenderer().createTextureState();
+                tstate.setTexture(ptex);
+                tstate.deleteAll();
+            }
+            ptex.setImage(TextureManager.loadImage(img, true));
+            ptex.setCorrection(Texture.CM_PERSPECTIVE);
+            ptex.setFilter(Texture.FM_LINEAR);
+            ptex.setMipmapState(Texture.MM_LINEAR_LINEAR);
+        }
+        
         protected MaterialState _hstate;
         protected PieceSprite _hsprite;
         protected ViewpointSprite _vpsprite;
