@@ -44,6 +44,11 @@ public class FKeyPopups
             return;
         }
 
+        // make sure we can display an FKEY popup right now
+        if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.FKEY)) {
+            return;
+        }
+
         // otherwise pop up the dialog associated with they key they pressed
         // (clearing any other dialog before doing so)
         BDecoratedWindow popup;
