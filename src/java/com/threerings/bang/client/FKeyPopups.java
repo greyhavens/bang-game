@@ -39,7 +39,7 @@ public class FKeyPopups
     {
         // if they pressed the same key as the current popup window, just
         // dismiss it
-        if (keyCode == _poppedKey) {
+        if (keyCode == _poppedKey && _popped.isAdded()) {
             clearPopup();
             return;
         }
