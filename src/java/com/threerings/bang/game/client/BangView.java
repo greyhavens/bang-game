@@ -151,6 +151,7 @@ public class BangView extends BWindow
         for (int ii = 0; ii < pcount; ii++) {
             _pswins[ii] = new BWindow(
                 _ctx.getStyleSheet(), GroupLayout.makeHStretch());
+            _pswins[ii].setLayer(1);
             _pswins[ii].setStyleClass("player_status_win");
             _pswins[ii].add(
                 pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, _ctrl, ii));
@@ -169,11 +170,16 @@ public class BangView extends BWindow
 
         // remove our displays
         for (int ii = 0; ii < _pswins.length; ii++) {
-            _ctx.getRootNode().removeWindow(_pswins[ii]);
+            if (_pswins[ii].isAdded()) {
+                _ctx.getRootNode().removeWindow(_pswins[ii]);
+            }
         }
-        _ctx.getRootNode().removeWindow(chat);
-        _ctx.getRootNode().removeWindow(_timer);
-
+        if (chat.isAdded()) {
+            _ctx.getRootNode().removeWindow(chat);
+        }
+        if (_timer.isAdded()) {
+            _ctx.getRootNode().removeWindow(_timer);
+        }
         if (help.isAdded()) {
             _ctx.getRootNode().removeWindow(help);
         }
@@ -189,41 +195,22 @@ public class BangView extends BWindow
     {
         super.wasAdded();
 
-        int width = _ctx.getDisplay().getWidth();
-        int height = _ctx.getDisplay().getHeight();
-        int gap = 0, wcount = _pswins.length;
-
-        // now that we've been added to the interface hierarchy, we can add the
-        // player status windows which should be "above" this one
-        for (int ii = 0; ii < wcount; ii++) {
-            BWindow pwin = _pswins[ii];
-            _ctx.getRootNode().addWindow(pwin);
-            pwin.pack();
-            // compute the gap once we've laid out our first status window
-            int wwidth = _pswins[ii].getWidth();
-            if (gap == 0) {
-                gap = ((width - 10) - (wcount * wwidth)) / (wcount-1);
-            }
-            pwin.setLocation(5 + (wwidth+gap) * ii, 5);
+        // we don't show our various views in the tutorials until asked
+        BangConfig config = (BangConfig)_ctrl.getPlaceConfig();
+        if (!config.tutorial) {
+            showPlayerStatus();
+            showRoundTimer();
+            showChat();
         }
-
-        // add the round timer
-        _ctx.getRootNode().addWindow(_timer);
-        _timer.pack();
-        _timer.setLocation(0, height - _timer.getHeight());
-
-        // and add our chat display
-        _ctx.getRootNode().addWindow(chat);
-        chat.pack();
-        chat.setBounds(5, 50, width - 10, chat.getHeight());
 
         // finally if we were waiting to start things up, get going
         if (_pendingPhase != -1) {
             setPhase(_pendingPhase);
         }
 
-        // start with help showing if requested
-        if (BangPrefs.config.getValue("context_help", false)) {
+        // start with help showing if requested and if we're not in a tutorial
+        if (!config.tutorial &&
+            BangPrefs.config.getValue("context_help", false)) {
             toggleHelpView(false);
         }
     }
@@ -238,7 +225,50 @@ public class BangView extends BWindow
             endRound();
         }
     }
-    
+
+    protected void showPlayerStatus ()
+    {
+        if (_pswins[0].isAdded()) {
+            return;
+        }
+
+        int width = _ctx.getDisplay().getWidth();
+        int height = _ctx.getDisplay().getHeight();
+        int gap = 0, wcount = _pswins.length;
+
+        for (int ii = 0; ii < wcount; ii++) {
+            BWindow pwin = _pswins[ii];
+            _ctx.getRootNode().addWindow(pwin);
+            pwin.pack();
+            // compute the gap once we've laid out our first status window
+            int wwidth = _pswins[ii].getWidth();
+            if (gap == 0) {
+                gap = ((width - 10) - (wcount * wwidth)) / (wcount-1);
+            }
+            pwin.setLocation(5 + (wwidth+gap) * ii, 5);
+        }
+    }
+
+    protected void showRoundTimer ()
+    {
+        if (!_timer.isAdded()) {
+            int height = _ctx.getDisplay().getHeight();
+            _ctx.getRootNode().addWindow(_timer);
+            _timer.pack();
+            _timer.setLocation(0, height - _timer.getHeight());
+        }
+    }
+
+    protected void showChat ()
+    {
+        if (!chat.isAdded()) {
+            int width = _ctx.getDisplay().getWidth();
+            _ctx.getRootNode().addWindow(chat);
+            chat.pack();
+            chat.setBounds(5, 50, width - 10, chat.getHeight());
+        }
+    }
+
     protected void setOverlay (BWindow overlay)
     {
         clearOverlay();

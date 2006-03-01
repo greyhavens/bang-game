@@ -37,7 +37,7 @@ import static com.threerings.bang.Log.log;
 public class TutorialController
 {
     /** Called from {@link BangController#init}. */
-    public void init (BangContext ctx, BangConfig config, BangBoardView view)
+    public void init (BangContext ctx, BangConfig config, BangView view)
     {
         _ctx = ctx;
         _view = view;
@@ -95,10 +95,8 @@ public class TutorialController
         }
 
         // display the pick tutorial view in "finished tutorial" mode
-        PickTutorialView view = new PickTutorialView(_ctx, _config.ident);
-        _ctx.getRootNode().addWindow(view);
-        view.pack(-1, -1);
-        view.center();
+        _ctx.getBangClient().displayPopup(
+            new PickTutorialView(_ctx, _config.ident), true);
     }
 
     /** Called from {@link BangController#didLeavePlace}. */
@@ -136,7 +134,7 @@ public class TutorialController
             int pieceId = ((TutorialConfig.CenterOnUnit)action).id;
             Piece p = (Piece)_bangobj.pieces.get(pieceId);
             if (p != null) {
-                _view.centerCameraOnUnit(p);
+                _view.view.centerCameraOnUnit(p);
             }
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
@@ -144,6 +142,14 @@ public class TutorialController
 
         } else if (action instanceof TutorialConfig.AddBonus) {
             // nothing to do here
+
+        } else if (action instanceof TutorialConfig.ShowView) {
+            String name = ((TutorialConfig.ShowView)action).name;
+            if (name.equals("player_status")) {
+                _view.showPlayerStatus();
+            } else if (name.equals("round_timer")) {
+                _view.showRoundTimer();
+            }
             
         } else {
             log.warning("Unknown action " + action);
@@ -199,7 +205,7 @@ public class TutorialController
     };
 
     protected BangContext _ctx;
-    protected BangBoardView _view;
+    protected BangView _view;
     protected BangObject _bangobj;
     protected MessageBundle _msgs, _gmsgs;
 

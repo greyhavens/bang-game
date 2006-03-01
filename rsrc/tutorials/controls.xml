@@ -1,14 +1,17 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="controls" board="Dry Canyon" players="2">
+<tutorial ident="controls" board="Sunset Raid" players="2">
+
+  <!-- start them off with a friendly welcome -->
   <text message="welcome" step="1"/>
   <wait event="text_clicked"/>
 
+  <!-- show them how to move the camera around -->
   <text message="camera" step="2"/>
   <wait event="text_clicked"/>
 
   <!-- show them a unit and have them click to select it -->
-  <add_unit id="1000" type="gunslinger" location="10,10" owner="0"/>
+  <add_unit id="1000" type="gunslinger" location="16,16" owner="0"/>
   <center_on_unit id="1000"/>
   <text message="click_unit" step="3"/>
   <wait event="unit_selected"/>
@@ -30,7 +33,7 @@
   <wait event="text_clicked"/>
 
   <!-- add an enemy unit and show them how to shoot it -->
-  <add_unit id="1001" type="steamgunman" location="10,10" owner="1"/>
+  <add_unit id="1001" type="steamgunman" location="16,17" owner="1"/>
   <text message="click_to_highlight_attacks" step="4"/>
   <wait event="unit_selected"/>
 
@@ -47,6 +50,7 @@
   <text message="damage_and_respawn_2"/>
   <wait event="text_clicked"/>
 
+  <!-- wrap up and end the tutorial -->
   <text message="done"/>
   <wait event="text_clicked"/>
 

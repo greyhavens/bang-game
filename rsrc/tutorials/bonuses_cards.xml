@@ -1,24 +1,55 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="bonuses_cards" board="Dry Canyon" players="2">
-  <!-- show them a unit and have them click to select it -->
-  <add_unit type="gunslinger" location="10,10" owner="0"/>
-  <text message="click_unit" step="1"/>
-  <wait event="unit_selected"/>
+<tutorial ident="bonuses_cards" board="Sunset Raid" players="2">
 
-  <!-- explain the potential move indicators and have them click to move -->
-  <text message="click_to_move"/>
-  <wait event="unit_moved"/>
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
 
-  <!-- explain the ticks until next move, have them move again -->
-  <text message="observe_ticks_then_move"/>
-  <wait event="unit_moved"/>
+  <!-- add two gunslingers -->
+  <add_unit id="1000" type="gunslinger" location="16,16" owner="0"/>
+  <add_unit id="2000" type="gunslinger" location="16,18" owner="1"/>
 
-  <!-- add an enemy unit and show them how to shoot it -->
-  <add_unit type="steamgunman" location="10,10" owner="1"/>
-  <text message="click_to_highlight_attacks" step="2"/>
-  <wait event="unit_selected"/>
-  <text message="click_to_attack"/>
+  <!-- have the player shoot one with the other -->
+  <text message="shoot_gunslinger" step="2"/>
   <wait event="unit_attacked"/>
+  <text message="took_damage"/>
+  <wait event="text_clicked"/>
+
+  <!-- add a repair bonus and have them activate it -->
+  <text message="repair_intro"/>
+  <add_bonus type="repair" location="16,14"/>
+  <wait event="bonus_activated"/>
+
+  <!-- have them turn on the help window, explain it -->
+  <text message="show_help" step="3"/>
+  <wait event="help_toggled"/>
+
+  <!-- add a ramblin' bonus, have them inspect and activate it -->
+  <text message="ramblin_intro"/>
+  <add_bonus type="ramblin" location="14,14"/>
+  <wait event="bonus_activated"/>
+  <text message="ramblin_effect"/>
+  <wait event="text_clicked"/>
+
+  <!-- show the player status view, explain it -->
+  <text message="player_status_intro" step="4"/>
+  <show_view name="player_status"/>
+  <wait event="text_clicked"/>
+
+  <!-- add a card bonus, have them activate it -->
+  <text message="card_intro"/>
+  <add_bonus type="card" location="14,16"/>
+  <wait event="bonus_activated"/>
+
+  <!-- explain cards and how to activate them -->
+  <text message="card_detail"/>
+  <wait event="card_selected"/>
+  <text message="activate_card"/>
+  <wait event="card_played"/>
+
+  <!-- wrap up and end the tutorial -->
+  <text message="done"/>
+  <wait event="text_clicked"/>
 
 </tutorial>

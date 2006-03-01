@@ -671,7 +671,7 @@ public class BangBoardView extends BoardView
         pruneAttackSet(attacks, _moveSet, _attackSet);
         highlightTiles(_moveSet, piece.isFlyer());
 
-        // report that the user took an action
+        // report that the user took an action (for tutorials)
         _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
     }
 
@@ -985,6 +985,7 @@ public class BangBoardView extends BoardView
                     _pendingBonuses.remove(new Point(p.x, p.y));
                 if (bsprite != null) {
                     removeSprite(bsprite);
+                    _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED);
                 }
             }
         }

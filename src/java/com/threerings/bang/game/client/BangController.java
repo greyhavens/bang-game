@@ -114,7 +114,7 @@ public class BangController extends GameController
         // if this is a tutorial game, create our tutorial controller
         if (_config.tutorial) {
             _tutcont = new TutorialController();
-            _tutcont.init(_ctx, _config, _view.view);
+            _tutcont.init(_ctx, _config, _view);
         }
 
         // we start the new round after the player has dismissed the previous
@@ -190,7 +190,9 @@ public class BangController extends GameController
     /** Activates the chat input. */
     public void handleStartChat (Object source)
     {
-        _view.chat.requestFocus();
+        if (_view.chat.isAdded()) { // chat is not available in tutorials
+            _view.chat.requestFocus();
+        }
     }
 
     /** Displays the in-game options view. */
@@ -234,6 +236,7 @@ public class BangController extends GameController
     public void handleToggleHelp (Object source)
     {
         _view.toggleHelpView(true);
+        postEvent("help_toggled");
     }
 
     /**
@@ -330,6 +333,7 @@ public class BangController extends GameController
         } else {
             // instruct the board view to activate placement mode
             _view.view.placeCard(card);
+            postEvent(TutorialCodes.CARD_SELECTED);
         }
     }
 
@@ -342,6 +346,7 @@ public class BangController extends GameController
         } else {
             _bangobj.service.playCard(
                 _ctx.getClient(), cardId, (short)tx, (short)ty);
+            postEvent(TutorialCodes.CARD_PLAYED);
         }
     }
 
