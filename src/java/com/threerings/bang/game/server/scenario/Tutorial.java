@@ -16,6 +16,8 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.BonusConfig;
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -94,6 +96,13 @@ public class Tutorial extends Scenario
         // end the scenario if we've reached the last action
         if (_nextActionId >= _config.getActionCount()) {
             bangobj.setLastTick(tick);
+
+            // also note that the player completed this tutorial
+            PlayerObject user = (PlayerObject)_bangmgr.getPlayer(0);
+            if (user != null) {
+                user.stats.addToSetStat(
+                    Stat.Type.TUTORIALS_COMPLETED, _config.ident);
+            }
         }
     }
 

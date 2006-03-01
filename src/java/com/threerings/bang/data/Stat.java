@@ -36,6 +36,7 @@ public abstract class Stat
         CONSEC_WINS(new IntStat()),
         CONSEC_LOSSES(new IntStat()),
         LATE_NIGHTS(new IntStat(), true, true),
+        TUTORIALS_COMPLETED(new ByteStringSetStat(), true, true),
 
         // transient (per-session) statistics
         SESSION_GAMES_PLAYED(new IntStat(), false, true),
@@ -108,7 +109,6 @@ public abstract class Stat
             // configure our prototype
             _prototype = prototype;
             _prototype._type = this;
-            _prototype._modified = true;
 
             // compute our unique code
             _code = BangUtil.crc32(name());
@@ -126,6 +126,17 @@ public abstract class Stat
         protected int _code;
         protected boolean _persist, _hidden;
     };
+
+    /** Provides auxilliary information to statistics during the persisting
+     * process. */
+    public static interface AuxDataSource
+    {
+        /** Maps the specified string to a unique integer value. */
+        public int getStringCode (Type type, String value);
+
+        /** Maps the specified unique code back to its string value. */
+        public String getCodeString (Type type, int code);
+    }
 
     /**
      * Maps a {@link Type}'s code code back to a {@link Type} instance.
@@ -160,57 +171,35 @@ public abstract class Stat
         return _modified;
     }
 
-    /**
-     * Writes our custom streamable fields.
-     */
+    /** Writes our custom streamable fields. */
     public void writeObject (ObjectOutputStream out)
         throws IOException
     {
-        if (_nondb) {
-            out.writeInt(_type.code());
-        }
+        out.writeInt(_type.code());
         out.defaultWriteObject();
     }
 
-    /**
-     * Reads our custom streamable fields.
-     */
+    /** Reads our custom streamable fields. */
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
     {
-        if (_nondb) {
-            _type = getType(in.readInt());
-        }
+        _type = getType(in.readInt());
         in.defaultReadObject();
     }
 
     /**
-     * Serializes this instance for storage in the item database.
+     * Serializes this instance for storage in the item database. Derived
+     * classes must override this method to implement persistence.
      */
-    public void persistTo (ObjectOutputStream out)
-        throws IOException
-    {
-        _nondb = false;
-        try {
-            out.writeBareObject(this);
-        } finally {
-            _nondb = true;
-        }
-    }
+    public abstract void persistTo (ObjectOutputStream out, AuxDataSource aux)
+        throws IOException;
 
     /**
      * Unserializes this item from data obtained from the item database.
+     * Derived classes must override this method to implement persistence.
      */
-    public void unpersistFrom (ObjectInputStream in)
-        throws IOException, ClassNotFoundException
-    {
-        _nondb = false;
-        try {
-            in.readBareObject(this);
-        } finally {
-            _nondb = true;
-        }
-    }
+    public abstract void unpersistFrom (ObjectInputStream in, AuxDataSource aux)
+        throws IOException, ClassNotFoundException;
 
     /**
      * Generates a string representation of this instance.
@@ -248,9 +237,6 @@ public abstract class Stat
 
     /** The type of the statistic in question. */
     protected transient Type _type;
-
-    /** Used when serializing this instance for storage in the database. */
-    protected transient boolean _nondb = true;
 
     /** Indicates whether or not this statistic has been modified since it
      * was loaded from the database. */

@@ -53,6 +53,9 @@ public final class StatSet extends DSet
     /**
      * Sets an integer stat to the specified value, if it exceeds our
      * existing recorded value.
+     *
+     * @exception ClassCastException thrown if the registered type of the
+     * specified stat is not an {@link IntStat}.
      */
     public void maxStat (Stat.Type type, int value)
     {
@@ -81,12 +84,40 @@ public final class StatSet extends DSet
     }
 
     /**
+     * Adds a string value to a {@link StringSetStat}.
+     *
+     * @exception ClassCastException thrown if the registered type of the
+     * specified stat is not an {@link StringSetStat}.
+     */
+    public void addToSetStat (Stat.Type type, String value)
+    {
+        StringSetStat stat = (StringSetStat)get(type.name());
+        if (stat == null) {
+            stat = (StringSetStat)type.newStat();
+            stat.add(value);
+            addStat(stat);
+        } else if (stat.add(value)) {
+            updateStat(stat);
+        }
+    }
+
+    /**
      * Returns the current value of the specified integer statistic.
      */
     public int getIntStat (Stat.Type type)
     {
         IntStat stat = (IntStat)get(type.name());
         return (stat == null) ? 0 : stat.getValue();
+    }
+
+    /**
+     * Returns true if the specified {@link StringSetStat} contains the
+     * specified value, false otherwise.
+     */
+    public boolean containsValue (Stat.Type type, String value)
+    {
+        StringSetStat stat = (StringSetStat)get(type.name());
+        return (stat == null) ? false : stat.contains(value);
     }
 
     protected void addStat (Stat stat)

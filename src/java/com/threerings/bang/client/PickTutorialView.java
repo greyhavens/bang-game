@@ -25,6 +25,8 @@ import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -52,6 +54,7 @@ public class PickTutorialView extends BDecoratedWindow
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
+        PlayerObject self = _ctx.getUserObject();
 
         String tmsg, hmsg;
         if (completed == null) {
@@ -71,26 +74,34 @@ public class PickTutorialView extends BDecoratedWindow
 
         BContainer table = new BContainer(new TableLayout(2, 5, 15));
         add(table);
+
+        int unplayed = 0;
         for (int ii = 0; ii < BangCodes.TUTORIALS.length; ii++) {
+            String tid = BangCodes.TUTORIALS[ii];
             ImageIcon icon;
             String btext;
-            if (false) { // check for completed tutorial
+            if (self.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED, tid)) {
                 icon = comp;
                 btext = "m.tut_replay";
             } else {
                 icon = incomp;
                 btext = "m.tut_play";
+                unplayed++;
             }
 
-            String ttext = _msgs.get("m.tut_" + BangCodes.TUTORIALS[ii]);
-            BLabel tlabel = new BLabel(ttext, "tutorial_text");
+            BLabel tlabel = new BLabel(
+                _msgs.get("m.tut_" + tid), "tutorial_text");
             tlabel.setIcon(icon);
             table.add(tlabel);
 
-            BButton play = new BButton(
-                _msgs.get(btext), this, BangCodes.TUTORIALS[ii]);
+            BButton play = new BButton(_msgs.get(btext), this, tid);
             play.setStyleClass("alt_button");
             table.add(play);
+
+            if (unplayed > 1) {
+                tlabel.setEnabled(false);
+                play.setEnabled(false);
+            }
         }
 
         if (completed == null) {

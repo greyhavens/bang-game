@@ -687,6 +687,10 @@ tutorial_text {
   text-align: left;
 }
 
+tutorial_text:disabled {
+  color: #4C260277;
+}
+
 tutorial_steps {
   font: "Helvetica" plain 12;
   color: #7D4924;
