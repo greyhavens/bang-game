@@ -96,7 +96,7 @@ public class TutorialController
 
         // display the pick tutorial view in "finished tutorial" mode
         _ctx.getBangClient().displayPopup(
-            new PickTutorialView(_ctx, _config.ident), true);
+            new PickTutorialView(_ctx, PickTutorialView.Mode.COMPLETED), true);
     }
 
     /** Called from {@link BangController#didLeavePlace}. */

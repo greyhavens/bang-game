@@ -198,6 +198,13 @@ public class BangClient extends BasicClient
             return true;
         }
 
+        // if they haven't done (or declined) the tutorials yet, show them
+        if (BangPrefs.shouldShowTutorials(_ctx.getUserObject())) {
+            displayPopup(new PickTutorialView(
+                             _ctx, PickTutorialView.Mode.FIRST_TIME), true);
+            return true;
+        }
+
         // if there are any pending pardner invitations, show those
         if (_invites.size() > 0) {
             displayPardnerInvite(_invites.remove(0));
@@ -227,6 +234,12 @@ public class BangClient extends BasicClient
             return false;
         }
 
+        // don't allow FKEY popups if we have other popups showing
+        if (type == MainView.Type.FKEY && _popups.size() > 0) {
+            return false;
+        }
+
+        // otherwise ask the view what they think about it
         if (_mview instanceof MainView) {
             return ((MainView)_mview).allowsPopup(type);
         } else {

@@ -12,6 +12,10 @@ import com.jme.system.PropertiesIO;
 
 import com.samskivert.util.Config;
 
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Stat;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -91,6 +95,28 @@ public class BangPrefs
     public static void updateFullscreen (boolean fullscreen)
     {
         config.setValue("display_fullscreen", fullscreen);
+    }
+
+    /**
+     * Used to prevent the tutorials from automatically showing up once a user
+     * has dismissed them the first time or completed the first two.
+     */
+    public static boolean shouldShowTutorials (PlayerObject user)
+    {
+        return !config.getValue(user.username + ".declined_tuts", false) &&
+            !(user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED,
+                                       BangCodes.TUTORIALS[0]) &&
+              user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED,
+                                       BangCodes.TUTORIALS[1]));
+    }
+
+    /**
+     * Called when the user has dismissed the tutorial dialog instead of
+     * choosing a tutorial.
+     */
+    public static void setDeclinedTutorials (PlayerObject user)
+    {
+        config.setValue(user.username + ".declined_tuts", true);
     }
 
     /**

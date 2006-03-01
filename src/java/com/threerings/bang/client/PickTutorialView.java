@@ -38,15 +38,19 @@ import static com.threerings.bang.Log.log;
 public class PickTutorialView extends BDecoratedWindow
     implements ActionListener
 {
+    /** The various modes in which we pop up the tutorial view. */
+    public static enum Mode { FIRST_TIME, FKEY, COMPLETED };
+
     /**
      * Creates the pick tutorial view.
      *
      * @param completed the identifier for the just completed tutorial, or null
      * if we're displaying this view from in town.
      */
-    public PickTutorialView (BangContext ctx, String completed)
+    public PickTutorialView (BangContext ctx, Mode mode)
     {
         super(ctx.getStyleSheet(), null);
+        setStyleClass("dialog_window");
         setLayoutManager(GroupLayout.makeVert(
                              GroupLayout.NONE, GroupLayout.CENTER,
                              GroupLayout.NONE));
@@ -57,12 +61,20 @@ public class PickTutorialView extends BDecoratedWindow
         PlayerObject self = _ctx.getUserObject();
 
         String tmsg, hmsg;
-        if (completed == null) {
+        switch (mode) {
+        default:
+        case FKEY:
             tmsg = "m.tut_title";
             hmsg = "m.tut_intro";
-        } else {
+            break;
+        case FIRST_TIME:
+            tmsg = "m.tut_first_title";
+            hmsg = "m.tut_first_intro";
+            break;
+        case COMPLETED:
             tmsg = "m.tut_completed_title";
             hmsg = "m.tut_completed_intro";
+            break;
         }
         add(new BLabel(_msgs.get(tmsg), "window_title"));
         add(new BLabel(_msgs.get(hmsg), "dialog_text"));
@@ -104,7 +116,7 @@ public class PickTutorialView extends BDecoratedWindow
             }
         }
 
-        if (completed == null) {
+        if (mode != Mode.COMPLETED) {
             add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         } else {
             add(new BButton(_msgs.get("m.to_town"), this, "to_town"));
@@ -116,7 +128,9 @@ public class PickTutorialView extends BDecoratedWindow
     {
         String action = event.getAction();
         if (action.equals("dismiss")) {
+            BangPrefs.setDeclinedTutorials(_ctx.getUserObject());;
             _ctx.getBangClient().clearPopup(this, true);
+            _ctx.getBangClient().checkShowIntro();
 
         } else if (action.equals("to_town")) {
             dismiss();

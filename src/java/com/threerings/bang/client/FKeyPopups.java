@@ -44,8 +44,10 @@ public class FKeyPopups
             return;
         }
 
-        // make sure we can display an FKEY popup right now
-        if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.FKEY)) {
+        // make sure we can display an FKEY popup right now (but only if we
+        // don't already have one popped up, in which case we'll replace it)
+        if (_popped == null &&
+            !_ctx.getBangClient().canDisplayPopup(MainView.Type.FKEY)) {
             return;
         }
 
@@ -54,8 +56,12 @@ public class FKeyPopups
         BDecoratedWindow popup;
         switch (keyCode) {
         default:
-        case KeyInput.KEY_F1: popup = createHelp(); break;
-        case KeyInput.KEY_T: popup = new PickTutorialView(_ctx, null); break;
+        case KeyInput.KEY_F1:
+            popup = createHelp();
+            break;
+        case KeyInput.KEY_T:
+            popup = new PickTutorialView(_ctx, PickTutorialView.Mode.FKEY);
+            break;
         }
 
         clearPopup();
@@ -76,6 +82,8 @@ public class FKeyPopups
     {
         BDecoratedWindow help = new BDecoratedWindow(
             _ctx.getStyleSheet(), _msgs.get("m.key_help_title"));
+        ((GroupLayout)help.getLayoutManager()).setGap(15);
+        help.setStyleClass("dialog_window");
         help.add(new BLabel(_msgs.get("m.key_help"), "dialog_text_left"));
         help.add(makeDismiss(help), GroupLayout.FIXED);
         return help;
