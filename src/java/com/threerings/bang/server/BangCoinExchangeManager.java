@@ -4,7 +4,6 @@
 package com.threerings.bang.server;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -12,6 +11,7 @@ import java.util.logging.Level;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.QuickSort;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.util.Name;
@@ -117,12 +117,12 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         ConsolidatedOffer[] buys = null;
         if (buy) {
             buys = summarizeOffers(_bids);
-            Arrays.sort(buys);
+            QuickSort.rsort(buys);
         }
         ConsolidatedOffer[] sells = null;
         if (sell) {
             sells = summarizeOffers(_asks);
-            Arrays.sort(sells, _revcmp);
+            QuickSort.sort(sells, _revcmp);
         }
         for (OfferPublisher publisher : _publishers) {
             publisher.updateOffers(buys, sells, lastPrice);
