@@ -673,6 +673,11 @@ public class BoardView extends BComponent
      */
     public void updateHoverState ()
     {
+        // if we don't know where the mouse is, we can't update
+        if (_worldMouse == null) {
+            return;
+        }
+        
         // update the sprite over which the mouse is hovering
         updateHoverSprite();
 
