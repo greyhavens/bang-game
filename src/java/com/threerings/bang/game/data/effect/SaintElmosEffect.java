@@ -55,7 +55,7 @@ public class SaintElmosEffect extends Effect
         newPieces = new Piece[pieceIds.length];
         for (int ii = 0; ii < newPieces.length; ii++) {
             newPieces[ii] = Unit.getUnit("windupslinger");
-            newPieces[ii].assignPieceId();
+            newPieces[ii].assignPieceId(bangobj);
             newPieces[ii].init();
             newPieces[ii].owner = owner;
             newPieces[ii].damage = 60;

@@ -88,7 +88,7 @@ public class CattleRustling extends Scenario
                 cps, cspot.x, cspot.y, 3);
             for (Point spot : spots) {
                 Cow cow = new Cow();
-                cow.assignPieceId();
+                cow.assignPieceId(bangobj);
                 cow.position(spot.x, spot.y);
                 cow.orientation = (short)RandomUtil.getInt(4);
 //                cow.owner = determineOwner(cow);

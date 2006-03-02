@@ -137,7 +137,7 @@ public class Tutorial extends Scenario
             if (aua.id > 0) {
                 unit.pieceId = aua.id;
             } else {
-                unit.assignPieceId();
+                unit.assignPieceId(_bangobj);
             }
             unit.init();
             unit.owner = aua.owner;
@@ -161,7 +161,7 @@ public class Tutorial extends Scenario
             TutorialConfig.AddBonus aba = (TutorialConfig.AddBonus)action;
             BonusConfig bconfig = BonusConfig.getConfig(aba.type);
             Bonus bonus = Bonus.createBonus(bconfig);
-            bonus.assignPieceId();
+            bonus.assignPieceId(_bangobj);
             bonus.position(aba.location[0], aba.location[1]);
             _bangobj.addToPieces(bonus);
             _bangobj.board.updateShadow(null, bonus);

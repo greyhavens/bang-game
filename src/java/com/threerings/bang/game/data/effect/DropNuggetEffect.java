@@ -74,7 +74,7 @@ public class DropNuggetEffect extends Effect
         }
 
         drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
-        drop.assignPieceId();
+        drop.assignPieceId(bangobj);
         drop.position(spot.x, spot.y);
     }
 

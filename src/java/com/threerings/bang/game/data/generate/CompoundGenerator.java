@@ -51,7 +51,6 @@ public class CompoundGenerator extends EnvironmentGenerator
                 bldgs[ii] = Prop.getProp("buildings/saloon");
             }
             BigPiece bldg = bldgs[ii];
-            bldg.assignPieceId();
 
             // position it randomly
             int tx = RandomUtil.getInt(width-bldg.getBounds().width, 0) +

@@ -284,7 +284,7 @@ public abstract class Scenario
 
         // create the engine there
         Train train = new Train();
-        train.assignPieceId();
+        train.assignPieceId(bangobj);
         train.x = terminal.x;
         train.y = terminal.y;
         train.orientation = terminal.orientation;
@@ -301,7 +301,7 @@ public abstract class Scenario
         Track terminal, boolean caboose)
     {
         Train train = new Train();
-        train.assignPieceId();
+        train.assignPieceId(bangobj);
         train.x = terminal.x;
         train.y = terminal.y;
         train.orientation = terminal.orientation;

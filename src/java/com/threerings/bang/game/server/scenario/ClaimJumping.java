@@ -226,7 +226,7 @@ public class ClaimJumping extends Scenario
     protected Bonus dropNugget (BangObject bangobj, int x, int y)
     {
         Bonus drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
-        drop.assignPieceId();
+        drop.assignPieceId(bangobj);
         drop.position(x, y);
         bangobj.board.updateShadow(null, drop);
         bangobj.addToPieces(drop);

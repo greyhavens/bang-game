@@ -469,7 +469,7 @@ public class BangManager extends GameManager
             }
         }
         Collections.addAll(pieces, pvec);
-        Piece.setNextPieceId(maxPieceId);
+        _bangobj.maxPieceId = maxPieceId;
 
         // extract and remove all player start markers
         _starts.clear();
@@ -508,7 +508,7 @@ public class BangManager extends GameManager
             if (p instanceof Marker) {
                 iter.remove();
             }
-            p.assignPieceId();
+            p.assignPieceId(_bangobj);
         }
 
         // configure the game object and board with the pieces
@@ -547,7 +547,7 @@ public class BangManager extends GameManager
 
             // configure their big shot selection
             Unit unit = Unit.getUnit(item.getType());
-            unit.assignPieceId();
+            unit.assignPieceId(_bangobj);
             unit.init();
             unit.owner = pidx;
             _bangobj.setBigShotsAt(unit, pidx);
@@ -604,7 +604,7 @@ public class BangManager extends GameManager
 
         // initialize and prepare the units
         for (int ii = 0; ii < units.length; ii++) {
-            units[ii].assignPieceId();
+            units[ii].assignPieceId(_bangobj);
             units[ii].init();
             units[ii].owner = pidx;
             _purchases.add(units[ii]);
@@ -1324,7 +1324,7 @@ public class BangManager extends GameManager
         Bonus bonus = Bonus.selectBonus(_bangobj, bspot, reachers[spidx]);
         if (bonus != null) {
             bonus.spot = (short)spidx;
-            bonus.assignPieceId();
+            bonus.assignPieceId(_bangobj);
             bonus.position(bspot.x, bspot.y);
             _bangobj.addToPieces(bonus);
             _bangobj.board.updateShadow(null, bonus);

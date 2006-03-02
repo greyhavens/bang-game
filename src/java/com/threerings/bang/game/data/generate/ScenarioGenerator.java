@@ -25,18 +25,6 @@ public abstract class ScenarioGenerator
         BangConfig config, BangBoard board, ArrayList<Piece> pieces);
 
     /**
-     * Configures a piece with the proper piece id and owner id and then
-     * adds it to the pieces array.
-     */
-    protected void configureAndAdd (
-        ArrayList<Piece> pieces, int pidx, Piece piece)
-    {
-        piece.assignPieceId();
-        piece.owner = pidx;
-        pieces.add(piece);
-    }
-
-    /**
      * Attempts to place the specified piece at the specified location.
      * Returns false if such a placement is not possible due to the space
      * being occupied by another piece or being out of bounds.

@@ -86,7 +86,6 @@ public class PiecePlacer extends EditorTool
             }
             
             _dragPiece = (Piece)piece.clone();
-            _dragPiece.assignPieceId();
             _dragPiece.orientation = (short)DIRECTIONS[
                 RandomUtil.getInt(DIRECTIONS.length)];
             _dragPiece.position(tx, ty);

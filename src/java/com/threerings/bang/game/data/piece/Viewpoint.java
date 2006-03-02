@@ -10,6 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.util.PieceUtil;
 
 /**
@@ -62,9 +63,9 @@ public class Viewpoint extends Piece
     }
 
     @Override // documentation inherited
-    public void assignPieceId ()
+    public void assignPieceId (BangObject bangobj)
     {
-        super.assignPieceId();
+        super.assignPieceId(bangobj);
         name = "viewpoint" + pieceId;
     }
     

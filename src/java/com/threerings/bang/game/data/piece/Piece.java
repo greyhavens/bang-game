@@ -63,15 +63,6 @@ public abstract class Piece extends SimpleStreamableObject
     {
         return (x << 16) | y;
     }
-
-    /**
-     * Used by the bang manager when loading a serialized board. This
-     * should not be called otherwise.
-     */
-    public static void setNextPieceId (int nextPieceId)
-    {
-        _nextPieceId = nextPieceId;
-    }
     
     /**
      * Returns the cost to purchase this piece.
@@ -481,10 +472,10 @@ public abstract class Piece extends SimpleStreamableObject
      * This is normally not needed, but is used by the editor to assign
      * piece IDs to new pieces.
      */
-    public void assignPieceId ()
+    public void assignPieceId (BangObject bangobj)
     {
         _key = null;
-        pieceId = ++_nextPieceId;
+        pieceId = ++bangobj.maxPieceId;
     }
     
     // documentation inherited from interface DSet.Entry
@@ -630,9 +621,6 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     protected transient Integer _key;
-
-    /** Used to assign a unique id to each piece. */
-    protected static int _nextPieceId;
 
     /** The default path-finding stepper. Allows movement in one of the
      * four directions. */

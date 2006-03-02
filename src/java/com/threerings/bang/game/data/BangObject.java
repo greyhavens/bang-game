@@ -151,6 +151,9 @@ public class BangObject extends GameObject
      * is made to pertinent game state. */
     public transient PlayerData[] pdata;
 
+    /** Used to assign ids to pieces added during the game. */
+    public transient int maxPieceId;
+
     /** This value is set at the end of every round, to inform the players
      * of various interesting statistics. */
     public StatSet[] stats;

@@ -78,13 +78,13 @@ public class Unit extends Piece
      * created. The unit will occupy a default location and must be moved
      * before being added to the game.
      */
-    public Unit duplicate ()
+    public Unit duplicate (BangObject bangobj)
     {
         Unit dup = getUnit(_config.dupeType);
         dup.owner = owner;
         dup.lastActed = lastActed;
         dup.damage = damage;
-        dup.assignPieceId();
+        dup.assignPieceId(bangobj);
         return dup;
     }
 
