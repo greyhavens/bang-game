@@ -3,7 +3,6 @@
 
 package com.threerings.bang.client;
 
-import java.net.URL;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -15,8 +14,6 @@ import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.SpeakService;
 import com.threerings.crowd.chat.data.ChatCodes;
 
-import com.threerings.hemiptera.data.Report;
-import com.threerings.hemiptera.util.SendReportUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.Config;
@@ -26,8 +23,6 @@ import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Handles custom chat bits for Bang.
@@ -61,7 +56,8 @@ public class BangChatDirector extends ChatDirector
                 }
 
             } else if (argv[0].equals("hfloat")) {
-                Config.display.floatHighlights = !Config.display.floatHighlights;
+                Config.display.floatHighlights =
+                    !Config.display.floatHighlights;
 
             } else if (argv[0].equals("stats")) {
                 _ctx.getApp().displayStatistics(
@@ -156,39 +152,7 @@ public class BangChatDirector extends ChatDirector
             if (StringUtil.isBlank(args)) {
                 return "m.usage_bug";
             }
-
-            // fill in a bug report
-            PlayerObject user = _ctx.getUserObject();
-            Report report = new Report();
-            report.submitter = user.username.toString();
-            if (args.length() > 255) {
-                report.summary = StringUtil.truncate(args, 255);
-                report.setAttribute("Description", args);
-            } else {
-                report.summary = args;
-            }
-            report.setAttribute("Handle", user.handle.toString());
-
-            // and send it along with our debug logs
-            URL submitURL = DeploymentConfig.getBugSubmitURL();
-            if (submitURL == null) {
-                log.warning("Unable to submit bug report, no submit URL.");
-                return "m.internal_error";
-            }
-
-            String[] files = { BangClient.localDataDir("bang.log") };
-            ResultListener rl = new ResultListener() {
-                public void requestCompleted (Object result) {
-                    displayFeedback(_bundle, "m.bug_submit_completed");
-                }
-                public void requestFailed (Exception cause) {
-                    log.log(Level.WARNING, "Bug submission failed.", cause);
-                    displayFeedback(_bundle, "m.bug_submit_failed");
-                }
-            };
-            SendReportUtil.submitReportAsync(
-                submitURL, report, files, _ctx.getClient().getRunQueue(), rl);
-            displayFeedback(_bundle, "m.bug_submit_started");
+            BangClient.submitBugReport(_ctx, args);
             return ChatCodes.SUCCESS;
         }
     }

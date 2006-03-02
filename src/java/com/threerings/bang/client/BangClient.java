@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -17,12 +18,15 @@ import com.jmex.bui.BWindow;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.Interval;
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.getdown.util.LaunchUtil;
+import com.threerings.hemiptera.data.Report;
+import com.threerings.hemiptera.util.SendReportUtil;
 
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.effect.WindowSlider;
@@ -53,6 +57,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
 
@@ -122,6 +127,48 @@ public class BangClient extends BasicClient
         }
 
         return false;
+    }
+
+    /**
+     * Asynchronously submits a bug report with the specified description.
+     */
+    public static void submitBugReport (final BangContext ctx, String descrip)
+    {
+        // fill in a bug report
+        PlayerObject user = ctx.getUserObject();
+        Report report = new Report();
+        report.submitter = user.username.toString();
+        if (descrip.length() > 255) {
+            report.summary = StringUtil.truncate(descrip, 255);
+            report.setAttribute("Description", descrip);
+        } else {
+            report.summary = descrip;
+        }
+        report.setAttribute("Handle", user.handle.toString());
+
+        // and send it along with our debug logs
+        URL submitURL = DeploymentConfig.getBugSubmitURL();
+        if (submitURL == null) {
+            log.warning("Unable to submit bug report, no submit URL.");
+            return;
+        }
+
+        String[] files = { BangClient.localDataDir("bang.log") };
+        ResultListener rl = new ResultListener() {
+            public void requestCompleted (Object result) {
+                ctx.getChatDirector().displayFeedback(
+                    BangCodes.BANG_MSGS, "m.bug_submit_completed");
+            }
+            public void requestFailed (Exception cause) {
+                log.log(Level.WARNING, "Bug submission failed.", cause);
+                ctx.getChatDirector().displayFeedback(
+                    BangCodes.BANG_MSGS, "m.bug_submit_failed");
+            }
+        };
+        SendReportUtil.submitReportAsync(
+            submitURL, report, files, ctx.getClient().getRunQueue(), rl);
+        ctx.getChatDirector().displayFeedback(
+            BangCodes.BANG_MSGS, "m.bug_submit_started");
     }
 
     /**

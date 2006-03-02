@@ -36,10 +36,10 @@ public class InGameOptionsView extends BDecoratedWindow
     {
         String action = event.getAction();
         if ("leave_game".equals(action)) {
+            _ctx.getBangClient().clearPopup(this, true);
             _ctx.getLocationDirector().moveBack();
-            dismiss();
         } else if ("dismiss".equals(action)) {
-            dismiss();
+            _ctx.getBangClient().clearPopup(this, true);
         } else if ("quit".equals(action)) {
             _ctx.getApp().stop();
         }

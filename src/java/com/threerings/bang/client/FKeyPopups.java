@@ -5,11 +5,17 @@ package com.threerings.bang.client;
 
 import com.jme.input.KeyInput;
 import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.TextEvent;
+import com.jmex.bui.event.TextListener;
+import com.jmex.bui.layout.GroupLayout;
+
+import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.data.BangCodes;
@@ -30,6 +36,7 @@ public class FKeyPopups
     {
         _ctx = ctx;
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F1, this);
+        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F2, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_T, this);
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
     }
@@ -59,6 +66,9 @@ public class FKeyPopups
         case KeyInput.KEY_F1:
             popup = createHelp();
             break;
+        case KeyInput.KEY_F2:
+            popup = createReportBug();
+            break;
         case KeyInput.KEY_T:
             popup = new PickTutorialView(_ctx, PickTutorialView.Mode.FKEY);
             break;
@@ -66,7 +76,7 @@ public class FKeyPopups
 
         clearPopup();
         _poppedKey = keyCode;
-        _ctx.getBangClient().displayPopup(_popped = popup, true);
+        _ctx.getBangClient().displayPopup(_popped = popup, true, 500);
     }
 
     protected void clearPopup ()
@@ -80,13 +90,53 @@ public class FKeyPopups
 
     protected BDecoratedWindow createHelp ()
     {
-        BDecoratedWindow help = new BDecoratedWindow(
-            _ctx.getStyleSheet(), _msgs.get("m.key_help_title"));
-        ((GroupLayout)help.getLayoutManager()).setGap(15);
-        help.setStyleClass("dialog_window");
+        BDecoratedWindow help = createDialogWindow("m.key_help_title");
         help.add(new BLabel(_msgs.get("m.key_help"), "dialog_text_left"));
         help.add(makeDismiss(help), GroupLayout.FIXED);
         return help;
+    }
+
+    protected BDecoratedWindow createReportBug ()
+    {
+        final BDecoratedWindow bug = createDialogWindow("m.bug_title");
+        ((GroupLayout)bug.getLayoutManager()).setOffAxisPolicy(
+            GroupLayout.STRETCH);
+        bug.add(new BLabel(_msgs.get("m.bug_intro"), "dialog_text_left"));
+        final BTextField descrip = new BTextField("");
+        bug.add(descrip, GroupLayout.FIXED);
+        descrip.requestFocus();
+        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
+        bug.add(buttons, GroupLayout.FIXED);
+
+        ActionListener buglist = new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                if (event.getAction().equals("submit")) {
+                    BangClient.submitBugReport(_ctx, descrip.getText());
+                }
+                _ctx.getBangClient().clearPopup(bug, true);
+            }
+        };
+        final BButton submit =
+            new BButton(_msgs.get("m.bug_submit"), buglist, "submit");
+        buttons.add(submit);
+        submit.setEnabled(false);
+        buttons.add(new BButton(_msgs.get("m.cancel"), buglist, "cancel"));
+
+        descrip.addListener(new TextListener() {
+            public void textChanged (TextEvent event) {
+                submit.setEnabled(!StringUtil.isBlank(descrip.getText()));
+            }
+        });
+        return bug;
+    }
+
+    protected BDecoratedWindow createDialogWindow (String title)
+    {
+        BDecoratedWindow window =
+            new BDecoratedWindow(_ctx.getStyleSheet(), _msgs.get(title));
+        ((GroupLayout)window.getLayoutManager()).setGap(15);
+        window.setStyleClass("dialog_window");
+        return window;
     }
 
     protected BButton makeDismiss (final BDecoratedWindow popup)
