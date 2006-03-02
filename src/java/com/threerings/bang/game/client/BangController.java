@@ -121,7 +121,7 @@ public class BangController extends GameController
         // round's stats dialogue and the game is reported as ready to go
         _selphaseMultex = new Multex(new Runnable() {
             public void run () {
-                _view.setPhase(BangObject.SELECT_PHASE);
+                _view.setPhase(BangView.PRE_SELECT_PHASE);
             }
         }, 2);
 
@@ -428,6 +428,16 @@ public class BangController extends GameController
         }
     }
 
+    /**
+     * Called by the board view after it has swung around the board before the
+     * selection phase.
+     */
+    protected void preSelectBoardTourComplete ()
+    {
+        // display the selection dialog
+        _view.setPhase(BangObject.SELECT_PHASE);
+    }
+    
     /**
      * Called by the board view after it has faded out the board at the end of
      * a round.

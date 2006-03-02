@@ -29,6 +29,9 @@ import static com.threerings.bang.Log.log;
 public class BangView extends BWindow
     implements PlaceView
 {
+    /** Special pre-selection phase phase. */
+    public static final int PRE_SELECT_PHASE = 0;
+    
     /** Displays our board. */
     public BangBoardView view;
 
@@ -92,6 +95,10 @@ public class BangView extends BWindow
         }
 
         switch (phase) {
+        case PRE_SELECT_PHASE:
+            view.doPreSelectBoardTour();
+            break;
+            
         case BangObject.SELECT_PHASE:
             setOverlay(new SelectionView(_ctx, config, _bangobj, pidx));
             break;

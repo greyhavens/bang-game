@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.renderer.ColorRGBA;
@@ -21,6 +22,9 @@ import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.jme.camera.CameraHandler;
+import com.threerings.jme.camera.CameraPath;
+import com.threerings.jme.camera.SwingPath;
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
@@ -107,6 +111,30 @@ public class BangBoardView extends BoardView
     }
 
     /**
+     * Swings around the board and calls back to the controller to let it know
+     * that everything is ready for the selection phase to start.
+     */
+    public void doPreSelectBoardTour ()
+    {
+        CameraHandler camhand = _ctx.getCameraHandler();
+        camhand.setLimitsEnabled(false);
+        camhand.tiltCamera(-FastMath.PI * 0.375f);
+        camhand.moveCamera(new SwingPath(camhand, camhand.getGroundPoint(),
+            camhand.getGroundNormal(), FastMath.TWO_PI, FastMath.TWO_PI/8,
+            camhand.getCamera().getLeft(), FastMath.PI * 0.375f, 0f));
+        _ctx.getInputHandler().setEnabled(false);
+        camhand.addCameraObserver(new CameraPath.Observer() {
+            public boolean pathCompleted (CameraPath path) {
+                // let the controller start up the next phase
+                _ctx.getInputHandler().setEnabled(true);
+                _ctx.getCameraHandler().setLimitsEnabled(true);
+                _ctrl.preSelectBoardTourComplete();
+                return false;
+            }
+        });
+    }
+    
+    /**
      * Fades in a "round over" marquee, fades out the board, sets up the fade
      * in for the new board and calls back to the controller to let it know
      * that everything is ready for the next round to start.
@@ -168,6 +196,12 @@ public class BangBoardView extends BoardView
     // documentation inherited from interface MouseListener
     public void mousePressed (MouseEvent e)
     {
+        // skip to the end of current camera path, if any
+        CameraHandler camhand = _ctx.getCameraHandler();
+        if (camhand.cameraIsMoving()) {
+            camhand.skipPath();
+        }
+        
         switch (_downButton = e.getButton()) {
         case MouseEvent.BUTTON2:
             handleRightPress(e.getX(), e.getY());
