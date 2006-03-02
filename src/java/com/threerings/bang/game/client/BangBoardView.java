@@ -121,19 +121,43 @@ public class BangBoardView extends BoardView
      */
     public void doPreSelectBoardTour ()
     {
+        // make sure all sprites are resolved
+        if (_resolvingSprites > 0) {
+            addResolutionObserver(new ResolutionObserver() {
+                public void mediaResolved () {
+                    doPreSelectBoardTour();
+                }
+            });
+            return;
+        }
         CameraHandler camhand = _ctx.getCameraHandler();
         camhand.setLimitsEnabled(false);
         camhand.tiltCamera(-FastMath.PI * 0.375f);
-        camhand.moveCamera(new SwingPath(camhand, camhand.getGroundPoint(),
-            camhand.getGroundNormal(), FastMath.TWO_PI, FastMath.TWO_PI/8,
-            camhand.getCamera().getLeft(), FastMath.PI * 0.375f, 0f));
+        camhand.moveCamera(_tpath = new SwingPath(camhand,
+            camhand.getGroundPoint(), camhand.getGroundNormal(),
+            FastMath.TWO_PI, FastMath.TWO_PI / BOARD_TOUR_DURATION,
+            camhand.getCamera().getLeft(), FastMath.PI * 0.375f, 0f) {
+            public boolean tick (float secondsSince) {
+                // fade the marquee out when there's a second or less remaining
+                boolean ret = super.tick(secondsSince);
+                float remaining = (_pangle - _protated) / _pangvel;
+                if (!_clearing && remaining <= 1f) {
+                    clearMarquee(remaining);
+                    _clearing = true;
+                }
+                return ret;
+            }
+            protected boolean _clearing;
+        });
         _ctx.getInputHandler().setEnabled(false);
         camhand.addCameraObserver(new CameraPath.Observer() {
             public boolean pathCompleted (CameraPath path) {
-                // let the controller start up the next phase
+                // clear the marquee, return the camera to normal, and let the
+                // controller start up the next phase
                 _ctx.getInputHandler().setEnabled(true);
                 _ctx.getCameraHandler().setLimitsEnabled(true);
                 _ctrl.preSelectBoardTourComplete();
+                _tpath = null;
                 return false;
             }
         });
@@ -201,10 +225,10 @@ public class BangBoardView extends BoardView
     // documentation inherited from interface MouseListener
     public void mousePressed (MouseEvent e)
     {
-        // skip to the end of current camera path, if any
-        CameraHandler camhand = _ctx.getCameraHandler();
-        if (camhand.cameraIsMoving()) {
-            camhand.skipPath();
+        // skip to the end of the board tour path, if active
+        if (_tpath != null) {
+            clearMarquee(0f);
+            _ctx.getCameraHandler().skipPath();
         }
         
         switch (_downButton = e.getButton()) {
@@ -374,6 +398,18 @@ public class BangBoardView extends BoardView
                 clearMarquee(_pmarquees[ii], fadeTime);
             }
             _pmarquees = null;
+        }
+    }
+    
+    @Override // documentation inherited
+    protected void fadeInComplete ()
+    {
+        if (_tpath == null) {
+            super.fadeInComplete();
+            
+        } else {
+            // we will clear the marquee when the board tour is finished
+            _fadein = null;
         }
     }
     
@@ -1099,7 +1135,9 @@ public class BangBoardView extends BoardView
     protected Card _card;
 
     protected Quad[] _pmarquees;
-    
+
+    protected SwingPath _tpath;
+        
     protected HashMap<Integer,QueuedMove> _queuedMoves =
         new HashMap<Integer,QueuedMove>();
 
@@ -1124,4 +1162,7 @@ public class BangBoardView extends BoardView
         new Vector3f(857f, 568f, 0f),
         new Vector3f(167f, 200f, 0f),
         new Vector3f(857f, 200f, 0f) };
+
+    /** The duration of the board tour in seconds. */
+    protected static final float BOARD_TOUR_DURATION = 10f;
 }
