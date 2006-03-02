@@ -53,7 +53,7 @@ public class FKeyPopups
 
         // make sure we can display an FKEY popup right now (but only if we
         // don't already have one popped up, in which case we'll replace it)
-        if (_popped == null &&
+        if ((_popped == null || !_popped.isAdded()) &&
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.FKEY)) {
             return;
         }
