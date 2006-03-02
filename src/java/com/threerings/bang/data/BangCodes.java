@@ -68,10 +68,10 @@ public interface BangCodes extends InvocationCodes
     public static final String[] TUTORIALS = {
         "controls",
         "bonuses_cards",
-        "bigshots",
-        "cattle_rustling",
-        "claim_jumping",
-        "gold_rush",
+//         "bigshots",
+//         "cattle_rustling",
+//         "claim_jumping",
+//         "gold_rush",
     };
 
     /** An error code reported when a financial transaction cannot complete. */
