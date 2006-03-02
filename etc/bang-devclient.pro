@@ -37,7 +37,8 @@
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 
--keep public class * implements java.io.Serializable {
+-keepnames class * implements java.io.Serializable
+-keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     !static !transient <fields>;
     private void writeObject(java.io.ObjectOutputStream);
