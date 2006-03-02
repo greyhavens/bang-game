@@ -1038,18 +1038,24 @@ public class BoardView extends BComponent
     protected void clearMarquee (float fadeTime)
     {
         if (_marquee != null) {
-            Quad omarquee = _marquee;
-            _ctx.getInterface().detachChild(_marquee);
+            clearMarquee(_marquee, fadeTime);
             _marquee = null;
-
-            if (fadeTime > 0f) {
-                TimeFunction tf = new LinearTimeFunction(1f, 0f, fadeTime);
-                _ctx.getInterface().attachChild(
-                    new FadeInOutEffect(omarquee, ColorRGBA.white, tf, true));
-            }
         }
     }
 
+    /**
+     * Clears out a marquee quad.
+     */
+    protected void clearMarquee (Quad mquad, float fadeTime)
+    {
+        _ctx.getInterface().detachChild(mquad);
+        if (fadeTime > 0f) {
+            TimeFunction tf = new LinearTimeFunction(1f, 0f, fadeTime);
+            _ctx.getInterface().attachChild(
+                new FadeInOutEffect(mquad, ColorRGBA.white, tf, true));
+        }
+    }
+    
     /**
      * Creates the piece sprite for the supplied piece. The newly created
      * sprite will automatically be initialized with the supplied piece and

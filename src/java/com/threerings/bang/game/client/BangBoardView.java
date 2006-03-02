@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -14,7 +15,9 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.shape.Quad;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 
@@ -35,7 +38,9 @@ import com.threerings.jme.util.TimeFunction;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.Model;
+import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
@@ -306,7 +311,7 @@ public class BangBoardView extends BoardView
             sprite.removeObserver(_bonusClearer);
         }
     }
-
+    
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -331,6 +336,45 @@ public class BangBoardView extends BoardView
 
         // clear out our cursor
         _cursbind.detach();
+    }
+    
+    @Override // documentation inherited
+    protected void createMarquee (String text)
+    {
+        super.createMarquee(text);
+        if (_bangobj.state != BangObject.PRE_GAME &&
+            _bangobj.state != BangObject.SELECT_PHASE) {
+            return;
+        }
+        _pmarquees = new Quad[_bangobj.players.length];
+        for (int ii = 0; ii < _pmarquees.length; ii++) {
+            BangOccupantInfo boi = (BangOccupantInfo)_bangobj.getOccupantInfo(
+                _bangobj.players[ii]);
+            if (boi == null) {
+                continue;
+            }
+            _pmarquees[ii] = AvatarView.getImage(_ctx, boi.avatar,
+                AVATAR_SIZE.width, AVATAR_SIZE.height);
+            _pmarquees[ii].setLocalTranslation(AVATAR_LOCATIONS[ii]);
+            _pmarquees[ii].setRenderQueueMode(Renderer.QUEUE_ORTHO);
+            _pmarquees[ii].setZOrder(-2);
+            _ctx.getInterface().attachChild(_pmarquees[ii]);
+        }
+    }
+    
+    @Override // documentation inherited
+    protected void clearMarquee (float fadeTime)
+    {
+        super.clearMarquee(fadeTime);
+        if (_pmarquees != null) {
+            for (int ii = 0; ii < _pmarquees.length; ii++) {
+                if (_pmarquees[ii] == null) {
+                    continue;
+                }
+                clearMarquee(_pmarquees[ii], fadeTime);
+            }
+            _pmarquees = null;
+        }
     }
     
     @Override // documentation inherited
@@ -1054,6 +1098,8 @@ public class BangBoardView extends BoardView
     protected int[] _action;
     protected Card _card;
 
+    protected Quad[] _pmarquees;
+    
     protected HashMap<Integer,QueuedMove> _queuedMoves =
         new HashMap<Integer,QueuedMove>();
 
@@ -1067,4 +1113,15 @@ public class BangBoardView extends BoardView
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0.5f, 0.5f, 0.5f);
+    
+    /** The size of the avatars on the opening marquee. */
+    protected static final Dimension AVATAR_SIZE =
+        new Dimension(234, 300);
+        
+    /** Positions for the four avatars. */
+    protected static final Vector3f[] AVATAR_LOCATIONS = {
+        new Vector3f(167f, 568f, 0f),
+        new Vector3f(857f, 568f, 0f),
+        new Vector3f(167f, 200f, 0f),
+        new Vector3f(857f, 200f, 0f) };
 }
