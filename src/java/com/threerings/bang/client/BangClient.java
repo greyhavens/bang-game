@@ -255,6 +255,13 @@ public class BangClient extends BasicClient
         // if there are any pending pardner invitations, show those
         if (_invites.size() > 0) {
             displayPardnerInvite(_invites.remove(0));
+            return true;
+        }
+
+        // if the main view is the town view, activate it because we're done
+        // fooling around
+        if (_mview instanceof TownView) {
+            ((TownView)_mview).setActive(true);
         }
 
         return false;

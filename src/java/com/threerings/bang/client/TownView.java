@@ -101,12 +101,23 @@ public class TownView extends BWindow
         add(_bview = new TownBoardView(ctx), BorderLayout.CENTER);
     }
 
+    /**
+     * Makes the town view responsive to user input or not. It may start out
+     * unresponsive when we're showing the create avatar or first time tutorial
+     * dialogs.
+     */
+    public void setActive (boolean active)
+    {
+        _active = active;
+    }
+
     // documentation inherited from interface MainView
     public boolean allowsPopup (Type type)
     {
         switch (type) {
         case STATUS:
         case PARDNER_INVITE:
+        case FKEY:
             return _active;
 
         default:
