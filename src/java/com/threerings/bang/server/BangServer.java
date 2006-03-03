@@ -128,10 +128,10 @@ public class BangServer extends CrowdServer
 
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
-    
+
     /** Contains information about the whole town. */
     public static TownObject townobj;
-    
+
     @Override // documentation inherited
     public void init ()
         throws Exception
@@ -153,7 +153,7 @@ public class BangServer extends CrowdServer
         comprepo = new BundledComponentRepository(
             rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET);
         alogic = new AvatarLogic(rsrcmgr, comprepo);
-            
+
         // create our database connection provider and repositories
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
         actionrepo = new AccountActionRepository(conprov);
@@ -211,7 +211,7 @@ public class BangServer extends CrowdServer
                     ", cause=" + cause + "].");
             }
         });
-        
+
         log.info("Bang server v" + DeploymentConfig.getVersion() +
                  " initialized.");
     }
@@ -276,7 +276,7 @@ public class BangServer extends CrowdServer
         _players.remove(player.handle);
         maybeUpdatePopulation();
     }
-    
+
     /**
      * Loads a message to the general audit log.
      */
@@ -315,11 +315,11 @@ public class BangServer extends CrowdServer
     protected static void maybeUpdatePopulation ()
     {
         int npop = _players.size();
-        if (npop != townobj.population && !_pthrottle.throttleOp()) {
+        if (npop != townobj.population && !_popthrot.throttleOp()) {
             townobj.setPopulation(npop);
         }
     }
-    
+
     public static void main (String[] args)
     {
         // set up the proper logging services
@@ -342,6 +342,6 @@ public class BangServer extends CrowdServer
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server.log");
     protected static AuditLogger _ilog = createAuditLog("item.log");
-    
-    protected static Throttle _pthrottle = new Throttle(1, 1000L);
+
+    protected static Throttle _popthrot = new Throttle(1, 30000L);
 }
