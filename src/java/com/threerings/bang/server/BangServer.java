@@ -10,9 +10,9 @@ import java.util.logging.Level;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.util.AuditLogger;
+import com.samskivert.util.Interval;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
-import com.samskivert.util.Throttle;
 
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.bundle.BundledComponentRepository;
@@ -201,10 +201,11 @@ public class BangServer extends CrowdServer
         plreg.createPlace(new RanchConfig(), crobs);
         plreg.createPlace(new BarberConfig(), crobs);
 
-        // create the town object
+        // create the town object and an interval to keep it up-to-date
         omgr.createObject(TownObject.class, new Subscriber() {
             public void objectAvailable (DObject object) {
                 townobj = (TownObject)object;
+                createTownObjectUpdateInterval();
             }
             public void requestFailed (int oid, ObjectAccessException cause) {
                 log.warning("Failed to create town object! [oid=" + oid +
@@ -237,6 +238,22 @@ public class BangServer extends CrowdServer
     }
 
     /**
+     * Creates the interval that updates the town object's population
+     * once every thirty seconds.
+     */
+    protected void createTownObjectUpdateInterval ()
+    {
+        new Interval(omgr) {
+            public void expired () {
+                int npop = _players.size();
+                if (npop != townobj.population) {
+                    townobj.setPopulation(npop);
+                }
+            }     
+        }.schedule(30000L, true);
+    }
+    
+    /**
      * Returns the player object for the specified user if they are online
      * currently, null otherwise. This should only be called from the dobjmgr
      * thread.
@@ -259,22 +276,20 @@ public class BangServer extends CrowdServer
     /**
      * Called when a player starts their session (or after they choose a handle
      * for players on their first session) to associate the handle with the
-     * player's distributed object and update the town's population.
+     * player's distributed object.
      */
     public static void registerPlayer (PlayerObject player)
     {
         _players.put(player.handle, player);
-        maybeUpdatePopulation();
     }
 
     /**
      * Called when a player ends their session to clear their handle to player
-     * object mapping and update the town's population.
+     * object mapping.
      */
     public static void clearPlayer (PlayerObject player)
     {
         _players.remove(player.handle);
-        maybeUpdatePopulation();
     }
 
     /**
@@ -308,18 +323,6 @@ public class BangServer extends CrowdServer
         return ServerConfig.serverPorts;
     }
 
-    /**
-     * Updates the population stored in the town object if the population
-     * has changed and enough time has elapsed since the last update.
-     */
-    protected static void maybeUpdatePopulation ()
-    {
-        int npop = _players.size();
-        if (npop != townobj.population && !_popthrot.throttleOp()) {
-            townobj.setPopulation(npop);
-        }
-    }
-
     public static void main (String[] args)
     {
         // set up the proper logging services
@@ -342,6 +345,4 @@ public class BangServer extends CrowdServer
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server.log");
     protected static AuditLogger _ilog = createAuditLog("item.log");
-
-    protected static Throttle _popthrot = new Throttle(1, 30000L);
 }
