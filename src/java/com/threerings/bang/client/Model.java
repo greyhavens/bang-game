@@ -33,10 +33,12 @@ import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
+import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
@@ -499,16 +501,17 @@ public class Model
             // thread and we'd be hosed
             boolean trans = _props.getProperty(
                 mesh + ".transparent", "false").equalsIgnoreCase("true");
-            part.creator = loadModel(
-                ctx, path + anim.action + "/" + mesh + ".jme", trans);
+            String mpath = path + anim.action + "/" + mesh + ".jme";
+            if (isStatic) {
+                part.target = loadModel(ctx, mpath, trans);
+            } else {
+                part.creator = loadModelCreator(ctx, mpath, trans);
+            }
 
             // the model may have multiple textures from which we
             // select at random
             String[] tnames =
                 getList(_props, mesh + ".texture", "texture", false);
-            if (isStatic) {
-                part.targets = new Node[Math.max(tnames.length, 1)];
-            }
             if (tnames.length == 0) {
                 continue;
             }
@@ -526,7 +529,7 @@ public class Model
         // load the emitter marker geometries
         for (int ee = 0; ee < anim.emitters.length; ee++) {
             String mesh = anim.emitters[ee].name;
-            anim.emitters[ee].creator = loadModel(
+            anim.emitters[ee].creator = loadModelCreator(
                 ctx, path + anim.action + "/" + mesh + ".jme", false);
         }
 
@@ -576,8 +579,7 @@ public class Model
     @Override // documentation inherited
     public String toString ()
     {
-        return _key + " m:" + _meshes.size() + " t:" + _textures.size() +
-            " a:" + _anims.size() + ")";
+        return _key + " m:" + _meshes.size() + " a:" + _anims.size() + ")";
     }
 
     /**
@@ -610,19 +612,30 @@ public class Model
         return values.toArray(new String[values.size()]);
     }
 
-    protected CloneCreator loadModel (
+    protected CloneCreator loadModelCreator (
+        BasicContext ctx, String path, boolean trans)
+    {
+        ModelCloneCreator cc = new ModelCloneCreator(
+            loadModel(ctx, path, trans));
+        // these define what we want to "shallow" copy
+        cc.addProperty("colors");
+        cc.addProperty("texcoords");
+        cc.addProperty("indices");
+        return cc;
+    }
+    
+    protected Node loadModel (
         BasicContext ctx, String path, boolean trans)
     {
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
-        CloneCreator cc = _meshes.get(path);
-        if (cc == null) {
+        Node model = _meshes.get(path);
+        if (model == null) {
             JmeBinaryReader jbr = new JmeBinaryReader();
             jbr.setProperty("bound", "box");
             jbr.setProperty("texurl", loader.getResource("rsrc/" + path));
             InputStream in = loader.getResourceAsStream("rsrc/" + path);
 
-            Node model = null;
             if (in != null) {
                 try {
                     model = jbr.loadBinaryFormat(new BufferedInputStream(in));
@@ -657,14 +670,9 @@ public class Model
                 model.attachChild(box);
             }
 
-            cc = new ModelCloneCreator(model);
-            // these define what we want to "shallow" copy
-            cc.addProperty("colors");
-            cc.addProperty("texcoords");
-            cc.addProperty("indices");
-            _meshes.put(path, cc);
+            _meshes.put(path, model);
         }
-        return cc;
+        return model;
     }
 
     protected String cleanPath (String path)
@@ -682,15 +690,14 @@ public class Model
     /** Contains information on one part of a model. */
     protected static class Part
     {
-        /** Used to create a clone of the model. */
+        /** Used to create a clone of non-static models. */
         public CloneCreator creator;
 
+        /** Used as a target for static models. */
+        public Node target;
+        
         /** A list of texture states from which to select randomly. */
         public TextureState[] tstates;
-
-        /** For static parts, contains a {@link Node} for each texture state
-         * to use as a {@link SharedNode} target. */
-        public Node[] targets;
 
         /**
          * Creates either a copy of the original part node or a
@@ -702,49 +709,67 @@ public class Model
          */
         public Node createInstance (int random)
         {
-            if (targets != null) {
-                int idx = random % targets.length;
-                if (targets[idx] == null) {
-                    targets[idx] = createCopy(random);
-                    targets[idx].lockBounds();
-                    targets[idx].lockMeshes();
-
+            Node instance;
+            if (creator != null) {
+                instance = (Node)creator.createCopy();
+                
+            } else { // target != null
+                if (!_tinit) {
+                    // in order to ensure that texture coords are sent when
+                    // compiling the shared geometry to a display list, we must
+                    // include a dummy texture state
+                    TextureState tstate = DisplaySystem.getDisplaySystem().
+                        getRenderer().createTextureState();
+                    tstate.setTexture(null, 0);
+                    target.setRenderState(tstate);
+                    
+                    setVBOInfos(target);
+                    target.lockBounds();
+                    target.lockMeshes();
+                    
                     // this is a workaround for a bug in JME--we wouldn't
                     // normally create a SharedNode of a SharedNode
-                    targets[idx] = new SharedNode("shared", targets[idx]);
+                    target = new SharedNode("shared", target);
+                    
+                    _tinit = true;
                 }
-                return new SharedNode("shared", targets[idx]);
-
-            } else {
-                return createCopy(random);
+                instance = new SharedNode("shared", target);
             }
-        }
-
-        /**
-         * Creates a copy of the original part node with the texture state
-         * derived from the supplied random number.
-         */
-        protected Node createCopy (int random)
-        {
-            Node copy = (Node)creator.createCopy();
             if (tstates != null) {
-                copy.setRenderState(tstates[random % tstates.length]);
-                copy.updateRenderState();
+                instance.setRenderState(tstates[random % tstates.length]);
+                instance.updateRenderState();
             }
-            return copy;
+            return instance;
         }
+        
+        /**
+         * Recursively descends the scene graph rooted at the supplied spatial,
+         * setting the {@link VBOInfo}s of any encountered {@link Geometry}
+         * nodes.
+         */
+        protected void setVBOInfos (Spatial spatial)
+        {
+            if (spatial instanceof Geometry) {
+                ((Geometry)spatial).setVBOInfo(new VBOInfo(true));
+                
+            } else if (spatial instanceof Node) {
+                Node node = (Node)spatial;
+                for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                    setVBOInfos(node.getChild(ii));
+                }
+            }
+        }
+        
+        /** Whether or not the target has been initialized. */
+        protected boolean _tinit;
     }
 
     protected String _key;
     protected Properties _props;
     protected Animation _ianim;
 
-    protected HashMap<String,CloneCreator> _meshes =
-        new HashMap<String,CloneCreator>();
-    protected HashMap<String,CloneCreator> _emitters =
-        new HashMap<String,CloneCreator>();
-    protected HashMap<String,TextureState> _textures =
-        new HashMap<String,TextureState>();
+    protected HashMap<String,Node> _meshes =
+        new HashMap<String,Node>();
     protected HashMap<String,Animation> _anims =
         new HashMap<String,Animation>();
 

@@ -915,7 +915,7 @@ public class TerrainNode extends Node
             tstate.setTexture(null, 1);
             block.mesh.setRenderState(tstate);
             
-            block.mesh.setVBOInfo(new VBOInfo());
+            block.mesh.setVBOInfo(new VBOInfo(true));
             block.mesh.lockBounds();
             block.mesh.lockMeshes();
         }
