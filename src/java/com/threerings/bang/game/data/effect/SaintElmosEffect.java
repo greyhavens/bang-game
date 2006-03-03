@@ -16,7 +16,7 @@ import com.threerings.bang.game.data.piece.Unit;
  * An effect that replaces all dead units with 60% health windup
  * gunslingers owned by the activating player.
  */
-public class SaintElmosEffect extends Effect
+public class SaintElmosEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
     public static final String ELMOED = "bonuses/saint_elmo/activate";
@@ -65,6 +65,8 @@ public class SaintElmosEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        super.apply(bangobj, obs);
+
         // remove the old pieces and add new windup gun slingers instead
         for (int ii = 0; ii < pieceIds.length; ii++) {
             Piece p = (Piece)bangobj.pieces.get(pieceIds[ii]);

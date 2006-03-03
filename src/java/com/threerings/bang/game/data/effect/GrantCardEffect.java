@@ -17,7 +17,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Delivers a card to the specified player.
  */
-public class GrantCardEffect extends Effect
+public class GrantCardEffect extends BonusEffect
 {
     public int player;
 
@@ -53,11 +53,5 @@ public class GrantCardEffect extends Effect
         Card card = Card.newCard(Card.selectRandomCard(bangobj.townId, true));
         card.init(bangobj, player);
         bangobj.addToCards(card);
-    }
-
-    @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
-    {
-        // NOOP
     }
 }

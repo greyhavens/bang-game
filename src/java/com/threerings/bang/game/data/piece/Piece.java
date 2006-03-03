@@ -31,9 +31,6 @@ import static com.threerings.bang.Log.log;
 public abstract class Piece extends SimpleStreamableObject
     implements Cloneable, DSet.Entry, PieceCodes
 {
-    /** Used by {@link #maybeInteract}. */
-    public enum Interaction { CONSUMED, ENTERED, INTERACTED, NOTHING };
-
     /** Uniquely identifies each piece in the game. */
     public int pieceId;
 
@@ -90,18 +87,19 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Called on every tick to allow a unit to lose hit points or
-     * regenerate hit points automatically.
+     * Called on every tick to allow a unit to lose hit points or regenerate
+     * hit points automatically.
      *
      * @param tick the current game tick.
      * @param board the current board.
      * @param pieces all the pieces on the board in easily accessible form.
      *
-     * @return true if the unit was updated.
+     * @return any effect to apply to the unit as a result of having been
+     * ticked or null.
      */
-    public boolean tick (short tick, BangBoard board, Piece[] pieces)
+    public Effect tick (short tick, BangBoard board, Piece[] pieces)
     {
-        return false;
+        return null;
     }
 
     /**
@@ -365,9 +363,10 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * When a unit shoots another piece, the unit may also do collateral
-     * damage to nearby units. This method should return effects
-     * indicating such damage.
+     * When a unit shoots another piece, the unit may also do collateral damage
+     * to nearby units. This method should return effects indicating such
+     * damage. <em>Note:</em> the piece is responsible for calling {@link
+     * Effect#init} on those effects before returning them.
      */
     public Effect[] collateralDamage (
         BangObject bangobj, Piece target, int damage)
@@ -397,33 +396,13 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Indicates whether or not this piece can activate bonuses.
-     */
-    public boolean canActivateBonus (Bonus bonus)
-    {
-        return true;
-    }
-
-    /**
      * Some pieces interact with other pieces, which takes place via this
-     * method. Depending on the type of interaction, the piece can
-     * indicate that it consumed the other piece, was consumed by it
-     * (entered), simply interacted with it resulting in both pieces being
-     * changed or did nothing at all. If the interaction results in an
-     * effect being produced, the effect should be appended to the
-     * supplied list.
+     * method. An effect should be returned communicating the nature of the
+     * interaction.
      */
-    public Interaction maybeInteract (Piece other, ArrayList<Effect> effects)
+    public Effect maybeInteract (Piece other)
     {
-        if (other instanceof Bonus && canActivateBonus((Bonus)other)) {
-            Effect effect = ((Bonus)other).affect(this);
-            if (effect != null) {
-                effects.add(effect);
-            }
-            return Interaction.CONSUMED;
-        }
-
-        return Interaction.NOTHING;
+        return null;
     }
 
     /**

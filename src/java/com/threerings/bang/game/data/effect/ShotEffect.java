@@ -51,6 +51,9 @@ public class ShotEffect extends Effect
     /** The piece id of the shooter. */
     public int shooterId;
 
+    /** Used to update the last acted tick of the shooter if appropriate. */
+    public short shooterLastActed = -1;
+
     /** The piece id of the target. */
     public int targetId;
 
@@ -58,7 +61,7 @@ public class ShotEffect extends Effect
     public int newDamage;
 
     /** An adjusted last acted time to apply to the target. */
-    public short newLastActed = -1;
+    public short targetLastActed = -1;
 
     /** The x coordinates of the path this shot takes before finally
      * arriving at its target (not including the starting coordinate). */
@@ -154,18 +157,28 @@ public class ShotEffect extends Effect
             return;
         }
 
+        // update the shooter's last acted if necessary
+        if (shooterLastActed != -1 && shooter.lastActed != shooterLastActed) {
+            shooter.lastActed = shooterLastActed;
+            reportEffect(obs, shooter, UPDATED);
+        }
+
         // rotate the shooter to face the target
-        if (shooter != null && target != null) {
-            short orient = PieceUtil.getDirection(shooter, target);
+        short orient = PieceUtil.getDirection(shooter, target);
+        if (shooter.orientation != orient) {
             shooter.orientation = orient;
             reportEffect(obs, shooter, ROTATED);
         }
-        if (newLastActed != -1) {
-            target.lastActed = newLastActed;
+
+        // if we have a new last acted to assign to the target, do that
+        if (targetLastActed != -1) {
+            target.lastActed = targetLastActed;
         }
-        damage(bangobj, obs, shooter.owner, target, newDamage,
-               shooter.getConfig().mode == UnitConfig.Mode.RANGE ?
-               EXPLODED : DAMAGED);
+
+        // finally do the damage
+        String effect = shooter.getConfig().mode == UnitConfig.Mode.RANGE ?
+            EXPLODED : DAMAGED;
+        damage(bangobj, obs, shooter.owner, target, newDamage, effect);
     }
 
     @Override // documentation inherited

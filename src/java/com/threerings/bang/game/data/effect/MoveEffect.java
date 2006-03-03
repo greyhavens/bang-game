@@ -9,14 +9,21 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
- * Grants bonus points to the acquiring player.
+ * An effect used when a unit moves.
  */
-public class BonusPointEffect extends BonusEffect
+public class MoveEffect extends Effect
 {
-    /** The identifier for the type of effect that we produce. */
-    public static final String BONUS_POINT = "bonuses/bonus_point/activate";
-
+    /** The identifier of the piece that moved. */
     public int pieceId;
+
+    /** The new last acted time to assign to the piece. */
+    public short newLastActed;
+
+    /** The new x location of the piece. */
+    public short nx;
+
+    /** The new y location of the piece. */
+    public short ny;
 
     @Override // documentation inherited
     public void init (Piece piece)
@@ -33,25 +40,23 @@ public class BonusPointEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        Piece piece = (Piece)bangobj.pieces.get(pieceId);
-        if (piece == null) {
-            return;
-        }
-        // grant points to the activating player
-        bangobj.grantPoints(piece.owner, BONUS_POINTS);
+        newLastActed = bangobj.tick;
     }
 
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
-        super.apply(bangobj, obs);
-
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
         if (piece == null) {
             return;
         }
-        reportEffect(obs, piece, BONUS_POINT);
-    }
 
-    protected static final int BONUS_POINTS = 50;
+        piece.lastActed = newLastActed;
+        if (piece.x != nx || piece.y != ny) {
+            moveAndReport(bangobj, piece, nx, ny, obs);
+        } else {
+            // we updated last acted, so we need to report something
+            reportEffect(obs, piece, UPDATED);
+        }
+    }
 }

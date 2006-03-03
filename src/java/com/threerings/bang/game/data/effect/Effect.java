@@ -19,10 +19,15 @@ import com.threerings.bang.game.data.piece.Piece;
 import static com.threerings.bang.Log.log;
 
 /**
- * Represents the effect of a piece activating a bonus.
+ * Encapsulates any effect on a piece in the game. All state changes are
+ * communicated through an ordered stream of effects.
  */
 public abstract class Effect extends SimpleStreamableObject
 {
+    /** An effect to use when a piece's internal status is updated and it
+     * should be refreshed, but no other visible change will take place. */
+    public static final String UPDATED = "updated";
+
     /** Provides a mechanism for observing the individual effects that take
      * place when applying an effect to the board and pieces. */
     public static interface Observer
@@ -44,6 +49,13 @@ public abstract class Effect extends SimpleStreamableObject
          * Indicates that the specified piece was moved or reoriented.
          */
         public void pieceMoved (Piece piece);
+
+        /**
+         * Indicates that the piece in question was killed (killed pieces are
+         * not automatically removed; if a piece was removed that will be
+         * reported separately with a call to {@link #pieceRemoved}).
+         */
+        public void pieceKilled (Piece piece);
 
         /**
          * Indicates that the specified piece was removed from the board.
@@ -76,10 +88,7 @@ public abstract class Effect extends SimpleStreamableObject
 
         // move the target to its new coordinates
         if (target.x != x || target.y != y) {
-            bangobj.board.updateShadow(target, null);
-            target.position(x, y);
-            bangobj.board.updateShadow(null, target);
-            reportMove(obs, target);
+            moveAndReport(bangobj, target, x, y, obs);
         }
 
         // damage the target if it's still alive
@@ -100,36 +109,47 @@ public abstract class Effect extends SimpleStreamableObject
     public static void damage (BangObject bangobj, Observer obs, int shooter,
                                Piece target, int newDamage, String effect)
     {
-        // effect the actual damage
-        log.fine("Damaging " + target.info() + " -> " + newDamage + ".");
-        target.damage = newDamage;
-
-        // flying targets must land when they die
-        if (!target.isAlive() && target.isFlyer()) {
-            Point pt = bangobj.board.getOccupiableSpot(
-                target.x, target.y, 5, new Random(bangobj.tick));
-            if (pt != null) {
-                bangobj.board.updateShadow(target, null);
-                target.position(pt.x, pt.y);
-                bangobj.board.updateShadow(null, target);
-                reportMove(obs, target);
-            }
+        // sanity check
+        if (!target.isAlive()) {
+            log.warning("Not damaging already dead target " +
+                "[target=" + target.info() + ", shooter=" + shooter +
+                ", nd=" + newDamage + ", effect=" + effect + "].");
+            return;
         }
+
+        // effect the actual damage
+//         log.info("Damaging " + target.info() + " -> " + newDamage + ".");
+        target.damage = newDamage;
 
         // report that the target was affected
         reportEffect(obs, target, effect);
 
-        // if the target is dead and we have a shooter and we're on the server,
-        // record the kill
-        if (shooter != -1 && !target.isAlive() &&
-            bangobj.getManager().isManager(bangobj)) {
+        // if the target is not dead, we can stop here
+        if (target.isAlive()) {
+            return;
+        }
+
+        // report that the target was killed
+        reportKill(obs, target);
+
+        // flying targets must land when they die
+        if (target.isFlyer()) {
+            Point pt = bangobj.board.getOccupiableSpot(
+                target.x, target.y, 5, new Random(bangobj.tick));
+            if (pt != null) {
+                moveAndReport(bangobj, target, pt.x, pt.y, obs);
+            }
+        }
+
+        // if we have a shooter and we're on the server, record the kill
+        if (shooter != -1 && bangobj.getManager().isManager(bangobj)) {
             // record the kill statistics
             bangobj.stats[shooter].incrementStat(Stat.Type.UNITS_KILLED, 1);
             bangobj.stats[target.owner].incrementStat(Stat.Type.UNITS_LOST, 1);
         }
 
-        // if the target is dead and should be removed, do so
-        if (!target.isAlive() && target.removeWhenDead()) {
+        // if the should be removed when killed, do so now
+        if (target.removeWhenDead()) {
             bangobj.removePieceDirect(target);
             reportRemoval(obs, target);
         }
@@ -200,11 +220,23 @@ public abstract class Effect extends SimpleStreamableObject
         }
     }
 
-    /** A helper function for reporting a piece movement. */
-    protected static void reportMove (Observer obs, Piece piece)
+    /** A helper function for moving a piece and reporting it. */
+    protected static void moveAndReport (
+        BangObject bangobj, Piece piece, int nx, int ny, Observer obs)
     {
+        bangobj.board.updateShadow(piece, null);
+        piece.position(nx, ny);
+        bangobj.board.updateShadow(null, piece);
         if (obs != null) {
             obs.pieceMoved(piece);
+        }
+    }
+
+    /** A helper function for reporting piece death. */
+    protected static void reportKill (Observer obs, Piece piece)
+    {
+        if (obs != null) {
+            obs.pieceKilled(piece);
         }
     }
 

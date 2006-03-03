@@ -19,6 +19,7 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
@@ -161,44 +162,36 @@ public class ClaimJumping extends Scenario
             return null;
         }
 
-        // deposit or withdraw a nugget as appropriate (TODO: turn these
-        // into effects)
+        // deposit or withdraw a nugget as appropriate
+        NuggetEffect effect = null;
         if (claim.owner == unit.owner && unit.benuggeted) {
-            // TODO: create an effect to animate the nugget
-            claim.nuggets++;
-            unit.benuggeted = false;
-            bangobj.updatePieces(claim);
-
+            effect = new NuggetEffect();
+            effect.init(unit);
+            effect.claimId = claim.pieceId;
+            effect.dropping = true;
         } else if (claim.owner != unit.owner && claim.nuggets > 0 &&
                    unit.canActivateBonus(_nuggetBonus)) {
-            claim.nuggets--;
-            unit.benuggeted = true;
-            bangobj.updatePieces(claim);
+            effect = new NuggetEffect();
+            effect.init(unit);
+            effect.claimId = claim.pieceId;
+            effect.dropping = false;
         }
 
-        return null;
+        return effect;
     }
 
     @Override // documentation inherited
-    public boolean pieceWasKilled (BangObject bangobj, Piece piece)
+    public Effect pieceWasKilled (BangObject bangobj, Piece piece)
     {
-        boolean update = super.pieceWasKilled(bangobj, piece);
+        super.pieceWasKilled(bangobj, piece);
 
         // if this piece is benuggeted, force it to drop its nugget
+        Effect effect = null;
         if (piece instanceof Unit && ((Unit)piece).benuggeted) {
-            Point spot = bangobj.board.getOccupiableSpot(piece.x, piece.y, 3);
-            if (spot == null) {
-                log.info("Can't find anywhere to drop nugget " +
-                         "[piece=" + piece + "].");
-            } else {
-                Unit unit = (Unit)piece;
-                unit.benuggeted = false;
-                update = true;
-                dropNugget(bangobj, spot.x, spot.y);
-            }
+            effect = NuggetEffect.dropNugget(bangobj, (Unit)piece);
         }
 
-        return update;
+        return effect;
     }
 
     @Override // documentation inherited

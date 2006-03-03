@@ -51,6 +51,7 @@ import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
@@ -195,10 +196,6 @@ public class BangManager extends GameManager
         String name = event.getName();
         if (name.equals(BangObject.TICK)) {
             tick(_bangobj.tick);
-
-        } else if (name.equals(BangObject.EFFECT)) {
-            ((Effect)event.getValue()).apply(_bangobj, _effector);
-
         } else {
             super.attributeChanged(event);
         }
@@ -266,13 +263,6 @@ public class BangManager extends GameManager
                     _bangobj.stats[target.owner].incrementStat(
                         Stat.Type.SHOTS_FIRED, 1);
                 }
-
-                // if they did not move in this same action, we need to
-                // set their last acted tick
-                if (munit == null || munit == unit) {
-                    unit.lastActed = _bangobj.tick;
-                    _bangobj.updatePieces(unit);
-                }
             }
 
             // finally update our metrics
@@ -289,11 +279,17 @@ public class BangManager extends GameManager
      */
     public void deployEffect (int effector, Effect effect)
     {
+        // prepare the effect and record any associated damage
         effect.prepare(_bangobj, _damage);
-        _bangobj.setEffect(effect);
         if (effector != -1) {
             recordDamage(effector, _damage);
         }
+
+        // broadcast the effect to the client
+        _bangobj.setEffect(effect);
+
+        // on the server we apply the effect immediately
+        effect.apply(_bangobj, _effector);
     }
 
     @Override // documentation inherited
@@ -753,34 +749,9 @@ public class BangManager extends GameManager
             }
 
             int ox = p.x, oy = p.y;
-            if (p.tick(tick, _bangobj.board, pieces)) {
-                Effect effect = null;
-
-                // if the piece died, make a note and maybe remove it
-                if (!p.isAlive()) {
-                    p.wasKilled(tick);
-                    _scenario.pieceWasKilled(_bangobj, p);
-                    if (p.removeWhenDead()) {
-                        _bangobj.removeFromPieces(p.getKey());
-                        _bangobj.board.updateShadow(p, null);
-                    }
-
-                // if the piece moved, let the scenario know about it
-                } else if (p.x != ox || p.y != oy) {
-                    effect = _scenario.pieceMoved(_bangobj, p);
-                }
-
-                // if the piece didn't die, update it
-                if (_bangobj.pieces.containsKey(p.getKey())) {
-                    _bangobj.updatePieces(p);
-                }
-
-                // after the piece has been updated, we can safely apply
-                // any effects to it
-                if (effect != null) {
-                    effect.init(p);
-                    deployEffect(-1, effect);
-                }
+            Effect teffect = p.tick(tick, _bangobj.board, pieces);
+            if (teffect != null) {
+                deployEffect(p.owner, teffect);
             }
         }
 
@@ -1153,56 +1124,28 @@ public class BangManager extends GameManager
         _bangobj.stats[munit.owner].incrementStat(
             Stat.Type.DISTANCE_MOVED, steps);
 
+        // dispatch a move effect to actually move the unit
+        MoveEffect meffect = new MoveEffect();
+        meffect.init(munit);
+        meffect.nx = munit.x;
+        meffect.ny = munit.y;
+        deployEffect(munit.owner, meffect);
+
         // interact with any pieces occupying our target space
         if (lappers != null) {
             for (Piece lapper : lappers) {
-                switch (munit.maybeInteract(lapper, _effects)) {
-                case CONSUMED:
-                    _bangobj.removeFromPieces(lapper.getKey());
-                    // note that this player collected a bonus
+                Effect effect = munit.maybeInteract(lapper);
+                if (effect != null) {
+                    deployEffect(unit.owner, effect);
+
+                    // small hackery: note that this player collected a bonus
                     if (lapper instanceof Bonus) {
                         _bangobj.stats[munit.owner].incrementStat(
                             Stat.Type.BONUSES_COLLECTED, 1);
                     }
-                    break;
-
-                case ENTERED:
-                    // update the piece we entered as we likely modified it in
-                    // doing so
-                    _bangobj.updatePieces(lapper);
-                    // TODO: generate a special event indicating that the
-                    // unit entered so that we can animate it
-                    _bangobj.removeFromPieces(munit.getKey());
-                    // short-circuit the remaining move processing
-                    return munit;
-
-                case INTERACTED:
-                    // update the piece we interacted with, we'll update
-                    // ourselves momentarily
-                    _bangobj.updatePieces(lapper);
-                    break;
-
-                case NOTHING:
-                    break;
                 }
             }
         }
-
-        // let the scenario know that the unit moved
-        Effect meffect = _scenario.pieceMoved(_bangobj, munit);
-        if (meffect != null) {
-            meffect.init(munit);
-            _effects.add(meffect);
-        }
-
-        // update the unit in the distributed set
-        _bangobj.updatePieces(munit);
-
-        // finally effect the effects
-        for (Effect effect : _effects) {
-            deployEffect(unit.owner, effect);
-        }
-        _effects.clear();
 
         return munit;
     }
@@ -1691,17 +1634,22 @@ public class BangManager extends GameManager
         }
 
         public void pieceAffected (Piece piece, String effect) {
-            if (!piece.isAlive()) {
-                piece.wasKilled(_bangobj.tick);
-                // if the scenario modifies the killed piece, broadcast
-                // those modifications to the clients
-                if (_scenario.pieceWasKilled(_bangobj, piece)) {
-                    _bangobj.updatePieces(piece);
-                }
-            }
         }
 
         public void pieceMoved (Piece piece) {
+            // let the scenario know that the unit moved
+            Effect effect = _scenario.pieceMoved(_bangobj, piece);
+            if (effect != null) {
+                deployEffect(piece.owner, effect);
+            }
+        }
+
+        public void pieceKilled (Piece piece) {
+            piece.wasKilled(_bangobj.tick);
+            Effect deatheff = _scenario.pieceWasKilled(_bangobj, piece);
+            if (deatheff != null) {
+                deployEffect(-1, deatheff);
+            }
         }
 
         public void pieceRemoved (Piece piece) {
@@ -1759,9 +1707,6 @@ public class BangManager extends GameManager
 
     /** Used to track the locations where players can start. */
     protected ArrayList<Piece> _starts = new ArrayList<Piece>();
-
-    /** Used to track effects during a move. */
-    protected ArrayList<Effect> _effects = new ArrayList<Effect>();
 
     /** Maps card id to a {@link StartingCard} record. */
     protected HashIntMap _scards = new HashIntMap();

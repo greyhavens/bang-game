@@ -19,7 +19,7 @@ import static com.threerings.bang.Log.log;
  * Converts some number of units from the other players to the activating
  * players control.
  */
-public class DefectEffect extends Effect
+public class DefectEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
     public static final String DEFECTED = "bonuses/defect/activate";
@@ -84,6 +84,8 @@ public class DefectEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        super.apply(bangobj, obs);
+
         // swipe away!
         int defected = 0;
         for (int ii = 0; ii < pieceIds.length; ii++) {

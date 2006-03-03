@@ -15,6 +15,8 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Terrain;
+import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
 import static com.threerings.bang.Log.log;
@@ -105,6 +107,14 @@ public class Unit extends Piece
         _respawnTick = tick;
     }
 
+    /**
+     * Indicates whether or not this piece can activate bonuses.
+     */
+    public boolean canActivateBonus (Bonus bonus)
+    {
+        return bonus.getConfig().type.equals("nugget") ? !benuggeted : true;
+    }
+
     /** Configures the instance after unserialization. */
     public void readObject (ObjectInputStream in)
         throws IOException, ClassNotFoundException
@@ -131,15 +141,18 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public boolean canActivateBonus (Bonus bonus)
-    {
-        return bonus.getConfig().type.equals("nugget") ? !benuggeted : true;
-    }
-
-    @Override // documentation inherited
     public int getCost ()
     {
         return _config.scripCost;
+    }
+
+    @Override // documentation inherited
+    public Effect maybeInteract (Piece other)
+    {
+        if (other instanceof Bonus && canActivateBonus((Bonus)other)) {
+            return ((Bonus)other).affect(this);
+        }
+        return super.maybeInteract(other);
     }
 
     @Override // documentation inherited
@@ -163,14 +176,14 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public boolean tick (short tick, BangBoard board, Piece[] pieces)
+    public Effect tick (short tick, BangBoard board, Piece[] pieces)
     {
         if (influence != null && influence.isExpired(tick)) {
-            log.info("Expiring " + influence + ".");
-            influence = null;
-            return true;
+            ExpireInfluenceEffect effect = new ExpireInfluenceEffect();
+            effect.init(this);
+            return effect;
         }
-        return false;
+        return null;
     }
 
     @Override // documentation inherited

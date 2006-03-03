@@ -18,7 +18,7 @@ import static com.threerings.bang.Log.log;
  * An effect that replaces all units in excess of the per-player average
  * with 40% health windup gunslingers owned by the original player.
  */
-public class PlagueEffect extends Effect
+public class PlagueEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
     public static final String PLAGUED = "bonuses/plague/activate";
@@ -88,6 +88,8 @@ public class PlagueEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        super.apply(bangobj, obs);
+
         // remove the old pieces and add new windup gun slingers instead
         for (int ii = 0; ii < pieceIds.length; ii++) {
             Piece p = (Piece)bangobj.pieces.get(pieceIds[ii]);

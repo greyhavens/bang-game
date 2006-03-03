@@ -19,7 +19,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.BonusEffect;
 
 import static com.threerings.bang.Log.log;
 
@@ -195,11 +195,12 @@ public class Bonus extends Piece
      * has on this piece or the entire board. Those effects will be
      * processed at the end of the tick.
      */
-    public Effect affect (Piece piece)
+    public BonusEffect affect (Piece piece)
     {
         try {
-            Effect effect = (Effect)Class.forName(
+            BonusEffect effect = (BonusEffect)Class.forName(
                 _config.effectClass).newInstance();
+            effect.bonusId = pieceId;
             effect.init(piece);
             return effect;
         } catch (Exception e) {

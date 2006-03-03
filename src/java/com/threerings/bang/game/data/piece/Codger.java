@@ -17,7 +17,7 @@ public class Codger extends Unit
         ShotEffect shot = super.shoot(bangobj, target);
         // the codger adds a tick to the unit he fires upon
         if (target.lastActed < bangobj.tick) {
-            shot.newLastActed = (short)(target.lastActed + 1);
+            shot.targetLastActed = (short)(target.lastActed + 1);
         }
         return shot;
     }

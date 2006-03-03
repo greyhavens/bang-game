@@ -5,17 +5,15 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.BangObject;
 
 /**
- * An effect that repairs a particular piece on the board.
+ * Expires the currently active influence on a unit.
  */
-public class RepairEffect extends BonusEffect
+public class ExpireInfluenceEffect extends Effect
 {
-    /** The identifier for the type of effect that we produce. */
-    public static final String REPAIRED = "bonuses/repair/activate";
-
     /** The identifier of the piece to be repaired. */
     public int pieceId;
 
@@ -32,7 +30,7 @@ public class RepairEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public void prepare (BangObject bangobj, IntIntMap dammap)
+        public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // nothing doing
     }
@@ -40,14 +38,10 @@ public class RepairEffect extends BonusEffect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
-        super.apply(bangobj, obs);
-
-        Piece piece = (Piece)bangobj.pieces.get(pieceId);
-        if (piece == null) {
-            return;
+        Unit unit = (Unit)bangobj.pieces.get(pieceId);
+        if (unit != null) {
+            unit.influence = null;
+            reportEffect(obs, unit, UPDATED);
         }
-
-        piece.damage = 0;
-        reportEffect(obs, piece, REPAIRED);
     }
 }

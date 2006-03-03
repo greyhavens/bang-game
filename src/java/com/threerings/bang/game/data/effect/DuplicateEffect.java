@@ -16,7 +16,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Duplicates a piece.
  */
-public class DuplicateEffect extends Effect
+public class DuplicateEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
     public static final String DUPLICATED = "bonuses/duplicate/activate";
@@ -66,6 +66,8 @@ public class DuplicateEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        super.apply(bangobj, obs);
+
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
         if (piece == null) {
             return;

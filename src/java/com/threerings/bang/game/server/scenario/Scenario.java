@@ -197,8 +197,9 @@ public abstract class Scenario
      * make further adjustments to the piece and modify other game data as
      * appropriate.
      *
-     * @return null if nothing happens to this piece as a result of the
-     * move or an effect to apply to the piece.
+     * @return null if nothing happens to this piece as a result of the move or
+     * an effect to apply to the piece. The returned effect should already be
+     * initialized.
      */
     public Effect pieceMoved (BangObject bangobj, Piece piece)
     {
@@ -209,15 +210,15 @@ public abstract class Scenario
      * Called when a piece was killed. The scenario can choose to respawn
      * the piece later, and do whatever else is appropriate.
      *
-     * @return true if the piece should be updated as a result of changes
-     * made by the scenario.
+     * @return any effect that should be applied as a result of the piece being
+     * killed or null. The returned effect should already be initialized.
      */
-    public boolean pieceWasKilled (BangObject bangobj, Piece piece)
+    public Effect pieceWasKilled (BangObject bangobj, Piece piece)
     {
         if (respawnPieces()) {
             maybeQueueForRespawn(piece, bangobj.tick);
         }
-        return false;
+        return null;
     }
 
     /**

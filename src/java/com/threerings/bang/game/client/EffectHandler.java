@@ -72,11 +72,6 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void pieceAffected (Piece piece, String effect)
     {
-        // if this piece is now dead, clear out any queued move
-        if (!piece.isAlive()) {
-            _view.clearQueuedMove(piece.pieceId);
-        }
-
         final PieceSprite sprite = _view.getPieceSprite(piece);
         if (sprite == null) {
             log.warning("Missing sprite for effect [piece=" + piece +
@@ -113,15 +108,15 @@ public class EffectHandler extends BoardView.BoardAction
         // queue the effect up on the piece sprite
         if (_effviz != null) {
             queueEffect(sprite, piece, _effviz);
+
+        } else if (effect.equals(ShotEffect.ROTATED)) {
+            // if we're rotating someone in preparation for a shot; just update
+            // their orientation immediately for now
+            ((MobileSprite)sprite).faceTarget();
+
         } else {
             // since we're not displaying an effect, we update immediately
             sprite.updated(piece, _tick);
-        }
-
-        // if we're rotating someone in preparation for a shot; just update
-        // their orientation immediately for now
-        if (effect.equals(ShotEffect.ROTATED)) {
-            ((MobileSprite)sprite).faceTarget();
         }
 
         // if this piece was shot, trigger the reacting or dying animation
@@ -179,6 +174,13 @@ public class EffectHandler extends BoardView.BoardAction
                 maybeComplete(penderId);
             }
         });
+    }
+
+    // documentation inherited from interface Effect.Observer
+    public void pieceKilled (Piece piece)
+    {
+        // clear out any queued move
+        _view.clearQueuedMove(piece.pieceId);
     }
 
     // documentation inherited from interface Effect.Observer

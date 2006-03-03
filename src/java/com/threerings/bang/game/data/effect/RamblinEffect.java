@@ -14,7 +14,7 @@ import com.threerings.bang.game.data.piece.Unit;
  * An effect that causes the piece in question to ramble along and move one
  * square further until it is killed and respawned.
  */
-public class RamblinEffect extends Effect
+public class RamblinEffect extends BonusEffect
 {
     /** The influence we have on units. */
     public static class RamblinInfluence extends Influence
@@ -52,6 +52,8 @@ public class RamblinEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        super.apply(bangobj, obs);
+
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
             return;

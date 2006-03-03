@@ -14,7 +14,7 @@ import com.threerings.bang.game.data.piece.Unit;
  * An effect that causes the piece in question to hustle up and move in one
  * fewer ticks than normal until it is killed and respawned.
  */
-public class HustleEffect extends Effect
+public class HustleEffect extends BonusEffect
 {
     /** The influence we have on units. */
     public static class HustleInfluence extends Influence
@@ -52,6 +52,8 @@ public class HustleEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        super.apply(bangobj, obs);
+
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
             return;

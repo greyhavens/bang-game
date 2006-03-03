@@ -4,8 +4,8 @@
 package com.threerings.bang.game.data.piece;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.DropNuggetEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
@@ -20,12 +20,16 @@ public class Sharpshooter extends Unit
         if (!(target instanceof Unit)) {
             return null;
         }
-        // the sharpshooter causes a unit holding a nugget to drop it
+
+        // the sharpshooter causes a unit holding a nugget to drop it; but not
+        // if we're going to kill them, in which case they'd drop anyway
         Unit unit = (Unit)target;
-        if (unit.benuggeted && (unit.damage + damage < 100)) {
-            return new Effect[] { new DropNuggetEffect(unit) };
+        if (!unit.benuggeted || (unit.damage + damage >= 100)) {
+            return null;
         }
-        return null;
+
+        NuggetEffect effect = NuggetEffect.dropNugget(bangobj, unit);
+        return (effect == null) ? null : new Effect[] { effect };
     }
 
     @Override // documentation inherited

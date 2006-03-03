@@ -10,6 +10,8 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.client.sprite.CowSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -66,11 +68,11 @@ public class Cow extends Piece
     }
 
     @Override // documentation inherited
-    public boolean tick (short tick, BangBoard board, Piece[] pieces)
+    public Effect tick (short tick, BangBoard board, Piece[] pieces)
     {
         // if we're corralled, stop moving
         if (corralled) {
-            return false;
+            return null;
         }
 
         // if we're walled in on all three sides, we also move
@@ -93,7 +95,7 @@ public class Cow extends Piece
 
         // if we don't want to move, stop here
         if (_wantToMove == -1) {
-            return false;
+            return null;
         }
 
         // otherwise look around for somewhere nicer to stand
@@ -120,14 +122,16 @@ public class Cow extends Piece
             ny = PointSet.decodeY(coords[0]);
         }
 
-        if (nx != x || ny != y) {
-            _wantToMove = -1;
-            board.updateShadow(this, null);
-            position(nx, ny);
-            board.updateShadow(null, this);
-            return true;
+        if (nx == x && ny == y) {
+            return null;
         }
-        return false;
+
+        _wantToMove = -1;
+        MoveEffect move = new MoveEffect();
+        move.init(this);
+        move.nx = (short)nx;
+        move.ny = (short)ny;
+        return move;
     }
 
     protected int whichDirection (int nx, int ny)
