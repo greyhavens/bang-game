@@ -157,18 +157,18 @@ public class BangClient extends BasicClient
         ResultListener rl = new ResultListener() {
             public void requestCompleted (Object result) {
                 ctx.getChatDirector().displayFeedback(
-                    BangCodes.BANG_MSGS, "m.bug_submit_completed");
+                    BANG_MSGS, "m.bug_submit_completed");
             }
             public void requestFailed (Exception cause) {
                 log.log(Level.WARNING, "Bug submission failed.", cause);
                 ctx.getChatDirector().displayFeedback(
-                    BangCodes.BANG_MSGS, "m.bug_submit_failed");
+                    BANG_MSGS, "m.bug_submit_failed");
             }
         };
         SendReportUtil.submitReportAsync(
             submitURL, report, files, ctx.getClient().getRunQueue(), rl);
         ctx.getChatDirector().displayFeedback(
-            BangCodes.BANG_MSGS, "m.bug_submit_started");
+            BANG_MSGS, "m.bug_submit_started");
     }
 
     /**
@@ -375,18 +375,11 @@ public class BangClient extends BasicClient
         // we potentially jump right into a game when developing
         BangConfig config = null;
         if ("tutorial".equals(System.getProperty("test"))) {
-            config = new BangConfig();
-            TutorialConfig tconfig =
-                TutorialUtil.loadTutorial(_rsrcmgr, "test");
-            config.rated = false;
-            config.players = new Name[] {
-                _ctx.getUserObject().getVisibleName(),
-                new Name("Larry") /*, new Name("Moe")*/ };
-            config.ais = new GameAI[] {
-                null, new GameAI(1, 50) /*, new GameAI(0, 50)*/ };
-            config.scenarios = new String[] { tconfig.ident };
-            config.tutorial = true;
-            config.board = tconfig.board;
+            PlayerService psvc = (PlayerService)
+                _ctx.getClient().requireService(PlayerService.class);
+            psvc.playTutorial(_ctx.getClient(), "test", new ReportingListener(
+                                  _ctx, BANG_MSGS, "m.start_tut_failed"));
+            return;
 
         } else if (System.getProperty("test") != null) {
             config = new BangConfig();

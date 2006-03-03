@@ -18,7 +18,7 @@ public interface PlayerService extends InvocationService
      */
     public void pickFirstBigShot (
         Client client, String type, Name name, ConfirmListener cl);
-    
+
     /**
      * Invite the specified user to be our pardner.
      */
@@ -30,10 +30,18 @@ public interface PlayerService extends InvocationService
      */
     public void respondToPardnerInvite (Client client, Name inviter,
         boolean resp, ConfirmListener listener);
-    
+
     /**
      * Remove one of our pardners from our pardner list.
      */
     public void removePardner (Client client, Name pardner,
         ConfirmListener listener);
+
+    /**
+     * Requests to play the specified tutorial. On success the game will start
+     * and the client will enter the game. On failure the supplied listener
+     * will be notified.
+     */
+    public void playTutorial (
+        Client client, String tutid, InvocationListener listener);
 }

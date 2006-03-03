@@ -30,18 +30,23 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
-import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.BarberObject;
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.bank.data.BankObject;
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.ranch.data.RanchObject;
 import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.store.data.StoreObject;
+
+import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.TutorialConfig;
+import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.PlayerDecoder;
 import com.threerings.bang.client.PlayerService;
@@ -321,6 +326,39 @@ public class PlayerManager
                     ", pardner=" + pardner + "]";
             }
         });
+    }
+
+    // documentation inherited from interface PlayerProvider
+    public void playTutorial (
+        ClientObject caller, String tutid, PlayerService.InvocationListener il)
+        throws InvocationException
+    {
+        PlayerObject player = (PlayerObject)caller;
+
+        // load up the tutorial configuration
+        TutorialConfig tconfig =
+            TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutid);
+
+        // create a game configuration from that
+        BangConfig config = new BangConfig();
+        config.rated = false;
+        config.players = new Name[] {
+            player.getVisibleName(),
+            new Name("Larry") }; // TODO: pick an AI name somehow, get a
+                                 // fingerprint for them in the GameObject
+        config.ais = new GameAI[] { null, new GameAI(1, 50) };
+        config.scenarios = new String[] { tconfig.ident };
+        config.tutorial = true;
+        config.board = tconfig.board;
+
+        // create the tutorial game manager and it will handle the rest
+        try {
+            BangServer.plreg.createPlace(config, null);
+        } catch (InstantiationException ie) {
+            log.log(Level.WARNING, "Error instantiating tutorial " +
+                "[for=" + player.who() + ", config=" + config + "].", ie);
+            throw new InvocationException(INTERNAL_ERROR);
+        }
     }
 
     /**

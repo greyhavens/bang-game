@@ -29,6 +29,8 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.client.util.ReportingListener;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -140,27 +142,11 @@ public class PickTutorialView extends BDecoratedWindow
             }
 
         } else {
-            // TODO: tidy this up; make special start tutorial service
-            TutorialConfig tconfig =
-                TutorialUtil.loadTutorial(_ctx.getResourceManager(), action);
-            BangConfig config = new BangConfig();
-            config.rated = false;
-            config.players = new Name[] {
-                _ctx.getUserObject().getVisibleName(),
-                new Name("Larry") };
-            config.ais = new GameAI[] {
-                null, new GameAI(1, 50) };
-            config.scenarios = new String[] { tconfig.ident };
-            config.tutorial = true;
-            config.board = tconfig.board;
-            ConfirmListener cl = new ConfirmListener() {
-                public void requestProcessed () {
-                }
-                public void requestFailed (String reason) {
-                    log.warning("Failed to start tutorial: " + reason);
-                }
-            };
-            _ctx.getParlorDirector().startSolitaire(config, cl);
+            PlayerService psvc = (PlayerService)
+                _ctx.getClient().requireService(PlayerService.class);
+            ReportingListener rl = new ReportingListener(
+                _ctx, BangCodes.BANG_MSGS, "m.start_tut_failed");
+            psvc.playTutorial(_ctx.getClient(), action, rl);
         }
     }
 

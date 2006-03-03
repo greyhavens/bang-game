@@ -53,6 +53,13 @@ public class PlayerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case PlayerMarshaller.PLAY_TUTORIAL:
+            ((PlayerProvider)provider).playTutorial(
+                source,
+                (String)args[0], (InvocationService.InvocationListener)args[1]
+            );
+            return;
+
         case PlayerMarshaller.REMOVE_PARDNER:
             ((PlayerProvider)provider).removePardner(
                 source,
