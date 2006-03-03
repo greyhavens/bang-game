@@ -244,6 +244,8 @@ public class BangManager extends GameManager
 
                 // effect the initial shot
                 ShotEffect effect = shooter.shoot(_bangobj, target);
+                // the initial shot updates the shooter's last acted
+                effect.shooterLastActed = _bangobj.tick;
                 deployEffect(shooter.owner, effect);
                 _bangobj.stats[shooter.owner].incrementStat(
                     Stat.Type.SHOTS_FIRED, 1);
