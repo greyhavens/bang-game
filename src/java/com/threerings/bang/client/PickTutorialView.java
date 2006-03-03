@@ -135,6 +135,7 @@ public class PickTutorialView extends BDecoratedWindow
             _ctx.getBangClient().checkShowIntro();
 
         } else if (action.equals("to_town")) {
+            BangPrefs.setDeclinedTutorials(_ctx.getUserObject());;
             dismiss();
             if (!_ctx.getLocationDirector().moveBack()) {
                 _ctx.getLocationDirector().leavePlace();
