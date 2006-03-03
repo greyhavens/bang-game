@@ -36,6 +36,7 @@ import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.SessionObserver;
 
 import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.parlor.game.data.GameAI;
@@ -55,6 +56,7 @@ import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
@@ -376,6 +378,18 @@ public class BangClient extends BasicClient
         // get a reference to the player service
         _psvc = (PlayerService)_client.requireService(PlayerService.class);
 
+        // create the mute director here because the mute list is specific to
+        // the account
+        final String mkey = client.getCredentials().getUsername() + ".muted";
+        _mutedir = new MuteDirector(_ctx, createHandles(
+            _config.getValue(mkey, new String[0])));
+        _mutedir.setChatDirector(_chatdir);
+        _mutedir.addMuteObserver(new MuteDirector.MuteObserver() {
+            public void muteChanged (Name playerName, boolean nowMuted) {
+                _config.setValue(mkey, StringUtil.join(_mutedir.getMuted()));
+            }
+        });
+        
         // register our status view key bindings
         StatusView.bindKeys(_ctx);
 
@@ -461,6 +475,15 @@ public class BangClient extends BasicClient
         }
     }
 
+    protected Name[] createHandles (String[] strings)
+    {
+        Name[] handles = new Name[strings.length];
+        for (int ii = 0; ii < strings.length; ii++) {
+            handles[ii] = new Handle(strings[ii]);
+        }
+        return handles;
+    }
+    
     @Override // documentation inherited
     protected void createContextServices (RunQueue rqueue)
     {
@@ -468,11 +491,11 @@ public class BangClient extends BasicClient
 
         // create our custom directors
         _chatdir = new BangChatDirector(_ctx);
-
+        
         // warm up the particle factory
         ParticleFactory.warmup(_ctx);
     }
-
+    
     protected void displayPardnerInvite (final Name handle)
     {
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
@@ -541,6 +564,10 @@ public class BangClient extends BasicClient
             return _chatdir;
         }
 
+        public MuteDirector getMuteDirector () {
+            return _mutedir;
+        }
+        
         public void setPlaceView (PlaceView view) {
             // clear any lingering popups
             clearPopups(false);
@@ -590,6 +617,7 @@ public class BangClient extends BasicClient
     protected Config _config = new Config("bang");
 
     protected BangChatDirector _chatdir;
+    protected MuteDirector _mutedir;
     protected PlayerService _psvc;
 
     protected BWindow _mview;

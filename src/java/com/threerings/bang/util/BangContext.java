@@ -3,6 +3,8 @@
 
 package com.threerings.bang.util;
 
+import com.threerings.crowd.chat.client.MuteDirector;
+
 import com.threerings.parlor.util.ParlorContext;
 
 import com.threerings.bang.client.BangClient;
@@ -20,4 +22,7 @@ public interface BangContext extends BasicContext, ParlorContext
     /** Returns a reference to the current player's user object. Only
      * valid when we are logged onto the server. */
     public PlayerObject getUserObject ();
+    
+    /** Returns a reference to the mute director. */
+    public MuteDirector getMuteDirector ();
 }

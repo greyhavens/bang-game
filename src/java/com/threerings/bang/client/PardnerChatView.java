@@ -210,12 +210,14 @@ public class PardnerChatView extends BDecoratedWindow
                 ((PardnerTab)_tabs.getSelectedTab()).requestTell(msg);
             }
 
-        } else if (src == _resume ||
-            (src == _close && _tabs.getTabCount() == 1)) {
-            _ctx.getBangClient().clearPopup(this, false);
-
+        } else if (src == _mute) {
+            ((PardnerTab)_tabs.getSelectedTab()).mute();
+            
         } else if (src == _close) {
-            _tabs.removeTab(_tabs.getSelectedTabIndex());
+            ((PardnerTab)_tabs.getSelectedTab()).close();
+
+        } else if (src == _resume) {
+            _ctx.getBangClient().clearPopup(this, false);
         }
     }
 
@@ -364,6 +366,28 @@ public class PardnerChatView extends BDecoratedWindow
             scrollToEnd();
         }
 
+        /**
+         * Mutes the user behind this tab.
+         */
+        public void mute ()
+        {
+            close();
+            _ctx.getMuteDirector().setMuted(_handle, true);   
+        }
+        
+        /**
+         * Closes this tab and hides the pop-up if this was the last tab open.
+         */
+        public void close ()
+        {
+            if (_tabs.getTabCount() == 1) {
+                _ctx.getBangClient().clearPopup(PardnerChatView.this, false);
+                
+            } else {
+                _tabs.removeTab(idx);
+            }
+        }
+        
         protected void scrollToEnd ()
         {
             _vport.validate();
