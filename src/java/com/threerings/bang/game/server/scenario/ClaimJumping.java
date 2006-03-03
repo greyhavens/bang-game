@@ -85,7 +85,9 @@ public class ClaimJumping extends Scenario
             }
         }
 
-        // start with a nugget on each of the bonus spots
+        // TODO: sort the bonus spots by distance to nearest claim, put up to
+        // one nugget per player in the spots that are maximally distant from
+        // the nearest claim
         for (int ii = 0; ii < bonusSpots.size(); ii++) {
             Bonus nugget = dropNugget(
                 bangobj, bonusSpots.getX(ii), bonusSpots.getY(ii));
@@ -221,7 +223,7 @@ public class ClaimJumping extends Scenario
         Bonus drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
         drop.assignPieceId(bangobj);
         drop.position(x, y);
-        bangobj.board.updateShadow(null, drop);
+        bangobj.board.shadowPiece(drop);
         bangobj.addToPieces(drop);
         return drop;
     }

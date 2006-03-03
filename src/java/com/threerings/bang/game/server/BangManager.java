@@ -243,6 +243,8 @@ public class BangManager extends GameManager
                 }
 
                 // effect the initial shot
+//                 log.info("Shooting " + target.info() +
+//                          " with " + shooter.info());
                 ShotEffect effect = shooter.shoot(_bangobj, target);
                 // the initial shot updates the shooter's last acted
                 effect.shooterLastActed = _bangobj.tick;
@@ -708,7 +710,7 @@ public class BangManager extends GameManager
                     Piece piece = ppieces.remove(0);
                     piece.position(spot.x, spot.y);
                     _bangobj.addToPieces(piece);
-                    _bangobj.board.updateShadow(null, piece);
+                    _bangobj.board.shadowPiece(piece);
                 }
             }
 
@@ -745,7 +747,7 @@ public class BangManager extends GameManager
                     log.info("Expiring wreckage " + p.pieceId +
                              " l:" + p.lastActed + " t:" + tick);
                     _bangobj.removeFromPieces(p.getKey());
-                    _bangobj.board.updateShadow(p, null);
+                    _bangobj.board.clearShadow(p);
                 }
                 continue;
             }
@@ -809,8 +811,6 @@ public class BangManager extends GameManager
                         }
                     }
                     if (target != null) {
-                        log.info("Shooting " + target.info() +
-                                 " with " + unit.info());
                         try {
                             moveAndShoot(unit, Short.MAX_VALUE, 0, target);
                             continue;
@@ -1120,7 +1120,8 @@ public class BangManager extends GameManager
         }
 
         // update our board shadow
-        _bangobj.board.updateShadow(unit, munit);
+        _bangobj.board.clearShadow(unit);
+        _bangobj.board.shadowPiece(munit);
 
         // record the move to this player's statistics
         _bangobj.stats[munit.owner].incrementStat(
@@ -1272,7 +1273,7 @@ public class BangManager extends GameManager
             bonus.assignPieceId(_bangobj);
             bonus.position(bspot.x, bspot.y);
             _bangobj.addToPieces(bonus);
-            _bangobj.board.updateShadow(null, bonus);
+            _bangobj.board.shadowPiece(bonus);
 
             log.info("Placed bonus: " + bonus.info());
         }

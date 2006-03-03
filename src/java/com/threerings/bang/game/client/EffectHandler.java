@@ -162,6 +162,10 @@ public class EffectHandler extends BoardView.BoardAction
         if (!sprite.updatePosition(_bangobj.board)) {
             return;
         }
+
+        // let the board view know that this piece is on the move
+        _view.pieceDidMove(piece);
+
         final int penderId = ++_nextPenderId;
         _penders.add(penderId);
         sprite.addObserver(new PathObserver() {

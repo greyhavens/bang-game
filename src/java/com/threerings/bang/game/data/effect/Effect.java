@@ -224,9 +224,9 @@ public abstract class Effect extends SimpleStreamableObject
     protected static void moveAndReport (
         BangObject bangobj, Piece piece, int nx, int ny, Observer obs)
     {
-        bangobj.board.updateShadow(piece, null);
+        bangobj.board.clearShadow(piece);
         piece.position(nx, ny);
-        bangobj.board.updateShadow(null, piece);
+        bangobj.board.shadowPiece(piece);
         if (obs != null) {
             obs.pieceMoved(piece);
         }

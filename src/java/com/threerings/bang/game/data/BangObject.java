@@ -227,7 +227,7 @@ public class BangObject extends GameObject
     public void addPieceDirect (Piece piece)
     {
         pieces.addDirect(piece);
-        board.updateShadow(null, piece);
+        board.shadowPiece(piece);
     }
 
     /**
@@ -239,7 +239,7 @@ public class BangObject extends GameObject
     public void removePieceDirect (Piece piece)
     {
         pieces.removeDirect(piece);
-        board.updateShadow(piece, null);
+        board.clearShadow(piece);
     }
     
     /**

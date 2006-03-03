@@ -143,7 +143,7 @@ public class Tutorial extends Scenario
             unit.owner = aua.owner;
             unit.position(aua.location[0], aua.location[1]);
             _bangobj.addToPieces(unit);
-            _bangobj.board.updateShadow(null, unit);
+            _bangobj.board.shadowPiece(unit);
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
             TutorialConfig.MoveUnit mua = (TutorialConfig.MoveUnit)action;
@@ -164,7 +164,7 @@ public class Tutorial extends Scenario
             bonus.assignPieceId(_bangobj);
             bonus.position(aba.location[0], aba.location[1]);
             _bangobj.addToPieces(bonus);
-            _bangobj.board.updateShadow(null, bonus);
+            _bangobj.board.shadowPiece(bonus);
         }
     }
 

@@ -108,12 +108,14 @@ public class NuggetEffect extends BonusEffect
         super.apply(bangobj, obs);
 
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
-        if (dropping) {
-            unit.benuggeted = false;
-            reportEffect(obs, unit, DROPPED_NUGGET);
-        } else {
-            unit.benuggeted = true;
-            reportEffect(obs, unit, PICKED_UP_NUGGET);
+        if (unit != null) {
+            if (dropping) {
+                unit.benuggeted = false;
+                reportEffect(obs, unit, DROPPED_NUGGET);
+            } else {
+                unit.benuggeted = true;
+                reportEffect(obs, unit, PICKED_UP_NUGGET);
+            }
         }
 
         if (drop != null) {

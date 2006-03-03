@@ -92,7 +92,7 @@ public class CattleRustling extends Scenario
                 cow.position(spot.x, spot.y);
                 cow.orientation = (short)RandomUtil.getInt(4);
 //                cow.owner = determineOwner(cow);
-                bangobj.board.updateShadow(null, cow);
+                bangobj.board.shadowPiece(cow);
                 bangobj.addToPieces(cow);
             }
         }

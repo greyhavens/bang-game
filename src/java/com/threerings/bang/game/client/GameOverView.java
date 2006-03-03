@@ -59,6 +59,7 @@ public class GameOverView extends BDecoratedWindow
     {
         super(ctx.getStyleSheet(), null);
         setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
+        setLayer(1);
         ((GroupLayout)getLayoutManager()).setGap(20);
 
         _ctx = ctx;

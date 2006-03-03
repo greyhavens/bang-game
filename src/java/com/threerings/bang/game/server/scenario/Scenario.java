@@ -175,7 +175,7 @@ public abstract class Scenario
 
             if (bangobj.pieces.containsKey(unit.getKey())) {
                 // clear the shadow at its old location
-                bangobj.board.updateShadow(unit, null);
+                bangobj.board.clearShadow(unit);
                 unit.position(bspot.x, bspot.y);
                 bangobj.updatePieces(unit);
             } else {
@@ -184,7 +184,7 @@ public abstract class Scenario
             }
 
             // shadow the unit at its new location
-            bangobj.board.updateShadow(null, unit);
+            bangobj.board.shadowPiece(unit);
         }
 
         // update train pieces
@@ -324,7 +324,7 @@ public abstract class Scenario
         // see if we've been flagged to disappear on this tick
         if (train.nextX == Train.UNSET) {
             bangobj.removeFromPieces(train.getKey());
-            bangobj.board.updateShadow(train, null);
+            bangobj.board.clearShadow(train);
             train.positionNext(Train.UNSET, Train.UNSET); // suck the rest in
             return true;
         }
@@ -464,9 +464,9 @@ public abstract class Scenario
      */
     protected void moveTrain (BangObject bangobj, Train train, int nx, int ny)
     {
-        bangobj.board.updateShadow(train, null);
+        bangobj.board.clearShadow(train);
         train.positionNext(nx, ny);
-        bangobj.board.updateShadow(null, train);
+        bangobj.board.shadowPiece(train);
         bangobj.updatePieces(train);
     }
 

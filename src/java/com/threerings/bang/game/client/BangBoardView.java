@@ -210,7 +210,7 @@ public class BangBoardView extends BoardView
     public boolean isSelectable (Piece piece)
     {
         PieceSprite psprite;
-        return !(piece.owner != _pidx ||
+        return !(piece.owner != _pidx || !piece.isAlive() ||
                  pieceUpdatePending(piece.pieceId) ||
                  (psprite = getPieceSprite(piece)) == null ||
                  psprite.isMoving());
@@ -435,13 +435,43 @@ public class BangBoardView extends BoardView
         }
     }
 
+    @Override // documentation inherited
+    protected void createPieceSprite (Piece piece, short tick)
+    {
+        super.createPieceSprite(piece, tick);
+
+        // pieces added before the game starts will be handled by a call to
+        // shadowPieces()
+        if (_bangobj.state != BangObject.IN_PLAY) {
+            return;
+        }
+
+        // update the shadow we use to do path finding and whatnot
+        _bangobj.board.shadowPiece(piece);
+
+        // if this piece influenced our selection, refresh it
+        checkForSelectionInfluence(piece);
+    }
+
+    @Override // documentation inherited
     protected boolean pieceUpdated (
         BoardAction action, Piece opiece, Piece npiece, short tick)
     {
         boolean wait = super.pieceUpdated(action, opiece, npiece, tick);
 
-        // update the shadow we use to do path finding and whatnot
-        _bangobj.board.updateShadow(opiece, npiece);
+//         String oinfo = (opiece == null) ? "<none>" : opiece.info();
+//         String ninfo = (npiece == null) ? "<none>" : npiece.info();
+//         log.info("Piece updated " + oinfo + " -> " + ninfo);
+
+        // TODO: this will go away when pieces no longer move by updating (the
+        // train still does)
+        if (opiece != null) {
+            // update the shadow we use to do path finding and whatnot
+            _bangobj.board.clearShadow(opiece);
+            if (npiece != null) {
+                _bangobj.board.shadowPiece(npiece);
+            }
+        }
 
         // if this piece was selected and it got removed, clear the selection
         if (opiece != null && npiece == null && _selection != null &&
@@ -451,25 +481,21 @@ public class BangBoardView extends BoardView
 
         // if this piece was inside our attack set or within range to be inside
         // our move set, recompute the selection as it may have changed
-        if (_selection != null) {
-            Piece sel = _selection;
-            if ((opiece != null &&
-                 (_attackSet.contains(opiece.x, opiece.y) ||
-                  sel.getDistance(opiece) < sel.getMoveDistance())) ||
-                (npiece != null &&
-                 sel.getDistance(npiece) < sel.getMoveDistance())) {
-                int[] oaction = _action;
-                clearSelection();
-                selectUnit((Unit)sel, false);
-                // if we had already selected a movement, reconfigure that
-                // (it might no longer be valid but handleClickToMove will
-                // ignore us in that case
-                if (oaction != null) {
-                    log.info("Reissuing click to move +" +
-                             oaction[1] + "+" + oaction[2]);
-                    handleClickToMove(oaction[1], oaction[2]);
-                }
-            }
+        if (!checkForSelectionInfluence(opiece)) {
+            checkForSelectionInfluence(npiece);
+        }
+
+        return wait;
+    }
+
+    @Override // documentation inherited
+    protected void pieceDidMove (Piece piece)
+    {
+        super.pieceDidMove(piece);
+
+        // if this was our selection, clear it
+        if (_selection == piece) {
+            clearSelection();
         }
 
         // update board and enemy visibility
@@ -516,8 +542,6 @@ public class BangBoardView extends BoardView
                 iter.remove();
             }
         }
-
-        return wait;
     }
 
     /** Handles a left mouse button click. */
@@ -769,6 +793,35 @@ public class BangBoardView extends BoardView
 
         // report that the user took an action (for tutorials)
         _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
+    }
+
+    protected boolean checkForSelectionInfluence (Piece piece)
+    {
+        if (_selection == null) {
+            return false;
+        }
+
+        Piece sel = _selection;
+        if (piece == null ||
+            (!_attackSet.contains(piece.x, piece.y) &&
+             sel.getDistance(piece) > sel.getMoveDistance())) {
+            return false;
+        }
+
+        // refresh our selection
+        int[] oaction = _action;
+        clearSelection();
+        selectUnit((Unit)sel, false);
+
+        // if we had already selected a movement, reconfigure that (it might no
+        // longer be valid but handleClickToMove will ignore us in that case
+        if (oaction != null) {
+            log.info("Reissuing click to move +" +oaction[1] +
+                     "+" + oaction[2]);
+            handleClickToMove(oaction[1], oaction[2]);
+        }
+
+        return true;
     }
 
     protected void centerCameraOnUnit (Piece piece)

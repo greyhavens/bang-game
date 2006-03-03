@@ -572,57 +572,58 @@ public class BangBoard extends SimpleStreamableObject
         }
 
         while (iter.hasNext()) {
-            updateShadow(null, (Piece)iter.next());
+            shadowPiece((Piece)iter.next());
         }
     }
 
     /**
-     * Updates the shadow for the specified piece.
+     * Clears the shadow for the specified piece, restoring that board tile to
+     * its default state.
      */
-    public void updateShadow (Piece opiece, Piece piece)
+    public void clearShadow (Piece piece)
     {
-        // unshadow the piece's old position (big pieces never move)
-        if (opiece != null) {
-            int pos = _width*opiece.y+opiece.x;
-            _tstate[pos] = _btstate[pos];
-        }
+        int pos = _width*piece.y+piece.x;
+        _tstate[pos] = _btstate[pos];
+    }
 
-        // now add a shadow for the new piece
-        if (piece != null) {
-            if (piece instanceof BigPiece) {
-                Rectangle pbounds = ((BigPiece)piece).getBounds();
-                for (int yy = pbounds.y, ly = yy + pbounds.height;
-                     yy < ly; yy++) {
-                    for (int xx = pbounds.x, lx = xx + pbounds.width;
-                         xx < lx; xx++) {
-                        if (_playarea.contains(xx, yy)) {
-                            _tstate[_width*yy+xx] = O_PROP;
-                            _btstate[_width*yy+xx] = O_PROP;
-                            _estate[_width*yy+xx] = 2;
-                        }
+    /**
+     * Configures a shadow for the specified piece.
+     */
+    public void shadowPiece (Piece piece)
+    {
+        if (piece instanceof BigPiece) {
+            Rectangle pbounds = ((BigPiece)piece).getBounds();
+            for (int yy = pbounds.y, ly = yy + pbounds.height;
+                 yy < ly; yy++) {
+                for (int xx = pbounds.x, lx = xx + pbounds.width;
+                     xx < lx; xx++) {
+                    if (_playarea.contains(xx, yy)) {
+                        _tstate[_width*yy+xx] = O_PROP;
+                        _btstate[_width*yy+xx] = O_PROP;
+                        _estate[_width*yy+xx] = 2;
                     }
                 }
-
-            } else if (!_playarea.contains(piece.x, piece.y)) {
-                return;
-                
-            } else if (piece instanceof Track) {
-                int idx = _width*piece.y+piece.x;
-                if (((Track)piece).preventsGroundOverlap()) {
-                    _tstate[idx] = _btstate[idx] = O_PROP;
-                    _btstate[idx] = _btstate[idx] = O_PROP;
-                    _estate[idx] = 2;
-                }
-
-            } else if (piece instanceof Bonus) {
-                _tstate[_width*piece.y+piece.x] = O_FLAT;
-
-            } else if (piece instanceof Train || piece.owner < 0) {
-                _tstate[_width*piece.y+piece.x] = O_PROP;
-
-            } else {
-                _tstate[_width*piece.y+piece.x] = (byte)piece.owner;
             }
+
+        } else if (!_playarea.contains(piece.x, piece.y)) {
+            return;
+                
+        } else if (piece instanceof Track) {
+            int idx = _width*piece.y+piece.x;
+            if (((Track)piece).preventsGroundOverlap()) {
+                _tstate[idx] = _btstate[idx] = O_PROP;
+                _btstate[idx] = _btstate[idx] = O_PROP;
+                _estate[idx] = 2;
+            }
+
+        } else if (piece instanceof Bonus) {
+            _tstate[_width*piece.y+piece.x] = O_FLAT;
+
+        } else if (piece instanceof Train || piece.owner < 0) {
+            _tstate[_width*piece.y+piece.x] = O_PROP;
+
+        } else {
+            _tstate[_width*piece.y+piece.x] = (byte)piece.owner;
         }
     }
 

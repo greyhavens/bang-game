@@ -60,7 +60,7 @@ public class DuplicateEffect extends BonusEffect
         duplicate.position(spot.x, spot.y);
 
         // update the board shadow to reflect its future existence
-        bangobj.board.updateShadow(null, duplicate);
+        bangobj.board.shadowPiece(duplicate);
     }
 
     @Override // documentation inherited

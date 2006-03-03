@@ -267,8 +267,9 @@ public class GunshotEmission extends SpriteEmission
             getLocalTranslation().set(eloc);
             
             // set the scale based on the distance to the target
-            _tdist = ((MobileSprite)_sprite).getTargetSprite().
-                getLocalTranslation().distance(eloc);
+            PieceSprite target = ((MobileSprite)_sprite).getTargetSprite();
+            _tdist = (target == null) ? 1f :
+                target.getLocalTranslation().distance(eloc);
             getLocalScale().set(0f, 0.175f, 1f);
             
             // set the orientation based on the eye vector and direction

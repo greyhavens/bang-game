@@ -1012,7 +1012,18 @@ public class BoardView extends BComponent
                 actionCompleted(action);
             }
         });
+
+        // let derived classes know that this piece is on the move
+        pieceDidMove(npiece);
+
         return true;
+    }
+
+    /**
+     * Called when a piece starts moving.
+     */
+    protected void pieceDidMove (Piece piece)
+    {
     }
 
     /**

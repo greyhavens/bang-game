@@ -396,9 +396,9 @@ public class StampedeEffect extends Effect
                     Point nloc = (nlocs.size() > 0 ?
                         (Point)RandomUtil.pickRandom(nlocs) : loc);
                     cols.add(new Collision(i, unit.pieceId, nloc.x, nloc.y));
-                    bangobj.board.updateShadow(unit, null);
+                    bangobj.board.clearShadow(unit);
                     unit.position(nloc.x, nloc.y);
-                    bangobj.board.updateShadow(null, unit);
+                    bangobj.board.shadowPiece(unit);
                     dammap.increment(unit.owner, COLLISION_DAMAGE);
                 }
             }
