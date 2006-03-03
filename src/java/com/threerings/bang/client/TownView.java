@@ -37,9 +37,16 @@ import com.jmex.bui.layout.BorderLayout;
 import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.presents.dobj.AttributeChangeListener;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.ObjectAccessException;
+import com.threerings.presents.dobj.Subscriber;
+import com.threerings.presents.util.SafeSubscriber;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.TownObject;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
@@ -66,7 +73,7 @@ public class TownView extends BWindow
     public TownView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), new BorderLayout());
-        _ctx = ctx;
+        _bctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("town");
 
         int width = ctx.getDisplay().getWidth();
@@ -91,7 +98,7 @@ public class TownView extends BWindow
         }
 
         // create the town display
-        add(_bview = new TownBoardView(_ctx), BorderLayout.CENTER);
+        add(_bview = new TownBoardView(ctx), BorderLayout.CENTER);
     }
 
     // documentation inherited from interface MainView
@@ -121,7 +128,7 @@ public class TownView extends BWindow
 
         // attempt to load the board
         try {
-            _bview.loadBoard(_ctx.getUserObject().townId);
+            _bview.loadBoard(_bctx.getUserObject().townId);
         } catch (IOException ioe) {
             log.warning("Failed to load town board! [error=" + ioe + "].");
         }
@@ -129,30 +136,31 @@ public class TownView extends BWindow
 
     protected void finishedIntroPan ()
     {
-        _active = !_ctx.getBangClient().checkShowIntro();
+        _active = !_bctx.getBangClient().checkShowIntro();
     }
 
     protected void fireCommand (String command)
     {
         BangBootstrapData bbd = (BangBootstrapData)
-            _ctx.getClient().getBootstrapData();
+            _bctx.getClient().getBootstrapData();
         if ("logoff".equals(command)) {
-            _ctx.getApp().stop();
+            _bctx.getApp().stop();
         } else if ("ranch".equals(command)) {
-            _ctx.getLocationDirector().moveTo(bbd.ranchOid);
+            _bctx.getLocationDirector().moveTo(bbd.ranchOid);
         } else if ("bank".equals(command)) {
-            _ctx.getLocationDirector().moveTo(bbd.bankOid);
+            _bctx.getLocationDirector().moveTo(bbd.bankOid);
         } else if ("store".equals(command)) {
-            _ctx.getLocationDirector().moveTo(bbd.storeOid);
+            _bctx.getLocationDirector().moveTo(bbd.storeOid);
         } else if ("saloon".equals(command)) {
-            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+            _bctx.getLocationDirector().moveTo(bbd.saloonOid);
         } else if ("barber".equals(command)) {
-            _ctx.getLocationDirector().moveTo(bbd.barberOid);
+            _bctx.getLocationDirector().moveTo(bbd.barberOid);
         }
     }
 
     /** A simple viewer for the town board. */
     protected class TownBoardView extends BoardView
+        implements Subscriber, AttributeChangeListener
     {
         public TownBoardView (BangContext ctx)
         {
@@ -174,6 +182,10 @@ public class TownView extends BWindow
             MaterialState mstate = ctx.getRenderer().createMaterialState();
             mstate.setEmissive(ColorRGBA.white);
             _hstate = RenderUtil.createColorMaterialState(mstate, false);
+            
+            BangBootstrapData bbd =
+                (BangBootstrapData)_bctx.getClient().getBootstrapData();
+            _safesub = new SafeSubscriber(bbd.townOid, this);
         }
 
         /**
@@ -203,7 +215,7 @@ public class TownView extends BWindow
 
             // if this is the first time this town is being shown, do our
             // aerial sweep, otherwise just go right to the main view
-            String townId = TownView.this._ctx.getUserObject().townId;
+            String townId = _bctx.getUserObject().townId;
             String view = _presented.contains(townId) ? "main" : "aerial";
             _presented.add(townId);
 
@@ -214,6 +226,29 @@ public class TownView extends BWindow
             }
         }
 
+        // documentation inherited from interface Subscriber
+        public void objectAvailable (DObject object)
+        {
+            _townobj = (TownObject)object;
+            _townobj.addListener(this);
+            updatePopulationSign(_townobj.population);
+        }
+        
+        // documentation inherited from interface Subscriber
+        public void requestFailed (int oid, ObjectAccessException cause)
+        {
+            log.warning("Failed to subscribe to town object! [oid=" + oid +
+                ", cause=" + cause + "].");
+        }
+        
+        // documentation inherited from interface AttributeChangeListener
+        public void attributeChanged (AttributeChangedEvent ace)
+        {
+            if (ace.getName().equals(TownObject.POPULATION)) {
+                updatePopulationSign(_townobj.population);
+            }
+        }
+        
         @Override // documentation inherited
         protected void wasAdded ()
         {
@@ -221,6 +256,9 @@ public class TownView extends BWindow
 
             // disable camera input handler
             _ctx.getInputHandler().setEnabled(false);
+            
+            // subscribe to town object
+            _safesub.subscribe(_bctx.getDObjectManager());
         }
 
         @Override // documentation inherited
@@ -228,6 +266,13 @@ public class TownView extends BWindow
         {
             super.wasRemoved();
 
+            // unsubscribe from town object
+            _safesub.unsubscribe(_bctx.getDObjectManager());
+            if (_townobj != null) {
+                _townobj.removeListener(this);
+                _townobj = null;
+            }
+            
             // unbind our camera (doesn't really do anything)
             if (_vpsprite != null) {
                 _vpsprite.unbindCamera();
@@ -250,8 +295,7 @@ public class TownView extends BWindow
         @Override // documentation inherited
         protected float getFadeInTime ()
         {
-            return _presented.contains(
-                TownView.this._ctx.getUserObject().townId) ? 1f : 3f;
+            return _presented.contains(_bctx.getUserObject().townId) ? 1f : 3f;
         }
 
         @Override // documentation inherited
@@ -259,9 +303,6 @@ public class TownView extends BWindow
         {
             super.fadeInComplete();
 
-            // make sure the population sign is up-to-date
-            updatePopulationSign(51234);
-            
             if (_vpsprite != null &&
                 !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
                 // clear out any hover sprite that was established in the
@@ -381,7 +422,7 @@ public class TownView extends BWindow
         {
             // get a reference to the buffered sign image
             String path = "props/structures/pop_sign_" +
-                TownView.this._ctx.getUserObject().townId + "/sign.png";
+                _bctx.getUserObject().townId + "/sign.png";
             BufferedImage bimg = _ctx.getImageCache().getBufferedImage(path);
             if (bimg == null) {
                 log.warning("Couldn't find population sign image [path=" +
@@ -423,9 +464,12 @@ public class TownView extends BWindow
         protected PieceSprite _hsprite;
         protected ViewpointSprite _vpsprite;
         protected Vector3f _pos = new Vector3f();
+        
+        protected SafeSubscriber _safesub;
+        protected TownObject _townobj;
     }
 
-    protected BangContext _ctx;
+    protected BangContext _bctx;
     protected MessageBundle _msgs;
     protected TownBoardView _bview;
     protected boolean _active;

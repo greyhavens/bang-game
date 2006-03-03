@@ -74,6 +74,7 @@ public class BangClient extends CrowdClient
 
         // fill in the oids of important places
         BangBootstrapData bbd = (BangBootstrapData)data;
+        bbd.townOid = BangServer.townobj.getOid();
         bbd.saloonOid = BangServer.saloonmgr.getPlaceObject().getOid();
         bbd.storeOid = BangServer.storemgr.getPlaceObject().getOid();
         bbd.bankOid = BangServer.bankmgr.getPlaceObject().getOid();

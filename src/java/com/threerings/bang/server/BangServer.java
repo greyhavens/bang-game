@@ -12,12 +12,16 @@ import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
+import com.samskivert.util.Throttle;
 
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.bundle.BundledComponentRepository;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.Name;
 
+import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.ObjectAccessException;
+import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.server.Authenticator;
 
 import com.threerings.crowd.data.BodyObject;
@@ -47,6 +51,7 @@ import com.threerings.bang.store.server.StoreManager;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.TownObject;
 import com.threerings.bang.server.persist.ItemRepository;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.RatingRepository;
@@ -123,7 +128,10 @@ public class BangServer extends CrowdServer
 
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
-
+    
+    /** Contains information about the whole town. */
+    public static TownObject townobj;
+    
     @Override // documentation inherited
     public void init ()
         throws Exception
@@ -193,6 +201,17 @@ public class BangServer extends CrowdServer
         plreg.createPlace(new RanchConfig(), crobs);
         plreg.createPlace(new BarberConfig(), crobs);
 
+        // create the town object
+        omgr.createObject(TownObject.class, new Subscriber() {
+            public void objectAvailable (DObject object) {
+                townobj = (TownObject)object;
+            }
+            public void requestFailed (int oid, ObjectAccessException cause) {
+                log.warning("Failed to create town object! [oid=" + oid +
+                    ", cause=" + cause + "].");
+            }
+        });
+        
         log.info("Bang server v" + DeploymentConfig.getVersion() +
                  " initialized.");
     }
@@ -240,22 +259,24 @@ public class BangServer extends CrowdServer
     /**
      * Called when a player starts their session (or after they choose a handle
      * for players on their first session) to associate the handle with the
-     * player's distributed object.
+     * player's distributed object and update the town's population.
      */
     public static void registerPlayer (PlayerObject player)
     {
         _players.put(player.handle, player);
+        maybeUpdatePopulation();
     }
 
     /**
      * Called when a player ends their session to clear their handle to player
-     * object mapping.
+     * object mapping and update the town's population.
      */
     public static void clearPlayer (PlayerObject player)
     {
         _players.remove(player.handle);
+        maybeUpdatePopulation();
     }
-
+    
     /**
      * Loads a message to the general audit log.
      */
@@ -287,6 +308,18 @@ public class BangServer extends CrowdServer
         return ServerConfig.serverPorts;
     }
 
+    /**
+     * Updates the population stored in the town object if the population
+     * has changed and enough time has elapsed since the last update.
+     */
+    protected static void maybeUpdatePopulation ()
+    {
+        int npop = _players.size();
+        if (npop != townobj.population && !_pthrottle.throttleOp()) {
+            townobj.setPopulation(npop);
+        }
+    }
+    
     public static void main (String[] args)
     {
         // set up the proper logging services
@@ -309,4 +342,6 @@ public class BangServer extends CrowdServer
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server.log");
     protected static AuditLogger _ilog = createAuditLog("item.log");
+    
+    protected static Throttle _pthrottle = new Throttle(1, 1000L);
 }

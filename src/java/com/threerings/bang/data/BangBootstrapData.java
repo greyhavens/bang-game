@@ -10,6 +10,9 @@ import com.threerings.presents.net.BootstrapData;
  */
 public class BangBootstrapData extends BootstrapData
 {
+    /** The oid of the town object. */
+    public int townOid;
+    
     /** The room oid of the Saloon. */
     public int saloonOid;
 
