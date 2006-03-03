@@ -113,36 +113,28 @@ public class PardnerChatView extends BDecoratedWindow
         bottom.add(buttons);
         add(bottom, GroupLayout.FIXED);
 
+        _alert = new ImageIcon(_ctx.loadImage("ui/chat/alert_icon.png"));
+        
         // render the chat bubble backgrounds
         createBubbleBackgrounds();
     }
 
     /**
-     * Displays a tab for talking to the named pardner.  If the chat view isn't
-     * visible, show it (if possible).  If the tab doesn't exist, create it.
-     * If it's not selected, select it.
+     * Displays the chat view, if possible, with a tab for talking to the
+     * named pardner.
      *
-     * @return true if we managed to display the tab, false if we can't show
-     * the chat view at the moment
+     * @return true if we managed to display the view, false if we can't
+     * at the moment
      */
-    public boolean displayTab (Name handle)
+    public boolean display (Name handle)
     {
-        if (!isAdded() &&
-            !_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
+        if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
             return false;
         }
-        PardnerTab tab = _pardners.get(handle);
-        if (tab == null) {
-            _tabs.addTab(handle.toString(),
-                tab = new PardnerTab(handle, _tabs.getTabCount()));
-            _pardners.put(handle, tab);
-        }
-        _tabs.selectTab(tab.idx);
-        if (!isAdded()) {
-            _ctx.getBangClient().displayPopup(this, false);
-            pack(-1, -1);
-            center();
-        }
+        addPardnerTab(handle);
+        _ctx.getBangClient().displayPopup(this, false);
+        pack(-1, -1);
+        center();
         return true;
     }
 
@@ -182,16 +174,24 @@ public class PardnerChatView extends BDecoratedWindow
     {
         if (msg instanceof UserMessage) {
             UserMessage umsg = (UserMessage)msg;
-            if (displayTab(umsg.speaker)) {
-                _pardners.get(umsg.speaker).appendReceived(umsg);
+            if (!isAdded() && !display(umsg.speaker)) {
+                return;
             }
+            PardnerTab tab = _pardners.get(umsg.speaker);
+            if (tab == null) {
+                tab = addPardnerTab(umsg.speaker); 
+            }
+            if (tab != _tabs.getSelectedTab()) {
+                _tabs.getTabButton(tab).setIcon(_alert);
+            }
+            tab.appendReceived(umsg);
 
         } else if (msg instanceof SystemMessage && isAdded()) {
             SystemMessage smsg = (SystemMessage)msg;
             ((PardnerTab)_tabs.getSelectedTab()).appendSystem(smsg);
         }
     }
-
+    
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent ae)
     {
@@ -287,20 +287,27 @@ public class PardnerChatView extends BDecoratedWindow
     }
 
     /**
+     * Creates, adds, and maps a tab for the named pardner.
+     */
+    protected PardnerTab addPardnerTab (Name handle)
+    {
+        PardnerTab tab = new PardnerTab(handle);
+        _tabs.addTab(handle.toString(), tab);
+        _pardners.put(handle, tab);
+        return tab;
+    }
+    
+    /**
      * Handles the display for single pardner.
      */
     protected class PardnerTab extends BScrollPane
     {
-        /** The index of the tab. */
-        public int idx;
-
-        public PardnerTab (Name handle, int idx)
+        public PardnerTab (Name handle)
         {
             super(new BContainer(GroupLayout.makeVert(
                 GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH)));
             _content = (BContainer)getChild();
             _handle = handle;
-            this.idx = idx;
 
             _vport.setStyleClass("pardner_chat_viewport");
             setPreferredSize(new Dimension(400, 400));
@@ -384,8 +391,17 @@ public class PardnerChatView extends BDecoratedWindow
                 _ctx.getBangClient().clearPopup(PardnerChatView.this, false);
                 
             } else {
-                _tabs.removeTab(idx);
+                _tabs.removeTab(this);
+                _pardners.remove(_handle);
             }
+        }
+        
+        protected void wasAdded ()
+        {
+            super.wasAdded();
+            
+            // clear the alert icon, if present
+            _tabs.getTabButton(this).setIcon(null);
         }
         
         protected void scrollToEnd ()
@@ -393,7 +409,7 @@ public class PardnerChatView extends BDecoratedWindow
             _vport.validate();
             getVerticalScrollBar().getModel().setValue(Integer.MAX_VALUE);
         }
-
+        
         protected Name _handle;
         protected BContainer _content;
         protected ChatEntry _last;
@@ -455,7 +471,7 @@ public class PardnerChatView extends BDecoratedWindow
      * in sequence and rest of bubbles in sequence. */
     protected ImageBackground _sfbg, _srbg, _rfbg, _rrbg;
 
-    protected BIcon _micon;
+    protected BIcon _micon, _alert;
     protected int[] _mavatar;
 
     /** The dimensions of the avatars in the chat window. */
