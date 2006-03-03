@@ -317,24 +317,6 @@ public class BangBoardView extends BoardView
         }
         _queuedMoves.clear();
     }
-
-    @Override // documentation inherited
-    public void addSprite (Sprite sprite)
-    {
-        super.addSprite(sprite);
-        if (sprite instanceof MobileSprite) {
-            sprite.addObserver(_bonusClearer);
-        }
-    }
-
-    @Override // documentation inherited
-    public void removeSprite (Sprite sprite)
-    {
-        super.removeSprite(sprite);
-        if (sprite instanceof MobileSprite) {
-            sprite.removeObserver(_bonusClearer);
-        }
-    }
     
     @Override // documentation inherited
     protected void wasAdded ()
@@ -911,19 +893,7 @@ public class BangBoardView extends BoardView
     protected PieceSprite removePieceSprite (int pieceId, String why)
     {
         PieceSprite sprite = _pieces.get(pieceId);
-
-        // bonus sprites are not removed immediately; instead they are
-        // shifted to a secondary table and they will be removed when the
-        // piece that activated the bonus finally comes to rest on the
-        // bonus piece's location
-        if (sprite instanceof BonusSprite) {
-            // and stick it into the pending bonuses table
-            Piece piece = sprite.getPiece();
-            _pendingBonuses.put(new Point(piece.x, piece.y), sprite);
-            _pieces.remove(pieceId);
-            return sprite;
-
-        } else if (sprite instanceof MobileSprite) {
+        if (sprite instanceof MobileSprite) {
             MobileSprite msprite = (MobileSprite)sprite;
             // if this mobile sprite is animating it will have to wait
             // until it's finished before being removed
@@ -1087,24 +1057,6 @@ public class BangBoardView extends BoardView
         }
     };
 
-    /** Clears bonuses from tiles when units finally land on them. */
-    protected PathObserver _bonusClearer = new PathObserver() {
-        public void pathCancelled (Sprite sprite, Path path) {
-            pathCompleted(sprite, path);
-        }
-        public void pathCompleted (Sprite sprite, Path path) {
-            if (sprite instanceof MobileSprite) {
-                Piece p = ((MobileSprite)sprite).getPiece();
-                PieceSprite bsprite =
-                    _pendingBonuses.remove(new Point(p.x, p.y));
-                if (bsprite != null) {
-                    removeSprite(bsprite);
-                    _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED);
-                }
-            }
-        }
-    };
-
     /** Used to remove unit sprites that have completed their death
      * animations. */
     protected MobileSprite.ActionObserver _deadRemover =
@@ -1143,10 +1095,6 @@ public class BangBoardView extends BoardView
 
     /** Tracks coordinate visibility. */
     protected VisibilityState _vstate;
-
-    /** Contains bonus sprites that are pending removal. */
-    protected HashMap<Point,PieceSprite> _pendingBonuses =
-        new HashMap<Point,PieceSprite>();
 
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
