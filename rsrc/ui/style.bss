@@ -441,6 +441,12 @@ dialog_label {
   text-align: center;
 }
 
+dialog_tip {
+  font: "Helvetica" plain 12;
+  color: #4C2602;
+  text-align: center;
+}
+
 //
 // Icon Palette styles
 

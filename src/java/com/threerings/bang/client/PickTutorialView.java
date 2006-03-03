@@ -118,6 +118,8 @@ public class PickTutorialView extends BDecoratedWindow
             }
         }
 
+        add(new BLabel(_msgs.get("m.tut_access_key"), "dialog_tip"));
+
         if (mode != Mode.COMPLETED) {
             add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         } else {
