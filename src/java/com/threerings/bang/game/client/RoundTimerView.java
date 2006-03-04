@@ -110,10 +110,15 @@ public class RoundTimerView extends BWindow
     {
         String name = event.getName();
         if (name.equals(BangObject.STATE)) {
-            if (_bangobj.state == BangObject.IN_PLAY) {
+            switch (_bangobj.state) {
+            case BangObject.IN_PLAY:
+            case BangObject.POST_ROUND:
+            case BangObject.GAME_OVER:
                 setStatus(_bangobj.tick, _bangobj.lastTick, _bangobj.duration);
-            } else {
+                break;
+            default:
                 setStatus(0, 0, 0);
+                break;
             }
 
         } else if (name.equals(BangObject.LAST_TICK)) {
