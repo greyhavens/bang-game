@@ -596,23 +596,26 @@ system_chat_entry {
   font: "Dom Casual" plain 18;
   color: #000000;
   text-align: center;
+  vertical-align: center;
   background: solid #00FF0080;
   border: 1 solid #000000;
-  padding: 14;
+  padding: 14 14 14 14;
 }
 
 sent_chat_bubble {
   font: "Dom Casual" plain 18;
   color: #003b27;
   text-align: center;
-  padding: 0 14 0 22;
+  vertical-align: center;
+  padding: 14 14 14 22;
 }
 
 received_chat_bubble {
   font: "Dom Casual" plain 18;
   color: #09103a;
   text-align: center;
-  padding: 0 22 0 14;
+  vertical-align: center;
+  padding: 14 22 14 14;
 }
 
 send_button {

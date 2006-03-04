@@ -26,6 +26,7 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTabbedPane;
+import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.background.BBackground;
 import com.jmex.bui.background.ImageBackground;
@@ -338,7 +339,7 @@ public class PardnerChatView extends BDecoratedWindow
                 _content.add(_last = new ChatEntry(_micon, true));
             }
             _last.addMessage(msg);
-            scrollToEnd();
+            _scrollToEnd = true;
         }
 
         /**
@@ -359,7 +360,7 @@ public class PardnerChatView extends BDecoratedWindow
                 _content.add(_last = new ChatEntry(_picon, false));
             }
             _last.addMessage(msg.message);
-            scrollToEnd();
+            _scrollToEnd = true;
         }
 
         /**
@@ -368,9 +369,10 @@ public class PardnerChatView extends BDecoratedWindow
         public void appendSystem (SystemMessage msg)
         {
             _last = null;
-            _content.add(new BLabel(_ctx.xlate(msg.bundle, msg.message),
-                "system_chat_entry"));
-            scrollToEnd();
+            BTextArea area = new BTextArea(msg.message);
+            area.setStyleClass("system_chat_entry");
+            _content.add(area);
+            _scrollToEnd = true;
         }
 
         /**
@@ -396,6 +398,18 @@ public class PardnerChatView extends BDecoratedWindow
             }
         }
         
+        @Override // documentation inherited
+        public void validate ()
+        {
+            // if flagged, scroll to the end when everything is valid
+            super.validate();
+            if (_scrollToEnd) {
+                getVerticalScrollBar().getModel().setValue(Integer.MAX_VALUE);
+                _scrollToEnd = false;
+            }
+        }
+        
+        @Override // documentation inherited
         protected void wasAdded ()
         {
             super.wasAdded();
@@ -403,17 +417,12 @@ public class PardnerChatView extends BDecoratedWindow
             // clear the alert icon, if present
             _tabs.getTabButton(this).setIcon(null);
         }
-        
-        protected void scrollToEnd ()
-        {
-            _vport.validate();
-            getVerticalScrollBar().getModel().setValue(Integer.MAX_VALUE);
-        }
-        
+
         protected Name _handle;
         protected BContainer _content;
         protected ChatEntry _last;
-
+        protected boolean _scrollToEnd;
+        
         protected BIcon _picon;
         protected int[] _pavatar;
     }
@@ -435,7 +444,7 @@ public class PardnerChatView extends BDecoratedWindow
             setLayoutManager(layout);
 
             layout = GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                GroupLayout.NONE);
+                GroupLayout.CONSTRAIN);
             layout.setOffAxisJustification(sent ?
                 GroupLayout.LEFT : GroupLayout.RIGHT);
             add(_mcont = new BContainer(layout));
@@ -447,10 +456,11 @@ public class PardnerChatView extends BDecoratedWindow
 
         public void addMessage (String msg)
         {
-            BLabel label = new BLabel(msg,
-                sent ? "sent_chat_bubble" : "received_chat_bubble");
-            _mcont.add(label);
-            label.setBackground(BComponent.DEFAULT,
+            BTextArea area = new BTextArea(msg);
+            area.setStyleClass(sent ?
+                "sent_chat_bubble" : "received_chat_bubble");
+            _mcont.add(area);
+            area.setBackground(BComponent.DEFAULT,
                 _mcont.getComponentCount() == 1 ?
                     (sent ? _sfbg : _rfbg) : (sent ? _srbg : _rrbg));
         }
