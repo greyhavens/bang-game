@@ -938,6 +938,15 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
+    protected void pieceRemoved (Piece piece, short tick)
+    {
+        super.pieceRemoved(piece, tick);
+
+        // clear out our pathfinding shadow for this piece
+        _bangobj.board.clearShadow(piece);
+    }
+
+    @Override // documentation inherited
     protected PieceSprite removePieceSprite (int pieceId, String why)
     {
         PieceSprite sprite = _pieces.get(pieceId);
