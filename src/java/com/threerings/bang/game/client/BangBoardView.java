@@ -21,6 +21,7 @@ import com.jme.renderer.Renderer;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 
+import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
@@ -210,9 +211,33 @@ public class BangBoardView extends BoardView
     {
         PieceSprite psprite;
         return !(piece.owner != _pidx || !piece.isAlive() ||
-                 pieceUpdatePending(piece.pieceId) ||
-                 (psprite = getPieceSprite(piece)) == null ||
-                 psprite.isMoving());
+            _pendmap.get(piece.pieceId) > 0 ||
+            (psprite = getPieceSprite(piece)) == null || psprite.isMoving());
+    }
+
+    /**
+     * Notes that the specified piece will be moving when its action is up for
+     * exection.
+     */
+    public void notePendingMove (int pieceId)
+    {
+//         Piece p = (Piece)_bangobj.pieces.get(pieceId);
+//         if (p != null && p.owner == _pidx) {
+//             log.info("Noting pending " + p.info());
+//         }
+        _pendmap.increment(pieceId, 1);
+    }
+
+    /**
+     * Notes that the specified piece no longer has a queued move action.
+     */
+    public void clearPendingMove (int pieceId)
+    {
+//         Piece p = (Piece)_bangobj.pieces.get(pieceId);
+//         if (p != null && p.owner == _pidx) {
+//             log.info("Clearing pending " + p.info());
+//         }
+        _pendmap.increment(pieceId, -1);
     }
 
     // documentation inherited from interface MouseListener
@@ -338,6 +363,9 @@ public class BangBoardView extends BoardView
             _bangobj.state != BangObject.SELECT_PHASE) {
             return;
         }
+
+        // we're creating the game-intro marquee, so slap the players involved
+        // in the game up on the screen as well
         _pmarquees = new Quad[_bangobj.players.length];
         for (int ii = 0; ii < _pmarquees.length; ii++) {
             BangOccupantInfo boi = (BangOccupantInfo)_bangobj.getOccupantInfo(
@@ -352,6 +380,8 @@ public class BangBoardView extends BoardView
             _pmarquees[ii].setZOrder(-2);
             _ctx.getInterface().attachChild(_pmarquees[ii]);
         }
+        // TODO: show their names, figure out why these are squished on baltic
+        // (probably has to do with non-square image rendering)
     }
     
     @Override // documentation inherited
@@ -442,14 +472,16 @@ public class BangBoardView extends BoardView
     /** Called by the {@link EffectHandler} when a piece has moved. */
     protected void pieceDidMove (Piece piece)
     {
-        // if this was our selection, clear it
+        // if this was our selection, refresh it
         if (_selection == piece) {
             clearSelection();
+            selectUnit((Unit)piece, false);
+        } else {
+            // otherwise, if this piece was inside our attack set or within
+            // range to be inside our move set, recompute the selection as it
+            // may have changed
+            checkForSelectionInfluence(piece);
         }
-
-        // if this piece was inside our attack set or within range to be inside
-        // our move set, recompute the selection as it may have changed
-        checkForSelectionInfluence(piece);
 
         // make sure all of our queued moves are still valid
         if (_queuedMoves.size() > 0) {
@@ -494,6 +526,12 @@ public class BangBoardView extends BoardView
     /** Called by the {@link EffectHandler} when a piece was killed. */
     protected void pieceWasKilled (int pieceId)
     {
+        // sanity check
+        if (_pendmap.get(pieceId) > 0) {
+            log.warning("Piece with pending move killed [id=" + pieceId + "].");
+            _pendmap.put(pieceId, 0);
+        }
+
         // clear out any queued move for this piece
         clearQueuedMove(pieceId);
 
@@ -730,6 +768,8 @@ public class BangBoardView extends BoardView
             return;
         }
         _selection = piece;
+
+//         log.info("Selecting " + _selection.info());
 
         // select the sprite and center it in the view
         PieceSprite sprite = getPieceSprite(_selection);
@@ -1041,9 +1081,12 @@ public class BangBoardView extends BoardView
     protected Card _card;
 
     protected Quad[] _pmarquees;
-
     protected SwingPath _tpath;
-        
+
+    /** Tracks pieces that will be moving as soon as the board finishes
+     * animating previous actions. */
+    protected IntIntMap _pendmap = new IntIntMap();
+
     protected HashMap<Integer,QueuedMove> _queuedMoves =
         new HashMap<Integer,QueuedMove>();
 

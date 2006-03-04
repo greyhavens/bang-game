@@ -20,14 +20,17 @@ import com.threerings.bang.game.client.effect.IconViz;
 import com.threerings.bang.game.client.effect.PlaySoundViz;
 import com.threerings.bang.game.client.effect.RepairViz;
 import com.threerings.bang.game.client.effect.WreckViz;
-import com.threerings.bang.game.data.effect.AreaDamageEffect;
-import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.effect.RepairEffect;
-import com.threerings.bang.game.data.effect.ShotEffect;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
+
+import com.threerings.bang.game.data.effect.AreaDamageEffect;
+import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.MoveEffect;
+import com.threerings.bang.game.data.effect.RepairEffect;
+import com.threerings.bang.game.data.effect.ShotEffect;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -51,6 +54,13 @@ public class EffectHandler extends BoardView.BoardAction
         _sounds = sounds;
         _effect = effect;
         pieceIds = effect.getAffectedPieces();
+
+        // if this is a move effect, note the pending move
+        if (_effect instanceof MoveEffect) {
+            for (int ii = 0; ii < pieceIds.length; ii++) {
+                _view.notePendingMove(pieceIds[ii]);
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -153,18 +163,28 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void pieceMoved (Piece piece)
     {
+        // clear the pending moves we set earlier
+        if (_effect instanceof MoveEffect) {
+            for (int ii = 0; ii < pieceIds.length; ii++) {
+                _view.clearPendingMove(pieceIds[ii]);
+            }
+        }
+
         PieceSprite sprite = _view.getPieceSprite(piece);
         if (sprite == null) {
             return;
         }
 
+        // update the sprite (TODO: is this needed?)
         sprite.updated(piece, _tick);
-        if (!sprite.updatePosition(_bangobj.board)) {
-            return;
-        }
 
         // let the board view know that this piece is on the move
         _view.pieceDidMove(piece);
+
+        // and do the actual move
+        if (!sprite.updatePosition(_bangobj.board)) {
+            return;
+        }
 
         final int penderId = ++_nextPenderId;
         _penders.add(penderId);
@@ -183,8 +203,7 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void pieceKilled (Piece piece)
     {
-        // clear out any queued move
-        _view.clearQueuedMove(piece.pieceId);
+        _view.pieceWasKilled(piece.pieceId);
     }
 
     // documentation inherited from interface Effect.Observer

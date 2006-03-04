@@ -56,7 +56,6 @@ import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
 
 import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ObserverList;
 
 import com.threerings.jme.effect.FadeInOutEffect;
@@ -623,7 +622,6 @@ public class BoardView extends BComponent
      */
     public void queuePieceUpdate (Piece opiece, Piece npiece)
     {
-        _pendmap.increment(npiece.pieceId, 1);
         executeAction(new PieceUpdatedAction(opiece, npiece, _bangobj.tick));
     }
 
@@ -632,17 +630,7 @@ public class BoardView extends BComponent
      */
     public void queuePieceRemoval (Piece piece)
     {
-        _pendmap.increment(piece.pieceId, 1);
         executeAction(new PieceRemovedAction(piece, _bangobj.tick));
-    }
-
-    /**
-     * Returns true if the specified piece has an update pending, false
-     * otherwise.
-     */
-    public boolean pieceUpdatePending (int pieceId)
-    {
-        return _pendmap.get(pieceId) > 0;
     }
 
     // documentation inherited from interface MouseMotionListener
@@ -1272,7 +1260,6 @@ public class BoardView extends BComponent
         }
 
         public boolean execute () {
-            _pendmap.increment(npiece.pieceId, -11);
             pieceUpdated(opiece, npiece, tick);
             return false;
         }
@@ -1303,7 +1290,6 @@ public class BoardView extends BComponent
         }
 
         public boolean execute () {
-            _pendmap.increment(piece.pieceId, -1);
             pieceRemoved(piece, tick);
             return false;
         }
@@ -1365,9 +1351,6 @@ public class BoardView extends BComponent
     protected ArrayList<BoardAction> _ractions = new ArrayList<BoardAction>();
     protected ArrayList<BoardAction> _pactions = new ArrayList<BoardAction>();
     protected ArrayIntSet _punits = new ArrayIntSet();
-
-    /** Used to track pending piece updates. */
-    protected IntIntMap _pendmap = new IntIntMap();
 
     /** Used to texture a quad that "targets" a tile. */
     protected TextureState _tgtstate;
