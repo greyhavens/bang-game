@@ -31,7 +31,7 @@ public class BangView extends BWindow
 {
     /** Special pre-selection phase phase. */
     public static final int PRE_SELECT_PHASE = 0;
-    
+
     /** Displays our board. */
     public BangBoardView view;
 
@@ -98,7 +98,7 @@ public class BangView extends BWindow
         case PRE_SELECT_PHASE:
             view.doPreSelectBoardTour();
             break;
-            
+
         case BangObject.SELECT_PHASE:
             setOverlay(new SelectionView(_ctx, config, _bangobj, pidx));
             break;
@@ -108,6 +108,9 @@ public class BangView extends BWindow
             break;
 
         case BangObject.IN_PLAY:
+            if (!config.tutorial) {
+                showRoundTimer();
+            }
             clearOverlay();
             view.startRound();
             break;
@@ -202,11 +205,10 @@ public class BangView extends BWindow
     {
         super.wasAdded();
 
-        // we don't show our various views in the tutorials until asked
+        // go ahead and add the chat view now, other views will be added after
+        // we do the board tour and unit selection
         BangConfig config = (BangConfig)_ctrl.getPlaceConfig();
         if (!config.tutorial) {
-            showPlayerStatus();
-            showRoundTimer();
             showChat();
         }
 
@@ -226,7 +228,7 @@ public class BangView extends BWindow
     public void wasRemoved ()
     {
         super.wasRemoved();
-        
+
         // make sure that we clean up per-round state
         if (_prepared) {
             endRound();

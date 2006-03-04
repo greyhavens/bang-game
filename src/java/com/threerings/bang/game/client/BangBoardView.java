@@ -14,10 +14,12 @@ import java.util.Map;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.scene.Node;
-import com.jme.scene.shape.Quad;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Node;
+import com.jme.scene.shape.Quad;
+
+import com.jmex.bui.BImage;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 
@@ -130,12 +132,13 @@ public class BangBoardView extends BoardView
             });
             return;
         }
+
         CameraHandler camhand = _ctx.getCameraHandler();
         camhand.setLimitsEnabled(false);
         camhand.tiltCamera(-FastMath.PI * 0.375f);
-        camhand.moveCamera(_tpath = new SwingPath(camhand,
-            camhand.getGroundPoint(), camhand.getGroundNormal(),
-            FastMath.TWO_PI, FastMath.TWO_PI / BOARD_TOUR_DURATION,
+        _tpath = new SwingPath(camhand, camhand.getGroundPoint(),
+            camhand.getGroundNormal(), FastMath.TWO_PI,
+            FastMath.TWO_PI / BOARD_TOUR_DURATION,
             camhand.getCamera().getLeft(), FastMath.PI * 0.375f, 0f) {
             public boolean tick (float secondsSince) {
                 // fade the marquee out when there's a second or less remaining
@@ -148,7 +151,8 @@ public class BangBoardView extends BoardView
                 return ret;
             }
             protected boolean _clearing;
-        });
+        };
+        camhand.moveCamera(_tpath);
         _ctx.getInputHandler().setEnabled(false);
         camhand.addCameraObserver(new CameraPath.Observer() {
             public boolean pathCompleted (CameraPath path) {
@@ -373,8 +377,10 @@ public class BangBoardView extends BoardView
             if (boi == null) {
                 continue;
             }
-            _pmarquees[ii] = AvatarView.getImage(_ctx, boi.avatar,
+            BImage image = AvatarView.getImage(_ctx, boi.avatar,
                 AVATAR_SIZE.width, AVATAR_SIZE.height);
+            image.setTextureCoords(0, 0, AVATAR_SIZE.width, AVATAR_SIZE.height);
+            _pmarquees[ii] = image;
             _pmarquees[ii].setLocalTranslation(AVATAR_LOCATIONS[ii]);
             _pmarquees[ii].setRenderQueueMode(Renderer.QUEUE_ORTHO);
             _pmarquees[ii].setZOrder(-2);

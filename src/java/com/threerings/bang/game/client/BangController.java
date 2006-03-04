@@ -434,6 +434,10 @@ public class BangController extends GameController
      */
     protected void preSelectBoardTourComplete ()
     {
+        // display the player status displays
+        if (!_config.tutorial) {
+            _view.showPlayerStatus();
+        }
         // display the selection dialog
         _view.setPhase(BangObject.SELECT_PHASE);
     }
