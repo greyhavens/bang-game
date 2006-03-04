@@ -23,6 +23,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.TrainEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
@@ -168,22 +169,20 @@ public abstract class Scenario
                 continue;
             }
 
-            // reset him, position him, and add him back in (if necessary)
+            // reset the units vital statistics
             unit.damage = 0;
             unit.influence = null;
             unit.setRespawnTick((short)0);
 
+            // if the unit is still in play for some reason, remove it first
             if (bangobj.pieces.containsKey(unit.getKey())) {
-                // clear the shadow at its old location
                 bangobj.board.clearShadow(unit);
-                unit.position(bspot.x, bspot.y);
-                bangobj.updatePieces(unit);
-            } else {
-                unit.position(bspot.x, bspot.y);
-                bangobj.addToPieces(unit);
+                bangobj.removeFromPieces(unit.getKey());
             }
 
-            // shadow the unit at its new location
+            // then position it and add it back at its new location
+            unit.position(bspot.x, bspot.y);
+            bangobj.addToPieces(unit);
             bangobj.board.shadowPiece(unit);
         }
 
@@ -323,9 +322,9 @@ public abstract class Scenario
     {
         // see if we've been flagged to disappear on this tick
         if (train.nextX == Train.UNSET) {
-            bangobj.removeFromPieces(train.getKey());
             bangobj.board.clearShadow(train);
-            train.positionNext(Train.UNSET, Train.UNSET); // suck the rest in
+            bangobj.removeFromPieces(train.getKey());
+            train.position(Train.UNSET, Train.UNSET); // suck the rest in
             return true;
         }
 
@@ -464,10 +463,11 @@ public abstract class Scenario
      */
     protected void moveTrain (BangObject bangobj, Train train, int nx, int ny)
     {
-        bangobj.board.clearShadow(train);
-        train.positionNext(nx, ny);
-        bangobj.board.shadowPiece(train);
-        bangobj.updatePieces(train);
+        MoveEffect effect = new MoveEffect();
+        effect.init(train);
+        effect.nx = (short)nx;
+        effect.ny = (short)ny;
+        _bangmgr.deployEffect(-1, effect);
     }
 
     /**

@@ -454,45 +454,19 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    protected boolean pieceUpdated (
-        BoardAction action, Piece opiece, Piece npiece, short tick)
+    protected void pieceRemoved (Piece piece, short tick)
     {
-        boolean wait = super.pieceUpdated(action, opiece, npiece, tick);
-
-//         String oinfo = (opiece == null) ? "<none>" : opiece.info();
-//         String ninfo = (npiece == null) ? "<none>" : npiece.info();
-//         log.info("Piece updated " + oinfo + " -> " + ninfo);
-
-        // TODO: this will go away when pieces no longer move by updating (the
-        // train still does)
-        if (opiece != null) {
-            // update the shadow we use to do path finding and whatnot
-            _bangobj.board.clearShadow(opiece);
-            if (npiece != null) {
-                _bangobj.board.shadowPiece(npiece);
-            }
-        }
+        super.pieceRemoved(piece, tick);
 
         // if this piece was selected and it got removed, clear the selection
-        if (opiece != null && npiece == null && _selection != null &&
-            _selection.pieceId == opiece.pieceId) {
+        if (_selection != null && _selection.pieceId == piece.pieceId) {
             clearSelection();
         }
-
-        // if this piece was inside our attack set or within range to be inside
-        // our move set, recompute the selection as it may have changed
-        if (!checkForSelectionInfluence(opiece)) {
-            checkForSelectionInfluence(npiece);
-        }
-
-        return wait;
     }
 
-    @Override // documentation inherited
+    /** Called by the {@link EffectHandler} when a piece has moved. */
     protected void pieceDidMove (Piece piece)
     {
-        super.pieceDidMove(piece);
-
         // if this was our selection, clear it
         if (_selection == piece) {
             clearSelection();
@@ -503,6 +477,10 @@ public class BangBoardView extends BoardView
             adjustBoardVisibility();
             adjustEnemyVisibility();
         }
+
+        // if this piece was inside our attack set or within range to be inside
+        // our move set, recompute the selection as it may have changed
+        checkForSelectionInfluence(piece);
 
         // make sure all of our queued moves are still valid
         if (_queuedMoves.size() > 0) {
@@ -985,11 +963,14 @@ public class BangBoardView extends BoardView
             }
         }
 
-        // update all of our units
+        // update all of our sprites
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
             if (piece instanceof Unit) {
-                queuePieceUpdate(null, piece);
+                UnitSprite usprite = getUnitSprite(piece);
+                if (usprite != null) {
+                    usprite.updated(piece, tick);
+                }
             }
         }
     }

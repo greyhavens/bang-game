@@ -623,9 +623,17 @@ public class BoardView extends BComponent
      */
     public void queuePieceUpdate (Piece opiece, Piece npiece)
     {
-        int pieceId = (opiece == null) ? npiece.pieceId : opiece.pieceId;
-        _pendmap.increment(pieceId, 1);
+        _pendmap.increment(npiece.pieceId, 1);
         executeAction(new PieceUpdatedAction(opiece, npiece, _bangobj.tick));
+    }
+
+    /**
+     * Called when a piece is removed from the game object.
+     */
+    public void queuePieceRemoval (Piece piece)
+    {
+        _pendmap.increment(piece.pieceId, 1);
+        executeAction(new PieceRemovedAction(piece, _bangobj.tick));
     }
 
     /**
@@ -971,59 +979,39 @@ public class BoardView extends BComponent
      * board actions (see {@link #executeAction}), waiting for animations and
      * effects to complete in between.
      */
-    protected boolean pieceUpdated (
-        final BoardAction action, Piece opiece, Piece npiece, short tick)
+    protected void pieceUpdated (Piece opiece, Piece npiece, short tick)
     {
-        // note that we've processed this pending update
-        int pieceId = (opiece == null) ? npiece.pieceId : opiece.pieceId;
-        _pendmap.increment(pieceId, -1);
-
-        // if we have an old piece but no new piece, the piece must have been
-        // removed, so remove its sprite now
-        if (opiece != null && npiece == null) {
-            removePieceSprite(opiece.pieceId, "pieceUpdated(opiece,null)");
-            // nothing else to do here
-            return false;
-        }
-
         PieceSprite sprite;
-        if (npiece == null || (sprite = getPieceSprite(npiece)) == null) {
-            log.info("Not updating missing piece [opiece=" + opiece +
-                     ", npiece=" + npiece + ", tick=" + tick + "].");
-            return false;
+        if ((sprite = getPieceSprite(npiece)) == null) {
+            log.info("Not updating, missing piece sprite [opiece=" + opiece +
+                ", npiece=" + npiece + ", tick=" + tick + "].");
+            return;
         }
 
-        // first update the sprite with its new piece
+        // update the sprite with its new piece
         sprite.updated(npiece, tick);
 
-        // then move it...
-        if (!sprite.updatePosition(_bangobj.board)) {
-            return false;
+        // if the piece has moved (which should only happen in the editor,
+        // never in game), then go ahead and move it
+        if (opiece.x != npiece.x || opiece.y != npiece.y ||
+            opiece.orientation != npiece.orientation) {
+            // it should finish immediately because we're in the editor
+            if (sprite.updatePosition(_bangobj.board)) {
+                log.warning("Piece moved along path after update " +
+                    "[piece=" + npiece + "]!");
+            }
         }
-
-        // ...and wait for it to finish moving, then call actionCompleted()
-        sprite.addObserver(new PathObserver() {
-            public void pathCancelled (Sprite sprite, Path path) {
-                sprite.removeObserver(this);
-                actionCompleted(action);
-            }
-            public void pathCompleted (Sprite sprite, Path path) {
-                sprite.removeObserver(this);
-                actionCompleted(action);
-            }
-        });
-
-        // let derived classes know that this piece is on the move
-        pieceDidMove(npiece);
-
-        return true;
     }
 
     /**
-     * Called when a piece starts moving.
+     * Called when a piece removal is actually being effected. Removals are
+     * first queued via {@link #queuePieceRemoval} and then executed after
+     * other previously queued board actions are completed.
      */
-    protected void pieceDidMove (Piece piece)
+    protected void pieceRemoved (Piece piece, short tick)
     {
+        // TODO: queue up a fade out action like we do when a piece dies?
+        removePieceSprite(piece.pieceId, "pieceRemoved(" + piece.info() + ")");
     }
 
     /**
@@ -1284,7 +1272,9 @@ public class BoardView extends BComponent
         }
 
         public boolean execute () {
-            return pieceUpdated(this, opiece, npiece, tick);
+            _pendmap.increment(npiece.pieceId, -11);
+            pieceUpdated(opiece, npiece, tick);
+            return false;
         }
 
         public String toString () {
@@ -1296,6 +1286,30 @@ public class BoardView extends BComponent
                 strval += "->" + npiece.info();
             }
             return strval;
+        }
+    }
+
+    /** Used to queue up piece removals so that each can execute, trigger
+     * animations and run to completion before the next one is run. */
+    protected class PieceRemovedAction extends BoardAction
+    {
+        public Piece piece;
+        public short tick;
+
+        public PieceRemovedAction (Piece piece, short tick) {
+            this.piece = piece;
+            this.tick = tick;
+            this.pieceIds = new int[] { piece.pieceId };
+        }
+
+        public boolean execute () {
+            _pendmap.increment(piece.pieceId, -1);
+            pieceRemoved(piece, tick);
+            return false;
+        }
+
+        public String toString () {
+            return super.toString() + ":" + piece.info();
         }
     }
 
@@ -1318,7 +1332,7 @@ public class BoardView extends BComponent
 
         public void entryRemoved (EntryRemovedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
-                queuePieceUpdate((Piece)event.getOldEntry(), null);
+                queuePieceRemoval((Piece)event.getOldEntry());
             }
         }
     };
