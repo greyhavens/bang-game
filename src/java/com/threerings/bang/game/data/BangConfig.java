@@ -33,9 +33,6 @@ public class BangConfig extends GameConfig
     /** Used when testing with a specific board. */
     public byte[] bdata;
 
-    /** Whether or not fog of war is activated. */
-    public boolean fog = false;
-
     /** Returns the desired number of rounds. */
     public int getRounds ()
     {

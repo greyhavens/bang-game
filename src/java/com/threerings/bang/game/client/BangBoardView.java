@@ -64,7 +64,6 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
-import com.threerings.bang.game.util.VisibilityState;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -270,13 +269,6 @@ public class BangBoardView extends BoardView
 
         _pidx = pidx;
         _bangobj.addListener(_ticker);
-
-        // set up the starting visibility if we're using it
-        if (cfg.fog) {
-            _vstate = new VisibilityState(_bbounds.width, _bbounds.height);
-            adjustBoardVisibility();
-            adjustEnemyVisibility();
-        }
     }
 
     /**
@@ -304,12 +296,6 @@ public class BangBoardView extends BoardView
 
         // remove our event listener
         _bangobj.removeListener(_ticker);
-
-        // allow everything to be visible
-        if (_vstate != null) {
-            _vstate.reveal();
-            adjustEnemyVisibility();
-        }
 
         // clear out queued moves
         for (QueuedMove move : _queuedMoves.values()) {
@@ -453,29 +439,12 @@ public class BangBoardView extends BoardView
         checkForSelectionInfluence(piece);
     }
 
-    @Override // documentation inherited
-    protected void pieceRemoved (Piece piece, short tick)
-    {
-        super.pieceRemoved(piece, tick);
-
-        // if this piece was selected and it got removed, clear the selection
-        if (_selection != null && _selection.pieceId == piece.pieceId) {
-            clearSelection();
-        }
-    }
-
     /** Called by the {@link EffectHandler} when a piece has moved. */
     protected void pieceDidMove (Piece piece)
     {
         // if this was our selection, clear it
         if (_selection == piece) {
             clearSelection();
-        }
-
-        // update board and enemy visibility
-        if (_vstate != null) {
-            adjustBoardVisibility();
-            adjustEnemyVisibility();
         }
 
         // if this piece was inside our attack set or within range to be inside
@@ -519,6 +488,18 @@ public class BangBoardView extends BoardView
                 move.clear();
                 iter.remove();
             }
+        }
+    }
+
+    /** Called by the {@link EffectHandler} when a piece was killed. */
+    protected void pieceWasKilled (int pieceId)
+    {
+        // clear out any queued move for this piece
+        clearQueuedMove(pieceId);
+
+        // if this piece was selected, clear it
+        if (_selection != null && _selection.pieceId == pieceId) {
+            clearSelection();
         }
     }
 
@@ -981,63 +962,6 @@ public class BangBoardView extends BoardView
         executeAction(handler);
     }
 
-    /** Adjusts the visibility settings for the tiles of the board. */
-    protected void adjustBoardVisibility ()
-    {
-        // if we're out of the game, just reveal everything
-        if (!_bangobj.hasLiveUnits(_pidx)) {
-            _vstate.reveal();
-            return;
-        }
-
-        // swap our visibility state to the fresh set
-        _vstate.swap();
-
-        // update the board visibility based on our piece's new position
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece piece = (Piece)iter.next();
-            if (piece.owner == -1 || (_pidx != -1 && _pidx != piece.owner)) {
-                continue; // skip non-player pieces in this pass
-            }
-
-            int dist = piece.getSightDistance(), dist2 = dist * dist;
-            Rectangle rect = new Rectangle(
-                piece.x - dist, piece.y - dist, 2*dist+1, 2*dist+1);
-            rect = rect.intersection(
-                new Rectangle(0, 0, _board.getWidth(), _board.getHeight()));
-            for (int yy = rect.y, ly = yy + rect.height; yy < ly; yy++) {
-                for (int xx = rect.x, lx = xx + rect.width; xx < lx; xx++) {
-                    int tdist = MathUtil.distanceSq(xx, yy, piece.x, piece.y);
-                    if (tdist < dist2) {
-                        _vstate.setVisible(xx, yy);
-                    }
-                }
-            }
-        }
-    }
-
-    /** Makes enemy pieces visible or invisible based on _vstate. */
-    protected void adjustEnemyVisibility ()
-    {
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece piece = (Piece)iter.next();
-            if (piece.owner == -1 || (_pidx == -1 || _pidx == piece.owner)) {
-                continue; // skip unowned and player pieces in this pass
-            }
-
-            PieceSprite sprite = _pieces.get(piece.pieceId);
-            if (sprite != null) {
-                boolean viz = _vstate.getVisible(piece.x, piece.y);
-                if (viz && !isManaged(sprite)) {
-                    sprite.updated(piece, _bangobj.tick);
-                    addSprite(sprite);
-                } else if (!viz && isManaged(sprite)) {
-                    removeSprite(sprite);
-                }
-            }
-        }
-    }
-
     protected class QueuedMove
     {
         public int unitId, mx, my, targetId;
@@ -1122,9 +1046,6 @@ public class BangBoardView extends BoardView
         
     protected HashMap<Integer,QueuedMove> _queuedMoves =
         new HashMap<Integer,QueuedMove>();
-
-    /** Tracks coordinate visibility. */
-    protected VisibilityState _vstate;
 
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
