@@ -775,27 +775,23 @@ public class BangBoardView extends BoardView
 
     protected boolean checkForSelectionInfluence (Piece piece)
     {
-        if (_selection == null) {
-            return false;
-        }
-
-        Piece sel = _selection;
-        if (piece == null ||
+        if (_selection == null ||
             (!_attackSet.contains(piece.x, piece.y) &&
-             sel.getDistance(piece) > sel.getMoveDistance())) {
+                _selection.getDistance(piece) > _selection.getMoveDistance())) {
             return false;
         }
 
         // refresh our selection
         int[] oaction = _action;
+        Unit oselection = (Unit)_selection;
         clearSelection();
-        selectUnit((Unit)sel, false);
+        selectUnit(oselection, false);
 
         // if we had already selected a movement, reconfigure that (it might no
         // longer be valid but handleClickToMove will ignore us in that case
         if (oaction != null) {
-            log.info("Reissuing click to move +" +oaction[1] +
-                     "+" + oaction[2]);
+            log.info("Reissuing click to move +" + oaction[1] +
+                "+" + oaction[2]);
             handleClickToMove(oaction[1], oaction[2]);
         }
 
