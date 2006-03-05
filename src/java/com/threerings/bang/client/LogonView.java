@@ -38,6 +38,10 @@ import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
 
+import java.io.IOException;
+
+import java.net.ConnectException;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -179,6 +183,23 @@ public class LogonView extends BWindow
                     msg = "m.version_mismatch_auto";
                 }
                 msg = _msgs.xlate(msg);
+
+            } else if (cause instanceof ConnectException) {
+                msg = _msgs.xlate("m.failed_to_connect");
+
+            } else if (cause instanceof IOException) {
+                String cmsg = cause.getMessage();
+                // jiggery pokery to detect a problem where Windows Connection
+                // Sharing will allow a connection to complete and then
+                // disconnect it after the first normal packet is sent
+                if (cmsg != null && cmsg.indexOf("forcibly closed") != -1) {
+                    msg = "m.failed_to_connect";
+                } else {
+                    msg = "m.network_error";
+                }
+
+            } else {
+                msg = "m.network_error";
             }
             _status.setStatus(msg, true);
         }
