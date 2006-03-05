@@ -11,8 +11,6 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.event.TextEvent;
-import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -20,6 +18,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.bang.client.MoneyLabel;
+import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
@@ -54,17 +53,18 @@ public class RecruitDialog extends BDecoratedWindow
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         row.add(new BLabel(_msgs.get("m.rd_name")), GroupLayout.FIXED);
         row.add(_name = new BTextField());
-        _name.addListener(new TextListener() {
-            public void textChanged (TextEvent event) {
-                if (_name.getText().length() > BigShotItem.MAX_NAME_LENGTH) {
+
+        new EnablingValidator(_name, _recruit) {
+            protected boolean checkEnabled (String text) {
+                if (text.length() > BigShotItem.MAX_NAME_LENGTH) {
                     _status.setText(_msgs.get("m.name_to_long"));
-                    _recruit.setEnabled(false);
+                    return false;
                 } else {
                     _status.setText("");
-                    _recruit.setEnabled(_name.getText().length() > 0);
+                    return super.checkEnabled(text);
                 }
             }
-        });
+        };
         cont.add(row, GroupLayout.FIXED);
 
         cont.add(_status = new StatusLabel(ctx), GroupLayout.FIXED);

@@ -78,6 +78,14 @@ public class DeploymentConfig
         return getURL("new_account_url");
     }
 
+    /**
+     * Returns the URL for the server status page.
+     */
+    public static URL getServerStatusURL ()
+    {
+        return getURL("server_status_url");
+    }
+
     /** Helper function for getting URL properties. */
     protected static URL getURL (String key)
     {

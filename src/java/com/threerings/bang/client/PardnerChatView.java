@@ -32,8 +32,6 @@ import com.jmex.bui.background.BBackground;
 import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.event.TextEvent;
-import com.jmex.bui.event.TextListener;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
@@ -43,7 +41,6 @@ import com.jmex.bui.util.Insets;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.util.Name;
 
@@ -56,6 +53,7 @@ import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 
+import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
@@ -67,7 +65,7 @@ import com.threerings.bang.util.BangContext;
  * next to the text.
  */
 public class PardnerChatView extends BDecoratedWindow
-    implements ActionListener, TextListener, ChatDisplay, BangCodes
+    implements ActionListener, ChatDisplay, BangCodes
 {
     public PardnerChatView (BangContext ctx)
     {
@@ -102,7 +100,6 @@ public class PardnerChatView extends BDecoratedWindow
         tcont.add(_send = new BButton(new ImageIcon(
             _ctx.loadImage("ui/chat/bubble_icon.png")), this, "send"),
             GroupLayout.FIXED);
-        _send.setEnabled(false);
         bottom.add(tcont);
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         buttons.add(_mute = new BButton(ctx.xlate(BANG_MSGS, "m.chat_mute"),
@@ -113,6 +110,9 @@ public class PardnerChatView extends BDecoratedWindow
             "m.status_resume"), this, "resume"));
         bottom.add(buttons);
         add(bottom, GroupLayout.FIXED);
+
+        // disable send until some text is entered
+        new EnablingValidator(_text, _send);
 
         _alert = new ImageIcon(_ctx.loadImage("ui/chat/alert_icon.png"));
         
@@ -167,7 +167,6 @@ public class PardnerChatView extends BDecoratedWindow
         _tabs.removeAllTabs();
         _pardners.clear();
         _text.setText("");
-        _send.setEnabled(false);
     }
 
     // documentation inherited from interface ChatDisplay
@@ -220,12 +219,6 @@ public class PardnerChatView extends BDecoratedWindow
         } else if (src == _resume) {
             _ctx.getBangClient().clearPopup(this, false);
         }
-    }
-
-    // documentation inherited from interface TextListener
-    public void textChanged (TextEvent te)
-    {
-        _send.setEnabled(!StringUtil.isBlank(_text.getText()));
     }
 
     /**

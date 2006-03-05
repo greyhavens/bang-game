@@ -3,6 +3,11 @@
 
 package com.threerings.bang.client;
 
+import java.io.IOException;
+
+import java.net.ConnectException;
+import java.net.URL;
+
 import com.jme.renderer.ColorRGBA;
 import com.jme.util.TextureManager;
 
@@ -33,14 +38,11 @@ import com.threerings.presents.client.LogonException;
 import com.threerings.presents.net.UsernamePasswordCreds;
 
 import com.threerings.bang.client.BangPrefs;
+import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
-
-import java.io.IOException;
-
-import java.net.ConnectException;
 
 import static com.threerings.bang.Log.log;
 
@@ -78,12 +80,18 @@ public class LogonView extends BWindow
         row.add(col);
         col.add(_logon = new BButton(_msgs.get("m.logon"), this, "logon"));
         _logon.setStyleClass("big_button");
-        _logon.setEnabled(false);
-        BButton btn;
-        col.add(btn = new BButton(_msgs.get("m.new_account"),
-                                  this, "new_account"));
-        btn.setStyleClass("logon_new");
+        col.add(_action =
+                new BButton(_msgs.get("m.new_account"), this, "new_account"));
+        _action.setStyleClass("logon_new");
         add(row);
+
+        // disable the logon button until a password is entered (and until
+        // we're initialized)
+        new EnablingValidator(_password, _logon) {
+            protected boolean checkEnabled (String text) {
+                return super.checkEnabled(text) && _initialized;
+            }
+        };
 
         add(_status = new StatusLabel(ctx));
         _status.setStyleClass("logon_status");
@@ -137,17 +145,15 @@ public class LogonView extends BWindow
             oview.pack();
             oview.center();
 
+        } else if ("server_status".equals(event.getAction())) {
+            BrowserUtil.browseURL(
+                _shownURL = DeploymentConfig.getServerStatusURL(), _browlist);
+            _status.setStatus(_msgs.get("m.server_status_launched"), false);
+
         } else if ("new_account".equals(event.getAction())) {
-            ResultListener rl = new ResultListener() {
-                public void requestCompleted (Object result) {
-                }
-                public void requestFailed (Exception cause) {
-                    _status.setStatus(
-                        _msgs.get("m.browser_launch_failed"), true);
-                }
-            };
-            BrowserUtil.browseURL(DeploymentConfig.getNewAccountURL(), rl);
-            _status.setStatus(_msgs.get("m.browser_launched"), false);
+            BrowserUtil.browseURL(
+                _shownURL = DeploymentConfig.getNewAccountURL(), _browlist);
+            _status.setStatus(_msgs.get("m.new_account_launched"), false);
 
         } else if ("exit".equals(event.getAction())) {
             _ctx.getApp().stop();
@@ -161,7 +167,7 @@ public class LogonView extends BWindow
             _status.setStatus(_msgs.get("m.init_progress", ""+percent), false);
         } else {
             _status.setStatus(_msgs.get("m.init_complete"), false);
-            _logon.setEnabled(true);
+            _logon.setEnabled(!StringUtil.isBlank(_password.getText()));
             _initialized = true;
         }
     }
@@ -184,24 +190,40 @@ public class LogonView extends BWindow
                 }
                 msg = _msgs.xlate(msg);
 
-            } else if (cause instanceof ConnectException) {
-                msg = _msgs.xlate("m.failed_to_connect");
+            } else {
+                if (cause instanceof ConnectException) {
+                    msg = _msgs.xlate("m.failed_to_connect");
 
-            } else if (cause instanceof IOException) {
-                String cmsg = cause.getMessage();
-                // jiggery pokery to detect a problem where Windows Connection
-                // Sharing will allow a connection to complete and then
-                // disconnect it after the first normal packet is sent
-                if (cmsg != null && cmsg.indexOf("forcibly closed") != -1) {
-                    msg = "m.failed_to_connect";
+                } else if (cause instanceof IOException) {
+                    String cmsg = cause.getMessage();
+                    // foolery to detect a problem where Windows Connection
+                    // Sharing will allow a connection to complete and then
+                    // disconnect it after the first normal packet is sent
+                    if (cmsg != null && cmsg.indexOf("forcibly closed") != -1) {
+                        msg = "m.failed_to_connect";
+                    } else {
+                        msg = "m.network_error";
+                    }
+
                 } else {
                     msg = "m.network_error";
                 }
 
-            } else {
-                msg = "m.network_error";
+                // change the new account button to server status
+                _action.setText(_msgs.get("m.server_status"));
+                _action.setAction("server_status");
             }
+
             _status.setStatus(msg, true);
+        }
+    };
+
+    protected ResultListener _browlist = new ResultListener() {
+        public void requestCompleted (Object result) {
+        }
+        public void requestFailed (Exception cause) {
+            _status.setStatus(_msgs.get("m.browser_launch_failed",
+                                        _shownURL.toString()), true);
         }
     };
 
@@ -210,8 +232,9 @@ public class LogonView extends BWindow
 
     protected BTextField _username;
     protected BPasswordField _password;
-    protected BButton _logon;
+    protected BButton _logon, _action;
 
     protected StatusLabel _status;
     protected boolean _initialized;
+    protected URL _shownURL;
 }

@@ -24,8 +24,6 @@ import com.jmex.bui.Label;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.event.TextEvent;
-import com.jmex.bui.event.TextListener;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
@@ -33,8 +31,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.BText;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Insets;
-
-import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -45,6 +41,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -59,7 +56,7 @@ import com.threerings.bang.util.BangContext;
  * Displays a player's pardners.
  */
 public class PardnerView extends IconPalette
-    implements ActionListener, TextListener, SetListener, BangCodes
+    implements ActionListener, SetListener, BangCodes
 {
     public PardnerView (BangContext ctx)
     {
@@ -91,12 +88,14 @@ public class PardnerView extends IconPalette
         bcont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
         bcont.add(_name = new BTextField());
         _name.setPreferredWidth(324);
-        _name.addListener(this);
         bcont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_submit"), this, "submit"));
         ccont.add(bcont);
         ccont.add(new Spacer(1, 15));
         add(ccont, BorderLayout.CENTER);
+
+        // disable submit until a name is entered
+        new EnablingValidator(_name, _submit);
     }
 
     // documentation inherited from interface ActionListener
@@ -125,12 +124,6 @@ public class PardnerView extends IconPalette
                 invitePardner(new Handle(_name.getText()));
             }
         }
-    }
-
-    // documentation inherited from interface TextListener
-    public void textChanged (TextEvent te)
-    {
-        _submit.setEnabled(!StringUtil.isBlank(_name.getText()));
     }
 
     // documentation inherited from interface SetListener
