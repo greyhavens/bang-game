@@ -49,6 +49,12 @@ public class ContextHelpView extends BDecoratedWindow
             _text.setText(_ctx.xlate(BangCodes.UNITS_MSGS,
                                      "m." + type + "_descrip"));
 
+        } else if (item.startsWith("card_")) {
+            String type = item.substring(5);
+            _title.setText(_ctx.xlate(BangCodes.CARDS_MSGS, "m." + type));
+            _text.setText(_ctx.xlate(BangCodes.CARDS_MSGS,
+                                     "m." + type + "_tip"));
+
         } else {
             _title.setText(_msgs.get("m.help_" + item + "_title"));
             _text.setText(_msgs.get("m.help_" + item));

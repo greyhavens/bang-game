@@ -26,8 +26,8 @@ import com.threerings.bang.game.data.card.Card;
  */
 public class CardPalette extends IconPalette
 {
-    public CardPalette (
-        BangContext ctx, BangObject bangobj, BLabel[] selcards)
+    public CardPalette (BangContext ctx, BangController ctrl,
+                        BangObject bangobj, BLabel[] selcards)
     {
         super(null, 4, 1, ItemIcon.ICON_SIZE, GameCodes.MAX_CARDS);
         setPaintBackground(true);
@@ -46,6 +46,8 @@ public class CardPalette extends IconPalette
                 CardItem card = (CardItem)item;
                 ItemIcon icon = card.createIcon();
                 icon.setItem(ctx, card);
+                icon.addListener(
+                    new HoverHelper(ctrl, "card_" + card.getType()));
                 addIcon(icon);
             }
         }

@@ -46,12 +46,13 @@ import static com.threerings.bang.Log.log;
 public class SelectionView extends BDecoratedWindow
     implements ActionListener
 {
-    public SelectionView (BangContext ctx, BangConfig config,
-                          BangObject bangobj, int pidx)
+    public SelectionView (BangContext ctx, BangController ctrl,
+                          BangConfig config, BangObject bangobj, int pidx)
     {
         super(ctx.getStyleSheet(), null);
 
         _ctx = ctx;
+        _ctrl = ctrl;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         _bangobj = bangobj;
         _pidx = pidx;
@@ -93,7 +94,7 @@ public class SelectionView extends BDecoratedWindow
 
         // create the big shot selection display
         _center.add(new BLabel(_msgs.get("m.select_bigshot"), "pick_subtitle"));
-        _units = new UnitPalette(_ctx, _enabler, 4, 1);
+        _units = new HelpyUnitPalette(_ctx, _enabler, 4, 1);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
         _units.setUser(_ctx.getUserObject());
@@ -102,7 +103,7 @@ public class SelectionView extends BDecoratedWindow
 
         // create the card selection display
         _center.add(new BLabel(_msgs.get("m.select_cards"), "pick_subtitle"));
-        _center.add(_cards = new CardPalette(_ctx, bangobj, _cardsels));
+        _center.add(_cards = new CardPalette(_ctx, _ctrl, bangobj, _cardsels));
         _cards.setStyleClass("pick_palette");
 
         updateBigShot();
@@ -129,7 +130,7 @@ public class SelectionView extends BDecoratedWindow
         // create the big shot selection display
         _center.add(new BLabel(_msgs.get("m.pv_assemble"), "pick_subtitle"));
         _units.shutdown();
-        _units = new UnitPalette(_ctx, _teamins, 4, 2);
+        _units = new HelpyUnitPalette(_ctx, _teamins, 4, 2);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
         _units.setSelectable(config.teamSize);
@@ -260,6 +261,20 @@ public class SelectionView extends BDecoratedWindow
         _ready.setEnabled(selected > 0);
     }
 
+    protected class HelpyUnitPalette extends UnitPalette
+    {
+        public HelpyUnitPalette (BangContext ctx, UnitPalette.Inspector ins,
+                                 int cols, int rows) {
+            super(ctx, ins, cols, rows);
+        }
+        protected UnitIcon createIcon (BangContext ctx, int itemId,
+                                       UnitConfig config, String name) {
+            UnitIcon icon = super.createIcon(ctx, itemId, config, name);
+            icon.addListener(new HoverHelper(_ctrl, "unit_" + config.type));
+            return icon;
+        }
+    };
+
     protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
         public void iconUpdated (SelectableIcon icon, boolean selected) {
             if (selected) {
@@ -277,6 +292,7 @@ public class SelectionView extends BDecoratedWindow
     };
 
     protected BangContext _ctx;
+    protected BangController _ctrl;
     protected MessageBundle _msgs;
     protected BangObject _bangobj;
     protected int _pidx;

@@ -7,6 +7,7 @@ import com.jmex.bui.util.Dimension;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BasicContext;
 
@@ -18,7 +19,8 @@ public class UnitIcon extends PaletteIcon
 {
     public UnitIcon (BasicContext ctx, int itemId, UnitConfig config)
     {
-        this(ctx, itemId, config, ctx.xlate("units", config.getName()));
+        this(ctx, itemId, config,
+             ctx.xlate(BangCodes.UNITS_MSGS, config.getName()));
     }
 
     public UnitIcon (

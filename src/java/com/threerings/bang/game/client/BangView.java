@@ -100,7 +100,7 @@ public class BangView extends BWindow
             break;
 
         case BangObject.SELECT_PHASE:
-            setOverlay(new SelectionView(_ctx, config, _bangobj, pidx));
+            setOverlay(new SelectionView(_ctx, _ctrl, config, _bangobj, pidx));
             break;
 
         case BangObject.BUYING_PHASE:

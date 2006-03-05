@@ -216,7 +216,7 @@ public class OverlayChatView extends BWindow
             return _color;
         }
 
-        protected ColorRGBA _color;
+        protected ColorRGBA _color = ColorRGBA.white;
     }
 
     protected BangContext _ctx;

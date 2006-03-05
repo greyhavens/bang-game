@@ -71,13 +71,24 @@ public class PlayerStatusView extends BContainer
         _rankimg = _ctx.loadImage("ui/pstatus/rank" + pidx + ".png");
 
         // create our interface elements
+        int selfidx = _bangobj.getPlayerIndex(
+            _ctx.getUserObject().getVisibleName());
         _player = new BLabel(_bangobj.players[_pidx].toString(),
                              "player_status" + _pidx);
+        addListener(new HoverHelper(_ctrl, _pidx == selfidx ? "you" : "they"));
         add(_player, NAME_RECT);
 
         _points = new BLabel("");
+        _points.addListener(new HoverHelper(_ctrl, "points"));
         add(_points, CASH_LOC);
         add(_ranklbl = new BLabel(createRankIcon(-2)), RANK_RECT);
+        _ranklbl.addListener(new HoverHelper(_ctrl, "rank") {
+            protected String computeHoveredItem () {
+                return (_bangobj.state == BangObject.SELECT_PHASE ||
+                        _bangobj.state == BangObject.BUYING_PHASE) ?
+                    "pre_round_rank" : super.computeHoveredItem();
+            }
+        });
 
         updateAvatar();
         updateStatus();
@@ -130,6 +141,8 @@ public class PlayerStatusView extends BContainer
                 return;
             }
             _cards[cidx] = createButton(card);
+            _cards[cidx].addListener(
+                new HoverHelper(_ctrl, "card_" + card.getType()));
             Rectangle rect = new Rectangle(CARD_RECT);
             rect.x += (rect.width * cidx);
             add(_cards[cidx], rect);

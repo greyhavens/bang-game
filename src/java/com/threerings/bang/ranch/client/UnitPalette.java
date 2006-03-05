@@ -12,6 +12,7 @@ import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
@@ -37,7 +38,8 @@ public class UnitPalette extends IconPalette
     public void setUnits (UnitConfig[] units)
     {
         for (int ii = 0; ii < units.length; ii++) {
-            addIcon(new UnitIcon(_ctx, -1, units[ii]));
+            String name = _ctx.xlate(BangCodes.UNITS_MSGS, units[ii].getName());
+            addIcon(createIcon(_ctx, -1, units[ii], name));
         }
     }
 
@@ -97,8 +99,8 @@ public class UnitPalette extends IconPalette
     protected void addUnit (BigShotItem unit)
     {
         UnitConfig config = UnitConfig.getConfig(unit.getType());
-        addIcon(new UnitIcon(_ctx, unit.getItemId(), config,
-                             unit.getName().toString()));
+        addIcon(createIcon(_ctx, unit.getItemId(), config,
+                           unit.getName().toString()));
     }
 
     protected void removeUnit (int itemId)
@@ -110,6 +112,12 @@ public class UnitPalette extends IconPalette
                 return;
             }
         }
+    }
+
+    protected UnitIcon createIcon (
+        BangContext ctx, int itemId, UnitConfig config, String name)
+    {
+        return new UnitIcon(ctx, itemId, config, name);
     }
 
     protected SetListener _invlistener = new SetListener() {
