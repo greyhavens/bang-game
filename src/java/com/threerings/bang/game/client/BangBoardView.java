@@ -729,7 +729,7 @@ public class BangBoardView extends BoardView
     protected void handleRightPress (int mx, int my)
     {
         // nothing doing if the game is not in play
-        if (_bangobj == null || _bangobj.state == BangObject.IN_PLAY) {
+        if (_bangobj == null || _bangobj.state != BangObject.IN_PLAY) {
             return;
         }
 
