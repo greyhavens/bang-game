@@ -29,7 +29,7 @@ public interface BangService extends InvocationService
      * or -1 if no firing is desired.
      */
     public void move (Client client, int pieceId, short x, short y,
-                      int targetId, InvocationListener listener);
+                      int targetId, ResultListener listener);
 
     /**
      * Requests that the specified card be activated at the specified

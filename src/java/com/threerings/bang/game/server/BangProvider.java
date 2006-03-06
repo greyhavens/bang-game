@@ -18,7 +18,7 @@ public interface BangProvider extends InvocationProvider
     /**
      * Handles a {@link BangService#move} request.
      */
-    public void move (ClientObject caller, int arg1, short arg2, short arg3, int arg4, InvocationService.InvocationListener arg5)
+    public void move (ClientObject caller, int arg1, short arg2, short arg3, int arg4, InvocationService.ResultListener arg5)
         throws InvocationException;
 
     /**

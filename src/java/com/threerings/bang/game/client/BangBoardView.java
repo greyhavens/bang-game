@@ -103,14 +103,11 @@ public class BangBoardView extends BoardView
     }
     
     /**
-     * Called by the controller if we requested to take a shot at another
-     * piece but it was rejected because the piece moved or something else
-     * prevented it.
+     * Called by the controller when we know one way or another regarding a
+     * move and shoot request.
      */
-    public void shotFailed (int targetId)
+    public void clearPendingShot (int targetId)
     {
-        // for now just clear the target indicator but perhaps display
-        // something fancier in the future
         Piece piece = (Piece)_bangobj.pieces.get(targetId);
         if (piece != null) {
             getUnitSprite(piece).setPendingShot(false);
@@ -489,44 +486,44 @@ public class BangBoardView extends BoardView
             checkForSelectionInfluence(piece);
         }
 
-        // make sure all of our queued moves are still valid
-        if (_queuedMoves.size() > 0) {
-            PointSet moves = new PointSet();
-            for (Iterator<Integer> iter = _queuedMoves.keySet().iterator();
-                 iter.hasNext(); ) {
-                Integer pieceId = iter.next();
-                QueuedMove move = _queuedMoves.get(pieceId);
-                Unit unit = (Unit)_bangobj.pieces.get(pieceId);
-                if (unit == null) {
-                    move.clear();
-                    iter.remove();
-                    continue;
-                }
-                _bangobj.board.computeMoves(unit, moves, null);
+//         // make sure all of our queued moves are still valid
+//         if (_queuedMoves.size() > 0) {
+//             PointSet moves = new PointSet();
+//             for (Iterator<Integer> iter = _queuedMoves.keySet().iterator();
+//                  iter.hasNext(); ) {
+//                 Integer pieceId = iter.next();
+//                 QueuedMove move = _queuedMoves.get(pieceId);
+//                 Unit unit = (Unit)_bangobj.pieces.get(pieceId);
+//                 if (unit == null) {
+//                     move.clear();
+//                     iter.remove();
+//                     continue;
+//                 }
+//                 _bangobj.board.computeMoves(unit, moves, null);
 
-                // if no specific location was specified, make sure we can
-                // still determine a location from which to fire
-                if (move.mx == Short.MAX_VALUE) {
-                    Piece target = (Piece)_bangobj.pieces.get(move.targetId);
-                    if (target != null) {
-                        Point spot = unit.computeShotLocation(target, moves);
-                        if (spot != null) {
-                            continue;
-                        }
-                    }
+//                 // if no specific location was specified, make sure we can
+//                 // still determine a location from which to fire
+//                 if (move.mx == Short.MAX_VALUE) {
+//                     Piece target = (Piece)_bangobj.pieces.get(move.targetId);
+//                     if (target != null) {
+//                         Point spot = unit.computeShotLocation(target, moves);
+//                         if (spot != null) {
+//                             continue;
+//                         }
+//                     }
 
-                // if a specific location was specified, make sure we can
-                // still reach it
-                } else if (moves.contains(move.mx, move.my)) {
-                    continue;
-                }
+//                 // if a specific location was specified, make sure we can
+//                 // still reach it
+//                 } else if (moves.contains(move.mx, move.my)) {
+//                     continue;
+//                 }
 
-                // the move is no longer valid, so clear and remove it
-                // TODO: play a sound?
-                move.clear();
-                iter.remove();
-            }
-        }
+//                 // the move is no longer valid, so clear and remove it
+//                 // TODO: play a sound?
+//                 move.clear();
+//                 iter.remove();
+//             }
+//         }
     }
 
     /** Called by the {@link EffectHandler} when a piece was killed. */
@@ -847,26 +844,45 @@ public class BangBoardView extends BoardView
 
         // if this unit is not yet movable, "queue" up their action
         UnitSprite sprite = getUnitSprite(actor);
-        if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
-            clearQueuedMove(_action[0]);
-            _queuedMoves.put(_action[0], new QueuedMove(sprite, _action));
-            _ctrl.postEvent(TutorialCodes.UNIT_ORDERED);
-        } else {
+//         if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
+//             clearQueuedMove(_action[0]);
+//             _queuedMoves.put(_action[0], new QueuedMove(sprite, _action));
+//             _ctrl.postEvent(TutorialCodes.UNIT_ORDERED);
+//         } else {
             // otherwise enact the move/fire combination immediately
             _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
-        }
+//         }
         // and clear everything out
         clearSelection();
     }
 
-    protected boolean hasQueuedMove (int pieceId)
+    public void addQueuedMove (int unitId, int tx, int ty, int targetId)
     {
-        return _queuedMoves.containsKey(pieceId);
+        // clear any old queued move for this unit
+        clearQueuedMove(unitId);
+
+        // look up the unit we're "acting" with
+        Unit actor = (Unit)_bangobj.pieces.get(unitId);
+        if (actor == null) {
+            log.warning("Missing piece for queued move [id=" + unitId + "].");
+            return;
+        }
+        UnitSprite sprite = getUnitSprite(actor);
+        if (sprite == null) {
+            log.warning("Missing sprite for queued move [p=" + actor + "].");
+            return;
+        }
+        _queuedMoves.put(unitId, new QueuedMove(sprite, tx, ty, targetId));
     }
 
-    protected void clearQueuedMove (int pieceId)
+    protected boolean hasQueuedMove (int unitId)
     {
-        QueuedMove move = _queuedMoves.remove(pieceId);
+        return _queuedMoves.containsKey(unitId);
+    }
+
+    protected void clearQueuedMove (int unitId)
+    {
+        QueuedMove move = _queuedMoves.remove(unitId);
         if (move != null) {
             move.clear();
         }
@@ -1021,12 +1037,12 @@ public class BangBoardView extends BoardView
     {
         public int unitId, mx, my, targetId;
 
-        public QueuedMove (UnitSprite unit, int[] action)
+        public QueuedMove (UnitSprite unit, int mx, int my, int targetId)
         {
-            unitId = action[0];
-            mx = action[1];
-            my = action[2];
-            targetId = action[3];
+            unitId = unit.getPieceId();
+            this.mx = mx;
+            this.my = my;
+            this.targetId = targetId;
 
             int x = mx, y = my;
             if (mx == Short.MAX_VALUE) {

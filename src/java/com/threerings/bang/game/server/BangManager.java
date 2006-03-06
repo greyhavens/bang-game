@@ -132,7 +132,7 @@ public class BangManager extends GameManager
 
     // documentation inherited from interface BangProvider
     public void move (ClientObject caller, int pieceId, short x, short y,
-                      int targetId, BangService.InvocationListener il)
+                      int targetId, BangService.ResultListener listener)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
@@ -144,19 +144,30 @@ public class BangManager extends GameManager
                         ", piece=" + piece + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
+
         Unit unit = (Unit)piece;
         int ticksTilMove = unit.ticksUntilMovable(_bangobj.tick);
         if (ticksTilMove > 0) {
-            log.warning("Rejecting premature move/fire request " +
-                        "[who=" + user.who() + ", piece=" + unit.info() +
-                        ", ticksTilMove=" + ticksTilMove +
-                        ", tick=" + _bangobj.tick +
-                        ", lastActed=" + unit.lastActed + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
+            // make sure this new order is valid
+            AdvanceOrder order = new AdvanceOrder(unit, x, y, targetId);
+            String cause = order.checkValid();
+            if (cause != null) {
+                throw new InvocationException(cause);
+            }
 
-        Piece target = (Piece)_bangobj.pieces.get(targetId);
-        moveAndShoot(unit, x, y, target);
+            // clear out any previous advance order for this unit
+            clearOrders(unit.pieceId);
+
+            // queue up our new advance order
+            _orders.add(order);
+            listener.requestProcessed(QUEUED_MOVE);
+
+        } else {
+            // execute the order immediately
+            Piece target = (Piece)_bangobj.pieces.get(targetId);
+            executeOrder(unit, x, y, target, true);
+            listener.requestProcessed(EXECUTED_MOVE);
+        }
     }
 
     // documentation inherited from interface BangProvider
@@ -212,8 +223,11 @@ public class BangManager extends GameManager
      * @param y the y coordinate to which to move, this is ignored if {@link
      * Short#MAX_VALUE} is supplied for x.
      * @param target the (optional) target to shoot after moving.
+     * @param recheckOrders whether or not to recheck other advance orders
+     * after executing this order.
      */
-    public void moveAndShoot (Unit unit, int x, int y, Piece target)
+    public void executeOrder (
+        Unit unit, int x, int y, Piece target, boolean recheckOrders)
         throws InvocationException
     {
         Piece munit = null, shooter = unit;
@@ -223,9 +237,6 @@ public class BangManager extends GameManager
             // if they specified a non-NOOP move, execute it
             if (x != unit.x || y != unit.y) {
                 munit = moveUnit(unit, x, y, target);
-                if (munit == null) {
-                    throw new InvocationException(MOVE_BLOCKED);
-                }
                 shooter = munit;
             }
 
@@ -234,12 +245,17 @@ public class BangManager extends GameManager
                 // make sure the target is valid
                 if (!shooter.validTarget(target, false)) {
                     // target already dead or something
+                    log.info("Target no longer valid [shooter=" + munit.info() +
+                             ", target=" + target.info() + "].");
                     throw new InvocationException(TARGET_NO_LONGER_VALID);
                 }
 
                 // make sure the target is still within range
                 if (!shooter.targetInRange(target.x, target.y)) {
-                    throw new InvocationException(TARGET_MOVED);
+                    log.info("Target no longer in range " +
+                             "[shooter=" + munit.info() +
+                             ", target=" + target.info() + "].");
+                    throw new InvocationException(TARGET_TOO_FAR);
                 }
 
                 // effect the initial shot
@@ -274,6 +290,12 @@ public class BangManager extends GameManager
 
         } finally {
             _bangobj.commitTransaction();
+        }
+
+        // finally, validate all of our advance orders and make sure none of
+        // them have become invalid
+        if (recheckOrders) {
+            validateOrders();
         }
     }
 
@@ -789,6 +811,28 @@ public class BangManager extends GameManager
             return;
         }
 
+        // execute any advance orders
+        int executed = 0;
+        for (Iterator<AdvanceOrder> iter = _orders.iterator();
+             iter.hasNext(); ) {
+            AdvanceOrder order = iter.next();
+            if (order.unit.ticksUntilMovable(tick) <= 0) {
+                try {
+                    Piece target = (Piece)_bangobj.pieces.get(order.targetId);
+                    executeOrder(order.unit, order.x, order.y, target, false);
+                    executed++;
+                } catch (InvocationException ie) {
+                    reportInvalidOrder(order, ie.getMessage());
+                }
+                iter.remove();
+            }
+        }
+
+        // if we executed any orders, validate the remainder
+        if (executed > 0) {
+            validateOrders();
+        }
+
         // move our AI pieces randomly
         if (!_bconfig.tutorial) {
             for (int ii = 0; ii < pieces.length; ii++) {
@@ -812,7 +856,8 @@ public class BangManager extends GameManager
                     }
                     if (target != null) {
                         try {
-                            moveAndShoot(unit, Short.MAX_VALUE, 0, target);
+                            executeOrder(
+                                unit, Short.MAX_VALUE, 0, target, true);
                             continue;
                         } catch (InvocationException ie) {
                             // fall through and move
@@ -820,10 +865,15 @@ public class BangManager extends GameManager
                     }
 
                     // otherwise just move
-                    if (_moves.size() > 0) {
-                        int midx = RandomUtil.getInt(_moves.size());
-                        moveUnit(unit, _moves.getX(midx), _moves.getY(midx),
-                                 null);
+                    if (_moves.size() == 0) {
+                        continue;
+                    }
+                    int midx = RandomUtil.getInt(_moves.size());
+                    int mx = _moves.getX(midx), my = _moves.getY(midx);
+                    try {
+                        executeOrder(unit, mx, my, null, true);
+                    } catch (InvocationException ie) {
+                        // oh well
                     }
                 }
             }
@@ -1019,10 +1069,10 @@ public class BangManager extends GameManager
      * Attempts to move the specified piece to the specified coordinates.
      * Various checks are made to ensure that it is a legal move.
      *
-     * @return the cloned and moved piece if the piece was moved, null if
-     * it was not movable for some reason.
+     * @return the cloned and moved piece if the piece was moved.
      */
     protected Unit moveUnit (Unit unit, int x, int y, Piece target)
+        throws InvocationException
     {
         // compute the possible moves for this unit
         _moves.clear();
@@ -1032,7 +1082,7 @@ public class BangManager extends GameManager
         if (x == Short.MAX_VALUE) {
             if (target == null) {
                 // the target must no longer be around, so abandon ship
-                return null;
+                throw new InvocationException(TARGET_NO_LONGER_VALID);
             }
 
             Point spot = unit.computeShotLocation(target, _moves);
@@ -1040,7 +1090,7 @@ public class BangManager extends GameManager
                 log.info("Unable to find place from which to shoot. " +
                          "[piece=" + unit.info() + ", target=" + target.info() +
                          ", moves=" + _moves + "].");
-                return null;
+                throw new InvocationException(TARGET_TOO_FAR);
             }
             x = spot.x;
             y = spot.y;
@@ -1058,7 +1108,7 @@ public class BangManager extends GameManager
                         ", alive=" + unit.isAlive() +
                         ", mticks=" + unit.ticksUntilMovable(_bangobj.tick) +
                         "].");
-            return null;
+            throw new InvocationException(MOVER_NO_LONGER_VALID);
         }
 
         // validate that the move is legal
@@ -1082,7 +1132,7 @@ public class BangManager extends GameManager
             if (!_moves.contains(x, y)) {
                 log.warning("Move still illegal: ");
                 _bangobj.board.dumpOccupiability(_moves);
-                return null;
+                throw new InvocationException(MOVE_BLOCKED);
             }
         }
 
@@ -1091,30 +1141,13 @@ public class BangManager extends GameManager
         munit.position(x, y);
         munit.lastActed = _bangobj.tick;
 
-        // if they specified a target, make sure it is still valid
-        if (target != null) {
-            if (!munit.validTarget(target, false)) {
-                log.info("Target no longer valid [shooter=" + munit.info() +
-                         ", target=" + target.info() + "].");
-                return null;
-//                 // target already dead or something
-//                 throw new InvocationException(TARGET_NO_LONGER_VALID);
-            }
-            if (!munit.targetInRange(target.x, target.y)) {
-                log.info("Target no longer in range [shooter=" + munit.info() +
-                         ", target=" + target.info() + "].");
-                return null;
-//                 throw new InvocationException(TARGET_MOVED);
-            }
-        }
-
         // ensure that we don't land on any piece that prevents us from
         // overlapping
         ArrayList<Piece> lappers = _bangobj.getOverlappers(munit);
         if (lappers != null) {
             for (Piece lapper : lappers) {
                 if (lapper.preventsOverlap(munit)) {
-                    return null;
+                    throw new InvocationException(MOVE_BLOCKED);
                 }
             }
         }
@@ -1151,6 +1184,51 @@ public class BangManager extends GameManager
         }
 
         return munit;
+    }
+
+    /**
+     * Scans the list of advance orders and clears any that have become
+     * invalid.
+     */
+    protected void validateOrders ()
+    {
+        for (Iterator<AdvanceOrder> iter = _orders.iterator();
+             iter.hasNext(); ) {
+            AdvanceOrder order = iter.next();
+            String cause = order.checkValid();
+            if (cause != null) {
+                iter.remove();
+                reportInvalidOrder(order, cause);
+            }
+        }
+    }
+
+    /**
+     * Clears any advance order for the specified unit.
+     */
+    protected void clearOrders (int unitId)
+    {
+        for (int ii = 0, ll = _orders.size(); ii < ll; ii++) {
+            if (_orders.get(ii).unit.pieceId == unitId) {
+                _orders.remove(ii);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Reports an invalidated order to the initiating player.
+     */
+    protected void reportInvalidOrder (AdvanceOrder order, String reason)
+    {
+        PlayerObject user = (PlayerObject)getPlayer(order.unit.owner);
+        if (user != null) {
+            log.info("Advance order failed [order=" + order +
+                     ", who=" + user.who() + "].");
+            BangSender.orderInvalidated(user, order.unit.pieceId, reason);
+        } else {
+            log.info("Advance order failed [order=" + order + "].");
+        }
     }
 
     /**
@@ -1545,6 +1623,83 @@ public class BangManager extends GameManager
         return false;
     }
 
+    /** Used to track advance orders. */
+    protected class AdvanceOrder
+    {
+        /** The unit to be ordered. */
+        public Unit unit;
+
+        /** The coordinates to which to move the unit. */
+        public short x, y;
+
+        /** The target to attack after moving. */
+        public int targetId;
+
+        public AdvanceOrder (Unit unit, short x, short y, int targetId) {
+            this.unit = unit;
+            this.x = x;
+            this.y = y;
+            this.targetId = targetId;
+        }
+
+        public String checkValid () {
+            // make sure this unit is still in play
+            Unit aunit = (Unit)_bangobj.pieces.get(unit.pieceId);
+            if (aunit == null || !aunit.isAlive()) {
+                return MOVER_NO_LONGER_VALID;
+            }
+
+            // make sure our target is still around
+            Piece target = null;
+            if (targetId > 0) {
+                target = (Piece)_bangobj.pieces.get(targetId);
+                if (target == null || !target.isAlive()) {
+                    return TARGET_NO_LONGER_VALID;
+                }
+            }
+
+            // compute our potential move and attack set
+            _moves.clear();
+            _attacks.clear();
+            _bangobj.board.computeMoves(unit, _moves, null);
+
+            // if no specific location was specified, make sure we can still
+            // determine a location from which to fire
+            if (x == Short.MAX_VALUE) {
+                if (target == null) { // sanity check
+                    return TARGET_NO_LONGER_VALID;
+                }
+                return (unit.computeShotLocation(target, _moves) == null) ?
+                    TARGET_TOO_FAR : null;
+            }
+
+            // if a specific location was specified, make sure we can
+            // still reach it
+            if (!_moves.contains(x, y)) {
+                return MOVE_BLOCKED;
+            }
+
+            // if we have no target, we're good to go
+            if (target == null) {
+                return null;
+            }
+
+            // we are doing a move and shoot, so make sure we can still hit the
+            // target from our desired move location
+            int tdist = target.getDistance(x, y);
+            if (tdist < unit.getMinFireDistance() ||
+                tdist > unit.getMaxFireDistance()) {
+                return TARGET_TOO_FAR;
+            }
+
+            return null;
+        }
+
+        public String toString() {
+            return unit.info() + " -> +" + x + "+" + y + " (" + targetId + ")";
+        }
+    }
+
     /** Used to track cards from a player's inventory and whether or not they
      * are actually used during a game. */
     protected static class StartingCard
@@ -1720,6 +1875,9 @@ public class BangManager extends GameManager
     /** The extra time to take for the current tick to allow extended effects
      * to complete. */
     protected long _extraTickTime;
+
+    /** Tracks advance orders. */
+    protected ArrayList<AdvanceOrder> _orders = new ArrayList<AdvanceOrder>();
 
     /** Our starting base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;

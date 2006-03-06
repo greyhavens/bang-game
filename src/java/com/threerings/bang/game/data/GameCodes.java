@@ -5,6 +5,8 @@ package com.threerings.bang.game.data;
 
 import com.threerings.presents.data.InvocationCodes;
 
+import com.threerings.bang.game.client.BangService;
+
 /**
  * Codes and constants used by the actual game.
  */
@@ -13,18 +15,23 @@ public interface GameCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String GAME_MSGS = "game";
 
-    /** An error message delivered when a move fails due to another piece
-     * blocking. */
+    /** A response code for {@link BangService#move}. */
+    public static final Integer EXECUTED_MOVE = 0;
+
+    /** A response code for {@link BangService#move}. */
+    public static final Integer QUEUED_MOVE = 1;
+
+    /** An error response code for {@link BangService#move}. */
+    public static final String MOVER_NO_LONGER_VALID = "m.mover_invalid";
+
+    /** An error response code for {@link BangService#move}. */
     public static final String MOVE_BLOCKED = "m.move_blocked";
 
-    /** An error message delivered when a shot fails due the target having
-     * moved out of range. */
-    public static final String TARGET_MOVED = "m.target_moved";
+    /** An error response code for {@link BangService#move}. */
+    public static final String TARGET_NO_LONGER_VALID = "m.target_invalid";
 
-    /** An error message delivered when a shot fails due the target having
-     * become invalid (by dying for example). */
-    public static final String TARGET_NO_LONGER_VALID =
-        "m.target_no_longer_valid";
+    /** An error response code for {@link BangService#move}. */
+    public static final String TARGET_TOO_FAR = "m.target_too_far";
 
     /** Defines the minimum team size (not counting one's big shot). */
     public static final int MIN_TEAM_SIZE = 2;

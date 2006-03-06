@@ -23,9 +23,9 @@ public class BangMarshaller extends InvocationMarshaller
     public static final int MOVE = 1;
 
     // documentation inherited from interface
-    public void move (Client arg1, int arg2, short arg3, short arg4, int arg5, InvocationService.InvocationListener arg6)
+    public void move (Client arg1, int arg2, short arg3, short arg4, int arg5, InvocationService.ResultListener arg6)
     {
-        ListenerMarshaller listener6 = new ListenerMarshaller();
+        InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
         listener6.listener = arg6;
         sendRequest(arg1, MOVE, new Object[] {
             new Integer(arg2), new Short(arg3), new Short(arg4), new Integer(arg5), listener6

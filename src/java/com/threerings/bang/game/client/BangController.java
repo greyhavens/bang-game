@@ -54,6 +54,7 @@ import static com.threerings.bang.Log.log;
  * Handles the logic and flow of the client side of a game.
  */
 public class BangController extends GameController
+    implements BangReceiver
 {
     /** The name of the command posted by the "Back to lobby" button in
      * the side bar. */
@@ -104,6 +105,14 @@ public class BangController extends GameController
         _view.help.setHelpItem(item);
     }
 
+    // documentation inherited from interface BangReceiver
+    public void orderInvalidated (int unitId, String reason)
+    {
+        _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, reason);
+        // TODO: flash the unit in the unit status display
+        _view.view.clearQueuedMove(unitId);
+    }
+
     @Override // documentation inherited
     public void init (CrowdContext ctx, PlaceConfig config)
     {
@@ -146,6 +155,10 @@ public class BangController extends GameController
         _bangobj = (BangObject)plobj;
         _bangobj.addListener(_ranklist);
 
+        // register to receive messages from the server
+        _ctx.getClient().getInvocationDirector().registerReceiver(
+            new BangDecoder(this));
+
         // let our tutorial controller know what's going on
         if (_tutcont != null) {
             _tutcont.willEnterPlace(_bangobj);
@@ -164,6 +177,10 @@ public class BangController extends GameController
     public void didLeavePlace (PlaceObject plobj)
     {
         super.didLeavePlace(plobj);
+
+        // clear out our receiver registration
+        _ctx.getClient().getInvocationDirector().unregisterReceiver(
+            BangDecoder.RECEIVER_CODE);
 
         if (_tutcont != null) {
             _tutcont.didLeavePlace(_bangobj);
@@ -283,40 +300,62 @@ public class BangController extends GameController
     }
 
     /** Handles a request to move a piece. */
-    public void moveAndFire (int pieceId, int tx, int ty, final int targetId)
+    public void moveAndFire (
+        final int pieceId, final int tx, final int ty, final int targetId)
     {
-        final PointSet moves = new PointSet();
-        moves.add(tx, ty);
-        BangService.InvocationListener il =
-            new BangService.InvocationListener() {
-            public void requestFailed (String reason) {
-                // TODO: play a sound or highlight the piece that failed
-                // to move
-                log.info("Thwarted! " + reason);
-                _bangobj.board.dumpOccupiability(moves);
+//         final PointSet moves = new PointSet();
+//         moves.add(tx, ty);
+        BangService.ResultListener rl = new BangService.ResultListener() {
+            public void requestProcessed (Object result) {
+                int code = (Integer)result;
+                if (code == GameCodes.EXECUTED_MOVE) {
+                    // report to the tutorial controller
+                    if (targetId == -1) {
+                        postEvent(TutorialCodes.UNIT_MOVED);
+                    } else if (tx == Short.MAX_VALUE) {
+                        postEvent(TutorialCodes.UNIT_ATTACKED);
+                    } else {
+                        postEvent(TutorialCodes.UNIT_MOVE_ATTACKED);
+                    }
+
+                } else if (code == GameCodes.QUEUED_MOVE) {
+                    // tell the view to display a queued move for this piece
+                    _view.view.addQueuedMove(pieceId, tx, ty, targetId);
+                    // report to the tutorial controller
+                    postEvent(TutorialCodes.UNIT_ORDERED);
+
+                } else {
+                    log.warning("Got unknown response to move(" + pieceId +
+                                ", " + tx + ", " + ty + ", " + targetId +
+                                ") [result=" + result + "].");
+                }
 
                 // clear any pending shot indicator
                 if (targetId != -1) {
-                    _view.view.shotFailed(targetId);
+                    _view.view.clearPendingShot(targetId);
+                }
+            }
+
+            public void requestFailed (String reason) {
+                // TODO: play a sound or highlight the piece that failed to
+                // move
+                log.info("Thwarted! " + reason);
+//                 _bangobj.board.dumpOccupiability(moves);
+
+                // clear any pending shot indicator
+                if (targetId != -1) {
+                    _view.view.clearPendingShot(targetId);
                 }
             }
         };
+
         log.info("Requesting move and fire [pid=" + pieceId +
                  ", to=+" + tx + "+" + ty + ", tid=" + targetId + "].");
         _bangobj.service.move(
-            _ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, il);
+            _ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, rl);
 
         // clear out our last selected unit as we want to start afresh
         _lastSelection = -1;
-
-        // report to the tutorial controller
-        if (targetId == -1) {
-            postEvent(TutorialCodes.UNIT_MOVED);
-        } else if (tx == Short.MAX_VALUE) {
-            postEvent(TutorialCodes.UNIT_ATTACKED);
-        } else {
-            postEvent(TutorialCodes.UNIT_MOVE_ATTACKED);
-        }
     }
 
     /** Handles a request to place a card. */

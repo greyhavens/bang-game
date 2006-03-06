@@ -150,8 +150,8 @@ public class Tutorial extends Scenario
             Unit unit = (Unit)_bangobj.pieces.get(mua.id);
             Unit target = (Unit)_bangobj.pieces.get(mua.target);
             try {
-                _bangmgr.moveAndShoot(
-                    unit, mua.location[0], mua.location[1], target);
+                _bangmgr.executeOrder(
+                    unit, mua.location[0], mua.location[1], target, true);
             } catch (InvocationException ie) {
                 log.warning("Unable to execute action " + mua + ":" +
                             ie.getMessage());

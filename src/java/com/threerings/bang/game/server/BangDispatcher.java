@@ -41,7 +41,7 @@ public class BangDispatcher extends InvocationDispatcher
         case BangMarshaller.MOVE:
             ((BangProvider)provider).move(
                 source,
-                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue(), ((Integer)args[3]).intValue(), (InvocationService.InvocationListener)args[4]
+                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue(), ((Integer)args[3]).intValue(), (InvocationService.ResultListener)args[4]
             );
             return;
 
