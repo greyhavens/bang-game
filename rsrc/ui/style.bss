@@ -599,7 +599,7 @@ system_chat_entry {
   vertical-align: center;
   background: solid #00FF0080;
   border: 1 solid #000000;
-  padding: 14 14 14 14;
+  padding: 7;
 }
 
 sent_chat_bubble {

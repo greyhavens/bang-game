@@ -26,7 +26,6 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTabbedPane;
-import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.background.BBackground;
 import com.jmex.bui.background.ImageBackground;
@@ -362,9 +361,7 @@ public class PardnerChatView extends BDecoratedWindow
         public void appendSystem (SystemMessage msg)
         {
             _last = null;
-            BTextArea area = new BTextArea(msg.message);
-            area.setStyleClass("system_chat_entry");
-            _content.add(area);
+            _content.add(new BLabel(msg.message, "system_chat_entry"));
             _scrollToEnd = true;
         }
 
@@ -440,7 +437,12 @@ public class PardnerChatView extends BDecoratedWindow
                 GroupLayout.CONSTRAIN);
             layout.setOffAxisJustification(sent ?
                 GroupLayout.LEFT : GroupLayout.RIGHT);
-            add(_mcont = new BContainer(layout));
+            add(_mcont = new BContainer(layout) {
+                protected Dimension computePreferredSize (
+                    int whint, int hhint) {
+                    return super.computePreferredSize(285, hhint);
+                }
+            });
 
             if (icon != null) {
                 add(sent ? 0 : 1, new BLabel(icon), GroupLayout.FIXED);
@@ -449,11 +451,10 @@ public class PardnerChatView extends BDecoratedWindow
 
         public void addMessage (String msg)
         {
-            BTextArea area = new BTextArea(msg);
-            area.setStyleClass(sent ?
+            BLabel label = new BLabel(msg, sent ?
                 "sent_chat_bubble" : "received_chat_bubble");
-            _mcont.add(area);
-            area.setBackground(BComponent.DEFAULT,
+            _mcont.add(label);
+            label.setBackground(BComponent.DEFAULT,
                 _mcont.getComponentCount() == 1 ?
                     (sent ? _sfbg : _rfbg) : (sent ? _srbg : _rrbg));
         }
