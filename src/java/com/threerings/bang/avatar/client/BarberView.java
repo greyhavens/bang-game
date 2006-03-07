@@ -84,7 +84,7 @@ public class BarberView extends ShopView
 
         // hackity hack hack hack
         if (_active == _wearclothes) {
-            _faketab.render(renderer, 179, 598);
+            _faketab.render(renderer, 179, 598, _alpha);
         }
     }
 

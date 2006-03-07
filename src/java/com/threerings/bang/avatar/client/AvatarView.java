@@ -132,7 +132,7 @@ public class AvatarView extends BLabel
     protected void renderComponent (Renderer renderer)
     {
         super.renderComponent(renderer);
-        _frame.render(renderer, 0, 0);
+        _frame.render(renderer, 0, 0, _alpha);
     }
 
     /** Wraps avatar fingerprints for use as hash keys. */

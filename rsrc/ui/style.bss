@@ -597,9 +597,23 @@ system_chat_entry {
   color: #000000;
   text-align: center;
   vertical-align: center;
-  background: solid #00FF0080;
   border: 1 solid #000000;
   padding: 7;
+}
+
+attention_chat_entry {
+  parent: "system_chat_entry";
+  background: solid #FF000080;
+}
+
+feedback_chat_entry {
+  parent: "system_chat_entry";
+  background: solid #00FF0080;
+}
+
+info_chat_entry {
+  parent: "system_chat_entry";
+  background: solid #80808080;
 }
 
 sent_chat_bubble {
@@ -625,6 +639,37 @@ send_button {
 send_button:disabled {
   padding: 0 16;
   parent: "button:disabled";
+}
+
+//
+// System chat view styles
+
+system_chat_view {
+    border: 20 blank;
+}
+
+system_chat_label {
+  font: "Dom Casual" plain 18;
+  color: #000000;
+  text-align: center;
+  vertical-align: center;
+  border: 1 solid #000000;
+  padding: 7;
+}
+
+attention_chat_label {
+  parent: "system_chat_label";
+  background: solid #FF000080;
+}
+
+feedback_chat_label {
+  parent: "system_chat_label";
+  background: solid #00FF0080;
+}
+
+info_chat_label {
+  parent: "system_chat_label";
+  background: solid #80808080;
 }
 
 //

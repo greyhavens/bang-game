@@ -134,8 +134,8 @@ public class RoundTimerView extends BWindow
     {
         super.renderComponent(renderer);
 
-        _overlay.render(renderer, 10, 9);
-        _pin.render(renderer, 12, 11);
+        _overlay.render(renderer, 10, 9, _alpha);
+        _pin.render(renderer, 12, 11, _alpha);
     }
 
     protected BasicContext _ctx;

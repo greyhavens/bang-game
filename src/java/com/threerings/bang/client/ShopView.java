@@ -127,11 +127,14 @@ public abstract class ShopView extends BWindow
     {
         super.renderBackground(renderer);
 
-        _shopkbg.render(renderer, 12, _height-_shopkbg.getHeight()-12);
-        _shopkeep.render(renderer, 12, _height-_shopkeep.getHeight()-12);
+        _shopkbg.render(renderer, 12, _height-_shopkbg.getHeight()-12,
+            _alpha);
+        _shopkeep.render(renderer, 12, _height-_shopkeep.getHeight()-12,
+            _alpha);
         _shop.render(renderer,
-                     _width-_shop.getWidth()-12, _height-_shop.getHeight()-12);
-        _background.render(renderer, 0, 0);
+                     _width-_shop.getWidth()-12, _height-_shop.getHeight()-12,
+                     _alpha);
+        _background.render(renderer, 0, 0, _alpha);
     }
 
     /**

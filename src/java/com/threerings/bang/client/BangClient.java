@@ -193,6 +193,10 @@ public class BangClient extends BasicClient
         // pardners and pop up when possible
         _pcview = new PardnerChatView(_ctx);
 
+        // create the system chat view, which will display system chat messages
+        // outside of games
+        _scview = new SystemChatView(_ctx);
+        
         // register our global key bindings
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_ESCAPE, _clearPopup);
         _functionPopup = new FKeyPopups(_ctx);
@@ -623,6 +627,7 @@ public class BangClient extends BasicClient
     protected BWindow _mview;
     protected ArrayList<BWindow> _popups = new ArrayList<BWindow>();
     protected PardnerChatView _pcview;
+    protected SystemChatView _scview;
 
     protected ArrayList<Name> _invites = new ArrayList<Name>();
 }

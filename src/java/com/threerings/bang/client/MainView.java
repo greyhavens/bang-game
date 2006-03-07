@@ -10,7 +10,7 @@ package com.threerings.bang.client;
 public interface MainView
 {
     /** Defines the different types of popups. */
-    public static enum Type { CHAT, PARDNER_INVITE, STATUS, FKEY };
+    public static enum Type { CHAT, PARDNER_INVITE, STATUS, FKEY, SYSTEM };
 
     /**
      * Returns true if it's OK to pop up a window over this view.

@@ -137,10 +137,12 @@ public class NewLookView extends BContainer
         add(new HackyTabs(ctx, true, "ui/barber/tab_", tarray, 54, 30) {
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
-                tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42);
+                tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42,
+                    _alpha);
                 if (malebg != null) {
                     malebg.render(
-                        renderer, 0, _height - malebg.getHeight() - 42);
+                        renderer, 0, _height - malebg.getHeight() - 42,
+                        _alpha);
                 }
             }
             protected void tabSelected (int index) {

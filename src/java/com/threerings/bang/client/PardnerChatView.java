@@ -84,7 +84,7 @@ public class PardnerChatView extends BDecoratedWindow
                 BBackground background = getBackground();
                 if (background != null) {
                     background.render(renderer, 0, 0, _width - 18,
-                        _height - 30);
+                        _height - 30, _alpha);
                 }
             }
         };
@@ -361,7 +361,15 @@ public class PardnerChatView extends BDecoratedWindow
         public void appendSystem (SystemMessage msg)
         {
             _last = null;
-            _content.add(new BLabel(msg.message, "system_chat_entry"));
+            String level;
+            if (msg.attentionLevel == SystemMessage.ATTENTION) {
+                level = "attention";
+            } else if (msg.attentionLevel == SystemMessage.FEEDBACK) {
+                level = "feedback";
+            } else { // msg.attentionLevel == SystemMessage.INFO) {
+                level = "info";
+            }
+            _content.add(new BLabel(msg.message, level + "_chat_entry"));
             _scrollToEnd = true;
         }
 

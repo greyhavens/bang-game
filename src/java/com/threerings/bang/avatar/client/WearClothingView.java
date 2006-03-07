@@ -50,7 +50,8 @@ public class WearClothingView extends BContainer
         add(new HackyTabs(ctx, true, "ui/barber/tab_", tabs, 54, 30) {
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
-                tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42);
+                tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42,
+                    _alpha);
             }
             protected void tabSelected (int index) {
                 setSlot(index);

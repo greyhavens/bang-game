@@ -195,11 +195,11 @@ public class PlayerStatusView extends BContainer
     protected void renderBackground (Renderer renderer)
     {
         // first draw our color
-        _color.render(renderer, BACKGROUND_LOC.x, BACKGROUND_LOC.y);
+        _color.render(renderer, BACKGROUND_LOC.x, BACKGROUND_LOC.y, _alpha);
 
         // then draw our avatar
         if (_avatar != null) {
-            _avatar.render(renderer, AVATAR_LOC.x, AVATAR_LOC.y);
+            _avatar.render(renderer, AVATAR_LOC.x, AVATAR_LOC.y, _alpha);
         }
 
         // then draw the normal background

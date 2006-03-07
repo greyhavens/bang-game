@@ -293,14 +293,14 @@ public class PardnerView extends IconPalette
         {
             super.renderComponent(renderer);
             if (_location != null) {
-                _location.render(renderer, 6, 67);
+                _location.render(renderer, 6, 67, _alpha);
             }
-            _scroll.render(renderer, 8, 8);
+            _scroll.render(renderer, 8, 8, _alpha);
             _handle.render(renderer, (_width - _handle.getSize().width) / 2,
-                _last == null ? 16 : 24);
+                _last == null ? 16 : 24, _alpha);
             if (_last != null) {
                 _last.render(renderer, (_width - _last.getSize().width) / 2,
-                    12);
+                    12, _alpha);
             }
         }
 

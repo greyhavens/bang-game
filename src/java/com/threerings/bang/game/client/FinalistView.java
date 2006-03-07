@@ -91,12 +91,12 @@ public class FinalistView extends BContainer
         super.renderBackground(renderer);
 
         int ax = (_width - _avatar.getWidth())/2, ay = _banner.getHeight()/2;
-        _background.render(renderer, ax, ay);
-        _avatar.render(renderer, ax, ay);
+        _background.render(renderer, ax, ay, _alpha);
+        _avatar.render(renderer, ax, ay, _alpha);
         _frame.render(renderer, ax-(_frame.getWidth()-_avatar.getWidth())/2,
-                      ay-(_frame.getHeight()-_avatar.getHeight())/2);
-        _banner.render(renderer, 0, 0);
-        _medal.render(renderer, 0, getHeight()-_medal.getHeight());
+                      ay-(_frame.getHeight()-_avatar.getHeight())/2, _alpha);
+        _banner.render(renderer, 0, 0, _alpha);
+        _medal.render(renderer, 0, getHeight()-_medal.getHeight(), _alpha);
     }
 
     protected BIcon _avatar, _frame, _banner, _medal;

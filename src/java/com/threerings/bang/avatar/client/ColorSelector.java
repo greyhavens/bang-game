@@ -151,7 +151,7 @@ public class ColorSelector extends BComponent
         super.renderComponent(renderer);
 
         if (_selidx >= 0) {
-            _swatches[_selidx].circle.render(renderer, 4, 5);
+            _swatches[_selidx].circle.render(renderer, 4, 5, _alpha);
         }
     }
 

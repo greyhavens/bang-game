@@ -75,7 +75,7 @@ public class HackyTabs extends BComponent
         } else {
             ix = _tsize*_selidx;
         }
-        _tabs[_selidx].render(renderer, ix, iy);
+        _tabs[_selidx].render(renderer, ix, iy, _alpha);
     }
 
     protected MouseAdapter _mlistener = new MouseAdapter() {

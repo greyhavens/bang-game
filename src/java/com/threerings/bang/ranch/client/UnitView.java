@@ -93,7 +93,7 @@ public class UnitView extends BGeomView
     @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
-        _frame.render(renderer, 0, 0);
+        _frame.render(renderer, 0, 0, _alpha);
         super.renderComponent(renderer);
     }
 

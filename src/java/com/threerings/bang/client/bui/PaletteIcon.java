@@ -64,7 +64,7 @@ public class PaletteIcon extends SelectableIcon
     protected void renderComponent (Renderer renderer)
     {
         super.renderComponent(renderer);
-        _text.render(renderer);
+        _text.render(renderer, _alpha);
     }
 
     protected Label _text;
