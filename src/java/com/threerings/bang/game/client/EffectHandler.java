@@ -124,6 +124,11 @@ public class EffectHandler extends BoardView.BoardAction
             // their orientation immediately for now
             ((MobileSprite)sprite).faceTarget();
 
+        } else if (effect.equals(ShotEffect.SHOT_NOMOVE)) {
+            // if they shot without moving, we'll need to clear out any advance
+            // order now because we normally do it after they move
+            _view.clearAdvanceOrder(piece.pieceId);
+
         } else {
             // since we're not displaying an effect, we update immediately
             sprite.updated(piece, _tick);

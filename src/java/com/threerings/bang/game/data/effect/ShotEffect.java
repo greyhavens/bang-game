@@ -30,6 +30,9 @@ public class ShotEffect extends Effect
     
     /** We also rotate the shooter, thereby affecting it. */
     public static final String ROTATED = "rotated";
+    
+    /** Indicates that a shooter shot without moving. */
+    public static final String SHOT_NOMOVE = "shot_nomove";
 
     /** A normal shot. */
     public static final int NORMAL = 0;
@@ -160,7 +163,7 @@ public class ShotEffect extends Effect
         // update the shooter's last acted if necessary
         if (shooterLastActed != -1 && shooter.lastActed != shooterLastActed) {
             shooter.lastActed = shooterLastActed;
-            reportEffect(obs, shooter, UPDATED);
+            reportEffect(obs, shooter, SHOT_NOMOVE);
         }
 
         // rotate the shooter to face the target
