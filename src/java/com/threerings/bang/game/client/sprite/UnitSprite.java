@@ -46,6 +46,9 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class UnitSprite extends MobileSprite
 {
+    public static enum AdvanceOrder { NONE, MOVE, MOVE_SHOOT };
+    public static enum TargetMode { NONE, SURE_SHOT, MAYBE };
+
     public UnitSprite (String type)
     {
         super("units", type);
@@ -87,11 +90,37 @@ public class UnitSprite extends MobileSprite
     /**
      * Indicates that this piece is a potential target.
      */
-    public void setTargeted (boolean targeted)
+    public void setTargeted (TargetMode mode)
     {
         if (_pendingTick == -1) {
             _tgtquad.setDefaultColor(ColorRGBA.white);
-            _tgtquad.setCullMode(targeted ? CULL_DYNAMIC : CULL_ALWAYS);
+            switch (mode) {
+            case NONE:
+                _tgtquad.setCullMode(CULL_ALWAYS);
+                break;
+            case SURE_SHOT:
+                _tgtquad.setRenderState(_tgttst);
+                _tgtquad.setCullMode(CULL_DYNAMIC);
+                _tgtquad.updateRenderState();
+                break;
+            case MAYBE:
+                _tgtquad.setRenderState(_qtgttst);
+                _tgtquad.setCullMode(CULL_DYNAMIC);
+                _tgtquad.updateRenderState();
+                break;
+            }
+        }
+    }
+
+    /**
+     * Configures this sprite with a pending order or not.
+     */
+    public void setAdvanceOrder (AdvanceOrder pendo)
+    {
+        if (_pendo != pendo) {
+            _pendo = pendo;
+            int ticks = _piece.ticksUntilMovable(_tick);
+            _stattex.update(_piece, ticks, _pendo, false);
         }
     }
 
@@ -143,7 +172,7 @@ public class UnitSprite extends MobileSprite
         }
 
         // update our status display
-        _stattex.update(_piece, ticks, false);
+        _stattex.update(_piece, ticks, _pendo, false);
         _ustate.updateRenderState();
         setStatusVisible();
 
@@ -260,7 +289,7 @@ public class UnitSprite extends MobileSprite
 
         _stattex = new StatusTexture(ctx);
         _ustate = new SharedMesh("ustate", _highlight);
-        _stattex.update(_piece, _piece.ticksUntilMovable(_tick), false);
+        _stattex.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
         _ustate.setRenderState(_stattex.getTextureState());
         _ustate.updateRenderState();
         _status.attachChild(_ustate);
@@ -383,6 +412,8 @@ public class UnitSprite extends MobileSprite
 
         _tgttst = RenderUtil.createTextureState(
             ctx, "textures/ustatus/crosshairs.png");
+        _qtgttst = RenderUtil.createTextureState(
+            ctx, "textures/ustatus/crosshairs_q.png");
     }
 
     protected Quad _tgtquad;
@@ -397,13 +428,14 @@ public class UnitSprite extends MobileSprite
     protected SharedMesh _hov, _ustate;
     protected StatusTexture _stattex;
     protected short _pendingTick = -1;
+    protected AdvanceOrder _pendo = AdvanceOrder.NONE;
     protected boolean _hovered;
 
     protected Node _nugget;
     protected Model.Binding _nugbind;
 
     protected static Texture _hovtex;
-    protected static TextureState _tgttst;
+    protected static TextureState _tgttst, _qtgttst;
 
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();

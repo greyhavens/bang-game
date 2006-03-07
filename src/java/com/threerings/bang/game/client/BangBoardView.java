@@ -671,7 +671,9 @@ public class BangBoardView extends BoardView
                 _selection.computeShotLocation(p, moves) != null) {
                 UnitSprite sprite = getUnitSprite(p);
                 if (sprite != null) {
-                    sprite.setTargeted(true);
+                    sprite.setTargeted(_selection.lastActed >= p.lastActed ?
+                                       UnitSprite.TargetMode.MAYBE :
+                                       UnitSprite.TargetMode.SURE_SHOT);
                     dest.add(p.x, p.y);
                 } else {
                     log.warning("No sprite for unit! [unit=" + p + "].");
@@ -843,7 +845,7 @@ public class BangBoardView extends BoardView
         }
         for (PieceSprite s : _pieces.values()) {
             if (s instanceof UnitSprite) {
-                ((UnitSprite)s).setTargeted(false);
+                ((UnitSprite)s).setTargeted(UnitSprite.TargetMode.NONE);
             }
         }
     }
@@ -981,8 +983,11 @@ public class BangBoardView extends BoardView
                 y = target.y;
             }
 
-            _highlight = _tnode.createHighlight(x, y, true);
             _unit = unit;
+            _unit.setAdvanceOrder(targetId == -1 ?
+                                  UnitSprite.AdvanceOrder.MOVE :
+                                  UnitSprite.AdvanceOrder.MOVE_SHOOT);
+            _highlight = _tnode.createHighlight(x, y, true);
             _unit.setPendingNode(_highlight);
             _highlight.updateRenderState();
             _pnode.attachChild(_highlight);
@@ -991,6 +996,7 @@ public class BangBoardView extends BoardView
         public void clear ()
         {
             _pnode.detachChild(_highlight);
+            _unit.setAdvanceOrder(UnitSprite.AdvanceOrder.NONE);
             _unit.setPendingNode(null);
         }
 

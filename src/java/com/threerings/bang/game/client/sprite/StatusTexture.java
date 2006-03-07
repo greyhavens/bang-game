@@ -45,6 +45,12 @@ public class StatusTexture
                 "textures/ustatus/health_meter_full.png");
             _dempty = ctx.getImageCache().getBufferedImage(
                 "textures/ustatus/health_meter_empty.png");
+            _morder = ctx.getImageCache().getBufferedImage(
+                "textures/ustatus/move_order.png");
+            _msorder = ctx.getImageCache().getBufferedImage(
+                "textures/ustatus/move_shoot_order.png");
+            _outline = ctx.getImageCache().getBufferedImage(
+                "textures/ustatus/tick_outline.png");
             _ticks = new BufferedImage[5];
             for (int ii = 0; ii < _ticks.length; ii++) {
                 _ticks[ii] = ctx.getImageCache().getBufferedImage(
@@ -66,11 +72,12 @@ public class StatusTexture
      * Recomposites if necessary our status texture and updates the texture
      * state.
      */
-    public void update (Piece piece, int ticksToMove, boolean selected)
+    public void update (Piece piece, int ticksToMove,
+                        UnitSprite.AdvanceOrder pendo, boolean selected)
     {
         if (_texture.getImage() != null && _ticksToMove == ticksToMove &&
             _owner == piece.owner && _damage == piece.damage &&
-            _selected == selected) {
+            _pendo == pendo && _selected == selected) {
             return;
         }
 
@@ -82,6 +89,7 @@ public class StatusTexture
         _owner = piece.owner;
         _damage = piece.damage;
         _ticksToMove = ticksToMove;
+        _pendo = pendo;
         _selected = selected;
 
         BufferedImage target = new BufferedImage(
@@ -91,6 +99,25 @@ public class StatusTexture
         try {
             gfx.scale(1, -1);
             gfx.translate(0, -STATUS_SIZE);
+
+            // draw our outline
+            if (_ticksToMove > 0) {
+                gfx.setClip(0, 0, STATUS_SIZE, STATUS_SIZE/2);
+                gfx.drawImage(_outline, 0, 0, null);
+                gfx.setClip(null);
+            } else {
+                gfx.drawImage(_outline, 0, 0, null);
+            }
+
+            // draw our pending order indicator
+            switch (_pendo) {
+            case MOVE:
+                gfx.drawImage(_morder, 0, 0, null);
+                break;
+            case MOVE_SHOOT:
+                gfx.drawImage(_msorder, 0, 0, null);
+                break;
+            }
 
             // draw the ready indicator if appropriate
             if (_ticksToMove <= 0) {
@@ -150,6 +177,7 @@ public class StatusTexture
     protected int _owner;
     protected int _ticksToMove;
     protected int _damage;
+    protected UnitSprite.AdvanceOrder _pendo = UnitSprite.AdvanceOrder.NONE;
     protected boolean _selected;
 
     protected Texture _texture;
@@ -157,7 +185,8 @@ public class StatusTexture
 
     protected static BufferedImage _ready;
     protected static BufferedImage _dfull, _dempty;
-    protected static BufferedImage _darkout, _lightout;
+    protected static BufferedImage _morder, _msorder;
+    protected static BufferedImage _outline;
     protected static BufferedImage[] _ticks;
 
     /** Defines the amount by which the damage arc image is inset from a
