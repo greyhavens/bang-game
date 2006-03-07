@@ -329,8 +329,15 @@ public class BangController extends GameController
                 } else if (code == GameCodes.QUEUED_ORDER) {
                     // tell the view to display a queued move for this piece
                     _view.view.addAdvanceOrder(unit.pieceId, tx, ty, targetId);
+
                     // report to the tutorial controller
-                    postEvent(TutorialCodes.UNIT_ORDERED);
+                    if (targetId == -1) {
+                        postEvent(TutorialCodes.UNIT_ORDERED_MOVE);
+                    } else if (tx == Short.MAX_VALUE) {
+                        postEvent(TutorialCodes.UNIT_ORDERED_ATTACK);
+                    } else {
+                        postEvent(TutorialCodes.UNIT_ORDERED_MOVE_ATTACK);
+                    }
 
                 } else {
                     log.warning("Got unknown response to move(" + unit.info() +

@@ -81,7 +81,7 @@ public class TutorialController
      */
     public void handleEvent (String event)
     {
-        if (_pending != null && event.equals(_pending.event)) {
+        if (_pending != null && event.matches(_pending.event)) {
             processedAction(_pending);
             _pending = null;
         }
@@ -123,7 +123,7 @@ public class TutorialController
             _pending = (TutorialConfig.Wait)action;
 
             // let them know if we're waiting for them to click
-            if (_pending.event.equals(TutorialCodes.TEXT_CLICKED)) {
+            if (TutorialCodes.TEXT_CLICKED.matches(_pending.event)) {
                 _click.setText(_gmsgs.get("m.tutorial_click"));
             }
 

@@ -26,7 +26,7 @@
 
   <!-- explain preloaded moves, have them preload a move -->
   <text message="preload_move"/>
-  <wait event="unit_ordered"/>
+  <wait event="unit_ordered_move"/>
 
   <!-- have them look at the preloaded move indicator -->
   <text message="examine_pending"/>
@@ -38,10 +38,10 @@
   <wait event="unit_selected"/>
 
   <text message="click_to_attack"/>
-  <wait event="unit_attacked"/>
+  <wait event="(unit_.*attack.*)"/>
 
   <text message="move_and_attack"/>
-  <wait event="unit_move_attacked"/>
+  <wait event="unit_.*move_attack.*"/>
 
   <!-- explain damage and unit respawnning -->
   <text message="damage_and_respawn" step="5"/>

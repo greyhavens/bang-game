@@ -488,6 +488,9 @@ public class BangBoardView extends BoardView
             // may have changed
             checkForSelectionInfluence(piece);
         }
+
+        // let the controller know that a unit moved
+        _ctrl.postEvent(TutorialCodes.UNIT_MOVED);
     }
 
     /** Called by the {@link EffectHandler} when a piece was killed. */
