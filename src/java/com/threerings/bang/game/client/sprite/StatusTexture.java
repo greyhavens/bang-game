@@ -6,6 +6,7 @@ package com.threerings.bang.game.client.sprite;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -94,41 +95,43 @@ public class StatusTexture
 
         BufferedImage target = new BufferedImage(
             STATUS_SIZE, STATUS_SIZE, BufferedImage.TYPE_4BYTE_ABGR);
-
+        RescaleOp colorizer =
+            new RescaleOp(RECOLORS[piece.owner], new float[4], null);
         Graphics2D gfx = (Graphics2D)target.getGraphics();
         try {
             gfx.scale(1, -1);
             gfx.translate(0, -STATUS_SIZE);
 
             // draw our outline
+            RescaleOp selop = (_selected ? WHITENER : colorizer);
             if (_ticksToMove > 0) {
                 gfx.setClip(0, 0, STATUS_SIZE, STATUS_SIZE/2);
-                gfx.drawImage(_outline, 0, 0, null);
+                gfx.drawImage(_outline, selop, 0, 0);
                 gfx.setClip(null);
             } else {
-                gfx.drawImage(_outline, 0, 0, null);
+                gfx.drawImage(_outline, selop, 0, 0);
             }
 
             // draw our pending order indicator
             switch (_pendo) {
             case MOVE:
-                gfx.drawImage(_morder, 0, 0, null);
+                gfx.drawImage(_morder, colorizer, 0, 0);
                 break;
             case MOVE_SHOOT:
-                gfx.drawImage(_msorder, 0, 0, null);
+                gfx.drawImage(_msorder, colorizer, 0, 0);
                 break;
             }
 
             // draw the ready indicator if appropriate
             if (_ticksToMove <= 0) {
-                gfx.drawImage(_ready, 0, 0, null);
+                gfx.drawImage(_ready, colorizer, 0, 0);
             }
 
             // draw the appropriate tick imagery
-            gfx.drawImage(_ticks[Math.max(0, 4-_ticksToMove)], 0, 0, null);
+            gfx.drawImage(_ticks[Math.max(0, 4-_ticksToMove)], colorizer, 0, 0);
 
             // draw the current damage level
-            gfx.drawImage(_dempty, 0, 0, null);
+            gfx.drawImage(_dempty, colorizer, 0, 0);
             float percent = (100 - _damage) / 100f;
             float extent = percent * (90 - 2*ARC_INSETS);
             // expand the width and height a smidge to avoid funny business
@@ -138,7 +141,7 @@ public class StatusTexture
                 10*STATUS_SIZE/8, 10*STATUS_SIZE/8,
                 90 - ARC_INSETS - extent, extent, Arc2D.PIE);
             gfx.setClip(arc);
-            gfx.drawImage(_dfull, 0, 0, null);
+            gfx.drawImage(_dfull, colorizer, 0, 0);
 
         } finally {
             gfx.dispose();
@@ -192,4 +195,17 @@ public class StatusTexture
     /** Defines the amount by which the damage arc image is inset from a
      * full quarter circle (on each side): 8 degrees. */
     protected static final float ARC_INSETS = 7;
+
+    /** Used to recolor our 24-bit status images. */
+    protected static final float[][] RECOLORS = {
+        { 0, 0, 1, 1 }, // blue
+        { 1, 0, 0, 1 }, // red
+        { 0, 1, 0, 1 }, // green
+        { 1, 1, 0, 1 }, // yellow
+    };
+
+    /** Used to make our gray outline white. */
+    protected static final RescaleOp WHITENER =
+        new RescaleOp(new float[] { 1, 1, 1, 1 },
+                      new float[] { 255, 255, 255, 0 }, null);
 }

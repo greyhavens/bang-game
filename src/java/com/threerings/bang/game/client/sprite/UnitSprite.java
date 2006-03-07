@@ -3,10 +3,6 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.awt.Graphics2D;
-import java.awt.geom.Arc2D;
-import java.awt.image.BufferedImage;
-
 import java.util.HashMap;
 
 import com.jme.image.Texture;
@@ -23,7 +19,6 @@ import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
 
 import com.threerings.jme.sprite.Path;
 
@@ -61,8 +56,9 @@ public class UnitSprite extends MobileSprite
     {
         if (_hovered != hovered) {
             _hovered = hovered;
-            _hov.setCullMode((_selected || _hovered) ?
-                             CULL_DYNAMIC : CULL_ALWAYS);
+            updateStatusTexture();
+
+            // if we have a pending node, adjust its highlight as well
             if (_pendnode != null) {
                 if (_hovered) {
                     _pendnode.setDefaultColor(ColorRGBA.white);
@@ -84,7 +80,7 @@ public class UnitSprite extends MobileSprite
     public void setSelected (boolean selected)
     {
         super.setSelected(selected);
-        _hov.setCullMode((_selected || _hovered) ? CULL_DYNAMIC : CULL_ALWAYS);
+        updateStatusTexture();
     }
 
     /**
@@ -119,8 +115,7 @@ public class UnitSprite extends MobileSprite
     {
         if (_pendo != pendo) {
             _pendo = pendo;
-            int ticks = _piece.ticksUntilMovable(_tick);
-            _stattex.update(_piece, ticks, _pendo, false);
+            updateStatusTexture();
         }
     }
 
@@ -149,8 +144,11 @@ public class UnitSprite extends MobileSprite
     {
         _pendnode = pnode;
         int ticks;
-        if (_pendnode != null &&
-            (ticks = _piece.ticksUntilMovable(_tick)) > 0) {
+        if (_pendnode != null) {
+            if ((ticks = _piece.ticksUntilMovable(_tick)) <= 0) {
+                log.warning("Am pending but am movable!? " + this);
+                ticks = 1;
+            }
             _pendtst.setTexture(createPendingTexture(ticks-1));
             _pendnode.setRenderState(_pendtst);
             _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
@@ -172,9 +170,7 @@ public class UnitSprite extends MobileSprite
         }
 
         // update our status display
-        _stattex.update(_piece, ticks, _pendo, false);
-        _ustate.updateRenderState();
-        setStatusVisible();
+        updateStatusTexture();
 
         // update our colors in the event that our owner changes
         configureOwnerColors();
@@ -204,14 +200,14 @@ public class UnitSprite extends MobileSprite
     public void cancelMove ()
     {
         super.cancelMove();
-        setStatusVisible();
+        updateStatusTexture();
     }
 
     @Override // documentation inherited
     public void pathCompleted ()
     {
         super.pathCompleted();
-        setStatusVisible();
+        updateStatusTexture();
     }
 
     @Override // documentation inherited
@@ -249,7 +245,7 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
-        if (_hovtex == null) {
+        if (_tgttst == null) {
             loadTextures(ctx);
         }
 
@@ -278,14 +274,6 @@ public class UnitSprite extends MobileSprite
         // this composite of icons combines to display our status
         _status = new Node("status");
         attachHighlight(_status);
-
-        // this icon is displayed when the mouse is hovered over us
-        _hov = new SharedMesh("hov", _highlight);
-        _hov.setRenderState(
-            RenderUtil.createTextureState(ctx, _hovtex.createSimpleClone()));
-        _hov.updateRenderState();
-        _status.attachChild(_hov);
-        _hov.setCullMode(CULL_ALWAYS);
 
         _stattex = new StatusTexture(ctx);
         _ustate = new SharedMesh("ustate", _highlight);
@@ -324,9 +312,12 @@ public class UnitSprite extends MobileSprite
     /**
      * Updates the visibility and location of the status display.
      */
-    protected void setStatusVisible ()
+    protected void updateStatusTexture ()
     {
-        if (_piece.isAlive() /* && !isMoving() */) {
+        if (_piece.isAlive() && !isMoving()) {
+            int ticks = _piece.ticksUntilMovable(_tick);
+            _stattex.update(_piece, ticks, _pendo, _hovered || _selected);
+            _ustate.updateRenderState();
             _status.setCullMode(CULL_DYNAMIC);
         } else {
             _status.setCullMode(CULL_ALWAYS);
@@ -343,6 +334,8 @@ public class UnitSprite extends MobileSprite
             if (_nugbind != null) {
                 _nugbind.detach();
             }
+            // clear out our status texture
+            _stattex.cleanup();
         }
     }
 
@@ -386,8 +379,7 @@ public class UnitSprite extends MobileSprite
     /** Sets up our colors according to our owning player. */
     protected void configureOwnerColors ()
     {
-        _highlight.setDefaultColor(JPIECE_COLORS[_piece.owner]);
-        _highlight.updateRenderState();
+        // nothing to do at present
     }
 
     protected Texture createPendingTexture (int tidx)
@@ -404,12 +396,6 @@ public class UnitSprite extends MobileSprite
 
     protected static void loadTextures (BasicContext ctx)
     {
-        // we also need to ensure that the textures are bound to ids before
-        // we clone them
-        _hovtex = ctx.getTextureCache().getTexture(
-            "textures/ustatus/selected.png");
-        RenderUtil.createTextureState(ctx, _hovtex).apply();
-
         _tgttst = RenderUtil.createTextureState(
             ctx, "textures/ustatus/crosshairs.png");
         _qtgttst = RenderUtil.createTextureState(
@@ -425,7 +411,7 @@ public class UnitSprite extends MobileSprite
     protected Texture[] _pendtexs;
 
     protected Node _status;
-    protected SharedMesh _hov, _ustate;
+    protected SharedMesh _ustate;
     protected StatusTexture _stattex;
     protected short _pendingTick = -1;
     protected AdvanceOrder _pendo = AdvanceOrder.NONE;
@@ -434,7 +420,6 @@ public class UnitSprite extends MobileSprite
     protected Node _nugget;
     protected Model.Binding _nugbind;
 
-    protected static Texture _hovtex;
     protected static TextureState _tgttst, _qtgttst;
 
     protected static HashMap<String,Texture[]> _pendtexmap =
