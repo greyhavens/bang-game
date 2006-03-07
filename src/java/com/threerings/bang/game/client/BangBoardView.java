@@ -923,7 +923,12 @@ public class BangBoardView extends BoardView
                 msprite.queueAction(MobileSprite.REMOVED);
                 return sprite;
             }
+
+        } else if (sprite instanceof BonusSprite) {
+            // if this was a bonus, note that it was activated
+            _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED);
         }
+
         return super.removePieceSprite(pieceId, why);
     }
 
