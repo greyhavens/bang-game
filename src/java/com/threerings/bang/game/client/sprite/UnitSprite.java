@@ -143,27 +143,12 @@ public class UnitSprite extends MobileSprite
         }
 
         // update our status display
-        updateStatus();
-        TextureState tstate =
-            (TextureState)_ticks.getRenderState(RenderState.RS_TEXTURE);
-        if (ticks > 0) {
-            tstate.setTexture(
-                _ticktex[Math.max(0, 4-ticks)].createSimpleClone());
-            _movable.setCullMode(CULL_ALWAYS);
-        } else {
-            tstate.setTexture(_ticktex[4].createSimpleClone());
-            _movable.setCullMode(CULL_DYNAMIC);
-        }
-        _ticks.updateRenderState();
+        _stattex.update(_piece, ticks, false);
+        _ustate.updateRenderState();
+        setStatusVisible();
 
         // update our colors in the event that our owner changes
         configureOwnerColors();
-
-        // update our damage texture if necessary
-        if (unit.damage != _odamage) {
-            _damtex.setTexture(createDamageTexture());
-            _odamage = unit.damage;
-        }
 
         // display our nugget if appropriate
         if (unit.benuggeted && _nugget.getParent() == null) {
@@ -190,14 +175,14 @@ public class UnitSprite extends MobileSprite
     public void cancelMove ()
     {
         super.cancelMove();
-        updateStatus();
+        setStatusVisible();
     }
 
     @Override // documentation inherited
     public void pathCompleted ()
     {
         super.pathCompleted();
-        updateStatus();
+        setStatusVisible();
     }
 
     @Override // documentation inherited
@@ -214,20 +199,10 @@ public class UnitSprite extends MobileSprite
         _camrot.mult(HALF_UNIT, _camtrans);
         _camtrans.set(0.5f - _camtrans.x, 0.5f - _camtrans.y, 0f);
 
-        Texture mtex = ((TextureState)_movable.getRenderState(
-            RenderState.RS_TEXTURE)).getTexture();
-        mtex.setRotation(_camrot);
-        mtex.setTranslation(_camtrans);
-
-        Texture ttex = ((TextureState)_ticks.getRenderState(
+        Texture ttex = ((TextureState)_ustate.getRenderState(
             RenderState.RS_TEXTURE)).getTexture();
         ttex.setRotation(_camrot);
         ttex.setTranslation(_camtrans);
-
-        Texture dtex = ((TextureState)_damage.getRenderState(
-            RenderState.RS_TEXTURE)).getTexture();
-        dtex.setRotation(_camrot);
-        dtex.setTranslation(_camtrans);
 
         // we have to do extra fiddly business here because our texture is
         // additionally scaled and translated to center the texture at half
@@ -283,25 +258,12 @@ public class UnitSprite extends MobileSprite
         _status.attachChild(_hov);
         _hov.setCullMode(CULL_ALWAYS);
 
-        _ticks = new SharedMesh("ticks", _highlight);
-        int tick = _piece.ticksUntilMovable(_tick), tidx = Math.max(0, 4-tick);
-        _ticks.setRenderState(RenderUtil.createTextureState(
-                                  ctx, _ticktex[tidx].createSimpleClone()));
-        _ticks.updateRenderState();
-        _status.attachChild(_ticks);
-
-        _damage = new SharedMesh("damage", _highlight);
-        _damtex = RenderUtil.createTextureState(ctx, createDamageTexture());
-        _damage.setRenderState(_damtex);
-        _damage.updateRenderState();
-        _status.attachChild(_damage);
-
-        _movable = new SharedMesh("movable", _highlight);
-        _movable.setRenderState(
-            RenderUtil.createTextureState(ctx, _movetex.createSimpleClone()));
-        _movable.updateRenderState();
-        _status.attachChild(_movable);
-        _movable.setCullMode(tick > 0 ? CULL_ALWAYS : CULL_DYNAMIC);
+        _stattex = new StatusTexture(ctx);
+        _ustate = new SharedMesh("ustate", _highlight);
+        _stattex.update(_piece, _piece.ticksUntilMovable(_tick), false);
+        _ustate.setRenderState(_stattex.getTextureState());
+        _ustate.updateRenderState();
+        _status.attachChild(_ustate);
 
         // this icon is displayed when we're a target
         _tgtquad = RenderUtil.createIcon(_tgttst);
@@ -333,7 +295,7 @@ public class UnitSprite extends MobileSprite
     /**
      * Updates the visibility and location of the status display.
      */
-    protected void updateStatus ()
+    protected void setStatusVisible ()
     {
         if (_piece.isAlive() /* && !isMoving() */) {
             _status.setCullMode(CULL_DYNAMIC);
@@ -380,7 +342,7 @@ public class UnitSprite extends MobileSprite
         coords[idx] = new Vector3f();
         toWorldCoords(nx, ny, elev, coords[idx]);
     }
-    
+
     /** Computes the elevation of a flying piece. */
     protected int computeFlightElevation (BangBoard board, int tx, int ty)
     {
@@ -391,41 +353,12 @@ public class UnitSprite extends MobileSprite
                 FLYER_PROP_HEIGHT) * BangBoard.ELEVATION_UNITS_PER_TILE);
         return Math.max(groundel, propel);
     }
-    
+
     /** Sets up our colors according to our owning player. */
     protected void configureOwnerColors ()
     {
         _highlight.setDefaultColor(JPIECE_COLORS[_piece.owner]);
         _highlight.updateRenderState();
-    }
-
-    protected Texture createDamageTexture ()
-    {
-        int width = _dempty.getWidth(), height = _dempty.getHeight();
-        BufferedImage comp = new BufferedImage(
-            width, height, BufferedImage.TYPE_INT_ARGB);
-
-        Graphics2D gfx = (Graphics2D)comp.getGraphics();
-        try {
-            gfx.drawImage(_dempty, 0, 0, null);
-            float percent = (100 - _piece.damage) / 100f;
-            float extent = percent * (90 - 2*ARC_INSETS);
-            // expand the width and height a smidge to avoid funny
-            // business around the edges
-            Arc2D.Float arc = new Arc2D.Float(
-                -width/8, -height/8, 10*width/8, 10*height/8,
-                90 - ARC_INSETS - extent, extent, Arc2D.PIE);
-            gfx.setClip(arc);
-            gfx.drawImage(_dfull, 0, 0, null);
-
-        } finally {
-            gfx.dispose();
-        }
-
-        Texture dtex = TextureManager.loadTexture(
-            comp, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, true);
-        dtex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-        return dtex;
     }
 
     protected Texture createPendingTexture (int tidx)
@@ -450,22 +383,6 @@ public class UnitSprite extends MobileSprite
 
         _tgttst = RenderUtil.createTextureState(
             ctx, "textures/ustatus/crosshairs.png");
-        _movetex = ctx.getTextureCache().getTexture(
-            "textures/ustatus/tick_ready.png");
-        _movetex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-        RenderUtil.createTextureState(ctx, _movetex).apply();
-        
-        _ticktex = new Texture[5];
-        for (int ii = 0; ii < 5; ii++) {
-            _ticktex[ii] = ctx.getTextureCache().getTexture(
-                "textures/ustatus/tick_counter_" + ii + ".png");
-            _ticktex[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-            RenderUtil.createTextureState(ctx, _ticktex[ii]).apply();
-        }
-        _dfull = ctx.getImageCache().getBufferedImage(
-            "textures/ustatus/health_meter_full.png");
-        _dempty = ctx.getImageCache().getBufferedImage(
-            "textures/ustatus/health_meter_empty.png");
     }
 
     protected Quad _tgtquad;
@@ -477,18 +394,15 @@ public class UnitSprite extends MobileSprite
     protected Texture[] _pendtexs;
 
     protected Node _status;
-    protected SharedMesh _hov, _ticks, _damage, _movable;
-    protected TextureState _damtex;
-    protected int _odamage;
+    protected SharedMesh _hov, _ustate;
+    protected StatusTexture _stattex;
     protected short _pendingTick = -1;
     protected boolean _hovered;
 
     protected Node _nugget;
     protected Model.Binding _nugbind;
 
-    protected static BufferedImage _dfull, _dempty;
-    protected static Texture _hovtex, _movetex;
-    protected static Texture[] _ticktex;
+    protected static Texture _hovtex;
     protected static TextureState _tgttst;
 
     protected static HashMap<String,Texture[]> _pendtexmap =
@@ -503,10 +417,10 @@ public class UnitSprite extends MobileSprite
     /** Defines the amount by which the damage arc image is inset from a
      * full quarter circle (on each side): 8 degrees. */
     protected static final float ARC_INSETS = 7;
-    
+
     /** The height above ground at which flyers fly (in tile lengths). */
     protected static final int FLYER_GROUND_HEIGHT = 1;
-    
+
     /** The height above props at which flyers fly (in tile lengths). */
     protected static final float FLYER_PROP_HEIGHT = 0.25f;
 }
