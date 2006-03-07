@@ -23,12 +23,13 @@ public interface BangService extends InvocationService
     public void selectTeam (Client client, String[] units);
 
     /**
-     * Requests that a piece be moved to the specified location.
+     * Issues an order to a particular unit to do some combination of moving
+     * and shooting.
      *
      * @param targetId the id of the piece on which to fire after moving
      * or -1 if no firing is desired.
      */
-    public void move (Client client, int pieceId, short x, short y,
+    public void order (Client client, int pieceId, short x, short y,
                       int targetId, ResultListener listener);
 
     /**

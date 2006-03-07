@@ -583,7 +583,12 @@ public class BangBoard extends SimpleStreamableObject
     public void clearShadow (Piece piece)
     {
         int pos = _width*piece.y+piece.x;
-        _tstate[pos] = _btstate[pos];
+        if (piece instanceof Bonus && _tstate[pos] >= 0) {
+            // we may clear a bonus after a piece has moved into place to pick
+            // it up, in which case we want to do nothing
+        } else {
+            _tstate[pos] = _btstate[pos];
+        }
     }
 
     /**
@@ -617,7 +622,7 @@ public class BangBoard extends SimpleStreamableObject
             }
 
         } else if (piece instanceof Bonus) {
-            _tstate[_width*piece.y+piece.x] = O_FLAT;
+            _tstate[_width*piece.y+piece.x] = O_BONUS;
 
         } else if (piece instanceof Train || piece.owner < 0) {
             _tstate[_width*piece.y+piece.x] = O_PROP;
@@ -757,6 +762,7 @@ public class BangBoard extends SimpleStreamableObject
         if (!_playarea.contains(x, y)) {
             return false;
         }
+
         // we accord flyer status to trains as they need to go "over" some
         // props, but will otherwise not do funny things
         int idx = y*_width+x;
@@ -764,7 +770,7 @@ public class BangBoard extends SimpleStreamableObject
         if (piece.isFlyer() || piece instanceof Train) {
             return true;
         } else {
-            return (tstate == O_FLAT) ||
+            return (tstate == O_FLAT) || (tstate == O_BONUS) ||
                 (tstate == piece.owner && _btstate[idx] == O_FLAT);
         }
     }
@@ -1097,12 +1103,16 @@ public class BangBoard extends SimpleStreamableObject
     /** Indicates that this tile is flat and traversable. */
     protected static final byte O_FLAT = -1;
 
+    /** Indicates that this tile is flat and traversable but occupied by a
+     * bonus. */
+    protected static final byte O_BONUS = -2;
+
     /** Indicates that this tile is rough and only traversable by some units. */
-    protected static final byte O_ROUGH = -2;
+    protected static final byte O_ROUGH = -3;
 
     /** Indicates that this tile is impassable by non-air units. */
-    protected static final byte O_IMPASS = -3;
+    protected static final byte O_IMPASS = -4;
 
     /** Indicates that this tile is occupied by a prop. */
-    protected static final byte O_PROP = -4;
+    protected static final byte O_PROP = -5;
 }

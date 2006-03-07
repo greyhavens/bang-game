@@ -230,7 +230,7 @@ public class BangBoardView extends BoardView
     }
 
     /**
-     * Notes that the specified piece no longer has a queued move action.
+     * Notes that the specified piece no longer has a pending move action.
      */
     public void clearPendingMove (int pieceId)
     {
@@ -323,11 +323,11 @@ public class BangBoardView extends BoardView
         // remove our event listener
         _bangobj.removeListener(_ticker);
 
-        // clear out queued moves
-        for (QueuedMove move : _queuedMoves.values()) {
-            move.clear();
+        // clear out advance orders
+        for (AdvanceOrder order : _orders.values()) {
+            order.clear();
         }
-        _queuedMoves.clear();
+        _orders.clear();
     }
     
     @Override // documentation inherited
@@ -475,6 +475,9 @@ public class BangBoardView extends BoardView
     /** Called by the {@link EffectHandler} when a piece has moved. */
     protected void pieceDidMove (Piece piece)
     {
+        // clear out any advance order for this piece
+        clearAdvanceOrder(piece.pieceId);
+
         // if this was our selection, refresh it
         if (_selection == piece) {
             clearSelection();
@@ -485,45 +488,6 @@ public class BangBoardView extends BoardView
             // may have changed
             checkForSelectionInfluence(piece);
         }
-
-//         // make sure all of our queued moves are still valid
-//         if (_queuedMoves.size() > 0) {
-//             PointSet moves = new PointSet();
-//             for (Iterator<Integer> iter = _queuedMoves.keySet().iterator();
-//                  iter.hasNext(); ) {
-//                 Integer pieceId = iter.next();
-//                 QueuedMove move = _queuedMoves.get(pieceId);
-//                 Unit unit = (Unit)_bangobj.pieces.get(pieceId);
-//                 if (unit == null) {
-//                     move.clear();
-//                     iter.remove();
-//                     continue;
-//                 }
-//                 _bangobj.board.computeMoves(unit, moves, null);
-
-//                 // if no specific location was specified, make sure we can
-//                 // still determine a location from which to fire
-//                 if (move.mx == Short.MAX_VALUE) {
-//                     Piece target = (Piece)_bangobj.pieces.get(move.targetId);
-//                     if (target != null) {
-//                         Point spot = unit.computeShotLocation(target, moves);
-//                         if (spot != null) {
-//                             continue;
-//                         }
-//                     }
-
-//                 // if a specific location was specified, make sure we can
-//                 // still reach it
-//                 } else if (moves.contains(move.mx, move.my)) {
-//                     continue;
-//                 }
-
-//                 // the move is no longer valid, so clear and remove it
-//                 // TODO: play a sound?
-//                 move.clear();
-//                 iter.remove();
-//             }
-//         }
     }
 
     /** Called by the {@link EffectHandler} when a piece was killed. */
@@ -535,8 +499,8 @@ public class BangBoardView extends BoardView
             _pendmap.put(pieceId, 0);
         }
 
-        // clear out any queued move for this piece
-        clearQueuedMove(pieceId);
+        // clear out any advance order for this piece
+        clearAdvanceOrder(pieceId);
 
         // if this piece was selected, clear it
         if (_selection != null && _selection.pieceId == pieceId) {
@@ -564,12 +528,6 @@ public class BangBoardView extends BoardView
                 piece = null;
             }
         }
-
-//         if (piece != null) {
-//             log.info("Clicked " + piece.info());
-//         } else {
-//             log.info("Clicked +" + _high.x + "+" + _high.y);
-//         }
 
         // if we are placing a card, activate it
         if (_card != null) {
@@ -833,58 +791,41 @@ public class BangBoardView extends BoardView
 
     protected void executeAction ()
     {
-        // look up the unit we're "acting" with
-        Unit actor = (Unit)_bangobj.pieces.get(_action[0]);
-        if (actor == null) {
-            log.warning("No actor? [action=" +
-                        StringUtil.toString(_action) + "].");
-            clearSelection();
-            return;
-        }
-
-        // if this unit is not yet movable, "queue" up their action
-        UnitSprite sprite = getUnitSprite(actor);
-//         if (sprite.getPiece().ticksUntilMovable(_bangobj.tick) > 0) {
-//             clearQueuedMove(_action[0]);
-//             _queuedMoves.put(_action[0], new QueuedMove(sprite, _action));
-//             _ctrl.postEvent(TutorialCodes.UNIT_ORDERED);
-//         } else {
-            // otherwise enact the move/fire combination immediately
-            _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
-//         }
-        // and clear everything out
+        // send off a request to move and shoot
+        _ctrl.moveAndFire(_action[0], _action[1], _action[2], _action[3]);
+        // and clear our selection
         clearSelection();
     }
 
-    public void addQueuedMove (int unitId, int tx, int ty, int targetId)
+    protected void addAdvanceOrder (int unitId, int tx, int ty, int targetId)
     {
-        // clear any old queued move for this unit
-        clearQueuedMove(unitId);
+        // clear any old advance order for this unit
+        clearAdvanceOrder(unitId);
 
         // look up the unit we're "acting" with
         Unit actor = (Unit)_bangobj.pieces.get(unitId);
         if (actor == null) {
-            log.warning("Missing piece for queued move [id=" + unitId + "].");
+            log.warning("Missing piece for advance order [id=" + unitId + "].");
             return;
         }
         UnitSprite sprite = getUnitSprite(actor);
         if (sprite == null) {
-            log.warning("Missing sprite for queued move [p=" + actor + "].");
+            log.warning("Missing sprite for advance order [p=" + actor + "].");
             return;
         }
-        _queuedMoves.put(unitId, new QueuedMove(sprite, tx, ty, targetId));
+        _orders.put(unitId, new AdvanceOrder(sprite, tx, ty, targetId));
     }
 
-    protected boolean hasQueuedMove (int unitId)
+    protected boolean hasAdvanceOrder (int unitId)
     {
-        return _queuedMoves.containsKey(unitId);
+        return _orders.containsKey(unitId);
     }
 
-    protected void clearQueuedMove (int unitId)
+    protected void clearAdvanceOrder (int unitId)
     {
-        QueuedMove move = _queuedMoves.remove(unitId);
-        if (move != null) {
-            move.clear();
+        AdvanceOrder order = _orders.remove(unitId);
+        if (order != null) {
+            order.clear();
         }
     }
 
@@ -983,7 +924,6 @@ public class BangBoardView extends BoardView
                 return sprite;
             }
         }
-
         return super.removePieceSprite(pieceId, why);
     }
 
@@ -992,25 +932,6 @@ public class BangBoardView extends BoardView
      */
     protected void ticked (short tick)
     {
-        // fire off any queued moves
-        for (Iterator<Map.Entry<Integer,QueuedMove>> iter =
-                 _queuedMoves.entrySet().iterator(); iter.hasNext(); ) {
-            Map.Entry<Integer,QueuedMove> move = iter.next();
-            Piece piece = (Piece)_bangobj.pieces.get(move.getKey());
-            if (piece == null || !piece.isAlive()) {
-                // our piece up and died, clear their queued action
-                iter.remove();
-                continue;
-            }
-            if (piece.ticksUntilMovable(tick) == 0) {
-                QueuedMove qmove = move.getValue();
-                _ctrl.moveAndFire(qmove.unitId, qmove.mx, qmove.my,
-                                  qmove.targetId);
-                qmove.clear();
-                iter.remove();
-            }
-        }
-
         // update all of our sprites
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
@@ -1033,11 +954,12 @@ public class BangBoardView extends BoardView
         executeAction(handler);
     }
 
-    protected class QueuedMove
+    /** Used to visualize advance orders. */
+    protected class AdvanceOrder
     {
         public int unitId, mx, my, targetId;
 
-        public QueuedMove (UnitSprite unit, int mx, int my, int targetId)
+        public AdvanceOrder (UnitSprite unit, int mx, int my, int targetId)
         {
             unitId = unit.getPieceId();
             this.mx = mx;
@@ -1118,8 +1040,9 @@ public class BangBoardView extends BoardView
      * animating previous actions. */
     protected IntIntMap _pendmap = new IntIntMap();
 
-    protected HashMap<Integer,QueuedMove> _queuedMoves =
-        new HashMap<Integer,QueuedMove>();
+    /** Tracks all pending advance orders. */
+    protected HashMap<Integer,AdvanceOrder> _orders =
+        new HashMap<Integer,AdvanceOrder>();
 
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =

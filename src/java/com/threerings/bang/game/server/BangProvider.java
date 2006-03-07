@@ -16,9 +16,9 @@ import com.threerings.presents.server.InvocationProvider;
 public interface BangProvider extends InvocationProvider
 {
     /**
-     * Handles a {@link BangService#move} request.
+     * Handles a {@link BangService#order} request.
      */
-    public void move (ClientObject caller, int arg1, short arg2, short arg3, int arg4, InvocationService.ResultListener arg5)
+    public void order (ClientObject caller, int arg1, short arg2, short arg3, int arg4, InvocationService.ResultListener arg5)
         throws InvocationException;
 
     /**

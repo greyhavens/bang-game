@@ -19,15 +19,15 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class BangMarshaller extends InvocationMarshaller
     implements BangService
 {
-    /** The method id used to dispatch {@link #move} requests. */
-    public static final int MOVE = 1;
+    /** The method id used to dispatch {@link #order} requests. */
+    public static final int ORDER = 1;
 
     // documentation inherited from interface
-    public void move (Client arg1, int arg2, short arg3, short arg4, int arg5, InvocationService.ResultListener arg6)
+    public void order (Client arg1, int arg2, short arg3, short arg4, int arg5, InvocationService.ResultListener arg6)
     {
         InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
         listener6.listener = arg6;
-        sendRequest(arg1, MOVE, new Object[] {
+        sendRequest(arg1, ORDER, new Object[] {
             new Integer(arg2), new Short(arg3), new Short(arg4), new Integer(arg5), listener6
         });
     }

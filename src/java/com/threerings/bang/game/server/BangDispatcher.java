@@ -38,8 +38,8 @@ public class BangDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
-        case BangMarshaller.MOVE:
-            ((BangProvider)provider).move(
+        case BangMarshaller.ORDER:
+            ((BangProvider)provider).order(
                 source,
                 ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue(), ((Integer)args[3]).intValue(), (InvocationService.ResultListener)args[4]
             );

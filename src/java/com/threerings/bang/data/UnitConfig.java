@@ -107,7 +107,7 @@ public class UnitConfig
     /** Returns a translatable name for the specified unit type. */
     public static String getName (String type)
     {
-        return MessageBundle.qualify("units", "m." + type);
+        return MessageBundle.qualify(BangCodes.UNITS_MSGS, "m." + type);
     }
 
     /**

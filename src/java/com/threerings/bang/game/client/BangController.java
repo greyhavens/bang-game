@@ -108,9 +108,18 @@ public class BangController extends GameController
     // documentation inherited from interface BangReceiver
     public void orderInvalidated (int unitId, String reason)
     {
+        // TEMP: report the failure via chat feedback
+        Unit unit = (Unit)_bangobj.pieces.get(unitId);
+        if (unit != null) {
+            reason = MessageBundle.compose("m.order_invalidated_unit",
+                                           unit.getConfig().getName(), reason);
+        } else {
+            reason = MessageBundle.compose("m.order_invalidated", reason);
+        }
         _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, reason);
+
         // TODO: flash the unit in the unit status display
-        _view.view.clearQueuedMove(unitId);
+        _view.view.clearAdvanceOrder(unitId);
     }
 
     @Override // documentation inherited
@@ -271,7 +280,7 @@ public class BangController extends GameController
         Piece[] pieces = _bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if ((pieces[ii].owner != _pidx) || !(pieces[ii] instanceof Unit) ||
-                _view.view.hasQueuedMove(pieces[ii].pieceId) ||
+                _view.view.hasAdvanceOrder(pieces[ii].pieceId) ||
                 !_view.view.isSelectable(pieces[ii])) {
                 continue;
             }
@@ -301,14 +310,13 @@ public class BangController extends GameController
 
     /** Handles a request to move a piece. */
     public void moveAndFire (
-        final int pieceId, final int tx, final int ty, final int targetId)
+        int pieceId, final int tx, final int ty, final int targetId)
     {
-//         final PointSet moves = new PointSet();
-//         moves.add(tx, ty);
+        final Unit unit = (Unit)_bangobj.pieces.get(pieceId);
         BangService.ResultListener rl = new BangService.ResultListener() {
             public void requestProcessed (Object result) {
                 int code = (Integer)result;
-                if (code == GameCodes.EXECUTED_MOVE) {
+                if (code == GameCodes.EXECUTED_ORDER) {
                     // report to the tutorial controller
                     if (targetId == -1) {
                         postEvent(TutorialCodes.UNIT_MOVED);
@@ -318,14 +326,14 @@ public class BangController extends GameController
                         postEvent(TutorialCodes.UNIT_MOVE_ATTACKED);
                     }
 
-                } else if (code == GameCodes.QUEUED_MOVE) {
+                } else if (code == GameCodes.QUEUED_ORDER) {
                     // tell the view to display a queued move for this piece
-                    _view.view.addQueuedMove(pieceId, tx, ty, targetId);
+                    _view.view.addAdvanceOrder(unit.pieceId, tx, ty, targetId);
                     // report to the tutorial controller
                     postEvent(TutorialCodes.UNIT_ORDERED);
 
                 } else {
-                    log.warning("Got unknown response to move(" + pieceId +
+                    log.warning("Got unknown response to move(" + unit.info() +
                                 ", " + tx + ", " + ty + ", " + targetId +
                                 ") [result=" + result + "].");
                 }
@@ -337,10 +345,14 @@ public class BangController extends GameController
             }
 
             public void requestFailed (String reason) {
+                // TEMP: report the failure via chat feedback
+                reason = MessageBundle.compose(
+                    "m.order_failed_unit", unit.getConfig().getName(), reason);
+                _ctx.getChatDirector().displayFeedback(
+                    GameCodes.GAME_MSGS, reason);
+
                 // TODO: play a sound or highlight the piece that failed to
                 // move
-                log.info("Thwarted! " + reason);
-//                 _bangobj.board.dumpOccupiability(moves);
 
                 // clear any pending shot indicator
                 if (targetId != -1) {
@@ -349,9 +361,9 @@ public class BangController extends GameController
             }
         };
 
-        log.info("Requesting move and fire [pid=" + pieceId +
+        log.info("Requesting move and fire [unit=" + unit.info() +
                  ", to=+" + tx + "+" + ty + ", tid=" + targetId + "].");
-        _bangobj.service.move(
+        _bangobj.service.order(
             _ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, rl);
 
         // clear out our last selected unit as we want to start afresh

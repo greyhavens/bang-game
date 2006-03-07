@@ -131,8 +131,8 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void move (ClientObject caller, int pieceId, short x, short y,
-                      int targetId, BangService.ResultListener listener)
+    public void order (ClientObject caller, int pieceId, short x, short y,
+                       int targetId, BangService.ResultListener listener)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
@@ -160,13 +160,13 @@ public class BangManager extends GameManager
 
             // queue up our new advance order
             _orders.add(order);
-            listener.requestProcessed(QUEUED_MOVE);
+            listener.requestProcessed(QUEUED_ORDER);
 
         } else {
             // execute the order immediately
             Piece target = (Piece)_bangobj.pieces.get(targetId);
             executeOrder(unit, x, y, target, true);
-            listener.requestProcessed(EXECUTED_MOVE);
+            listener.requestProcessed(EXECUTED_ORDER);
         }
     }
 

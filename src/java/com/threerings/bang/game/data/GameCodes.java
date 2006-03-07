@@ -16,10 +16,10 @@ public interface GameCodes extends InvocationCodes
     public static final String GAME_MSGS = "game";
 
     /** A response code for {@link BangService#move}. */
-    public static final Integer EXECUTED_MOVE = 0;
+    public static final Integer EXECUTED_ORDER = 0;
 
     /** A response code for {@link BangService#move}. */
-    public static final Integer QUEUED_MOVE = 1;
+    public static final Integer QUEUED_ORDER = 1;
 
     /** An error response code for {@link BangService#move}. */
     public static final String MOVER_NO_LONGER_VALID = "m.mover_invalid";
