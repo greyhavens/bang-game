@@ -58,6 +58,8 @@
     *;
 }
 
+-keep public class * extends com.threerings.media.tile.TileSet
+
 -keep public class * extends com.samskivert.swing.Controller {
     *;
 }
