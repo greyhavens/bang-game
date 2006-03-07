@@ -21,17 +21,23 @@ public class TutorialConfig
         public String toString () {
             return getClass().getName() + StringUtil.fieldsToString(this);
         }
+
+        private static final long serialVersionUID = 1;
     }
 
     public static class Text extends Action
     {
         public String message;
         public int step;
+
+        private static final long serialVersionUID = 1;
     }
 
     public static class Wait extends Action
     {
         public String event;
+
+        private static final long serialVersionUID = 1;
     }
 
     public static class AddUnit extends Action
@@ -40,11 +46,15 @@ public class TutorialConfig
         public int id;
         public int[] location;
         public int owner;
+
+        private static final long serialVersionUID = 1;
     }
 
     public static class CenterOnUnit extends Action
     {
         public int id;
+
+        private static final long serialVersionUID = 1;
     }
 
     public static class MoveUnit extends Action
@@ -52,17 +62,23 @@ public class TutorialConfig
         public int id;
         public int[] location = { Short.MAX_VALUE, Short.MAX_VALUE };
         public int target;
+
+        private static final long serialVersionUID = 1;
     }
 
     public static class AddBonus extends Action
     {
         public String type;
         public int[] location;
+
+        private static final long serialVersionUID = 1;
     }
 
     public static class ShowView extends Action
     {
         public String name;
+
+        private static final long serialVersionUID = 1;
     }
     
     /** The identifier for this tutorial, which defines its message bundle. */
@@ -124,4 +140,7 @@ public class TutorialConfig
 
     /** Contains the list of actions used in this tutorial. */
     protected ArrayList<Action> _actions = new ArrayList<Action>();
+
+    /** Serialization and Proguard will never get along. */
+    private static final long serialVersionUID = 1;
 }

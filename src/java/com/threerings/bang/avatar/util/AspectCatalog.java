@@ -56,6 +56,10 @@ public class AspectCatalog
 
         /** The coin cost associated with this aspect. */
         public int coins;
+
+        /** Increase this value when object's serialized state is impacted by a
+         * class change (modification of fields, inheritance). */
+        private static final long serialVersionUID = 1;
     }
 
     /**
