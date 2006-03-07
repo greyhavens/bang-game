@@ -130,13 +130,32 @@ public class BangBoardView extends BoardView
             return;
         }
 
+        // compute the desired starting location and orientation
         CameraHandler camhand = _ctx.getCameraHandler();
+        Point start = _bangobj.startPositions[
+            _bangobj.getPlayerIndex(_ctx.getUserObject().handle)];
+        Vector3f gpoint = camhand.getGroundPoint(),
+            target = new Vector3f((start.x + 0.5f) * TILE_SIZE,
+                (start.y + 0.5f) * TILE_SIZE, 150f);
+        if (target.x >= gpoint.x && target.y >= gpoint.y) {
+            camhand.orbitCamera(FastMath.HALF_PI);
+        } else if (target.x < gpoint.x && target.y >= gpoint.y) {
+            camhand.orbitCamera(FastMath.PI);
+        } else if (target.x < gpoint.x && target.y < gpoint.y) {
+            camhand.orbitCamera(-FastMath.HALF_PI);
+        }
+        camhand.setLocation(target);
+        Vector3f pan = new Vector3f(target.x - gpoint.x, target.y - gpoint.y,
+            0f);
+        camhand.setLocation(target.set(gpoint.x, gpoint.y, 150f));
+        
+        // pan, orbit, and zoom over the board
         camhand.setLimitsEnabled(false);
-        camhand.tiltCamera(-FastMath.PI * 0.375f);
-        _tpath = new SwingPath(camhand, camhand.getGroundPoint(),
-            camhand.getGroundNormal(), FastMath.TWO_PI,
-            FastMath.TWO_PI / BOARD_TOUR_DURATION,
-            camhand.getCamera().getLeft(), FastMath.PI * 0.375f, 0f) {
+        camhand.tiltCamera(-FastMath.PI * 0.25f);
+        camhand.zoomCamera(-75f);
+        _tpath = new SwingPath(camhand, gpoint, camhand.getGroundNormal(),
+            FastMath.TWO_PI, FastMath.TWO_PI / BOARD_TOUR_DURATION,
+            camhand.getCamera().getLeft(), FastMath.PI * 0.25f, pan, 75f) {
             public boolean tick (float secondsSince) {
                 // fade the marquee out when there's a second or less remaining
                 boolean ret = super.tick(secondsSince);

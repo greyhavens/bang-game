@@ -11,6 +11,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.DSet;
 import com.threerings.parlor.game.data.GameObject;
+import com.threerings.util.StreamablePoint;
 
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
@@ -100,6 +101,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>board</code> field. */
     public static final String BOARD = "board";
 
+    /** The field name of the <code>startPositions</code> field. */
+    public static final String START_POSITIONS = "startPositions";
+
     /** The field name of the <code>bigShots</code> field. */
     public static final String BIG_SHOTS = "bigShots";
 
@@ -174,6 +178,9 @@ public class BangObject extends GameObject
     /** Contains the representation of the game board. */
     public BangBoard board;
 
+    /** The starting positions for each player. */
+    public StreamablePoint[] startPositions;
+    
     /** The big shots selected for use by each player. */
     public Unit[] bigShots;
 
@@ -597,6 +604,39 @@ public class BangObject extends GameObject
         requestAttributeChange(
             BOARD, value, ovalue);
         this.board = value;
+    }
+
+    /**
+     * Requests that the <code>startPositions</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setStartPositions (StreamablePoint[] value)
+    {
+        StreamablePoint[] ovalue = this.startPositions;
+        requestAttributeChange(
+            START_POSITIONS, value, ovalue);
+        this.startPositions = (value == null) ? null : (StreamablePoint[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>startPositions</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setStartPositionsAt (StreamablePoint value, int index)
+    {
+        StreamablePoint ovalue = this.startPositions[index];
+        requestElementUpdate(
+            START_POSITIONS, index, value, ovalue);
+        this.startPositions[index] = value;
     }
 
     /**

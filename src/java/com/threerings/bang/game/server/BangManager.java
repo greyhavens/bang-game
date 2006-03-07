@@ -25,6 +25,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
+import com.threerings.util.StreamablePoint;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -510,7 +511,15 @@ public class BangManager extends GameManager
             _starts.add(p);
         }
         Collections.shuffle(_starts);
-
+        // store them in the bang object for initial camera positions
+        _bangobj.startPositions = new StreamablePoint[_starts.size()];
+        for (int ii = 0, nn = _starts.size(); ii < nn; ii++) {
+            Piece start = _starts.get(ii);
+            _bangobj.startPositions[ii] = new StreamablePoint(start.x,
+                start.y);
+        }
+        _bangobj.setStartPositions(_bangobj.startPositions);
+        
         // extract the bonus spawn markers from the pieces array
         _bonusSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
