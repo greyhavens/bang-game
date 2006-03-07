@@ -63,10 +63,46 @@ public class Track extends Piece
         return type == SINGLETON || type == TERMINAL;
     }
     
+    /**
+     * Determines whether this piece of track can be assumed to be connected
+     * to another piece of track at the specified coordinates based on this
+     * track's type and orientation.
+     */
+    public boolean isConnectedTo (int tx, int ty)
+    {
+        switch (type) {
+            default:
+            case SINGLETON:
+                return false;
+            case TERMINAL:
+                return isInDirection(tx, ty, orientation);
+            case STRAIGHT:
+                return isInDirection(tx, ty, orientation) ||
+                    isInDirection(tx, ty, (orientation + 2) % 4);
+            case T_JUNCTION:
+                return getDistance(tx, ty) == 1 &&
+                    !isInDirection(tx, ty, orientation);
+            case X_JUNCTION:
+                return getDistance(tx, ty) == 1;
+            case TURN:
+                return isInDirection(tx, ty, orientation) ||
+                    isInDirection(tx, ty, (orientation + 1) % 4);
+        }
+    }
+    
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new TrackSprite();
+    }
+    
+    /**
+     * Checks whether the specified position lies one step away in the given
+     * position.
+     */
+    protected boolean isInDirection (int tx, int ty, int dir)
+    {
+        return tx == x + DX[dir] && ty == y + DY[dir];
     }
     
     @Override // documentation inherited

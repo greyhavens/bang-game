@@ -345,7 +345,7 @@ public abstract class Scenario
         for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
             Piece piece = (Piece)it.next();
             if (piece instanceof Track &&
-                piece.getDistance(train.nextX, train.nextY) == 1 &&
+                ((Track)piece).isConnectedTo(train.nextX, train.nextY) &&
                 (piece.x != train.x || piece.y != train.y)) {
                 tracks.add((Track)piece);
             }
