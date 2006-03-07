@@ -59,6 +59,7 @@
 }
 
 -keep public class com.threerings.media.tile.SwissArmyTileSet
+-keep public class com.threerings.media.tile.TrimmedTileSet
 
 -keep public class * extends com.samskivert.swing.Controller {
     *;
