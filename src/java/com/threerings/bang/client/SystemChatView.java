@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.jme.scene.Controller;
 
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.BEvent;
@@ -39,10 +40,22 @@ public class SystemChatView extends BWindow
                 ctx.getDisplay().getHeight());
     }
     
+    @Override // we never want the chat window to accept clicks
+    public BComponent getHitComponent (int mx, int my) {
+        return null;
+    }
+    
+    @Override // documentation inherited
+    public boolean isOverlay ()
+    {
+        return true;
+    }
+    
     // documentation inherited from interface ChatDisplay
     public void displayMessage (ChatMessage msg)
     {
         if (!(msg instanceof SystemMessage) ||
+            _ctx.getBangClient().getPardnerChatView().isAdded() ||
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
             return;
         }
@@ -61,7 +74,7 @@ public class SystemChatView extends BWindow
         }
         add(new MessageLabel(smsg.message, level + "_chat_label"));
     }
-    
+
     // documentation inherited from interface ChatDisplay
     public void clear ()
     {
@@ -102,7 +115,7 @@ public class SystemChatView extends BWindow
         
         protected Dimension computePreferredSize (int whint, int hhint)
         {
-            return super.computePreferredSize(314, hhint);
+            return super.computePreferredSize(308, hhint);
         }
         
         protected float _elapsed;
@@ -125,7 +138,7 @@ public class SystemChatView extends BWindow
     };
     
     /** The amount of time for which messages linger on the screen. */
-    protected static final float MESSAGE_LINGER_DURATION = 5f;
+    protected static final float MESSAGE_LINGER_DURATION = 10f;
     
     /** The amount of time it takes for messages to fade out. */
     protected static final float MESSAGE_FADE_DURATION = 1f;
