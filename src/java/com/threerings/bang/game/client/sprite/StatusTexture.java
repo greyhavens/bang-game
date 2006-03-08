@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
@@ -31,16 +33,28 @@ public class StatusTexture
     public StatusTexture (BasicContext ctx)
     {
         _ctx = ctx;
-        _spstate = ctx.getRenderer().createTextureState();
-        _ststate = ctx.getRenderer().createTextureState();
+
+        // create our image
+        _image = new Image();
+        _image.setType(Image.RGBA8888);
+        _image.setWidth(STATUS_SIZE);
+        _image.setHeight(STATUS_SIZE);
+
+        // our texture
         _texture = new Texture();
         _texture.setCorrection(Texture.CM_PERSPECTIVE);
         _texture.setFilter(Texture.FM_LINEAR);
         _texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
         _texture.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
 
-        // load up our images if we have not yet done so
-        if (_ready == null) {
+        // and our texture states
+        _spstate = ctx.getRenderer().createTextureState();
+        _ststate = ctx.getRenderer().createTextureState();
+
+        // load up our shared images if we have not yet done so
+        if (_target == null) {
+            _target = new BufferedImage(
+                STATUS_SIZE, STATUS_SIZE, BufferedImage.TYPE_4BYTE_ABGR);
             _ready = ctx.getImageCache().getBufferedImage(
                 "textures/ustatus/tick_ready.png");
             _dfull = ctx.getImageCache().getBufferedImage(
@@ -99,12 +113,15 @@ public class StatusTexture
         _pendo = pendo;
         _selected = selected;
 
-        BufferedImage target = new BufferedImage(
-            STATUS_SIZE, STATUS_SIZE, BufferedImage.TYPE_4BYTE_ABGR);
-        RescaleOp colorizer =
-            new RescaleOp(RECOLORS[piece.owner], new float[4], null);
-        Graphics2D gfx = (Graphics2D)target.getGraphics();
+        RescaleOp colorizer = RECOLORS[_owner];
+        Graphics2D gfx = (Graphics2D)_target.getGraphics();
         try {
+            // start with a blank slate
+            gfx.setColor(CLEAR_COLOR);
+            gfx.setComposite(AlphaComposite.SrcOut);
+            gfx.fillRect(0, 0, STATUS_SIZE, STATUS_SIZE);
+            gfx.setComposite(AlphaComposite.SrcOver);
+
             // draw our outline
             RescaleOp selop = (_selected ? WHITENER : colorizer);
             if (_ticksToMove > 0) {
@@ -151,20 +168,18 @@ public class StatusTexture
         }
 
         // turn the buffered image into image data for our texture
-        ByteBuffer scratch = ByteBuffer.allocateDirect(
-            4 * STATUS_SIZE * STATUS_SIZE).order(ByteOrder.nativeOrder());
-        scratch.clear();
-        scratch.put((byte[])target.getRaster().getDataElements(
-                        0, 0, STATUS_SIZE, STATUS_SIZE, null));
-        scratch.flip();
-        Image teximg = new Image();
-        teximg.setType(Image.RGBA8888);
-        teximg.setWidth(STATUS_SIZE);
-        teximg.setHeight(STATUS_SIZE);
-        teximg.setData(scratch);
+        if (_data == null) {
+            _data = ByteBuffer.allocateDirect(
+                4 * STATUS_SIZE * STATUS_SIZE).order(ByteOrder.nativeOrder());
+        }
+        _data.clear();
+        _data.put((byte[])_target.getRaster().getDataElements(
+                      0, 0, STATUS_SIZE, STATUS_SIZE, null));
+        _data.flip();
+        _image.setData(_data);
 
         // configure the texture and load it into OpenGL
-        _texture.setImage(teximg);
+        _texture.setImage(_image);
         _texture.setNeedsFilterRefresh(true);
         _texture.setNeedsWrapRefresh(true);
         _spstate.setTexture(_texture);
@@ -187,12 +202,15 @@ public class StatusTexture
     protected int _owner;
     protected int _ticksToMove;
     protected int _damage;
-    protected UnitSprite.AdvanceOrder _pendo = UnitSprite.AdvanceOrder.NONE;
     protected boolean _selected;
+    protected UnitSprite.AdvanceOrder _pendo = UnitSprite.AdvanceOrder.NONE;
 
+    protected ByteBuffer _data;
+    protected Image _image;
     protected Texture _texture;
     protected TextureState _spstate, _ststate;
 
+    protected static BufferedImage _target;
     protected static BufferedImage _ready;
     protected static BufferedImage _dfull, _dempty;
     protected static BufferedImage _morder, _msorder;
@@ -204,15 +222,18 @@ public class StatusTexture
     protected static final float ARC_INSETS = 7;
 
     /** Used to recolor our 24-bit status images. */
-    protected static final float[][] RECOLORS = {
-        { 0, 0, 1, 1 }, // blue
-        { 1, 0, 0, 1 }, // red
-        { 0, 1, 0, 1 }, // green
-        { 1, 1, 0, 1 }, // yellow
+    protected static final RescaleOp[] RECOLORS = new RescaleOp[] {
+        new RescaleOp(new float[] { 0, 0, 1, 1 }, new float[4], null), // blue
+        new RescaleOp(new float[] { 1, 0, 0, 1 }, new float[4], null), // red
+        new RescaleOp(new float[] { 0, 1, 0, 1 }, new float[4], null), // green
+        new RescaleOp(new float[] { 1, 1, 0, 1 }, new float[4], null), // yellow
     };
 
     /** Used to make our gray outline white. */
     protected static final RescaleOp WHITENER =
         new RescaleOp(new float[] { 1, 1, 1, 1 },
                       new float[] { 255, 255, 255, 0 }, null);
+
+    /** Used to erase our image. */
+    protected static final Color CLEAR_COLOR = new Color(255, 255, 255, 0);
 }
