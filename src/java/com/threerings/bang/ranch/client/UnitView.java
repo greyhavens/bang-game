@@ -9,6 +9,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BGeomView;
 import com.jmex.bui.BImage;
@@ -36,27 +37,6 @@ public class UnitView extends BGeomView
         _geom.setRenderState(RenderUtil.lequalZBuf);
         _geom.updateRenderState();
         _frame = ctx.loadImage("ui/frames/" + prefix + "frame.png");
-
-        // position and point up our camera
-        Vector3f loc = new Vector3f(
-            10*TILE_SIZE/16, -18*TILE_SIZE/16, 7*TILE_SIZE/16);
-        _camera.setLocation(loc);
-        Matrix3f rotm = new Matrix3f();
-        rotm.fromAngleAxis(-FastMath.PI/2, _camera.getLeft());
-        rotm.mult(_camera.getDirection(), _camera.getDirection());
-        rotm.mult(_camera.getUp(), _camera.getUp());
-        rotm.mult(_camera.getLeft(), _camera.getLeft());
-
-        rotm.fromAngleAxis(FastMath.PI/6, _camera.getUp());
-        rotm.mult(_camera.getDirection(), _camera.getDirection());
-        rotm.mult(_camera.getUp(), _camera.getUp());
-        rotm.mult(_camera.getLeft(), _camera.getLeft());
-
-//         rotm.fromAngleAxis(FastMath.PI/6, _camera.getLeft());
-//         rotm.mult(_camera.getDirection(), _camera.getDirection());
-//         rotm.mult(_camera.getUp(), _camera.getUp());
-//         rotm.mult(_camera.getLeft(), _camera.getLeft());
-        _camera.update();
     }
 
     /**
@@ -88,6 +68,35 @@ public class UnitView extends BGeomView
         if (_binding != null) {
             _binding.detach();
         }
+    }
+
+    @Override // documentation inherited
+    protected Camera createCamera (DisplaySystem ds)
+    {
+        Camera cam = super.createCamera(ds);
+
+        // position and point up our camera
+        Vector3f loc = new Vector3f(
+            10*TILE_SIZE/16, -18*TILE_SIZE/16, 7*TILE_SIZE/16);
+        cam.setLocation(loc);
+        Matrix3f rotm = new Matrix3f();
+        rotm.fromAngleAxis(-FastMath.PI/2, cam.getLeft());
+        rotm.mult(cam.getDirection(), cam.getDirection());
+        rotm.mult(cam.getUp(), cam.getUp());
+        rotm.mult(cam.getLeft(), cam.getLeft());
+
+        rotm.fromAngleAxis(FastMath.PI/6, cam.getUp());
+        rotm.mult(cam.getDirection(), cam.getDirection());
+        rotm.mult(cam.getUp(), cam.getUp());
+        rotm.mult(cam.getLeft(), cam.getLeft());
+
+//         rotm.fromAngleAxis(FastMath.PI/6, cam.getLeft());
+//         rotm.mult(cam.getDirection(), cam.getDirection());
+//         rotm.mult(cam.getUp(), cam.getUp());
+//         rotm.mult(cam.getLeft(), cam.getLeft());
+        cam.update();
+
+        return cam;
     }
 
     @Override // documentation inherited
