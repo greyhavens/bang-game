@@ -250,12 +250,10 @@ public class RenderUtil
         int tsize = nextPOT(Math.max(width, Math.max(height, 1)));
 
         // render the text into the image
-        BufferedImage image = new BufferedImage(
-            tsize, tsize, BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage image = ctx.getImageCache().createCompatibleImage(
+            tsize, tsize, true);
         gfx = image.createGraphics();
         try {
-            gfx.setColor(BLANK);
-            gfx.fillRect(0, 0, tsize, tsize);
             gfx.setColor(acolor);
             layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());
         } finally {
@@ -269,7 +267,7 @@ public class RenderUtil
         tcoords[2] = new Vector2f(width/tsf, height/tsf);
         tcoords[3] = new Vector2f(width/tsf, 0);
 
-        return createTexture(ctx.getImageCache().createImage(image, false));
+        return createTexture(ctx.getImageCache().convertImage(image));
     }
 
     /**

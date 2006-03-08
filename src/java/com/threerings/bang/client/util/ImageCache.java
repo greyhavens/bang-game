@@ -11,8 +11,15 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import java.awt.Graphics2D;
+import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
+
 import javax.imageio.ImageIO;
 
 import com.jme.image.Image;
@@ -114,16 +121,77 @@ public class ImageCache
     }
 
     /**
+     * Creates a buffered image in a format compatible with LWJGL with the
+     * specified dimensions.
+     *
+     * @param transparent if true, the image will be four bytes per pixel
+     * (RGBA), if false it will be three (and have no alpha channel).
+     */
+    public BufferedImage createCompatibleImage (
+        int width, int height, boolean transparent)
+    {
+        if (transparent) {
+            return new BufferedImage(
+                GL_ALPHA_MODEL, Raster.createInterleavedRaster(
+                    DataBuffer.TYPE_BYTE, width, height, 4, null),
+                false, null);
+        } else {
+            return new BufferedImage(
+                GL_OPAQUE_MODEL, Raster.createInterleavedRaster(
+                    DataBuffer.TYPE_BYTE, width, height, 3, null),
+                false, null);
+        }
+    }
+
+    /**
+     * Converts the supplied image (which must have been created with {@link
+     * #createCompatibleImage}) into a {@link ByteBuffer} that can be passed to
+     * {@link Image#setData}.
+     *
+     * @param target the results of a previous call to {@link #convertImage}
+     * that will be overwritten or null if a new buffer should be allocated. Of
+     * course a reused buffer must be used with the same image or one with the
+     * exact same configuration.
+     */
+    public ByteBuffer convertImage (BufferedImage image, ByteBuffer target)
+    {
+        DataBufferByte dbuf = (DataBufferByte)image.getRaster().getDataBuffer();
+        byte[] data = dbuf.getData(); 
+        if (target == null) {
+            target = ByteBuffer.allocateDirect(data.length);
+            target.order(ByteOrder.nativeOrder());
+        }
+        target.clear();
+        target.put(data);
+        target.flip();
+        return target;
+    }
+
+    /**
+     * Converts an image that was created with {@link #createCompatibleImage}
+     * into a JME {@link Image}. The data is assumed to have already been
+     * "flipped".
+     */
+    public Image convertImage (BufferedImage bufimg)
+    {
+        Image image = new Image();
+        image.setType(bufimg.getColorModel().hasAlpha() ?
+                      Image.RGBA8888 : Image.RGB888);
+        image.setWidth(bufimg.getWidth());
+        image.setHeight(bufimg.getHeight());
+        image.setData(convertImage(bufimg, null));
+        return image;
+    }
+
+    /**
      * Creates a JME-compatible image from the supplied buffered image.
      */
     public Image createImage (BufferedImage bufimg, boolean flip)
     {
         // convert the the image to the format that OpenGL prefers
         int width = bufimg.getWidth(), height = bufimg.getHeight();
-        boolean hasAlpha = bufimg.getColorModel().hasAlpha();
-        BufferedImage dispimg = new BufferedImage(
-            width, height, hasAlpha ? BufferedImage.TYPE_4BYTE_ABGR :
-            BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage dispimg = createCompatibleImage(
+            width, height, bufimg.getColorModel().hasAlpha());
 
         // flip the image to convert into OpenGL's coordinate system
         AffineTransform tx = null;
@@ -137,21 +205,8 @@ public class ImageCache
         gfx.drawImage(bufimg, tx, null);
         gfx.dispose();
 
-        // now extract the image data, which will be supplied to JME
-        ByteBuffer imgdata = ByteBuffer.allocateDirect(4 * width * height);
-        imgdata.order(ByteOrder.nativeOrder());
-        byte data[] = (byte[])dispimg.getRaster().getDataElements(
-            0, 0, dispimg.getWidth(), dispimg.getHeight(), null);
-        imgdata.clear();
-        imgdata.put(data);
-        imgdata.flip();
-
-        Image image = new Image();
-        image.setType(hasAlpha ? Image.RGBA8888 : Image.RGB888);
-        image.setWidth(width);
-        image.setHeight(height);
-        image.setData(imgdata);
-        return image;
+        // now extract the image data into a JME image
+        return convertImage(dispimg);
     }
 
     /**
@@ -196,4 +251,14 @@ public class ImageCache
     /** A cache of {@link BufferedImage} instances. */
     protected HashMap<String,WeakReference<BufferedImage>> _bufcache =
         new HashMap<String,WeakReference<BufferedImage>>();
+
+    /** Used to create buffered images in a format compatible with OpenGL. */
+    protected static ColorModel GL_ALPHA_MODEL = new ComponentColorModel(
+        ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8, 8 },
+        true, false, ComponentColorModel.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+
+    /** Used to create buffered images in a format compatible with OpenGL. */
+    protected static ColorModel GL_OPAQUE_MODEL = new ComponentColorModel(
+        ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8, 0 },
+        false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
 }

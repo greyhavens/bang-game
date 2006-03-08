@@ -39,7 +39,7 @@ public class RoundTimerView extends BWindow
         _ctx = ctx;
         _pin = new ImageIcon(ctx.loadImage("ui/gauge/pin.png"));
         _needle = ctx.getImageCache().getBufferedImage("ui/gauge/needle.png");
-        _overimg = new BufferedImage(78, 78, BufferedImage.TYPE_INT_ARGB);
+        _overimg = _ctx.getImageCache().createCompatibleImage(78, 78, true);
 
         setStatus(0, 0, 0);
     }

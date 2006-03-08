@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -53,8 +52,8 @@ public class StatusTexture
 
         // load up our shared images if we have not yet done so
         if (_target == null) {
-            _target = new BufferedImage(
-                STATUS_SIZE, STATUS_SIZE, BufferedImage.TYPE_4BYTE_ABGR);
+            _target = _ctx.getImageCache().createCompatibleImage(
+                STATUS_SIZE, STATUS_SIZE, true);
             _ready = ctx.getImageCache().getBufferedImage(
                 "textures/ustatus/tick_ready.png");
             _dfull = ctx.getImageCache().getBufferedImage(
@@ -168,14 +167,7 @@ public class StatusTexture
         }
 
         // turn the buffered image into image data for our texture
-        if (_data == null) {
-            _data = ByteBuffer.allocateDirect(
-                4 * STATUS_SIZE * STATUS_SIZE).order(ByteOrder.nativeOrder());
-        }
-        _data.clear();
-        _data.put((byte[])_target.getRaster().getDataElements(
-                      0, 0, STATUS_SIZE, STATUS_SIZE, null));
-        _data.flip();
+        _data = _ctx.getImageCache().convertImage(_target, _data);
         _image.setData(_data);
 
         // configure the texture and load it into OpenGL
