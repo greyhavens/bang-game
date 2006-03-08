@@ -31,7 +31,8 @@ public class StatusTexture
     public StatusTexture (BasicContext ctx)
     {
         _ctx = ctx;
-        _tstate = ctx.getRenderer().createTextureState();
+        _spstate = ctx.getRenderer().createTextureState();
+        _ststate = ctx.getRenderer().createTextureState();
         _texture = new Texture();
         _texture.setCorrection(Texture.CM_PERSPECTIVE);
         _texture.setFilter(Texture.FM_LINEAR);
@@ -64,9 +65,14 @@ public class StatusTexture
      * Returns the texture state that can be used to display the status
      * texture.
      */
-    public TextureState getTextureState ()
+    public TextureState getSpriteState ()
     {
-        return _tstate;
+        return _spstate;
+    }
+
+    public TextureState getStatusState ()
+    {
+        return _ststate;
     }
 
     /**
@@ -84,7 +90,7 @@ public class StatusTexture
 
         // if we have a previous texture, delete it
         if (_texture.getTextureId() > 0) {
-            _tstate.deleteAll();
+            _spstate.deleteAll();
         }
 
         _owner = piece.owner;
@@ -99,9 +105,6 @@ public class StatusTexture
             new RescaleOp(RECOLORS[piece.owner], new float[4], null);
         Graphics2D gfx = (Graphics2D)target.getGraphics();
         try {
-            gfx.scale(1, -1);
-            gfx.translate(0, -STATUS_SIZE);
-
             // draw our outline
             RescaleOp selop = (_selected ? WHITENER : colorizer);
             if (_ticksToMove > 0) {
@@ -164,15 +167,19 @@ public class StatusTexture
         _texture.setImage(teximg);
         _texture.setNeedsFilterRefresh(true);
         _texture.setNeedsWrapRefresh(true);
-        _tstate.setTexture(_texture);
-        _tstate.apply();
+        _spstate.setTexture(_texture);
+        _spstate.apply();
+
+        // clone the texture and stick it in our status state which we will use
+        // without rotating
+        _ststate.setTexture(_texture.createSimpleClone());
     }
 
     public void cleanup ()
     {
         // if we have a previous texture, delete it
         if (_texture.getTextureId() > 0) {
-            _tstate.deleteAll();
+            _spstate.deleteAll();
         }
     }
 
@@ -184,7 +191,7 @@ public class StatusTexture
     protected boolean _selected;
 
     protected Texture _texture;
-    protected TextureState _tstate;
+    protected TextureState _spstate, _ststate;
 
     protected static BufferedImage _ready;
     protected static BufferedImage _dfull, _dempty;

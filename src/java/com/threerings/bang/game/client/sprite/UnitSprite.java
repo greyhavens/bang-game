@@ -20,7 +20,10 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 
+import com.samskivert.util.ObserverList;
+
 import com.threerings.jme.sprite.Path;
+import com.threerings.jme.sprite.SpriteObserver;
 
 import com.threerings.bang.client.Model;
 import com.threerings.bang.data.UnitConfig;
@@ -41,6 +44,13 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class UnitSprite extends MobileSprite
 {
+    /** Used to notify observers of updates to this sprite. */
+    public interface UpdateObserver extends SpriteObserver
+    {
+        /** Called when {@link UnitSprite#updated} is called. */
+        public void updated (UnitSprite sprite);
+    }
+
     public static enum AdvanceOrder { NONE, MOVE, MOVE_SHOOT };
     public static enum TargetMode { NONE, SURE_SHOT, MAYBE };
 
@@ -70,8 +80,16 @@ public class UnitSprite extends MobileSprite
         }
     }
 
+    /**
+     * Returns the status texture used by this unit.
+     */
+    public StatusTexture getStatusTexture ()
+    {
+        return _stattex;
+    }
+
     @Override // documentation inherited
-        public String getHelpIdent (int pidx)
+    public String getHelpIdent (int pidx)
     {
         return "unit_" + ((Unit)_piece).getType();
     }
@@ -187,6 +205,11 @@ public class UnitSprite extends MobileSprite
         if (_pendnode != null && ticks > 0) {
             _pendtst.setTexture(createPendingTexture(ticks-1));
         }
+
+        // notify any updated observers
+        if (_observers != null) {
+            _observers.apply(_updater);
+        }
     }
 
     @Override // documentation inherited
@@ -219,8 +242,8 @@ public class UnitSprite extends MobileSprite
         Vector3f dir = _ctx.getCameraHandler().getCamera().getDirection(),
             up = _ctx.getCameraHandler().getCamera().getUp(),
             vec = (dir.x*dir.x+dir.y*dir.y > up.x*up.x+up.y*up.y) ? dir : up;
-        float angle = FastMath.PI + FastMath.atan2(-vec.x, vec.y);
-        _camrot.fromAngleAxis(-angle, Vector3f.UNIT_Z);
+        float angle = -FastMath.atan2(-vec.x, vec.y);
+        _camrot.fromAngleAxis(angle, Vector3f.UNIT_Z);
         _camrot.mult(HALF_UNIT, _camtrans);
         _camtrans.set(0.5f - _camtrans.x, 0.5f - _camtrans.y, 0f);
 
@@ -231,10 +254,9 @@ public class UnitSprite extends MobileSprite
 
         // we have to do extra fiddly business here because our texture is
         // additionally scaled and translated to center the texture at half
-        // size within the highlight node; plus we want it to be 180 degrees
-        // rotated from the status orientation
+        // size within the highlight node
         Texture gptex = _pendtst.getTexture();
-        _gcamrot.fromAngleAxis(FastMath.PI-angle, Vector3f.UNIT_Z);
+        _gcamrot.fromAngleAxis(angle, Vector3f.UNIT_Z);
         _gcamrot.mult(WHOLE_UNIT, _gcamtrans);
         _gcamtrans.set(1f - _gcamtrans.x - 0.5f,
                        1f - _gcamtrans.y - 0.5f, 0f);
@@ -278,7 +300,7 @@ public class UnitSprite extends MobileSprite
         _stattex = new StatusTexture(ctx);
         _ustate = new SharedMesh("ustate", _highlight);
         _stattex.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
-        _ustate.setRenderState(_stattex.getTextureState());
+        _ustate.setRenderState(_stattex.getSpriteState());
         _ustate.updateRenderState();
         _status.attachChild(_ustate);
 
@@ -401,6 +423,16 @@ public class UnitSprite extends MobileSprite
         _qtgttst = RenderUtil.createTextureState(
             ctx, "textures/ustatus/crosshairs_q.png");
     }
+
+    /** Used to dispatch {@link UpdateObserver#updated}. */
+    protected ObserverList.ObserverOp _updater = new ObserverList.ObserverOp() {
+        public boolean apply (Object observer) {
+            if (observer instanceof UpdateObserver) {
+                ((UpdateObserver)observer).updated(UnitSprite.this);
+            }
+            return true;
+        }
+    };
 
     protected Quad _tgtquad;
     protected TerrainNode.Highlight _pendnode;

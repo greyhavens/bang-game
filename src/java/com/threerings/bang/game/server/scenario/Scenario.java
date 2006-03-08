@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.samskivert.util.IntIntMap;
 import com.samskivert.util.QuickSort;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
@@ -127,13 +126,6 @@ public abstract class Scenario
             Piece p = starts.get(ii);
             _startSpots[ii] = new Point(p.x, p.y);
         }
-
-        // note the starting owner for all the purchased pieces; only
-        // starting pieces are respawnable and they are returned to their
-        // original owner when they respawn
-        for (Piece piece : purchases.values()) {
-            _startingOwners.put(piece.pieceId, piece.owner);
-        }
     }
 
     /**
@@ -155,7 +147,7 @@ public abstract class Scenario
             log.info("Respawning " + unit + ".");
 
             // reassign the unit to its original owner
-            unit.owner = _startingOwners.get(unit.pieceId);
+            unit.owner = unit.originalOwner;
 
             // figure out where to put this guy
             Point spot = _startSpots[unit.owner];
@@ -540,8 +532,7 @@ public abstract class Scenario
      */
     protected void maybeQueueForRespawn (Piece piece, short tick)
     {
-        if (!_startingOwners.contains(piece.pieceId) ||
-            !(piece instanceof Unit)) {
+        if (!(piece instanceof Unit) || ((Unit)piece).originalOwner == -1) {
             return;
         }
         Unit unit = (Unit)piece;
@@ -578,9 +569,6 @@ public abstract class Scenario
 
     /** Used to track the locations where players are started. */
     protected Point[] _startSpots;
-
-    /** Used to note the starting owner for the starting pieces. */
-    protected IntIntMap _startingOwners = new IntIntMap();
 
     /** A list of units waiting to be respawned. */
     protected ArrayList<Unit> _respawns = new ArrayList<Unit>();

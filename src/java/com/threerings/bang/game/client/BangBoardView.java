@@ -489,6 +489,11 @@ public class BangBoardView extends BoardView
 
         // if this piece influenced our selection, refresh it
         checkForSelectionInfluence(piece);
+
+        // if this is a unit, we need to tell the unit status view
+        if (piece instanceof Unit) {
+            ((BangView)getParent()).ustatus.unitAdded(getUnitSprite(piece));
+        }
     }
 
     /** Called by the {@link EffectHandler} when a piece has moved. */

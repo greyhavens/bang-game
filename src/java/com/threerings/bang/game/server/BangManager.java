@@ -581,6 +581,7 @@ public class BangManager extends GameManager
             unit.assignPieceId(_bangobj);
             unit.init();
             unit.owner = pidx;
+            unit.originalOwner = pidx;
             _bangobj.setBigShotsAt(unit, pidx);
 
         } finally {
@@ -638,6 +639,7 @@ public class BangManager extends GameManager
             units[ii].assignPieceId(_bangobj);
             units[ii].init();
             units[ii].owner = pidx;
+            units[ii].originalOwner = pidx;
             _purchases.add(units[ii]);
         }
 

@@ -765,6 +765,14 @@ context_help_text {
 }
 
 //
+// Unit Status View
+
+unit_status_label {
+  text-align: center;
+  vertical-align: center;
+}
+
+//
 // Player Status View
 
 player_status {

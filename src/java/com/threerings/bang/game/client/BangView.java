@@ -41,6 +41,9 @@ public class BangView extends BWindow
     /** Our player status views. */
     public PlayerStatusView[] pstatus;
 
+    /** Our unit status view. */
+    public UnitStatusView ustatus;
+
     /** A window that displays contextual help. */
     public ContextHelpView help;
 
@@ -110,6 +113,7 @@ public class BangView extends BWindow
         case BangObject.IN_PLAY:
             if (!config.tutorial) {
                 showRoundTimer();
+                showUnitStatus();
             }
             clearOverlay();
             view.startRound();
@@ -127,6 +131,11 @@ public class BangView extends BWindow
 
         // note that we'll need to prepare for the next round
         _prepared = false;
+
+        // remove the unit status view in between rounds
+        if (ustatus.isAdded()) {
+            _ctx.getRootNode().removeWindow(ustatus);
+        }
     }
 
     /**
@@ -183,6 +192,9 @@ public class BangView extends BWindow
                 _ctx.getRootNode().removeWindow(_pswins[ii]);
             }
         }
+        if (ustatus.isAdded()) {
+            _ctx.getRootNode().removeWindow(ustatus);
+        }
         if (chat.isAdded()) {
             _ctx.getRootNode().removeWindow(chat);
         }
@@ -231,6 +243,15 @@ public class BangView extends BWindow
         // make sure that we clean up per-round state
         if (_prepared) {
             endRound();
+        }
+    }
+
+    protected void showUnitStatus ()
+    {
+        if (ustatus == null) {
+            ustatus = new UnitStatusView(_ctx, _bangobj);
+            _ctx.getRootNode().addWindow(ustatus);
+            ustatus.reposition();
         }
     }
 

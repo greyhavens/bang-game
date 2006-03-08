@@ -26,6 +26,10 @@ import static com.threerings.bang.Log.log;
  */
 public class Unit extends Piece
 {
+    /** The player to whom this unit will return on respawn or -1 if it should
+     * not be respawned. */
+    public int originalOwner = -1;
+
     /** Any influence currently acting on this unit. */
     public Influence influence;
 
