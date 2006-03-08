@@ -60,22 +60,23 @@ public class MoveUnitPath extends LineSegmentPath
     public void update (float time)
     {
         super.update(time);
-
+        if (_current >= _durations.length) {
+            return;
+        }
+        
         // see if we're turning a corner
-        if (_current < _durations.length) {
-            int half = _accum < _durations[_current]*0.5f ?
-                FIRST_HALF : SECOND_HALF;
-            if (_pivots[half] != null) {
-                float angle = _startAngles[half] + _angularVels[half] *
-                    (_accum / _durations[_current]);
-                _temp.set(CORNERING_RADIUS * FastMath.cos(angle),
-                    CORNERING_RADIUS * FastMath.sin(angle), 0f);
-                _temp.addLocal(_pivots[half]);
-                _sprite.setLocalTranslation(_temp);
-                _rotate.fromAngleNormalAxis(_angularVels[half] < 0 ?
-                    angle : angle + FastMath.PI, Vector3f.UNIT_Z);
-                _sprite.setLocalRotation(_rotate);
-            }
+        int half = _accum < _durations[_current]*0.5f ?
+            FIRST_HALF : SECOND_HALF;
+        if (_pivots[half] != null) {
+            float angle = _startAngles[half] + _angularVels[half] *
+                (_accum / _durations[_current]);
+            _temp.set(CORNERING_RADIUS * FastMath.cos(angle),
+                CORNERING_RADIUS * FastMath.sin(angle), 0f);
+            _temp.addLocal(_pivots[half]);
+            _sprite.setLocalTranslation(_temp);
+            _rotate.fromAngleNormalAxis(_angularVels[half] < 0 ?
+                angle : angle + FastMath.PI, Vector3f.UNIT_Z);
+            _sprite.setLocalRotation(_rotate);
         }
         
         // adjust to the terrain at the current coordinates
@@ -97,6 +98,7 @@ public class MoveUnitPath extends LineSegmentPath
 
         // restore the sprite to standing
         MobileSprite sprite = (MobileSprite)_sprite;
+        sprite.pathUpdate();
         sprite.setAction(sprite.getRestPose());
         sprite.setAnimationActive(false);
     }
