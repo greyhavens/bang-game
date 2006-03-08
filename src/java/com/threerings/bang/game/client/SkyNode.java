@@ -23,6 +23,8 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Node;
+import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Disk;
 import com.jme.scene.shape.Dome;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -53,8 +55,47 @@ public class SkyNode extends Node
         Quaternion rot = new Quaternion();
         rot.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
         _dome.setLocalRotation(rot);
-        _dome.setLocalTranslation(new Vector3f(0f, 0f, -10f));
+        _dome.setLocalTranslation(new Vector3f(0f, 0f, -20f));
+        _dome.setRenderState(_gtstate =
+            _ctx.getRenderer().createTextureState());
+        _gtstate.setTexture(null, 0);
+        _dome.lockMeshes(ctx.getRenderer());
         attachChild(_dome);
+        _dome.updateRenderState();
+        
+        // create the cloud plane geometry, which fades out towards the edge
+        _clouds = new Disk("clouds", CLOUD_SHELL_SAMPLES, CLOUD_RADIAL_SAMPLES,
+            CLOUD_RADIUS);
+        _clouds.setLocalTranslation(new Vector3f(0f, 0f, CLOUD_HEIGHT));
+        FloatBuffer cbuf = BufferUtils.createColorBuffer(1 +
+            (CLOUD_SHELL_SAMPLES - 1) * CLOUD_RADIAL_SAMPLES);
+        float[] color = new float[] { 1f, 1f, 1f, 1f };
+        cbuf.put(color);
+        int rings = CLOUD_SHELL_SAMPLES - 1;
+        float d;
+        for (int ii = 0; ii < CLOUD_RADIAL_SAMPLES; ii++) {
+            for (int jj = 0; jj < rings; jj++) {
+                d = (float)(jj + 1) / rings;
+                color[3] = (d < 0.5f) ? 1f : 1f - (d - 0.5f) / 0.5f;
+                cbuf.put(color);
+            }
+        }
+        _clouds.setColorBuffer(cbuf);
+        _clouds.setRenderState(_ctstate =
+            _ctx.getRenderer().createTextureState());
+        _ctstate.setTexture(null, 0);
+        _clouds.lockMeshes(ctx.getRenderer());
+        attachChild(_clouds);
+        _clouds.setRenderState(_ctstate = RenderUtil.createTextureState(ctx,
+            "textures/environ/clouds.png"));
+        Texture ctex = _ctstate.getTexture();
+        ctex.setWrap(Texture.WM_WRAP_S_WRAP_T);
+        ctex.setScale(new Vector3f(CLOUD_TEXTURE_SCALE,
+            CLOUD_TEXTURE_SCALE, CLOUD_TEXTURE_SCALE));
+        ctex.setTranslation(new Vector3f());
+        _clouds.setRenderState(RenderUtil.blendAlpha);
+        _clouds.setRenderState(RenderUtil.alwaysZBuf);
+        _clouds.updateRenderState();
     }
     
     /**
@@ -74,14 +115,24 @@ public class SkyNode extends Node
      */
     public void refreshGradient ()
     {
-        unlockMeshes(_ctx.getRenderer());
+        _gtstate.deleteAll();
+        _gtstate.setTexture(createGradientTexture());
+        _dome.updateRenderState();
+    }
+    
+    @Override // documentation inherited
+    public void updateWorldData (float time)
+    {
+        super.updateWorldData(time);
+        if (_board == null) {
+            return;
+        }
         
-        TextureState tstate = _ctx.getRenderer().createTextureState();
-        tstate.setTexture(createGradientTexture());
-        setRenderState(tstate);
-        updateRenderState();
-        
-        lockMeshes(_ctx.getRenderer());
+        // move the clouds according to the wind velocity
+        float wdir = _board.getWindDirection(), wspeed = _board.getWindSpeed();
+        _ctstate.getTexture().getTranslation().addLocal(
+            time * wspeed * FastMath.cos(wdir) * 0.001f,
+            time * wspeed * FastMath.sin(wdir) * 0.001f, 0f);
     }
     
     @Override // documentation inherited
@@ -90,6 +141,7 @@ public class SkyNode extends Node
         // match the position of the camera
         worldTranslation.set(renderer.getCamera().getLocation());
         _dome.updateWorldVectors();
+        _clouds.updateWorldVectors();
         
         super.draw(renderer);
     }
@@ -132,6 +184,15 @@ public class SkyNode extends Node
     /** The dome geometry. */
     protected Dome _dome;
     
+    /** The gradient texture state. */
+    protected TextureState _gtstate;
+    
+    /** The cloud plane geometry. */
+    protected Disk _clouds;
+    
+    /** The cloud texture state. */
+    protected TextureState _ctstate;
+    
     /** The current board object. */
     protected BangBoard _board;
     
@@ -146,4 +207,19 @@ public class SkyNode extends Node
     
     /** The size of the one-dimensional gradient texture. */
     protected static final int GRADIENT_TEXTURE_SIZE = 1024;
+    
+    /** The number of rings in the cloud plane. */
+    protected static final int CLOUD_SHELL_SAMPLES = 16;
+    
+    /** The number of radial samples in the cloud plane. */
+    protected static final int CLOUD_RADIAL_SAMPLES = 16;
+    
+    /** The radius of the cloud plane. */
+    protected static final float CLOUD_RADIUS = 10000f;
+    
+    /** The height of the cloud plane. */
+    protected static final float CLOUD_HEIGHT = 500f;
+    
+    /** The texture scale (tiling factor) of the cloud texture. */
+    protected static final float CLOUD_TEXTURE_SCALE = 10f;
 }
