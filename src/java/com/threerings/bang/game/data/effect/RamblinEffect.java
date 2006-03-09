@@ -20,6 +20,11 @@ public class RamblinEffect extends BonusEffect
     public static class RamblinInfluence extends Influence
     {
         @Override // documentation inherited
+        public String getIcon () {
+            return "ramblin";
+        }
+
+        @Override // documentation inherited
         public int adjustMoveDistance (int moveDistance) {
             return moveDistance+1;
         }

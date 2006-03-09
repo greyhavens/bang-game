@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.jme.renderer.Renderer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.background.BBackground;
@@ -126,7 +128,14 @@ public class UnitStatusView extends BWindow
                     setAlpha(0.5f);
                 }
             } else {
-                // TODO: update our influence icon if necessary
+                if (unit.influence == null) {
+                    _influence = null;
+                } else {
+                    // we don't worry about refetching the image from the cache
+                    // if our influence didn't actually change, it's cheap
+                    _influence = _ctx.getImageCache().getBImage(
+                        "influences/" + unit.influence.getIcon() + ".png");
+                }
             }
             resort();
         }
@@ -154,6 +163,17 @@ public class UnitStatusView extends BWindow
             return _bground;
         }
 
+        @Override // documentation inherited
+        protected void renderComponent (Renderer renderer)
+        {
+            super.renderComponent(renderer);
+
+            // render our influence icon if we have one
+            if (_influence != null) {
+                _influence.render(renderer, getWidth()-19, getHeight()-19, 1f);
+            }
+        }
+
         protected void clearSprite () {
             if (_sprite != null) {
                 _sprite.removeObserver(this);
@@ -164,6 +184,7 @@ public class UnitStatusView extends BWindow
 
         protected UnitSprite _sprite;
         protected BBackground _bground;
+        protected BImage _influence;
     }
 
     protected BangContext _ctx;

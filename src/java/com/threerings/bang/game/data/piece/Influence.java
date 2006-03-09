@@ -14,6 +14,9 @@ import com.threerings.bang.game.data.Terrain;
  */
 public abstract class Influence extends SimpleStreamableObject
 {
+    /** Returns the name of our icon image. */
+    public abstract String getIcon ();
+
     /** Returns true if this influence has expired. */
     public boolean isExpired (short tick)
     {

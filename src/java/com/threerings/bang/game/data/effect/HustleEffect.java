@@ -20,6 +20,11 @@ public class HustleEffect extends BonusEffect
     public static class HustleInfluence extends Influence
     {
         @Override // documentation inherited
+        public String getIcon () {
+            return "hustle";
+        }
+
+        @Override // documentation inherited
         public int adjustTicksPerMove (int ticksPerMove) {
             return ticksPerMove-1;
         }
