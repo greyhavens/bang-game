@@ -329,6 +329,7 @@ public class BangManager extends GameManager
     protected void didStartup ()
     {
         super.didStartup();
+        log.info("Manager started up [where=" + where() + "].");
 
         // set up the bang object
         _bangobj = (BangObject)_gameobj;
@@ -393,6 +394,7 @@ public class BangManager extends GameManager
     {
         super.didShutdown();
         PresentsServer.invmgr.clearDispatcher(_bangobj.service);
+        log.info("Manager shutdown [where=" + where() + "].");
     }
 
     @Override // documentation inherited
@@ -483,16 +485,14 @@ public class BangManager extends GameManager
         BoardRecord brec = _boards[_bangobj.roundId];
         _bangobj.setBoardName(brec.name);
         _bangobj.setBoard(brec.getBoard());
+
+        // clone the pieces we get from the board record as we may modify them
+        // during the course of the game
         ArrayList<Piece> pieces = new ArrayList<Piece>();
         Piece[] pvec = brec.getPieces();
-        int maxPieceId = 0;
         for (int ii = 0; ii < pvec.length; ii++) {
-            if (pvec[ii].pieceId > maxPieceId) {
-                maxPieceId = pvec[ii].pieceId;
-            }
+            pieces.add((Piece)pvec[ii].clone());
         }
-        Collections.addAll(pieces, pvec);
-        _bangobj.maxPieceId = maxPieceId;
 
         // extract and remove all player start markers
         _starts.clear();
