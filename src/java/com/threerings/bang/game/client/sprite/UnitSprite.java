@@ -67,7 +67,7 @@ public class UnitSprite extends MobileSprite
     {
         if (_hovered != hovered) {
             _hovered = hovered;
-            updateStatusTexture();
+            updateUnitStatus();
 
             // if we have a pending node, adjust its highlight as well
             if (_pendnode != null) {
@@ -84,9 +84,9 @@ public class UnitSprite extends MobileSprite
     /**
      * Returns the status texture used by this unit.
      */
-    public StatusTexture getStatusTexture ()
+    public UnitStatus getUnitStatus ()
     {
-        return _stattex;
+        return _status;
     }
 
     @Override // documentation inherited
@@ -99,7 +99,7 @@ public class UnitSprite extends MobileSprite
     public void setSelected (boolean selected)
     {
         super.setSelected(selected);
-        updateStatusTexture();
+        updateUnitStatus();
     }
 
     /**
@@ -134,7 +134,7 @@ public class UnitSprite extends MobileSprite
     {
         if (_pendo != pendo) {
             _pendo = pendo;
-            updateStatusTexture();
+            updateUnitStatus();
         }
     }
 
@@ -189,7 +189,7 @@ public class UnitSprite extends MobileSprite
         }
 
         // update our status display
-        updateStatusTexture();
+        updateUnitStatus();
 
         // update our colors in the event that our owner changes
         configureOwnerColors();
@@ -224,14 +224,14 @@ public class UnitSprite extends MobileSprite
     public void cancelMove ()
     {
         super.cancelMove();
-        updateStatusTexture();
+        updateUnitStatus();
     }
 
     @Override // documentation inherited
     public void pathCompleted ()
     {
         super.pathCompleted();
-        updateStatusTexture();
+        updateUnitStatus();
     }
 
     @Override // documentation inherited
@@ -248,10 +248,8 @@ public class UnitSprite extends MobileSprite
         _camrot.mult(HALF_UNIT, _camtrans);
         _camtrans.set(0.5f - _camtrans.x, 0.5f - _camtrans.y, 0f);
 
-        Texture ttex = ((TextureState)_ustate.getRenderState(
-            RenderState.RS_TEXTURE)).getTexture();
-        ttex.setRotation(_camrot);
-        ttex.setTranslation(_camtrans);
+        // rotate our unit status with the camera
+        _status.rotateWithCamera(_camrot, _camtrans);
 
         // we have to do extra fiddly business here because our texture is
         // additionally scaled and translated to center the texture at half
@@ -300,15 +298,8 @@ public class UnitSprite extends MobileSprite
         }
 
         // this composite of icons combines to display our status
-        _status = new Node("status");
-        attachHighlight(_status);
-
-        _stattex = new StatusTexture(ctx);
-        _ustate = new SharedMesh("ustate", _highlight);
-        _stattex.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
-        _ustate.setRenderState(_stattex.getSpriteState());
-        _ustate.updateRenderState();
-        _status.attachChild(_ustate);
+        attachHighlight(_status = new UnitStatus(ctx, _highlight));
+        _status.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
 
         // this icon is displayed when we're a target
         _tgtquad = RenderUtil.createIcon(_tgttst);
@@ -340,12 +331,11 @@ public class UnitSprite extends MobileSprite
     /**
      * Updates the visibility and location of the status display.
      */
-    protected void updateStatusTexture ()
+    protected void updateUnitStatus ()
     {
         if (_piece.isAlive() && !isMoving()) {
             int ticks = _piece.ticksUntilMovable(_tick);
-            _stattex.update(_piece, ticks, _pendo, _hovered || _selected);
-            _ustate.updateRenderState();
+            _status.update(_piece, ticks, _pendo, _hovered || _selected);
             _status.setCullMode(CULL_DYNAMIC);
         } else {
             _status.setCullMode(CULL_ALWAYS);
@@ -362,8 +352,6 @@ public class UnitSprite extends MobileSprite
             if (_nugbind != null) {
                 _nugbind.detach();
             }
-            // clear out our status texture
-            _stattex.cleanup();
         }
     }
 
@@ -448,9 +436,7 @@ public class UnitSprite extends MobileSprite
     protected Vector3f _camtrans = new Vector3f(), _gcamtrans = new Vector3f();
     protected Texture[] _pendtexs;
 
-    protected Node _status;
-    protected SharedMesh _ustate;
-    protected StatusTexture _stattex;
+    protected UnitStatus _status;
     protected short _pendingTick = -1;
     protected AdvanceOrder _pendo = AdvanceOrder.NONE;
     protected boolean _hovered;

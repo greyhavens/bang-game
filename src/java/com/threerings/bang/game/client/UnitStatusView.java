@@ -40,10 +40,12 @@ public class UnitStatusView extends BWindow
      */
     public void reposition ()
     {
-        pack();
-        int width = _ctx.getDisplay().getWidth();
-        int height = _ctx.getDisplay().getHeight();
-        setLocation(width - getWidth() - 5, height - getHeight() - 5);
+        if (isAdded()) {
+            pack();
+            int width = _ctx.getDisplay().getWidth();
+            int height = _ctx.getDisplay().getHeight();
+            setLocation(width - getWidth() - 5, height - getHeight() - 5);
+        }
     }
 
     /**
@@ -98,10 +100,10 @@ public class UnitStatusView extends BWindow
             _sprite.addObserver(this);
             pieceId = _sprite.getPieceId();
 
-            // setup our background
-            BImage status = new BImage(
-                sprite.getStatusTexture().getStatusState(), 64, 64);
-            _bground = new ImageBackground(ImageBackground.CENTER_XY, status);
+//             // setup our background
+//             BImage status = new BImage(
+//                 sprite.getStatusTexture().getStatusState(), 64, 64);
+//             _bground = new ImageBackground(ImageBackground.CENTER_XY, status);
 
             // set up our icon image
             Unit unit = (Unit)sprite.getPiece();
