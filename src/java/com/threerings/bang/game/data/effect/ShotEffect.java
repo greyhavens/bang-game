@@ -167,11 +167,7 @@ public class ShotEffect extends Effect
         }
 
         // rotate the shooter to face the target
-        short orient = PieceUtil.getDirection(shooter, target);
-        if (shooter.orientation != orient) {
-            shooter.orientation = orient;
-            reportEffect(obs, shooter, ROTATED);
-        }
+        reportEffect(obs, shooter, ROTATED);
 
         // if we have a new last acted to assign to the target, do that
         if (targetLastActed != -1) {
