@@ -359,10 +359,14 @@ public class RenderUtil
     public static TextureState createShadowTexture (
         BasicContext ctx, float length, float rotation, float intensity)
     {
-        // reuse our existing texture if possible
+        // reuse our existing texture if possible; if not, release old
+        // texture
         if (_shadtex != null && _slength == length &&
             _srotation == rotation && _sintensity == intensity) {
             return _shadtex;
+            
+        } else if (_shadtex != null) {
+            _shadtex.deleteAll();
         }
 
         _slength = length;

@@ -57,6 +57,7 @@ public class WaterNode extends Node
         setRenderState(RenderUtil.blendAlpha);
         setRenderState(RenderUtil.backCull);
         setRenderState(RenderUtil.lequalZBuf);
+        setRenderState(_smtstate = _ctx.getRenderer().createTextureState());
     }
     
     /**
@@ -87,6 +88,14 @@ public class WaterNode extends Node
     }
     
     /**
+     * Releases the resources created by this node.
+     */
+    public void cleanup ()
+    {
+        _smtstate.deleteAll();
+    }
+    
+    /**
      * Creates and attaches the sphere map that blends the water and sky colors
      * according to the Fresnel term.  This code is based on the RenderMan
      * shader in Jerry Tessendorf's
@@ -95,6 +104,8 @@ public class WaterNode extends Node
      */
     public void refreshSphereMap ()
     {
+        _smtstate.deleteAll();
+        
         ByteBuffer pbuf = ByteBuffer.allocateDirect(SPHERE_MAP_SIZE *
             SPHERE_MAP_SIZE * 4);
         ColorRGBA wcolor = RenderUtil.createColorRGBA(
@@ -144,10 +155,7 @@ public class WaterNode extends Node
         texture.setEnvironmentalMapMode(Texture.EM_SPHERE);
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-        TextureState tstate = _ctx.getRenderer().createTextureState();
-        tstate.setTexture(texture);
-        setRenderState(tstate);
-        updateRenderState();
+        _smtstate.setTexture(texture);
     }
     
     /**
@@ -300,6 +308,9 @@ public class WaterNode extends Node
     
     /** The array of surface blocks referring to instances of the patch. */
     protected SharedMesh[][] _blocks;
+    
+    /** The sphere map texture state. */
+    protected TextureState _smtstate;
     
     /** The number of active blocks. */
     protected int _bcount;

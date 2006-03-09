@@ -413,6 +413,21 @@ public class TerrainNode extends Node
     }
     
     /**
+     * Releases the resources created by this node.
+     */
+    public void cleanup ()
+    {
+        if (_blocks == null) {
+            return;
+        }
+        for (int x = 0; x < _blocks.length; x++) {
+            for (int y = 0; y < _blocks[x].length; y++) {
+                _blocks[x][y].deleteCreatedTextures();
+            }
+        }
+    }
+    
+    /**
      * Refreshes the entire heightfield.
      */
     public void refreshHeightfield ()
@@ -1237,6 +1252,10 @@ public class TerrainNode extends Node
         /** Maps terrain codes to alpha texture buffers. */
         public HashIntMap alphaBuffers = new HashIntMap();
 
+        /** The texture states containing created textures. */
+        public ArrayList<TextureState> tstates =
+            new ArrayList<TextureState>();
+        
         /**
          * Refreshes the geometry covered by the specified rectangle (in
          * sub-tile coordinates).
@@ -1282,9 +1301,10 @@ public class TerrainNode extends Node
          */
         public void refreshSplats (Rectangle rect)
         {
-            // remove all the existing children
+            // remove all the existing children and delete created textures
             node.detachAllChildren();
-
+            deleteCreatedTextures();
+            
             // find out which terrain codes this block contains
             ArrayIntSet codes = new ArrayIntSet();
             for (int y = bounds.y, ymax = y+bounds.height; y < ymax; y++) {
@@ -1323,6 +1343,7 @@ public class TerrainNode extends Node
                 ground.setCombineSrc0RGB(Texture.ACS_TEXTURE);
                 ground.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
                 tstate.setTexture(ground, 1);
+                tstates.add(tstate);
                 splat.setRenderState(tstate);
 
                 // and the z buffer state
@@ -1344,6 +1365,18 @@ public class TerrainNode extends Node
             node.updateRenderState();
         }
 
+        /**
+         * Deletes the textures created for this block.
+         */
+        public void deleteCreatedTextures ()
+        {
+            for (TextureState tstate : tstates) {
+                // for splat textures, don't delete the ground texture in 1
+                tstate.delete(0);
+            }
+            tstates.clear();
+        }
+        
         /**
          * Returns the ground texture state for the given terrain code, making
          * sure that we always pick the same "random" texture for this splat.
@@ -1404,6 +1437,7 @@ public class TerrainNode extends Node
             TextureState tstate =
                 _ctx.getDisplay().getRenderer().createTextureState();
             tstate.setTexture(texture);
+            tstates.add(tstate);
             return tstate;
         }
 

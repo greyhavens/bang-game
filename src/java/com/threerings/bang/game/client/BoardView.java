@@ -787,6 +787,11 @@ public class BoardView extends BComponent
 
         // clear any marquee we have up
         clearMarquee(0f);
+        
+        // let the child nodes know that they need to clean up any textures
+        // they've created
+        _tnode.cleanup();
+        _wnode.cleanup();
     }
 
     /**
