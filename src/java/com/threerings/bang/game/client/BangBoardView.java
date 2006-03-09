@@ -18,6 +18,7 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
@@ -397,6 +398,9 @@ public class BangBoardView extends BoardView
         _pmarquees = new BWindow(_ctx.getStyleSheet(), new AbsoluteLayout()) {
             public boolean isOverlay () {
                 return true;
+            }
+            public BComponent getHitComponent (int mx, int my) {
+               return null;
             }
         };
         for (int ii = 0; ii < _bangobj.players.length; ii++) {
