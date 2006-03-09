@@ -11,10 +11,15 @@ import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
+import com.jme.scene.Spatial;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+
+import com.jmex.bui.background.BBackground;
 
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.piece.Piece;
@@ -83,12 +88,20 @@ public class UnitStatus extends Node
             }
         }
 
-        // we have one outline and one to three info layers
+        // we have one outline and three info layers
         for (int ii = 0; ii < _info.length; ii++) {
             _info[ii] = new SharedMesh("info" + ii, highlight);
             _info[ii].setRenderState(ctx.getRenderer().createTextureState());
             _info[ii].updateRenderState();
             attachChild(_info[ii]);
+
+            _icon[ii] = new Quad("icon" + ii, ICON_SIZE, ICON_SIZE);
+            _icon[ii].setRenderState(ctx.getRenderer().createTextureState());
+            _icon[ii].setRenderState(RenderUtil.blendAlpha);
+            _icon[ii].getLocalTranslation().x = ICON_SIZE/2f;
+            _icon[ii].getLocalTranslation().y = ICON_SIZE/2f;
+            _icon[ii].updateGeometricState(0, true);
+            _icon[ii].updateRenderState();
         }
 
         // we'll set up textures in the first call to update()
@@ -100,18 +113,39 @@ public class UnitStatus extends Node
      */
     public void rotateWithCamera (Quaternion camrot, Vector3f camtrans)
     {
-        int units = TextureState.getNumberOfUnits();
         for (int ii = 0; ii < _info.length; ii++) {
-            TextureState tstate = (TextureState)
-                _info[ii].getRenderState(RenderState.RS_TEXTURE);
-            for (int tt = 0; tt < units; tt++) {
-                Texture tex = tstate.getTexture(tt);
+            if (_info[ii].getCullMode() != CULL_ALWAYS) {
+                Texture tex = getTextureState(_info[ii]).getTexture();
                 if (tex != null) {
                     tex.setRotation(camrot);
                     tex.setTranslation(camtrans);
                 }
             }
         }
+    }
+
+    /**
+     * Returns a background that can be used to render this unit's status in
+     * iconic form in the unit status user interface.
+     */
+    public BBackground getIconBackground ()
+    {
+        return new BBackground() {
+            public int getMinimumWidth () {
+                return ICON_SIZE;
+            }
+            public int getMinimumHeight () {
+                return ICON_SIZE;
+            }
+            public void render (Renderer renderer, int x, int y,
+                                int width, int height, float alpha) {
+                for (int ii = 0; ii < _icon.length; ii++) {
+                    if (_icon[ii].getCullMode() != CULL_ALWAYS) {
+                        _icon[ii].draw(renderer);
+                    }
+                }
+            }
+        };
     }
 
     /**
@@ -126,34 +160,35 @@ public class UnitStatus extends Node
 
             // update our tick texture
             int tickidx = Math.max(0, 4-ticksToMove);
-            ((TextureState)_info[1].getRenderState(
-                RenderState.RS_TEXTURE)).setTexture(
-                    _ticktexs[tickidx].createSimpleClone());
+            Texture ttex = _ticktexs[tickidx];
+            getTextureState(_info[1]).setTexture(ttex.createSimpleClone());
+            getTextureState(_icon[1]).setTexture(ttex.createSimpleClone());
 
             // update our outline texture
             Texture otex = (_ticksToMove > 0) ? _outtex : _routtex;
-            ((TextureState)_info[0].getRenderState(
-                RenderState.RS_TEXTURE)).setTexture(
-                    otex.createSimpleClone());
+            getTextureState(_info[0]).setTexture(otex.createSimpleClone());
+            getTextureState(_icon[0]).setTexture(otex.createSimpleClone());
         }
 
         if (_owner != piece.owner) {
             // set up our starting outline color the first time we're updated
             if (_owner == -1) {
                 _info[0].setDefaultColor(DARKER_COLORS[piece.owner]);
+                _icon[0].setDefaultColor(DARKER_COLORS[piece.owner]);
             }
             _owner = piece.owner;
             for (int ii = 1; ii < _info.length; ii++) {
                 _info[ii].setDefaultColor(JPIECE_COLORS[_owner]);
+                _icon[ii].setDefaultColor(JPIECE_COLORS[_owner]);
             }
         }
 
         int dlevel = (int)Math.round(piece.damage/10f);
         if (_dlevel != dlevel) {
             _dlevel = dlevel;
-            ((TextureState)_info[2].getRenderState(
-                RenderState.RS_TEXTURE)).setTexture(
-                    _damtexs[dlevel].createSimpleClone());
+            Texture dtex = _damtexs[dlevel];
+            getTextureState(_info[2]).setTexture(dtex.createSimpleClone());
+            getTextureState(_icon[2]).setTexture(dtex.createSimpleClone());
         }
 
         if (_pendo == null || _pendo != pendo) {
@@ -161,22 +196,26 @@ public class UnitStatus extends Node
 
             Texture otex = null;
             switch (_pendo) {
-            case MOVE: otex = _movetex.createSimpleClone(); break;
-            case MOVE_SHOOT: otex = _shoottex.createSimpleClone(); break;
+            case MOVE: otex = _movetex; break;
+            case MOVE_SHOOT: otex = _shoottex; break;
             }
             if (otex == null) {
                 _info[3].setCullMode(CULL_ALWAYS);
+                _icon[3].setCullMode(CULL_ALWAYS);
             } else {
                 _info[3].setCullMode(CULL_DYNAMIC);
-                ((TextureState)_info[3].getRenderState(
-                    RenderState.RS_TEXTURE)).setTexture(otex);
+                _icon[3].setCullMode(CULL_DYNAMIC);
+                getTextureState(_info[3]).setTexture(otex.createSimpleClone());
+                getTextureState(_icon[3]).setTexture(otex.createSimpleClone());
             }
         }
 
         if (_selected != selected) {
             _selected = selected;
-            _info[0].setDefaultColor(
-                _selected ? ColorRGBA.white : DARKER_COLORS[_owner]);
+            ColorRGBA color = _selected ?
+                ColorRGBA.white : DARKER_COLORS[_owner];
+            _info[0].setDefaultColor(color);
+            _icon[0].setDefaultColor(color);
         }
     }
 
@@ -193,6 +232,11 @@ public class UnitStatus extends Node
         _tempstate.setTexture(texture);
         _tempstate.apply(); // TODO: change to load()
         return texture;
+    }
+
+    protected final TextureState getTextureState (Spatial spatial)
+    {
+        return (TextureState)spatial.getRenderState(RenderState.RS_TEXTURE);
     }
 
     protected static Texture createDamageTexture (
@@ -225,6 +269,7 @@ public class UnitStatus extends Node
     protected UnitSprite.AdvanceOrder _pendo;
 
     protected SharedMesh[] _info = new SharedMesh[4];
+    protected Quad[] _icon = new Quad[4];
 
     protected static TextureState _tempstate;
     protected static Texture[] _ticktexs, _damtexs;

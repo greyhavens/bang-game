@@ -8,11 +8,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.background.BBackground;
-import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -100,10 +98,8 @@ public class UnitStatusView extends BWindow
             _sprite.addObserver(this);
             pieceId = _sprite.getPieceId();
 
-//             // setup our background
-//             BImage status = new BImage(
-//                 sprite.getStatusTexture().getStatusState(), 64, 64);
-//             _bground = new ImageBackground(ImageBackground.CENTER_XY, status);
+            // setup our background
+            _bground = sprite.getUnitStatus().getIconBackground();
 
             // set up our icon image
             Unit unit = (Unit)sprite.getPiece();
@@ -167,7 +163,7 @@ public class UnitStatusView extends BWindow
         }
 
         protected UnitSprite _sprite;
-        protected ImageBackground _bground;
+        protected BBackground _bground;
     }
 
     protected BangContext _ctx;
