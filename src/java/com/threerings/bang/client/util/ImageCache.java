@@ -44,12 +44,25 @@ public class ImageCache
     }
 
     /**
+     * See {@link #getImage(String,boolean)}.
+     */
+    public Image getImage (String rsrcPath)
+    {
+        return getImage(rsrcPath, true);
+    }
+
+    /**
      * Loads up an image from the cache if possible or from the resource
      * manager otherwise, in which case it is prepared for use by JME and
      * OpenGL. <em>Note:</em> these images are cached separately from the
      * {@link BImage} and {@link BufferedImage} caches.
+     *
+     * @param flip whether or not to convert the image from normal computer
+     * coordinates into OpenGL coordinates when loading. <em>Note:</em> this
+     * information is not cached, an image must <em>always</em> be requested as
+     * flipped or not flipped.
      */
-    public Image getImage (String rsrcPath)
+    public Image getImage (String rsrcPath, boolean flip)
     {
         // first check the cache
         WeakReference<Image> iref = _imgcache.get(rsrcPath);
@@ -71,7 +84,7 @@ public class ImageCache
         }
 
         // create and cache a new JME image with the appropriate data
-        image = createImage(bufimg, true);
+        image = createImage(bufimg, flip);
         _imgcache.put(rsrcPath, new WeakReference<Image>(image));
         return image;
     }
