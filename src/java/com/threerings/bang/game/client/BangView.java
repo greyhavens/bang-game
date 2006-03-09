@@ -175,6 +175,9 @@ public class BangView extends BWindow
                 pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, _ctrl, ii));
         }
 
+        // create our unit status display
+        ustatus = new UnitStatusView(_ctx, _bangobj);
+
         // initialize the round timer
         _timer.init(_bangobj);
 
@@ -248,8 +251,7 @@ public class BangView extends BWindow
 
     protected void showUnitStatus ()
     {
-        if (ustatus == null) {
-            ustatus = new UnitStatusView(_ctx, _bangobj);
+        if (!ustatus.isAdded()) {
             _ctx.getRootNode().addWindow(ustatus);
             ustatus.reposition();
         }
