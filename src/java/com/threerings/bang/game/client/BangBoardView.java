@@ -182,10 +182,12 @@ public class BangBoardView extends BoardView
         camhand.addCameraObserver(new CameraPath.Observer() {
             public boolean pathCompleted (CameraPath path) {
                 // clear the marquee, return the camera to normal, and let the
-                // controller start up the next phase
+                // controller start up the next phase (if we're not leaving)
                 _ctx.getInputHandler().setEnabled(true);
                 _ctx.getCameraHandler().setLimitsEnabled(true);
-                _ctrl.preSelectBoardTourComplete();
+                if (isAdded()) {
+                    _ctrl.preSelectBoardTourComplete();
+                }
                 _tpath = null;
                 return false;
             }
@@ -280,7 +282,6 @@ public class BangBoardView extends BoardView
     {
         // skip to the end of the board tour path, if active
         if (_tpath != null) {
-            clearMarquee(0f);
             _ctx.getCameraHandler().skipPath();
         }
         
@@ -382,6 +383,11 @@ public class BangBoardView extends BoardView
 
         // clear out our cursor
         _cursbind.detach();
+        
+        // stop the board tour if it's still going
+        if (_tpath != null) {
+            _ctx.getCameraHandler().moveCamera(null);
+        }
     }
     
     @Override // documentation inherited
