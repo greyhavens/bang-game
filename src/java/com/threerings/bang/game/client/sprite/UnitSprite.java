@@ -8,6 +8,7 @@ import java.util.HashMap;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
+import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
@@ -19,6 +20,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.util.geom.BufferUtils;
 
 import com.samskivert.util.ObserverList;
 
@@ -114,12 +116,12 @@ public class UnitSprite extends MobileSprite
                 _tgtquad.setCullMode(CULL_ALWAYS);
                 break;
             case SURE_SHOT:
-                _tgtquad.setRenderState(_tgttst);
+                _tgtquad.setRenderState(_crosstst[0]);
                 _tgtquad.setCullMode(CULL_DYNAMIC);
                 _tgtquad.updateRenderState();
                 break;
             case MAYBE:
-                _tgtquad.setRenderState(_qtgttst);
+                _tgtquad.setRenderState(_crosstst[1]);
                 _tgtquad.setCullMode(CULL_DYNAMIC);
                 _tgtquad.updateRenderState();
                 break;
@@ -172,6 +174,32 @@ public class UnitSprite extends MobileSprite
             _pendnode.setRenderState(_pendtst);
             _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
             _pendnode.updateRenderState();
+        }
+    }
+
+    /**
+     * Adds or removes an attacker from this sprite.
+     */
+    public void configureAttacker (int pidx, int delta)
+    {
+        // sanity check
+        if (_attackers == 0 && delta < 0) {
+            log.warning("Requested to decrement attackers but we have none! " +
+                        "[sprite=" + this + ", pidx=" + pidx +
+                        ", delta=" + delta + "].");
+            Thread.dumpStack();
+            return;
+        }
+
+        _attackers += delta;
+
+        if (_attackers > 0) {
+            _ptquad.setRenderState(_crosstst[Math.min(_attackers, 3)+1]);
+            _ptquad.setDefaultColor(JPIECE_COLORS[pidx]);
+            _ptquad.updateRenderState();
+            _ptquad.setCullMode(CULL_DYNAMIC);
+        } else {
+            _ptquad.setCullMode(CULL_ALWAYS);
         }
     }
 
@@ -266,7 +294,7 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
-        if (_tgttst == null) {
+        if (_crosstst == null) {
             loadTextures(ctx);
         }
 
@@ -296,25 +324,36 @@ public class UnitSprite extends MobileSprite
                 RenderUtil.createTextureState(ctx, _pendtexs[ii]).apply();
             }
         }
+        _pendtst = RenderUtil.createTextureState(
+            ctx, createPendingTexture(0));
 
         // this composite of icons combines to display our status
         attachHighlight(_status = new UnitStatus(ctx, _highlight));
         _status.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
 
-        // this icon is displayed when we're a target
-        _tgtquad = RenderUtil.createIcon(_tgttst);
+        // we'll use this to keep a few things rotated toward the camera
+        BillboardNode bbn = new BillboardNode("billboard");
+        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
+        attachChild(bbn);
+
+        // this icon is displayed when we're highlighted as a potential target
+        _tgtquad = RenderUtil.createIcon(_crosstst[0]);
         _tgtquad.setLocalTranslation(new Vector3f(0, 0, 0));
         _tgtquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _tgtquad.setRenderState(RenderUtil.alwaysZBuf);
         _tgtquad.updateRenderState();
-        BillboardNode bbn = new BillboardNode("target");
-        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
         bbn.attachChild(_tgtquad);
-        attachChild(bbn);
         _tgtquad.setCullMode(CULL_ALWAYS);
 
-        _pendtst = RenderUtil.createTextureState(
-            ctx, createPendingTexture(0));
+        // this icon is displayed when we have pending shots aimed at us
+        _ptquad = RenderUtil.createIcon(_crosstst[2]);
+        _ptquad.setLocalTranslation(new Vector3f(0, TILE_SIZE/2, 0));
+        _ptquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _ptquad.setRenderState(RenderUtil.alwaysZBuf);
+        _ptquad.updateRenderState();
+        _ptquad.setTextureBuffer(BufferUtils.createFloatBuffer(PTARG_COORDS));
+        bbn.attachChild(_ptquad);
+        _ptquad.setCullMode(CULL_ALWAYS);
 
         // the nugget is shown when we're carrying a nugget
         _nugget = new Node("nugget");
@@ -412,10 +451,12 @@ public class UnitSprite extends MobileSprite
 
     protected static void loadTextures (BasicContext ctx)
     {
-        _tgttst = RenderUtil.createTextureState(
-            ctx, "textures/ustatus/crosshairs.png");
-        _qtgttst = RenderUtil.createTextureState(
-            ctx, "textures/ustatus/crosshairs_q.png");
+        _crosstst = new TextureState[CROSS_TEXS.length];
+        for (int ii = 0; ii < CROSS_TEXS.length; ii++) {
+            _crosstst[ii] = RenderUtil.createTextureState(
+                ctx, "textures/ustatus/crosshairs" + CROSS_TEXS[ii] + ".png");
+            _crosstst[ii].getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+        }
     }
 
     /** Used to dispatch {@link UpdateObserver#updated}. */
@@ -428,24 +469,26 @@ public class UnitSprite extends MobileSprite
         }
     };
 
-    protected Quad _tgtquad;
+    protected Quad _tgtquad, _ptquad;
     protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst;
+    protected Texture[] _pendtexs;
+
     protected Quaternion _camrot = new Quaternion();
     protected Quaternion _gcamrot = new Quaternion();
-    protected Vector3f _camtrans = new Vector3f(), _gcamtrans = new Vector3f();
-    protected Texture[] _pendtexs;
+    protected Vector3f _camtrans = new Vector3f();
+    protected Vector3f _gcamtrans = new Vector3f();
 
     protected UnitStatus _status;
     protected short _pendingTick = -1;
     protected AdvanceOrder _pendo = AdvanceOrder.NONE;
     protected boolean _hovered;
+    protected int _attackers;
 
     protected Node _nugget;
     protected Model.Binding _nugbind;
 
-    protected static TextureState _tgttst, _qtgttst;
-
+    protected static TextureState[] _crosstst;
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();
 
@@ -454,6 +497,14 @@ public class UnitSprite extends MobileSprite
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
+
+    protected static final String[] CROSS_TEXS = { "", "_q", "_1", "_2", "_n" };
+    protected static final Vector2f[] PTARG_COORDS = {
+        new Vector2f(0, 2),
+        new Vector2f(0, 0),
+        new Vector2f(2, 0),
+        new Vector2f(2, 2),
+    };
 
     /** Defines the amount by which the damage arc image is inset from a
      * full quarter circle (on each side): 8 degrees. */

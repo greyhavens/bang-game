@@ -1028,24 +1028,43 @@ public class BangBoardView extends BoardView
                 y = target.y;
             }
 
+            // mark our unit as having an advance order
             _unit = unit;
             _unit.setAdvanceOrder(targetId == -1 ?
                                   UnitSprite.AdvanceOrder.MOVE :
                                   UnitSprite.AdvanceOrder.MOVE_SHOOT);
-            _highlight = _tnode.createHighlight(x, y, true);
-            _unit.setPendingNode(_highlight);
-            _highlight.updateRenderState();
-            _pnode.attachChild(_highlight);
+
+            // denote our desired move location on the board 
+            if (mx != Short.MAX_VALUE) {
+                _highlight = _tnode.createHighlight(x, y, true);
+                _unit.setPendingNode(_highlight);
+                _highlight.updateRenderState();
+                _pnode.attachChild(_highlight);
+            }
+
+            // mark our attacker as targeted
+            Piece target = (Piece)_bangobj.pieces.get(targetId);
+            if (target != null) {
+                _target = getUnitSprite(target);
+                if (_target != null) {
+                    _target.configureAttacker(_pidx, 1);
+                }
+            }
         }
 
         public void clear ()
         {
-            _pnode.detachChild(_highlight);
             _unit.setAdvanceOrder(UnitSprite.AdvanceOrder.NONE);
-            _unit.setPendingNode(null);
+            if (_highlight != null) {
+                _pnode.detachChild(_highlight);
+                _unit.setPendingNode(null);
+            }
+            if (_target != null) {
+                _target.configureAttacker(_pidx, -1);
+            }
         }
 
-        protected UnitSprite _unit;
+        protected UnitSprite _unit, _target;
         protected TerrainNode.Highlight _highlight;
     }
 
