@@ -205,11 +205,11 @@
   </class>
   
   <!-- unit recolorations -->
-  <class classId="12" name="unit" source="#87A7FF" range="0.1, 0.6, 1">
-    <color colorId="1" name="blue" offsets="0, 0.1, -0.05"/>
-    <color colorId="2" name="red" offsets="0.4, 0.6, -0.1"/>
-    <color colorId="3" name="green" offsets="0.7, 0, -0.5"/>
-    <color colorId="4" name="yellow" offsets="0.55, -0.1, 0.1"/>
+  <class classId="12" name="unit" source="#0700FF" range="0.1, 0.8, 1">
+    <color colorId="1" name="blue" offsets="0, 0.1, 0"/>
+    <color colorId="2" name="red" offsets="0.33, 0.3, 0"/>
+    <color colorId="3" name="green" offsets="0.7, .1, 0"/>
+    <color colorId="4" name="yellow" offsets="0.5, 0.1, 0.24"/>
   </class>
   
 </colors>
