@@ -675,6 +675,15 @@ info_chat_label {
 //
 // Pre-game styles
 
+player_marquee_label {
+  font: "Dom Casual" plain 24;
+  color: #4a2805;
+  background: image "ui/frames/big_scroll.png" framexy;
+  text-align: center;
+  vertical-align: center;
+  padding: 0 0 11 0;
+}
+
 pick_subtitle {
   font: "Dom Casual" plain 19;
   padding: 0 0 0 15;

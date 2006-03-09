@@ -4,7 +4,6 @@
 package com.threerings.bang.game.client;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Rectangle;
 
 import java.util.HashMap;
@@ -19,9 +18,16 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
+import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
+import com.jmex.bui.BLabel;
+import com.jmex.bui.BWindow;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
+import com.jmex.bui.icon.SubimageIcon;
+import com.jmex.bui.layout.AbsoluteLayout;
+import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Point;
 
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
@@ -42,7 +48,9 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.Model;
+import com.threerings.bang.client.bui.WindowFader;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -132,7 +140,7 @@ public class BangBoardView extends BoardView
 
         // compute the desired starting location and orientation
         CameraHandler camhand = _ctx.getCameraHandler();
-        Point start = _bangobj.startPositions[
+        java.awt.Point start = _bangobj.startPositions[
             _bangobj.getPlayerIndex(_ctx.getUserObject().handle)];
         Vector3f gpoint = camhand.getGroundPoint(),
             target = new Vector3f((start.x + 0.5f) * TILE_SIZE,
@@ -386,24 +394,39 @@ public class BangBoardView extends BoardView
 
         // we're creating the game-intro marquee, so slap the players involved
         // in the game up on the screen as well
-        _pmarquees = new Quad[_bangobj.players.length];
-        for (int ii = 0; ii < _pmarquees.length; ii++) {
+        _pmarquees = new BWindow(_ctx.getStyleSheet(), new AbsoluteLayout()) {
+            public boolean isOverlay () {
+                return true;
+            }
+        };
+        for (int ii = 0; ii < _bangobj.players.length; ii++) {
             BangOccupantInfo boi = (BangOccupantInfo)_bangobj.getOccupantInfo(
                 _bangobj.players[ii]);
             if (boi == null) {
                 continue;
             }
-            BImage image = AvatarView.getImage(_ctx, boi.avatar,
-                AVATAR_SIZE.width, AVATAR_SIZE.height);
-            image.setTextureCoords(0, 0, AVATAR_SIZE.width, AVATAR_SIZE.height);
-            _pmarquees[ii] = image;
-            _pmarquees[ii].setLocalTranslation(AVATAR_LOCATIONS[ii]);
-            _pmarquees[ii].setRenderQueueMode(Renderer.QUEUE_ORTHO);
-            _pmarquees[ii].setZOrder(-2);
-            _ctx.getInterface().attachChild(_pmarquees[ii]);
+            _pmarquees.add(createPlayerMarquee(boi),
+                PLAYER_MARQUEE_LOCATIONS[ii]);
         }
-        // TODO: show their names, figure out why these are squished on baltic
-        // (probably has to do with non-square image rendering)
+        _pmarquees.setBounds(0, 0, _ctx.getDisplay().getWidth(),
+            _ctx.getDisplay().getHeight());
+        _ctx.getRootNode().addWindow(_pmarquees);
+    }
+    
+    /**
+     * Creates and returns a player view for the opening marquee.
+     */
+    protected BContainer createPlayerMarquee (BangOccupantInfo boi)
+    {
+        GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
+        layout.setGap(-1);
+        BContainer cont = new BContainer(layout);
+        int awidth = AvatarLogic.WIDTH/2, aheight = AvatarLogic.HEIGHT/2;
+        cont.add(new BLabel(new SubimageIcon(
+            AvatarView.getImage(_ctx, boi.avatar, awidth, aheight),
+                0, 0, awidth, aheight)));
+        cont.add(new BLabel(boi.username.toString(), "player_marquee_label"));
+        return cont;
     }
     
     @Override // documentation inherited
@@ -411,12 +434,7 @@ public class BangBoardView extends BoardView
     {
         super.clearMarquee(fadeTime);
         if (_pmarquees != null) {
-            for (int ii = 0; ii < _pmarquees.length; ii++) {
-                if (_pmarquees[ii] == null) {
-                    continue;
-                }
-                clearMarquee(_pmarquees[ii], fadeTime);
-            }
+            WindowFader.remove(_ctx, _pmarquees, fadeTime);
             _pmarquees = null;
         }
     }
@@ -1073,7 +1091,7 @@ public class BangBoardView extends BoardView
     protected int[] _action;
     protected Card _card;
 
-    protected Quad[] _pmarquees;
+    protected BWindow _pmarquees;
     protected SwingPath _tpath;
 
     /** Tracks pieces that will be moving as soon as the board finishes
@@ -1088,16 +1106,10 @@ public class BangBoardView extends BoardView
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0.5f, 0.5f, 0.5f);
     
-    /** The size of the avatars on the opening marquee. */
-    protected static final Dimension AVATAR_SIZE =
-        new Dimension(234, 300);
-        
     /** Positions for the four avatars. */
-    protected static final Vector3f[] AVATAR_LOCATIONS = {
-        new Vector3f(167f, 568f, 0f),
-        new Vector3f(857f, 568f, 0f),
-        new Vector3f(167f, 200f, 0f),
-        new Vector3f(857f, 200f, 0f) };
+    protected static final Point[] PLAYER_MARQUEE_LOCATIONS = {
+        new Point(10, 416), new Point(724, 416),
+        new Point(10, 10), new Point(724, 10) };
 
     /** The duration of the board tour in seconds. */
     protected static final float BOARD_TOUR_DURATION = 10f;
