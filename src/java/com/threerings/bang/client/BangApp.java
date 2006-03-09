@@ -145,6 +145,15 @@ public class BangApp extends JmeApp
         BangPrefs.configureDisplayMode(props);
         _api = props.getRenderer();
         DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
+
+        // turn on FPS stats and turn off vsync if we're profiling
+        if ("true".equalsIgnoreCase(System.getProperty("profiling"))) {
+            display.setVSyncEnabled(false);
+            displayStatistics(true);
+        } else {
+            display.setVSyncEnabled(true);
+        }
+
         display.createWindow(props.getWidth(), props.getHeight(),
                              props.getDepth(), props.getFreq(),
                              props.getFullscreen());
