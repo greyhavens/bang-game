@@ -20,12 +20,11 @@ public class ModelLoader extends Thread
     /**
      * Creates, but does not start, a model loading thread.
      */
-    public ModelLoader (BasicContext ctx)
+    public ModelLoader ()
     {
         super("ModelLoader");
         setDaemon(true);
         setPriority(Thread.MIN_PRIORITY);
-        _ctx = ctx;
     }
 
     /**
@@ -59,7 +58,7 @@ public class ModelLoader extends Thread
             }
             PendingActionKey akey = _queue.poll();
             try {
-                akey.resolveAction(_ctx);
+                akey.resolveAction();
             } catch (Throwable t) {
                 log.log(Level.WARNING,
                         "Choked resolving action: " + akey + ".", t);
@@ -85,8 +84,8 @@ public class ModelLoader extends Thread
             }
         }
 
-        public void resolveAction (BasicContext ctx) {
-            _model.resolveAction(ctx, _action);
+        public void resolveAction () {
+            _model.resolveAction(_action);
         }
 
         public int compareTo (PendingActionKey other) {
@@ -98,7 +97,6 @@ public class ModelLoader extends Thread
         protected int _priority;
     }
 
-    protected BasicContext _ctx;
     protected PriorityQueue<PendingActionKey> _queue =
         new PriorityQueue<PendingActionKey>();
 }

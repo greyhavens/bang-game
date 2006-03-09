@@ -47,4 +47,7 @@ public class BangMetrics
         ColorRGBA.green.mult(ColorRGBA.darkGray),
         new ColorRGBA(1, 1, 0, 0).mult(ColorRGBA.darkGray)
     };
+    
+    /** Colorization ids for each of the players. */
+    public static final int[] PIECE_COLOR_IDS = { 1, 2, 3, 4 };
 }

@@ -20,6 +20,7 @@ import com.jmex.effects.ParticleManager;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.media.image.Colorization;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
@@ -366,7 +367,7 @@ public class MobileSprite extends PieceSprite
 
         // add the new meshes
         Model.Animation anim = _model.getAnimation(action);
-        bindAnimation(_ctx, anim, _texrando);
+        bindAnimation(_ctx, anim, _texrando, _zations);
         return anim;
     }
 
@@ -568,6 +569,9 @@ public class MobileSprite extends PieceSprite
      * displayed for this particular instance. */
     protected int _texrando = RandomUtil.getInt(Integer.MAX_VALUE);
 
+    /** The colorizations to use for this sprite's textures. */
+    protected Colorization[] _zations;
+    
     protected static TextureState _dusttex;
 
     /** The number of dust particles. */

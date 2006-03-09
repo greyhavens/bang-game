@@ -19,6 +19,7 @@ import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.media.image.Colorization;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
@@ -423,9 +424,12 @@ public class PieceSprite extends Sprite
      * Binds the given animation and updates the set of emissions.
      *
      * @param random the number used to select a texture
+     * @param zations the colorizations to use for the texture, or
+     * <code>null</code> for none
      */
     protected void bindAnimation (
-        final BasicContext ctx, Model.Animation anim, int random)
+        final BasicContext ctx, Model.Animation anim, int random,
+        Colorization[] zations)
     {
         // stop all running emissions
         for (SpriteEmission emission : _emissions.values()) {
@@ -436,7 +440,8 @@ public class PieceSprite extends Sprite
 
         // bind the new animation
         _view.addResolvingSprite(this);
-        _binding = anim.bind(this, random, new Model.Binding.Observer() {
+        _binding = anim.bind(
+            this, random, zations, new Model.Binding.Observer() {
             public void wasBound (Model.Animation anim, Model.Binding binding) {
                 // now that the meshes are attached, configure the animation
                 // speed and repeat type

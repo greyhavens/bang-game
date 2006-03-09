@@ -43,6 +43,7 @@ import com.jme.util.TextureManager;
 import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
 
+import com.threerings.media.image.Colorization;
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.bang.client.Config;
@@ -88,11 +89,14 @@ public class Model
             _anim.clearBinding(this);
         }
 
-        protected Binding (Animation anim, Node node, int random, Observer obs)
+        protected Binding (
+            Animation anim, Node node, int random, Colorization[] zations,
+            Observer obs)
         {
             _anim = anim;
             _node = node;
             _random = random;
+            _zations = zations;
             _obs = obs;
             attachMeshes();
         }
@@ -107,7 +111,7 @@ public class Model
 
         protected void attachMeshes ()
         {
-            _meshes = _anim.getMeshes(_random);
+            _meshes = _anim.getMeshes(_random, _zations);
             _markers = new HashMap<String, Geometry>();
             for (int ii = 0; ii < _meshes.length; ii++) {
                 if (_meshes[ii].getCullMode() == Node.CULL_ALWAYS) {
@@ -147,6 +151,7 @@ public class Model
         protected Animation _anim;
         protected Node _node;
         protected int _random;
+        protected Colorization[] _zations;
         protected Observer _obs;
         protected Node[] _meshes;
         protected HashMap<String, Geometry> _markers;
@@ -235,9 +240,10 @@ public class Model
          *
          * @see #getMeshes
          */
-        public Binding bind (Node node, int random, Binding.Observer obs)
+        public Binding bind (Node node, int random, Colorization[] zations,
+            Binding.Observer obs)
         {
-            Binding binding = new Binding(this, node, random, obs);
+            Binding binding = new Binding(this, node, random, zations, obs);
             if (_bindings != null) {
                 _bindings.add(binding);
             }
@@ -254,8 +260,10 @@ public class Model
          * select a random number for the "instance" and then supply it to
          * the model when obtaining animated meshes for that particular
          * instance.
+         * @param zations the colorizations to apply to the texture, or
+         * <code>null</code> for none
          */
-        public Node[] getMeshes (int random)
+        public Node[] getMeshes (int random, Colorization[] zations)
         {
             // return an empty set of meshes if our parts are not resolved
             if (_parts == null) {
@@ -264,7 +272,7 @@ public class Model
 
             Node[] nodes = new Node[_parts.length + emitters.length];
             for (int ii = 0; ii < _parts.length; ii++) {
-                nodes[ii] = _parts[ii].createInstance(random);
+                nodes[ii] = _parts[ii].createInstance(random, zations);
             }
             for (int ii = 0; ii < emitters.length; ii++) {
                 int idx = _parts.length + ii;
@@ -336,6 +344,7 @@ public class Model
      */
     public Model (BasicContext ctx, String type, String name)
     {
+        _ctx = ctx;
         _key = type + "/" + name;
 
         _props = new Properties();
@@ -360,7 +369,7 @@ public class Model
 
         // start up our background loader thread if it hasn't been
         if (_loader == null) {
-            _loader = new ModelLoader(ctx);
+            _loader = new ModelLoader();
             _loader.start();
         }
 
@@ -466,7 +475,7 @@ public class Model
      * thread and must be very careful not to use non-thread-safe services from
      * the supplied context.
      */
-    public void resolveAction (final BasicContext ctx, String action)
+    public void resolveAction (String action)
     {
         final Animation anim = _anims.get(action);
         boolean isStatic = _props.getProperty(
@@ -489,7 +498,6 @@ public class Model
         String[] pnames = getList(
             _props, anim.action + ".meshes", "meshes", true);
         final Part[] parts = new Part[pnames.length];
-        final Texture[][] textures = new Texture[pnames.length][];
         for (int pp = 0; pp < pnames.length; pp++) {
             String mesh = pnames[pp];
             Part part = (parts[pp] = new Part());
@@ -503,9 +511,9 @@ public class Model
                 mesh + ".transparent", "false").equalsIgnoreCase("true");
             String mpath = path + anim.action + "/" + mesh + ".jme";
             if (isStatic) {
-                part.target = loadModel(ctx, mpath, trans);
+                part.target = loadModel(mpath, trans);
             } else {
-                part.creator = loadModelCreator(ctx, mpath, trans);
+                part.creator = loadModelCreator(mpath, trans);
             }
 
             // the model may have multiple textures from which we
@@ -515,14 +523,12 @@ public class Model
             if (tnames.length == 0) {
                 continue;
             }
-            textures[pp] = new Texture[tnames.length];
+            part.tpaths = new String[tnames.length];
             for (int tt = 0; tt < tnames.length; tt++) {
-                // we load the texture data on the background thread, but the
-                // creation of the texture states must take place on the main
-                // thread as it does OpenGL things
-                textures[pp][tt] = ctx.getTextureCache().getTexture(
-                    // TODO: make the texture cache thread safe
-                    cleanPath(path + tnames[tt]));
+                // preload the textures so they're cached when we need them
+                // TODO: make the texture cache thread safe
+                _ctx.getTextureCache().getTexture(
+                    part.tpaths[tt] = cleanPath(path + tnames[tt]));
             }
         }
 
@@ -530,13 +536,13 @@ public class Model
         for (int ee = 0; ee < anim.emitters.length; ee++) {
             String mesh = anim.emitters[ee].name;
             anim.emitters[ee].creator = loadModelCreator(
-                ctx, path + anim.action + "/" + mesh + ".jme", false);
+                path + anim.action + "/" + mesh + ".jme", false);
         }
 
         // now finish our resolution on the main thread
-        ctx.getApp().postRunnable(new Runnable() {
+        _ctx.getApp().postRunnable(new Runnable() {
             public void run () {
-                finishResolution(ctx, anim, parts, textures);
+                finishResolution(anim, parts);
             }
         });
     }
@@ -545,22 +551,8 @@ public class Model
      * Finishes the resolution of a model animation. <em>Note:</em> this is
      * called on the main thread where we can safely access OpenGL.
      */
-    protected void finishResolution (BasicContext ctx, Animation anim,
-                                     Part[] parts, Texture[][] textures)
+    protected void finishResolution (Animation anim, Part[] parts)
     {
-        for (int ii = 0; ii < parts.length; ii++) {
-            if (textures[ii] == null) {
-                continue;
-            }
-            Part part = parts[ii];
-            part.tstates = new TextureState[textures[ii].length];
-            for (int tt = 0; tt < part.tstates.length; tt++) {
-                part.tstates[tt] = ctx.getRenderer().createTextureState();
-                textures[ii][tt].setWrap(Texture.WM_WRAP_S_WRAP_T);
-                part.tstates[tt].setTexture(textures[ii][tt]);
-                part.tstates[tt].setEnabled(true);
-            }
-        }
         anim.setParts(parts);
     }
 
@@ -612,11 +604,9 @@ public class Model
         return values.toArray(new String[values.size()]);
     }
 
-    protected CloneCreator loadModelCreator (
-        BasicContext ctx, String path, boolean trans)
+    protected CloneCreator loadModelCreator (String path, boolean trans)
     {
-        ModelCloneCreator cc = new ModelCloneCreator(
-            loadModel(ctx, path, trans));
+        ModelCloneCreator cc = new ModelCloneCreator(loadModel(path, trans));
         // these define what we want to "shallow" copy
         cc.addProperty("colors");
         cc.addProperty("texcoords");
@@ -624,8 +614,7 @@ public class Model
         return cc;
     }
     
-    protected Node loadModel (
-        BasicContext ctx, String path, boolean trans)
+    protected Node loadModel (String path, boolean trans)
     {
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
@@ -688,7 +677,7 @@ public class Model
     }
 
     /** Contains information on one part of a model. */
-    protected static class Part
+    protected class Part
     {
         /** Used to create a clone of non-static models. */
         public CloneCreator creator;
@@ -696,8 +685,8 @@ public class Model
         /** Used as a target for static models. */
         public Node target;
         
-        /** A list of texture states from which to select randomly. */
-        public TextureState[] tstates;
+        /** The paths of the textures from which to select randomly. */
+        public String[] tpaths;
 
         /**
          * Creates either a copy of the original part node or a
@@ -706,8 +695,10 @@ public class Model
          *
          * @param random a random number used to determine which texture to
          * use
+         * @param zations the colorizations to apply to the texture, or
+         * <code>null</code> for none
          */
-        public Node createInstance (int random)
+        public Node createInstance (int random, Colorization[] zations)
         {
             Node instance;
             if (creator != null) {
@@ -735,9 +726,13 @@ public class Model
                 }
                 instance = new SharedNode("shared", target);
             }
-            if (tstates != null) {
-                instance.setRenderState(tstates[random % tstates.length]);
-                instance.updateRenderState();
+            if (tpaths != null) {
+                TextureState tstate = _ctx.getRenderer().createTextureState();
+                Texture tex = _ctx.getTextureCache().getTexture(
+                    tpaths[random % tpaths.length], zations);
+                tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
+                tstate.setTexture(tex);
+                instance.setRenderState(tstate);
             }
             return instance;
         }
@@ -764,6 +759,7 @@ public class Model
         protected boolean _tinit;
     }
 
+    protected BasicContext _ctx;
     protected String _key;
     protected Properties _props;
     protected Animation _ianim;

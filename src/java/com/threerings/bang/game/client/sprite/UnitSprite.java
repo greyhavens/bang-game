@@ -22,6 +22,7 @@ import com.jme.scene.state.TextureState;
 
 import com.samskivert.util.ObserverList;
 
+import com.threerings.media.image.Colorization;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.SpriteObserver;
 
@@ -271,6 +272,11 @@ public class UnitSprite extends MobileSprite
             loadTextures(ctx);
         }
 
+        // set our colorization
+        _zations = new Colorization[] {
+            ctx.getAvatarLogic().getColorPository().getColorization("unit",
+                PIECE_COLOR_IDS[_piece.owner] ) };
+        
         // load up our model
         super.createGeometry(ctx);
 
@@ -325,7 +331,7 @@ public class UnitSprite extends MobileSprite
         _nugget.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         _nugget.setLocalScale(0.5f);
         Model nugmod = ctx.loadModel("bonuses", "nugget");
-        _nugbind = nugmod.getAnimation("normal").bind(_nugget, 0, null);
+        _nugbind = nugmod.getAnimation("normal").bind(_nugget, 0, null, null);
 
         // configure our colors
         configureOwnerColors();

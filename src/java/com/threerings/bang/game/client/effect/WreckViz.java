@@ -130,7 +130,7 @@ public class WreckViz extends ParticleEffectViz
         {
             _binding = _ctx.loadModel("units",
                 "wreckage/" + type).getAnimation("normal").bind(this,
-                    RandomUtil.getInt(Integer.MAX_VALUE), null);
+                    RandomUtil.getInt(Integer.MAX_VALUE), null, null);
         }
         
         public void updateWorldVectors ()

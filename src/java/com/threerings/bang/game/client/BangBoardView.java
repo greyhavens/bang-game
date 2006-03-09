@@ -359,7 +359,7 @@ public class BangBoardView extends BoardView
         _cursor.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         // _cursor.setLocalScale(0.75f);
         Model model = _ctx.loadModel("bonuses", "bonus_point");
-        _cursbind = model.getAnimation("normal").bind(_cursor, 0, null);
+        _cursbind = model.getAnimation("normal").bind(_cursor, 0, null, null);
         _cursor.addController(new Spinner(_cursor, FastMath.PI));
         _cursor.addController(new Bouncer(_cursor, TILE_SIZE, TILE_SIZE/4));
         _cursor.setRenderState(RenderUtil.lequalZBuf);

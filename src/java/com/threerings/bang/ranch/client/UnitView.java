@@ -50,7 +50,7 @@ public class UnitView extends BGeomView
 
         Model model = _ctx.loadModel("units", config.type);
         Model.Animation anim = model.getAnimation("standing");
-        _binding = anim.bind((Node)_geom, 0, null);
+        _binding = anim.bind((Node)_geom, 0, null, null);
     }
 
     @Override // documentation inherited

@@ -203,4 +203,13 @@
   <class classId="10" name="familiar_t" source="#57AC6A" range="0.1, 0.6, 1">
     <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
   </class>
+  
+  <!-- unit recolorations -->
+  <class classId="12" name="unit" source="#87A7FF" range="0.1, 0.6, 1">
+    <color colorId="1" name="blue" offsets="0, 0.1, -0.05"/>
+    <color colorId="2" name="red" offsets="0.4, 0.6, -0.1"/>
+    <color colorId="3" name="green" offsets="0.7, 0, -0.5"/>
+    <color colorId="4" name="yellow" offsets="0.55, -0.1, 0.1"/>
+  </class>
+  
 </colors>
