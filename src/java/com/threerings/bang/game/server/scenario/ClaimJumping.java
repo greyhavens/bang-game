@@ -5,8 +5,10 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.samskivert.util.ArrayIntSet;
+import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
@@ -85,16 +87,36 @@ public class ClaimJumping extends Scenario
             }
         }
 
-        // TODO: sort the bonus spots by distance to nearest claim, put up to
-        // one nugget per player in the spots that are maximally distant from
-        // the nearest claim
+        // sort the bonus spots by distance to nearest claim, put up to one
+        // nugget per player in the spots that are maximally distant from the
+        // nearest claim
+        ArrayList<BonusSorter> sorters = new ArrayList<BonusSorter>();
         for (int ii = 0; ii < bonusSpots.size(); ii++) {
-            Bonus nugget = dropNugget(
-                bangobj, bonusSpots.getX(ii), bonusSpots.getY(ii));
-            // we need to make sure these nuggets "occupy" the bonus spots they
-            // are being dropped in, lest the server stick another bonus in
-            // their place
-            nugget.spot = (short)ii;
+            BonusSorter sorter = new BonusSorter();
+            sorter.index = (short)ii;
+            int x = bonusSpots.getX(ii), y = bonusSpots.getY(ii);
+            for (int ss = 0; ss < _startSpots.length; ss++) {
+                int distsq = MathUtil.distanceSq(
+                    x, y, _startSpots[ss].x, _startSpots[ss].y);
+                sorter.minDistSq = Math.max(sorter.minDistSq, distsq);
+            }
+            sorters.add(sorter);
+        }
+        Collections.sort(sorters);
+
+        int placed = 0;
+        for (BonusSorter sorter : sorters) {
+            Bonus nugget = dropNugget(bangobj, bonusSpots.getX(sorter.index),
+                                      bonusSpots.getY(sorter.index));
+            // we need to mark these nuggets as "occupying" the bonus spots
+            // they are being dropped in, lest the server stick another bonus
+            // in their place
+            nugget.spot = sorter.index;
+
+            // stop when we've placed one nugget for each player
+            if (++placed >= bangobj.players.length) {
+                break;
+            }
         }
     }
 
@@ -226,6 +248,20 @@ public class ClaimJumping extends Scenario
         bangobj.board.shadowPiece(drop);
         bangobj.addToPieces(drop);
         return drop;
+    }
+
+    protected static class BonusSorter implements Comparable<BonusSorter>
+    {
+        /** The index of this bonus spot. */
+        public short index;
+
+        /** The distance (squared) from the bonus spot to the closest player. */
+        public int minDistSq;
+
+        /** Compare based on distance to nearest player. */
+        public int compareTo (BonusSorter other) {
+            return other.minDistSq - minDistSq;
+        }
     }
 
     /** A list of the active claims. */
