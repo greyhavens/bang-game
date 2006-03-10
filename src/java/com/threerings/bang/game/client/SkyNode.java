@@ -93,6 +93,7 @@ public class SkyNode extends Node
         ctex.setScale(new Vector3f(CLOUD_TEXTURE_SCALE,
             CLOUD_TEXTURE_SCALE, CLOUD_TEXTURE_SCALE));
         ctex.setTranslation(new Vector3f());
+        _clouds.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _clouds.setRenderState(RenderUtil.blendAlpha);
         _clouds.setRenderState(RenderUtil.alwaysZBuf);
         _clouds.updateRenderState();
