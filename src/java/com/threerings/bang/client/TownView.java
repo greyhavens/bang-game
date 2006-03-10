@@ -306,7 +306,7 @@ public class TownView extends BWindow
         @Override // documentation inherited
         protected float getFadeInTime ()
         {
-            return _presented.contains(_bctx.getUserObject().townId) ? 1f : 3f;
+            return 1f;
         }
 
         @Override // documentation inherited
