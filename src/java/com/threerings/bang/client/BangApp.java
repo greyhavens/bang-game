@@ -106,6 +106,11 @@ public class BangApp extends JmeApp
             return false;
         }
 
+        // turn on the FPS display if we're profiling
+        if (_profiling) {
+            displayStatistics(true);
+        }
+
         // initialize our client instance
         _client = new BangClient();
         _client.init(this);
@@ -145,15 +150,7 @@ public class BangApp extends JmeApp
         BangPrefs.configureDisplayMode(props);
         _api = props.getRenderer();
         DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
-
-        // turn on FPS stats and turn off vsync if we're profiling
-        if ("true".equalsIgnoreCase(System.getProperty("profiling"))) {
-            display.setVSyncEnabled(false);
-            displayStatistics(true);
-        } else {
-            display.setVSyncEnabled(true);
-        }
-
+        display.setVSyncEnabled(!_profiling);
         display.createWindow(props.getWidth(), props.getHeight(),
                              props.getDepth(), props.getFreq(),
                              props.getFullscreen());
@@ -190,5 +187,10 @@ public class BangApp extends JmeApp
         }
     }
 
+    /** The main thing! */
     protected BangClient _client;
+
+    /** Used to configure the renderer appropriately when profiling. */
+    protected boolean _profiling =
+        "true".equalsIgnoreCase(System.getProperty("profiling"));
 }
