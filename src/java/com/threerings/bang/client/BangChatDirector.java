@@ -38,7 +38,6 @@ public class BangChatDirector extends ChatDirector
         MessageBundle msg = _msgmgr.getBundle(_bundle);
         registerCommandHandler(msg, "debug", new DebugHandler());
         registerCommandHandler(msg, "tell", new TellHandler());
-        registerCommandHandler(msg, "bug", new BugHandler());
     }
 
     /** A place for temporary debug hacks. */
@@ -137,22 +136,6 @@ public class BangChatDirector extends ChatDirector
                 }
             });
 
-            return ChatCodes.SUCCESS;
-        }
-    }
-
-    /** Implements <code>/bug</code>. */
-    protected class BugHandler extends CommandHandler
-    {
-        public String handleCommand (
-            SpeakService speakSvc, final String command, String args,
-            String[] history)
-        {
-            // the argument should be non-blank
-            if (StringUtil.isBlank(args)) {
-                return "m.usage_bug";
-            }
-            BangClient.submitBugReport(_ctx, args);
             return ChatCodes.SUCCESS;
         }
     }
