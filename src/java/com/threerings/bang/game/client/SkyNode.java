@@ -12,6 +12,7 @@ import java.nio.FloatBuffer;
 
 import javax.imageio.ImageIO;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
@@ -28,6 +29,7 @@ import com.jme.scene.shape.Disk;
 import com.jme.scene.shape.Dome;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 
@@ -61,11 +63,17 @@ public class SkyNode extends Node
         _gtstate.setTexture(null, 0);
         _dome.lockMeshes(ctx.getRenderer());
         attachChild(_dome);
+        ZBufferState zbstate = ctx.getRenderer().createZBufferState();
+        zbstate.setFunction(ZBufferState.CF_ALWAYS);
+        zbstate.setWritable(false);
+        _dome.setRenderState(zbstate);
         _dome.updateRenderState();
         
         // create the cloud plane geometry, which fades out towards the edge
         _clouds = new Disk("clouds", CLOUD_SHELL_SAMPLES, CLOUD_RADIAL_SAMPLES,
             CLOUD_RADIUS);
+        _clouds.setModelBound(new BoundingBox());
+        _clouds.updateModelBound();
         _clouds.setLocalTranslation(new Vector3f(0f, 0f, CLOUD_HEIGHT));
         FloatBuffer cbuf = BufferUtils.createColorBuffer(1 +
             (CLOUD_SHELL_SAMPLES - 1) * CLOUD_RADIAL_SAMPLES);
@@ -95,7 +103,7 @@ public class SkyNode extends Node
         ctex.setTranslation(new Vector3f());
         _clouds.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _clouds.setRenderState(RenderUtil.blendAlpha);
-        _clouds.setRenderState(RenderUtil.alwaysZBuf);
+        _clouds.setRenderState(zbstate);
         _clouds.updateRenderState();
     }
     
