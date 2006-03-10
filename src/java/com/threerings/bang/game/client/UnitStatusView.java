@@ -128,7 +128,7 @@ public class UnitStatusView extends BWindow
                     setAlpha(0.5f);
                 }
             } else {
-                if (unit.influence == null) {
+                if (!unit.isAlive() || unit.influence == null) {
                     _influence = null;
                 } else {
                     // we don't worry about refetching the image from the cache
