@@ -134,7 +134,8 @@ public class BangClient extends BasicClient
     /**
      * Asynchronously submits a bug report with the specified description.
      */
-    public static void submitBugReport (final BangContext ctx, String descrip)
+    public static void submitBugReport (final BangContext ctx, String descrip,
+                                        final boolean exitAfterSubmit)
     {
         // fill in a bug report
         PlayerObject user = ctx.getUserObject();
@@ -160,6 +161,9 @@ public class BangClient extends BasicClient
             public void requestCompleted (Object result) {
                 ctx.getChatDirector().displayFeedback(
                     BANG_MSGS, "m.bug_submit_completed");
+                if (exitAfterSubmit) {
+                    ctx.getApp().stop();
+                }
             }
             public void requestFailed (Exception cause) {
                 log.log(Level.WARNING, "Bug submission failed.", cause);
@@ -609,7 +613,7 @@ public class BangClient extends BasicClient
 
     protected GlobalKeyManager.Command _clearPopup =
         new GlobalKeyManager.Command() {
-        public void invoke (int keyCode) {
+        public void invoke (int keyCode, int modifiers) {
             if (_popups.size() > 0) {
                 clearPopup(_popups.get(_popups.size()-1), true);
             }

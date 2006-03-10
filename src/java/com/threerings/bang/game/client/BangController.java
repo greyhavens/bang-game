@@ -72,7 +72,7 @@ public class BangController extends GameController
     {
         _ctx.getKeyManager().registerCommand(
             keyCode, new GlobalKeyManager.Command() {
-            public void invoke (int keyCode) {
+            public void invoke (int keyCode, int modifiers) {
                 handleAction(new ActionEvent(BangController.this, 0, command));
             }
         });

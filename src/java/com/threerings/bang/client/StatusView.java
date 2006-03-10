@@ -47,7 +47,7 @@ public class StatusView extends BWindow
     public static void bindKeys (final BangContext ctx)
     {
         GlobalKeyManager.Command showStatus = new GlobalKeyManager.Command() {
-            public void invoke (int keyCode) {
+            public void invoke (int keyCode, int modifiers) {
                 // make sure we can display the status view right now
                 if (!ctx.getBangClient().canDisplayPopup(
                         MainView.Type.STATUS)) {

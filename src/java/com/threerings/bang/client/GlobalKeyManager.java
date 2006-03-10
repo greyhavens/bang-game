@@ -24,7 +24,7 @@ public class GlobalKeyManager
     public static interface Command
     {
         /** Called when our registered key has been pressed. */
-        public void invoke (int keyCode);
+        public void invoke (int keyCode, int modifiers);
     }
 
     /**
@@ -41,7 +41,7 @@ public class GlobalKeyManager
                     int keyCode = kev.getKeyCode();
                     Command command = (Command)_commap.get(keyCode);
                     if (command != null) {
-                        command.invoke(keyCode);
+                        command.invoke(keyCode, kev.getModifiers());
                         return true;
                     }
                 }

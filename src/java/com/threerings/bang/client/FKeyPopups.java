@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import com.jme.input.KeyInput;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
@@ -11,6 +12,7 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.InputEvent;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.StringUtil;
@@ -41,8 +43,18 @@ public class FKeyPopups
     }
 
     // documentation inherited from interface GlobalKeyManager.Command
-    public void invoke (int keyCode)
+    public void invoke (int keyCode, int modifiers)
     {
+        // special hackery to handle Ctrl-Shift-F2 which submits an
+        // auto-bug-report and exits the client
+        if (keyCode == KeyInput.KEY_F2 && modifiers ==
+            (InputEvent.CTRL_DOWN_MASK|InputEvent.SHIFT_DOWN_MASK)) {
+            if (!_autoBugged) { // avoid repeat pressage
+                BangClient.submitBugReport(_ctx, "Autobug!", true);
+            }
+            return;
+        }
+
         // if they pressed the same key as the current popup window, just
         // dismiss it
         if (keyCode == _poppedKey && _popped.isAdded()) {
@@ -110,7 +122,7 @@ public class FKeyPopups
         ActionListener buglist = new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 if (event.getAction().equals("submit")) {
-                    BangClient.submitBugReport(_ctx, descrip.getText());
+                    BangClient.submitBugReport(_ctx, descrip.getText(), false);
                 }
                 _ctx.getBangClient().clearPopup(bug, true);
             }
@@ -147,4 +159,5 @@ public class FKeyPopups
 
     protected int _poppedKey = -1;
     protected BDecoratedWindow _popped;
+    protected boolean _autoBugged;
 }
