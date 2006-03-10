@@ -464,6 +464,7 @@ public class TerrainNode extends Node
                 Rectangle isect = rect.intersection(block.ebounds);
                 if (!isect.isEmpty()) {
                     block.refreshGeometry(isect);
+                    block.mesh.updateModelBound();
                 }
             }
         }
