@@ -139,10 +139,8 @@ public class PickTutorialView extends BDecoratedWindow
         } else if (action.equals("to_town")) {
             BangPrefs.setDeclinedTutorials(_ctx.getUserObject());;
             dismiss();
-            if (!_ctx.getLocationDirector().moveBack()) {
-                _ctx.getLocationDirector().leavePlace();
-                _ctx.getBangClient().showTownView();
-            }
+            _ctx.getLocationDirector().leavePlace();
+            _ctx.getBangClient().showTownView();
 
         } else {
             PlayerService psvc = (PlayerService)
