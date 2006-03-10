@@ -7,6 +7,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.nio.FloatBuffer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +35,7 @@ import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
+import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.LightState;
@@ -40,8 +43,10 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
+import com.jme.util.geom.BufferUtils;
 import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
+import com.jmex.model.animation.KeyframeController;
 
 import com.threerings.media.image.Colorization;
 import com.threerings.jme.sprite.Sprite;
@@ -630,11 +635,11 @@ public class Model
                     model = jbr.loadBinaryFormat(new BufferedInputStream(in));
                     // TODO: put this in the model config file
                     if (path.indexOf("units") != -1) {
-                        model.setLocalScale(0.04f);
+                        setModelScale(model, 0.04f);
                     } else {
-                        model.setLocalScale(0.05f);
+                        setModelScale(model, 0.05f);
                     }
-
+                    
                     // enable back-face culling (for cw winding order)
                     model.setRenderState(RenderUtil.frontCull);
                     
@@ -667,6 +672,44 @@ public class Model
         return model;
     }
 
+    /**
+     * Rescales a model by diving into its {@link TriMesh}es and scaling each
+     * vertex.
+     */
+    protected void setModelScale (Spatial spatial, float scale)
+    {
+        if (spatial instanceof TriMesh) {
+            TriMesh mesh = (TriMesh)spatial;
+            int vcount = mesh.getVertQuantity();
+            FloatBuffer vbuf = mesh.getVertexBuffer();
+            Vector3f vertex = new Vector3f();
+            for (int ii = 0; ii < vcount; ii++) {
+                BufferUtils.populateFromBuffer(vertex, vbuf, ii);
+                vertex.multLocal(scale);
+                BufferUtils.setInBuffer(vertex, vbuf, ii);
+            }
+            mesh.updateModelBound();
+            
+        } else if (spatial instanceof Node) {
+            Node node = (Node)spatial;
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                setModelScale(node.getChild(ii), scale);
+            }
+        }
+        // scale all the key frames as well
+        for (Object ctrl : spatial.getControllers()) {
+            if (!(ctrl instanceof KeyframeController)) {
+                continue;
+            }
+            ArrayList frames = ((KeyframeController)ctrl).keyframes;
+            for (int ii = 0, nn = frames.size(); ii < nn; ii++) {
+                setModelScale(
+                    ((KeyframeController.PointInTime)frames.get(ii)).newShape,
+                    scale);
+            }
+        }
+    }
+    
     protected String cleanPath (String path)
     {
         // non-file URLs don't handle blah/foo/../bar so we make those path
