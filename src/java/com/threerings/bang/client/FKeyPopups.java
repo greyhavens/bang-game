@@ -9,11 +9,13 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.InputEvent;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
@@ -38,6 +40,7 @@ public class FKeyPopups
         _ctx = ctx;
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F1, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F2, this);
+        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F3, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_T, this);
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
     }
@@ -71,7 +74,7 @@ public class FKeyPopups
 
         // otherwise pop up the dialog associated with they key they pressed
         // (clearing any other dialog before doing so)
-        BDecoratedWindow popup;
+        BDecoratedWindow popup = null;
         switch (keyCode) {
         default:
         case KeyInput.KEY_F1:
@@ -80,14 +83,21 @@ public class FKeyPopups
         case KeyInput.KEY_F2:
             popup = createReportBug();
             break;
+        case KeyInput.KEY_F3:
+            if (modifiers == InputEvent.SHIFT_DOWN_MASK) {
+                popup = createRecentLog();
+            }
+            break;
         case KeyInput.KEY_T:
             popup = new PickTutorialView(_ctx, PickTutorialView.Mode.FKEY);
             break;
         }
 
-        clearPopup();
-        _poppedKey = keyCode;
-        _ctx.getBangClient().displayPopup(_popped = popup, true, 500);
+        if (popup != null) {
+            clearPopup();
+            _poppedKey = keyCode;
+            _ctx.getBangClient().displayPopup(_popped = popup, true, 500);
+        }
     }
 
     protected void clearPopup ()
@@ -134,6 +144,22 @@ public class FKeyPopups
         // disable the submit button until a description is entered
         new EnablingValidator(descrip, submit);
         return bug;
+    }
+
+    protected BDecoratedWindow createRecentLog ()
+    {
+        BDecoratedWindow window = new BDecoratedWindow(
+            _ctx.getStyleSheet(), _msgs.get("m.log_title"));
+        ((GroupLayout)window.getLayoutManager()).setGap(15);
+        StringBuffer buf = new StringBuffer();
+        for (int ii = BangApp.recentLog.size()-1; ii >= 0; ii--) {
+            String line = (String)BangApp.recentLog.get(ii);
+            buf.append(line.replace("@", "@@"));
+        }
+        window.add(new BScrollPane(new BLabel(buf.toString(), "debug_log")));
+        window.add(makeDismiss(window), GroupLayout.FIXED);
+        window.setPreferredSize(new Dimension(1000, 700));
+        return window;
     }
 
     protected BDecoratedWindow createDialogWindow (String title)

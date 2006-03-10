@@ -6,8 +6,10 @@ package com.threerings.bang.client;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import javax.swing.JOptionPane;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
+
+import javax.swing.JOptionPane;
 
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
@@ -18,6 +20,7 @@ import com.jme.util.LoggingSystem;
 import com.samskivert.servlet.user.Password;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
+import com.samskivert.util.RecentList;
 import com.samskivert.util.RepeatRecordFilter;
 
 import com.threerings.presents.client.Client;
@@ -39,6 +42,9 @@ import static com.threerings.bang.Log.log;
  */
 public class BangApp extends JmeApp
 {
+    /** Keep the last 500 formatted log records in memory. */
+    public static RecentList recentLog = new RecentList(500);
+
     public static void configureLog (String file)
     {
         // we do this all in a strange order to avoid logging anything
@@ -65,7 +71,14 @@ public class BangApp extends JmeApp
 
         // set up the proper logging services
         com.samskivert.util.Log.setLogProvider(new LoggingLogProvider());
-        OneLineLogFormatter.configureDefaultHandler(false);
+        OneLineLogFormatter formatter = new OneLineLogFormatter(false) {
+            public String format (LogRecord record) {
+                String output = super.format(record);
+                recentLog.add(output);
+                return output;
+            }
+        };
+        OneLineLogFormatter.configureDefaultHandler(formatter);
         RepeatRecordFilter.configureDefaultHandler(100);
     }
 
