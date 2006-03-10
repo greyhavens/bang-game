@@ -26,7 +26,6 @@
 
 -libraryjars <java.home>/lib/rt.jar
 -libraryjars ../lib/lwjgl.jar
--libraryjars ../lib/lwjgl_fmod3.jar
 
 # -dontoptimize
 # -dontobfuscate
