@@ -65,6 +65,8 @@ public class RenderUtil
     public static ZBufferState overlayZBuf;
 
     public static CullState backCull;
+    
+    public static CullState frontCull;
 
     /**
      * Initializes our commonly used render states.
@@ -100,6 +102,9 @@ public class RenderUtil
         backCull = ctx.getRenderer().createCullState();
         backCull.setCullMode(CullState.CS_BACK);
 
+        frontCull = ctx.getRenderer().createCullState();
+        frontCull.setCullMode(CullState.CS_FRONT);
+        
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.RENDERABLE) {
             for (int ii = 1; ii <= MAX_TILE_VARIANT; ii++) {

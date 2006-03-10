@@ -635,6 +635,9 @@ public class Model
                         model.setLocalScale(0.05f);
                     }
 
+                    // enable back-face culling (for cw winding order)
+                    model.setRenderState(RenderUtil.frontCull);
+                    
                     // configure transparent models specially
                     if (trans) {
                         model.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
