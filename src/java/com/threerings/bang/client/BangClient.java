@@ -616,6 +616,8 @@ public class BangClient extends BasicClient
         public void invoke (int keyCode, int modifiers) {
             if (_popups.size() > 0) {
                 clearPopup(_popups.get(_popups.size()-1), true);
+            } else {
+                displayPopup(new OptionsView(_ctx, _mview), true);
             }
         }
     };

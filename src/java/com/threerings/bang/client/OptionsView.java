@@ -14,6 +14,7 @@ import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
@@ -40,7 +41,7 @@ import static com.threerings.bang.Log.log;
 public class OptionsView extends BDecoratedWindow
     implements ActionListener
 {
-    public OptionsView (BangContext ctx, LogonView parent)
+    public OptionsView (BangContext ctx, BWindow parent)
     {
         super(ctx.getStyleSheet(), ctx.xlate("options", "m.title"));
         setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
@@ -61,7 +62,11 @@ public class OptionsView extends BDecoratedWindow
         _fullscreen.addListener(_modelist);
         add(cont);
 
-        add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
+        BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)bcont.getLayoutManager()).setGap(25);
+        bcont.add(new BButton(_msgs.get("m.quit"), this, "quit"));
+        bcont.add(new BButton(_msgs.get("m.resume"), this, "dismiss"));
+        add(bcont);
 
         _mode = Display.getDisplayMode();
         refreshDisplayModes();
@@ -72,7 +77,9 @@ public class OptionsView extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         if ("dismiss".equals(event.getAction())) {
-            dismiss();
+            _ctx.getBangClient().clearPopup(this, true);
+        } else if ("quit".equals(event.getAction())) {
+            _ctx.getApp().stop();
         }
     }
 
@@ -147,8 +154,10 @@ public class OptionsView extends BDecoratedWindow
         _ctx.getCameraHandler().getCamera().setFrustumPerspective(
             45.0f, width/(float)height, 1, 10000);
 
-        // recenter the logon view and options window
-        _parent.center();
+        // recenter the main view and options window
+        if (_parent != null) {
+            _parent.center();
+        }
         center();
 
         // store these settings for later
@@ -204,7 +213,7 @@ public class OptionsView extends BDecoratedWindow
     };
 
     protected BangContext _ctx;
-    protected LogonView _parent;
+    protected BWindow _parent;
     protected MessageBundle _msgs;
     protected DisplayMode _mode;
 

@@ -140,10 +140,8 @@ public class LogonView extends BWindow
             _ctx.getClient().logon();
 
         } else if ("options".equals(event.getAction())) {
-            OptionsView oview = new OptionsView(_ctx, this);
-            _ctx.getRootNode().addWindow(oview);
-            oview.pack();
-            oview.center();
+            _ctx.getBangClient().displayPopup(
+                new OptionsView(_ctx, this), true);
 
         } else if ("server_status".equals(event.getAction())) {
             BrowserUtil.browseURL(
