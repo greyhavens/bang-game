@@ -202,7 +202,6 @@ public class BangClient extends BasicClient
         _scview = new SystemChatView(_ctx);
         
         // register our global key bindings
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_ESCAPE, _clearPopup);
         _functionPopup = new FKeyPopups(_ctx);
 
         // create and display the logon view; which we do by hand instead of
@@ -542,6 +541,13 @@ public class BangClient extends BasicClient
     {
         _mview = view;
         _ctx.getRootNode().addWindow(_mview);
+
+        // re-wire up our options view whenever the main view changes as the
+        // BangView overrides the escape mapping during the game
+        if (!(view instanceof BangView)) {
+            _ctx.getKeyManager().registerCommand(
+                KeyInput.KEY_ESCAPE, _clearPopup);
+        }
 
         // don't fade in the game or town views, they will handle that
         // themselves when they're ready to roll
