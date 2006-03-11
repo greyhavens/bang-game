@@ -279,14 +279,14 @@ public class WaterNode extends Node
         for (int ii = 0; ii < HEIGHT_MAP_SIZE; ii++) {
             for (int jj = 0; jj < HEIGHT_MAP_SIZE; jj++) {
                 // upper left triangle
-                ibuf.put(jj*vwidth + ii);
-                ibuf.put((jj+1)*vwidth + (ii+1));
                 ibuf.put((jj+1)*vwidth + ii);
+                ibuf.put((jj+1)*vwidth + (ii+1));
+                ibuf.put(jj*vwidth + ii);
 
                 // lower right triangle
-                ibuf.put(jj*vwidth + ii);
-                ibuf.put(jj*vwidth + (ii+1));
                 ibuf.put((jj+1)*vwidth + (ii+1));
+                ibuf.put(jj*vwidth + (ii+1));
+                ibuf.put(jj*vwidth + ii);
             }
         }
         

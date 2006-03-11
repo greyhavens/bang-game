@@ -56,6 +56,9 @@ public class EditorApp extends JmeCanvasApp
     public boolean init ()
     {
         if (super.init()) {
+            // two-pass transparency is expensive
+            _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
+        
             // create and initialize our client instance
             _client = new EditorClient(this, _frame);
 

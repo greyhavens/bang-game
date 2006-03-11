@@ -103,7 +103,7 @@ public class SkyNode extends Node
         ctex.setTranslation(new Vector3f());
         _clouds.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _clouds.setRenderState(RenderUtil.blendAlpha);
-        _clouds.setRenderState(zbstate);
+        _clouds.setRenderState(RenderUtil.overlayZBuf);
         _clouds.updateRenderState();
     }
     

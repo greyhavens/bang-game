@@ -119,6 +119,9 @@ public class BangApp extends JmeApp
             return false;
         }
 
+        // two-pass transparency is expensive
+        _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
+        
         // turn on the FPS display if we're profiling
         if (_profiling) {
             displayStatistics(true);
