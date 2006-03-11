@@ -155,10 +155,28 @@ public abstract class Effect extends SimpleStreamableObject
         }
     }
 
-    /** Initializes this effect (called only on the server) with the piece that
-     * activated the bonus. */
+    /**
+     * Initializes this effect (called only on the server) with the piece that
+     * activated the bonus.
+     */
     public void init (Piece piece)
     {
+    }
+
+    /**
+     * Returns an array of pieces we must wait for before activating this
+     * effect. The default implementation returns nothing, however, some
+     * effects may require that we wait for a piece to finish animating before
+     * starting but not necessarily block that piece from moving on to the next
+     * animation once this effect's visualization is started.
+     *
+     * <p>Note: it is not necessary to return any pieces that are already
+     * returned by {@link #getAffectedPieces} as those will automatically be
+     * waited for.
+     */
+    public int[] getWaitPieces ()
+    {
+        return NO_PIECES;
     }
 
     /** Returns an array of the ids of all pieces affected by this effect. */
@@ -255,4 +273,7 @@ public abstract class Effect extends SimpleStreamableObject
             obs.tickDelayed(extraTime);
         }
     }
+
+    /** Used by {@link #getWaitPieces}. */
+    protected static final int[] NO_PIECES = new int[0];
 }

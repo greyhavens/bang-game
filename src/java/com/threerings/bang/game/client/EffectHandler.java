@@ -54,6 +54,7 @@ public class EffectHandler extends BoardView.BoardAction
         _sounds = sounds;
         _effect = effect;
         pieceIds = effect.getAffectedPieces();
+        waiterIds = effect.getWaitPieces();
 
         // if this is a move effect, note the pending move
         if (_effect instanceof MoveEffect) {
@@ -220,6 +221,13 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void tickDelayed (long extraTime)
     {
+    }
+
+    @Override // documentation inherited
+    public String toString ()
+    {
+        String cname = getClass().getName();
+        return cname.substring(cname.lastIndexOf(".")+1) + ":" + _effect;
     }
 
     protected void queueEffect (

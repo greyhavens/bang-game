@@ -18,9 +18,15 @@ public class SpookEffect extends MoveEffect
     public int spookerId;
 
     @Override // documentation inherited
+    public int[] getWaitPieces ()
+    {
+        return new int[] { spookerId };
+    }
+
+    @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
-        return new int[] { pieceId, spookerId };
+        return new int[] { pieceId };
     }
 
     @Override // documentation inherited

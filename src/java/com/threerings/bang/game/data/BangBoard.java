@@ -24,6 +24,7 @@ import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Train;
@@ -73,11 +74,11 @@ public class BangBoard extends SimpleStreamableObject
         _shadows = new byte[_hfwidth * _hfheight];
         fillShadows(0);
         _shadowIntensity = 1f;
-        
+
         _waterLevel = (byte)-128;
         _waterColor = 0x003232;
         _waterAmplitude = 25f;
-        
+
         _lightAzimuths = new float[] { 0f, (float)Math.PI };
         _lightElevations = new float[] { (float)(Math.PI / 4),
             (float)(-Math.PI / 4)};
@@ -87,9 +88,9 @@ public class BangBoard extends SimpleStreamableObject
         _skyHorizonColor = 0xFFFFFF;
         _skyOverheadColor = 0x00FFFF;
         _skyFalloff = 10f;
-        
+
         _windSpeed = 20f;
-        
+
         _pterrain = new byte[width*height];
         _btstate = new byte[width*height];
         _estate = new byte[width*height];
@@ -222,38 +223,38 @@ public class BangBoard extends SimpleStreamableObject
             return (int)_shadows[y*_hfwidth + x] + 128;
         }
     }
-    
+
     /** Sets the height above terrain of the shadow volume at the specified
      * sub-tile coordinates. */
     public void setShadowValue (int x, int y, int value)
     {
         _shadows[y*_hfwidth + x] = (byte)(value - 128);
     }
-    
+
     /** Fills the shadow array with the specified value. */
     public void fillShadows (int value)
     {
         Arrays.fill(_shadows, (byte)(value - 128));
     }
-    
+
     /** Returns a reference to the shadow map. */
     public byte[] getShadows ()
     {
         return _shadows;
     }
-    
+
     /** Returns the intensity of the shadows on the board. */
     public float getShadowIntensity ()
     {
         return _shadowIntensity;
     }
-    
+
     /** Sets the intensity of the shadows on the board. */
     public void setShadowIntensity (float intensity)
     {
         _shadowIntensity = intensity;
     }
-    
+
     /** Returns the level of the water on the board in heightfield units (-128
      * for no water. */
     public byte getWaterLevel ()
@@ -272,7 +273,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _waterAmplitude;
     }
-    
+
     /** Sets the water parameters. */
     public void setWaterParams (byte level, int color, float amplitude)
     {
@@ -343,7 +344,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _skyHorizonColor;
     }
-    
+
     /**
      * Returns the RGB color at the top of the sky dome.
      */
@@ -351,7 +352,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _skyOverheadColor;
     }
-    
+
     /**
      * Returns the exponential falloff factor for the transition
      * between the horizon color and the overhead color.  Higher
@@ -361,7 +362,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _skyFalloff;
     }
-    
+
     /**
      * Sets the parameters of the sky dome.
      *
@@ -375,7 +376,7 @@ public class BangBoard extends SimpleStreamableObject
         _skyOverheadColor = overheadColor;
         _skyFalloff = falloff;
     }
-    
+
     /**
      * Returns the direction in which the wind is blowing.
      */
@@ -383,7 +384,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _windDirection;
     }
-    
+
     /**
      * Returns the speed at which the wind is blowing.
      */
@@ -391,7 +392,7 @@ public class BangBoard extends SimpleStreamableObject
     {
         return _windSpeed;
     }
-    
+
     /**
      * Sets the wind parameters.
      *
@@ -403,7 +404,7 @@ public class BangBoard extends SimpleStreamableObject
         _windDirection = direction;
         _windSpeed = speed;
     }
-    
+
     /**
      * Returns the bounds of the playable area on the board. <em>Do not
      * modify</em> the returned rectangle.
@@ -516,7 +517,7 @@ public class BangBoard extends SimpleStreamableObject
         }
         return ospots;
     }
-    
+
     /**
      * Returns the coordinates of a location near to the specified
      * coordinates into which a piece can be spawned. First the
@@ -544,9 +545,9 @@ public class BangBoard extends SimpleStreamableObject
     public Point getOccupiableSpot (int cx, int cy, int maxdist, Random rnd)
     {
         ArrayList<Point> spots = getOccupiableSpots(1, cx, cy, maxdist, rnd);
-        return (spots.size() > 0) ? spots.get(0) : null;           
+        return (spots.size() > 0) ? spots.get(0) : null;
     }
-    
+
     /**
      * Adds the supplied set of pieces to our board "shadow" data. This is
      * done at the start of the game; all subsequent changes are
@@ -612,7 +613,7 @@ public class BangBoard extends SimpleStreamableObject
 
         } else if (!_playarea.contains(piece.x, piece.y)) {
             return;
-                
+
         } else if (piece instanceof Track) {
             int idx = _width*piece.y+piece.x;
             if (((Track)piece).preventsGroundOverlap()) {
@@ -623,6 +624,9 @@ public class BangBoard extends SimpleStreamableObject
 
         } else if (piece instanceof Bonus) {
             _tstate[_width*piece.y+piece.x] = O_BONUS;
+
+        } else if (piece instanceof Cow) {
+            _tstate[_width*piece.y+piece.x] = O_OCCUPIED;
 
         } else if (piece instanceof Train || piece.owner < 0) {
             _tstate[_width*piece.y+piece.x] = O_PROP;
@@ -665,7 +669,7 @@ public class BangBoard extends SimpleStreamableObject
             return _estate[y*_width+x] * ELEVATION_UNITS_PER_TILE;
         }
     }
- 
+
     /**
      * Checks whether any adjacent vertices in the heightfield under the
      * specified tile coordinates exceed the maximum height delta.
@@ -761,6 +765,11 @@ public class BangBoard extends SimpleStreamableObject
     {
         if (!_playarea.contains(x, y)) {
             return false;
+        }
+
+        // the piece can always occupy it's current location
+        if (piece.x == x && piece.y == y) {
+            return true;
         }
 
         // we accord flyer status to trains as they need to go "over" some
@@ -1052,10 +1061,10 @@ public class BangBoard extends SimpleStreamableObject
 
     /** The height of the shadow volume at each heightfield vertex. */
     protected byte[] _shadows;
-    
+
     /** The intensity of the shadows on the board. */
     protected float _shadowIntensity;
-    
+
     /** The level of the water on the board (-128 for no water). */
     protected byte _waterLevel;
 
@@ -1064,7 +1073,7 @@ public class BangBoard extends SimpleStreamableObject
 
     /** The amplitude scale of the waves in the water. */
     protected float _waterAmplitude;
-    
+
     /** The azimuths and elevations of the directional lights. */
     protected float[] _lightAzimuths, _lightElevations;
 
@@ -1073,14 +1082,14 @@ public class BangBoard extends SimpleStreamableObject
 
     /** The color of the horizon and the sky overhead. */
     protected int _skyHorizonColor, _skyOverheadColor;
-    
+
     /** The falloff factor that determines how quickly the horizon color fades
      * into the overhead color. */
     protected float _skyFalloff;
 
     /** The speed and direction of the wind. */
     protected float _windDirection, _windSpeed;
-    
+
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight;
 
@@ -1099,6 +1108,9 @@ public class BangBoard extends SimpleStreamableObject
 
     /** A rectangle containing our playable area. */
     protected transient Rectangle _playarea;
+
+    /** Indicates that this tile is occupied by a mobile non-unit. */
+    protected static final byte O_OCCUPIED = 10;
 
     /** Indicates that this tile is flat and traversable. */
     protected static final byte O_FLAT = -1;

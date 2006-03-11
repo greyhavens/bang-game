@@ -199,7 +199,7 @@ public class BangView extends BWindow
                 _ctx.getRootNode().removeWindow(_pswins[ii]);
             }
         }
-        if (ustatus.isAdded()) {
+        if (ustatus != null && ustatus.isAdded()) {
             _ctx.getRootNode().removeWindow(ustatus);
         }
         if (chat.isAdded()) {

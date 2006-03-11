@@ -56,6 +56,7 @@ import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ObserverList;
 
 import com.threerings.jme.effect.FadeInOutEffect;
@@ -106,9 +107,14 @@ public class BoardView extends BComponent
         public long start;
 
         /** The board action must fill in this array with the ids of all pieces
-         * involved in the action. This will be used to ensure that a piece is
+         * affected by the action. This will be used to ensure that a piece is
          * only involved in one board action at a time. */
         public int[] pieceIds;
+
+        /** The board action must fill in this array with the ids of any pieces
+         * that are not affected but that we need to wait for before executing
+         * this action. */
+        public int[] waiterIds;
 
         /** Returns true if this action can be executed, false if it operates
          * on a piece that is currently involved in another action. */
@@ -116,6 +122,11 @@ public class BoardView extends BComponent
         {
             for (int ii = 0; ii < pieceIds.length; ii++) {
                 if (penders.contains(pieceIds[ii])) {
+                    return false;
+                }
+            }
+            for (int ii = 0; ii < waiterIds.length; ii++) {
+                if (penders.contains(waiterIds[ii])) {
                     return false;
                 }
             }
@@ -574,6 +585,9 @@ public class BoardView extends BComponent
             _pactions.add(action);
         }
 
+        // we always have to add this actions pieces to the pending set
+        _punits.add(action.pieceIds);
+
         // scan the running actions and issue a warning for long runners
         long now = System.currentTimeMillis(), since;
         for (int ii = 0, ll = _ractions.size(); ii < ll; ii++) {
@@ -603,7 +617,7 @@ public class BoardView extends BComponent
         if (ACTION_DEBUG) {
             log.info("Completed " + action);
         }
-        _punits.remove(action.pieceIds);
+        noteExecuting(action.pieceIds, -1);
         processActions();
     }
 
@@ -910,6 +924,10 @@ public class BoardView extends BComponent
      */
     protected void processActions ()
     {
+        // clear out _punits and repopulate it with what's in eunits
+        _punits.clear();
+        _punits.add(_eunits.getValues());
+
         Iterator<BoardAction> iter = _pactions.iterator();
         while (iter.hasNext()) {
             BoardAction action = iter.next();
@@ -920,6 +938,7 @@ public class BoardView extends BComponent
                 // result in a recursive call to processActions()
                 processAction(action);
             }
+            _punits.add(action.pieceIds);
         }
     }
 
@@ -932,10 +951,11 @@ public class BoardView extends BComponent
             log.info("Posting: " + action);
         }
 
-        // mark the pieces involved in this action as pending
-        _punits.add(action.pieceIds);
-        _ractions.add(action);
+        // mark the pieces involved in this action as executing
+        noteExecuting(action.pieceIds, 1);
 
+        // throw a runnable on the queue that will execute this action
+        _ractions.add(action);
         _ctx.getApp().postRunnable(new Runnable() {
             public void run () {
                 try {
@@ -1229,6 +1249,14 @@ public class BoardView extends BComponent
         return (tris == null || tris.size() == 0 || !(mesh instanceof TriMesh));
     }
 
+    /** Used to increment and decrement executing status for pieces. */
+    protected void noteExecuting (int[] pieceIds, int delta)
+    {
+        for (int ii = 0; ii < pieceIds.length; ii++) {
+            _eunits.increment(pieceIds[ii], delta);
+        }
+    }
+
     /** Used to queue up piece createion so that the piece shows up on the
      * board in the right sequence with all other board actions. */
     protected class PieceCreatedAction extends BoardAction
@@ -1240,6 +1268,7 @@ public class BoardView extends BComponent
             this.piece = piece;
             this.tick = tick;
             this.pieceIds = new int[] { piece.pieceId };
+            this.waiterIds = new int[0];
         }
 
         public boolean execute () {
@@ -1259,8 +1288,8 @@ public class BoardView extends BComponent
             this.opiece = opiece;
             this.npiece = npiece;
             this.tick = tick;
-            this.pieceIds = new int[] {
-                opiece == null ? npiece.pieceId : opiece.pieceId };
+            this.pieceIds = new int[] { opiece.pieceId };
+            this.waiterIds = new int[0];
         }
 
         public boolean execute () {
@@ -1291,6 +1320,7 @@ public class BoardView extends BComponent
             this.piece = piece;
             this.tick = tick;
             this.pieceIds = new int[] { piece.pieceId };
+            this.waiterIds = new int[0];
         }
 
         public boolean execute () {
@@ -1354,6 +1384,7 @@ public class BoardView extends BComponent
 
     protected ArrayList<BoardAction> _ractions = new ArrayList<BoardAction>();
     protected ArrayList<BoardAction> _pactions = new ArrayList<BoardAction>();
+    protected IntIntMap _eunits = new IntIntMap();
     protected ArrayIntSet _punits = new ArrayIntSet();
 
     /** Used to texture a quad that "targets" a tile. */
