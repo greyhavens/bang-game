@@ -24,6 +24,7 @@ import com.threerings.presents.server.net.AuthingConnection;
 
 import com.threerings.crowd.data.TokenRing;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.util.DeploymentConfig;
@@ -121,9 +122,17 @@ public class OOOAuthenticator extends Authenticator
             }
 
             // check whether we're restricting non-insider login
-            if (ServerConfig.config.getValue("insiders_only", false) &&
-                !user.holdsToken(OOOUser.INSIDER)) {
+            if (!RuntimeConfig.server.openToPublic &&
+                !user.holdsToken(OOOUser.INSIDER) &&
+                !user.isSupportPlus()) {
                 rdata.code = NON_PUBLIC_SERVER;
+                return;
+            }
+
+            // check whether we're restricting non-admin login
+            if (!RuntimeConfig.server.nonAdminsAllowed &&
+                !user.isSupportPlus()) {
+                rdata.code = UNDER_MAINTENANCE;
                 return;
             }
 

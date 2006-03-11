@@ -172,6 +172,12 @@ public class LogonView extends BWindow
         }
     }
 
+    protected void switchToServerStatus ()
+    {
+        _action.setText(_msgs.get("m.server_status"));
+        _action.setAction("server_status");
+    }
+
     protected ClientAdapter _listener = new ClientAdapter() {
         public void clientDidLogon (Client client) {
             _status.setStatus(_msgs.get("m.logged_on"), false);
@@ -188,6 +194,13 @@ public class LogonView extends BWindow
                     // that we're going to automatically restart
                     msg = "m.version_mismatch_auto";
                 }
+
+                // change the new account button to server status for certain
+                // response codes
+                if (msg.equals(BangAuthCodes.UNDER_MAINTENANCE)) {
+                    switchToServerStatus();
+                }
+
                 msg = _msgs.xlate(msg);
 
             } else {
@@ -210,8 +223,7 @@ public class LogonView extends BWindow
                 }
 
                 // change the new account button to server status
-                _action.setText(_msgs.get("m.server_status"));
-                _action.setAction("server_status");
+                switchToServerStatus();
             }
 
             _status.setStatus(msg, true);

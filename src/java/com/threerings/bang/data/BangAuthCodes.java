@@ -35,10 +35,6 @@ public interface BangAuthCodes extends AuthCodes
      * login is not allowed. */
     public static final String UNDER_MAINTENANCE = "m.under_maintenance";
 
-    /** A code indicating that the server is under heavy load and this player's
-     * authentication request was throttled. */
-    public static final String UNDER_LOAD = "m.under_load";
-
     /** A code indicating that the client version is out of date. */
     public static final String VERSION_MISMATCH = "m.version_mismatch";
 
@@ -46,8 +42,4 @@ public interface BangAuthCodes extends AuthCodes
      * the server which generally means we're in the middle of updating the
      * game. */
     public static final String NEWER_VERSION = "m.newer_version";
-
-    /** A code used during account creation authentication indicating that the
-     * username requested already exists. */
-    public static final String NAME_IN_USE = "m.name_in_use";
 }
