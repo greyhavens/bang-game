@@ -167,10 +167,12 @@ public class ClaimJumping extends Scenario
     }
 
     @Override // documentation inherited
-    public Effect pieceMoved (BangObject bangobj, Piece piece)
+    public void pieceMoved (BangObject bangobj, Piece piece)
     {
+        super.pieceMoved(bangobj, piece);
+
         if (!(piece instanceof Unit)) {
-            return null;
+            return;
         }
         Unit unit = (Unit)piece;
 
@@ -183,7 +185,7 @@ public class ClaimJumping extends Scenario
             }
         }
         if (claim == null) {
-            return null;
+            return;
         }
 
         // deposit or withdraw a nugget as appropriate
@@ -200,8 +202,9 @@ public class ClaimJumping extends Scenario
             effect.claimId = claim.pieceId;
             effect.dropping = false;
         }
-
-        return effect;
+        if (effect != null) {
+            _bangmgr.deployEffect(piece.owner, effect);
+        }
     }
 
     @Override // documentation inherited

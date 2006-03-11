@@ -17,7 +17,6 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.ScenarioCodes;
-import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
@@ -113,33 +112,6 @@ public class CattleRustling extends Scenario
                     Stat.Type.CATTLE_RUSTLED, 1);
             }
         }
-    }
-
-    @Override // documentation inherited
-    public Effect pieceMoved (BangObject bangobj, Piece piece)
-    {
-        /* if (piece instanceof Cow) {
-            // recompute this cow's owner
-            Cow cow = (Cow)piece;
-            int newOwner = determineOwner(cow);
-            if (newOwner != cow.owner) {
-                cow.owner = newOwner;
-                log.info("Cow changed owner " + cow.info());
-            }
-
-        } else */
-        if (piece instanceof Unit) {
-            // check to see if this unit spooked any cattle
-            Piece[] pieces = bangobj.getPieceArray();
-            for (int ii = 0; ii < pieces.length; ii++) {
-                if (pieces[ii] instanceof Cow &&
-                    piece.getDistance(pieces[ii]) == 1) {
-                    ((Cow)pieces[ii]).spook((Unit)piece);
-                }
-            }
-        }
-
-        return null;
     }
 
     @Override // documentation inherited

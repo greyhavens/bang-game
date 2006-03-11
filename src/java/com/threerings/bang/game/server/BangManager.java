@@ -1807,10 +1807,7 @@ public class BangManager extends GameManager
 
         public void pieceMoved (Piece piece) {
             // let the scenario know that the unit moved
-            Effect effect = _scenario.pieceMoved(_bangobj, piece);
-            if (effect != null) {
-                deployEffect(piece.owner, effect);
-            }
+            _scenario.pieceMoved(_bangobj, piece);
         }
 
         public void pieceKilled (Piece piece) {

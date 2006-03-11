@@ -24,6 +24,7 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.TrainEffect;
+import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Track;
@@ -183,18 +184,25 @@ public abstract class Scenario
     }
 
     /**
-     * Called when a piece makes a move in the game but before the
-     * associated update for that piece is broadcast. The scenario can
-     * make further adjustments to the piece and modify other game data as
-     * appropriate.
-     *
-     * @return null if nothing happens to this piece as a result of the move or
-     * an effect to apply to the piece. The returned effect should already be
-     * initialized.
+     * Called when a piece makes a move in the game. The scenario can deploy
+     * effects (via {@link BangManager#deployEffect}) as a result of the move.
      */
-    public Effect pieceMoved (BangObject bangobj, Piece piece)
+    public void pieceMoved (BangObject bangobj, Piece piece)
     {
-        return null;
+        if (piece instanceof Unit) {
+            // check to see if this unit spooked any cattle
+            Piece[] pieces = bangobj.getPieceArray();
+            for (int ii = 0; ii < pieces.length; ii++) {
+                if (pieces[ii] instanceof Cow &&
+                    piece.getDistance(pieces[ii]) == 1) {
+                    Effect effect = ((Cow)pieces[ii]).spook(
+                        bangobj.board, (Unit)piece);
+                    if (effect != null) {
+                        _bangmgr.deployEffect(piece.owner, effect);
+                    }
+                }
+            }
+        }
     }
 
     /**

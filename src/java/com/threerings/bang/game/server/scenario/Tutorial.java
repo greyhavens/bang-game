@@ -25,6 +25,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.BangManager;
@@ -132,7 +133,12 @@ public class Tutorial extends Scenario
 
         if (action instanceof TutorialConfig.AddUnit) {
             TutorialConfig.AddUnit aua = (TutorialConfig.AddUnit)action;
-            Unit unit = Unit.getUnit(aua.type);
+            Piece unit;
+            if (aua.type.equals("cow")) {
+                unit = new Cow();
+            } else {
+                unit = Unit.getUnit(aua.type);
+            }
             // use a particular id if asked to do so
             if (aua.id > 0) {
                 unit.pieceId = aua.id;
