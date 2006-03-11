@@ -25,7 +25,6 @@ import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
-import com.jmex.bui.BTabbedPane;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.background.BBackground;
 import com.jmex.bui.background.ImageBackground;
@@ -53,6 +52,7 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.client.bui.EnablingValidator;
+import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
@@ -77,18 +77,7 @@ public class PardnerChatView extends BDecoratedWindow
 
         _ctx.getChatDirector().addChatDisplay(this);
 
-        // shrink the tab background so that the tabs overlap the top edge and
-        // the scroll bar falls outside
-        _tabs = new BTabbedPane() {
-            protected void renderBackground (Renderer renderer) {
-                BBackground background = getBackground();
-                if (background != null) {
-                    background.render(renderer, 0, 0, _width - 18,
-                        _height - 30, _alpha);
-                }
-            }
-        };
-        add(_tabs);
+        add(_tabs = new TabbedPane(true));
 
         BContainer bottom = new BContainer(GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH));
@@ -472,7 +461,7 @@ public class PardnerChatView extends BDecoratedWindow
 
     protected BangContext _ctx;
 
-    protected BTabbedPane _tabs;
+    protected TabbedPane _tabs;
     protected BTextField _text;
     protected BButton _send, _mute, _close, _resume;
 

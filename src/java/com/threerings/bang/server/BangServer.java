@@ -14,6 +14,9 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 
+import com.threerings.admin.server.AdminProvider;
+import com.threerings.admin.server.ConfigRegistry;
+import com.threerings.admin.server.DatabaseConfigRegistry;
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.bundle.BundledComponentRepository;
 import com.threerings.resource.ResourceManager;
@@ -40,6 +43,7 @@ import com.threerings.bang.avatar.server.BarberManager;
 import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.ranch.data.RanchConfig;
@@ -73,6 +77,9 @@ public class BangServer extends CrowdServer
      * that the client does (for resources that are used on both the server and
      * client). */
     public static ResourceManager rsrcmgr;
+
+    /** Maintains a registry of runtime configuration information. */
+    public static ConfigRegistry confreg;
 
     /** Provides information on our character components. */
     public static ComponentRepository comprepo;
@@ -166,12 +173,57 @@ public class BangServer extends CrowdServer
         coinmgr = new BangCoinManager(conprov);
         coinexmgr = new BangCoinExchangeManager(conprov);
 
+        // create and set up our configuration registry and admin service
+        confreg = new DatabaseConfigRegistry(conprov, invoker);
+        AdminProvider.init(invmgr, confreg);
+
         // set up our authenticator
         Authenticator auth = ServerConfig.getAuthenticator();
         if (auth != null) {
             conmgr.setAuthenticator(auth);
         }
 
+        // now initialize our runtime configuration, postponing the remaining
+        // server initialization until our configuration objects are available
+        RuntimeConfig.init(omgr);
+        omgr.postRunnable(new Runnable () {
+            public void run () {
+                try {
+                    finishInit();
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Server initialization failed.", e);
+                    System.exit(-1);
+                }
+            }
+        });
+    }
+
+    @Override // documentation inherited
+    public void shutdown ()
+    {
+        super.shutdown();
+
+        // close our audit logs
+        _glog.close();
+        _ilog.close();
+    }
+
+    @Override // documentation inherited
+    protected BodyLocator createBodyLocator ()
+    {
+        return new BodyLocator() {
+            public BodyObject get (Name visibleName) {
+                return _players.get(visibleName);
+            }
+        };
+    }
+
+    /**
+     * This is called once our runtime configuration is available.
+     */
+    protected void finishInit ()
+        throws Exception
+    {
         // initialize our managers
         parmgr.init(invmgr, plreg);
         boardmgr.init(conprov);
@@ -215,26 +267,6 @@ public class BangServer extends CrowdServer
 
         log.info("Bang server v" + DeploymentConfig.getVersion() +
                  " initialized.");
-    }
-
-    @Override // documentation inherited
-    public void shutdown ()
-    {
-        super.shutdown();
-
-        // close our audit logs
-        _glog.close();
-        _ilog.close();
-    }
-
-    @Override // documentation inherited
-    protected BodyLocator createBodyLocator ()
-    {
-        return new BodyLocator() {
-            public BodyObject get (Name visibleName) {
-                return _players.get(visibleName);
-            }
-        };
     }
 
     /**
@@ -334,7 +366,7 @@ public class BangServer extends CrowdServer
             server.init();
             server.run();
         } catch (Exception e) {
-            log.log(Level.WARNING, "Unable to initialize server.", e);
+            log.log(Level.WARNING, "Server initialization failed.", e);
             System.exit(-1);
         }
     }

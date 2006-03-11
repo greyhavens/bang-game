@@ -20,6 +20,7 @@ import com.jmex.bui.util.Dimension;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.admin.client.RuntimeConfigView;
 import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
@@ -41,6 +42,7 @@ public class FKeyPopups
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F1, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F2, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F3, this);
+        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F4, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_T, this);
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
     }
@@ -86,6 +88,11 @@ public class FKeyPopups
         case KeyInput.KEY_F3:
             if (modifiers == InputEvent.SHIFT_DOWN_MASK) {
                 popup = createRecentLog();
+            }
+            break;
+        case KeyInput.KEY_F4:
+            if (_ctx.getUserObject().tokens.isAdmin()) {
+                popup = new RuntimeConfigView(_ctx);
             }
             break;
         case KeyInput.KEY_T:

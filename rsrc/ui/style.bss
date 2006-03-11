@@ -424,6 +424,19 @@ debug_log {
   padding: 5;
 }
 
+config_object_view {
+  padding: 10 20 15 15;
+}
+
+config_field_label {
+  color: #4C2602;
+}
+
+config_help_label {
+  font: "Helvetica" plain 12;
+  color: #4C2602;
+}
+
 //
 // Dialog Window styles
 
