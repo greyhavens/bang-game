@@ -986,8 +986,7 @@ public class BoardView extends BComponent
 
         // if the piece has moved (which should only happen in the editor,
         // never in game), then go ahead and move it
-        if (opiece.x != npiece.x || opiece.y != npiece.y ||
-            opiece.orientation != npiece.orientation) {
+        if (!opiece.positionEquals(npiece)) {
             // it should finish immediately because we're in the editor
             if (sprite.updatePosition(_bangobj.board)) {
                 log.warning("Piece moved along path after update " +

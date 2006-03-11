@@ -98,6 +98,17 @@ public class Prop extends BigPiece
         return !lapper.isFlyer();
     }
 
+    @Override // documentation inherited
+    public boolean positionEquals (Piece other)
+    {
+        if (!(other instanceof Prop)) {
+            return super.positionEquals(other);
+        }
+        Prop oprop = (Prop)other;
+        return super.positionEquals(other) && fx == oprop.fx &&
+            fy == oprop.fy && forient == oprop.forient;
+    }
+    
     /**
      * Rotates this piece in fine units, which divide the 90 degree rotations
      * up by 256.
