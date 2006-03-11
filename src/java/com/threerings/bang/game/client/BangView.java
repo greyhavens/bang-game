@@ -138,6 +138,7 @@ public class BangView extends BWindow
         // remove the unit status view in between rounds
         if (ustatus.isAdded()) {
             _ctx.getRootNode().removeWindow(ustatus);
+            ustatus = null;
         }
     }
 
