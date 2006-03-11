@@ -103,7 +103,7 @@ public class Cow extends Piece
         for (int ii = 0; ii < coords.length; ii++) {
             int hx = PointSet.decodeX(coords[ii]);
             int hy = PointSet.decodeY(coords[ii]);
-            if (whichDirection(hx, hy) == _wantToMove) {
+            if (whichDirection(hx, hy) == direction) {
                 nx = hx;
                 ny = hy;
                 break;
@@ -134,9 +134,6 @@ public class Cow extends Piece
         }
         return -1;
     }
-
-    /** Computed when a unit has moved near us and "spooked" us. */
-    protected transient int _wantToMove = -1;
 
     /** Used for temporary calculations. */
     protected static PointSet _moves = new PointSet();
