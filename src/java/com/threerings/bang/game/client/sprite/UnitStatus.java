@@ -230,7 +230,7 @@ public class UnitStatus extends Node
     {
         texture.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         _tempstate.setTexture(texture);
-        _tempstate.apply(); // TODO: change to load()
+        _tempstate.load();
         return texture;
     }
 
