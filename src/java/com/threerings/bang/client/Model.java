@@ -39,6 +39,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
@@ -633,6 +634,7 @@ public class Model
             if (in != null) {
                 try {
                     model = jbr.loadBinaryFormat(new BufferedInputStream(in));
+                    
                     // TODO: put this in the model config file
                     if (path.indexOf("units") != -1) {
                         setModelScale(model, 0.04f);
@@ -640,13 +642,15 @@ public class Model
                         setModelScale(model, 0.05f);
                     }
                     
-                    // enable back-face culling (for cw winding order)
-                    model.setRenderState(RenderUtil.frontCull);
-                    
                     // configure transparent models specially
                     if (trans) {
                         model.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
                         model.setRenderState(RenderUtil.blendAlpha);
+                        model.setRenderState(RenderUtil.overlayZBuf);
+                        
+                    } else {
+                        // enable back-face culling (for cw winding order)
+                        model.setRenderState(RenderUtil.frontCull);    
                     }
 
                 } catch (IOException ioe) {
@@ -671,7 +675,7 @@ public class Model
         }
         return model;
     }
-
+    
     /**
      * Rescales a model by diving into its {@link TriMesh}es and scaling each
      * vertex.
