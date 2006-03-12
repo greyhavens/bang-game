@@ -39,6 +39,10 @@ public class BoardManager
         // load up and map all of our boards by scenario and player count
         for (BoardRecord record : _brepo.loadBoards()) {
             int pidx = record.players-1;
+            if (pidx < 0) { // sanity check
+                log.warning("Invalid board record [record=" + record + "].");
+                continue;
+            }
             String[] scenarios = StringUtil.split(record.scenarios, ",");
             for (int ii = 0; ii < scenarios.length; ii++) {
                 BoardList[] lists = _byscenario.get(scenarios[ii]);

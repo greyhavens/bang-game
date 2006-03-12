@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="bonuses_cards" board="Sunset Raid" players="2">
+<tutorial ident="bonuses_cards" board="Bonuses and Cards" players="2">
 
   <!-- start them off with a friendly welcome -->
   <text message="welcome" step="1"/>

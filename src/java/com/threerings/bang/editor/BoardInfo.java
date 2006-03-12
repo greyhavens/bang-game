@@ -19,6 +19,7 @@ import com.samskivert.swing.VGroupLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.util.BasicContext;
@@ -48,11 +49,18 @@ public class BoardInfo extends JPanel
                              2, VGroupLayout.TOP));
         String[] scids = ScenarioFactory.getScenarios(
             BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1]);
+        JCheckBox box;
         for (int ii = 0; ii < scids.length; ii++) {
-            JCheckBox box = new JCheckBox(gmsgs.get("m.scenario_" + scids[ii]));
+            String sname = gmsgs.get("m.scenario_" + scids[ii]);
+            spanel.add(box = new JCheckBox(sname));
             _sboxes.put(scids[ii], box);
-            spanel.add(box);
         }
+
+        // add a selection for the tutorial scenario
+        String sname = gmsgs.get("m.scenario_" + ScenarioCodes.TUTORIAL);
+        spanel.add(box = new JCheckBox(sname));
+        _sboxes.put(ScenarioCodes.TUTORIAL, box);
+
         add(new JScrollPane(spanel) {
             public Dimension getPreferredSize () {
                 Dimension d = super.getPreferredSize();
