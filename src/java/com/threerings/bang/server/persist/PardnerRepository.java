@@ -80,27 +80,25 @@ public class PardnerRepository extends SimpleRepository
      * Get a list of {@link PardnerRecord}s representing all pardnerships
      * (active and proposed) involving the specified player.
      */
-    public ArrayList<PardnerRecord> getPardnerRecords (final int playerId)
+    public ArrayList<PardnerRecord> getPardnerRecords (int playerId)
         throws PersistenceException
     {
         final ArrayList<PardnerRecord> list = new ArrayList<PardnerRecord>();
+        final String query = PARD_SELECT +
+            " where (ACTIVE=1 and PLAYER_ID1=" + playerId +
+            " and PLAYER_ID=PLAYER_ID2) union " + PARD_SELECT +
+            " where (PLAYER_ID2=" + playerId + " and PLAYER_ID=PLAYER_ID1)";
         execute(new Operation() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 Statement stmt = conn.createStatement();
                 try {
-                    // this is actually faster than two queries
-                    ResultSet rs = stmt.executeQuery(
-                        "select HANDLE, LAST_SESSION, ACTIVE from PARDNERS " +
-                        "straight join PLAYERS where (ACTIVE=1 and " +
-                        "PLAYER_ID1=" + playerId + " and " +
-                        "PLAYER_ID=PLAYER_ID2) or (PLAYER_ID2=" + playerId +
-                        " and PLAYER_ID=PLAYER_ID1)");
+                    ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
                         list.add(new PardnerRecord(
-                            new Handle(JDBCUtil.unjigger(rs.getString(1))),
-                            rs.getDate(2), rs.getBoolean(3)));
+                                     new Handle(rs.getString(1)),
+                                     rs.getDate(2), rs.getBoolean(3)));
                     }
                     return null;
 
@@ -237,8 +235,7 @@ public class PardnerRepository extends SimpleRepository
         int playerId = -1;
         ResultSet rs = stmt.executeQuery(
             "select PLAYER_ID from PLAYERS where HANDLE = " +
-            JDBCUtil.escape(JDBCUtil.jigger(
-                handle.toString())));
+            JDBCUtil.escape(handle.toString()));
         while (rs.next()) {
             playerId = rs.getInt(1);
         }
@@ -256,4 +253,9 @@ public class PardnerRepository extends SimpleRepository
             playerId2 + ") or (PLAYER_ID1 = " + playerId2 + " and " +
             "PLAYER_ID2 = " + playerId1 + ")";
     }
+
+    /** Used by {@link #getPardnerRecords}. */
+    protected static final String PARD_SELECT =
+        "select HANDLE, LAST_SESSION, ACTIVE from PARDNERS " +
+        "straight join PLAYERS";
 }

@@ -5,7 +5,6 @@ package com.threerings.bang.server.persist;
 
 import java.sql.Date;
 
-import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.Handle;
@@ -71,7 +70,7 @@ public class Player
     /** Returns our handle as a proper {@link Handle} instance. */
     public Handle getHandle ()
     {
-        return new Handle(JDBCUtil.unjigger(handle));
+        return new Handle(handle);
     }
     
     /** Generates a string representation of this instance. */
