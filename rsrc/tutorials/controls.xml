@@ -33,7 +33,7 @@
   <wait event="text_clicked"/>
 
   <!-- add an enemy unit and show them how to shoot it -->
-  <add_unit id="1001" type="steamgunman" location="16,17" owner="1"/>
+  <add_unit id="1001" type="shotgunner" location="16,17" owner="1"/>
   <text message="click_to_highlight_attacks" step="4"/>
   <wait event="unit_selected"/>
 

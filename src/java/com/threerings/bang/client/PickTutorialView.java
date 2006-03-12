@@ -138,7 +138,7 @@ public class PickTutorialView extends BDecoratedWindow
 
         } else if (action.equals("to_town")) {
             BangPrefs.setDeclinedTutorials(_ctx.getUserObject());;
-            dismiss();
+            _ctx.getBangClient().clearPopup(this, true);
             _ctx.getLocationDirector().leavePlace();
             _ctx.getBangClient().showTownView();
 
