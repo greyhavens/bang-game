@@ -119,7 +119,15 @@ public class BangView extends BWindow
                 showUnitStatus();
             }
             clearOverlay();
-            view.startRound();
+            // when the round starts a bunch of piece creation notifications
+            // come in which are thrown onto the event queue, and we need to
+            // postpone starting the round until those have been processed, so
+            // we throw this on the event queue as well
+            _ctx.getApp().postRunnable(new Runnable() {
+                public void run () {
+                    view.startRound();
+                }
+            });
             break;
         }
     }
