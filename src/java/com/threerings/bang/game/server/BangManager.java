@@ -34,6 +34,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.data.Badge;
@@ -317,6 +318,21 @@ public class BangManager extends GameManager
 
         // on the server we apply the effect immediately
         effect.apply(_bangobj, _effector);
+    }
+
+    @Override // documentation inherited
+    public void updateOccupantInfo (OccupantInfo occInfo)
+    {
+        super.updateOccupantInfo(occInfo);
+
+        // if an active player disconnected, boot them from the game
+        int pidx = getPlayerIndex(occInfo.username);
+        if (pidx != -1 && occInfo.status == OccupantInfo.DISCONNECTED &&
+            _bangobj.isInPlay() && _bangobj.isActivePlayer(pidx)) {
+            log.info("Booting disconnected player [game=" + where() +
+                     ", who=" + occInfo.username + "].");
+            endPlayerGame(pidx);
+        }
     }
 
     @Override // documentation inherited
