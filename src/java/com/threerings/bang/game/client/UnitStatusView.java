@@ -122,13 +122,15 @@ public class UnitStatusView extends BWindow
                 if (unit.originalOwner != _pidx) {
                     UnitStatusView.this.remove(this);
                 } else {
+                    // clear out any influence when the unit dies
+                    _influence = null;
                     // clear out our background when our unit dies
                     _bground = null;
                     // and draw our icon at 50% alpha
                     setAlpha(0.5f);
                 }
             } else {
-                if (!unit.isAlive() || unit.influence == null) {
+                if (unit.influence == null) {
                     _influence = null;
                 } else {
                     // we don't worry about refetching the image from the cache
