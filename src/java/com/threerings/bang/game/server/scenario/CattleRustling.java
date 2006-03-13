@@ -136,8 +136,8 @@ public class CattleRustling extends Scenario
     @Override // documentation inherited
     protected short getBaseDuration ()
     {
-        // cattle herding should be a bit shorter than the normal 240
-        return 200;
+        // cattle herding should be a bit shorter than the normal scenario
+        return 4 * BASE_SCENARIO_TICKS / 5;
     }
 
     /**

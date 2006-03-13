@@ -592,7 +592,7 @@ public abstract class Scenario
 
     /** The base number of ticks that we allow per round (scaled by the
      * anticipated average number of units per-player). */
-    protected static final short BASE_SCENARIO_TICKS = 240;
+    protected static final short BASE_SCENARIO_TICKS = 300;
 
     /** A set of times (in seconds prior to the end of the round) at which
      * we warn the players. */
