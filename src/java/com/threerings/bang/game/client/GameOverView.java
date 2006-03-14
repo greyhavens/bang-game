@@ -199,7 +199,7 @@ public class GameOverView extends BDecoratedWindow
     {
         String action = event.getAction();
         if (action.equals("to_town") || action.equals("to_saloon")) {
-            _ctx.getRootNode().removeWindow(GameOverView.this);
+            ((BangContext)_ctx).getBangClient().clearPopup(this, true);
             _ctrl.statsDismissed(action.equals("to_town"));
         }
     }

@@ -147,6 +147,15 @@ public class BangController extends GameController
         // that condition already satisfied
         _selphaseMultex.satisfied(Multex.CONDITION_TWO);
 
+        // we'll use this one at the end of the game
+        _postGameMultex = new Multex(new Runnable() {
+            public void run () {
+                _ctx.getBangClient().displayPopup(
+                    new GameOverView(_ctx, BangController.this, _bangobj),
+                    true);
+            }
+        }, 2);
+
         mapCommand(KeyInput.KEY_SPACE, "StartChat");
         mapCommand(KeyInput.KEY_ESCAPE, "ShowOptions");
         mapCommand(KeyInput.KEY_TAB, "SelectNextUnit");
@@ -417,10 +426,7 @@ public class BangController extends GameController
         if (event.getName().equals(BangObject.AWARDS) &&
             // we handle things specially in the tutorial
             !_config.tutorial) {
-            GameOverView gov = new GameOverView(_ctx, this, _bangobj);
-            _ctx.getRootNode().addWindow(gov);
-            gov.pack();
-            gov.center();
+            _postGameMultex.satisfied(Multex.CONDITION_TWO);
         }
     }
 
@@ -484,6 +490,9 @@ public class BangController extends GameController
         if (_tutcont != null) {
             _tutcont.gameDidEnd();
         }
+
+        // fade in a game over marquee
+        _view.view.doPostGameMarqueeFade();
     }
 
     /**
@@ -499,7 +508,7 @@ public class BangController extends GameController
         // display the selection dialog
         _view.setPhase(BangObject.SELECT_PHASE);
     }
-    
+
     /**
      * Called by the board view after it has faded out the board at the end of
      * a round.
@@ -508,6 +517,15 @@ public class BangController extends GameController
     {
         // potentially display the selection phase dialog for the next round
         _selphaseMultex.satisfied(Multex.CONDITION_TWO);
+    }
+
+    /**
+     * Called by the board view after it has faded in the game over marquee.
+     */
+    protected void postGameFadeComplete ()
+    {
+        // potentially display the post-game stats
+        _postGameMultex.satisfied(Multex.CONDITION_ONE);
     }
 
     /**
@@ -520,7 +538,7 @@ public class BangController extends GameController
         // we re-use the playerReady mechanism to communicate this to the game
         // manager
         playerReady();
-    }        
+    }
 
     /**
      * Called by the stats dialog when it has been dismissed.
@@ -611,6 +629,10 @@ public class BangController extends GameController
 
     /** Used to start the new round after two conditions have been met. */
     protected Multex _selphaseMultex;
+
+    /** Used to show the stats once we've faded in our Game Over marquee and
+     * the awards have arrived. */
+    protected Multex _postGameMultex;
 
     /** The units we cycle through when we press tab. */
     protected ArrayList<Unit> _selections = new ArrayList<Unit>();

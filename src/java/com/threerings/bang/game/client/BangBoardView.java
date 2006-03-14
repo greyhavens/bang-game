@@ -235,6 +235,27 @@ public class BangBoardView extends BoardView
     }
 
     /**
+     * Fades in a "Game Over" marqee, then notifies the controller that it's OK
+     * to drop in the post-game stats display.
+     */
+    public void doPostGameMarqueeFade ()
+    {
+        // create a marquee, but detach it
+        createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.game_over"));
+        _ctx.getInterface().detachChild(_marquee);
+
+        // then reattach it with a fade in function
+        TimeFunction tf = new LinearTimeFunction(0f, 1f, 2f);
+        _ctx.getInterface().attachChild(
+            new FadeInOutEffect(_marquee, ColorRGBA.white, tf, true) {
+                protected void fadeComplete () {
+                    super.fadeComplete();
+                    _ctrl.postGameFadeComplete();
+                }
+            });
+    }
+
+    /**
      * Returns true if the specified piece is OK to be selected, false if it is
      * currently animating or has a pending animation.
      */
