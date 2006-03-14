@@ -7,9 +7,12 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.lang.ref.WeakReference;
+
 import java.nio.FloatBuffer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -738,6 +741,10 @@ public class Model
         /** The paths of the textures from which to select randomly. */
         public String[] tpaths;
 
+        /** Maps indices/colorizations to precreated texture states. */
+        public HashMap<TextureKey, WeakReference<TextureState>> tstates =
+            new HashMap<TextureKey, WeakReference<TextureState>>();
+        
         /**
          * Creates either a copy of the original part node or a
          * {@link SharedNode} reference to a locked target, depending on
@@ -768,20 +775,25 @@ public class Model
                     target.lockBounds();
                     target.lockMeshes();
                     
-                    // this is a workaround for a bug in JME--we wouldn't
-                    // normally create a SharedNode of a SharedNode
-                    target = new SharedNode("shared", target);
+                    target.updateCollisionTree();
                     
                     _tinit = true;
                 }
-                instance = new SharedNode("shared", target);
+                instance = new SharedNode("shared", target, false);
             }
             if (tpaths != null) {
-                TextureState tstate = _ctx.getRenderer().createTextureState();
-                Texture tex = _ctx.getTextureCache().getTexture(
-                    tpaths[random % tpaths.length], zations);
-                tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
-                tstate.setTexture(tex);
+                TextureKey tkey = new TextureKey(random % tpaths.length,
+                    zations);
+                WeakReference<TextureState> tref = tstates.get(tkey);
+                TextureState tstate;
+                if (tref == null || (tstate = tref.get()) == null) {
+                    tstate = _ctx.getRenderer().createTextureState();
+                    Texture tex = _ctx.getTextureCache().getTexture(
+                        tpaths[tkey.idx], zations);
+                    tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
+                    tstate.setTexture(tex);
+                    tstates.put(tkey, new WeakReference<TextureState>(tstate));
+                }
                 instance.setRenderState(tstate);
             }
             return instance;
@@ -809,6 +821,32 @@ public class Model
         protected boolean _tinit;
     }
 
+    /** Identifies a specific part texture by index and colorizations. */
+    protected static class TextureKey
+    {
+        public int idx;
+        public Colorization[] zations;
+        
+        public TextureKey (int idx, Colorization[] zations)
+        {
+            this.idx = idx;
+            this.zations = zations;
+        }
+        
+        @Override // documentation inherited
+        public int hashCode ()
+        {
+            return idx ^ Arrays.hashCode(zations);
+        }
+        
+        @Override // documentation inherited
+        public boolean equals (Object other)
+        {
+            TextureKey okey = (TextureKey)other;
+            return idx == okey.idx && Arrays.equals(zations, okey.zations);
+        }
+    }
+    
     protected BasicContext _ctx;
     protected String _key;
     protected Properties _props;
