@@ -113,9 +113,6 @@ public class PropSprite extends PieceSprite
         // them to the center of the prop's footprint
         _model = ctx.loadModel("props", _config.type);
         bindAnimation(ctx, _model.getAnimation("normal"), 0, null);
-
-        setRenderState(RenderUtil.blendAlpha);
-        updateRenderState();
     }
 
     @Override // documentation inherited

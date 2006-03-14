@@ -175,6 +175,7 @@ public class BoardView extends BComponent
         _node.setRenderState(RenderUtil.createColorMaterialState(mstate,
             false));
         _node.setRenderState(RenderUtil.lequalZBuf);
+        _node.setRenderState(RenderUtil.opaqueAlpha);
         _node.updateRenderState();
 
         // create the sky

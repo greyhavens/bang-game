@@ -60,6 +60,8 @@ public class RenderUtil
 
     public static AlphaState addAlpha;
 
+    public static AlphaState opaqueAlpha;
+
     public static ZBufferState alwaysZBuf;
 
     public static ZBufferState lequalZBuf;
@@ -87,6 +89,9 @@ public class RenderUtil
         blendAlpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
         blendAlpha.setEnabled(true);
 
+        opaqueAlpha = ctx.getRenderer().createAlphaState();
+        opaqueAlpha.setBlendEnabled(false);
+        
         alwaysZBuf = ctx.getRenderer().createZBufferState();
         alwaysZBuf.setWritable(true);
         alwaysZBuf.setEnabled(true);
