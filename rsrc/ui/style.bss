@@ -384,6 +384,7 @@ shop_view {
 status_label {
   text-align: center;
   vertical-align: center;
+//  border: 1 solid #000000;
 }
 
 shop_status {
@@ -946,6 +947,11 @@ lobby_chat {
   padding: 0 5 5 5;
 }
 
+match_label {
+  font: "Dom Casual" plain 20;
+  color: #897301;
+}
+
 //
 // Ranch styles
 
@@ -987,7 +993,7 @@ big_unit_view {
   padding: 7 12 7 12;
 }
 
-small_unit_view {
-  background: image "ui/frames/small_background.png" centerxy;
+medium_unit_view {
+  background: image "ui/frames/medium_background.png" centerxy;
   padding: 7 12 7 12;
 }

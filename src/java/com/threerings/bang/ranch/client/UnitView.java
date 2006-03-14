@@ -30,7 +30,7 @@ public class UnitView extends BGeomView
     public UnitView (BangContext ctx, boolean small)
     {
         super(new Node("Unit Model"));
-        String prefix = small ? "small_" : "big_";
+        String prefix = small ? "medium_" : "big_";
         setStyleClass(prefix + "unit_view");
 
         _ctx = ctx;

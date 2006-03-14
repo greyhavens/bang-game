@@ -69,7 +69,7 @@ public class FinalistView extends BContainer
         }
 
         // load up our frame and scroll banner
-        String prefix = winner ? "ui/frames/big_" : "ui/frames/smaller_";
+        String prefix = winner ? "ui/frames/big_" : "ui/frames/small_";
         _frame = new ImageIcon(ctx.loadImage(prefix + "frame.png"));
         _banner = new ImageIcon(ctx.loadImage(prefix + "scroll.png"));
 

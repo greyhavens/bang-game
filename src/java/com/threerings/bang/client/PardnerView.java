@@ -330,9 +330,9 @@ public class PardnerView extends IconPalette
             }
 
             // and the scroll icon
-            _scroll = new ImageIcon(_ctx.loadImage(
-                "ui/frames/" + (entry.status == PardnerEntry.OFFLINE ?
-                    "taller" : "smaller") + "_scroll.png"));
+            String path = "ui/frames/" + (entry.status == PardnerEntry.OFFLINE ?
+                                          "tall_" : "") + "small_scroll.png";
+            _scroll = new ImageIcon(_ctx.loadImage(path));
 
             // and the last session date
             if (entry.status == PardnerEntry.OFFLINE) {
