@@ -76,6 +76,7 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Model;
+import com.threerings.bang.client.util.ModelLoader;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -282,8 +283,8 @@ public class BoardView extends BComponent
         _pnode.updateGeometricState(0, true);
 
         // create a loading marquee to report loading progress
-        _loadingMax = Model.getLoader().getQueueSize();
-        if (_loadingMax > 0) {
+        ModelLoader loader = Model.getLoader();
+        if (loader != null && (_loadingMax = loader.getQueueSize()) > 0) {
             updateLoadingMarquee();
         }
 
