@@ -444,9 +444,6 @@ public class PieceSprite extends Sprite
             this, random, zations, new Model.Binding.Observer() {
             public void wasBound (
                 Model.Animation anim, Model.Binding binding) {
-                // update the render states of the attached meshes
-                updateRenderState();
-                
                 // now that the meshes are attached, configure the animation
                 // speed and repeat type
                 setAnimationSpeed(

@@ -167,6 +167,7 @@ public class BoardView extends BComponent
             _lights[i].setEnabled(true);
         }
         _node.setRenderState(_lstate);
+        _node.setLightCombineMode(LightState.REPLACE);
 
         // default states
         MaterialState mstate = ctx.getRenderer().createMaterialState();
@@ -176,6 +177,7 @@ public class BoardView extends BComponent
             false));
         _node.setRenderState(RenderUtil.lequalZBuf);
         _node.setRenderState(RenderUtil.opaqueAlpha);
+        _node.setTextureCombineMode(TextureState.REPLACE);
         _node.updateRenderState();
 
         // create the sky
