@@ -245,7 +245,7 @@ public class BangBoardView extends BoardView
         _ctx.getInterface().detachChild(_marquee);
 
         // then reattach it with a fade in function
-        TimeFunction tf = new LinearTimeFunction(0f, 1f, 2f);
+        TimeFunction tf = new LinearTimeFunction(0f, 1f, 3f);
         _ctx.getInterface().attachChild(
             new FadeInOutEffect(_marquee, ColorRGBA.white, tf, true) {
                 protected void fadeComplete () {
