@@ -46,6 +46,9 @@ public class BangUI
     /** A font used to render the marquee over the board. */
     public static Font MARQUEE_FONT;
 
+    /** A font used to render the loading status over the board. */
+    public static Font LOADING_FONT;
+
     /** The stylesheet used to configure our interface. */
     public static BStyleSheet stylesheet;
 
@@ -90,6 +93,7 @@ public class BangUI
 
         COUNTER_FONT = _fonts.get("Tombstone").deriveFont(Font.BOLD, 48);
         MARQUEE_FONT = _fonts.get("Old Town").deriveFont(Font.PLAIN, 96);
+        LOADING_FONT = _fonts.get("Dom Casual").deriveFont(Font.PLAIN, 24);
 
         // create our stylesheet
         reloadStylesheet();

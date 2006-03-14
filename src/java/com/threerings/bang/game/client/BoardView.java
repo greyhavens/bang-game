@@ -58,6 +58,7 @@ import com.jmex.bui.layout.BorderLayout;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ObserverList;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;
@@ -80,6 +81,7 @@ import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.PointSet;
@@ -213,7 +215,7 @@ public class BoardView extends BComponent
         // everything is loaded up and we're ready to show the board
         createPausedFadeIn();
     }
-    
+
     /**
      * Returns our top-level geometry node.
      */
@@ -279,9 +281,17 @@ public class BoardView extends BComponent
         }
         _pnode.updateGeometricState(0, true);
 
+        // create a loading marquee to report loading progress
+        _loadingMax = Model.getLoader().getQueueSize();
+        updateLoadingMarquee();
+
         // fade the board in when the sprites are all resolved
         addResolutionObserver(new ResolutionObserver() {
             public void mediaResolved () {
+                if (_loading != null) {
+                    _ctx.getInterface().detachChild(_loading);
+                    _loading = null;
+                }
                 if (_fadein != null) {
                     _fadein.setPaused(false);
                 }
@@ -319,6 +329,11 @@ public class BoardView extends BComponent
     public void clearResolvingSprite (PieceSprite resolved)
     {
         _resolvingSprites--;
+
+        // update our loading marquee
+        if (_loading != null) {
+            updateLoadingMarquee();
+        }
 
         // if we're done resolving, notify any resolution observers
         if (_resolvingSprites == 0 && _resolutionObs.size() > 0) {
@@ -525,7 +540,7 @@ public class BoardView extends BComponent
             return null;
         }
     }
-    
+
     /**
      * Returns the piece sprite associated with the supplied piece.
      */
@@ -533,7 +548,7 @@ public class BoardView extends BComponent
     {
         return _pieces.get(piece.pieceId);
     }
-    
+
     /**
      * Returns true if the specified sprite is part of the active view.
      */
@@ -566,7 +581,7 @@ public class BoardView extends BComponent
         }
         return mheight;
     }
-    
+
     /**
      * Requests that the specified action be executed. If there are other
      * actions executing and queued for execution, this action will be executed
@@ -687,7 +702,7 @@ public class BoardView extends BComponent
         if (_worldMouse == null) {
             return;
         }
-        
+
         // update the sprite over which the mouse is hovering
         updateHoverSprite();
 
@@ -801,7 +816,7 @@ public class BoardView extends BComponent
 
         // clear any marquee we have up
         clearMarquee(0f);
-        
+
         // let the child nodes know that they need to clean up any textures
         // they've created
         _tnode.cleanup();
@@ -1066,7 +1081,29 @@ public class BoardView extends BComponent
                 new FadeInOutEffect(mquad, ColorRGBA.white, tf, true));
         }
     }
-    
+
+    /**
+     * Updates the loading progress display.
+     */
+    protected void updateLoadingMarquee ()
+    {
+        if (_loading != null) {
+            _ctx.getInterface().detachChild(_loading);
+        }
+
+        int pct = (_loadingMax - Model.getLoader().getQueueSize()) * 100 /
+            _loadingMax;
+        String pctstr = _ctx.xlate(
+            GameCodes.GAME_MSGS, MessageBundle.tcompose(
+                "m.loading_pct", String.valueOf(pct)));
+        _loading = RenderUtil.createTextQuad(_ctx, BangUI.LOADING_FONT, pctstr);
+        _loading.setLocalTranslation(
+            new Vector3f(_ctx.getRenderer().getWidth()-100, 25, 0));
+        _loading.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+        _loading.setZOrder(-2);
+        _ctx.getInterface().attachChild(_loading);
+    }
+
     /**
      * Creates the piece sprite for the supplied piece. The newly created
      * sprite will automatically be initialized with the supplied piece and
@@ -1369,7 +1406,8 @@ public class BoardView extends BComponent
     protected Rectangle _bbounds;
     protected BoardEventListener _blistener = new BoardEventListener();
 
-    protected Quad _marquee;
+    protected Quad _marquee, _loading;
+    protected int _loadingMax;
 
     protected Node _node, _pnode, _hnode;
     protected LightState _lstate;
