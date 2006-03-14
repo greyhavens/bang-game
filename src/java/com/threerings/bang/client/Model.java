@@ -777,6 +777,11 @@ public class Model
                     
                     target.updateCollisionTree();
                     
+                    // we create a SharedNode of a SharedNode because rendering
+                    // each SharedMesh modifies the transform of its target,
+                    // would then be copied by SharedMeshes created afterwards
+                    target = new SharedNode("shared", target, false);
+                    
                     _tinit = true;
                 }
                 instance = new SharedNode("shared", target, false);
