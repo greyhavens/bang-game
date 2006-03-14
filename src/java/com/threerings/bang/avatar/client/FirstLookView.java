@@ -65,8 +65,9 @@ public class FirstLookView extends BContainer
 
         // create our user interface
         add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
-        _toggles = new BContainer(
-            new TableLayout(4, 5, 20, TableLayout.LEFT, true));
+        TableLayout tlay = new TableLayout(4, 5, 20);
+        tlay.setEqualRows(true);
+        _toggles = new BContainer(tlay);
         BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
         wrapper.add(_toggles);
         add(wrapper, BorderLayout.CENTER);

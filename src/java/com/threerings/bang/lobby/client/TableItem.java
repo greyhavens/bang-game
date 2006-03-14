@@ -14,8 +14,6 @@ import com.jmex.bui.layout.TableLayout;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
-import com.threerings.crowd.data.BodyObject;
-
 import com.threerings.parlor.client.SeatednessObserver;
 import com.threerings.parlor.client.TableDirector;
 import com.threerings.parlor.data.Table;
@@ -40,11 +38,13 @@ public class TableItem extends BContainer
      */
     public TableItem (BangContext ctx, TableDirector tdtr, Table table)
     {
-        super(new TableLayout(3, 5, 5, TableLayout.STRETCH));
+        super(new TableLayout(3, 5, 5));
+        ((TableLayout)getLayoutManager()).setHorizontalAlignment(
+            TableLayout.STRETCH);
         setStyleClass("padded_box");
 
         _ctx = ctx;
-        _self = ((BodyObject)ctx.getClient().getClientObject()).getVisibleName();
+        _self = ctx.getUserObject().getVisibleName();
         _tconfig = (BangConfig)table.config;
         _tdtr = tdtr;
         _tdtr.addSeatednessObserver(this);

@@ -82,8 +82,9 @@ public class LobbyView extends BWindow
         _penders.setStyleClass("padded_box");
 
         // add our various configuration options
-        BContainer blist = new BContainer(
-            new TableLayout(5, 5, 5, TableLayout.CENTER));
+        TableLayout tlay = new TableLayout(5, 5, 5);
+        tlay.setHorizontalAlignment(TableLayout.CENTER);
+        BContainer blist = new BContainer(tlay);
         blist.add(new BLabel(msgs.get("m.player_count")));
         _seats = new BComboBox(SEATS);
         blist.add(_seats);
