@@ -24,6 +24,7 @@ import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.CompositeMesh;
 import com.jme.scene.Line;
 import com.jme.scene.Node;
@@ -364,6 +365,7 @@ public class TerrainNode extends Node
 
         // always perform backface culling
         setRenderState(RenderUtil.backCull);
+        setRenderQueueMode(Renderer.QUEUE_SKIP);
         
         MaterialState mstate = ctx.getRenderer().createMaterialState();
         mstate.setAmbient(ColorRGBA.white);

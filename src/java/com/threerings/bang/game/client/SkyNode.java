@@ -50,6 +50,7 @@ public class SkyNode extends Node
         _ctx = ctx;
         
         setLightCombineMode(LightState.OFF);
+        setRenderQueueMode(Renderer.QUEUE_SKIP);
         
         // create the dome geometry
         _dome = new Dome("dome", DOME_PLANES, DOME_RADIAL_SAMPLES,
@@ -57,7 +58,7 @@ public class SkyNode extends Node
         Quaternion rot = new Quaternion();
         rot.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
         _dome.setLocalRotation(rot);
-        _dome.setLocalTranslation(new Vector3f(0f, 0f, -20f));
+        _dome.setLocalTranslation(new Vector3f(0f, 0f, -10f));
         _dome.setRenderState(_gtstate =
             _ctx.getRenderer().createTextureState());
         _gtstate.setTexture(null, 0);
@@ -101,7 +102,6 @@ public class SkyNode extends Node
         ctex.setScale(new Vector3f(CLOUD_TEXTURE_SCALE,
             CLOUD_TEXTURE_SCALE, CLOUD_TEXTURE_SCALE));
         ctex.setTranslation(new Vector3f());
-        _clouds.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _clouds.setRenderState(RenderUtil.blendAlpha);
         _clouds.setRenderState(RenderUtil.overlayZBuf);
         _clouds.updateRenderState();
