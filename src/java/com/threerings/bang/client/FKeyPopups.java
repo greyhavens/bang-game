@@ -70,11 +70,12 @@ public class FKeyPopups
         // only some of our popups should check before they popup, others (like
         // the admin interfaces, debug log and bug report) should work
         // regardless of what's going on in the game
-        boolean requiresCheck = false;
+        boolean requiresCheck = true;
         switch (keyCode) {
-        case KeyInput.KEY_F1:
-        case KeyInput.KEY_T:
-            requiresCheck = true;
+        case KeyInput.KEY_F2:
+        case KeyInput.KEY_F3:
+        case KeyInput.KEY_F4:
+            requiresCheck = false;
             break;
         }
 
