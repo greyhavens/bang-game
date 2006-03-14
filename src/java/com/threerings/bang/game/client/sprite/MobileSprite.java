@@ -386,7 +386,7 @@ public class MobileSprite extends PieceSprite
                 _ctx.getRenderer().createMaterialState();
             final ColorRGBA color = new ColorRGBA(ColorRGBA.white);
             mstate.setAmbient(color);
-            setRenderState(mstate);
+            setRenderState(RenderUtil.createColorMaterialState(mstate, false));
             _shadow.setDefaultColor(color);
 
             Vector3f start = new Vector3f(localTranslation),
@@ -398,7 +398,6 @@ public class MobileSprite extends PieceSprite
                     color.a -= time / REMOVAL_DURATION;
                     mstate.getDiffuse().a = color.a;
                     mstate.getSpecular().a = color.a;
-                    updateRenderState();
                 }
             });
 
