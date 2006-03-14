@@ -3,9 +3,11 @@
 
 package com.threerings.bang.util;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -231,7 +233,8 @@ public class RenderUtil
         Color acolor = new Color(color.r, color.g, color.b, color.a);
         TextLayout layout;
         try {
-            gfx.setFont(font);
+            gfx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             gfx.setColor(acolor);
             layout = new TextLayout(text, font, gfx.getFontRenderContext());
         } finally {
@@ -259,6 +262,9 @@ public class RenderUtil
             tsize, tsize, true);
         gfx = image.createGraphics();
         try {
+            gfx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            gfx.setComposite(AlphaComposite.SrcOut);
             gfx.setColor(acolor);
             layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());
         } finally {
