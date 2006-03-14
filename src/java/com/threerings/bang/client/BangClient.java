@@ -439,14 +439,19 @@ public class BangClient extends BasicClient
             _ctx.getClient().getBootstrapData();
         if ("ranch".equals(where)) {
             _ctx.getLocationDirector().moveTo(bbd.ranchOid);
+            return;
         } else if ("bank".equals(where)) {
             _ctx.getLocationDirector().moveTo(bbd.bankOid);
+            return;
         } else if ("store".equals(where)) {
             _ctx.getLocationDirector().moveTo(bbd.storeOid);
+            return;
         } else if ("saloon".equals(where)) {
             _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+            return;
         } else if ("barber".equals(where)) {
             _ctx.getLocationDirector().moveTo(bbd.barberOid);
+            return;
         }
 
         // show the town view to start, this will call checkShowIntro() once
