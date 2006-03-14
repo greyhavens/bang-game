@@ -952,6 +952,17 @@ match_label {
   color: #897301;
 }
 
+match_view {
+  padding: 0 10 5 10;
+}
+
+match_slot {
+  font: "Dom Casual" plain 13;
+  text-align: center;
+  vertical-align: bottom;
+  padding: 0 0 5 0;
+}
+
 //
 // Ranch styles
 

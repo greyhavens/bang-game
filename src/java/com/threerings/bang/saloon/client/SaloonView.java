@@ -14,6 +14,7 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
+import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.util.BangContext;
 
@@ -31,17 +32,22 @@ public class SaloonView extends ShopView
         _ctrl = ctrl;
 
         // add our various interface components
-        add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
-            new Rectangle(232, 640, 570, 35));
+        add(new BLabel(_msgs.get("m.title"), "shop_status"),
+            new Rectangle(266, 656, 491, 33));
+        add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
         add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
 
-        add(_crview = new CriterionView(ctx, _ctrl), new Point(700, 300));
-        add(_status = new StatusLabel(ctx), new Rectangle(450, 80, 400, 50));
+        add(_crview = new CriterionView(ctx, _ctrl), MATCH_RECT);
+        add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
+        _status.setText(_msgs.get("m.intro_tip"));
 
-        add(new BButton(_msgs.get("m.test_game"), _ctrl,
-                        SaloonController.TEST_GAME), new Point(700, 250));
+        // add a test game button for developer testing
+        if (ctx.getUserObject().tokens.isAdmin()) {
+            add(new BButton(_msgs.get("m.test_game"), _ctrl,
+                            SaloonController.TEST_GAME), new Point(730, 85));
+        }
     }
 
     /**
@@ -51,7 +57,7 @@ public class SaloonView extends ShopView
     public void displayMatchView (int matchOid)
     {
         remove(_crview);
-        add(_mview = new MatchView(_ctx, _ctrl, matchOid), new Point(700, 300));
+        add(_mview = new MatchView(_ctx, _ctrl, matchOid), MATCH_RECT);
     }
 
     /**
@@ -62,7 +68,7 @@ public class SaloonView extends ShopView
     {
         remove(_mview);
         _mview = null;
-        add(_crview, new Point(700, 300));
+        add(_crview, MATCH_RECT);
         setStatus(status);
     }
 
@@ -86,4 +92,7 @@ public class SaloonView extends ShopView
     protected StatusLabel _status;
     protected CriterionView _crview;
     protected MatchView _mview;
+
+    protected static final Rectangle MATCH_RECT =
+        new Rectangle(594, 328, 395, 233);
 }

@@ -28,21 +28,18 @@ public class CriterionView extends BContainer
 {
     public CriterionView (BangContext ctx, SaloonController ctrl)
     {
-        super(GroupLayout.makeVStretch());
-        setStyleClass("padded_box");
+        super(new BorderLayout(5, 5));
 
         _ctx = ctx;
         _ctrl = ctrl;
         MessageBundle msgs = _ctx.getMessageManager().getBundle(
             SaloonCodes.SALOON_MSGS);
 
-        add(new BLabel(msgs.get("m.criterion_header")));
-
         BContainer table = new BContainer(
-            new TableLayout(2, 5, 5, TableLayout.LEFT, true));
-        add(table, GroupLayout.FIXED);
+            new TableLayout(2, 5, 25, TableLayout.CENTER, true));
+        add(table, BorderLayout.CENTER);
 
-        table.add(new BLabel(msgs.get("m.rounds")));
+        table.add(new BLabel(msgs.get("m.rounds"), "match_label"));
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         for (int ii = 0; ii < _rounds.length; ii++) {
             row.add(_rounds[ii] = new BCheckBox("" + (ii+1)));
@@ -50,7 +47,7 @@ public class CriterionView extends BContainer
         }
         table.add(row);
 
-        table.add(new BLabel(msgs.get("m.players")));
+        table.add(new BLabel(msgs.get("m.players"), "match_label"));
         row = new BContainer(GroupLayout.makeHStretch());
         for (int ii = 0; ii < _players.length; ii++) {
             row.add(_players[ii] = new BCheckBox("" + (ii+2)));
@@ -58,18 +55,19 @@ public class CriterionView extends BContainer
         }
         table.add(row);
 
-        table.add(new BLabel(msgs.get("m.rankedness")));
+        table.add(new BLabel(msgs.get("m.rankedness"), "match_label"));
         table.add(_ranked = new BComboBox(xlate(msgs, RANKED)));
         _ranked.selectItem(0);
 
-        table.add(new BLabel(msgs.get("m.range")));
+        table.add(new BLabel(msgs.get("m.range"), "match_label"));
         table.add(_range = new BComboBox(xlate(msgs, RANGE)));
         _range.selectItem(0);
 
-        row = new BContainer(new BorderLayout());
-        row.add(new BButton(msgs.get("m.go"), _golist, "match"),
-                BorderLayout.EAST);
-        add(row);
+        row = GroupLayout.makeHBox(GroupLayout.CENTER);
+        BButton go = new BButton(msgs.get("m.go"), _golist, "match");
+        go.setStyleClass("big_button");
+        row.add(go);
+        add(row, BorderLayout.SOUTH);
 
         // TODO: preserve our settings in persistent preferences
     }

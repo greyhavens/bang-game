@@ -3,21 +3,30 @@
 
 package com.threerings.bang.saloon.client;
 
+import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.util.Dimension;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+
+import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
-import com.threerings.util.MessageBundle;
 import com.threerings.presents.util.SafeSubscriber;
+
+import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.util.BangContext;
@@ -36,13 +45,44 @@ public class MatchView extends BContainer
 {
     public MatchView (BangContext ctx, SaloonController ctrl, int matchOid)
     {
-        super(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                   GroupLayout.STRETCH));
+        super(new BorderLayout(5, 10));
+        setStyleClass("match_view");
+
         _ctx = ctx;
         _ctrl = ctrl;
         _msgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
         _msub = new SafeSubscriber(matchOid, this);
         _msub.subscribe(_ctx.getDObjectManager());
+
+        // this will contain the players and game info
+        BContainer main = new BContainer(GroupLayout.makeHStretch());
+        main.add(_left = GroupLayout.makeVBox(GroupLayout.CENTER));
+        ((GroupLayout)_left.getLayoutManager()).setGap(0);
+        main.add(_info = GroupLayout.makeVBox(GroupLayout.CENTER),
+                 GroupLayout.FIXED);
+        main.add(_right = GroupLayout.makeVBox(GroupLayout.CENTER));
+        ((GroupLayout)_right.getLayoutManager()).setGap(0);
+        add(main, BorderLayout.CENTER);
+
+        // TODO: add our game info
+        _info.add(new BLabel("? Rounds", "match_label"));
+        _info.add(new BLabel("? Players", "match_label"));
+        _info.add(new BLabel("Unrated?", "match_label"));
+        _info.add(new BLabel("Ranked near?", "match_label"));
+
+        // add our leave button
+        BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
+        row.add(new BButton(_msgs.get("m.leave"), new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                _ctrl.leaveMatch(_mobj.getOid());
+            }
+        }, "leave"));
+        add(row, BorderLayout.SOUTH);
+
+        // load up some images
+        _silhouette = ctx.loadImage("ui/saloon/silhouette.png");
+        _playerScroll = ctx.loadImage("ui/frames/tiny_scroll.png");
+        _emptyScroll = ctx.loadImage("ui/frames/tall_tiny_scroll.png");
     }
 
     @Override // documentation inherited
@@ -64,20 +104,15 @@ public class MatchView extends BContainer
         _mobj = (MatchObject)object;
         _mobj.addListener(_elup);
 
-        // create our player rows
-        _rows = new PlayerRow[_mobj.playerOids.length];
-        for (int ii = 0; ii < _rows.length; ii++) {
-            add(_rows[ii] = new PlayerRow());
-        }
-
-        // add a cancel button
-        BContainer row = new BContainer(new BorderLayout());
-        row.add(new BButton(_msgs.get("m.cancel"), new ActionListener() {
-            public void actionPerformed (ActionEvent event) {
-                _ctrl.leaveMatch(_mobj.getOid());
+        // create our player slots
+        _slots = new PlayerSlot[_mobj.playerOids.length];
+        for (int ii = 0; ii < _slots.length; ii++) {
+            if (ii % 2 == 0) {
+                _left.add(_slots[ii] = new PlayerSlot());
+            } else {
+                _right.add(_slots[ii] = new PlayerSlot());
             }
-        }, "cancel"), BorderLayout.EAST);
-        add(row);
+        }
 
         updateDisplay();
     }
@@ -93,7 +128,7 @@ public class MatchView extends BContainer
     protected void updateDisplay ()
     {
         for (int ii = 0; ii < _mobj.playerOids.length; ii++) {
-            _rows[ii].setPlayerOid(_mobj.playerOids[ii]);
+            _slots[ii].setPlayerOid(_mobj.playerOids[ii]);
         }
     }
 
@@ -103,22 +138,23 @@ public class MatchView extends BContainer
         }
     };
 
-    protected class PlayerRow extends BContainer
+    protected class PlayerSlot extends BLabel
     {
-        public PlayerRow ()
+        public PlayerSlot ()
         {
-            super(new BorderLayout(5, 5));
-            add(_icon = new BLabel(""), BorderLayout.WEST);;
-            add(_name = new BLabel(_msgs.get("m.waiting_for_player")),
-                BorderLayout.NORTH);
-            add(_info = new BLabel("..."), BorderLayout.CENTER);
+            super("");
+            setStyleClass("match_slot");
         }
 
         public void setPlayerOid (int playerOid)
         {
+            if (playerOid == _playerOid) {
+                return;
+            }
+            _playerOid = playerOid;
+
             if (playerOid <= 0) {
-                _name.setText(_msgs.get("m.waiting_for_player"));
-                _icon.setIcon(null);
+                setText(_msgs.get("m.waiting_for_player"));
                 return;
             }
 
@@ -127,14 +163,46 @@ public class MatchView extends BContainer
             if (boi == null) {
                 log.warning("Missing occupant info for player " +
                             "[oid=" + playerOid + "].");
-                _name.setText(_msgs.xlate(SaloonCodes.INTERNAL_ERROR));
+                setText("???");
             } else {
-                _name.setText(boi.username.toString());
-                // TODO: set avatar icon
+                setText(boi.username.toString());
+                _avatar = AvatarView.getImage(_ctx, boi.avatar,
+                    AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8);
             }
         }
 
-        protected BLabel _icon, _name, _info;
+        public ColorRGBA getColor ()
+        {
+            return _playerOid > 0 ? super.getColor() : GREY_ALPHA;
+        }
+
+        protected Dimension computePreferredSize (int whint, int hhint)
+        {
+            return new Dimension(120, 75);
+        }
+
+        protected void renderBackground (Renderer renderer)
+        {
+            super.renderBackground(renderer);
+
+            BImage icon, scroll;
+            int offy = 0;
+            if (_playerOid > 0) {
+                icon = _avatar;
+                scroll = _playerScroll;
+            } else {
+                icon = _silhouette;
+                scroll = _emptyScroll;
+                offy = 5;
+            }
+            int ix = (getWidth() - icon.getWidth())/2;
+            int iy = getHeight() - icon.getHeight() - offy;
+            icon.render(renderer, ix, iy, 1f);
+            scroll.render(renderer, 0, 0, 1f);
+        }
+
+        protected int _playerOid = -1;
+        protected BImage _avatar;
     }
 
     protected BangContext _ctx;
@@ -142,5 +210,11 @@ public class MatchView extends BContainer
     protected MessageBundle _msgs;
     protected SafeSubscriber _msub;
     protected MatchObject _mobj;
-    protected PlayerRow[] _rows;
+
+    protected BImage _silhouette, _playerScroll, _emptyScroll;
+    protected BContainer _left, _right, _info;
+    protected PlayerSlot[] _slots;
+
+    protected static final ColorRGBA GREY_ALPHA =
+        new ColorRGBA(0f, 0f, 0f, 0.25f);
 }
