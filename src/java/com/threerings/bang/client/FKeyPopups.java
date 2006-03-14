@@ -67,9 +67,20 @@ public class FKeyPopups
             return;
         }
 
+        // only some of our popups should check before they popup, others (like
+        // the admin interfaces, debug log and bug report) should work
+        // regardless of what's going on in the game
+        boolean requiresCheck = false;
+        switch (keyCode) {
+        case KeyInput.KEY_F1:
+        case KeyInput.KEY_T:
+            requiresCheck = true;
+            break;
+        }
+
         // make sure we can display an FKEY popup right now (but only if we
         // don't already have one popped up, in which case we'll replace it)
-        if ((_popped == null || !_popped.isAdded()) &&
+        if ((_popped == null || !_popped.isAdded()) && requiresCheck &&
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.FKEY)) {
             return;
         }
