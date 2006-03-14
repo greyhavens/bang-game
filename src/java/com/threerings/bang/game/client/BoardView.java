@@ -283,7 +283,9 @@ public class BoardView extends BComponent
 
         // create a loading marquee to report loading progress
         _loadingMax = Model.getLoader().getQueueSize();
-        updateLoadingMarquee();
+        if (_loadingMax > 0) {
+            updateLoadingMarquee();
+        }
 
         // fade the board in when the sprites are all resolved
         addResolutionObserver(new ResolutionObserver() {
