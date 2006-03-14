@@ -47,7 +47,7 @@ public class SaloonController extends PlaceController
                 _view.displayMatchView((Integer)result);
             }
             public void requestFailed (String reason) {
-                _view.setStatus(reason);
+                _view.findMatchFailed(reason);
             }
         };
         _salobj.service.findMatch(_ctx.getClient(), criterion, rl);

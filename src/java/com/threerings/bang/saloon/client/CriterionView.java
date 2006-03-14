@@ -35,8 +35,11 @@ public class CriterionView extends BContainer
         MessageBundle msgs = _ctx.getMessageManager().getBundle(
             SaloonCodes.SALOON_MSGS);
 
-        BContainer table = new BContainer(
-            new TableLayout(2, 5, 25, TableLayout.CENTER, true));
+        TableLayout tlay = new TableLayout(2, 5, 25);
+        tlay.setHorizontalAlignment(TableLayout.CENTER);
+        tlay.setVerticalAlignment(TableLayout.CENTER);
+        tlay.setEqualRows(true);
+        BContainer table = new BContainer(tlay);
         add(table, BorderLayout.CENTER);
 
         table.add(new BLabel(msgs.get("m.rounds"), "match_label"));
@@ -64,12 +67,23 @@ public class CriterionView extends BContainer
         _range.selectItem(0);
 
         row = GroupLayout.makeHBox(GroupLayout.CENTER);
-        BButton go = new BButton(msgs.get("m.go"), _golist, "match");
-        go.setStyleClass("big_button");
-        row.add(go);
+        row.add(_go = new BButton(msgs.get("m.go"), _golist, "match"));
+        _go.setStyleClass("big_button");
         add(row, BorderLayout.SOUTH);
 
         // TODO: preserve our settings in persistent preferences
+    }
+
+    public void reenable ()
+    {
+        _go.setEnabled(true);
+    }
+
+    @Override // documentation inherited
+    public void wasAdded ()
+    {
+        super.wasAdded();
+        reenable();
     }
 
     protected String[] xlate (MessageBundle msgs, String[] umsgs)
@@ -97,6 +111,7 @@ public class CriterionView extends BContainer
             criterion.range = _range.getSelectedIndex();
 
             // pass the buck onto the controller to do the rest
+            _go.setEnabled(false);
             _ctrl.findMatch(criterion);
         }
     };
@@ -107,6 +122,7 @@ public class CriterionView extends BContainer
     protected BCheckBox[] _rounds = new BCheckBox[3];
     protected BCheckBox[] _players = new BCheckBox[3];
     protected BComboBox _ranked, _range;
+    protected BButton _go;
 
     protected static final String[] RANKED = { "ranked", "unranked", "both" };
     protected static final String[] RANGE = { "tight", "loose", "open" };

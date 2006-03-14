@@ -72,8 +72,9 @@ public class MatchView extends BContainer
 
         // add our leave button
         BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
-        row.add(new BButton(_msgs.get("m.leave"), new ActionListener() {
+        row.add(_bye = new BButton(_msgs.get("m.leave"), new ActionListener() {
             public void actionPerformed (ActionEvent event) {
+                _bye.setEnabled(false);
                 _ctrl.leaveMatch(_mobj.getOid());
             }
         }, "leave"));
@@ -210,6 +211,7 @@ public class MatchView extends BContainer
     protected MessageBundle _msgs;
     protected SafeSubscriber _msub;
     protected MatchObject _mobj;
+    protected BButton _bye;
 
     protected BImage _silhouette, _playerScroll, _emptyScroll;
     protected BContainer _left, _right, _info;

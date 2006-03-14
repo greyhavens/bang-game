@@ -77,6 +77,7 @@ public class BangUI
 
         // load up our fonts
         _fonts.put("Tombstone", loadFont(ctx, "ui/fonts/tomb.ttf"));
+        _fonts.put("Times", new Font("Serif", Font.PLAIN, 12));
 
         // we need to stretch Dom Casual out a bit
         Font dom = loadFont(ctx, "ui/fonts/domcasual.pfb");

@@ -19,6 +19,7 @@ import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
+import com.threerings.bang.saloon.data.SaloonObject;
 
 /**
  * Displays the main Saloon interface wherein a player can meet up with other
@@ -35,8 +36,9 @@ public class SaloonView extends ShopView
         add(new BLabel(_msgs.get("m.title"), "shop_status"),
             new Rectangle(266, 656, 491, 33));
         add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
-        add(createHelpButton(), new Point(780, 25));
+        add(createHelpButton(), new Point(800, 25));
         add(new TownButton(ctx), new Point(870, 25));
+        add(_paper = new PaperView(ctx), new Rectangle(48, 68, 518, 576));
 
         add(_crview = new CriterionView(ctx, _ctrl), MATCH_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
@@ -56,7 +58,18 @@ public class SaloonView extends ShopView
      */
     public void displayMatchView (int matchOid)
     {
-        remove(_crview);
+        // remove our criterion view
+        if (_crview.isAdded()) {
+            remove(_crview);
+        }
+
+        // this should never happen, but just to be ultra-robust
+        if (_mview != null) {
+            remove(_mview);
+            _mview = null;
+        }
+
+        // display a match view for this pending match
         add(_mview = new MatchView(_ctx, _ctrl, matchOid), MATCH_RECT);
     }
 
@@ -66,10 +79,24 @@ public class SaloonView extends ShopView
      */
     public void clearMatchView (String status)
     {
-        remove(_mview);
-        _mview = null;
-        add(_crview, MATCH_RECT);
+        // out with the old match view
+        if (_mview != null) {
+            remove(_mview);
+            _mview = null;
+        }
+
+        // redisplay the criterion view
+        if (!_crview.isAdded()) {
+            add(_crview, MATCH_RECT);
+        }
+
         setStatus(status);
+    }
+
+    public void findMatchFailed (String reason)
+    {
+        _crview.reenable();
+        _status.setStatus(_msgs.xlate(reason), true);
     }
 
     public void setStatus (String status)
@@ -81,6 +108,7 @@ public class SaloonView extends ShopView
     @Override // documentation inherited
     public void willEnterPlace (PlaceObject plobj)
     {
+        _paper.init((SaloonObject)plobj);
     }
 
     @Override // documentation inherited
@@ -89,6 +117,7 @@ public class SaloonView extends ShopView
     }
 
     protected SaloonController _ctrl;
+    protected PaperView _paper;
     protected StatusLabel _status;
     protected CriterionView _crview;
     protected MatchView _mview;
