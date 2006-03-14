@@ -50,6 +50,7 @@ public class Match
         for (int ii = 0; ii < oids.length; ii++) {
             oids[ii] = (players[ii] == null) ? 0 : players[ii].getOid();
         }
+        matchobj.setCriterion(_criterion);
         matchobj.setPlayerOids(oids);
     }
 
@@ -76,13 +77,24 @@ public class Match
         // we're good to go, so merge this feller on in
         _criterion.merge(criterion);
 
-        // find them a slot
-        for (int ii = 0; ii < players.length; ii++) {
-            if (players[ii] == null) {
-                players[ii] = player;
-                matchobj.setPlayerOidsAt(player.getOid(), ii);
-                break;
+        try {
+            // add the player and update the criterion in one event
+            matchobj.startTransaction();
+
+            // find them a slot
+            for (int ii = 0; ii < players.length; ii++) {
+                if (players[ii] == null) {
+                    players[ii] = player;
+                    matchobj.setPlayerOidsAt(player.getOid(), ii);
+                    break;
+                }
             }
+
+            // update the criterion now that the player oid is in
+            matchobj.setCriterion(_criterion);
+
+        } finally {
+            matchobj.commitTransaction();
         }
 
         // recompute our rating info

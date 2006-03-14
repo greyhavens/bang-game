@@ -3,6 +3,9 @@
 
 package com.threerings.bang.saloon.data;
 
+import java.util.ArrayList;
+
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.io.SimpleStreamableObject;
 
 /**
@@ -83,6 +86,14 @@ public class Criterion extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if the specified round count is allowed.
+     */
+    public boolean isValidRoundCount (int roundCount)
+    {
+        return (rounds & (1 << (roundCount-1))) != 0;
+    }
+
+    /**
      * Returns the highest allowed number of rounds.
      */
     public int getDesiredRounds ()
@@ -98,6 +109,34 @@ public class Criterion extends SimpleStreamableObject
         return (ranked & (1|(1<<2))) != 0;
     }
 
+    /**
+     * Returns a string describing the allowable player counts.
+     */
+    public String getPlayerString ()
+    {
+        ArrayList<String> values = new ArrayList<String>();
+        for (int ii = 2; ii <= GameCodes.MAX_PLAYERS; ii++) {
+            if (isValidPlayerCount(ii)) {
+                values.add(String.valueOf(ii));
+            }
+        }
+        return join(values);
+    }
+
+    /**
+     * Returns a string describing the allowable round counts.
+     */
+    public String getRoundString ()
+    {
+        ArrayList<String> values = new ArrayList<String>();
+        for (int ii = 1; ii <= GameCodes.MAX_ROUNDS; ii++) {
+            if (isValidRoundCount(ii)) {
+                values.add(String.valueOf(ii));
+            }
+        }
+        return join(values);
+    }
+
     protected int highestBitIndex (int bitmask)
     {
         int highest = 0;
@@ -106,5 +145,26 @@ public class Criterion extends SimpleStreamableObject
             highest++;
         }
         return highest;
+    }
+
+    /**
+     * Special join function that assumes we only have three possible values.
+     */
+    protected String join (ArrayList<String> values)
+    {
+        switch (values.size()) {
+        case 1: return values.get(0);
+        case 2: return values.get(0) + ", " + values.get(1);
+        case 3: return values.get(0) + "-" + values.get(2);
+        default:
+            StringBuffer buf = new StringBuffer();
+            for (String value : values) {
+                if (buf.length() > 0) {
+                    buf.append(",");
+                }
+                buf.append(value);
+            }
+            return buf.toString();
+        }
     }
 }

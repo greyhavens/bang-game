@@ -16,6 +16,7 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.Criterion;
@@ -119,8 +120,8 @@ public class CriterionView extends BContainer
     protected BangContext _ctx;
     protected SaloonController _ctrl;
 
-    protected BCheckBox[] _rounds = new BCheckBox[3];
-    protected BCheckBox[] _players = new BCheckBox[3];
+    protected BCheckBox[] _rounds = new BCheckBox[GameCodes.MAX_ROUNDS];
+    protected BCheckBox[] _players = new BCheckBox[GameCodes.MAX_PLAYERS-1];
     protected BComboBox _ranked, _range;
     protected BButton _go;
 

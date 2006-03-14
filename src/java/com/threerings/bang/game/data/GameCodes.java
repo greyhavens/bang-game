@@ -33,6 +33,12 @@ public interface GameCodes extends InvocationCodes
     /** An error response code for {@link BangService#move}. */
     public static final String TARGET_TOO_FAR = "m.target_too_far";
 
+    /** The highest number of players we will allow in a game. */
+    public static final int MAX_PLAYERS = 4;
+
+    /** The highest number of rounds we will allow in a game. */
+    public static final int MAX_ROUNDS = 3;
+
     /** Defines the minimum team size (not counting one's big shot). */
     public static final int MIN_TEAM_SIZE = 2;
 

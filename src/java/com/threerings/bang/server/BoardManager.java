@@ -12,7 +12,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.util.RandomUtil;
 
-import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.server.persist.BoardRepository.BoardList;
 import com.threerings.bang.server.persist.BoardRepository;
@@ -31,25 +31,26 @@ public class BoardManager
         throws PersistenceException
     {
         _brepo = new BoardRepository(conprov);
-        _byname = new BoardMap[BangCodes.MAX_PLAYERS-1];
+        _byname = new BoardMap[GameCodes.MAX_PLAYERS-1];
         for (int ii = 0; ii < _byname.length; ii++) {
             _byname[ii] = new BoardMap();
         }
 
         // load up and map all of our boards by scenario and player count
         for (BoardRecord record : _brepo.loadBoards()) {
-            int pidx = record.players-1;
-            if (pidx < 0) { // sanity check
+            // sanity check boards as creators are known to fuck up
+            if (record.players < 2 || record.players > GameCodes.MAX_PLAYERS) {
                 log.warning("Invalid board record [record=" + record + "].");
                 continue;
             }
+            int pidx = record.players-2;
             String[] scenarios = StringUtil.split(record.scenarios, ",");
             for (int ii = 0; ii < scenarios.length; ii++) {
                 BoardList[] lists = _byscenario.get(scenarios[ii]);
                 if (lists == null) {
                     _byscenario.put(
                         scenarios[ii],
-                        lists = new BoardList[BangCodes.MAX_PLAYERS]);
+                        lists = new BoardList[GameCodes.MAX_PLAYERS-1]);
                 }
                 if (lists[pidx] == null) {
                     lists[pidx] = new BoardList();

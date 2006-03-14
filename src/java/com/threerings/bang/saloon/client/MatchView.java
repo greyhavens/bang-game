@@ -18,6 +18,8 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.presents.dobj.AttributeChangeListener;
+import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
@@ -64,11 +66,11 @@ public class MatchView extends BContainer
         ((GroupLayout)_right.getLayoutManager()).setGap(0);
         add(main, BorderLayout.CENTER);
 
-        // TODO: add our game info
-        _info.add(new BLabel("? Rounds", "match_label"));
-        _info.add(new BLabel("? Players", "match_label"));
-        _info.add(new BLabel("Unrated?", "match_label"));
-        _info.add(new BLabel("Ranked near?", "match_label"));
+        // this will contain our current criterion
+        _info.add(_rounds = new BLabel("", "match_label"));
+        _info.add(_players = new BLabel("", "match_label"));
+        _info.add(_ranked = new BLabel("", "match_label"));
+        _info.add(_range = new BLabel("", "match_label"));
 
         // add our leave button
         BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -87,12 +89,6 @@ public class MatchView extends BContainer
     }
 
     @Override // documentation inherited
-    public void wasAdded ()
-    {
-        super.wasAdded();
-    }
-
-    @Override // documentation inherited
     public void wasRemoved ()
     {
         super.wasRemoved();
@@ -104,6 +100,7 @@ public class MatchView extends BContainer
     {
         _mobj = (MatchObject)object;
         _mobj.addListener(_elup);
+        _mobj.addListener(_atch);
 
         // create our player slots
         _slots = new PlayerSlot[_mobj.playerOids.length];
@@ -116,6 +113,7 @@ public class MatchView extends BContainer
         }
 
         updateDisplay();
+        updateCriterion();
     }
 
     // documentation inherited from interface Subscriber
@@ -132,6 +130,24 @@ public class MatchView extends BContainer
             _slots[ii].setPlayerOid(_mobj.playerOids[ii]);
         }
     }
+
+    protected void updateCriterion ()
+    {
+        String value = _mobj.criterion.getPlayerString();
+        _players.setText(_msgs.get("m.cr_players", value));
+        value = _mobj.criterion.getRoundString();
+        _rounds.setText(_msgs.get("m.cr_rounds", value));
+        _ranked.setText(_msgs.get(_mobj.criterion.getDesiredRankedness() ?
+                                  "m.ranked" : "m.unranked"));
+        value = "m." + CriterionView.RANGE[_mobj.criterion.range];
+        _range.setText(_msgs.get(value));
+    }
+
+    protected AttributeChangeListener _atch = new AttributeChangeListener() {
+        public void attributeChanged (AttributeChangedEvent event) {
+            updateCriterion();
+        }
+    };
 
     protected ElementUpdateListener _elup = new ElementUpdateListener() {
         public void elementUpdated (ElementUpdatedEvent event) {
@@ -211,6 +227,8 @@ public class MatchView extends BContainer
     protected MessageBundle _msgs;
     protected SafeSubscriber _msub;
     protected MatchObject _mobj;
+
+    protected BLabel _players, _rounds, _ranked, _range;
     protected BButton _bye;
 
     protected BImage _silhouette, _playerScroll, _emptyScroll;

@@ -13,10 +13,16 @@ public class MatchObject extends DObject
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerOids</code> field. */
     public static final String PLAYER_OIDS = "playerOids";
+
+    /** The field name of the <code>criterion</code> field. */
+    public static final String CRITERION = "criterion";
     // AUTO-GENERATED: FIELDS END
 
     /** The player object ids of the players in this game. */
     public int[] playerOids;
+
+    /** The current criterion for matching. */
+    public Criterion criterion;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -50,6 +56,22 @@ public class MatchObject extends DObject
         requestElementUpdate(
             PLAYER_OIDS, index, new Integer(value), new Integer(ovalue));
         this.playerOids[index] = value;
+    }
+
+    /**
+     * Requests that the <code>criterion</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setCriterion (Criterion value)
+    {
+        Criterion ovalue = this.criterion;
+        requestAttributeChange(
+            CRITERION, value, ovalue);
+        this.criterion = value;
     }
     // AUTO-GENERATED: METHODS END
 }

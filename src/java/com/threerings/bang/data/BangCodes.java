@@ -55,11 +55,6 @@ public interface BangCodes extends InvocationCodes
     /** The number of offers of each type we publish in the coin exchange. */
     public static final int COINEX_OFFERS_SHOWN = 5;
 
-    /** The highest number of players we will allow in a game (currently
-     * we only support four but we'll probably get crazy and try larger
-     * numbers at some point). */
-    public static final int MAX_PLAYERS = 8;
-
     /** The maximum number of pardners you can have. */
     public static final int MAX_PARDNERS = 75;
 
