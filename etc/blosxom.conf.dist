@@ -30,10 +30,10 @@ $blog_description = "Tales from the Triple O ranch.";
 $blog_language = "en";
 
 # Where are this blog's entries kept?
-$datadir = "/export/bang/data/blosxom";
+$datadir = "/export/ship/bang/data/blosxom";
 
 # What's my preferred base URL for this blog (leave blank for automatic)?
-$url = "http://dev.banghowdy.com";
+$url = "http://www.banghowdy.com";
 
 # Should I stick only to the datadir for items or travel down the
 # directory hierarchy looking for items?  If so, to what depth?
@@ -61,7 +61,7 @@ $plugin_state_dir = "/var/lib/blosxom/state";
 # --- Static Rendering -----
 
 # Where are this blog's static files to be created?
-$static_dir = "/export/bang/pages";
+$static_dir = "/export/ship/bang/pages";
 
 # What's my administrative password (you must set this for static rendering)?
 $static_password = "b\@ngbl0sx0m";
