@@ -5,16 +5,20 @@ package com.threerings.bang.saloon.client;
 
 import java.io.StringReader;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import javax.swing.text.html.HTMLDocument;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.text.HTMLView;
 
 import com.samskivert.util.ResultListener;
@@ -37,17 +41,33 @@ public class PaperView extends BContainer
     public PaperView (BangContext ctx)
     {
         super(GroupLayout.makeVStretch());
-        ((GroupLayout)getLayoutManager()).setGap(20);
+        ((GroupLayout)getLayoutManager()).setGap(0);
         setStyleClass("news_view");
         _ctx = ctx;
         String townId = ctx.getUserObject().townId;
 
         BLabel lbl;
-        add(lbl = new BLabel("", "nameplate"), GroupLayout.FIXED);
+        add(lbl = new BLabel("", "news_nameplate"), GroupLayout.FIXED);
         String npath = "ui/saloon/" + townId + "/nameplate.png";
         lbl.setIcon(new ImageIcon(ctx.loadImage(npath)));
 
+        BContainer row = GroupLayout.makeHBox(GroupLayout.RIGHT);
+        TableLayout tlay = new TableLayout(6, 0, 0);
+        tlay.setHorizontalAlignment(TableLayout.STRETCH);
+        BContainer masthead = new BContainer(tlay);
+        masthead.setStyleClass("news_masthead");
+        // TODO: add proper masthead buttons, etc.
+        masthead.add(new BLabel("No. 23", "news_mastlabel"));
+        masthead.add(new BLabel("News", "news_mastlabel"));
+        masthead.add(new BLabel("Top Scores", "news_mastlabel"));
+        masthead.add(new BLabel("Events", "news_mastlabel"));
+        masthead.add(new BLabel("Highlights", "news_mastlabel"));
+        masthead.add(new BLabel(_dfmt.format(new Date()), "news_mastlabel"));
+        row.add(masthead);
+        add(row, GroupLayout.FIXED);
+
         add(_contents = new HTMLView());
+        _contents.setStyleClass("news_contents");
 
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
         hlay.setGap(40);
@@ -137,6 +157,8 @@ public class PaperView extends BContainer
     protected SaloonObject _salobj;
     protected BButton _forward, _back;
     protected HTMLView _contents;
+
+    protected DateFormat _dfmt = DateFormat.getDateInstance(DateFormat.SHORT);
 
     protected static CachedDocument _news;
 

@@ -947,14 +947,23 @@ news_view {
   padding: 10 20 0 20;
 }
 
-nameplate {
+news_nameplate {
   text-align: right;
-  padding: 6 02 0 0;
+  padding: 7 0 0 0;
 }
 
-news_column {
-  font: "Times" plain 13;
-  vertical-align: top;
+news_masthead {
+  background: image "ui/saloon/lines.png" centerxy;
+  padding: 6 0 0 0;
+}
+
+news_mastlabel {
+  color: #553817;
+  font: "Dom Casual" plain 14;
+}
+
+news_contents {
+  padding: 20 0;
 }
 
 news_buttons {
