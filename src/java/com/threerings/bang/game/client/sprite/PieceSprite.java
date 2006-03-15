@@ -102,7 +102,6 @@ public class PieceSprite extends Sprite
         // create our sprite geometry
         createGeometry(ctx);
         setAnimationSpeed(20);
-        setAnimationActive(false);
 
         // create any sounds associated with this sprite
         createSounds(sounds);

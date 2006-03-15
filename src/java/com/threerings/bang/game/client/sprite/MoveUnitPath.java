@@ -87,7 +87,6 @@ public class MoveUnitPath extends LineSegmentPath
         if (_actions != null && _elapsed > _times[_index] &&
             _index < _actions.length-1) {
             sprite.setAction(_actions[++_index]);
-            sprite.setAnimationActive(true);
         }
     }
 
@@ -100,7 +99,6 @@ public class MoveUnitPath extends LineSegmentPath
         MobileSprite sprite = (MobileSprite)_sprite;
         sprite.pathUpdate();
         sprite.setAction(sprite.getRestPose());
-        sprite.setAnimationActive(false);
     }
 
     @Override // documentation inherited

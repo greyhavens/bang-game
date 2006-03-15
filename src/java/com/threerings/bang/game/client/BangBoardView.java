@@ -1111,14 +1111,14 @@ public class BangBoardView extends BoardView
     };
 
     /** Used to remove unit sprites that have completed their death
-     * animations. */
+     * paths. */
     protected MobileSprite.ActionObserver _deadRemover =
         new MobileSprite.ActionObserver() {
         public void actionCompleted (Sprite sprite, String action) {
             if (action.equals(MobileSprite.REMOVED)) {
-                if (((MobileSprite)sprite).isAnimating()) {
+                if (((MobileSprite)sprite).isMoving()) {
                     log.warning("Removing dead sprite, but it's still " +
-                                "animating! [sprite=" + sprite + "].");
+                                "moving! [sprite=" + sprite + "].");
                 }
                 removeSprite(sprite);
             }

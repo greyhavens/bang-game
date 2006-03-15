@@ -8,6 +8,7 @@ import com.jme.math.Vector3f;
 import com.threerings.jme.sprite.Path;
 
 import com.threerings.bang.client.Config;
+import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.game.data.BangBoard;
@@ -51,6 +52,16 @@ public class TrainSprite extends MobileSprite
         return ((Train)_piece).isLast();
     }
 
+    @Override // documentation inherited
+    protected Model.Animation setAction (String action)
+    {
+        // at least for now, our rest animation is the same as our walking
+        // animation, so we have to pause it
+        Model.Animation anim = super.setAction(action);
+        setAnimationActive(!action.equals(getRestPose()));
+        return anim;
+    }
+    
     @Override // documentation inherited
     protected Path createPath (BangBoard board)
     {

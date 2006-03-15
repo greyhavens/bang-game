@@ -238,7 +238,6 @@ public class MobileSprite extends PieceSprite
                     startNextAction();
                 } else {
                     setAction(getRestPose());
-                    setAnimationActive(false);
                 }
             }
         }
@@ -404,7 +403,6 @@ public class MobileSprite extends PieceSprite
         } else {
             Model.Animation anim = setAction(_action);
             _nextAction = anim.getDuration() / Config.display.animationSpeed;
-            setAnimationActive(true);
         }
     }
 

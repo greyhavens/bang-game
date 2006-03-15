@@ -60,6 +60,7 @@ import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
+import com.threerings.bang.client.util.AnimationController;
 import com.threerings.bang.client.util.ModelLoader;
 
 import static com.threerings.bang.Log.log;
@@ -518,11 +519,13 @@ public class Model
             // thread and we'd be hosed
             boolean trans = _props.getProperty(
                 mesh + ".transparent", "false").equalsIgnoreCase("true");
-            String mpath = path + anim.action + "/" + mesh + ".jme";
+            String mpath = path + anim.action + "/" + mesh + ".jme",
+                amesh = anim.action + "." + mesh,
+                bound = _props.getProperty(amesh + ".bound", "box");
             if (isStatic) {
-                part.target = loadModel(mpath, trans);
+                part.target = loadModel(mpath, trans, bound);
             } else {
-                part.creator = loadModelCreator(mpath, trans);
+                part.creator = loadModelCreator(mpath, trans, bound);
             }
 
             // the model may have multiple textures from which we
@@ -539,13 +542,21 @@ public class Model
                 _ctx.getTextureCache().getTexture(
                     part.tpaths[tt] = cleanPath(path + tnames[tt]));
             }
+            
+            // possibly create a programmatic animation controller
+            String panim = _props.getProperty(amesh + ".anim");
+            if (panim != null) {
+                part.animctrl = AnimationController.create(panim,
+                    PropertiesUtil.getSubProperties(_props, amesh));
+            }
         }
 
         // load the emitter marker geometries
         for (int ee = 0; ee < anim.emitters.length; ee++) {
             String mesh = anim.emitters[ee].name;
             anim.emitters[ee].creator = loadModelCreator(
-                path + anim.action + "/" + mesh + ".jme", false);
+                path + anim.action + "/" + mesh + ".jme", false,
+                "box");
         }
 
         // now finish our resolution on the main thread
@@ -613,9 +624,11 @@ public class Model
         return values.toArray(new String[values.size()]);
     }
 
-    protected CloneCreator loadModelCreator (String path, boolean trans)
+    protected CloneCreator loadModelCreator (String path, boolean trans,
+        String bound)
     {
-        ModelCloneCreator cc = new ModelCloneCreator(loadModel(path, trans));
+        ModelCloneCreator cc = new ModelCloneCreator(
+            loadModel(path, trans, bound));
         // these define what we want to "shallow" copy
         cc.addProperty("colors");
         cc.addProperty("texcoords");
@@ -623,14 +636,14 @@ public class Model
         return cc;
     }
     
-    protected Node loadModel (String path, boolean trans)
+    protected Node loadModel (String path, boolean trans, String bound)
     {
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
         Node model = _meshes.get(path);
         if (model == null) {
             JmeBinaryReader jbr = new JmeBinaryReader();
-            jbr.setProperty("bound", "box");
+            jbr.setProperty("bound", bound);
             jbr.setProperty("texurl", loader.getResource("rsrc/" + path));
             InputStream in = loader.getResourceAsStream("rsrc/" + path);
 
@@ -741,6 +754,9 @@ public class Model
         /** The paths of the textures from which to select randomly. */
         public String[] tpaths;
 
+        /** The animation controller to clone for this part, if any. */
+        public AnimationController animctrl;
+        
         /** Maps indices/colorizations to precreated texture states. */
         public HashMap<TextureKey, WeakReference<TextureState>> tstates =
             new HashMap<TextureKey, WeakReference<TextureState>>();
@@ -801,6 +817,12 @@ public class Model
                     tstates.put(tkey, new WeakReference<TextureState>(tstate));
                 }
                 instance.setRenderState(tstate);
+            }
+            if (animctrl != null) {
+                AnimationController ctrl =
+                    (AnimationController)animctrl.clone();
+                ctrl.setTarget(instance);
+                instance.addController(ctrl);
             }
             return instance;
         }
