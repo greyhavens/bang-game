@@ -8,6 +8,9 @@ import java.util.HashMap;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.util.Invoker;
+import com.samskivert.util.ResultListener;
+import com.samskivert.util.ResultListenerList;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.util.RandomUtil;
@@ -107,6 +110,45 @@ public class BoardManager
         return _byname[pcount-1].get(name);
     }
 
+    /**
+     * Loads the board data for the specified board, notifying the given result
+     * listener when finished.
+     */
+    public void loadBoardData (final BoardRecord brec, ResultListener listener)
+    {
+        // if there's already a list of listeners waiting for the data, put the
+        // listener on it and return; otherwise, create and map the list and
+        // post an invoker to load the data
+        ResultListenerList rll = _boardDataListeners.get(brec);
+        if (rll != null) {
+            rll.add(listener);
+            return;
+        }
+        final ResultListenerList list = new ResultListenerList();
+        _boardDataListeners.put(brec, list);
+        list.add(listener);
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                try {
+                    _brepo.loadBoardData(brec);
+                    
+                } catch (PersistenceException pe) {
+                    _error = pe;
+                }
+                return true;
+            }
+            public void handleResult () {
+                if (_error == null) {
+                    list.requestCompleted(brec);
+                } else {
+                    list.requestFailed(_error);
+                }
+                _boardDataListeners.remove(brec);
+            }
+            protected Exception _error;
+        });
+    }
+    
     /** Used for our name to board mapping. */
     protected static class BoardMap extends HashMap<String,BoardRecord>
     {
@@ -122,4 +164,9 @@ public class BoardManager
 
     /** A mapping by board name, broken out by player count. */
     protected BoardMap[] _byname;
+    
+    /** Maps board records to lists of {@link ResultListener}s waiting for the
+     * invoker to load the record's board data from the database. */
+    protected HashMap<BoardRecord, ResultListenerList> _boardDataListeners =
+        new HashMap<BoardRecord, ResultListenerList>();
 }

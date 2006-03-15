@@ -5,16 +5,22 @@ package com.threerings.bang.server.persist;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
+import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.Cursor;
 import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Session;
 import com.samskivert.jdbc.jora.Table;
+
+import static com.threerings.bang.Log.*;
 
 /**
  * Handles the loading and management of our persistent board data.
@@ -44,26 +50,72 @@ public class BoardRepository extends JORARepository
     }
 
     /**
-     * Loads all boards in the whole database.
+     * Loads all boards in the whole database without their board data.
      */
     public BoardList loadBoards ()
         throws PersistenceException
     {
-        return (BoardList)execute(new Operation() {
+        final BoardList blist = new BoardList();
+        execute(new Operation() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
-                BoardList blist = new BoardList();
-                Cursor c = _btable.select("");
-                BoardRecord brec;
-                while ((brec = (BoardRecord)c.next()) != null) {
-                    blist.add(brec);
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(
+                        "select BOARD_ID, NAME, CREATOR, SCENARIOS, " +
+                        "PLAYERS, PLAYS from BOARDS");
+                    while (rs.next()) {
+                        BoardRecord brec = new BoardRecord();
+                        brec.boardId = rs.getInt(1);
+                        brec.name = rs.getString(2);
+                        brec.creator = rs.getString(3);
+                        brec.scenarios = rs.getString(4);
+                        brec.players = rs.getInt(5);
+                        brec.plays = rs.getInt(6);
+                        blist.add(brec);
+                    }
+                    
+                } finally {
+                    JDBCUtil.close(stmt);
                 }
-                return blist;
+                return null;
+            }
+        });
+        return blist;
+    }
+
+    /**
+     * Loads the board data for the given board.
+     */
+    public void loadBoardData (final BoardRecord brec)
+        throws PersistenceException
+    {
+        execute(new Operation() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                PreparedStatement stmt = conn.prepareStatement(
+                    "select DATA from BOARDS where BOARD_ID = ?");
+                try {
+                    stmt.setInt(1, brec.boardId);
+                    ResultSet rs = stmt.executeQuery();
+                    if (rs.next()) {
+                        brec.data = (byte[])rs.getObject(1);
+                        
+                    } else {
+                        log.warning("Couldn't find board data! [brec=" + brec +
+                            "].");
+                    }
+                    
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
             }
         });
     }
-
+    
     /**
      * Inserts a new board into the repository for the first time. If the
      * board's name conflicts with an existing board an exception is

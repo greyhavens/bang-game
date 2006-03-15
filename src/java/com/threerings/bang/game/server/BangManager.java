@@ -21,6 +21,7 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
@@ -483,6 +484,26 @@ public class BangManager extends GameManager
     /** Starts the pre-game buying phase. */
     protected void startRound ()
     {
+        // find out if the desired board has been loaded, loading it if not
+        final BoardRecord brec = _boards[_bangobj.roundId];
+        if (brec.data != null) {
+            continueStartingRound(brec);
+            return;
+        }
+        BangServer.boardmgr.loadBoardData(brec, new ResultListener() {
+            public void requestCompleted (Object obj) {
+                continueStartingRound(brec);
+            }
+            public void requestFailed (Exception cause) {
+                log.warning("Failed to load board! [brec=" + brec +
+                    ", cause=" + cause + "].");
+            }
+        });
+    }
+    
+    /** Continues starting the round once the board's data is loaded. */
+    protected void continueStartingRound (BoardRecord brec)
+    {
         // create the appropriate scenario to handle this round
         if (_bconfig.tutorial) {
             _bangobj.setScenarioId(ScenarioCodes.TUTORIAL);
@@ -498,7 +519,6 @@ public class BangManager extends GameManager
         _purchases.clear();
 
         // set up the board and pieces so it's visible while purchasing
-        BoardRecord brec = _boards[_bangobj.roundId];
         _bangobj.setBoardName(brec.name);
         _bangobj.setBoard(brec.getBoard());
 
