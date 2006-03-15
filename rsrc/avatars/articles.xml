@@ -27,7 +27,8 @@
   </article>
 
   <article name="male_longjohns" townId="frontier_town"
-           slot="clothing" scrip="3000" coins="10" colors="skin, clothes_p,clothes_s">
+           slot="clothing" scrip="3000" coins="10"
+           colors="skin,clothes_p,clothes_s">
     <component cclass="male/clothing_back" name="a_longjohns"/>
     <component cclass="male/clothing_front" name="cautious_longjohns"/>
   </article>
