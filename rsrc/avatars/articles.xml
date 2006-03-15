@@ -152,14 +152,14 @@
     <component cclass="female/clothing_back" name="striped_vest"/>
   </article>
 
-  <article name="female_pancho" townId="frontier_town"
+  <article name="female_poncho" townId="frontier_town"
            slot="clothing" scrip="1500" coins="5">
-    <component cclass="female/clothing_back" name="pancho"/>
+    <component cclass="female/clothing_back" name="poncho"/>
   </article>
 
-  <article name="female_pancho_closed" townId="frontier_town"
+  <article name="female_poncho_closed" townId="frontier_town"
            slot="clothing" scrip="1500" coins="5">
-    <component cclass="female/clothing_back" name="pancho_closed"/>
+    <component cclass="female/clothing_back" name="poncho_closed"/>
   </article>
 
   <article name="female_peasant_dress" townId="frontier_town"
