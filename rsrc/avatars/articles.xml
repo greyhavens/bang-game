@@ -3,26 +3,59 @@
 
 <articles>
   <!-- male clothing -->
-  <article name="male_suit_bow" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5" starter="true">
-    <component cclass="male/clothing_back" name="suit_bow"/>
+  <article name="male_suit_cards" townId="frontier_town"
+           slot="clothing" scrip="2000" coins="6">
+    <component cclass="male/clothing_back" name="a_suit"/>
+    <component cclass="male/clothing_props" name="cards_suit"/>
   </article>
 
-  <article name="male_western_jacket" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5" colors="clothes_p,clothes_t">
-    <component cclass="male/clothing_back" name="western_jacket"/>
+  <article name="male_suit_lapels" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="male/clothing_back" name="a_suit"/>
+    <component cclass="male/clothing_front" name="lapels_suit"/>
   </article>
 
-  <article name="male_western_jacket_cigarette" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5" colors="clothes_p,clothes_t">
-    <component cclass="male/clothing_back" name="western_jacket"/>
-    <component cclass="male/clothing_props" name="cigarette_jacket"/>
+  <article name="male_duster" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="male/clothing_back" name="duster"/>
   </article>
 
-  <article name="male_western_jacket_pistol" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5" colors="clothes_p,clothes_t">
-    <component cclass="male/clothing_back" name="western_jacket"/>
-    <component cclass="male/clothing_props" name="pistol_jacket"/>
+  <article name="male_duster_rifle" townId="frontier_town"
+           slot="clothing" scrip="2200" coins="6">
+    <component cclass="male/clothing_back" name="a_duster"/>
+    <component cclass="male/clothing_props" name="rifle_duster"/>
+  </article>
+
+  <article name="male_longjohns" townId="frontier_town"
+           slot="clothing" scrip="3000" coins="10" colors="skin, clothes_p,clothes_s">
+    <component cclass="male/clothing_back" name="a_longjohns"/>
+    <component cclass="male/clothing_front" name="cautious_longjohns"/>
+  </article>
+
+  <article name="male_fringe" townId="frontier_town"
+           slot="clothing" scrip="1800" coins="5">
+    <component cclass="male/clothing_back" name="fringe"/>
+  </article>
+
+  <article name="male_fringe_shotgun" townId="frontier_town"
+           slot="clothing" scrip="2200" coins="6">
+    <component cclass="male/clothing_back" name="shotgun_fringe"/>
+  </article>
+
+  <article name="male_poncho" townId="frontier_town"
+           slot="clothing" scrip="1800" coins="6">
+    <component cclass="male/clothing_back" name="poncho"/>
+  </article>
+
+  <article name="male_poncho_plate" townId="frontier_town"
+           slot="clothing" scrip="2500" coins="6">
+    <component cclass="male/clothing_back" name="plate_poncho"/>
+    <component cclass="male/clothing_props" name="ironplate_poncho"/>
+  </article>
+
+  <article name="male_gunslinger" townId="frontier_town"
+           slot="clothing" scrip="2500" coins="6" starter="true">
+    <component cclass="male/clothing_back" name="shirt_collar"/>
   </article>
 
   <!-- male familiars -->
@@ -34,151 +67,79 @@
   </article>
 
   <article name="male_steamgoggles" townId="frontier_town"
-           slot="glasses" scrip="1500" coins="5">
+           slot="glasses" scrip="5000" coins="12">
     <component cclass="male/glasses" name="steamgoggles"/>
   </article>
 
   <!-- male hats -->
-  <article name="male_cowboy_bare" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5" colors="clothes_p">
-    <component cclass="male/hat" name="cowboy"/>
-    <component cclass="male/hat_back" name="cowboy"/>
+  <article name="male_stetson_bare" townId="frontier_town"
+           slot="hat" scrip="1300" coins="4">
+    <component cclass="male/hat" name="stetson"/>
+    <component cclass="male/hat_back" name="stetson"/>
   </article>
 
-  <article name="male_cowboy_diamond" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
-    <component cclass="male/hat" name="cowboy"/>
-    <component cclass="male/hat_back" name="cowboy"/>
-    <component cclass="male/hat_band" name="diamond_cowboy"/>
+  <article name="male_stetson_king" townId="frontier_town"
+           slot="hat" scrip="2000" coins="6">
+    <component cclass="male/hat" name="stetson"/>
+    <component cclass="male/hat_back" name="stetson"/>
+    <component cclass="male/hat_band" name="king_stetson"/>
   </article>
 
-  <article name="male_cowboy_king" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
-    <component cclass="male/hat" name="cowboy"/>
-    <component cclass="male/hat_back" name="cowboy"/>
-    <component cclass="male/hat_band" name="king_cowboy"/>
+  <article name="male_stetson_band" townId="frontier_town"
+           slot="hat" scrip="1600" coins="5"
+    <component cclass="male/hat" name="stetson"/>
+    <component cclass="male/hat_back" name="stetson"/>
+    <component cclass="male/hat_band" name="plain_stetson"/>
   </article>
 
-  <article name="male_cowboy_plain" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
-    <component cclass="male/hat" name="cowboy"/>
-    <component cclass="male/hat_back" name="cowboy"/>
-    <component cclass="male/hat_band" name="plain_cowboy"/>
-  </article>
-
-  <article name="male_cowboy_ringlets" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
-    <component cclass="male/hat" name="cowboy"/>
-    <component cclass="male/hat_back" name="cowboy"/>
-    <component cclass="male/hat_band" name="ringlets_cowboy"/>
+  <article name="male_stetson_ringlets" townId="frontier_town"
+           slot="hat" scrip="1800" coins="5" colors="clothes_s">
+    <component cclass="male/hat" name="stetson"/>
+    <component cclass="male/hat_back" name="stetson"/>
+    <component cclass="male/hat_band" name="ringlets_stetson"/>
   </article>
 
   <article name="male_widebrim_bare" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5" colors="clothes_p">
+           slot="hat" scrip="1300" coins="4">
     <component cclass="male/hat" name="widebrim"/>
   </article>
 
   <article name="male_widebrim_buckle" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
+           slot="hat" scrip="1800" coins="5" colors="clothes_t">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="buckle_widebrim"/>
   </article>
 
   <article name="male_widebrim_disks" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1800" coins="5" colors="clothes_s">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="disks_widebrim"/>
   </article>
 
   <article name="male_widebrim_ringlets" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5">
+           slot="hat" scrip="1900" coins="5">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="ringlets_widebrim"/>
   </article>
 
   <article name="male_widebrim_thick" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
+           slot="hat" scrip="1600" coins="5" colors="clothes_t">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="thick_widebrim"/>
   </article>
 
   <article name="male_widebrim_thin" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
+           slot="hat" scrip="1600" coins="5" colors="clothes_s">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="thin_widebrim"/>
   </article>
 
-  <article name="male_feather_double" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5" colors="clothes_p,clothes_s">
-    <component cclass="male/hat_back" name="feather_double"/>
-  </article>
-
-  <article name="male_feather_single" townId="frontier_town"
-           slot="hat" scrip="1500" coins="5" colors="clothes_p">
-    <component cclass="male/hat_back" name="feather_single"/>
-  </article>
 
   <!-- male jewelry -->
-  <article name="male_earring_hoop" townId="frontier_town"
-           slot="jewelry" scrip="1500" coins="5">
-    <component cclass="male/jewelry" name="earring_hoop"/>
-  </article>
+
 
   <!-- male face paint -->
-  <article name="male_makeup_bridge" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="bridge"/>
-  </article>
 
-  <article name="male_makeup_butterfly" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="butterfly"/>
-  </article>
-
-  <article name="male_makeup_crow" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="crow"/>
-  </article>
-
-  <article name="male_makeup_crywarrior" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="crywarrior"/>
-  </article>
-
-  <article name="male_makeup_dead" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="dead"/>
-  </article>
-
-  <article name="male_makeup_eyebar" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="eyebar"/>
-  </article>
-
-  <article name="male_makeup_eyebar_cheek" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="eyebar_cheek"/>
-  </article>
-
-  <article name="male_makeup_jaguar" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="jaguar"/>
-  </article>
-
-  <article name="male_makeup_peacock" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="peacock"/>
-  </article>
-
-  <article name="male_makeup_phoenix" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="phoenix"/>
-  </article>
-
-  <article name="male_makeup_rain" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="male/makeup" name="rain"/>
-  </article>
 
   <!-- female clothing -->
   <article name="female_gunslinger" townId="frontier_town"
