@@ -456,19 +456,22 @@ public class TownView extends BWindow
                 img.getHeight() - 32);
             gfx.dispose();
             
-            // get a reference to the population sign texture and update
-            Texture ptex = _ctx.getTextureCache().getTexture(path);
-            int tid = ptex.getTextureId();
+            // get a reference to the population sign texture (and keep it
+            // around, so it doesn't disappear from the cache) and update
+            if (_poptex == null) {
+                _poptex = _ctx.getTextureCache().getTexture(path);
+            }
+            int tid = _poptex.getTextureId();
             if (tid != 0) {
                 // to delete the texture, we need an OpenGL texture state
                 TextureState tstate = _ctx.getRenderer().createTextureState();
-                tstate.setTexture(ptex);
+                tstate.setTexture(_poptex);
                 tstate.deleteAll();
             }
-            ptex.setImage(TextureManager.loadImage(img, true));
-            ptex.setCorrection(Texture.CM_PERSPECTIVE);
-            ptex.setFilter(Texture.FM_LINEAR);
-            ptex.setMipmapState(Texture.MM_LINEAR_LINEAR);
+            _poptex.setImage(TextureManager.loadImage(img, true));
+            _poptex.setCorrection(Texture.CM_PERSPECTIVE);
+            _poptex.setFilter(Texture.FM_LINEAR);
+            _poptex.setMipmapState(Texture.MM_LINEAR_LINEAR);
         }
         
         protected MaterialState _hstate;
@@ -478,6 +481,7 @@ public class TownView extends BWindow
         
         protected SafeSubscriber _safesub;
         protected TownObject _townobj;
+        protected Texture _poptex;
     }
 
     protected BangContext _bctx;
