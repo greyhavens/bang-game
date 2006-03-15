@@ -42,10 +42,21 @@ h3 {
 .postdate {
   color: #760507;
   font-weight: bold;
+  text-decoration: none;
 }
 
 .posttitle {
   color: #760507;
   font-weight: bold;
   font-size: large;
+}
+
+.header {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+.sidebar {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
 }

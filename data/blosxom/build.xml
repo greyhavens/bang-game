@@ -1,9 +1,20 @@
 <!-- handles rebuilding the developer blog -->
 <project name="bang" default="blog" basedir=".">
+  <property name="base.dir" value="../.."/>
+
   <target name="blog">
-    <exec executable="../../bin/blosxom">
-      <arg line="-f=../../etc/blosxom.conf"/>
+    <exec executable="${base.dir}/bin/blosxom">
+      <arg line="-f=${base.dir}/etc/blosxom.conf"/>
       <arg line="-password=b@ngbl0sx0m"/>
     </exec>
+  </target>
+
+  <target name="clean">
+    <delete dir="${base.dir}/pages/2005"/>
+    <delete dir="${base.dir}/pages/2006"/>
+    <delete dir="${base.dir}/pages/news"/>
+    <delete>
+       <fileset dir="${base.dir}/pages" includes="index.*"/>
+    </delete>
   </target>
 </project>
