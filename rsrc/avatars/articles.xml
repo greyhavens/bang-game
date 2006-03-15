@@ -86,7 +86,7 @@
   </article>
 
   <article name="male_stetson_band" townId="frontier_town"
-           slot="hat" scrip="1600" coins="5"
+           slot="hat" scrip="1600" coins="5">
     <component cclass="male/hat" name="stetson"/>
     <component cclass="male/hat_back" name="stetson"/>
     <component cclass="male/hat_band" name="plain_stetson"/>
