@@ -182,28 +182,63 @@
 
   <!-- female clothing -->
   <article name="female_gunslinger" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5" colors="clothes_p,clothes_s">
+           slot="clothing" scrip="1500" coins="5" starter="true">
     <component cclass="female/clothing_back" name="gunslinger"/>
   </article>
 
-  <article name="female_squaw" townId="frontier_town"
-           slot="clothing" scrip="1500" coins="5" starter="true">
-    <component cclass="female/clothing_back" name="squaw"/>
+  <article name="female_striped_vest" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="female/clothing_back" name="striped_vest"/>
   </article>
 
-  <article name="female_squaw_rifle" townId="frontier_town"
+  <article name="female_pancho" townId="frontier_town"
            slot="clothing" scrip="1500" coins="5">
-    <component cclass="female/clothing_back" name="squaw"/>
-    <component cclass="female/clothing_props" name="rifle_squaw"/>
+    <component cclass="female/clothing_back" name="pancho"/>
+  </article>
+
+  <article name="female_pancho_closed" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="female/clothing_back" name="pancho_closed"/>
+  </article>
+
+  <article name="female_peasant_dress" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="female/clothing_back" name="peasant_dress"/>
+    <component cclass="female/clothing_front" name="flirt_peasant_dress"/>
+  </article>
+
+  <article name="female_peasant_dress_pistol" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="female/clothing_back" name="peasant_dress"/>
+    <component cclass="female/clothing_front" name="pistol_peasant_dress"/>
+  </article>
+
+  <article name="female_bodice" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="female/clothing_back" name="bodice"/>
+    <component cclass="female/clothing_front" name="arms_down_bodice"/>
+  </article>
+
+  <article name="female_bodice_fan" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="female/clothing_back" name="bodice"/>
+    <component cclass="female/clothing_front" name="fan_bodice"/>
+  </article>
+
+  <article name="female_frontier_dress" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="female/clothing_back" name="frontier_dress"/>
+  </article>
+
+  <article name="female_frontier_dress_book" townId="frontier_town"
+           slot="clothing" scrip="1500" coins="5">
+    <component cclass="female/clothing_back" name="frontier_dress_holding"/>
+    <component cclass="female/clothing_front" name="book_frontier_dress"/>
   </article>
 
   <!-- female familiars -->
 
   <!-- female eye glasses -->
-  <article name="female_glasses_round" townId="frontier_town"
-           slot="glasses" scrip="1500" coins="5">
-    <component cclass="female/glasses" name="round"/>
-  </article>
 
   <!-- female hats -->
   <article name="female_longbrim" townId="frontier_town"
@@ -265,15 +300,42 @@
     <component cclass="female/hat_band" name="thick_stetson"/>
   </article>
 
-  <!-- female jewelry -->
-  <article name="female_earring_hoop" townId="frontier_town"
-           slot="jewelry" scrip="1500" coins="5">
-    <component cclass="female/jewelry" name="earring_hoop"/>
+  <article name="female_stetson_dual" townId="frontier_town"
+           slot="hat" scrip="1500" coins="5">
+    <component cclass="female/hat" name="stetson"/>
+    <component cclass="female/hat_back" name="stetson"/>
+    <component cclass="female/hat_band" name="dual_stetson"/>
   </article>
 
-  <!-- female face paint -->
-  <article name="female_beautymark" townId="frontier_town"
-           slot="makeup" scrip="1500" coins="5">
-    <component cclass="female/makeup" name="beautymark"/>
+  <article name="female_bonnet" townId="frontier_town"
+           slot="hat" scrip="1500" coins="5">
+    <component cclass="female/hat" name="bonnet"/>
+    <component cclass="female/hat_back" name="bonnet"/>
   </article>
+
+  <article name="female_sombrero" townId="frontier_town"
+           slot="hat" scrip="1500" coins="5" colors="clothes_p">
+    <component cclass="female/hat" name="sombrero"/>
+    <component cclass="female/hat_back" name="sombrero"/>
+  </article>
+
+  <article name="female_sombrero_trim" townId="frontier_town"
+           slot="hat" scrip="1500" coins="5" colors="clothes_p">
+    <component cclass="female/hat" name="sombrero"/>
+    <component cclass="female/hat_back" name="sombrero"/>
+    <component cclass="female/hat_band" name="border_sombrero"/>
+  </article>
+
+  <article name="female_sombrero_thin" townId="frontier_town"
+           slot="hat" scrip="1500" coins="5" colors="clothes_p">
+    <component cclass="female/hat" name="sombrero"/>
+    <component cclass="female/hat_back" name="sombrero"/>
+    <component cclass="female/hat_band" name="border_bnad_sombrero"/>
+  </article>
+
+
+  <!-- female jewelry -->
+
+  <!-- female face paint -->
+
 </articles>
