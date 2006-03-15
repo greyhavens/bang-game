@@ -19,6 +19,7 @@ server_host = game.banghowdy.com
 #
 # Various URLs that are needed by the client
 
+doc_base_url = http://www.banghowdy.com/
 bug_submit_url = http://www.banghowdy.com/hemiptera/submit.xhtml
 new_account_url = http://www.banghowdy.com/register/register.wm?showreg=true
 server_status_url = http://www.banghowdy.com/status.html

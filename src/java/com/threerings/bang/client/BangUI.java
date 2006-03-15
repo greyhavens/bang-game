@@ -5,6 +5,12 @@ package com.threerings.bang.client;
 
 import java.awt.Font;
 import java.awt.geom.AffineTransform;
+
+import javax.swing.text.AttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.html.CSS;
+import javax.swing.text.html.StyleSheet;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,6 +58,9 @@ public class BangUI
     /** The stylesheet used to configure our interface. */
     public static BStyleSheet stylesheet;
 
+    /** The stylesheet used to render HTML in the game. */
+    public static StyleSheet css;
+
     /** Used to load sounds from the classpath. */
     public static ClipProvider clipprov = new WaveDataClipProvider();
 
@@ -77,7 +86,6 @@ public class BangUI
 
         // load up our fonts
         _fonts.put("Tombstone", loadFont(ctx, "ui/fonts/tomb.ttf"));
-        _fonts.put("Times", new Font("Serif", Font.PLAIN, 12));
 
         // we need to stretch Dom Casual out a bit
         Font dom = loadFont(ctx, "ui/fonts/domcasual.pfb");
@@ -96,7 +104,17 @@ public class BangUI
         MARQUEE_FONT = _fonts.get("Old Town").deriveFont(Font.PLAIN, 96);
         LOADING_FONT = _fonts.get("Dom Casual").deriveFont(Font.PLAIN, 24);
 
-        // create our stylesheet
+        // load up our HTML stylesheet
+        css = new BangStyleSheet();
+        try {
+            InputStream is =
+                _ctx.getResourceManager().getResource("ui/html_style.css");
+            css.loadRules(new InputStreamReader(is), null);
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Failed to load HTML style sheet.", t);
+        }
+
+        // create our BUI stylesheet
         reloadStylesheet();
 
         scripIcon = new ImageIcon(ctx.loadImage("ui/icons/scrip.png"));
@@ -227,6 +245,38 @@ public class BangUI
             font = new Font("Dialog", Font.PLAIN, 16);
         }
         return font;
+    }
+
+    /** We use this to provide custom fonts in our HTML views. */
+    protected static class BangStyleSheet extends StyleSheet
+    {
+        public Font getFont (AttributeSet attrs) {
+            // Java's style sheet parser annoyingly looks up whatever is
+            // supplied for font-family and if it doesn't map to an internal
+            // Java font; it discards it. Thanks! So we do this hackery with
+            // the font-variant which it passes through unmolested.
+            String variant = (String)
+                attrs.getAttribute(CSS.Attribute.FONT_VARIANT);
+            if (variant != null) {
+                Font base = _fonts.get(variant);
+                if (base != null) {
+                    int style = Font.PLAIN;
+                    if (StyleConstants.isBold(attrs)) {
+                        style |= Font.BOLD;
+                    }
+                    if (StyleConstants.isItalic(attrs)) {
+                        style |= Font.ITALIC;
+                    }
+                    int size = StyleConstants.getFontSize(attrs);
+                    if (StyleConstants.isSuperscript(attrs) ||
+                        StyleConstants.isSubscript(attrs)) {
+                        size -= 2;
+                    }
+                    return base.deriveFont(style, size);
+                }
+            }
+            return super.getFont(attrs);
+        }
     }
 
     protected static BasicContext _ctx;

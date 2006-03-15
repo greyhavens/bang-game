@@ -1,0 +1,29 @@
+//
+// $Id$
+//
+// A stylesheet used when rendering HTML in the client
+
+body {
+  color: #553817;
+  font-family: serif;
+}
+
+table {
+  color: #553817;
+  font-family: serif;
+}
+
+p {
+  color: #553817;
+  font-family: serif;
+}
+
+.headline { 
+  font-variant: "Old Town Wide";
+  font-size: 36;
+}
+
+.subhead { 
+  font-variant: "Dom Casual";
+  font-size: 24;
+}

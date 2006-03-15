@@ -3,6 +3,11 @@
 
 package com.threerings.bang.saloon.client;
 
+import java.io.StringReader;
+import java.net.URL;
+import java.util.logging.Level;
+import javax.swing.text.html.HTMLDocument;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
@@ -10,10 +15,19 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.text.HTMLView;
 
+import com.samskivert.util.ResultListener;
+
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.CachedDocument;
+import com.threerings.bang.util.DeploymentConfig;
 
+import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Displays the daily paper.
@@ -33,29 +47,7 @@ public class PaperView extends BContainer
         String npath = "ui/saloon/" + townId + "/nameplate.png";
         lbl.setIcon(new ImageIcon(ctx.loadImage(npath)));
 
-        BContainer cols = new BContainer(GroupLayout.makeHStretch());
-        ((GroupLayout)cols.getLayoutManager()).setGap(20);
-        String left = "I must not fear.\n" +
-            "Fear is the mind-killer.\n" +
-            "Fear is the little-death that brings total obliteration.\n" +
-            "I will face my fear.\n" +
-            "I will permit it to pass over me and through me.\n" +
-            "And when it has gone past I will turn the inner eye to see " +
-            "its path.\n" +
-            "Where the fear has gone there will be nothing.\n" +
-            "Only I will remain.";
-        cols.add(new BLabel(left, "news_column"));
-
-        String right = "Lorem ipsum dolor sit amet, consectetur adipisicing " +
-            "elit, sed do eiusmod tempor incididunt ut labore et dolore " +
-            "magna aliqua. Ut enim ad minim veniam, quis nostrud " +
-            "exercitation ullamco laboris nisi ut aliquip ex ea commodo " +
-            "consequat. Duis aute irure dolor in reprehenderit in voluptate " +
-            "velit esse cillum dolore eu fugiat nulla pariatur. Excepteur " +
-            "sint occaecat cupidatat non proident, sunt in culpa qui officia " +
-            "deserunt mollit anim id est laborum.";
-        cols.add(new BLabel(right, "news_column"));
-        add(cols);
+        add(_contents = new HTMLView());
 
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
         hlay.setGap(40);
@@ -66,27 +58,88 @@ public class PaperView extends BContainer
         _back.setEnabled(false);
         bcont.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
-        _forward.setEnabled(false);
+//         _forward.setEnabled(false);
         add(bcont, GroupLayout.FIXED);
+
+        // read in the main news page
+        refreshNews(false);
     }
 
     public void init (SaloonObject salobj)
     {
         _salobj = salobj;
-        // TODO: display the news
     }
+
+    protected void setContents (String contents)
+    {
+        HTMLDocument doc = new HTMLDocument(BangUI.css);
+        doc.setBase(DeploymentConfig.getDocBaseURL());
+        try {
+            _contents.getEditorKit().read(new StringReader(contents), doc, 0);
+            _contents.setContents(doc);
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Failed to parse HTML " +
+                    "[contents=" + contents + "].", t);
+        }
+    }
+
+    protected void refreshNews (boolean force)
+    {
+        if (_news == null) {
+            URL base = DeploymentConfig.getDocBaseURL();
+            try {
+                URL news = new URL(base, NEWS_URL);
+                _news = new CachedDocument(news, NEWS_REFRESH_INTERVAL);
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Failed to create news URL " +
+                        "[base=" + base + ", path=" + NEWS_URL + "].", e);
+                return;
+            }
+        }
+        if (!_news.refreshDocument(force, _newsup)) {
+            setContents(_news.getDocument());
+        }
+    }
+
+    protected ResultListener _newsup = new ResultListener() {
+        public void requestCompleted (Object result) {
+            updateNews((String)result);
+        }
+        public void requestFailed (Exception cause) {
+            log.log(Level.WARNING, "Failed to load the news.", cause);
+            updateNews("m.news_load_failed");
+        }
+        protected void updateNews (final String text) {
+            _ctx.getApp().postRunnable(new Runnable() {
+                public void run () {
+                    if (text.startsWith("m.")) {
+                        setContents(_ctx.xlate(SaloonCodes.SALOON_MSGS, text));
+                    } else {
+                        setContents(text);
+                    }
+                }
+            });
+        }
+    };
 
     protected ActionListener _listener = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
-//             if (event.getAction().equals("forward")) {
+            if (event.getAction().equals("forward")) {
+                refreshNews(true);
 //                 displayPage(_page+1, false);
-//             } else if (event.getAction().equals("back")) {
+            } else if (event.getAction().equals("back")) {
 //                 displayPage(_page-1, false);
-//             }
+            }
         }
     };
 
     protected BangContext _ctx;
     protected SaloonObject _salobj;
     protected BButton _forward, _back;
+    protected HTMLView _contents;
+
+    protected static CachedDocument _news;
+
+    protected static final long NEWS_REFRESH_INTERVAL = 60 * 60 * 1000L;
+    protected static final String NEWS_URL = "news_incl.html";
 }

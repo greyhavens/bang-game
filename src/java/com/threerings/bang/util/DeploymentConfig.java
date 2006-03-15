@@ -63,6 +63,14 @@ public class DeploymentConfig
     }
 
     /**
+     * Returns the URL from which HTML content is loaded.
+     */
+    public static URL getDocBaseURL ()
+    {
+        return getURL("doc_base_url");
+    }
+
+    /**
      * Returns the URL to which bug reports should be submitted.
      */
     public static URL getBugSubmitURL ()
