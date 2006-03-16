@@ -155,7 +155,7 @@
 
   <!-- tertiary clothing recolorations -->
   <class classId="7" name="clothes_t" source="#87A7FF" range="0.1, 0.6, 1">
-    <color colorId="1" name="darkBrown" offsets="0.49, 0, -0.5"/>
+    <color colorId="1" name="dkbrn" offsets="0.49, 0, -0.5"/>
     <color colorId="2" name="leather" offsets="0.44, 0.1, -0.32"/>
     <color colorId="3" name="brown" offsets="0.48, -0.05, -0.32"/>
     <color colorId="4" name="beige" offsets="0.51, -0.25, -0.18"/>

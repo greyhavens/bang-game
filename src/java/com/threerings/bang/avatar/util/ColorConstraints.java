@@ -10,6 +10,7 @@ import java.util.Iterator;
 import com.threerings.media.image.ColorPository.ClassRecord;
 import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.ColorPository;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.PlayerObject;
@@ -27,6 +28,20 @@ public class ColorConstraints
         /** Returns true if the color in question is available to the specified
          * player. */
         public boolean isAvailable (PlayerObject user);
+    }
+
+    /**
+     * Selects a random color from the records available to the supplied player
+     * in the specified class. Returns null if no colors are available to the
+     * player (which should never happen unless something is booched).
+     */
+    public static ColorRecord pickRandomColor (
+        ColorPository pository, String colorClass, PlayerObject user)
+    {
+        ArrayList<ColorRecord> records =
+            getAvailableColors(pository, colorClass, user);
+        return records.size() == 0 ? null :
+            (ColorRecord)RandomUtil.pickRandom(records);
     }
 
     /**

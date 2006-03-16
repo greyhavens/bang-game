@@ -3,6 +3,8 @@
 
 package com.threerings.bang.store.client;
 
+import java.util.ArrayList;
+
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
 
@@ -16,6 +18,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.avatar.util.ColorConstraints;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
@@ -44,15 +47,16 @@ public class GoodsIcon extends PaletteIcon
         _good = good;
 
         if (_good instanceof ArticleGood) {
-            setStyleClass("article_icon"); // adjust insets
             AvatarLogic al = _ctx.getAvatarLogic();
             String[] cclasses = al.getColorizationClasses(
                 al.getArticleCatalog().getArticle(_good.getType()));
             colorIds = new int[3];
             Colorization[] zations = new Colorization[cclasses.length];
             for (int ii = 0; ii < zations.length; ii++) {
-                ColorPository.ColorRecord crec =
-                    al.getColorPository().getRandomStartingColor(cclasses[ii]);
+                ColorPository.ColorRecord crec = 
+                    ColorConstraints.pickRandomColor(
+                        al.getColorPository(), cclasses[ii],
+                        _ctx.getUserObject());
                 if (crec == null) {
                     continue;
                 }

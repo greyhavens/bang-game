@@ -894,15 +894,6 @@ town_name_label {
 //
 // General Store styles
 
-article_icon {
-  parent: palette_icon;
-  padding: 0 0 0 0;
-}
-
-article_icon:selected {
-  parent: "palette_icon:selected";
-}
-
 goods_descrip {
   background: blank;
   font: "Helvetica" plain 15;

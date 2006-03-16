@@ -21,7 +21,6 @@ public class ArticleIcon extends ItemIcon
 {
     public ArticleIcon ()
     {
-        setStyleClass("article_icon"); // adjust insets
     }
 
     @Override // documentation inherited
