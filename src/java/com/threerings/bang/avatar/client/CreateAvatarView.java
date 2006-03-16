@@ -65,22 +65,20 @@ public class CreateAvatarView extends BDecoratedWindow
         _done.setEnabled(false);
 
         // this all goes in the inner box
-        BContainer hcont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        hcont.add(new Spacer(20, 1));
-        hcont.add(new BLabel(_msgs.get("m.persuasion"), "dialog_label"));
+        BContainer row = new BContainer(GroupLayout.makeHStretch());
+        BContainer col = GroupLayout.makeHBox(GroupLayout.LEFT);
+        col.add(new Spacer(20, 1));
+        col.add(new BLabel(_msgs.get("m.persuasion"), "dialog_label"));
         String[] gensel = new String[] {
             _msgs.get("m.male"), _msgs.get("m.female") };
-        hcont.add(_gender = new BComboBox(gensel));
+        col.add(_gender = new BComboBox(gensel));
         _gender.addListener(_sexer);
-        inner.add(hcont);
+        row.add(col);
 
-        inner.add(_look = new FirstLookView(ctx, _status));
-
-        hcont = new BContainer(GroupLayout.makeHStretch());
-        hcont.add(new BLabel(_msgs.get("m.handle"), "dialog_label"),
-                  GroupLayout.FIXED);
-        hcont.add(_handle = new BTextField(""), GroupLayout.FIXED);
-        _handle.setPreferredWidth(125);
+        col = GroupLayout.makeHBox(GroupLayout.RIGHT);
+        col.add(new BLabel(_msgs.get("m.handle"), "dialog_label"));
+        col.add(_handle = new BTextField(""));
+        _handle.setPreferredWidth(150);
         _handle.setDocument(new HandleDocument());
         _handle.addListener(new TextListener() {
             public void textChanged (TextEvent event) {
@@ -90,20 +88,11 @@ public class CreateAvatarView extends BDecoratedWindow
 
         ImageIcon dicon = new ImageIcon(ctx.loadImage("ui/icons/dice.png"));
         BButton btn;
-        hcont.add(btn = new BButton(dicon, this, "random"), GroupLayout.FIXED);
+        col.add(btn = new BButton(dicon, this, "random"), GroupLayout.FIXED);
         btn.setStyleClass("arrow_button");
-
-        hcont.add(new Spacer(33, 5), GroupLayout.FIXED);
-
-        hcont.add(_prefix = new BComboBox(), GroupLayout.FIXED);
-        _prefix.addListener(_namer);
-        _root = new BComboBox();
-        _root.addListener(_namer);
-        hcont.add(_root);
-        hcont.add(_suffix = new BComboBox(), GroupLayout.FIXED);
-        _suffix.addListener(_namer);
-
-        inner.add(hcont);
+        row.add(col);
+        inner.add(row);
+        inner.add(_look = new FirstLookView(ctx, _status));
 
         // start with a random gender which will trigger name list and avatar
         // display configuration
@@ -115,34 +104,29 @@ public class CreateAvatarView extends BDecoratedWindow
     {
         String cmd = event.getAction();
         if (cmd.equals("random")) {
-            if (RandomUtil.getInt(100) >= 50) {
-                _prefix.selectItem(RandomUtil.getInt(_prefix.getItemCount()));
-                _root.selectItem(RandomUtil.getInt(_root.getItemCount()));
-            } else {
-                _root.selectItem(RandomUtil.getInt(_root.getItemCount()));
-                _suffix.selectItem(RandomUtil.getInt(_suffix.getItemCount()));
-            }
+            pickRandomHandle();
             maybeClearStatus();
-
         } else if (cmd.equals("done")) {
             createAvatar();
         }
     }
 
-    protected void updateLists (boolean isMale)
+    protected void pickRandomHandle ()
     {
-        // configure the proper gendered lists
-        HashSet<String> names;
-        names = NameFactory.getCreator().getHandlePrefixes(isMale);
-        _prefix.setItems(names.toArray(new String[names.size()]));
-        names = NameFactory.getCreator().getHandleRoots(isMale);
-        _root.setItems(names.toArray(new String[names.size()]));
-        names = NameFactory.getCreator().getHandleSuffixes(isMale);
-        _suffix.setItems(names.toArray(new String[names.size()]));
-
-        // start with a random selection
-        _prefix.selectItem(RandomUtil.getInt(_prefix.getItemCount()));
-        _root.selectItem(RandomUtil.getInt(_root.getItemCount()));
+        boolean isMale = (_gender.getSelectedIndex() == 0);
+        HashSet<String> first, second;
+        if (RandomUtil.getInt(100) >= 50) {
+            first = NameFactory.getCreator().getHandlePrefixes(isMale);
+            second = NameFactory.getCreator().getHandleRoots(isMale);
+        } else {
+            first = NameFactory.getCreator().getHandleRoots(isMale);
+            second = NameFactory.getCreator().getHandleSuffixes(isMale);
+        }
+        String fname = (String)
+            RandomUtil.pickRandom(first.iterator(), first.size());
+        String sname = (String)
+            RandomUtil.pickRandom(second.iterator(), second.size());
+        _handle.setText(fname + " " + sname);
     }
 
     protected void handleUpdated (String text)
@@ -208,7 +192,7 @@ public class CreateAvatarView extends BDecoratedWindow
                 // if they're just starting to type from a blank slate,
                 // capitalize the first letter they type; doing it at any other
                 // time has the potential to result in unintended behavior
-                if (getLength() == 0 && Character.isLowerCase(c)) {
+                if (getLength() == 0 && ii == 0 && Character.isLowerCase(c)) {
                     buf.append(Character.toUpperCase(c));
                 } else {
                     buf.append(c);
@@ -232,30 +216,10 @@ public class CreateAvatarView extends BDecoratedWindow
         }
     };
 
-    protected ActionListener _namer = new ActionListener() {
-        public void actionPerformed (ActionEvent event) {
-            if (event.getSource() == _prefix &&
-                _prefix.getSelectedItem() != null) {
-                _suffix.selectItem(-1);
-            } else if (event.getSource() == _suffix &&
-                       _suffix.getSelectedItem() != null) {
-                _prefix.selectItem(-1);
-            }
-
-            String prefix = (String)_prefix.getSelectedItem();
-            String root = (String)_root.getSelectedItem();
-            String suffix = (String)_suffix.getSelectedItem();
-            _handle.setText((prefix == null) ?
-                            (root + " " + suffix) : (prefix + " " + root));
-            maybeClearStatus();
-        }
-    };
-
     protected ActionListener _sexer = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
-            boolean isMale = (_gender.getSelectedIndex() == 0);
-            updateLists(isMale);
-            _look.setGender(isMale);
+            _look.setGender(_gender.getSelectedIndex() == 0);
+            pickRandomHandle();
             maybeClearStatus();
         }
     };
@@ -267,7 +231,6 @@ public class CreateAvatarView extends BDecoratedWindow
 
     protected BComboBox _gender;
     protected BTextField _handle;
-    protected BComboBox _prefix, _root, _suffix;
     protected FirstLookView _look;
     protected BButton _done;
 

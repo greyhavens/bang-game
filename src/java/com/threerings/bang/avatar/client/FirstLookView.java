@@ -95,7 +95,8 @@ public class FirstLookView extends BContainer
         _defart = _defarts[isMale ? 0 : 1];
         _toggles.removeAll();
         for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
-            if (isMale || !AvatarLogic.ASPECTS[ii].maleOnly) {
+            // we don't allow first time avatars to have mustaches or beards
+            if (!AvatarLogic.ASPECTS[ii].maleOnly) {
                 new AspectToggle(AvatarLogic.ASPECTS[ii], _toggles);
             }
         }
