@@ -24,17 +24,17 @@
          renderPriority="90"/>
   <class name="male/eyebrows" colors="skin,hair" shadow="male/shadow"
          renderPriority="100"/>
-  <class name="male/nose" colors="skin" shadow="male/shadow"
-         renderPriority="110"/>
   <class name="male/eyes" colors="skin,iris_t"
-         renderPriority="120" shadow="male/shadow"/>
+         renderPriority="110" shadow="male/shadow"/>
   <class name="male/beard" colors="hair"
-         renderPriority="130"/>
+         renderPriority="120"/>
   <class name="male/mustache" colors="hair"
+         renderPriority="130"/>
+  <class name="male/nose" colors="skin" shadow="male/shadow"
          renderPriority="140"/>
   <class name="male/hair_front" colors="hair,clothes_s"
          renderPriority="150"/>
-  <class name="male/clothing_front" colors="skin,clothes_p,clothes_s,clothes_t"
+  <class name="male/clothing_middle" colors="skin,clothes_p,clothes_s,clothes_t"
          renderPriority="160"/>
   <class name="male/glasses" colors="clothes_p,clothes_s"
          renderPriority="170"/>
@@ -46,7 +46,7 @@
          renderPriority="200"/>
   <class name="male/familiar" colors="familiar_p,familiar_s,familiar_t"
          renderPriority="210"/>
-  <class name="male/clothing_props" colors="skin,clothes_p,clothes_s,clothes_t"
+  <class name="male/clothing_front" colors="skin,clothes_p,clothes_s,clothes_t"
          renderPriority="220"/>
 
   <!-- female component classes -->
@@ -68,13 +68,13 @@
          renderPriority="80" shadow="female/shadow"/>
   <class name="female/eyebrows" colors="skin,hair" shadow="female/shadow"
          renderPriority="90"/>
-  <class name="female/nose" colors="skin" shadow="female/shadow"
-         renderPriority="100"/>
   <class name="female/eyes" colors="skin,iris_t"
-         renderPriority="110" shadow="female/shadow"/>
+         renderPriority="100" shadow="female/shadow"/>
+  <class name="female/nose" colors="skin" shadow="female/shadow"
+         renderPriority="110"/>
   <class name="female/hair_front" colors="hair,clothes_s"
          renderPriority="120"/>
-  <class name="female/clothing_front"
+  <class name="female/clothing_middle"
          colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="130"/>
   <class name="female/glasses" colors="clothes_p,clothes_s"
          renderPriority="140"/>
@@ -86,6 +86,6 @@
          renderPriority="170"/>
   <class name="female/familiar" colors="familiar_p,familiar_s,familiar_t"
          renderPriority="180"/>
-  <class name="female/clothing_props"
+  <class name="female/clothing_front"
          colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="190"/>
 </classes>
