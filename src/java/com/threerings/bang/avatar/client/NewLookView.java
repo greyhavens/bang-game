@@ -30,6 +30,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
+import com.threerings.media.image.Colorization;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
 
@@ -101,16 +102,14 @@ public class NewLookView extends BContainer
         // create our color selectors
         add(_collabel = new BLabel("", "colorsel_label"),
             new Rectangle(487, 510, 145, 35));
-        ActionListener al = new ActionListener() {
-            public void actionPerformed (ActionEvent event) {
-                updateAvatar();
-            }
-        };
 
         ColorSelector s, h, e;
-        _colsels.put("head", s = new ColorSelector(_ctx, AvatarLogic.SKIN, al));
-        _colsels.put("hair", h = new ColorSelector(_ctx, AvatarLogic.HAIR, al));
-        _colsels.put("eyes", e = new ColorSelector(_ctx, AvatarLogic.EYES, al));
+        _colsels.put("head", s = new ColorSelector(_ctx, AvatarLogic.SKIN,
+                                                   _handlers.get("head")));
+        _colsels.put("hair", h = new ColorSelector(_ctx, AvatarLogic.HAIR,
+                                                   _handlers.get("hair")));
+        _colsels.put("eyes", e = new ColorSelector(_ctx, AvatarLogic.EYES,
+                                                   _handlers.get("eyes")));
 // TODO: give women a colorization for lips?
 //         _colsels.put("mouth", new ColorSelector(_ctx, AvatarLogic.MAKEUP));
 
@@ -134,7 +133,8 @@ public class NewLookView extends BContainer
         final BImage tabbg = _ctx.loadImage("ui/barber/side_new_look.png");
         final BImage malebg = isMale ?
             _ctx.loadImage("ui/barber/side_new_look_male.png") : null;
-        add(new HackyTabs(ctx, true, "ui/barber/tab_", tarray, 54, 30) {
+        HackyTabs htabs = new HackyTabs(
+            ctx, true, "ui/barber/tab_", tarray, 54, 30) {
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
                 tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42,
@@ -148,7 +148,9 @@ public class NewLookView extends BContainer
             protected void tabSelected (int index) {
                 _handlers.get(AvatarLogic.ASPECTS[index].name).selected();
             }
-        }, new Rectangle(10, 35, 140, 470));
+        };
+        htabs.setDefaultTab(1); // default to hair which is more interesting
+        add(htabs, new Rectangle(10, 35, 140, 470));
     }
 
     /**
@@ -298,35 +300,55 @@ public class NewLookView extends BContainer
 
         public CharacterComponent[] components;
 
-        public ChoiceIcon (AspectCatalog.Aspect aspect)
-        {
+        public ChoiceIcon (String prefix, AspectCatalog.Aspect aspect) {
             this.aspect = aspect;
-            setText(aspect == null ? "none" : aspect.name);
+            _prefix = prefix;
         }
+
+        public void updateIcon (BangContext ctx, ColorSelector colsel) {
+            if (aspect == null) {
+                return;
+            }
+            BImage image;
+            if (colsel == null) {
+                image = ctx.loadImage(getIconPath());
+            } else {
+                image = ctx.getImageCache().createColorizedBImage(
+                    getIconPath(), new Colorization[] {
+                        colsel.getSelectedColorization() }, true);
+            }
+            setIcon(new ImageIcon(image));
+        }
+
+        protected String getIconPath () {
+            return "aspects/" + _prefix + "/" + aspect.name + ".png";
+        }
+
+        protected String _prefix;
     }
 
     protected class AspectHandler
-        implements IconPalette.Inspector
+        implements IconPalette.Inspector, ActionListener
     {
         public AspectHandler (AvatarLogic.Aspect aspect)
         {
             _aspect = aspect;
 
+            String prefix = _gender + _aspect.name;
             ComponentRepository crepo =
                 _ctx.getCharacterManager().getComponentRepository();
             Collection<AspectCatalog.Aspect> aspects =
-                _ctx.getAvatarLogic().getAspectCatalog().getAspects(
-                    _gender + _aspect.name);
+                _ctx.getAvatarLogic().getAspectCatalog().getAspects(prefix);
 
             // default to the NONE if we have one, then later override it if we
             // see that their current look contains one of our components
             if (aspect.optional) {
-                _icons.add(_choice = new ChoiceIcon(null));
+                _icons.add(_choice = new ChoiceIcon(prefix, null));
             }
 
             Look look = _ctx.getUserObject().getLook();
             for (AspectCatalog.Aspect entry : aspects) {
-                ChoiceIcon choice = new ChoiceIcon(entry);
+                ChoiceIcon choice = new ChoiceIcon(prefix, entry);
                 choice.components =
                     new CharacterComponent[aspect.classes.length];
                 for (int ii = 0; ii < aspect.classes.length; ii++) {
@@ -380,7 +402,7 @@ public class NewLookView extends BContainer
             }
             _choice.setSelected(true);
             setActiveColor(_colsels.get(_aspect.name));
-            updateAvatar();
+            actionPerformed(null);
         }
 
         // documentation inherited from interface IconPalette.Inspector
@@ -401,6 +423,16 @@ public class NewLookView extends BContainer
                     }
                 });
             }
+        }
+
+        // documentation inherited from interface ActionListener
+        public void actionPerformed (ActionEvent event)
+        {
+            ColorSelector colsel = _colsels.get(_aspect.name);
+            for (ChoiceIcon icon : _icons) {
+                icon.updateIcon(_ctx, colsel);
+            }
+            updateAvatar();
         }
 
         protected AvatarLogic.Aspect _aspect;

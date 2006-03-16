@@ -123,6 +123,18 @@ public class ImageCache
     }
 
     /**
+     * Colorizes the image with supplied path (which must be an 8-bit
+     * colormapped image), then converts the colorized image into a form that
+     * JME can display.
+     */
+    public BImage createColorizedBImage (
+        String path, Colorization[] zations, boolean flip)
+    {
+        return new BImage(
+            ImageUtil.recolorImage(getBufferedImage(path), zations), flip);
+    }
+
+    /**
      * Colorizes the supplied buffered image (which must be an 8-bit
      * colormapped image), then converts the colorized image into a form that
      * JME can display.

@@ -10,7 +10,6 @@ import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.media.image.ColorPository;
 import com.threerings.media.image.Colorization;
-import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
@@ -46,6 +45,7 @@ public class GoodsIcon extends PaletteIcon
     {
         _good = good;
 
+        BImage image;
         if (_good instanceof ArticleGood) {
             AvatarLogic al = _ctx.getAvatarLogic();
             String[] cclasses = al.getColorizationClasses(
@@ -64,15 +64,13 @@ public class GoodsIcon extends PaletteIcon
                 colorIds[cidx] = crec.colorId;
                 zations[ii] = crec.getColorization();
             }
-            BImage image = new BImage(
-                ImageUtil.recolorImage(
-                    _ctx.getImageCache().getBufferedImage(good.getIconPath()),
-                    zations));
-            setIcon(new ImageIcon(image));
+            image = _ctx.getImageCache().createColorizedBImage(
+                good.getIconPath(), zations, true);
         } else {
-            setIcon(new ImageIcon(_ctx.loadImage(good.getIconPath())));
+            image = _ctx.loadImage(good.getIconPath());
         }
 
+        setIcon(new ImageIcon(image));
         setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
     }
 

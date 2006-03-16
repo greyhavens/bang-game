@@ -35,6 +35,14 @@ public class HackyTabs extends BComponent
         }
     }
 
+    /**
+     * Changes the default tab from zero to the specified index.
+     */
+    public void setDefaultTab (int index)
+    {
+        _deftab = index;
+    }
+
     public void selectTab (int index)
     {
         if (_selidx != index) {
@@ -51,17 +59,10 @@ public class HackyTabs extends BComponent
     {
         super.wasAdded();
 
-        // start with the zeroth tab selected
-        selectTab(0);
-    }
-
-    @Override // documentation inherited
-    protected void wasRemoved ()
-    {
-        super.wasRemoved();
-
-        // clear this so that we properly reselect tab zero if we're readded
-        _selidx = -1;
+        // select the default tab if one is not alrady selected
+        if (_selidx == -1) {
+            selectTab(_deftab);
+        }
     }
 
     @Override // documentation inherited
@@ -93,5 +94,5 @@ public class HackyTabs extends BComponent
     protected boolean _vertical;
     protected int _tsize, _tborder;
     protected BImage[] _tabs;
-    protected int _selidx = -1;
+    protected int _deftab, _selidx = -1;
 }
