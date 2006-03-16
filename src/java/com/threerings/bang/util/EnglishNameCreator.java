@@ -15,7 +15,7 @@ public class EnglishNameCreator extends NameCreator
     @Override // documentation inherited
     public HashSet<String> getHandlePrefixes (boolean isMale)
     {
-        return isMale ? MALE_PREFIX_TABLE : FEMALE_PREFIX_TABLE;
+        return isMale ? MALE_PREF_TABLE : FEMALE_PREF_TABLE;
     }
 
     @Override // documentation inherited
@@ -27,16 +27,16 @@ public class EnglishNameCreator extends NameCreator
     @Override // documentation inherited
     public HashSet<String> getHandleSuffixes (boolean isMale)
     {
-        return isMale ? MALE_SUFFIX_TABLE : FEMALE_SUFFIX_TABLE;
+        return isMale ? MALE_SUFF_TABLE : FEMALE_SUFF_TABLE;
     }
 
-    protected static HashSet<String> MALE_PREFIX_TABLE;
-    protected static HashSet<String> MALE_ROOT_TABLE;
-    protected static HashSet<String> MALE_SUFFIX_TABLE;
+    protected static HashSet<String> MALE_PREF_TABLE = new HashSet<String>();
+    protected static HashSet<String> MALE_ROOT_TABLE = new HashSet<String>();
+    protected static HashSet<String> MALE_SUFF_TABLE = new HashSet<String>();
 
-    protected static HashSet<String> FEMALE_PREFIX_TABLE;
-    protected static HashSet<String> FEMALE_ROOT_TABLE;
-    protected static HashSet<String> FEMALE_SUFFIX_TABLE;
+    protected static HashSet<String> FEMALE_PREF_TABLE = new HashSet<String>();
+    protected static HashSet<String> FEMALE_ROOT_TABLE = new HashSet<String>();
+    protected static HashSet<String> FEMALE_SUFF_TABLE = new HashSet<String>();
 
     protected static final String[] SHARED_PREFIXES = {
         "Anasazi",
@@ -86,6 +86,8 @@ public class EnglishNameCreator extends NameCreator
     };
 
     protected static final String[] SHARED_ROOTS = {
+        "Charlie",
+        "Charley",
     };
 
     protected static final String[] MALE_ROOTS = {
@@ -99,7 +101,6 @@ public class EnglishNameCreator extends NameCreator
         "Bubba",
         "Casey",
         "Chance",
-        "Charlie",
         "Deuce",
         "Doyle",
         "George",
@@ -135,7 +136,6 @@ public class EnglishNameCreator extends NameCreator
         "Belle",
         "Bonnie",
         "Cathay",
-        "Charley",
         "Dale",
         "Dixie",
         "Edith",
@@ -221,19 +221,18 @@ public class EnglishNameCreator extends NameCreator
     };
 
     static {
-        MALE_PREFIX_TABLE = new HashSet<String>();
-        CollectionUtil.addAll(MALE_PREFIX_TABLE, SHARED_PREFIXES);
-        CollectionUtil.addAll(MALE_PREFIX_TABLE, MALE_PREFIXES);
+        CollectionUtil.addAll(MALE_PREF_TABLE, SHARED_PREFIXES);
+        CollectionUtil.addAll(MALE_PREF_TABLE, MALE_PREFIXES);
         CollectionUtil.addAll(MALE_ROOT_TABLE, SHARED_ROOTS);
         CollectionUtil.addAll(MALE_ROOT_TABLE, MALE_ROOTS);
-        CollectionUtil.addAll(MALE_SUFFIX_TABLE, SHARED_SUFFIXES);
-        CollectionUtil.addAll(MALE_SUFFIX_TABLE, MALE_SUFFIXES);
+        CollectionUtil.addAll(MALE_SUFF_TABLE, SHARED_SUFFIXES);
+        CollectionUtil.addAll(MALE_SUFF_TABLE, MALE_SUFFIXES);
 
-        CollectionUtil.addAll(FEMALE_PREFIX_TABLE, SHARED_PREFIXES);
-        CollectionUtil.addAll(FEMALE_PREFIX_TABLE, FEMALE_PREFIXES);
+        CollectionUtil.addAll(FEMALE_PREF_TABLE, SHARED_PREFIXES);
+        CollectionUtil.addAll(FEMALE_PREF_TABLE, FEMALE_PREFIXES);
         CollectionUtil.addAll(FEMALE_ROOT_TABLE, SHARED_ROOTS);
         CollectionUtil.addAll(FEMALE_ROOT_TABLE, FEMALE_ROOTS);
-        CollectionUtil.addAll(FEMALE_SUFFIX_TABLE, SHARED_SUFFIXES);
-        CollectionUtil.addAll(FEMALE_SUFFIX_TABLE, FEMALE_SUFFIXES);
+        CollectionUtil.addAll(FEMALE_SUFF_TABLE, SHARED_SUFFIXES);
+        CollectionUtil.addAll(FEMALE_SUFF_TABLE, FEMALE_SUFFIXES);
     }
 }
