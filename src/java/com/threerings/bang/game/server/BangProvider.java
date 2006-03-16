@@ -4,6 +4,8 @@
 package com.threerings.bang.game.server;
 
 import com.threerings.bang.game.client.BangService;
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -15,6 +17,12 @@ import com.threerings.presents.server.InvocationProvider;
  */
 public interface BangProvider extends InvocationProvider
 {
+    /**
+     * Handles a {@link BangService#getBoard} request.
+     */
+    public void getBoard (ClientObject caller, BangService.BoardListener arg1)
+        throws InvocationException;
+
     /**
      * Handles a {@link BangService#order} request.
      */

@@ -51,6 +51,7 @@ import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
 
 import com.threerings.bang.game.data.Award;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
@@ -81,6 +82,26 @@ import static com.threerings.bang.Log.log;
 public class BangManager extends GameManager
     implements GameCodes, BangProvider
 {
+    // documentation inherited from interface BangProvider
+    public void getBoard (
+        ClientObject caller, BangService.BoardListener listener)
+        throws InvocationException
+    {
+        PlayerObject user = (PlayerObject)caller;
+        if (!_bangobj.occupants.contains(user.getOid())) {
+            log.warning("Rejecting request for board by non-occupant [who=" +
+                user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+            
+        } else if (_bangobj.board == null) {
+            log.warning("Rejecting request for non-existent board [who=" +
+                user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        BoardRecord brec = _boards[_bangobj.roundId];
+        listener.requestProcessed(brec.getBoard(), brec.getPieces());
+    }
+    
     // documentation inherited from interface BangProvider
     public void selectStarters (
         ClientObject caller, int bigShotId, int[] cardIds)
@@ -519,8 +540,9 @@ public class BangManager extends GameManager
         _purchases.clear();
 
         // set up the board and pieces so it's visible while purchasing
+        _bangobj.board = (BangBoard)brec.getBoard().clone();
         _bangobj.setBoardName(brec.name);
-        _bangobj.setBoard(brec.getBoard());
+        _bangobj.setBoardHash(brec.dataHash);
 
         // clone the pieces we get from the board record as we may modify them
         // during the course of the game
@@ -570,16 +592,18 @@ public class BangManager extends GameManager
         _scenario.filterMarkers(_bangobj, _starts, pieces);
 
         // remove any remaining marker pieces and assign piece ids
+        _bangobj.maxPieceId = 0;
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (p instanceof Marker) {
                 iter.remove();
+                continue;
             }
             p.assignPieceId(_bangobj);
         }
-
+        
         // configure the game object and board with the pieces
-        _bangobj.setPieces(new PieceDSet(pieces.iterator()));
+        _bangobj.pieces = new PieceDSet(pieces.iterator());
         _bangobj.board.shadowPieces(pieces.iterator());
 
         // clear out the selected big shots array

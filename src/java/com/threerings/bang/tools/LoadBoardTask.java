@@ -80,6 +80,7 @@ public class LoadBoardTask extends Task
         try {
             BoardRecord brec = new BoardRecord();
             brec.load(source);
+            brec.dataHash = brec.getDataHash();
             _brepo.storeBoard(brec);
 
         } catch (Exception e) {

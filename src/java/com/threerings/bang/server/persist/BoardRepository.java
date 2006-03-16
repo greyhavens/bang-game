@@ -47,6 +47,20 @@ public class BoardRepository extends JORARepository
         throws PersistenceException
     {
         super(conprov, BOARD_DB_IDENT);
+        
+        // TEMP: add the DATA_HASH column to the table
+        execute(new Operation() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                if (!JDBCUtil.tableContainsColumn(conn, "BOARDS",
+                    "DATA_HASH")) {
+                    JDBCUtil.addColumn(conn, "BOARDS", "DATA_HASH",
+                        "BLOB NOT NULL", "DATA");
+                }
+                return null;
+            }
+        });
     }
 
     /**
@@ -86,7 +100,7 @@ public class BoardRepository extends JORARepository
     }
 
     /**
-     * Loads the board data for the given board.
+     * Loads the board data and data hash for the given board.
      */
     public void loadBoardData (final BoardRecord brec)
         throws PersistenceException
@@ -96,12 +110,13 @@ public class BoardRepository extends JORARepository
                 throws SQLException, PersistenceException
             {
                 PreparedStatement stmt = conn.prepareStatement(
-                    "select DATA from BOARDS where BOARD_ID = ?");
+                    "select DATA, DATA_HASH from BOARDS where BOARD_ID = ?");
                 try {
                     stmt.setInt(1, brec.boardId);
                     ResultSet rs = stmt.executeQuery();
                     if (rs.next()) {
                         brec.data = (byte[])rs.getObject(1);
+                        brec.dataHash = (byte[])rs.getObject(2);
                         
                     } else {
                         log.warning("Couldn't find board data! [brec=" + brec +

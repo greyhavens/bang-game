@@ -81,7 +81,7 @@ public class BoardManager
             String scenario = scenarios[ii];
             BoardList[] candvec = _byscenario.get(scenario);
             BoardList candidates =
-                (candvec == null) ? null : candvec[players-1];
+                (candvec == null) ? null : candvec[players-2];
             if (candidates == null) {
                 log.warning("Aiya! Missing boards [players=" + players +
                             ", scenario=" + scenario + "].");
@@ -107,7 +107,7 @@ public class BoardManager
      */
     public BoardRecord getBoard (int pcount, String name)
     {
-        return _byname[pcount-1].get(name);
+        return _byname[pcount-2].get(name);
     }
 
     /**

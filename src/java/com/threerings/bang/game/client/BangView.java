@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client;
 
+import java.util.ArrayList;
+
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 
@@ -18,8 +20,14 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.BoardData;
+import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.piece.Marker;
+import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
 
@@ -71,7 +79,7 @@ public class BangView extends BWindow
     {
         // if we're not added to the UI hierarchy yet, we need to hold off a
         // moment
-        if (!isAdded()) {
+        if (!isAdded() || _preparing) {
             _pendingPhase = phase;
             return;
         }
@@ -84,17 +92,9 @@ public class BangView extends BWindow
         // we call this at the beginning of each phase because the scenario
         // might decide to skip the selection or buying phase, so we need to
         // prepare prior to starting whichever phase is first
-        if (!_prepared) {
-            // tell the board view to start the game so that we can see the
-            // board while we're buying pieces
-            view.prepareForRound(_bangobj, config, pidx);
-
-            // let the camera handler know that we're getting ready to start
-            GameInputHandler gih = (GameInputHandler)_ctx.getInputHandler();
-            gih.prepareForRound(this, _bangobj, pidx);
-
-            // note that we've prepared
-            _prepared = true;
+        if (!_prepared && !prepareForRound(config, pidx)) {
+            _pendingPhase = phase;
+            return; // will be called again when preparation is finished
         }
 
         switch (phase) {
@@ -258,6 +258,74 @@ public class BangView extends BWindow
         }
     }
 
+    /**
+     * Prepares for the coming round.
+     *
+     * @return true if prepared, false if waiting to receive board from server
+     */
+    protected boolean prepareForRound (final BangConfig config, final int pidx)
+    {
+        // if the board is cached, we can continue immediately; otherwise, we
+        // must request the board from the server
+        BoardData board = _ctx.getBoardCache().loadBoard(_bangobj.boardName,
+            _bangobj.players.length, _bangobj.boardHash);
+        if (board != null) {
+            continuePreparingForRound(config, pidx, board.getBoard(),
+                board.getPieces());
+            return true;
+        }
+        _preparing = true;
+        _bangobj.service.getBoard(
+            _ctx.getClient(), new BangService.BoardListener() {
+            public void requestProcessed (BangBoard board, Piece[] pieces) {
+                // save the board for future use and continue
+                _ctx.getBoardCache().saveBoard(_bangobj.boardName,
+                    _bangobj.players.length, _bangobj.boardHash,
+                    board, pieces);
+                continuePreparingForRound(config, pidx, board, pieces);
+                _preparing = false;
+                setPhase(_pendingPhase);
+            }
+            public void requestFailed (String cause) {
+                _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS,
+                    cause);
+            }
+        });
+        return false;
+    }
+    
+    /**
+     * Continues preparing for the round once we've acquired the board data.
+     */
+    protected void continuePreparingForRound (
+        BangConfig config, int pidx, BangBoard board, Piece[] pieces)
+    {
+        _bangobj.board = (BangBoard)board.clone();
+        ArrayList<Piece> plist = new ArrayList<Piece>();
+        _bangobj.maxPieceId = 0;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii] instanceof Marker) {
+                continue;
+            }
+            Piece p = (Piece)pieces[ii].clone();
+            p.assignPieceId(_bangobj);
+            plist.add(p);
+        }
+        _bangobj.pieces = new PieceDSet(plist.iterator());
+        _bangobj.board.shadowPieces(plist.iterator());
+        
+        // tell the board view to start the game so that we can see the
+        // board while we're buying pieces
+        view.prepareForRound(_bangobj, config, pidx);
+
+        // let the camera handler know that we're getting ready to start
+        GameInputHandler gih = (GameInputHandler)_ctx.getInputHandler();
+        gih.prepareForRound(this, _bangobj, pidx);
+
+        // note that we've prepared
+        _prepared = true;
+    }
+    
     protected void showUnitStatus ()
     {
         if (ustatus == null) {
@@ -347,8 +415,9 @@ public class BangView extends BWindow
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;
 
-    /** Keeps track of whether we've prepared for the current round. */
-    protected boolean _prepared;
+    /** Keeps track of whether we've prepared or are preparing for the current
+     * round. */
+    protected boolean _prepared, _preparing;
 
     /** If we were requested to start a particular phase before we were added
      * to the interface hierarchy, that will be noted here. */

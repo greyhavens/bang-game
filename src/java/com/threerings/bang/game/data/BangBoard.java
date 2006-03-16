@@ -36,6 +36,7 @@ import static com.threerings.bang.Log.log;
  * Describes the terrain of the game board.
  */
 public class BangBoard extends SimpleStreamableObject
+    implements AStarPathUtil.TraversalPred, Cloneable
 {
     /** The basic traversal cost. */
     public static final int BASE_TRAVERSAL = 10;
@@ -66,9 +67,9 @@ public class BangBoard extends SimpleStreamableObject
     {
         _width = width;
         _height = height;
-
         _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
         _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
+        
         _heightfield = new byte[_hfwidth * _hfheight];
         _terrain = new byte[_hfwidth * _hfheight];
         _shadows = new byte[_hfwidth * _hfheight];
@@ -91,15 +92,7 @@ public class BangBoard extends SimpleStreamableObject
 
         _windSpeed = 20f;
 
-        _pterrain = new byte[width*height];
-        _btstate = new byte[width*height];
-        _estate = new byte[width*height];
-        _tstate = new byte[width*height];
-        _pgrid = new byte[width*height];
-
-        _playarea = new Rectangle(BORDER_SIZE, BORDER_SIZE,
-                                  _width - 2*BORDER_SIZE,
-                                  _height - 2*BORDER_SIZE);
+        initTransientFields();
     }
 
     /** A default constructor for unserialization. */
@@ -107,6 +100,19 @@ public class BangBoard extends SimpleStreamableObject
     {
     }
 
+    @Override // documentation inherited
+    public Object clone ()
+    {
+        try {
+            BangBoard board = (BangBoard)super.clone();
+            board.initTransientFields();
+            return board;
+            
+        } catch (CloneNotSupportedException e) {
+            return null; // should never happen
+        }
+    }
+    
     /** Returns the width of the board in tiles. */
     public int getWidth ()
     {
@@ -425,7 +431,7 @@ public class BangBoard extends SimpleStreamableObject
 //                  piece.x + "/" + piece.y +
 //                  " maxdist:" + piece.getMoveDistance() + ".");
         return AStarPathUtil.getPath(
-            _tpred, piece.getStepper(), piece, piece.getMoveDistance(),
+            this, piece.getStepper(), piece, piece.getMoveDistance(),
             ox, oy, piece.x, piece.y, true);
     }
 
@@ -757,6 +763,11 @@ public class BangBoard extends SimpleStreamableObject
         return (btstate == O_FLAT) || (rough && btstate == O_ROUGH);
     }
 
+    // documentation inherited from interface AStarPathUtil.TraversalPred
+    public boolean canTraverse (Object traverser, int x, int y) {
+        return canOccupy((Piece)traverser, x, y);
+    }
+    
     /**
      * Returns true if the specified piece can occupy the specified
      * coordinate.
@@ -905,23 +916,7 @@ public class BangBoard extends SimpleStreamableObject
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-
-        _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
-        _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
-
-        int size = _width*_height;
-        _pterrain = new byte[size];
-        _btstate = new byte[size];
-        _estate = new byte[size];
-        _tstate = new byte[size];
-        _pgrid = new byte[size];
-
-        _playarea = new Rectangle(BORDER_SIZE, BORDER_SIZE,
-                                  _width - 2*BORDER_SIZE,
-                                  _height - 2*BORDER_SIZE);
-
-        updateMinEdgeHeight();
-        updatePredominantTerrain();
+        initTransientFields();
     }
 
     /**
@@ -953,6 +948,29 @@ public class BangBoard extends SimpleStreamableObject
         return Terrain.fromCode(_pterrain[y*_width + x]);
     }
 
+    /** 
+     * Initializes the transient fields to their default states.
+     */
+    protected void initTransientFields ()
+    {
+        _hfwidth = _width * HEIGHTFIELD_SUBDIVISIONS + 1;
+        _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
+        
+        int size = _width*_height;
+        _pterrain = new byte[size];
+        _btstate = new byte[size];
+        _estate = new byte[size];
+        _tstate = new byte[size];
+        _pgrid = new byte[size];
+
+        _playarea = new Rectangle(BORDER_SIZE, BORDER_SIZE,
+                                  _width - 2*BORDER_SIZE,
+                                  _height - 2*BORDER_SIZE);
+
+        updateMinEdgeHeight();
+        updatePredominantTerrain();
+    }
+    
     /**
      * Finds and returns the predominant terrain code under the specified tile.
      */
@@ -1041,14 +1059,6 @@ public class BangBoard extends SimpleStreamableObject
             considerFiring(attacks, xx, yy-1, premain, true);
         }
     }
-
-    /** Used when path finding. */
-    protected transient AStarPathUtil.TraversalPred _tpred =
-        new AStarPathUtil.TraversalPred() {
-        public boolean canTraverse (Object traverser, int x, int y) {
-            return canOccupy((Piece)traverser, x, y);
-        }
-    };
 
     /** The width and height of our board. */
     protected int _width, _height;

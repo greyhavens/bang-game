@@ -404,7 +404,7 @@ public class EditorController extends GameController
         try {
             BoardRecord brec = new BoardRecord();
             brec.load(board);
-            _bangobj.setBoard(brec.getBoard());
+            _bangobj.board = brec.getBoard();
             Piece[] pieces = brec.getPieces();
             // reassign piece ids
             for (int ii = 0; ii < pieces.length; ii++) {
@@ -468,7 +468,7 @@ public class EditorController extends GameController
             !StringUtil.isBlank(EditorApp.appArgs[0])) {
             loadBoard(new File(EditorApp.appArgs[0]), false);
         } else {
-            _bangobj.setBoard(new BangBoard(32, 32));
+            _bangobj.board = new BangBoard(32, 32);
             _bangobj.board.fillTerrain(Terrain.DIRT);
             _bangobj.setPieces(new PieceDSet());
         }

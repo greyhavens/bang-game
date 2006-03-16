@@ -98,8 +98,8 @@ public class BangObject extends GameObject
     /** The field name of the <code>boardName</code> field. */
     public static final String BOARD_NAME = "boardName";
 
-    /** The field name of the <code>board</code> field. */
-    public static final String BOARD = "board";
+    /** The field name of the <code>boardHash</code> field. */
+    public static final String BOARD_HASH = "boardHash";
 
     /** The field name of the <code>startPositions</code> field. */
     public static final String START_POSITIONS = "startPositions";
@@ -147,6 +147,9 @@ public class BangObject extends GameObject
     /** A {@link #state} constant indicating the post-round phase. */
     public static final int POST_ROUND = 6;
 
+    /** Contains the representation of the game board. */
+    public transient BangBoard board;
+    
     /** Contains statistics on the game, updated every time any change is
      * made to pertinent game state. */
     public transient GameData gdata = new GameData();
@@ -175,9 +178,10 @@ public class BangObject extends GameObject
     /** The name of the current board. */
     public String boardName;
 
-    /** Contains the representation of the game board. */
-    public BangBoard board;
-
+    /** The MD5 hash of the game board, to be compared against any cached
+     * version of the board stored on the client. */
+    public byte[] boardHash;
+    
     /** The starting positions for each player. */
     public StreamablePoint[] startPositions;
     
@@ -591,19 +595,36 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Requests that the <code>board</code> field be set to the
+     * Requests that the <code>boardHash</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setBoard (BangBoard value)
+    public void setBoardHash (byte[] value)
     {
-        BangBoard ovalue = this.board;
+        byte[] ovalue = this.boardHash;
         requestAttributeChange(
-            BOARD, value, ovalue);
-        this.board = value;
+            BOARD_HASH, value, ovalue);
+        this.boardHash = (value == null) ? null : (byte[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>boardHash</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setBoardHashAt (byte value, int index)
+    {
+        byte ovalue = this.boardHash[index];
+        requestElementUpdate(
+            BOARD_HASH, index, new Byte(value), new Byte(ovalue));
+        this.boardHash[index] = value;
     }
 
     /**

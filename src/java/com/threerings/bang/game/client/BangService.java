@@ -6,11 +6,28 @@ package com.threerings.bang.game.client;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.piece.Piece;
+
 /**
  * Defines the requests that the client can make to the server.
  */
 public interface BangService extends InvocationService
 {
+    /** Used to respond to a {@link #getBoard} request. */
+    public interface BoardListener extends InvocationListener
+    {
+        /**
+         * A response to a {@link #getBoard} request.
+         */
+        public void requestProcessed (BangBoard board, Piece[] pieces);
+    }
+    
+    /**
+     * Requests a copy of the board data.
+     */
+    public void getBoard (Client client, BoardListener listener);
+    
     /**
      * Used to select a player's big shot and starting hand in the
      * pre-game phase.

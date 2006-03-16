@@ -32,6 +32,9 @@ CREATE TABLE BOARDS
     /** A serialized representation of the board data. */
     DATA BLOB NOT NULL,
 
+    /** The MD5 hash of the board data. */
+    DATA_HASH BLOB NOT NULL,
+    
     /** Defines our table keys. */
     PRIMARY KEY (BOARD_ID), UNIQUE(NAME,PLAYERS), KEY(CREATOR)
 );

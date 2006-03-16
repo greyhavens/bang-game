@@ -51,6 +51,7 @@ import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.client.util.BoardCache;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangBootstrapData;
@@ -222,7 +223,7 @@ public class BangClient extends BasicClient
         };
         _ctx.getInterface().attachChild(fade);
     }
-
+    
     /**
      * Returns a reference to the context in effect for this client. This
      * reference is valid for the lifetime of the application.
@@ -503,6 +504,7 @@ public class BangClient extends BasicClient
 
         // create our custom directors
         _chatdir = new BangChatDirector(_ctx);
+        _bcache = new BoardCache();
         
         // warm up the particle factory
         ParticleFactory.warmup(_ctx);
@@ -587,6 +589,10 @@ public class BangClient extends BasicClient
             return _mutedir;
         }
         
+        public BoardCache getBoardCache () {
+            return _bcache;
+        }
+        
         public void setPlaceView (PlaceView view) {
             // clear any lingering popups
             clearPopups(false);
@@ -638,6 +644,7 @@ public class BangClient extends BasicClient
     protected Config _config = new Config("bang");
 
     protected BangChatDirector _chatdir;
+    protected BoardCache _bcache;
     protected MuteDirector _mutedir;
     protected PlayerService _psvc;
 

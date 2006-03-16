@@ -380,7 +380,7 @@ public class EditorBoardView extends BoardView
      */
     public void createNewBoard (int width, int height)
     {
-        _bangobj.setBoard(new BangBoard(width, height));
+        _bangobj.board = new BangBoard(width, height);
         _bangobj.board.fillTerrain(Terrain.DIRT);
         _bangobj.setPieces(new PieceDSet());
         refreshBoard();
@@ -424,7 +424,7 @@ public class EditorBoardView extends BoardView
         nboard.setWaterParams(_board.getWaterLevel(), _board.getWaterColor(),
             _board.getWaterAmplitude());
         nboard.setWindParams(_board.getWindDirection(), _board.getWindSpeed());
-        _bangobj.setBoard(nboard);
+        _bangobj.board = nboard;
 
         // then move the pieces
         xoff = (width - _board.getWidth())/2;
