@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.client;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -21,7 +22,7 @@ import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BlankIcon;
 
-import com.threerings.media.image.ColorPository;
+import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
 import com.threerings.util.RandomUtil;
@@ -29,6 +30,7 @@ import com.threerings.util.RandomUtil;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.avatar.util.ColorConstraints;
 
 /**
  * Displays a popup menu in which the user can select a particular colorization
@@ -43,8 +45,10 @@ public class ColorSelector extends BComponent
         addListener(listener);
         _colorClass = colorClass;
 
-        ColorPository cpos = ctx.getAvatarLogic().getColorPository();
-        ColorPository.ColorRecord[] colors = cpos.enumerateColors(colorClass);
+        ArrayList<ColorRecord> colors =
+            ColorConstraints.getAvailableColors(
+                ctx.getAvatarLogic().getColorPository(), colorClass,
+                ctx.getUserObject());
 
         int dy = 0; // HAIR
         if (colorClass.endsWith("_s")) {
@@ -62,12 +66,12 @@ public class ColorSelector extends BComponent
         BufferedImage square = dots.getSubimage(48, dy, 24, 24);
         BufferedImage selsquare = dots.getSubimage(72, dy, 24, 24);
 
-        int scount = (colors == null) ? 0 : colors.length;
+        int scount = colors.size();
         _swatches = new Swatch[scount];
         for (int ii = 0; ii < _swatches.length; ii++) {
             Swatch swatch = _swatches[ii] = new Swatch();
-            swatch.colorId = colors[ii].colorId;
-            swatch.zation = colors[ii].getColorization();
+            swatch.colorId = colors.get(ii).colorId;
+            swatch.zation = colors.get(ii).getColorization();
             swatch.circle = new BImage(
                 ImageUtil.recolorImage(circle, swatch.zation));
             swatch.selectedCircle = new BImage(

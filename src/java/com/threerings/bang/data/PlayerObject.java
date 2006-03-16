@@ -151,6 +151,20 @@ public class PlayerObject extends BodyObject
         return false;
     }
 
+    /**
+     * Returns true if this player has earned the specified badge type.
+     */
+    public boolean holdsBadge (Badge.Type type)
+    {
+        for (Iterator iter = inventory.iterator(); iter.hasNext(); ) {
+            Object item = iter.next();
+            if (item instanceof Badge && ((Badge)item).getType().equals(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override // documentation inherited
     public TokenRing getTokens ()
     {
