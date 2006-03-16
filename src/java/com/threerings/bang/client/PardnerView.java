@@ -41,6 +41,8 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.avatar.util.AvatarLogic;
+
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.OptionDialog;
@@ -375,7 +377,8 @@ public class PardnerView extends IconPalette
         new HashMap<Comparable, PardnerIcon>();
 
     protected static final Dimension ICON_SIZE = new Dimension(167, 186);
-    protected static final Dimension AVATAR_SIZE = new Dimension(117, 150);
+    protected static final Dimension AVATAR_SIZE = new Dimension(
+        AvatarLogic.WIDTH/4, AvatarLogic.HEIGHT/4);
 
     protected static final SimpleDateFormat LAST_SESSION_FORMAT =
         new SimpleDateFormat("M/d/yy");

@@ -104,7 +104,10 @@ public class AvatarLogic
     public static final String EYES = "iris_t";
 
     /** The width of our avatar source images. */
-    public static final int WIDTH = 468;
+    public static final int FRAMED_WIDTH = 468;
+
+    /** The width of our avatar source images. */
+    public static final int WIDTH = 540;
 
     /** The height of our avatar source images. */
     public static final int HEIGHT = 600;

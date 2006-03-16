@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import java.awt.image.BufferedImage;
-
 import com.jme.renderer.Renderer;
 
 import com.jmex.bui.BButton;
@@ -212,11 +210,8 @@ public class PlayerStatusView extends BContainer
         BangOccupantInfo boi = (BangOccupantInfo)
             _bangobj.getOccupantInfo(_bangobj.players[_pidx]);
         if (boi != null) {
-            BufferedImage aimage = AvatarView.getImage(_ctx, boi.avatar);
             _avatar = new ImageIcon(
-                new BImage(aimage.getScaledInstance(
-                               AvatarLogic.WIDTH/10, AvatarLogic.HEIGHT/10,
-                               BufferedImage.SCALE_SMOOTH)));
+                AvatarView.getFramableImage(_ctx, boi.avatar, 10));
         }
     }
 

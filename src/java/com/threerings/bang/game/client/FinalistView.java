@@ -59,13 +59,12 @@ public class FinalistView extends BContainer
         // create our avatar imagery
         boolean winner = (rank == 0);
         int scale =  winner ? 2 : 4;
-        int awidth = AvatarLogic.WIDTH / scale;
-        int aheight = AvatarLogic.HEIGHT / scale;
         if (avatar != null) {
             _avatar = new ImageIcon(
-                AvatarView.getImage(ctx, avatar, awidth, aheight));
+                AvatarView.getFramableImage(ctx, avatar, scale));
         } else {
-            _avatar = new BlankIcon(awidth, aheight);
+            _avatar = new BlankIcon(AvatarLogic.FRAMED_WIDTH/scale,
+                                    AvatarLogic.HEIGHT/scale);
         }
 
         // load up our frame and scroll banner

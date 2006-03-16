@@ -35,6 +35,21 @@ import static com.threerings.bang.avatar.util.AvatarLogic.*;
 public class AvatarView extends BLabel
 {
     /**
+     * Returns a framable (skinnier) image for the specified avatar, scaled by
+     * one over the specified factor.
+     */
+    public static BImage getFramableImage (
+        BasicContext ctx, int[] avatar, int reduction)
+    {
+        BufferedImage base = getImage(ctx, avatar);
+        BufferedImage cropped = base.getSubimage(
+            (WIDTH-FRAMED_WIDTH)/2, 0, FRAMED_WIDTH, HEIGHT);
+        return new BImage(cropped.getScaledInstance(
+                              FRAMED_WIDTH/reduction, HEIGHT/reduction,
+                              BufferedImage.SCALE_SMOOTH));
+    }
+
+    /**
      * Obtains and scales an image for the specified avatar. The source image
      * will be cached.
      */
@@ -108,18 +123,8 @@ public class AvatarView extends BLabel
      */
     public void setAvatar (int[] avatar)
     {
-        BufferedImage image = getImage(_ctx, avatar);
-        if (image == null) {
-            return;
-        }
-
-        // scale that image appropriately
-        BImage scaled = new BImage(
-            image.getScaledInstance(
-                WIDTH/2, HEIGHT/2, BufferedImage.SCALE_SMOOTH));
-
         // TODO: fade between the two images?
-        setIcon(new ImageIcon(scaled));
+        setIcon(new ImageIcon(getFramableImage(_ctx, avatar, 2)));
     }
 
     @Override // documentation inherited

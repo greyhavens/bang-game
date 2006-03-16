@@ -50,6 +50,7 @@ import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.TabbedPane;
@@ -265,7 +266,8 @@ public class PardnerChatView extends BDecoratedWindow
         return (avatar == null) ? null : new ImageIcon(
             new BImage(
                 AvatarView.getImage(_ctx, avatar).getScaledInstance(
-                    AVATAR_WIDTH, AVATAR_HEIGHT, BufferedImage.SCALE_SMOOTH)));
+                    AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8,
+                    BufferedImage.SCALE_SMOOTH)));
     }
 
     /**
@@ -474,7 +476,4 @@ public class PardnerChatView extends BDecoratedWindow
 
     protected BIcon _micon, _alert;
     protected int[] _mavatar;
-
-    /** The dimensions of the avatars in the chat window. */
-    protected static final int AVATAR_WIDTH = 58, AVATAR_HEIGHT = 75;
 }

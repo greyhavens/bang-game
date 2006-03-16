@@ -25,7 +25,7 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
-import com.jmex.bui.icon.SubimageIcon;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
@@ -453,9 +453,9 @@ public class BangBoardView extends BoardView
         layout.setGap(-1);
         BContainer cont = new BContainer(layout);
         int awidth = AvatarLogic.WIDTH/2, aheight = AvatarLogic.HEIGHT/2;
-        cont.add(new BLabel(new SubimageIcon(
-            AvatarView.getImage(_ctx, boi.avatar, awidth, aheight),
-                0, 0, awidth, aheight)));
+        ImageIcon aicon = new ImageIcon(
+            AvatarView.getImage(_ctx, boi.avatar, awidth, aheight));
+        cont.add(new BLabel(aicon));
         cont.add(new BLabel(boi.username.toString(), "player_marquee_label"));
         return cont;
     }

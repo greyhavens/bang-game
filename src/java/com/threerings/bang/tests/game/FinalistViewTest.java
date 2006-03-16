@@ -46,6 +46,6 @@ public class FinalistViewTest extends TestApp
     }
 
     protected static final int[] TEST_AVATAR = {
-        263, 147, 150, 158, 166, 172, 178, 182,
-        21430441, 21430442, 21430481, 99745931 };
+        198, 19, 38, 45, 71, 77, 81, 1114163, 1114167,
+        671088665, 1370554375, 1370554381 };
 }
