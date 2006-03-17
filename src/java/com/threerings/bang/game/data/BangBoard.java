@@ -752,11 +752,12 @@ public class BangBoard extends SimpleStreamableObject
      * Returns true if the specified location is ground traversable.
      *
      * @param rough whether or not to allow the occupation of rough
-     * terrain
+     * terrain and the border areas
      */
     public boolean isGroundOccupiable (int x, int y, boolean rough)
     {
-        if (!_playarea.contains(x, y)) {
+        if (x < 0 || x >= _width || y < 0 || y >= _height ||
+            !(rough || _playarea.contains(x, y))) {
             return false;
         }
         byte btstate = _btstate[y*_width+x];

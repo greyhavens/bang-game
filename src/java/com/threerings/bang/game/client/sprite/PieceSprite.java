@@ -110,13 +110,6 @@ public class PieceSprite extends Sprite
         setLocation(_px = piece.x, _py = piece.y,
                     computeElevation(board, _px, _py));
         setOrientation(_porient = piece.orientation);
-
-        // ensure that we have a valid shadow value the first time even if the
-        // sprite starts out at zero zero
-        updateShadowValue();
-
-        // update our highlight geometry if we have any
-        updateHighlight();
     }
 
     /**
@@ -141,6 +134,14 @@ public class PieceSprite extends Sprite
     /**
      * Configures this sprite's tile location.
      */
+    public void setLocation (BangBoard board, int tx, int ty)
+    {
+        setLocation(tx, ty, computeElevation(board, tx, ty));
+    }
+    
+    /**
+     * Configures this sprite's tile location and elevation.
+     */
     public void setLocation (int tx, int ty, int elevation)
     {
         _elevation = elevation;
@@ -150,6 +151,7 @@ public class PieceSprite extends Sprite
 //             log.info("Moving to " + tx + ", " + ty + ", " + elevation +
 //                      ": " + _temp);
             updateShadowValue();
+            updateHighlight();
         }
     }
 

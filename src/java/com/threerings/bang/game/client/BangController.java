@@ -468,6 +468,7 @@ public class BangController extends GameController
 
         // when the game "starts", the round is ready to be played, but the
         // game only "ends" once, at the actual end of the game
+        _bangobj.tick = (short)0;
         _view.setPhase(BangObject.IN_PLAY);
     }
 

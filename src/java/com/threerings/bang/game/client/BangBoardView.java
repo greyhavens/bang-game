@@ -7,7 +7,9 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.jme.math.FastMath;
@@ -32,8 +34,10 @@ import com.jmex.bui.util.Point;
 
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
+import com.threerings.media.util.AStarPathUtil;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
+import com.threerings.util.StreamablePoint;
 
 import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.camera.CameraPath;
@@ -50,6 +54,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.bui.WindowFader;
 import com.threerings.bang.data.BangOccupantInfo;
@@ -381,6 +386,55 @@ public class BangBoardView extends BoardView
     }
     
     @Override // documentation inherited
+    public void clearResolvingSprite (final PieceSprite resolved)
+    {
+        // have unit sprites loaded before the first tick run to their
+        // positions
+        if (_bangobj.tick != 0 || !(resolved instanceof UnitSprite) ||
+            _rsprites.contains(resolved)) {
+            super.clearResolvingSprite(resolved);
+            return;
+        }
+        
+        // move the unit after it's fully initialized
+        _rsprites.add(resolved);
+        _ctx.getClient().getRunQueue().postRunnable(new Runnable() {
+            public void run () {
+                moveSpriteToStart((UnitSprite)resolved);
+            }
+        });
+    }
+    
+    /**
+     * Moves a sprite to its initial position and marks it as resolved
+     * when it gets there.
+     */
+    protected void moveSpriteToStart (UnitSprite sprite)
+    {
+        Piece unit = sprite.getPiece();
+        Point corner = getStartCorner(unit.owner);
+        List path = AStarPathUtil.getPath(_tpred, unit.getStepper(),
+            unit, _board.getWidth() / 2, corner.x, corner.y, unit.x, unit.y,
+            false);
+        if (path == null) {
+            sprite.setLocation(_board, unit.x, unit.y);
+            sprite.snapToTerrain();
+            super.clearResolvingSprite(sprite);
+            return;
+        }
+        sprite.move(_board, path, Config.display.getMovementSpeed());
+        sprite.addObserver(new PathObserver() {
+            public void pathCancelled (Sprite sprite, Path path) {
+                pathCompleted(sprite, path);
+            }
+            public void pathCompleted (Sprite sprite, Path path) {
+                BangBoardView.super.clearResolvingSprite((PieceSprite)sprite);
+                sprite.removeObserver(this);
+            }
+        });
+    }
+    
+    @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();
@@ -539,12 +593,36 @@ public class BangBoardView extends BoardView
         // if this piece influenced our selection, refresh it
         checkForSelectionInfluence(piece);
 
-        // if this is a unit, we need to tell the unit status view
-        if (piece instanceof Unit) {
-            ((BangView)getParent()).ustatus.unitAdded(getUnitSprite(piece));
+        // if this is a unit, we need to tell the unit status view and,
+        // if it's before the first tick, reposition the unit so it can
+        // run in from off the board
+        if (!(piece instanceof Unit)) {
+            return;
         }
+        UnitSprite sprite = getUnitSprite(piece);
+        ((BangView)getParent()).ustatus.unitAdded(sprite);
+        if (_bangobj.tick != 0) {
+            return;
+        }
+        
+        // place the unit at the corner of the board nearest to the player's
+        // start position
+        Point corner = getStartCorner(piece.owner);
+        sprite.setLocation(_board, corner.x, corner.y);
     }
-
+    
+    /**
+     * Returns the corner of the board nearest to the specified player's start
+     * position.
+     */
+    protected Point getStartCorner (int pidx)
+    {
+        StreamablePoint pt = _bangobj.startPositions[pidx];
+        return new Point(
+            (pt.x < _board.getWidth() / 2) ? 0 : _board.getWidth() - 1,
+            (pt.y < _board.getHeight() / 2) ? 0 : _board.getHeight() - 1);
+    }
+    
     /** Called by the {@link EffectHandler} when a piece has moved. */
     protected void pieceDidMove (Piece piece)
     {
@@ -1015,6 +1093,12 @@ public class BangBoardView extends BoardView
      */
     protected void ticked (short tick)
     {
+        // when we reach the first tick, we can clear our list of sprites
+        // running to the start position
+        if (tick == 1) {
+            _rsprites.clear();
+        }
+        
         // update all of our sprites
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
@@ -1144,6 +1228,17 @@ public class BangBoardView extends BoardView
     protected BWindow _pmarquees;
     protected SwingPath _tpath;
 
+    /** A traversal predicate for units running to their initial positions. */
+    protected AStarPathUtil.TraversalPred _tpred =
+        new AStarPathUtil.TraversalPred() {
+        public boolean canTraverse (Object traverser, int x, int y) {
+            return _board.isGroundOccupiable(x, y, true);
+        }
+    };
+    
+    /** The units currently running to their initial positions. */
+    protected HashSet<Sprite> _rsprites = new HashSet<Sprite>();
+    
     /** Tracks pieces that will be moving as soon as the board finishes
      * animating previous actions. */
     protected IntIntMap _pendmap = new IntIntMap();
