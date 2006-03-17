@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -386,21 +385,22 @@ public class BangBoardView extends BoardView
     }
     
     @Override // documentation inherited
-    public void clearResolvingSprite (final PieceSprite resolved)
+    public void clearResolvingSprite (PieceSprite resolved)
     {
         // have unit sprites loaded before the first tick run to their
         // positions
         if (_bangobj.tick != 0 || !(resolved instanceof UnitSprite) ||
-            _rsprites.contains(resolved)) {
+            ((UnitSprite)resolved).movingToStart) {
             super.clearResolvingSprite(resolved);
             return;
         }
         
         // move the unit after it's fully initialized
-        _rsprites.add(resolved);
+        final UnitSprite sprite = (UnitSprite)resolved;
+        sprite.movingToStart = true;
         _ctx.getClient().getRunQueue().postRunnable(new Runnable() {
             public void run () {
-                moveSpriteToStart((UnitSprite)resolved);
+                moveSpriteToStart(sprite);
             }
         });
     }
@@ -1093,12 +1093,6 @@ public class BangBoardView extends BoardView
      */
     protected void ticked (short tick)
     {
-        // when we reach the first tick, we can clear our list of sprites
-        // running to the start position
-        if (tick == 1) {
-            _rsprites.clear();
-        }
-        
         // update all of our sprites
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
@@ -1235,9 +1229,6 @@ public class BangBoardView extends BoardView
             return _board.isGroundOccupiable(x, y, true);
         }
     };
-    
-    /** The units currently running to their initial positions. */
-    protected HashSet<Sprite> _rsprites = new HashSet<Sprite>();
     
     /** Tracks pieces that will be moving as soon as the board finishes
      * animating previous actions. */

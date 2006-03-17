@@ -57,6 +57,10 @@ public class UnitSprite extends MobileSprite
     public static enum AdvanceOrder { NONE, MOVE, MOVE_SHOOT };
     public static enum TargetMode { NONE, SURE_SHOT, MAYBE };
 
+    /** For sprites added before the first tick, this flag indicates whether
+     * the sprite has started running towards its initial position. */
+    public boolean movingToStart;
+    
     public UnitSprite (String type)
     {
         super("units", type);
