@@ -73,7 +73,14 @@ public class BarberManager extends PlaceManager
         }
 
         // copy the articles from their "active" look
-        look.articles = user.getLook().articles;
+        Look current = user.getLook();
+        if (current != null) {
+            look.articles = current.articles;
+        } else {
+            log.warning("Player has no current look from which to copy " +
+                        "articles [who=" + user.who() +
+                        ", look=" + user.look + "].");
+        }
 
         // the buy look action takes care of the rest (including checking that
         // they have sufficient funds)
