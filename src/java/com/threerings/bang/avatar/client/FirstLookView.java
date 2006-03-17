@@ -59,9 +59,10 @@ public class FirstLookView extends BContainer
         _status = status;
 
         // create our default clothing articles
-        int pid = ctx.getUserObject().playerId;
-        _defarts[0] = ctx.getAvatarLogic().createDefaultClothing(pid, true);
-        _defarts[1] = ctx.getAvatarLogic().createDefaultClothing(pid, false);
+        _defarts[0] = ctx.getAvatarLogic().createDefaultClothing(
+            ctx.getUserObject(), true);
+        _defarts[1] = ctx.getAvatarLogic().createDefaultClothing(
+            ctx.getUserObject(), false);
 
         // create our user interface
         add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
@@ -126,6 +127,16 @@ public class FirstLookView extends BContainer
         }
 
         return config;
+    }
+
+    /**
+     * Returns the colorization info for the default clothing article used when
+     * creating our avatar.
+     */
+    public int getDefaultArticleColorizations ()
+    {
+        // the top 16 bits of every component id are the colorizations
+        return _defart.getComponents()[0] & 0xFFFF0000;
     }
 
     // documentation inherited from interface ActionListener

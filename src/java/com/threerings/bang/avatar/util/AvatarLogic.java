@@ -406,9 +406,28 @@ public class AvatarLogic
     }
 
     /**
-     * Creates the default clothing article for the specified gender.
+     * Creates the default clothing article for the specified gender, choosing
+     * random colorizations.
      */
-    public Article createDefaultClothing (int playerId, boolean forMale)
+    public Article createDefaultClothing (PlayerObject user, boolean forMale)
+    {
+        int primary = ColorConstraints.pickRandomColor(
+            _pository, "clothes_p", user).colorId;
+        int secondary = ColorConstraints.pickRandomColor(
+            _pository, "clothes_s", user).colorId;
+        int tertiary = ColorConstraints.pickRandomColor(
+            _pository, "clothes_t", user).colorId;
+        return createDefaultClothing(
+            user, forMale, composeZations(primary, secondary, tertiary));
+    }
+
+    /**
+     * Creates the default clothing article for the specified gender, with the
+     * specified colorizations (which should have come from {@link
+     * #composeZation}.
+     */
+    public Article createDefaultClothing (
+        PlayerObject user, boolean forMale, int zations)
     {
         // look up the starter article
         String prefix = forMale ? "male" : "female";
@@ -423,10 +442,7 @@ public class AvatarLogic
                         "[gender=" + prefix + "].");
             return null;
         }
-
-        int zations = 0;
-        return new Article(playerId, "clothing", article.name,
-                           getComponentIds(article, zations));
+        return createArticle(user.playerId, article, zations);
     }
 
     /**
@@ -442,6 +458,12 @@ public class AvatarLogic
             HashSet<String> classes = new HashSet<String>();
             for (ArticleCatalog.Component comp : article.components) {
                 ComponentClass cclass = _crepo.getComponentClass(comp.cclass);
+                if (cclass == null) {
+                    log.warning("Missing component classs for article " +
+                                "[article=" + article +
+                                ", cclass=" + comp.cclass + "].");
+                    continue;
+                }
                 for (int ii = 0; ii < cclass.colors.length; ii++) {
                     classes.add(cclass.colors[ii]);
                 }

@@ -60,6 +60,10 @@ public class GoodsIcon extends PaletteIcon
                 if (crec == null) {
                     continue;
                 }
+                // skip skin, which some article goods use
+                if (AvatarLogic.SKIN.equals(crec.cclass.name)) {
+                    continue;
+                }
                 int cidx = AvatarLogic.getColorIndex(crec.cclass.name);
                 colorIds[cidx] = crec.colorId;
                 zations[ii] = crec.getColorization();

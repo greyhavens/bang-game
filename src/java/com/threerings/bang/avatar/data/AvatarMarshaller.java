@@ -25,12 +25,12 @@ public class AvatarMarshaller extends InvocationMarshaller
     public static final int CREATE_AVATAR = 1;
 
     // documentation inherited from interface
-    public void createAvatar (Client arg1, Handle arg2, boolean arg3, LookConfig arg4, InvocationService.ConfirmListener arg5)
+    public void createAvatar (Client arg1, Handle arg2, boolean arg3, LookConfig arg4, int arg5, InvocationService.ConfirmListener arg6)
     {
-        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
-        listener5.listener = arg5;
+        InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
+        listener6.listener = arg6;
         sendRequest(arg1, CREATE_AVATAR, new Object[] {
-            arg2, new Boolean(arg3), arg4, listener5
+            arg2, new Boolean(arg3), arg4, new Integer(arg5), listener6
         });
     }
 

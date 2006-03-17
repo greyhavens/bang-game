@@ -43,7 +43,7 @@ public class AvatarDispatcher extends InvocationDispatcher
         case AvatarMarshaller.CREATE_AVATAR:
             ((AvatarProvider)provider).createAvatar(
                 source,
-                (Handle)args[0], ((Boolean)args[1]).booleanValue(), (LookConfig)args[2], (InvocationService.ConfirmListener)args[3]
+                (Handle)args[0], ((Boolean)args[1]).booleanValue(), (LookConfig)args[2], ((Integer)args[3]).intValue(), (InvocationService.ConfirmListener)args[4]
             );
             return;
 

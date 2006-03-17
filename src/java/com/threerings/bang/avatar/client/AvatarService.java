@@ -21,7 +21,7 @@ public interface AvatarService extends InvocationService
      * (in-game name), sex, and default avatar look.
      */
     public void createAvatar (Client client, Handle handle, boolean isMale,
-                              LookConfig look, ConfirmListener cl);
+                              LookConfig look, int zations, ConfirmListener cl);
 
     /**
      * Selects the specified look as the player's "current" look.

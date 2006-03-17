@@ -76,6 +76,33 @@ public class ColorConstraints
         return colors;
     }
 
+    /**
+     * Returns true if the specified color is valid for the specified player.
+     */
+    public static boolean isValidColor (
+        ColorPository pository, String colorClass, int colorId,
+        PlayerObject user)
+    {
+        ClassRecord clrec = pository.getClassRecord(colorClass);
+        HashMap<String,Predicate> preds = _preds.get(colorClass);
+        if (clrec == null || preds == null) {
+            return false;
+        }
+        ColorRecord crec = (ColorRecord)clrec.colors.get(colorId);
+        if (crec == null) {
+            return false;
+        }
+        Predicate pred = preds.get(crec.name);
+        return (pred == null) ? false : pred.isAvailable(user);
+    }
+
+    /** We use this to disable colors until we know what we want to do. */
+    protected static class Disabled implements Predicate {
+        public boolean isAvailable (PlayerObject user) {
+            return false;
+        }
+    }
+
     /** Starter colors are available to every player any time. */
     protected static class Starter implements Predicate {
         public boolean isAvailable (PlayerObject user) {
@@ -112,24 +139,26 @@ public class ColorConstraints
         HashMap<String,Predicate> preds;
 
         _preds.put("hair", preds = new HashMap<String,Predicate>());
-        preds.put("red", new Starter());
-        preds.put("grey", new Normal());
-        preds.put("white", new Normal());
         preds.put("black", new Starter());
+        preds.put("blonde", new Starter());
         preds.put("brown", new Starter());
         preds.put("lightBrown", new Starter());
         preds.put("sandyBlonde", new Starter());
-        preds.put("blonde", new Starter());
         preds.put("toehead", new Starter());
-        preds.put("violet", new HoldsBadge(Badge.Type.GAMES_PLAYED_2));
-        preds.put("purple", new HoldsBadge(Badge.Type.CONSEC_WINS_1));
-        preds.put("navyBlue", new HoldsBadge(Badge.Type.GAMES_PLAYED_3));
-        preds.put("blue", new HoldsBadge(Badge.Type.UNITS_KILLED_2));
+
         preds.put("aqua", new Normal());
+        preds.put("grey", new Normal());
         preds.put("lime", new Normal());
-        preds.put("green", new HoldsBadge(Badge.Type.SHOTS_FIRED_1));
-        preds.put("orange", new HoldsBadge(Badge.Type.UNITS_KILLED_3));
         preds.put("maroon", new Normal());
+        preds.put("red", new Normal());
+        preds.put("white", new Normal());
+
+        preds.put("blue", new HoldsBadge(Badge.Type.UNITS_KILLED_2));
+        preds.put("green", new HoldsBadge(Badge.Type.SHOTS_FIRED_1));
+        preds.put("navyBlue", new HoldsBadge(Badge.Type.GAMES_PLAYED_3));
+        preds.put("orange", new HoldsBadge(Badge.Type.UNITS_KILLED_3));
+        preds.put("purple", new HoldsBadge(Badge.Type.CONSEC_WINS_1));
+        preds.put("violet", new HoldsBadge(Badge.Type.GAMES_PLAYED_2));
 
         _preds.put("skin", preds = new HashMap<String,Predicate>());
         preds.put("darkest", new Starter());
@@ -142,65 +171,72 @@ public class ColorConstraints
         preds.put("pasty", new Starter());
 
         _preds.put("iris_t", preds = new HashMap<String,Predicate>());
-        preds.put("blue", new Starter());
-        preds.put("purple", new HoldsBadge(Badge.Type.BONUSES_COLLECTED_2));
-        preds.put("violet", new HoldsBadge(Badge.Type.GAMES_PLAYED_1));
-        preds.put("red", new HoldsBadge(Badge.Type.UNITS_KILLED_3));
-        preds.put("brown", new Starter());
-        preds.put("orange", new HoldsBadge(Badge.Type.CASH_EARNED_1));
         preds.put("beige", new Starter());
+        preds.put("blue", new Starter());
+        preds.put("brown", new Starter());
         preds.put("hazel", new Starter());
+
         preds.put("green", new Normal());
         preds.put("lime", new Normal());
-        preds.put("sky", new Starter());
+        preds.put("sky", new Normal());
+
+        preds.put("violet", new HoldsBadge(Badge.Type.GAMES_PLAYED_1));
+        preds.put("orange", new HoldsBadge(Badge.Type.CASH_EARNED_1));
+        preds.put("purple", new HoldsBadge(Badge.Type.BONUSES_COLLECTED_2));
+        preds.put("red", new HoldsBadge(Badge.Type.UNITS_KILLED_3));
 
         _preds.put("makeup_p", preds = new HashMap<String,Predicate>());
         _preds.put("makeup_s", preds);
-        preds.put("red", new Normal());
-        preds.put("brown", new Normal());
-        preds.put("white", new Normal());
-        preds.put("black", new Normal());
-        preds.put("grey", new Normal());
-        preds.put("yellow", new Normal());
-        preds.put("pink", new Normal());
-        preds.put("violet", new Normal());
-        preds.put("purple", new Normal());
-        preds.put("navyBlue", new Normal());
-        preds.put("blue", new Normal());
         preds.put("aqua", new Normal());
-        preds.put("lime", new Normal());
-        preds.put("green", new Normal());
-        preds.put("orange", new Normal());
-        preds.put("maroon", new Normal());
+        preds.put("black", new Normal());
+        preds.put("blue", new Normal());
+        preds.put("brown", new Normal());
         preds.put("darkBrown", new Normal());
         preds.put("gold", new Normal());
+        preds.put("green", new Normal());
+        preds.put("grey", new Normal());
+        preds.put("lime", new Normal());
+        preds.put("maroon", new Normal());
+        preds.put("navyBlue", new Normal());
+        preds.put("orange", new Normal());
+        preds.put("pink", new Normal());
+        preds.put("purple", new Normal());
+        preds.put("red", new Normal());
+        preds.put("violet", new Normal());
+        preds.put("white", new Normal());
+        preds.put("yellow", new Normal());
 
         _preds.put("clothes_p", preds = new HashMap<String,Predicate>());
         _preds.put("clothes_s", preds);
         _preds.put("clothes_t", preds);
-        preds.put("dkbrn", new Starter());
-        preds.put("leather", new Starter());
-        preds.put("brown", new Starter());
+
         preds.put("beige", new Starter());
-        preds.put("pink", new Normal());
-        preds.put("red", new Normal());
-        preds.put("maroon", new Starter());
-        preds.put("orange", new Normal());
-        preds.put("gold", new Normal());
-        preds.put("yellow", new Normal());
-        preds.put("moss", new Starter());
-        preds.put("lime", new Normal());
-        preds.put("green", new Starter());
-        preds.put("olive", new Starter());
-        preds.put("aqua", new Normal());
         preds.put("blue", new Starter());
-        preds.put("navyBlue", new Normal());
-        preds.put("slate", new Starter());
-        preds.put("violet", new Normal());
-        preds.put("purple", new Normal());
-        preds.put("white", new Normal());
+        preds.put("brown", new Starter());
+        preds.put("green", new Starter());
         preds.put("grey", new Starter());
-        preds.put("black", new Normal());
+
+        preds.put("aqua", new Normal());
+        preds.put("lime", new Normal());
+        preds.put("red", new Normal());
+        preds.put("slate", new Normal());
+        preds.put("white", new Normal());
+        preds.put("yellow", new Normal());
+
+        // come up with badge requirements for these
+        preds.put("dkbrn", new Normal());
+        preds.put("gold", new Normal());
+        preds.put("maroon", new Normal());
+        preds.put("moss", new Normal());
+        preds.put("navyBlue", new Normal());
+        preds.put("olive", new Normal());
+        preds.put("purple", new Normal());
+
+        preds.put("black", new HoldsBadge(Badge.Type.CONSEC_WINS_2));
+        preds.put("leather", new HoldsBadge(Badge.Type.CARDS_PLAYED_1));
+        preds.put("orange", new HoldsBadge(Badge.Type.CARDS_PLAYED_2));
+        preds.put("pink", new HoldsBadge(Badge.Type.LOOKS_BOUGHT_1));
+        preds.put("violet", new HoldsBadge(Badge.Type.DUDS_BOUGHT_2));
 
         _preds.put("familiar_p", preds = new HashMap<String,Predicate>());
         _preds.put("familiar_s", preds);

@@ -10,6 +10,8 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.StringUtil;
+
+import com.threerings.media.image.ColorPository;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.coin.server.persist.CoinTransaction;
@@ -38,6 +40,7 @@ import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.avatar.util.ColorConstraints;
 
 import static com.threerings.bang.Log.log;
 
@@ -131,7 +134,7 @@ public class BarberManager extends PlaceManager
     // documentation inherited from interface AvatarProvider
     public void createAvatar (
         ClientObject caller, final Handle handle, boolean isMale,
-        LookConfig config, final AvatarService.ConfirmListener cl)
+        LookConfig config, int zations, final AvatarService.ConfirmListener cl)
         throws InvocationException
     {
         final PlayerObject user = (PlayerObject)caller;
@@ -167,11 +170,25 @@ public class BarberManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // validate the starter article colorizations
+        int czp = AvatarLogic.decodePrimary(zations);
+        int czs = AvatarLogic.decodeSecondary(zations);
+        int czt = AvatarLogic.decodeTertiary(zations);
+        ColorPository cpos = BangServer.alogic.getColorPository();
+        if (!ColorConstraints.isValidColor(cpos, "clothes_p", czp, user) ||
+            !ColorConstraints.isValidColor(cpos, "clothes_s", czs, user) ||
+            !ColorConstraints.isValidColor(cpos, "clothes_t", czt, user)) {
+            log.warning("Tried to create avatar with invalid default article " +
+                        "colorizations [who=" + user.who() + ", look=" + look +
+                        ", zations=" + zations + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
         // create their default clothing article, we'll fill in its item id
         // after we've inserted the article into the database
         look.articles = new int[AvatarLogic.SLOTS.length];
-        final Article article =
-            BangServer.alogic.createDefaultClothing(user.playerId, isMale);
+        final Article article = BangServer.alogic.createDefaultClothing(
+            user, isMale, zations);
 
         // the client should prevent selection of components that have cost
         if (cost[0] > AvatarCodes.BASE_LOOK_SCRIP_COST ||

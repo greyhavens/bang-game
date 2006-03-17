@@ -20,7 +20,7 @@ public interface AvatarProvider extends InvocationProvider
     /**
      * Handles a {@link AvatarService#createAvatar} request.
      */
-    public void createAvatar (ClientObject caller, Handle arg1, boolean arg2, LookConfig arg3, InvocationService.ConfirmListener arg4)
+    public void createAvatar (ClientObject caller, Handle arg1, boolean arg2, LookConfig arg3, int arg4, InvocationService.ConfirmListener arg5)
         throws InvocationException;
 
     /**

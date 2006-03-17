@@ -6,7 +6,7 @@
   <article name="male_suit_cards" townId="frontier_town"
            slot="clothing" scrip="2000" coins="6">
     <component cclass="male/clothing_back" name="a_suit"/>
-    <component cclass="male/clothing_props" name="cards_suit"/>
+    <component cclass="male/clothing_front" name="cards_suit"/>
   </article>
 
   <article name="male_suit_lapels" townId="frontier_town"
@@ -23,7 +23,7 @@
   <article name="male_duster_rifle" townId="frontier_town"
            slot="clothing" scrip="2200" coins="6">
     <component cclass="male/clothing_back" name="a_duster"/>
-    <component cclass="male/clothing_props" name="rifle_duster"/>
+    <component cclass="male/clothing_front" name="rifle_duster"/>
   </article>
 
   <article name="male_longjohns" townId="frontier_town"
@@ -51,7 +51,7 @@
   <article name="male_poncho_plate" townId="frontier_town"
            slot="clothing" scrip="2500" coins="6">
     <component cclass="male/clothing_back" name="plate_poncho"/>
-    <component cclass="male/clothing_props" name="ironplate_poncho"/>
+    <component cclass="male/clothing_front" name="ironplate_poncho"/>
   </article>
 
   <article name="male_gunslinger" townId="frontier_town"

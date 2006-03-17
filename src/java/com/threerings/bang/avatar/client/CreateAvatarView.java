@@ -165,7 +165,8 @@ public class CreateAvatarView extends BDecoratedWindow
         Handle handle = new Handle(_handle.getText());
         boolean isMale = (_gender.getSelectedIndex() == 0);
         asvc.createAvatar(
-            _ctx.getClient(), handle, isMale, _look.getLookConfig(), cl);
+            _ctx.getClient(), handle, isMale, _look.getLookConfig(),
+            _look.getDefaultArticleColorizations(), cl);
     }
 
     protected void maybeClearStatus ()
