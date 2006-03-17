@@ -50,6 +50,7 @@
 }
 -keep public class * implements com.threerings.io.Streamable {
     !static !transient <fields>;
+    <init> ();
     public void readObject (com.threerings.io.ObjectInputStream);
     public void writeObject (com.threerings.io.ObjectOutputStream);
 }
