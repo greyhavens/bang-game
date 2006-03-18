@@ -88,6 +88,12 @@ public class ColorSelector extends BComponent
             }
         });
 
+        // start with a randomly selected color
+        pickRandom();
+    }
+
+    public void pickRandom ()
+    {
         if (_swatches.length > 0) {
             setSelectedColor(RandomUtil.getInt(_swatches.length));
         }

@@ -24,6 +24,7 @@ import com.jmex.bui.text.LengthLimitedDocument;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
@@ -36,7 +37,7 @@ import com.threerings.bang.avatar.data.AvatarCodes;
  * sex and default look.
  */
 public class CreateAvatarView extends BDecoratedWindow
-    implements ActionListener
+    implements ActionListener, BangClient.NonClearablePopup
 {
     public CreateAvatarView (BangContext ctx)
     {
@@ -59,7 +60,6 @@ public class CreateAvatarView extends BDecoratedWindow
         add(inner);
         _status = new StatusLabel(ctx);
         _status.setStyleClass("dialog_text");
-        _status.setStatus(_msgs.get("m.create_tip"), false);
         add(_status);
         add(_done = new BButton(_msgs.get("m.done"), this, "done"));
         _done.setEnabled(false);

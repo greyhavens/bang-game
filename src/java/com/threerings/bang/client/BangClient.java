@@ -71,6 +71,11 @@ import static com.threerings.bang.Log.log;
 public class BangClient extends BasicClient
     implements SessionObserver, PlayerReceiver, BangCodes
 {
+    /** A marker interface for non-clearable popups. */
+    public static interface NonClearablePopup
+    {
+    }
+
     /**
      * Checks the supplied logon failure message for client version related
      * failure and decodes the necessary business to instruct Getdown to update
@@ -632,7 +637,10 @@ public class BangClient extends BasicClient
         new GlobalKeyManager.Command() {
         public void invoke (int keyCode, int modifiers) {
             if (_popups.size() > 0) {
-                clearPopup(_popups.get(_popups.size()-1), true);
+                BWindow popup = _popups.get(_popups.size()-1);
+                if (!(popup instanceof NonClearablePopup)) {
+                    clearPopup(popup, true);
+                }
             } else {
                 displayPopup(new OptionsView(_ctx, _mview), true);
             }

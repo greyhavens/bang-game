@@ -17,6 +17,7 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
@@ -31,15 +32,12 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberCodes;
-import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.avatar.util.AspectCatalog;
@@ -49,7 +47,6 @@ import com.threerings.bang.avatar.util.AvatarLogic;
  * Allows the configuration of a player's first avatar look.
  */
 public class FirstLookView extends BContainer
-    implements ActionListener
 {
     public FirstLookView (BangContext ctx, StatusLabel status)
     {
@@ -69,8 +66,30 @@ public class FirstLookView extends BContainer
         TableLayout tlay = new TableLayout(4, 5, 20);
         tlay.setEqualRows(true);
         _toggles = new BContainer(tlay);
-        BContainer wrapper = GroupLayout.makeHBox(GroupLayout.CENTER);
+        BContainer wrapper = GroupLayout.makeVBox(GroupLayout.CENTER);
+        ((GroupLayout)wrapper.getLayoutManager()).setGap(10);
         wrapper.add(_toggles);
+
+        // add a button to randomly pick new settings
+        ImageIcon dicon = new ImageIcon(ctx.loadImage("ui/icons/dice.png"));
+        BButton rando = new BButton(dicon, new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                for (AspectToggle at : _ats) {
+                    at.pickRandom();
+                }
+                _skin.pickRandom();
+                _hair.pickRandom();
+                _eyes.pickRandom();
+                updateAvatar();
+            }
+        }, "random");
+        rando.setStyleClass("arrow_button");
+
+        // do some jimmying to center the rando button nicely
+        BContainer jimmy = GroupLayout.makeHBox(GroupLayout.CENTER);
+        jimmy.add(new Spacer(122, 5));
+        jimmy.add(rando);
+        wrapper.add(jimmy);
         add(wrapper, BorderLayout.CENTER);
 
         // start out with the random gender selection
@@ -78,27 +97,18 @@ public class FirstLookView extends BContainer
     }
 
     /**
-     * Called by the {@link BarberView} to give us a reference to our barber
-     * object when needed.
-     */
-    public void setBarberObject (BarberObject barbobj)
-    {
-        _barbobj = barbobj;
-    }
-
-    /**
-     * Can be used to change the gender of the avatar we're configuring. This
-     * is only used when creating a character for the first time.
+     * Used to change the gender of the avatar we're creating.
      */
     public void setGender (boolean isMale)
     {
         _gender = isMale ? "male/" : "female/";
         _defart = _defarts[isMale ? 0 : 1];
         _toggles.removeAll();
+        _ats.clear();
         for (int ii = 0; ii < AvatarLogic.ASPECTS.length; ii++) {
             // we don't allow first time avatars to have mustaches or beards
             if (!AvatarLogic.ASPECTS[ii].maleOnly) {
-                new AspectToggle(AvatarLogic.ASPECTS[ii], _toggles);
+                _ats.add(new AspectToggle(AvatarLogic.ASPECTS[ii], _toggles));
             }
         }
         updateAvatar();
@@ -110,7 +120,7 @@ public class FirstLookView extends BContainer
     public LookConfig getLookConfig ()
     {
         LookConfig config = new LookConfig();
-        config.name = (_name == null) ? "" : _name.getText();
+        config.name = "";
         config.hair = _hair.getSelectedColor();
         config.skin = _skin.getSelectedColor();
 
@@ -137,33 +147,6 @@ public class FirstLookView extends BContainer
     {
         // the top 16 bits of every component id are the colorizations
         return _defart.getComponents()[0] & 0xFFFF0000;
-    }
-
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
-    {
-        // make sure they specified a name for the new look
-        String name = _name.getText();
-        if (StringUtil.isBlank(name)) {
-            _status.setText(_msgs.get("m.name_required"));
-            return;
-        }
-
-        // prevent double clicks or other lag related fuckolas
-        _buy.setEnabled(false);
-
-        BarberService.ConfirmListener cl = new BarberService.ConfirmListener() {
-            public void requestProcessed () {
-                _status.setText(_msgs.get("m.look_bought"));
-                _name.setText("");
-                _buy.setEnabled(true);
-            }
-            public void requestFailed (String reason) {
-                _status.setText(_msgs.xlate(reason));
-                _buy.setEnabled(true);
-            }
-        };
-        _barbobj.service.purchaseLook(_ctx.getClient(), getLookConfig(), cl);
     }
 
     protected void updateAvatar ()
@@ -202,11 +185,8 @@ public class FirstLookView extends BContainer
         avatar[0] = (_hair.getSelectedColor() << 5) | _skin.getSelectedColor();
         compids.toIntArray(avatar, 1);
 
-        // update the avatar and cost displays
+        // update the avatar display
         _avatar.setAvatar(avatar);
-        if (_cost != null) {
-            _cost.setMoney(scrip, coins, false);
-        }
     }
 
     protected int getColorizations (String aspect)
@@ -289,6 +269,11 @@ public class FirstLookView extends BContainer
             }
 
             // configure our default selection
+            pickRandom();
+        }
+
+        public void pickRandom ()
+        {
             if (_choices.size() > 0) {
                 _selidx = RandomUtil.getInt(_choices.size());
                 noteSelection();
@@ -344,11 +329,7 @@ public class FirstLookView extends BContainer
     protected BContainer _toggles;
     protected ColorSelector _skin, _hair, _eyes;
 
-    protected BTextField _name;
-    protected MoneyLabel _cost;
-    protected BButton _buy;
-
-    protected BarberObject _barbobj;
+    protected ArrayList<AspectToggle> _ats = new ArrayList<AspectToggle>();
     protected String _gender;
 
     protected Article[] _defarts = new Article[2];

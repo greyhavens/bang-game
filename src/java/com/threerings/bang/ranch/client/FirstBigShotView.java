@@ -20,6 +20,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -35,7 +36,8 @@ import com.threerings.bang.ranch.data.RanchCodes;
  * to select one.
  */
 public class FirstBigShotView extends BDecoratedWindow
-    implements ActionListener, IconPalette.Inspector
+    implements ActionListener, IconPalette.Inspector,
+               BangClient.NonClearablePopup
 {
     public FirstBigShotView (BangContext ctx)
     {
