@@ -43,14 +43,20 @@
     <component cclass="male/clothing_back" name="shotgun_fringe"/>
   </article>
 
+  <article name="male_fringe_flask" townId="frontier_town"
+           slot="clothing" scrip="2200" coins="6">
+    <component cclass="male/clothing_back" name="a_fringe"/>
+    <component cclass="male/clothing_front" name="flask_fringe"/>
+  </article>
+
   <article name="male_poncho" townId="frontier_town"
            slot="clothing" scrip="1800" coins="6">
     <component cclass="male/clothing_back" name="poncho"/>
   </article>
 
-  <article name="male_poncho_plate" townId="frontier_town"
+  <article name="male_poncho_ironplate" townId="frontier_town"
            slot="clothing" scrip="2500" coins="6">
-    <component cclass="male/clothing_back" name="plate_poncho"/>
+    <component cclass="male/clothing_back" name="ironplate_poncho"/>
     <component cclass="male/clothing_front" name="ironplate_poncho"/>
   </article>
 
@@ -86,7 +92,7 @@
     <component cclass="male/hat_band" name="king_stetson"/>
   </article>
 
-  <article name="male_stetson_band" townId="frontier_town"
+  <article name="male_stetson_plain" townId="frontier_town"
            slot="hat" scrip="1600" coins="5">
     <component cclass="male/hat" name="stetson"/>
     <component cclass="male/hat_back" name="stetson"/>
