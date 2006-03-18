@@ -74,7 +74,7 @@
   </article>
 
   <article name="male_steamgoggles" townId="frontier_town"
-           slot="glasses" scrip="5000" coins="12">
+           slot="glasses" scrip="5000" coins="12" colors="clothes_p">
     <component cclass="male/glasses" name="steamgoggles"/>
   </article>
 
@@ -100,7 +100,7 @@
   </article>
 
   <article name="male_stetson_ringlets" townId="frontier_town"
-           slot="hat" scrip="1800" coins="5" colors="clothes_s">
+           slot="hat" scrip="1800" coins="5" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="stetson"/>
     <component cclass="male/hat_back" name="stetson"/>
     <component cclass="male/hat_band" name="ringlets_stetson"/>
@@ -112,13 +112,13 @@
   </article>
 
   <article name="male_widebrim_buckle" townId="frontier_town"
-           slot="hat" scrip="1800" coins="5" colors="clothes_t">
+           slot="hat" scrip="1800" coins="5" colors="clothes_p,clothes_t">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="buckle_widebrim"/>
   </article>
 
   <article name="male_widebrim_disks" townId="frontier_town"
-           slot="hat" scrip="1800" coins="5" colors="clothes_s">
+           slot="hat" scrip="1800" coins="5" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="disks_widebrim"/>
   </article>
@@ -130,20 +130,18 @@
   </article>
 
   <article name="male_widebrim_thick" townId="frontier_town"
-           slot="hat" scrip="1600" coins="5" colors="clothes_t">
+           slot="hat" scrip="1600" coins="5" colors="clothes_p,clothes_t">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="thick_widebrim"/>
   </article>
 
   <article name="male_widebrim_thin" townId="frontier_town"
-           slot="hat" scrip="1600" coins="5" colors="clothes_s">
+           slot="hat" scrip="1600" coins="5" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="widebrim"/>
     <component cclass="male/hat_band" name="thin_widebrim"/>
   </article>
 
-
   <!-- male jewelry -->
-
 
   <!-- male face paint -->
 
