@@ -183,7 +183,7 @@ public class UnitStatus extends Node
             }
         }
 
-        int dlevel = (int)Math.round(piece.damage/10f);
+        int dlevel = (int)Math.ceil(piece.damage/10f);
         if (_dlevel != dlevel) {
             _dlevel = dlevel;
             Texture dtex = _damtexs[dlevel];
