@@ -443,8 +443,7 @@ public class PieceSprite extends Sprite
         _view.addResolvingSprite(this);
         _binding = anim.bind(
             this, random, zations, new Model.Binding.Observer() {
-            public void wasBound (
-                Model.Animation anim, Model.Binding binding) {
+            public void wasBound (Model.Animation anim) {
                 // now that the meshes are attached, configure the animation
                 // speed and repeat type
                 setAnimationSpeed(
@@ -460,9 +459,13 @@ public class PieceSprite extends Sprite
                                            name, anim.emitters[ii].props));
                         emission.init(ctx, _view, PieceSprite.this);
                     }
-                    emission.start(anim, binding);
+                    emission.start(anim, _binding);
                 }
 
+                _view.clearResolvingSprite(PieceSprite.this);
+            }
+
+            public void wasSkipped (Model.Animation anim) {
                 _view.clearResolvingSprite(PieceSprite.this);
             }
         });
@@ -492,6 +495,7 @@ public class PieceSprite extends Sprite
         if (parent == null) {
             if (_binding != null) {
                 _binding.detach();
+                _binding = null;
             }
             for (SpriteEmission emission : _emissions.values()) {
                 emission.cleanup();

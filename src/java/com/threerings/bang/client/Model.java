@@ -80,10 +80,11 @@ public class Model
     public static class Binding
     {
         /** Used to notify interested parties when our animation is finally
-         * bound. */
+         * bound or if we are cleared prior to binding completion. */
         public interface Observer
         {
-            public void wasBound (Animation anim, Binding binding);
+            public void wasBound (Animation anim);
+            public void wasSkipped (Animation anim);
         }
 
         public Geometry getMarker (String name)
@@ -93,6 +94,13 @@ public class Model
 
         public void detach ()
         {
+            // if we haven't completed our binding yet, we need to let our
+            // observer know that we never did the deal
+            if (_obs != null) {
+                _obs.wasSkipped(_anim);
+                _obs = null;
+            }
+
             for (int ii = 0; ii < _meshes.length; ii++) {
                 _node.detachChild(_meshes[ii]);
             }
@@ -137,7 +145,8 @@ public class Model
             // bindings will be resolved the first time through and will report
             // binding completion immediately
             if (!_anim.isResolving() && _obs != null) {
-                _obs.wasBound(_anim, this);
+                _obs.wasBound(_anim);
+                _obs = null;
             }
         }
 
