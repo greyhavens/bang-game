@@ -34,6 +34,7 @@ import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
@@ -45,6 +46,7 @@ import com.threerings.bang.store.data.StoreObject;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
@@ -58,6 +60,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.persist.PardnerRepository;
 import com.threerings.bang.server.persist.Player;
+import com.threerings.bang.util.NameFactory;
 
 import static com.threerings.bang.Log.log;
 
@@ -339,13 +342,16 @@ public class PlayerManager
         TutorialConfig tconfig =
             TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutid);
 
+        // we'll use this when picking an AI name
+        HashSet<String> names = new HashSet<String>();
+        names.add(player.getVisibleName().toString());
+
         // create a game configuration from that
         BangConfig config = new BangConfig();
         config.rated = false;
         config.players = new Name[] {
             player.getVisibleName(),
-            new Name("Larry") }; // TODO: pick an AI name somehow, get a
-                                 // fingerprint for them in the GameObject
+            new Name(pickAIName(names)) }; // TODO: get a fingerprint for the AI
         config.ais = new GameAI[] { null, new GameAI(1, 50) };
         config.scenarios = new String[] { tconfig.ident };
         config.tutorial = true;
@@ -359,6 +365,71 @@ public class PlayerManager
                 "[for=" + player.who() + ", config=" + config + "].", ie);
             throw new InvocationException(INTERNAL_ERROR);
         }
+    }
+
+    // documentation inherited from interface PlayerProvider
+    public void playComputer (
+        ClientObject caller, int players, String scenario, String board,
+        PlayerService.InvocationListener listener)
+        throws InvocationException
+    {
+        PlayerObject player = (PlayerObject)caller;
+
+        // sanity check the parameters
+        if (players < 2 || players > GameCodes.MAX_PLAYERS) {
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        // TODO: sanity check scenario type (make sure it corresponds to town)
+
+        // we'll use this when picking AI names
+        HashSet<String> names = new HashSet<String>();
+        names.add(player.getVisibleName().toString());
+
+        // create a game configuration from that
+        BangConfig config = new BangConfig();
+        config.rated = false;
+        config.players = new Name[players];
+        config.ais = new GameAI[players];
+        config.players[0] = player.getVisibleName();
+        for (int ii = 1; ii < players; ii++) {
+            // TODO: get a fingerprint for the AI
+            config.players[ii] = new Name(pickAIName(names));
+            config.ais[ii] = new GameAI(1, 50); // TODO: config difficulty?
+        }
+        config.scenarios = new String[] { scenario };
+        config.board = board;
+
+        // create the game manager and it will handle the rest
+        try {
+            BangServer.plreg.createPlace(config, null);
+        } catch (InstantiationException ie) {
+            log.log(Level.WARNING, "Error instantiating game " +
+                    "[for=" + player.who() + ", config=" + config + "].", ie);
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+    }
+
+    protected String pickAIName (HashSet<String> used)
+    {
+        boolean g = (RandomUtil.getInt(100) > 49);
+        HashSet<String> prefs = NameFactory.getCreator().getHandlePrefixes(g);
+        HashSet<String> roots = NameFactory.getCreator().getHandleRoots(g);
+        HashSet<String> suffs = NameFactory.getCreator().getHandleSuffixes(g);
+        for (int ii = 0; ii < 25; ii++) {
+            String name;
+            if (RandomUtil.getInt(100) > 49) {
+                name = (String)RandomUtil.pickRandom(prefs) + " "
+                    + (String)RandomUtil.pickRandom(roots);
+            } else {
+                name = (String)RandomUtil.pickRandom(roots) + " "
+                    + (String)RandomUtil.pickRandom(suffs);
+            }
+            if (!used.contains(name)) {
+                used.add(name);
+                return name;
+            }
+        }
+        return "HAL" + RandomUtil.getInt(1000);
     }
 
     /**

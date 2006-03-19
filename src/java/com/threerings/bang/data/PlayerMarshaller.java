@@ -46,8 +46,21 @@ public class PlayerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #playComputer} requests. */
+    public static final int PLAY_COMPUTER = 3;
+
+    // documentation inherited from interface
+    public void playComputer (Client arg1, int arg2, String arg3, String arg4, InvocationService.InvocationListener arg5)
+    {
+        ListenerMarshaller listener5 = new ListenerMarshaller();
+        listener5.listener = arg5;
+        sendRequest(arg1, PLAY_COMPUTER, new Object[] {
+            new Integer(arg2), arg3, arg4, listener5
+        });
+    }
+
     /** The method id used to dispatch {@link #playTutorial} requests. */
-    public static final int PLAY_TUTORIAL = 3;
+    public static final int PLAY_TUTORIAL = 4;
 
     // documentation inherited from interface
     public void playTutorial (Client arg1, String arg2, InvocationService.InvocationListener arg3)
@@ -60,7 +73,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #removePardner} requests. */
-    public static final int REMOVE_PARDNER = 4;
+    public static final int REMOVE_PARDNER = 5;
 
     // documentation inherited from interface
     public void removePardner (Client arg1, Name arg2, InvocationService.ConfirmListener arg3)
@@ -73,7 +86,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #respondToPardnerInvite} requests. */
-    public static final int RESPOND_TO_PARDNER_INVITE = 5;
+    public static final int RESPOND_TO_PARDNER_INVITE = 6;
 
     // documentation inherited from interface
     public void respondToPardnerInvite (Client arg1, Name arg2, boolean arg3, InvocationService.ConfirmListener arg4)

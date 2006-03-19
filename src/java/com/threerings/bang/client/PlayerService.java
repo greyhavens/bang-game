@@ -44,4 +44,10 @@ public interface PlayerService extends InvocationService
      */
     public void playTutorial (
         Client client, String tutid, InvocationListener listener);
+
+    /**
+     * Requests to play a single round match against the computer.
+     */
+    public void playComputer (Client client, int players, String scenario,
+                              String board, InvocationListener listener);
 }

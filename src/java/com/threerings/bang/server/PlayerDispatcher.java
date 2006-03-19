@@ -53,6 +53,13 @@ public class PlayerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case PlayerMarshaller.PLAY_COMPUTER:
+            ((PlayerProvider)provider).playComputer(
+                source,
+                ((Integer)args[0]).intValue(), (String)args[1], (String)args[2], (InvocationService.InvocationListener)args[3]
+            );
+            return;
+
         case PlayerMarshaller.PLAY_TUTORIAL:
             ((PlayerProvider)provider).playTutorial(
                 source,

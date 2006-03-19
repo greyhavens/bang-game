@@ -29,6 +29,12 @@ public interface PlayerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link PlayerService#playComputer} request.
+     */
+    public void playComputer (ClientObject caller, int arg1, String arg2, String arg3, InvocationService.InvocationListener arg4)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#playTutorial} request.
      */
     public void playTutorial (ClientObject caller, String arg1, InvocationService.InvocationListener arg2)

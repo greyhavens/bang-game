@@ -32,23 +32,17 @@ import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.effect.WindowSlider;
 
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.SessionObserver;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.PlaceView;
 
-import com.threerings.parlor.game.data.GameAI;
-
 import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.ranch.client.FirstBigShotView;
 
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticleFactory;
-import com.threerings.bang.game.data.BangConfig;
-import com.threerings.bang.game.data.TutorialConfig;
-import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.util.BoardCache;
@@ -406,36 +400,30 @@ public class BangClient extends BasicClient
         // register our status view key bindings
         StatusView.bindKeys(_ctx);
 
-        // we potentially jump right into a game when developing
-        BangConfig config = null;
-        if ("tutorial".equals(System.getProperty("test"))) {
+        // developers can jump right into a tutorial or game
+        String test = System.getProperty("test");
+        if (test != null) {
+            ReportingListener rl =
+                new ReportingListener(_ctx, BANG_MSGS, "m.quick_start_failed");
             PlayerService psvc = (PlayerService)
                 _ctx.getClient().requireService(PlayerService.class);
-            psvc.playTutorial(_ctx.getClient(), "test", new ReportingListener(
-                                  _ctx, BANG_MSGS, "m.start_tut_failed"));
-            return;
 
-        } else if (System.getProperty("test") != null) {
-            config = new BangConfig();
-            config.players = new Name[] {
-                _ctx.getUserObject().getVisibleName(),
-                new Name("Larry"), new Name("Moe"), new Name("Curly") };
-            config.ais = new GameAI[] {
-                null, new GameAI(1, 50), new GameAI(0, 50), new GameAI(0, 50) };
-            config.scenarios = new String[] { "cj" };
-            config.teamSize = 3;
-            config.board = System.getProperty("board");
-        }
+            // start a tutorial if requested
+            if ("tutorial".equals("test")) {
+                psvc.playTutorial(_ctx.getClient(), "test", rl);
+                return;
+            }
 
-        if (config != null) {
-            ConfirmListener cl = new ConfirmListener() {
-                public void requestProcessed () {
-                }
-                public void requestFailed (String reason) {
-                    log.warning("Failed to create game: " + reason);
-                }
-            };
-            _ctx.getParlorDirector().startSolitaire(config, cl);
+            // otherwise we're starting a test game versus the computer
+            int pcount;
+            try {
+                pcount = Integer.parseInt(System.getProperty("players"));
+            } catch (Throwable t) {
+                pcount = 4;
+            }
+            psvc.playComputer(_ctx.getClient(), pcount,
+                              System.getProperty("scenario", "cj"),
+                              System.getProperty("board"), rl);
             return;
         }
 
@@ -477,7 +465,7 @@ public class BangClient extends BasicClient
         // clear our status view key bindings
         StatusView.clearKeys(_ctx);
 
-        // TODO: go back to the logon page?
+        // shut her right on down
         _ctx.getApp().stop();
     }
 
