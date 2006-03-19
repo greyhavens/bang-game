@@ -389,7 +389,7 @@ public class StatRepository extends SimpleRepository
             "STAT_DATA BLOB NOT NULL",
             "KEY (PLAYER_ID)",
             "KEY (STAT_CODE)",
-        });
+        }, "");
 
         JDBCUtil.createTableIfMissing(conn, "STRING_CODES", new String[] {
             "STAT_CODE INTEGER NOT NULL",
@@ -397,7 +397,7 @@ public class StatRepository extends SimpleRepository
             "CODE INTEGER NOT NULL",
             "UNIQUE (STAT_CODE, VALUE)",
             "UNIQUE (STAT_CODE, CODE)",
-        });
+        }, "");
     }
 
     protected HashMap<Stat.Type,HashMap<String,Integer>> _stringToCode =
