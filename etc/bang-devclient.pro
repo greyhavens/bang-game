@@ -28,7 +28,7 @@
 -libraryjars ../lib/lwjgl.jar
 
 # -dontoptimize
-# -dontobfuscate
+-dontobfuscate
 
 -outjars ../dist/bang-pcode.jar
 -printseeds ../dist/proguard.seeds

@@ -376,7 +376,7 @@ public class BangView extends BWindow
             int width = _ctx.getDisplay().getWidth();
             _ctx.getRootNode().addWindow(chat);
             chat.pack();
-            chat.setBounds(5, 50, width - 10, chat.getHeight());
+            chat.setBounds(5, 80, width - 10, chat.getHeight());
         }
     }
 
