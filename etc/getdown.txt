@@ -48,9 +48,6 @@ jvmarg = -Xmx128M
 jvmarg = -Djava.library.path=%APPDIR%/native
 jvmarg = -Dappdir=%APPDIR%
 jvmarg = -Dresource_dir=%APPDIR%/rsrc
-# jvmarg = -XrunShark
-jvmarg = -Dprofiling=true
-jvmarg = -agentlib:yjpagent
 
 # The main Java class
 class = com.threerings.bang.client.BangApp
