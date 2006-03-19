@@ -76,7 +76,6 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Model;
-import com.threerings.bang.client.util.ModelLoader;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -286,8 +285,7 @@ public class BoardView extends BComponent
         _pnode.updateGeometricState(0, true);
 
         // create a loading marquee to report loading progress
-        ModelLoader loader = Model.getLoader();
-        if (loader != null && (_loadingMax = loader.getQueueSize()) > 0) {
+        if (_toLoad > 0) {
             updateLoadingMarquee();
         }
 
@@ -297,6 +295,7 @@ public class BoardView extends BComponent
                 if (_loading != null) {
                     _ctx.getInterface().detachChild(_loading);
                     _loading = null;
+                    _loaded = _toLoad = 0;
                 }
                 if (_fadein != null) {
                     _fadein.setPaused(false);
@@ -327,6 +326,7 @@ public class BoardView extends BComponent
     public void addResolvingSprite (PieceSprite resolver)
     {
         _resolvingSprites++;
+        _toLoad++;
     }
 
     /**
@@ -335,6 +335,7 @@ public class BoardView extends BComponent
     public void clearResolvingSprite (PieceSprite resolved)
     {
         _resolvingSprites--;
+        _loaded++;
 
         // update our loading marquee
         if (_loading != null) {
@@ -1097,8 +1098,8 @@ public class BoardView extends BComponent
             _ctx.getInterface().detachChild(_loading);
         }
 
-        int pct = (_loadingMax - Model.getLoader().getQueueSize()) * 100 /
-            _loadingMax;
+        // Model.getLoader().getQueueSize()
+        int pct = _loaded * 100 / _toLoad;
         String pctstr = _ctx.xlate(
             GameCodes.GAME_MSGS, MessageBundle.tcompose(
                 "m.loading_pct", String.valueOf(pct)));
@@ -1413,7 +1414,7 @@ public class BoardView extends BComponent
     protected BoardEventListener _blistener = new BoardEventListener();
 
     protected Quad _marquee, _loading;
-    protected int _loadingMax;
+    protected int _toLoad, _loaded;
 
     protected Node _node, _pnode, _hnode;
     protected LightState _lstate;

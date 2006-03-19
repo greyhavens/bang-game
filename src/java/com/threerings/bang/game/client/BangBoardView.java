@@ -114,7 +114,7 @@ public class BangBoardView extends BoardView
         updatePlacingCard(_mouse.x, _mouse.y);
         log.info("Placing " + _card);
     }
-    
+
     /**
      * Called by the controller when we know one way or another regarding a
      * move and shoot request.
@@ -161,7 +161,7 @@ public class BangBoardView extends BoardView
         Vector3f pan = new Vector3f(target.x - gpoint.x, target.y - gpoint.y,
             0f);
         camhand.setLocation(target.set(gpoint.x, gpoint.y, 150f));
-        
+
         // pan, orbit, and zoom over the board
         camhand.setLimitsEnabled(false);
         camhand.tiltCamera(-FastMath.PI * 0.25f);
@@ -197,7 +197,7 @@ public class BangBoardView extends BoardView
             }
         });
     }
-    
+
     /**
      * Fades in a "round over" marquee, fades out the board, sets up the fade
      * in for the new board and calls back to the controller to let it know
@@ -309,7 +309,7 @@ public class BangBoardView extends BoardView
         if (_tpath != null) {
             _ctx.getCameraHandler().skipPath();
         }
-        
+
         switch (_downButton = e.getButton()) {
         case MouseEvent.BUTTON2:
             handleRightPress(e.getX(), e.getY());
@@ -358,8 +358,18 @@ public class BangBoardView extends BoardView
      */
     public void startRound ()
     {
+        // create a loading marquee to report unit loading progress
+        if (_toLoad > 0) {
+            updateLoadingMarquee();
+        }
+
         addResolutionObserver(new ResolutionObserver() {
             public void mediaResolved () {
+                if (_loading != null) {
+                    _ctx.getInterface().detachChild(_loading);
+                    _loading = null;
+                    _loaded = _toLoad = 0;
+                }
                 _ctrl.readyForRound();
             }
         });
@@ -383,7 +393,7 @@ public class BangBoardView extends BoardView
         }
         _orders.clear();
     }
-    
+
     @Override // documentation inherited
     public void clearResolvingSprite (PieceSprite resolved)
     {
@@ -394,7 +404,7 @@ public class BangBoardView extends BoardView
             super.clearResolvingSprite(resolved);
             return;
         }
-        
+
         // move the unit after it's fully initialized
         final UnitSprite sprite = (UnitSprite)resolved;
         sprite.movingToStart = true;
@@ -404,7 +414,7 @@ public class BangBoardView extends BoardView
             }
         });
     }
-    
+
     /**
      * Moves a sprite to its initial position and marks it as resolved
      * when it gets there.
@@ -433,7 +443,7 @@ public class BangBoardView extends BoardView
             }
         });
     }
-    
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -458,13 +468,13 @@ public class BangBoardView extends BoardView
 
         // clear out our cursor
         _cursbind.detach();
-        
+
         // stop the board tour if it's still going
         if (_tpath != null) {
             _ctx.getCameraHandler().moveCamera(null);
         }
     }
-    
+
     @Override // documentation inherited
     protected void createMarquee (String text)
     {
@@ -497,7 +507,7 @@ public class BangBoardView extends BoardView
             _ctx.getDisplay().getHeight());
         _ctx.getRootNode().addWindow(_pmarquees);
     }
-    
+
     /**
      * Creates and returns a player view for the opening marquee.
      */
@@ -513,7 +523,7 @@ public class BangBoardView extends BoardView
         cont.add(new BLabel(boi.username.toString(), "player_marquee_label"));
         return cont;
     }
-    
+
     @Override // documentation inherited
     protected void clearMarquee (float fadeTime)
     {
@@ -523,19 +533,19 @@ public class BangBoardView extends BoardView
             _pmarquees = null;
         }
     }
-    
+
     @Override // documentation inherited
     protected void fadeInComplete ()
     {
         if (_tpath == null) {
             super.fadeInComplete();
-            
+
         } else {
             // we will clear the marquee when the board tour is finished
             _fadein = null;
         }
     }
-    
+
     @Override // documentation inherited
     protected boolean isHoverable (Sprite sprite)
     {
@@ -604,13 +614,13 @@ public class BangBoardView extends BoardView
         if (_bangobj.tick != 0) {
             return;
         }
-        
+
         // place the unit at the corner of the board nearest to the player's
         // start position
         Point corner = getStartCorner(piece.owner);
         sprite.setLocation(_board, corner.x, corner.y);
     }
-    
+
     /**
      * Returns the corner of the board nearest to the specified player's start
      * position.
@@ -622,7 +632,7 @@ public class BangBoardView extends BoardView
             (pt.x < _board.getWidth() / 2) ? 0 : _board.getWidth() - 1,
             (pt.y < _board.getHeight() / 2) ? 0 : _board.getHeight() - 1);
     }
-    
+
     /** Called by the {@link EffectHandler} when a piece has moved. */
     protected void pieceDidMove (Piece piece)
     {
@@ -821,7 +831,7 @@ public class BangBoardView extends BoardView
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (p instanceof Unit && range.contains(p.x, p.y) &&
-                _selection.validTarget(p, false) && 
+                _selection.validTarget(p, false) &&
                 _selection.computeShotLocation(p, moves) != null) {
                 UnitSprite sprite = getUnitSprite(p);
                 if (sprite != null) {
@@ -1143,7 +1153,7 @@ public class BangBoardView extends BoardView
                                   UnitSprite.AdvanceOrder.MOVE :
                                   UnitSprite.AdvanceOrder.MOVE_SHOOT);
 
-            // denote our desired move location on the board 
+            // denote our desired move location on the board
             if (mx != Short.MAX_VALUE) {
                 _highlight = _tnode.createHighlight(x, y, true);
                 _unit.setPendingNode(_highlight);
@@ -1229,7 +1239,7 @@ public class BangBoardView extends BoardView
             return _board.isGroundOccupiable(x, y, true);
         }
     };
-    
+
     /** Tracks pieces that will be moving as soon as the board finishes
      * animating previous actions. */
     protected IntIntMap _pendmap = new IntIntMap();
@@ -1241,7 +1251,7 @@ public class BangBoardView extends BoardView
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0.5f, 0.5f, 0.5f);
-    
+
     /** Positions for the four avatars. */
     protected static final Point[] PLAYER_MARQUEE_LOCATIONS = {
         new Point(10, 416), new Point(724, 416),
