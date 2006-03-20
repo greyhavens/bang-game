@@ -441,7 +441,8 @@ public class PieceSprite extends Sprite
         _view.addResolvingSprite(this);
         _binding = anim.bind(
             this, random, zations, new Model.Binding.Observer() {
-            public void wasBound (Model.Animation anim) {
+            public void wasBound (
+                Model.Animation anim, Model.Binding binding) {
                 // now that the meshes are attached, configure the animation
                 // speed and repeat type
                 setAnimationSpeed(
@@ -457,7 +458,7 @@ public class PieceSprite extends Sprite
                                            name, anim.emitters[ii].props));
                         emission.init(ctx, _view, PieceSprite.this);
                     }
-                    emission.start(anim, _binding);
+                    emission.start(anim, binding);
                 }
 
                 _view.clearResolvingSprite(PieceSprite.this);

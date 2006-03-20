@@ -83,7 +83,7 @@ public class Model
          * bound or if we are cleared prior to binding completion. */
         public interface Observer
         {
-            public void wasBound (Animation anim);
+            public void wasBound (Animation anim, Binding binding);
             public void wasSkipped (Animation anim);
         }
 
@@ -145,7 +145,7 @@ public class Model
             // bindings will be resolved the first time through and will report
             // binding completion immediately
             if (!_anim.isResolving() && _obs != null) {
-                _obs.wasBound(_anim);
+                _obs.wasBound(_anim, this);
                 _obs = null;
             }
         }

@@ -66,6 +66,9 @@ public class SmokePlumeEmission extends SpriteEmission
         _smokemgr.getParticles().addController(_smokemgr);
         _smokemgr.getParticles().addController(new Controller() {
             public void update (float time) {
+                if (!isRunning()) {
+                    return;
+                }
                 // position the emitter
                 getEmitterLocation(true, _smokemgr.getParticlesOrigin());
             }

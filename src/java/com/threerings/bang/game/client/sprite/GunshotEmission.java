@@ -109,6 +109,13 @@ public class GunshotEmission extends SpriteEmission
         _shotctrl.add();
     }
     
+    @Override // documentation inherited
+    public void stop ()
+    {
+        super.stop();
+        _sprite.removeController(_shotctrl);
+    }
+    
     /**
      * Creates the shared flare mesh geometry.
      */

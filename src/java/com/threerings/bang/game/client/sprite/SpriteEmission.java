@@ -158,11 +158,21 @@ public abstract class SpriteEmission implements Cloneable
     
     /**
      * Returns a reference to the marker geometry associated with this
-     * emission, or <code>null</code> if the marker is not yet loaded.
+     * emission, or <code>null</code> if it could not be found.
      */
     protected Geometry getMarker ()
     {
-        return (_binding == null) ? null : _binding.getMarker(_name);
+        if (_binding == null) {
+            log.warning("Received request for emission marker when stopped " +
+                "[name=" + _name + "].");
+            return null;
+        }
+        Geometry marker = _binding.getMarker(_name);
+        if (marker == null) {
+            log.warning("Couldn't locate marker geometry [action=" +
+                _anim.action + ", name=" + _name + "].");
+        }
+        return marker;
     }
 
     protected String _name;
