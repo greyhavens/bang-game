@@ -170,6 +170,9 @@ public class MobileSprite extends PieceSprite
     public void move (BangBoard board, List path, float speed)
     {
         move(createPath(board, path, speed));
+        Point pt = (Point)path.get(path.size() - 1);
+        _px = pt.x;
+        _py = pt.y;
     }
 
     @Override // documentation inherited
@@ -347,9 +350,11 @@ public class MobileSprite extends PieceSprite
             }
             if (path != null) {
                 move(path);
+                _px = _piece.x;
+                _py = _piece.y;
+                
             } else {
-                int elev = computeElevation(board, _piece.x, _piece.y);
-                setLocation(_piece.x, _piece.y, elev);
+                setLocation(board, _piece.x, _piece.y);
             }
         }
     }

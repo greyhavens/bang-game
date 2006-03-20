@@ -312,7 +312,6 @@ public class BangView extends BWindow
             plist.add(p);
         }
         _bangobj.pieces = new PieceDSet(plist.iterator());
-        _bangobj.board.shadowPieces(plist.iterator());
         
         // tell the board view to start the game so that we can see the
         // board while we're buying pieces

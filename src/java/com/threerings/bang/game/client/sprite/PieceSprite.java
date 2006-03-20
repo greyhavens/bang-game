@@ -115,7 +115,7 @@ public class PieceSprite extends Sprite
         createSounds(sounds);
 
         // position ourselves properly to start
-        moveSprite(board);
+        setLocation(board, _piece.x, _piece.y);
         setOrientation(piece.orientation);
     }
 
@@ -151,7 +151,7 @@ public class PieceSprite extends Sprite
      */
     public void setLocation (int tx, int ty, int elevation)
     {
-        toWorldCoords(tx, ty, elevation, _temp);
+        toWorldCoords(_px = tx, _py = ty, elevation, _temp);
         if (!_temp.equals(localTranslation)) {
             setLocalTranslation(new Vector3f(_temp));
 //             log.info("Moving to " + tx + ", " + ty + ", " + elevation +
@@ -397,7 +397,7 @@ public class PieceSprite extends Sprite
      */
     protected void moveSprite (BangBoard board)
     {
-        setLocation(board, _px = _piece.x, _py = _piece.y);
+        setLocation(board, _piece.x, _piece.y);
     }
 
     /** Converts tile coordinates plus elevation into (3D) world
