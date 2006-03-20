@@ -44,9 +44,6 @@ public class BangBoard extends SimpleStreamableObject
     /** The number of subdivisions in the heightfield for each tile. */
     public static final int HEIGHTFIELD_SUBDIVISIONS = 4;
 
-    /** The number of elevation units per vertical tile size. */
-    public static final int ELEVATION_UNITS_PER_TILE = 64;
-
     /** The maximum difference between adjacent height points allowed before a
      * tile becomes unoccupiable. */
     public static final int MAX_OCCUPIABLE_HEIGHT_DELTA = 16;
@@ -71,6 +68,7 @@ public class BangBoard extends SimpleStreamableObject
         _hfheight = _height * HEIGHTFIELD_SUBDIVISIONS + 1;
         
         _heightfield = new byte[_hfwidth * _hfheight];
+        _elevationUnitsPerTile = 64;
         _terrain = new byte[_hfwidth * _hfheight];
         _shadows = new byte[_hfwidth * _hfheight];
         fillShadows(0);
@@ -191,6 +189,25 @@ public class BangBoard extends SimpleStreamableObject
         return _heightfield;
     }
 
+    /** Returns the number of elevation units per tile, which determines the
+     * elevation scale. */
+    public byte getElevationUnitsPerTile ()
+    {
+        return _elevationUnitsPerTile;
+    }
+
+    /** Sets the number of elevation units per tile. */
+    public void setElevationUnitsPerTile (byte units)
+    {
+        _elevationUnitsPerTile = units;
+    }
+    
+    /** Returns the elevation scale (the distance between elevation units). */
+    public float getElevationScale (float tileSize)
+    {
+        return tileSize / _elevationUnitsPerTile;
+    }
+    
     /** Returns the terrain value at the specified terrain coordinates. */
     public byte getTerrainValue (int x, int y)
     {
@@ -672,7 +689,7 @@ public class BangBoard extends SimpleStreamableObject
         if (x < 0 || y < 0 || x >= _width || y >= _height) {
             return 0;
         } else {
-            return _estate[y*_width+x] * ELEVATION_UNITS_PER_TILE;
+            return _estate[y*_width+x] * (int)_elevationUnitsPerTile;
         }
     }
 
@@ -1067,6 +1084,9 @@ public class BangBoard extends SimpleStreamableObject
     /** The heightfield that describes the board terrain. */
     protected byte[] _heightfield;
 
+    /** The number of elevation units in the length of one tile. */
+    protected byte _elevationUnitsPerTile;
+    
     /** The terrain codes for each heightfield vertex. */
     protected byte[] _terrain;
 

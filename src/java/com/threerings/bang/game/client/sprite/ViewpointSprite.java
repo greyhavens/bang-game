@@ -72,15 +72,6 @@ public class ViewpointSprite extends PieceSprite
     {
         super.updatePosition(board);
 
-        // update fine positioning as well
-        Viewpoint vp = (Viewpoint)_piece;
-        if (_fx != vp.fx || _fy != vp.fy) {
-            setLocation(_px, _py, _elevation);
-        }
-        if (_forient != vp.forient || _pitch != vp.pitch) {
-            setOrientation(_porient);
-        }
-
         // copy the new state to the bound camera
         if (_boundcam != null) {
             updateBoundCamera();
@@ -93,11 +84,10 @@ public class ViewpointSprite extends PieceSprite
     public void setLocation (int tx, int ty, int elevation)
     {
         // adjust by fine coordinates
-        _elevation = elevation;
         toWorldCoords(tx, ty, elevation, _temp);
         Viewpoint vp = (Viewpoint)_piece;
-        _temp.x += (_fx = vp.fx) * PropSprite.FINE_POSITION_SCALE;
-        _temp.y += (_fy = vp.fy) * PropSprite.FINE_POSITION_SCALE;
+        _temp.x += vp.fx * PropSprite.FINE_POSITION_SCALE;
+        _temp.y += vp.fy * PropSprite.FINE_POSITION_SCALE;
         _temp.z += TILE_SIZE * 0.5f;
         getLocalTranslation().set(_temp);
     }
@@ -107,9 +97,9 @@ public class ViewpointSprite extends PieceSprite
     {
         Viewpoint vp = (Viewpoint)_piece;
         getLocalRotation().fromAngleNormalAxis(ROTATIONS[orientation] -
-            (_forient = vp.forient) * PropSprite.FINE_ROTATION_SCALE, UP);
-        _rot.fromAngleNormalAxis(
-            (_pitch = vp.pitch) * PropSprite.FINE_ROTATION_SCALE, LEFT);
+            vp.forient * PropSprite.FINE_ROTATION_SCALE, UP);
+        _rot.fromAngleNormalAxis(vp.pitch * PropSprite.FINE_ROTATION_SCALE,
+            LEFT);
         getLocalRotation().multLocal(_rot);
     }
 
@@ -149,9 +139,6 @@ public class ViewpointSprite extends PieceSprite
 
     /** The camera to which this viewpoint is bound, if any. */
     protected Camera _boundcam;
-
-    /** The displayed fine x, fine y, fine orientation, and pitch. */
-    protected int _fx, _fy, _forient, _pitch;
 
     /** Temporary rotation result. */
     protected Quaternion _rot = new Quaternion();

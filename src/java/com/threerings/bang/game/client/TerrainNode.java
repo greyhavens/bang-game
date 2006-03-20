@@ -303,8 +303,7 @@ public class TerrainNode extends Node
             if (_onTile && _overPieces &&
                 _board.getPieceElevation(tx, ty) > 0) {
                 constantElevation = true;
-                elevation = _board.getElevation(tx, ty) * (TILE_SIZE /
-                    BangBoard.ELEVATION_UNITS_PER_TILE);
+                elevation = _board.getElevation(tx, ty) * _elevationScale;
             }
 
             float x0 = x - _width/2, y0 = y - _height/2;
@@ -379,6 +378,7 @@ public class TerrainNode extends Node
     public void createBoardTerrain (BangBoard board)
     {
         _board = board;
+        _elevationScale = _board.getElevationScale(TILE_SIZE);
 
         // clean up any existing geometry
         detachAllChildren();
@@ -399,19 +399,8 @@ public class TerrainNode extends Node
         updateRenderState();
         updateGeometricState(0, true);
         
-        // compute the bounding box planes with some extra space
-        updateWorldBound();
-        float bbxmax = _board.getWidth() * TILE_SIZE,
-            bbymax = _board.getHeight() * TILE_SIZE,
-            bbzmax = 129 * TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE;
-        _bbplanes = new Plane[] {
-            new Plane(Vector3f.UNIT_X, -SUB_TILE_SIZE),
-            new Plane(Vector3f.UNIT_Y, -SUB_TILE_SIZE),
-            new Plane(Vector3f.UNIT_Z, -bbzmax),
-            new Plane(Vector3f.UNIT_X.negate(), -bbxmax),
-            new Plane(Vector3f.UNIT_Y.negate(), -bbymax),
-            new Plane(Vector3f.UNIT_Z.negate(), -bbzmax),
-        };
+        // compute the bounding box planes used for ray casting
+        computeBoundingBoxPlanes();
     }
     
     /**
@@ -444,6 +433,13 @@ public class TerrainNode extends Node
      */
     public void refreshHeightfield (int x1, int y1, int x2, int y2)
     {
+        // make sure the scale is up-to-date
+        float elevationScale = _board.getElevationScale(TILE_SIZE);
+        if (_elevationScale != elevationScale) {
+            _elevationScale = elevationScale;
+            computeBoundingBoxPlanes();
+        }
+        
         // if the region includes the edges, we have to update the whole
         // shebang
         Rectangle rect;
@@ -534,7 +530,7 @@ public class TerrainNode extends Node
         byte[] shadows = _board.getShadows();
         float azimuth = _board.getLightAzimuth(0),
             elevation = _board.getLightElevation(0),
-            hstep = TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE, theight;
+            hstep = _elevationScale, theight;
         Vector3f origin = new Vector3f(),
             dir = new Vector3f(FastMath.cos(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(azimuth) * FastMath.cos(elevation),
@@ -746,8 +742,8 @@ public class TerrainNode extends Node
      */
     public float getHeightfieldValue (int x, int y)
     {
-        return (_board == null) ? 0f : _board.getHeightfieldValue(x, y) *
-            (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
+        return (_board == null) ?
+            0f : _board.getHeightfieldValue(x, y) * _elevationScale;
     }
     
     /**
@@ -781,8 +777,7 @@ public class TerrainNode extends Node
     protected float getShadowHeight (int x, int y)
     {
         return (_board.getHeightfieldValue(x, y) +
-            _board.getShadowValue(x, y)) *
-                (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
+            _board.getShadowValue(x, y)) * _elevationScale;
     }
     
     /**
@@ -1037,6 +1032,25 @@ public class TerrainNode extends Node
             }
         }
         return (value / total) * _board.getShadowIntensity();
+    }
+    
+    /**
+     * Computes and stores the planes of the bounding box.
+     */
+    protected void computeBoundingBoxPlanes ()
+    {
+        // the z extents include some extra space for the ray cast algorithm
+        float bbxmax = _board.getWidth() * TILE_SIZE,
+            bbymax = _board.getHeight() * TILE_SIZE,
+            bbzmax = 129 * _elevationScale;
+        _bbplanes = new Plane[] {
+            new Plane(Vector3f.UNIT_X, -SUB_TILE_SIZE),
+            new Plane(Vector3f.UNIT_Y, -SUB_TILE_SIZE),
+            new Plane(Vector3f.UNIT_Z, -bbzmax),
+            new Plane(Vector3f.UNIT_X.negate(), -bbxmax),
+            new Plane(Vector3f.UNIT_Y.negate(), -bbymax),
+            new Plane(Vector3f.UNIT_Z.negate(), -bbzmax),
+        };
     }
     
     /**
@@ -1505,6 +1519,9 @@ public class TerrainNode extends Node
     
     /** The board with the terrain. */
     protected BangBoard _board;
+    
+    /** The elevation scale specified in the board. */
+    protected float _elevationScale;
     
     /** A shadow buffer indicating, for static heightfields, which heightfield
      * points are in shadow (as determined by raycasting). */

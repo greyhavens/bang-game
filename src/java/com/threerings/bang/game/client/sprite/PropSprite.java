@@ -31,6 +31,10 @@ public class PropSprite extends PieceSprite
     public static final float FINE_ROTATION_SCALE =
         (FastMath.PI * 0.25f) / 128;
 
+    /** The ratio between radians and the coarse rotation units used for pitch
+     * and roll values. */
+    public static final float COARSE_ROTATION_SCALE = FastMath.PI / 128;
+    
     /** The ratio between world units and fine translation units. */
     public static final float FINE_POSITION_SCALE =
         (TILE_SIZE * 0.5f) / 128;
@@ -53,31 +57,13 @@ public class PropSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    public boolean updatePosition (BangBoard board)
-    {
-        super.updatePosition(board);
-
-        // update fine positioning as well
-        Prop prop = (Prop)_piece;
-        if (_fx != prop.fx || _fy != prop.fy) {
-            setLocation(_px, _py, _elevation);
-        }
-        if (_forient != prop.forient) {
-            setOrientation(_porient);
-        }
-
-        return false;
-    }
-
-    @Override // documentation inherited
     public void setLocation (int tx, int ty, int elevation)
     {
         // adjust by fine coordinates
-        _elevation = elevation;
         toWorldCoords(tx, ty, elevation, _temp);
         Prop prop = (Prop)_piece;
-        _temp.x += (_fx = prop.fx) * FINE_POSITION_SCALE;
-        _temp.y += (_fy = prop.fy) * FINE_POSITION_SCALE;
+        _temp.x += prop.fx * FINE_POSITION_SCALE;
+        _temp.y += prop.fy * FINE_POSITION_SCALE;
         if (!_temp.equals(localTranslation)) {
             setLocalTranslation(new Vector3f(_temp));
         }
@@ -86,11 +72,11 @@ public class PropSprite extends PieceSprite
     @Override // documentation inherited
     public void setOrientation (int orientation)
     {
-        Quaternion quat = new Quaternion();
         Prop prop = (Prop)_piece;
-        quat.fromAngleAxis(ROTATIONS[orientation] -
-            (_forient = prop.forient) * FINE_ROTATION_SCALE, UP);
-        setLocalRotation(quat);
+        getLocalRotation().fromAngles(new float[] {
+            -prop.pitch * COARSE_ROTATION_SCALE,
+            -prop.roll * COARSE_ROTATION_SCALE,
+            ROTATIONS[orientation] - prop.forient * FINE_ROTATION_SCALE });
     }
 
     @Override // documentation inherited
@@ -116,6 +102,12 @@ public class PropSprite extends PieceSprite
     }
 
     @Override // documentation inherited
+    protected int computeElevation (BangBoard board, int tx, int ty)
+    {
+        return super.computeElevation(board, tx, ty) + ((Prop)_piece).felev;
+    }
+    
+    @Override // documentation inherited
     protected void centerWorldCoords (Vector3f coords)
     {
         // the piece width and height account for rotation
@@ -126,8 +118,6 @@ public class PropSprite extends PieceSprite
     protected PropConfig _config;
     protected Model _model;
     protected Model.Binding _binding;
-
-    protected int _fx, _fy, _forient;
 
 //     protected static final ColorRGBA FOOT_COLOR =
 //         new ColorRGBA(1, 1, 1, 0.5f);

@@ -106,6 +106,16 @@ public class EditorBoardView extends BoardView
     }
 
     /**
+     * Sets the number of elevation units there are in the length of a tile,
+     * which determines the heightfield scale.
+     */
+    public void setElevationUnitsPerTile (int units)
+    {
+        _board.setElevationUnitsPerTile((byte)units);
+        heightfieldChanged();
+    }
+    
+    /**
      * Sets the heightfield to the contents of the specified image.
      */
     public void setHeightfield (BufferedImage image)
@@ -187,7 +197,7 @@ public class EditorBoardView extends BoardView
         // update the terrain splats
         _tnode.refreshTerrain(x1, y1, x2, y2);
     }
-
+    
     /**
      * Paints a circle of values into the heightfield, either raising/lowering
      * the values or setting them directly.
@@ -413,6 +423,7 @@ public class EditorBoardView extends BoardView
                     _board.getTerrainValue(x+xoff, y+yoff));
             }
         }
+        nboard.setElevationUnitsPerTile(_board.getElevationUnitsPerTile());
         for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
             nboard.setLightParams(i, _board.getLightAzimuth(i),
                 _board.getLightElevation(i), _board.getLightDiffuseColor(i),

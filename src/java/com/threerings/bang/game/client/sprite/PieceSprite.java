@@ -53,6 +53,14 @@ public class PieceSprite extends Sprite
         _editorMode = editorMode;
     }
 
+    /**
+     * Checks whether editor mode has been enabled.
+     */
+    public static boolean isEditorMode ()
+    {
+        return _editorMode;
+    }
+    
     /** Returns the piece associated with this sprite. */
     public Piece getPiece ()
     {
@@ -107,9 +115,8 @@ public class PieceSprite extends Sprite
         createSounds(sounds);
 
         // position ourselves properly to start
-        setLocation(_px = piece.x, _py = piece.y,
-                    computeElevation(board, _px, _py));
-        setOrientation(_porient = piece.orientation);
+        moveSprite(board);
+        setOrientation(piece.orientation);
     }
 
     /**
@@ -144,7 +151,6 @@ public class PieceSprite extends Sprite
      */
     public void setLocation (int tx, int ty, int elevation)
     {
-        _elevation = elevation;
         toWorldCoords(tx, ty, elevation, _temp);
         if (!_temp.equals(localTranslation)) {
             setLocalTranslation(new Vector3f(_temp));
@@ -278,30 +284,22 @@ public class PieceSprite extends Sprite
      */
     public boolean updatePosition (BangBoard board)
     {
-        boolean moved = false;
-
+        // in the editor, just update everything; there could be something as
+        // wacky as a change in elevation scale
+        if (_editorMode) {
+            moveSprite(board);
+            setOrientation(_piece.orientation);
+            return false;
+        }
+        
         // move ourselves to our new location if we have one
         if (_piece.x != _px || _piece.y != _py) {
 //             log.info("Moving " + _piece.info() + " from +" +
 //                      _piece.x + "+" + _piece.y + " to +" + _px + "+" + _py);
             moveSprite(board);
-            moved = true;
-            _px = _piece.x;
-            _py = _piece.y;
-        }
-
-        // if we're rotated or the ground has moved underneath us (which only
-        // happens in the editor), we need to update our model
-        if (_editorMode) {
-            int elevation = computeElevation(board, _px, _py);
-            if (_porient != _piece.orientation || _elevation != elevation) {
-                setOrientation(_porient = _piece.orientation);
-                // now reset our location and it will adjust our centering
-                setLocation(_px, _py, elevation);
+            if (!isMoving()) {
+                log.warning("Moved but am not moving?! " + _piece.info());
             }
-
-        } else if (!isMoving() && moved) {
-            log.warning("Moved but am not moving?! " + _piece.info());
         }
 
         // if we started moving as a result, we need to be waited for
@@ -399,17 +397,17 @@ public class PieceSprite extends Sprite
      */
     protected void moveSprite (BangBoard board)
     {
-        int elev = computeElevation(board, _piece.x, _piece.y);
-        setLocation(_piece.x, _piece.y, elev);
+        setLocation(board, _px = _piece.x, _py = _piece.y);
     }
 
     /** Converts tile coordinates plus elevation into (3D) world
      * coordinates. */
-    protected Vector3f toWorldCoords (int tx, int ty, int elev, Vector3f target)
+    protected Vector3f toWorldCoords (int tx, int ty, int elev,
+        Vector3f target)
     {
         target.x = tx * TILE_SIZE;
         target.y = ty * TILE_SIZE;
-        target.z = elev * (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
+        target.z = elev * _view.getBoard().getElevationScale(TILE_SIZE);
         centerWorldCoords(target);
         return target;
     }
@@ -464,7 +462,6 @@ public class PieceSprite extends Sprite
 
                 _view.clearResolvingSprite(PieceSprite.this);
             }
-
             public void wasSkipped (Model.Animation anim) {
                 _view.clearResolvingSprite(PieceSprite.this);
             }
@@ -506,7 +503,7 @@ public class PieceSprite extends Sprite
     protected BoardView _view;
 
     protected Piece _piece;
-    protected int _px, _py, _porient;
+    protected int _px, _py;
     protected short _tick;
 
     protected boolean _selected;
@@ -524,9 +521,6 @@ public class PieceSprite extends Sprite
     /** The emissions activated by animations. */
     protected HashMap<String, SpriteEmission> _emissions =
         new HashMap<String, SpriteEmission>();
-
-    /** The current elevation of the piece. */
-    protected int _elevation;
 
     /** A place to hang all highlight geometry. */
     protected Node _hnode;

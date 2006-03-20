@@ -429,9 +429,9 @@ public class UnitSprite extends MobileSprite
     {
         int groundel = Math.max(board.getWaterLevel(),
             super.computeElevation(board, tx, ty)) +
-                FLYER_GROUND_HEIGHT * BangBoard.ELEVATION_UNITS_PER_TILE,
+                FLYER_GROUND_HEIGHT * board.getElevationUnitsPerTile(),
             propel = (int)((_view.getPropHeight(tx, ty) / TILE_SIZE +
-                FLYER_PROP_HEIGHT) * BangBoard.ELEVATION_UNITS_PER_TILE);
+                FLYER_PROP_HEIGHT) * board.getElevationUnitsPerTile());
         return Math.max(groundel, propel);
     }
 

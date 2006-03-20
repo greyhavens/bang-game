@@ -13,7 +13,6 @@ import com.jme.input.KeyInput;
 import com.jme.math.Vector3f;
 
 import com.jmex.bui.event.KeyEvent;
-import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 
 import com.threerings.jme.sprite.Sprite;
@@ -30,7 +29,7 @@ import static com.threerings.bang.Log.*;
  * Allows the user to place and manipulate pieces on the board.
  */
 public class PiecePlacer extends EditorTool
-    implements KeyListener, PieceCodes
+    implements PieceCodes
 {
     /** The name of this tool. */
     public static final String NAME = "piece_placer";
@@ -52,7 +51,7 @@ public class PiecePlacer extends EditorTool
         int tx = _hoverTile.x, ty = _hoverTile.y;
 
         // keep track of the press location in case we need it later
-        _dragStart.setLocation(tx, ty);
+        _dragStart.setLocation(e.getX(), e.getY());
 
         // if there's a piece under the mouse, start to drag or delete it
         _dragPiece = _panel.view.getHoverPiece();
@@ -62,9 +61,16 @@ public class PiecePlacer extends EditorTool
                     _panel, EditorController.REMOVE_PIECE, _dragPiece.getKey());
                 _dragPiece = null;
             } else {
-                _fineDrag = _dragPiece instanceof Prop &&
-                    (e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0;
-                if (_fineDrag) {
+                _dragType = NORMAL_DRAG;
+                if (_dragPiece instanceof Prop &&
+                    (e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0) {
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        _dragType = FINE_DRAG;
+                    } else if (e.getButton() == MouseEvent.BUTTON3) {
+                        _dragType = ELEVATION_DRAG;
+                    }
+                }
+                if (_dragType == FINE_DRAG) {
                     Prop p = (Prop)_dragPiece;
                     _panel.view.getGroundIntersect(e, false, _loc);
                     _dragOffset.setLocation(
@@ -73,7 +79,7 @@ public class PiecePlacer extends EditorTool
                         (int)(_loc.y / PropSprite.FINE_POSITION_SCALE) -
                             (p.y * 256 + p.fy));
                     
-                } else {
+                } else if (_dragType == NORMAL_DRAG) {
                     _dragOffset.setLocation(tx-_dragPiece.x, ty-_dragPiece.y);
                 }
             }
@@ -106,15 +112,24 @@ public class PiecePlacer extends EditorTool
     @Override // documentation inherited
     public void mouseDragged (MouseEvent e)
     {
-        if (_dragPiece != null && _fineDrag) {
-            Piece p = (Piece)_dragPiece.clone();
+        if (_dragPiece == null) {
+            return;
+        }
+        if (_dragType == FINE_DRAG) {
+            Prop p = (Prop)_dragPiece.clone();
             _panel.view.getGroundIntersect(e, false, _loc);
-            ((Prop)p).positionFine(
+            p.positionFine(
                 (int)(_loc.x / PropSprite.FINE_POSITION_SCALE) -
                     _dragOffset.x,
                 (int)(_loc.y / PropSprite.FINE_POSITION_SCALE) -
                     _dragOffset.y);
-            getBangObject().updatePieces(p);
+            getBangObject().updatePieces(_dragPiece = p);
+            
+        } else if (_dragType == ELEVATION_DRAG) {
+            Prop p = (Prop)_dragPiece.clone();
+            p.elevate(e.getY() - _dragStart.y);
+            _dragStart.setLocation(e.getX(), e.getY());
+            getBangObject().updatePieces(_dragPiece = p);   
         }
     }
     
@@ -142,7 +157,7 @@ public class PiecePlacer extends EditorTool
         _hoverTile.setLocation(tx, ty);
         
         // if we are dragging a piece, move that feller around
-        if (_dragPiece != null && !_fineDrag) {
+        if (_dragPiece != null && _dragType == NORMAL_DRAG) {
             Piece p = (Piece)_dragPiece.clone();
             p.position(tx - _dragOffset.x, ty - _dragOffset.y);
             getBangObject().updatePieces(p);
@@ -158,34 +173,43 @@ public class PiecePlacer extends EditorTool
             Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
     
-    // documentation inherited from interface KeyListener
+    @Override // documentation inherited
     public void keyPressed (KeyEvent e)
     {
-        int code = e.getKeyCode(), rot;
+        int code = e.getKeyCode(), rot = 0, elev = 0;
+        byte pitch = 0, roll = 0;
         switch (code) {
              case KeyInput.KEY_LEFT: rot = Piece.CW; break;
              case KeyInput.KEY_RIGHT: rot = Piece.CCW; break;
+             case KeyInput.KEY_UP: elev = +2; break;
+             case KeyInput.KEY_DOWN: elev = -2; break;
+             case KeyInput.KEY_W: pitch = +1; break;
+             case KeyInput.KEY_A: roll = -1; break;
+             case KeyInput.KEY_S: pitch = -1; break;
+             case KeyInput.KEY_D: roll = +1; break;
              default: return;
         }
         Piece piece = _panel.view.getHoverPiece();
         if (piece == null) {
             return;
         }
-        Piece p = (Piece)piece.clone();
+        piece = (Piece)piece.clone();
         if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0 &&
             piece instanceof Prop) {
-            ((Prop)piece).rotateFine(rot == Piece.CW ? -8 : +8);
-                
-        } else {
+            if (elev != 0) {
+                ((Prop)piece).elevate(elev);
+            } else if (pitch != 0) {
+                ((Prop)piece).pitch += pitch;
+            } else if (roll != 0) {
+                ((Prop)piece).roll += roll;
+            } else {
+                ((Prop)piece).rotateFine(rot == Piece.CW ? -8 : +8);
+            }
+            
+        } else if (elev == 0) {
             piece.rotate(rot);
         }
         getBangObject().updatePieces(piece);
-    }
-    
-    // documentation inherited from interface KeyListener
-    public void keyReleased (KeyEvent e)
-    {
-        // nada
     }
     
     // documentation inherited
@@ -195,14 +219,14 @@ public class PiecePlacer extends EditorTool
         options.add(_chooser = new PieceChooser(_ctx), BorderLayout.CENTER);
         return options;
     }
-
+    
     /** The piece chooser component. */
     protected PieceChooser _chooser;
     
     /** The location of the mouse pointer in tile coordinates. */
     protected Point _hoverTile = new Point(-1, -1);
         
-    /** The point at which our last drag took place. */
+    /** The screen coordinates where our drag started. */
     protected Point _dragStart = new Point();
 
     /** The piece we're dragging, if we clicked and dragged the mouse. */
@@ -214,9 +238,18 @@ public class PiecePlacer extends EditorTool
     /** The button that started our drag or -1. */
     protected int _dragButton = -1;
     
-    /** Whether or not we are performing a fine drag operation. */
-    protected boolean _fineDrag;
+    /** The type of drag operation we're performing. */
+    protected int _dragType;
     
     /** A temporary vector to reuse. */
     protected Vector3f _loc = new Vector3f();
+    
+    /** The normal drag type: dragging pieces with tile coordinates. */
+    protected static final int NORMAL_DRAG = 0;
+    
+    /** The fine drag type: dragging pieces with fine coordinates. */
+    protected static final int FINE_DRAG = 1;
+    
+    /** The elevation drag type: dragging pieces vertically. */
+    protected static final int ELEVATION_DRAG = 2;
 }

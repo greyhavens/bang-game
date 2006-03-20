@@ -9,14 +9,19 @@ import java.awt.event.ActionListener;
 
 import java.text.NumberFormat;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.jme.math.FastMath;
 
+import com.samskivert.swing.GroupLayout;
 import com.samskivert.swing.VGroupLayout;
 
 import com.threerings.util.MessageBundle;
@@ -24,22 +29,27 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.game.data.BangBoard;
 
 /**
- * Allows the user to change the board size.
+ * Allows the user to change various properties of the board, such as its size
+ * and elevation scale.
  */
-public class BoardSizeDialog extends JDialog
+public class BoardPropertiesDialog extends JDialog
+    implements ChangeListener
 {
-    public BoardSizeDialog (EditorContext ctx, EditorPanel panel)
+    public BoardPropertiesDialog (EditorContext ctx, EditorPanel panel)
     {
-        super(ctx.getFrame(), ctx.xlate("editor", "t.board_size_dialog"),
+        super(ctx.getFrame(), ctx.xlate("editor", "t.board_props_dialog"),
             true);
         _ctx = ctx;
         _panel = panel;
     
-        getContentPane().add(_dimensions = new DimensionsPanel(ctx),
-            BorderLayout.CENTER);
+        JPanel center = new JPanel(new VGroupLayout());
+        getContentPane().add(center, BorderLayout.CENTER);
         
-        JPanel buttons = new JPanel();
-        JButton change = new JButton(_ctx.xlate("editor", "b.change_size"));
+        JPanel spanel = GroupLayout.makeHBox();
+        spanel.setBorder(BorderFactory.createTitledBorder(null,
+            _ctx.xlate("editor", "m.board_size")));
+        spanel.add(_dimensions = new DimensionsPanel(ctx));
+        JButton change = new JButton(_ctx.xlate("editor", "b.resize"));
         change.addActionListener(new ActionListener() {
             public void actionPerformed (ActionEvent ae) {
                 try {
@@ -54,7 +64,16 @@ public class BoardSizeDialog extends JDialog
                 setVisible(false);
             }
         });
-        buttons.add(change);
+        spanel.add(change);
+        center.add(spanel);
+        
+        JPanel epanel = new JPanel();
+        epanel.add(new JLabel(_ctx.xlate("editor", "m.elevation_scale")));
+        epanel.add(_elevationScale = new JSlider(1, 127, 64));
+        _elevationScale.addChangeListener(this);
+        center.add(epanel);
+        
+        JPanel buttons = new JPanel();
         JButton dismiss = new JButton(_ctx.xlate("editor", "b.dismiss"));
         dismiss.addActionListener(new ActionListener() {
             public void actionPerformed (ActionEvent e) {
@@ -74,6 +93,13 @@ public class BoardSizeDialog extends JDialog
     public void fromBoard (BangBoard board)
     {
         _dimensions.setValues(board.getWidth(), board.getHeight());
+        _elevationScale.setValue(128 - board.getElevationUnitsPerTile());
+    }
+    
+    // documentation inherited from interface ChangeListener
+    public void stateChanged (ChangeEvent e)
+    {
+        _panel.view.setElevationUnitsPerTile(128 - _elevationScale.getValue());
     }
     
     /** The application context. */
@@ -84,4 +110,7 @@ public class BoardSizeDialog extends JDialog
     
     /** The dimensions panel. */
     protected DimensionsPanel _dimensions;
+    
+    /** The elevation scale slider. */
+    protected JSlider _elevationScale;
 }

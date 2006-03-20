@@ -53,7 +53,7 @@ public class BallisticShotHandler extends ShotHandler
     @Override // documentation inherited
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
-        float escale = (TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
+        float escale = _bangobj.board.getElevationScale(TILE_SIZE);
         Vector3f start = new Vector3f(
             sx * TILE_SIZE + TILE_SIZE/2, sy * TILE_SIZE + TILE_SIZE/2,
             _bangobj.board.getElevation(sx, sy) * escale + TILE_SIZE/2);

@@ -42,12 +42,15 @@ public class BoardData
         public byte[] heightfield;
         public byte[] terrain;
         public byte[] shadows;
+        public float shadowIntensity;
         public byte waterLevel;
         public int waterColor;
+        public float waterAmplitude;
         public float[] lightAzimuths, lightElevations;
         public int[] lightDiffuseColors, lightAmbientColors;
         public int skyHorizonColor, skyOverheadColor;
         public float skyFalloff;
+        public float windDirection, windSpeed;
     }
     
     /**
@@ -132,7 +135,7 @@ public class BoardData
                 new ByteArrayInputStream(data));
             /*
             oin.addTranslation("com.threerings.bang.game.data.BangBoard",
-                "com.threerings.bang.server.persist.BoardRecord$OldBangBoard");
+                "com.threerings.bang.game.data.BoardData$OldBangBoard");
             OldBangBoard obb = (OldBangBoard)oin.readObject();
             _board = new BangBoard(obb.width, obb.height);
             System.arraycopy(obb.heightfield, 0, _board.getHeightfield(), 0,
@@ -141,7 +144,9 @@ public class BoardData
                 obb.terrain.length);
             System.arraycopy(obb.shadows, 0, _board.getShadows(), 0,
                 obb.shadows.length);
-            _board.setWaterParams(obb.waterLevel, obb.waterColor, 25f);
+            _board.setShadowIntensity(obb.shadowIntensity);
+            _board.setWaterParams(obb.waterLevel, obb.waterColor,
+                obb.waterAmplitude);
             for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
                 _board.setLightParams(i, obb.lightAzimuths[i],
                     obb.lightElevations[i], obb.lightDiffuseColors[i],
@@ -149,6 +154,7 @@ public class BoardData
             }
             _board.setSkyParams(obb.skyHorizonColor, obb.skyOverheadColor,
                 obb.skyFalloff);
+            _board.setWindParams(obb.windDirection, obb.windSpeed);
             */
             _board = (BangBoard)oin.readObject();
             _pieces = new Piece[oin.readInt()];

@@ -6,6 +6,7 @@ package com.threerings.bang.editor;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.MouseEvent;
 
 import com.threerings.crowd.util.CrowdContext;
@@ -91,7 +92,21 @@ public abstract class EditorTool
     public void mouseWheeled (MouseEvent e)
     {
     }
-
+    
+    /**
+     * Called by the tool palette when we're the active tool.
+     */
+    public void keyPressed (KeyEvent e)
+    {
+    }
+    
+    /**
+     * Called by the tool palette when we're the active tool.
+     */
+    public void keyReleased (KeyEvent e)
+    {
+    }
+    
     /**
      * Notifies the tool that the tile over which the mouse is hovering has
      * changed.

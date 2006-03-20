@@ -75,18 +75,6 @@ public class Viewpoint extends Piece
         return name;
     }
     
-    @Override // documentation inherited
-    public boolean positionEquals (Piece other)
-    {
-        if (!(other instanceof Viewpoint)) {
-            return super.positionEquals(other);
-        }
-        Viewpoint oview = (Viewpoint)other;
-        return super.positionEquals(other) && fx == oview.fx &&
-            fy == oview.fy && forient == oview.forient &&
-            pitch == oview.pitch && elevation == oview.elevation;
-    }
-    
     /**
      * Rotates this piece in fine coordinates.
      *

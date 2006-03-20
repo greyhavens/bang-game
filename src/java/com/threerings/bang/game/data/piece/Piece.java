@@ -153,16 +153,6 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Determines whether the position (coordinates and orientation) of this
-     * piece is equal to that of the specified other piece.
-     */
-    public boolean positionEquals (Piece other)
-    {
-        return x == other.x && y == other.y &&
-            orientation == other.orientation;
-    }
-    
-    /**
      * Returns our combined x and y coordinate.
      */
     public int getCoord ()

@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
+import com.jmex.bui.event.InputEvent;
+import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseWheelListener;
 import com.jmex.bui.event.MouseAdapter;
@@ -126,9 +128,9 @@ public class ToolPanel extends JPanel
         });
     }
 
-    protected EditorTool getTool (MouseEvent e)
+    protected EditorTool getTool (InputEvent e)
     {
-        if ((e.getModifiers() & MouseEvent.CTRL_DOWN_MASK) != 0) {
+        if ((e.getModifiers() & InputEvent.CTRL_DOWN_MASK) != 0) {
             return cameraDolly;
         } else {
             return getActiveTool();
@@ -136,7 +138,7 @@ public class ToolPanel extends JPanel
     }
 
     protected class EventDispatcher extends MouseAdapter
-        implements MouseWheelListener
+        implements MouseWheelListener, KeyListener
     {
         public void mousePressed (MouseEvent e) {
             getTool(e).mousePressed(e);
@@ -152,6 +154,12 @@ public class ToolPanel extends JPanel
         }
         public void mouseWheeled (MouseEvent e) {
             getTool(e).mouseWheeled(e);
+        }
+        public void keyPressed (com.jmex.bui.event.KeyEvent e) {
+            getTool(e).keyPressed(e);
+        }
+        public void keyReleased (com.jmex.bui.event.KeyEvent e) {
+            getTool(e).keyReleased(e);
         }
     }
 

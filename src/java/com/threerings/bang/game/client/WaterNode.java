@@ -218,7 +218,7 @@ public class WaterNode extends Node
         
         getLocalTranslation().set(0f, 0f,
             (_board.getWaterLevel() - 1) *
-                TILE_SIZE / BangBoard.ELEVATION_UNITS_PER_TILE);
+                _board.getElevationScale(TILE_SIZE));
         
         updateWorldBound();
         
