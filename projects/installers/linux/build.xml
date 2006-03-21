@@ -56,8 +56,8 @@
   <!-- creates the devclient installer -->
   <target name="devprops">
     <property name="bclient_ident" value="devclient"/>
-    <property name="bclient_title" value="${client_title} (Dev)"/>
-    <property name="beditor_title" value="${editor_title} (Dev)"/>
+    <property name="bclient_title" value="${client_title}"/>
+    <property name="beditor_title" value="${editor_title}"/>
     <property name="installer.name" value="dev-install.bin"/>
   </target>
   <target name="devclient" depends="devprops,instbuild"/>
