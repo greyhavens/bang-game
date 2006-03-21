@@ -5,6 +5,7 @@ package com.threerings.bang.editor;
 
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import java.nio.FloatBuffer;
@@ -120,6 +121,9 @@ public class EditorBoardView extends BoardView
      */
     public void setHeightfield (BufferedImage image)
     {
+        // store the original heightfield state as an edit
+        new HeightfieldEdit().commit();
+        
         // scale the image to the size of the heightfield, flip it upside down,
         // and convert it to 8-bit grayscale
         int hfwidth = _board.getHeightfieldWidth(),
@@ -182,6 +186,12 @@ public class EditorBoardView extends BoardView
         y1 = clamp(y1, 0, _board.getHeightfieldHeight() - 1);
         y2 = clamp(y2, 0, _board.getHeightfieldHeight() - 1);
 
+        // create/update the current terrain edit
+        if (_tedit == null) {
+            _tedit = new TerrainEdit();
+        }
+        _tedit.dirty(x1, y1, x2, y2);
+        
         // scan over the sub-tile coordinates, setting any that fall in the
         // circle
         Vector2f vec = new Vector2f();
@@ -196,6 +206,18 @@ public class EditorBoardView extends BoardView
 
         // update the terrain splats
         _tnode.refreshTerrain(x1, y1, x2, y2);
+    }
+    
+    /**
+     * Commits the current terrain edit to the undo buffer.
+     */
+    public void commitTerrainEdit ()
+    {
+        if (_tedit == null) {
+            return;
+        }
+        _tedit.commit();
+        _tedit = null;
     }
     
     /**
@@ -219,6 +241,12 @@ public class EditorBoardView extends BoardView
         y1 = clamp(y1, 0, _board.getHeightfieldHeight() - 1);
         y2 = clamp(y2, 0, _board.getHeightfieldHeight() - 1);
 
+        // create/update the current heightfield edit
+        if (_hfedit == null) {
+            _hfedit = new HeightfieldEdit();
+        }
+        _hfedit.dirty(x1, y1, x2, y2);
+        
         // scan over the sub-tile coordinates, setting any that fall in the
         // circle
         Vector2f vec = new Vector2f();
@@ -243,11 +271,26 @@ public class EditorBoardView extends BoardView
     }
 
     /**
+     * Commits the current heightfield edit to the undo buffer.
+     */
+    public void commitHeightfieldEdit ()
+    {
+        if (_hfedit == null) {
+            return;
+        }
+        _hfedit.commit();
+        _hfedit = null;
+    }
+    
+    /**
      * Adds some random noise to the heightfield (just enough to create some
-     * interesting texture.
+     * interesting texture).
      */
     public void addHeightfieldNoise ()
     {
+        // store the original heightfield state as an edit
+        new HeightfieldEdit().commit();
+        
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight();
 
@@ -265,6 +308,9 @@ public class EditorBoardView extends BoardView
      */
     public void smoothHeightfield ()
     {
+        // store the original heightfield state as an edit
+        new HeightfieldEdit().commit();
+        
         byte[] smoothed = new byte[_board.getHeightfield().length];
 
         int width = _board.getHeightfieldWidth(),
@@ -396,6 +442,7 @@ public class EditorBoardView extends BoardView
         refreshBoard();
         _panel.info.clear();
         _panel.info.updatePlayers(0);
+        ((EditorController)_panel.getController()).clearEdits();
     }
 
     /**
@@ -408,6 +455,9 @@ public class EditorBoardView extends BoardView
             return;
         }
 
+        // no undo for now
+        ((EditorController)_panel.getController()).clearEdits();
+        
         // first transfer the board
         BangBoard nboard = new BangBoard(width, height);
         int hfwidth = nboard.getHeightfieldWidth(),
@@ -468,6 +518,9 @@ public class EditorBoardView extends BoardView
      */
     protected void setHeightfield (AbstractHeightMap map)
     {
+        // store the original heightfield state as an edit
+        new HeightfieldEdit().commit();
+        
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight();
         for (int y = 0; y < height; y++) {
@@ -602,6 +655,171 @@ public class EditorBoardView extends BoardView
         _panel.tools.getActiveTool().hoverSpriteChanged(hover);
     }
 
+    /** Superclass for heightfield and terrain edits, which work in almost
+     * exactly the same way. */
+    protected abstract class BufferEdit
+        implements EditorController.Edit
+    {
+        public BufferEdit () {
+            // on construction, save the entire buffer; when we're commited,
+            // we can choose what to throw away
+            _saved = (byte[])getBuffer().clone();
+        }
+        
+        /**
+         * Marks the specified region of the buffer as dirty, so that it
+         * will be included in the edit.
+         */
+        public void dirty (int x1, int y1, int x2, int y2)
+        {
+            Rectangle drect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
+            if (_modified == null) {
+                _modified = drect;
+            } else {
+                _modified.add(drect);
+            }
+        }
+        
+        /**
+         * Commits this edit to the undo buffer, keeping only the modified
+         * portion if any portions were marked as dirty.
+         */
+        public void commit ()
+        {
+            if (_modified != null) {
+                if (_modified.width == 0 && _modified.height == 0) {
+                    return;
+                } else if (_modified.x == 0 && _modified.y == 0 &&
+                    _modified.width == _board.getHeightfieldWidth() &&
+                    _modified.height == _board.getHeightfieldHeight()) {
+                    _modified = null;
+                    
+                } else {
+                    _saved = getRegion(_saved, _modified);
+                }
+            }
+            ((EditorController)_panel.getController()).addEdit(this);
+        }
+        
+        // documentation inherited from interface EditorController.Edit
+        public void undo ()
+        {
+            swapSaved();
+        }
+        
+        // documentation inherited from interface EditorController.Edit
+        public void redo ()
+        {
+            swapSaved();
+        }
+        
+        /**
+         * Swaps the saved data with the current data.
+         */
+        protected void swapSaved ()
+        {
+            byte[] buf = getBuffer();
+            if (_modified == null) {
+                byte[] tmp = (byte[])buf.clone();
+                System.arraycopy(_saved, 0, buf, 0, _saved.length);
+                _saved = tmp;
+                
+            } else {
+                byte[] tmp = getRegion(buf, _modified);
+                setRegion(getBuffer(), _modified, _saved);
+                _saved = tmp; 
+            }
+        }
+        
+        /**
+         * Returns a reference to the current contents of the buffer.
+         */
+        protected abstract byte[] getBuffer ();
+        
+        /**
+         * Creates and returns a new array containing the contents of the
+         * specified region of the given heightfield-sized data array.
+         */
+        protected byte[] getRegion (byte[] data, Rectangle rect)
+        {
+            byte[] region = new byte[_modified.width * _modified.height];
+            int hfwidth = _board.getHeightfieldWidth(), ridx = 0;
+            for (int y = rect.y, ymax = y + rect.height; y < ymax; y++) {
+                for (int x = rect.x, xmax = x + rect.width; x < xmax; x++) {
+                    region[ridx++] = data[y*hfwidth + x];
+                }
+            }
+            return region;
+        }
+        
+        /**
+         * Sets the specified region of the given heightfield-sized data
+         * array to the provided values.
+         */
+        protected void setRegion (byte[] data, Rectangle rect, byte[] region)
+        {
+            int hfwidth = _board.getHeightfieldWidth(), ridx = 0;
+            for (int y = rect.y, ymax = y + rect.height; y < ymax; y++) {
+                for (int x = rect.x, xmax = x + rect.width; x < xmax; x++) {
+                    data[y*hfwidth + x] = region[ridx++];
+                }
+            }
+        }
+        
+        /** The modified region of the buffer, or <code>null</code> if the
+         * entire buffer is dirty. */
+        protected Rectangle _modified;
+        
+        /** The saved buffer data. */
+        protected byte[] _saved;
+    }
+    
+    /** Represents a change to the heightfield that can be done and undone. */
+    protected class HeightfieldEdit extends BufferEdit
+    {
+        // documentation inherited
+        protected void swapSaved ()
+        {
+            super.swapSaved();
+            if (_modified == null) {
+                heightfieldChanged();
+            } else {
+                heightfieldChanged(_modified.x, _modified.y,
+                    _modified.x + _modified.width - 1,
+                    _modified.y + _modified.height - 1);
+            }
+        }
+        
+        // documentation inherited
+        protected byte[] getBuffer ()
+        {
+            return _board.getHeightfield();
+        } 
+    }
+    
+    /** Represents a change to the terrain that can be done and undone. */
+    protected class TerrainEdit extends BufferEdit
+    {
+        // documentation inherited
+        protected void swapSaved ()
+        {
+            super.swapSaved();
+            if (_modified == null) {
+                _tnode.refreshTerrain();
+            } else {
+                _tnode.refreshTerrain(_modified.x, _modified.y,
+                    _modified.x + _modified.width - 1,
+                    _modified.y + _modified.height - 1);
+            }
+        }
+        
+        // documentation inherited
+        protected byte[] getBuffer ()
+        {
+            return _board.getTerrain();
+        }
+    }
+    
     /** The panel that contains additional interface elements with which
      * we interact. */
     protected EditorPanel _panel;
@@ -612,6 +830,10 @@ public class EditorBoardView extends BoardView
     /** Whether or not to show the highlights. */
     protected boolean _showHighlights;
 
+    /** The in-progress buffer edits, if any. */
+    protected HeightfieldEdit _hfedit;
+    protected TerrainEdit _tedit;
+    
     /** The color to use for highlights. */
     protected static final ColorRGBA HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0f, 0f, 0.25f);

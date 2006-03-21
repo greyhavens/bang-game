@@ -53,6 +53,10 @@ public class EditorPanel extends JPanel
     /** Allows user to select and configure tools. */
     public ToolPanel tools;
 
+    /** The undo and redo menu items, which are enabled and disabled by the
+     * controller. */
+    public JMenuItem undo, redo; 
+    
     /** Creates the main panel and its sub-interfaces. */
     public EditorPanel (EditorContext ctx, EditorController ctrl)
     {
@@ -133,6 +137,13 @@ public class EditorPanel extends JPanel
         edit.setMnemonic(KeyEvent.VK_E);
         menubar.add(edit);
         
+        undo = createMenuItem(edit, msgs.get("m.menu_undo"), KeyEvent.VK_Z,
+            KeyEvent.VK_U, EditorController.UNDO);
+        redo = createMenuItem(edit, msgs.get("m.menu_redo"), KeyEvent.VK_Y,
+            KeyEvent.VK_R, EditorController.REDO);
+        undo.setEnabled(false);
+        redo.setEnabled(false);
+        edit.addSeparator();
         createMenuItem(edit, msgs.get("m.menu_light"), -1, KeyEvent.VK_L,
             EditorController.EDIT_LIGHT);
         createMenuItem(edit, msgs.get("m.menu_sky"), -1, KeyEvent.VK_S,
@@ -143,6 +154,11 @@ public class EditorPanel extends JPanel
             EditorController.EDIT_ENVIRONMENT);
         createMenuItem(edit, msgs.get("m.menu_board_props"), -1, KeyEvent.VK_P,
             EditorController.EDIT_BOARD_PROPERTIES);
+        edit.addSeparator();
+        createMenuItem(edit, msgs.get("m.menu_generate_shadows"), -1,
+            KeyEvent.VK_G, EditorController.GENERATE_SHADOWS);
+        createMenuItem(edit, msgs.get("m.menu_clear_shadows"), -1,
+            KeyEvent.VK_C, EditorController.CLEAR_SHADOWS);
             
         JMenu view = new JMenu(msgs.get("m.menu_view"));
         view.setMnemonic(KeyEvent.VK_V);
@@ -157,11 +173,7 @@ public class EditorPanel extends JPanel
         createCheckBoxMenuItem(view, msgs.get("m.menu_highlight"),
             KeyEvent.VK_H, KeyEvent.VK_H, EditorController.TOGGLE_HIGHLIGHTS,
             false);
-        createMenuItem(view, msgs.get("m.menu_generate_shadows"), -1,
-            KeyEvent.VK_S, EditorController.GENERATE_SHADOWS);
-        createMenuItem(view, msgs.get("m.menu_clear_shadows"), -1,
-            KeyEvent.VK_C, EditorController.CLEAR_SHADOWS);
-            
+                    
         // add our side panel to the main display
         add(sidePanel, HGroupLayout.FIXED);
     }
@@ -209,8 +221,9 @@ public class EditorPanel extends JPanel
         return d;
     }
 
-    protected void createMenuItem (JMenu menu, String label, int accelerator,
-                                   int mnemonic, String command)
+    protected JMenuItem createMenuItem (
+        JMenu menu, String label, int accelerator, int mnemonic,
+        String command)
     {
         JMenuItem item = new JMenuItem(label);
         if (accelerator != -1) {
@@ -221,6 +234,7 @@ public class EditorPanel extends JPanel
         item.setActionCommand(command);
         item.addActionListener(_ctrl);
         menu.add(item);
+        return item;
     }
 
     protected void createCheckBoxMenuItem (JMenu menu, String label,

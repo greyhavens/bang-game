@@ -65,6 +65,12 @@ public class TerrainBrush extends EditorTool
     }
     
     @Override // documentation inherited
+    public void mouseReleased (MouseEvent e)
+    {
+        _panel.view.commitTerrainEdit();
+    }
+    
+    @Override // documentation inherited
     public void mouseMoved (MouseEvent e)
     {
         Vector3f ground = _panel.view.getGroundIntersect(e, false, null);
