@@ -80,6 +80,7 @@ public class BarberManager extends PlaceManager
             log.warning("Player has no current look from which to copy " +
                         "articles [who=" + user.who() +
                         ", look=" + user.look + "].");
+            look.articles = new int[0];
         }
 
         // the buy look action takes care of the rest (including checking that
