@@ -26,6 +26,7 @@ public abstract class EditorTool
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("editor");
         _panel = panel;
+        _ctrl = (EditorController)panel.getController();
     }
 
     /**
@@ -144,5 +145,6 @@ public abstract class EditorTool
     protected EditorContext _ctx;
     protected MessageBundle _msgs;
     protected EditorPanel _panel;
+    protected EditorController _ctrl;
     protected JPanel _options;
 }

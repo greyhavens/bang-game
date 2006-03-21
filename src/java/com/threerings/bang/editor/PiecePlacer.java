@@ -57,9 +57,9 @@ public class PiecePlacer extends EditorTool
         _dragPiece = _panel.view.getHoverPiece();
         if (_dragPiece != null) {
             if (e.getButton() == MouseEvent.BUTTON2) {
-                EditorController.postAction(
-                    _panel, EditorController.REMOVE_PIECE, _dragPiece.getKey());
+                _ctrl.removePiece(_dragPiece);
                 _dragPiece = null;
+                
             } else {
                 _dragType = NORMAL_DRAG;
                 if (_dragPiece instanceof Prop &&
@@ -95,9 +95,8 @@ public class PiecePlacer extends EditorTool
             _dragPiece.orientation = (short)DIRECTIONS[
                 RandomUtil.getInt(DIRECTIONS.length)];
             _dragPiece.position(tx, ty);
-            
-            EditorController.postAction(
-                _panel, EditorController.ADD_PIECE, _dragPiece);
+
+            _ctrl.addPiece(_dragPiece);
             
             _panel.view.updateHoverState(e);
         }
@@ -107,30 +106,30 @@ public class PiecePlacer extends EditorTool
     public void mouseReleased (MouseEvent e)
     {
         _dragPiece = null;
+        _ctrl.maybeCommitPieceEdit();
     }
     
     @Override // documentation inherited
     public void mouseDragged (MouseEvent e)
     {
-        if (_dragPiece == null) {
+        if (_dragPiece == null || _dragType == NORMAL_DRAG) {
             return;
         }
+        _ctrl.maybeStartPieceEdit(_dragPiece);
+        Prop p = (Prop)_dragPiece.clone();
         if (_dragType == FINE_DRAG) {
-            Prop p = (Prop)_dragPiece.clone();
             _panel.view.getGroundIntersect(e, false, _loc);
             p.positionFine(
                 (int)(_loc.x / PropSprite.FINE_POSITION_SCALE) -
                     _dragOffset.x,
                 (int)(_loc.y / PropSprite.FINE_POSITION_SCALE) -
                     _dragOffset.y);
-            getBangObject().updatePieces(_dragPiece = p);
             
-        } else if (_dragType == ELEVATION_DRAG) {
-            Prop p = (Prop)_dragPiece.clone();
+        } else { // _dragType == ELEVATION_DRAG
             p.elevate(e.getY() - _dragStart.y);
             _dragStart.setLocation(e.getX(), e.getY());
-            getBangObject().updatePieces(_dragPiece = p);   
         }
+        getBangObject().updatePieces(_dragPiece = p);
     }
     
     @Override // documentation inherited
@@ -139,15 +138,19 @@ public class PiecePlacer extends EditorTool
         // if we're over a piece, rotate it
         Piece piece = _panel.view.getHoverPiece();
         if (piece != null) {
+            _ctrl.maybeStartPieceEdit(piece);
             piece = (Piece)piece.clone();
-            if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0 &&
-                piece instanceof Prop) {
+            boolean fine = (e.getModifiers() &
+                MouseEvent.SHIFT_DOWN_MASK) != 0 && piece instanceof Prop;
+            if (fine) {
                 ((Prop)piece).rotateFine(e.getDelta()*8);
-                
             } else {
                 piece.rotate(e.getDelta() > 0 ? Piece.CCW : Piece.CW);
             }
             getBangObject().updatePieces(piece);
+            if (!fine) { // for fine rotation, commit when shift released
+                _ctrl.maybeCommitPieceEdit();
+            }
         }
     }
 
@@ -158,6 +161,7 @@ public class PiecePlacer extends EditorTool
         
         // if we are dragging a piece, move that feller around
         if (_dragPiece != null && _dragType == NORMAL_DRAG) {
+            _ctrl.maybeStartPieceEdit(_dragPiece);
             Piece p = (Piece)_dragPiece.clone();
             p.position(tx - _dragOffset.x, ty - _dragOffset.y);
             getBangObject().updatePieces(p);
@@ -193,6 +197,7 @@ public class PiecePlacer extends EditorTool
         if (piece == null) {
             return;
         }
+        _ctrl.maybeStartPieceEdit(piece);
         piece = (Piece)piece.clone();
         if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0 &&
             piece instanceof Prop) {
@@ -210,6 +215,12 @@ public class PiecePlacer extends EditorTool
             piece.rotate(rot);
         }
         getBangObject().updatePieces(piece);
+    }
+    
+    @Override // documentation inherited
+    public void keyReleased (KeyEvent e)
+    {
+        _ctrl.maybeCommitPieceEdit();
     }
     
     // documentation inherited

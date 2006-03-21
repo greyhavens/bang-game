@@ -34,6 +34,7 @@ import com.samskivert.swing.util.SwingUtil;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Viewpoint;
 
 /**
@@ -80,13 +81,21 @@ public class ViewpointEditor extends EditorTool
     }
     
     // documentation inherited from interface MouseMotionListener
+    public void mouseReleased (MouseEvent e)
+    {
+        _ctrl.maybeCommitPieceEdit();
+    }
+    
+    // documentation inherited from interface MouseMotionListener
     public void mouseDragged (MouseEvent e)
     {
         if (_vpsprite == null) {
             return;
         }
         int dx = _lastX - e.getX(), dy =  _lastY - e.getY();
-        Viewpoint vp = (Viewpoint)_vpsprite.getPiece().clone();
+        Piece piece = _vpsprite.getPiece();
+        _ctrl.maybeStartPieceEdit(piece);
+        Viewpoint vp = (Viewpoint)piece.clone();
         switch(_lastButton) {
             case MouseEvent.BUTTON1: // left changes heading and pitch
                 vp.rotateFine(dx, -dy);
@@ -108,15 +117,20 @@ public class ViewpointEditor extends EditorTool
         if (_vpsprite == null) {
             return;
         }
-        Viewpoint vp = (Viewpoint)_vpsprite.getPiece().clone();
+        Piece piece = _vpsprite.getPiece();
+        _ctrl.maybeStartPieceEdit(piece);
+        Viewpoint vp = (Viewpoint)piece.clone();
         vp.elevation -= e.getDelta();
         getBangObject().updatePieces(vp);
+        _ctrl.maybeCommitPieceEdit();
     }
     
     // documentation inherited from interface KeyListener
     public void keyPressed (KeyEvent e)
     {
-        Viewpoint vp = (Viewpoint)_vpsprite.getPiece();
+        Piece piece = _vpsprite.getPiece();
+        _ctrl.maybeStartPieceEdit(piece);
+        Viewpoint vp = (Viewpoint)piece.clone();
         switch (e.getKeyCode()) {
             case KeyInput.KEY_W: moveViewpoint(vp, 5, 0); break;
             case KeyInput.KEY_A: moveViewpoint(vp, 0, -5); break;
@@ -132,6 +146,7 @@ public class ViewpointEditor extends EditorTool
     // documentation inherited from interface KeyListener
     public void keyReleased (KeyEvent e)
     {
+        _ctrl.maybeCommitPieceEdit();
     }
     
     /**

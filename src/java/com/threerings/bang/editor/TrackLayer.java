@@ -5,6 +5,8 @@ package com.threerings.bang.editor;
 
 import java.awt.Point;
 
+import java.util.HashSet;
+
 import javax.swing.JPanel;
 
 import com.jme.math.Vector3f;
@@ -34,35 +36,31 @@ public class TrackLayer extends EditorTool
     public void mousePressed (MouseEvent e)
     {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            _laying = true;
-            EditorController.postAction(_panel, EditorController.LAY_TRACK,
-                _hoverTile);
+            _edit = new TrackLaid();
+            _edit.processPoint(_hoverTile);
             
         } else if (e.getButton() == MouseEvent.BUTTON2) {
-            _removing = true;
-            EditorController.postAction(_panel, EditorController.REMOVE_TRACK,
-                _hoverTile);
+            _edit = new TrackRemoved();
+            _edit.processPoint(_hoverTile);
         }
     }
     
     @Override // documentation inherited
     public void mouseReleased (MouseEvent e)
     {
-        _laying = _removing = false;
+        if (_edit == null) {
+            return;
+        }
+        _edit.commit();
+        _edit = null;
     }
     
     @Override // documentation inherited
     public void hoverTileChanged (int tx, int ty)
     {
         _hoverTile.setLocation(tx, ty);
-        
-        if (_laying) {
-            EditorController.postAction(_panel, EditorController.LAY_TRACK,
-                _hoverTile);
-                
-        } else if (_removing) {
-            EditorController.postAction(_panel, EditorController.REMOVE_TRACK,
-                _hoverTile);
+        if (_edit != null) {
+            _edit.processPoint(_hoverTile);
         }
     }
     
@@ -72,9 +70,92 @@ public class TrackLayer extends EditorTool
         return new JPanel();
     }
     
+    /** The superclass of edits to the train tracks. */
+    protected abstract class TrackEdit
+        implements EditorController.Edit
+    {
+        /** Processes the specified point for this edit. */
+        public abstract void processPoint (Point point);
+        
+        /** Commits this edit to the undo buffer. */
+        public void commit ()
+        {
+            if (_points.size() > 0) {
+                _ctrl.addEdit(this);
+            }
+        }
+
+        /** Adds the points removed. */
+        protected void layTracks ()
+        {
+            for (Point point : _points) {
+                _ctrl.layTrack(point);
+            }
+        }
+        
+        /** Removes the points added. */
+        protected void removeTracks ()
+        {
+            for (Point point : _points) {
+                _ctrl.removeTrack(point);
+            }
+        }
+        
+        /** The affected locations. */
+        protected HashSet<Point> _points = new HashSet<Point>();
+    }
+    
+    /** An edit where track was laid. */
+    protected class TrackLaid extends TrackEdit
+    {
+        // documentation inherited
+        public void processPoint (Point point)
+        {
+            if (_ctrl.layTrack(point)) {
+                _points.add((Point)point.clone());
+            }
+        }
+        
+        // documentation inherited from interface EditorController.Edit
+        public void undo ()
+        {
+            removeTracks();
+        }
+        
+        // documentation inherited from interface EditorController.Edit
+        public void redo ()
+        {
+            layTracks();
+        }
+    }
+    
+    /** An edit where track was removed. */
+    protected class TrackRemoved extends TrackEdit
+    {
+        // documentation inherited
+        public void processPoint (Point point)
+        {
+            if (_ctrl.removeTrack(point)) {
+                _points.add((Point)point.clone());
+            }
+        }
+        
+        // documentation inherited from interface EditorController.Edit
+        public void undo ()
+        {
+            layTracks();
+        }
+        
+        // documentation inherited from interface EditorController.Edit
+        public void redo ()
+        {
+            removeTracks();
+        }
+    }
+    
     /** The location of the mouse pointer in tile coordinates. */
     protected Point _hoverTile = new Point(-1, -1);
     
-    /** Whether or not we are currently laying or removing track. */
-    protected boolean _laying, _removing;
+    /** The current track edit, if any. */
+    protected TrackEdit _edit;
 }
