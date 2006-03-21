@@ -176,6 +176,7 @@ public class TerrainNode extends Node
             _overPieces = overPieces;
 
             setLightCombineMode(LightState.OFF);
+            setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             setRenderState(RenderUtil.overlayZBuf);
             setRenderState(RenderUtil.blendAlpha);
             setRenderState(RenderUtil.backCull);
