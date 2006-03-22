@@ -32,7 +32,7 @@
          renderPriority="130"/>
   <class name="male/nose" colors="skin" shadow="male/shadow"
          renderPriority="140"/>
-  <class name="male/hair_front" colors="hair,clothes_s"
+  <class name="male/hair_front" colors="hair,clothes_s" mask="male/hat"
          renderPriority="150"/>
   <class name="male/clothing_middle" colors="skin,clothes_p,clothes_s,clothes_t"
          renderPriority="160"/>
@@ -72,7 +72,7 @@
          renderPriority="100" shadow="female/shadow"/>
   <class name="female/nose" colors="skin" shadow="female/shadow"
          renderPriority="110"/>
-  <class name="female/hair_front" colors="hair,clothes_s"
+  <class name="female/hair_front" colors="hair,clothes_s" mask="female/hat"
          renderPriority="120"/>
   <class name="female/clothing_middle"
          colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="130"/>
