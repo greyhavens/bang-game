@@ -55,6 +55,8 @@ public class SkyNode extends Node
         // create the dome geometry
         _dome = new Dome("dome", DOME_PLANES, DOME_RADIAL_SAMPLES,
             DOME_RADIUS);
+        _dome.setModelBound(new BoundingBox());
+        _dome.updateModelBound();
         Quaternion rot = new Quaternion();
         rot.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
         _dome.setLocalRotation(rot);
