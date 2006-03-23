@@ -68,6 +68,7 @@ import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.game.server.scenario.Tutorial;
@@ -484,7 +485,8 @@ public class BangManager extends GameManager
             // select big shots for our AIs
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 if (isAI(ii)) {
-                    selectStarters(ii, null, null);
+                    selectStarters(ii, _aiLogic[ii].getBigShotType(),
+                        _aiLogic[ii].getCardTypes());
                 }
             }
             break;
@@ -493,9 +495,8 @@ public class BangManager extends GameManager
             // make purchases for our AIs
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 if (isAI(ii)) {
-                    String[] units = new String[] {
-                        "steamgunman", "gunslinger", "dirigible" };
-                    selectTeam(ii, units);
+                    selectTeam(ii,
+                        _aiLogic[ii].getUnitTypes(_bconfig.teamSize));
                 }
             }
             break;
@@ -535,6 +536,15 @@ public class BangManager extends GameManager
         }
         _scenario.init(this);
 
+        // create the logic for our ai players, if any
+        _aiLogic = new AILogic[_AIs.length];
+        for (int ii = 0; ii < _AIs.length; ii++) {
+            if (_AIs[ii] != null) {
+                _aiLogic[ii] = _scenario.createAILogic(_AIs[ii]);
+                _aiLogic[ii].init(this, ii);
+            }
+        }
+        
         // clear out the various per-player data structures
         _ready.clear();
         _purchases.clear();
@@ -613,6 +623,22 @@ public class BangManager extends GameManager
         _scenario.startNextPhase(_bangobj);
     }
 
+    /**
+     * Selects the starting configuration for an AI player.
+     */
+    protected void selectStarters (
+        int pidx, String bigShotType, String[] cardTypes)
+    {
+        Card[] cards = null;
+        if (cardTypes != null) {
+            cards = new Card[cardTypes.length];
+            for (int ii = 0; ii < cards.length; ii++) {
+                cards[ii] = Card.newCard(cardTypes[ii]); 
+            }
+        }
+        selectStarters(pidx, new BigShotItem(-1, bigShotType), cards);
+    }
+    
     /**
      * Selects the starting configuration for this player.
      */
@@ -904,48 +930,11 @@ public class BangManager extends GameManager
             validateOrders();
         }
 
-        // move our AI pieces randomly
+        // give our AI players a chance to move
         if (!_bconfig.tutorial) {
-            for (int ii = 0; ii < pieces.length; ii++) {
-                if (pieces[ii] instanceof Unit && pieces[ii].isAlive() &&
-                    isAI(pieces[ii].owner) &&
-                    pieces[ii].ticksUntilMovable(tick) == 0) {
-                    Unit unit = (Unit)pieces[ii];
-                    _moves.clear();
-                    _attacks.clear();
-                    _bangobj.board.computeMoves(unit, _moves, _attacks);
-
-                    // if we can attack someone, do that
-                    Piece target = null;
-                    for (int tt = 0; tt < pieces.length; tt++) {
-                        Piece p = pieces[tt];
-                        if (p instanceof Unit && _attacks.contains(p.x, p.y) &&
-                            unit.validTarget(p, false)) {
-                            target = p;
-                            break;
-                        }
-                    }
-                    if (target != null) {
-                        try {
-                            executeOrder(
-                                unit, Short.MAX_VALUE, 0, target, true);
-                            continue;
-                        } catch (InvocationException ie) {
-                            // fall through and move
-                        }
-                    }
-
-                    // otherwise just move
-                    if (_moves.size() == 0) {
-                        continue;
-                    }
-                    int midx = RandomUtil.getInt(_moves.size());
-                    int mx = _moves.getX(midx), my = _moves.getY(midx);
-                    try {
-                        executeOrder(unit, mx, my, null, true);
-                    } catch (InvocationException ie) {
-                        // oh well
-                    }
+            for (int ii = 0; ii < _aiLogic.length; ii++) {
+                if (_aiLogic[ii] != null) {
+                    _aiLogic[ii].tick(pieces, tick);
                 }
             }
         }
@@ -1912,6 +1901,9 @@ public class BangManager extends GameManager
     /** Implements our gameplay scenario. */
     protected Scenario _scenario;
 
+    /** The logic for the artificial players. */
+    protected AILogic[] _aiLogic;
+    
     /** The time at which the round started. */
     protected long _startStamp;
 

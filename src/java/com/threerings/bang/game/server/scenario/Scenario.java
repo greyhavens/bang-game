@@ -17,6 +17,8 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
 
+import com.threerings.parlor.game.data.GameAI;
+
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -31,6 +33,8 @@ import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.BangManager;
+import com.threerings.bang.game.server.ai.AILogic;
+import com.threerings.bang.game.server.ai.RandomLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PieceUtil;
 import com.threerings.bang.game.util.PointSet;
@@ -66,6 +70,15 @@ public abstract class Scenario
         _bangmgr = bangmgr;
     }
 
+    /**
+     * Creates and returns an instance of {@link AILogic} to handle the
+     * behavior of the described AI player.
+     */
+    public AILogic createAILogic (GameAI ai)
+    {
+        return new RandomLogic();
+    }
+    
     /**
      * Determines the next phase of the game. Normally a game transitions from
      * {@link BangObject#SELECT_PHASE} to {@link BangObject#BUYING_PHASE} to
