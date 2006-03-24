@@ -14,13 +14,20 @@
 <body background="/images/parchment.jpg">
   <table width="756">
     <tr>
-      <td colspan="3" valign="bottom"><img src=
-      "/images/sketches_L.gif" /><img src="/images/bang_howdy.gif" /><img src=
-      "/images/sketches_R.gif" /></td>
+      <td colspan="3" valign="bottom">
+         <img src="/images/sketches_L.gif"/>
+         <a href="/"><img src="/images/bang_howdy.gif" border=0/></a>
+         <img src="/images/sketches_R.gif" /></td>
     </tr>
 
     <tr>
-      <td colspan="3" align="center"><img src="/images/design_top.gif" /></td>
+      <td colspan="3" align="center" class="header">
+         <img src="/images/design_top.gif"/><br/>
+         <a href="/about.html">about</a> &nbsp;&nbsp;
+         <a href="/screenshots.html">screenshots</a> &nbsp;&nbsp;
+         <a href="/faq.html">faq</a> &nbsp;&nbsp;
+         <a href="/register/register.wm">sign up</a>
+      </td>
     </tr>
 
 <tr><td colspan="3" valign="top" height="100%" style="padding-left: 15px; padding-top: 15px">
