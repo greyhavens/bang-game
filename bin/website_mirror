@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Mirrors changes to the Bang Howdy website to the appropriate servers
+
+MIRROR=/export/tools/bin/mirror
+ROOT=`dirname $0`/..
+
+# mirror the client
+echo "** Mirroring website documents and images..."
+$MIRROR "$@" `find $ROOT/pages -name '*.html' -o \
+  -name '*.rss' -o -name '*.css' -o -name '*.jpg' -o \
+  -name '*.png' | grep -v .svn`
