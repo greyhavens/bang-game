@@ -27,3 +27,8 @@ p {
   font-variant: "Dom Casual";
   font-size: 24;
 }
+
+.caption { 
+  font-family: "Helvetica";
+  font-size: 10;
+}
