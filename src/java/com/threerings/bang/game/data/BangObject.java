@@ -83,6 +83,9 @@ public class BangObject extends GameObject
     }
 
     // AUTO-GENERATED: FIELDS START
+    /** The field name of the <code>avatars</code> field. */
+    public static final String AVATARS = "avatars";
+
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
 
@@ -160,6 +163,11 @@ public class BangObject extends GameObject
 
     /** Used to assign ids to pieces added during the game. */
     public transient int maxPieceId;
+
+    /** The avatar fingerprints for each of the players in the game. We keep
+     * these here in case the player leaves early and so that we can provide
+     * fake fingerprints for AIs. */
+    public int[][] avatars;
 
     /** This value is set at the end of every round, to inform the players
      * of various interesting statistics. */
@@ -497,6 +505,39 @@ public class BangObject extends GameObject
     }
 
     // AUTO-GENERATED: METHODS START
+    /**
+     * Requests that the <code>avatars</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setAvatars (int[][] value)
+    {
+        int[][] ovalue = this.avatars;
+        requestAttributeChange(
+            AVATARS, value, ovalue);
+        this.avatars = (value == null) ? null : (int[][])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>avatars</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setAvatarsAt (int[] value, int index)
+    {
+        int[] ovalue = this.avatars[index];
+        requestElementUpdate(
+            AVATARS, index, value, ovalue);
+        this.avatars[index] = value;
+    }
+
     /**
      * Requests that the <code>stats</code> field be set to the
      * specified value. The local value will be updated immediately and an

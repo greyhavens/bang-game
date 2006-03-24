@@ -25,7 +25,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BadgeIcon;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.util.BangContext;
@@ -83,15 +82,8 @@ public class GameOverView extends BDecoratedWindow
             if (pidx == apidx) {
                 award = bangobj.awards[ii];
             }
-
-            int[] avatar = null;
-            // look up this player's avatar image if they're still around
-            BangOccupantInfo boi = (BangOccupantInfo)
-                bangobj.getOccupantInfo(bangobj.players[apidx]);
-            if (boi != null) {
-                avatar = boi.avatar;
-            }
-            who.add(new FinalistView(ctx, apidx, bangobj.players[apidx], avatar,
+            who.add(new FinalistView(ctx, apidx, bangobj.players[apidx],
+                                     bangobj.avatars[apidx],
                                      bangobj.awards[ii].rank));
         }
         _results.add(who);

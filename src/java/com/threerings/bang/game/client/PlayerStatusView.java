@@ -34,7 +34,6 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
-import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangObject;
@@ -110,13 +109,21 @@ public class PlayerStatusView extends BContainer
     {
         if (event.getName().equals(BangObject.STATE)) {
             updateStatus();
+        } else if (event.getName().equals(BangObject.AVATARS)) {
+            updateAvatar();
         }
     }
 
     // documentation inherited from interface ElementUpdateListener
     public void elementUpdated (ElementUpdatedEvent event)
     {
-        updateStatus();
+        if (event.getName().equals(BangObject.AVATARS)) {
+            if (event.getIndex() == _pidx) {
+                updateAvatar();
+            }
+        } else {
+            updateStatus();
+        }
     }
 
     // documentation inherited from interface SetListener
@@ -144,19 +151,12 @@ public class PlayerStatusView extends BContainer
             Rectangle rect = new Rectangle(CARD_RECT);
             rect.x += (rect.width * cidx);
             add(_cards[cidx], rect);
-
-        } else if (name.equals(BangObject.OCCUPANT_INFO) && _avatar == null) {
-            updateAvatar();
         }
     }
 
     // documentation inherited from interface SetListener
     public void entryUpdated (EntryUpdatedEvent event)
     {
-        if (event.getName().equals(BangObject.OCCUPANT_INFO) &&
-            _avatar == null) {
-            updateAvatar();
-        }
     }
 
     // documentation inherited from interface SetListener
@@ -207,11 +207,9 @@ public class PlayerStatusView extends BContainer
     protected void updateAvatar ()
     {
         // load up this player's avatar image
-        BangOccupantInfo boi = (BangOccupantInfo)
-            _bangobj.getOccupantInfo(_bangobj.players[_pidx]);
-        if (boi != null) {
+        if (_bangobj.avatars != null && _bangobj.avatars[_pidx] != null) {
             _avatar = new ImageIcon(
-                AvatarView.getFramableImage(_ctx, boi.avatar, 10));
+                AvatarView.getFramableImage(_ctx, _bangobj.avatars[_pidx], 10));
         }
     }
 

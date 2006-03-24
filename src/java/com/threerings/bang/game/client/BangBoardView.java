@@ -56,7 +56,6 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.bui.WindowFader;
-import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
@@ -495,13 +494,8 @@ public class BangBoardView extends BoardView
             }
         };
         for (int ii = 0; ii < _bangobj.players.length; ii++) {
-            BangOccupantInfo boi = (BangOccupantInfo)_bangobj.getOccupantInfo(
-                _bangobj.players[ii]);
-            if (boi == null) {
-                continue;
-            }
-            _pmarquees.add(createPlayerMarquee(boi),
-                PLAYER_MARQUEE_LOCATIONS[ii]);
+            _pmarquees.add(createPlayerMarquee(ii),
+                           PLAYER_MARQUEE_LOCATIONS[ii]);
         }
         _pmarquees.setBounds(0, 0, _ctx.getDisplay().getWidth(),
             _ctx.getDisplay().getHeight());
@@ -511,16 +505,20 @@ public class BangBoardView extends BoardView
     /**
      * Creates and returns a player view for the opening marquee.
      */
-    protected BContainer createPlayerMarquee (BangOccupantInfo boi)
+    protected BContainer createPlayerMarquee (int pidx)
     {
         GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
         layout.setGap(-1);
         BContainer cont = new BContainer(layout);
         int awidth = AvatarLogic.WIDTH/2, aheight = AvatarLogic.HEIGHT/2;
-        ImageIcon aicon = new ImageIcon(
-            AvatarView.getImage(_ctx, boi.avatar, awidth, aheight));
-        cont.add(new BLabel(aicon));
-        cont.add(new BLabel(boi.username.toString(), "player_marquee_label"));
+        if (_bangobj.avatars[pidx] != null) {
+            ImageIcon aicon = new ImageIcon(
+                AvatarView.getImage(
+                    _ctx, _bangobj.avatars[pidx], awidth, aheight));
+            cont.add(new BLabel(aicon));
+        }
+        cont.add(new BLabel(_bangobj.players[pidx].toString(),
+                            "player_marquee_label"));
         return cont;
     }
 

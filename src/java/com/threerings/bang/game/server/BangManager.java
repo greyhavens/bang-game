@@ -38,6 +38,8 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.parlor.game.server.GameManager;
 
+import com.threerings.bang.avatar.data.Look;
+
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
@@ -51,6 +53,7 @@ import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
 
 import com.threerings.bang.game.data.Award;
+import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
@@ -444,18 +447,25 @@ public class BangManager extends GameManager
             // create our player records now that we know everyone's in the
             // room and ready to go
             _precords = new PlayerRecord[getPlayerSlots()];
+            int[][] avatars = new int[getPlayerSlots()][];
             for (int ii = 0; ii < _precords.length; ii++) {
                 PlayerRecord prec = (_precords[ii] = new PlayerRecord());
                 if (isAI(ii)) {
                     prec.playerId = -1;
                     prec.ratings = new DSet();
+                    avatars[ii] = ((BangAI)_AIs[ii]).avatar;
                 } else {
                     PlayerObject user = (PlayerObject)getPlayer(ii);
                     prec.playerId = user.playerId;
                     prec.purse = user.getPurse();
                     prec.ratings = user.ratings;
+                    Look look = user.getLook();
+                    if (look != null) {
+                        avatars[ii] = look.getAvatar(user);
+                    }
                 }
             }
+            _bangobj.setAvatars(avatars);
             // when the players all arrive, go into the buying phase
             startRound();
             break;
