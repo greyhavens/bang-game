@@ -14,11 +14,6 @@ server_name = bang
 # server_ports = 47624, 443
 
 #
-# Temporary configuration restricting logins to insiders only
-
-# insiders_only = false
-
-#
 # The directory from which the server is run. Used to put log files in the
 # proper location and things like that.
 
