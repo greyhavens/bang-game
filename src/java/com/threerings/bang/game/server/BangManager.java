@@ -537,8 +537,9 @@ public class BangManager extends GameManager
         _scenario.init(this);
 
         // create the logic for our ai players, if any
-        _aiLogic = new AILogic[_AIs.length];
-        for (int ii = 0; ii < _AIs.length; ii++) {
+        int aicount = (_AIs == null) ? 0 : _AIs.length;
+        _aiLogic = new AILogic[aicount];
+        for (int ii = 0; ii < aicount; ii++) {
             if (_AIs[ii] != null) {
                 _aiLogic[ii] = _scenario.createAILogic(_AIs[ii]);
                 _aiLogic[ii].init(this, ii);
