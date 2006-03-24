@@ -3,6 +3,9 @@
 
 package com.threerings.bang.client;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.jme.input.KeyInput;
 
 import com.jmex.bui.BButton;
@@ -43,6 +46,7 @@ public class FKeyPopups
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F2, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F3, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F4, this);
+        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F12, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_T, this);
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
     }
@@ -57,6 +61,16 @@ public class FKeyPopups
             if (!_autoBugged) { // avoid repeat pressage
                 BangClient.submitBugReport(_ctx, "Autobug!", true);
             }
+            return;
+        }
+
+        // other hackery to handle taking screen shots
+        if (keyCode == KeyInput.KEY_F12) {
+            String fname = "bang_screen_" + _sfmt.format(new Date());
+            _ctx.getRenderer().takeScreenShot(fname);
+            String msg = MessageBundle.tcompose(
+                "m.screenshot_taken", BangClient.localDataDir(fname + ".png"));
+            _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
             return;
         }
 
@@ -205,4 +219,7 @@ public class FKeyPopups
     protected int _poppedKey = -1;
     protected BDecoratedWindow _popped;
     protected boolean _autoBugged;
+
+    protected static SimpleDateFormat _sfmt =
+        new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 }
