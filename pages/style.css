@@ -1,9 +1,12 @@
 body {
   font-family: Times New Roman, Times, serif;
+  font-size: 14px;
+  margin: 5px;
 }
 
 td {
   font-family: Times New Roman, Times, serif;
+  font-size: 14px;
 }
 
 .fancy {
@@ -26,7 +29,7 @@ a {
 }
 
 li:before {
-  display: marker;
+  /* display: marker; */
   content: url("images/circle.gif");
 }
 

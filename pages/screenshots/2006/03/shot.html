@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Bang! Howdy&trade; Screen Shot</title>
+  <link rel="stylesheet" type="text/css" href="/style.css" />
+</head>
+
+<body>
+<a href="" onclick="window.close()">
+<script language="JavaScript">
+//<![CDATA[
+var image = window.location.search;
+if (image) {
+   image = image.substring(1);
+} else {
+   image = "canyon_shot1";
+}
+document.write("<img border=0 src='" + image + "'.png/>")
+//]]>
+</script>
+</a>
+</body>
+</html>
