@@ -1,12 +1,39 @@
 Take a load off pardner, and have a look around
 
 This here's the website fer Three Rings' forthcoming multiplayer tactical
-strategy game, Bang! Howdy&trade;. If ya just fell off the turnip truck, then
-you'll want to <a href="/about.html">read about</a> the game so ya have some
-idea of what we're talking about.
+strategy game, <b>Bang! Howdy&trade;</b>. If ya just fell off the turnip truck,
+then you'll want to read <a href="/about.html">about the game</a> so ya have
+some idea of what we're talking about.
 
-<p> We're gettin' mighty close to our first round of public testin' and so we
-figgered it was high time we got to talkin' to you prospective cowpokes. Fer
-starters we've got some juicy screenshots fer ya to have a gander at:
+<p> If yer antsy fer a look at the game have a gander at our
+<a href="/screenshots/">screen shots</a>:<br/>
 
-<p> ... TBD ...
+<p> <a href="/screenshots/"><img border=0 src="screenshots/2006/03/thumbs/hilltown_shot1.png"/></a>
+<a href="/screenshots/"><img border=0 src="screenshots/2006/03/thumbs/sunset_shot4.png"/></a>
+
+<p> We're startin' our closed alpha testing on Monday the 27th of March, so we
+figgered it was high time we got to talkin' to you prospective cowpokes. A
+whole heap of ya have been kind enough to sign up to be notified when that
+testing starts, and we're going to be sendin' off email to the first batch of
+folks this very weekend!
+
+<p> The rest of ya will no doubt be wantin' to get in on the action, so I'll
+give ya a rundown on how we're going to work this operation. On Monday we'll
+start fixed hours testing, most likely in the evenings. Assuming things are
+going smoothly, we're going to keep sendin' off invites to more players while
+we're busy fixin' all them pesky bugs that will no doubt be creepin' up.
+
+<p> In the meanwhile, ya'll should <a href="/register/register.wm">sign up</a>
+fer an account (assumin' ya don't already have one from Puzzle Pirates) so that
+we can send ya an email invitation when the time is right.
+
+<p> When we're confident that things are workin' well and that we've ironed out
+any major problems and imbalances, we'll throw the doors wide open and invite
+everybody to come on down and give 'er a wrangle. You can keep an eye on this
+here site for status updates and information on when the public beta will
+start. We're high-tech cowboys here at the Triple-O Ranch, so we've got an <a
+href="/index.rss">RSS feed</a> for those of ya'll that prefer to get yer news
+that way.
+
+<p> Thanks fer stoppin' by. Yee haw!
+<p align="right">- Michael
