@@ -14,11 +14,6 @@ import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 
-import com.threerings.parlor.game.data.GameAI;
-
-import com.threerings.util.Name;
-
-import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.Criterion;
@@ -73,23 +68,7 @@ public class SaloonController extends PlaceController
     public void actionPerformed (ActionEvent event)
     {
         if (event.getAction().equals(TEST_GAME)) {
-            BangConfig config = new BangConfig();
-            config.players = new Name[] {
-                _ctx.getUserObject().getVisibleName(),
-                new Name("Larry"), new Name("Moe") };
-            config.ais = new GameAI[] {
-                null, new GameAI(1, 50), new GameAI(0, 50) };
-            config.scenarios = new String[] { "cj" };
-            config.teamSize = 3;
-            InvocationService.ConfirmListener cl =
-                new InvocationService.ConfirmListener() {
-                public void requestProcessed () {
-                }
-                public void requestFailed (String reason) {
-                    log.warning("Failed to create game: " + reason);
-                }
-            };
-            _ctx.getParlorDirector().startSolitaire(config, cl);
+            _ctx.getBangClient().startTestGame();
         }
     }
 

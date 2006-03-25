@@ -30,7 +30,6 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
-import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -350,7 +349,7 @@ public class PlayerManager
         BangConfig config = new BangConfig();
         config.rated = false;
         config.players = new Name[] { player.getVisibleName(), ai.handle };
-        config.ais = new GameAI[] { null, ai };
+        config.ais = new BangAI[] { null, ai };
         config.scenarios = new String[] { tconfig.ident };
         config.tutorial = true;
         config.board = tconfig.board;
@@ -387,7 +386,7 @@ public class PlayerManager
         BangConfig config = new BangConfig();
         config.rated = false;
         config.players = new Name[players];
-        config.ais = new GameAI[players];
+        config.ais = new BangAI[players];
         config.players[0] = player.getVisibleName();
         for (int ii = 1; ii < players; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names);

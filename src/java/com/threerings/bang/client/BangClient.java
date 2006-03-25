@@ -379,6 +379,35 @@ public class BangClient extends BasicClient
         return _pcview;
     }
 
+    /**
+     * Parses some system properties and starts a quick test game vs the
+     * computer. Used by developers.
+     */
+    public void startTestGame ()
+    {
+        ReportingListener rl =
+            new ReportingListener(_ctx, BANG_MSGS, "m.quick_start_failed");
+        PlayerService psvc = (PlayerService)
+            _ctx.getClient().requireService(PlayerService.class);
+
+        // start a tutorial if requested
+        if ("tutorial".equals("test")) {
+            psvc.playTutorial(_ctx.getClient(), "test", rl);
+            return;
+        }
+
+        // otherwise we're starting a test game versus the computer
+        int pcount;
+        try {
+            pcount = Integer.parseInt(System.getProperty("players"));
+        } catch (Throwable t) {
+            pcount = 4;
+        }
+        psvc.playComputer(_ctx.getClient(), pcount,
+                          System.getProperty("scenario", "cj"),
+                          System.getProperty("board"), rl);
+    }
+
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
@@ -403,27 +432,7 @@ public class BangClient extends BasicClient
         // developers can jump right into a tutorial or game
         String test = System.getProperty("test");
         if (test != null) {
-            ReportingListener rl =
-                new ReportingListener(_ctx, BANG_MSGS, "m.quick_start_failed");
-            PlayerService psvc = (PlayerService)
-                _ctx.getClient().requireService(PlayerService.class);
-
-            // start a tutorial if requested
-            if ("tutorial".equals("test")) {
-                psvc.playTutorial(_ctx.getClient(), "test", rl);
-                return;
-            }
-
-            // otherwise we're starting a test game versus the computer
-            int pcount;
-            try {
-                pcount = Integer.parseInt(System.getProperty("players"));
-            } catch (Throwable t) {
-                pcount = 4;
-            }
-            psvc.playComputer(_ctx.getClient(), pcount,
-                              System.getProperty("scenario", "cj"),
-                              System.getProperty("board"), rl);
+            startTestGame();
             return;
         }
 
