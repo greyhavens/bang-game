@@ -11,6 +11,8 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.parlor.game.data.GameAI;
+
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
@@ -21,6 +23,8 @@ import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.server.ai.AILogic;
+import com.threerings.bang.game.server.ai.CattleRustlingLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -46,7 +50,7 @@ public class CattleRustling extends Scenario
      * also be considered the probability that a cow will be spawned in a
      * particular square. */
     public static final float CATTLE_RATIO = 0.04f;
-
+    
     @Override // documentation inherited
     public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
                                ArrayList<Piece> pieces)
@@ -62,6 +66,12 @@ public class CattleRustling extends Scenario
         }
     }
 
+    @Override // documentation inherited
+    public AILogic createAILogic (GameAI ai)
+    {
+        return new CattleRustlingLogic();
+    }
+    
     @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
                                 PointSet bonusSpots, PieceSet purchases)

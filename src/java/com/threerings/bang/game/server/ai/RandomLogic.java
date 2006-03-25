@@ -8,6 +8,7 @@ import com.samskivert.util.ArrayUtil;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.UnitConfig;
+
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
@@ -24,13 +25,7 @@ public class RandomLogic extends AILogic
             UnitConfig.Rank.BIGSHOT);
         return ((UnitConfig)RandomUtil.pickRandom(configs)).type;
     }
-    
-    // documentation inherited
-    public String[] getCardTypes ()
-    {
-        return null;
-    }
-    
+
     // documentation inherited
     public String[] getUnitTypes (int count)
     {
@@ -46,8 +41,7 @@ public class RandomLogic extends AILogic
     
     // documentation inherited
     protected void moveUnit (
-        Piece[] pieces, short tick, Unit unit, PointSet moves,
-        PointSet attacks)
+        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         // if we can attack someone, do that
         Piece target = null;

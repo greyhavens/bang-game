@@ -509,6 +509,22 @@ public abstract class Piece extends SimpleStreamableObject
         return valid;
     }
 
+    /**
+     * Computes the actual damage done if this piece were to fire on the
+     * specified target, accounting for this piece's current damage level
+     * and other limiting factors.
+     */
+    public int computeScaledDamage (Piece target)
+    {
+        int ddamage = computeDamage(target);
+        // scale the damage by our own damage level; but always fire as if
+        // we have at least half hit points
+        int undamage = Math.max(50, 100-damage);
+        ddamage = (ddamage * undamage) / 100;
+        ddamage = Math.max(1, ddamage); // always do at least 1 point of damage
+        return ddamage;
+    }
+    
     /** Returns the frequency with which this piece can move. */
     protected int getTicksPerMove ()
     {
@@ -563,22 +579,6 @@ public abstract class Piece extends SimpleStreamableObject
      */
     protected void recomputeBounds ()
     {
-    }
-
-    /**
-     * Computes the actual damage done if this piece were to fire on the
-     * specified target, accounting for this piece's current damage level
-     * and other limiting factors.
-     */
-    protected int computeScaledDamage (Piece target)
-    {
-        int ddamage = computeDamage(target);
-        // scale the damage by our own damage level; but always fire as if
-        // we have at least half hit points
-        int undamage = Math.max(50, 100-damage);
-        ddamage = (ddamage * undamage) / 100;
-        ddamage = Math.max(1, ddamage); // always do at least 1 point of damage
-        return ddamage;
     }
 
     /** Helper function for {@link #info}. */

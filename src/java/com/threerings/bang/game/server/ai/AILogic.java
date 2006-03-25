@@ -3,7 +3,13 @@
 
 package com.threerings.bang.game.server.ai;
 
+import java.awt.Point;
+
+import com.threerings.util.RandomUtil;
+
 import com.threerings.presents.server.InvocationException;
+
+import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
@@ -33,9 +39,12 @@ public abstract class AILogic
     
     /**
      * Returns the types of cards desired by the AI (or <code>null</code> for
-     * no cards).
+     * no cards, which is what the default implementation returns).
      */
-    public abstract String[] getCardTypes ();
+    public String[] getCardTypes ()
+    {
+        return null;
+    }
     
     /**
      * Returns the types of units that the AI wants for its team.
@@ -62,7 +71,7 @@ public abstract class AILogic
                 _moves.clear();
                 _attacks.clear();
                 _bangobj.board.computeMoves(unit, _moves, _attacks);
-                moveUnit(pieces, tick, unit, _moves, _attacks);
+                moveUnit(pieces, unit, _moves, _attacks);
             }
         }
     }
@@ -71,14 +80,12 @@ public abstract class AILogic
      * Moves an owned, ticked-up unit.
      *
      * @param pieces the array of pieces on the board
-     * @param tick the current tick
      * @param unit the unit to move
      * @param moves the places to which the unit can move
      * @param attacks the places the unit can attack
      */
     protected void moveUnit (
-        Piece[] pieces, short tick, Unit unit, PointSet moves,
-        PointSet attacks)
+        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
     }
     
@@ -104,6 +111,71 @@ public abstract class AILogic
         } catch (InvocationException e) {
             return false;
         }
+    }
+    
+    /**
+     * Returns a number of unique unit types by evaluating the provided array
+     * of configurations and making weighted random selections.
+     */
+    protected String[] getWeightedUnitTypes (
+        UnitConfig[] configs, UnitConfigEvaluator evaluator, int count)
+    {
+        // compute the weights
+        int[] weights = new int[configs.length];
+        for (int ii = 0; ii < configs.length; ii++) {
+            weights[ii] = evaluator.getWeight(configs[ii]);
+        }
+        
+        // use the weights to select the desired number of types
+        String[] types = new String[count];
+        for (int ii = 0; ii < count; ii++) {
+            int idx = RandomUtil.getWeightedIndex(weights);
+            types[ii] = configs[idx].type;
+            weights[idx] = 0;
+        }
+        return types;
+    }
+    
+    /**
+     * Finds and returns the best target that the unit can reach after moving
+     * to the given destination, according to the provided evaluator.
+     */
+    protected Unit getBestTarget (
+        Piece[] pieces, Unit unit, Point dest, TargetEvaluator evaluator)
+    {
+        Unit best = null;
+        int bweight = -1;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (!unit.validTarget(pieces[ii], false)) {
+                continue;
+            }
+            int dist = pieces[ii].getDistance(dest.x, dest.y);
+            if (dist < unit.getMinFireDistance() ||
+                dist > unit.getMaxFireDistance()) {
+                continue;
+            }
+            Unit target = (Unit)pieces[ii];
+            int tweight = evaluator.getWeight(unit, target);
+            if (tweight > bweight) {
+                best = target;
+                bweight = tweight;
+            }
+        }
+        return best;
+    }
+    
+    /** Used to evaluate unit configs for weighted random selections. */
+    protected interface UnitConfigEvaluator
+    {
+        /** Returns the weight of the described unit. */
+        public int getWeight (UnitConfig config);
+    }
+    
+    /** Used to rank potential targets. */
+    protected interface TargetEvaluator
+    {
+        /** Returns the weight of the specified target for the given unit. */
+        public int getWeight (Unit unit, Unit target);
     }
     
     /** The game manager. */
