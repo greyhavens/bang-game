@@ -8,8 +8,8 @@ some idea of what we're talking about.
 <p> If yer antsy fer a look at the game have a gander at our
 <a href="/screenshots/">screen shots</a>:<br/>
 
-<p> <a href="/screenshots/"><img border=0 src="screenshots/2006/03/thumbs/hilltown_shot1.jpg"/></a>
-<a href="/screenshots/"><img border=0 src="screenshots/2006/03/thumbs/sunset_shot4.jpg"/></a>
+<p> <a href="/screenshots/"><img border=0 src="/screenshots/2006/03/thumbs/hilltown_shot1.jpg"/></a>
+<a href="/screenshots/"><img border=0 src="/screenshots/2006/03/thumbs/sunset_shot4.jpg"/></a>
 
 <p> We're startin' our closed alpha testing on Monday the 27th of March, so we
 figgered it was high time we got to talkin' to you prospective cowpokes. A
