@@ -144,7 +144,9 @@ $template =
     my ($path, $chunk, $flavour) = @_;
 
     do {
-      return join '', <$fh> if $fh->open("< $datadir/$path/$chunk.$flavour");
+      my $rpath = $path;
+      $rpath = "flavours" unless ($rpath);
+      return join '', <$fh> if $fh->open("< $datadir/$rpath/$chunk.$flavour");
     } while ($path =~ s/(\/*[^\/]*)$// and $1);
 
     return join '', ($template{$flavour}{$chunk} || $template{error}{$chunk} || '');
