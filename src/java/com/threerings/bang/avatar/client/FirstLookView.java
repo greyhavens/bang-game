@@ -91,9 +91,6 @@ public class FirstLookView extends BContainer
         jimmy.add(rando);
         wrapper.add(jimmy);
         add(wrapper, BorderLayout.CENTER);
-
-        // start out with the random gender selection
-        setGender(_ctx.getUserObject().isMale);
     }
 
     /**
