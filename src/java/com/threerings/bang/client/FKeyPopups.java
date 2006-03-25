@@ -69,7 +69,7 @@ public class FKeyPopups
             String fname = "bang_screen_" + _sfmt.format(new Date());
             _ctx.getRenderer().takeScreenShot(fname);
             String msg = MessageBundle.tcompose(
-                "m.screenshot_taken", BangClient.localDataDir(fname + ".png"));
+                "m.screenshot_taken", fname + ".png");
             _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
             return;
         }
