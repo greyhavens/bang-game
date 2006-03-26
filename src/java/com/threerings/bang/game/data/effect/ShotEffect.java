@@ -136,7 +136,9 @@ public class ShotEffect extends Effect
 
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target != null) {
-            dammap.increment(target.owner, newDamage - target.damage);
+            // award a 20 damage point (2 game point) bonus for a kill
+            int bonus = (newDamage == 100) ? 20 : 0;
+            dammap.increment(target.owner, newDamage - target.damage + bonus);
         } else {
             log.warning("Shot effect missing target [id=" + targetId + "].");
         }
