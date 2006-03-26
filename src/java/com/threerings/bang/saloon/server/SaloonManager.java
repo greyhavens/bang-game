@@ -19,6 +19,8 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.server.BangServer;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
+
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.MatchObject;
@@ -40,6 +42,11 @@ public class SaloonManager extends PlaceManager
         throws InvocationException
     {
         final PlayerObject user = (PlayerObject)caller;
+
+        // if we're not allowing new games, fail immediately
+        if (!RuntimeConfig.server.allowNewGames) {
+            throw new InvocationException("m.new_games_disabled");
+        }
 
         // look for an existing match that is compatible
         for (Match match : _matches.values()) {

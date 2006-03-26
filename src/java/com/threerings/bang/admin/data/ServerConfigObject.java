@@ -14,6 +14,9 @@ public class ServerConfigObject extends ConfigObject
 
     /** The field name of the <code>nonAdminsAllowed</code> field. */
     public static final String NON_ADMINS_ALLOWED = "nonAdminsAllowed";
+
+    /** The field name of the <code>allowNewGames</code> field. */
+    public static final String ALLOW_NEW_GAMES = "allowNewGames";
     // AUTO-GENERATED: FIELDS END
 
     /** Whether or not to require insiders or testers. */
@@ -21,6 +24,9 @@ public class ServerConfigObject extends ConfigObject
 
     /** Whether or not to allow non-admins to log on. */
     public boolean nonAdminsAllowed = true;
+
+    /** Whether or not new games can be started. */
+    public boolean allowNewGames = true;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -53,6 +59,22 @@ public class ServerConfigObject extends ConfigObject
         requestAttributeChange(
             NON_ADMINS_ALLOWED, new Boolean(value), new Boolean(ovalue));
         this.nonAdminsAllowed = value;
+    }
+
+    /**
+     * Requests that the <code>allowNewGames</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setAllowNewGames (boolean value)
+    {
+        boolean ovalue = this.allowNewGames;
+        requestAttributeChange(
+            ALLOW_NEW_GAMES, new Boolean(value), new Boolean(ovalue));
+        this.allowNewGames = value;
     }
     // AUTO-GENERATED: METHODS END
 }
