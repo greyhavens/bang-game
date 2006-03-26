@@ -898,6 +898,7 @@ goods_descrip {
   background: blank;
   font: "Helvetica" plain 15;
   color: #F7E17E;
+  vertical-align: top;
 }
 
 //
