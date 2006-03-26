@@ -40,6 +40,8 @@ public class SaloonView extends ShopView
         add(new TownButton(ctx), new Point(870, 25));
         add(_paper = new PaperView(ctx), new Rectangle(48, 68, 516, 576));
 
+        add(new BLabel(_msgs.get("m.coming_soon")), new Point(730, 183));
+
         add(_crview = new CriterionView(ctx, _ctrl), MATCH_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
