@@ -287,7 +287,11 @@ public class PardnerView extends IconPalette
         protected void layout ()
         {
             super.layout();
-            _label.layout(new Insets(25, 5, 25, 31));
+
+            // the not online icon is a different size from an actual avatar
+            // icon so we have to adjust the insets
+            int offtop = (entry.avatar == null) ? 20 : 5;
+            _label.layout(new Insets(25, offtop, 25, 31));
         }
 
         // documentation inherited
