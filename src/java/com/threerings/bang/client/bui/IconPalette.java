@@ -75,7 +75,15 @@ public class IconPalette extends BContainer
         _forward.setStyleClass("fwd_button");
         add(_bcont, BorderLayout.SOUTH);
     }
-    
+
+    /**
+     * Configures whether or not the last selected icon can be deselected.
+     */
+    public void setAllowsEmptySelection (boolean allowsEmptySelection)
+    {
+        _allowsEmpty = allowsEmptySelection;
+    }
+
     /**
      * Configures the number of simultaneous selections allowed by this icon
      * palette.
@@ -154,7 +162,7 @@ public class IconPalette extends BContainer
             }
         }
     }
-    
+
     /**
      * Removes an icon from the palette (and from the display if it is
      * showing).
@@ -176,7 +184,7 @@ public class IconPalette extends BContainer
     {
         return _icons.size();
     }
-    
+
     /**
      * Returns the icon at the specified index.
      */
@@ -184,7 +192,7 @@ public class IconPalette extends BContainer
     {
         return _icons.get(idx);
     }
-    
+
     /**
      * Returns an array containing the icons displayed by this palette.
      */
@@ -369,6 +377,11 @@ public class IconPalette extends BContainer
 
     protected void iconSelected (SelectableIcon icon)
     {
+        // this happens when we're refusing an empty selection
+        if (_selections.contains(icon)) {
+            return;
+        }
+
         // add the newly selected icon to the list of selections
         _selections.add(icon);
 
@@ -385,6 +398,14 @@ public class IconPalette extends BContainer
 
     protected void iconDeselected (SelectableIcon icon)
     {
+        // refuse to allow the last icon to be deselected if we don't allow an
+        // empty selection
+        if (!_allowsEmpty && _selections.size() == 1 &&
+            _selections.get(0) == icon) {
+            icon.setSelected(true);
+            return;
+        }
+
         // the icon was deselected, remove it from the selections list
         _selections.remove(icon);
 
@@ -412,6 +433,7 @@ public class IconPalette extends BContainer
     protected Inspector _inspector;
     protected BButton _forward, _back;
 
+    protected boolean _allowsEmpty = true;
     protected int _selectable;
     protected ArrayList<SelectableIcon> _selections =
         new ArrayList<SelectableIcon>();

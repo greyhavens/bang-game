@@ -12,6 +12,8 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.avatar.util.AvatarLogic;
+
 /**
  * Displays a selectable list of avatar articles.
  */
@@ -31,6 +33,10 @@ public class ArticlePalette extends IconPalette
     public void setSlot (String slot)
     {
         clear();
+
+        // disallow a non-selection if we're not an optional slot
+        int slidx = AvatarLogic.getSlotIndex(slot);
+        setAllowsEmptySelection(AvatarLogic.SLOTS[slidx].optional);
 
         PlayerObject player = _ctx.getUserObject();
         for (Iterator iter = player.inventory.iterator(); iter.hasNext(); ) {
