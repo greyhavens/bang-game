@@ -123,7 +123,10 @@ public class AvatarView extends BLabel
      */
     public void setAvatar (int[] avatar)
     {
-        // TODO: fade between the two images?
+        if (_avatar != null && Arrays.equals(avatar, _avatar)) {
+            return;
+        }
+        _avatar = (int[])avatar.clone();
         setIcon(new ImageIcon(getFramableImage(_ctx, avatar, 2)));
     }
 
@@ -160,10 +163,11 @@ public class AvatarView extends BLabel
         
         protected int[] _avatar;
     }
-    
+
     protected BasicContext _ctx;
     protected BImage _frame;
-    
+    protected int[] _avatar;
+
     /** The avatar image cache. */
     protected static HashMap<AvatarKey, WeakReference<BufferedImage>> _icache =
         new HashMap<AvatarKey, WeakReference<BufferedImage>>();

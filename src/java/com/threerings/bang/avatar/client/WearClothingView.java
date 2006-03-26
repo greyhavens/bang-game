@@ -80,13 +80,27 @@ public class WearClothingView extends BContainer
         _pick.refreshDisplay();
     }
 
-    protected void setSlot (int slotidx)
+    @Override // documentation inherited
+    protected void wasAdded ()
     {
-        _slotidx = slotidx;
-        _articles.setSlot(AvatarLogic.SLOTS[slotidx].name);
+        super.wasAdded();
+
+        // refresh our article palette to cause the active article to be
+        // reselected when we switch to this tab
+        if (_slotidx != -1) {
+            _articles.setSlot(AvatarLogic.SLOTS[_slotidx].name);
+        }
     }
 
-    protected int _slotidx;
+    protected void setSlot (int slotidx)
+    {
+        if (_slotidx != slotidx) {
+            _slotidx = slotidx;
+            _articles.setSlot(AvatarLogic.SLOTS[slotidx].name);
+        }
+    }
+
+    protected int _slotidx = -1;
     protected PickLookView _pick;
     protected ArticlePalette _articles;
 }

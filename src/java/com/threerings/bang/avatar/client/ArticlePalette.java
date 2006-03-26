@@ -12,6 +12,7 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 /**
@@ -38,7 +39,15 @@ public class ArticlePalette extends IconPalette
         int slidx = AvatarLogic.getSlotIndex(slot);
         setAllowsEmptySelection(AvatarLogic.SLOTS[slidx].optional);
 
+        // look up the active look and find out what the player is wearing in
+        // this slot
         PlayerObject player = _ctx.getUserObject();
+        int articleId = -1;
+        Look look = player.getLook();
+        if (look != null) {
+            articleId = look.articles[slidx];
+        }
+
         for (Iterator iter = player.inventory.iterator(); iter.hasNext(); ) {
             Item item = (Item)iter.next();
             if (!(item instanceof Article) ||
@@ -51,6 +60,11 @@ public class ArticlePalette extends IconPalette
             }
             icon.setItem(_ctx, item);
             addIcon(icon);
+
+            // if this is the currently worn article, select it
+            if (item.getItemId() == articleId) {
+                icon.setSelected(true);
+            }
         }
     }
 

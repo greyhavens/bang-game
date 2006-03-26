@@ -147,7 +147,8 @@ public class NewLookView extends BContainer
                 }
             }
             protected void tabSelected (int index) {
-                _handlers.get(AvatarLogic.ASPECTS[index].name).selected();
+                _current = _handlers.get(AvatarLogic.ASPECTS[index].name);
+                _current.selected();
             }
         };
         htabs.setDefaultTab(1); // default to hair which is more interesting
@@ -222,9 +223,10 @@ public class NewLookView extends BContainer
     {
         super.wasAdded();
 
-        if (_barbobj != null) {
-            // update our avatar in case our outfit changed
-            updateAvatar();
+        if (_barbobj != null && _current != null) {
+            // fake the current tab being selected to reselect the active
+            // aspect and update the avatar (in case our outfit changed)
+            _current.selected();
         }
     }
 
@@ -459,6 +461,7 @@ public class NewLookView extends BContainer
     protected AvatarView _avatar;
     protected IconPalette _palette;
     protected ColorSelector _active;
+    protected AspectHandler _current;
 
     protected BTextField _name;
     protected MoneyLabel _cost;
