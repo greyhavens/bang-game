@@ -112,12 +112,10 @@ public class CattleRustling extends Scenario
     {
         super.roundDidEnd(bangobj);
 
-        // award points for each cow and note rustled counts
+        // note rustled counts
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
-                bangobj.grantPoints(
-                    pieces[ii].owner, ScenarioCodes.POINTS_PER_COW);
                 bangobj.stats[pieces[ii].owner].incrementStat(
                     Stat.Type.CATTLE_RUSTLED, 1);
             }

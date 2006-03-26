@@ -1065,7 +1065,12 @@ public class BangManager extends GameManager
                 // these stats count regardless of the game duration
                 for (int ss = 0; ss < ACCUM_STATS.length; ss++) {
                     Stat.Type type = ACCUM_STATS[ss];
-                    user.stats.incrementStat(type, stats.getIntStat(type));
+                    // we don't subtract accumulating stats if the player
+                    // "accumulated" negative points in the game
+                    int value = stats.getIntStat(type);
+                    if (value > 0) {
+                        user.stats.incrementStat(type, value);
+                    }
                 }
                 user.stats.maxStat(Stat.Type.HIGHEST_POINTS,
                                    stats.getIntStat(Stat.Type.POINTS_EARNED));

@@ -81,6 +81,10 @@ public class ClaimJumping extends Scenario
                     claim.owner = midx;
                     claim.nuggets = NUGGET_COUNT;
                     bangobj.updatePieces(claim);
+                    // start the player with points for each nugget, but don't
+                    // record them as "earned" (which grantPoints() would do)
+                    bangobj.setPointsAt(
+                        NUGGET_COUNT * ScenarioCodes.POINTS_PER_NUGGET, midx);
                     _claims.add(claim);
                     assigned.add(midx);
                 }
@@ -154,15 +158,12 @@ public class ClaimJumping extends Scenario
     {
         super.roundDidEnd(bangobj);
 
-        // score points for all nuggets in each players' claim
+        // increment each players' nugget related stats
         for (Claim claim : _claims) {
-            if (claim.nuggets <= 0) {
-                continue;
+            if (claim.nuggets > 0) {
+                bangobj.stats[claim.owner].incrementStat(
+                    Stat.Type.NUGGETS_CLAIMED, claim.nuggets);
             }
-            bangobj.grantPoints(
-                claim.owner, ScenarioCodes.POINTS_PER_NUGGET * (claim.nuggets));
-            bangobj.stats[claim.owner].incrementStat(
-                Stat.Type.NUGGETS_CLAIMED, claim.nuggets);
         }
     }
 

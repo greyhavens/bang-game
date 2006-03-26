@@ -563,12 +563,8 @@ public class BangController extends GameController
             return;
         }
 
-        // compute each player's total points including unscored points
-        int[] points = (int[])_bangobj.points.clone();
-        ScenarioUtil.computeUnscoredPoints(_bangobj, points);
-
         // determine each player's rank based on those points
-        int[] spoints = (int[])points.clone();
+        int[] spoints = (int[])_bangobj.points.clone();
         Arrays.sort(spoints);
         ArrayUtil.reverse(spoints);
         int rank = 0;
@@ -576,8 +572,8 @@ public class BangController extends GameController
             if (rr > 0 && spoints[rr] == spoints[rr-1]) {
                 continue;
             }
-            for (int ii = 0; ii < points.length; ii++) {
-                if (points[ii] == spoints[rr]) {
+            for (int ii = 0; ii < _bangobj.points.length; ii++) {
+                if (_bangobj.points[ii] == spoints[rr]) {
                     _view.pstatus[ii].setRank(rank);
                 }
             }

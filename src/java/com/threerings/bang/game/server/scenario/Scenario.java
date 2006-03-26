@@ -209,7 +209,7 @@ public abstract class Scenario
                 if (pieces[ii] instanceof Cow &&
                     piece.getDistance(pieces[ii]) == 1) {
                     Effect effect = ((Cow)pieces[ii]).spook(
-                        bangobj.board, (Unit)piece);
+                        bangobj, (Unit)piece);
                     if (effect != null) {
                         _bangmgr.deployEffect(piece.owner, effect);
                     }

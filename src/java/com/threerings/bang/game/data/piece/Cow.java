@@ -10,6 +10,8 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.client.sprite.CowSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.SpookEffect;
 import com.threerings.bang.game.util.PointSet;
@@ -29,12 +31,16 @@ public class Cow extends Piece
      * Called when a unit moves next to this cow; causes the cow to spook
      * in the opposite direction.
      */
-    public SpookEffect spook (BangBoard board, Unit spooker)
+    public SpookEffect spook (BangObject bangobj, Unit spooker)
     {
         // if we were spooked by a big shot, become owned by that player
         int owner = -1;
         if (spooker.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            if (this.owner != -1) {
+                bangobj.grantPoints(this.owner, -ScenarioCodes.POINTS_PER_COW);
+            }
             owner = spooker.owner;
+            bangobj.grantPoints(owner, ScenarioCodes.POINTS_PER_COW);
         }
 
         // otherwise spook in the opposite direction of our spooker
@@ -43,7 +49,7 @@ public class Cow extends Piece
                 // spook in the direction that the spooker would have to move
                 // to occupy our location (ie. if we're east of the spooker,
                 // try spooking further east)
-                return move(board, dd, owner, spooker.pieceId);
+                return move(bangobj.board, dd, owner, spooker.pieceId);
             }
         }
 

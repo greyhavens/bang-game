@@ -10,6 +10,7 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.data.BonusConfig;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
@@ -125,9 +126,19 @@ public class NuggetEffect extends BonusEffect
         } else if (claimId > 0) {
             Claim claim = (Claim)bangobj.pieces.get(claimId);
             if (dropping) {
+                // if we're on the server, grant points to the player
+                if (bangobj.getManager().isManager(bangobj)) {
+                    bangobj.grantPoints(
+                        claim.owner, ScenarioCodes.POINTS_PER_NUGGET);
+                }
                 claim.nuggets++;
                 reportEffect(obs, claim, NUGGET_ADDED);
             } else {
+                // if we're on the server, deduct points from the player
+                if (bangobj.getManager().isManager(bangobj)) {
+                    bangobj.grantPoints(
+                        claim.owner, -ScenarioCodes.POINTS_PER_NUGGET);
+                }
                 claim.nuggets--;
                 reportEffect(obs, claim, NUGGET_REMOVED);
             }
