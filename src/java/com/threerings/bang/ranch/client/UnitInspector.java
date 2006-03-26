@@ -142,11 +142,9 @@ public class UnitInspector extends BContainer
         if ("recruit".equals(event.getAction())) {
             if (_config != null && _itemId == -1 &&
                 _config.rank == UnitConfig.Rank.BIGSHOT) {
-                RecruitDialog rd = new RecruitDialog(
-                    _ctx, (RanchView)getParent(), _ranchobj, _config);
-                _ctx.getBangClient().displayPopup(rd, true);
-                rd.pack(400, -1);
-                rd.center();
+                _ctx.getBangClient().displayPopup(
+                    new RecruitDialog(_ctx, (RanchView)getParent(), _ranchobj,
+                                      _config), true, 400);
             }
 
         } else if ("customize".equals(event.getAction())) {

@@ -48,23 +48,12 @@ public class RecruitDialog extends BDecoratedWindow
 
         add(new UnitIcon(ctx, -1, config), BorderLayout.WEST);
         BContainer cont = new BContainer(GroupLayout.makeVStretch());
-        cont.add(new BLabel(_msgs.get("m.rd_intro")), GroupLayout.FIXED);
+        cont.add(new BLabel(_msgs.get("m.rd_intro"), "ranch_recruit"),
+                 GroupLayout.FIXED);
 
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         row.add(new BLabel(_msgs.get("m.rd_name")), GroupLayout.FIXED);
         row.add(_name = new BTextField());
-
-        new EnablingValidator(_name, _recruit) {
-            protected boolean checkEnabled (String text) {
-                if (text.length() > BigShotItem.MAX_NAME_LENGTH) {
-                    _status.setText(_msgs.get("m.name_to_long"));
-                    return false;
-                } else {
-                    _status.setText("");
-                    return super.checkEnabled(text);
-                }
-            }
-        };
         cont.add(row, GroupLayout.FIXED);
 
         cont.add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
@@ -85,6 +74,19 @@ public class RecruitDialog extends BDecoratedWindow
         cont.add(row, GroupLayout.FIXED);
 
         add(cont, BorderLayout.CENTER);
+
+        // set up a validator for the big shot name
+        new EnablingValidator(_name, _recruit) {
+            protected boolean checkEnabled (String text) {
+                if (text.length() > BigShotItem.MAX_NAME_LENGTH) {
+                    _status.setText(_msgs.get("m.name_to_long"));
+                    return false;
+                } else {
+                    _status.setText("");
+                    return super.checkEnabled(text);
+                }
+            }
+        };
     }
 
     // documentation inherited from interface ActionListener

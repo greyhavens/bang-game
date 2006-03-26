@@ -1018,6 +1018,12 @@ ranch_unit_cost {
   color: #FFFFFF;
 }
 
+ranch_recruit {
+  font: "Dom Casual" plain 19;
+  color: #4C2804;
+  text-align: left;
+}
+
 big_unit_view {
   background: image "ui/frames/big_background.png" centerxy;
   padding: 7 12 7 12;
