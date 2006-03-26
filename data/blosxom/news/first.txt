@@ -3,7 +3,7 @@ Take a load off pardner, and have a look around
 This here's the website fer Three Rings' forthcoming multiplayer tactical
 strategy game, <b>Bang! Howdy&trade;</b>. If ya just fell off the turnip truck,
 then you'll want to read <a href="/about.html">about the game</a> so ya have
-some idea of what we're talking about.
+some idea of what we're talking about.</p>
 
 <p> If yer antsy fer a look at the game have a gander at our
 <a href="/screenshots/">screen shots</a>:<br/></p>
@@ -36,4 +36,4 @@ href="/index.rss">RSS feed</a> for those of ya'll that prefer to get yer news
 that way.</p>
 
 <p> Thanks fer stoppin' by. Yee haw!</p>
-<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a></p>
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>

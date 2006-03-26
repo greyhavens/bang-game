@@ -28,13 +28,13 @@ a {
   font-weight: bold;
 }
 
-li:before {
-  /* display: marker; */
-  content: url("images/circle.gif");
+ul {
+  list-style-image: url('images/circle.gif');
+  padding-left: 25px;
 }
 
 li {
-  margin-bottom: 20px
+  margin-bottom: 10px
 }
 
 /* for register/register.wm */
