@@ -24,6 +24,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.admin.client.RuntimeConfigView;
+import com.threerings.bang.admin.client.ServerStatusView;
 import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
@@ -46,6 +47,7 @@ public class FKeyPopups
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F2, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F3, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F4, this);
+        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F5, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F12, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_T, this);
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
@@ -89,6 +91,7 @@ public class FKeyPopups
         case KeyInput.KEY_F2:
         case KeyInput.KEY_F3:
         case KeyInput.KEY_F4:
+        case KeyInput.KEY_F5:
             requiresCheck = false;
             break;
         }
@@ -118,6 +121,11 @@ public class FKeyPopups
             break;
         case KeyInput.KEY_F4:
             if (_ctx.getUserObject().tokens.isAdmin()) {
+                popup = new ServerStatusView(_ctx);
+            }
+            break;
+        case KeyInput.KEY_F5:
+            if (_ctx.getUserObject().tokens.isAdmin()) {
                 popup = new RuntimeConfigView(_ctx);
             }
             break;
@@ -145,7 +153,11 @@ public class FKeyPopups
     protected BDecoratedWindow createHelp ()
     {
         BDecoratedWindow help = createDialogWindow("m.key_help_title");
-        help.add(new BLabel(_msgs.get("m.key_help"), "dialog_text_left"));
+        String text = _msgs.get("m.key_help");
+        if (_ctx.getUserObject().tokens.isAdmin()) {
+            text += _msgs.get("m.key_help_admin");
+        }
+        help.add(new BLabel(text, "dialog_text_left"));
         help.add(makeDismiss(help), GroupLayout.FIXED);
         return help;
     }

@@ -53,17 +53,17 @@ public class UnitInspector extends BContainer
         add(new Spacer(10, 10));
 
         BContainer row = new BContainer(GroupLayout.makeHStretch());
-        row.add(new BLabel(_msgs.get("m.make"), "ranch_unit_label"));
-        row.add(_umake = new BLabel("", "ranch_unit_data"));
-        row.add(new BLabel(_msgs.get("m.move"), "ranch_unit_label"));
-        row.add(_umove = new BLabel("", "ranch_unit_data"));
+        row.add(new BLabel(_msgs.get("m.make"), "table_label"));
+        row.add(_umake = new BLabel("", "table_data"));
+        row.add(new BLabel(_msgs.get("m.move"), "table_label"));
+        row.add(_umove = new BLabel("", "table_data"));
         add(row);
 
         row = new BContainer(GroupLayout.makeHStretch());
-        row.add(new BLabel(_msgs.get("m.mode"), "ranch_unit_label"));
-        row.add(_umode = new BLabel("", "ranch_unit_data"));
-        row.add(new BLabel(_msgs.get("m.shoot"), "ranch_unit_label"));
-        row.add(_ufire = new BLabel("", "ranch_unit_data"));
+        row.add(new BLabel(_msgs.get("m.mode"), "table_label"));
+        row.add(_umode = new BLabel("", "table_data"));
+        row.add(new BLabel(_msgs.get("m.shoot"), "table_label"));
+        row.add(_ufire = new BLabel("", "table_data"));
         add(row);
 
         add(new Spacer(10, 15));

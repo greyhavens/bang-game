@@ -10,6 +10,9 @@ import com.threerings.presents.net.BootstrapData;
  */
 public class BangBootstrapData extends BootstrapData
 {
+    /** The oid of the server status object (only non-zero for admins). */
+    public int statusOid;
+
     /** The oid of the town object. */
     public int townOid;
     

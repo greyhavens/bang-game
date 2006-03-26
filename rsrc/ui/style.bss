@@ -438,6 +438,18 @@ config_help_label {
   color: #4C2602;
 }
 
+table_label {
+  font: "Dom Casual" plain 19;
+  color: #4C2804;
+  text-align: right;
+}
+
+table_data {
+  font: "Dom Casual" plain 19;
+  color: #FFFFFF;
+  text-align: left;
+}
+
 //
 // Dialog Window styles
 
@@ -992,18 +1004,6 @@ ranch_unit_name {
   effect-color: #6A482E;
   text-align: center;
   vertical-align: center;
-}
-
-ranch_unit_label {
-  font: "Dom Casual" plain 19;
-  color: #4C2804;
-  text-align: right;
-}
-
-ranch_unit_data {
-  font: "Dom Casual" plain 19;
-  color: #FFFFFF;
-  text-align: left;
 }
 
 ranch_unit_info {
