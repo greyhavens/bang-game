@@ -15,188 +15,133 @@ function view_unit(unit) {
 }
 //]]>
 </script>
+
+<style type="text/css">
+#cowgirlleft {
+  float: left;
+  position: relative;
+  padding-left: 50px;
+}
+#sidebar {
+  float: right;
+}
+#pitchtop {
+  margin-left: 220px;
+}
+#pitchtop ul {
+  list-style-image: url('images/star.gif');
+}
+#meetunits {
+  clear: both;
+}
+p {
+  margin-left: 30px; margin-bottom: 10px
+}
+#meetunits li {
+  display: inline;
+}
+#towns ul {
+  list-style-image: url('images/circle.gif');
+}
+#towns div {
+  width: 50%;
+}
+#frontier {
+  float: left;
+}
+#boom {
+  float: right;
+}
+#towns p {
+  clear: both;
+}
+</style>
 </head>
 
 <!--#include file="header_incl.html"-->
-  <table width="756">
-    <tr>
-      <td align="right" valign="top" width="165">
-        <p><img src="/images/cowgirl.gif" alt="Cowgirl"/></p>
-        <p class="sidebar">
-        See the <a href="/screenshots.html">screenshots</a>!<br/>
-        <a href="/register/">Sign up</a> to be a tester!</p>
-      </td>
-      <td width="10"></td>
-      <td valign="top">
-
-        <br />
-        <span class="highlight">Howdy pardner!</span> Thanks fer moseyin' on
-        over to check out our mighty fine game. Have a gander at these here
-        excitin' features:</p>
-
-        <p/>
-        <table cellpadding="5" width="500">
-          <tr>
-            <td valign="baseline"><img src="images/star.gif" alt="*" /></td>
-
-            <td valign="baseline">Multiplayer online tactical strategy game
-            in a 3D Wild West setting, yee haw!</td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/star.gif" alt="*" /></td>
-
-            <td valign="baseline">Fast-paced hybrid of turn-based and
-            realtime strategy gameplay with a healthy helpin' of rootin'
-            tootin' antics!</td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/star.gif" alt="*" /></td>
-
-            <td valign="baseline">Dozens of unique units, hundreds of special
-            playfields and over ten wild and crazy gameplay scenarios!</td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/star.gif" alt="*" /></td>
-
-            <td valign="baseline">Customizable avatars and collectable badges
-            let you show them city folk that you know how to handle yer
-            dogies!</td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/star.gif" alt="*" /></td>
-
-            <td valign="baseline">Collect and customize <em>Big Shot</em>
-            units that complement your play style whether ya like to take yer
-            sweet time or go in guns ablazin'!</td>
-          </tr>
-        </table>
-      </td>
+<div id="cowgirlleft">
+<img src="images/cowgirl.gif" alt="Cowgirl"/>
+<p class="sidebar">
+  See the <a href="/screenshots.html">screenshots</a>!<br/>
+    <a href="/register/">Sign up</a> to be a tester!</p>
+</p>
+</div>
+<div id="pitchtop">
+<span class="highlight">Howdy pardner!</span> Thanks fer moseyin' on
+  over to check out our mighty fine game. Have a gander at these here
+  excitin' features:
+<ul>
+  <li>Multiplayer online tactical strategy game in a 3D Wild West setting,
+    yee haw!</li>
+  <li>Fast-paced hybrid of turn-based and realtime strategy gameplay with a
+    healthy helpin' of rootin' tootin' antics!</li>
+  <li>Dozens of unique units, hundreds of special playfields and over ten
+    wild and crazy gameplay scenarios!</li>
+  <li>Customizable avatars and collectable badges let you show them city
+    folk that you know how to handle yer dogies!</li>
+  <li>Collect and customize <em>Big Shot</em> units that complement your
+    play style whether ya like to take yer sweet time or go in guns 
+    ablazin'!</li>
+</ul>
+</div>
+<div id="meetunits">
+<p>
+  <span class="highlight">Meet</span> a few of the able hands you'll
+  recruit as ya blaze a trail to victory:
+</p>
+<ul>
+  <li><a href="units/codger.html" onclick="return view_unit('codger')">
+    <img border="0" src="images/units/codger_sm.gif" alt="Old Codger"/>
+    </a></li>
+  <li><a href="units/steamgunman.html"
+      onclick="return view_unit('steamgunman')"><img border="0"
+      src="images/units/steamgunman_sm.gif" alt="Steam Gunman"/></a></li>
+  <li><a href="units/gunslinger.html"
+      onclick="return view_unit('gunslinger')"><img border="0"
+      src="images/units/gunslinger_sm.gif" alt="Gunslinger"/></a></li>
+  <li><a href="units/cavalry.html" onclick="return view_unit('cavalry')">
+      <img border="0" src="images/units/cavalry_sm.gif" alt="Cavalry"/>
+      </a></li>
+  <li><a href="units/dirigible.html" onclick=
+      "return view_unit('dirigible')"><img border="0"
+      src="images/units/dirigible_sm.gif" alt="Dirigible"/></a></li>
+  <li><a href="units/tactician.html" onclick=
+      "return view_unit('tactician')"><img border="0"
+      src="images/units/tactician_sm.gif" alt="Tactician"/></a></li>
     </tr>
-  </table><br />
-
-  <table>
-    <tr>
-      <td colspan="6">
-        <div style="margin-left: 30px; margin-bottom: 10px">
-          <span class="highlight">Meet</span> a few of the able hands you'll
-          recruit as ya blaze a trail to victory:
-        </div>
-      </td>
-    </tr>
-
-    <tr>
-      <td align="center"><a href="units/codger.html" onclick=
-      "return view_unit('codger')"><img border="0" src=
-      "images/units/codger_sm.gif" alt="Old Codger"/></a></td>
-
-      <td align="center"><a href="units/steamgunman.html" onclick=
-      "return view_unit('steamgunman')"><img border="0" src=
-      "images/units/steamgunman_sm.gif" alt="Steam Gunman"/></a></td>
-
-      <td align="center"><a href="units/gunslinger.html" onclick=
-      "return view_unit('gunslinger')"><img border="0" src=
-      "images/units/gunslinger_sm.gif" alt="Gunslinger"/></a></td>
-
-      <td align="center"><a href="units/cavalry.html" onclick=
-      "return view_unit('cavalry')"><img border="0" src=
-      "images/units/cavalry_sm.gif" alt="Cavalry"/></a></td>
-
-      <td align="center"><a href="units/dirigible.html" onclick=
-      "return view_unit('dirigible')"><img border="0" src=
-      "images/units/dirigible_sm.gif" alt="Dirigible"/></a></td>
-
-      <td align="center"><a href="units/tactician.html" onclick=
-      "return view_unit('tactician')"><img border="0" src=
-      "images/units/tactician_sm.gif" alt="Tactician"/></a></td>
-    </tr>
-  </table><br />
-
-  <table width="756">
-    <tr>
-      <td rowspan="4" width="20"></td>
-
-      <td colspan="2">Players progress through five unique and exciting Wild
-      West towns. Each town introduces new units, new gameplay scenarios, new
-      special items and more!</td>
-    </tr>
-
-    <tr>
-      <td valign="top">
-        <table cellspacing="15">
-          <tr>
-            <td colspan="2"><span class="highlight">Frontier Town</span></td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/circle.gif" alt="*" /></td>
-
-            <td valign="baseline">Try yer hand at the claim jumping, cattle
-            herding, and gold rush gameplay scenarios!</td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/circle.gif" alt="*" /></td>
-
-            <td valign="baseline">Recruit the Cavalry, Tactician and Old
-            Codger to your team of <em>Big Shots</em> and see which one ya
-            like best!</td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/circle.gif" alt="*" /></td>
-
-            <td valign="baseline">Watch out fer buffalo stampedes and stay
-            off the tracks when the train comes rollin' down the line!</td>
-          </tr>
-        </table>
-      </td>
-
-      <td width="350" valign="top">
-        <table cellspacing="15">
-          <tr>
-            <td colspan="2"><span class="highlight">Boom Town</span></td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/circle.gif" alt="*" /></td>
-
-            <td valign="baseline">Sabotage your opponents in the tunnels of a
-            mineshaft or play horse hockey on the Steam Mustang Factory
-            floor!</td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/circle.gif" alt="*" /></td>
-
-            <td valign="baseline">Recover wrecked units with the Tinkerer and
-            blow them up again with the Prospector!</td>
-          </tr>
-
-          <tr>
-            <td valign="baseline"><img src="images/circle.gif" alt="*" /></td>
-
-            <td valign="baseline">Hop in a mine cart and glide around the
-            board to flank opposing units.</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-    <tr>
-      <td colspan="2">
-        With more fun and excitement in the <span class="highlight">Indian
-        Village</span>, the <span class="highlight">Ghost Town</span> and the
-        <span class="highlight">City of Gold</span>!
-
-        <p>If ya want to get wind when we're ready for public testin', ye can
-        <a href="/register/">sign up fer an account</a> and we'll kindly send
-        ya a telegram when we're ready.</p>
-      </td>
-    </tr>
-  </table><br />
+</div>
+<div id="towns">
+<p>Players progress through five unique and exciting Wild
+West towns. Each town introduces new units, new gameplay scenarios, new
+special items and more!</p>
+<div id="frontier">
+<span class="highlight">Frontier Town</span>
+<ul>
+  <li>Try yer hand at the claim jumping, cattle herding, and gold rush
+    gameplay scenarios!</li>
+  <li>Recruit the Cavalry, Tactician and Old Codger to your team of <em>Big
+    Shots</em> and see which one ya like best!</li>
+  <li>Watch out fer buffalo stampedes and stay off the tracks when the train
+    comes rollin' down the line!</li>
+</ul>
+</div>
+<div id="boom">
+<span class="highlight">Boom Town</span>
+<ul>
+  <li>Sabotage your opponents in the tunnels of a mineshaft or play horse
+    hockey on the Steam Mustang Factory floor!</li>
+  <li>Recover wrecked units with the Tinkerer and blow them up again with
+    the Prospector!</li>
+  <li>Hop in a mine cart and glide around the board to flank opposing
+    units.</li>
+</ul>
+</div>
+<p>With more fun and excitement in the <span class="highlight">Indian
+Village</span>, the <span class="highlight">Ghost Town</span> and the
+<span class="highlight">City of Gold</span>!</p>
+</div>
+<p>If ya want to get wind when we're ready for public testin', ye can
+  <a href="/register/">sign up fer an account</a> and we'll kindly send
+  ya a telegram when we're ready.</p>
 
 <!--#include file="footer_incl.html"-->
