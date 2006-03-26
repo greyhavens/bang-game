@@ -130,12 +130,13 @@ public class PickLookView extends BContainer
             name = "";
         }
         PlayerObject user = _ctx.getUserObject();
+        // we don't clone our selection because whatever modifications we make
+        // we'll eventually flush to the server, and when we switch back from
+        // configuring our active look, we want the NewLookView to be able to
+        // immediately grab the new articles which would not otherwise be
+        // possible since we'd have just sent off a request to the server to
+        // update them
         _selection = (Look)user.looks.get(name);
-        // we clone our selection so that it can be modified when we're used in
-        // the wear clothes view without messing up the original
-        if (_selection != null) {
-            _selection = (Look)_selection.clone();
-        }
         refreshDisplay();
 
         // if we don't have a barber object, we need to tell the server that we

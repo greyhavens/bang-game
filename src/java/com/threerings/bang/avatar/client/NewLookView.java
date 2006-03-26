@@ -217,6 +217,17 @@ public class NewLookView extends BContainer
         _barbobj.service.purchaseLook(_ctx.getClient(), getLookConfig(), cl);
     }
 
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        if (_barbobj != null) {
+            // update our avatar in case our outfit changed
+            updateAvatar();
+        }
+    }
+
     protected void setActiveColor (ColorSelector colsel)
     {
         if (_active != null) {
