@@ -93,7 +93,7 @@ public class RenderUtil
         opaqueAlpha.setBlendEnabled(false);
         
         alwaysZBuf = ctx.getRenderer().createZBufferState();
-        alwaysZBuf.setWritable(true);
+        alwaysZBuf.setWritable(false);
         alwaysZBuf.setEnabled(true);
         alwaysZBuf.setFunction(ZBufferState.CF_ALWAYS);
 
