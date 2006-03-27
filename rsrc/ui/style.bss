@@ -631,21 +631,22 @@ system_chat_entry {
   vertical-align: center;
   border: 1 solid #000000;
   padding: 7;
+  background: solid #E8504E80;
 }
 
 attention_chat_entry {
   parent: "system_chat_entry";
-  background: solid #FF000080;
+  background: solid #2986E580;
 }
 
 feedback_chat_entry {
   parent: "system_chat_entry";
-  background: solid #00FF0080;
+  background: solid #D7B37780;
 }
 
 info_chat_entry {
   parent: "system_chat_entry";
-  background: solid #80808080;
+  background: solid #FFDA0080;
 }
 
 sent_chat_bubble {
