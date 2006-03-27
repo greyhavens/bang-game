@@ -15,20 +15,59 @@ import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 /**
  * Displays notifications for system messages outside of games.
  */
 public class SystemChatView extends BWindow
-    implements ChatDisplay, ChatCodes
+    implements ChatDisplay, ChatCodes, BangCodes
 {
+    /**
+     * Returns a string describing the system attention level of the given
+     * message, or <code>null</code> for none.
+     */
+    public static String getAttentionLevel (ChatMessage msg)
+    {
+        if (msg instanceof UserMessage) {
+            return ((UserMessage)msg).mode == BROADCAST_MODE ?
+                "attention" : null;
+        }
+        if (!(msg instanceof SystemMessage)) {
+            return null;
+        }
+        SystemMessage smsg = (SystemMessage)msg;
+        if (smsg.attentionLevel == SystemMessage.ATTENTION) {
+            return "attention";
+        } else if (smsg.attentionLevel == SystemMessage.FEEDBACK) {
+            return "feedback";
+        } else { // smsg.attentionLevel == SystemMessage.INFO) {
+            return "info";
+        }
+    }
+    
+    /**
+     * Formats the given system message.
+     */
+    public static String format (BangContext ctx, ChatMessage msg)
+    {
+        if (!(msg instanceof UserMessage)) {
+            return msg.message;
+        }
+        UserMessage umsg = (UserMessage)msg;
+        return ctx.xlate(CHAT_MSGS, MessageBundle.tcompose(
+            "m.broadcast_format", umsg.speaker, msg.message));
+    }
+    
     public SystemChatView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), new TableLayout(3, 20, 20));
@@ -54,7 +93,8 @@ public class SystemChatView extends BWindow
     // documentation inherited from interface ChatDisplay
     public void displayMessage (ChatMessage msg)
     {
-        if (!(msg instanceof SystemMessage) ||
+        String level = getAttentionLevel(msg);
+        if (level == null ||
             _ctx.getBangClient().getPardnerChatView().isAdded() ||
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
             return;
@@ -63,16 +103,7 @@ public class SystemChatView extends BWindow
             _ctx.getRootNode().addWindow(this);
             _ctx.getRootNode().addController(_fctrl);
         }
-        SystemMessage smsg = (SystemMessage)msg;
-        String level;
-        if (smsg.attentionLevel == SystemMessage.ATTENTION) {
-            level = "attention";
-        } else if (smsg.attentionLevel == SystemMessage.FEEDBACK) {
-            level = "feedback";
-        } else { // smsg.attentionLevel == SystemMessage.INFO) {
-            level = "info";
-        }
-        add(new MessageLabel(smsg.message, level + "_chat_label"));
+        add(new MessageLabel(format(_ctx, msg), level + "_chat_label"));
     }
 
     // documentation inherited from interface ChatDisplay

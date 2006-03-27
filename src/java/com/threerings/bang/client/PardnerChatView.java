@@ -161,24 +161,26 @@ public class PardnerChatView extends BDecoratedWindow
     // documentation inherited from interface ChatDisplay
     public void displayMessage (ChatMessage msg)
     {
-        if (msg instanceof UserMessage) {
-            UserMessage umsg = (UserMessage)msg;
-            if (!isAdded() && !display(umsg.speaker)) {
-                return;
+        String level = SystemChatView.getAttentionLevel(msg);
+        if (level != null) {
+            if (isAdded()) {
+                PardnerTab tab = (PardnerTab)_tabs.getSelectedTab();
+                tab.appendSystem(msg, level);
             }
-            PardnerTab tab = _pardners.get(umsg.speaker);
-            if (tab == null) {
-                tab = addPardnerTab(umsg.speaker); 
-            }
-            if (tab != _tabs.getSelectedTab()) {
-                _tabs.getTabButton(tab).setIcon(_alert);
-            }
-            tab.appendReceived(umsg);
-
-        } else if (msg instanceof SystemMessage && isAdded()) {
-            SystemMessage smsg = (SystemMessage)msg;
-            ((PardnerTab)_tabs.getSelectedTab()).appendSystem(smsg);
+            return;
         }
+        UserMessage umsg = (UserMessage)msg;
+        if (!isAdded() && !display(umsg.speaker)) {
+            return;
+        }
+        PardnerTab tab = _pardners.get(umsg.speaker);
+        if (tab == null) {
+            tab = addPardnerTab(umsg.speaker); 
+        }
+        if (tab != _tabs.getSelectedTab()) {
+            _tabs.getTabButton(tab).setIcon(_alert);
+        }
+        tab.appendReceived(umsg);
     }
     
     // documentation inherited from interface ActionListener
@@ -349,18 +351,11 @@ public class PardnerChatView extends BDecoratedWindow
         /**
          * Appends a message received from the system.
          */
-        public void appendSystem (SystemMessage msg)
+        public void appendSystem (ChatMessage msg, String level)
         {
             _last = null;
-            String level;
-            if (msg.attentionLevel == SystemMessage.ATTENTION) {
-                level = "attention";
-            } else if (msg.attentionLevel == SystemMessage.FEEDBACK) {
-                level = "feedback";
-            } else { // msg.attentionLevel == SystemMessage.INFO) {
-                level = "info";
-            }
-            _content.add(new BLabel(msg.message, level + "_chat_entry"));
+            _content.add(new BLabel(SystemChatView.format(_ctx, msg),
+                level + "_chat_label"));
             _scrollToEnd = true;
         }
 

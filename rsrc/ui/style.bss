@@ -624,31 +624,6 @@ pardner_chat_viewport {
   padding: 10 20 15 15;
 }
 
-system_chat_entry {
-  font: "Dom Casual" plain 18;
-  color: #000000;
-  text-align: center;
-  vertical-align: center;
-  border: 1 solid #000000;
-  padding: 7;
-  background: solid #E8504E80;
-}
-
-attention_chat_entry {
-  parent: "system_chat_entry";
-  background: solid #2986E580;
-}
-
-feedback_chat_entry {
-  parent: "system_chat_entry";
-  background: solid #D7B37780;
-}
-
-info_chat_entry {
-  parent: "system_chat_entry";
-  background: solid #FFDA0080;
-}
-
 sent_chat_bubble {
   font: "Dom Casual" plain 18;
   color: #003b27;
@@ -688,21 +663,22 @@ system_chat_label {
   vertical-align: center;
   border: 1 solid #000000;
   padding: 7;
+  background: solid #E8504E80;
 }
 
 attention_chat_label {
   parent: "system_chat_label";
-  background: solid #FF000080;
+  background: solid #2986E580;
 }
 
 feedback_chat_label {
   parent: "system_chat_label";
-  background: solid #00FF0080;
+  background: solid #D7B37780;
 }
 
 info_chat_label {
   parent: "system_chat_label";
-  background: solid #80808080;
+  background: solid #FFDA0080;
 }
 
 //
