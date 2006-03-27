@@ -266,6 +266,32 @@ public class AvatarLogic
     }
 
     /**
+     * Determines whether the given avatar belongs to a male character by
+     * looking for a gender-specific component.  Returns false if no
+     * gender-specific components are found.
+     */
+    public boolean isMale (int[] avatar)
+    {
+        if (avatar == null) {
+            return false;
+        }
+        for (int ii = 1; ii < avatar.length; ii++) {
+            CharacterComponent ccomp;
+            try {
+                ccomp = _crepo.getComponent(avatar[ii] & 0xFFFF);
+            } catch (NoSuchComponentException e) {
+                continue;
+            }
+            if (ccomp.componentClass.name.startsWith("male")) {
+                return true;
+            } else if (ccomp.componentClass.name.startsWith("female")) {
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Decodes and returns the colorizations encoded into the supplied encoded
      * component.
      */

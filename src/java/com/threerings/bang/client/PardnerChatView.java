@@ -6,17 +6,22 @@ package com.threerings.bang.client;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
+import java.nio.FloatBuffer;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.jme.math.Vector2f;
 import com.jme.renderer.Renderer;
 import com.jme.util.TextureManager;
+import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
@@ -138,7 +143,7 @@ public class PardnerChatView extends BDecoratedWindow
         Look look = (Look)player.looks.get(player.look);
         int[] avatar = (look == null) ? null : look.getAvatar(player);
         if (!Arrays.equals(_mavatar, avatar)) {
-            _micon = getAvatarIcon(avatar);
+            _micon = getAvatarIcon(avatar, player.isMale);
             _mavatar = avatar;
         }
     }
@@ -167,6 +172,9 @@ public class PardnerChatView extends BDecoratedWindow
                 PardnerTab tab = (PardnerTab)_tabs.getSelectedTab();
                 tab.appendSystem(msg, level);
             }
+            return;
+        }
+        if (!(msg instanceof UserMessage)) {
             return;
         }
         UserMessage umsg = (UserMessage)msg;
@@ -211,7 +219,49 @@ public class PardnerChatView extends BDecoratedWindow
             _ctx.getBangClient().clearPopup(this, false);
         }
     }
+    
+    /**
+     * Gets a scaled avatar icon for the specified avatar (which can be
+     * <code>null</code>, in which case <code>null</code> is returned).
+     *
+     * @param mirror if true, flip the image left-to-right
+     */
+    protected BIcon getAvatarIcon (int[] avatar, boolean mirror)
+    {
+        if (avatar == null) {
+            return null;
+        }
+        Image img = AvatarView.getImage(_ctx, avatar).getScaledInstance(
+            AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8,
+            BufferedImage.SCALE_SMOOTH);
+        BImage bimg;
+        if (mirror) {
+            bimg = new BImage(img) {
+                public void setTextureCoords (
+                    int sx, int sy, int swidth, int sheight) {
+                    // flip the texture coords left-to-right
+                    super.setTextureCoords(sx, sy, swidth, sheight);
+                    FloatBuffer tcoords = getTextureBuffer();
+                    swapInBuffer(tcoords, 0, 3);
+                    swapInBuffer(tcoords, 1, 2);
+                }
+            };
+        } else {
+            bimg = new BImage(img);
+        }
+        return new ImageIcon(bimg);
+    }
 
+    /**
+     * Swaps two texture coordinates in the specified buffer.
+     */
+    protected void swapInBuffer (FloatBuffer tbuf, int idx1, int idx2)
+    {
+        BufferUtils.populateFromBuffer(_tcoord, tbuf, idx1);
+        BufferUtils.copyInternalVector2(tbuf, idx2, idx1);
+        BufferUtils.setInBuffer(_tcoord, tbuf, idx2);
+    }
+    
     /**
      * Renders the chat bubble backgrounds.
      */
@@ -257,19 +307,6 @@ public class PardnerChatView extends BDecoratedWindow
             ArrayUtil.reverse(pbuf);
             img.setRGB(0, y, w, 1, pbuf, 0, w);
         }
-    }
-
-    /**
-     * Gets a scaled avatar icon for the specified avatar (which can be
-     * <code>null</code>, in which case <code>null</code> is returned).
-     */
-    protected BIcon getAvatarIcon (int[] avatar)
-    {
-        return (avatar == null) ? null : new ImageIcon(
-            new BImage(
-                AvatarView.getImage(_ctx, avatar).getScaledInstance(
-                    AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8,
-                    BufferedImage.SCALE_SMOOTH)));
     }
 
     /**
@@ -337,7 +374,8 @@ public class PardnerChatView extends BDecoratedWindow
             int[] avatar = (entry == null) ? null : entry.avatar;
             boolean newav = false;
             if (!Arrays.equals(avatar, _pavatar)) {
-                _picon = getAvatarIcon(avatar);
+                _picon = getAvatarIcon(avatar,
+                    !_ctx.getAvatarLogic().isMale(avatar));
                 _pavatar = avatar;
                 newav = true;
             }
@@ -471,4 +509,6 @@ public class PardnerChatView extends BDecoratedWindow
 
     protected BIcon _micon, _alert;
     protected int[] _mavatar;
+    
+    protected Vector2f _tcoord = new Vector2f();
 }
