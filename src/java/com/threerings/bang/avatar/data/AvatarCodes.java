@@ -25,6 +25,9 @@ public interface AvatarCodes
     /** The base coin cost for a new look. */
     public static final int BASE_LOOK_COIN_COST = 2;
 
+    /** The maximum cost of an aspect offered when creating a first look. */
+    public static final int MAX_STARTER_COST = 250;
+
     /** An error message used by {@link AvatarService#createAvatar}. */
     public static final String ERR_VULGAR_HANDLE = "m.vulgar_handle";
 

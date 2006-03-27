@@ -198,9 +198,13 @@ public class BarberManager extends PlaceManager
         final Article article = BangServer.alogic.createDefaultClothing(
             user, isMale, zations);
 
-        // the client should prevent selection of components that have cost
-        if (cost[0] > AvatarCodes.BASE_LOOK_SCRIP_COST ||
-            cost[1] > AvatarCodes.BASE_LOOK_COIN_COST) {
+        // the client should prevent selection of non-starter components, but
+        // we check on the server because we can't trust those bastards
+        int maxScrip = AvatarCodes.BASE_LOOK_SCRIP_COST;
+        // allow up to the MAX_STARTER_COST for each aspect; this isn't
+        // precisely correct, but it doesn't leave too much room for hackery
+        maxScrip += AvatarCodes.MAX_STARTER_COST * config.aspects.length;
+        if (cost[0] > maxScrip || cost[1] > AvatarCodes.BASE_LOOK_COIN_COST) {
             log.warning("Tried to create avatar with a non-zero cost look " +
                         "[who=" + user.who() + ", look=" + look +
                         ", scrip=" + cost[0] + ", coin=" + cost[1] + "].");

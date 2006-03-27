@@ -239,8 +239,9 @@ public class FirstLookView extends BContainer
                 _ctx.getAvatarLogic().getAspectCatalog().getAspects(
                     _gender + _aspect.name);
             for (AspectCatalog.Aspect entry : aspects) {
-                // skip aspects that have non-zero cost
-                if ((entry.scrip > 0 || entry.coins > 0)) {
+                // skip aspects that are above the threshold cost
+                if (entry.scrip > AvatarCodes.MAX_STARTER_COST ||
+                    entry.coins > 0) {
                     continue;
                 }
 
