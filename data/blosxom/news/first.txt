@@ -23,7 +23,7 @@ start fixed hours testing, most likely in the evenings. Assuming things are
 going smoothly, we're going to keep sendin' off invites to more players while
 we're busy fixin' all them pesky bugs that will no doubt be creepin' up.</p>
 
-<p> In the meanwhile, ya'll should <a href="/register/register.wm">sign up</a>
+<p> In the meanwhile, y'all should <a href="/register/register.wm">sign up</a>
 fer an account (assumin' ya don't already have one from Puzzle Pirates) so that
 we can send ya an email invitation when the time is right.</p>
 
@@ -32,7 +32,7 @@ any major problems and imbalances, we'll throw the doors wide open and invite
 everybody to come on down and give 'er a wrangle. You can keep an eye on this
 here site for status updates and information on when the public beta will
 start. We're high-tech cowboys here at the Triple-O Ranch, so we've got an <a
-href="/index.rss">RSS feed</a> for those of ya'll that prefer to get yer news
+href="/index.rss">RSS feed</a> for those of y'all that prefer to get yer news
 that way.</p>
 
 <p> Thanks fer stoppin' by. Yee haw!</p>
