@@ -1,7 +1,7 @@
 Take a load off pardner, and have a look around
 
 This here's the website fer Three Rings' forthcoming multiplayer tactical
-strategy game, <b>Bang! Howdy&trade;</b>. If ya just fell off the turnip truck,
+strategy game, <b>Bang! Howdy&#8482;</b>. If ya just fell off the turnip truck,
 then you'll want to read <a href="/about.html">about the game</a> so ya have
 some idea of what we're talking about.</p>
 

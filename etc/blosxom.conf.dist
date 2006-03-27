@@ -21,7 +21,7 @@
 # --- Configurable variables -----
 
 # What's this blog's title?
-$blog_title = "Bang! Howdy&trade;";
+$blog_title = "Bang! Howdy&#8482;";
 
 # What's this blog's description (for outgoing RSS feed)?
 $blog_description = "Tales from the Triple O ranch.";
