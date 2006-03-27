@@ -321,8 +321,8 @@ public class PieceSprite extends Sprite
     {
         if (getShadowType() == Shadow.DYNAMIC) {
             // the dynamic shadow is a highlight with wider geometry
-            float length = _view.getShadowLength(),
-                rotation = _view.getShadowRotation(),
+            float length = TILE_SIZE, // _view.getShadowLength(),
+                rotation = 0f, // _view.getShadowRotation(),
                 intensity = _view.getShadowIntensity();
             _shadow = _view.getTerrainNode().createHighlight(
                 localTranslation.x, localTranslation.y, length, length);
@@ -475,12 +475,15 @@ public class PieceSprite extends Sprite
     protected void updateHighlight ()
     {
         if (_shadow != null) {
+            _shadow.setPosition(localTranslation.x, localTranslation.y);
+            /*
             _loc.set(localTranslation.x, localTranslation.y,
-                     localTranslation.z + TILE_SIZE/2);
+                     localTranslation.z);
             _view.getShadowLocation(_loc, _result);
             if (_shadow.x != _result.x || _shadow.y != _result.y) {
                 _shadow.setPosition(_result.x, _result.y);
             }
+            */
         }
     }
 
