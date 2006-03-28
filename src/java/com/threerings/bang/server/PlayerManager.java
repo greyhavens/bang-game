@@ -422,7 +422,6 @@ public class PlayerManager
         PlayerObject player = (PlayerObject)BangServer.lookupBody(handle);
         if (player != null) {
             return (new PardnerEntryUpdater(player)).entry;
-
         } else {
             return new PardnerEntry(handle, lastSession);
         }
@@ -631,7 +630,9 @@ public class PlayerManager
         protected void updateAvatar ()
         {
             Look look = (Look)_player.looks.get(_player.look);
-            entry.avatar = look.getAvatar(_player);
+            if (look != null) {
+                entry.avatar = look.getAvatar(_player);
+            }
         }
 
         protected void updateStatus ()

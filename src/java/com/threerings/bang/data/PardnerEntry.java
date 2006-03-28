@@ -49,7 +49,7 @@ public class PardnerEntry
      */
     public PardnerEntry (Name handle)
     {
-        this.handle = handle;
+        this.handle = (handle == null) ? Name.BLANK : handle;
     }
     
     /**
@@ -57,7 +57,7 @@ public class PardnerEntry
      */
     public PardnerEntry (Name handle, Date lastSession)
     {
-        this.handle = handle;
+        this(handle);
         setLastSession(lastSession);
     }
     
