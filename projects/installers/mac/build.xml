@@ -91,7 +91,7 @@
       <arg file="${tmp.dmg}"/>
     </exec>
 
-<!--    <exec executable="/usr/bin/hdiutil" failonerror="true">
+    <exec executable="/usr/bin/hdiutil" failonerror="true">
       <arg line="convert"/>
       <arg line="'${tmp.dmg}.dmg'"/>
       <arg line="-format"/>
@@ -104,7 +104,7 @@
     <exec executable="/usr/bin/hdiutil" failonerror="true">
       <arg line="internet-enable"/>
       <arg line="'${inst.dir}/bang-install.dmg'"/>
-    </exec>-->
+    </exec>
   </target> 
 
   <!-- do the additional bits to make the full application -->
