@@ -147,6 +147,7 @@ public class BangClient extends BasicClient
         } else {
             report.summary = descrip;
         }
+        report.version = String.valueOf(DeploymentConfig.getVersion());
         report.setAttribute("Handle", user.handle.toString());
 
         // and send it along with our debug logs
