@@ -46,11 +46,6 @@ import static com.threerings.bang.Log.log;
  */
 public class CattleRustling extends Scenario
 {
-    /** The ratio of cattle to the size of the board (width x height). Can
-     * also be considered the probability that a cow will be spawned in a
-     * particular square. */
-    public static final float CATTLE_RATIO = 0.04f;
-    
     @Override // documentation inherited
     public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
                                ArrayList<Piece> pieces)
@@ -79,19 +74,10 @@ public class CattleRustling extends Scenario
     {
         super.roundWillStart(bangobj, markers, bonusSpots, purchases);
 
-        // determine how many cattle we want to put on the board
-        int cattle = 0, cps = 0;
-        if (_cattleSpots.size() > 0) {
-            while (cattle < bangobj.players.length * 3) {
-                cattle += _cattleSpots.size();
-                cps++;
-            }
-        } else {
-            log.warning("Board has no cattle spots! [game=" + _bangmgr.where() +
-                        ", board=" + bangobj.boardName + "].");
-        }
-
         // now place the cattle near the cattle starting spots
+        int placed = 0, players = bangobj.players.length, cps = (int)
+            Math.ceil(_cattleSpots.size() / (float)players);
+      MARKER_LOOP:
         for (Marker cspot : _cattleSpots) {
             ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
                 cps, cspot.x, cspot.y, 3);
@@ -103,6 +89,11 @@ public class CattleRustling extends Scenario
 //                cow.owner = determineOwner(cow);
                 bangobj.board.shadowPiece(cow);
                 bangobj.addToPieces(cow);
+
+                // stop when we've placed three cattle per player
+                if (++placed >= players * 3) {
+                    break MARKER_LOOP;
+                }
             }
         }
     }
