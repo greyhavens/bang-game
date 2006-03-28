@@ -38,6 +38,7 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.parlor.game.server.GameManager;
 
+import com.threerings.bang.admin.data.StatusObject;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.Badge;
@@ -380,6 +381,18 @@ public class BangManager extends GameManager
                 new BangDispatcher(this), false));
         _bconfig = (BangConfig)_gameconfig;
 
+        // note this game in the status object
+        StatusObject.GameInfo info = new StatusObject.GameInfo();
+        info.gameOid = _bangobj.getOid();
+        info.players = getPlayerCount();
+        for (int ii = 0; ii < getPlayerCount(); ii++) {
+            if (isAI(ii)) {
+                info.players--;
+            }
+        }
+        info.scenarios = _bconfig.scenarios;
+        BangServer.statobj.addToGames(info);
+
         // load up the named board if one was named
         if (!StringUtil.isBlank(_bconfig.board)) {
             BoardRecord brec = BangServer.boardmgr.getBoard(
@@ -438,6 +451,7 @@ public class BangManager extends GameManager
     {
         super.didShutdown();
         PresentsServer.invmgr.clearDispatcher(_bangobj.service);
+        BangServer.statobj.removeFromGames(_bangobj.getOid());
         log.info("Manager shutdown [where=" + where() + "].");
     }
 

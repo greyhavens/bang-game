@@ -23,7 +23,7 @@ public class StatusObject extends DObject
         public int players;
 
         /** The scenarios to be used in the game. */
-        public String[] scenario;
+        public String[] scenarios;
 
         // documentation inherited from interface DSet.Entry
         public Comparable getKey () {
