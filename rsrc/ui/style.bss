@@ -663,22 +663,22 @@ system_chat_label {
   vertical-align: center;
   border: 1 solid #000000;
   padding: 7;
-  background: solid #E8504E80;
+  background: solid #E8504E;
 }
 
 attention_chat_label {
   parent: "system_chat_label";
-  background: solid #2986E580;
+  background: solid #2986E5;
 }
 
 feedback_chat_label {
   parent: "system_chat_label";
-  background: solid #D7B37780;
+  background: solid #D7B377;
 }
 
 info_chat_label {
   parent: "system_chat_label";
-  background: solid #FFDA0080;
+  background: solid #FFDA00;
 }
 
 //
