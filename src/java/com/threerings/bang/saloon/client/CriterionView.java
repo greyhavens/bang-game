@@ -47,7 +47,7 @@ public class CriterionView extends BContainer
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         for (int ii = 0; ii < _rounds.length; ii++) {
             row.add(_rounds[ii] = new BCheckBox("" + (ii+1)));
-            _rounds[ii].setSelected(true);
+            _rounds[ii].setSelected(ii == 0);
         }
         table.add(row);
 
