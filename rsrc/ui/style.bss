@@ -956,6 +956,13 @@ match_label {
   color: #897301;
 }
 
+starting_label {
+  font: "Dom Casual" plain 20;
+  color: #FFFFFF;
+  text-effect: shadow;
+  effect-color: #897301;
+}
+
 match_view {
   padding: 0 10 5 10;
 }

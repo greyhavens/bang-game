@@ -71,6 +71,7 @@ public class MatchView extends BContainer
         _info.add(_players = new BLabel("", "match_label"));
         _info.add(_ranked = new BLabel("", "match_label"));
         _info.add(_range = new BLabel("", "match_label"));
+        _info.add(_starting = new BLabel("", "starting_label"));
 
         // add our leave button
         BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -129,6 +130,7 @@ public class MatchView extends BContainer
         for (int ii = 0; ii < _mobj.playerOids.length; ii++) {
             _slots[ii].setPlayerOid(_mobj.playerOids[ii]);
         }
+        updateStarting();
     }
 
     protected void updateCriterion ()
@@ -141,6 +143,19 @@ public class MatchView extends BContainer
                                   "m.ranked" : "m.unranked"));
         value = "m." + CriterionView.RANGE[_mobj.criterion.range];
         _range.setText(_msgs.get(value));
+        updateStarting();
+    }
+
+    protected void updateStarting ()
+    {
+        int filled = 0;
+        for (int ii = 0; ii < _mobj.playerOids.length; ii++) {
+            if (_mobj.playerOids[ii] > 0) {
+                filled++;
+            }
+        }
+        _starting.setText(_mobj.criterion.getDesiredPlayers() == filled ?
+                          _msgs.get("m.starting") : "");
     }
 
     protected AttributeChangeListener _atch = new AttributeChangeListener() {
@@ -229,6 +244,7 @@ public class MatchView extends BContainer
     protected MatchObject _mobj;
 
     protected BLabel _players, _rounds, _ranked, _range;
+    protected BLabel _starting;
     protected BButton _bye;
 
     protected BImage _silhouette, _playerScroll, _emptyScroll;

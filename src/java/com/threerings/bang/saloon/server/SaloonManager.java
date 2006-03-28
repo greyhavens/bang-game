@@ -6,6 +6,8 @@ package com.threerings.bang.saloon.server;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import com.samskivert.util.Interval;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ObjectAccessException;
@@ -60,16 +62,10 @@ public class SaloonManager extends PlaceManager
                     break;
 
                 case START_NOW:
-                    BangConfig config = match.createConfig();
-                    try {
-                        BangServer.plreg.createPlace(config, null);
-                        // TODO: set a field in the match object indicating
-                        // that the game is starting?
-                    } catch (Exception e) {
-                        log.log(Level.WARNING, "Choked creating game " +
-                                "[config=" + config + "].", e);
-                    }
-                    clearMatch(match);
+                    // start the match after a short delay to give everyone a
+                    // chance to see who they're playing with and bail out if
+                    // they don't like it
+                    delayedStartMatch(match);
                     break;
                 }
                 return;
@@ -81,7 +77,6 @@ public class SaloonManager extends PlaceManager
         BangServer.omgr.createObject(MatchObject.class, new Subscriber() {
             public void objectAvailable (DObject object) {
                 match.setObject((MatchObject)object);
-                log.info("Created match " + object.getOid());
                 _matches.put(object.getOid(), match);
                 listener.requestProcessed(object.getOid());
             }
@@ -98,6 +93,14 @@ public class SaloonManager extends PlaceManager
         Match match = _matches.get(matchOid);
         if (match != null) {
             clearPlayerFromMatch(match, caller.getOid());
+
+            // if the match is queued to be started and is no longer ready,
+            // cancel its starter interval
+            if (match.checkReady() == Match.Readiness.NOT_READY &&
+                match.starter != null) {
+                match.starter.cancel();
+                match.starter = null;
+            }
         }
     }
 
@@ -144,8 +147,6 @@ public class SaloonManager extends PlaceManager
     {
         super.bodyUpdated(info);
 
-        log.info("Updated " + info);
-
         // if a player disconnects during the matchmaking phase, remove them
         // from their pending match
         if (info.status == OccupantInfo.DISCONNECTED) {
@@ -155,6 +156,38 @@ public class SaloonManager extends PlaceManager
                 }
             }
         }
+    }
+
+    protected void delayedStartMatch (final Match match)
+    {
+        if (match.starter != null) {
+            log.warning("Requested to start match that's already queued " +
+                        "for starting " + match + ".");
+            return;
+        }
+
+        match.starter = new Interval(BangServer.omgr) {
+            public void expired () {
+                // make sure the match is still ready (this shouldn't happen as
+                // we cancel matches that become non-ready, but there are edge
+                // cases where we might not get canceled in time)
+                if (match.checkReady() == Match.Readiness.NOT_READY) {
+                    match.starter = null;
+                    return;
+                }
+
+                // go like the wind!
+                BangConfig config = match.createConfig();
+                try {
+                    BangServer.plreg.createPlace(config, null);
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Choked creating game " +
+                            "[config=" + config + "].", e);
+                }
+                clearMatch(match);
+            }
+        };
+        match.starter.schedule(START_DELAY);
     }
 
     protected boolean clearPlayerFromMatch (Match match, int playerOid)
@@ -173,9 +206,10 @@ public class SaloonManager extends PlaceManager
         int moid = match.matchobj.getOid();
         BangServer.omgr.destroyObject(moid);
         _matches.remove(moid);
-        log.info("Cleared match " + moid);
     }
 
     protected SaloonObject _salobj;
     protected HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
+
+    protected static final long START_DELAY = 5000L;
 }

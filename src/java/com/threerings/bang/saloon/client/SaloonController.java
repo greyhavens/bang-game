@@ -54,14 +54,10 @@ public class SaloonController extends PlaceController
      */
     public void leaveMatch (int matchOid)
     {
-        if (matchOid == -1) {
-            // there was an error
-            _view.clearMatchView(SaloonCodes.INTERNAL_ERROR);
-        } else {
-            // the user clicked cancel
+        if (matchOid != -1) {
             _salobj.service.leaveMatch(_ctx.getClient(), matchOid);
-            _view.clearMatchView(null);
         }
+        _view.clearMatchView(null);
     }
 
     // documentation inherited from interface ActionListener

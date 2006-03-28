@@ -3,6 +3,7 @@
 
 package com.threerings.bang.saloon.server;
 
+import com.samskivert.util.Interval;
 import com.threerings.util.Name;
 
 import com.threerings.bang.data.PlayerObject;
@@ -28,6 +29,9 @@ public class Match
 
     /** The players involved in this match-up. */
     public PlayerObject[] players;
+
+    /** Used on the server to start the match after a delay. */
+    public transient Interval starter;
 
     /** Creates a new match with the specified player. */
     public Match (PlayerObject player, Criterion criterion)
