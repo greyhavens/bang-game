@@ -137,6 +137,9 @@ public class PickLookView extends BContainer
         // possible since we'd have just sent off a request to the server to
         // update them
         _selection = (Look)user.looks.get(name);
+        // but we keep track of what the selection looked like before we
+        // started messing with it so that we can tell if we changed it
+        _orig = (Look)_selection.clone();
         refreshDisplay();
 
         // if we don't have a barber object, we need to tell the server that we
@@ -159,10 +162,9 @@ public class PickLookView extends BContainer
             return; // nothing doing
         }
 
-        // compare our current look with the one in the player object; if they
-        // differ, send a request to the server to update the look
-        Look remote = (Look)_ctx.getUserObject().looks.get(_selection.name);
-        if (!_selection.equals(remote)) {
+        // compare our current look with the unmodified copy; if they differ,
+        // send a request to the server to update the look
+        if (!_selection.equals(_orig)) {
             _barbobj.service.configureLook(
                 _ctx.getClient(), _selection.name, _selection.articles);
         }
@@ -174,5 +176,5 @@ public class PickLookView extends BContainer
     protected AvatarView _avatar;
     protected BComboBox _looks;
     protected String _deflook;
-    protected Look _selection;
+    protected Look _selection, _orig;
 }
