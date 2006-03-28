@@ -20,6 +20,12 @@ server_name = bang
 server_root = /export/bang
 
 #
+# Defines the directory into which any web applications will be installed. (And
+# where they will locate their site-data directory).
+
+webapp_dir = /export/threerings/webapps
+
+#
 # Defines the client authenticator used by the server.
 
 server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
