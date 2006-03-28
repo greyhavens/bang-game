@@ -137,6 +137,7 @@ public class BangView extends BWindow
      */
     public void endRound ()
     {
+        ((GameCameraHandler)_ctx.getCameraHandler()).endRound();
         ((GameInputHandler)_ctx.getInputHandler()).endRound(this);
         view.endRound();
 
@@ -317,9 +318,12 @@ public class BangView extends BWindow
         // board while we're buying pieces
         view.prepareForRound(_bangobj, config, pidx);
 
-        // let the camera handler know that we're getting ready to start
-        GameInputHandler gih = (GameInputHandler)_ctx.getInputHandler();
-        gih.prepareForRound(this, _bangobj, pidx);
+        // let the camera and input handlers know that we're getting ready to
+        // start
+        ((GameCameraHandler)_ctx.getCameraHandler()).prepareForRound(
+            this, _bangobj);
+        ((GameInputHandler)_ctx.getInputHandler()).prepareForRound(
+            this, _bangobj);
 
         // note that we've prepared
         _prepared = true;

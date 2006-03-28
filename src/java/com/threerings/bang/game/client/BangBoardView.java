@@ -143,23 +143,22 @@ public class BangBoardView extends BoardView
         }
 
         // compute the desired starting location and orientation
-        CameraHandler camhand = _ctx.getCameraHandler();
+        GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
         java.awt.Point start = _bangobj.startPositions[
             _bangobj.getPlayerIndex(_ctx.getUserObject().handle)];
-        Vector3f gpoint = camhand.getGroundPoint(),
-            target = new Vector3f((start.x + 0.5f) * TILE_SIZE,
-                (start.y + 0.5f) * TILE_SIZE, 150f);
-        if (target.x >= gpoint.x && target.y >= gpoint.y) {
+        Vector3f gpoint = camhand.getGroundPoint();
+        float dx = (start.x + 0.5f) * TILE_SIZE - gpoint.x,
+            dy = (start.y + 0.5f) * TILE_SIZE - gpoint.y;
+        if (dx >= 0f && dy >= 0f) {
             camhand.orbitCamera(FastMath.HALF_PI);
-        } else if (target.x < gpoint.x && target.y >= gpoint.y) {
+        } else if (dx < 0f && dy >= 0f) {
             camhand.orbitCamera(FastMath.PI);
-        } else if (target.x < gpoint.x && target.y < gpoint.y) {
+        } else if (dx < 0f && dy < 0f) {
             camhand.orbitCamera(-FastMath.HALF_PI);
         }
-        camhand.setLocation(target);
-        Vector3f pan = new Vector3f(target.x - gpoint.x, target.y - gpoint.y,
-            0f);
-        camhand.setLocation(target.set(gpoint.x, gpoint.y, 150f));
+        camhand.panCameraAbs(dx, dy);
+        Vector3f pan = camhand.getGroundPoint().subtractLocal(gpoint);
+        camhand.panCameraAbs(-pan.x, -pan.y);
 
         // pan, orbit, and zoom over the board
         camhand.setLimitsEnabled(false);

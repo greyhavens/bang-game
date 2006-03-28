@@ -31,6 +31,7 @@ import com.threerings.jme.camera.CameraHandler;
 
 import com.threerings.util.Name;
 
+import com.threerings.bang.game.client.GameCameraHandler;
 import com.threerings.bang.game.client.GameInputHandler;
 import com.threerings.bang.util.DeploymentConfig;
 import com.threerings.bang.util.RenderUtil;
@@ -173,6 +174,12 @@ public class BangApp extends JmeApp
         return display;
     }
 
+    @Override // documentation inherited
+    protected CameraHandler createCameraHandler (Camera camera)
+    {
+        return new GameCameraHandler(camera);
+    }
+    
     @Override // documentation inherited
     protected InputHandler createInputHandler (CameraHandler camhand)
     {

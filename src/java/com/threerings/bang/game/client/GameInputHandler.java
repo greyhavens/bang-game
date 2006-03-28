@@ -41,7 +41,7 @@ public class GameInputHandler extends GodViewHandler
     /**
      * Configures the camera at the start of the game.
      */
-    public void prepareForRound (BangView view, BangObject bangobj, int pidx)
+    public void prepareForRound (BangView view, BangObject bangobj)
     {
         // listen for mouse wheel events
         view.view.addListener(_swingListener);
@@ -60,11 +60,13 @@ public class GameInputHandler extends GodViewHandler
         
         // start the camera in the center of the board, pointing straight
         // down
+        GameCameraHandler gcamhand = (GameCameraHandler)_camhand;
         float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
         float cy = TILE_SIZE * bangobj.board.getHeight() / 2;
-        float height = CAMERA_ZOOMS[0];
-        _camhand.setLocation(new Vector3f(cx, cy, height));
-
+        float height = gcamhand.getSmoothedHeight(cx, cy);
+        _camhand.setLocation(new Vector3f(cx, cy, height + CAMERA_ZOOMS[0]));
+        gcamhand.setGroundPointHeight(height);
+        
         // rotate the camera by 45 degrees and orient it properly
         _camhand.orbitCamera(FastMath.PI/4);
 
@@ -123,19 +125,9 @@ public class GameInputHandler extends GodViewHandler
      */
     public void aimCamera (Vector3f location)
     {
-        // compute the distance from the camera to the ground plane along the
-        // camera's direction vector
-        Vector3f gnorm = _camhand.getGroundNormal();
-        Vector3f camloc = _camhand.getCamera().getLocation();
-        Vector3f camdir = _camhand.getCamera().getDirection();
-        float camdist = -1f * gnorm.dot(camloc) / gnorm.dot(camdir);
-
-        // slide our target location backwards along the direction vector by
-        // the same distance and we'll have our desired camera location
-        Vector3f spot = new Vector3f(location.x, location.y, 0);
-        spot.scaleAdd(-camdist, camdir, spot);
-
-        _camhand.moveCamera(new PanPath(_camhand, spot, 0.25f));
+        GameCameraHandler gcamhand = (GameCameraHandler)_camhand;
+        gcamhand.getGroundPoint(_gpoint);
+        gcamhand.panCameraAbs(location.x - _gpoint.x, location.y - _gpoint.y);
     }
 
     protected void rollCamera (int nextidx, float angvel)
@@ -187,6 +179,8 @@ public class GameInputHandler extends GodViewHandler
 
     protected int _camidx = -1;
     protected HoverUpdater _hoverUpdater;
+    
+    protected Vector3f _gpoint = new Vector3f();
     
     protected final static float[] CAMERA_ANGLES = {
         FastMath.PI/2, FastMath.PI/3, FastMath.PI/4 };
