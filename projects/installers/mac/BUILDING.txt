@@ -10,16 +10,14 @@ How to make the Mac disk image
 
       ant devclient_full|client_full
 
-2) Move the mac install directory to a mac with the same path:
+2) From a Mac with the necessary software (dev tools, Bang dev
+   environment, VPN) installed, do the following:
 
-scp /export/bang/projects/installers/mac
-   somemac:/export/bang/projects/installers/mac
-
-Make sure that somemac has the developer tools and is set up for Bang
-Development.
+   % cd /export/bang/projects/installers/mac
+   % rsync -avr build.earth.threerings.net:/export/<whichever>/bang/projects/installers/mac/dist .
 
 3) Run 'ant image' ant target. This will create the final, read-only,
    internet-enabled, compressed disk image at dist/bang-install.dmg
 
-4) Check the bang-install.dmg to make sure it's kosher. Accept the
-   accolades of Mac users!
+4) Verify that the bang-install.dmg is kosher. Then copy it back to
+   build.earth.threerings.net.  Accept the accolades of Mac users!

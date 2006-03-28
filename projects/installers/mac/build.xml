@@ -143,8 +143,8 @@
     <property name="app.name" value="${base.name}.app"/>
     <property name="app_base.name" value="${base.name}"/>
   </target>
-  <target name="yoclient" depends="props,app"/>
-  <target name="yoclient_full" depends="props,app,makefull"/>
+  <target name="client" depends="props,app"/>
+  <target name="client_full" depends="props,app,makefull"/>
 
   <!-- creates the tclient installer -->
   <target name="tprops">
