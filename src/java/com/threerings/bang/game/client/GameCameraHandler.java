@@ -56,12 +56,14 @@ public class GameCameraHandler extends CameraHandler
     }
     
     /**
-     * Sets the z value of the ground point, which will be updated when the
-     * camera is panned.
+     * Sets the z value of the ground point to the smoothed terrain height at
+     * the camera's location.  The value will be updated when the camera is
+     * panned.
      */
-    public void setGroundPointHeight (float height)
+    public void resetGroundPointHeight ()
     {
-        _groundz = height;
+        Vector3f camloc = _camera.getLocation();
+        _groundz = getSmoothedHeight(camloc.x, camloc.y);
     }
     
     @Override // documentation inherited

@@ -143,7 +143,7 @@ public class BangBoardView extends BoardView
         }
 
         // compute the desired starting location and orientation
-        GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
+        final GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
         java.awt.Point start = _bangobj.startPositions[
             _bangobj.getPlayerIndex(_ctx.getUserObject().handle)];
         Vector3f gpoint = camhand.getGroundPoint();
@@ -186,7 +186,10 @@ public class BangBoardView extends BoardView
                 // clear the marquee, return the camera to normal, and let the
                 // controller start up the next phase (if we're not leaving)
                 _ctx.getInputHandler().setEnabled(true);
-                _ctx.getCameraHandler().setLimitsEnabled(true);
+                GameCameraHandler camhand =
+                    (GameCameraHandler)_ctx.getCameraHandler();
+                camhand.setLimitsEnabled(true);
+                camhand.resetGroundPointHeight();
                 if (isAdded()) {
                     _ctrl.preSelectBoardTourComplete();
                 }
@@ -606,22 +609,16 @@ public class BangBoardView extends BoardView
         if (!(piece instanceof Unit)) {
             return;
         }
-
-        // let the unit status view know that a unit was added
         UnitSprite sprite = getUnitSprite(piece);
-        BangView bview = (BangView)getParent();
-        if (bview.ustatus != null) {
-            bview.ustatus.unitAdded(sprite);
+        ((BangView)getParent()).ustatus.unitAdded(sprite);
+        if (_bangobj.tick != 0) {
+            return;
         }
 
-        // if we've not yet started the game, place the unit at the corner of
-        // the board nearest to the player's start position because we're going
-        // to run them to the player's starting location once their animations
-        // are resolved
-        if (_bangobj.tick == 0) {
-            Point corner = getStartCorner(piece.owner);
-            sprite.setLocation(_board, corner.x, corner.y);
-        }
+        // place the unit at the corner of the board nearest to the player's
+        // start position
+        Point corner = getStartCorner(piece.owner);
+        sprite.setLocation(_board, corner.x, corner.y);
     }
 
     /**

@@ -63,9 +63,9 @@ public class GameInputHandler extends GodViewHandler
         GameCameraHandler gcamhand = (GameCameraHandler)_camhand;
         float cx = TILE_SIZE * bangobj.board.getWidth() / 2;
         float cy = TILE_SIZE * bangobj.board.getHeight() / 2;
-        float height = gcamhand.getSmoothedHeight(cx, cy);
-        _camhand.setLocation(new Vector3f(cx, cy, height + CAMERA_ZOOMS[0]));
-        gcamhand.setGroundPointHeight(height);
+        float height = gcamhand.getSmoothedHeight(cx, cy) + CAMERA_ZOOMS[0];
+        _camhand.setLocation(new Vector3f(cx, cy, height));
+        gcamhand.resetGroundPointHeight();
         
         // rotate the camera by 45 degrees and orient it properly
         _camhand.orbitCamera(FastMath.PI/4);
