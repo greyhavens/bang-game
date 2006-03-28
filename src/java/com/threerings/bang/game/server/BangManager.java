@@ -983,6 +983,9 @@ public class BangManager extends GameManager
         // trigger the display of the post round bits
         _bangobj.setState(BangObject.POST_ROUND);
 
+        // clear out pending orders
+        _orders.clear();
+
         // start the next round
         startRound();
     }
