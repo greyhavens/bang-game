@@ -1217,27 +1217,33 @@ public class BangManager extends GameManager
 
         // validate that the move is legal
         if (!_moves.contains(x, y)) {
-            log.warning("Unit requested illegal move [unit=" + unit +
+            log.warning("Unit requested illegal move [unit=" + unit.info() +
                         ", x=" + x + ", y=" + y + ", moves=" + _moves + "].");
-            Piece[] pvec = _bangobj.getPieceArray();
-            for (int ii = 0; ii < pvec.length; ii++) {
-                System.err.println(pvec[ii]);
-            }
-            _bangobj.board.dumpOccupiability(_moves);
+//             Piece[] pvec = _bangobj.getPieceArray();
+//             for (int ii = 0; ii < pvec.length; ii++) {
+//                 Piece p = pvec[ii];
+//                 if (ii > 0) {
+//                     System.err.print(" ");
+//                 }
+//                 System.err.print(p.pieceId + " " + p.getWidth() + "x" +
+//                                  p.getHeight() + "+" + p.x + "+" + p.y);
+//             }
+//             System.err.println("");
+//             _bangobj.board.dumpOccupiability(_moves);
 
-            // reshadow all the pieces to try to correct the error
-            _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
-            log.warning("Reshadowed dump:");
-            _bangobj.board.dumpOccupiability(_moves);
+//             // reshadow all the pieces to try to correct the error
+//             _bangobj.board.shadowPieces(_bangobj.pieces.iterator());
+//             log.warning("Reshadowed dump:");
+//             _bangobj.board.dumpOccupiability(_moves);
 
-            // now try the whole process again
-            _moves.clear();
-            _bangobj.board.computeMoves(unit, _moves, null);
-            if (!_moves.contains(x, y)) {
-                log.warning("Move still illegal: ");
-                _bangobj.board.dumpOccupiability(_moves);
+//             // now try the whole process again
+//             _moves.clear();
+//             _bangobj.board.computeMoves(unit, _moves, null);
+//             if (!_moves.contains(x, y)) {
+//                 log.warning("Move still illegal: ");
+//                 _bangobj.board.dumpOccupiability(_moves);
                 throw new InvocationException(MOVE_BLOCKED);
-            }
+//             }
         }
 
         // clone and move the unit
