@@ -133,8 +133,8 @@
     <property name="app.name" value="Dev ${base.name}.app"/>
     <property name="app_base.name" value="Dev ${base.name}"/>
   </target>
-  <target name="devclient" depends="devprops,app,image"/>
-  <target name="devclient_full" depends="devprops,app,makefull,image"/>
+  <target name="devclient" depends="devprops,app"/>
+  <target name="devclient_full" depends="devprops,app,makefull"/>
 
   <!-- creates the client app -->
   <target name="props">
@@ -143,8 +143,8 @@
     <property name="app.name" value="${base.name}.app"/>
     <property name="app_base.name" value="${base.name}"/>
   </target>
-  <target name="yoclient" depends="props,app,image"/>
-  <target name="yoclient_full" depends="props,app,makefull,image"/>
+  <target name="yoclient" depends="props,app"/>
+  <target name="yoclient_full" depends="props,app,makefull"/>
 
   <!-- creates the tclient installer -->
   <target name="tprops">
@@ -153,5 +153,5 @@
     <property name="app.name" value="${base.name} Test.app"/>
     <property name="app_base.name" value="${base.name} Test"/>
   </target>
-  <target name="tclient" depends="tprops,app,image"/>
+  <target name="tclient" depends="tprops,app"/>
 </project>

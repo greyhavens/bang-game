@@ -18,25 +18,8 @@ scp /export/bang/projects/installers/mac
 Make sure that somemac has the developer tools and is set up for Bang
 Development.
 
-3) Run the 'image' ant target to generate a disk image. The image will be
-   automatically mounted on the desktop.
-
-4) From the Finder, open the disk image and choose "Show View Options"
-   from the "View" menu (command-J)
-
-    * Select "For This Window Only" in the "View Options" panel
-
-    * Set the background image (Hit command-shift-g in the "Open File"
-      dialog, type in /Volumes/Bang Howdy/.background, select banner.png)
-
-    * Set the icon size (96x96)
-
-    * Resize the window and position the icon to make it look pretty. See
-      how_it_should_look.jpg for an example
-
-    * Once everything is pretty, unmount the disk image.
-
-5) Run the 'image-seal' ant target. This will create the final, read-only,
+3) Run 'ant image' ant target. This will create the final, read-only,
    internet-enabled, compressed disk image at dist/bang-install.dmg
 
-6) Ship it! Check in the bang-install.dmg. Accept the accolades of Mac users!
+4) Check the bang-install.dmg to make sure it's kosher. Accept the
+   accolades of Mac users!
