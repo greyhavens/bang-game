@@ -82,7 +82,9 @@ public class AvatarView extends BLabel
         } catch (Exception e) {
             log.log(Level.WARNING, "Unable to load action frames " +
                     "[cdesc=" + cdesc + "].", e);
-            return null;
+            // return a blank image rather than null
+            return ctx.getImageCache().createCompatibleImage(
+                WIDTH, HEIGHT, true);
         }
 
         // composite the myriad components and render them into an image
