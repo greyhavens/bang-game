@@ -42,6 +42,7 @@ public class OverlayChatView extends BWindow
     {
         super(ctx.getStyleSheet(), GroupLayout.makeVert(
                   GroupLayout.NONE, GroupLayout.BOTTOM, GroupLayout.STRETCH));
+        setLayer(2);
 
         _ctx = ctx;
         _chatdtr = _ctx.getChatDirector();
