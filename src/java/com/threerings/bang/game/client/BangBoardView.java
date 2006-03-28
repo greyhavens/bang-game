@@ -607,16 +607,22 @@ public class BangBoardView extends BoardView
         if (!(piece instanceof Unit)) {
             return;
         }
+
+        // let the unit status view know that a unit was added
         UnitSprite sprite = getUnitSprite(piece);
-        ((BangView)getParent()).ustatus.unitAdded(sprite);
-        if (_bangobj.tick != 0) {
-            return;
+        BangView bview = (BangView)getParent();
+        if (bview.ustatus != null) {
+            bview.ustatus.unitAdded(sprite);
         }
 
-        // place the unit at the corner of the board nearest to the player's
-        // start position
-        Point corner = getStartCorner(piece.owner);
-        sprite.setLocation(_board, corner.x, corner.y);
+        // if we've not yet started the game, place the unit at the corner of
+        // the board nearest to the player's start position because we're going
+        // to run them to the player's starting location once their animations
+        // are resolved
+        if (_bangobj.tick == 0) {
+            Point corner = getStartCorner(piece.owner);
+            sprite.setLocation(_board, corner.x, corner.y);
+        }
     }
 
     /**
