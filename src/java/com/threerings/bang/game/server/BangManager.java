@@ -382,7 +382,6 @@ public class BangManager extends GameManager
 
         // load up the named board if one was named
         if (!StringUtil.isBlank(_bconfig.board)) {
-            log.info("Loading '" + _bconfig.board + "'.");
             BoardRecord brec = BangServer.boardmgr.getBoard(
                 _bconfig.players.length, _bconfig.board);
             if (brec != null) {
@@ -412,7 +411,6 @@ public class BangManager extends GameManager
 
         // if no boards were specified otherwise, pick them randomly
         if (_boards == null) {
-            log.info("Loading boards randomly.");
             _boards = BangServer.boardmgr.selectBoards(
                 _bconfig.players.length, _bconfig.scenarios);
         }
@@ -446,8 +444,6 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void playersAllHere ()
     {
-        log.info("Players all here... " + _bangobj.state);
-
         switch (_bangobj.state) {
         case BangObject.PRE_GAME:
             // create our player records now that we know everyone's in the
@@ -794,8 +790,6 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void gameWillStart ()
     {
-        log.info("gameWillStart()...");
-
         super.gameWillStart();
 
         // note the time at which we started
@@ -1371,7 +1365,7 @@ public class BangManager extends GameManager
                 if (!_moves.contains(x, y)) {
                     continue;
                 }
-                log.info(p.info() + " can reach " + x + "/" + y);
+//                 log.info(p.info() + " can reach " + x + "/" + y);
                 if (reachers[bb] == null) {
                     reachers[bb] = new ArrayIntSet();
                     reachers[bb].add(p.owner);
