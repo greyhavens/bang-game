@@ -141,14 +141,17 @@ public class BangObject extends GameObject
     public static final String AWARDS = "awards";
     // AUTO-GENERATED: FIELDS END
 
+    /** A {@link #state} constant used by the tutorial scenario. */
+    public static final int PRE_TUTORIAL = 4;
+
     /** A {@link #state} constant indicating the pre-game selection phase. */
-    public static final int SELECT_PHASE = 4;
+    public static final int SELECT_PHASE = 5;
 
     /** A {@link #state} constant indicating the pre-game buying phase. */
-    public static final int BUYING_PHASE = 5;
+    public static final int BUYING_PHASE = 6;
 
     /** A {@link #state} constant indicating the post-round phase. */
-    public static final int POST_ROUND = 6;
+    public static final int POST_ROUND = 7;
 
     /** Contains the representation of the game board. */
     public transient BangBoard board;

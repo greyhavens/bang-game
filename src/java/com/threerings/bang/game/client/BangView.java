@@ -293,7 +293,7 @@ public class BangView extends BWindow
         });
         return false;
     }
-    
+
     /**
      * Continues preparing for the round once we've acquired the board data.
      */
@@ -312,7 +312,7 @@ public class BangView extends BWindow
             plist.add(p);
         }
         _bangobj.pieces = new PieceDSet(plist.iterator());
-        
+
         // tell the board view to start the game so that we can see the
         // board while we're buying pieces
         view.prepareForRound(_bangobj, config, pidx);
@@ -324,7 +324,7 @@ public class BangView extends BWindow
         // note that we've prepared
         _prepared = true;
     }
-    
+
     protected void showUnitStatus ()
     {
         if (ustatus == null) {

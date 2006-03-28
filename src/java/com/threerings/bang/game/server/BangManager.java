@@ -96,7 +96,7 @@ public class BangManager extends GameManager
             log.warning("Rejecting request for board by non-occupant [who=" +
                 user.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);
-            
+
         } else if (_bangobj.board == null) {
             log.warning("Rejecting request for non-existent board [who=" +
                 user.who() + "].");
@@ -105,7 +105,7 @@ public class BangManager extends GameManager
         BoardRecord brec = _boards[_bangobj.roundId];
         listener.requestProcessed(brec.getBoard(), brec.getPieces());
     }
-    
+
     // documentation inherited from interface BangProvider
     public void selectStarters (
         ClientObject caller, int bigShotId, int[] cardIds)
@@ -380,14 +380,17 @@ public class BangManager extends GameManager
                 new BangDispatcher(this), false));
         _bconfig = (BangConfig)_gameconfig;
 
-        // for testing boards may be specified by name or binary board data
+        // load up the named board if one was named
         if (!StringUtil.isBlank(_bconfig.board)) {
+            log.info("Loading '" + _bconfig.board + "'.");
             BoardRecord brec = BangServer.boardmgr.getBoard(
                 _bconfig.players.length, _bconfig.board);
             if (brec != null) {
                 _boards = new BoardRecord[_bconfig.scenarios.length];
                 Arrays.fill(_boards, brec);
             } else {
+                log.warning("Failed to locate '" + _bconfig.board + "' " +
+                            "[where=" + where() + "].");
                 String msg = MessageBundle.tcompose(
                     "m.no_such_board", _bconfig.board);
                 SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
@@ -409,6 +412,7 @@ public class BangManager extends GameManager
 
         // if no boards were specified otherwise, pick them randomly
         if (_boards == null) {
+            log.info("Loading boards randomly.");
             _boards = BangServer.boardmgr.selectBoards(
                 _bconfig.players.length, _bconfig.scenarios);
         }
@@ -442,6 +446,8 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void playersAllHere ()
     {
+        log.info("Players all here... " + _bangobj.state);
+
         switch (_bangobj.state) {
         case BangObject.PRE_GAME:
             // create our player records now that we know everyone's in the
@@ -468,6 +474,11 @@ public class BangManager extends GameManager
             _bangobj.setAvatars(avatars);
             // when the players all arrive, go into the buying phase
             startRound();
+            break;
+
+        case BangObject.PRE_TUTORIAL:
+            // let the tutorial know that the player is ready
+            _scenario.startNextPhase(_bangobj);
             break;
 
         case BangObject.IN_PLAY:
@@ -532,7 +543,7 @@ public class BangManager extends GameManager
             }
         });
     }
-    
+
     /** Continues starting the round once the board's data is loaded. */
     protected void continueStartingRound (BoardRecord brec)
     {
@@ -540,6 +551,10 @@ public class BangManager extends GameManager
         if (_bconfig.tutorial) {
             _bangobj.setScenarioId(ScenarioCodes.TUTORIAL);
             _scenario = new Tutorial();
+            // we reuse the playerIsReady() mechanism to wait for the player to
+            // be ready to start the tutorial; normally they'd select their
+            // bigshot, but that doesn't happen in a tutorial
+            Arrays.fill(_playerOids, 0);
         } else {
             _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);
             _scenario = ScenarioFactory.createScenario(_bangobj.scenarioId);
@@ -555,7 +570,7 @@ public class BangManager extends GameManager
                 _aiLogic[ii].init(this, ii);
             }
         }
-        
+
         // clear out the various per-player data structures
         _ready.clear();
         _purchases.clear();
@@ -598,7 +613,7 @@ public class BangManager extends GameManager
                 start.y);
         }
         _bangobj.setStartPositions(_bangobj.startPositions);
-        
+
         // extract the bonus spawn markers from the pieces array
         _bonusSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
@@ -622,7 +637,7 @@ public class BangManager extends GameManager
             }
             p.assignPieceId(_bangobj);
         }
-        
+
         // configure the game object and board with the pieces
         _bangobj.pieces = new PieceDSet(pieces.iterator());
         _bangobj.board.shadowPieces(pieces.iterator());
@@ -644,12 +659,12 @@ public class BangManager extends GameManager
         if (cardTypes != null) {
             cards = new Card[cardTypes.length];
             for (int ii = 0; ii < cards.length; ii++) {
-                cards[ii] = Card.newCard(cardTypes[ii]); 
+                cards[ii] = Card.newCard(cardTypes[ii]);
             }
         }
         selectStarters(pidx, new BigShotItem(-1, bigShotType), cards);
     }
-    
+
     /**
      * Selects the starting configuration for this player.
      */
@@ -779,6 +794,8 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void gameWillStart ()
     {
+        log.info("gameWillStart()...");
+
         super.gameWillStart();
 
         // note the time at which we started
@@ -1919,7 +1936,7 @@ public class BangManager extends GameManager
 
     /** The logic for the artificial players. */
     protected AILogic[] _aiLogic;
-    
+
     /** The time at which the round started. */
     protected long _startStamp;
 

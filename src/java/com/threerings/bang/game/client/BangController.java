@@ -440,7 +440,8 @@ public class BangController extends GameController
     @Override // documentation inherited
     protected boolean stateDidChange (int state)
     {
-        if (state == BangObject.SELECT_PHASE) {
+        if (state == BangObject.SELECT_PHASE ||
+            state == BangObject.PRE_TUTORIAL) {
             _selphaseMultex.satisfied(Multex.CONDITION_ONE);
             return true;
 
@@ -502,12 +503,16 @@ public class BangController extends GameController
      */
     protected void preSelectBoardTourComplete ()
     {
-        // display the player status displays
-        if (!_config.tutorial) {
+        if (_config.tutorial) {
+            // we re-use the playerReady mechanism to communicate that we're
+            // ready for our tutorial
+            playerReady();
+        } else {
+            // display the player status displays
             _view.showPlayerStatus();
+            // display the selection dialog
+            _view.setPhase(BangObject.SELECT_PHASE);
         }
-        // display the selection dialog
-        _view.setPhase(BangObject.SELECT_PHASE);
     }
 
     /**

@@ -56,6 +56,10 @@ public class Tutorial extends Scenario
             // break;
 
         case BangObject.BUYING_PHASE:
+            bangobj.setState(BangObject.PRE_TUTORIAL);
+            break;
+
+        case BangObject.PRE_TUTORIAL:
             _bangmgr.startGame();
             break;
 
