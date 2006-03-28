@@ -124,6 +124,7 @@ public class OOOAuthenticator extends Authenticator
             // check whether we're restricting non-insider login
             if (!RuntimeConfig.server.openToPublic &&
                 !user.holdsToken(OOOUser.INSIDER) &&
+                !user.holdsToken(OOOUser.TESTER) &&
                 !user.isSupportPlus()) {
                 rdata.code = NON_PUBLIC_SERVER;
                 return;
