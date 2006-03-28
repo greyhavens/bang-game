@@ -1753,8 +1753,16 @@ public class BangManager extends GameManager
         }
 
         public String checkValid () {
+            // sanity check, though I think this bug is fixed
+            Object obj = _bangobj.pieces.get(unit.pieceId);
+            if (!(obj instanceof Unit)) {
+                log.warning("Our unit became a non-unit!? [where=" + where() +
+                            ", unit=" + unit.info() + ", nunit=" + obj + "].");
+                return INTERNAL_ERROR;
+            }
+
             // make sure this unit is still in play
-            Unit aunit = (Unit)_bangobj.pieces.get(unit.pieceId);
+            Unit aunit = (Unit)obj;
             if (aunit == null || !aunit.isAlive()) {
                 return MOVER_NO_LONGER_VALID;
             }
