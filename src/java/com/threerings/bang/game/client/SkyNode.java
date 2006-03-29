@@ -134,6 +134,9 @@ public class SkyNode extends Node
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
+        // match the position of the camera
+        getWorldTranslation().set(
+            _ctx.getCameraHandler().getCamera().getLocation());
         super.updateWorldData(time);
         if (_board == null) {
             return;
@@ -144,17 +147,6 @@ public class SkyNode extends Node
         _ctstate.getTexture().getTranslation().addLocal(
             time * wspeed * FastMath.cos(wdir) * 0.001f,
             time * wspeed * FastMath.sin(wdir) * 0.001f, 0f);
-    }
-    
-    @Override // documentation inherited
-    public void draw (Renderer renderer)
-    {
-        // match the position of the camera
-        worldTranslation.set(renderer.getCamera().getLocation());
-        _dome.updateWorldVectors();
-        _clouds.updateWorldVectors();
-        
-        super.draw(renderer);
     }
     
     /**
