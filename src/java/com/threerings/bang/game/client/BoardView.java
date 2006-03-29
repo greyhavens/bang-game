@@ -1240,26 +1240,12 @@ public class BoardView extends BComponent
      */
     protected void updateHighlightHover ()
     {
-        Vector3f camloc = _ctx.getCameraHandler().getCamera().getLocation();
-        _pick.clear();
-        _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
-        for (int ii = 0; ii < _pick.getNumber(); ii++) {
-            PickData pdata = _pick.getPickData(ii);
-            if (notReallyAHit(pdata)) {
-                continue;
-            }
-            Geometry tmesh = pdata.getTargetMesh();
-            if (tmesh instanceof TerrainNode.Highlight) {
-                TerrainNode.Highlight highlight = (TerrainNode.Highlight)tmesh;
-                _high.x = highlight.getTileX();
-                _high.y = highlight.getTileY();
-                return;
-            }
-        }
-        if (_high.x != -1 || _high.y != -1) {
+        if (_htiles.contains(_mouse.x, _mouse.y)) {
+            _high.setLocation(_mouse);
+            
+        } else if (_high.x != -1 || _high.y != -1) {
 //             log.info("Clearing highlight.");
-            _high.x = -1;
-            _high.y = -1;
+            _high.setLocation(-1, -1);
         }
     }
 
@@ -1294,6 +1280,7 @@ public class BoardView extends BComponent
             }
             highlight.updateRenderState();
             _hnode.attachChild(highlight);
+            _htiles.add(tx, ty);
         }
     }
 
@@ -1315,6 +1302,7 @@ public class BoardView extends BComponent
         _hnode.detachAllChildren();
         _hnode.updateRenderState();
         _hnode.updateGeometricState(0f, true);
+        _htiles.clear();
     }
 
     /** JME peskily returns bogus hits when we do triangle level picking. */
@@ -1476,6 +1464,9 @@ public class BoardView extends BComponent
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);
 
+    /** The set of currently highlighted tiles. */
+    protected PointSet _htiles = new PointSet();
+    
     /** The tile coordinates of the highlight tile that the mouse is
      * hovering over or (-1, -1). */
     protected Point _high = new Point(-1, -1);
