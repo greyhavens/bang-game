@@ -55,6 +55,11 @@ public class SaloonManager extends PlaceManager
 
         // look for an existing match that is compatible
         for (Match match : _matches.values()) {
+            // don't allow players to join matches that are about to start
+            if (match.starter != null) {
+                continue;
+            }
+
             if (match.join(user, criterion)) {
                 listener.requestProcessed(match.matchobj.getOid());
 
