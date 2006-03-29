@@ -972,8 +972,8 @@ public class BangManager extends GameManager
             validateOrders();
         }
 
-        // give our AI players a chance to move
-        if (!_bconfig.tutorial) {
+        // give our AI players a chance to move but not on the zeroth tick
+        if (!_bconfig.tutorial && tick > 0) {
             for (int ii = 0; ii < _aiLogic.length; ii++) {
                 if (_aiLogic[ii] != null) {
                     _aiLogic[ii].tick(pieces, tick);
