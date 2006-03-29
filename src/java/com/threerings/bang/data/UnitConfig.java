@@ -258,8 +258,8 @@ public class UnitConfig
         config.dupeType = props.getProperty("dupe_type", type);
 
         config.scripCost =
-            BangUtil.getIntProperty(type, props, "scrip_cost", 0);
-        config.coinCost = BangUtil.getIntProperty(type, props, "coin_cost", 0);
+            BangUtil.getIntProperty(type, props, "scrip_cost", 999);
+        config.coinCost = BangUtil.getIntProperty(type, props, "coin_cost", 99);
 
         int idx = 0;
         for (Mode mode : EnumSet.allOf(Mode.class)) {
