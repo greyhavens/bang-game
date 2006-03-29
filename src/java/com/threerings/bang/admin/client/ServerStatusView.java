@@ -57,7 +57,11 @@ public class ServerStatusView extends BDecoratedWindow
             GroupLayout.FIXED);
         BContainer sstats = new BContainer(new TableLayout(4, 5, 15));
         for (int ii = 0; ii < SERVER_STATS.length; ii++) {
-            sstats.add(new BLabel(_msgs.get(SERVER_STATS[ii]), "table_label"));
+            String msg = SERVER_STATS[ii];
+            if (!StringUtil.isBlank(msg)) {
+                msg = _msgs.get(SERVER_STATS[ii]);
+            }
+            sstats.add(new BLabel(msg, "table_label"));
             sstats.add(_genstats[ii] = new BLabel("", "table_data"));
         }
         add(sstats);
@@ -161,14 +165,15 @@ public class ServerStatusView extends BDecoratedWindow
     protected void updateGeneralStats ()
     {
         _genstats[0].setText(_ssfmt.format(new Date(_statobj.serverStartTime)));
-        _genstats[1].setText(String.valueOf(_statobj.games.size()));
         _genstats[2].setText(String.valueOf(_statobj.playersOnline));
+        _genstats[3].setText(String.valueOf(_statobj.pendingMatches));
+        _genstats[4].setText(String.valueOf(_statobj.games.size()));
         int playersInGames = 0;
         for (Iterator iter = _statobj.games.iterator(); iter.hasNext(); ) {
             StatusObject.GameInfo gi = (StatusObject.GameInfo)iter.next();
             playersInGames += gi.players;
         }
-        _genstats[3].setText(String.valueOf(playersInGames));
+        _genstats[5].setText(String.valueOf(playersInGames));
     }
 
     protected void updateConMgrStats ()
@@ -197,8 +202,9 @@ public class ServerStatusView extends BDecoratedWindow
         new SimpleDateFormat("EEE MMM, dd hh:mm aa");
 
     protected static final String[] SERVER_STATS = {
-        "m.server_started", "m.active_games",
-        "m.players_online", "m.players_in_games",
+        "m.server_started", "",
+        "m.players_online", "m.matches_pending",
+        "m.active_games", "m.players_in_games",
     };
 
     protected static final String[] CONMGR_STATS = {

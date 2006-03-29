@@ -41,6 +41,9 @@ public class StatusObject extends DObject
     /** The field name of the <code>games</code> field. */
     public static final String GAMES = "games";
 
+    /** The field name of the <code>pendingMatches</code> field. */
+    public static final String PENDING_MATCHES = "pendingMatches";
+
     /** The field name of the <code>connStats</code> field. */
     public static final String CONN_STATS = "connStats";
     // AUTO-GENERATED: FIELDS END
@@ -53,6 +56,9 @@ public class StatusObject extends DObject
 
     /** Information on all active games. */
     public DSet games = new DSet();
+
+    /** The number of matches waiting for players. */
+    public int pendingMatches;
 
     /** Stats on our connection manager. */
     public ConMgrStats connStats;
@@ -134,6 +140,22 @@ public class StatusObject extends DObject
     {
         requestAttributeChange(GAMES, value, this.games);
         this.games = (value == null) ? null : (DSet)value.clone();
+    }
+
+    /**
+     * Requests that the <code>pendingMatches</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setPendingMatches (int value)
+    {
+        int ovalue = this.pendingMatches;
+        requestAttributeChange(
+            PENDING_MATCHES, new Integer(value), new Integer(ovalue));
+        this.pendingMatches = value;
     }
 
     /**

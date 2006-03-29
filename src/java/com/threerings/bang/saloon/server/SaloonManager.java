@@ -90,6 +90,7 @@ public class SaloonManager extends PlaceManager
                         new SpeakDispatcher(new SpeakProvider(object, null)),
                         false));
                 _matches.put(object.getOid(), match);
+                BangServer.statobj.setPendingMatches(_matches.size());
                 listener.requestProcessed(object.getOid());
             }
             public void requestFailed (int oid, ObjectAccessException cause) {
@@ -221,6 +222,7 @@ public class SaloonManager extends PlaceManager
         }
         BangServer.omgr.destroyObject(moid);
         _matches.remove(moid);
+        BangServer.statobj.setPendingMatches(_matches.size());
     }
 
     protected SaloonObject _salobj;
