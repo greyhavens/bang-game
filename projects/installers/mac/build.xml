@@ -40,6 +40,7 @@
       jars="${inst.dir}/getdown-pro.jar"
       vmoptions="-Dappdir=."
       version="1.0"
+      jvmversion="1.5+"
       infostring="${client_ident} ${version}"
       icon="desktop.icns"
       stubfile="JavaApplicationStub"/>
