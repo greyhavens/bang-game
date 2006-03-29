@@ -125,9 +125,13 @@ public class GameInputHandler extends GodViewHandler
      */
     public void aimCamera (Vector3f location)
     {
+        Vector3f start = new Vector3f(_camhand.getCamera().getLocation());
         GameCameraHandler gcamhand = (GameCameraHandler)_camhand;
         gcamhand.getGroundPoint(_gpoint);
         gcamhand.panCameraAbs(location.x - _gpoint.x, location.y - _gpoint.y);
+        Vector3f end = new Vector3f(_camhand.getCamera().getLocation());
+        _camhand.getCamera().getLocation().set(start);
+        _camhand.moveCamera(new PanPath(_camhand, end, 0.25f));
     }
 
     protected void rollCamera (int nextidx, float angvel)
