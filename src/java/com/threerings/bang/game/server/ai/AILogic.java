@@ -5,7 +5,11 @@ package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
 
+import java.util.List;
+
 import com.threerings.util.RandomUtil;
+
+import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -137,11 +141,85 @@ public abstract class AILogic
     }
     
     /**
+     * Attempts to move the unit towards the provided destination and fire
+     * off a shot at the best target.
+     *
+     * @return true if we successfully moved towards the destination,
+     * false if we couldn't find a path
+     */
+    protected boolean moveUnit (
+        Piece[] pieces, Unit unit, PointSet moves, int dx, int dy,
+        TargetEvaluator evaluator)
+    {
+        Point dest = getClosestPoint(unit, moves, dx, dy);
+        if (dest == null) {
+            return false;
+        }
+        executeOrder(unit, dest.x, dest.y, getBestTarget(pieces, unit, dest.x,
+            dest.y, evaluator));
+        return true;
+    }
+    
+    /**
+     * Gets the closest point to the provided destination that the unit can
+     * reach in one move (or <code>null</code> if the destination is
+     * unreachable).
+     */
+    protected Point getClosestPoint (Unit unit, PointSet moves, int dx, int dy)
+    {
+        List path = AStarPathUtil.getPath(_bangobj.board, unit.getStepper(),
+            unit, getMaxLookahead(), unit.x, unit.y, dx, dy, true);
+        if (path == null || path.size() < 2) {
+            return null;
+        }
+        for (int ii = path.size() - 1; ii >= 0; ii--) {
+            Point pt = (Point)path.get(ii);
+            if (moves.contains(pt.x, pt.y)) {
+                return pt;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the maximum lookahead for destinations beyond what units can
+     * reach in the current tick.
+     */
+    protected int getMaxLookahead ()
+    {
+        return _bangobj.board.getWidth() / 2;
+    }
+    
+    /**
+     * Finds and returns the best target that the unit can reach according to
+     * the provided evaluator.
+     */
+    protected Unit getBestTarget (
+        Piece[] pieces, Unit unit, PointSet attacks, TargetEvaluator evaluator)
+    {
+        Unit best = null;
+        int bweight = -1;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (!unit.validTarget(pieces[ii], false) ||
+                !attacks.contains(pieces[ii].x, pieces[ii].y)) {
+                continue;
+            }
+            Unit target = (Unit)pieces[ii];
+            int tweight = evaluator.getWeight(unit, target);
+            if (tweight > bweight) {
+                best = target;
+                bweight = tweight;
+            }
+        }
+        return best;
+    }
+    
+    /**
      * Finds and returns the best target that the unit can reach after moving
      * to the given destination, according to the provided evaluator.
      */
     protected Unit getBestTarget (
-        Piece[] pieces, Unit unit, Point dest, TargetEvaluator evaluator)
+        Piece[] pieces, Unit unit, int dx, int dy, TargetEvaluator evaluator)
     {
         Unit best = null;
         int bweight = -1;
@@ -149,7 +227,7 @@ public abstract class AILogic
             if (!unit.validTarget(pieces[ii], false)) {
                 continue;
             }
-            int dist = pieces[ii].getDistance(dest.x, dest.y);
+            int dist = pieces[ii].getDistance(dx, dy);
             if (dist < unit.getMinFireDistance() ||
                 dist > unit.getMaxFireDistance()) {
                 continue;

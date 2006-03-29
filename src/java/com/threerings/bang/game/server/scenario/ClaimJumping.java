@@ -12,6 +12,7 @@ import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.parlor.game.data.GameAI;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.PlayerObject;
@@ -26,6 +27,8 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.server.ai.AILogic;
+import com.threerings.bang.game.server.ai.ClaimJumpingLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -53,6 +56,12 @@ public class ClaimJumping extends Scenario
     /** The number of nuggets in each claim. TODO: put in BangConfig. */
     public static final int NUGGET_COUNT = 2;
 
+    @Override // documentation inherited
+    public AILogic createAILogic (GameAI ai)
+    {
+        return new ClaimJumpingLogic();
+    }
+    
     @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
                                 PointSet bonusSpots, PieceSet purchases)

@@ -22,6 +22,8 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 
+import static com.threerings.bang.Log.*;
+
 /**
  * A simple AI for the cattle rustling scenario.
  */
@@ -103,7 +105,7 @@ public class CattleRustlingLogic extends AILogic
         }
         Point dest = best.getKey();
         executeOrder(unit, dest.x, dest.y,
-            getBestTarget(pieces, unit, dest, TARGET_EVALUATOR));
+            getBestTarget(pieces, unit, dest.x, dest.y, TARGET_EVALUATOR));
     }
     
     /**
@@ -117,30 +119,30 @@ public class CattleRustlingLogic extends AILogic
         Piece[] pieces, Unit unit, PointSet moves, Unit bshot, Point herd,
         Cow ccow, Piece ctarget)
     {
-        if (bshot != null) {
-            _point.setLocation(bshot.x, bshot.y);
-        } else if (herd != null && (herd.x != unit.x || herd.y != unit.x)) {
-            _point.setLocation(herd.x, herd.y);
-        } else if (ccow != null) {
-            _point.setLocation(ccow.x, ccow.y);
-        } else if (ctarget != null) {
-            _point.setLocation(ctarget.x, ctarget.y);
-        } else {
+        if (bshot != null && moveUnit(pieces, unit, moves, bshot.x, bshot.y)) {
             return;
+        } else if (herd != null && (herd.x != unit.x || herd.y != unit.x) &&
+            moveUnit(pieces, unit, moves, herd.x, herd.y)) {
+            return;
+        } else if (ccow != null &&
+            moveUnit(pieces, unit, moves, ccow.x, ccow.y)) {
+            return;
+        } else if (ctarget != null) {
+            moveUnit(pieces, unit, moves, ctarget.x, ctarget.y);
         }
-        
-        // choose the location that's closest to our destination
-        Point dest = new Point(unit.x, unit.y);
-        int ddist = 0;
-        for (int ii = 0, nn = moves.size(); ii < nn; ii++) {
-            int x = moves.getX(ii), y = moves.getY(ii);
-            if (getDistance(_point, x, y) <
-                    getDistance(_point, dest.x, dest.y)) {
-                dest.setLocation(x, y);
-            }
-        }
-        executeOrder(unit, dest.x, dest.y,
-            getBestTarget(pieces, unit, dest, TARGET_EVALUATOR));
+    }
+    
+    /**
+     * Attempts to move the unit towards the provided destination and fire
+     * off a shot at the best target.
+     *
+     * @return true if we successfully moved towards the destination,
+     * false if we couldn't find a path
+     */
+    protected boolean moveUnit (
+        Piece[] pieces, Unit unit, PointSet moves, int dx, int dy)
+    {
+        return moveUnit(pieces, unit, moves, dx, dy, TARGET_EVALUATOR);
     }
     
     /**
@@ -193,7 +195,7 @@ public class CattleRustlingLogic extends AILogic
         }
         Point dest = best.getKey();
         executeOrder(unit, dest.x, dest.y,
-            getBestTarget(pieces, unit, dest, TARGET_EVALUATOR));
+            getBestTarget(pieces, unit, dest.x, dest.y, TARGET_EVALUATOR));
     }
     
     /**
