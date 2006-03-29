@@ -14,6 +14,9 @@ import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.crowd.chat.data.SpeakMarshaller;
+import com.threerings.crowd.chat.server.SpeakDispatcher;
+import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.server.PlaceManager;
 
@@ -77,6 +80,10 @@ public class SaloonManager extends PlaceManager
         BangServer.omgr.createObject(MatchObject.class, new Subscriber() {
             public void objectAvailable (DObject object) {
                 match.setObject((MatchObject)object);
+                match.matchobj.setSpeakService(
+                    (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
+                        new SpeakDispatcher(new SpeakProvider(object, null)),
+                        false));
                 _matches.put(object.getOid(), match);
                 listener.requestProcessed(object.getOid());
             }
@@ -204,6 +211,9 @@ public class SaloonManager extends PlaceManager
     protected void clearMatch (Match match)
     {
         int moid = match.matchobj.getOid();
+        if (match.matchobj.speakService != null) {
+            BangServer.invmgr.clearDispatcher(match.matchobj.speakService);
+        }
         BangServer.omgr.destroyObject(moid);
         _matches.remove(moid);
     }

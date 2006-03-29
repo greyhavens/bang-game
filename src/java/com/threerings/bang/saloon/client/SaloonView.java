@@ -40,9 +40,9 @@ public class SaloonView extends ShopView
         add(new TownButton(ctx), new Point(870, 25));
         add(_paper = new PaperView(ctx), new Rectangle(48, 68, 516, 576));
 
-        add(new BLabel(_msgs.get("m.coming_soon")), new Point(730, 183));
+        add(_soon = new BLabel(_msgs.get("m.coming_soon")), SOON_LOC);
 
-        add(_crview = new CriterionView(ctx, _ctrl), MATCH_RECT);
+        add(_crview = new CriterionView(ctx, _ctrl), CRIT_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
         _status.setText(_msgs.get("m.intro_tip"));
@@ -50,7 +50,7 @@ public class SaloonView extends ShopView
         // add a test game button for developer testing
         if (ctx.getUserObject().tokens.isAdmin()) {
             add(new BButton(_msgs.get("m.test_game"), _ctrl,
-                            SaloonController.TEST_GAME), new Point(730, 85));
+                            SaloonController.TEST_GAME), new Point(595, 335));
         }
     }
 
@@ -63,6 +63,7 @@ public class SaloonView extends ShopView
         // remove our criterion view
         if (_crview.isAdded()) {
             remove(_crview);
+            remove(_soon);
         }
 
         // this should never happen, but just to be ultra-robust
@@ -89,7 +90,8 @@ public class SaloonView extends ShopView
 
         // redisplay the criterion view
         if (!_crview.isAdded()) {
-            add(_crview, MATCH_RECT);
+            add(_crview, CRIT_RECT);
+            add(_soon, SOON_LOC);
         }
 
         setStatus(status);
@@ -123,7 +125,11 @@ public class SaloonView extends ShopView
     protected StatusLabel _status;
     protected CriterionView _crview;
     protected MatchView _mview;
+    protected BLabel _soon;
 
-    protected static final Rectangle MATCH_RECT =
+    protected static final Rectangle CRIT_RECT =
         new Rectangle(594, 328, 395, 233);
+    protected static final Rectangle MATCH_RECT =
+        new Rectangle(594, 80, 395, 491);
+    protected static final Point SOON_LOC = new Point(730, 183);
 }

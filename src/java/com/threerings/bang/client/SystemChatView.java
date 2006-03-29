@@ -95,7 +95,6 @@ public class SystemChatView extends BWindow
     {
         String level = getAttentionLevel(msg);
         if (level == null ||
-            _ctx.getBangClient().getPardnerChatView().isAdded() ||
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
             return;
         }

@@ -166,15 +166,9 @@ public class PardnerChatView extends BDecoratedWindow
     // documentation inherited from interface ChatDisplay
     public void displayMessage (ChatMessage msg)
     {
-        String level = SystemChatView.getAttentionLevel(msg);
-        if (level != null) {
-            if (isAdded()) {
-                PardnerTab tab = (PardnerTab)_tabs.getSelectedTab();
-                tab.appendSystem(msg, level);
-            }
-            return;
-        }
-        if (!(msg instanceof UserMessage)) {
+        // we only display player-to-player chat
+        if (!ChatCodes.USER_CHAT_TYPE.equals(msg.localtype) ||
+            !(msg instanceof UserMessage)) {
             return;
         }
         UserMessage umsg = (UserMessage)msg;

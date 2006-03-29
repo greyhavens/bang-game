@@ -10,12 +10,15 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.util.Dimension;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Dimension;
 
+import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.jme.chat.ChatView;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -35,6 +38,7 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.MatchObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
+import com.threerings.bang.saloon.data.SaloonObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -47,7 +51,7 @@ public class MatchView extends BContainer
 {
     public MatchView (BangContext ctx, SaloonController ctrl, int matchOid)
     {
-        super(new BorderLayout(5, 10));
+        super(GroupLayout.makeVStretch());
         setStyleClass("match_view");
 
         _ctx = ctx;
@@ -64,7 +68,8 @@ public class MatchView extends BContainer
                  GroupLayout.FIXED);
         main.add(_right = GroupLayout.makeVBox(GroupLayout.CENTER));
         ((GroupLayout)_right.getLayoutManager()).setGap(0);
-        add(main, BorderLayout.CENTER);
+        main.setPreferredSize(new Dimension(395, 203));
+        add(main, GroupLayout.FIXED);
 
         // this will contain our current criterion
         _info.add(_rounds = new BLabel("", "match_label"));
@@ -81,19 +86,24 @@ public class MatchView extends BContainer
                 _ctrl.leaveMatch(_mobj.getOid());
             }
         }, "leave"));
-        add(row, BorderLayout.SOUTH);
+        add(row, GroupLayout.FIXED);
+
+        add(new Spacer(10, 66), GroupLayout.FIXED);
+
+        // this will eventually be the chat view
+        _chat = new ChatView(_ctx, _ctx.getChatDirector()) {
+            /* ChatView() */ {
+                _text.setStyleClass("match_chat_text");
+            }
+        };
+        ((BorderLayout)_chat.getLayoutManager()).setGaps(2, 6);
+        _chat.setEnabled(false);
+        add(_chat);
 
         // load up some images
         _silhouette = ctx.loadImage("ui/saloon/silhouette.png");
         _playerScroll = ctx.loadImage("ui/frames/tiny_scroll.png");
         _emptyScroll = ctx.loadImage("ui/frames/tall_tiny_scroll.png");
-    }
-
-    @Override // documentation inherited
-    public void wasRemoved ()
-    {
-        super.wasRemoved();
-        _msub.unsubscribe(_ctx.getDObjectManager());
     }
 
     // documentation inherited from interface Subscriber
@@ -115,6 +125,13 @@ public class MatchView extends BContainer
 
         updateDisplay();
         updateCriterion();
+
+        _ctx.getChatDirector().addAuxiliarySource(_mobj, "match_chat");
+        _chat.setSpeakService(_mobj.speakService);
+        _chat.setEnabled(true);
+        _chat.requestFocus();
+        _chat.displayMessage(new SystemMessage(_msgs.get("m.chat_here"),
+                                               null, SystemMessage.INFO));
     }
 
     // documentation inherited from interface Subscriber
@@ -123,6 +140,17 @@ public class MatchView extends BContainer
         log.warning("Failed to subscribe to match object " +
                     "[oid=" + oid + ", cause=" + cause + "].");
         _ctrl.leaveMatch(-1);
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        if (_mobj != null) {
+            _ctx.getChatDirector().removeAuxiliarySource(_mobj);
+        }
+        _msub.unsubscribe(_ctx.getDObjectManager());
+        _chat.clearSpeakService();
     }
 
     protected void updateDisplay ()
@@ -250,6 +278,8 @@ public class MatchView extends BContainer
     protected BImage _silhouette, _playerScroll, _emptyScroll;
     protected BContainer _left, _right, _info;
     protected PlayerSlot[] _slots;
+
+    protected ChatView _chat;
 
     protected static final ColorRGBA GREY_ALPHA =
         new ColorRGBA(0f, 0f, 0f, 0.25f);

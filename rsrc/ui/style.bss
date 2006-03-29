@@ -965,6 +965,7 @@ starting_label {
 
 match_view {
   padding: 0 10 5 10;
+//  border: 1 solid #000000;
 }
 
 match_slot {
@@ -972,6 +973,12 @@ match_slot {
   text-align: center;
   vertical-align: bottom;
   padding: 0 0 5 0;
+}
+
+match_chat_text {
+  font: "Dom Casual" plain 16;
+  padding: 7 4;
+//  border: 1 solid #000000;
 }
 
 lobby_chat {
