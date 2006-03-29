@@ -91,8 +91,7 @@ public class GameInputHandler extends GodViewHandler
      */
     public void swingCamera (float deltaAngle)
     {
-        if (_camhand.cameraIsMoving()) {
-            log.info("Already rotating, no swing: " + deltaAngle + ".");
+        if (!isEnabled() || _camhand.cameraIsMoving()) {
             return;
         }
 
@@ -108,7 +107,7 @@ public class GameInputHandler extends GodViewHandler
      */
     public void rollCamera ()
     {
-        if (_camhand.cameraIsMoving()) {
+        if (!isEnabled() || _camhand.cameraIsMoving()) {
             return;
         }
         rollCamera((_camidx + 1) % CAMERA_ANGLES.length, 2*FastMath.PI);
