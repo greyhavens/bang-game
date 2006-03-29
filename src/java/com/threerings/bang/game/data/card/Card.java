@@ -38,9 +38,8 @@ public abstract class Card extends SimpleStreamableObject
      */
     public static String selectRandomCard (String townId, boolean inGame)
     {
-        // TODO: select the card more sophisticatedly
-        return (String)RandomUtil.pickRandom(
-            _cards.keySet().iterator(), _cards.size());
+        // select the card based on a weighted random choice
+        return _wcards[RandomUtil.getWeightedIndex(_weights)].getType();
     }
 
     /**
@@ -72,6 +71,12 @@ public abstract class Card extends SimpleStreamableObject
      * @return the effect of the card activation.
      */
     public abstract Effect activate (int x, int y);
+
+    /**
+     * Returns the weight of this card compared to the others which is used to
+     * determine its rarity.
+     */
+    public abstract int getWeight ();
 
     /**
      * This is used to assign the owner and a new unique id to a card when
@@ -136,11 +141,28 @@ public abstract class Card extends SimpleStreamableObject
     /** A mapping from card identifier to card prototype. */
     protected static HashMap<String,Card> _cards = new HashMap<String,Card>();
 
+    /** Contains a weight value for every registered card. */
+    protected static int[] _weights;
+
+    /** Contains the card associated with the weight value of the same index in
+     * {@link #_weights}. */
+    protected static Card[] _wcards;
+
     static {
         register(new Repair());
         register(new DustDevil());
         register(new Missile());
         register(new Stampede());
         register(new Staredown());
+
+        // collect the weights of each card into an array used to select
+        // randomly based on said weights
+        _weights = new int[_cards.size()];
+        _wcards = new Card[_cards.size()];
+        int idx = 0;
+        for (Card card : _cards.values()) {
+            _wcards[idx] = card;
+            _weights[idx++] = card.getWeight();
+        }
     }
 }

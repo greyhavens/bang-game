@@ -25,6 +25,12 @@ public class Repair extends Card
     }
 
     @Override // documentation inherited
+    public int getWeight ()
+    {
+        return 50;
+    }
+
+    @Override // documentation inherited
     public Effect activate (int x, int y)
     {
         return new AreaRepairEffect(100, getRadius(), x, y);

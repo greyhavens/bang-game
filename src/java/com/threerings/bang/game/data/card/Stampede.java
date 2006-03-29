@@ -26,6 +26,12 @@ public class Stampede extends Card
     }
 
     @Override // documentation inherited
+    public int getWeight ()
+    {
+        return 0;
+    }
+
+    @Override // documentation inherited
     public Effect activate (int x, int y)
     {
         return new StampedeEffect(owner, x, y, getRadius());

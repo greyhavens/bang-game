@@ -35,6 +35,12 @@ public class DustDevil extends Card
     }
 
     @Override // documentation inherited
+    public int getWeight ()
+    {
+        return 10;
+    }
+
+    @Override // documentation inherited
     public Effect activate (int x, int y)
     {
         return new AreaClearEffect(getRadius(), x, y);

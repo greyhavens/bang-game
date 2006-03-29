@@ -48,6 +48,12 @@ public class Missile extends Card
     }
 
     @Override // documentation inherited
+    public int getWeight ()
+    {
+        return 25;
+    }
+
+    @Override // documentation inherited
     public Effect activate (int x, int y)
     {
         return new AreaDamageEffect(owner, power, getRadius(), x, y);
