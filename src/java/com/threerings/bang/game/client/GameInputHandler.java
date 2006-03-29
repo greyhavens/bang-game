@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Rectangle;
+
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
@@ -48,12 +50,6 @@ public class GameInputHandler extends GodViewHandler
 
         // set up the starting zoom index
         _camidx = 0;
-
-        // set the pan limits based on the board size
-        _camhand.setPanLimits(
-            0, 0,
-            TILE_SIZE * bangobj.board.getWidth(),
-            TILE_SIZE * bangobj.board.getHeight(), true);
 
         // reset the camera's orientation
         _camhand.resetAxes();

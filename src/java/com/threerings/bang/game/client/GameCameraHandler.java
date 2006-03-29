@@ -45,6 +45,10 @@ public class GameCameraHandler extends CameraHandler
                     _parea.x + jj, _parea.y + ii);
             }
         }
+        _minGroundX = area.x * TILE_SIZE;
+        _minGroundY = area.y * TILE_SIZE;
+        _maxGroundX = _minGroundX + area.width * TILE_SIZE;
+        _maxGroundY = _minGroundY + area.height * TILE_SIZE;
     }
 
     /**
@@ -80,15 +84,12 @@ public class GameCameraHandler extends CameraHandler
      */
     public void panCameraAbs (float x, float y)
     {
-        Vector3f camloc = _camera.getLocation();
-        float ox = camloc.x, oy = camloc.y;
         getGroundPoint(_gpoint);
-        bound(camloc.addLocal(x, y, 0f));
-        float dx = camloc.x - ox, dy = camloc.y - oy,
-            dz = getSmoothedHeight(_gpoint.x + dx, _gpoint.y + dy) - _groundz;
-        camloc.z += dz;
-        _groundz += dz;
-        setLocation(bound(camloc));
+        float nx = Math.min(Math.max(_gpoint.x + x, _minGroundX), _maxGroundX),
+            ny = Math.min(Math.max(_gpoint.y + y, _minGroundY), _maxGroundY);
+        _groundz = getSmoothedHeight(nx, ny);
+        setLocation(_camera.getLocation().addLocal(nx - _gpoint.x,
+            ny - _gpoint.y, _groundz - _gpoint.z));
     }
     
     @Override // documentation inherited
@@ -171,6 +172,9 @@ public class GameCameraHandler extends CameraHandler
     
     /** The playable area of the board in sub-tile coordinates. */
     protected Rectangle _parea = new Rectangle();
+    
+    /** The limits of the ground point. */
+    protected float _minGroundX, _minGroundY, _maxGroundX, _maxGroundY;
     
     /** The z value of the ground plane. */
     protected float _groundz;
