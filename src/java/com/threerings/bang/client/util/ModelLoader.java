@@ -92,6 +92,10 @@ public class ModelLoader extends Thread
             return other._priority - _priority;
         }
 
+        public String toString () {
+            return _model + " (" + _action + ", " + _priority + ")";
+        }
+
         protected Model _model;
         protected String _action;
         protected int _priority;
