@@ -67,10 +67,17 @@ public class EffectHandler extends BoardView.BoardAction
     @Override // documentation inherited
     public boolean execute ()
     {
+        // don't allow the effect to complete until we're done applying
+        // everything
+        _applying = true;
+
         // applying the effect may result in calls to pieceAffected() which may
         // trigger visualizations or animations which we will then notice and
         // report that the view should wait
         _effect.apply(_bangobj, this);
+
+        // now determine whether or not anything remained pending
+        _applying = false;
         return !isCompleted();
     }
 
@@ -270,7 +277,7 @@ public class EffectHandler extends BoardView.BoardAction
 
     protected boolean isCompleted ()
     {
-        return (_penders.size() == 0);
+        return (!_applying && _penders.size() == 0);
     }
 
     protected int notePender ()
@@ -299,6 +306,7 @@ public class EffectHandler extends BoardView.BoardAction
     protected BangObject _bangobj;
     protected BangBoardView _view;
     protected short _tick;
+    protected boolean _applying;
 
     protected SoundGroup _sounds;
 
