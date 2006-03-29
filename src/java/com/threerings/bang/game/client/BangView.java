@@ -176,6 +176,7 @@ public class BangView extends BWindow
         _bangobj = (BangObject)plobj;
 
         // create our player status displays
+        BangConfig config = (BangConfig)_ctrl.getPlaceConfig();
         int pcount = _bangobj.players.length;
         _pswins = new BWindow[pcount];
         pstatus = new PlayerStatusView[pcount];
@@ -184,8 +185,8 @@ public class BangView extends BWindow
                 _ctx.getStyleSheet(), GroupLayout.makeHStretch());
             _pswins[ii].setLayer(1);
             _pswins[ii].setStyleClass("player_status_win");
-            _pswins[ii].add(
-                pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, _ctrl, ii));
+            _pswins[ii].add(pstatus[ii] = new PlayerStatusView(
+                                _ctx, _bangobj, config, _ctrl, ii));
         }
 
         // initialize the round timer

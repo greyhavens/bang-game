@@ -36,6 +36,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
@@ -51,7 +52,7 @@ public class PlayerStatusView extends BContainer
                ActionListener
 {
     public PlayerStatusView (BangContext ctx, BangObject bangobj,
-                             BangController ctrl, int pidx)
+                             BangConfig bconfig, BangController ctrl, int pidx)
     {
         super(new AbsoluteLayout());
         setStyleClass("player_status_cont");
@@ -59,6 +60,7 @@ public class PlayerStatusView extends BContainer
         _ctx = ctx;
         _bangobj = bangobj;
         _bangobj.addListener(this);
+        _bconfig = bconfig;
         _ctrl = ctrl;
         _pidx = pidx;
 
@@ -89,6 +91,7 @@ public class PlayerStatusView extends BContainer
 
         updateAvatar();
         updateStatus();
+        checkPlayerHere();
     }
 
     /**
@@ -151,6 +154,9 @@ public class PlayerStatusView extends BContainer
             Rectangle rect = new Rectangle(CARD_RECT);
             rect.x += (rect.width * cidx);
             add(_cards[cidx], rect);
+
+        } else if (name.equals(BangObject.OCCUPANT_INFO)) {
+            checkPlayerHere();
         }
     }
 
@@ -162,20 +168,23 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface SetListener
     public void entryRemoved (EntryRemovedEvent event)
     {
-        if (!event.getName().equals(BangObject.CARDS)) {
-            return;
-        }
-        Card card = (Card)event.getOldEntry();
-        if (card.owner != _pidx) {
-            return;
-        }
-        String cid = "" + card.cardId;
-        for (int ii = 0; ii < _cards.length; ii++) {
-            if (cid.equals(_cards[ii].getAction())) {
-                remove(_cards[ii]);
-                _cards[ii] = null;
+        String name = event.getName();
+        if (name.equals(BangObject.CARDS)) {
+            Card card = (Card)event.getOldEntry();
+            if (card.owner != _pidx) {
                 return;
             }
+            String cid = "" + card.cardId;
+            for (int ii = 0; ii < _cards.length; ii++) {
+                if (cid.equals(_cards[ii].getAction())) {
+                    remove(_cards[ii]);
+                    _cards[ii] = null;
+                    return;
+                }
+            }
+
+        } else if (name.equals(BangObject.OCCUPANT_INFO)) {
+            checkPlayerHere();
         }
     }
 
@@ -196,7 +205,7 @@ public class PlayerStatusView extends BContainer
         _color.render(renderer, BACKGROUND_LOC.x, BACKGROUND_LOC.y, _alpha);
 
         // then draw our avatar
-        if (_avatar != null) {
+        if (_avatar != null && _playerHere) {
             _avatar.render(renderer, AVATAR_LOC.x, AVATAR_LOC.y, _alpha);
         }
 
@@ -211,6 +220,14 @@ public class PlayerStatusView extends BContainer
             _avatar = new ImageIcon(
                 AvatarView.getFramableImage(_ctx, _bangobj.avatars[_pidx], 10));
         }
+    }
+
+    protected void checkPlayerHere ()
+    {
+        _playerHere =
+            (_bconfig.ais != null && _bconfig.ais.length > _pidx &&
+             _bconfig.ais[_pidx] != null) ||
+            (_bangobj.getOccupantInfo(_bangobj.players[_pidx]) != null);
     }
 
     protected void updateStatus ()
@@ -256,11 +273,13 @@ public class PlayerStatusView extends BContainer
 
     protected BangContext _ctx;
     protected BangObject _bangobj;
+    protected BangConfig _bconfig;
     protected BangController _ctrl;
     protected int _pidx, _rank = -2;
 
     protected ImageIcon _color, _avatar;
     protected BImage _rankimg;
+    protected boolean _playerHere;
 
     protected BLabel _player, _points, _ranklbl;
     protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];
