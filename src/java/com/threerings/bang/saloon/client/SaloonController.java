@@ -64,7 +64,7 @@ public class SaloonController extends PlaceController
     public void actionPerformed (ActionEvent event)
     {
         if (event.getAction().equals(TEST_GAME)) {
-            _ctx.getBangClient().startTestGame();
+            _ctx.getBangClient().startTestGame(false);
         }
     }
 
