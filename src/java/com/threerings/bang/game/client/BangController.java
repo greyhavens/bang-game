@@ -500,10 +500,13 @@ public class BangController extends GameController
         _view.endRound();
         if (_tutcont != null) {
             _tutcont.gameDidEnd();
-        }
+            // no "game over" marquee for tutorials
+            postGameFadeComplete();
 
-        // fade in a game over marquee
-        _view.view.doPostGameMarqueeFade();
+        } else {
+            // fade in a game over marquee
+            _view.view.doPostGameMarqueeFade();
+        }
     }
 
     /**
@@ -553,8 +556,10 @@ public class BangController extends GameController
         // reenable the camera controls now that we're fully operational
         _ctx.getInputHandler().setEnabled(true);
 
-        // and zoom down from the vertical to the middle camera angle
-        ((GameInputHandler)_ctx.getInputHandler()).rollCamera();
+        // if we're not in a tutorial zoom up one level
+        if (_tutcont == null) {
+            ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
+        }
 
         // let the game manager know that our units are in place and we're
         // fully ready to go
