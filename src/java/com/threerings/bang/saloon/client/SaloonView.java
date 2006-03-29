@@ -50,7 +50,7 @@ public class SaloonView extends ShopView
         // add a test game button for developer testing
         if (ctx.getUserObject().tokens.isAdmin()) {
             add(new BButton(_msgs.get("m.test_game"), _ctrl,
-                            SaloonController.TEST_GAME), new Point(595, 335));
+                            SaloonController.TEST_GAME), new Point(595, 334));
         }
     }
 
