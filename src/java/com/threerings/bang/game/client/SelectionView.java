@@ -141,9 +141,9 @@ public class SelectionView extends BDecoratedWindow
         ArrayList<UnitConfig> units = new ArrayList<UnitConfig>();
         CollectionUtil.addAll(units, UnitConfig.getTownUnits(_bangobj.townId));
         for (Iterator<UnitConfig> iter = units.iterator(); iter.hasNext(); ) {
-            // filter out bigshots and unrecruitable special units
+            // filter out bigshots and special units
             UnitConfig uc = iter.next();
-            if (uc.rank == UnitConfig.Rank.BIGSHOT || uc.scripCost < 0) {
+            if (uc.rank != UnitConfig.Rank.NORMAL || uc.scripCost < 0) {
                 iter.remove();
             }
         }
