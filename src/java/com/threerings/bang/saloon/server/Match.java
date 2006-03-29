@@ -24,6 +24,9 @@ public class Match
     /** Used by {@link #checkReady}. */
     public static enum Readiness { NOT_READY, COULD_START, START_NOW };
 
+    /** Team sizes for two, three and four player games. */
+    public static final int[] TEAM_SIZES = { 5, 4, 3 };
+
     /** The distributed object that we use to communicate to our players. */
     public MatchObject matchobj;
 
@@ -189,7 +192,4 @@ public class Match
 
     protected Criterion _criterion;
     protected int _minRating, _avgRating, _maxRating;
-
-    // team sizes for two, three and four player games
-    protected static final int[] TEAM_SIZES = { 5, 4, 3 };
 }

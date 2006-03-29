@@ -40,6 +40,7 @@ import com.threerings.bang.bank.data.BankObject;
 import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.ranch.data.RanchObject;
 import com.threerings.bang.saloon.data.SaloonObject;
+import com.threerings.bang.saloon.server.Match;
 import com.threerings.bang.store.data.StoreObject;
 
 import com.threerings.bang.game.data.BangAI;
@@ -388,6 +389,7 @@ public class PlayerManager
         config.players = new Name[players];
         config.ais = new BangAI[players];
         config.players[0] = player.getVisibleName();
+        config.teamSize = Match.TEAM_SIZES[config.seats-2];
         for (int ii = 1; ii < players; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names);
             config.players[ii] = ai.handle;
