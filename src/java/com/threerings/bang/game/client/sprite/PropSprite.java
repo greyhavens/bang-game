@@ -98,7 +98,7 @@ public class PropSprite extends PieceSprite
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
         _model = ctx.loadModel("props", _config.type);
-        bindAnimation(ctx, _model.getAnimation("normal"), 0, null);
+        bindAnimation(ctx, _model, "normal", 0, null);
     }
 
     @Override // documentation inherited
@@ -116,7 +116,6 @@ public class PropSprite extends PieceSprite
     }
 
     protected PropConfig _config;
-    protected Model _model;
     protected Model.Binding _binding;
 
 //     protected static final ColorRGBA FOOT_COLOR =

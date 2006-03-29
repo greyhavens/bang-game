@@ -426,8 +426,8 @@ public class PieceSprite extends Sprite
      * @param zations the colorizations to use for the texture, or
      * <code>null</code> for none
      */
-    protected void bindAnimation (
-        final BasicContext ctx, Model.Animation anim, int random,
+    protected Model.Animation bindAnimation (
+        final BasicContext ctx, Model model, String action, int random,
         Colorization[] zations)
     {
         // stop all running emissions
@@ -437,8 +437,8 @@ public class PieceSprite extends Sprite
             }
         }
 
+        Model.Animation anim = model.getAnimation(action);
         // bind the new animation
-        _view.addResolvingSprite(this);
         _binding = anim.bind(
             this, random, zations, new Model.Binding.Observer() {
             public void wasBound (
@@ -460,13 +460,23 @@ public class PieceSprite extends Sprite
                     }
                     emission.start(anim, binding);
                 }
-
-                _view.clearResolvingSprite(PieceSprite.this);
             }
             public void wasSkipped (Model.Animation anim) {
+                // nothing needed
+            }
+        });
+
+        // wait for this animation (and any other pending animations) to
+        // complete their resolution before we let the view know that we're
+        // done resolving
+        _view.addResolvingSprite(this);
+        model.addResolutionObserver(new Model.ResolutionObserver() {
+            public void modelResolved (Model model) {
                 _view.clearResolvingSprite(PieceSprite.this);
             }
         });
+
+        return anim;
     }
 
     /**

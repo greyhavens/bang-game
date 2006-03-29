@@ -49,12 +49,12 @@ public class GameInputHandler extends GodViewHandler
         view.view.addListener(_swingListener);
 
         // set up the starting zoom index
-        _camidx = 0;
-        _camdelta = 1;
+        _camidx = CAMERA_ZOOMS.length-1;
+        _camdelta = -1;
 
         // reset the camera's orientation
         _camhand.resetAxes();
-        
+
         // start the camera in the center of the board, pointing straight
         // down
         GameCameraHandler gcamhand = (GameCameraHandler)_camhand;
@@ -63,14 +63,13 @@ public class GameInputHandler extends GodViewHandler
         float height = gcamhand.getSmoothedHeight(cx, cy) + CAMERA_ZOOMS[0];
         _camhand.setLocation(new Vector3f(cx, cy, height));
         gcamhand.resetGroundPointHeight();
-        
+
         // rotate the camera by 45 degrees and orient it properly
         _camhand.orbitCamera(FastMath.PI/4);
 
         // add a camera observer that updates the board view's hover state
         // after the camera completes a path
-        _camhand.addCameraObserver(
-            _hoverUpdater = new HoverUpdater(view.view));
+        _camhand.addCameraObserver(_hoverUpdater = new HoverUpdater(view.view));
     }
 
     /**
@@ -80,7 +79,7 @@ public class GameInputHandler extends GodViewHandler
     {
         // stop listening for mouse wheel events
         view.view.removeListener(_swingListener);
-        
+
         // stop updating hover state and clear out reference
         _camhand.removeCameraObserver(_hoverUpdater);
         _hoverUpdater = null;
@@ -167,16 +166,16 @@ public class GameInputHandler extends GodViewHandler
         {
             _view = view;
         }
-        
+
         public boolean pathCompleted (CameraPath path)
         {
             _view.updateHoverState();
             return true;
         }
-        
+
         protected BangBoardView _view;
     }
-    
+
     protected MouseWheelListener _swingListener = new MouseWheelListener() {
         public void mouseWheeled (MouseEvent e) {
             swingCamera((e.getDelta() > 0) ? -FastMath.PI/2 : FastMath.PI/2);
@@ -185,7 +184,7 @@ public class GameInputHandler extends GodViewHandler
 
     protected int _camidx = -1, _camdelta = 0;
     protected HoverUpdater _hoverUpdater;
-    
+
     protected Vector3f _gpoint = new Vector3f();
 
     protected final static float[] CAMERA_ANGLES = {

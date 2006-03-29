@@ -368,11 +368,8 @@ public class MobileSprite extends PieceSprite
         if (_binding != null) {
             _binding.detach();
         }
-
         // add the new meshes
-        Model.Animation anim = _model.getAnimation(action);
-        bindAnimation(_ctx, anim, _texrando, _zations);
-        return anim;
+        return bindAnimation(_ctx, _model, action, _texrando, _zations);
     }
 
     /**

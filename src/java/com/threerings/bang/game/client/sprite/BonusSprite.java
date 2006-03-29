@@ -47,7 +47,7 @@ public class BonusSprite extends PieceSprite
 
         // load up the model for this bonus
         _model = ctx.loadModel("bonuses", _type);
-        bindAnimation(ctx, _model.getAnimation("normal"), 0, null);
+        bindAnimation(ctx, _model, "normal", 0, null);
     }
 
     protected String _type;

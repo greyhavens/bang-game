@@ -162,11 +162,9 @@ public class BangBoardView extends BoardView
 
         // pan, orbit, and zoom over the board
         camhand.setLimitsEnabled(false);
-        camhand.tiltCamera(-FastMath.PI * 0.25f);
-        camhand.zoomCamera(-75f);
         _tpath = new SwingPath(camhand, gpoint, camhand.getGroundNormal(),
             FastMath.TWO_PI, FastMath.TWO_PI / BOARD_TOUR_DURATION,
-            camhand.getCamera().getLeft(), FastMath.PI * 0.25f, pan, 75f) {
+            camhand.getCamera().getLeft(), -FastMath.PI * 0.25f, pan, -75f) {
             public boolean tick (float secondsSince) {
                 // fade the marquee out when there's a second or less remaining
                 boolean ret = super.tick(secondsSince);

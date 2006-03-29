@@ -72,6 +72,14 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class Model
 {
+    /** Used for notification of the completed resolution of all of a model's
+     * animations. */
+    public interface ResolutionObserver
+    {
+        /** Called when all of a model's animations are resolved. */
+        public void modelResolved (Model model);
+    }
+
     /**
      * Used to bind an animation's meshs to a node and then later remove them.
      * The binding will take care of updating the node if the animation was not
@@ -241,7 +249,7 @@ public class Model
         {
             return _bindings != null;
         }
-        
+
         /**
          * Configures this animation as "being resolved" so that we don't queue
          * it up for resolution more than once.
@@ -355,6 +363,11 @@ public class Model
      */
     public static ModelLoader getLoader ()
     {
+        // start up our background loader thread if it hasn't been
+        if (_loader == null) {
+            _loader = new ModelLoader();
+            _loader.start();
+        }
         return _loader;
     }
 
@@ -386,12 +399,6 @@ public class Model
         // TODO: use a whole different system for non-animating models
         // that uses a SharedMesh
 
-        // start up our background loader thread if it hasn't been
-        if (_loader == null) {
-            _loader = new ModelLoader();
-            _loader.start();
-        }
-
         String[] actions = getList(_props, "actions", null, true);
         for (int ii = 0; ii < actions.length; ii++) {
             String action = actions[ii];
@@ -418,37 +425,39 @@ public class Model
     }
 
     /**
-     * Loads the names and properties of the emitters for the specified action.
-     * Does not load the marker geometries (that happens on the loader thread).
-     */
-    protected Emitter[] getEmitters (String action)
-    {
-        String[] enames = getList(_props, action + ".emitters", "emitters",
-            false);
-        Emitter[] emitters = new Emitter[enames.length];
-        for (int ee = 0; ee < enames.length; ee++) {
-            Emitter emitter = (emitters[ee] = new Emitter());
-            emitter.name = enames[ee];
-            emitter.props = PropertiesUtil.getSubProperties(_props,
-                action + "." + emitter.name, emitter.name);
-        }
-        return emitters;
-    }
-
-    /**
      * Returns a reference to the configuration properties of this model.
      */
     public Properties getProperties ()
     {
         return _props;
     }
-    
+
     /**
      * Returns true if we have meshes for the specified action.
      */
     public boolean hasAnimation (String action)
     {
         return _anims.containsKey(action);
+    }
+
+    /**
+     * Adds a resolution observer to this model.
+     */
+    public void addResolutionObserver (ResolutionObserver observer)
+    {
+        if (allAnimationsResolved()) {
+            observer.modelResolved(this);
+        } else {
+            _observers.add(observer);
+        }
+    }
+
+    /**
+     * Clears a resolution observer from this model.
+     */
+    public void clearResolutionObserver (ResolutionObserver observer)
+    {
+        _observers.remove(observer);
     }
 
     /**
@@ -465,7 +474,7 @@ public class Model
             return BLANK_ANIM;
         } else if (!anim.isResolved()) {
             anim.setIsResolving();
-            _loader.queueAction(this, action);
+            getLoader().queueAction(this, action);
         }
         return anim;
     }
@@ -483,7 +492,7 @@ public class Model
             Animation anim = entry.getValue();
             if (!anim.isResolved()) {
                 anim.setIsResolving();
-                _loader.queueAction(this, action);
+                getLoader().queueAction(this, action);
             }
         }
     }
@@ -551,7 +560,7 @@ public class Model
                 _ctx.getTextureCache().getTexture(
                     part.tpaths[tt] = cleanPath(path + tnames[tt]));
             }
-            
+
             // possibly create a programmatic animation controller
             String panim = _props.getProperty(amesh + ".anim");
             if (panim != null) {
@@ -576,15 +585,6 @@ public class Model
         });
     }
 
-    /**
-     * Finishes the resolution of a model animation. <em>Note:</em> this is
-     * called on the main thread where we can safely access OpenGL.
-     */
-    protected void finishResolution (Animation anim, Part[] parts)
-    {
-        anim.setParts(parts);
-    }
-
     @Override // documentation inherited
     public boolean equals (Object other)
     {
@@ -600,7 +600,55 @@ public class Model
     @Override // documentation inherited
     public String toString ()
     {
-        return _key + " m:" + _meshes.size() + " a:" + _anims.size() + ")";
+        return _key + " m:" + _meshes.size() + " a:" + _anims.size();
+    }
+
+    /**
+     * Loads the names and properties of the emitters for the specified action.
+     * Does not load the marker geometries (that happens on the loader thread).
+     */
+    protected Emitter[] getEmitters (String action)
+    {
+        String[] enames = getList(_props, action + ".emitters", "emitters",
+            false);
+        Emitter[] emitters = new Emitter[enames.length];
+        for (int ee = 0; ee < enames.length; ee++) {
+            Emitter emitter = (emitters[ee] = new Emitter());
+            emitter.name = enames[ee];
+            emitter.props = PropertiesUtil.getSubProperties(_props,
+                action + "." + emitter.name, emitter.name);
+        }
+        return emitters;
+    }
+
+    /**
+     * Finishes the resolution of a model animation. <em>Note:</em> this is
+     * called on the main thread where we can safely access OpenGL.
+     */
+    protected void finishResolution (Animation anim, Part[] parts)
+    {
+        anim.setParts(parts);
+
+        // if all of our animations are now resolved, notify our observers
+        if (allAnimationsResolved()) {
+            for (ResolutionObserver observer : _observers) {
+                observer.modelResolved(this);
+            }
+            _observers.clear();
+        }
+    }
+
+    /**
+     * Helper function for {@link #finishResolution}.
+     */
+    protected boolean allAnimationsResolved ()
+    {
+        for (Animation anim : _anims.values()) {
+            if (anim.isResolving()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -644,7 +692,7 @@ public class Model
         cc.addProperty("indices");
         return cc;
     }
-    
+
     protected Node loadModel (String path, boolean trans, String bound)
     {
         path = cleanPath(path);
@@ -659,23 +707,23 @@ public class Model
             if (in != null) {
                 try {
                     model = jbr.loadBinaryFormat(new BufferedInputStream(in));
-                    
+
                     // TODO: put this in the model config file
                     if (path.indexOf("units") != -1) {
                         setModelScale(model, 0.04f);
                     } else {
                         setModelScale(model, 0.05f);
                     }
-                    
+
                     // configure transparent models specially
                     if (trans) {
                         model.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
                         model.setRenderState(RenderUtil.blendAlpha);
                         model.setRenderState(RenderUtil.overlayZBuf);
-                        
+
                     } else {
                         // enable back-face culling (for cw winding order)
-                        model.setRenderState(RenderUtil.frontCull);    
+                        model.setRenderState(RenderUtil.frontCull);
                     }
 
                 } catch (IOException ioe) {
@@ -700,7 +748,7 @@ public class Model
         }
         return model;
     }
-    
+
     /**
      * Rescales a model by diving into its {@link TriMesh}es and scaling each
      * vertex.
@@ -718,7 +766,7 @@ public class Model
                 BufferUtils.setInBuffer(vertex, vbuf, ii);
             }
             mesh.updateModelBound();
-            
+
         } else if (spatial instanceof Node) {
             Node node = (Node)spatial;
             for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
@@ -738,7 +786,7 @@ public class Model
             }
         }
     }
-    
+
     protected String cleanPath (String path)
     {
         // non-file URLs don't handle blah/foo/../bar so we make those path
@@ -759,17 +807,17 @@ public class Model
 
         /** Used as a target for static models. */
         public Node target;
-        
+
         /** The paths of the textures from which to select randomly. */
         public String[] tpaths;
 
         /** The animation controller to clone for this part, if any. */
         public AnimationController animctrl;
-        
+
         /** Maps indices/colorizations to precreated texture states. */
         public HashMap<TextureKey, WeakReference<TextureState>> tstates =
             new HashMap<TextureKey, WeakReference<TextureState>>();
-        
+
         /**
          * Creates either a copy of the original part node or a
          * {@link SharedNode} reference to a locked target, depending on
@@ -785,7 +833,7 @@ public class Model
             Node instance;
             if (creator != null) {
                 instance = (Node)creator.createCopy();
-                
+
             } else { // target != null
                 if (!_tinit) {
                     // in order to ensure that texture coords are sent when
@@ -795,19 +843,19 @@ public class Model
                         getRenderer().createTextureState();
                     tstate.setTexture(null, 0);
                     target.setRenderState(tstate);
-                    
+
                     setVBOInfos(target);
                     target.lockBounds();
                     target.lockMeshes();
                     target.clearRenderState(RenderState.RS_TEXTURE);
-                    
+
                     target.updateCollisionTree();
-                    
+
                     // we create a SharedNode of a SharedNode because rendering
                     // each SharedMesh modifies the transform of its target,
                     // would then be copied by SharedMeshes created afterwards
                     target = new SharedNode("shared", target, false);
-                    
+
                     _tinit = true;
                 }
                 instance = new SharedNode("shared", target, false);
@@ -835,7 +883,7 @@ public class Model
             }
             return instance;
         }
-        
+
         /**
          * Recursively descends the scene graph rooted at the supplied spatial,
          * setting the {@link VBOInfo}s of any encountered {@link Geometry}
@@ -845,7 +893,7 @@ public class Model
         {
             if (spatial instanceof Geometry) {
                 ((Geometry)spatial).setVBOInfo(new VBOInfo(true));
-                
+
             } else if (spatial instanceof Node) {
                 Node node = (Node)spatial;
                 for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
@@ -853,7 +901,7 @@ public class Model
                 }
             }
         }
-        
+
         /** Whether or not the target has been initialized. */
         protected boolean _tinit;
     }
@@ -863,19 +911,19 @@ public class Model
     {
         public int idx;
         public Colorization[] zations;
-        
+
         public TextureKey (int idx, Colorization[] zations)
         {
             this.idx = idx;
             this.zations = zations;
         }
-        
+
         @Override // documentation inherited
         public int hashCode ()
         {
             return idx ^ Arrays.hashCode(zations);
         }
-        
+
         @Override // documentation inherited
         public boolean equals (Object other)
         {
@@ -883,11 +931,13 @@ public class Model
             return idx == okey.idx && Arrays.equals(zations, okey.zations);
         }
     }
-    
+
     protected BasicContext _ctx;
     protected String _key;
     protected Properties _props;
     protected Animation _ianim;
+    protected ArrayList<ResolutionObserver> _observers =
+        new ArrayList<ResolutionObserver>();
 
     protected HashMap<String,Node> _meshes =
         new HashMap<String,Node>();

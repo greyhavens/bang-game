@@ -56,7 +56,7 @@ public class TrackSprite extends PieceSprite
 
         Track track = (Track)_piece;
         _model = ctx.loadModel("extras/tracks", MODEL_NAMES[track.type]);
-        bindAnimation(ctx, _model.getAnimation("normal"), 0, null);
+        bindAnimation(ctx, _model, "normal", 0, null);
     }
 
     protected BasicContext _ctx;
