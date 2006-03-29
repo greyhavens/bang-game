@@ -1761,7 +1761,7 @@ public class BangManager extends GameManager
         public String checkValid () {
             // sanity check, though I think this bug is fixed
             Object obj = _bangobj.pieces.get(unit.pieceId);
-            if (!(obj instanceof Unit)) {
+            if (obj != null && !(obj instanceof Unit)) {
                 log.warning("Our unit became a non-unit!? [where=" + where() +
                             ", unit=" + unit.info() + ", nunit=" + obj + "].");
                 return INTERNAL_ERROR;
