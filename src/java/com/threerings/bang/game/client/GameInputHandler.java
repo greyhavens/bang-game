@@ -50,6 +50,7 @@ public class GameInputHandler extends GodViewHandler
 
         // set up the starting zoom index
         _camidx = 0;
+        _camdelta = 1;
 
         // reset the camera's orientation
         _camhand.resetAxes();
@@ -110,7 +111,13 @@ public class GameInputHandler extends GodViewHandler
         if (!isEnabled() || _camhand.cameraIsMoving()) {
             return;
         }
-        rollCamera((_camidx + 1) % CAMERA_ANGLES.length, 2*FastMath.PI);
+        int nextidx = (_camidx + _camdelta) % CAMERA_ANGLES.length;
+        if (nextidx == 0) {
+            _camdelta = 1;
+        } else if (nextidx == CAMERA_ANGLES.length-1) {
+            _camdelta = -1;
+        }
+        rollCamera(nextidx, 2*FastMath.PI);
     }
 
     /**
@@ -176,11 +183,11 @@ public class GameInputHandler extends GodViewHandler
         }
     };
 
-    protected int _camidx = -1;
+    protected int _camidx = -1, _camdelta = 0;
     protected HoverUpdater _hoverUpdater;
     
     protected Vector3f _gpoint = new Vector3f();
-    
+
     protected final static float[] CAMERA_ANGLES = {
         FastMath.PI/2, FastMath.PI/3, FastMath.PI/4 };
     protected final static float[] CAMERA_ZOOMS = {
