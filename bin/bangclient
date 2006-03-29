@@ -27,7 +27,12 @@ while [ ! -z "$1" ]; do
             ;;
         
         -tutorial)
-            JARGS="$JARGS -Dtest=tutorial";
+            JARGS="$JARGS -Dtutorial=test";
+            ;;
+        
+        -tutorial=*)
+            TUTORIAL=`echo $1 | sed 's:-tutorial=::g'`;
+            JARGS="$JARGS -Dtutorial=$TUTORIAL";
             ;;
         
         -build)

@@ -384,7 +384,7 @@ public class BangClient extends BasicClient
      * Parses some system properties and starts a quick test game vs the
      * computer. Used by developers.
      */
-    public void startTestGame ()
+    public void startTestGame (boolean tutorial)
     {
         ReportingListener rl =
             new ReportingListener(_ctx, BANG_MSGS, "m.quick_start_failed");
@@ -392,21 +392,22 @@ public class BangClient extends BasicClient
             _ctx.getClient().requireService(PlayerService.class);
 
         // start a tutorial if requested
-        if ("tutorial".equals("test")) {
-            psvc.playTutorial(_ctx.getClient(), "test", rl);
-            return;
-        }
+        if (tutorial) {
+            psvc.playTutorial(_ctx.getClient(),
+                              System.getProperty("tutorial"), rl);
 
-        // otherwise we're starting a test game versus the computer
-        int pcount;
-        try {
-            pcount = Integer.parseInt(System.getProperty("players"));
-        } catch (Throwable t) {
-            pcount = 4;
+        } else {
+            // otherwise we're starting a test game versus the computer
+            int pcount;
+            try {
+                pcount = Integer.parseInt(System.getProperty("players"));
+            } catch (Throwable t) {
+                pcount = 4;
+            }
+            psvc.playComputer(_ctx.getClient(), pcount,
+                              System.getProperty("scenario", "cj"),
+                              System.getProperty("board"), rl);
         }
-        psvc.playComputer(_ctx.getClient(), pcount,
-                          System.getProperty("scenario", "cj"),
-                          System.getProperty("board"), rl);
     }
 
     // documentation inherited from interface SessionObserver
@@ -431,9 +432,11 @@ public class BangClient extends BasicClient
         StatusView.bindKeys(_ctx);
 
         // developers can jump right into a tutorial or game
-        String test = System.getProperty("test");
-        if (test != null) {
-            startTestGame();
+        if (!StringUtil.isBlank(System.getProperty("test"))) {
+            startTestGame(false);
+            return;
+        } else if (!StringUtil.isBlank(System.getProperty("tutorial"))) {
+            startTestGame(true);
             return;
         }
 
