@@ -107,6 +107,16 @@ public class GameInputHandler extends GodViewHandler
      */
     public void rollCamera ()
     {
+        rollCamera(2*FastMath.PI);
+    }
+
+    /**
+     * Moves the camera to the next elevation angle. The camera will smoothly
+     * roll to the appropriate angle at the specified velocity (in radians per
+     * second) rather than changing abruptly.
+     */
+    public void rollCamera (float angvel)
+    {
         if (!isEnabled() || _camhand.cameraIsMoving()) {
             return;
         }
@@ -116,7 +126,7 @@ public class GameInputHandler extends GodViewHandler
         } else if (nextidx == CAMERA_ANGLES.length-1) {
             _camdelta = -1;
         }
-        rollCamera(nextidx, 2*FastMath.PI);
+        rollCamera(nextidx, angvel);
     }
 
     /**
