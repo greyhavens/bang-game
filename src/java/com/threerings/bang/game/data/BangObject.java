@@ -507,6 +507,15 @@ public class BangObject extends GameObject
                 state == IN_PLAY || state == POST_ROUND);
     }
 
+    /**
+     * Returns true only while the game is in the actual moving and shooting
+     * mode, not during round set up or after the round ends.
+     */
+    public boolean isInteractivePlay ()
+    {
+        return (state == IN_PLAY && tick >= 0);
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>avatars</code> field be set to the

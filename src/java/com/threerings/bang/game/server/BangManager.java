@@ -235,7 +235,9 @@ public class BangManager extends GameManager
     {
         String name = event.getName();
         if (name.equals(BangObject.TICK)) {
-            tick(_bangobj.tick);
+            if (_bangobj.tick >= 0) {
+                tick(_bangobj.tick);
+            }
         } else {
             super.attributeChanged(event);
         }
@@ -494,7 +496,8 @@ public class BangManager extends GameManager
         case BangObject.IN_PLAY:
             // queue up the first board tick
             _ticker.schedule(getTickTime(), false);
-            _bangobj.tick = (short)0;
+            // let the players know we're ready to go with the first tick
+            _bangobj.setTick((short)0);
             break;
 
         default:
@@ -537,6 +540,9 @@ public class BangManager extends GameManager
     /** Starts the pre-game buying phase. */
     protected void startRound ()
     {
+        // set the tick to -1 during the pre-round
+        _bangobj.setTick((short)-1);
+
         // find out if the desired board has been loaded, loading it if not
         final BoardRecord brec = _boards[_bangobj.roundId];
         if (brec.data != null) {

@@ -246,19 +246,27 @@ public class BangController extends GameController
     /** Moves the camera to the next zoom level. */
     public void handleAdjustZoom (Object source)
     {
-        ((GameInputHandler)_ctx.getInputHandler()).rollCamera();
+        if (_bangobj.tick >= 0) {
+            ((GameInputHandler)_ctx.getInputHandler()).rollCamera();
+        }
     }
 
     /** Swings the camera around counter-clockwise. */
     public void handleSwingCameraLeft (Object source)
     {
-        ((GameInputHandler)_ctx.getInputHandler()).swingCamera(-FastMath.PI/2);
+        if (_bangobj.tick >= 0) {
+            ((GameInputHandler)_ctx.getInputHandler()).swingCamera(
+                -FastMath.PI/2);
+        }
     }
 
     /** Swings the camera around clockwise. */
     public void handleSwingCameraRight (Object source)
     {
-        ((GameInputHandler)_ctx.getInputHandler()).swingCamera(FastMath.PI/2);
+        if (_bangobj.tick >= 0) {
+            ((GameInputHandler)_ctx.getInputHandler()).swingCamera(
+                FastMath.PI/2);
+        }
     }
 
     /** Toggles the grid in the game. */
@@ -280,7 +288,9 @@ public class BangController extends GameController
      */
     public void handleSelectNextUnit (Object source)
     {
-        if (_bangobj == null || !_bangobj.isInPlay()) {
+        if (_bangobj == null || !_bangobj.isInteractivePlay()) {
+            log.info("Not interactive [state=" + _bangobj.state +
+                     ", tick=" + _bangobj.tick + "]!");
             return;
         }
 
@@ -389,7 +399,7 @@ public class BangController extends GameController
     /** Handles a request to place a card. */
     public void placeCard (int cardId)
     {
-        if (_bangobj == null || _bangobj.state != BangObject.IN_PLAY) {
+        if (_bangobj == null || !_bangobj.isInteractivePlay()) {
             return;
         }
 
@@ -397,7 +407,7 @@ public class BangController extends GameController
         if (card == null) {
             log.warning("Requested to place non-existent card '" +
                         cardId + "'.");
-        } else {
+        } else if (card.owner == _pidx) {
             // instruct the board view to activate placement mode
             _view.view.placeCard(card);
             postEvent(TutorialCodes.CARD_SELECTED);
@@ -469,7 +479,6 @@ public class BangController extends GameController
 
         // when the game "starts", the round is ready to be played, but the
         // game only "ends" once, at the actual end of the game
-        _bangobj.tick = (short)0;
         _view.setPhase(BangObject.IN_PLAY);
     }
 
@@ -541,8 +550,14 @@ public class BangController extends GameController
      */
     protected void readyForRound ()
     {
-        // we re-use the playerReady mechanism to communicate this to the game
-        // manager
+        // reenable the camera controls now that we're fully operational
+        _ctx.getInputHandler().setEnabled(true);
+
+        // and zoom down from the vertical to the middle camera angle
+        ((GameInputHandler)_ctx.getInputHandler()).rollCamera();
+
+        // let the game manager know that our units are in place and we're
+        // fully ready to go
         playerReady();
     }
 

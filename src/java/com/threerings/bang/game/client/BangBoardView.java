@@ -180,12 +180,10 @@ public class BangBoardView extends BoardView
             protected boolean _clearing;
         };
         camhand.moveCamera(_tpath);
-        _ctx.getInputHandler().setEnabled(false);
         camhand.addCameraObserver(new CameraPath.Observer() {
             public boolean pathCompleted (CameraPath path) {
                 // clear the marquee, return the camera to normal, and let the
                 // controller start up the next phase (if we're not leaving)
-                _ctx.getInputHandler().setEnabled(true);
                 GameCameraHandler camhand =
                     (GameCameraHandler)_ctx.getCameraHandler();
                 camhand.setLimitsEnabled(true);
@@ -350,6 +348,11 @@ public class BangBoardView extends BoardView
 
         _pidx = pidx;
         _bangobj.addListener(_ticker);
+
+        // start with the camera controls disabled; the controller will
+        // reenable them when we are completely ready to play (starting units
+        // moved into place and everything)
+        _ctx.getInputHandler().setEnabled(false);
     }
 
     /**
@@ -400,7 +403,7 @@ public class BangBoardView extends BoardView
     {
         // have unit sprites loaded before the first tick run to their
         // positions
-        if (_bangobj.tick != 0 || !(resolved instanceof UnitSprite) ||
+        if (_bangobj.isInteractivePlay() || !(resolved instanceof UnitSprite) ||
             ((UnitSprite)resolved).movingToStart) {
             super.clearResolvingSprite(resolved);
             return;
@@ -621,7 +624,7 @@ public class BangBoardView extends BoardView
         // the board nearest to the player's start position because we're going
         // to run them to the player's starting location once their animations
         // are resolved
-        if (_bangobj.tick == 0) {
+        if (_bangobj.tick < 0) {
             Point corner = getStartCorner(piece.owner);
             sprite.setLocation(_board, corner.x, corner.y);
         }
@@ -682,8 +685,7 @@ public class BangBoardView extends BoardView
     protected void handleLeftPress (int mx, int my)
     {
         // nothing doing if the game is not in play or we're not a player
-        if (_bangobj == null || _bangobj.state != BangObject.IN_PLAY ||
-            _pidx == -1) {
+        if (_pidx == -1 || _bangobj == null || !_bangobj.isInteractivePlay()) {
             return;
         }
 
@@ -856,7 +858,7 @@ public class BangBoardView extends BoardView
     protected void handleRightPress (int mx, int my)
     {
         // nothing doing if the game is not in play
-        if (_bangobj == null || _bangobj.state != BangObject.IN_PLAY) {
+        if (_bangobj == null || !_bangobj.isInteractivePlay()) {
             return;
         }
 
