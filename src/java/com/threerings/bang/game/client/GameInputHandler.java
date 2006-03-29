@@ -125,7 +125,7 @@ public class GameInputHandler extends GodViewHandler
         gcamhand.getGroundPoint(_gpoint);
         gcamhand.panCameraAbs(location.x - _gpoint.x, location.y - _gpoint.y);
         Vector3f end = new Vector3f(_camhand.getCamera().getLocation());
-        _camhand.getCamera().getLocation().set(start);
+        _camhand.setLocation(start);
         _camhand.moveCamera(new PanPath(_camhand, end, 0.25f));
     }
 
