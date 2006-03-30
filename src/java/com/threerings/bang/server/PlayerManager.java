@@ -389,7 +389,7 @@ public class PlayerManager
         config.players = new Name[players];
         config.ais = new BangAI[players];
         config.players[0] = player.getVisibleName();
-        config.teamSize = Match.TEAM_SIZES[config.seats-2];
+        config.teamSize = Match.TEAM_SIZES[players-2];
         for (int ii = 1; ii < players; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names);
             config.players[ii] = ai.handle;
