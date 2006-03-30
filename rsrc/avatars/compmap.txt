@@ -1,4 +1,4 @@
-256
+257
 female/clothing_back := bodice := 174
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
@@ -119,6 +119,7 @@ female/mouth := serious := 119
 female/mouth := sly := 209
 female/mouth := smirk := 120
 female/mouth := tiny := 121
+female/nose := hook := 257
 female/nose := line := 122
 female/nose := normal := 123
 female/nose := round := 124

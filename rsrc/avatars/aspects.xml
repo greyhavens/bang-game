@@ -131,7 +131,7 @@
   </class>
 
   <class name="female/mouth">
-    <aspect name="chuckling" townId="frontier_town" scrip="500" coins="1" colors="skin"/>
+    <aspect name="chuckling" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="content" townId="frontier_town" scrip="250" coins="1"/>
     <aspect name="grin" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="jolie" townId="frontier_town" scrip="750" coins="1"/>
