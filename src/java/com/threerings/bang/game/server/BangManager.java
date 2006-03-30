@@ -1625,18 +1625,19 @@ public class BangManager extends GameManager
             }
 
             public void handleResult () {
-                for (int pidx = 0; pidx < awards.length; pidx++) {
+                for (int ii = 0; ii < awards.length; ii++) {
+                    int pidx = awards[ii].pidx;
                     PlayerObject player = _precords[pidx].user;
                     if (player == null || !player.isActive()) {
                         // no need to update their player distributed object if
                         // they've already logged off
                         continue;
                     }
-                    if (awards[pidx].cashEarned > 0) {
-                        player.setScrip(player.scrip + awards[pidx].cashEarned);
+                    if (awards[ii].cashEarned > 0) {
+                        player.setScrip(player.scrip + awards[ii].cashEarned);
                     }
-                    if (awards[pidx].badge != null) {
-                        player.addToInventory(awards[pidx].badge);
+                    if (awards[ii].badge != null) {
+                        player.addToInventory(awards[ii].badge);
                     }
                     for (Rating rating : _precords[pidx].nratings.values()) {
                         if (player.ratings.containsKey(rating.scenario)) {
