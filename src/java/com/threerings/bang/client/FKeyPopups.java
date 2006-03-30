@@ -103,6 +103,12 @@ public class FKeyPopups
             return;
         }
 
+        // don't auto-replace a never clear popup
+        if (_popped != null && _popped.isAdded() &&
+            _popped.getLayer() == BangCodes.NEVER_CLEAR_LAYER) {
+            return;
+        }
+
         // otherwise pop up the dialog associated with they key they pressed
         // (clearing any other dialog before doing so)
         BDecoratedWindow popup = null;
@@ -167,6 +173,7 @@ public class FKeyPopups
         final BDecoratedWindow bug = createDialogWindow("m.bug_title");
         ((GroupLayout)bug.getLayoutManager()).setOffAxisPolicy(
             GroupLayout.STRETCH);
+        bug.setLayer(BangCodes.NEVER_CLEAR_LAYER);
         bug.add(new BLabel(_msgs.get("m.bug_intro"), "dialog_text_left"));
         final BTextField descrip = new BTextField("");
         bug.add(descrip, GroupLayout.FIXED);

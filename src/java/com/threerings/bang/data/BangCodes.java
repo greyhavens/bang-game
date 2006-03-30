@@ -58,6 +58,10 @@ public interface BangCodes extends InvocationCodes
     /** The maximum number of pardners you can have. */
     public static final int MAX_PARDNERS = 75;
 
+    /** The layer for popups that should never be auto cleared and should be
+     * hovered above everything (like the bug report popup). */
+    public static final int NEVER_CLEAR_LAYER = 10;
+
     /** Enumerates the identifiers for our tutorials and the order in which
      * they should be displayed and completed. */
     public static final String[] TUTORIALS = {

@@ -346,8 +346,12 @@ public class BangClient extends BasicClient
      */
     public void clearPopups (boolean animate)
     {
-        while (_popups.size() > 0) {
-            clearPopup(_popups.get(0), animate);
+        BWindow[] popups = _popups.toArray(new BWindow[_popups.size()]);
+        for (int ii = 0; ii < popups.length; ii++) {
+            // don't auto clear certain popups
+            if (popups[ii].getLayer() < BangCodes.NEVER_CLEAR_LAYER) {
+                clearPopup(popups[ii], animate);
+            }
         }
     }
 
