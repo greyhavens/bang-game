@@ -289,8 +289,6 @@ public class BangController extends GameController
     public void handleSelectNextUnit (Object source)
     {
         if (_bangobj == null || !_bangobj.isInteractivePlay()) {
-            log.info("Not interactive [state=" + _bangobj.state +
-                     ", tick=" + _bangobj.tick + "]!");
             return;
         }
 
