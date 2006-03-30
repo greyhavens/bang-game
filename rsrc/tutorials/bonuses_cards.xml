@@ -9,6 +9,7 @@
   <!-- add two gunslingers -->
   <add_unit id="1000" type="gunslinger" location="16,16" owner="0"/>
   <add_unit id="2000" type="gunslinger" location="16,18" owner="1"/>
+  <center_on_unit id="1000"/>
 
   <!-- have the player shoot one with the other -->
   <text message="shoot_gunslinger" step="2"/>
