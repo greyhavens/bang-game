@@ -745,6 +745,8 @@ round_timer {
 
 overlay_chat {
   font: "Dom Casual" plain 20;
+  text-effect: shadow;
+  effect-color: #000000;
 }
 
 tutorial_title {
