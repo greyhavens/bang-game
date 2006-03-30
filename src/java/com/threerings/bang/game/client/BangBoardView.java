@@ -756,7 +756,8 @@ public class BangBoardView extends BoardView
         // reduce the highlighted move tiles to just the selected tile
         PointSet moves = new PointSet();
         moves.add(tx, ty);
-        highlightTiles(moves, _selection.isFlyer());
+        highlightTiles(moves, _selection.isFlyer(),
+                       getHighlightColor(_selection));
 
         // display our potential attacks
         PointSet attacks = new PointSet();
@@ -921,7 +922,7 @@ public class BangBoardView extends BoardView
         _attackSet.clear();
         pruneAttackSet(_moveSet, _moveSet, _attackSet);
         pruneAttackSet(attacks, _moveSet, _attackSet);
-        highlightTiles(_moveSet, piece.isFlyer());
+        highlightTiles(_moveSet, piece.isFlyer(), getHighlightColor(piece));
 
         // report that the user took an action (for tutorials)
         _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
@@ -1036,6 +1037,16 @@ public class BangBoardView extends BoardView
         // clear out any pending action
         _action = null;
         clearAttackSet();
+    }
+
+    protected ColorRGBA getHighlightColor (Piece piece)
+    {
+        if (piece instanceof Unit &&
+            ((Unit)piece).getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            return BMOVE_HIGHLIGHT_COLOR;
+        } else {
+            return MOVEMENT_HIGHLIGHT_COLOR;
+        }
     }
 
     protected void updatePlacingCard (int tx, int ty)
@@ -1253,6 +1264,10 @@ public class BangBoardView extends BoardView
     /** Tracks all pending advance orders. */
     protected HashMap<Integer,AdvanceOrder> _orders =
         new HashMap<Integer,AdvanceOrder>();
+
+    /** The color of BigShot movement highlights. */
+    protected static final ColorRGBA BMOVE_HIGHLIGHT_COLOR =
+        new ColorRGBA(0.5f, 1f, 0f, 0.5f);
 
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
