@@ -5,6 +5,7 @@ package com.threerings.bang.saloon.client;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
@@ -49,8 +50,11 @@ public class SaloonView extends ShopView
 
         // add a test game button for developer testing
         if (ctx.getUserObject().tokens.isAdmin()) {
-            add(new BButton(_msgs.get("m.test_game"), _ctrl,
-                            SaloonController.TEST_GAME), new Point(595, 334));
+            BButton btn;
+            add(btn = new BButton(
+                    new ImageIcon(ctx.loadImage("ui/icons/dice.png")),
+                    _ctrl, SaloonController.TEST_GAME), new Point(895, 274));
+            btn.setStyleClass("arrow_button");
         }
     }
 
