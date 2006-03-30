@@ -52,7 +52,17 @@ public class OverlayChatView extends BWindow
         for (int ii = 0; ii < _history.length; ii++) {
             add(_history[ii] = new MessageLabel());
         }
-        add(_input = new BTextField());
+        add(_input = new BTextField() {
+            protected void gainedFocus () {
+                super.gainedFocus();
+                setBackground(BComponent.DEFAULT, _inputbg);
+            }
+            protected void lostFocus () {
+                super.lostFocus();
+                setBackground(BComponent.DEFAULT, _blankbg);
+                setText("");
+            }
+        });
 
         _input.addListener(new ActionListener() {
             public void actionPerformed (ActionEvent event) {
@@ -95,7 +105,6 @@ public class OverlayChatView extends BWindow
     public void requestFocus ()
     {
         _input.requestFocus();
-        _input.setBackground(BComponent.DEFAULT, _inputbg);
     }
 
     // documentation inherited from interface ChatDisplay
@@ -176,7 +185,6 @@ public class OverlayChatView extends BWindow
         String errmsg = _chatdtr.requestChat(null, text, true);
         if (errmsg.equals(ChatCodes.SUCCESS)) {
             _ctx.getRootNode().requestFocus(null);
-            _input.setBackground(BComponent.DEFAULT, _blankbg);
             return true;
 
         } else {
