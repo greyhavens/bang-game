@@ -71,9 +71,9 @@ public class RepairViz extends ParticleEffectViz
             _trenderer.setBackgroundColor(ColorRGBA.black);
             _trenderer.setupTexture(_texture = new Texture());
             
-            TextureState tstate = _ctx.getRenderer().createTextureState();
-            tstate.setTexture(_texture);
-            setRenderState(tstate);
+            _tstate = _ctx.getRenderer().createTextureState();
+            _tstate.setTexture(_texture);
+            setRenderState(_tstate);
             setRenderState(RenderUtil.addAlpha);
             setRenderQueueMode(Renderer.QUEUE_ORTHO);
             setLightCombineMode(LightState.OFF);
@@ -103,6 +103,7 @@ public class RepairViz extends ParticleEffectViz
             if ((_elapsed += time) > GLOW_DURATION) {
                 _view.getPieceNode().detachChild(this);
                 _trenderer.cleanup();
+                _tstate.deleteAll();
                 return;
             }
 
@@ -173,6 +174,7 @@ public class RepairViz extends ParticleEffectViz
         protected Quad[] _panes;
         protected TextureRenderer _trenderer;
         protected Texture _texture;
+        protected TextureState _tstate;
         protected PieceSprite _target;
         protected float _elapsed;
         
