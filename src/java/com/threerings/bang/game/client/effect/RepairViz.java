@@ -65,11 +65,12 @@ public class RepairViz extends ParticleEffectViz
         {
             super("glow");
             
-            _trenderer = _ctx.getDisplay().createTextureRenderer(TEXTURE_SIZE,
-                TEXTURE_SIZE, true, false, false, false,
-                TextureRenderer.RENDER_TEXTURE_2D, 0);
+            _trenderer = RenderUtil.createTextureRenderer(_ctx, TEXTURE_SIZE,
+                TEXTURE_SIZE);
             _trenderer.setBackgroundColor(ColorRGBA.black);
-            _trenderer.setupTexture(_texture = new Texture());
+            _texture = new Texture();
+            _texture.setRTTSource(Texture.RTT_SOURCE_RGB);
+            _trenderer.setupTexture(_texture);
             
             _tstate = _ctx.getRenderer().createTextureState();
             _tstate.setTexture(_texture);
@@ -109,12 +110,11 @@ public class RepairViz extends ParticleEffectViz
 
             // if the target is on screen, determine its location and size in
             // screen space
-            AbstractCamera rcam =
-                (AbstractCamera)_ctx.getRenderer().getCamera();
-            BoundingVolume bounds = _target.getWorldBound();
-            if (rcam.contains(bounds) == Camera.OUTSIDE_FRUSTUM) {
+            if (_target.getLastFrustumIntersection() ==
+                    Camera.OUTSIDE_FRUSTUM) {
                 return;
             }
+            BoundingVolume bounds = _target.getWorldBound();
             bounds.getCenter(_tmp);
             DisplaySystem display = _ctx.getDisplay();
             display.getScreenCoordinates(_tmp, _loc);
@@ -128,6 +128,7 @@ public class RepairViz extends ParticleEffectViz
             } else if (bounds instanceof OrientedBoundingBox) {
                 radius = ((OrientedBoundingBox)bounds).getExtent().length();
             }
+            Camera rcam = _ctx.getCameraHandler().getCamera();
             _tmp.scaleAdd(-radius, rcam.getLeft(), _tmp);
             display.getScreenCoordinates(_tmp, _extent);
             radius = _extent.x - _loc.x;

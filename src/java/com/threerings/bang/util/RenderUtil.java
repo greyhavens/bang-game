@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.Pbuffer;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -421,6 +422,25 @@ public class RenderUtil
         return _shadtex;
     }
 
+    /**
+     * Creates and returns a texture renderer for a target with the given
+     * dimensions.
+     */
+    public static TextureRenderer createTextureRenderer (BasicContext ctx,
+        int width, int height)
+    {
+        // if the video card supports rendering straight to texture, use
+        // JME's texture renderer; otherwise, render to the back buffer
+        int caps = Pbuffer.getCapabilities();
+        if ((caps & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0) {
+            return ctx.getDisplay().createTextureRenderer(width, height, true,
+                false, false, false, TextureRenderer.RENDER_TEXTURE_2D, 0);
+            
+        } else {
+            return new BackTextureRenderer(ctx, width, height);
+        }
+    }
+    
     /**
      * Creates a JME {@link ColorRGBA} object with alpha equal to one from a
      * packed RGB value.
