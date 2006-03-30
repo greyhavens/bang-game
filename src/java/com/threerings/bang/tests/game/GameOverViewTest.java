@@ -11,6 +11,7 @@ import com.jmex.bui.BWindow;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.util.Name;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
@@ -21,6 +22,7 @@ import com.threerings.bang.tests.TestApp;
 
 import com.threerings.bang.game.client.GameOverView;
 import com.threerings.bang.game.data.Award;
+import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangObject;
 
 /**
@@ -54,13 +56,16 @@ public class GameOverViewTest extends TestApp
             user.handle,
             new Name("Elvis"),
         };
+        bangobj.avatars = new int[bangobj.players.length][];
         bangobj.awards = new Award[bangobj.players.length];
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
-            bangobj.awards[ii].badge = Badge.Type.IRON_HORSE.newBadge();
+            bangobj.awards[ii].badge = Badge.Type.DISTANCE_MOVED_1.newBadge();
+            bangobj.avatars[ii] = BangAI.getAvatarPrint(
+                RandomUtil.getInt(100) > 50);
         }
 
         return new GameOverView(_ctx, null, bangobj, user);

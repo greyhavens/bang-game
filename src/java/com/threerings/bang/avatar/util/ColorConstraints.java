@@ -153,6 +153,7 @@ public class ColorConstraints
         preds.put("red", new Normal());
         preds.put("white", new Normal());
 
+        // note: additional badge rewards must be noted in Badge.java
         preds.put("blue", new HoldsBadge(Badge.Type.UNITS_KILLED_2));
         preds.put("green", new HoldsBadge(Badge.Type.SHOTS_FIRED_1));
         preds.put("navyBlue", new HoldsBadge(Badge.Type.GAMES_PLAYED_3));
@@ -180,6 +181,7 @@ public class ColorConstraints
         preds.put("lime", new Normal());
         preds.put("sky", new Normal());
 
+        // note: additional badge rewards must be noted in Badge.java
         preds.put("violet", new HoldsBadge(Badge.Type.GAMES_PLAYED_1));
         preds.put("orange", new HoldsBadge(Badge.Type.CASH_EARNED_1));
         preds.put("purple", new HoldsBadge(Badge.Type.BONUSES_COLLECTED_2));
@@ -232,6 +234,7 @@ public class ColorConstraints
         preds.put("olive", new Normal());
         preds.put("purple", new Normal());
 
+        // note: additional badge rewards must be noted in Badge.java
         preds.put("black", new HoldsBadge(Badge.Type.CONSEC_WINS_2));
         preds.put("leather", new HoldsBadge(Badge.Type.CARDS_PLAYED_1));
         preds.put("orange", new HoldsBadge(Badge.Type.CARDS_PLAYED_2));

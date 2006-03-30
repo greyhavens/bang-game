@@ -69,10 +69,17 @@ public class BangAI extends GameAI
         }
 
         // pick a random avatar finger print
-        ai.avatar = (int[])RandomUtil.pickRandom(
-            AVATAR_PRINTS[ai.isMale ? 0 : 1]);
+        ai.avatar = getAvatarPrint(ai.isMale);
 
         return ai;
+    }
+
+    /**
+     * Returns a random AI avatar fingerprint.
+     */
+    public static int[] getAvatarPrint (boolean isMale)
+    {
+        return (int[])RandomUtil.pickRandom(AVATAR_PRINTS[isMale ? 0 : 1]);
     }
 
     protected static final int[][][] AVATAR_PRINTS = {

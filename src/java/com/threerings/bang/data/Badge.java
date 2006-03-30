@@ -5,10 +5,14 @@ package com.threerings.bang.data;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
+import com.threerings.util.MessageBundle;
+
+import com.threerings.bang.avatar.data.AvatarCodes;
 
 import com.threerings.bang.client.BadgeIcon;
 import com.threerings.bang.client.ItemIcon;
@@ -437,6 +441,18 @@ public class Badge extends Item
     }
 
     /**
+     * Returns the reward associated with this badge or null if the badge does
+     * not confer any reward (other than the joy of collecting it).
+     */
+    public String getReward ()
+    {
+        if (_rewards.size() == 0) {
+            registerRewards();
+        }
+        return _rewards.get(getType());
+    }
+
+    /**
      * Returns the integer code to which this badge's type maps.
      */
     public int getCode ()
@@ -465,6 +481,69 @@ public class Badge extends Item
         buf.append(", type=").append(getType());
     }
 
+    /**
+     * Registers a message used to report the reward associated with obtaining
+     * the specified type of badge.
+     *
+     * @param type the type of badge with which the reward is associated.
+     * @param message the translatable string used to report the reward to the
+     * player when they earn the badge.
+     */
+    protected static void registerReward (Type type, String message)
+    {
+        String old = _rewards.put(type, message);
+        if (old != null) {
+            log.warning("Badge registered for duplicate rewards " +
+                        "[type=" + type + ", old=" + old +
+                        ", new=" + message + "].");
+        }
+    }
+
+    /**
+     * Registers all badge awards. We have to do this on demand rather than in
+     * a static initializer because of a twisty maze of already interdependent
+     * static initializers.
+     */
+    protected static void registerRewards ()
+    {
+        String key = "m.hair_color_enabled", msg;
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_blue");
+        registerReward(Type.UNITS_KILLED_2, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_green");
+        registerReward(Type.SHOTS_FIRED_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_navyBlue");
+        registerReward(Type.GAMES_PLAYED_3, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_orange");
+        registerReward(Type.DISTANCE_MOVED_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_purple");
+        registerReward(Type.CONSEC_WINS_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_violet");
+        registerReward(Type.GAMES_PLAYED_2, MessageBundle.compose(key, msg));
+
+        key = "m.eye_color_enabled";
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_violet");
+        registerReward(Type.GAMES_PLAYED_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_orange");
+        registerReward(Type.CASH_EARNED_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_purple");
+        registerReward(Type.BONUSES_COLLECTED_2,
+                       MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_red");
+        registerReward(Type.UNITS_KILLED_3, MessageBundle.compose(key, msg));
+
+        key = "m.duds_color_enabled";
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_black");
+        registerReward(Type.CONSEC_WINS_2, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_leather");
+        registerReward(Type.CARDS_PLAYED_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_orange");
+        registerReward(Type.CARDS_PLAYED_2, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_pink");
+        registerReward(Type.LOOKS_BOUGHT_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_violet");
+        registerReward(Type.DUDS_BOUGHT_2, MessageBundle.compose(key, msg));
+    }
+
     /** The unique code for the type of this badge. */
     protected int _code;
 
@@ -476,4 +555,7 @@ public class Badge extends Item
 
     /** Used by {@link #checkQualifies}. */
     protected static ArrayIntSet _badgeCodes = new ArrayIntSet();
+
+    /** Used to report rewards associated with badges. */
+    protected static HashMap<Type,String> _rewards = new HashMap<Type,String>();
 }

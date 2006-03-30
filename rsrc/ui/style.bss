@@ -867,6 +867,12 @@ endgame_smallcash {
   font: "Dom Casual" plain 24;
 }
 
+endgame_reward {
+  font: "Helvetica" plain 12;
+  text-align: center;
+  color: #442801;
+}
+
 //
 // Shared Shop Styles
 

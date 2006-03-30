@@ -175,6 +175,12 @@ public class GameOverView extends BDecoratedWindow
                 bcont.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
                 bcont.add(new BadgeIcon().setItem(ctx, award.badge),
                           BorderLayout.CENTER);
+                String reward = award.badge.getReward();
+                if (reward != null) {
+                    txt = _ctx.xlate(BangCodes.BADGE_MSGS, reward);
+                    bcont.add(new BLabel(txt, "endgame_reward"),
+                              BorderLayout.SOUTH);
+                }
                 row.add(bcont);
             }
         }
