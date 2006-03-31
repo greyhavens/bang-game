@@ -1368,12 +1368,7 @@ public class TerrainNode extends Node
                     RenderUtil.createTextureState(_ctx, ground).load(0);
                 }
                 ground = ground.createSimpleClone();
-                ground.setApply(Texture.AM_COMBINE);
-                ground.setCombineFuncAlpha(Texture.ACF_REPLACE);
-                ground.setCombineSrc0Alpha(Texture.ACS_PREVIOUS);
-                ground.setCombineFuncRGB(Texture.ACF_MODULATE);
-                ground.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-                ground.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
+                ground.setApply(Texture.AM_MODULATE);
                 tstate.setTexture(ground, 1);
                 tstates.add(tstate);
                 splat.setRenderState(tstate);
@@ -1503,8 +1498,7 @@ public class TerrainNode extends Node
 
                     byte alpha = (byte)(getTerrainAlpha(code,
                         bounds.x + x * step, bounds.y + y * step)*255);
-                    abuf.putInt(idx, (alpha << 24) | (alpha << 16) |
-                        (alpha << 8) | alpha);
+                    abuf.putInt(idx, 0xFFFFFF00 | alpha);
                 }
             }
 
@@ -1517,9 +1511,7 @@ public class TerrainNode extends Node
             texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
 
             // and the combination parameters
-            texture.setApply(Texture.AM_COMBINE);
-            texture.setCombineFuncAlpha(Texture.ACF_REPLACE);
-            texture.setCombineSrc0Alpha(Texture.ACS_TEXTURE);
+            texture.setApply(Texture.AM_MODULATE);
 
             return texture;
         }
