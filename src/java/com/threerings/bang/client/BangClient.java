@@ -162,6 +162,7 @@ public class BangClient extends BasicClient
             return;
         }
 
+        log.info("Submitting bug report '" + descrip + "'.");
         String[] files = { BangClient.localDataDir("bang.log") };
         ResultListener rl = new ResultListener() {
             public void requestCompleted (Object result) {
