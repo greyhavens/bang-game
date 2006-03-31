@@ -95,6 +95,9 @@ public class MatchView extends BContainer
             /* ChatView() */ {
                 _text.setStyleClass("match_chat_text");
             }
+            protected boolean handlesType (String localType) {
+                return "match_chat".equals(localType);
+            }
         };
         ((BorderLayout)_chat.getLayoutManager()).setGaps(2, 6);
         _chat.setEnabled(false);
