@@ -21,6 +21,7 @@ import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -58,6 +59,7 @@ public class WreckViz extends ParticleEffectViz
         for (int i = 0; i < _wreckage.length; i++) {
             _wreckage[i].bind((String)RandomUtil.pickRandom(wtypes));
             target.attachChild(_wreckage[i]);
+            _wreckage[i].updateRenderState();
         }
         
         // display the wrapped effect viz
@@ -95,12 +97,10 @@ public class WreckViz extends ParticleEffectViz
             // initialize the render state for transparency control
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             setRenderState(RenderUtil.blendAlpha);
-            _mstate = _ctx.getRenderer().createMaterialState();
-            _mstate.setDiffuse(new ColorRGBA(ColorRGBA.white));
-            _mstate.setAmbient(new ColorRGBA(ColorRGBA.white));
-            setRenderState(RenderUtil.createColorMaterialState(_mstate,
-                false));
-            updateRenderState();
+            _mstate = new ColorMaterialState();
+            _mstate.getDiffuse().set(ColorRGBA.white);
+            _mstate.getAmbient().set(ColorRGBA.white);
+            setRenderState(_mstate);
             
             // fire the piece in a random direction
             float azimuth = RandomUtil.getFloat(FastMath.TWO_PI),

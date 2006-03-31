@@ -37,6 +37,7 @@ import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.WaveUtil;
 
@@ -56,7 +57,7 @@ public class WaterNode extends Node
         setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         setRenderState(RenderUtil.blendAlpha);
         setRenderState(RenderUtil.backCull);
-        setRenderState(RenderUtil.lequalZBuf);
+        setRenderState(RenderUtil.overlayZBuf);
         setRenderState(_smtstate = _ctx.getRenderer().createTextureState());
     }
     

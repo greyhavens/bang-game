@@ -88,6 +88,7 @@ import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -171,11 +172,10 @@ public class BoardView extends BComponent
         _node.setLightCombineMode(LightState.REPLACE);
 
         // default states
-        MaterialState mstate = ctx.getRenderer().createMaterialState();
-        mstate.setDiffuse(ColorRGBA.white);
-        mstate.setAmbient(ColorRGBA.white);
-        _node.setRenderState(RenderUtil.createColorMaterialState(mstate,
-            false));
+        MaterialState mstate = new ColorMaterialState();
+        mstate.getDiffuse().set(ColorRGBA.white);
+        mstate.getAmbient().set(ColorRGBA.white);
+        _node.setRenderState(mstate);
         _node.setRenderState(RenderUtil.lequalZBuf);
         _node.setRenderState(RenderUtil.opaqueAlpha);
         _node.setTextureCombineMode(TextureState.REPLACE);

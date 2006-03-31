@@ -39,6 +39,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -383,11 +384,10 @@ public class MobileSprite extends PieceSprite
             _nextAction = REMOVAL_DURATION;
 
             setRenderState(RenderUtil.blendAlpha);
-            final MaterialState mstate =
-                _ctx.getRenderer().createMaterialState();
+            final MaterialState mstate = new ColorMaterialState();
             final ColorRGBA color = new ColorRGBA(ColorRGBA.white);
             mstate.setAmbient(color);
-            setRenderState(RenderUtil.createColorMaterialState(mstate, false));
+            setRenderState(mstate);
             _shadow.setDefaultColor(color);
 
             Vector3f start = new Vector3f(localTranslation),

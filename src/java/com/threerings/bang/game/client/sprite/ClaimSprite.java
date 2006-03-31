@@ -9,6 +9,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.geom.BufferUtils;
 
@@ -79,6 +80,7 @@ public class ClaimSprite extends PropSprite
         _counter.setRenderState(RenderUtil.blendAlpha);
         _counter.setRenderState(RenderUtil.overlayZBuf);
         _counter.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        _counter.setLightCombineMode(LightState.OFF);
         BillboardNode bbn = new BillboardNode("cbillboard");
         bbn.attachChild(_counter);
         // TODO: account properly for the height of the claim model

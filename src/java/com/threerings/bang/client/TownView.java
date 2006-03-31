@@ -57,6 +57,7 @@ import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.*;
@@ -190,9 +191,10 @@ public class TownView extends BWindow
                 }
             });
 
-            MaterialState mstate = ctx.getRenderer().createMaterialState();
-            mstate.setEmissive(ColorRGBA.white);
-            _hstate = RenderUtil.createColorMaterialState(mstate, false);
+            _hstate = new ColorMaterialState();
+            _hstate.getAmbient().set(ColorRGBA.white);
+            _hstate.getDiffuse().set(ColorRGBA.white);
+            _hstate.getEmissive().set(ColorRGBA.white);
             
             BangBootstrapData bbd =
                 (BangBootstrapData)_bctx.getClient().getBootstrapData();

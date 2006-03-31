@@ -51,6 +51,7 @@ import com.threerings.media.image.ColorUtil;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -82,7 +83,6 @@ public class TerrainNode extends Node
             setLightCombineMode(LightState.OFF);
             setRenderState(RenderUtil.lequalZBuf);
 
-            updateRenderState();
             update();
         }
 
@@ -140,6 +140,13 @@ public class TerrainNode extends Node
                 getHeightfieldHeight(v.x, v.y) + 0.1f));
         }
         
+        @Override // documentation inherited
+        protected void setParent (Node parent)
+        {
+            super.setParent(parent);
+            updateRenderState();
+        }
+    
         protected ArrayList<Vector3f> _verts = new ArrayList<Vector3f>();
         protected Vector2f _v1 = new Vector2f(), _v2 = new Vector2f(),
             _between = new Vector2f();
@@ -180,7 +187,6 @@ public class TerrainNode extends Node
             setRenderState(RenderUtil.overlayZBuf);
             setRenderState(RenderUtil.blendAlpha);
             setRenderState(RenderUtil.backCull);
-            updateRenderState();
 
             // set the vertices, which change according to position and terrain
             if (_onTile) {
@@ -344,6 +350,13 @@ public class TerrainNode extends Node
             }
         }
 
+        @Override // documentation inherited
+        protected void setParent (Node parent)
+        {
+            super.setParent(parent);
+            updateRenderState();
+        }
+    
         /** If true, the highlight will always be aligned with a tile. */
         protected boolean _onTile;
 
@@ -367,11 +380,11 @@ public class TerrainNode extends Node
         setRenderState(RenderUtil.backCull);
         setRenderQueueMode(Renderer.QUEUE_SKIP);
         
-        MaterialState mstate = ctx.getRenderer().createMaterialState();
-        mstate.setAmbient(ColorRGBA.white);
-        setRenderState(RenderUtil.createColorMaterialState(mstate, true));
+        MaterialState mstate = new ColorMaterialState(GL11.GL_DIFFUSE);
+        mstate.getAmbient().set(ColorRGBA.white);
+        setRenderState(mstate);
     }
-
+    
     /**
      * Initializes the terrain geometry using terrain data from the given board
      * and saves the board reference for later updates.
