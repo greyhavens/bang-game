@@ -166,10 +166,7 @@ public class WaterNode extends Node
         texture.setEnvironmentalMapMode(Texture.EM_SPHERE);
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-        texture.setApply(Texture.AM_COMBINE);
-        texture.setCombineFuncRGB(Texture.ACF_ADD);
-        texture.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
-        texture.setCombineSrc1RGB(Texture.ACS_TEXTURE);
+        texture.setApply(Texture.AM_REPLACE);
         _smtstate.setTexture(texture);
     }
     

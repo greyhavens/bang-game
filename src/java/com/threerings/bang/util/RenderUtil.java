@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.Pbuffer;
 
 import com.jme.image.Image;
@@ -461,6 +462,9 @@ public class RenderUtil
                 lstate.apply();
                 GL11.glLightModeli(GL11.GL_LIGHT_MODEL_LOCAL_VIEWER,
                     specular ? 1 : 0);
+                GL11.glLightModeli(GL12.GL_LIGHT_MODEL_COLOR_CONTROL,
+                    specular ? GL12.GL_SEPARATE_SPECULAR_COLOR :
+                        GL12.GL_SINGLE_COLOR);
             }
             public RenderState extract (Stack stack, Spatial spat) {
                 return (spat.getLightCombineMode() == LightState.OFF) ?
