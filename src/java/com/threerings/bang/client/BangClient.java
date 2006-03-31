@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import org.lwjgl.opengl.Display;
+
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
@@ -148,7 +150,10 @@ public class BangClient extends BasicClient
             report.summary = descrip;
         }
         report.version = String.valueOf(DeploymentConfig.getVersion());
-        report.setAttribute("Handle", user.handle.toString());
+        report.setAttribute("Handle", "" + user.handle);
+        report.setAttribute("Driver", Display.getAdapter());
+        report.setAttribute("Driver Version", Display.getVersion());
+        report.setAttribute("Display Mode", "" + Display.getDisplayMode());
 
         // and send it along with our debug logs
         URL submitURL = DeploymentConfig.getBugSubmitURL();
