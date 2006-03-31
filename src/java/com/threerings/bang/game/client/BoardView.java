@@ -325,6 +325,9 @@ public class BoardView extends BComponent
      */
     public void toggleGrid (boolean persistent)
     {
+        if (_board == null) { // no freaky outy
+            return;
+        }
         if (_grid == null || _grid.getParent() == null) {
             updateGrid();
             _node.attachChild(_grid);
