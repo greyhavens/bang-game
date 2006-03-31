@@ -1138,8 +1138,10 @@ public class BangBoardView extends BoardView
     protected void applyEffect (Effect effect)
     {
         EffectHandler handler = effect.createHandler(_bangobj);
-        handler.init(_ctx, _bangobj, this, _sounds, effect);
-        executeAction(handler);
+        if (handler != null) {
+            handler.init(_ctx, _bangobj, this, _sounds, effect);
+            executeAction(handler);
+        }
     }
 
     /** Used to visualize advance orders. */

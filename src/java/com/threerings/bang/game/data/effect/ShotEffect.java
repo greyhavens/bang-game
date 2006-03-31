@@ -186,9 +186,13 @@ public class ShotEffect extends Effect
     public EffectHandler createHandler (BangObject bangobj)
     {
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
+        if (shooter == null) {
+            log.warning("Missing shooter for shot effect! " +
+                        "[effect=" + this + "].");
+            return null;
+        }
         if (shooter.getConfig().mode == UnitConfig.Mode.RANGE) {
             return new BallisticShotHandler();
-            
         } else {
             return new InstantShotHandler();
         }
