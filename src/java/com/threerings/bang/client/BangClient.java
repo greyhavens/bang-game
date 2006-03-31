@@ -629,9 +629,7 @@ public class BangClient extends BasicClient
         }
 
         public void clearPlaceView (PlaceView view) {
-            // while testing, reload the stylesheet every time we switch the
-            // place view
-            BangUI.reloadStylesheet();
+            // nada
         }
 
         public BangClient getBangClient() {

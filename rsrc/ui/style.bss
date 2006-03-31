@@ -952,7 +952,7 @@ news_mastlabel {
 }
 
 news_contents {
-  padding: 20 0;
+  padding: 15 0 10 0;
 }
 
 news_buttons {

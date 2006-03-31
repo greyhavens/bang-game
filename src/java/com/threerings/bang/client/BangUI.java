@@ -153,11 +153,8 @@ public class BangUI
             }
         };
         try {
-// TEMP: while testing load the stylesheet from the classpath
-//             InputStream is =
-//                 _ctx.getResourceManager().getResource("ui/style.bss");
-            InputStream is = BangUI.class.getClassLoader().getResourceAsStream(
-                "rsrc/ui/style.bss");
+            InputStream is =
+                _ctx.getResourceManager().getResource("ui/style.bss");
             stylesheet =
                 new BStyleSheet(new InputStreamReader(is, "UTF-8"), rp);
         } catch (IOException ioe) {
