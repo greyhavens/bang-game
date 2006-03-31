@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+# Web crawler control file
+
+User-agent: *
+Disallow: /client/
+Disallow: /devclient/
+Disallow: /editor/
+Disallow: /images/
+Disallow: /source/
