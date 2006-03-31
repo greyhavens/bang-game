@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import org.lwjgl.opengl.GL11;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.intersection.PickData;
@@ -161,14 +163,16 @@ public class BoardView extends BComponent
         // create our top-level node
         _node = new Node("board_view");
 
-        // let there be lights
+        // let there be lights (the wrapped light state disables the changes
+        // made by the water state)
         _lstate = _ctx.getRenderer().createLightState();
         _lights = new DirectionalLight[BangBoard.NUM_LIGHTS];
         for (int i = 0; i < _lights.length; i++) {
             _lstate.attach(_lights[i] = new DirectionalLight());
             _lights[i].setEnabled(true);
         }
-        _node.setRenderState(_lstate);
+        _node.setRenderState(RenderUtil.createSpecularLightState(_lstate,
+            false));
         _node.setLightCombineMode(LightState.REPLACE);
 
         // default states
@@ -188,7 +192,7 @@ public class BoardView extends BComponent
         Node bnode = new Node("board");
         _node.attachChild(bnode);
         bnode.attachChild(_tnode = createTerrainNode(ctx));
-        bnode.attachChild(_wnode = new WaterNode(ctx));
+        bnode.attachChild(_wnode = new WaterNode(ctx, _lstate));
 
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
@@ -972,8 +976,9 @@ public class BoardView extends BComponent
 
         float[] drgb = new Color(dcolor).getRGBColorComponents(null),
             argb = new Color(acolor).getRGBColorComponents(null);
-        _lights[idx].setDiffuse(new ColorRGBA(drgb[0], drgb[1], drgb[2], 1f));
-        _lights[idx].setAmbient(new ColorRGBA(argb[0], argb[1], argb[2], 1f));
+        _lights[idx].getDiffuse().set(drgb[0], drgb[1], drgb[2], 1f);
+        _lights[idx].getSpecular().set(drgb[0], drgb[1], drgb[2], 1f);
+        _lights[idx].getAmbient().set(argb[0], argb[1], argb[2], 1f);
     }
 
     /**

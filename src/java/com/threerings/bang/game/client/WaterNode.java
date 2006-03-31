@@ -15,6 +15,8 @@ import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.opengl.GL11;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -49,7 +51,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class WaterNode extends Node
 {
-    public WaterNode (BasicContext ctx)
+    public WaterNode (BasicContext ctx, final LightState lstate)
     {
         super("water");
         _ctx = ctx;
@@ -59,6 +61,14 @@ public class WaterNode extends Node
         setRenderState(RenderUtil.backCull);
         setRenderState(RenderUtil.overlayZBuf);
         setRenderState(_smtstate = _ctx.getRenderer().createTextureState());
+        setRenderState(RenderUtil.createSpecularLightState(lstate, true));
+        
+        MaterialState mstate = new ColorMaterialState();
+        mstate.getDiffuse().set(ColorRGBA.black);
+        mstate.getAmbient().set(ColorRGBA.black);
+        mstate.getSpecular().set(ColorRGBA.white);
+        mstate.setShininess(32f);
+        setRenderState(mstate);
     }
     
     /**
@@ -156,6 +166,10 @@ public class WaterNode extends Node
         texture.setEnvironmentalMapMode(Texture.EM_SPHERE);
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+        texture.setApply(Texture.AM_COMBINE);
+        texture.setCombineFuncRGB(Texture.ACF_ADD);
+        texture.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
+        texture.setCombineSrc1RGB(Texture.ACS_TEXTURE);
         _smtstate.setTexture(texture);
     }
     

@@ -16,6 +16,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Pbuffer;
@@ -30,11 +31,13 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
@@ -73,6 +76,8 @@ public class RenderUtil
     
     public static CullState frontCull;
 
+    public static LightState noLights;
+    
     /**
      * Initializes our commonly used render states.
      */
@@ -112,6 +117,9 @@ public class RenderUtil
 
         frontCull = ctx.getRenderer().createCullState();
         frontCull.setCullMode(CullState.CS_FRONT);
+        
+        noLights = ctx.getRenderer().createLightState();
+        noLights.setEnabled(false);
         
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.RENDERABLE) {
@@ -439,6 +447,26 @@ public class RenderUtil
         } else {
             return new BackTextureRenderer(ctx, width, height);
         }
+    }
+    
+    /**
+     * Creates a light state that wraps the given state and enables or
+     * disables parameters used for specular highlights.
+     */
+    public static LightState createSpecularLightState (
+        final LightState lstate, final boolean specular)
+    {
+        return new LightState() {
+            public void apply () {
+                lstate.apply();
+                GL11.glLightModeli(GL11.GL_LIGHT_MODEL_LOCAL_VIEWER,
+                    specular ? 1 : 0);
+            }
+            public RenderState extract (Stack stack, Spatial spat) {
+                return (spat.getLightCombineMode() == LightState.OFF) ?
+                    noLights : super.extract(stack, spat);
+            }
+        };
     }
     
     /**
