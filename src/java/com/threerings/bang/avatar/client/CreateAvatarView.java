@@ -82,7 +82,7 @@ public class CreateAvatarView extends BDecoratedWindow
         _handle.setDocument(new HandleDocument());
         _handle.addListener(new TextListener() {
             public void textChanged (TextEvent event) {
-                handleUpdated(_handle.getText());
+                handleUpdated(_handle.getText().trim());
             }
         });
 
@@ -135,7 +135,7 @@ public class CreateAvatarView extends BDecoratedWindow
             new Handle(text));
         _done.setEnabled(valid);
         String status = "m.create_defstatus";
-        if (!valid && _handle.getText().length() >=
+        if (!valid && text.length() >=
             NameFactory.getValidator().getMinHandleLength()) {
             status = "m.invalid_handle";
         }
