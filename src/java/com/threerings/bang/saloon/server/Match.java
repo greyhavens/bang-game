@@ -81,21 +81,28 @@ public class Match
 
         // TODO
 
-        // we're good to go, so merge this feller on in
-        _criterion.merge(criterion);
-
         try {
             // add the player and update the criterion in one event
             matchobj.startTransaction();
 
             // find them a slot
+            int added = -1;
             for (int ii = 0; ii < players.length; ii++) {
                 if (players[ii] == null) {
                     players[ii] = player;
                     matchobj.setPlayerOidsAt(player.getOid(), ii);
+                    added = ii;
                     break;
                 }
             }
+
+            // if we failed to find them a spot, don't let them in
+            if (added == -1) {
+                return false;
+            }
+
+            // we're good to go, so merge this feller on in
+            _criterion.merge(criterion);
 
             // update the criterion now that the player oid is in
             matchobj.setCriterion(_criterion);
