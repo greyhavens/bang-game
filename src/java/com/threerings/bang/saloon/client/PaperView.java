@@ -78,7 +78,9 @@ public class PaperView extends BContainer
         _back.setEnabled(false);
         bcont.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
-//         _forward.setEnabled(false);
+        if (!ctx.getUserObject().tokens.isAdmin()) { // TEMP: for testing
+            _forward.setEnabled(false);
+        }
         add(bcont, GroupLayout.FIXED);
 
         // read in the main news page
