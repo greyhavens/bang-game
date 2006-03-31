@@ -998,19 +998,15 @@ public class BangBoard extends SimpleStreamableObject
         int x1 = tx * HEIGHTFIELD_SUBDIVISIONS,
             y1 = ty * HEIGHTFIELD_SUBDIVISIONS,
             x2 = (tx+1) * HEIGHTFIELD_SUBDIVISIONS,
-            y2 = (ty+1) * HEIGHTFIELD_SUBDIVISIONS;
+            y2 = (ty+1) * HEIGHTFIELD_SUBDIVISIONS,
+            code, count, maxCode = 0, maxCount = 0;
         for (int y = y1; y <= y2; y++) {
             for (int x = x1; x <= x2; x++) {
-                counts.increment(getTerrainValue(x, y), 1);
-            }
-        }
-
-        int maxCount = 0, maxCode = 0;
-        for (Iterator it = counts.entrySet().iterator(); it.hasNext(); ) {
-            IntIntMap.Entry e = (IntIntMap.Entry)it.next();
-            if (e.getIntValue() > maxCount) {
-                maxCode = e.getIntKey();
-                maxCount = e.getIntValue();
+                code = getTerrainValue(x, y);
+                if ((count = counts.increment(code, 1)) > maxCount) {
+                    maxCode = code;
+                    maxCount = count;
+                }
             }
         }
         return (byte)maxCode;

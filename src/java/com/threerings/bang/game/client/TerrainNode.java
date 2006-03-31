@@ -44,6 +44,7 @@ import com.jme.util.geom.BufferUtils;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interator;
 
@@ -883,13 +884,10 @@ public class TerrainNode extends Node
         // set the texture coordinates
         FloatBuffer tbuf0 = BufferUtils.createFloatBuffer(vwidth*vheight*2),
             tbuf1 = BufferUtils.createFloatBuffer(vwidth*vheight*2);
-        float step0 = 1.0f / (SPLAT_SIZE+1),
-            step1 = 1.0f / BangBoard.HEIGHTFIELD_SUBDIVISIONS;
+        float step0 = 1.0f / BangBoard.HEIGHTFIELD_SUBDIVISIONS,
+            step1 = 1.0f / (SPLAT_SIZE+1);
         for (int y = (be ? -2 : 0), ymax = y + vheight; y < ymax; y++) {
             for (int x = (le ? -2 : 0), xmax = x + vwidth; x < xmax; x++) {
-                tbuf0.put(0.5f*step0 + x * step0);
-                tbuf0.put(0.5f*step0 + y * step0);
-
                 float xoff = 0f;
                 if (le && x == -2) {
                     xoff = -EDGE_SIZE / TILE_SIZE;
@@ -897,7 +895,7 @@ public class TerrainNode extends Node
                 } else if (re && x == xmax - 1) {
                     xoff = EDGE_SIZE / TILE_SIZE;
                 }
-                tbuf1.put(x * step1 + xoff);
+                tbuf0.put(x * step0 + xoff);
 
                 float yoff = 0f;
                 if (be && y == -2) {
@@ -906,7 +904,10 @@ public class TerrainNode extends Node
                 } else if (te && y == ymax - 1) {
                     yoff = EDGE_SIZE / TILE_SIZE;
                 }
-                tbuf1.put(y * step1 + yoff);
+                tbuf0.put(y * step0 + yoff);
+                
+                tbuf1.put(0.5f*step1 + x * step1);
+                tbuf1.put(0.5f*step1 + y * step1);
             }
         }
 
@@ -1336,32 +1337,37 @@ public class TerrainNode extends Node
             node.detachAllChildren();
             deleteCreatedTextures();
             
-            // find out which terrain codes this block contains
-            ArrayIntSet codes = new ArrayIntSet();
+            // find out which terrain codes this block contains and get the
+            // most common code
+            IntIntMap codes = new IntIntMap();
+            int ccount = 0, ccode = 0, count, code;
             for (int y = bounds.y, ymax = y+bounds.height; y < ymax; y++) {
                 for (int x = bounds.x, xmax = x+bounds.width; x < xmax; x++) {
-                    codes.add(_board.getTerrainValue(x, y));
+                    code = _board.getTerrainValue(x, y);
+                    if ((count = codes.increment(code, 1)) > ccount) {
+                        ccount = count;
+                        ccode = code;
+                    }
                 }
             }
-
+            
             // use the most common terrain for the base mesh (which both tests
             // and writes to the z buffer)
             SharedMesh base = new SharedMesh("base", mesh);
-            base.setRenderState(createBaseTexture(rect));
+            base.setRenderState(getGroundTexture(ccode));
             base.setRenderState(RenderUtil.lequalZBuf);
             node.attachChild(base);
 
             // add the rest as splats (which only test the z buffer)
-            for (Interator it = codes.interator(); it.hasNext(); ) {
-                int code = it.nextInt();
+            codes.remove(ccode);
+            for (Interator it = codes.keys(); it.hasNext(); ) {
+                code = it.nextInt();
                 SharedMesh splat = new SharedMesh("splat" + code, mesh);
                 splat.setIsCollidable(false);
                 
                 // initialize the texture state
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
-                tstate.setTexture(createAlphaTexture(code, rect), 0);
-                tstate.load(0);
                 Texture ground = getGroundTexture(code).getTexture();
                 // before creating a clone, make sure the texture is bound
                 if (ground.getTextureId() == 0) {
@@ -1369,7 +1375,9 @@ public class TerrainNode extends Node
                 }
                 ground = ground.createSimpleClone();
                 ground.setApply(Texture.AM_MODULATE);
-                tstate.setTexture(ground, 1);
+                tstate.setTexture(ground, 0);
+                tstate.setTexture(createAlphaTexture(code, rect), 1);
+                tstate.load(1);
                 tstates.add(tstate);
                 splat.setRenderState(tstate);
 
@@ -1398,8 +1406,8 @@ public class TerrainNode extends Node
         public void deleteCreatedTextures ()
         {
             for (TextureState tstate : tstates) {
-                // for splat textures, don't delete the ground texture in 1
-                tstate.delete(0);
+                // just delete the alpha texture in the second slot
+                tstate.delete(1);
             }
             tstates.clear();
         }
