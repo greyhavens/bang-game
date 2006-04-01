@@ -500,6 +500,10 @@ public class TerrainNode extends Node
     public void refreshTerrain (int x1, int y1, int x2, int y2)
     {
         Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
+        
+        // grow the rectangle to make sure it includes surroundings
+        rect.grow(1, 1);
+        
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 SplatBlock block = _blocks[x][y];
@@ -1281,6 +1285,13 @@ public class TerrainNode extends Node
         /** The base texture buffer. */
         public ByteBuffer baseBuffer;
 
+        /** Maps terrain codes to alpha texture buffers. */
+        public HashIntMap alphaBuffers = new HashIntMap();
+
+        /** Contains the code for each terrain layer (plus one, because zeros
+         * are interpreted as empty spaces by {@link IntListUtil}. */
+        public int[] layers;
+        
         /** The texture states containing created textures. */
         public ArrayList<TextureState> tstates =
             new ArrayList<TextureState>();
@@ -1334,39 +1345,61 @@ public class TerrainNode extends Node
             node.detachAllChildren();
             deleteCreatedTextures();
             
-            // find out which terrain codes this block contains and get the
-            // most common code
+            // find out which terrain codes this block contains, get the
+            // most common code, update the layers and find out if all alpha
+            // textures must be remade
             IntIntMap codes = new IntIntMap();
             int ccount = 0, ccode = 0, count, code;
             for (int y = bounds.y, ymax = y+bounds.height; y < ymax; y++) {
                 for (int x = bounds.x, xmax = x+bounds.width; x < xmax; x++) {
-                    code = _board.getTerrainValue(x, y);
+                    code = _board.getTerrainValue(x, y)+1;
                     if ((count = codes.increment(code, 1)) > ccount) {
                         ccount = count;
                         ccode = code;
                     }
                 }
             }
+            if (layers == null || layers[0] != ccode) {
+                layers = new int[] { ccode };
+                rect = bounds;
+                
+            } else {
+                for (int ii = 1; ii < layers.length; ii++) {
+                    if (!codes.contains(layers[ii])) {
+                        layers[ii] = 0;
+                        rect = bounds;
+                    }
+                }
+            }
+            for (Interator it = codes.keys(); it.hasNext(); ) {
+                code = it.nextInt();
+                int[] nlayers = IntListUtil.testAndAdd(layers, code);
+                if (nlayers != null) {
+                    layers = nlayers;
+                    rect = bounds;
+                }
+            }
+            layers = IntListUtil.compact(layers);
             
             // use the most common terrain for the base mesh (which both tests
             // and writes to the z buffer)
             SharedMesh base = new SharedMesh("base", mesh);
-            base.setRenderState(getGroundTexture(ccode));
+            base.setRenderState(getGroundTexture(--ccode));
             base.setRenderState(RenderUtil.lequalZBuf);
             node.attachChild(base);
 
             // add the rest as splats (which only test the z buffer)
-            initAlphaTotals(ccode);
-            codes.remove(ccode);
-            for (Interator it = codes.keys(); it.hasNext(); ) {
-                code = it.nextInt();
-                SharedMesh splat = new SharedMesh("splat" + code, mesh);
+            initAlphaTotals(ccode, rect);
+            for (int ii = 1; ii < layers.length; ii++) {
+                
+                SharedMesh splat = new SharedMesh("layer" + ii, mesh);
                 splat.setIsCollidable(false);
                 
                 // initialize the texture state
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
-                Texture ground = getGroundTexture(code).getTexture();
+                Texture ground =
+                    getGroundTexture(code = layers[ii]-1).getTexture();
                 // before creating a clone, make sure the texture is bound
                 if (ground.getTextureId() == 0) {
                     RenderUtil.createTextureState(_ctx, ground).load(0);
@@ -1386,6 +1419,13 @@ public class TerrainNode extends Node
                 splat.setRenderState(RenderUtil.blendAlpha);
 
                 node.attachChild(splat);
+            }
+
+            // prune any unused alpha buffers from the map
+            for (Interator it = alphaBuffers.keys(); it.hasNext(); ) {
+                if (!codes.contains(it.nextInt()+1)) {
+                    it.remove();
+                }
             }
 
             node.updateRenderState();
@@ -1471,19 +1511,22 @@ public class TerrainNode extends Node
          * Initializes the alpha totals with the alpha values for the base
          * texture.
          */
-        protected void initAlphaTotals (int code)
+        protected void initAlphaTotals (int code, Rectangle rect)
         {
             if (_atotals == null) {
                 _atotals = new float[TEXTURE_SIZE * TEXTURE_SIZE];
             }
-            float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE;
-            int xmax = (int)FastMath.ceil((bounds.width - 1) / step),
-                ymax = (int)FastMath.ceil((bounds.height - 1) / step),
-                idx = 0;
-            for (int y = 0; y <= ymax; y++) {
-                for (int x = 0; x <= xmax; x++) {
-                    _atotals[idx++] = getTerrainAlpha(code, bounds.x + x*step,
-                        bounds.y + y*step);
+            float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE, alpha;
+            int x1 = (int)((rect.x - bounds.x) / step),
+                y1 = (int)((rect.y - bounds.y) / step),
+                x2 = (int)FastMath.ceil((rect.x + rect.width - 1 - bounds.x) /
+                    step),
+                y2 = (int)FastMath.ceil((rect.y + rect.height - 1 - bounds.y) /
+                    step);
+            for (int y = y1; y <= y2; y++) {
+                for (int x = x1; x <= x2; x++) {
+                    _atotals[y*TEXTURE_SIZE + x] = getTerrainAlpha(code,
+                        bounds.x + x*step, bounds.y + y*step);
                 }
             }
         }
@@ -1496,30 +1539,36 @@ public class TerrainNode extends Node
          */
         protected Texture createAlphaTexture (int code, Rectangle rect)
         {
-            if (_abuf == null) {
-                _abuf = ByteBuffer.allocateDirect(
-                    TEXTURE_SIZE * TEXTURE_SIZE * 4);
-            }
+            // create the buffer if it doesn't already exist
+            ByteBuffer abuf = (ByteBuffer)alphaBuffers.get(code);
+            if (abuf == null) {
+                alphaBuffers.put(code, abuf = ByteBuffer.allocateDirect(
+                    TEXTURE_SIZE*TEXTURE_SIZE*4));
+                rect = bounds;
+             }
             
             // update the affected region of the buffer
             float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE, alpha;
-            int xmax = (int)FastMath.ceil((bounds.width - 1) / step),
-                ymax = (int)FastMath.ceil((bounds.height - 1) / step),
-                idx = 0;
-            byte[] rgba = new byte[] { (byte)0xFF, (byte)0xFF, (byte)0xFF, 0 };
-            for (int y = 0; y <= ymax; y++) {
-                for (int x = 0; x <= xmax; x++) {
+            int x1 = (int)((rect.x - bounds.x) / step),
+                y1 = (int)((rect.y - bounds.y) / step),
+                x2 = (int)FastMath.ceil((rect.x + rect.width - 1 - bounds.x) /
+                    step),
+                y2 = (int)FastMath.ceil((rect.y + rect.height - 1 - bounds.y) /
+                    step), idx, rgba;
+            for (int y = y1; y <= y2; y++) {
+                for (int x = x1; x <= x2; x++) {
+                    idx = y*TEXTURE_SIZE + x;
                     alpha = getTerrainAlpha(code, bounds.x + x*step,
                         bounds.y + y*step);
-                    rgba[3] = (byte)((alpha / (_atotals[idx++] += alpha))*255);
-                    _abuf.put(rgba);
+                    abuf.putInt(idx*4, 0xFFFFFF00 |
+                        (int)((alpha / (_atotals[idx] += alpha))*255));
                 }
             }
-
+            
             Texture texture = new Texture();
-            _abuf.rewind();
+            abuf.rewind();
             texture.setImage(new Image(Image.RGBA8888, TEXTURE_SIZE,
-                TEXTURE_SIZE, _abuf));
+                TEXTURE_SIZE, abuf));
 
             // set the filter parameters
             texture.setFilter(Texture.FM_LINEAR);
@@ -1568,9 +1617,6 @@ public class TerrainNode extends Node
     
     /** Used to store alpha totals when computing alpha maps. */
     protected float[] _atotals;
-    
-    /** A reusable alpha buffer. */
-    protected ByteBuffer _abuf;
     
     /** The size of the terrain splats in sub-tiles. */
     protected static final int SPLAT_SIZE = 32;
