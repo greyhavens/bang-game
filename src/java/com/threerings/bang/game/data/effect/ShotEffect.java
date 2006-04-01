@@ -144,6 +144,23 @@ public class ShotEffect extends Effect
         }
     }
 
+    /**
+     * This is called on the client by the shot handler to apply any unit state
+     * changes needed <em>prior</em> to the shot animation. The normal effect
+     * application takes place <em>after</em> the shot has been animated.
+     */
+    public void preapply (BangObject bangobj, Observer obs)
+    {
+        // update the shooter's last acted if necessary
+        Unit shooter = (Unit)bangobj.pieces.get(shooterId);
+        if (shooter != null && shooterLastActed != -1 &&
+            shooter.lastActed != shooterLastActed) {
+            shooter.lastActed = shooterLastActed;
+            reportEffect(obs, shooter, SHOT_NOMOVE);
+            shooterLastActed = -1; // avoid doing this again in apply()
+        }
+    }
+
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {

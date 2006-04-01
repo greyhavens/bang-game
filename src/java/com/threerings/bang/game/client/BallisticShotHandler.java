@@ -43,7 +43,6 @@ public class BallisticShotHandler extends ShotHandler
         if (_shooter instanceof Unit) {
             Unit sunit = (Unit)_shooter;
             String lpath = "rsrc/units/" + sunit.getType() + "/launch.wav";
-            log.info("Launch? " + lpath);
             if (SoundUtil.haveSound(lpath)) {
                 _launchSound = sounds.getSound(lpath);
             }
@@ -100,7 +99,6 @@ public class BallisticShotHandler extends ShotHandler
         if (_sidx == 0) {
             // play the launch sound if we have one
             if (_launchSound != null) {
-                log.info("Launch!");
                 _launchSound.play(false);
             }
 

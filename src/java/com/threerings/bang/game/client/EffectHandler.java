@@ -75,9 +75,9 @@ public class EffectHandler extends BoardView.BoardAction
         // trigger visualizations or animations which we will then notice and
         // report that the view should wait
         _effect.apply(_bangobj, this);
+        _applying = false;
 
         // now determine whether or not anything remained pending
-        _applying = false;
         return !isCompleted();
     }
 
@@ -136,6 +136,8 @@ public class EffectHandler extends BoardView.BoardAction
             // if they shot without moving, we'll need to clear out any advance
             // order now because we normally do it after they move
             _view.clearAdvanceOrder(piece.pieceId);
+            // and update them to reset their tick display
+            sprite.updated(piece, _tick);
 
         } else {
             // since we're not displaying an effect, we update immediately

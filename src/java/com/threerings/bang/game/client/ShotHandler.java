@@ -53,21 +53,14 @@ public abstract class ShotHandler extends EffectHandler
             }
         }
 
-        // note that we're not going to be "completed" until we're done doing
-        // all the firing business so that no one fires off an
-        // instant-completion effect and then thinks we're ready to call it
-        // quits
-        _shooting = true;
+        // don't allow the effect to complete until we're done applying
+        // everything
+        _applying = true;
         fireShot();
-        _shooting = false;
+        _applying = false;
 
+        // now determine whether or not anything remained pending
         return !isCompleted();
-    }
-
-    @Override // documentation inherited
-    protected boolean isCompleted ()
-    {
-        return !_shooting && super.isCompleted();
     }
 
     /**
@@ -91,13 +84,18 @@ public abstract class ShotHandler extends EffectHandler
     protected void fireShot ()
     {
         if (_sidx == 0) {
+            // pre-apply the shot effect which may update the shooter
+            _shot.preapply(_bangobj, this);
+
+            // now fire the main shot
             fireShot(_shooter.x, _shooter.y,
                      _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
+
             // don't animate the shooter for collateral damage shots, the main
             // shot will trigger an animation
             if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
-                // on the first shot, we animate the shooter
                 PieceSprite ssprite = _view.getPieceSprite(_shooter);
+                // on the first shot, we animate the shooter
                 if (ssprite instanceof MobileSprite) {
                     queueAction((MobileSprite)ssprite,
                                 ShotEffect.SHOT_ACTIONS[_shot.type]);
@@ -131,7 +129,6 @@ public abstract class ShotHandler extends EffectHandler
     protected ShotEffect _shot;
     protected Sound _bangSound;
 
-    protected boolean _shooting;
     protected Piece _shooter, _target;
     protected int _sidx;
 }
