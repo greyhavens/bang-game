@@ -346,6 +346,7 @@ public class BangBoardView extends BoardView
 
         _pidx = pidx;
         _bangobj.addListener(_ticker);
+        _bconfig = cfg;
 
         // start with the camera controls disabled; the controller will
         // reenable them when we are completely ready to play (starting units
@@ -610,19 +611,19 @@ public class BangBoardView extends BoardView
         if (!(piece instanceof Unit)) {
             return;
         }
-        
+
         // let the unit status view know that a unit was added
         UnitSprite sprite = getUnitSprite(piece);
         BangView bview = (BangView)getParent();
         if (bview.ustatus != null) {
             bview.ustatus.unitAdded(sprite);
         }
-        
+
         // if we've not yet started the game, place the unit at the corner of
         // the board nearest to the player's start position because we're going
         // to run them to the player's starting location once their animations
         // are resolved
-        if (_bangobj.tick < 0) {
+        if (!_bconfig.tutorial && _bangobj.tick < 0) {
             Point corner = getStartCorner(piece.owner);
             sprite.setLocation(_board, corner.x, corner.y);
         }
@@ -1234,6 +1235,7 @@ public class BangBoardView extends BoardView
 
     protected BangContext _ctx;
     protected BangController _ctrl;
+    protected BangConfig _bconfig;
 
     protected Node _cursor;
     protected Model.Binding _cursbind;

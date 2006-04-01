@@ -17,6 +17,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
 import static com.threerings.bang.Log.log;
@@ -148,6 +149,18 @@ public class Unit extends Piece
     public int getCost ()
     {
         return _config.scripCost;
+    }
+
+    @Override // documentation inherited
+    public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
+    {
+        if (target instanceof Unit) {
+            Unit unit = (Unit)target;
+            if (unit.benuggeted && shot.newDamage >= 100) {
+                return NuggetEffect.dropNugget(bangobj, unit, pieceId);
+            }
+        }
+        return null;
     }
 
     @Override // documentation inherited

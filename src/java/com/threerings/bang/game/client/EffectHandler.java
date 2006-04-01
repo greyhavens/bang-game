@@ -235,8 +235,7 @@ public class EffectHandler extends BoardView.BoardAction
     @Override // documentation inherited
     public String toString ()
     {
-        String cname = getClass().getName();
-        return cname.substring(cname.lastIndexOf(".")+1) + ":" + _effect;
+        return super.toString() + ":" + _effect;
     }
 
     protected void queueEffect (

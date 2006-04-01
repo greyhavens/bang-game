@@ -62,6 +62,7 @@ import com.jmex.sound.openAL.objects.MusicStream;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ObserverList;
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.jme.effect.FadeInOutEffect;
@@ -151,7 +152,9 @@ public class BoardView extends BComponent
         /** Returns a string representation of this action. */
         public String toString () {
             String cname = getClass().getName();
-            return cname.substring(cname.lastIndexOf("$")+1) + ":" + hashCode();
+            return cname.substring(cname.lastIndexOf("$")+1) +
+                " w" + StringUtil.toString(waiterIds) +
+                " p" + StringUtil.toString(pieceIds) + ":" + hashCode();
         }
     }
 
@@ -619,19 +622,18 @@ public class BoardView extends BComponent
      */
     public void executeAction (BoardAction action)
     {
-        if (ACTION_DEBUG) {
-            log.info("Queueing: " + action);
-        }
-
         // if we can execute this action immediately, do so
         if (action.canExecute(_punits)) {
             processAction(action);
         } else {
+            if (ACTION_DEBUG) {
+                log.info("Queueing p" + _punits + ": " + action);
+            }
             _pactions.add(action);
         }
 
-        // we always have to add this actions pieces to the pending set
-        _punits.add(action.pieceIds);
+        // we always have to add this action's pieces to the pending set
+        notePending(action.pieceIds);
 
         // scan the running actions and issue a warning for long runners
         long now = System.currentTimeMillis(), since;
@@ -988,7 +990,12 @@ public class BoardView extends BComponent
     {
         // clear out _punits and repopulate it with what's in eunits
         _punits.clear();
-        _punits.add(_eunits.getValues());
+        int[] executers = _eunits.getKeys();
+        for (int ii = 0; ii < executers.length; ii++) {
+            if (_eunits.get(executers[ii]) > 0) {
+                _punits.add(executers[ii]);
+            }
+        }
 
         Iterator<BoardAction> iter = _pactions.iterator();
         while (iter.hasNext()) {
@@ -1000,7 +1007,7 @@ public class BoardView extends BComponent
                 // result in a recursive call to processActions()
                 processAction(action);
             }
-            _punits.add(action.pieceIds);
+            notePending(action.pieceIds);
         }
     }
 
@@ -1010,7 +1017,7 @@ public class BoardView extends BComponent
     protected void processAction (final BoardAction action)
     {
         if (ACTION_DEBUG) {
-            log.info("Posting: " + action);
+            log.info("Posting p" + _punits + ": " + action);
         }
 
         // mark the pieces involved in this action as executing
@@ -1328,11 +1335,22 @@ public class BoardView extends BComponent
         return (tris == null || tris.size() == 0 || !(mesh instanceof TriMesh));
     }
 
+    protected void notePending (int[] pieceIds)
+    {
+        for (int ii = 0; ii < pieceIds.length; ii++) {
+            if (pieceIds[ii] > 0) {
+                _punits.add(pieceIds[ii]);
+            }
+        }
+    }
+
     /** Used to increment and decrement executing status for pieces. */
     protected void noteExecuting (int[] pieceIds, int delta)
     {
         for (int ii = 0; ii < pieceIds.length; ii++) {
-            _eunits.increment(pieceIds[ii], delta);
+            if (pieceIds[ii] > 0) {
+                _eunits.increment(pieceIds[ii], delta);
+            }
         }
     }
 

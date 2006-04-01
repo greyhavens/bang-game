@@ -87,12 +87,8 @@ public abstract class ShotHandler extends EffectHandler
             // pre-apply the shot effect which may update the shooter
             _shot.preapply(_bangobj, this);
 
-            // now fire the main shot
-            fireShot(_shooter.x, _shooter.y,
-                     _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
-
-            // don't animate the shooter for collateral damage shots, the main
-            // shot will trigger an animation
+            // animate the shooter if this is not collateral damage (in which
+            // case the main shot will trigger their shooting animation)
             if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
                 PieceSprite ssprite = _view.getPieceSprite(_shooter);
                 // on the first shot, we animate the shooter
@@ -101,6 +97,10 @@ public abstract class ShotHandler extends EffectHandler
                                 ShotEffect.SHOT_ACTIONS[_shot.type]);
                 }
             }
+
+            // now fire the shot animation
+            fireShot(_shooter.x, _shooter.y,
+                     _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
 
         } else {
             fireShot(_shot.xcoords[_sidx-1], _shot.ycoords[_sidx-1],

@@ -24,10 +24,10 @@ import static com.threerings.bang.Log.log;
 public class NuggetEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String PICKED_UP_NUGGET = "bonuses/nugget/activate";
+    public static final String PICKED_UP_NUGGET = "bonuses/nugget/pickedup";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String DROPPED_NUGGET = "bonuses/nugget/activate";
+    public static final String DROPPED_NUGGET = "bonuses/nugget/dropped";
 
     /** The identifier for the type of effect that we produce. */
     public static final String NUGGET_ADDED = "bonuses/nugget/added";
@@ -42,6 +42,9 @@ public class NuggetEffect extends BonusEffect
      * claim if claimId is greater than zero or onto the ground if it is -1. */
     public boolean dropping;
 
+    /** The unit that caused us to drop our nugget (if any). */
+    public int causerId = -1;
+
     /** The id of the claim involved in this nugget transfer or -1 if we're
      * picking the nugget up off of the board. */
     public int claimId = -1;
@@ -53,8 +56,12 @@ public class NuggetEffect extends BonusEffect
      * Creates a nugget effect configured to cause the specified unit to drop
      * their nugget. Returns null if a location for the nugget to fall could
      * not be found.
+     *
+     * @param causerId the piece id of the piece that caused this piece to drop
+     * this nugget, used for animation sequencing.
      */
-    public static NuggetEffect dropNugget (BangObject bangobj, Unit unit)
+    public static NuggetEffect dropNugget (
+        BangObject bangobj, Unit unit, int causerId)
     {
         Point spot = bangobj.board.getOccupiableSpot(unit.x, unit.y, 3);
         if (spot == null) {
@@ -66,6 +73,7 @@ public class NuggetEffect extends BonusEffect
         NuggetEffect effect = new NuggetEffect();
         effect.init(unit);
         effect.dropping = true;
+        effect.causerId = causerId;
         effect.drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
         effect.drop.assignPieceId(bangobj);
         effect.drop.position(spot.x, spot.y);
@@ -76,6 +84,12 @@ public class NuggetEffect extends BonusEffect
     public void init (Piece piece)
     {
         pieceId = piece.pieceId;
+    }
+
+    @Override // documentation inherited
+    public int[] getWaitPieces ()
+    {
+        return new int[] { causerId };
     }
 
     @Override // documentation inherited

@@ -337,6 +337,15 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Creates any effect that must be applied prior to applying the {@link
+     * ShotEffect} that results from this piece shooting another.
+     */
+    public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
+    {
+        return null;
+    }
+
+    /**
      * Creates an effect that will "shoot" the specified target piece.
      */
     public ShotEffect shoot (BangObject bangobj, Piece target)

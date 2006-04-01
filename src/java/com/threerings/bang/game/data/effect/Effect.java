@@ -221,6 +221,14 @@ public abstract class Effect extends SimpleStreamableObject
         return new EffectHandler();
     }
 
+    @Override // documentation inherited
+    public String toString ()
+    {
+        String cname = getClass().getName();
+        return cname.substring(cname.lastIndexOf(".")+1) + ":" +
+            super.toString();
+    }
+
     /** A helper function for reporting a piece addition. */
     protected static void reportAddition (Observer obs, Piece piece)
     {

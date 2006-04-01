@@ -218,20 +218,6 @@ public class ClaimJumping extends Scenario
     }
 
     @Override // documentation inherited
-    public Effect pieceWasKilled (BangObject bangobj, Piece piece)
-    {
-        super.pieceWasKilled(bangobj, piece);
-
-        // if this piece is benuggeted, force it to drop its nugget
-        Effect effect = null;
-        if (piece instanceof Unit && ((Unit)piece).benuggeted) {
-            effect = NuggetEffect.dropNugget(bangobj, (Unit)piece);
-        }
-
-        return effect;
-    }
-
-    @Override // documentation inherited
     public void recordStats (
         BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {

@@ -6,6 +6,7 @@ package com.threerings.bang.game.data.piece;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
+import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
@@ -14,22 +15,17 @@ import com.threerings.bang.game.data.piece.Piece;
 public class Sharpshooter extends Unit
 {
     @Override // documentation inherited
-    public Effect[] collateralDamage (
-        BangObject bangobj, Piece target, int damage)
+    public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
     {
-        if (!(target instanceof Unit)) {
-            return null;
+        // sharpshooters always cause their target to drop their nugget whether
+        // they die or not
+        if (target instanceof Unit) {
+            Unit unit = (Unit)target;
+            if (unit.benuggeted) {
+                return NuggetEffect.dropNugget(bangobj, unit, pieceId);
+            }
         }
-
-        // the sharpshooter causes a unit holding a nugget to drop it; but not
-        // if we're going to kill them, in which case they'd drop anyway
-        Unit unit = (Unit)target;
-        if (!unit.benuggeted || (unit.damage + damage >= 100)) {
-            return null;
-        }
-
-        NuggetEffect effect = NuggetEffect.dropNugget(bangobj, unit);
-        return (effect == null) ? null : new Effect[] { effect };
+        return null;
     }
 
     @Override // documentation inherited
