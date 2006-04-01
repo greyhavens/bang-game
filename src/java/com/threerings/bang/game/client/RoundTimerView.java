@@ -101,7 +101,7 @@ public class RoundTimerView extends BWindow
             gfx.dispose();
         }
 
-        if (_overlay != null) {
+        if (isAdded() && _overlay != null) {
             _overlay.wasRemoved();
             _overlay = null;
         }
@@ -141,6 +141,8 @@ public class RoundTimerView extends BWindow
     protected void wasAdded ()
     {
         super.wasAdded();
+
+        _pin.wasAdded();
         if (_overlay != null) {
             _overlay.wasAdded();
         }
@@ -150,6 +152,8 @@ public class RoundTimerView extends BWindow
     protected void wasRemoved ()
     {
         super.wasRemoved();
+
+        _pin.wasRemoved();
         if (_overlay != null) {
             _overlay.wasRemoved();
         }

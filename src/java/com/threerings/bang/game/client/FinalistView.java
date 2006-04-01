@@ -85,6 +85,30 @@ public class FinalistView extends BContainer
     }
 
     @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        _avatar.wasAdded();
+        _frame.wasAdded();
+        _banner.wasAdded();
+        _medal.wasAdded();
+        _background.reference();
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        _avatar.wasRemoved();
+        _frame.wasRemoved();
+        _banner.wasRemoved();
+        _medal.wasRemoved();
+        _background.release();
+    }
+
+    @Override // documentation inherited
     protected void renderBackground (Renderer renderer)
     {
         super.renderBackground(renderer);
