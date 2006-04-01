@@ -199,6 +199,28 @@ public class PlayerStatusView extends BContainer
     }
 
     @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        _color.wasAdded();
+        if (_avatar != null) {
+            _avatar.wasAdded();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        _color.wasRemoved();
+        if (_avatar != null) {
+            _avatar.wasRemoved();
+        }
+    }
+
+    @Override // documentation inherited
     protected void renderBackground (Renderer renderer)
     {
         // first draw our color
@@ -217,8 +239,14 @@ public class PlayerStatusView extends BContainer
     {
         // load up this player's avatar image
         if (_bangobj.avatars != null && _bangobj.avatars[_pidx] != null) {
+            if (_avatar != null && isAdded()) {
+                _avatar.wasRemoved();
+            }
             _avatar = new ImageIcon(
                 AvatarView.getFramableImage(_ctx, _bangobj.avatars[_pidx], 10));
+            if (isAdded()) {
+                _avatar.wasAdded();
+            }
         }
     }
 

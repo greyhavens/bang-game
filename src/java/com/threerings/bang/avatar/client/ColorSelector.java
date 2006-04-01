@@ -156,6 +156,28 @@ public class ColorSelector extends BComponent
     }
 
     @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // we need to manage our circle image because we render it by hand
+        for (int ii = 0; ii < _swatches.length; ii++) {
+            _swatches[ii].circle.reference();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        // we need to manage our circle image because we render it by hand
+        for (int ii = 0; ii < _swatches.length; ii++) {
+            _swatches[ii].circle.release();
+        }
+    }
+
+    @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
         super.renderComponent(renderer);

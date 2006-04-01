@@ -63,6 +63,22 @@ public class HackyTabs extends BComponent
         if (_selidx == -1) {
             selectTab(_deftab);
         }
+
+        // reference our tab images
+        for (int ii = 0; ii < _tabs.length; ii++) {
+            _tabs[ii].reference();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        // release our tab images
+        for (int ii = 0; ii < _tabs.length; ii++) {
+            _tabs[ii].release();
+        }
     }
 
     @Override // documentation inherited

@@ -101,8 +101,16 @@ public class RoundTimerView extends BWindow
             gfx.dispose();
         }
 
+        if (_overlay != null) {
+            _overlay.wasRemoved();
+            _overlay = null;
+        }
+
         // now convert this into a JME displayable image
         _overlay = new ImageIcon(new BImage(_overimg));
+        if (isAdded()) {
+            _overlay.wasAdded();
+        }
     }
 
     // documentation inherited from interface AttributeChangeListener
@@ -126,6 +134,24 @@ public class RoundTimerView extends BWindow
 
         } else if (name.equals(BangObject.TICK)) {
             setStatus(_bangobj.tick, _bangobj.lastTick, _bangobj.duration);
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        if (_overlay != null) {
+            _overlay.wasAdded();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        if (_overlay != null) {
+            _overlay.wasRemoved();
         }
     }
 

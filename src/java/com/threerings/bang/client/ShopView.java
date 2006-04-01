@@ -106,6 +106,12 @@ public abstract class ShopView extends BWindow
     {
         super.wasAdded();
 
+        // reference our images
+        _shopkbg.reference();
+        _shopkeep.reference();
+        _shop.reference();
+        _background.reference();
+
         // if this is the first time the player has entered this shop, show
         // them the intro popup
 //         showHelp();
@@ -115,6 +121,12 @@ public abstract class ShopView extends BWindow
     protected void wasRemoved ()
     {
         super.wasRemoved();
+
+        // release our images
+        _shopkbg.release();
+        _shopkeep.release();
+        _shop.release();
+        _background.release();
 
         // clear out our intro if it's still showing
         if (_intro != null && _intro.isAdded()) {

@@ -136,6 +136,20 @@ public class NewLookView extends BContainer
             _ctx.loadImage("ui/barber/side_new_look_male.png") : null;
         HackyTabs htabs = new HackyTabs(
             ctx, true, "ui/barber/tab_", tarray, 54, 30) {
+            protected void wasAdded () {
+                super.wasAdded();
+                tabbg.reference();
+                if (malebg != null) {
+                    malebg.reference();
+                }
+            }
+            protected void wasRemoved () {
+                super.wasRemoved();
+                tabbg.release();
+                if (malebg != null) {
+                    malebg.release();
+                }
+            }
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
                 tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42,

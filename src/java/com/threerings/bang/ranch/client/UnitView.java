@@ -61,10 +61,18 @@ public class UnitView extends BGeomView
     }
 
     @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _frame.reference();
+    }
+
+    @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
 
+        _frame.release();
         if (_binding != null) {
             _binding.detach();
         }

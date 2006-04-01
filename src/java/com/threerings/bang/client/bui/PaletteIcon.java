@@ -40,7 +40,14 @@ public class PaletteIcon extends SelectableIcon
     protected void wasAdded ()
     {
         super.wasAdded();
-        _text.stateDidChange();
+        _text.wasAdded();
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _text.wasRemoved();
     }
 
     @Override // documentation inherited

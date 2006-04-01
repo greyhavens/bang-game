@@ -123,7 +123,7 @@ public class UnitStatusView extends BWindow
                     UnitStatusView.this.remove(this);
                 } else {
                     // clear out any influence when the unit dies
-                    _influence = null;
+                    setInfluence(null);
                     // clear out our background when our unit dies
                     _bground = null;
                     // and draw our icon at 50% alpha
@@ -131,12 +131,13 @@ public class UnitStatusView extends BWindow
                 }
             } else {
                 if (unit.influence == null) {
-                    _influence = null;
+                    setInfluence(null);
                 } else {
                     // we don't worry about refetching the image from the cache
                     // if our influence didn't actually change, it's cheap
-                    _influence = _ctx.getImageCache().getBImage(
-                        "influences/" + unit.influence.getIcon() + ".png");
+                    String path =
+                        "influences/" + unit.influence.getIcon() + ".png";
+                    setInfluence(_ctx.getImageCache().getBImage(path));
                 }
             }
             resort();
@@ -166,6 +167,13 @@ public class UnitStatusView extends BWindow
         }
 
         @Override // documentation inherited
+        protected void wasRemoved ()
+        {
+            super.wasRemoved();
+            setInfluence(null);
+        }
+
+        @Override // documentation inherited
         protected void renderComponent (Renderer renderer)
         {
             super.renderComponent(renderer);
@@ -173,6 +181,21 @@ public class UnitStatusView extends BWindow
             // render our influence icon if we have one
             if (_influence != null) {
                 _influence.render(renderer, getWidth()-19, getHeight()-19, 1f);
+            }
+        }
+
+        protected void setInfluence (BImage influence)
+        {
+            if (_influence == influence) {
+                return;
+            }
+            if (_influence != null) {
+                _influence.release();
+                _influence = null;
+            }
+            _influence = influence;
+            if (_influence != null) {
+                _influence.reference();
             }
         }
 
