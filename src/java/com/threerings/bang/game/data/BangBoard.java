@@ -28,6 +28,7 @@ import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Train;
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -808,7 +809,8 @@ public class BangBoard extends SimpleStreamableObject
         if (piece.isFlyer() || piece instanceof Train) {
             return true;
         } else {
-            return (tstate == O_FLAT) || (tstate == O_BONUS) ||
+            return (tstate == O_FLAT) ||
+                (piece instanceof Unit && tstate == O_BONUS) ||
                 (tstate == piece.owner && _btstate[idx] == O_FLAT);
         }
     }
