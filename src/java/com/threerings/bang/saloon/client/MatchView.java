@@ -128,6 +128,7 @@ public class MatchView extends BContainer
 
         updateDisplay();
         updateCriterion();
+        updateStarting();
 
         _ctx.getChatDirector().addAuxiliarySource(_mobj, "match_chat");
         _chat.setSpeakService(_mobj.speakService);
@@ -146,6 +147,17 @@ public class MatchView extends BContainer
     }
 
     @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // reference our images
+        _silhouette.reference();
+        _playerScroll.reference();
+        _emptyScroll.reference();
+    }
+
+    @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
@@ -154,6 +166,11 @@ public class MatchView extends BContainer
         }
         _msub.unsubscribe(_ctx.getDObjectManager());
         _chat.clearSpeakService();
+
+        // release our images
+        _silhouette.reference();
+        _playerScroll.reference();
+        _emptyScroll.reference();
     }
 
     protected void updateDisplay ()
@@ -161,7 +178,6 @@ public class MatchView extends BContainer
         for (int ii = 0; ii < _mobj.playerOids.length; ii++) {
             _slots[ii].setPlayerOid(_mobj.playerOids[ii]);
         }
-        updateStarting();
     }
 
     protected void updateCriterion ()
@@ -174,24 +190,20 @@ public class MatchView extends BContainer
                                   "m.ranked" : "m.unranked"));
         value = "m." + CriterionView.RANGE[_mobj.criterion.range];
         _range.setText(_msgs.get(value));
-        updateStarting();
     }
 
     protected void updateStarting ()
     {
-        int filled = 0;
-        for (int ii = 0; ii < _mobj.playerOids.length; ii++) {
-            if (_mobj.playerOids[ii] > 0) {
-                filled++;
-            }
-        }
-        _starting.setText(_mobj.criterion.getDesiredPlayers() == filled ?
-                          _msgs.get("m.starting") : "");
+        _starting.setText(_mobj.starting ? _msgs.get("m.starting") : "");
     }
 
     protected AttributeChangeListener _atch = new AttributeChangeListener() {
         public void attributeChanged (AttributeChangedEvent event) {
-            updateCriterion();
+            if (event.getName().equals(MatchObject.STARTING)) {
+                updateStarting();
+            } else {
+                updateCriterion();
+            }
         }
     };
 
@@ -229,14 +241,32 @@ public class MatchView extends BContainer
                 setText("???");
             } else {
                 setText(boi.username.toString());
-                _avatar = AvatarView.getImage(_ctx, boi.avatar,
+                if (_avatar != null) {
+                    _avatar.release();
+                }
+                _avatar = AvatarView.getImage(
+                    _ctx, boi.avatar,
                     AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8);
+                _avatar.reference();
             }
         }
 
         public ColorRGBA getColor ()
         {
             return _playerOid > 0 ? super.getColor() : GREY_ALPHA;
+        }
+
+        protected void wasAdded ()
+        {
+            super.wasAdded();
+        }
+
+        protected void wasRemoved ()
+        {
+            super.wasRemoved();
+            if (_avatar != null) {
+                _avatar.release();
+            }
         }
 
         protected Dimension computePreferredSize (int whint, int hhint)

@@ -23,6 +23,9 @@ public class MatchObject extends DObject
 
     /** The field name of the <code>criterion</code> field. */
     public static final String CRITERION = "criterion";
+
+    /** The field name of the <code>starting</code> field. */
+    public static final String STARTING = "starting";
     // AUTO-GENERATED: FIELDS END
 
     /** Used for chatting among the matchmakees. */
@@ -33,6 +36,9 @@ public class MatchObject extends DObject
 
     /** The current criterion for matching. */
     public Criterion criterion;
+
+    /** Set to true if this match is about to start. */
+    public boolean starting;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -98,6 +104,22 @@ public class MatchObject extends DObject
         requestAttributeChange(
             CRITERION, value, ovalue);
         this.criterion = value;
+    }
+
+    /**
+     * Requests that the <code>starting</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setStarting (boolean value)
+    {
+        boolean ovalue = this.starting;
+        requestAttributeChange(
+            STARTING, new Boolean(value), new Boolean(ovalue));
+        this.starting = value;
     }
     // AUTO-GENERATED: METHODS END
 

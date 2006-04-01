@@ -56,7 +56,7 @@ public class SaloonManager extends PlaceManager
         // look for an existing match that is compatible
         for (Match match : _matches.values()) {
             // don't allow players to join matches that are about to start
-            if (match.starter != null) {
+            if (match.matchobj.starting) {
                 continue;
             }
 
@@ -66,14 +66,10 @@ public class SaloonManager extends PlaceManager
                 // check to see if this match is ready to go
                 switch (match.checkReady()) {
                 case COULD_START:
-                    // TODO: start the match after a short timeout
+                    couldStartMatch(match);
                     break;
-
                 case START_NOW:
-                    // start the match after a short delay to give everyone a
-                    // chance to see who they're playing with and bail out if
-                    // they don't like it
-                    delayedStartMatch(match);
+                    startMatch(match);
                     break;
                 }
                 return;
@@ -113,6 +109,7 @@ public class SaloonManager extends PlaceManager
                 match.starter != null) {
                 match.starter.cancel();
                 match.starter = null;
+                match.matchobj.setStarting(false);
             }
         }
     }
@@ -171,14 +168,40 @@ public class SaloonManager extends PlaceManager
         }
     }
 
-    protected void delayedStartMatch (final Match match)
+    /**
+     * Called when a match could potentially be started.
+     */
+    protected void couldStartMatch (final Match match)
+    {
+        if (match.starter != null) {
+            log.warning("Requested to couldStart match that's already queued " +
+                        "for something " + match + ".");
+            return;
+        }
+        match.starter = new Interval(BangServer.omgr) {
+            public void expired () {
+                match.starter = null;
+                if (match.checkReady() != Match.Readiness.NOT_READY) {
+                    startMatch(match);
+                }
+            }
+        };
+        match.starter.schedule(GO_WITH_IT_DELAY);
+    }
+
+    /**
+     * Called when a match should be started. Marks the match as such and waits
+     * a few second before actually starting the match to give participants a
+     * chance to see who the last joiner was and potentially balk.
+     */
+    protected void startMatch (final Match match)
     {
         if (match.starter != null) {
             log.warning("Requested to start match that's already queued " +
                         "for starting " + match + ".");
             return;
         }
-
+        match.matchobj.setStarting(true);
         match.starter = new Interval(BangServer.omgr) {
             public void expired () {
                 // make sure the match is still ready (this shouldn't happen as
@@ -186,9 +209,9 @@ public class SaloonManager extends PlaceManager
                 // cases where we might not get canceled in time)
                 if (match.checkReady() == Match.Readiness.NOT_READY) {
                     match.starter = null;
+                    match.matchobj.setStarting(false);
                     return;
                 }
-
                 // go like the wind!
                 BangConfig config = match.createConfig();
                 try {
@@ -229,4 +252,5 @@ public class SaloonManager extends PlaceManager
     protected HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
 
     protected static final long START_DELAY = 5000L;
+    protected static final long GO_WITH_IT_DELAY = 10000L;
 }
