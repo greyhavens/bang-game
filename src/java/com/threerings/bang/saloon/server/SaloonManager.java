@@ -173,7 +173,6 @@ public class SaloonManager extends PlaceManager
                             "queued for something " + match + ".");
                 return;
             }
-            log.info("Could starting " + match + ".");
             match.starter = new Interval(BangServer.omgr) {
                 public void expired () {
                     match.starter = null;
@@ -187,7 +186,6 @@ public class SaloonManager extends PlaceManager
             break;
 
         case START_NOW:
-            log.info("Starting " + match + ".");
             startMatch(match);
             break;
         }

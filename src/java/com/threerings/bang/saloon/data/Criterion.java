@@ -81,14 +81,11 @@ public class Criterion extends SimpleStreamableObject
      */
     public boolean couldStart (int playerCount)
     {
-        log.info("Checking " + this + "...");
         for (int ii = 1, ll = getAllowedAIs(); ii <= ll; ii++) {
-            log.info("How about " + (playerCount+ii) + "?");
             if (isBitSet(players, playerCount-2 + ii)) {
                 return true;
             }
         }
-        log.info("How about " + playerCount + "?");
         return isBitSet(players, playerCount-2);
     }
 
