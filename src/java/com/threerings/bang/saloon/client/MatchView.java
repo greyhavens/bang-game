@@ -76,6 +76,7 @@ public class MatchView extends BContainer
         _info.add(_players = new BLabel("", "match_label"));
         _info.add(_ranked = new BLabel("", "match_label"));
         _info.add(_range = new BLabel("", "match_label"));
+        _info.add(_opponents = new BLabel("", "match_label"));
         _info.add(_starting = new BLabel("", "starting_label"));
 
         // add our leave button
@@ -188,6 +189,8 @@ public class MatchView extends BContainer
         _rounds.setText(_msgs.get("m.cr_rounds", value));
         _ranked.setText(_msgs.get(_mobj.criterion.getDesiredRankedness() ?
                                   "m.ranked" : "m.unranked"));
+        value = _mobj.criterion.getAIString();
+        _opponents.setText(_msgs.get("m.cr_aiopps", value));
         value = "m." + CriterionView.RANGE[_mobj.criterion.range];
         _range.setText(_msgs.get(value));
     }
@@ -304,7 +307,7 @@ public class MatchView extends BContainer
     protected SafeSubscriber _msub;
     protected MatchObject _mobj;
 
-    protected BLabel _players, _rounds, _ranked, _range;
+    protected BLabel _players, _rounds, _ranked, _range, _opponents;
     protected BLabel _starting;
     protected BButton _bye;
 

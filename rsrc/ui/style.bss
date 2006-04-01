@@ -35,6 +35,8 @@ popupmenu {
 
 menuitem {
   padding: 5 5 5 5;
+  color: #524129;
+  font: "Dialog" bold 16;
 }
 
 menuitem:hover {

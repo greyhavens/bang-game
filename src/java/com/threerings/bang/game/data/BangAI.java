@@ -45,20 +45,13 @@ public class BangAI extends GameAI
 
         // first pick a name for this AI
         HashSet<String> prefs =
-            NameFactory.getCreator().getHandlePrefixes(ai.isMale);
+            NameFactory.getCreator().getAIPrefixes(ai.isMale);
         HashSet<String> roots =
             NameFactory.getCreator().getHandleRoots(ai.isMale);
-        HashSet<String> suffs =
-            NameFactory.getCreator().getHandleSuffixes(ai.isMale);
         for (int ii = 0; ii < 25; ii++) {
             String name;
-            if (RandomUtil.getInt(100) > 49) {
-                name = (String)RandomUtil.pickRandom(prefs) + " "
-                    + (String)RandomUtil.pickRandom(roots);
-            } else {
-                name = (String)RandomUtil.pickRandom(roots) + " "
-                    + (String)RandomUtil.pickRandom(suffs);
-            }
+            name = (String)RandomUtil.pickRandom(prefs) + " "
+                + (String)RandomUtil.pickRandom(roots);
             if (!usedNames.contains(name)) {
                 usedNames.add(name);
                 ai.handle = new Handle(name);

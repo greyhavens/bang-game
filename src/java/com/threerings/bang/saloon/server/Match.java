@@ -3,12 +3,16 @@
 
 package com.threerings.bang.saloon.server;
 
+import java.util.HashSet;
+
 import com.samskivert.util.Interval;
 import com.threerings.util.Name;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
+import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.util.ScenarioUtil;
 import com.threerings.bang.server.ServerConfig;
@@ -149,7 +153,7 @@ public class Match
     }
 
     /**
-     * Returns the count of players involved in this match.
+     * Returns the count of human players involved in this match.
      */
     public int getPlayerCount ()
     {
@@ -170,7 +174,7 @@ public class Match
         int count = getPlayerCount();
         if (count == _criterion.getDesiredPlayers()) {
             return Readiness.START_NOW;
-        } else if (_criterion.isValidPlayerCount(count)) {
+        } else if (_criterion.couldStart(count)) {
             return Readiness.COULD_START;
         } else {
             return Readiness.NOT_READY;
@@ -183,17 +187,34 @@ public class Match
     public BangConfig createConfig ()
     {
         BangConfig config = new BangConfig();
-        config.seats = getPlayerCount();
+        config.seats = getPlayerCount() + _criterion.getAllowedAIs();
+        config.seats = Math.min(GameCodes.MAX_PLAYERS, config.seats);
         config.players = new Name[config.seats];
-        config.teamSize = TEAM_SIZES[config.seats-2];
-        for (int ii = 0, idx = 0; ii < players.length; ii++) {
+
+        // add our human players
+        int idx = 0;
+        for (int ii = 0; ii < players.length; ii++) {
             if (players[ii] != null) {
                 config.players[idx++] = players[ii].handle;
             }
         }
+
+        // add our ais (if any)
+        config.ais = new BangAI[config.seats];
+        HashSet<String> names = new HashSet<String>();
+        for (int ii = idx; ii < config.ais.length; ii++) {
+            // TODO: sort out personality and skill
+            BangAI ai = BangAI.createAI(1, 50, names);
+            config.ais[ii] = ai;
+            config.players[ii] = ai.handle;
+        }
+
+        // configure our other bits
+        config.teamSize = TEAM_SIZES[config.seats-2];
         config.rated = _criterion.getDesiredRankedness();
         config.scenarios = ScenarioUtil.selectRandom(
             ServerConfig.getTownId(), _criterion.getDesiredRounds());;
+
         return config;
     }
 

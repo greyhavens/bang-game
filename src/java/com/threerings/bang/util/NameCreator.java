@@ -10,6 +10,10 @@ import java.util.HashSet;
  */
 public abstract class NameCreator
 {
+    /** Returns a set of prefixes that can be prepended to a root to make an AI
+     * name. For example: "Robo" Pete, "Tick-tock" Bart, "Clanky" Bob, etc. */
+    public abstract HashSet<String> getAIPrefixes (boolean isMale);
+
     /** Returns a set of prefixes that can be prepended to a root to make a
      * cowboy name. For example: "Wild" Pete, "Mean" Bart, "Oklahoma" Bob,
      * etc. */

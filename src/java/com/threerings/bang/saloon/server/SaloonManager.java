@@ -62,16 +62,7 @@ public class SaloonManager extends PlaceManager
 
             if (match.join(user, criterion)) {
                 listener.requestProcessed(match.matchobj.getOid());
-
-                // check to see if this match is ready to go
-                switch (match.checkReady()) {
-                case COULD_START:
-                    couldStartMatch(match);
-                    break;
-                case START_NOW:
-                    startMatch(match);
-                    break;
-                }
+                checkReadiness(match);
                 return;
             }
         }
@@ -88,6 +79,7 @@ public class SaloonManager extends PlaceManager
                 _matches.put(object.getOid(), match);
                 BangServer.statobj.setPendingMatches(_matches.size());
                 listener.requestProcessed(object.getOid());
+                checkReadiness(match);
             }
             public void requestFailed (int oid, ObjectAccessException cause) {
                 log.warning("Failed to create match object " + cause + ".");
@@ -169,24 +161,36 @@ public class SaloonManager extends PlaceManager
     }
 
     /**
-     * Called when a match could potentially be started.
+     * Checks whether a match is ready.
      */
-    protected void couldStartMatch (final Match match)
+    protected void checkReadiness (final Match match)
     {
-        if (match.starter != null) {
-            log.warning("Requested to couldStart match that's already queued " +
-                        "for something " + match + ".");
-            return;
-        }
-        match.starter = new Interval(BangServer.omgr) {
-            public void expired () {
-                match.starter = null;
-                if (match.checkReady() != Match.Readiness.NOT_READY) {
-                    startMatch(match);
-                }
+        // check to see if this match is ready to go
+        switch (match.checkReady()) {
+        case COULD_START:
+            if (match.starter != null) {
+                log.warning("Requested to couldStart match that's already " +
+                            "queued for something " + match + ".");
+                return;
             }
-        };
-        match.starter.schedule(GO_WITH_IT_DELAY);
+            log.info("Could starting " + match + ".");
+            match.starter = new Interval(BangServer.omgr) {
+                public void expired () {
+                    match.starter = null;
+                    if (match.checkReady() != Match.Readiness.NOT_READY) {
+                        log.info("Starting " + match + ".");
+                        startMatch(match);
+                    }
+                }
+            };
+            match.starter.schedule(GO_WITH_IT_DELAY);
+            break;
+
+        case START_NOW:
+            log.info("Starting " + match + ".");
+            startMatch(match);
+            break;
+        }
     }
 
     /**

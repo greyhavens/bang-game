@@ -13,6 +13,12 @@ import com.samskivert.util.CollectionUtil;
 public class EnglishNameCreator extends NameCreator
 {
     @Override // documentation inherited
+    public HashSet<String> getAIPrefixes (boolean isMale)
+    {
+        return AI_PREF_TABLE;
+    }
+
+    @Override // documentation inherited
     public HashSet<String> getHandlePrefixes (boolean isMale)
     {
         return isMale ? MALE_PREF_TABLE : FEMALE_PREF_TABLE;
@@ -37,6 +43,8 @@ public class EnglishNameCreator extends NameCreator
     protected static HashSet<String> FEMALE_PREF_TABLE = new HashSet<String>();
     protected static HashSet<String> FEMALE_ROOT_TABLE = new HashSet<String>();
     protected static HashSet<String> FEMALE_SUFF_TABLE = new HashSet<String>();
+
+    protected static HashSet<String> AI_PREF_TABLE = new HashSet<String>();
 
     protected static final String[] SHARED_PREFIXES = {
         "Anasazi",
@@ -83,6 +91,14 @@ public class EnglishNameCreator extends NameCreator
         "Little Miss",
         "Madame",
         "Sure Shot",
+    };
+
+    protected static final String[] AI_PREFIXES = {
+        "Broke Down",
+        "Clankin",
+        "Robo",
+        "Steam Powered",
+        "Tin Can",
     };
 
     protected static final String[] SHARED_ROOTS = {
@@ -234,5 +250,7 @@ public class EnglishNameCreator extends NameCreator
         CollectionUtil.addAll(FEMALE_ROOT_TABLE, FEMALE_ROOTS);
         CollectionUtil.addAll(FEMALE_SUFF_TABLE, SHARED_SUFFIXES);
         CollectionUtil.addAll(FEMALE_SUFF_TABLE, FEMALE_SUFFIXES);
+
+        CollectionUtil.addAll(AI_PREF_TABLE, AI_PREFIXES);
     }
 }

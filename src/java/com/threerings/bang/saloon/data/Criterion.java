@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.io.SimpleStreamableObject;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Defines various criterion for finding opponents.
  */
@@ -35,6 +37,9 @@ public class Criterion extends SimpleStreamableObject
      * #TIGHT}, {@link #LOOSE} or {@link #OPEN}. */
     public int range;
 
+    /** A bitmask indicating how many AIs to allow. */
+    public int allowAIs;
+
     /** Utility function for creating criterion instances. */
     public static int compose (boolean val1, boolean val2, boolean val3)
     {
@@ -53,7 +58,8 @@ public class Criterion extends SimpleStreamableObject
     {
         return (rounds & other.rounds) != 0 &&
             (players & other.players) != 0 &&
-            (ranked & other.ranked) != 0;
+            (ranked & other.ranked) != 0 &&
+            (allowAIs & other.allowAIs) != 0;
     }
 
     /**
@@ -67,14 +73,23 @@ public class Criterion extends SimpleStreamableObject
         players &= other.players;
         ranked &= other.ranked;
         range = Math.min(range, other.range);
+        allowAIs &= other.allowAIs;
     }
 
     /**
-     * Returns true if the specified player count is allowed.
+     * Returns true if the game could start with the specified player count.
      */
-    public boolean isValidPlayerCount (int playerCount)
+    public boolean couldStart (int playerCount)
     {
-        return (players & (1 << (playerCount-2))) != 0;
+        log.info("Checking " + this + "...");
+        for (int ii = 1, ll = getAllowedAIs(); ii <= ll; ii++) {
+            log.info("How about " + (playerCount+ii) + "?");
+            if (isBitSet(players, playerCount-2 + ii)) {
+                return true;
+            }
+        }
+        log.info("How about " + playerCount + "?");
+        return isBitSet(players, playerCount-2);
     }
 
     /**
@@ -83,14 +98,6 @@ public class Criterion extends SimpleStreamableObject
     public int getDesiredPlayers ()
     {
         return highestBitIndex(players) + 1;
-    }
-
-    /**
-     * Returns true if the specified round count is allowed.
-     */
-    public boolean isValidRoundCount (int roundCount)
-    {
-        return (rounds & (1 << (roundCount-1))) != 0;
     }
 
     /**
@@ -106,7 +113,15 @@ public class Criterion extends SimpleStreamableObject
      */
     public boolean getDesiredRankedness ()
     {
-        return (ranked & (1|(1<<2))) != 0;
+        return (ranked & 1) != 0;
+    }
+
+    /**
+     * Returns the largest allow AI count.
+     */
+    public int getAllowedAIs ()
+    {
+        return highestBitIndex(allowAIs);
     }
 
     /**
@@ -116,7 +131,7 @@ public class Criterion extends SimpleStreamableObject
     {
         ArrayList<String> values = new ArrayList<String>();
         for (int ii = 2; ii <= GameCodes.MAX_PLAYERS; ii++) {
-            if (isValidPlayerCount(ii)) {
+            if (isBitSet(players, ii-2)) {
                 values.add(String.valueOf(ii));
             }
         }
@@ -130,11 +145,30 @@ public class Criterion extends SimpleStreamableObject
     {
         ArrayList<String> values = new ArrayList<String>();
         for (int ii = 1; ii <= GameCodes.MAX_ROUNDS; ii++) {
-            if (isValidRoundCount(ii)) {
+            if (isBitSet(rounds, ii-1)) {
                 values.add(String.valueOf(ii));
             }
         }
         return join(values);
+    }
+
+    /**
+     * Returns a string describing the allowable AI counts.
+     */
+    public String getAIString ()
+    {
+        ArrayList<String> values = new ArrayList<String>();
+        for (int ii = 1; ii <= GameCodes.MAX_PLAYERS-1; ii++) {
+            if (isBitSet(allowAIs, ii-1)) {
+                values.add(String.valueOf(ii));
+            }
+        }
+        return join(values);
+    }
+
+    protected boolean isBitSet (int mask, int bit)
+    {
+        return (mask & (1 << bit)) != 0;
     }
 
     protected int highestBitIndex (int bitmask)

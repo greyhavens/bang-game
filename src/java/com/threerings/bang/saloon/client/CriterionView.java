@@ -67,6 +67,14 @@ public class CriterionView extends BContainer
         table.add(_range = new BComboBox(xlate(msgs, RANGE)));
         _range.selectItem(0);
 
+        table.add(new BLabel(msgs.get("m.opponents"), "match_label"));
+        row = new BContainer(GroupLayout.makeHStretch());
+        for (int ii = 0; ii < _players.length; ii++) {
+            row.add(_aiopps[ii] = new BCheckBox("" + (ii+1)));
+            _aiopps[ii].setSelected(ii < 1);
+        }
+        table.add(row);
+
         row = GroupLayout.makeHBox(GroupLayout.CENTER);
         row.add(_go = new BButton(msgs.get("m.go"), _golist, "match"));
         _go.setStyleClass("big_button");
@@ -110,6 +118,9 @@ public class CriterionView extends BContainer
             criterion.ranked = Criterion.compose(
                 (rsel == 0 || rsel == 2), (rsel == 1 || rsel == 2), false);
             criterion.range = _range.getSelectedIndex();
+            criterion.allowAIs = Criterion.compose(
+                _aiopps[0].isSelected(), _aiopps[1].isSelected(),
+                _aiopps[2].isSelected());
 
             // pass the buck onto the controller to do the rest
             _go.setEnabled(false);
@@ -122,9 +133,11 @@ public class CriterionView extends BContainer
 
     protected BCheckBox[] _rounds = new BCheckBox[GameCodes.MAX_ROUNDS];
     protected BCheckBox[] _players = new BCheckBox[GameCodes.MAX_PLAYERS-1];
+    protected BCheckBox[] _aiopps = new BCheckBox[GameCodes.MAX_PLAYERS-1];
     protected BComboBox _ranked, _range;
     protected BButton _go;
 
     protected static final String[] RANKED = { "ranked", "unranked", "both" };
     protected static final String[] RANGE = { "tight", "loose", "open" };
+    protected static final String[] ALLOW_AIS = { "allow", "disallow", "both" };
 }
