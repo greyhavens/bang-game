@@ -53,6 +53,14 @@ public class SaloonManager extends PlaceManager
             throw new InvocationException("m.new_games_disabled");
         }
 
+        // sanity check the criterion, force at least 2 players and 1 round
+        if (criterion.players == 0) {
+            criterion.players = 1;
+        }
+        if (criterion.rounds == 0) {
+            criterion.rounds = 1;
+        }
+
         // look for an existing match that is compatible
         for (Match match : _matches.values()) {
             // don't allow players to join matches that are about to start
