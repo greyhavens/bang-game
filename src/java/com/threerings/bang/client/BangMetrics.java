@@ -36,16 +36,18 @@ public class BangMetrics
 
     /** JME colors for each of the players. */
     public static final ColorRGBA[] JPIECE_COLORS = {
-        ColorRGBA.blue, ColorRGBA.red, ColorRGBA.green,
+        new ColorRGBA(0, 0.5f, 1, 1),
+        ColorRGBA.red,
+        ColorRGBA.green,
         new ColorRGBA(1, 1, 0, 1)
     };
 
     /** Darker JME colors for each of the players. */
     public static final ColorRGBA[] DARKER_COLORS = {
-        ColorRGBA.blue.mult(ColorRGBA.darkGray),
-        ColorRGBA.red.mult(ColorRGBA.darkGray),
-        ColorRGBA.green.mult(ColorRGBA.darkGray),
-        new ColorRGBA(1, 1, 0, 0).mult(ColorRGBA.darkGray)
+        JPIECE_COLORS[0].mult(ColorRGBA.darkGray),
+        JPIECE_COLORS[1].mult(ColorRGBA.darkGray),
+        JPIECE_COLORS[2].mult(ColorRGBA.darkGray),
+        JPIECE_COLORS[3].mult(ColorRGBA.darkGray)
     };
     
     /** Colorization ids for each of the players. */
