@@ -190,7 +190,7 @@ public class SaloonManager extends PlaceManager
                     }
                 }
             };
-            match.starter.schedule(GO_WITH_IT_DELAY);
+            match.starter.schedule(match.getWaitForOpponentsDelay());
             break;
 
         case START_NOW:
@@ -262,5 +262,4 @@ public class SaloonManager extends PlaceManager
     protected HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
 
     protected static final long START_DELAY = 5000L;
-    protected static final long GO_WITH_IT_DELAY = 10000L;
 }

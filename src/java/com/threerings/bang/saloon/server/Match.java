@@ -182,6 +182,18 @@ public class Match
     }
 
     /**
+     * Returns the duration we should wait for more opponents to arrive before
+     * we go ahead and start the game with whoever is already here.
+     */
+    public long getWaitForOpponentsDelay ()
+    {
+        // if there are at least two players, just wait ten seconds; otherwise
+        // wait ten seconds for every empty seat
+        int humans = getPlayerCount();
+        return ((humans > 1) ? 1 : players.length - humans) * BASE_WAIT;
+    }
+
+    /**
      * Creates a game configuration based on our match information.
      */
     public BangConfig createConfig ()
@@ -220,4 +232,6 @@ public class Match
 
     protected Criterion _criterion;
     protected int _minRating, _avgRating, _maxRating;
+
+    protected static final long BASE_WAIT = 10000L;
 }
