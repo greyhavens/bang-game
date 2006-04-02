@@ -582,10 +582,13 @@ public class BangController extends GameController
      */
     protected void updateRank ()
     {
-        if (_bangobj.points == null) {
+        // don't update our rank until after the first tick, by which time
+        // everyone will have loaded their units and we might have some points
+        if (_bangobj.points == null || _bangobj.tick < 1) {
             return;
         }
 
+        log.info("Updating rank...");
         // determine each player's rank based on those points
         int[] spoints = (int[])_bangobj.points.clone();
         Arrays.sort(spoints);

@@ -153,6 +153,9 @@ public class BangObject extends GameObject
     /** A {@link #state} constant indicating the post-round phase. */
     public static final int POST_ROUND = 7;
 
+    /** A {@link #playerStatus} constant used before the game starts. */
+    public static final int PLAYER_PREPARING = 2;
+
     /** Contains the representation of the game board. */
     public transient BangBoard board;
     
@@ -514,6 +517,13 @@ public class BangObject extends GameObject
     public boolean isInteractivePlay ()
     {
         return (state == IN_PLAY && tick >= 0);
+    }
+
+    @Override // documentation inherited
+    protected boolean isActivePlayerStatus (int playerStatus)
+    {
+        return super.isActivePlayerStatus(playerStatus) ||
+            (playerStatus == PLAYER_PREPARING);
     }
 
     // AUTO-GENERATED: METHODS START

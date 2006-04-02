@@ -111,7 +111,9 @@ public class PlayerStatusView extends BContainer
     public void attributeChanged (AttributeChangedEvent event)
     {
         if (event.getName().equals(BangObject.STATE)) {
+            updatePoints();
             updateStatus();
+
         } else if (event.getName().equals(BangObject.AVATARS)) {
             updateAvatar();
         }
@@ -124,8 +126,12 @@ public class PlayerStatusView extends BContainer
             if (event.getIndex() == _pidx) {
                 updateAvatar();
             }
-        } else {
+
+        } else if (event.getName().equals(BangObject.PLAYER_STATUS)) {
             updateStatus();
+
+        } else if (event.getName().equals(BangObject.POINTS)) {
+            updatePoints();
         }
     }
 
@@ -258,20 +264,26 @@ public class PlayerStatusView extends BContainer
             (_bangobj.getOccupantInfo(_bangobj.players[_pidx]) != null);
     }
 
-    protected void updateStatus ()
+    protected void updatePoints ()
     {
         _points.setText("" + _bangobj.points[_pidx]);
+    }
 
+    protected void updateStatus ()
+    {
         switch (_bangobj.state) {
         case BangObject.SELECT_PHASE:
-            // when we're in the select phase, display whether or not this
-            // player has selected their bigshot and cards
-            setRank(_bangobj.bigShots[_pidx] == null ? -2 : -1);
+        case BangObject.BUYING_PHASE:
+            setRank(_bangobj.playerStatus[_pidx] ==
+                    BangObject.PLAYER_IN_PLAY ? -1 : -2);
             break;
 
-        case BangObject.BUYING_PHASE:
-            // TODO: publish something when the player 
-            setRank(-2);
+        case BangObject.IN_PLAY:
+            // on the first tick we wait for everyone to load their units
+            if (_bangobj.tick == 0) {
+                setRank(_bangobj.playerStatus[_pidx] ==
+                        BangObject.PLAYER_IN_PLAY ? -1 : -2);
+            }
             break;
 
         case BangObject.GAME_OVER:

@@ -243,6 +243,21 @@ public class BangManager extends GameManager
         }
     }
 
+    @Override // documentation inherited
+    public void playerReady (ClientObject caller)
+    {
+        super.playerReady(caller);
+
+        // if we're in play, we need to note that this player is ready to go
+        if (_bangobj.state == BangObject.IN_PLAY) {
+            PlayerObject user = (PlayerObject)caller;
+            int pidx = _bangobj.getPlayerIndex(user.handle);
+            if (pidx != -1) {
+                _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
+            }
+        }
+    }
+
     /**
      * Attempts to move the specified unit to the specified coordinates and
      * optionally fire upon the specified target.
@@ -358,6 +373,38 @@ public class BangManager extends GameManager
         effect.apply(_bangobj, _effector);
     }
 
+    /**
+     * Called by the {@link Scenario} to start the specified phase of the game.
+     */
+    public void startPhase (int state)
+    {
+        switch (state) {
+        case BangObject.PRE_TUTORIAL:
+            resetPreparingStatus(true);
+            _bangobj.setState(BangObject.PRE_TUTORIAL);
+            break;
+
+        case BangObject.SELECT_PHASE:
+            resetPreparingStatus(false);
+            _bangobj.setState(BangObject.SELECT_PHASE);
+            break;
+
+        case BangObject.BUYING_PHASE:
+            resetPreparingStatus(false);
+            _bangobj.setState(BangObject.BUYING_PHASE);
+            break;
+
+        case BangObject.IN_PLAY:
+            startGame();
+            break;
+
+        default:
+            log.warning("Unable to start next phase [game=" + where() +
+                        ", state=" + state + "].");
+            break;
+        }
+    }
+
     @Override // documentation inherited
     public void updateOccupantInfo (OccupantInfo occInfo)
     {
@@ -455,6 +502,8 @@ public class BangManager extends GameManager
             _bangobj.pdata[ii] = new BangObject.PlayerData();
             _bangobj.stats[ii] = new StatSet();
         }
+        _bangobj.setPlayerStatus(new int[slots]);
+        resetPreparingStatus(false);
     }
 
     @Override // documentation inherited
@@ -597,7 +646,6 @@ public class BangManager extends GameManager
         }
 
         // clear out the various per-player data structures
-        _ready.clear();
         _purchases.clear();
 
         // set up the board and pieces so it's visible while purchasing
@@ -721,6 +769,9 @@ public class BangManager extends GameManager
             unit.originalOwner = pidx;
             _bangobj.setBigShotsAt(unit, pidx);
 
+            // note that they're done with this phase
+            _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
+
         } finally {
             _bangobj.commitTransaction();
         }
@@ -781,7 +832,7 @@ public class BangManager extends GameManager
         }
 
         // note that this player is ready and potentially fire away
-        _ready.add(pidx);
+        _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
         checkStartNextPhase();
     }
 
@@ -793,26 +844,16 @@ public class BangManager extends GameManager
      */
     protected void checkStartNextPhase ()
     {
-        switch (_bangobj.state) {
-        case BangObject.SELECT_PHASE:
-            for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
+        if (_bangobj.state == BangObject.SELECT_PHASE ||
+            _bangobj.state == BangObject.BUYING_PHASE) {
+            for (int ii = 0; ii < _bangobj.playerStatus.length; ii++) {
+                // if anyone is still preparing, we're not ready
                 if (_bangobj.isActivePlayer(ii) &&
-                    _bangobj.bigShots[ii] == null) {
+                    _bangobj.playerStatus[ii] == BangObject.PLAYER_PREPARING) {
                     return;
                 }
             }
             _scenario.startNextPhase(_bangobj);
-            break;
-
-        case BangObject.BUYING_PHASE:
-            if (_ready.size() == _bangobj.getActivePlayerCount()) {
-                _scenario.startNextPhase(_bangobj);
-            }
-            break;
-
-        default:
-            // nothing to do in this phase
-            break;
         }
     }
 
@@ -834,6 +875,9 @@ public class BangManager extends GameManager
         // now place and add the player pieces
         try {
             _bangobj.startTransaction();
+
+            // override the player status set in super.gameWillStart()
+            resetPreparingStatus(true);
 
             try {
                 // let the scenario know that we're about to start the round
@@ -1736,6 +1780,32 @@ public class BangManager extends GameManager
         }
     }
 
+    /**
+     * Resets all player status to preparing. We do this element by element
+     * rather than setting one array because there is the change that
+     * unprocessed element sets in the queue will overwrite what we set.
+     */
+    protected void resetPreparingStatus (boolean aisAreReady)
+    {
+        boolean dotrans = !_bangobj.inTransaction();
+        if (dotrans) {
+            _bangobj.startTransaction();
+        }
+        try {
+            for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                int status = BangObject.PLAYER_PREPARING;
+                if (isAI(ii) && aisAreReady) {
+                    status = BangObject.PLAYER_IN_PLAY;
+                }
+                _bangobj.setPlayerStatusAt(status, ii);
+            }
+        } finally {
+            if (dotrans) {
+                _bangobj.commitTransaction();
+            }
+        }
+    }
+
     /** Indicates that we're testing and to do wacky stuff. */
     protected boolean isTest ()
     {
@@ -1983,9 +2053,6 @@ public class BangManager extends GameManager
 
     /** The purchases made by players in the buying phase. */
     protected PieceSet _purchases = new PieceSet();
-
-    /** Used to indicate when all players are ready. */
-    protected ArrayIntSet _ready = new ArrayIntSet();
 
     /** Used to record damage done during an attack. */
     protected IntIntMap _damage = new IntIntMap();

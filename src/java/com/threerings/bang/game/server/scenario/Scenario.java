@@ -90,15 +90,15 @@ public abstract class Scenario
         switch (bangobj.state) {
         case BangObject.POST_ROUND:
         case BangObject.PRE_GAME:
-            bangobj.setState(BangObject.SELECT_PHASE);
+            _bangmgr.startPhase(BangObject.SELECT_PHASE);
             break;
 
         case BangObject.SELECT_PHASE:
-            bangobj.setState(BangObject.BUYING_PHASE);
+            _bangmgr.startPhase(BangObject.BUYING_PHASE);
             break;
 
         case BangObject.BUYING_PHASE:
-            _bangmgr.startGame();
+            _bangmgr.startPhase(BangObject.IN_PLAY);
             break;
 
         default:
