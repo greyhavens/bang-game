@@ -588,7 +588,6 @@ public class BangController extends GameController
             return;
         }
 
-        log.info("Updating rank...");
         // determine each player's rank based on those points
         int[] spoints = (int[])_bangobj.points.clone();
         Arrays.sort(spoints);
