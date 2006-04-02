@@ -79,6 +79,20 @@ public class BarberView extends ShopView
     }
 
     @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _faketab.reference();
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _faketab.release();
+    }
+
+    @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
         super.renderComponent(renderer);

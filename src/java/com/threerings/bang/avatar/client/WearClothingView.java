@@ -48,6 +48,14 @@ public class WearClothingView extends BContainer
         }
         final BImage tabbg = ctx.loadImage("ui/barber/side_change_clothes.png");
         add(new HackyTabs(ctx, true, "ui/barber/tab_", tabs, 54, 30) {
+            protected void wasAdded () {
+                super.wasAdded();
+                tabbg.reference();
+            }
+            protected void wasRemoved () {
+                super.wasRemoved();
+                tabbg.release();
+            }
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
                 tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42,
