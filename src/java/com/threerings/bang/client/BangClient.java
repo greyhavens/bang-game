@@ -240,6 +240,19 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Returns the player status view; creating the view if necessary. We purge
+     * the view from memory every time the main view is switched, but preserve
+     * it while in one place.
+     */
+    public StatusView getStatusView ()
+    {
+        if (_status == null) {
+            _status = new StatusView(_ctx);
+        }
+        return _status;
+    }
+
+    /**
      * Potentially shows the next phase of the client introduction and
      * tutorial. This is called after first logging on and then at the
      * completion of each phase of the intro and tutorial.
@@ -562,6 +575,15 @@ public class BangClient extends BasicClient
 
     protected void fadeInMainView (BWindow view)
     {
+        // clear out the status view because the main view is switching
+        if (_status != null) {
+            if (_status.isAdded()) {
+                clearPopup(_status, true);
+            }
+            _status = null;
+        }
+
+        // now add the main view
         _mview = view;
         _ctx.getRootNode().addWindow(_mview);
 
@@ -669,6 +691,7 @@ public class BangClient extends BasicClient
     protected ArrayList<BWindow> _popups = new ArrayList<BWindow>();
     protected PardnerChatView _pcview;
     protected SystemChatView _scview;
+    protected StatusView _status;
 
     protected ArrayList<Name> _invites = new ArrayList<Name>();
 }

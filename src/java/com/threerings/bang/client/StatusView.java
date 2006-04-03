@@ -54,10 +54,8 @@ public class StatusView extends BWindow
                     return;
                 }
 
-                // create the status view the first time we show it
-                if (_status == null) {
-                    _status = new StatusView(ctx);
-                }
+                // get the status view from the client
+                StatusView status = ctx.getBangClient().getStatusView();
 
                 // determine which tab we want to show
                 int tabidx = 0;
@@ -68,18 +66,17 @@ public class StatusView extends BWindow
                     }
                 }
 
-                if (_status.isAdded()) {
-                    if (tabidx == _status.getSelectedTab()) {
-                        ctx.getBangClient().clearPopup(_status, true);
+                if (status.isAdded()) {
+                    if (tabidx == status.getSelectedTab()) {
+                        ctx.getBangClient().clearPopup(status, true);
                     } else {
-                        _status.setSelectedTab(tabidx);
+                        status.setSelectedTab(tabidx);
                     }
                 } else {
-                    ctx.getBangClient().displayPopup(_status, true);
-                    _status.setSelectedTab(tabidx);
+                    ctx.getBangClient().displayPopup(status, true);
+                    status.setSelectedTab(tabidx);
                 }
             }
-            protected StatusView _status;
         };
 
         for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
