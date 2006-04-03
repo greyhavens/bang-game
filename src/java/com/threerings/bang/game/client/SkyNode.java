@@ -135,7 +135,7 @@ public class SkyNode extends Node
     public void updateWorldData (float time)
     {
         // match the position of the camera
-        getWorldTranslation().set(
+        getLocalTranslation().set(
             _ctx.getCameraHandler().getCamera().getLocation());
         super.updateWorldData(time);
         if (_board == null) {
