@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.jme.renderer.Renderer;
+import com.jmex.bui.BButton;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
@@ -27,11 +28,14 @@ import com.threerings.bang.util.BangContext;
  */
 public class UnitStatusView extends BWindow
 {
-    public UnitStatusView (BangContext ctx, BangObject bangobj)
+    public UnitStatusView (
+        BangContext ctx, BangBoardView view, BangObject bangobj)
     {
         super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.TOP));
 
         _ctx = ctx;
+        _view = view;
+        _bangobj = bangobj;
         _pidx = bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
     }
 
@@ -82,13 +86,14 @@ public class UnitStatusView extends BWindow
         }
     }
 
-    protected class UnitLabel extends BLabel
+    protected class UnitLabel extends BButton
         implements UnitSprite.UpdateObserver, Comparable<UnitLabel>
     {
         public int pieceId;
 
         public UnitLabel () {
-            super("", "unit_status_label");
+            super("");
+            setStyleClass("unit_status_label");
         }
 
         public void setUnitSprite (UnitSprite sprite) {
@@ -184,6 +189,16 @@ public class UnitStatusView extends BWindow
             }
         }
 
+        @Override // documentation inherited
+        protected void fireAction (long when, int modifiers)
+        {
+            Unit unit = getUnit();
+            if (_bangobj != null && _bangobj.isInteractivePlay() &&
+                unit != null && unit.isAlive()) {
+                _view.selectUnit(unit, true);
+            }
+        }
+
         protected void setInfluence (BImage influence)
         {
             if (_influence == influence) {
@@ -213,6 +228,8 @@ public class UnitStatusView extends BWindow
     }
 
     protected BangContext _ctx;
+    protected BangBoardView _view;
+    protected BangObject _bangobj;
     protected int _pidx;
     protected ArrayList<UnitLabel> _labels = new ArrayList<UnitLabel>();
 }

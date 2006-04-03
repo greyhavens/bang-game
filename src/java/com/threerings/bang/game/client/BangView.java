@@ -333,7 +333,7 @@ public class BangView extends BWindow
     protected void showUnitStatus ()
     {
         if (ustatus == null) {
-            ustatus = new UnitStatusView(_ctx, _bangobj);
+            ustatus = new UnitStatusView(_ctx, view, _bangobj);
         }
         if (!ustatus.isAdded()) {
             _ctx.getRootNode().addWindow(ustatus);
