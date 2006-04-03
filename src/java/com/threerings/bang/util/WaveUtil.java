@@ -163,14 +163,16 @@ public class WaveUtil
         float[][] iamps)
     {
         Vector2f k = new Vector2f();
-        int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2;
+        int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2, ni, nj;
         float ir2 = 1f / FastMath.sqrt(2f), ir2re;
         for (int ii = 0; ii < numSamplesX; ii++) {
-            for (int jj = ii, ni, nj; jj < numSamplesY; jj++) {
-                k.set((FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
-                        sizeX,
-                    (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
-                        sizeY);
+            k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
+                sizeX;
+            for (int jj = (ii <= hnsx) ? 0 : hnsy,
+                nn = (ii == 0 || ii > hnsx) ? hnsy : numSamplesY - 1;
+                jj <= nn; jj++) {
+                k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
+                    sizeY;
                 ir2re = ir2 * FastMath.sqrt(spectrum.getEnergy(k));
                 ramps[ii][jj] = (float)(FastMath.rand.nextGaussian()*ir2re);
                 iamps[ii][jj] = (float)(FastMath.rand.nextGaussian()*ir2re);
@@ -198,14 +200,16 @@ public class WaveUtil
         DispersionModel model, float t, float[][] ramps, float[][] iamps)
     {
         Vector2f k = new Vector2f();
-        int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2;
+        int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2, ni, nj;
         float coswkt2;
         for (int ii = 0; ii < numSamplesX; ii++) {
-            for (int jj = ii, ni, nj; jj < numSamplesY; jj++) {
-                k.set((FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
-                        sizeX,
-                    (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
-                        sizeY);
+            k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
+                sizeX;
+            for (int jj = (ii <= hnsx) ? 0 : hnsy,
+                nn = (ii == 0 || ii > hnsx) ? hnsy : numSamplesY - 1;
+                jj <= nn; jj++) {
+                k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
+                    sizeY;
                 coswkt2 = 2f * FastMath.cos(model.getDispersion(k)*t);
                 ramps[ii][jj] = iramps[ii][jj] * coswkt2;
                 iamps[ii][jj] = iiamps[ii][jj] * coswkt2;
@@ -250,6 +254,97 @@ public class WaveUtil
     }
     
     /**
+     * Given the current wave amplitudes, computes the vertices of the waves
+     * and adds them to the provided buffer.
+     *
+     * @param ramps the real components of the wave amplitudes (which will be
+     * overwritten)
+     * @param iamps the imaginary components of the wave amplitudes (also
+     * overwritten)
+     * @param vbuf the buffer to populate with vertices (must be of size
+     * numSamplesX + 1 by numSamplesY + 1)
+     */
+    public static void addVertices (int numSamplesX, int numSamplesY,
+        float sizeX, float sizeY, float[][] ramps, float[][] iamps,
+        FloatBuffer vbuf)
+    {
+        // compute the ifft to get the wave heights
+        ifft(ramps, iamps);
+        
+        // add vertices to displacements in the buffer
+        Vector3f vertex = new Vector3f();
+        float xstep = sizeX / numSamplesX, ystep = sizeY / numSamplesY;
+        for (int ii = 0, idx = 0; ii <= numSamplesX; ii++) {
+            for (int jj = 0; jj <= numSamplesY; jj++) {
+                BufferUtils.addInBuffer(vertex.set(ii * xstep, jj * ystep,
+                        ramps[ii % numSamplesX][jj % numSamplesY]),
+                    vbuf, idx++);
+            }
+        }
+    }
+    
+    /**
+     * Given the current wave amplitudes, computes the X/Y displacements
+     * of the waves and stores them in the provided buffer.
+     *
+     * @param rgradx a temporary buffer for real gradient values
+     * @param igradx a temporary buffer for imaginary gradient values
+     * @param rgrady a temporary buffer for real gradient values
+     * @param igrady a temporary buffer for imaginary gradient values
+     * @param choppiness the displacement scaling factor
+     * @param vbuf the vertex buffer to populate
+     */
+    public static void getDisplacements (int numSamplesX, int numSamplesY,
+        float sizeX, float sizeY, float[][] ramps, float[][] iamps,
+        float[][] rgradx, float[][] igradx, float[][] rgrady, float[][] igrady,
+        float choppiness, FloatBuffer vbuf)
+    {
+        // compute the x and y components of the displacement in separate iffts
+        Vector2f k = new Vector2f();
+        int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2, ni, nj;
+        float rlenk;
+        for (int ii = 0; ii < numSamplesX; ii++) {
+            k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
+                sizeX;
+            for (int jj = (ii <= hnsx) ? 0 : hnsy,
+                nn = (ii == 0 || ii > hnsx) ? hnsy : numSamplesY - 1;
+                jj <= nn; jj++) {
+                k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
+                    sizeY;
+                if ((rlenk = k.length()) != 0f) {
+                    rlenk = 1f / rlenk;
+                }
+                rgradx[ii][jj] = -iamps[ii][jj] * k.x * rlenk;
+                igradx[ii][jj] = ramps[ii][jj] * k.x * rlenk;
+                rgrady[ii][jj] = -iamps[ii][jj] * k.y * rlenk;
+                igrady[ii][jj] = ramps[ii][jj] * k.y * rlenk;
+                if (ii != hnsx && jj != hnsy) {
+                    ni = (numSamplesX - ii) % numSamplesX;
+                    nj = (numSamplesY - jj) % numSamplesY;
+                    rgradx[ni][nj] = rgradx[ii][jj];
+                    igradx[ni][nj] = -igradx[ii][jj];
+                    rgrady[ni][nj] = rgrady[ii][jj];
+                    igrady[ni][nj] = -igrady[ii][jj];
+                }
+            }
+        }
+        ifft(rgradx, igradx);
+        ifft(rgrady, igrady);
+        
+        // combine and set in the buffer
+        Vector3f displacement = new Vector3f();
+        for (int ii = 0, idx = 0; ii <= numSamplesX; ii++) {
+            for (int jj = 0; jj <= numSamplesY; jj++) {
+                BufferUtils.setInBuffer(displacement.set(
+                        rgradx[ii % numSamplesX][jj % numSamplesY],
+                        rgrady[ii % numSamplesX][jj % numSamplesY],
+                        0f).multLocal(choppiness),
+                    vbuf, idx++);
+            }
+        }
+    }
+    
+    /**
      * Given the current wave amplitudes, computes the normals of the waves
      * and stores them in the provided buffer.
      *
@@ -267,28 +362,32 @@ public class WaveUtil
         float[][] rgradx, float[][] igradx, float[][] rgrady, float[][] igrady,
         FloatBuffer nbuf)
     {
-        // compute the x component of the gradient
-        int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2;
-        float k;
+        // compute the x and y components of the gradient in separate iffts
+        Vector2f k = new Vector2f();
+        int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2, ni, nj;
         for (int ii = 0; ii < numSamplesX; ii++) {
-            k = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
-                    sizeX;
-            for (int jj = 0; jj < numSamplesY; jj++) {
-                rgradx[ii][jj] = -iamps[ii][jj] * k;
-                igradx[ii][jj] = ramps[ii][jj] * k;
+            k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
+                sizeX;
+            for (int jj = (ii <= hnsx) ? 0 : hnsy,
+                nn = (ii == 0 || ii > hnsx) ? hnsy : numSamplesY - 1;
+                jj <= nn; jj++) {
+                k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
+                    sizeY;
+                rgradx[ii][jj] = -iamps[ii][jj] * k.x;
+                igradx[ii][jj] = ramps[ii][jj] * k.x;
+                rgrady[ii][jj] = -iamps[ii][jj] * k.y;
+                igrady[ii][jj] = ramps[ii][jj] * k.y;
+                if (ii != hnsx && jj != hnsy) {
+                    ni = (numSamplesX - ii) % numSamplesX;
+                    nj = (numSamplesY - jj) % numSamplesY;
+                    rgradx[ni][nj] = rgradx[ii][jj];
+                    igradx[ni][nj] = -igradx[ii][jj];
+                    rgrady[ni][nj] = rgrady[ii][jj];
+                    igrady[ni][nj] = -igrady[ii][jj];
+                }
             }
         }
         ifft(rgradx, igradx);
-        
-        // compute the y component of the gradient
-        for (int ii = 0; ii < numSamplesX; ii++) {
-            for (int jj = 0; jj < numSamplesY; jj++) {
-                k = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
-                    sizeY;
-                rgrady[ii][jj] = -iamps[ii][jj] * k;
-                igrady[ii][jj] = ramps[ii][jj] * k;
-            }
-        }
         ifft(rgrady, igrady);
         
         // combine, normalize, and set in the buffer
@@ -305,29 +404,78 @@ public class WaveUtil
     }
     
     /**
+     * Computes the normals using adjacent vertices.
+     *
+     * @param nbuf the buffer to populate with normals (must be of size
+     * numSamplesX + 1 by numSamplesY + 1)
+     */
+    public static void getNormals (int numSamplesX, int numSamplesY,
+        float sizeX, float sizeY, FloatBuffer vbuf, FloatBuffer nbuf)
+    {
+        Vector3f left = new Vector3f(), right = new Vector3f(),
+            up = new Vector3f(), down = new Vector3f();
+        int vwidth = numSamplesX + 1, vheight = numSamplesY + 1,
+            lidx, uidx, idx = 0;
+        float loff, uoff;
+        for (int ii = 0; ii < numSamplesX; ii++) {
+            if (ii == 0) {
+                lidx = vwidth - 2;
+                loff = -sizeX;
+            } else {
+                lidx = ii - 1;
+                loff = 0f;
+            }
+            for (int jj = 0; jj < numSamplesY; jj++) {
+                if (jj == 0) {
+                    uidx = vheight - 2;
+                    uoff = -sizeY;
+                } else {
+                    uidx = jj - 1;
+                    uoff = 0f;
+                }
+                BufferUtils.populateFromBuffer(down, vbuf,
+                    ii * vheight + jj + 1);
+                BufferUtils.populateFromBuffer(up, vbuf,
+                    ii * vheight + uidx);
+                up.y += uoff;
+                BufferUtils.populateFromBuffer(left, vbuf,
+                    lidx * vheight + jj);
+                left.x += loff;
+                BufferUtils.populateFromBuffer(right, vbuf,
+                    (ii + 1) * vheight + jj);
+                BufferUtils.setInBuffer(down.subtractLocal(up).
+                    crossLocal(left.subtractLocal(right)).normalizeLocal(),
+                    nbuf, idx++);
+            }
+            BufferUtils.copyInternalVector3(nbuf, idx - numSamplesY, idx++);
+        }
+        for (int jj = 0; jj < vheight; jj++) {
+            BufferUtils.copyInternalVector3(nbuf, idx - vheight*numSamplesY,
+                idx++); 
+        }
+    }
+    
+    /**
      * Performs an in-place two dimensional inverse fast Fourier transform on
      * the supplied arrays.
      */
     protected static void ifft (float[][] rex, float[][] imx)
     {
-        // compute the conjugate of the input
-        for (int ii = 0; ii < imx.length; ii++) {
-            for (int jj = 0; jj < imx.length; jj++) {
-                imx[ii][jj] *= -1f;
-            }
-        }
-        
-        // compute the forward fft
-        fft(rex, imx);
-        
-        // conjugate and scale the result
-        float in2 = 1f / (rex.length * rex.length), nin2 = -in2;
+        // compute the ifft in the first dimension
         for (int ii = 0; ii < rex.length; ii++) {
-            for (int jj = 0; jj < rex.length; jj++) {
-                rex[ii][jj] *= in2;
-                imx[ii][jj] *= nin2;
-            }
+            ifft(rex[ii], imx[ii]);
         }
+        
+        // transpose and compute in the second dimension
+        transpose(rex);
+        transpose(imx);
+        for (int ii = 0; ii < rex.length; ii++) {
+            ifft(rex[ii], imx[ii]);
+        }
+        
+        // transpose back
+        transpose(rex);
+        transpose(imx);
     }
     
     /**
@@ -351,6 +499,26 @@ public class WaveUtil
         // transpose back
         transpose(rex);
         transpose(imx);
+    }
+    
+    /**
+     * Performs an in-place inverse fast Fourier transform on the supplied
+     * arrays.
+     *
+     * @param rex the real components of the input data
+     * @param imx the imaginary components of the input data
+     */
+    protected static void ifft (float[] rex, float[] imx)
+    {
+        // take fft of swapped arrays
+        fft(imx, rex);
+        
+        // rescale
+        float rn = 1f / rex.length;
+        for (int ii = 0; ii < rex.length; ii++) {
+            rex[ii] *= rn;
+            imx[ii] *= rn;   
+        }
     }
     
     /**

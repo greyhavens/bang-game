@@ -252,11 +252,14 @@ public class WaterNode extends Node
         WaveUtil.getAmplitudes(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
             PATCH_SIZE, PATCH_SIZE, _iramps, _iiamps, _disp, _t, _ramps,
             _iamps);
-        WaveUtil.getNormals(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
-            PATCH_SIZE, PATCH_SIZE, _ramps, _iamps, _rgradx, _igradx, _rgrady,
-            _igrady, _patch.getNormalBuffer());
-        WaveUtil.getVertices(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
+        WaveUtil.getDisplacements(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
+            PATCH_SIZE, PATCH_SIZE, _ramps, _iamps, _rgradx, _igradx,
+            _rgrady, _igrady, 1f, _patch.getVertexBuffer());
+        WaveUtil.addVertices(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
             PATCH_SIZE, PATCH_SIZE, _ramps, _iamps, _patch.getVertexBuffer());
+        WaveUtil.getNormals(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
+            PATCH_SIZE, PATCH_SIZE, _patch.getVertexBuffer(),
+            _patch.getNormalBuffer());
     }
 
     /**
