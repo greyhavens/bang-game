@@ -11,12 +11,12 @@ import java.util.Iterator;
 
 import java.text.SimpleDateFormat;
 
-import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextField;
@@ -247,9 +247,6 @@ public class PardnerView extends IconPalette
             _handle = _ctx.getStyleSheet().getTextFactory(this,
                 null).createText(entry.handle.toString(),
                     _ctx.getStyleSheet().getColor(this, null));
-
-            updateAvatar();
-            updateStatus();
         }
 
         public void insert ()
@@ -278,7 +275,8 @@ public class PardnerView extends IconPalette
             }
         }
 
-        public Dimension getPreferredSize (int whint, int hhint)
+        @Override // documentation inherited
+        protected Dimension computePreferredSize (int whint, int hhint)
         {
             return ICON_SIZE;
         }
@@ -294,7 +292,7 @@ public class PardnerView extends IconPalette
             _label.layout(new Insets(25, offtop, 25, 31));
         }
 
-        // documentation inherited
+        @Override // documentation inherited
         protected void renderComponent (Renderer renderer)
         {
             super.renderComponent(renderer);
@@ -310,47 +308,103 @@ public class PardnerView extends IconPalette
             }
         }
 
+        @Override // documentation inherited
+        protected void wasAdded ()
+        {
+            super.wasAdded();
+
+            // set up our imagery
+            _handle.wasAdded();
+            updateAvatar();
+            updateStatus();
+        }
+
+        @Override // documentation inherited
+        protected void wasRemoved ()
+        {
+            super.wasRemoved();
+
+            // clean up our imagery
+            _handle.wasRemoved();
+            setLocation(null);
+            setLastSeen(null);
+            setScroll(null);
+        }
+
         protected void updateAvatar ()
         {
+            BImage image;
             if (entry.avatar == null) {
-                setIcon(new ImageIcon(
-                    _ctx.loadImage("ui/pardners/silhouette.png")));
+                image = _ctx.loadImage("ui/pardners/silhouette.png");
             } else {
                 int w = AVATAR_SIZE.width, h = AVATAR_SIZE.height;
-                setIcon(new ImageIcon(AvatarView.getImage(
-                                          _ctx, entry.avatar, w, h)));
+                image = AvatarView.getImage(_ctx, entry.avatar, w, h);
             }
+            setIcon(new ImageIcon(image));
         }
 
         protected void updateStatus ()
         {
             // update the location icon
+            ImageIcon location = null;
             if (entry.status == PardnerEntry.IN_GAME ||
                 entry.status == PardnerEntry.IN_SALOON) {
-                _location = new ImageIcon(_ctx.loadImage(
-                    "ui/pardners/in_" + (entry.status == PardnerEntry.IN_GAME ?
-                        "game" : "saloon") + ".png"));
-
-            } else {
-                _location = null;
+                String path = "ui/pardners/in_" +
+                    (entry.status == PardnerEntry.IN_GAME ? "game" : "saloon") +
+                    ".png";
+                location = new ImageIcon(_ctx.loadImage(path));
             }
+            setLocation(location);
 
             // and the scroll icon
             String path = "ui/frames/" + (entry.status == PardnerEntry.OFFLINE ?
                                           "tall_" : "") + "small_scroll.png";
-            _scroll = new ImageIcon(_ctx.loadImage(path));
+            setScroll(new ImageIcon(_ctx.loadImage(path)));
 
             // and the last session date
+            BText last = null;
             if (entry.status == PardnerEntry.OFFLINE) {
-                String msg = _ctx.xlate(BANG_MSGS, MessageBundle.tcompose(
-                    "m.pardner_last_session", LAST_SESSION_FORMAT.format(
-                        entry.getLastSession())));
-                _last = _ctx.getStyleSheet().getTextFactory(this,
-                    "last_session").createText(msg,
-                        _ctx.getStyleSheet().getColor(this, "last_session"));
+                String msg = LAST_SESSION_FORMAT.format(entry.getLastSession());
+                msg = MessageBundle.tcompose("m.pardner_last_session", msg);
+                msg = _ctx.xlate(BANG_MSGS, msg);
+                last = _ctx.getStyleSheet().getTextFactory(
+                    this, "last_session").createText(
+                        msg, _ctx.getStyleSheet().getColor(
+                            this, "last_session"));
+            }
+            setLastSeen(last);
+        }
 
-            } else {
-                _last = null;
+        protected void setLocation (ImageIcon icon)
+        {
+            if (_location != null) {
+                _location.wasRemoved();
+            }
+            _location = icon;
+            if (_location != null) {
+                _location.wasAdded();
+            }
+        }
+
+        protected void setLastSeen (BText text)
+        {
+            if (_last != null) {
+                _last.wasRemoved();
+            }
+            _last = text;
+            if (_last != null) {
+                _last.wasAdded();
+            }
+        }
+
+        protected void setScroll (ImageIcon icon)
+        {
+            if (_scroll != null) {
+                _scroll.wasRemoved();
+            }
+            _scroll = icon;
+            if (_scroll != null) {
+                _scroll.wasAdded();
             }
         }
 
