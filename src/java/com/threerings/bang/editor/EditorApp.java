@@ -62,13 +62,9 @@ public class EditorApp extends JmeCanvasApp
             // create and initialize our client instance
             _client = new EditorClient(this, _frame);
 
-            // post a runnable that will get executed after everything is
-            // initialized and happy
-            EditorServer.omgr.postRunnable(new Runnable() {
-                public void run () {
-                    _client.logon();
-                }
-            });
+            // start up the client
+            _client.start();
+
             return true;
         }
         return false;

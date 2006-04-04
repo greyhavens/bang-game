@@ -69,28 +69,20 @@ public class EditorClient extends BasicClient
         return _ctx;
     }
 
-    public void logon ()
+    /**
+     * Called by the application when we're ready to go.
+     */
+    public void start ()
     {
-        // create our client object
-        ClientResolutionListener clr = new ClientResolutionListener() {
-            public void clientResolved (Name username, ClientObject clobj) {
-                // fake up a bootstrap...
-                BootstrapData data = new BootstrapData();
-                data.clientOid = clobj.getOid();
-                data.services = EditorServer.invmgr.bootlist;
-
-                // ...and configure the client to operate using the
-                // server's distributed object manager
-                _ctx.getClient().gotBootstrap(data, EditorServer.omgr);
+        // TODO: display progress in a UI somewhere
+        initResources(new InitObserver() {
+            public void progress (int percent) {
+                // once we're fully unpacked, continue our initialization
+                if (percent == 100) {
+                    logon();
+                }
             }
-
-            public void resolutionFailed (Name username, Exception reason) {
-                log.log(Level.WARNING, "Failed to resolve client [who=" +
-                        username + "].", reason);
-                // TODO: display this error
-            }
-        };
-        EditorServer.clmgr.resolveClientObject(new Name("editor"), clr);
+        });
     }
 
     // documentation inherited from interface SessionObserver
@@ -131,6 +123,30 @@ public class EditorClient extends BasicClient
     public boolean isDispatchThread ()
     {
         return EventQueue.isDispatchThread();
+    }
+
+    protected void logon ()
+    {
+        // create our client object
+        ClientResolutionListener clr = new ClientResolutionListener() {
+            public void clientResolved (Name username, ClientObject clobj) {
+                // fake up a bootstrap...
+                BootstrapData data = new BootstrapData();
+                data.clientOid = clobj.getOid();
+                data.services = EditorServer.invmgr.bootlist;
+
+                // ...and configure the client to operate using the
+                // server's distributed object manager
+                _ctx.getClient().gotBootstrap(data, EditorServer.omgr);
+            }
+
+            public void resolutionFailed (Name username, Exception reason) {
+                log.log(Level.WARNING, "Failed to resolve client [who=" +
+                        username + "].", reason);
+                // TODO: display this error
+            }
+        };
+        EditorServer.clmgr.resolveClientObject(new Name("editor"), clr);
     }
 
     /**
