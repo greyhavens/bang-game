@@ -381,14 +381,12 @@ public class Model
         _ctx = ctx;
         _key = type + "/" + name;
 
-        // our properties files are loaded via the classpath
         _props = new Properties();
-        String path = "rsrc/" + _key + "/model.properties";
+        String path = _key + "/model.properties";
         try {
-            InputStream pin =
-                getClass().getClassLoader().getResourceAsStream(path);
-            if (pin != null) {
-                _props.load(new BufferedInputStream(pin));
+            File file = _ctx.getResourceManager().getResourceFile(path);
+            if (file.exists()) {
+                _props.load(new BufferedInputStream(new FileInputStream(file)));
             } else {
                 log.info("Faking model info file for " + _key + ".");
                 String mname = name.substring(name.lastIndexOf("/")+1);
@@ -708,7 +706,6 @@ public class Model
             JmeBinaryReader jbr = new JmeBinaryReader();
             jbr.setProperty("bound", bound);
 
-            // our media is loaded from unpacked files
             File file = _ctx.getResourceManager().getResourceFile(path);
             if (file.exists()) {
                 try {
@@ -733,6 +730,7 @@ public class Model
                         model.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
                         model.setRenderState(RenderUtil.blendAlpha);
                         model.setRenderState(RenderUtil.overlayZBuf);
+                        centerOrigins(model);   
                     }
                     
                     // enable back-face culling for solid models
@@ -763,6 +761,30 @@ public class Model
         return model;
     }
 
+    /**
+     * Recursively descends the scene graph, making sure that the origins of
+     * each {@link Geometry} object encountered are located at the object's
+     * bounding volume center.
+     */
+    protected void centerOrigins (Spatial spatial)
+    {
+        if (spatial instanceof Node) {
+            Node node = (Node)spatial;
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                centerOrigins(node.getChild(ii));
+            }
+        } else if (spatial instanceof Geometry) {
+            Geometry geom = (Geometry)spatial;
+            Vector3f mcenter = geom.getModelBound().getCenter(),
+                offset = geom.getLocalTranslation().subtract(mcenter);
+            if (!offset.equals(Vector3f.ZERO)) {
+                geom.getLocalTranslation().subtractLocal(offset);
+                geom.getModelBound().setCenter(mcenter.addLocal(offset));
+                geom.getBatch().translatePoints(offset);
+            }
+        }
+    }
+    
     protected String cleanPath (String path)
     {
         // non-file URLs don't handle blah/foo/../bar so we make those path
