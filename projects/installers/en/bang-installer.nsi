@@ -16,7 +16,6 @@
   ; the JVM from the web and installs it
   ; !define BUNDLE_JVM true
 
-  !define NO_QUESTIONS_ASKED   ; quicky installer
   !include "..\data\installer-common.nsi"
 
 Section "Extra" ExtraStuff
