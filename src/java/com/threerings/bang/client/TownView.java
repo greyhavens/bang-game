@@ -209,7 +209,7 @@ public class TownView extends BWindow
             throws IOException
         {
             BoardRecord brec = new BoardRecord();
-            brec.load(_ctx.getResourceManager().getResource(
+            brec.load(_ctx.getResourceManager().getResourceFile(
                           "menu/" + townId + "/town.board"));
             BangObject bangobj = new BangObject();
             // we only want to configure the board name the first time we're

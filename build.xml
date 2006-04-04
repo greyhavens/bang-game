@@ -86,13 +86,6 @@
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/classes/rsrc"/>
     <mkdir dir="${javadoc.dir}"/>
-    <copy todir="${deploy.dir}/classes">
-      <fileset dir="${src.dir}" includes="**/*.properties"/>
-    </copy>
-  </target>
-
-  <!-- copies our resources into the build directory -->
-  <target name="rsrc">
     <copy todir="${deploy.dir}/classes/rsrc">
       <fileset dir="rsrc">
        <include name="**/*"/>
@@ -103,14 +96,16 @@
        <exclude name="fences/**"/>
        <exclude name="boards/**"/>
        <exclude name="avatars/**"/>
+       <exclude name="sounds/**"/>
        <exclude name="tutorials/**/*.xml"/>
        <exclude name="config/**/*.xml"/>
+       <exclude name="**/*.properties"/>
+       <exclude name="**/*.bss"/>
+       <exclude name="**/*.css"/>
+       <exclude name="**/*.txt"/>
        <exclude name="**/*.jar"/>
+       <exclude name="**/*.dat"/>
        <exclude name="**/source/**"/>
-      </fileset>
-      <fileset dir="rsrc">
-       <include name="*/*.txt"/>
-       <include name="avatars/*.dat"/>
       </fileset>
     </copy>
   </target>
@@ -122,11 +117,11 @@
       <arg value="-name"/>
       <arg value="*.wav"/>
     </exec>
-    <jar file="rsrc/sounds/effects.jar" basedir="rsrc/sounds/effects">
+    <jar file="rsrc/sounds/effects/bundle.jar" basedir="rsrc/sounds/effects">
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/sounds/music.jar" basedir="rsrc/sounds/music">
+    <jar file="rsrc/sounds/music/bundle.jar" basedir="rsrc/sounds/music">
       <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
@@ -142,32 +137,28 @@
       <fileset dir="rsrc" includes="**/*.3DS"/>
       <fileset dir="rsrc" includes="**/*.ASE"/>
     </convert>
-    <jar file="rsrc/units.jar" basedir="rsrc/units">
+    <jar file="rsrc/units/bundle.jar" basedir="rsrc/units">
       <include name="**/*.png"/>
       <include name="**/*.jme"/>
       <include name="**/*.wav"/>
-      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/props.jar" basedir="rsrc/props">
+    <jar file="rsrc/props/bundle.jar" basedir="rsrc/props">
       <include name="**/*.png"/>
       <include name="**/*.jme"/>
       <include name="**/*.wav"/>
-      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/bonuses.jar" basedir="rsrc/bonuses">
+    <jar file="rsrc/bonuses/bundle.jar" basedir="rsrc/bonuses">
       <include name="**/*.png"/>
       <include name="**/*.jme"/>
       <include name="**/*.wav"/>
-      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/extras.jar" basedir="rsrc/extras">
+    <jar file="rsrc/extras/bundle.jar" basedir="rsrc/extras">
       <include name="**/*.png"/>
       <include name="**/*.jme"/>
       <include name="**/*.wav"/>
-      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
   </target>
@@ -243,7 +234,7 @@
   </target>
 
   <!-- build the java class files -->
-  <target name="compile" depends="prepare,rsrc">
+  <target name="compile" depends="prepare">
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
            debug="on" optimize="off" deprecation="on">
       <classpath refid="classpath"/>
@@ -292,6 +283,12 @@
       <fileset dir=".">
         <include name="deployment.properties"/>
         <include name="build.properties"/>
+        <!-- these need to be available via the classpath -->
+        <include name="rsrc/**/*.txt"/>
+        <include name="rsrc/**/*.properties"/>
+        <include name="rsrc/**/*.bss"/>
+        <include name="rsrc/**/*.css"/>
+        <include name="rsrc/**/*.dat"/>
       </fileset>
     </jar>
 
@@ -311,7 +308,6 @@
     <copy todir="${client_dir}/rsrc">
       <fileset dir="rsrc" includes="**/*.jar"/>
       <fileset dir="rsrc" includes="config/resource/manager.properties"/>
-      <fileset dir="dist" includes="bang-*.jar" excludes="bang-*code.jar"/>
     </copy>
     <copy todir="${client_dir}/native">
       <fileset dir="lib/i686-Linux" includes="*.so"/>
@@ -387,11 +383,8 @@
   </target>
 
   <!-- builds the avatar, media and sounds jar files -->
-  <target name="mdist" depends="prepare,models,sounds,bits,avatars,rsrc">
-    <jar file="${deploy.dir}/${app.name}-media.jar"
-         basedir="${deploy.dir}/classes">
-      <include name="rsrc/**"/>
-    </jar>
+  <target name="mdist" depends="prepare,models,sounds,bits,avatars">
+    <jar file="rsrc/bundle.jar" basedir="${deploy.dir}/classes/rsrc"/>
   </target>
 
 </project>

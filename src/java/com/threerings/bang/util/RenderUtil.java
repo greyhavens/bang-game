@@ -127,8 +127,7 @@ public class RenderUtil
             for (int ii = 1; ii <= MAX_TILE_VARIANT; ii++) {
                 String path = "tiles/ground/" +
                     terrain.toString().toLowerCase() + ii + ".png";
-                URL texpath = loader.getResource("rsrc/" + path);
-                if (texpath == null) {
+                if (!ctx.getResourceManager().getResourceFile(path).exists()) {
                     continue;
                 }
                 Image teximg = ctx.getImageCache().getImage(path);

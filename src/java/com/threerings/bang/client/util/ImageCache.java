@@ -3,6 +3,7 @@
 
 package com.threerings.bang.client.util;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -73,12 +74,12 @@ public class ImageCache
 
         // load the image data from the resource manager
         BufferedImage bufimg;
+        File ifile = _ctx.getResourceManager().getResourceFile(rsrcPath);
         try {
-            bufimg = ImageIO.read(
-                _ctx.getResourceManager().getImageResource(rsrcPath));
+            bufimg = ImageIO.read(ifile);
         } catch (Throwable t) {
             log.log(Level.WARNING, "Unable to load image resource " +
-                    "[path=" + rsrcPath + "].", t);
+                    "[path=" + ifile + "].", t);
             // cope; return an error image of abitrary size
             bufimg = ImageUtil.createErrorImage(64, 64);
         }
@@ -106,12 +107,12 @@ public class ImageCache
 
         // load the image data from the resource manager
         BufferedImage bufimg;
+        File ifile = _ctx.getResourceManager().getResourceFile(rsrcPath);
         try {
-            bufimg = ImageIO.read(
-                _ctx.getResourceManager().getImageResource(rsrcPath));
+            bufimg = ImageIO.read(ifile);
         } catch (Throwable t) {
             log.log(Level.WARNING, "Unable to load image resource " +
-                    "[path=" + rsrcPath + "].", t);
+                    "[path=" + ifile + "].", t);
             // cope; return an error image of abitrary size
             bufimg = ImageUtil.createErrorImage(64, 64);
         }
@@ -249,12 +250,12 @@ public class ImageCache
         }
 
         // load the image data from the resource manager
+        File ifile = _ctx.getResourceManager().getResourceFile(rsrcPath);
         try {
-            image = ImageIO.read(
-                _ctx.getResourceManager().getImageResource(rsrcPath));
+            image = ImageIO.read(ifile);
         } catch (Throwable t) {
             log.log(Level.WARNING, "Unable to load image resource " +
-                    "[path=" + rsrcPath + "].", t);
+                    "[path=" + ifile + "].", t);
             // cope; return an error image of abitrary size
             image = ImageUtil.createErrorImage(64, 64);
         }

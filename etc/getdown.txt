@@ -22,7 +22,6 @@ code = code/config.jar
 code = code/bang-pcode.jar
 code = code/lwjgl.jar
 code = code/lwjgl_util.jar
-code = rsrc/bang-media.jar
 
 # Native library bits
 resource = [linux] native/liblwjgl.so
@@ -40,13 +39,14 @@ resource = progress.png
 resource = rsrc/avatars/female/components.jar
 resource = rsrc/avatars/male/components.jar
 resource = rsrc/avatars/metadata.jar
-resource = rsrc/bonuses.jar
+resource = rsrc/bonuses/bundle.jar [u]
+resource = rsrc/bundle.jar [u]
 resource = rsrc/config/resource/manager.properties
-resource = rsrc/extras.jar
-resource = rsrc/props.jar
-resource = rsrc/sounds/effects.jar
-resource = rsrc/sounds/music.jar
-resource = rsrc/units.jar
+resource = rsrc/extras/bundle.jar [u]
+resource = rsrc/props/bundle.jar [u]
+resource = rsrc/sounds/effects/bundle.jar [u]
+resource = rsrc/sounds/music/bundle.jar [u]
+resource = rsrc/units/bundle.jar [u]
 
 # Parameters passed to the JVM
 jvmarg = -Xmx128M

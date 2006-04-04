@@ -381,12 +381,14 @@ public class Model
         _ctx = ctx;
         _key = type + "/" + name;
 
+        // our properties files are loaded via the classpath
         _props = new Properties();
-        String path = _key + "/model.properties";
+        String path = "rsrc/" + _key + "/model.properties";
         try {
-            File file = _ctx.getResourceManager().getResourceFile(path);
-            if (file.exists()) {
-                _props.load(new BufferedInputStream(new FileInputStream(file)));
+            InputStream pin =
+                getClass().getClassLoader().getResourceAsStream(path);
+            if (pin != null) {
+                _props.load(new BufferedInputStream(pin));
             } else {
                 log.info("Faking model info file for " + _key + ".");
                 String mname = name.substring(name.lastIndexOf("/")+1);
@@ -706,6 +708,7 @@ public class Model
             JmeBinaryReader jbr = new JmeBinaryReader();
             jbr.setProperty("bound", bound);
 
+            // our media is loaded from unpacked files
             File file = _ctx.getResourceManager().getResourceFile(path);
             if (file.exists()) {
                 try {

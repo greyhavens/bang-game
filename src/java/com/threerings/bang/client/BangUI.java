@@ -273,7 +273,7 @@ public class BangUI
         int type = path.endsWith(".pfb") ? Font.TYPE1_FONT : Font.TRUETYPE_FONT;
         try {
             font = Font.createFont(
-                type, ctx.getResourceManager().getResource(path));
+                type, ctx.getResourceManager().getResourceFile(path));
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to load font '" + path + "'.", e);
             font = new Font("Dialog", Font.PLAIN, 16);

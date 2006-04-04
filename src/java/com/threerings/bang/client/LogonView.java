@@ -136,7 +136,6 @@ public class LogonView extends BWindow
                 new UsernamePasswordCreds(
                     new Name(username),
                     Password.makeFromClear(password).getEncrypted()));
-            _ctx.getClient().setVersion("" + DeploymentConfig.getVersion());
             _ctx.getClient().logon();
 
         } else if ("options".equals(event.getAction())) {
@@ -167,6 +166,12 @@ public class LogonView extends BWindow
             _status.setStatus(_msgs.get("m.init_complete"), false);
             _logon.setEnabled(!StringUtil.isBlank(_password.getText()));
             _initialized = true;
+
+            // if we already have credentials (set on the command line during
+            // testing), auto-logon
+            if (_ctx.getClient().getCredentials() != null) {
+                _ctx.getClient().logon();
+            }
         }
     }
 

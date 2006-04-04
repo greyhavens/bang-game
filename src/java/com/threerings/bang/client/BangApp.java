@@ -141,19 +141,18 @@ public class BangApp extends JmeApp
     {
         Client client = _client.getContext().getClient();
 
-        // pass them on to the client
-        log.info("Using [server=" + server + ", port=" + port + "].");
+        // configure our server, port and client version
+        log.info("Using [server=" + server + ", port=" + port +
+                 ", version=" + DeploymentConfig.getVersion() + "].");
         client.setServer(server, port);
+        client.setVersion(String.valueOf(DeploymentConfig.getVersion()));
 
-        // configure the client with some credentials and logon
+        // configure the client with credentials if they were supplied
         if (username != null && password != null) {
-            // create and set our credentials
             client.setCredentials(
                 new UsernamePasswordCreds(
                     new Name(username),
                     Password.makeFromClear(password).getEncrypted()));
-            client.setVersion(String.valueOf(DeploymentConfig.getVersion()));
-            client.logon();
         }
 
         // now start up the main event loop
