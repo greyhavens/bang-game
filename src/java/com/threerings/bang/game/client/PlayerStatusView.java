@@ -182,6 +182,9 @@ public class PlayerStatusView extends BContainer
             }
             String cid = "" + card.cardId;
             for (int ii = 0; ii < _cards.length; ii++) {
+                if (_cards[ii] == null) {
+                    continue;
+                }
                 if (cid.equals(_cards[ii].getAction())) {
                     remove(_cards[ii]);
                     _cards[ii] = null;
