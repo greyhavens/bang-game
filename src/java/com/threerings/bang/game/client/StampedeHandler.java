@@ -31,30 +31,32 @@ public class StampedeHandler extends EffectHandler
     {
         _stampede = (StampedeEffect)_effect;
 
-        // set all the buffalo on the paths listed in the effect
-        for (int ii = 0; ii < _stampede.paths.length; ii++) {
-            MobileSprite sprite = new MobileSprite("extras", "bison");
-            sprite.init(_ctx, _view, _bangobj.board, _sounds,
-                        new DummyPiece(), _bangobj.tick);
-            _view.addSprite(sprite);
-            sprite.addObserver(_remover);
-            _buffalo++;
-            sprite.move(_bangobj.board, _stampede.paths[ii],
-                        StampedeEffect.BUFFALO_SPEED);
-        }
-
+        // set the buffalo on the path listed in the effect
+        MobileSprite sprite = new MobileSprite("extras", "bison");
+        sprite.init(_ctx, _view, _bangobj.board, _sounds, new DummyPiece(),
+            _bangobj.tick);
+        _view.addSprite(sprite);
+        sprite.move(_bangobj.board, _stampede.path,
+            StampedeEffect.BUFFALO_SPEED);
+            
+        final int penderId = notePender();
+        sprite.addObserver(new PathObserver() {
+            public void pathCompleted (Sprite sprite, Path path) {
+                _view.removeSprite(sprite);
+                maybeComplete(penderId);
+            }
+            public void pathCancelled (Sprite sprite, Path path) {
+                _view.removeSprite(sprite);
+                maybeComplete(penderId);
+            }
+        });
+        
         // activate each collision on its listed tick
         for (int ii = 0; ii < _stampede.collisions.length; ii++) {
             new CollisionInterval(_stampede.collisions[ii]).schedule();
         }
 
         return !isCompleted();
-    }
-
-    @Override // documentation inherited
-    protected boolean isCompleted ()
-    {
-        return super.isCompleted() && (_buffalo == 0);
     }
 
     /** A dummy piece for the buffalo sprites. */
@@ -73,7 +75,7 @@ public class StampedeHandler extends EffectHandler
 
         public void schedule ()
         {
-            schedule((long)(1000 * (_collision.step-1) /
+            schedule((long)(1000 * (Math.max(0, _collision.step-1)) /
                             StampedeEffect.BUFFALO_SPEED));
         }
 
@@ -88,19 +90,6 @@ public class StampedeHandler extends EffectHandler
         protected StampedeEffect.Collision _collision;
     }
 
-    protected PathObserver _remover = new PathObserver() {
-        public void pathCompleted (Sprite sprite, Path path) {
-            _view.removeSprite(sprite);
-            _buffalo--;
-            maybeComplete(-1);
-        }
-        public void pathCancelled (Sprite sprite, Path path) {
-            _view.removeSprite(sprite);
-            _buffalo--;
-            maybeComplete(-1);
-        }
-    };
-
     protected StampedeEffect _stampede;
-    protected int _buffalo;
+    protected int _penderId;
 }

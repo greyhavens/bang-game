@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -25,6 +26,8 @@ import com.threerings.bang.game.util.PointList;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
+
+import static com.threerings.bang.Log.*;
 
 /**
  * Represents the effect of a stampede running over the board.
@@ -77,8 +80,8 @@ public class StampedeEffect extends Effect
     /** The radius of the effect. */
     public transient int radius;
 
-    /** The paths to be followed by each buffalo. */
-    public PointList[] paths;
+    /** The path to be followed by the buffalo. */
+    public PointList path;
 
     /** The list of collisions between buffalo and units. */
     public Collision[] collisions;
@@ -108,54 +111,8 @@ public class StampedeEffect extends Effect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // determine how many of the causer's units are in the x and y stripes
-        int xstripe = 0, ystripe = 0;
-        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-            Piece piece = (Piece)it.next();
-            if (piece.owner != causer) {
-                continue;
-            }
-            if (Math.abs(piece.x - x) <= radius*2) {
-                ystripe++;
-            }
-            if (Math.abs(piece.y - y) <= radius*2) {
-                xstripe++;
-            }
-        }
-
-        // choose the order of directions to try such that the directions with
-        // the fewest number of causer units in the way are first
-        int[] dirs = new int[DIRECTIONS.length];
-        if (xstripe > ystripe) {
-            shuffleCopy(Y_DIRECTIONS, 0, dirs, 0, Y_DIRECTIONS.length);
-            shuffleCopy(X_DIRECTIONS, 0, dirs, Y_DIRECTIONS.length,
-                X_DIRECTIONS.length);
-
-        } else if (ystripe > xstripe) {
-            shuffleCopy(X_DIRECTIONS, 0, dirs, 0, X_DIRECTIONS.length);
-            shuffleCopy(Y_DIRECTIONS, 0, dirs, X_DIRECTIONS.length,
-                Y_DIRECTIONS.length);
-
-        } else {
-            shuffleCopy(DIRECTIONS, 0, dirs, 0, DIRECTIONS.length);
-        }
-
-        // try the directions in sequence and use whichever one gets the
-        // buffalo closest to the target
-        int minSquareDist = Integer.MAX_VALUE;
-        PointList[] bestPaths = null;
-        for (int ii = 0; ii < dirs.length; ii++) {
-            PointList[] paths = new PointList[NUM_BUFFALO];
-            int squareDist = createPaths(bangobj.board, dirs[ii], paths);
-            if (squareDist < minSquareDist) {
-                minSquareDist = squareDist;
-                bestPaths = paths;
-                if (minSquareDist <= radius * radius) {
-                    break;
-                }
-            }
-        }
-        paths = bestPaths;
+        // create the path that the buffalo will follow
+        createPath(bangobj.board);
 
         // create the list of collisions
         createCollisions(bangobj, dammap);
@@ -166,11 +123,7 @@ public class StampedeEffect extends Effect
     {
         // delay the tick by the amount of time it takes for the buffalo to run
         // their course
-        int maxlen = 0;
-        for (int i = 0; i < paths.length; i++) {
-            maxlen = Math.max(maxlen, paths[i].size());
-        }
-        reportDelay(obs, (long)((maxlen-1) * 1000 / BUFFALO_SPEED));
+        reportDelay(obs, (long)((path.size()-1) * 1000 / BUFFALO_SPEED));
 
         // apply the collisions in order
         for (int ii = 0; ii < collisions.length; ii++) {
@@ -187,174 +140,71 @@ public class StampedeEffect extends Effect
     }
 
     /**
-     * Copies elements from the source array to the destination array in
-     * shuffled order.
+     * Creates a path for the buffalo.
      */
-    protected void shuffleCopy (
-        int[] src, int srcidx, int[] dest, int destidx, int length)
+    protected void createPath (BangBoard board)
     {
-        System.arraycopy(src, srcidx, dest, destidx, length);
-        ArrayUtil.shuffle(dest, destidx, length);
+        // starting at the target position, grow the path from both ends until
+        // we're blocked or we've reached the maximum length
+        path = new PointList();
+        Point start = new Point(x, y);
+        path.add(start);
+        int hdir = growPath(board, path, -1);
+        if (hdir == -1) {
+            log.warning("Couldn't find anywhere for the buffalo to go! " +
+                "[effect=" + this + "]."); 
+            return;
+        }
+        Collections.reverse(path);
+        PointList rpath = new PointList();
+        rpath.add(start);
+        if (growPath(board, rpath, (hdir + 2) % 4) != -1) {
+            path.addAll(rpath.subList(1, rpath.size()));
+        }
     }
-
-    /**
-     * Creates a set of paths for buffalo traversing the board in the specified
-     * direction.
-     *
-     * @param paths the array of paths to populate
-     * @return the minimum square distance to the stampede target reached in
-     * the paths
-     */
-    protected int createPaths (BangBoard board, int dir, PointList[] paths)
+    
+    protected int growPath (BangBoard board, PointList path, int dir)
     {
-        // determine the approximate point of origin
-        int ox, oy;
-        if (dir == NORTH || dir == SOUTH) {
-            ox = x;
-            oy = (dir == NORTH) ? board.getHeight() - radius - 1 : radius;
-
+        Point last = path.get(path.size() - 1);
+        int[] dirs;
+        if (dir != -1) {
+            int rot = (RandomUtil.getInt(2) == 0) ? 1 : 3;
+            dirs = new int[] { dir, (dir + rot) % 4, (dir + rot + 2) % 4,
+                (dir + 2) % 4 };
         } else {
-            ox = (dir == WEST) ? board.getWidth() - radius - 1 : radius;
-            oy = y;
+            dirs = (int[])DIRECTIONS.clone();
+            ArrayUtil.shuffle(dirs);
         }
-
-        // scatter the initial locations about the origin
-        Point[] locs = new Point[paths.length];
-        int[] dirs = new int[paths.length];
-        boolean[] reversed = new boolean[paths.length];
-        int extent = radius + 1;
-        for (int i = 0; i < locs.length; i++) {
-            Point loc;
-            do {
-                loc = new Point(
-                    ox + RandomUtil.getInt(+extent, -extent),
-                    oy + RandomUtil.getInt(+extent, -extent));
-
-            } while (ListUtil.contains(locs, loc));
-            locs[i] = loc;
-            paths[i] = new PointList();
-            paths[i].add(loc);
-            dirs[i] = dir;
-        }
-
-        // step through until all buffalo have left the board or we've reached
-        // the maximum path length
-        int maxStep = (int)(MAX_STEP_FACTOR * ((dir == NORTH || dir == SOUTH) ?
-            board.getHeight() : board.getWidth()));
-        int minSquareDist = Integer.MAX_VALUE;
-        for (int ii = 0; ii < maxStep; ii++) {
-            int dist = stepStampede(board, dir, paths, locs, dirs, reversed);
-            minSquareDist = Math.min(minSquareDist, dist);
-            if (ListUtil.size(locs) == 0) {
-                break;
-            }
-        }
-        return minSquareDist;
-    }
-
-    /**
-     * Executes a single step of the stampede.
-     *
-     * @param locs the current locations of each buffalo
-     * @param dirs the temporary directions of each buffalo
-     * @param reversed whether each buffalo is moving in reverse with respect
-     * to the stampede direction
-     * @param dirs the temporary directions of each buffalo
-     * @return the minimum square distance to the stampede target reached on
-     * this step
-     */
-    protected int stepStampede (
-        BangBoard board, int dir, PointList[] paths,
-        Point[] locs, int[] dirs, boolean[] reversed)
-    {
-        Point[] nlocs = new Point[paths.length];
-        int minSquareDist = Integer.MAX_VALUE;
-        for (int i = 0; i < paths.length; i++) {
-            if (locs[i] == null) {
+        PointList bpath = null;
+        int bdir = -1, marker = path.size();
+        for (int ii = 0; ii < dirs.length; ii++) {
+            Point next = new Point(last.x + DX[dirs[ii]],
+                last.y + DY[dirs[ii]]);
+            if (!board.isGroundOccupiable(next.x, next.y, true) ||
+                path.contains(next)) {
                 continue;
             }
-
-            // arrange the list of possible directions in order of preference
-            int fdir = (dir + (reversed[i] ? 2 : 0)) % DIRECTIONS.length;
-            int[] ndirs;
-            if (dirs[i] == fdir) {
-                boolean swap = (RandomUtil.getInt(2) == 1);
-                ndirs = new int[] { fdir, // fwd, left, right, back
-                    (fdir + (swap ? 3 : 1)) % DIRECTIONS.length,
-                    (fdir + (swap ? 1 : 3)) % DIRECTIONS.length,
-                    (fdir + 2) % DIRECTIONS.length };
-
-            } else {
-                ndirs = new int[] { fdir, // fwd, same, back, other
-                    dirs[i], (fdir + 2) % DIRECTIONS.length,
-                    (dirs[i] + 2) % DIRECTIONS.length };
+            path.add(next);
+            if (path.size() == STAMPEDE_LENGTH + 1) {
+                return dirs[ii];
             }
-
-            // see if we can go somewhere; if not, wait
-            int ndir = dirs[i];
-            nlocs[i] = locs[i];
-            for (int j = 0; j < ndirs.length; j++) {
-                Point nloc = new Point(
-                    locs[i].x + DX[ndirs[j]], locs[i].y + DY[ndirs[j]]);
-                if (board.isGroundOccupiable(nloc.x, nloc.y, true) &&
-                    !ListUtil.contains(nlocs, nloc)) {
-                    ndir = ndirs[j];
-                    nlocs[i] = nloc;
-                    break;
-                }
+            growPath(board, path, dirs[ii]);
+            if (path.size() == STAMPEDE_LENGTH + 1) {
+                return dirs[ii];
             }
-
-            // toggle the reverse flag if we're going backwards with respect to
-            // the forward or temporary direction
-            int rndir = (ndir + 2) % DIRECTIONS.length;
-            if (rndir == dirs[i] || rndir == fdir) {
-                reversed[i] = !reversed[i];
+            if (bpath == null || (path.size() - marker) > bpath.size()) {
+                bpath = new PointList();
+                bpath.addAll(path.subList(marker, path.size()));
+                bdir = dirs[ii];
             }
-
-            // update the direction and min dist, add the new location to the
-            // path, and end if we've reached the edge of the board
-            dirs[i] = ndir;
-            paths[i].add(nlocs[i]);
-            minSquareDist = Math.min(minSquareDist,
-                getSquareDistanceToTarget(nlocs[i]));
-            if (isOnEdge(board, fdir, nlocs[i])) {
-                nlocs[i] = null;
-            }
+            path.subList(marker, path.size()).clear();
         }
-        System.arraycopy(nlocs, 0, locs, 0, paths.length);
-        return minSquareDist;
-    }
-
-    /**
-     * Gets the squared distance from the specified point to the stampede
-     * target.
-     */
-    protected int getSquareDistanceToTarget (Point loc)
-    {
-        int dx = loc.x - x, dy = loc.y - y;
-        return dx*dx + dy*dy;
-    }
-
-    /**
-     * Determines whether the specified point is on the edge of the board with
-     * respect to the specified stampede direction.
-     */
-    protected boolean isOnEdge (BangBoard board, int dir, Point loc)
-    {
-        if (dir == NORTH) {
-            return loc.y == 0;
-
-        } else if (dir == SOUTH) {
-            return loc.y == board.getHeight() - 1;
-
-        } else if (dir == WEST) {
-            return loc.x == 0;
-
-        } else { // dir == EAST
-            return loc.x == board.getWidth() - 1;
+        if (bpath != null) {
+            path.addAll(bpath);
         }
+        return bdir;
     }
-
+    
     /**
      * Creates the collision list for the buffalo.
      */
@@ -369,33 +219,27 @@ public class StampedeEffect extends Effect
             }
         }
 
-        // find the maximum path length
-        int maxlen = 0;
-        for (int ii = 0; ii < paths.length; ii++) {
-            maxlen = Math.max(maxlen, paths[ii].size());
-        }
-
-        // step through the paths, updating units and generating collisions
+        // step through the path, updating units and generating collisions
         ArrayList<Collision> cols = new ArrayList<Collision>();
         Point loc = new Point();
-        for (int i = 0; i < maxlen; i++) {
+        for (int ii = 0, nn = path.size(); ii < nn; ii++) {
             for (Piece unit : units) {
                 loc.setLocation(unit.x, unit.y);
-                if (containsBuffalo(loc, i)) {
+                if (containsBuffalo(loc, ii)) {
                     // try to move the unit to a point that wasn't occupied by
                     // a buffalo in the last step and won't be in the next step
                     ArrayList<Point> nlocs = new ArrayList<Point>();
-                    for (int j = 0; j < DIRECTIONS.length; j++) {
-                        Point nloc = new Point(loc.x + DX[j], loc.y + DY[j]);
+                    for (int jj = 0; jj < DIRECTIONS.length; jj++) {
+                        Point nloc = new Point(loc.x + DX[jj], loc.y + DY[jj]);
                         if (bangobj.board.canOccupy(unit, nloc.x, nloc.y) &&
-                            !containsBuffalo(nloc, i - 1) &&
-                            !containsBuffalo(nloc, i + 1)) {
+                            !containsBuffalo(nloc, ii - 1) &&
+                            !containsBuffalo(nloc, ii + 1)) {
                             nlocs.add(nloc);
                         }
                     }
                     Point nloc = (nlocs.size() > 0 ?
                         (Point)RandomUtil.pickRandom(nlocs) : loc);
-                    cols.add(new Collision(i, unit.pieceId, nloc.x, nloc.y));
+                    cols.add(new Collision(ii, unit.pieceId, nloc.x, nloc.y));
                     bangobj.board.clearShadow(unit);
                     unit.position(nloc.x, nloc.y);
                     bangobj.board.shadowPiece(unit);
@@ -415,18 +259,9 @@ public class StampedeEffect extends Effect
         if (step < 0) {
             return false;
         }
-        for (int ii = 0; ii < paths.length; ii++) {
-            if (paths[ii].size() > step && paths[ii].get(step).equals(loc)) {
-                return true;
-            }
-        }
-        return false;
+        return path.size() > step && path.get(step).equals(loc);
     }
 
-    /** The number of buffalo in the stampede. */
-    protected static final int NUM_BUFFALO = 3;
-
-    /** Multiplied by the board dimension to determine the maximum number of
-     * steps the buffalo can take in traversing the board. */
-    protected static final float MAX_STEP_FACTOR = 2f;
+    /** The (maximum) length of the buffalo stampede in each direction. */
+    protected static final int STAMPEDE_LENGTH = 4;
 }
