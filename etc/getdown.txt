@@ -19,6 +19,7 @@ ui.status_text = FFFFFF
 
 # These all go into the classpath
 code = code/config.jar
+code = code/bang-config.jar
 code = code/bang-pcode.jar
 code = code/lwjgl.jar
 code = code/lwjgl_util.jar

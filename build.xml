@@ -283,12 +283,6 @@
       <fileset dir=".">
         <include name="deployment.properties"/>
         <include name="build.properties"/>
-        <!-- these need to be available via the classpath -->
-        <include name="rsrc/**/*.txt"/>
-        <include name="rsrc/**/*.properties"/>
-        <include name="rsrc/**/*.bss"/>
-        <include name="rsrc/**/*.css"/>
-        <include name="rsrc/**/*.dat"/>
       </fileset>
     </jar>
 
@@ -301,6 +295,7 @@
     </copy>
     <copy todir="${client_dir}/code">
       <fileset dir="dist" includes="bang-pcode.jar"/>
+      <fileset dir="dist" includes="bang-config.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
       <fileset dir="lib" includes="lwjgl_util.jar"/>
     </copy>
@@ -378,10 +373,21 @@
   <!-- rebuild all the niggling bits -->
   <target name="bits" depends="colorpos,tutorials"/>
 
-  <!-- builds the code jar file -->
+  <!-- builds the distribution jar files -->
   <target name="dist" depends="prepare,compile">
+    <!-- stick all our code in one jar file -->
     <jar file="${deploy.dir}/${app.name}-code.jar"
          basedir="${deploy.dir}/classes" includes="com/**"/>
+    <!-- and all of our config and properties files in another -->
+    <jar destfile="${deploy.dir}/${app.name}-config.jar">
+      <fileset dir=".">
+        <include name="rsrc/**/*.txt"/>
+        <include name="rsrc/**/*.properties"/>
+        <include name="rsrc/**/*.bss"/>
+        <include name="rsrc/**/*.css"/>
+        <include name="rsrc/**/*.dat"/>
+      </fileset>
+    </jar>
   </target>
 
   <!-- builds the avatar, media and sounds jar files -->
