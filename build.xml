@@ -122,11 +122,11 @@
       <arg value="-name"/>
       <arg value="*.wav"/>
     </exec>
-    <jar file="rsrc/sounds/effects.jar" basedir="rsrc">
+    <jar file="rsrc/sounds/effects.jar" basedir="rsrc/sounds/effects">
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/sounds/music.jar" basedir="rsrc">
+    <jar file="rsrc/sounds/music.jar" basedir="rsrc/sounds/music">
       <include name="**/*.mp3"/>
       <exclude name="**/source/**"/>
     </jar>
@@ -142,28 +142,32 @@
       <fileset dir="rsrc" includes="**/*.3DS"/>
       <fileset dir="rsrc" includes="**/*.ASE"/>
     </convert>
-    <jar file="rsrc/units.jar" basedir="rsrc">
-      <include name="units/**/*.png"/>
-      <include name="units/**/*.jme"/>
-      <include name="units/**/*.properties"/>
+    <jar file="rsrc/units.jar" basedir="rsrc/units">
+      <include name="**/*.png"/>
+      <include name="**/*.jme"/>
+      <include name="**/*.wav"/>
+      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/props.jar" basedir="rsrc">
-      <include name="props/**/*.png"/>
-      <include name="props/**/*.jme"/>
-      <include name="props/**/*.properties"/>
+    <jar file="rsrc/props.jar" basedir="rsrc/props">
+      <include name="**/*.png"/>
+      <include name="**/*.jme"/>
+      <include name="**/*.wav"/>
+      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/bonuses.jar" basedir="rsrc">
-      <include name="bonuses/**/*.png"/>
-      <include name="bonuses/**/*.jme"/>
-      <include name="bonuses/**/*.properties"/>
+    <jar file="rsrc/bonuses.jar" basedir="rsrc/bonuses">
+      <include name="**/*.png"/>
+      <include name="**/*.jme"/>
+      <include name="**/*.wav"/>
+      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/extras.jar" basedir="rsrc">
-      <include name="extras/**/*.png"/>
-      <include name="extras/**/*.jme"/>
-      <include name="extras/**/*.properties"/>
+    <jar file="rsrc/extras.jar" basedir="rsrc/extras">
+      <include name="**/*.png"/>
+      <include name="**/*.jme"/>
+      <include name="**/*.wav"/>
+      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
   </target>
