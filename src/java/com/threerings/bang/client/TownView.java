@@ -302,8 +302,7 @@ public class TownView extends BWindow
         @Override // documentation inherited
         protected String getOpeningMusicPath ()
         {
-            // return "sounds/music/" + _bctx.getUserObject().townId + ".ogg";
-            return null;
+            return "sounds/music/" + _bctx.getUserObject().townId + ".ogg";
         }
         
         @Override // documentation inherited
