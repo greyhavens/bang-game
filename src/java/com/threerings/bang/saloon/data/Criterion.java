@@ -59,7 +59,7 @@ public class Criterion extends SimpleStreamableObject
         return (rounds & other.rounds) != 0 &&
             (players & other.players) != 0 &&
             (ranked & other.ranked) != 0 &&
-            (allowAIs & other.allowAIs) != 0;
+            (allowAIs == other.allowAIs || (allowAIs & other.allowAIs) != 0);
     }
 
     /**
