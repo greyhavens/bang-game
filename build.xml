@@ -127,7 +127,7 @@
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/sounds/music.jar" basedir="rsrc/sounds/music">
-      <include name="**/*.mp3"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
   </target>
@@ -239,6 +239,7 @@
   <!-- fully cleans out the installed application -->
   <target name="distclean">
     <delete dir="${deploy.dir}"/>
+    <delete><fileset dir="rsrc" includes="**/*.jar"/></delete>
   </target>
 
   <!-- build the java class files -->
