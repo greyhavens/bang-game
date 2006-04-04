@@ -42,14 +42,16 @@ resource = progress.png
 resource = rsrc/avatars/female/components.jar
 resource = rsrc/avatars/male/components.jar
 resource = rsrc/avatars/metadata.jar
-resource = rsrc/bonuses/bundle.jar [u]
-resource = rsrc/bundle.jar [u]
 resource = rsrc/config/resource/manager.properties
-resource = rsrc/extras/bundle.jar [u]
-resource = rsrc/props/bundle.jar [u]
-resource = rsrc/sounds/effects/bundle.jar [u]
-resource = rsrc/sounds/music/bundle.jar [u]
-resource = rsrc/units/bundle.jar [u]
+
+# Media resources that will be unpacked
+uresource = rsrc/bonuses/bundle.jar
+uresource = rsrc/bundle.jar
+uresource = rsrc/extras/bundle.jar
+uresource = rsrc/props/bundle.jar
+uresource = rsrc/sounds/effects/bundle.jar
+uresource = rsrc/sounds/music/bundle.jar
+uresource = rsrc/units/bundle.jar
 
 # Parameters passed to the JVM
 jvmarg = -Xmx128M
