@@ -6,16 +6,20 @@ package com.threerings.bang.client;
 import java.awt.Font;
 import java.awt.geom.AffineTransform;
 
+import javax.sound.sampled.AudioSystem;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.CSS;
 import javax.swing.text.html.StyleSheet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.logging.Level;
+
+import org.lwjgl.util.WaveData;
 
 import com.jme.image.Image;
 
@@ -29,8 +33,8 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.text.AWTTextFactory;
 import com.jmex.bui.text.BTextFactory;
 
+import com.threerings.openal.Clip;
 import com.threerings.openal.ClipProvider;
-import com.threerings.openal.WaveDataClipProvider;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
@@ -62,7 +66,7 @@ public class BangUI
     public static StyleSheet css;
 
     /** Used to load sounds from the classpath. */
-    public static ClipProvider clipprov = new WaveDataClipProvider();
+    public static ClipProvider clipprov;
 
     /** An icon used to indicate a quantity of coins. */
     public static BIcon coinIcon;
@@ -122,6 +126,39 @@ public class BangUI
 
         leftArrow = new ImageIcon(ctx.loadImage("ui/icons/left_arrow.png"));
         rightArrow = new ImageIcon(ctx.loadImage("ui/icons/right_arrow.png"));
+
+        // create our sound clip provider
+        clipprov = new ClipProvider() {
+            public Clip loadClip (String path) throws IOException {
+                Clip clip = new Clip();
+                File file = new File(path);
+                if (!file.exists()) {
+                    throw new IOException(
+                        "Missing sound resource '" + path + "'.");
+                }
+
+                // TODO: preconvert all of our sounds to a standard format and
+                // then mmap() the sound files and stuff them directly into the
+                // clip; WaveData does all sorts of expensive conversion
+                WaveData wfile = null;
+                Exception cause = null;
+                try {
+                    wfile = WaveData.create(
+                        AudioSystem.getAudioInputStream(file));
+                } catch (Exception e) {
+                    cause = e;
+                }
+                if (wfile == null) {
+                    String err = "Error loading sound resource '" + path + "'.";
+                    throw (IOException)new IOException(err).initCause(cause);
+                }
+
+                clip.format = wfile.format;
+                clip.frequency = wfile.samplerate;
+                clip.data = wfile.data;
+                return clip;
+            }
+        };
     }
 
     /**

@@ -4,6 +4,8 @@
 package com.threerings.bang.client;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -380,12 +382,11 @@ public class Model
         _key = type + "/" + name;
 
         _props = new Properties();
-        String path = "rsrc/" + _key + "/model.properties";
+        String path = _key + "/model.properties";
         try {
-            InputStream pin =
-                getClass().getClassLoader().getResourceAsStream(path);
-            if (pin != null) {
-                _props.load(new BufferedInputStream(pin));
+            File file = _ctx.getResourceManager().getResourceFile(path);
+            if (file.exists()) {
+                _props.load(new BufferedInputStream(new FileInputStream(file)));
             } else {
                 log.info("Faking model info file for " + _key + ".");
                 String mname = name.substring(name.lastIndexOf("/")+1);
@@ -704,12 +705,18 @@ public class Model
         if (model == null) {
             JmeBinaryReader jbr = new JmeBinaryReader();
             jbr.setProperty("bound", bound);
-            jbr.setProperty("texurl", loader.getResource("rsrc/" + path));
-            InputStream in = loader.getResourceAsStream("rsrc/" + path);
 
-            if (in != null) {
+            File file = _ctx.getResourceManager().getResourceFile(path);
+            if (file.exists()) {
                 try {
-                    model = jbr.loadBinaryFormat(new BufferedInputStream(in));
+                    jbr.setProperty("texurl", file.toURL());
+                } catch (Exception e) {
+                    log.warning("Failed to set texture URL [file=" + file +
+                                ", err=" + e + "].");
+                }
+                try {
+                    model = jbr.loadBinaryFormat(
+                        new BufferedInputStream(new FileInputStream(file)));
 
                     // TODO: put this in the model config file
                     if (path.indexOf("units") != -1) {
@@ -735,7 +742,7 @@ public class Model
                             "Failed to load mesh " + path + ".", ioe);
                 }
             } else {
-                log.warning("Missing model " + path + ".");
+                log.warning("Missing model " + file + ".");
             }
 
             if (model == null) {

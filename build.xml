@@ -96,14 +96,20 @@
     <copy todir="${deploy.dir}/classes/rsrc">
       <fileset dir="rsrc">
        <include name="**/*"/>
-       <exclude name="**/*.MD3"/>
-       <exclude name="**/*.obj"/>
-       <exclude name="**/*.mtl"/>
+       <exclude name="units/**"/>
+       <exclude name="props/**"/>
+       <exclude name="extras/**"/>
+       <exclude name="bonuses/**"/>
+       <exclude name="fences/**"/>
+       <exclude name="boards/**"/>
        <exclude name="avatars/**"/>
        <exclude name="tutorials/**/*.xml"/>
        <exclude name="config/**/*.xml"/>
+       <exclude name="**/*.jar"/>
+       <exclude name="**/source/**"/>
       </fileset>
       <fileset dir="rsrc">
+       <include name="*/*.txt"/>
        <include name="avatars/*.dat"/>
       </fileset>
     </copy>
@@ -116,6 +122,14 @@
       <arg value="-name"/>
       <arg value="*.wav"/>
     </exec>
+    <jar file="rsrc/sounds/effects.jar" basedir="rsrc">
+      <include name="**/*.wav"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/sounds/music.jar" basedir="rsrc">
+      <include name="**/*.mp3"/>
+      <exclude name="**/source/**"/>
+    </jar>
   </target>
 
   <!-- converts our models into JME format -->
@@ -128,6 +142,30 @@
       <fileset dir="rsrc" includes="**/*.3DS"/>
       <fileset dir="rsrc" includes="**/*.ASE"/>
     </convert>
+    <jar file="rsrc/units.jar" basedir="rsrc">
+      <include name="units/**/*.png"/>
+      <include name="units/**/*.jme"/>
+      <include name="units/**/*.properties"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/props.jar" basedir="rsrc">
+      <include name="props/**/*.png"/>
+      <include name="props/**/*.jme"/>
+      <include name="props/**/*.properties"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/bonuses.jar" basedir="rsrc">
+      <include name="bonuses/**/*.png"/>
+      <include name="bonuses/**/*.jme"/>
+      <include name="bonuses/**/*.properties"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/extras.jar" basedir="rsrc">
+      <include name="extras/**/*.png"/>
+      <include name="extras/**/*.jme"/>
+      <include name="extras/**/*.properties"/>
+      <exclude name="**/source/**"/>
+    </jar>
   </target>
 
   <!-- loads our boards into the database -->
@@ -348,13 +386,6 @@
     <jar file="${deploy.dir}/${app.name}-media.jar"
          basedir="${deploy.dir}/classes">
       <include name="rsrc/**"/>
-      <exclude name="**/source/**"/>
-      <exclude name="rsrc/sounds/**"/>
-    </jar>
-    <jar file="${deploy.dir}/${app.name}-sounds.jar"
-         basedir="${deploy.dir}/classes">
-      <include name="rsrc/sounds/**"/>
-      <exclude name="**/source/**"/>
     </jar>
   </target>
 
