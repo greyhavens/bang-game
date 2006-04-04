@@ -8,5 +8,5 @@ ROOT=`dirname $0`/..
 CLASS=com.threerings.bang.server.BangServer
 SARGS="-server -Djava.awt.headless=true"
 SARGS="$SARGS -Dinstall_config=$ROOT/server.properties"
-SARGS="$SARGS -Dresource_dir=$ROOT/rsrc"
+SARGS="$SARGS -Dresource_dir=$ROOT/rsrc -Dno_unpack_resources=true"
 $ROOT/bin/runjava -- $SARGS $CLASS
