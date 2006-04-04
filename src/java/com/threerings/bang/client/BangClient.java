@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.glu.GLU;
 
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
@@ -152,8 +154,14 @@ public class BangClient extends BasicClient
         report.version = String.valueOf(DeploymentConfig.getVersion());
         report.setAttribute("Handle", "" + user.handle);
         report.setAttribute("Driver", Display.getAdapter());
-        report.setAttribute("Driver Version", Display.getVersion());
-        report.setAttribute("Display Mode", "" + Display.getDisplayMode());
+        report.setAttribute("GL Display Mode", "" + Display.getDisplayMode());
+        report.setAttribute("GL Version", GL11.glGetString(GL11.GL_VERSION));
+        report.setAttribute("GL Vendor", GL11.glGetString(GL11.GL_VENDOR));
+        report.setAttribute("GL Renderer", GL11.glGetString(GL11.GL_RENDERER));
+        report.setAttribute("GL Extensions",
+                            GL11.glGetString(GL11.GL_EXTENSIONS));
+        report.setAttribute("GLU Extensions",
+                            GLU.gluGetString(GLU.GLU_EXTENSIONS));
 
         // and send it along with our debug logs
         URL submitURL = DeploymentConfig.getBugSubmitURL();
