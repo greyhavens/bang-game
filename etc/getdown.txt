@@ -23,6 +23,9 @@ code = code/bang-pcode.jar
 code = code/lwjgl.jar
 code = code/lwjgl_util.jar
 
+# Getdown doesn't go in the classpath; this is just for auto-upgrade
+resource = code/getdown-pro-new.jar
+
 # Native library bits
 resource = [linux] native/liblwjgl.so
 resource = [linux] native/libopenal.so

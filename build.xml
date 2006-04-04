@@ -304,6 +304,8 @@
       <fileset dir="lib" includes="lwjgl.jar"/>
       <fileset dir="lib" includes="lwjgl_util.jar"/>
     </copy>
+    <copy file="projects/getdown/dist/getdown-pro.jar"
+          tofile="${client_dir}/code/getdown-pro-new.jar"/>
     <delete file="dist/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
       <fileset dir="rsrc" includes="**/*.jar"/>
