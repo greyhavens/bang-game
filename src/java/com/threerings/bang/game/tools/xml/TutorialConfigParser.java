@@ -42,7 +42,7 @@ public class TutorialConfigParser extends CompiledConfigParser
         "text", TutorialConfig.Text.class.getName(),
         "wait", TutorialConfig.Wait.class.getName(),
         "add_unit", TutorialConfig.AddUnit.class.getName(),
-        "center_on_unit", TutorialConfig.CenterOnUnit.class.getName(),
+        "center_on", TutorialConfig.CenterOn.class.getName(),
         "move_unit", TutorialConfig.MoveUnit.class.getName(),
         "add_bonus", TutorialConfig.AddBonus.class.getName(),
         "show_view", TutorialConfig.ShowView.class.getName(),

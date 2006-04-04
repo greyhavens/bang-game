@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client;
 
+import java.util.Iterator;
+
 import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BContainer;
@@ -25,6 +27,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
+import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.TutorialUtil;
 
@@ -130,11 +133,30 @@ public class TutorialController
         } else if (action instanceof TutorialConfig.AddUnit) {
             // nothing to do here
 
-        } else if (action instanceof TutorialConfig.CenterOnUnit) {
-            int pieceId = ((TutorialConfig.CenterOnUnit)action).id;
-            Piece p = (Piece)_bangobj.pieces.get(pieceId);
+        } else if (action instanceof TutorialConfig.CenterOn) {
+            String what = ((TutorialConfig.CenterOn)action).what;
+            int id = ((TutorialConfig.CenterOn)action).id;
+            Piece p = null;
+            if (what.equals("unit")) {
+                p = (Piece)_bangobj.pieces.get(id);
+
+            } else if (what.equals("claim")) {
+                // locate the specified claim
+                for (Iterator iter = _bangobj.pieces.iterator();
+                     iter.hasNext(); ) {
+                    Piece cp = (Piece)iter.next();
+                    if (cp instanceof Claim && cp.owner == id) {
+                        p = cp;
+                        break;
+                    }
+                }
+
+            } else {
+                log.warning("Requested to center camera on unknown entity " +
+                            "[what=" + what + ", id=" + id + "].");
+            }
             if (p != null) {
-                _view.view.centerCameraOnUnit(p);
+                _view.view.centerCameraOnPiece(p);
             }
 
         } else if (action instanceof TutorialConfig.MoveUnit) {

@@ -914,7 +914,7 @@ public class BangBoardView extends BoardView
         sprite.setSelected(true);
         sprite.attachChild(_cursor);
         if (scrollCamera) {
-            centerCameraOnUnit(_selection);
+            centerCameraOnPiece(_selection);
         }
 
         // highlight our potential moves and attackable pieces
@@ -954,7 +954,7 @@ public class BangBoardView extends BoardView
         return true;
     }
 
-    protected void centerCameraOnUnit (Piece piece)
+    protected void centerCameraOnPiece (Piece piece)
     {
         PieceSprite sprite = getPieceSprite(piece);
         if (sprite != null) {

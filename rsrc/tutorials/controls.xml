@@ -12,7 +12,7 @@
 
   <!-- show them a unit and have them click to select it -->
   <add_unit id="1000" type="gunslinger" location="16,16" owner="0"/>
-  <center_on_unit id="1000"/>
+  <center_on what="unit" id="1000"/>
   <text message="click_unit" step="3"/>
   <wait event="unit_selected"/>
 

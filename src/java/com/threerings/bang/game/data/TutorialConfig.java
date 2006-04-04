@@ -50,8 +50,9 @@ public class TutorialConfig
         private static final long serialVersionUID = 1;
     }
 
-    public static class CenterOnUnit extends Action
+    public static class CenterOn extends Action
     {
+        public String what;
         public int id;
 
         private static final long serialVersionUID = 1;
