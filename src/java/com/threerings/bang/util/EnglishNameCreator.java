@@ -94,10 +94,10 @@ public class EnglishNameCreator extends NameCreator
     };
 
     protected static final String[] AI_PREFIXES = {
-        "Broke Down",
         "Clankin",
+        "Lugbolt",
         "Robo",
-        "Steam Powered",
+        "Steam",
         "Tin Can",
     };
 
