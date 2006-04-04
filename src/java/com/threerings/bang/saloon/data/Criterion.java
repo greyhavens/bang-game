@@ -160,7 +160,7 @@ public class Criterion extends SimpleStreamableObject
                 values.add(String.valueOf(ii));
             }
         }
-        return join(values);
+        return values.size() > 0 ? join(values) : Integer.toString(0);
     }
 
     protected boolean isBitSet (int mask, int bit)
