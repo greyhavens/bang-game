@@ -264,10 +264,18 @@ public class BangUI
                     if (StyleConstants.isItalic(attrs)) {
                         style |= Font.ITALIC;
                     }
-                    int size = StyleConstants.getFontSize(attrs);
-                    if (StyleConstants.isSuperscript(attrs) ||
-                        StyleConstants.isSubscript(attrs)) {
-                        size -= 2;
+                    int size;
+                    try {
+                        size = StyleConstants.getFontSize(attrs);
+                        if (StyleConstants.isSuperscript(attrs) ||
+                            StyleConstants.isSubscript(attrs)) {
+                            size -= 2;
+                        }
+                    } catch (Throwable t) {
+                        log.warning("StyleConstants choked looking up size " +
+                                    "[font=" + variant + ", attrs=" + attrs +
+                                    ", t=" + t + "].");
+                        size = 9;
                     }
                     return base.deriveFont(style, size);
                 }
