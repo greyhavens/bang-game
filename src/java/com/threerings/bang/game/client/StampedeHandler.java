@@ -91,5 +91,4 @@ public class StampedeHandler extends EffectHandler
     }
 
     protected StampedeEffect _stampede;
-    protected int _penderId;
 }

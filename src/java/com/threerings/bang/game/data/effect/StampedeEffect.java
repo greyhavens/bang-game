@@ -150,7 +150,7 @@ public class StampedeEffect extends Effect
         Point start = new Point(x, y);
         path.add(start);
         int hdir = growPath(board, path, -1);
-        if (hdir == -1) {
+        if (path.size() == 1) {
             log.warning("Couldn't find anywhere for the buffalo to go! " +
                 "[effect=" + this + "]."); 
             return;
@@ -163,6 +163,13 @@ public class StampedeEffect extends Effect
         }
     }
     
+    /**
+     * Extends the path by one tile.
+     *
+     * @param path the path so far
+     * @param dir the preferred direction, or -1 for none
+     * @return the direction taken, or -1 for none
+     */
     protected int growPath (BangBoard board, PointList path, int dir)
     {
         Point last = path.get(path.size() - 1);
