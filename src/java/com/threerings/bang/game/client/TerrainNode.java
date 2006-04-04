@@ -52,7 +52,6 @@ import com.threerings.media.image.ColorUtil;
 
 import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -381,7 +380,8 @@ public class TerrainNode extends Node
         setRenderState(RenderUtil.backCull);
         setRenderQueueMode(Renderer.QUEUE_SKIP);
         
-        MaterialState mstate = new ColorMaterialState(GL11.GL_DIFFUSE);
+        MaterialState mstate = _ctx.getRenderer().createMaterialState();
+        mstate.setColorMaterial(MaterialState.CM_DIFFUSE);
         mstate.getAmbient().set(ColorRGBA.white);
         setRenderState(mstate);
     }

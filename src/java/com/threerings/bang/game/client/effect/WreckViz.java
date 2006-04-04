@@ -21,7 +21,6 @@ import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -97,7 +96,7 @@ public class WreckViz extends ParticleEffectViz
             // initialize the render state for transparency control
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             setRenderState(RenderUtil.blendAlpha);
-            _mstate = new ColorMaterialState();
+            _mstate = _ctx.getRenderer().createMaterialState();
             _mstate.getDiffuse().set(ColorRGBA.white);
             _mstate.getAmbient().set(ColorRGBA.white);
             setRenderState(_mstate);

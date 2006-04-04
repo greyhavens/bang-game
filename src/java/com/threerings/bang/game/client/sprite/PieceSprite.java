@@ -26,7 +26,6 @@ import com.threerings.openal.SoundGroup;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BoardView;
@@ -100,7 +99,7 @@ public class PieceSprite extends Sprite
         // create and set the material that we will use to change shadow values
         // (if appropriate)
         if (isShadowable()) {
-            _mstate = new ColorMaterialState();
+            _mstate = ctx.getRenderer().createMaterialState();
             _mstate.getDiffuse().set(ColorRGBA.white);
             _mstate.getAmbient().set(ColorRGBA.white);
             setRenderState(_mstate);

@@ -92,7 +92,6 @@ import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -167,20 +166,18 @@ public class BoardView extends BComponent
         // create our top-level node
         _node = new Node("board_view");
 
-        // let there be lights (the wrapped light state disables the changes
-        // made by the water state)
+        // let there be lights
         _lstate = _ctx.getRenderer().createLightState();
         _lights = new DirectionalLight[BangBoard.NUM_LIGHTS];
         for (int i = 0; i < _lights.length; i++) {
             _lstate.attach(_lights[i] = new DirectionalLight());
             _lights[i].setEnabled(true);
         }
-        _node.setRenderState(RenderUtil.createSpecularLightState(_lstate,
-            false));
+        _node.setRenderState(_lstate);
         _node.setLightCombineMode(LightState.REPLACE);
 
         // default states
-        MaterialState mstate = new ColorMaterialState();
+        MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.getDiffuse().set(ColorRGBA.white);
         mstate.getAmbient().set(ColorRGBA.white);
         _node.setRenderState(mstate);
@@ -196,7 +193,7 @@ public class BoardView extends BComponent
         Node bnode = new Node("board");
         _node.attachChild(bnode);
         bnode.attachChild(_tnode = createTerrainNode(ctx));
-        bnode.attachChild(_wnode = new WaterNode(ctx, _lstate));
+        bnode.attachChild(_wnode = new WaterNode(ctx));
 
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));

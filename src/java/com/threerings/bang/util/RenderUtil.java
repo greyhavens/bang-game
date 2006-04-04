@@ -450,29 +450,6 @@ public class RenderUtil
     }
     
     /**
-     * Creates a light state that wraps the given state and enables or
-     * disables parameters used for specular highlights.
-     */
-    public static LightState createSpecularLightState (
-        final LightState lstate, final boolean specular)
-    {
-        return new LightState() {
-            public void apply () {
-                lstate.apply();
-                GL11.glLightModeli(GL11.GL_LIGHT_MODEL_LOCAL_VIEWER,
-                    specular ? 1 : 0);
-                GL11.glLightModeli(GL12.GL_LIGHT_MODEL_COLOR_CONTROL,
-                    specular ? GL12.GL_SEPARATE_SPECULAR_COLOR :
-                        GL12.GL_SINGLE_COLOR);
-            }
-            public RenderState extract (Stack stack, Spatial spat) {
-                return (spat.getLightCombineMode() == LightState.OFF) ?
-                    noLights : super.extract(stack, spat);
-            }
-        };
-    }
-    
-    /**
      * Creates a JME {@link ColorRGBA} object with alpha equal to one from a
      * packed RGB value.
      */

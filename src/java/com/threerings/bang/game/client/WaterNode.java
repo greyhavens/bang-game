@@ -39,7 +39,6 @@ import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.ColorMaterialState;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.WaveUtil;
 
@@ -51,7 +50,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class WaterNode extends Node
 {
-    public WaterNode (BasicContext ctx, final LightState lstate)
+    public WaterNode (BasicContext ctx)
     {
         super("water");
         _ctx = ctx;
@@ -61,9 +60,16 @@ public class WaterNode extends Node
         setRenderState(RenderUtil.backCull);
         setRenderState(RenderUtil.overlayZBuf);
         setRenderState(_smtstate = _ctx.getRenderer().createTextureState());
-        setRenderState(RenderUtil.createSpecularLightState(lstate, true));
         
-        MaterialState mstate = new ColorMaterialState();
+        // combine the board light state with one that enables specular
+        // properties
+        LightState lstate = _ctx.getRenderer().createLightState();
+        lstate.setLocalViewer(true);
+        lstate.setSeparateSpecular(true);
+        setRenderState(lstate);
+        setLightCombineMode(LightState.COMBINE_CLOSEST);
+        
+        MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.getDiffuse().set(ColorRGBA.black);
         mstate.getAmbient().set(ColorRGBA.black);
         mstate.getSpecular().set(ColorRGBA.white);
