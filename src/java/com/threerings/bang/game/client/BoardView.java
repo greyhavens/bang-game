@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import java.io.File;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -315,14 +316,13 @@ public class BoardView extends BComponent
         // load and start the opening music stream
         String mpath = getOpeningMusicPath();
         if (mpath != null) {
+            File mfile = _ctx.getResourceManager().getResourceFile(mpath);
             try {
-                _mstream = new MusicStream(
-                    _ctx.getResourceManager().getResourceFile(mpath).toString(),
-                    false);
+                _mstream = new MusicStream(mfile.toString(), false);
                 _mstream.play();
             } catch (Throwable t) {
                 log.log(Level.WARNING, "Failed to start music " +
-                        "[path=" + mpath + "].", t);
+                        "[path=" + mfile + "].", t);
             }
         }
     }
