@@ -201,6 +201,12 @@ public class BangClient extends BasicClient
         _ctx = new BangContextImpl();
         initClient(_ctx, app, app);
 
+        // upgrade getdown if appropriate
+        File newgd = new File(localDataDir("code/getdown-pro-new.jar"));
+        File curgd = new File(localDataDir("getdown-pro.jar"));
+        File oldgd = new File(localDataDir("getdown-pro-old.jar"));
+        LaunchUtil.upgradeGetdown(oldgd, curgd, newgd);
+
         // listen for logon
         _client.addClientObserver(this);
 
