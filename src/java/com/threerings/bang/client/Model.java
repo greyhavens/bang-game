@@ -537,13 +537,15 @@ public class Model
             // thread and we'd be hosed
             boolean trans = _props.getProperty(
                 mesh + ".transparent", "false").equalsIgnoreCase("true");
+            boolean solid = _props.getProperty(
+                mesh + ".solid", "true").equalsIgnoreCase("true");
             String mpath = path + anim.action + "/" + mesh + ".jme",
                 amesh = anim.action + "." + mesh,
                 bound = _props.getProperty(amesh + ".bound", "box");
             if (isStatic) {
-                part.target = loadModel(mpath, trans, bound);
+                part.target = loadModel(mpath, trans, solid, bound);
             } else {
-                part.creator = loadModelCreator(mpath, trans, bound);
+                part.creator = loadModelCreator(mpath, trans, solid, bound);
             }
 
             // the model may have multiple textures from which we
@@ -574,7 +576,7 @@ public class Model
             String mesh = anim.emitters[ee].name;
             anim.emitters[ee].creator = loadModelCreator(
                 path + anim.action + "/" + mesh + ".jme", false,
-                "box");
+                false, "box");
         }
 
         // now finish our resolution on the main thread
@@ -681,11 +683,11 @@ public class Model
         return values.toArray(new String[values.size()]);
     }
 
-    protected CloneCreator loadModelCreator (String path, boolean trans,
-        String bound)
+    protected CloneCreator loadModelCreator (
+        String path, boolean trans, boolean solid, String bound)
     {
         ModelCloneCreator cc = new ModelCloneCreator(
-            loadModel(path, trans, bound));
+            loadModel(path, trans, solid, bound));
         // these define what we want to "shallow" copy
         cc.addProperty("colors");
         cc.addProperty("texcoords");
@@ -693,7 +695,8 @@ public class Model
         return cc;
     }
 
-    protected Node loadModel (String path, boolean trans, String bound)
+    protected Node loadModel (
+        String path, boolean trans, boolean solid, String bound)
     {
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
@@ -710,9 +713,9 @@ public class Model
 
                     // TODO: put this in the model config file
                     if (path.indexOf("units") != -1) {
-                        setModelScale(model, 0.04f);
+                        model.setLocalScale(0.04f);
                     } else {
-                        setModelScale(model, 0.05f);
+                        model.setLocalScale(0.05f);
                     }
 
                     // configure transparent models specially
@@ -720,9 +723,10 @@ public class Model
                         model.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
                         model.setRenderState(RenderUtil.blendAlpha);
                         model.setRenderState(RenderUtil.overlayZBuf);
-
-                    } else {
-                        // enable back-face culling (for cw winding order)
+                    }
+                    
+                    // enable back-face culling for solid models
+                    if (solid) {
                         model.setRenderState(RenderUtil.frontCull);
                     }
 
@@ -747,44 +751,6 @@ public class Model
             _meshes.put(path, model);
         }
         return model;
-    }
-
-    /**
-     * Rescales a model by diving into its {@link TriMesh}es and scaling each
-     * vertex.
-     */
-    protected void setModelScale (Spatial spatial, float scale)
-    {
-        if (spatial instanceof TriMesh) {
-            TriMesh mesh = (TriMesh)spatial;
-            int vcount = mesh.getVertQuantity();
-            FloatBuffer vbuf = mesh.getVertexBuffer();
-            Vector3f vertex = new Vector3f();
-            for (int ii = 0; ii < vcount; ii++) {
-                BufferUtils.populateFromBuffer(vertex, vbuf, ii);
-                vertex.multLocal(scale);
-                BufferUtils.setInBuffer(vertex, vbuf, ii);
-            }
-            mesh.updateModelBound();
-
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                setModelScale(node.getChild(ii), scale);
-            }
-        }
-        // scale all the key frames as well
-        for (Object ctrl : spatial.getControllers()) {
-            if (!(ctrl instanceof KeyframeController)) {
-                continue;
-            }
-            ArrayList frames = ((KeyframeController)ctrl).keyframes;
-            for (int ii = 0, nn = frames.size(); ii < nn; ii++) {
-                setModelScale(
-                    ((KeyframeController.PointInTime)frames.get(ii)).newShape,
-                    scale);
-            }
-        }
     }
 
     protected String cleanPath (String path)
