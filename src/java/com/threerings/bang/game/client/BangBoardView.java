@@ -1225,8 +1225,8 @@ public class BangBoardView extends BoardView
         public void actionCompleted (Sprite sprite, String action) {
             if (action.equals(MobileSprite.REMOVED)) {
                 if (((MobileSprite)sprite).isMoving()) {
-                    log.warning("Removing dead sprite, but it's still " +
-                                "moving! [sprite=" + sprite + "].");
+                    log.warning("Removing dead sprite, but it's still moving " +
+                                ((MobileSprite)sprite).getPiece() + ".");
                 }
                 removeSprite(sprite);
             }
