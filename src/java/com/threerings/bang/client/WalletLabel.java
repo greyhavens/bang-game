@@ -27,7 +27,6 @@ public class WalletLabel extends MoneyLabel
                            "wallet_name"), BorderLayout.NORTH);
         }
         _user = ctx.getUserObject();
-        updateValues(false);
     }
 
     // documentation inherited from interface AttributeChangeListener
@@ -45,6 +44,7 @@ public class WalletLabel extends MoneyLabel
     {
         super.wasAdded();
         _user.addListener(this);
+        updateValues(false);
     }
 
     @Override // documentation inherited
