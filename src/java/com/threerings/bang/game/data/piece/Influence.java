@@ -73,6 +73,12 @@ public abstract class Influence extends SimpleStreamableObject
         return traversalCost;
     }
 
+    @Override // documentation inherited
+    public String toString ()
+    {
+        return getIcon();
+    }
+
     /** Configures an influence instance with its starting tick. */
     protected void init (short tick)
     {
