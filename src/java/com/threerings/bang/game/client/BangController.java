@@ -233,8 +233,11 @@ public class BangController extends GameController
     /** Displays the in-game options view. */
     public void handleShowOptions (Object source)
     {
+        if (_bangobj == null) {
+            return;
+        }
         if (_options == null) {
-            _options = new InGameOptionsView(_ctx);
+            _options = new InGameOptionsView(_ctx, _bangobj);
         }
         if (_options.isAdded()) {
             _ctx.getBangClient().clearPopup(_options, true);

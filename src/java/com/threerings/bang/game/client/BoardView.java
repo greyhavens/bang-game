@@ -314,12 +314,15 @@ public class BoardView extends BComponent
         String mpath = getOpeningMusicPath();
         if (mpath != null) {
             File mfile = _ctx.getResourceManager().getResourceFile(mpath);
-            try {
-                _mstream = new MusicStream(mfile.toString(), false);
-                _mstream.play();
-            } catch (Throwable t) {
-                log.log(Level.WARNING, "Failed to start music " +
-                        "[path=" + mfile + "].", t);
+            if (mfile.exists()) {
+                try {
+                    _mstream = new MusicStream(mfile.toString(), false);
+                    _mstream.loop(true);
+                    _mstream.play();
+                } catch (Throwable t) {
+                    log.log(Level.WARNING, "Failed to start music " +
+                            "[path=" + mfile + "].", t);
+                }
             }
         }
     }
