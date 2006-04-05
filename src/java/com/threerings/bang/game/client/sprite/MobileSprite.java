@@ -508,13 +508,9 @@ public class MobileSprite extends PieceSprite
 
         if (_dustmgr != null && isMoving()) {
             _dustmgr.getParticlesOrigin().set(localTranslation);
-            int tx = (int)(localTranslation.x / TILE_SIZE),
-                ty = (int)(localTranslation.y / TILE_SIZE);
-            Terrain terrain = _view.getBoard().getPredominantTerrain(tx, ty);
-            ColorRGBA color = RenderUtil.getGroundColor(terrain);
-            _dustmgr.getStartColor().set(color.r, color.g, color.b,
-                terrain.dustiness);
-            _dustmgr.getEndColor().set(color.r, color.g, color.b, 0f);
+            ColorRGBA start = _dustmgr.getStartColor();
+            _view.getDustColor(localTranslation, start);
+            _dustmgr.getEndColor().set(start.r, start.g, start.b, 0f);
         }
     }
 

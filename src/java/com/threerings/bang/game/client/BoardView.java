@@ -444,6 +444,33 @@ public class BoardView extends BComponent
     }
 
     /**
+     * Gets the color of the dust at the specified location, which will depend
+     * on the terrain type, the ground normal, and the lighting parameters.
+     */
+    public void getDustColor (Vector3f location, ColorRGBA result)
+    {
+        // get the normal at the supplied location and use it to determine the
+        // total light falling onto the terrain
+        Vector3f normal = _tnode.getHeightfieldNormal(location.x, location.y);
+        result.set(0f, 0f, 0f, 1f);
+        for (int ii = 0; ii < _lights.length; ii++) {
+            result.addLocal(_lights[ii].getAmbient());
+            _color.set(_lights[ii].getDiffuse());
+            result.addLocal(_color.multLocal(
+                -normal.dot(_lights[ii].getDirection())));
+        }
+        
+        // get the color of the predominant terrain and multiply it by the
+        // light
+        int tx = (int)(location.x / TILE_SIZE),
+            ty = (int)(location.y / TILE_SIZE);
+        Terrain terrain = _board.getPredominantTerrain(tx, ty);
+        ColorRGBA gcolor = RenderUtil.getGroundColor(terrain);
+        result.set(result.r * gcolor.r, result.g * gcolor.g,
+            result.b * gcolor.b, terrain.dustiness);
+    }
+    
+    /**
      * Creates a brief flash of light at the specified location with the
      * given color and duration.
      */
@@ -1527,6 +1554,9 @@ public class BoardView extends BComponent
     protected HashMap<Spatial,Sprite> _plights =
         new HashMap<Spatial,Sprite>();
 
+    /** Temporary result variables. */
+    protected ColorRGBA _color = new ColorRGBA();
+    
     /** Used when intersecting the ground. */
     protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
 
