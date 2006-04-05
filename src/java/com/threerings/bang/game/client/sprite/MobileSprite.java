@@ -132,7 +132,7 @@ public class MobileSprite extends PieceSprite
      */
     public void queueAction (String action)
     {
-        log.info("Queueing action " + action + " on " + _piece.info() + ".");
+        // log.info("Queueing action " + action + " on " + _piece.info() + ".");
         _actions.add(action);
         if (_action == null) {
             startNextAction();
