@@ -61,6 +61,12 @@ public class ContextHelpView extends BDecoratedWindow
         }
     }
 
+    @Override // documentation inherited
+    protected Dimension computePreferredSize (int whint, int hhint)
+    {
+        return new Dimension(300, 150);
+    }
+
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BLabel _title, _text;
