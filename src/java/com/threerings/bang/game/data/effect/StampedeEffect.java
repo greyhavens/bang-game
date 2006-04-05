@@ -238,7 +238,7 @@ public class StampedeEffect extends Effect
                     ArrayList<Point> nlocs = new ArrayList<Point>();
                     for (int jj = 0; jj < DIRECTIONS.length; jj++) {
                         Point nloc = new Point(loc.x + DX[jj], loc.y + DY[jj]);
-                        if (bangobj.board.canOccupy(unit, nloc.x, nloc.y) &&
+                        if (bangobj.board.isOccupiable(nloc.x, nloc.y) &&
                             !containsBuffalo(nloc, ii - 1) &&
                             !containsBuffalo(nloc, ii + 1)) {
                             nlocs.add(nloc);

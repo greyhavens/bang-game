@@ -437,7 +437,7 @@ public abstract class Scenario
             trackless = new ArrayList<Point>();
         for (int i = 0; i < dirs.length; i++) {
             int x = unit.x + DX[dirs[i]], y = unit.y + DY[dirs[i]];
-            if (unit.canTraverse(bangobj.board, x, y)) {
+            if (bangobj.board.isOccupiable(x, y)) {
                 Point pt = new Point(x, y);
                 passable.add(pt);
                 if (!hasTracks(bangobj, x, y)) {
