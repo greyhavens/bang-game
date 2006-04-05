@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.AreaDamageHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -48,6 +50,12 @@ public class AreaDamageEffect extends AreaEffect
             Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
             newDamage[ii] = target.damage + dammap.get(pieces[ii]);
         }
+    }
+    
+    @Override // documentation inherited
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        return new AreaDamageHandler();
     }
 
     @Override // documentation inherited
