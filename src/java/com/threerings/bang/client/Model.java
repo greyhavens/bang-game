@@ -856,7 +856,7 @@ public class Model
                     tstate.setTexture(null, 0);
                     target.setRenderState(tstate);
 
-                    //setVBOInfos(target);
+                    setVBOInfos(target);
                     target.lockBounds();
                     target.lockMeshes();
                     target.clearRenderState(RenderState.RS_TEXTURE);
@@ -904,7 +904,9 @@ public class Model
         protected void setVBOInfos (Spatial spatial)
         {
             if (spatial instanceof Geometry) {
-                ((Geometry)spatial).setVBOInfo(new VBOInfo(true));
+                VBOInfo vboinfo = new VBOInfo(true);
+                vboinfo.setVBOIndexEnabled(true);
+                ((Geometry)spatial).setVBOInfo(vboinfo);
 
             } else if (spatial instanceof Node) {
                 Node node = (Node)spatial;
