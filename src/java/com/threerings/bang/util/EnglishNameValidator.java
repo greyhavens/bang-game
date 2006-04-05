@@ -23,6 +23,25 @@ public class EnglishNameValidator extends NameValidator
     }
 
     @Override // documentation inherited
+    public boolean isReservedHandle (Handle handle)
+    {
+        String name = (handle != null) ? handle.toString() : "";
+        name = name.replaceAll(" ", "");
+        name = name.toLowerCase();
+        for (int ii = 0; ii < RESERVED_WORDS.length; ii++) {
+            if (name.indexOf(RESERVED_WORDS[ii]) != -1) {
+                return true;
+            }
+        }
+        for (int ii = 0; ii < RESERVED_REGEXES.length; ii++) {
+            if (name.matches(RESERVED_REGEXES[ii])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override // documentation inherited
     public boolean isVulgarHandle (Handle handle)
     {
         String hstr = (handle != null) ? handle.toString() : "";
@@ -67,4 +86,17 @@ public class EnglishNameValidator extends NameValidator
 
     /** The maximum number of characters for a player handle. */
     protected static final int MAX_HANDLE_CHARS = 18;
+
+    // we're most likely going to call our support personel sheriffs or
+    // deputies, so don't allow anyone to use those in a name
+
+    /** Substrings that are not allowed in handles. */
+    protected static final String[] RESERVED_WORDS = {
+        "deput",
+    };
+
+    /** Regular expressions that handles are not allowed to match. */
+    protected static final String[] RESERVED_REGEXES = {
+        ".*sh[e][r]+[il][f]+.*",
+    };
 }

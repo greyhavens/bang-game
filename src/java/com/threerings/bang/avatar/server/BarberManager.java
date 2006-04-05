@@ -162,6 +162,12 @@ public class BarberManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // prevent the use of reserved names by non-admins
+        if (!user.tokens.isAdmin() &&
+            NameFactory.getValidator().isReservedHandle(handle)) {
+            throw new InvocationException(AvatarCodes.ERR_RESERVED_HANDLE);
+        }
+
         // discourage the kiddies from being obviously vulgar
         if (NameFactory.getValidator().isVulgarHandle(handle)) {
             throw new InvocationException(AvatarCodes.ERR_VULGAR_HANDLE);

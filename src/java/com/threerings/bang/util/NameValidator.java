@@ -16,6 +16,12 @@ public abstract class NameValidator
     public abstract boolean isValidHandle (Handle handle);
 
     /**
+     * Returns true if the supplied handle matches any of our reserved words or
+     * regular expressions.
+     */
+    public abstract boolean isReservedHandle (Handle handle);
+
+    /**
      * Returns true if the supplied handle matches any of our stop words or
      * regular expressions.
      */

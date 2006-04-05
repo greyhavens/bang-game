@@ -29,6 +29,9 @@ public interface AvatarCodes
     public static final int MAX_STARTER_COST = 250;
 
     /** An error message used by {@link AvatarService#createAvatar}. */
+    public static final String ERR_RESERVED_HANDLE = "m.reserved_handle";
+
+    /** An error message used by {@link AvatarService#createAvatar}. */
     public static final String ERR_VULGAR_HANDLE = "m.vulgar_handle";
 
     /** An error message used by {@link AvatarService#createAvatar}. */
