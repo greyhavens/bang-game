@@ -8,13 +8,13 @@ import java.util.logging.Level;
 
 import com.samskivert.util.Invoker;
 
-import com.threerings.crowd.data.TokenRing;
 import com.threerings.crowd.server.CrowdClient;
 import com.threerings.presents.net.BootstrapData;
 
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
@@ -46,15 +46,15 @@ public class BangClient extends CrowdClient
         }
 
         // if we have auth data in the form of a token ring, use it
-        if (_authdata instanceof TokenRing) {
+        if (_authdata instanceof BangTokenRing) {
             // we can set things directly here rather than use the setter
             // methods because the user object is not yet out in the wild
-            user.tokens = (TokenRing)_authdata;
+            user.tokens = (BangTokenRing)_authdata;
         } else {
             log.warning("Missing or bogus authdata [who=" + _username +
                         ", adata=" + _authdata + "].");
             // give them zero privileges
-            user.tokens = new TokenRing();
+            user.tokens = new BangTokenRing();
         }
 
         // configure the player in the town for this server

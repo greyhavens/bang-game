@@ -22,9 +22,8 @@ import com.threerings.presents.net.UsernamePasswordCreds;
 import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.net.AuthingConnection;
 
-import com.threerings.crowd.data.TokenRing;
-
 import com.threerings.bang.admin.server.RuntimeConfig;
+import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.util.DeploymentConfig;
@@ -146,9 +145,13 @@ public class OOOAuthenticator extends Authenticator
             // configure a token ring for this user
             int tokens = 0;
             if (user.holdsToken(OOOUser.ADMIN)) {
-                tokens |= TokenRing.ADMIN;
+                tokens |= BangTokenRing.ADMIN;
+                tokens |= BangTokenRing.INSIDER;
             }
-            rsp.authdata = new TokenRing(tokens);
+            if (user.holdsToken(OOOUser.INSIDER)) {
+                tokens |= BangTokenRing.INSIDER;
+            }
+            rsp.authdata = new BangTokenRing(tokens);
 
             // replace the username in their credentials with the
             // canonical name in their user record as that username will

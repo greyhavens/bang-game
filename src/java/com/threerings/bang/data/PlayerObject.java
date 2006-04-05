@@ -11,7 +11,6 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.data.TokenRing;
 
 import com.threerings.bang.avatar.data.Look;
 
@@ -71,7 +70,7 @@ public class PlayerObject extends BodyObject
     public boolean isMale;
 
     /** Indicates which access control tokens are held by this user. */
-    public TokenRing tokens;
+    public BangTokenRing tokens;
 
     /** Contains all items held by this user. */
     public DSet inventory;
@@ -166,7 +165,7 @@ public class PlayerObject extends BodyObject
     }
 
     @Override // documentation inherited
-    public TokenRing getTokens ()
+    public BangTokenRing getTokens ()
     {
         return tokens;
     }
@@ -274,9 +273,9 @@ public class PlayerObject extends BodyObject
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setTokens (TokenRing value)
+    public void setTokens (BangTokenRing value)
     {
-        TokenRing ovalue = this.tokens;
+        BangTokenRing ovalue = this.tokens;
         requestAttributeChange(
             TOKENS, value, ovalue);
         this.tokens = value;

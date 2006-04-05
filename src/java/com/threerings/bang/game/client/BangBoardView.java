@@ -450,7 +450,8 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     protected String getOpeningMusicPath ()
     {
-        return "sounds/music/scenario_" + _bangobj.scenarioId + ".ogg";
+        return _ctx.getUserObject().tokens.isInsider() ?
+            "sounds/music/scenario_" + _bangobj.scenarioId + ".ogg" : null;
     }
 
     @Override // documentation inherited
