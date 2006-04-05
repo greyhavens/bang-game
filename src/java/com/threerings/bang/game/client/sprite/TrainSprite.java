@@ -30,26 +30,20 @@ public class TrainSprite extends MobileSprite
     {
         // trains do not kick up dust
     }
-
+    
     @Override // documentation inherited
-    public void updated (Piece piece, short tick)
+    public boolean updatePosition (BangBoard board)
     {
-        // note our previous lastX and Y before we're updated
+        super.updatePosition(board);
+        
+        // store our last x and y for path forming
         Train train = (Train)_piece;
         _lastLastX = train.lastX;
         _lastLastY = train.lastY;
         
-        super.updated(piece, tick);
-    }
-    
-    @Override // documentation inherited
-    public boolean updatePosition (BangBoard board)
-    {   
-        super.updatePosition(board);
-        
         // unless we're the last car on the train, proceed immediately to the
         // next car's update so that all cars move simultaneously
-        return ((Train)_piece).isLast();
+        return train.isLast();
     }
 
     @Override // documentation inherited
