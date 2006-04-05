@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.samskivert.io.PersistenceException;
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
@@ -159,6 +160,20 @@ public class BoardRepository extends JORARepository
         } else {
             record.boardId = insert(_btable, record);
         }
+    }
+
+    /**
+     * Wipes all non-user-created boards that don't fall in the specified
+     * set. Used to prune obsolete boards after reloading the boards from the
+     * source files.
+     *
+     * @return the number of pruned boards.
+     */
+    public int clearStaleBoards (ArrayIntSet except)
+        throws PersistenceException
+    {
+        return update("delete from BOARDS where CREATOR is NULL " +
+                      "and BOARD_ID not in " + except);
     }
 
     @Override // documentation inherited

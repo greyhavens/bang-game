@@ -13,13 +13,12 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
 import com.samskivert.io.PersistenceException;
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.jdbc.StaticConnectionProvider;
 
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.server.persist.BoardRepository;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * An ant task for loading pre-made boards into the repository.
@@ -61,12 +60,30 @@ public class LoadBoardTask extends Task
             }
         }
 
+        // reload the stock boards
+        ArrayIntSet loaded = new ArrayIntSet();
+        int attempted = 0;
         for (FileSet fs : _filesets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             File fromDir = fs.getDir(getProject());
             String[] srcFiles = ds.getIncludedFiles();
             for (int ii = 0; ii < srcFiles.length; ii++) {
-                loadBoard(new File(fromDir, srcFiles[ii]));
+                attempted++;
+                loadBoard(new File(fromDir, srcFiles[ii]), loaded);
+            }
+        }
+        System.out.println("Loaded " + loaded.size() + " boards.");
+
+        // then wipe any stale boards (but only if there were no errors loading
+        // the stock boards)
+        if (loaded.size() == attempted) {
+            try {
+                int pruned = _brepo.clearStaleBoards(loaded);
+                if (pruned > 0) {
+                    System.out.println("Pruned " + pruned + " stale boards.");
+                }
+            } catch (Exception e) {
+                System.err.println("Failure clearing stale boards: " + e);
             }
         }
     }
@@ -75,17 +92,18 @@ public class LoadBoardTask extends Task
      * Parses a single board file and loads its data into the board
      * repository.
      */
-    protected void loadBoard (File source)
+    protected void loadBoard (File source, ArrayIntSet loaded)
     {
         try {
             BoardRecord brec = new BoardRecord();
             brec.load(source);
             brec.dataHash = brec.getDataHash();
             _brepo.storeBoard(brec);
+            loaded.add(brec.boardId);
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to load board " +
-                    "[source=" + source + "].", e);
+            System.err.println("Failed to load board [source=" + source + "].");
+            e.printStackTrace(System.err);
         }
     }
 
