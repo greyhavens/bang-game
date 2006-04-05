@@ -54,6 +54,7 @@ import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
+import com.threerings.bang.client.util.PerfMonitor;
 import com.threerings.bang.client.util.TextureCache;
 
 import static com.threerings.bang.Log.log;
@@ -127,6 +128,9 @@ public class BasicClient
         // initialize our user interface bits
         _keymgr.init(_ctx);
         BangUI.init(_ctx);
+
+        // intialize our performance monitor
+        PerfMonitor.init(_ctx);
 
         // create our media managers
         _imgmgr = new ImageManager(

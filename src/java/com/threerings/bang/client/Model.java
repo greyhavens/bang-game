@@ -505,8 +505,10 @@ public class Model
      * action. <em>Note:</em> this is called on the background model loader
      * thread and must be very careful not to use non-thread-safe services from
      * the supplied context.
+     *
+     * @return the number of bytes loaded from disk in resolving this action.
      */
-    public void resolveAction (String action)
+    public int resolveAction (String action)
     {
         final Animation anim = _anims.get(action);
         boolean isStatic = _props.getProperty(
@@ -524,6 +526,9 @@ public class Model
         } else {
             anim.repeatType = Controller.RT_WRAP;
         }
+
+        // used to track total number of bytes read
+        int[] loaded = new int[1];
 
         String path = _key + "/";
         String[] pnames = getList(
@@ -546,9 +551,10 @@ public class Model
                 amesh = anim.action + "." + mesh,
                 bound = _props.getProperty(amesh + ".bound", "box");
             if (isStatic) {
-                part.target = loadModel(mpath, trans, solid, bound);
+                part.target = loadModel(mpath, trans, solid, bound, loaded);
             } else {
-                part.creator = loadModelCreator(mpath, trans, solid, bound);
+                part.creator = loadModelCreator(
+                    mpath, trans, solid, bound, loaded);
             }
 
             // the model may have multiple textures from which we
@@ -579,7 +585,7 @@ public class Model
             String mesh = anim.emitters[ee].name;
             anim.emitters[ee].creator = loadModelCreator(
                 path + anim.action + "/" + mesh + ".jme", false,
-                false, "box");
+                false, "box", loaded);
         }
 
         // now finish our resolution on the main thread
@@ -588,6 +594,8 @@ public class Model
                 finishResolution(anim, parts);
             }
         });
+
+        return loaded[0];
     }
 
     @Override // documentation inherited
@@ -687,10 +695,10 @@ public class Model
     }
 
     protected CloneCreator loadModelCreator (
-        String path, boolean trans, boolean solid, String bound)
+        String path, boolean trans, boolean solid, String bound, int[] loaded)
     {
         ModelCloneCreator cc = new ModelCloneCreator(
-            loadModel(path, trans, solid, bound));
+            loadModel(path, trans, solid, bound, loaded));
         // these define what we want to "shallow" copy
         cc.addProperty("colors");
         cc.addProperty("texcoords");
@@ -699,7 +707,7 @@ public class Model
     }
 
     protected Node loadModel (
-        String path, boolean trans, boolean solid, String bound)
+        String path, boolean trans, boolean solid, String bound, int[] loaded)
     {
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
@@ -720,6 +728,9 @@ public class Model
                 try {
                     model = jbr.loadBinaryFormat(
                         new BufferedInputStream(new FileInputStream(file)));
+
+                    // note the number of bytes we loaded
+                    loaded[0] += file.length();
 
                     // TODO: put this in the model config file
                     if (path.indexOf("units") != -1) {

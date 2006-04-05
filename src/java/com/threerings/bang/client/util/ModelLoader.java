@@ -58,7 +58,9 @@ public class ModelLoader extends Thread
             }
             PendingActionKey akey = _queue.poll();
             try {
-                akey.resolveAction();
+                long start = PerfMonitor.getCurrentMicros();
+                int loaded = akey.resolveAction();
+                PerfMonitor.recordModelLoad(start, loaded);
             } catch (Throwable t) {
                 log.log(Level.WARNING,
                         "Choked resolving action: " + akey + ".", t);
@@ -84,8 +86,8 @@ public class ModelLoader extends Thread
             }
         }
 
-        public void resolveAction () {
-            _model.resolveAction(_action);
+        public int resolveAction () {
+            return _model.resolveAction(_action);
         }
 
         public int compareTo (PendingActionKey other) {

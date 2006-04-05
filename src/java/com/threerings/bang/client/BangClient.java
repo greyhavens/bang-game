@@ -50,6 +50,7 @@ import com.threerings.bang.game.client.effect.ParticleFactory;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.util.BoardCache;
+import com.threerings.bang.client.util.PerfMonitor;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangBootstrapData;
@@ -467,6 +468,9 @@ public class BangClient extends BasicClient
         
         // register our status view key bindings
         StatusView.bindKeys(_ctx);
+
+        // configure our performance reporting
+        PerfMonitor.setReportToChat(_ctx.getUserObject().tokens.isAdmin());
 
         // developers can jump right into a tutorial or game
         if (!StringUtil.isBlank(System.getProperty("test"))) {
