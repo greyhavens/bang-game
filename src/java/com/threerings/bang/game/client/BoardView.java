@@ -875,6 +875,7 @@ public class BoardView extends BComponent
 
         // let the child nodes know that they need to clean up any textures
         // they've created
+        _snode.cleanup();
         _tnode.cleanup();
         _wnode.cleanup();
         

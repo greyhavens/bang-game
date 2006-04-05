@@ -24,6 +24,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Disk;
 import com.jme.scene.shape.Dome;
@@ -53,50 +54,57 @@ public class SkyNode extends Node
         setRenderQueueMode(Renderer.QUEUE_SKIP);
         
         // create the dome geometry
-        _dome = new Dome("dome", DOME_PLANES, DOME_RADIAL_SAMPLES,
-            DOME_RADIUS);
-        _dome.setModelBound(new BoundingBox());
-        _dome.updateModelBound();
+        if (_dgeom == null) {
+            _dgeom = new Dome("dgeom", DOME_PLANES, DOME_RADIAL_SAMPLES,
+                DOME_RADIUS);
+            _dgeom.setModelBound(new BoundingBox());
+            _dgeom.updateModelBound();
+            TextureState tstate = ctx.getRenderer().createTextureState();
+            tstate.setTexture(null, 0);
+            _dgeom.setRenderState(tstate);
+            _dgeom.lockMeshes(ctx.getRenderer());
+        }
+        _dome = new SharedMesh("dome", _dgeom);
         Quaternion rot = new Quaternion();
         rot.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
         _dome.setLocalRotation(rot);
         _dome.setLocalTranslation(new Vector3f(0f, 0f, -10f));
-        _dome.setRenderState(_gtstate =
-            _ctx.getRenderer().createTextureState());
-        _gtstate.setTexture(null, 0);
-        _dome.lockMeshes(ctx.getRenderer());
-        attachChild(_dome);
+        _dome.setRenderState(
+            _gtstate = ctx.getRenderer().createTextureState());
         ZBufferState zbstate = ctx.getRenderer().createZBufferState();
         zbstate.setFunction(ZBufferState.CF_ALWAYS);
         zbstate.setWritable(false);
         _dome.setRenderState(zbstate);
+        attachChild(_dome);
         _dome.updateRenderState();
         
         // create the cloud plane geometry, which fades out towards the edge
-        _clouds = new Disk("clouds", CLOUD_SHELL_SAMPLES, CLOUD_RADIAL_SAMPLES,
-            CLOUD_RADIUS);
-        _clouds.setModelBound(new BoundingBox());
-        _clouds.updateModelBound();
-        _clouds.setLocalTranslation(new Vector3f(0f, 0f, CLOUD_HEIGHT));
-        FloatBuffer cbuf = BufferUtils.createColorBuffer(1 +
-            (CLOUD_SHELL_SAMPLES - 1) * CLOUD_RADIAL_SAMPLES);
-        float[] color = new float[] { 1f, 1f, 1f, 1f };
-        cbuf.put(color);
-        int rings = CLOUD_SHELL_SAMPLES - 1;
-        float d;
-        for (int ii = 0; ii < CLOUD_RADIAL_SAMPLES; ii++) {
-            for (int jj = 0; jj < rings; jj++) {
-                d = (float)(jj + 1) / rings;
-                color[3] = (d < 0.5f) ? 1f : 1f - (d - 0.5f) / 0.5f;
-                cbuf.put(color);
+        if (_cgeom == null) {
+            _cgeom = new Disk("cgeom", CLOUD_SHELL_SAMPLES,
+                CLOUD_RADIAL_SAMPLES, CLOUD_RADIUS);
+            _cgeom.setModelBound(new BoundingBox());
+            _cgeom.updateModelBound();
+            FloatBuffer cbuf = BufferUtils.createColorBuffer(1 +
+                (CLOUD_SHELL_SAMPLES - 1) * CLOUD_RADIAL_SAMPLES);
+            float[] color = new float[] { 1f, 1f, 1f, 1f };
+            cbuf.put(color);
+            int rings = CLOUD_SHELL_SAMPLES - 1;
+            float d;
+            for (int ii = 0; ii < CLOUD_RADIAL_SAMPLES; ii++) {
+                for (int jj = 0; jj < rings; jj++) {
+                    d = (float)(jj + 1) / rings;
+                    color[3] = (d < 0.5f) ? 1f : 1f - (d - 0.5f) / 0.5f;
+                    cbuf.put(color);
+                }
             }
+            _cgeom.setColorBuffer(cbuf);
+            TextureState tstate = ctx.getRenderer().createTextureState();
+            tstate.setTexture(null, 0);
+            _cgeom.setRenderState(tstate);
+            _cgeom.lockMeshes(ctx.getRenderer());
         }
-        _clouds.setColorBuffer(cbuf);
-        _clouds.setRenderState(_ctstate =
-            _ctx.getRenderer().createTextureState());
-        _ctstate.setTexture(null, 0);
-        _clouds.lockMeshes(ctx.getRenderer());
-        attachChild(_clouds);
+        _clouds = new SharedMesh("clouds", _cgeom);
+        _clouds.setLocalTranslation(new Vector3f(0f, 0f, CLOUD_HEIGHT));
         _clouds.setRenderState(_ctstate = RenderUtil.createTextureState(ctx,
             "textures/environ/clouds.png"));
         Texture ctex = _ctstate.getTexture();
@@ -106,6 +114,7 @@ public class SkyNode extends Node
         ctex.setTranslation(new Vector3f());
         _clouds.setRenderState(RenderUtil.blendAlpha);
         _clouds.setRenderState(RenderUtil.overlayZBuf);
+        attachChild(_clouds);
         _clouds.updateRenderState();
     }
     
@@ -119,6 +128,14 @@ public class SkyNode extends Node
         
         // (re)create the gradient texture
         refreshGradient();
+    }
+    
+    /**
+     * Releases the resources created by this node.
+     */
+    public void cleanup ()
+    {
+        _gtstate.deleteAll();
     }
     
     /**
@@ -184,20 +201,26 @@ public class SkyNode extends Node
     /** The application context. */
     protected BasicContext _ctx;
     
-    /** The dome geometry. */
-    protected Dome _dome;
+    /** The dome mesh. */
+    protected SharedMesh _dome;
     
     /** The gradient texture state. */
     protected TextureState _gtstate;
     
-    /** The cloud plane geometry. */
-    protected Disk _clouds;
+    /** The cloud plane mesh. */
+    protected SharedMesh _clouds;
     
     /** The cloud texture state. */
     protected TextureState _ctstate;
     
     /** The current board object. */
     protected BangBoard _board;
+    
+    /** The shared sky dome geometry. */
+    protected static Dome _dgeom;
+    
+    /** The shared cloud plane geometry. */
+    protected static Disk _cgeom;
     
     /** The number of vertical samples in the sky dome. */
     protected static final int DOME_PLANES = 16;

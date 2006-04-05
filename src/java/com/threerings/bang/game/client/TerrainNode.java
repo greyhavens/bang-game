@@ -429,6 +429,7 @@ public class TerrainNode extends Node
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 _blocks[x][y].deleteCreatedTextures();
+                _blocks[x][y].mesh.unlockMeshes(_ctx.getRenderer());
             }
         }
     }
@@ -947,7 +948,7 @@ public class TerrainNode extends Node
             tstate.setTexture(null, 1);
             block.mesh.setRenderState(tstate);
             
-            block.mesh.setVBOInfo(new VBOInfo(true));
+            //block.mesh.setVBOInfo(new VBOInfo(true));
             block.mesh.lockBounds();
             block.mesh.lockMeshes();
         }

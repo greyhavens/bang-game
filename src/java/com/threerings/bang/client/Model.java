@@ -856,7 +856,7 @@ public class Model
                     tstate.setTexture(null, 0);
                     target.setRenderState(tstate);
 
-                    setVBOInfos(target);
+                    //setVBOInfos(target);
                     target.lockBounds();
                     target.lockMeshes();
                     target.clearRenderState(RenderState.RS_TEXTURE);
