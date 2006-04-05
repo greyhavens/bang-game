@@ -19,9 +19,12 @@
 -injars ../lib/jme-model.jar(!META-INF/*)
 -injars ../lib/jme-terrain.jar(!META-INF/*)
 -injars ../lib/jme-awt.jar(!META-INF/*)
+-injars ../lib/jme-sound.jar(!META-INF/*,!**/fmod/**)
 -injars ../lib/jme-bui.jar(!META-INF/*,!**/tests/**)
 -injars ../lib/threerings.jar(**/coin/**)
 -injars ../lib/hemiptera.jar(!**/web/**,!**/persist/**,!install.properties)
+-injars ../lib/jorbis-0.0.12.jar(!META-INF/*)
+-injars ../lib/jogg-0.0.5.jar(!META-INF/*)
 -injars ../dist/bang-code.jar(!META-INF/*,!**/tools/**,!**/tests/**)
 
 -libraryjars <java.home>/lib/rt.jar
