@@ -156,10 +156,10 @@ public class ToolPanel extends JPanel
             getTool(e).mouseWheeled(e);
         }
         public void keyPressed (com.jmex.bui.event.KeyEvent e) {
-            getTool(e).keyPressed(e);
+            getActiveTool().keyPressed(e);
         }
         public void keyReleased (com.jmex.bui.event.KeyEvent e) {
-            getTool(e).keyReleased(e);
+            getActiveTool().keyReleased(e);
         }
     }
 
