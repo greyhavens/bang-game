@@ -1236,6 +1236,12 @@ public class BangBoardView extends BoardView
                                 ((MobileSprite)sprite).getPiece() + ".");
                 }
                 removeSprite(sprite);
+
+                // let our unit status know if a unit just departed
+                BangView bview = (BangView)getParent();
+                if (sprite instanceof UnitSprite && bview.ustatus != null) {
+                    bview.ustatus.unitRemoved((UnitSprite)sprite);
+                }
             }
         }
     };

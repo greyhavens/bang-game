@@ -77,6 +77,32 @@ public class UnitStatusView extends BWindow
         reposition();
     }
 
+    /**
+     * Called when a unit sprite is removed from the game.
+     */
+    public void unitRemoved (UnitSprite usprite)
+    {
+        int pieceId = usprite.getPieceId();
+        UnitLabel ulabel = null;
+        for (UnitLabel label : _labels) {
+            if (label.pieceId == pieceId) {
+                ulabel = label;
+                break;
+            }
+        }
+        if (ulabel == null) {
+            return;
+        }
+
+        // if this unit was hijacked from another player, or a duplicate,
+        // remove this label
+        if (((Unit)usprite.getPiece()).originalOwner != _pidx) {
+            remove(ulabel);
+            resort();
+            reposition();
+        }
+    }
+
     protected void resort ()
     {
         Collections.sort(_labels);
