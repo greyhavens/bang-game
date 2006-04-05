@@ -26,12 +26,6 @@ public class AreaClearEffect extends AreaEffect
     }
 
     @Override // documentation inherited
-    protected void noteAffected (Piece piece, IntIntMap dammap, int dist)
-    {
-        // NOOP
-    }
-
-    @Override // documentation inherited
     protected boolean affectedPiece (Piece piece)
     {
         return (piece.owner >= 0 && !piece.isAlive());

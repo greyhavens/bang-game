@@ -47,8 +47,8 @@ public class AreaDamageHandler extends EffectHandler
                 continue;
             }
             _view.addSprite(ssprite);
-            ssprite.setLocalScale(FastMath.pow(0.5f,
-                target.getDistance(effect.x, effect.y)));
+            ssprite.setLocalScale(
+                1f / (target.getDistance(effect.x, effect.y) + 1));
             ssprite.getLocalRotation().fromAngleNormalAxis(-FastMath.HALF_PI,
                 FORWARD);
             Vector3f end = _view.getPieceSprite(target).getLocalTranslation(),

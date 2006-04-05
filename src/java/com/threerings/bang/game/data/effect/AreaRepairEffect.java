@@ -44,12 +44,6 @@ public class AreaRepairEffect extends AreaEffect
     }
 
     @Override // documentation inherited
-    protected void noteAffected (Piece piece, IntIntMap dammap, int dist)
-    {
-        // NOOP
-    }
-
-    @Override // documentation inherited
     protected void apply (
         BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {

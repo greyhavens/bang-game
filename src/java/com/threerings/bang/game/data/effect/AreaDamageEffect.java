@@ -43,12 +43,13 @@ public class AreaDamageEffect extends AreaEffect
     {
         super.prepare(bangobj, dammap);
 
-        // we already computed the damage for each piece in noteAffected()
-        // so we can just look it up again here
+        // determine the damage for each piece
         newDamage = new int[pieces.length];
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
-            newDamage[ii] = target.damage + dammap.get(pieces[ii]);
+            int damage = getDamage(target);
+            newDamage[ii] = target.damage + damage;
+            dammap.increment(target.owner, damage);
         }
     }
     
@@ -58,13 +59,15 @@ public class AreaDamageEffect extends AreaEffect
         return new AreaDamageHandler();
     }
 
-    @Override // documentation inherited
-    protected void noteAffected (Piece piece, IntIntMap dammap, int dist)
+    /**
+     * Returns the damage done to the specified piece.
+     */
+    protected int getDamage (Piece piece)
     {
-        int damage = baseDamage / (dist+1);
-        dammap.increment(piece.owner, Math.min(damage, 100-piece.damage));
+        int damage = baseDamage / (piece.getDistance(x, y) + 1);
+        return Math.min(damage, 100-piece.damage);
     }
-
+    
     @Override // documentation inherited
     protected void apply (
         BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
