@@ -3,15 +3,17 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.math.FastMath;
+
 import com.samskivert.util.Interval;
 
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
-
 import com.threerings.openal.SoundGroup;
+import com.threerings.util.RandomUtil;
 
-import com.threerings.bang.game.client.sprite.MobileSprite;
+import com.threerings.bang.game.client.sprite.BisonSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
@@ -20,6 +22,8 @@ import com.threerings.bang.game.data.effect.StampedeEffect;
 import com.threerings.bang.game.data.effect.TrainEffect;
 
 import com.threerings.bang.util.BangContext;
+
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays a stampede.
@@ -31,25 +35,25 @@ public class StampedeHandler extends EffectHandler
     {
         _stampede = (StampedeEffect)_effect;
 
-        // set the buffalo on the path listed in the effect
-        MobileSprite sprite = new MobileSprite("extras", "bison");
-        sprite.init(_ctx, _view, _bangobj.board, _sounds, new DummyPiece(),
-            _bangobj.tick);
-        _view.addSprite(sprite);
-        sprite.move(_bangobj.board, _stampede.path,
-            StampedeEffect.BUFFALO_SPEED);
-            
-        final int penderId = notePender();
-        sprite.addObserver(new PathObserver() {
-            public void pathCompleted (Sprite sprite, Path path) {
-                _view.removeSprite(sprite);
-                maybeComplete(penderId);
-            }
-            public void pathCancelled (Sprite sprite, Path path) {
-                _view.removeSprite(sprite);
-                maybeComplete(penderId);
-            }
-        });
+        // set the bison on the path listed in the effect, spread out
+        // in a circle around the herd center
+        float angle = RandomUtil.getFloat(FastMath.TWO_PI);
+        for (int ii = 0; ii < NUM_BISON; ii++) {
+            final int penderId = notePender();
+            BisonSprite sprite = new BisonSprite(angle, BISON_DISTANCE) {
+                public void pathCompleted () {
+                    super.pathCompleted();
+                    _view.removeSprite(this);
+                    maybeComplete(penderId);
+                }
+            };
+            angle += (FastMath.TWO_PI / NUM_BISON);
+            sprite.init(_ctx, _view, _bangobj.board, _sounds,
+                new DummyPiece(), _bangobj.tick);
+            _view.addSprite(sprite);
+            sprite.move(_bangobj.board, _stampede.path,
+                StampedeEffect.BISON_SPEED);
+        }
         
         // activate each collision on its listed tick
         for (int ii = 0; ii < _stampede.collisions.length; ii++) {
@@ -59,7 +63,7 @@ public class StampedeHandler extends EffectHandler
         return !isCompleted();
     }
 
-    /** A dummy piece for the buffalo sprites. */
+    /** A dummy piece for the bison sprites. */
     protected class DummyPiece extends Piece
     {
     }
@@ -76,7 +80,7 @@ public class StampedeHandler extends EffectHandler
         public void schedule ()
         {
             schedule((long)(1000 * (Math.max(0, _collision.step-1)) /
-                            StampedeEffect.BUFFALO_SPEED));
+                            StampedeEffect.BISON_SPEED));
         }
 
         public void expired ()
@@ -91,4 +95,10 @@ public class StampedeHandler extends EffectHandler
     }
 
     protected StampedeEffect _stampede;
+    
+    /** The number of bison in the stampede. */
+    protected static final int NUM_BISON = 3;
+    
+    /** The distance of each bison from the center of the herd. */
+    protected static final float BISON_DISTANCE = TILE_SIZE / 2;
 }

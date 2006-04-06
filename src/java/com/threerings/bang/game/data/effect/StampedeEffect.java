@@ -35,17 +35,17 @@ import static com.threerings.bang.Log.*;
 public class StampedeEffect extends Effect
     implements PieceCodes
 {
-    /** The speed of the buffalo in tiles per second. */
-    public static final float BUFFALO_SPEED = 4f;
+    /** The speed of the bison in tiles per second. */
+    public static final float BISON_SPEED = 4f;
 
-    /** The amount of damage taken by units hit by buffalo. */
+    /** The amount of damage taken by units hit by bison. */
     public static final int COLLISION_DAMAGE = 20;
 
     /** The identifier for the type of effect that we produce. */
     public static final String DAMAGED = "bang";
 
     /**
-     * Represents a buffalo's collision with a unit.
+     * Represents a bison's collision with a unit.
      */
     public static class Collision extends SimpleStreamableObject
     {
@@ -80,10 +80,10 @@ public class StampedeEffect extends Effect
     /** The radius of the effect. */
     public transient int radius;
 
-    /** The path to be followed by the buffalo. */
+    /** The path to be followed by the bison. */
     public PointList path;
 
-    /** The list of collisions between buffalo and units. */
+    /** The list of collisions between bison and units. */
     public Collision[] collisions;
 
     public StampedeEffect ()
@@ -111,7 +111,7 @@ public class StampedeEffect extends Effect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // create the path that the buffalo will follow
+        // create the path that the bison will follow
         createPath(bangobj.board);
 
         // create the list of collisions
@@ -121,9 +121,9 @@ public class StampedeEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
-        // delay the tick by the amount of time it takes for the buffalo to run
+        // delay the tick by the amount of time it takes for the bison to run
         // their course
-        reportDelay(obs, (long)((path.size()-1) * 1000 / BUFFALO_SPEED));
+        reportDelay(obs, (long)((path.size()-1) * 1000 / BISON_SPEED));
 
         // apply the collisions in order
         for (int ii = 0; ii < collisions.length; ii++) {
@@ -140,7 +140,7 @@ public class StampedeEffect extends Effect
     }
 
     /**
-     * Creates a path for the buffalo.
+     * Creates a path for the bison.
      */
     protected void createPath (BangBoard board)
     {
@@ -151,7 +151,7 @@ public class StampedeEffect extends Effect
         path.add(start);
         int hdir = growPath(board, path, -1);
         if (path.size() == 1) {
-            log.warning("Couldn't find anywhere for the buffalo to go! " +
+            log.warning("Couldn't find anywhere for the bison to go! " +
                 "[effect=" + this + "]."); 
             return;
         }
@@ -213,7 +213,7 @@ public class StampedeEffect extends Effect
     }
     
     /**
-     * Creates the collision list for the buffalo.
+     * Creates the collision list for the bison.
      */
     protected void createCollisions (BangObject bangobj, IntIntMap dammap)
     {
@@ -232,15 +232,15 @@ public class StampedeEffect extends Effect
         for (int ii = 0, nn = path.size(); ii < nn; ii++) {
             for (Piece unit : units) {
                 loc.setLocation(unit.x, unit.y);
-                if (containsBuffalo(loc, ii)) {
+                if (containsBison(loc, ii)) {
                     // try to move the unit to a point that wasn't occupied by
-                    // a buffalo in the last step and won't be in the next step
+                    // a bison in the last step and won't be in the next step
                     ArrayList<Point> nlocs = new ArrayList<Point>();
                     for (int jj = 0; jj < DIRECTIONS.length; jj++) {
                         Point nloc = new Point(loc.x + DX[jj], loc.y + DY[jj]);
                         if (bangobj.board.isOccupiable(nloc.x, nloc.y) &&
-                            !containsBuffalo(nloc, ii - 1) &&
-                            !containsBuffalo(nloc, ii + 1)) {
+                            !containsBison(nloc, ii - 1) &&
+                            !containsBison(nloc, ii + 1)) {
                             nlocs.add(nloc);
                         }
                     }
@@ -258,10 +258,10 @@ public class StampedeEffect extends Effect
     }
 
     /**
-     * Checks whether the specified location contains a buffalo at the given
+     * Checks whether the specified location contains a bison at the given
      * step along the paths.
      */
-    protected boolean containsBuffalo (Point loc, int step)
+    protected boolean containsBison (Point loc, int step)
     {
         if (step < 0) {
             return false;
@@ -269,6 +269,6 @@ public class StampedeEffect extends Effect
         return path.size() > step && path.get(step).equals(loc);
     }
 
-    /** The (maximum) length of the buffalo stampede in each direction. */
+    /** The (maximum) length of the bison stampede in each direction. */
     protected static final int STAMPEDE_LENGTH = 4;
 }
