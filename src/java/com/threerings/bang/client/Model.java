@@ -758,12 +758,12 @@ public class Model
             jbr.setProperty("bound", bound);
 
             // our media is loaded from unpacked files
-            File file = _local ? new File(path) : 
-                _ctx.getResourceManager().getResourceFile(path);
-            if (!file.exists() && _local) {
-                // look for/convert a file 
+            if (_local) {
+                // (re-)convert the source model
                 attemptModelConversion(path);
             }
+            File file = _local ? new File(path) : 
+                _ctx.getResourceManager().getResourceFile(path);
             if (file.exists()) {
                 try {
                     jbr.setProperty("texurl", file.toURL());
