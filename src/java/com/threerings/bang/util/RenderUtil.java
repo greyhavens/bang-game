@@ -39,6 +39,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Spatial;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
@@ -470,6 +471,21 @@ public class RenderUtil
             
         } else {
             return new BackTextureRenderer(ctx, width, height);
+        }
+    }
+    
+    /**
+     * Deletes all the vertex buffer objects identified in the given info.
+     */
+    public static void deleteVBOs (BasicContext ctx, VBOInfo vboinfo)
+    {
+        Renderer r = ctx.getRenderer();
+        r.deleteVBO(vboinfo.getVBOColorID());
+        r.deleteVBO(vboinfo.getVBOIndexID());
+        r.deleteVBO(vboinfo.getVBONormalID());
+        r.deleteVBO(vboinfo.getVBOVertexID());
+        for (int ii = 0; ii < 2; ii++) {
+            r.deleteVBO(vboinfo.getVBOTextureID(ii));
         }
     }
     

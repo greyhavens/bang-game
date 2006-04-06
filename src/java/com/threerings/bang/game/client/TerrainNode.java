@@ -430,6 +430,10 @@ public class TerrainNode extends Node
             for (int y = 0; y < _blocks[x].length; y++) {
                 _blocks[x][y].deleteCreatedTextures();
                 _blocks[x][y].mesh.unlockMeshes(_ctx.getRenderer());
+                VBOInfo vboinfo = _blocks[x][y].mesh.getVBOInfo();
+                if (vboinfo != null) {
+                    RenderUtil.deleteVBOs(_ctx, vboinfo);
+                }
             }
         }
     }
