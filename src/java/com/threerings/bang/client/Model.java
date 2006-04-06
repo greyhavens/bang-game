@@ -52,6 +52,7 @@ import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
 import com.jmex.model.ModelCloneCreator;
 import com.jmex.model.XMLparser.JmeBinaryReader;
+import com.jmex.model.XMLparser.Converters.Md3ToJme;
 import com.jmex.model.animation.KeyframeController;
 
 import com.threerings.media.image.Colorization;
@@ -374,57 +375,36 @@ public class Model
     }
 
     /**
+     * Creates the model and loads up all of its constituent animations from
+     * a local file.
+     */
+    public Model (BasicContext ctx, File path)
+    {
+        _ctx = ctx;
+        _local = true;
+        _key = path.toString();
+        int sep = _key.lastIndexOf(File.separator);
+        _key = (sep == -1) ? "" : _key.substring(0, sep);
+        FileInputStream pin = null;
+        try {
+            pin = new FileInputStream(path);
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Couldn't find model properties file " +
+                "[path=" + path + "].");
+        }
+        loadProperties(pin, _key);
+    }
+    
+    /**
      * Creates the model and loads up all of its consituent animations.
      */
     public Model (BasicContext ctx, String type, String name)
     {
         _ctx = ctx;
         _key = type + "/" + name;
-
-        // our properties files are loaded via the classpath
-        _props = new Properties();
         String path = "rsrc/" + _key + "/model.properties";
-        try {
-            InputStream pin =
-                getClass().getClassLoader().getResourceAsStream(path);
-            if (pin != null) {
-                _props.load(new BufferedInputStream(pin));
-            } else {
-                log.info("Faking model info file for " + _key + ".");
-                String mname = name.substring(name.lastIndexOf("/")+1);
-                _props.setProperty("meshes", mname);
-            }
-        } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failed to load model info " +
-                    "[path=" + path + "].", ioe);
-        }
-
-        // TODO: use a whole different system for non-animating models
-        // that uses a SharedMesh
-
-        String[] actions = getList(_props, "actions", null, true);
-        for (int ii = 0; ii < actions.length; ii++) {
-            String action = actions[ii];
-            // skip commented out actions
-            if (action.equals("#")) {
-                ii++;
-                continue;
-            } else if (action.startsWith("#")) {
-                continue;
-            }
-
-            // create a placeholder animation record for this action
-            Animation anim = new Animation();
-            anim.action = action;
-            anim.emitters = getEmitters(action);
-            _anims.put(action, anim);
-        }
-
-        // TEMP: use the first frame of the walking pose if this model has no
-        // standing pose defined
-        if (!_anims.containsKey("standing") && _anims.containsKey("walking")) {
-            _anims.put("standing", _anims.get("walking"));
-        }
+        loadProperties(getClass().getClassLoader().getResourceAsStream(path),
+            path);
     }
 
     /**
@@ -435,6 +415,17 @@ public class Model
         return _props;
     }
 
+    /**
+     * Returns the names of all this model's actions.
+     */
+    public String[] getActions ()
+    {
+        if (_actions == null) {
+            _actions = _anims.keySet().toArray(new String[_anims.size()]);
+        }
+        return _actions;
+    }
+    
     /**
      * Returns true if we have meshes for the specified action.
      */
@@ -566,12 +557,14 @@ public class Model
             }
             part.tpaths = new String[tnames.length];
             for (int tt = 0; tt < tnames.length; tt++) {
-                // preload the textures so they're cached when we need them
-                // TODO: make the texture cache thread safe
-                _ctx.getTextureCache().getTexture(
-                    part.tpaths[tt] = cleanPath(path + tnames[tt]));
+                part.tpaths[tt] = cleanPath(path + tnames[tt]);
+                if (!_local) {
+                    // preload the textures so they're cached when we need them
+                    // TODO: make the texture cache thread safe
+                    _ctx.getTextureCache().getTexture(part.tpaths[tt]);
+                }
             }
-
+            
             // possibly create a programmatic animation controller
             String panim = _props.getProperty(amesh + ".anim");
             if (panim != null) {
@@ -616,6 +609,54 @@ public class Model
         return _key + " m:" + _meshes.size() + " a:" + _anims.size();
     }
 
+    /**
+     * Loads the model properties from the given stream.
+     */
+    protected void loadProperties (InputStream pin, String path)
+    {
+        _props = new Properties();
+        if (pin != null) {
+            try {
+                _props.load(new BufferedInputStream(pin));
+            } catch (IOException ioe) {
+                log.log(Level.WARNING, "Failed to load model info " +
+                    "[path=" + path + "].", ioe);
+            }
+        }
+        if (_props.size() == 0) {
+            log.info("Faking model info file for " + _key + ".");
+            String mname = _key.substring(_key.lastIndexOf("/")+1);
+            _props.setProperty("meshes", mname);
+        }
+
+        // TODO: use a whole different system for non-animating models
+        // that uses a SharedMesh
+
+        String[] actions = getList(_props, "actions", null, true);
+        for (int ii = 0; ii < actions.length; ii++) {
+            String action = actions[ii];
+            // skip commented out actions
+            if (action.equals("#")) {
+                ii++;
+                continue;
+            } else if (action.startsWith("#")) {
+                continue;
+            }
+
+            // create a placeholder animation record for this action
+            Animation anim = new Animation();
+            anim.action = action;
+            anim.emitters = getEmitters(action);
+            _anims.put(action, anim);
+        }
+
+        // TEMP: use the first frame of the walking pose if this model has no
+        // standing pose defined
+        if (!_anims.containsKey("standing") && _anims.containsKey("walking")) {
+            _anims.put("standing", _anims.get("walking"));
+        }
+    }
+    
     /**
      * Loads the names and properties of the emitters for the specified action.
      * Does not load the marker geometries (that happens on the loader thread).
@@ -712,12 +753,17 @@ public class Model
         path = cleanPath(path);
         ClassLoader loader = getClass().getClassLoader();
         Node model = _meshes.get(path);
-        if (model == null) {
+        if (model == null || _local) {
             JmeBinaryReader jbr = new JmeBinaryReader();
             jbr.setProperty("bound", bound);
 
             // our media is loaded from unpacked files
-            File file = _ctx.getResourceManager().getResourceFile(path);
+            File file = _local ? new File(path) : 
+                _ctx.getResourceManager().getResourceFile(path);
+            if (!file.exists() && _local) {
+                // look for/convert a file 
+                attemptModelConversion(path);
+            }
             if (file.exists()) {
                 try {
                     jbr.setProperty("texurl", file.toURL());
@@ -775,6 +821,20 @@ public class Model
         return model;
     }
 
+    /**
+     * Attempts to locate a non-JME model corresponding to the given path
+     * and convert it to a JME model.
+     */
+    protected void attemptModelConversion (String path)
+    {
+        String root = path.substring(0, path.lastIndexOf('.')+1);
+        File test = new File(root + "MD3");
+        if (test.exists()) {
+            new Md3ToJme().attemptFileConvert(
+                new String[] { test.toString(), path });
+        }
+    }
+    
     /**
      * Recursively descends the scene graph, making sure that the origins of
      * each {@link Geometry} object encountered are located at the object's
@@ -879,8 +939,14 @@ public class Model
                 TextureState tstate;
                 if (tref == null || (tstate = tref.get()) == null) {
                     tstate = _ctx.getRenderer().createTextureState();
-                    Texture tex = _ctx.getTextureCache().getTexture(
-                        tpaths[tkey.idx], zations);
+                    Texture tex;
+                    if (_local) {
+                        tex = RenderUtil.loadTexture(_ctx, tpaths[tkey.idx],
+                            zations);
+                    } else {
+                        tex = _ctx.getTextureCache().getTexture(
+                            tpaths[tkey.idx], zations);
+                    }
                     tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
                     tstate.setTexture(tex);
                     tstates.put(tkey, new WeakReference<TextureState>(tstate));
@@ -958,6 +1024,9 @@ public class Model
     protected HashMap<String,Animation> _anims =
         new HashMap<String,Animation>();
 
+    protected boolean _local;
+    protected String[] _actions;
+    
     /** This asynchronous thread loads our models in the background. */
     protected static ModelLoader _loader;
 

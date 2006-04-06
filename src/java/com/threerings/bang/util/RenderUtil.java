@@ -12,11 +12,17 @@ import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import java.io.File;
+import java.io.IOException;
+
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.logging.Level;
+
+import javax.imageio.ImageIO;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -47,7 +53,7 @@ import com.jme.util.geom.BufferUtils;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.jme.JmeCanvasApp;
-
+import com.threerings.media.image.Colorization;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.data.Terrain;
@@ -295,6 +301,24 @@ public class RenderUtil
         return createTexture(ctx.getImageCache().convertImage(image));
     }
 
+    /**
+     * Loads a texture from the local file system.
+     */
+    public static Texture loadTexture (
+        BasicContext ctx, String path, Colorization[] zations)
+    {
+        try {
+            BufferedImage bimg = ImageIO.read(new File(path));
+            return createTexture(zations == null ?
+                ctx.getImageCache().createImage(bimg, true) :
+                ctx.getImageCache().createImage(bimg, zations, true));
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Unable to load texture [path=" + path +
+                ", error=" + ioe + "].");
+            return null;
+        }
+    }
+    
     /**
      * Creates a texture using the supplied image.
      */
