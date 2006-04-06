@@ -918,7 +918,7 @@ public class Model
 
                     setVBOInfos(target);
                     target.lockBounds();
-                    target.lockMeshes();
+                    //target.lockMeshes();
                     target.clearRenderState(RenderState.RS_TEXTURE);
 
                     target.updateCollisionTree();

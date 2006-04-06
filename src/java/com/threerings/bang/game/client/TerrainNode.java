@@ -952,7 +952,7 @@ public class TerrainNode extends Node
             vboinfo.setVBOIndexEnabled(true);
             block.mesh.setVBOInfo(vboinfo);
             block.mesh.lockBounds();
-            block.mesh.lockMeshes();
+            //block.mesh.lockMeshes();
         }
         
         // create the splat meshes

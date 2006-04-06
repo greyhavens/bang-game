@@ -26,6 +26,7 @@ import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.shape.Disk;
 import com.jme.scene.shape.Dome;
 import com.jme.scene.state.LightState;
@@ -62,7 +63,10 @@ public class SkyNode extends Node
             TextureState tstate = ctx.getRenderer().createTextureState();
             tstate.setTexture(null, 0);
             _dgeom.setRenderState(tstate);
-            _dgeom.lockMeshes(ctx.getRenderer());
+            VBOInfo vboinfo = new VBOInfo(true);
+            vboinfo.setVBOIndexEnabled(true);
+            _dgeom.setVBOInfo(vboinfo);
+            //_dgeom.lockMeshes(ctx.getRenderer());
         }
         _dome = new SharedMesh("dome", _dgeom);
         Quaternion rot = new Quaternion();
@@ -101,7 +105,10 @@ public class SkyNode extends Node
             TextureState tstate = ctx.getRenderer().createTextureState();
             tstate.setTexture(null, 0);
             _cgeom.setRenderState(tstate);
-            _cgeom.lockMeshes(ctx.getRenderer());
+            VBOInfo vboinfo = new VBOInfo(true);
+            vboinfo.setVBOIndexEnabled(true);
+            _cgeom.setVBOInfo(vboinfo);
+            //_cgeom.lockMeshes(ctx.getRenderer());
         }
         _clouds = new SharedMesh("clouds", _cgeom);
         _clouds.setLocalTranslation(new Vector3f(0f, 0f, CLOUD_HEIGHT));
