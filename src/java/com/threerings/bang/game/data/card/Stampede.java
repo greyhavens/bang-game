@@ -28,7 +28,7 @@ public class Stampede extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 0;
+        return 30;
     }
 
     @Override // documentation inherited
