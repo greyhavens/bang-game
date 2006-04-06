@@ -460,7 +460,7 @@ public class BoardView extends BComponent
             result.addLocal(_lights[ii].getAmbient());
             _color.set(_lights[ii].getDiffuse());
             result.addLocal(_color.multLocal(
-                -normal.dot(_lights[ii].getDirection())));
+                Math.max(0, -normal.dot(_lights[ii].getDirection()))));
         }
         
         // get the color of the predominant terrain and multiply it by the
