@@ -87,6 +87,14 @@ if [ ! -z "$CLIENT" ]; then
 
     cd $ROOT
     ant models client
+    if [ $? != 0 ]; then
+        rm -f $LOCKFILE
+        exit 255
+    fi
+
+    # make our Proguard mapping file accessible to Hemiptera
+    cp $ROOT/etc/proguard/$BUILD_VERSION.map \
+        $ROOT/../threerings/etc/proguard/bang
 
     cd $ROOT/projects/installers
     ant client
