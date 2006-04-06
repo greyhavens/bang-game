@@ -23,6 +23,7 @@ public enum Terrain
     ROUGH_DIRT  (5, BangBoard.BASE_TRAVERSAL, 0.5f),
     SAND        (6, BangBoard.BASE_TRAVERSAL, 0.9f),
     WATER       (7, -1, 0f),
+    BONE        (8, BangBoard.BASE_TRAVERSAL, 0.2f),
 
     // special "outside the board" tiles
     OUTER       (99, -1, 0f),
