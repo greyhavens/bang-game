@@ -62,6 +62,9 @@ $MIRROR $VERBOSE `find $CLIENT_DIR/$version -type f`
 # mirror the updated installers
 $MIRROR $VERBOSE $ROOT/pages/$client_ident/*-install.???
 
+# mirror the Hemiptera Proguard mapping
+$MIRROR $VERBOSE $ROOT/../threerings/etc/proguard/bang/$version.map
+
 # update the getdown.txt used by a fresh installation
 cp $CLIENT_DIR/$version/getdown.txt $CLIENT_DIR
 $MIRROR $VERBOSE $CLIENT_DIR/getdown.txt
