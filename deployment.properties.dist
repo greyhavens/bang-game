@@ -36,3 +36,4 @@ default_locale = en
 client_ident = client
 client_title = Bang! Howdy
 editor_title = Bang! Howdy Editor
+viewer_title = Bang! Howdy Model Viewer

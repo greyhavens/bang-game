@@ -80,6 +80,10 @@
     *;
 }
 
+-keep public class com.threerings.bang.viewer.ViewerApp {
+    public static void main (java.lang.String[]);
+}
+
 -keep public class com.threerings.bang.data.Badge {
     static <fields>;
 }
