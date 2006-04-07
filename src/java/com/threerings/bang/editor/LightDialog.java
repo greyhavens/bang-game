@@ -82,6 +82,9 @@ public class LightDialog extends JDialog
     // documentation inherited from interface ChangeListener
     public void stateChanged (ChangeEvent e)
     {
+        if (!isShowing()) {
+            return; // invoked from fromBoard
+        }
         _panel.view.setShadowIntensity(_shadow.getValue() / 100f);
     }
     
@@ -133,6 +136,9 @@ public class LightDialog extends JDialog
         
         public void stateChanged (ChangeEvent e)
         {
+            if (!isShowing()) {
+                return; // invoked from fromBoard
+            }
             _panel.view.setLightParams(idx,
                 azimuth.getValue() * FastMath.DEG_TO_RAD,
                 elevation.getValue() * FastMath.DEG_TO_RAD,

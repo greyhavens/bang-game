@@ -99,6 +99,9 @@ public class BoardPropertiesDialog extends JDialog
     // documentation inherited from interface ChangeListener
     public void stateChanged (ChangeEvent e)
     {
+        if (!isShowing()) {
+            return; // invoked from fromBoard
+        }
         _panel.view.setElevationUnitsPerTile(128 - _elevationScale.getValue());
     }
     

@@ -74,6 +74,9 @@ public class SkyDialog extends JDialog
     // documentation inherited from interface ChangeListener
     public void stateChanged (ChangeEvent e)
     {
+        if (!isShowing()) {
+            return; // invoked from fromBoard
+        }
         _panel.view.setSkyParams(_horizonColor.getRGB(),
             _overheadColor.getRGB(), _falloff.getValue());
     }

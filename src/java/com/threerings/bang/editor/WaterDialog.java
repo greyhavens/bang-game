@@ -77,6 +77,9 @@ public class WaterDialog extends JDialog
     // documentation inherited from interface ChangeListener
     public void stateChanged (ChangeEvent e)
     {
+        if (!isShowing()) {
+            return; // invoked from fromBoard
+        }
         _panel.view.setWaterParams(_level.getValue(), _color.getRGB(),
             _amplitude.getValue());
     }

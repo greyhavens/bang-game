@@ -76,6 +76,9 @@ public class EnvironmentDialog extends JDialog
     // documentation inherited from interface ChangeListener
     public void stateChanged (ChangeEvent e)
     {
+        if (!isShowing()) {
+            return; // invoked from fromBoard
+        }
         _panel.view.setWindParams(_direction.getValue() * FastMath.DEG_TO_RAD,
             _speed.getValue());
     }
