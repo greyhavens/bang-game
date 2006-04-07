@@ -72,8 +72,8 @@ public class PerfMonitor
                          ", kb=" + kb + ", ms=" + millis +
                          ", kbps=" + kbps + "].");
                 if (_reportToChat && _ctx instanceof BangContext) {
-                    String msg = "Models l:" + _models[0] + " k:" + kb +
-                        " t:" + millis + " r:" + kbps;
+                    String msg = "Models: #" + _models[0] + " " + kb +
+                        "k " + millis + "ms " + kbps + "kbps";
                     ((BangContext)_ctx).getChatDirector().displayInfo(
                         null, MessageBundle.taint(msg));
                 }
