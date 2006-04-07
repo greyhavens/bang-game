@@ -11,6 +11,8 @@ import com.jmex.bui.BCheckBox;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 
+import com.threerings.io.Streamable;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -21,8 +23,12 @@ import static com.threerings.bang.Log.log;
 public class Config
 {
     /** Parameters relating to the display and user interface. */
-    public static class Display
+    public static class Display implements Streamable
     {
+        // Note: this class is not actually sent over the network, we just
+        // implement streamable to prevent Proguard from renaming our fields
+        // which we lookup by name.
+
         /** Controls the overall speed of the game animations. */
         public float animationSpeed = 1f;
 
