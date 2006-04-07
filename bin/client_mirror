@@ -8,15 +8,6 @@ MIRROR=/export/tools/bin/mirror
 ROOT=`dirname $0`/..
 export JAVA_HOME=/usr/local/jdk1.5
 
-# "parse" our arguments
-VERBOSE=""
-while [ ! -z "$1" ]; do
-    if [ $1 = "-v" ]; then
-        VERBOSE=true
-    fi
-    shift
-done
-
 # read in our deployment configuration
 if [ -f $ROOT/deployment.properties ]; then
     egrep 'web_dir|client_ident' $ROOT/deployment.properties | \
@@ -57,14 +48,14 @@ done
 
 # mirror the client
 echo "** Mirroring $client_ident version $version..."
-$MIRROR $VERBOSE `find $CLIENT_DIR/$version -type f`
+$MIRROR $* `find $CLIENT_DIR/$version -type f`
 
 # mirror the updated installers
-$MIRROR $VERBOSE $ROOT/pages/$client_ident/*-install.???
+$MIRROR $* $ROOT/pages/$client_ident/*-install.???
 
 # mirror the Hemiptera Proguard mapping
-$MIRROR $VERBOSE $ROOT/../threerings/etc/proguard/bang/$version.map
+$MIRROR $* $ROOT/../threerings/etc/proguard/bang/$version.map
 
 # update the getdown.txt used by a fresh installation
 cp $CLIENT_DIR/$version/getdown.txt $CLIENT_DIR
-$MIRROR $VERBOSE $CLIENT_DIR/getdown.txt
+$MIRROR $* $CLIENT_DIR/getdown.txt

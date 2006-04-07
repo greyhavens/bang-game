@@ -16,4 +16,8 @@ $MIRROR `find $WEB_DIR/devclient -name '*.jar'` \
     $WEB_DIR/devclient/rsrc/config/resource/manager.properties \
     $WEB_DIR/devclient/native/* \
     $WEB_DIR/devclient/*.*
+
+# mirror the updated installers
+$MIRROR $ROOT/pages/devclient/*-install.???
+
 echo "*** Finished mirror at" `date`
