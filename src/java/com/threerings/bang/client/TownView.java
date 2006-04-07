@@ -175,7 +175,7 @@ public class TownView extends BWindow
     {
         public TownBoardView (BangContext ctx)
         {
-            super(ctx);
+            super(ctx, false);
             addListener(this);
             addListener(new MouseAdapter() {
                 public void mousePressed (MouseEvent me) {

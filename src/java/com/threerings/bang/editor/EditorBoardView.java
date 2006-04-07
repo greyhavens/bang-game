@@ -57,7 +57,7 @@ public class EditorBoardView extends BoardView
 {
     public EditorBoardView (BasicContext ctx, EditorPanel panel)
     {
-        super(ctx);
+        super(ctx, true);
         _panel = panel;
         addListener(this);
 
@@ -623,16 +623,6 @@ public class EditorBoardView extends BoardView
                 }
             }
         }
-    }
-
-    @Override // documentation inherited
-    protected TerrainNode createTerrainNode (BasicContext ctx)
-    {
-        return new TerrainNode(ctx, this) {
-            protected boolean isHeightfieldStatic () {
-                return false;
-            }
-        };
     }
     
     @Override // documentation inherited

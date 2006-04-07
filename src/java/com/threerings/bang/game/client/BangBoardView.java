@@ -91,7 +91,7 @@ public class BangBoardView extends BoardView
 {
     public BangBoardView (BangContext ctx, BangController ctrl)
     {
-        super(ctx);
+        super(ctx, false);
         _ctx = ctx;
         _ctrl = ctrl;
         addListener(this);

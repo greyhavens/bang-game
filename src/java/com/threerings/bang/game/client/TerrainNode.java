@@ -370,12 +370,13 @@ public class TerrainNode extends Node
         protected boolean _overPieces;
     }
 
-    public TerrainNode (BasicContext ctx, BoardView view)
+    public TerrainNode (BasicContext ctx, BoardView view, boolean editorMode)
     {
         super("terrain");
         _ctx = ctx;
         _view = view;
-
+        _editorMode = editorMode;
+        
         // always perform backface culling
         setRenderState(RenderUtil.backCull);
         setRenderQueueMode(Renderer.QUEUE_SKIP);
@@ -943,7 +944,7 @@ public class TerrainNode extends Node
         block.mesh.setTextureBuffer(tbuf1, 1);
         block.mesh.setModelBound(new BoundingBox());
         block.mesh.updateModelBound();
-        if (isHeightfieldStatic()) {
+        if (!_editorMode) {
             // in order to ensure that texture coords are sent when compiling
             // the shared geometry to a display list, we must include a dummy
             // texture state
@@ -963,16 +964,6 @@ public class TerrainNode extends Node
         block.refreshSplats(block.bounds);
         
         return block;
-    }
-
-    /**
-     * Checks whether the heightfield can be assumed to be static (and thus a
-     * candidate for rendering optimization).  Default implementation returns
-     * <code>true</code>.
-     */
-    protected boolean isHeightfieldStatic ()
-    {
-        return true;
     }
 
     /**
@@ -1593,6 +1584,9 @@ public class TerrainNode extends Node
 
     /** The board view. */
     protected BoardView _view;
+    
+    /** Whether or not we are in editor mode. */
+    protected boolean _editorMode;
     
     /** The board with the terrain. */
     protected BangBoard _board;

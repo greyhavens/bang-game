@@ -158,7 +158,7 @@ public class BoardView extends BComponent
         }
     }
 
-    public BoardView (BasicContext ctx)
+    public BoardView (BasicContext ctx, boolean editorMode)
     {
         setStyleClass("board_view");
         _ctx = ctx;
@@ -192,8 +192,8 @@ public class BoardView extends BComponent
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
         _node.attachChild(bnode);
-        bnode.attachChild(_tnode = createTerrainNode(ctx));
-        bnode.attachChild(_wnode = new WaterNode(ctx));
+        bnode.attachChild(_tnode = new TerrainNode(ctx, this, editorMode));
+        bnode.attachChild(_wnode = new WaterNode(ctx, editorMode));
 
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
@@ -223,7 +223,9 @@ public class BoardView extends BComponent
 
         // create a paused fade in effect, we'll do our real fading in once
         // everything is loaded up and we're ready to show the board
-        createPausedFadeIn();
+        if (!editorMode) {
+            createPausedFadeIn();
+        }
     }
 
     /**
@@ -888,15 +890,6 @@ public class BoardView extends BComponent
             _mstream.close();
             _mstream = null;
         }
-    }
-
-    /**
-     * Creates and returns the terrain node for this board view, giving
-     * subclasses a change to customize the object.
-     */
-    protected TerrainNode createTerrainNode (BasicContext ctx)
-    {
-        return new TerrainNode(ctx, this);
     }
 
     /**

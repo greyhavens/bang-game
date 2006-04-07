@@ -30,6 +30,7 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Skybox;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
@@ -50,15 +51,14 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class WaterNode extends Node
 {
-    public WaterNode (BasicContext ctx)
+    public WaterNode (BasicContext ctx, boolean editorMode)
     {
         super("water");
         _ctx = ctx;
+        _editorMode = editorMode;
         
-        setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         setRenderState(RenderUtil.blendAlpha);
         setRenderState(RenderUtil.backCull);
-        setRenderState(RenderUtil.overlayZBuf);
         setRenderState(_smtstate = _ctx.getRenderer().createTextureState());
         
         // combine the board light state with one that enables specular
@@ -88,20 +88,21 @@ public class WaterNode extends Node
         // clean up any existing geometry
         detachAllChildren();
         
-        // refresh the sphere map
-        refreshSphereMap();
-        
-        // and the wave amplitudes
-        refreshWaveAmplitudes();
-        
-        // initialize the array of blocks
-        int bwidth = (int)Math.ceil(_board.getWidth() /
-                (double)HEIGHT_MAP_TILES),
-            bheight = (int)Math.ceil(_board.getHeight() /
-                (double)HEIGHT_MAP_TILES);
-        _blocks = new SharedMesh[bwidth][bheight];
+        // initialize the array of blocks and patches
+        _blocks = new SharedMesh[_board.getWidth()][_board.getHeight()];
+        _patches = new TriMesh[WAVE_MAP_TILES][WAVE_MAP_TILES];
+        int vsize = (WAVE_MAP_SIZE + 1) * (WAVE_MAP_SIZE + 1);
+        _vbuf = BufferUtils.createVector3Buffer(vsize);
+        _nbuf = BufferUtils.createVector3Buffer(vsize);
         _bcount = 0;
         refreshSurface();
+        
+        // refresh the sphere map and wave amplitudes if there are any
+        // blocks visible
+        if (_editorMode || _bcount > 0) {
+            refreshSphereMap();
+            refreshWaveAmplitudes();
+        }
     }
     
     /**
@@ -186,8 +187,8 @@ public class WaterNode extends Node
         float wdir = _board.getWindDirection(), wspeed = _board.getWindSpeed();
         Vector2f wvec = new Vector2f(wspeed * FastMath.cos(wdir),
             wspeed * FastMath.sin(wdir));
-        WaveUtil.getInitialAmplitudes(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
-            PATCH_SIZE, PATCH_SIZE, new WaveUtil.PhillipsSpectrum(
+        WaveUtil.getInitialAmplitudes(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
+            MAP_WORLD_SIZE, MAP_WORLD_SIZE, new WaveUtil.PhillipsSpectrum(
                 _board.getWaterAmplitude(), wvec, GRAVITY, 0.5f),
             _iramps, _iiamps);
     }
@@ -207,19 +208,22 @@ public class WaterNode extends Node
      */
     public void refreshSurface (int x1, int y1, int x2, int y2)
     {
-        for (int bx = x1 / HEIGHT_MAP_TILES, bxmax = x2 / HEIGHT_MAP_TILES;
-                bx <= bxmax; bx++) {
-            for (int by = y1 / HEIGHT_MAP_TILES, bymax = y2 / HEIGHT_MAP_TILES;
-                    by <= bymax; by++) {
-                if (isUnderWater(bx, by)) {
+        for (int bx = x1; bx <= x2; bx++) {
+            for (int by = y1; by <= y2; by++) {
+                if (_board.isUnderWater(bx, by)) {
                     if (_blocks[bx][by] == null) {
-                        if (_patch == null) {
-                            createWavePatch();
+                        int px = bx % WAVE_MAP_TILES,
+                            py = by % WAVE_MAP_TILES;
+                        if (_patches[px][py] == null) {
+                            createWavePatch(px, py);
                         }
-                        _blocks[bx][by] = new SharedMesh("block", _patch);
+                        _blocks[bx][by] = new SharedMesh("block",
+                            _patches[px][py]);
+                         int wx = bx / WAVE_MAP_TILES,
+                            wy = by / WAVE_MAP_TILES;
                         _blocks[bx][by].setLocalTranslation(
-                            new Vector3f(bx * HEIGHT_MAP_TILES * TILE_SIZE,
-                                by * HEIGHT_MAP_TILES * TILE_SIZE, 0f));
+                            new Vector3f(wx * WAVE_MAP_TILES * TILE_SIZE,
+                                wy * WAVE_MAP_TILES * TILE_SIZE, 0f));
                     }
                     if (_blocks[bx][by].getParent() == null) {
                         attachChild(_blocks[bx][by]);
@@ -252,82 +256,90 @@ public class WaterNode extends Node
             return;
         }
         
-        // update the shared geometry (the vertices go last because they
-        // overwrite the amplitudes)
+        // compute the vertices and normals for the entire wave map
         _t += time;
-        WaveUtil.getAmplitudes(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
-            PATCH_SIZE, PATCH_SIZE, _iramps, _iiamps, _disp, _t, _ramps,
-            _iamps);
-        WaveUtil.getDisplacements(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
-            PATCH_SIZE, PATCH_SIZE, _ramps, _iamps, _rgradx, _igradx,
-            _rgrady, _igrady, 1f, _patch.getVertexBuffer());
-        WaveUtil.addVertices(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
-            PATCH_SIZE, PATCH_SIZE, _ramps, _iamps, _patch.getVertexBuffer());
-        WaveUtil.getNormals(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE,
-            PATCH_SIZE, PATCH_SIZE, _patch.getVertexBuffer(),
-            _patch.getNormalBuffer());
-    }
-
-    /**
-     * Determines whether any part of the block at the specified block
-     * coordinates is underwater.
-     */
-    protected boolean isUnderWater (int bx, int by)
-    {
-        for (int x = bx * HEIGHT_MAP_TILES, xmax = x + HEIGHT_MAP_TILES;
-                x < xmax; x++) {
-            for (int y = by * HEIGHT_MAP_TILES, ymax = y + HEIGHT_MAP_TILES;
-                    y < ymax; y++) {
-                if (_board.isUnderWater(x, y)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        WaveUtil.getAmplitudes(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
+            MAP_WORLD_SIZE, MAP_WORLD_SIZE, _iramps, _iiamps, _disp, _t,
+            _ramps, _iamps);
+        WaveUtil.getDisplacements(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
+            MAP_WORLD_SIZE, MAP_WORLD_SIZE, _ramps, _iamps, _rgradx, _igradx,
+            _rgrady, _igrady, 1f, _vbuf);
+        WaveUtil.addVertices(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
+            MAP_WORLD_SIZE, MAP_WORLD_SIZE, _ramps, _iamps, _vbuf);
+        WaveUtil.getNormals(WAVE_MAP_SIZE, WAVE_MAP_SIZE,
+            MAP_WORLD_SIZE, MAP_WORLD_SIZE, _vbuf, _nbuf);
     }
     
     /**
-     * Creates the state necessary to render the wave patch.
+     * Creates the state necessary to render the wave patch at the given patch
+     * coordinates.
      */
-    protected void createWavePatch ()
+    protected void createWavePatch (int px, int py)
     {
-        // reuse the dispersion model and index buffer
-        _disp = new WaveUtil.DeepWaterModel(GRAVITY);
-        int vwidth = HEIGHT_MAP_SIZE + 1, vheight = HEIGHT_MAP_SIZE + 1,
-            vsize = vwidth * vheight;
-        IntBuffer ibuf = BufferUtils.createIntBuffer(HEIGHT_MAP_SIZE *
-            HEIGHT_MAP_SIZE * 2 * 3);
-        for (int ii = 0; ii < HEIGHT_MAP_SIZE; ii++) {
-            for (int jj = 0; jj < HEIGHT_MAP_SIZE; jj++) {
+        // reuse the dispersion model
+        if (_disp == null) {
+            _disp = new WaveUtil.DeepWaterModel(GRAVITY);
+        }
+        IntBuffer ibuf = BufferUtils.createIntBuffer(
+            PATCH_SIZE * PATCH_SIZE * 2 * 3);
+        int stride = WAVE_MAP_SIZE + 1;
+        for (int x = px * PATCH_SIZE, xmax = x + PATCH_SIZE; x < xmax; x++) {
+            for (int y = py * PATCH_SIZE, ymax = y + PATCH_SIZE; y < ymax;
+                y++) {
                 // upper left triangle
-                ibuf.put((jj+1)*vwidth + ii);
-                ibuf.put((jj+1)*vwidth + (ii+1));
-                ibuf.put(jj*vwidth + ii);
+                ibuf.put((x+1)*stride + y);
+                ibuf.put((x+1)*stride + (y+1));
+                ibuf.put(x*stride + y);
 
                 // lower right triangle
-                ibuf.put((jj+1)*vwidth + (ii+1));
-                ibuf.put(jj*vwidth + (ii+1));
-                ibuf.put(jj*vwidth + ii);
+                ibuf.put((x+1)*stride + (y+1));
+                ibuf.put(x*stride + (y+1));
+                ibuf.put(x*stride + y);
             }
         }
         
         // create the trimesh
-        _patch = new TriMesh("waves", BufferUtils.createVector3Buffer(vsize),
-            BufferUtils.createVector3Buffer(vsize), null, null, ibuf);
-        _patch.setModelBound(new BoundingBox(Vector3f.ZERO, PATCH_SIZE, PATCH_SIZE,
-            1f));
+        _patches[px][py] = new TriMesh("patch", _vbuf, _nbuf, null, null,
+            ibuf);
+        _patches[px][py].setModelBound(new BoundingBox(
+            new Vector3f((px+0.5f) * TILE_SIZE, (py+0.5f) * TILE_SIZE, 0f),
+            TILE_SIZE/2, TILE_SIZE/2, 5f));
+    }
+    
+    /**
+     * Copies vertices and normals from the wave map to patch at the given
+     * coordinates.
+     */
+    protected void updateWavePatch (int px, int py)
+    {
+        FloatBuffer pvbuf = _patches[px][py].getVertexBuffer(),
+            pnbuf = _patches[px][py].getNormalBuffer();
+        pvbuf.clear();
+        pnbuf.clear();
+        int stride = (WAVE_MAP_SIZE + 1)*3, pos, lim;
+        for (int x = px * PATCH_SIZE, xmax = x + PATCH_SIZE; x <= xmax; x++) {
+            pos = x * stride + py * PATCH_SIZE * 3;
+            lim = pos + (PATCH_SIZE + 1)*3;
+            _vbuf.limit(lim).position(pos);
+            _nbuf.limit(lim).position(pos);
+            pvbuf.put(_vbuf);
+            pnbuf.put(_nbuf);
+        }
     }
     
     /** The application context. */
     protected BasicContext _ctx;
     
+    /** Whether or not we are in editor mode. */
+    protected boolean _editorMode;
+    
     /** The board with the terrain information. */
     protected BangBoard _board;
 
-    /** The shared wave patch. */
-    protected TriMesh _patch;
+    /** The shared wave patches. */
+    protected TriMesh[][] _patches;
     
-    /** The array of surface blocks referring to instances of the patch. */
+    /** The array of surface blocks referring to instances of the patches. */
     protected SharedMesh[][] _blocks;
     
     /** The sphere map texture state. */
@@ -337,29 +349,35 @@ public class WaterNode extends Node
     protected int _bcount;
     
     /** Our many, many FFT arrays. */
-    float[][] _iramps = new float[HEIGHT_MAP_SIZE][HEIGHT_MAP_SIZE],
-        _iiamps = new float[HEIGHT_MAP_SIZE][HEIGHT_MAP_SIZE],
-        _ramps = new float[HEIGHT_MAP_SIZE][HEIGHT_MAP_SIZE],
-        _iamps = new float[HEIGHT_MAP_SIZE][HEIGHT_MAP_SIZE],
-        _rgradx = new float[HEIGHT_MAP_SIZE][HEIGHT_MAP_SIZE],
-        _igradx = new float[HEIGHT_MAP_SIZE][HEIGHT_MAP_SIZE],
-        _rgrady = new float[HEIGHT_MAP_SIZE][HEIGHT_MAP_SIZE],
-        _igrady = new float[HEIGHT_MAP_SIZE][HEIGHT_MAP_SIZE];
+    float[][] _iramps = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE],
+        _iiamps = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE],
+        _ramps = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE],
+        _iamps = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE],
+        _rgradx = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE],
+        _igradx = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE],
+        _rgrady = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE],
+        _igrady = new float[WAVE_MAP_SIZE][WAVE_MAP_SIZE];
     
-    /** The dispersion model. */
-    protected WaveUtil.DispersionModel _disp;
+    /** Buffers for the vertices and normals of the entire wave patch. */
+    protected FloatBuffer _vbuf, _nbuf;
     
     /** The time of the last frame within the animation period. */
     protected float _t;
     
-    /** The size in samples of the wave height map. */
-    protected static final int HEIGHT_MAP_SIZE = 64;
+    /** The dispersion model. */
+    protected static WaveUtil.DispersionModel _disp;
     
-    /** The number of tiles spanned by the wave height map. */
-    protected static final int HEIGHT_MAP_TILES = 8; 
+    /** The size in samples of the wave map. */
+    protected static final int WAVE_MAP_SIZE = 32;
     
-    /** The actual size of the wave patch in world units. */
-    protected static final float PATCH_SIZE = HEIGHT_MAP_TILES * TILE_SIZE;
+    /** The number of tiles spanned by the wave map. */
+    protected static final int WAVE_MAP_TILES = 4; 
+    
+    /** The actual size of the wave map in world units. */
+    protected static final float MAP_WORLD_SIZE = WAVE_MAP_TILES * TILE_SIZE;
+    
+    /** The size in squares of each patch. */
+    protected static final int PATCH_SIZE = WAVE_MAP_SIZE / WAVE_MAP_TILES;
     
     /** The size of the Fresnel sphere map. */
     protected static final int SPHERE_MAP_SIZE = 256;
