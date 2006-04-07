@@ -306,27 +306,6 @@ public class WaterNode extends Node
             TILE_SIZE/2, TILE_SIZE/2, 5f));
     }
     
-    /**
-     * Copies vertices and normals from the wave map to patch at the given
-     * coordinates.
-     */
-    protected void updateWavePatch (int px, int py)
-    {
-        FloatBuffer pvbuf = _patches[px][py].getVertexBuffer(),
-            pnbuf = _patches[px][py].getNormalBuffer();
-        pvbuf.clear();
-        pnbuf.clear();
-        int stride = (WAVE_MAP_SIZE + 1)*3, pos, lim;
-        for (int x = px * PATCH_SIZE, xmax = x + PATCH_SIZE; x <= xmax; x++) {
-            pos = x * stride + py * PATCH_SIZE * 3;
-            lim = pos + (PATCH_SIZE + 1)*3;
-            _vbuf.limit(lim).position(pos);
-            _nbuf.limit(lim).position(pos);
-            pvbuf.put(_vbuf);
-            pnbuf.put(_nbuf);
-        }
-    }
-    
     /** The application context. */
     protected BasicContext _ctx;
     
