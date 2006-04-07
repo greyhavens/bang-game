@@ -78,7 +78,10 @@ public class SkyDialog extends JDialog
             return; // invoked from fromBoard
         }
         _panel.view.setSkyParams(_horizonColor.getRGB(),
-            _overheadColor.getRGB(), _falloff.getValue());
+            _overheadColor.getRGB(), _falloff.getValue(), true);
+        if (!_falloff.getValueIsAdjusting()) {
+            _panel.view.commitSkyEdit();
+        }
     }
     
     /** The application context. */

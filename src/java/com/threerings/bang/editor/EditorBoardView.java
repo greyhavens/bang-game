@@ -109,11 +109,39 @@ public class EditorBoardView extends BoardView
     /**
      * Sets the number of elevation units there are in the length of a tile,
      * which determines the heightfield scale.
+     *
+     * @param edit true if the user is directly modifying the value
      */
-    public void setElevationUnitsPerTile (int units)
+    public void setElevationUnitsPerTile (int units, boolean edit)
     {
+        if (edit && _elevationUnitsEdit == null) {
+            _elevationUnitsEdit = new SwapEdit() {
+                public void commit () {
+                    if (_units != _board.getElevationUnitsPerTile()) {
+                        super.commit();
+                    }
+                }
+                public void swapSaved () {
+                    byte tmp = _board.getElevationUnitsPerTile();
+                    setElevationUnitsPerTile(_units, false);
+                    _units = tmp;
+                }
+                protected byte _units = _board.getElevationUnitsPerTile();
+            };
+        }
         _board.setElevationUnitsPerTile((byte)units);
         heightfieldChanged();
+    }
+    
+    /**
+     * Commits the elevation units edit, if any.
+     */
+    public void commitElevationUnitsEdit ()
+    {
+        if (_elevationUnitsEdit != null) {
+            _elevationUnitsEdit.commit();
+            _elevationUnitsEdit = null;
+        }
     }
     
     /**
@@ -372,30 +400,125 @@ public class EditorBoardView extends BoardView
 
     /**
      * Sets the parameters of the board's light.
+     *
+     * @param edit true if the user is directly modifying the value
      */
-    public void setLightParams (int idx, float azimuth, float elevation,
-        int diffuseColor, int ambientColor)
+    public void setLightParams (final int idx, float azimuth, float elevation,
+        int diffuseColor, int ambientColor, boolean edit)
     {
+        if (edit && _lightEdits[idx] == null) {
+            _lightEdits[idx] = new SwapEdit() {
+                public void commit () {
+                    if (_azimuth != _board.getLightAzimuth(idx) ||
+                        _elevation != _board.getLightElevation(idx) ||
+                        _diffuseColor != _board.getLightDiffuseColor(idx) ||
+                        _ambientColor != _board.getLightAmbientColor(idx)) {
+                        super.commit();
+                    }
+                }
+                public void swapSaved () {
+                    float azimuth = _board.getLightAzimuth(idx),
+                        elevation = _board.getLightElevation(idx);
+                    int diffuseColor = _board.getLightDiffuseColor(idx),
+                        ambientColor = _board.getLightAmbientColor(idx);
+                    setLightParams(idx, _azimuth, _elevation, _diffuseColor,
+                        _ambientColor, false);
+                    _azimuth = azimuth;
+                    _elevation = elevation;
+                    _diffuseColor = diffuseColor;
+                    _ambientColor = ambientColor;
+                }
+                protected float _azimuth = _board.getLightAzimuth(idx),
+                    _elevation = _board.getLightElevation(idx);
+                protected int _diffuseColor = _board.getLightDiffuseColor(idx),
+                    _ambientColor = _board.getLightAmbientColor(idx);
+            };
+        }
         _board.setLightParams(idx, azimuth, elevation, diffuseColor,
             ambientColor);
         refreshLight(idx);
     }
 
     /**
-     * Sets the shadow intensity.
+     * Commits the light edit, if any.
      */
-    public void setShadowIntensity (float intensity)
+    public void commitLightEdit (int idx)
     {
+        if (_lightEdits[idx] != null) {
+            _lightEdits[idx].commit();
+            _lightEdits[idx] = null;
+        }
+    }
+    
+    /**
+     * Sets the shadow intensity.
+     *
+     * @param edit true if the user is directly modifying the value
+     */
+    public void setShadowIntensity (float intensity, boolean edit)
+    {
+        if (edit && _shadowIntensityEdit == null) {
+            _shadowIntensityEdit = new SwapEdit() {
+                public void commit () {
+                    if (_intensity != _board.getShadowIntensity()) {
+                        super.commit();
+                    }
+                }
+                public void swapSaved () {
+                    float tmp = _board.getShadowIntensity();
+                    setShadowIntensity(_intensity, false);
+                    _intensity = tmp;
+                }
+                protected float _intensity = _board.getShadowIntensity();
+            };
+        }
         _board.setShadowIntensity(intensity);
         _tnode.refreshShadows();
     }
 
     /**
+     * Commits the shadow intensity edit, if any.
+     */
+    public void commitShadowIntensityEdit ()
+    {
+        if (_shadowIntensityEdit != null) {
+            _shadowIntensityEdit.commit();
+            _shadowIntensityEdit = null;
+        }
+    }
+    
+    /**
      * Sets the parameters of the board's sky.
+     *
+     * @param edit true if the user is directly modifying the value
      */
     public void setSkyParams (int horizonColor, int overheadColor,
-        float falloff)
+        float falloff, boolean edit)
     {
+        if (edit && _skyEdit == null) {
+            _skyEdit = new SwapEdit() {
+                public void commit () {
+                    if (_horizonColor != _board.getSkyHorizonColor() ||
+                        _overheadColor != _board.getSkyOverheadColor() ||
+                        _falloff != _board.getSkyFalloff()) {
+                        super.commit();
+                    }
+                }
+                public void swapSaved () {
+                    int horizonColor = _board.getSkyHorizonColor(),
+                        overheadColor = _board.getSkyOverheadColor();
+                    float falloff = _board.getSkyFalloff();
+                    setSkyParams(_horizonColor, _overheadColor, _falloff,
+                        false);
+                    _horizonColor = horizonColor;
+                    _overheadColor = overheadColor;
+                    _falloff = falloff;
+                }
+                protected int _horizonColor = _board.getSkyHorizonColor(),
+                    _overheadColor = _board.getSkyOverheadColor();
+                protected float _falloff = _board.getSkyFalloff();
+            };
+        }
         int oocolor = _board.getSkyOverheadColor();
         _board.setSkyParams(horizonColor, overheadColor, falloff);
         if (oocolor != overheadColor) {
@@ -405,10 +528,47 @@ public class EditorBoardView extends BoardView
     }
 
     /**
-     * Sets the board's water parameters.
+     * Commits the sky edit, if any.
      */
-    public void setWaterParams (int level, int color, float amplitude)
+    public void commitSkyEdit ()
     {
+        if (_skyEdit != null) {
+            _skyEdit.commit();
+            _skyEdit = null;
+        }
+    }
+    
+    /**
+     * Sets the board's water parameters.
+     *
+     * @param edit true if the user is directly modifying the value
+     */
+    public void setWaterParams (int level, int color, float amplitude,
+        boolean edit)
+    {
+        if (edit && _waterEdit == null) {
+            _waterEdit = new SwapEdit() {
+                public void commit () {
+                    if (_level != _board.getWaterLevel() ||
+                        _color != _board.getWaterColor() ||
+                        _amplitude != _board.getWaterAmplitude()) {
+                        super.commit();
+                    }
+                }
+                public void swapSaved () {
+                    byte level = _board.getWaterLevel();
+                    int color = _board.getWaterColor();
+                    float amplitude = _board.getWaterAmplitude();
+                    setWaterParams(_level, _color, _amplitude, false);
+                    _level = level;
+                    _color = color;
+                    _amplitude = amplitude;
+                }
+                protected byte _level = _board.getWaterLevel();
+                protected int _color = _board.getWaterColor();
+                protected float _amplitude = _board.getWaterAmplitude();
+            };
+        }
         int ocolor = _board.getWaterColor();
         float oamplitude = _board.getWaterAmplitude();
         _board.setWaterParams((byte)level, color, amplitude);
@@ -423,14 +583,57 @@ public class EditorBoardView extends BoardView
     }
 
     /**
-     * Sets the board's wind parameters.
+     * Commits the water edit, if any.
      */
-    public void setWindParams (float direction, float speed)
+    public void commitWaterEdit ()
     {
+        if (_waterEdit != null) {
+            _waterEdit.commit();
+            _waterEdit = null;
+        }
+    }
+    
+    /**
+     * Sets the board's wind parameters.
+     *
+     * @param edit true if the user is directly modifying the value
+     */
+    public void setWindParams (float direction, float speed, boolean edit)
+    {
+        if (edit && _windEdit == null) {
+            _windEdit = new SwapEdit() {
+                public void commit () {
+                    if (_direction != _board.getWindDirection() ||
+                        _speed != _board.getWindSpeed()) {
+                        super.commit();
+                    }
+                }
+                public void swapSaved () {
+                    float direction = _board.getWindDirection(),
+                        speed = _board.getWindSpeed();
+                    setWindParams(_direction, _speed, false);
+                    _direction = direction;
+                    _speed = speed;
+                }
+                protected float _direction = _board.getWindDirection(),
+                    _speed = _board.getWindSpeed();
+            };
+        }
         _board.setWindParams(direction, speed);
         _wnode.refreshWaveAmplitudes();
     }
 
+    /**
+     * Commits the wind edit, if any.
+     */
+    public void commitWindEdit ()
+    {
+        if (_windEdit != null) {
+            _windEdit.commit();
+            _windEdit = null;
+        }
+    }
+    
     /**
      * Creates a fresh new board.
      */
@@ -645,10 +848,41 @@ public class EditorBoardView extends BoardView
         _panel.tools.getActiveTool().hoverSpriteChanged(hover);
     }
 
+    /** Superclass for edits that can be reversed by swapping the current
+     * value with the saved value. */
+    protected abstract class SwapEdit
+        implements EditorController.Edit
+    {
+        /**
+         * Commits this edit to the undo buffer if it differs from the current
+         * state.
+         */
+        public void commit ()
+        {
+            ((EditorController)_panel.getController()).addEdit(this);
+        }
+        
+        // documentation inherited from interface EditorController.Edit
+        public void undo ()
+        {
+            swapSaved();
+        }
+        
+        // documentation inherited from interface EditorController.Edit
+        public void redo ()
+        {
+            swapSaved();
+        }
+        
+        /**
+         * Swaps the saved data with the current data.
+         */
+        protected abstract void swapSaved ();
+    }
+    
     /** Superclass for heightfield and terrain edits, which work in almost
      * exactly the same way. */
-    protected abstract class BufferEdit
-        implements EditorController.Edit
+    protected abstract class BufferEdit extends SwapEdit
     {
         public BufferEdit () {
             // on construction, save the entire buffer; when we're commited,
@@ -670,12 +904,11 @@ public class EditorBoardView extends BoardView
             }
         }
         
-        /**
-         * Commits this edit to the undo buffer, keeping only the modified
-         * portion if any portions were marked as dirty.
-         */
+        @Override // documentation inherited
         public void commit ()
         {
+            // keep only the modified portion if any portions were marked as
+            // dirty
             if (_modified != null) {
                 if (_modified.width == 0 && _modified.height == 0) {
                     return;
@@ -688,24 +921,10 @@ public class EditorBoardView extends BoardView
                     _saved = getRegion(_saved, _modified);
                 }
             }
-            ((EditorController)_panel.getController()).addEdit(this);
+            super.commit();
         }
-        
-        // documentation inherited from interface EditorController.Edit
-        public void undo ()
-        {
-            swapSaved();
-        }
-        
-        // documentation inherited from interface EditorController.Edit
-        public void redo ()
-        {
-            swapSaved();
-        }
-        
-        /**
-         * Swaps the saved data with the current data.
-         */
+
+        @Override // documentation inherited
         protected void swapSaved ()
         {
             byte[] buf = getBuffer();
@@ -813,16 +1032,19 @@ public class EditorBoardView extends BoardView
     /** The panel that contains additional interface elements with which
      * we interact. */
     protected EditorPanel _panel;
-
+    
     /** Highlights indicating which tiles are occupiable. */
     protected TerrainNode.Highlight[][] _highlights;
 
     /** Whether or not to show the highlights. */
     protected boolean _showHighlights;
 
-    /** The in-progress buffer edits, if any. */
+    /** The in-progress edits, if any. */
     protected HeightfieldEdit _hfedit;
     protected TerrainEdit _tedit;
+    protected SwapEdit _elevationUnitsEdit, _shadowIntensityEdit, _skyEdit,
+        _waterEdit, _windEdit;
+    protected SwapEdit[] _lightEdits = new SwapEdit[BangBoard.NUM_LIGHTS];
     
     /** The color to use for highlights. */
     protected static final ColorRGBA HIGHLIGHT_COLOR =

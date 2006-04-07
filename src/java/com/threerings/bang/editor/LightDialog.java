@@ -85,7 +85,10 @@ public class LightDialog extends JDialog
         if (!isShowing()) {
             return; // invoked from fromBoard
         }
-        _panel.view.setShadowIntensity(_shadow.getValue() / 100f);
+        _panel.view.setShadowIntensity(_shadow.getValue() / 100f, true);
+        if (!_shadow.getValueIsAdjusting()) {
+            _panel.view.commitShadowIntensityEdit();
+        }
     }
     
     /** Controls the parameters for a single light. */
@@ -142,7 +145,11 @@ public class LightDialog extends JDialog
             _panel.view.setLightParams(idx,
                 azimuth.getValue() * FastMath.DEG_TO_RAD,
                 elevation.getValue() * FastMath.DEG_TO_RAD,
-                diffuseColor.getRGB(), ambientColor.getRGB());
+                diffuseColor.getRGB(), ambientColor.getRGB(), true);
+            if (!azimuth.getValueIsAdjusting() &&
+                !elevation.getValueIsAdjusting()) {
+                _panel.view.commitLightEdit(idx);
+            }
         }
     }
     

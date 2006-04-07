@@ -81,7 +81,11 @@ public class WaterDialog extends JDialog
             return; // invoked from fromBoard
         }
         _panel.view.setWaterParams(_level.getValue(), _color.getRGB(),
-            _amplitude.getValue());
+            _amplitude.getValue(), true);
+        if (!_level.getValueIsAdjusting() &&
+            !_amplitude.getValueIsAdjusting()) {
+            _panel.view.commitWaterEdit();
+        }
     }
     
     /** The application context. */

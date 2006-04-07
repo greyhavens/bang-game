@@ -102,7 +102,11 @@ public class BoardPropertiesDialog extends JDialog
         if (!isShowing()) {
             return; // invoked from fromBoard
         }
-        _panel.view.setElevationUnitsPerTile(128 - _elevationScale.getValue());
+        _panel.view.setElevationUnitsPerTile(128 - _elevationScale.getValue(),
+            true);
+        if (!_elevationScale.getValueIsAdjusting()) {
+            _panel.view.commitElevationUnitsEdit();
+        }
     }
     
     /** The application context. */

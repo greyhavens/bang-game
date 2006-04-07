@@ -80,7 +80,11 @@ public class EnvironmentDialog extends JDialog
             return; // invoked from fromBoard
         }
         _panel.view.setWindParams(_direction.getValue() * FastMath.DEG_TO_RAD,
-            _speed.getValue());
+            _speed.getValue(), true);
+        if (!_direction.getValueIsAdjusting() &&
+            !_speed.getValueIsAdjusting()) {
+            _panel.view.commitWindEdit();
+        }
     }
     
     /** The application context. */
