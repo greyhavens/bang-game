@@ -26,6 +26,8 @@ public enum Terrain
     BONE                (8, BangBoard.BASE_TRAVERSAL, 0.2f),
     PRAIRIE_GRASS_GREEN (9, BangBoard.BASE_TRAVERSAL, 0.2f),
     PRAIRIE_GRASS_GOLD  (10, BangBoard.BASE_TRAVERSAL, 0.2f),
+    AUTUMN_LEAVES       (11, BangBoard.BASE_TRAVERSAL, 0.2f),
+    GREEN_LEAVES        (12, BangBoard.BASE_TRAVERSAL, 0.2f),
 
     // special "outside the board" tiles
     OUTER (99, -1, 0f),
