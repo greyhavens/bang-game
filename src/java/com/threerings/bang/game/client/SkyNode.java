@@ -35,6 +35,7 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 
+import com.threerings.bang.client.Config;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -63,10 +64,14 @@ public class SkyNode extends Node
             TextureState tstate = ctx.getRenderer().createTextureState();
             tstate.setTexture(null, 0);
             _dgeom.setRenderState(tstate);
-            VBOInfo vboinfo = new VBOInfo(true);
-            vboinfo.setVBOIndexEnabled(true);
-            _dgeom.setVBOInfo(vboinfo);
-            //_dgeom.lockMeshes(ctx.getRenderer());
+            if (Config.display.useVBOs) {
+                VBOInfo vboinfo = new VBOInfo(true);
+                vboinfo.setVBOIndexEnabled(true);
+                _dgeom.setVBOInfo(vboinfo);
+            }
+            if (Config.display.useDisplayLists) {
+                _dgeom.lockMeshes(ctx.getRenderer());
+            }
         }
         _dome = new SharedMesh("dome", _dgeom);
         Quaternion rot = new Quaternion();
@@ -105,10 +110,14 @@ public class SkyNode extends Node
             TextureState tstate = ctx.getRenderer().createTextureState();
             tstate.setTexture(null, 0);
             _cgeom.setRenderState(tstate);
-            VBOInfo vboinfo = new VBOInfo(true);
-            vboinfo.setVBOIndexEnabled(true);
-            _cgeom.setVBOInfo(vboinfo);
-            //_cgeom.lockMeshes(ctx.getRenderer());
+            if (Config.display.useVBOs) {
+                VBOInfo vboinfo = new VBOInfo(true);
+                vboinfo.setVBOIndexEnabled(true);
+                _cgeom.setVBOInfo(vboinfo);
+            }
+            if (Config.display.useDisplayLists) {
+                _cgeom.lockMeshes(ctx.getRenderer());
+            }
         }
         _clouds = new SharedMesh("clouds", _cgeom);
         _clouds.setLocalTranslation(new Vector3f(0f, 0f, CLOUD_HEIGHT));

@@ -952,12 +952,16 @@ public class TerrainNode extends Node
             tstate.setTexture(null, 0);
             tstate.setTexture(null, 1);
             block.mesh.setRenderState(tstate);
-            
-            VBOInfo vboinfo = new VBOInfo(true);
-            vboinfo.setVBOIndexEnabled(true);
-            block.mesh.setVBOInfo(vboinfo);
+
+            if (Config.display.useVBOs) {
+                VBOInfo vboinfo = new VBOInfo(true);
+                vboinfo.setVBOIndexEnabled(true);
+                block.mesh.setVBOInfo(vboinfo);
+            }
             block.mesh.lockBounds();
-            //block.mesh.lockMeshes();
+            if (Config.display.useDisplayLists) {
+                block.mesh.lockMeshes();
+            }
         }
         
         // create the splat meshes

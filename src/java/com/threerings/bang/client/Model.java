@@ -916,9 +916,13 @@ public class Model
                     tstate.setTexture(null, 0);
                     target.setRenderState(tstate);
 
-                    setVBOInfos(target);
+                    if (Config.display.useVBOs) {
+                        setVBOInfos(target);
+                    }
                     target.lockBounds();
-                    //target.lockMeshes();
+                    if (Config.display.useDisplayLists) {
+                        target.lockMeshes();
+                    }
                     target.clearRenderState(RenderState.RS_TEXTURE);
 
                     target.updateCollisionTree();

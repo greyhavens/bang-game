@@ -57,14 +57,23 @@ public class OptionsView extends BDecoratedWindow
         cont.add(_modes = new BComboBox());
 
         cont.add(new BLabel(_msgs.get("m.fullscreen"), "right_label"));
-        cont.add(_fullscreen = new BCheckBox(""));;
+        cont.add(_fullscreen = new BCheckBox(""));
         _fullscreen.setSelected(Display.isFullscreen());
         _fullscreen.addListener(_modelist);
+
+        BCheckBox pcheck;
+        cont.add(new BLabel(_msgs.get("m.use_dl"), "right_label"));
+        cont.add(pcheck = new BCheckBox(""));
+        Config.bindComponent(pcheck, Config.display, "useDisplayLists");
+        cont.add(new BLabel(_msgs.get("m.use_vbos"), "right_label"));
+        cont.add(pcheck = new BCheckBox(""));
+        Config.bindComponent(pcheck, Config.display, "useVBOs");
+
         add(cont);
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)bcont.getLayoutManager()).setGap(25);
-        bcont.add(new BButton(_msgs.get("m.quit"), this, "quit"));
+        bcont.add(new BButton(_msgs.get("m.exit"), this, "exit"));
         bcont.add(new BButton(_msgs.get("m.resume"), this, "dismiss"));
         add(bcont);
 
@@ -78,7 +87,7 @@ public class OptionsView extends BDecoratedWindow
     {
         if ("dismiss".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
-        } else if ("quit".equals(event.getAction())) {
+        } else if ("exit".equals(event.getAction())) {
             _ctx.getApp().stop();
         }
     }
