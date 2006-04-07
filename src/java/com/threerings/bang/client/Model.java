@@ -916,11 +916,11 @@ public class Model
                     tstate.setTexture(null, 0);
                     target.setRenderState(tstate);
 
-                    if (Config.display.useVBOs) {
+                    if (Config.useVBOs) {
                         setVBOInfos(target);
                     }
                     target.lockBounds();
-                    if (Config.display.useDisplayLists) {
+                    if (Config.useDisplayLists) {
                         target.lockMeshes();
                     }
                     target.clearRenderState(RenderState.RS_TEXTURE);

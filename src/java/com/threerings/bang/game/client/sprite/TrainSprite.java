@@ -69,7 +69,7 @@ public class TrainSprite extends MobileSprite
         if (last) {
             setCoord(board, coords, idx++, _lastLastX, _lastLastY);
         }
-        durations[idx] = 1f / Config.display.getMovementSpeed();
+        durations[idx] = 1f / Config.getMovementSpeed();
         setCoord(board, coords, idx++, train.lastX, train.lastY);
         setCoord(board, coords, idx++, train.x, train.y);
         if (next) {

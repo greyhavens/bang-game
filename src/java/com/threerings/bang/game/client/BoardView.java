@@ -81,6 +81,7 @@ import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
@@ -187,20 +188,32 @@ public class BoardView extends BComponent
         _node.updateRenderState();
 
         // create the sky
-        _node.attachChild(_snode = new SkyNode(ctx));
+        _snode = new SkyNode(ctx);
+        if (Config.displaySky) {
+            _node.attachChild(_snode);
+        }
 
         // we'll hang the board geometry off this node
         Node bnode = new Node("board");
         _node.attachChild(bnode);
-        bnode.attachChild(_tnode = new TerrainNode(ctx, this, editorMode));
-        bnode.attachChild(_wnode = new WaterNode(ctx, editorMode));
+        _tnode = new TerrainNode(ctx, this, editorMode);
+        if (Config.displayTerrain) {
+            bnode.attachChild(_tnode);
+        }
+        _wnode = new WaterNode(ctx, editorMode);
+        if (Config.displayWater) {
+            bnode.attachChild(_wnode);
+        }
 
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 
         // we'll hang all of our pieces off this node
-        _node.attachChild(_pnode = new Node("pieces"));
+        _pnode = new Node("pieces");
+        if (Config.displayModels) {
+            _node.attachChild(_pnode);
+        }
 
         // create our highlight alpha state
         _hastate = ctx.getDisplay().getRenderer().createAlphaState();

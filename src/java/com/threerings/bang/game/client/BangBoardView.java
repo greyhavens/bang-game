@@ -435,7 +435,7 @@ public class BangBoardView extends BoardView
             super.clearResolvingSprite(sprite);
             return;
         }
-        sprite.move(_board, path, Config.display.getMovementSpeed());
+        sprite.move(_board, path, Config.getMovementSpeed());
         sprite.addObserver(new PathObserver() {
             public void pathCancelled (Sprite sprite, Path path) {
                 pathCompleted(sprite, path);

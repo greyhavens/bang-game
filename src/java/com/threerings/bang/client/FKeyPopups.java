@@ -48,6 +48,7 @@ public class FKeyPopups
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F3, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F4, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F5, this);
+        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F6, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F12, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_T, this);
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
@@ -92,6 +93,7 @@ public class FKeyPopups
         case KeyInput.KEY_F3:
         case KeyInput.KEY_F4:
         case KeyInput.KEY_F5:
+        case KeyInput.KEY_F6:
             requiresCheck = false;
             break;
         }
@@ -108,6 +110,9 @@ public class FKeyPopups
             _popped.getLayer() == BangCodes.NEVER_CLEAR_LAYER) {
             return;
         }
+
+        boolean isOnline = (_ctx.getUserObject() != null);
+        boolean isAdmin = isOnline && _ctx.getUserObject().tokens.isAdmin();
 
         // otherwise pop up the dialog associated with they key they pressed
         // (clearing any other dialog before doing so)
@@ -126,13 +131,19 @@ public class FKeyPopups
             }
             break;
         case KeyInput.KEY_F4:
-            if (_ctx.getUserObject().tokens.isAdmin()) {
+            if (isAdmin) {
                 popup = new ServerStatusView(_ctx);
             }
             break;
         case KeyInput.KEY_F5:
-            if (_ctx.getUserObject().tokens.isAdmin()) {
+            if (isAdmin) {
                 popup = new RuntimeConfigView(_ctx);
+            }
+            break;
+        case KeyInput.KEY_F6:
+            if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0 &&
+                (modifiers & InputEvent.CTRL_DOWN_MASK) != 0) {
+                popup = new ConfigEditorView(_ctx);
             }
             break;
         case KeyInput.KEY_T:

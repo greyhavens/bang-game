@@ -16,13 +16,11 @@ import com.threerings.crowd.chat.data.ChatCodes;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.Config;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.DeploymentConfig;
 
 /**
  * Handles custom chat bits for Bang.
@@ -36,41 +34,7 @@ public class BangChatDirector extends ChatDirector
 
         // register our user chat command handlers
         MessageBundle msg = _msgmgr.getBundle(_bundle);
-        registerCommandHandler(msg, "debug", new DebugHandler());
         registerCommandHandler(msg, "tell", new TellHandler());
-    }
-
-    /** A place for temporary debug hacks. */
-    protected class DebugHandler extends CommandHandler
-    {
-        public String handleCommand (SpeakService speakSvc, String command,
-                                     String args, String[] history)
-        {
-            String[] argv = StringUtil.split(args, " ");
-            if (argv[0].equals("slowmo")) {
-                if (Config.display.animationSpeed == 1) {
-                    Config.display.animationSpeed = 0.25f;
-                } else {
-                    Config.display.animationSpeed = 1f;
-                }
-
-            } else if (argv[0].equals("hfloat")) {
-                Config.display.floatHighlights =
-                    !Config.display.floatHighlights;
-
-            } else if (argv[0].equals("stats")) {
-                _ctx.getApp().displayStatistics(
-                    !_ctx.getApp().showingStatistics());
-
-            } else {
-                return "m.unknown_debug";
-            }
-
-            displayFeedback(
-                _bundle, MessageBundle.tcompose("m.debug_toggled", argv[0]));
-
-            return ChatCodes.SUCCESS;
-        }
     }
 
     /** Implements <code>/tell</code>. */

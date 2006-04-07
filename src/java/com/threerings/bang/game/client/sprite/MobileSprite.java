@@ -403,7 +403,12 @@ public class MobileSprite extends PieceSprite
 
         } else {
             Model.Animation anim = setAction(_action);
-            _nextAction = anim.getDuration() / Config.display.animationSpeed;
+            // cope when we have units disabled for debugging purposes
+            if (anim == null) {
+                _nextAction = 0.5f;
+            } else {
+                _nextAction = anim.getDuration() / Config.animationSpeed;
+            }
         }
     }
 
@@ -435,7 +440,7 @@ public class MobileSprite extends PieceSprite
             }
             // if we're dead, take our final path in slow motion (this only
             // happens to flying units that are heading somewhere to explode)
-            float speed = Config.display.getMovementSpeed();
+            float speed = Config.getMovementSpeed();
             if (!_piece.isAlive()) {
                 speed /= 2;
             }

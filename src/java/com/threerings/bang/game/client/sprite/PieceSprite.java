@@ -435,6 +435,11 @@ public class PieceSprite extends Sprite
             }
         }
 
+        // if we're not displaying units, don't bind any poses
+        if (!Config.displayUnits) {
+            return null;
+        }
+
         Model.Animation anim = model.getAnimation(action);
         // bind the new animation
         _binding = anim.bind(
@@ -443,8 +448,7 @@ public class PieceSprite extends Sprite
                 Model.Animation anim, Model.Binding binding) {
                 // now that the meshes are attached, configure the animation
                 // speed and repeat type
-                setAnimationSpeed(
-                    Config.display.animationSpeed * anim.getSpeed());
+                setAnimationSpeed(Config.animationSpeed * anim.getSpeed());
                 setAnimationRepeatType(anim.repeatType);
 
                 // start emissions used in the animation, creating any uncreated

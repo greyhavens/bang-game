@@ -38,12 +38,12 @@ public class MoveUnitPath extends LineSegmentPath
             _times = new float[_actions.length];
             Model.Animation start = sprite.getAction("walking_start");
             if (start != null) {
-                _times[0] = start.getDuration() / Config.display.animationSpeed;
+                _times[0] = start.getDuration() / Config.animationSpeed;
                 total -= _times[0];
             }
             Model.Animation end = sprite.getAction("walking_end");
             if (end != null) {
-                _times[2] = end.getDuration() / Config.display.animationSpeed;
+                _times[2] = end.getDuration() / Config.animationSpeed;
                 total -= _times[2];
             }
             _times[1] = total + _times[0];

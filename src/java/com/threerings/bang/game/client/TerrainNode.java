@@ -609,8 +609,7 @@ public class TerrainNode extends Node
      */
     public Highlight createHighlight (int x, int y, boolean overPieces)
     {
-        return new Highlight(x, y, overPieces &&
-                             Config.display.floatHighlights);
+        return new Highlight(x, y, overPieces && Config.floatHighlights);
     }
 
     /**
@@ -953,13 +952,13 @@ public class TerrainNode extends Node
             tstate.setTexture(null, 1);
             block.mesh.setRenderState(tstate);
 
-            if (Config.display.useVBOs) {
+            if (Config.useVBOs) {
                 VBOInfo vboinfo = new VBOInfo(true);
                 vboinfo.setVBOIndexEnabled(true);
                 block.mesh.setVBOInfo(vboinfo);
             }
             block.mesh.lockBounds();
-            if (Config.display.useDisplayLists) {
+            if (Config.useDisplayLists) {
                 block.mesh.lockMeshes();
             }
         }

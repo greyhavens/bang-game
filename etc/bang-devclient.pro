@@ -68,6 +68,10 @@
     *;
 }
 
+-keep public class com.threerings.bang.client.Config {
+    <fields>;
+}
+
 -keep public class com.threerings.bang.client.BangApp {
     public static void main (java.lang.String[]);
 }
