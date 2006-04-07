@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.prefs.Preferences;
 
@@ -12,6 +13,8 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 
 import com.threerings.io.Streamable;
+
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -44,6 +47,9 @@ public class Config
         /** Whether or not VBOs are activated. */
         public boolean useVBOs = true;
 
+        /** Whether or not to display render statistics. */
+        public boolean displayStats = false;
+
         /** Returns the unit movement speed modulated by the total
          * animation speed. */
         public float getMovementSpeed ()
@@ -70,6 +76,29 @@ public class Config
     public static Display display = new Display();
 
     /**
+     * Initializes our various configuration hooks.
+     */
+    public static void init (final BasicContext ctx)
+    {
+        // load our persistent preferences
+        display.useDisplayLists = _prefs.getBoolean(
+            "useDisplayLists", display.useDisplayLists);
+        display.useVBOs = _prefs.getBoolean(
+            "useVBOs", display.useVBOs);
+        display.displayStats = _prefs.getBoolean(
+            "displayStats", display.displayStats);
+
+        // register our various hooks
+        Hook hook = new Hook() {
+            public void valueUpdated () {
+                ctx.getApp().displayStatistics(display.displayStats);
+            }
+        };
+        hook.valueUpdated();
+        _hooks.put("displayStats", hook);
+    }
+
+    /**
      * Binds the supplied checkbox to the specified boolean configuration
      * parameter.
      */
@@ -82,9 +111,16 @@ public class Config
             checkbox.addListener(new ActionListener() {
                 public void actionPerformed (ActionEvent event) {
                     try {
+                        // update the in memory value
                         field.setBoolean(config, checkbox.isSelected());
+                        // update our persistent preference
                         _prefs.putBoolean(
                             field.getName(), checkbox.isSelected());
+                        // run any associated hook
+                        Hook hook = _hooks.get(field.getName());
+                        if (hook != null) {
+                            hook.valueUpdated();
+                        }
                     } catch (Exception e) {
                         log.log(Level.WARNING, "Failed to update config " +
                                 "[config=" + config.getClass().getName() +
@@ -99,13 +135,16 @@ public class Config
         }
     }
 
+    /** Used when we bind configuration values to user interface elements. */
+    protected static interface Hook
+    {
+        public void valueUpdated ();
+    }
+
     /** We use these to persist settings between invocations. */
     protected static Preferences _prefs =
         Preferences.userNodeForPackage(Config.class);
 
-    static {
-        // load our persistent preferences
-        display.useDisplayLists = _prefs.getBoolean("useDisplayLists", true);
-        display.useVBOs = _prefs.getBoolean("useVBOs", true);
-    }
+    /** Used to register hooks that are run when configuration values change. */
+    protected static HashMap<String,Hook> _hooks = new HashMap<String,Hook>();
 }

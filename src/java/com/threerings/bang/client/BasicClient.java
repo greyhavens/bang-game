@@ -102,6 +102,7 @@ public class BasicClient
         createContextServices(rqueue);
 
         // initialize some static services
+        Config.init(_ctx);
         RenderUtil.init(_ctx);
         SoundUtil.init(_ctx);
     }

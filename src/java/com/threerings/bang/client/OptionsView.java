@@ -65,9 +65,14 @@ public class OptionsView extends BDecoratedWindow
         cont.add(new BLabel(_msgs.get("m.use_dl"), "right_label"));
         cont.add(pcheck = new BCheckBox(""));
         Config.bindComponent(pcheck, Config.display, "useDisplayLists");
+
         cont.add(new BLabel(_msgs.get("m.use_vbos"), "right_label"));
         cont.add(pcheck = new BCheckBox(""));
         Config.bindComponent(pcheck, Config.display, "useVBOs");
+
+        cont.add(new BLabel(_msgs.get("m.display_stats"), "right_label"));
+        cont.add(pcheck = new BCheckBox(""));
+        Config.bindComponent(pcheck, Config.display, "displayStats");
 
         add(cont);
 
