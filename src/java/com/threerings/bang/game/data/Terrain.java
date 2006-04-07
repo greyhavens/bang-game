@@ -12,22 +12,24 @@ import java.util.HashMap;
 public enum Terrain
 {
     // indicates a non-playable tile
-    NONE        (-1, -1, 0f),
+    NONE (-1, -1, 0f),
 
     // normal terrain types: DON'T BOOCH increasing terrain code
-    BRUSH       (0, BangBoard.BASE_TRAVERSAL, 0.2f),
-    DARK_DIRT   (1, BangBoard.BASE_TRAVERSAL, 0.5f),
-    DIRT        (2, BangBoard.BASE_TRAVERSAL, 0.8f),
-    ROAD        (3, BangBoard.BASE_TRAVERSAL, 0.2f),
-    ROCKY       (4, BangBoard.BASE_TRAVERSAL, 0.2f),
-    ROUGH_DIRT  (5, BangBoard.BASE_TRAVERSAL, 0.5f),
-    SAND        (6, BangBoard.BASE_TRAVERSAL, 0.9f),
-    WATER       (7, -1, 0f),
-    BONE        (8, BangBoard.BASE_TRAVERSAL, 0.2f),
+    BRUSH               (0, BangBoard.BASE_TRAVERSAL, 0.2f),
+    DARK_DIRT           (1, BangBoard.BASE_TRAVERSAL, 0.5f),
+    DIRT                (2, BangBoard.BASE_TRAVERSAL, 0.8f),
+    ROAD                (3, BangBoard.BASE_TRAVERSAL, 0.2f),
+    ROCKY               (4, BangBoard.BASE_TRAVERSAL, 0.2f),
+    ROUGH_DIRT          (5, BangBoard.BASE_TRAVERSAL, 0.5f),
+    SAND                (6, BangBoard.BASE_TRAVERSAL, 0.9f),
+    WATER               (7, -1, 0f),
+    BONE                (8, BangBoard.BASE_TRAVERSAL, 0.2f),
+    PRAIRIE_GRASS_GREEN (9, BangBoard.BASE_TRAVERSAL, 0f),
+    PRAIRIE_GRASS_GOLD  (10, BangBoard.BASE_TRAVERSAL, 0f),
 
     // special "outside the board" tiles
-    OUTER       (99, -1, 0f),
-    RIM         (100, -1, 0f);
+    OUTER (99, -1, 0f),
+    RIM   (100, -1, 0f);
 
     /** The code used when encoding terrain types in the {@link BangBoard}. */
     public int code;
