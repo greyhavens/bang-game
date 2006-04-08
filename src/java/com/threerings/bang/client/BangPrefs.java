@@ -12,9 +12,9 @@ import com.jme.system.PropertiesIO;
 
 import com.samskivert.util.Config;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.game.data.TutorialCodes;
 
 import static com.threerings.bang.Log.log;
 
@@ -105,9 +105,9 @@ public class BangPrefs
     {
         return !config.getValue(user.username + ".declined_tuts", false) &&
             !(user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED,
-                                       BangCodes.TUTORIALS[0]) &&
+                                       TutorialCodes.TUTORIALS[0]) &&
               user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED,
-                                       BangCodes.TUTORIALS[1]));
+                                       TutorialCodes.TUTORIALS[1]));
     }
 
     /**

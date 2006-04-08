@@ -8,6 +8,17 @@ package com.threerings.bang.game.data;
  */
 public interface TutorialCodes
 {
+    /** Enumerates the identifiers for our tutorials and the order in which
+     * they should be displayed and completed. */
+    public static final String[] TUTORIALS = {
+        "controls",
+        "bonuses_cards",
+        "claim_jumping",
+//         "bigshots",
+//         "cattle_rustling",
+//         "gold_rush",
+    };
+
     /** An event message sent to the server to let the tutorial scenario know
      * that we've processed a particular action. The index of the action will
      * be passed along with the event. */
@@ -55,4 +66,7 @@ public interface TutorialCodes
 
     /** A game state action monitored by the tutorial system. */
     public static final String CARD_PLAYED = "card_played";
+
+    /** Used to report piece effects. */
+    public static final String EFFECT_PREFIX = "effect:";
 }

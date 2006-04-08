@@ -21,6 +21,7 @@ import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
@@ -90,8 +91,8 @@ public class PickTutorialView extends BDecoratedWindow
         add(table);
 
         int unplayed = 0;
-        for (int ii = 0; ii < BangCodes.TUTORIALS.length; ii++) {
-            String tid = BangCodes.TUTORIALS[ii];
+        for (int ii = 0; ii < TutorialCodes.TUTORIALS.length; ii++) {
+            String tid = TutorialCodes.TUTORIALS[ii];
             ImageIcon icon;
             String btext;
             if (self.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED, tid)) {

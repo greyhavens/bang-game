@@ -557,10 +557,8 @@ public class BangController extends GameController
         // reenable the camera controls now that we're fully operational
         _ctx.getInputHandler().setEnabled(true);
 
-        // if we're not in a tutorial zoom up one level
-        if (_tutcont == null) {
-            ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
-        }
+        // zoom the camera to the center level
+        ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
 
         // let the game manager know that our units are in place and we're
         // fully ready to go

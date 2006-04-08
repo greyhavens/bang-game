@@ -40,8 +40,9 @@ public class TutorialConfig
         private static final long serialVersionUID = 1;
     }
 
-    public static class AddUnit extends Action
+    public static class AddPiece extends Action
     {
+        public String what;
         public String type;
         public int id;
         public int[] location;
@@ -63,14 +64,6 @@ public class TutorialConfig
         public int id;
         public int[] location = { Short.MAX_VALUE, Short.MAX_VALUE };
         public int target;
-
-        private static final long serialVersionUID = 1;
-    }
-
-    public static class AddBonus extends Action
-    {
-        public String type;
-        public int[] location;
 
         private static final long serialVersionUID = 1;
     }

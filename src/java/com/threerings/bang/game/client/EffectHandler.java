@@ -28,6 +28,7 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
@@ -107,7 +108,8 @@ public class EffectHandler extends BoardView.BoardAction
         } else if (effect.equals(AreaDamageEffect.MISSILED)) {
             wasDamaged = true;
             _effviz = new ExplosionViz(true);
-        } else if (effect.equals(RepairEffect.REPAIRED)) {
+        } else if (effect.equals(RepairEffect.REPAIRED) ||
+                   effect.equals(NuggetEffect.NUGGET_ADDED)) {
             _effviz = new RepairViz();
         }
 
@@ -173,6 +175,10 @@ public class EffectHandler extends BoardView.BoardAction
             // TODO: make this not an effect viz
             new PlaySoundViz(_sounds, path).display(sprite);
         }
+
+        // report the effect to the view who will report it to the tutorial
+        // controller if appropriate
+        _view.pieceWasAffected(piece, effect);
     }
 
     // documentation inherited from interface Effect.Observer

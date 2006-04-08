@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.samskivert.util.ArrayIntSet;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
 
@@ -20,7 +19,6 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
@@ -69,36 +67,9 @@ public class ClaimJumping extends Scenario
     {
         super.roundWillStart(bangobj, starts, bonusSpots, purchases);
 
-        _claims = new ArrayList<Claim>();
-
-        // locate all the claims, assign them to players and fill them
-        // with nuggets
-        ArrayIntSet assigned = new ArrayIntSet();
-        Piece[] pieces = bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Claim) {
-                Claim claim = (Claim)pieces[ii];
-                // determine which start marker to which it is nearest
-                int midx = getOwner(claim, starts);
-                if (midx == -1 || assigned.contains(midx)) {
-                    throw new InvocationException(
-                        "m.no_start_marker_for_claim");
-                }
-                // if we have a player in the game associated with this
-                // start marker, configure this claim for play
-                if (midx < bangobj.players.length) {
-                    claim.owner = midx;
-                    claim.nuggets = NUGGET_COUNT;
-                    bangobj.updatePieces(claim);
-                    // start the player with points for each nugget, but don't
-                    // record them as "earned" (which grantPoints() would do)
-                    bangobj.setPointsAt(
-                        NUGGET_COUNT * ScenarioCodes.POINTS_PER_NUGGET, midx);
-                    _claims.add(claim);
-                    assigned.add(midx);
-                }
-            }
-        }
+        // locate all the claims, assign them to players and fill them with
+        // nuggets
+        assignClaims(bangobj, starts);
 
         // sort the bonus spots by distance to nearest claim, put up to one
         // nugget per player in the spots that are maximally distant from the
@@ -177,47 +148,6 @@ public class ClaimJumping extends Scenario
     }
 
     @Override // documentation inherited
-    public void pieceMoved (BangObject bangobj, Piece piece)
-    {
-        super.pieceMoved(bangobj, piece);
-
-        if (!(piece instanceof Unit)) {
-            return;
-        }
-        Unit unit = (Unit)piece;
-
-        // if this unit landed next to one of the claims, do some stuff
-        Claim claim = null;
-        for (Claim c : _claims) {
-            if (c.getDistance(unit) <= 1) {
-                claim = c;
-                break;
-            }
-        }
-        if (claim == null) {
-            return;
-        }
-
-        // deposit or withdraw a nugget as appropriate
-        NuggetEffect effect = null;
-        if (claim.owner == unit.owner && unit.benuggeted) {
-            effect = new NuggetEffect();
-            effect.init(unit);
-            effect.claimId = claim.pieceId;
-            effect.dropping = true;
-        } else if (claim.owner != unit.owner && claim.nuggets > 0 &&
-                   unit.canActivateBonus(_nuggetBonus)) {
-            effect = new NuggetEffect();
-            effect.init(unit);
-            effect.claimId = claim.pieceId;
-            effect.dropping = false;
-        }
-        if (effect != null) {
-            _bangmgr.deployEffect(piece.owner, effect);
-        }
-    }
-
-    @Override // documentation inherited
     public void recordStats (
         BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {
@@ -263,16 +193,8 @@ public class ClaimJumping extends Scenario
         }
     }
 
-    /** A list of the active claims. */
-    protected ArrayList<Claim> _claims;
-
     /** Indicates the tick on which we will end the game. */
     protected short _gameOverTick = -1;
-
-    /** A prototype nugget bonus used to ensure that pieces can be
-     * benuggeted. */
-    protected Bonus _nuggetBonus =
-        Bonus.createBonus(BonusConfig.getConfig("nugget"));
 
     /** The number of ticks after which we end the game if at least one claim
      * remains empty for that duration. */

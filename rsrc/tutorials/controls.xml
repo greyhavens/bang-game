@@ -11,8 +11,9 @@
   <wait event="text_clicked"/>
 
   <!-- show them a unit and have them click to select it -->
-  <add_unit id="1000" type="gunslinger" location="16,16" owner="0"/>
-  <center_on what="unit" id="1000"/>
+  <add_piece what="unit" id="1000" type="gunslinger" location="16,16" 
+             owner="0"/>
+  <center_on what="piece" id="1000"/>
   <text message="click_unit" step="3"/>
   <wait event="unit_selected"/>
 
@@ -33,7 +34,8 @@
   <wait event="text_clicked"/>
 
   <!-- add an enemy unit and show them how to shoot it -->
-  <add_unit id="1001" type="shotgunner" location="16,17" owner="1"/>
+  <add_piece what="unit" id="1001" type="shotgunner" location="16,17"
+             owner="1"/>
   <text message="click_to_highlight_attacks" step="4"/>
   <wait event="unit_selected"/>
 

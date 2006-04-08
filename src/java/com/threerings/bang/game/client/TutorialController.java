@@ -130,14 +130,14 @@ public class TutorialController
                 _click.setText(_gmsgs.get("m.tutorial_click"));
             }
 
-        } else if (action instanceof TutorialConfig.AddUnit) {
+        } else if (action instanceof TutorialConfig.AddPiece) {
             // nothing to do here
 
         } else if (action instanceof TutorialConfig.CenterOn) {
             String what = ((TutorialConfig.CenterOn)action).what;
             int id = ((TutorialConfig.CenterOn)action).id;
             Piece p = null;
-            if (what.equals("unit")) {
+            if (what.equals("piece")) {
                 p = (Piece)_bangobj.pieces.get(id);
 
             } else if (what.equals("claim")) {
@@ -160,9 +160,6 @@ public class TutorialController
             }
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
-            // nothing to do here
-
-        } else if (action instanceof TutorialConfig.AddBonus) {
             // nothing to do here
 
         } else if (action instanceof TutorialConfig.ShowView) {

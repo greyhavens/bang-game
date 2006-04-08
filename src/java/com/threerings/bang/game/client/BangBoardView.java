@@ -648,6 +648,13 @@ public class BangBoardView extends BoardView
             (pt.y < _board.getHeight() / 2) ? 0 : _board.getHeight() - 1);
     }
 
+    /** Called by the {@link EffectHandler} when a piece was affected. */
+    protected void pieceWasAffected (Piece piece, String effect)
+    {
+        // just report the effect to the controller in case the tutorial cares
+        _ctrl.postEvent(TutorialCodes.EFFECT_PREFIX + effect);
+    }
+
     /** Called by the {@link EffectHandler} when a piece has moved. */
     protected void pieceDidMove (Piece piece)
     {

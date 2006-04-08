@@ -70,11 +70,14 @@ public class Tutorial extends Scenario
     }
 
     @Override // documentation inherited
-    public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
+    public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
                                 PointSet bonusSpots, PieceSet purchases)
         throws InvocationException
     {
-        super.roundWillStart(bangobj, markers, bonusSpots, purchases);
+        super.roundWillStart(bangobj, starts, bonusSpots, purchases);
+
+        // assign claims in case this is a claim jumping tutorial
+        assignClaims(bangobj, starts);
 
         // register to receive various tutorial specific messages
         _bangmgr.registerMessageHandler(TutorialCodes.ACTION_PROCESSED, this);
@@ -135,25 +138,36 @@ public class Tutorial extends Scenario
     {
         TutorialConfig.Action action = _config.getAction(actionId);
 
-        if (action instanceof TutorialConfig.AddUnit) {
-            TutorialConfig.AddUnit aua = (TutorialConfig.AddUnit)action;
-            Piece unit;
-            if (aua.type.equals("cow")) {
-                unit = new Cow();
+        if (action instanceof TutorialConfig.AddPiece) {
+            TutorialConfig.AddPiece add = (TutorialConfig.AddPiece)action;
+            Piece piece;
+            if (add.what.equals("bonus")) {
+                BonusConfig bconfig = BonusConfig.getConfig(add.type);
+                piece = Bonus.createBonus(bconfig);
+
+            } else if (add.what.equals("unit")) {
+                if (add.type.equals("cow")) {
+                    piece = new Cow();
+                } else {
+                    piece = Unit.getUnit(add.type);
+                }
+
             } else {
-                unit = Unit.getUnit(aua.type);
+                log.warning("Requested to add unknown piece type " + add + ".");
+                return;
             }
+
             // use a particular id if asked to do so
-            if (aua.id > 0) {
-                unit.pieceId = aua.id;
+            if (add.id > 0) {
+                piece.pieceId = add.id;
             } else {
-                unit.assignPieceId(_bangobj);
+                piece.assignPieceId(_bangobj);
             }
-            unit.init();
-            unit.owner = aua.owner;
-            unit.position(aua.location[0], aua.location[1]);
-            _bangobj.addToPieces(unit);
-            _bangobj.board.shadowPiece(unit);
+            piece.init();
+            piece.owner = add.owner;
+            piece.position(add.location[0], add.location[1]);
+            _bangobj.addToPieces(piece);
+            _bangobj.board.shadowPiece(piece);
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
             TutorialConfig.MoveUnit mua = (TutorialConfig.MoveUnit)action;
@@ -166,15 +180,6 @@ public class Tutorial extends Scenario
                 log.warning("Unable to execute action " + mua + ":" +
                             ie.getMessage());
             }
-            
-        } else if (action instanceof TutorialConfig.AddBonus) {
-            TutorialConfig.AddBonus aba = (TutorialConfig.AddBonus)action;
-            BonusConfig bconfig = BonusConfig.getConfig(aba.type);
-            Bonus bonus = Bonus.createBonus(bconfig);
-            bonus.assignPieceId(_bangobj);
-            bonus.position(aba.location[0], aba.location[1]);
-            _bangobj.addToPieces(bonus);
-            _bangobj.board.shadowPiece(bonus);
         }
     }
 

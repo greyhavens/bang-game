@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.QuickSort;
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
@@ -19,13 +20,18 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.TrainEffect;
+import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
@@ -203,18 +209,9 @@ public abstract class Scenario
     public void pieceMoved (BangObject bangobj, Piece piece)
     {
         if (piece instanceof Unit) {
-            // check to see if this unit spooked any cattle
-            Piece[] pieces = bangobj.getPieceArray();
-            for (int ii = 0; ii < pieces.length; ii++) {
-                if (pieces[ii] instanceof Cow &&
-                    piece.getDistance(pieces[ii]) == 1) {
-                    Effect effect = ((Cow)pieces[ii]).spook(
-                        bangobj, (Unit)piece);
-                    if (effect != null) {
-                        _bangmgr.deployEffect(piece.owner, effect);
-                    }
-                }
-            }
+            Unit unit = (Unit)piece;
+            checkSpookedCattle(bangobj, unit);
+            checkAdjustedClaim(bangobj, unit);
         }
     }
 
@@ -528,6 +525,95 @@ public abstract class Scenario
         return null;
     }
 
+    protected void checkSpookedCattle (BangObject bangobj, Unit unit)
+    {
+        // check to see if this unit spooked any cattle
+        Piece[] pieces = bangobj.getPieceArray();
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii] instanceof Cow &&
+                unit.getDistance(pieces[ii]) == 1) {
+                Effect effect = ((Cow)pieces[ii]).spook(bangobj, unit);
+                if (effect != null) {
+                    _bangmgr.deployEffect(unit.owner, effect);
+                }
+            }
+        }
+    }
+
+    protected void checkAdjustedClaim (BangObject bangobj, Unit unit)
+    {
+        if (_claims == null || _claims.size() == 0) {
+            return;
+        }
+
+        // if this unit landed next to one of the claims, do some stuff
+        Claim claim = null;
+        for (Claim c : _claims) {
+            if (c.getDistance(unit) <= 1) {
+                claim = c;
+                break;
+            }
+        }
+        if (claim == null) {
+            return;
+        }
+
+        // deposit or withdraw a nugget as appropriate
+        NuggetEffect effect = null;
+        if (claim.owner == unit.owner && unit.benuggeted) {
+            effect = new NuggetEffect();
+            effect.init(unit);
+            effect.claimId = claim.pieceId;
+            effect.dropping = true;
+        } else if (claim.owner != unit.owner && claim.nuggets > 0 &&
+                   unit.canActivateBonus(_nuggetBonus)) {
+            effect = new NuggetEffect();
+            effect.init(unit);
+            effect.claimId = claim.pieceId;
+            effect.dropping = false;
+        }
+        if (effect != null) {
+            _bangmgr.deployEffect(unit.owner, effect);
+        }
+    }
+
+    /**
+     * Assigns claims to the closest player and populates the claims with the
+     * starting number of nuggets.
+     */
+    protected void assignClaims (BangObject bangobj, ArrayList<Piece> starts)
+        throws InvocationException
+    {
+        _claims = new ArrayList<Claim>();
+        ArrayIntSet assigned = new ArrayIntSet();
+        Piece[] pieces = bangobj.getPieceArray();
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii] instanceof Claim) {
+                Claim claim = (Claim)pieces[ii];
+                // determine which start marker to which it is nearest
+                int midx = getOwner(claim, starts);
+                if (midx == -1 || assigned.contains(midx)) {
+                    throw new InvocationException(
+                        "m.no_start_marker_for_claim");
+                }
+
+                // if we have a player in the game associated with this
+                // start marker, configure this claim for play
+                if (midx < bangobj.players.length) {
+                    claim.owner = midx;
+                    claim.nuggets = ClaimJumping.NUGGET_COUNT;
+                    bangobj.updatePieces(claim);
+                    // start the player with points for each nugget, but don't
+                    // record them as "earned" (which grantPoints() would do)
+                    bangobj.setPointsAt(ClaimJumping.NUGGET_COUNT *
+                                        ScenarioCodes.POINTS_PER_NUGGET, midx);
+                    _claims.add(claim);
+                    assigned.add(midx);
+                }
+            }
+        }
+    }
+
     /**
      * Returns the base duration of the scenario in ticks assuming 1.75 seconds
      * per tick. This will be scaled by the expected average number of units
@@ -599,6 +685,14 @@ public abstract class Scenario
 
     /** Used to track when we've warned about the end of the round. */
     protected int _warnStage = -1;
+
+    /** A list of the active claims. */
+    protected ArrayList<Claim> _claims;
+
+    /** A prototype nugget bonus used to ensure that pieces can be
+     * benuggeted. */
+    protected Bonus _nuggetBonus =
+        Bonus.createBonus(BonusConfig.getConfig("nugget"));
 
     /** The number of ticks that must elapse before a unit is respawned. */
     protected static final int RESPAWN_TICKS = 12;
