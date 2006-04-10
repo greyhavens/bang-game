@@ -29,7 +29,7 @@ public class Match
     public static enum Readiness { NOT_READY, COULD_START, START_NOW };
 
     /** Team sizes for two, three and four player games. */
-    public static final int[] TEAM_SIZES = { 5, 4, 3 };
+    public static final int[] TEAM_SIZES = { 4, 3, 3 };
 
     /** The distributed object that we use to communicate to our players. */
     public MatchObject matchobj;
