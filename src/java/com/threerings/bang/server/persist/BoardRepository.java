@@ -179,7 +179,7 @@ public class BoardRepository extends JORARepository
     @Override // documentation inherited
     protected void createTables (Session session)
     {
-	_btable = new Table(BoardRecord.class.getName(), "BOARDS",
+	_btable = new Table(BoardRecord.class, "BOARDS",
                             session, "BOARD_ID", true);
     }
 

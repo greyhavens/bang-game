@@ -266,7 +266,11 @@ public abstract class Scenario
         }
 
         // update the oldest train first; if it moves, move the rest in order
-        QuickSort.sort(trains, PIECE_ID_COMPARATOR);
+        QuickSort.sort(trains, new Comparator<Train>() {
+            public int compare (Train t1, Train t2) {
+                return t1.pieceId - t2.pieceId;
+            }
+        });
         if (updateTrain(bangobj, trains.get(0))) {
             for (int i = 1, size = trains.size(); i < size; i++) {
                 Train previous = trains.get(i-1);
@@ -712,12 +716,4 @@ public abstract class Scenario
 
     /** The average number of cars on a train. */
     protected static final int AVG_TRAIN_CARS = 2;
-
-    /** Compares pieces based on their piece ids. */
-    protected static final Comparator<Piece> PIECE_ID_COMPARATOR =
-        new Comparator<Piece>() {
-        public int compare (Piece p1, Piece p2) {
-            return p1.pieceId - p2.pieceId;
-        }
-    };
 }

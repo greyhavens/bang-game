@@ -198,7 +198,7 @@ public class PlayerRepository extends JORARepository
     @Override // documentation inherited
     protected void createTables (Session session)
     {
-	_ptable = new Table(Player.class.getName(), "PLAYERS",
+	_ptable = new Table(Player.class, "PLAYERS",
                             session, "PLAYER_ID", true);
     }
 
