@@ -64,12 +64,12 @@ public class SkyNode extends Node
             TextureState tstate = ctx.getRenderer().createTextureState();
             tstate.setTexture(null, 0);
             _dgeom.setRenderState(tstate);
-            if (Config.useVBOs) {
+            if (Config.useVBOs && ctx.getRenderer().supportsVBO()) {
                 VBOInfo vboinfo = new VBOInfo(true);
                 vboinfo.setVBOIndexEnabled(true);
                 _dgeom.setVBOInfo(vboinfo);
-            }
-            if (Config.useDisplayLists) {
+                
+            } else if (Config.useDisplayLists) {
                 _dgeom.lockMeshes(ctx.getRenderer());
             }
         }
@@ -110,12 +110,12 @@ public class SkyNode extends Node
             TextureState tstate = ctx.getRenderer().createTextureState();
             tstate.setTexture(null, 0);
             _cgeom.setRenderState(tstate);
-            if (Config.useVBOs) {
+            if (Config.useVBOs && ctx.getRenderer().supportsVBO()) {
                 VBOInfo vboinfo = new VBOInfo(true);
                 vboinfo.setVBOIndexEnabled(true);
                 _cgeom.setVBOInfo(vboinfo);
-            }
-            if (Config.useDisplayLists) {
+                
+            } else if (Config.useDisplayLists) {
                 _cgeom.lockMeshes(ctx.getRenderer());
             }
         }

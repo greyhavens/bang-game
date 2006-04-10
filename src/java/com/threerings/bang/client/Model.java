@@ -911,18 +911,20 @@ public class Model
                     // in order to ensure that texture coords are sent when
                     // compiling the shared geometry to a display list, we must
                     // include a dummy texture state
-                    TextureState tstate = DisplaySystem.getDisplaySystem().
-                        getRenderer().createTextureState();
+                    Renderer renderer = DisplaySystem.getDisplaySystem().
+                        getRenderer();
+                    TextureState tstate = renderer.createTextureState();
                     tstate.setTexture(null, 0);
                     target.setRenderState(tstate);
 
-                    if (Config.useVBOs) {
+                    if (Config.useVBOs && renderer.supportsVBO()) {
                         setVBOInfos(target);
-                    }
-                    target.lockBounds();
-                    if (Config.useDisplayLists) {
+                        
+                    } else if (Config.useDisplayLists) {
                         target.lockMeshes();
                     }
+                    target.lockBounds();
+                    
                     target.clearRenderState(RenderState.RS_TEXTURE);
 
                     target.updateCollisionTree();
