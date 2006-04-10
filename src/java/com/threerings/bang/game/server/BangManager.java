@@ -1768,9 +1768,10 @@ public class BangManager extends GameManager
             long delta = System.currentTimeMillis() - _startStamp;
             delta = Math.min(delta, TIME_SCALE_CAP);
 
-            // scale from 1/1 to 1/2 over the course of ten minutes
-            float factor = 1f + 1f * delta / TIME_SCALE_CAP;
-            long baseTime = (long)Math.round(BASE_TICK_TIME / factor);
+//             // scale from 1/1 to 1/2 over the course of ten minutes
+//             float factor = 1f + 1f * delta / TIME_SCALE_CAP;
+//             long baseTime = (long)Math.round(BASE_TICK_TIME / factor);
+            long baseTime = BASE_TICK_TIME;
 
             // scale this base time by the average number of units in play
             long tickTime = baseTime * _bangobj.getAverageUnitCount();
