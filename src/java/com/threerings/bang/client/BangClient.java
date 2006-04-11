@@ -20,6 +20,8 @@ import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
 
+import com.jmex.sound.openAL.objects.MusicStream;
+
 import com.samskivert.util.Config;
 import com.samskivert.util.Interval;
 import com.samskivert.util.ResultListener;
@@ -419,6 +421,49 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Queues up the music track with the specified path.
+     *
+     * TODO: fade between the two tracks? or quickly fade out the old track and
+     * fade in the new.
+     */
+    public void queueMusic (String musicPath)
+    {
+        // for now disable music for non-insiders
+        if (!_ctx.getUserObject().tokens.isInsider()) {
+            return;
+        }
+
+        // if we're already playing this track, keep it running
+        if (musicPath.equals(_playingMusic)) {
+            return;
+        }
+
+        File mfile = _ctx.getResourceManager().getResourceFile(musicPath);
+        if (!mfile.exists()) {
+            log.warning("Requested to play non-existent music " +
+                        "[path=" + musicPath + "].");
+            return;
+        }
+
+        // stop any currently playing stream
+        if (_mstream != null) {
+            _mstream.stop();
+            _mstream.close();
+            _mstream = null;
+        }
+
+        try {
+            _playingMusic = musicPath;
+            _mstream = new MusicStream(mfile.toString(), false);
+            _mstream.loop(true);
+            _mstream.play();
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Failed to start music " +
+                    "[path=" + mfile + "].", t);
+        }
+    }
+
+    /**
      * Parses some system properties and starts a quick test game vs the
      * computer. Used by developers.
      */
@@ -605,9 +650,16 @@ public class BangClient extends BasicClient
         _mview = view;
         _ctx.getRootNode().addWindow(_mview);
 
+        boolean isGameView = (view instanceof BangView);
+
+        // if this is not the game view, play the town theme
+        if (!isGameView) {
+            queueMusic("sounds/music/" + _ctx.getUserObject().townId + ".ogg");
+        }
+
         // re-wire up our options view whenever the main view changes as the
         // BangView overrides the escape mapping during the game
-        if (!(view instanceof BangView)) {
+        if (!isGameView) {
             _ctx.getKeyManager().registerCommand(
                 KeyInput.KEY_ESCAPE, _clearPopup);
         }
@@ -619,6 +671,19 @@ public class BangClient extends BasicClient
         }
         _ctx.getInterface().attachChild(
             new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true));
+    }
+
+    /**
+     * Called by the main app when we're about to exit (cleanly).
+     */
+    protected void willExit ()
+    {
+        // stop any currently playing stream
+        if (_mstream != null) {
+            _mstream.stop();
+            _mstream.close();
+            _mstream = null;
+        }
     }
 
     /** The context implementation. This provides access to all of the
@@ -712,4 +777,7 @@ public class BangClient extends BasicClient
     protected StatusView _status;
 
     protected ArrayList<Name> _invites = new ArrayList<Name>();
+
+    protected String _playingMusic;
+    protected MusicStream _mstream;
 }
