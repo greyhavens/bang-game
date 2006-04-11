@@ -5,11 +5,17 @@ package com.threerings.bang.client.util;
 
 import java.awt.image.BufferedImage;
 import java.lang.ref.WeakReference;
+import java.nio.IntBuffer;
+
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.lwjgl.opengl.GL11;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.util.Rectangle;
 
@@ -114,6 +120,51 @@ public class TextureCache
         return getTexture(path, region);
     }
 
+    /**
+     * Computes the count and size of our resident and non-resident cached
+     * textures.
+     */
+    public void dumpResidence ()
+    {
+        int[] counts = new int[4], bytes = new int[4];
+        for (Map.Entry<TextureKey,WeakReference<Texture>> entry :
+                 _textures.entrySet()) {
+            TextureKey key = entry.getKey();
+            Texture texture = entry.getValue().get();
+            if (texture == null) {
+//                 log.info("Flushed " + key.path + ":" + key.region);
+                counts[0]++;
+                continue;
+            }
+
+            Image image = texture.getImage();
+            int size = (image == null) ? 0 : image.getData().capacity();
+            int texid = texture.getTextureId();
+            if (texid <= 0) {
+//                 log.info("Not loaded " + key.path + ":" + key.region);
+                int idx = (size == 0) ? 1 : 2;
+                counts[idx]++;
+                bytes[idx] += size;
+                continue;
+            }
+
+//             GL11.glGetTexParameter(texid, GL11.GL_TEXTURE_RESIDENT, _qbuf);
+            if (size == 0) {
+                log.warning("Loadaed texture has no image? [key=" + key + "].");
+            } else {
+                counts[3]++;
+                bytes[3] += size;
+            }
+
+//             log.info("Resident? " + key.path + ":" + key.region + ":" + texid +
+//                      " " + _qbuf.get(0));
+        }
+
+        log.info("FL:" + counts[0] + " NL0:" + counts[1] +
+                 " NL1:" + counts[2] + "/" + bytes[2] +
+                 " LD:" + counts[3] + "/" + bytes[3]);
+    }
+
     protected static class TextureKey
     {
         public String path;
@@ -140,9 +191,16 @@ public class TextureCache
             return path.hashCode() ^ Arrays.hashCode(zations) ^
                 (region == null ? 0 : region.hashCode());
         }
+
+        public String toString () {
+            return path + ":" + zations + ":" + region;
+        }
     }
 
     protected BasicContext _ctx;
+
     protected HashMap<TextureKey,WeakReference<Texture>> _textures =
         new HashMap<TextureKey,WeakReference<Texture>>();
+
+    protected IntBuffer _qbuf = BufferUtils.createIntBuffer(4);
 }
