@@ -55,7 +55,7 @@ public class BangBoard extends SimpleStreamableObject
 
     /** The size in tiles of the border between the edge of the heightfield and
      * the edge of the playable region. */
-    public static final int BORDER_SIZE = 8;
+    public static final int BORDER_SIZE = 12;
 
     /** The number of directional lights on the board. */
     public static final int NUM_LIGHTS = 2;
