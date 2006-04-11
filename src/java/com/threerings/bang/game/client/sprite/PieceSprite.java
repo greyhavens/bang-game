@@ -107,7 +107,6 @@ public class PieceSprite extends Sprite
 
         // create our sprite geometry
         createGeometry(ctx);
-        setAnimationSpeed(20);
 
         // create any sounds associated with this sprite
         createSounds(sounds);
@@ -446,11 +445,6 @@ public class PieceSprite extends Sprite
             this, random, zations, new Model.Binding.Observer() {
             public void wasBound (
                 Model.Animation anim, Model.Binding binding) {
-                // now that the meshes are attached, configure the animation
-                // speed and repeat type
-                setAnimationSpeed(Config.animationSpeed * anim.getSpeed());
-                setAnimationRepeatType(anim.repeatType);
-
                 // start emissions used in the animation, creating any uncreated
                 for (int ii = 0; ii < anim.emitters.length; ii++) {
                     String name = anim.emitters[ii].name;

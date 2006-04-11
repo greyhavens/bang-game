@@ -151,6 +151,11 @@ public class Model
                 _meshes[ii].updateRenderState();
             }
 
+            // configure the animation speed and repeat type
+            Sprite.setAnimationSpeed(
+                _node, Config.animationSpeed * _anim.getSpeed());
+            Sprite.setAnimationRepeatType(_node, _anim.repeatType);
+
             // the first time through we'll be resolving and won't call this,
             // then we'll call it when the resolution is done; subsequent
             // bindings will be resolved the first time through and will report
