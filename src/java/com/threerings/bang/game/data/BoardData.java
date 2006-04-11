@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data;
 
+import java.awt.Rectangle;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.samskivert.util.StringUtil;
@@ -156,11 +159,24 @@ public class BoardData
                 obb.skyFalloff);
             _board.setWindParams(obb.windDirection, obb.windSpeed);
             */
+
+            // load up our board
             _board = (BangBoard)oin.readObject();
-            _pieces = new Piece[oin.readInt()];
-            for (int ii = 0; ii < _pieces.length; ii++) {
-                _pieces[ii] = readPiece(oin);
+
+            // load and sanity check our pieces
+            int pcount = oin.readInt();
+            Rectangle rect = new Rectangle(
+                0, 0, _board.getWidth(), _board.getHeight());
+            ArrayList<Piece> plist = new ArrayList<Piece>();
+            for (int ii = 0; ii < pcount; ii++) {
+                Piece p = readPiece(oin);
+                if (!rect.contains(p.x, p.y)) {
+                    log.warning("Rececting OOB piece " + p + ".");
+                } else {
+                    plist.add(p);
+                }
             }
+            _pieces = plist.toArray(new Piece[plist.size()]);
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to decode board " + this, e);
