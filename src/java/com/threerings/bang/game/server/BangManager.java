@@ -621,6 +621,13 @@ public class BangManager extends GameManager
     /** Continues starting the round once the board's data is loaded. */
     protected void continueStartingRound (BoardRecord brec)
     {
+        // make sure we've got a board to work with
+        BangBoard board = brec.getBoard();
+        if (board == null) {
+            log.warning("Have no board. We're hosed! " + brec + ".");
+            return;
+        }
+
         // create the appropriate scenario to handle this round
         if (_bconfig.tutorial) {
             _bangobj.setScenarioId(ScenarioCodes.TUTORIAL);
@@ -649,7 +656,7 @@ public class BangManager extends GameManager
         _purchases.clear();
 
         // set up the board and pieces so it's visible while purchasing
-        _bangobj.board = (BangBoard)brec.getBoard().clone();
+        _bangobj.board =(BangBoard)board.clone();
         _bangobj.setBoardName(brec.name);
         _bangobj.setBoardHash(brec.dataHash);
 
@@ -658,7 +665,13 @@ public class BangManager extends GameManager
         ArrayList<Piece> pieces = new ArrayList<Piece>();
         Piece[] pvec = brec.getPieces();
         for (int ii = 0; ii < pvec.length; ii++) {
-            pieces.add((Piece)pvec[ii].clone());
+            Piece p = (Piece)pvec[ii].clone();
+            // sanity check our pieces
+            if (p.x < 0 || p.x >= _bangobj.board.getWidth() ||
+                p.y < 0 || p.y >= _bangobj.board.getHeight()) {
+                log.warning("Beward! Out of bounds piece " + p + ".");
+            }
+            pieces.add(p);
         }
 
         // extract and remove all player start markers
@@ -2069,7 +2082,7 @@ public class BangManager extends GameManager
     protected ArrayList<Piece> _starts = new ArrayList<Piece>();
 
     /** Maps card id to a {@link StartingCard} record. */
-    protected HashIntMap _scards = new HashIntMap();
+    protected HashIntMap<StartingCard> _scards = new HashIntMap<StartingCard>();
 
     /** The time for which the next tick is scheduled. */
     protected long _nextTickTime;

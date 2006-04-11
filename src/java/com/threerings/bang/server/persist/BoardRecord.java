@@ -117,4 +117,10 @@ public class BoardRecord extends BoardData
         data = StringUtil.unhexlate(props.getProperty("data", ""));
         bin.close();
     }
+
+    /** Helper function for {@link #toString}. */
+    public String dataHashToString ()
+    {
+        return StringUtil.hexlate(dataHash);
+    }
 }
