@@ -48,20 +48,6 @@ public class BoardRepository extends JORARepository
         throws PersistenceException
     {
         super(conprov, BOARD_DB_IDENT);
-        
-        // TEMP: add the DATA_HASH column to the table
-        execute(new Operation() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                if (!JDBCUtil.tableContainsColumn(conn, "BOARDS",
-                    "DATA_HASH")) {
-                    JDBCUtil.addColumn(conn, "BOARDS", "DATA_HASH",
-                        "BLOB NOT NULL", "DATA");
-                }
-                return null;
-            }
-        });
     }
 
     /**
@@ -71,7 +57,7 @@ public class BoardRepository extends JORARepository
         throws PersistenceException
     {
         final BoardList blist = new BoardList();
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -106,7 +92,7 @@ public class BoardRepository extends JORARepository
     public void loadBoardData (final BoardRecord brec)
         throws PersistenceException
     {
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -177,11 +163,21 @@ public class BoardRepository extends JORARepository
     }
 
     @Override // documentation inherited
-    protected void createTables (Session session)
+    protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
+        throws SQLException, PersistenceException
     {
-	_btable = new Table(BoardRecord.class, "BOARDS",
-                            session, "BOARD_ID", true);
+        if (JDBCUtil.getColumnSize(conn, "BOARDS", "DATA") <= 65536) {
+            JDBCUtil.changeColumn(
+                conn, "BOARDS", "DATA", "DATA MEDIUMBLOB NOT NULL");
+        }
     }
 
-    protected Table _btable;
+    @Override // documentation inherited
+    protected void createTables (Session session)
+    {
+	_btable = new Table<BoardRecord>(
+            BoardRecord.class, "BOARDS", session, "BOARD_ID", true);
+    }
+
+    protected Table<BoardRecord> _btable;
 }
