@@ -152,8 +152,8 @@ public class EditorPanel extends JPanel
             EditorController.EDIT_WATER);
         createMenuItem(edit, msgs.get("m.menu_environment"), -1, KeyEvent.VK_E,
             EditorController.EDIT_ENVIRONMENT);
-        createMenuItem(edit, msgs.get("m.menu_board_props"), -1, KeyEvent.VK_P,
-            EditorController.EDIT_BOARD_PROPERTIES);
+        createMenuItem(edit, msgs.get("m.menu_board_props"), KeyEvent.VK_P,
+            KeyEvent.VK_P, EditorController.EDIT_BOARD_PROPERTIES);
         edit.addSeparator();
         createMenuItem(edit, msgs.get("m.menu_generate_shadows"), -1,
             KeyEvent.VK_G, EditorController.GENERATE_SHADOWS);
