@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.data.card;
 
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AreaRepairEffect;
 import com.threerings.bang.game.data.effect.Effect;
 

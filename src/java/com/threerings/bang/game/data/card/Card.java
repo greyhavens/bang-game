@@ -154,6 +154,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new Missile());
         register(new Stampede());
         register(new Staredown());
+        register(new GiddyUp());
 
         // collect the weights of each card into an array used to select
         // randomly based on said weights

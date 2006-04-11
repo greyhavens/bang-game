@@ -11,13 +11,15 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
- * Causes the piece in the area of our effect to delay one tick before
- * they are again able to move.
+ * Adjusts the last acted tick for a particular piece.
  */
-public class StaredownEffect extends Effect
+public class AdjustTickEffect extends Effect
 {
-    /** The identifier for the type of effect that we produce. */
+    /** Identifies the use of this effect by the Staredown card. */
     public static final String STARED_DOWN = "cards/staredown/activate";
+
+    /** Identifies the use of this effect by the Giddy Up card. */
+    public static final String GIDDY_UPPED = "cards/giddy_up/activate";
 
     /** The coordinates at which we were activated. */
     public short x, y;
@@ -28,14 +30,15 @@ public class StaredownEffect extends Effect
     /** The new last acted time to assign to this piece. */
     public short newLastActed;
 
-    public StaredownEffect ()
+    public AdjustTickEffect ()
     {
     }
 
-    public StaredownEffect (int x, int y)
+    public AdjustTickEffect (int x, int y, int delta)
     {
         this.x = (short)x;
         this.y = (short)y;
+        _delta = delta;
     }
 
     @Override // documentation inherited
@@ -51,7 +54,7 @@ public class StaredownEffect extends Effect
             Piece p = (Piece)iter.next();
             if (p.x == x && p.y == y && p.isAlive()) {
                 pieceId = p.pieceId;
-                newLastActed = bangobj.tick;
+                newLastActed = (short)(bangobj.tick + _delta);
                 break;
             }
         }
@@ -62,8 +65,13 @@ public class StaredownEffect extends Effect
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
         if (piece != null) {
+            String effect = (newLastActed < bangobj.tick) ?
+                GIDDY_UPPED : STARED_DOWN;
             piece.lastActed = newLastActed;
-            reportEffect(observer, piece, STARED_DOWN);
+            reportEffect(observer, piece, effect);
         }
     }
+
+    /** The delta from the board tick at activation time. */
+    protected transient int _delta;
 }
