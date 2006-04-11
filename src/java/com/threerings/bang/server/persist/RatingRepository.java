@@ -52,7 +52,7 @@ public class RatingRepository extends SimpleRepository
         final ArrayList<Rating> rats = new ArrayList<Rating>();
         final String query = "select SCENARIO, RATING, EXPERIENCE " +
             "from RATINGS where PLAYER_ID = " + playerId;
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -81,7 +81,7 @@ public class RatingRepository extends SimpleRepository
     public void updateRatings (final int playerId, final ArrayList<Rating> rats)
         throws PersistenceException
     {
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {

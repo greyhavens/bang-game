@@ -88,7 +88,7 @@ public class PardnerRepository extends SimpleRepository
             " where (ACTIVE=1 and PLAYER_ID1=" + playerId +
             " and PLAYER_ID=PLAYER_ID2) union " + PARD_SELECT +
             " where (PLAYER_ID2=" + playerId + " and PLAYER_ID=PLAYER_ID1)";
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -123,8 +123,8 @@ public class PardnerRepository extends SimpleRepository
         final boolean active)
         throws PersistenceException
     {
-        return (String)execute(new Operation() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
+        return execute(new Operation<String>() {
+            public String invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 Statement stmt = conn.createStatement();
@@ -161,7 +161,7 @@ public class PardnerRepository extends SimpleRepository
         final boolean active)
         throws PersistenceException
     {
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -197,7 +197,7 @@ public class PardnerRepository extends SimpleRepository
     public void removePardners (final int playerId1, final Name handle2)
         throws PersistenceException
     {
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {

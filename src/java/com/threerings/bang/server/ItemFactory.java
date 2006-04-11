@@ -58,7 +58,7 @@ public class ItemFactory
         }
 
         // now do the lookup
-        return (Class)_typeToClass.get(type);
+        return _typeToClass.get(type);
     }
 
     /**
@@ -84,7 +84,7 @@ public class ItemFactory
     protected static void registerItemClasses ()
     {
         // create our tables
-        _typeToClass = new HashIntMap();
+        _typeToClass = new HashIntMap<Class>();
         _classToType = new HashMap<Class,Integer>();
 
         // register the item classes (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
@@ -97,7 +97,7 @@ public class ItemFactory
     }
 
     /** The table mapping item types to classes. */
-    protected static HashIntMap _typeToClass;
+    protected static HashIntMap<Class> _typeToClass;
 
     /** The table mapping item classes to types. */
     protected static HashMap<Class,Integer> _classToType;

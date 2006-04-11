@@ -86,8 +86,8 @@ public class PlayerRepository extends JORARepository
         final String query = "update PLAYERS set FLAGS = FLAGS " + gensql +
             ", HANDLE = " + JDBCUtil.escape(handle.toString()) +
             " where PLAYER_ID = " + playerId;
-        return (Boolean)execute(new Operation() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
+        return execute(new Operation<Boolean>() {
+            public Boolean invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 Statement stmt = conn.createStatement();
@@ -198,8 +198,8 @@ public class PlayerRepository extends JORARepository
     @Override // documentation inherited
     protected void createTables (Session session)
     {
-	_ptable = new Table(Player.class, "PLAYERS",
-                            session, "PLAYER_ID", true);
+	_ptable = new Table<Player>(
+            Player.class, "PLAYERS", session, "PLAYER_ID", true);
     }
 
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
@@ -227,6 +227,6 @@ public class PlayerRepository extends JORARepository
         }
     }
 
-    protected Table _ptable;
+    protected Table<Player> _ptable;
     protected FieldMask _byNameMask;
 }

@@ -56,7 +56,7 @@ public class StatRepository extends SimpleRepository
         super(conprov, STAT_DB_IDENT);
 
         // load up our string set mappings
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -86,7 +86,7 @@ public class StatRepository extends SimpleRepository
         final ArrayList<Stat> stats = new ArrayList<Stat>();
         final String query = "select STAT_CODE, STAT_DATA " +
             "from STATS where PLAYER_ID = " + playerId;
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -156,12 +156,12 @@ public class StatRepository extends SimpleRepository
     // documentation inherited from interface Stat.AuxDataSource
     public String getCodeString (Stat.Type type, int code)
     {
-        HashIntMap map = _codeToString.get(type);
+        HashIntMap<String> map = _codeToString.get(type);
         if (map == null) {
             log.warning("Missing reverse mapping [type=" + type + "].");
-            _codeToString.put(type, map = new HashIntMap());
+            _codeToString.put(type, map = new HashIntMap<String>());
         }
-        String value = (String)map.get(code);
+        String value = map.get(code);
         if (value == null) {
             log.warning("Missing reverse maping [type=" + type +
                         ", code=" + code + "].");
@@ -235,7 +235,7 @@ public class StatRepository extends SimpleRepository
         }
 
         // now update (or insert) the flattened data into the database
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -262,8 +262,8 @@ public class StatRepository extends SimpleRepository
         final Stat.Type type, final String value)
         throws PersistenceException
     {
-        return (Integer)execute(new Operation() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
+        return execute(new Operation<Integer>() {
+            public Integer invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 for (int ii = 0; ii < 10; ii++) {
@@ -372,9 +372,9 @@ public class StatRepository extends SimpleRepository
             _stringToCode.put(type, fmap = new HashMap<String,Integer>());
         }
         fmap.put(value, code);
-        HashIntMap rmap = _codeToString.get(type);
+        HashIntMap<String> rmap = _codeToString.get(type);
         if (rmap == null) {
-            _codeToString.put(type, rmap = new HashIntMap());
+            _codeToString.put(type, rmap = new HashIntMap<String>());
         }
         rmap.put(code, value);
     }
@@ -402,6 +402,6 @@ public class StatRepository extends SimpleRepository
 
     protected HashMap<Stat.Type,HashMap<String,Integer>> _stringToCode =
         new HashMap<Stat.Type,HashMap<String,Integer>>();
-    protected HashMap<Stat.Type,HashIntMap> _codeToString =
-        new HashMap<Stat.Type,HashIntMap>();
+    protected HashMap<Stat.Type,HashIntMap<String>> _codeToString =
+        new HashMap<Stat.Type,HashIntMap<String>>();
 }
