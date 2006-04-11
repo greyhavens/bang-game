@@ -202,6 +202,9 @@ public class BangApp extends JmeApp
     {
         super.cleanup();
 
+        // let the client clean things up before we shutdown
+        _client.willExit();
+
         // log off before we shutdown
         Client client = _client.getContext().getClient();
         if (client.isLoggedOn()) {

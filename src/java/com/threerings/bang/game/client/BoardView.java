@@ -58,8 +58,6 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
 
-import com.jmex.sound.openAL.objects.MusicStream;
-
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ObserverList;
@@ -324,22 +322,6 @@ public class BoardView extends BComponent
                 }
             }
         });
-        
-        // load and start the opening music stream
-        String mpath = getOpeningMusicPath();
-        if (mpath != null) {
-            File mfile = _ctx.getResourceManager().getResourceFile(mpath);
-            if (mfile.exists()) {
-                try {
-                    _mstream = new MusicStream(mfile.toString(), false);
-                    _mstream.loop(true);
-                    _mstream.play();
-                } catch (Throwable t) {
-                    log.log(Level.WARNING, "Failed to start music " +
-                            "[path=" + mfile + "].", t);
-                }
-            }
-        }
     }
     
     /**
@@ -896,13 +878,6 @@ public class BoardView extends BComponent
         _snode.cleanup();
         _tnode.cleanup();
         _wnode.cleanup();
-        
-        // get rid of the music stream
-        if (_mstream != null) {
-            _mstream.stop();
-            _mstream.close();
-            _mstream = null;
-        }
     }
 
     /**
@@ -938,15 +913,6 @@ public class BoardView extends BComponent
         }
     }
 
-    /**
-     * Returns the resource path for the board's opening music, or
-     * <code>null</code> for none.
-     */
-    protected String getOpeningMusicPath ()
-    {
-        return null;
-    }
-    
     /**
      * Creates a fade-in effect and pauses it, we will unpause once the board
      * is fully resolved.
@@ -1543,9 +1509,6 @@ public class BoardView extends BComponent
 
     /** Used to load all in-game sounds. */
     protected SoundGroup _sounds;
-
-    /** The music stream for the board's soundtrack. */
-    protected MusicStream _mstream;
     
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();

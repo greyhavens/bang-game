@@ -137,15 +137,15 @@ public class BangController extends GameController
 
         // we start the new round after the player has dismissed the previous
         // round's stats dialogue and the game is reported as ready to go
-        _selphaseMultex = new Multex(new Runnable() {
+        _startRoundMultex = new Multex(new Runnable() {
             public void run () {
-                _view.setPhase(BangView.PRE_SELECT_PHASE);
+                roundDidStart();
             }
         }, 2);
 
-        // there's no stats dialogue when we first enter, so start with
-        // that condition already satisfied
-        _selphaseMultex.satisfied(Multex.CONDITION_TWO);
+        // there's no stats dialogue when we first enter, so start with that
+        // condition already satisfied
+        _startRoundMultex.satisfied(Multex.CONDITION_TWO);
 
         // we'll use this one at the end of the game
         _postGameMultex = new Multex(new Runnable() {
@@ -453,13 +453,12 @@ public class BangController extends GameController
     {
         if (state == BangObject.SELECT_PHASE ||
             state == BangObject.PRE_TUTORIAL) {
-            _selphaseMultex.satisfied(Multex.CONDITION_ONE);
+            _startRoundMultex.satisfied(Multex.CONDITION_ONE);
             return true;
 
         } else if (state == BangObject.BUYING_PHASE) {
             _view.setPhase(state);
             return true;
-
         } else if (state == BangObject.POST_ROUND) {
             // let the view know that this round is over
             _view.endRound();
@@ -471,6 +470,19 @@ public class BangController extends GameController
         } else {
             return super.stateDidChange(state);
         }
+    }
+
+    /**
+     * Called a the beginning of every round. In a normal game this is wehen 
+     */
+    protected void roundDidStart ()
+    {
+        // display the unit selection if appropriate
+        _view.setPhase(BangView.PRE_SELECT_PHASE);
+
+        // start up the music for this scenario
+        _ctx.getBangClient().queueMusic(
+            "sounds/music/scenario_" + _bangobj.scenarioId + ".ogg");
     }
 
     @Override // documentation inherited
@@ -535,7 +547,7 @@ public class BangController extends GameController
     protected void interRoundFadeComplete ()
     {
         // potentially display the selection phase dialog for the next round
-        _selphaseMultex.satisfied(Multex.CONDITION_TWO);
+        _startRoundMultex.satisfied(Multex.CONDITION_TWO);
     }
 
     /**
@@ -651,7 +663,7 @@ public class BangController extends GameController
     protected int _pidx;
 
     /** Used to start the new round after two conditions have been met. */
-    protected Multex _selphaseMultex;
+    protected Multex _startRoundMultex;
 
     /** Used to show the stats once we've faded in our Game Over marquee and
      * the awards have arrived. */

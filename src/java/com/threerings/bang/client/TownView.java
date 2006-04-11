@@ -297,13 +297,6 @@ public class TownView extends BWindow
             // reenable the input handler
             _ctx.getInputHandler().setEnabled(true);
         }
-
-        @Override // documentation inherited
-        protected String getOpeningMusicPath ()
-        {
-            return _bctx.getUserObject().tokens.isInsider() ?
-                "sounds/music/" + _bctx.getUserObject().townId + ".ogg" : null;
-        }
         
         @Override // documentation inherited
         protected boolean shouldShowGrid ()

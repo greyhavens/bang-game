@@ -170,7 +170,7 @@ public class BangView extends BWindow
         }
     }
 
-    // documentation inherited from interface
+    // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
         _bangobj = (BangObject)plobj;
@@ -195,7 +195,7 @@ public class BangView extends BWindow
         chat.willEnterPlace(plobj);
     }
 
-    // documentation inherited from interface
+    // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
         chat.didLeavePlace(plobj);
