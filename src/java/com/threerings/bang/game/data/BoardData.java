@@ -170,7 +170,7 @@ public class BoardData
             ArrayList<Piece> plist = new ArrayList<Piece>();
             for (int ii = 0; ii < pcount; ii++) {
                 Piece p = readPiece(oin);
-                if (!rect.contains(p.x, p.y)) {
+                if (!(p instanceof Viewpoint) && !rect.contains(p.x, p.y)) {
                     log.warning("Rececting OOB piece " + p + ".");
                 } else {
                     plist.add(p);
