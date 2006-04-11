@@ -1281,13 +1281,15 @@ public class TerrainNode extends Node
         public FloatBuffer vbuf, nbuf, cbuf;
 
         /** Maps terrain codes to ground texture states. */
-        public HashIntMap groundTextures = new HashIntMap();
+        public HashIntMap<TextureState> groundTextures =
+            new HashIntMap<TextureState>();
 
         /** The base texture buffer. */
         public ByteBuffer baseBuffer;
 
         /** Maps terrain codes to alpha texture buffers. */
-        public HashIntMap alphaBuffers = new HashIntMap();
+        public HashIntMap<ByteBuffer> alphaBuffers =
+            new HashIntMap<ByteBuffer>();
 
         /** Contains the code for each terrain layer (plus one, because zeros
          * are interpreted as empty spaces by {@link IntListUtil}. */
@@ -1450,7 +1452,7 @@ public class TerrainNode extends Node
          */
         protected TextureState getGroundTexture (int code)
         {
-            TextureState tstate = (TextureState)groundTextures.get(code);
+            TextureState tstate = groundTextures.get(code);
             if (tstate == null) {
                 groundTextures.put(code, tstate = RenderUtil.getGroundTexture(
                     Terrain.fromCode(code)));
@@ -1541,7 +1543,7 @@ public class TerrainNode extends Node
         protected Texture createAlphaTexture (int code, Rectangle rect)
         {
             // create the buffer if it doesn't already exist
-            ByteBuffer abuf = (ByteBuffer)alphaBuffers.get(code);
+            ByteBuffer abuf = alphaBuffers.get(code);
             if (abuf == null) {
                 alphaBuffers.put(code, abuf = ByteBuffer.allocateDirect(
                     TEXTURE_SIZE*TEXTURE_SIZE*4));

@@ -367,9 +367,10 @@ public class BoardView extends BComponent
 
         // if we're done resolving, notify any resolution observers
         if (_resolvingSprites == 0 && _resolutionObs.size() > 0) {
-            _resolutionObs.apply(new ObserverList.ObserverOp() {
-                public boolean apply (Object observer) {
-                    ((ResolutionObserver)observer).mediaResolved();
+            _resolutionObs.apply(
+                new ObserverList.ObserverOp<ResolutionObserver>() {
+                public boolean apply (ResolutionObserver observer) {
+                    observer.mediaResolved();
                     return false; // clear the observer
                 }
             });
@@ -1518,8 +1519,8 @@ public class BoardView extends BComponent
 
     /** Used to keep track of observers that want to know when our sprites are
      * resolved and we're ready to roll. */
-    protected ObserverList _resolutionObs =
-        new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
+    protected ObserverList<ResolutionObserver> _resolutionObs =
+        new ObserverList<ResolutionObserver>(ObserverList.SAFE_IN_ORDER_NOTIFY);
 
     /** Used to fade ourselves in at the start of the game. */
     protected FadeInOutEffect _fadein;

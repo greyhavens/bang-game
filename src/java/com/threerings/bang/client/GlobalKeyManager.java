@@ -39,7 +39,7 @@ public class GlobalKeyManager
                     (KeyEvent)event : null;
                 if (kev != null && kev.getType() == KeyEvent.KEY_PRESSED) {
                     int keyCode = kev.getKeyCode();
-                    Command command = (Command)_commap.get(keyCode);
+                    Command command = _commap.get(keyCode);
                     if (command != null) {
                         command.invoke(keyCode, kev.getModifiers());
                         return true;
@@ -66,5 +66,5 @@ public class GlobalKeyManager
         _commap.remove(keyCode);
     }
 
-    protected HashIntMap _commap = new HashIntMap();
+    protected HashIntMap<Command> _commap = new HashIntMap<Command>();
 }

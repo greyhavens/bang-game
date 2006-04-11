@@ -532,14 +532,15 @@ public class MobileSprite extends PieceSprite
     }
 
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */
-    protected static class CompletedOp implements ObserverList.ObserverOp
+    protected static class CompletedOp
+        implements ObserverList.ObserverOp<SpriteObserver>
     {
         public CompletedOp (Sprite sprite, String action) {
             _sprite = sprite;
             _action = action;
         }
 
-        public boolean apply (Object observer) {
+        public boolean apply (SpriteObserver observer) {
             if (observer instanceof ActionObserver) {
                 ((ActionObserver)observer).actionCompleted(_sprite, _action);
             }

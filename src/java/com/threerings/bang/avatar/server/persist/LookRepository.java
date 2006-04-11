@@ -55,7 +55,7 @@ public class LookRepository extends SimpleRepository
         final ArrayList<Look> looks = new ArrayList<Look>();
         final String query = "select NAME, ASPECTS, ARTICLES from LOOKS " +
             "where PLAYER_ID = " + playerId;
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -80,7 +80,7 @@ public class LookRepository extends SimpleRepository
     public void insertLook (final int playerId, final Look look)
         throws PersistenceException
     {
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -108,7 +108,7 @@ public class LookRepository extends SimpleRepository
     public void updateLook (final int playerId, final Look look)
         throws PersistenceException
     {
-        execute(new Operation() {
+        execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {

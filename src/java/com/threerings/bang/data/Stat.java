@@ -143,7 +143,7 @@ public abstract class Stat
      */
     public static Type getType (int code)
     {
-        return (Type)_codeToType.get(code);
+        return _codeToType.get(code);
     }
 
     /**
@@ -243,7 +243,7 @@ public abstract class Stat
     protected transient boolean _modified;
 
     /** The table mapping stat codes to enumerated types. */
-    protected static HashIntMap _codeToType = new HashIntMap();
+    protected static HashIntMap<Type> _codeToType = new HashIntMap<Type>();
 
     /** Trigger the loading of the enum when we load this class. */
     protected static Type _trigger = Type.UNUSED;

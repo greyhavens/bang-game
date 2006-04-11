@@ -464,8 +464,9 @@ public class UnitSprite extends MobileSprite
     }
 
     /** Used to dispatch {@link UpdateObserver#updated}. */
-    protected ObserverList.ObserverOp _updater = new ObserverList.ObserverOp() {
-        public boolean apply (Object observer) {
+    protected ObserverList.ObserverOp<SpriteObserver> _updater =
+        new ObserverList.ObserverOp<SpriteObserver>() {
+        public boolean apply (SpriteObserver observer) {
             if (observer instanceof UpdateObserver) {
                 ((UpdateObserver)observer).updated(UnitSprite.this);
             }
