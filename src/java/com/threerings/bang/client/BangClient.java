@@ -425,8 +425,11 @@ public class BangClient extends BasicClient
      *
      * TODO: fade between the two tracks? or quickly fade out the old track and
      * fade in the new.
+     *
+     * @param musicPath the path to an OGG resource containing the music.
+     * @param volume a value between 0 and 1 indicating the music volume.
      */
-    public void queueMusic (String musicPath)
+    public void queueMusic (String musicPath, float volume)
     {
         // for now disable music for non-insiders
         if (!_ctx.getUserObject().tokens.isInsider()) {
@@ -456,6 +459,7 @@ public class BangClient extends BasicClient
             _playingMusic = musicPath;
             _mstream = new MusicStream(mfile.toString(), false);
             _mstream.loop(true);
+            _mstream.setVolume(Math.round(255*volume));
             _mstream.play();
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to start music " +
@@ -650,16 +654,13 @@ public class BangClient extends BasicClient
         _mview = view;
         _ctx.getRootNode().addWindow(_mview);
 
-        boolean isGameView = (view instanceof BangView);
+        if (!(view instanceof BangView)) {
+            // if this is not the game view, play the town theme
+            String townId = _ctx.getUserObject().townId;
+            queueMusic("sounds/music/" + townId + ".ogg", 1f);
 
-        // if this is not the game view, play the town theme
-        if (!isGameView) {
-            queueMusic("sounds/music/" + _ctx.getUserObject().townId + ".ogg");
-        }
-
-        // re-wire up our options view whenever the main view changes as the
-        // BangView overrides the escape mapping during the game
-        if (!isGameView) {
+            // also re-wire up our options view whenever the main view changes
+            // as the BangView overrides the escape mapping during the game
             _ctx.getKeyManager().registerCommand(
                 KeyInput.KEY_ESCAPE, _clearPopup);
         }
