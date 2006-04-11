@@ -19,7 +19,7 @@ while [ ! -z "$1" ]; do
         
         -test=*)
             BOARD=`echo $1 | sed 's:-test=::g'`;
-            JARGS="$JARGS -Dboard=$BOARD -Dtest=true";
+            JARGS="$JARGS -Dboard=\"$BOARD\" -Dtest=true";
             ;;
         
         -test)
