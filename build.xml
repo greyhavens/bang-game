@@ -375,10 +375,13 @@
 
   <!-- builds the distribution jar files -->
   <target name="dist" depends="prepare,compile">
-    <!-- stick all our code in one jar file -->
     <jar file="${deploy.dir}/${app.name}-code.jar"
          basedir="${deploy.dir}/classes" includes="com/**"/>
-    <!-- and all of our config and properties files in another -->
+  </target>
+
+  <!-- builds the avatar, media and sounds jar files -->
+  <target name="mdist" depends="prepare,models,sounds,bits,avatars">
+    <jar file="rsrc/bundle.jar" basedir="${deploy.dir}/classes/rsrc"/>
     <jar destfile="${deploy.dir}/${app.name}-config.jar">
       <fileset dir=".">
         <include name="rsrc/**/*.txt"/>
@@ -388,11 +391,6 @@
         <include name="rsrc/**/*.dat"/>
       </fileset>
     </jar>
-  </target>
-
-  <!-- builds the avatar, media and sounds jar files -->
-  <target name="mdist" depends="prepare,models,sounds,bits,avatars">
-    <jar file="rsrc/bundle.jar" basedir="${deploy.dir}/classes/rsrc"/>
   </target>
 
 </project>
