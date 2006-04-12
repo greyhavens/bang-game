@@ -1,0 +1,25 @@
+Meanwhile back at The Ranch
+
+Howdy pardners! It's been a while since we made our first post and we've been
+downright unblog like on this here blog. I solemnly promise to jabber on about
+the fascinating details of our development process and keep y'all updated with
+our progress.</p>
+
+<p>We've been runnin' the alpha test fer a couple of weeks and it has been very
+informative. Dang there are a heck of a lot of ways fer a graphics card to
+freak out and we seem to be findin' all of 'em. But we're makin' progress on
+that front slowly but surely and we're findin' time to polish things up and
+round up them last few dogies.</p>
+
+<p>Andrzej is busy rewritin' our 3D model handlin' code and pipeline which we
+hope will give us room fer more fancy animations and allow us to support a
+wider range of hardware more efficiently. Jon's been whippin' up exciting new
+arenas. Rick's workin' on some fancy new animations and I've been workin' on
+graphics performance as well, the tutorials and on addin' some new cards and
+bonuses.</p>
+
+<p>We'll be invitin' some more people into the alpha in the next week er so, so
+keep an eye on yer inbox fer an invitation. Now if you'll excuse me I got to
+head back to the Ranch and git back to work.</p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
