@@ -35,4 +35,16 @@ public class DustDevil extends Card
     {
         return new ResurrectEffect(owner, x, y);
     }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 0;
+    }
+
+    @Override // documentation inherited
+    public int getCoinCost ()
+    {
+        return 0;
+    }
 }

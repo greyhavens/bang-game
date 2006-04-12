@@ -36,4 +36,16 @@ public class Stampede extends Card
     {
         return new StampedeEffect(owner, x, y, getRadius());
     }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 500;
+    }
+
+    @Override // documentation inherited
+    public int getCoinCost ()
+    {
+        return 1;
+    }
 }

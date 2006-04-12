@@ -34,4 +34,16 @@ public class GiddyUp extends Card
     {
         return new AdjustTickEffect(x, y, -4);
     }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 500;
+    }
+
+    @Override // documentation inherited
+    public int getCoinCost ()
+    {
+        return 0;
+    }
 }

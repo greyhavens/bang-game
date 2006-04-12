@@ -18,15 +18,17 @@ import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
+import com.threerings.bang.game.data.card.Card;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardPackGood;
+import com.threerings.bang.store.data.CardTripletGood;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.PurseGood;
 
@@ -61,10 +63,22 @@ public class GoodsCatalog
         registerGood(BangCodes.CITY_OF_GOLD, new PurseGood(5, 15000, 8), pf);
 
         // register our packs of cards
-        pf = new CardPackProviderFactory();
-        registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(5, 500, 1), pf);
-        registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(13, 1500, 2), pf);
-        registerGood(BangCodes.FRONTIER_TOWN, new CardPackGood(52, 5000, 6), pf);
+        pf = new CardProviderFactory();
+        for (int ii = 0; ii < PACK_PRICES.length; ii += 3) {
+            registerGood(BangCodes.FRONTIER_TOWN,
+                         new CardPackGood(PACK_PRICES[ii], PACK_PRICES[ii+1],
+                                          PACK_PRICES[ii+2]), pf);
+        }
+        for (Card card : Card.getCards()) {
+            // not all cards are for sale individually
+            if (card.getScripCost() <= 0) {
+                continue;
+            }
+            // TODO: sort out town id bits
+            Good good = new CardTripletGood(
+                card.getType(), card.getScripCost(), card.getCoinCost());
+            registerGood(BangCodes.FRONTIER_TOWN, good, pf);
+        }
 
         // load up our avatar article catalog and use the data therein to
         // create goods for all avatar articles
@@ -150,12 +164,16 @@ public class GoodsCatalog
         protected int _townIndex;
     }
 
-    /** Used for {@link CardPackGood}s. */
-    protected class CardPackProviderFactory extends ProviderFactory {
+    /** Used for {@link CardPackGood}s and {@link CardTripletGood}s. */
+    protected class CardProviderFactory extends ProviderFactory {
         public Provider createProvider (
             PlayerObject user, Good good, Object[] args)
             throws InvocationException {
-            return new CardPackProvider(user, good);
+            if (good instanceof CardPackGood) {
+                return new CardPackProvider(user, good);
+            } else {
+                return new CardTripletProvider(user, good);
+            }
         }
     }
 
@@ -201,4 +219,11 @@ public class GoodsCatalog
     /** Contains mappings from {@link Good} to {@link ProviderFactory} for
      * the goods available in each town. */
     protected GoodsMap[] _goods = new GoodsMap[BangCodes.TOWN_IDS.length];
+
+    /** Quantity, scrip cost and coin cost for our packs of cards. */
+    protected static final int[] PACK_PRICES = {
+        5, 500, 1,
+        13, 1500, 2,
+        52, 5000, 6,
+    };
 }

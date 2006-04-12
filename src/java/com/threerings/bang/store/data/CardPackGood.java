@@ -55,7 +55,8 @@ public class CardPackGood extends Good
     @Override // documentation inherited
     public String getTip ()
     {
-        String msg = MessageBundle.tcompose("m.card_tip", String.valueOf(_size));
+        String msg = MessageBundle.tcompose(
+            "m.card_tip", String.valueOf(_size));
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 

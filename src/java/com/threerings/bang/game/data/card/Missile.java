@@ -58,4 +58,16 @@ public class Missile extends Card
     {
         return new AreaDamageEffect(owner, power, getRadius(), x, y);
     }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 250;
+    }
+
+    @Override // documentation inherited
+    public int getCoinCost ()
+    {
+        return 0;
+    }
 }

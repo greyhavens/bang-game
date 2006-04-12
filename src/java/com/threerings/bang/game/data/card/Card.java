@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import com.threerings.io.SimpleStreamableObject;
@@ -57,6 +58,14 @@ public abstract class Card extends SimpleStreamableObject
         return (Card)proto.clone();
     }
 
+    /**
+     * Returns a lsit of all registered card types.
+     */
+    public static Collection<Card> getCards ()
+    {
+        return _cards.values();
+    }
+
     /** Returns a string type identifier for this card. */
     public abstract String getType ();
 
@@ -77,6 +86,17 @@ public abstract class Card extends SimpleStreamableObject
      * determine its rarity.
      */
     public abstract int getWeight ();
+
+    /**
+     * Returns the script cost for a pack of three of these cards or 0 if the
+     * cards are not for sale outside of bundles.
+     */
+    public abstract int getScripCost ();
+
+    /**
+     * Returns the coin cost for a pack of three of these cards.
+     */
+    public abstract int getCoinCost ();
 
     /**
      * This is used to assign the owner and a new unique id to a card when

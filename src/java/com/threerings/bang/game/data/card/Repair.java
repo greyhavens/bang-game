@@ -34,4 +34,16 @@ public class Repair extends Card
     {
         return new AreaRepairEffect(100, getRadius(), x, y);
     }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 300;
+    }
+
+    @Override // documentation inherited
+    public int getCoinCost ()
+    {
+        return 0;
+    }
 }

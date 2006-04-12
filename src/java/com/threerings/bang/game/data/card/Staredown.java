@@ -35,4 +35,16 @@ public class Staredown extends Card
     {
         return new AdjustTickEffect(x, y, 0);
     }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 200;
+    }
+
+    @Override // documentation inherited
+    public int getCoinCost ()
+    {
+        return 0;
+    }
 }
