@@ -1,10 +1,12 @@
 bonus_point
 card
-defect
 duplicate
 hustle
+iron_plate
+lady_luck
 nugget
 plague
+power_up
 ramblin
 repair
 saint_elmo
