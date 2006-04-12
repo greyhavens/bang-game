@@ -317,6 +317,11 @@ public class BoardView extends BComponent
                     _loading = null;
                     _loaded = _toLoad = 0;
                 }
+
+                // now that we're ready to fade in, go ahead and add our
+                // geometry into the scene graph
+                _ctx.getGeometry().attachChild(_node);
+
                 if (_fadein != null) {
                     _fadein.setPaused(false);
                 }
@@ -852,10 +857,9 @@ public class BoardView extends BComponent
     {
         super.wasAdded();
 
-        // add our geometry into the scene graph
-        _ctx.getGeometry().attachChild(_node);
-
-        // add our own blackness that we'll fade in when we're ready
+        // add our own blackness that we'll fade in when we're ready; we don't
+        // attach the main scene graph until we're ready to fade in to avoid
+        // consuming CPU while we're loading and decoding models
         _ctx.getInterface().attachChild(_fadein);
     }
 
