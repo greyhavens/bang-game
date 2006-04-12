@@ -3,17 +3,15 @@
 
 package com.threerings.bang.game.data.card;
 
-import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.AreaClearEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.ResurrectEffect;
 
 /**
- * A card that allows the player to clear out all dead pieces in an area.
+ * A card that allows the player to immediately resurrect one dead unit,
+ * potentially stealing it from their opponent in the process.
  */
 public class DustDevil extends Card
 {
-    public int radius = 2;
-
     @Override // documentation inherited
     public String getType ()
     {
@@ -21,17 +19,9 @@ public class DustDevil extends Card
     }
 
     @Override // documentation inherited
-    public void init (BangObject bangobj, int owner)
-    {
-        super.init(bangobj, owner);
-
-        // TODO: change radius for any reason?
-    }
-
-    @Override // documentation inherited
     public int getRadius ()
     {
-        return radius;
+        return 0;
     }
 
     @Override // documentation inherited
@@ -43,6 +33,6 @@ public class DustDevil extends Card
     @Override // documentation inherited
     public Effect activate (int x, int y)
     {
-        return new AreaClearEffect(getRadius(), x, y);
+        return new ResurrectEffect(owner, x, y);
     }
 }

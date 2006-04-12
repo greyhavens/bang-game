@@ -210,6 +210,7 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
+        boolean wasDead = !_piece.isAlive();
         super.updated(piece, tick);
 
         Unit unit = (Unit)piece;
@@ -242,6 +243,13 @@ public class UnitSprite extends MobileSprite
         // notify any updated observers
         if (_observers != null) {
             _observers.apply(_updater);
+        }
+
+        // if we were dead but are once again alive, switch back to our rest
+        // pose
+        if (wasDead && piece.isAlive()) {
+            log.info("Resurrected " + piece.info());
+            setAction(getRestPose());
         }
     }
 

@@ -123,6 +123,12 @@ public abstract class Card extends SimpleStreamableObject
         }
     }
 
+    @Override // documentation inherited
+    public String toString ()
+    {
+        return getType() + super.toString();
+    }
+
     /**
      * Registers a card prototype so that it may be looked up and
      * instantiated by "type" (as defined by {@link #getType}).

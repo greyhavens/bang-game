@@ -30,6 +30,7 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
+import com.threerings.bang.game.data.effect.ResurrectEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
 import com.threerings.bang.game.data.BangObject;
@@ -109,7 +110,8 @@ public class EffectHandler extends BoardView.BoardAction
             wasDamaged = true;
             _effviz = new ExplosionViz(true);
         } else if (effect.equals(RepairEffect.REPAIRED) ||
-                   effect.equals(NuggetEffect.NUGGET_ADDED)) {
+                   effect.equals(NuggetEffect.NUGGET_ADDED) ||
+                   effect.equals(ResurrectEffect.RESURRECTED)) {
             _effviz = new RepairViz();
         }
 
