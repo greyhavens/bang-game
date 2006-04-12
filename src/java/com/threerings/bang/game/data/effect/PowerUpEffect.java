@@ -4,23 +4,24 @@
 package com.threerings.bang.game.data.effect;
 
 import com.threerings.bang.game.data.piece.Influence;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * An effect that causes the piece in question to hustle up and move in one
- * fewer ticks than normal until it is killed and respawned.
+ * An effect that gives a 30% attack bonus across the board to the piece in
+ * question.
  */
-public class HustleEffect extends SetInfluenceEffect
+public class PowerUpEffect extends SetInfluenceEffect
 {
     @Override // documentation inherited
     protected Influence createInfluence (Unit target)
     {
         return new Influence() {
             public String getIcon () {
-                return "hustle";
+                return "power_up";
             }
-            public int adjustTicksPerMove (int ticksPerMove) {
-                return ticksPerMove-1;
+            public int adjustAttack (Piece target, int damage) {
+                return (int)Math.round(1.3f * damage);
             }
         };
     }
@@ -28,6 +29,6 @@ public class HustleEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "bonuses/hustle/activate";
+        return "bonuses/power_up/activate";
     }
 }

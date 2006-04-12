@@ -525,13 +525,24 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public int computeScaledDamage (Piece target)
     {
+        // compute the damage we're doing to this piece
         int ddamage = computeDamage(target);
+
         // scale the damage by our own damage level; but always fire as if
         // we have at least half hit points
         int undamage = Math.max(50, 100-damage);
         ddamage = (ddamage * undamage) / 100;
-        ddamage = Math.max(1, ddamage); // always do at least 1 point of damage
-        return ddamage;
+
+        // account for any influences on the attacker or defender
+        if (this instanceof Unit && ((Unit)this).influence != null) {
+            ddamage = ((Unit)this).influence.adjustAttack(target, ddamage);
+        }
+        if (target instanceof Unit && ((Unit)target).influence != null) {
+            ddamage = ((Unit)target).influence.adjustDefend(this, ddamage);
+        }
+
+        // finally, always do at least 1 point of damage
+        return Math.max(1, ddamage);
     }
     
     /** Returns the frequency with which this piece can move. */

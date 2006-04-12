@@ -73,6 +73,22 @@ public abstract class Influence extends SimpleStreamableObject
         return traversalCost;
     }
 
+    /**
+     * Adjusts the damage a piece does to another piece.
+     */
+    public int adjustAttack (Piece target, int damage)
+    {
+        return damage;
+    }
+
+    /**
+     * Adjusts the damage a piece receives from another piece.
+     */
+    public int adjustDefend (Piece shooter, int damage)
+    {
+        return damage;
+    }
+
     @Override // documentation inherited
     public String toString ()
     {

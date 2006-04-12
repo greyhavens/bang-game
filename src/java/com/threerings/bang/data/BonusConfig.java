@@ -82,6 +82,11 @@ public class BonusConfig
     public int getWeight (BangObject bangobj, double averagePower,
                           int averageDamage, int averagePieces)
     {
+        // if the base weight is zero, don't adjust it
+        if (baseWeight == 0) {
+            return 0;
+        }
+
         // add contributions from each of our affinities
         int eweight = 0, ecount = 0;
         if (damageAffinity != 0) {
