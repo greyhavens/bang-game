@@ -164,7 +164,7 @@ public class ItemRepository extends SimpleRepository
         }
 
         // now insert the flattened data into the database
-        execute(new Operation<Object>() {
+        executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -234,7 +234,7 @@ public class ItemRepository extends SimpleRepository
         }
 
         // now insert the flattened data into the database
-        execute(new Operation<Object>() {
+        executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -259,7 +259,7 @@ public class ItemRepository extends SimpleRepository
     public void deleteItem (final Item item, final String why)
         throws PersistenceException
     {
-        execute(new Operation<Object>() {
+        executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -295,7 +295,7 @@ public class ItemRepository extends SimpleRepository
                 "Refusing to delete empty itemIds set '" + itemIds + "'");
         }
 
-        execute(new Operation<Object>() {
+        executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {

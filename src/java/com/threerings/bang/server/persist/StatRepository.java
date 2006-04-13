@@ -235,7 +235,7 @@ public class StatRepository extends SimpleRepository
         }
 
         // now update (or insert) the flattened data into the database
-        execute(new Operation<Object>() {
+        executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -262,7 +262,7 @@ public class StatRepository extends SimpleRepository
         final Stat.Type type, final String value)
         throws PersistenceException
     {
-        return execute(new Operation<Integer>() {
+        return executeUpdate(new Operation<Integer>() {
             public Integer invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {

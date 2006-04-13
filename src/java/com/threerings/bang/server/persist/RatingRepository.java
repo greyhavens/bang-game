@@ -81,7 +81,7 @@ public class RatingRepository extends SimpleRepository
     public void updateRatings (final int playerId, final ArrayList<Rating> rats)
         throws PersistenceException
     {
-        execute(new Operation<Object>() {
+        executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {

@@ -86,7 +86,7 @@ public class PlayerRepository extends JORARepository
         final String query = "update PLAYERS set FLAGS = FLAGS " + gensql +
             ", HANDLE = " + JDBCUtil.escape(handle.toString()) +
             " where PLAYER_ID = " + playerId;
-        return execute(new Operation<Boolean>() {
+        return executeUpdate(new Operation<Boolean>() {
             public Boolean invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {

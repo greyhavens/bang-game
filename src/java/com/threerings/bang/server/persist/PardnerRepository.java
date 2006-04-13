@@ -123,7 +123,7 @@ public class PardnerRepository extends SimpleRepository
         final boolean active)
         throws PersistenceException
     {
-        return execute(new Operation<String>() {
+        return executeUpdate(new Operation<String>() {
             public String invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -161,7 +161,7 @@ public class PardnerRepository extends SimpleRepository
         final boolean active)
         throws PersistenceException
     {
-        execute(new Operation<Object>() {
+        executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
@@ -197,7 +197,7 @@ public class PardnerRepository extends SimpleRepository
     public void removePardners (final int playerId1, final Name handle2)
         throws PersistenceException
     {
-        execute(new Operation<Object>() {
+        executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
