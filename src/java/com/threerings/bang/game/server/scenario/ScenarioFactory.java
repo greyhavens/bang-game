@@ -83,5 +83,7 @@ public class ScenarioFactory
             ClaimJumping.class);
         map(ScenarioCodes.CATTLE_RUSTLING, BangCodes.FRONTIER_TOWN,
             CattleRustling.class);
+        map(ScenarioCodes.GOLD_RUSH, BangCodes.FRONTIER_TOWN,
+            GoldRush.class);
     }
 }

@@ -71,13 +71,13 @@ public class Tutorial extends Scenario
 
     @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
-                                PointSet bonusSpots, PieceSet purchases)
+                                PieceSet purchases)
         throws InvocationException
     {
-        super.roundWillStart(bangobj, starts, bonusSpots, purchases);
+        super.roundWillStart(bangobj, starts, purchases);
 
         // assign claims in case this is a claim jumping tutorial
-        assignClaims(bangobj, starts);
+        assignClaims(bangobj, starts, ClaimJumping.NUGGET_COUNT);
 
         // register to receive various tutorial specific messages
         _bangmgr.registerMessageHandler(TutorialCodes.ACTION_PROCESSED, this);
@@ -112,6 +112,13 @@ public class Tutorial extends Scenario
                     Stat.Type.TUTORIALS_COMPLETED, _config.ident);
             }
         }
+    }
+
+    @Override // documentation inherited
+    public boolean addBonus (BangObject bangobj, Piece[] pieces)
+    {
+        // no automatic bonuses in tutorials
+        return false;
     }
 
     // documentation inherited from PlaceManager.MessageHandler

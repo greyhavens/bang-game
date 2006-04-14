@@ -59,8 +59,7 @@ public class ClaimJumpingLogic extends AILogic
                     unit.getDistance(claim) < unit.getDistance(cclaim))) {
                     cclaim = claim;
                 }
-            } else if (pieces[ii] instanceof Bonus &&
-                ((Bonus)pieces[ii]).getConfig().type.equals("nugget")) {
+            } else if (Bonus.isBonus(pieces[ii], "nugget")) {
                 if (cnugget == null || unit.getDistance(pieces[ii]) <
                         unit.getDistance(cnugget)) {
                     cnugget = pieces[ii];

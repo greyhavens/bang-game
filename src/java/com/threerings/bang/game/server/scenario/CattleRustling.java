@@ -47,9 +47,17 @@ import static com.threerings.bang.Log.log;
 public class CattleRustling extends Scenario
 {
     @Override // documentation inherited
+    public AILogic createAILogic (GameAI ai)
+    {
+        return new CattleRustlingLogic();
+    }
+
+    @Override // documentation inherited
     public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
                                ArrayList<Piece> pieces)
     {
+        super.filterMarkers(bangobj, starts, pieces);
+
         // extract and remove all cattle markers
         _cattleSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
@@ -62,17 +70,11 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public AILogic createAILogic (GameAI ai)
-    {
-        return new CattleRustlingLogic();
-    }
-    
-    @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
-                                PointSet bonusSpots, PieceSet purchases)
+                                PieceSet purchases)
         throws InvocationException
     {
-        super.roundWillStart(bangobj, markers, bonusSpots, purchases);
+        super.roundWillStart(bangobj, markers, purchases);
 
         // now place the cattle near the cattle starting spots
         int placed = 0, players = bangobj.players.length, cps = (int)

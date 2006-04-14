@@ -492,7 +492,7 @@ public class BangClient extends BasicClient
                 pcount = 4;
             }
             psvc.playComputer(_ctx.getClient(), pcount,
-                              System.getProperty("scenario", "cj"),
+                              System.getProperty("scenario", "gr"),
                               System.getProperty("board"), rl);
         }
     }

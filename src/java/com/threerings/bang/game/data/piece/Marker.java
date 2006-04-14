@@ -19,7 +19,7 @@ public class Marker extends Piece
 
     /** A particular marker type. */
     public static final int CATTLE = 2;
-    
+
     /**
      * Handy function for checking if this piece is a marker and of the
      * specified type.
@@ -51,7 +51,7 @@ public class Marker extends Piece
     {
         return _type;
     }
-    
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
@@ -64,7 +64,7 @@ public class Marker extends Piece
         // our orientation doesn't change with position
         return orientation;
     }
-    
+
     /** Indicates the type of this marker. */
     protected int _type;
 }

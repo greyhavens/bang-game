@@ -26,10 +26,10 @@ public class Shootout extends Scenario
 {
     @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
-                                PointSet bonusSpots, PieceSet purchases)
+                                PieceSet purchases)
         throws InvocationException
     {
-        super.roundWillStart(bangobj, markers, bonusSpots, purchases);
+        super.roundWillStart(bangobj, markers, purchases);
 
         // create a fresh knockout array
         _knockoutOrder = new int[bangobj.players.length];

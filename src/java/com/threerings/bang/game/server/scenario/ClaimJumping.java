@@ -37,16 +37,16 @@ import static com.threerings.bang.Log.log;
  * <ul>
  * <li> Each player has a mine shaft, and those mine shafts start with a
  * particular quantity of gold.
- * <li> When another player's unit lands on (or in front of) the mine
- * shaft, they steal a nugget of gold from the shaft and must return that
- * nugget to their own shaft to deposit it.
- * <li> If the unit carrying the nugget is shot, it drops the nugget in a
- * nearby square and the nugget can then be picked up by any piece that
- * lands on it.
- * <li> When one player's mine is completely depleted of nuggets, the
- * round ends.
- * <li> Any units that are killed during the round respawn near the
- * player's starting marker.
+ * <li> When another player's unit lands on (or in front of) the mine shaft,
+ * they steal a nugget of gold from the shaft and must return that nugget to
+ * their own shaft to deposit it.
+ * <li> If the unit carrying the nugget is killed, it drops the nugget in a
+ * nearby square and the nugget can then be picked up by any piece that lands
+ * on it.
+ * <li> When one player's mine is completely depleted of nuggets, the end of
+ * round tick is advanced a bit.
+ * <li> Any units that are killed during the round respawn near the player's
+ * starting marker.
  * </ul>
  */
 public class ClaimJumping extends Scenario
@@ -62,23 +62,23 @@ public class ClaimJumping extends Scenario
     
     @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
-                                PointSet bonusSpots, PieceSet purchases)
+                                PieceSet purchases)
         throws InvocationException
     {
-        super.roundWillStart(bangobj, starts, bonusSpots, purchases);
+        super.roundWillStart(bangobj, starts, purchases);
 
         // locate all the claims, assign them to players and fill them with
         // nuggets
-        assignClaims(bangobj, starts);
+        assignClaims(bangobj, starts, NUGGET_COUNT);
 
         // sort the bonus spots by distance to nearest claim, put up to one
         // nugget per player in the spots that are maximally distant from the
         // nearest claim
         ArrayList<BonusSorter> sorters = new ArrayList<BonusSorter>();
-        for (int ii = 0; ii < bonusSpots.size(); ii++) {
+        for (int ii = 0; ii < _bonusSpots.size(); ii++) {
             BonusSorter sorter = new BonusSorter();
             sorter.index = (short)ii;
-            int x = bonusSpots.getX(ii), y = bonusSpots.getY(ii);
+            int x = _bonusSpots.getX(ii), y = _bonusSpots.getY(ii);
             for (int ss = 0; ss < _startSpots.length; ss++) {
                 int distsq = MathUtil.distanceSq(
                     x, y, _startSpots[ss].x, _startSpots[ss].y);
@@ -90,8 +90,8 @@ public class ClaimJumping extends Scenario
 
         int placed = 0;
         for (BonusSorter sorter : sorters) {
-            Bonus nugget = dropNugget(bangobj, bonusSpots.getX(sorter.index),
-                                      bonusSpots.getY(sorter.index));
+            Bonus nugget = dropNugget(bangobj, _bonusSpots.getX(sorter.index),
+                                      _bonusSpots.getY(sorter.index));
             // we need to mark these nuggets as "occupying" the bonus spots
             // they are being dropped in, lest the server stick another bonus
             // in their place
@@ -169,7 +169,7 @@ public class ClaimJumping extends Scenario
     /**
      * Drops a nugget at the specified location.
      */
-    protected Bonus dropNugget (BangObject bangobj, int x, int y)
+    protected static Bonus dropNugget (BangObject bangobj, int x, int y)
     {
         Bonus drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
         drop.assignPieceId(bangobj);

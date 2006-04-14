@@ -18,7 +18,6 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
@@ -700,16 +699,6 @@ public class BangManager extends GameManager
         }
         _bangobj.setStartPositions(_bangobj.startPositions);
 
-        // extract the bonus spawn markers from the pieces array
-        _bonusSpots.clear();
-        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
-            Piece p = iter.next();
-            if (Marker.isMarker(p, Marker.BONUS)) {
-                _bonusSpots.add(p.x, p.y);
-                iter.remove();
-            }
-        }
-
         // give the scenario a shot at its own custom markers
         _scenario.filterMarkers(_bangobj, _starts, pieces);
 
@@ -894,8 +883,7 @@ public class BangManager extends GameManager
 
             try {
                 // let the scenario know that we're about to start the round
-                _scenario.roundWillStart(
-                    _bangobj, _starts, _bonusSpots, _purchases);
+                _scenario.roundWillStart(_bangobj, _starts, _purchases);
 
                 // configure the duration of the round
                 _bangobj.setDuration(_scenario.getDuration(_bconfig));
@@ -1050,7 +1038,7 @@ public class BangManager extends GameManager
         try {
             _bangobj.startTransaction();
             // potentially create and add new bonuses
-            if (addBonus()) {
+            if (_scenario.addBonus(_bangobj, _bangobj.getPieceArray())) {
                 _bangobj.updateData();
             }
         } finally {
@@ -1411,134 +1399,6 @@ public class BangManager extends GameManager
         } else {
             log.info("Advance order failed [order=" + order + "].");
         }
-    }
-
-    /**
-     * Called following each tick to determine whether or not new bonuses
-     * should be added to the board.
-     *
-     * @return true if a bonus was added, false if not.
-     */
-    protected boolean addBonus ()
-    {
-        // no automatic bonuses in tutorials
-        if (_bconfig.tutorial) {
-            return false;
-        }
-
-        Piece[] pieces = _bangobj.getPieceArray();
-
-        // have a 1 in 4 chance of adding a bonus for each live player for
-        // which there is not already a bonus on the board
-        int bprob = (_bangobj.gdata.livePlayers - _bangobj.gdata.bonuses);
-        int rando = RandomUtil.getInt(40);
-        if (bprob == 0 || rando > bprob*10) {
-//             log.info("No bonus, probability " + bprob + " in 10 (" +
-//                      rando + ").");
-            return false;
-        }
-
-        // determine (roughly) who can get to bonus spots on this tick
-        int[] weights = new int[_bonusSpots.size()];
-        ArrayIntSet[] reachers = new ArrayIntSet[weights.length];
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
-            if (!(p instanceof Unit) || p.owner < 0 || !p.isAlive() ||
-                p.ticksUntilMovable(_bangobj.tick) > 0) {
-                continue;
-            }
-            for (int bb = 0; bb < reachers.length; bb++) {
-                int x = _bonusSpots.getX(bb), y = _bonusSpots.getY(bb);
-                if (p.getDistance(x, y) > p.getMoveDistance()) {
-                    continue;
-                }
-                _moves.clear();
-                _bangobj.board.computeMoves(p, _moves, null);
-                if (!_moves.contains(x, y)) {
-                    continue;
-                }
-//                 log.info(p.info() + " can reach " + x + "/" + y);
-                if (reachers[bb] == null) {
-                    reachers[bb] = new ArrayIntSet();
-                    reachers[bb].add(p.owner);
-                }
-            }
-        }
-
-        // now convert reachability into weightings for each of the spots
-        for (int ii = 0; ii < weights.length; ii++) {
-            if (reachers[ii] == null) {
-//                 log.info("Spot " + ii + " is a wash.");
-                // if no one can reach it, give it a base probability
-                weights[ii] = 1;
-
-            } else if (reachers[ii].size() == 1) {
-//                 log.info("Spot " + ii + " is a one man spot.");
-                // if only one player can reach it, give it a probability
-                // inversely proportional to that player's power
-                int pidx = reachers[ii].get(0);
-                double ifactor = 1.0 - _bangobj.pdata[pidx].powerFactor;
-                weights[ii] = (int)Math.round(10 * Math.max(0, ifactor)) + 1;
-
-            } else {
-                // if multiple players can reach it, give it a nudge if
-                // they are of about equal power
-                double avgpow = _bangobj.getAveragePower(reachers[ii]);
-                boolean outlier = false;
-                for (int pp = 0; pp < reachers[ii].size(); pp++) {
-                    int pidx = reachers[ii].get(pp);
-                    double power = _bangobj.pdata[pidx].power;
-                    if (power < 0.9 * avgpow || power > 1.1 * avgpow) {
-                        outlier = true;
-                    }
-                }
-//                 log.info("Spot " + ii + " is a multi-man spot: " + outlier);
-                weights[ii] = outlier ? 1 : 5;
-            }
-        }
-
-        // zero out weightings for any spots that already have a bonus
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Bonus) {
-                int spidx = ((Bonus)pieces[ii]).spot;
-                if (spidx >= 0) {
-                    weights[spidx] = 0;
-                }
-            }
-        }
-        // make sure there is at least one available spot
-        if (IntListUtil.sum(weights) == 0) {
-            log.info("Dropping bonus. No unused spots.");
-            return false;
-        }
-
-        // now select a spot based on our weightings
-        int spidx = RandomUtil.getWeightedIndex(weights);
-        Point spot = new Point(_bonusSpots.getX(spidx),
-                               _bonusSpots.getY(spidx));
-        log.info("Selecting from " + StringUtil.toString(weights) + ": " +
-                 spidx + " -> " + spot.x + "/" + spot.y + ".");
-
-        // locate the nearest spot to that which can be occupied by our piece
-        Point bspot = _bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
-        if (bspot == null) {
-            log.info("Dropping bonus for lack of spot " + spot + ".");
-            return false;
-        }
-
-        // now turn to the bonus factory for guidance
-        Bonus bonus = Bonus.selectBonus(_bangobj, bspot, reachers[spidx]);
-        if (bonus != null) {
-            bonus.spot = (short)spidx;
-            bonus.assignPieceId(_bangobj);
-            bonus.position(bspot.x, bspot.y);
-            _bangobj.addToPieces(bonus);
-            _bangobj.board.shadowPiece(bonus);
-
-            log.info("Placed bonus: " + bonus.info());
-        }
-
-        return true;
     }
 
     /** Records damage done by the specified user to various pieces. */
@@ -2074,9 +1934,6 @@ public class BangManager extends GameManager
     /** Used to compute a piece's potential moves or attacks when
      * validating a move request. */
     protected PointSet _moves = new PointSet(), _attacks = new PointSet();
-
-    /** Used to track the locations of all bonus spawn points. */
-    protected PointSet _bonusSpots = new PointSet();
 
     /** Used to track the locations where players can start. */
     protected ArrayList<Piece> _starts = new ArrayList<Piece>();

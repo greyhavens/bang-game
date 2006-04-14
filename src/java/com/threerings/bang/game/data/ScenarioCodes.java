@@ -31,7 +31,7 @@ public interface ScenarioCodes
 
     /** Scenarios available in Frontier Town. */
     public static final String[] FRONTIER_TOWN_SCENARIOS = {
-        CLAIM_JUMPING, CATTLE_RUSTLING /*, GOLD_RUSH */ };
+        CLAIM_JUMPING, CATTLE_RUSTLING, GOLD_RUSH };
 
     /** Scenarios available in Indian Village. */
     public static final String[] INDIAN_VILLAGE_SCENARIOS = { };

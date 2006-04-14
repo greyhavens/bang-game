@@ -174,6 +174,16 @@ public class Bonus extends Piece
     }
 
     /**
+     * Handy function for checking if this piece is a bonus and of the
+     * specified type.
+     */
+    public static boolean isBonus (Piece piece, String type)
+    {
+        return (piece instanceof Bonus) &&
+            ((Bonus)piece).getConfig().type.equals(type);
+    }
+
+    /**
      * Configures this bonus instance with the good stuff.
      */
     public void init (BonusConfig config)
