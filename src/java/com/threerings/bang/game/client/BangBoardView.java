@@ -81,6 +81,7 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
+import com.threerings.bang.game.util.ScenarioUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -349,6 +350,9 @@ public class BangBoardView extends BoardView
         _pidx = pidx;
         _bangobj.addListener(_ticker);
         _bconfig = cfg;
+
+        // preload our sounds for this scenario
+        ScenarioUtil.preloadSounds(bangobj.scenarioId, _sounds);
 
         // start with the camera controls disabled; the controller will
         // reenable them when we are completely ready to play (starting units

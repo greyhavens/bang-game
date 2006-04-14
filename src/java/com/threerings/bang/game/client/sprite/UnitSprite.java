@@ -432,6 +432,12 @@ public class UnitSprite extends MobileSprite
         toWorldCoords(nx, ny, elev, coords[idx]);
     }
 
+    @Override // documentation inherited
+    protected String[] getPreloadSounds ()
+    {
+        return PRELOAD_SOUNDS;
+    }
+
     /** Computes the elevation of a flying piece. */
     protected int computeFlightElevation (BangBoard board, int tx, int ty)
     {
@@ -528,4 +534,11 @@ public class UnitSprite extends MobileSprite
 
     /** The height above props at which flyers fly (in tile lengths). */
     protected static final float FLYER_PROP_HEIGHT = 0.25f;
+
+    /** Sounds that we preload for mobile units if they exist. */
+    protected static final String[] PRELOAD_SOUNDS = {
+        "launch",
+        "shooting",
+        "returning_fire",
+    };
 }

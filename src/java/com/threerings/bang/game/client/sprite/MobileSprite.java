@@ -40,6 +40,7 @@ import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
+import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -186,7 +187,9 @@ public class MobileSprite extends PieceSprite
         }
 
         // start the movement sound
-        _moveSound.loop(false);
+        if (_moveSound != null) {
+            _moveSound.loop(false);
+        }
 
         // turn on the dust
         if (_dustmgr != null) {
@@ -200,7 +203,9 @@ public class MobileSprite extends PieceSprite
         super.pathCompleted();
 
         // stop our movement sound
-        _moveSound.stop();
+        if (_moveSound != null) {
+            _moveSound.stop();
+        }
 
         // deactivate the dust
         if (_dustmgr != null) {
@@ -326,8 +331,32 @@ public class MobileSprite extends PieceSprite
         super.createSounds(sounds);
 
         // load up our movement sounds
-        _moveSound = sounds.getSound(
-            "rsrc/" + _type + "/" + _name + "/move.wav");
+        String spre = "rsrc/" + _type + "/" + _name;
+        String spath = spre + "/move.wav";
+        if (SoundUtil.haveSound(spath)) {
+            _moveSound = sounds.getSound(spath);
+        } else {
+            log.info("No movement sound '" + spath + "'.");
+        }
+
+        // preload any associated sounds
+        String[] preload = getPreloadSounds();
+        int pcount = (preload == null) ? 0 : preload.length;
+        for (int ii = 0; ii < pcount; ii++) {
+            spath = spre + "/" + preload[ii] + ".wav";
+            if (SoundUtil.haveSound(spath)) {
+                sounds.preloadClip(spath);
+            }
+        }
+    }
+
+    /**
+     * Returns an array of sound identifiers that will be preloaded for this
+     * mobile sprite.
+     */
+    protected String[] getPreloadSounds ()
+    {
+        return null;
     }
 
     @Override // documentation inherited

@@ -28,29 +28,38 @@ public class AreaDamageHandler extends EffectHandler
     @Override // documentation inherited
     public boolean execute ()
     {
-        AreaDamageEffect effect = (AreaDamageEffect)_effect;
-        
-        // load and start the whistle sound
+        // we first wait for the missile sound to resolve
         _whistleSound = _sounds.getSound(
             "rsrc/sounds/effects/bomb_whistle.wav");
-        _whistleSound.play(false);
-        
+        _whistleSound.play(new Sound.StartObserver() {
+            public void soundStarted (Sound sound) {
+                // then we create the visualization
+                dropBombs();
+            }
+        }, false);
+
+        return true;
+    }
+
+    protected void dropBombs ()
+    {
         // create a missile for each piece, scaled according to distance from
         // the center
+        AreaDamageEffect effect = (AreaDamageEffect)_effect;
         for (int ii = 0; ii < effect.pieces.length; ii++) {
             ShotSprite ssprite = new ShotSprite(_ctx);
             Piece target = (Piece)_bangobj.pieces.get(
                 Integer.valueOf(effect.pieces[ii]));
             if (target == null) {
                 log.warning("Missing piece for damage target [pieceId=" +
-                    effect.pieces[ii] + "].");
+                            effect.pieces[ii] + "].");
                 continue;
             }
             _view.addSprite(ssprite);
             ssprite.setLocalScale(
                 1f / (target.getDistance(effect.x, effect.y) + 1));
-            ssprite.getLocalRotation().fromAngleNormalAxis(-FastMath.HALF_PI,
-                FORWARD);
+            ssprite.getLocalRotation().fromAngleNormalAxis(
+                -FastMath.HALF_PI, FORWARD);
             Vector3f end = _view.getPieceSprite(target).getLocalTranslation(),
                 start = end.add(0f, 0f, BOMB_HEIGHT);
             ssprite.move(new LinePath(ssprite, start, end, BOMB_DURATION));
@@ -64,11 +73,10 @@ public class AreaDamageHandler extends EffectHandler
                     _view.removeSprite(sprite);
                     maybeComplete(penderId);
                 }
-            });        
+            });
         }
-        return true;
     }
-    
+
     @Override // documentation inherited
     protected void maybeComplete (int penderId)
     {
@@ -79,16 +87,16 @@ public class AreaDamageHandler extends EffectHandler
         }
         super.maybeComplete(penderId);
     }
-    
+
     /** The bomb whistle. */
     protected Sound _whistleSound;
-    
+
     /** Whether or not the effect has been applied. */
     protected boolean _applied;
-    
+
     /** The height from which the bombs fall. */
     protected static final float BOMB_HEIGHT = 200f;
-    
+
     /** The duration of the bomb flight in seconds. */
     protected static final float BOMB_DURATION = 1.5f;
 }

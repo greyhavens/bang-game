@@ -40,6 +40,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;

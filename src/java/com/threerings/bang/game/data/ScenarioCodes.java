@@ -17,6 +17,9 @@ public interface ScenarioCodes
     /** The code for the claim jumping scenario. */
     public static final String CLAIM_JUMPING = "cj";
 
+    /** The code for the claim jumping scenario. */
+    public static final String GOLD_RUSH = "gr";
+
     /** The amount of points earned per nugget at the end of the game. */
     public static final int POINTS_PER_NUGGET = 50;
 
@@ -28,7 +31,7 @@ public interface ScenarioCodes
 
     /** Scenarios available in Frontier Town. */
     public static final String[] FRONTIER_TOWN_SCENARIOS = {
-        CLAIM_JUMPING, CATTLE_RUSTLING };
+        CLAIM_JUMPING, CATTLE_RUSTLING, GOLD_RUSH };
 
     /** Scenarios available in Indian Village. */
     public static final String[] INDIAN_VILLAGE_SCENARIOS = { };

@@ -175,7 +175,10 @@ public class EffectHandler extends BoardView.BoardAction
         String path = "rsrc/" + effect + ".wav";
         if (SoundUtil.haveSound(path)) {
             // TODO: make this not an effect viz
+            log.info("Playined effect sound " + path + ".");
             new PlaySoundViz(_sounds, path).display(sprite);
+        } else {
+            log.info("No effect sound " + path + ".");
         }
 
         // report the effect to the view who will report it to the tutorial

@@ -11,6 +11,12 @@ import com.threerings.bang.game.data.piece.Cow;
  */
 public class SpookEffect extends MoveEffect
 {
+    /** An effect reported when a cow is branded. */
+    public static final String BRANDED = "extras/cow/branded";
+
+    /** An effect reported when a cow is merely spooked. */
+    public static final String SPOOKED = "extras/cow/spooked";
+
     /** The new owner of the cow. */
     public int owner = -1;
 
@@ -33,11 +39,15 @@ public class SpookEffect extends MoveEffect
     public void apply (BangObject bangobj, Observer obs)
     {
         // update the cow's owner (if appropriate), then let them move
-        if (owner != -1) {
-            Cow cow = (Cow)bangobj.pieces.get(pieceId);
-            if (cow != null) {
+        Cow cow = (Cow)bangobj.pieces.get(pieceId);
+        if (cow != null) {
+            String effect = SPOOKED;
+            if (owner != -1 && cow.owner != owner) {
                 cow.owner = owner;
+                effect = BRANDED;
             }
+            // report an effect on the cow so that we can play a sound
+            reportEffect(obs, cow, effect);
         }
         super.apply(bangobj,obs);
     }

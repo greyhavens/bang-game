@@ -36,9 +36,6 @@ public class BallisticShotHandler extends ShotHandler
     {
         super.prepareSounds(sounds);
 
-        // load up the whistle sound
-        _whistleSound = sounds.getSound("rsrc/sounds/effects/bomb_whistle.wav");
-
         // if the shooter has a "launch" sound, grab that
         if (_shooter instanceof Unit) {
             Unit sunit = (Unit)_shooter;
@@ -101,11 +98,6 @@ public class BallisticShotHandler extends ShotHandler
             if (_launchSound != null) {
                 _launchSound.play(false);
             }
-
-            // TODO: delay the whistle sound a short while
-
-            // start the bomb whistle
-            _whistleSound.play(false);
         }
     }
 
@@ -124,8 +116,6 @@ public class BallisticShotHandler extends ShotHandler
             if (_target != null && _bangSound != null) {
                 _bangSound.play(false); // bang!
             }
-            // stop the bomb whistle
-            _whistleSound.stop();
 
             // apply the effect and complete our handling if that did not
             // result in anything that needs waiting for
@@ -148,7 +138,7 @@ public class BallisticShotHandler extends ShotHandler
 
     protected int _penderId;
     protected ShotSprite _ssprite;
-    protected Sound _whistleSound, _launchSound;
+    protected Sound _launchSound;
 
     protected static final float GRAVITY = 10*BallisticPath.G;
     protected static final Vector3f GRAVVEC = new Vector3f(0, 0, GRAVITY);

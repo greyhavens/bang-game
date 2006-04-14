@@ -7,7 +7,10 @@ import com.jme.math.FastMath;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
+import com.threerings.openal.SoundGroup;
+
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -48,6 +51,18 @@ public class BonusSprite extends PieceSprite
         // load up the model for this bonus
         _model = ctx.loadModel("bonuses", _type);
         bindAnimation(ctx, _model, "normal", 0, null);
+    }
+
+    @Override // documentation inherited
+    protected void createSounds (SoundGroup sounds)
+    {
+        super.createSounds(sounds);
+
+        // preload any sound associated with activating this bonus
+        String spath = "rsrc/bonuses/" + _type + "/activate.wav";
+        if (SoundUtil.haveSound(spath)) {
+            sounds.preloadClip(spath);
+        }
     }
 
     protected String _type;

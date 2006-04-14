@@ -60,6 +60,12 @@ public class CowSprite extends MobileSprite
         configureOwnerColors();
     }
 
+    @Override // documentation inherited
+    protected String[] getPreloadSounds ()
+    {
+        return PRELOAD_SOUNDS;
+    }
+
     /** Sets up our colors according to our owning player. */
     protected void configureOwnerColors ()
     {
@@ -81,4 +87,10 @@ public class CowSprite extends MobileSprite
     protected SharedMesh _owner;
 
     protected static TextureState _owntex;
+
+    /** Sounds that we preload for mobile units if they exist. */
+    protected static final String[] PRELOAD_SOUNDS = {
+        "spooked",
+        "branded",
+    };
 }
