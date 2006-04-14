@@ -136,7 +136,10 @@ public class BangUI
         clipprov = new ClipProvider() {
             public Clip loadClip (String path) throws IOException {
                 Clip clip = new Clip();
-                File file = new File(path);
+                if (path.startsWith("rsrc/")) {
+                    path = path.substring(5);
+                }
+                File file = _ctx.getResourceManager().getResourceFile(path);
                 if (!file.exists()) {
                     throw new IOException(
                         "Missing sound resource '" + path + "'.");
