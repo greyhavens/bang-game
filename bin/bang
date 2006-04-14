@@ -28,6 +28,9 @@ rm $BFILE
 # Let's blow that file descriptor limit wide open baby!
 ulimit -n 4096
 
+# Bump our maximum data segment size to 1.5 gigs
+ulimit -d 1572864
+
 DAEMON=$BANG_HOME/bin/bangrespawn
 PIDFILE=/var/run/bangrespawn.pid
 
