@@ -459,7 +459,7 @@ public class BangClient extends BasicClient
             _playingMusic = musicPath;
             _mstream = new MusicStream(mfile.toString(), false);
             _mstream.loop(true);
-            _mstream.setVolume(Math.round(255*volume));
+            _mstream.setVolume(volume);
             _mstream.play();
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to start music " +
