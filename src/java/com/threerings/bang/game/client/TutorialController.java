@@ -166,6 +166,8 @@ public class TutorialController
             String name = ((TutorialConfig.ShowView)action).name;
             if (name.equals("player_status")) {
                 _view.showPlayerStatus();
+            } else if (name.equals("unit_status")) {
+                _view.showUnitStatus();
             } else if (name.equals("round_timer")) {
                 _view.showRoundTimer();
             }
