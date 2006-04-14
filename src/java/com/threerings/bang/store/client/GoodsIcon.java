@@ -10,6 +10,7 @@ import com.jmex.bui.icon.ImageIcon;
 
 import com.threerings.media.image.ColorPository;
 import com.threerings.media.image.Colorization;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
@@ -76,6 +77,9 @@ public class GoodsIcon extends PaletteIcon
 
         setIcon(new ImageIcon(image));
         setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
+        String msg = MessageBundle.compose(
+            "m.goods_icon", good.getName(), good.getTip());
+        setTooltipText(_ctx.xlate(BangCodes.GOODS_MSGS, msg));
     }
 
     protected BangContext _ctx;

@@ -5,7 +5,6 @@ package com.threerings.bang.store.data;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 
@@ -40,7 +39,7 @@ public class PurseGood extends Good
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "goods/purses/" + _type + ".png";
+        return Purse.getIconPath(_townIndex);
     }
 
     @Override // documentation inherited
@@ -53,9 +52,7 @@ public class PurseGood extends Good
     @Override // documentation inherited
     public String getTip ()
     {
-        int pct = Math.round(Purse.PURSE_BONUS[_townIndex] * 100) - 100;
-        String msg = MessageBundle.tcompose("m.purse_tip", String.valueOf(pct));
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+        return Purse.getDescrip(_townIndex);
     }
 
     protected int _townIndex;

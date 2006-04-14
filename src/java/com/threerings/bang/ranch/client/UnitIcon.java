@@ -5,6 +5,8 @@ package com.threerings.bang.ranch.client;
 
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.BangCodes;
@@ -30,6 +32,9 @@ public class UnitIcon extends PaletteIcon
         _config = config;
         setText(name);
         setIcon(BangUI.getUnitIcon(config));
+        String msg = MessageBundle.compose(
+            "m.unit_icon", config.getName(), config.getName() + "_descrip");
+        setTooltipText(ctx.xlate(BangCodes.UNITS_MSGS, msg));
     }
 
     public int getItemId ()

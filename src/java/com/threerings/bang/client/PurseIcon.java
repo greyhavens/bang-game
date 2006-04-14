@@ -5,6 +5,8 @@ package com.threerings.bang.client;
 
 import com.jmex.bui.icon.ImageIcon;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.util.BasicContext;
@@ -18,8 +20,8 @@ public class PurseIcon extends ItemIcon
     protected void configureLabel (BasicContext ctx)
     {
         Purse purse = (Purse)_item;
-        String type = Purse.PURSE_TYPES[purse.getTownIndex()];
-        setIcon(new ImageIcon(ctx.loadImage("goods/purses/" + type + ".png")));
-        setText(ctx.xlate(BangCodes.GOODS_MSGS, "m." + type));
+        setIcon(new ImageIcon(ctx.loadImage(purse.getIconPath())));
+        setText(ctx.xlate(BangCodes.GOODS_MSGS, purse.getName()));
+        setTooltipText(ctx.xlate(BangCodes.GOODS_MSGS, purse.getTooltip()));
     }
 }

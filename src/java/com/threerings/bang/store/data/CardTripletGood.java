@@ -60,7 +60,10 @@ public class CardTripletGood extends Good
         String msg = MessageBundle.qualify(
             BangCodes.CARDS_MSGS, "m." + _cardType);
         msg = MessageBundle.compose("m.card_trip_tip", msg);
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+        msg = MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+        msg = MessageBundle.compose(
+            "m.card_tip_cont", msg, "m." + _cardType + "_tip");
+        return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
     }
 
     protected String _cardType;

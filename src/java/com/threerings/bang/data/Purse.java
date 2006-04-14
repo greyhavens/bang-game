@@ -3,8 +3,11 @@
 
 package com.threerings.bang.data;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.PurseIcon;
+import com.threerings.bang.data.BangCodes;
 
 /**
  * Enables a player to retain more money (per round) at the end of a game.
@@ -36,6 +39,46 @@ public class Purse extends Item
         1.5f, // city of gold
     };
 
+    /**
+     * Returns the path to the icon to use for the specified purse.
+     */
+    public static String getIconPath (int townIndex)
+    {
+        return "goods/purses/" + PURSE_TYPES[townIndex] + ".png";
+    }
+
+    /**
+     * Returns a qualified translatable string describing the specifid purse.
+     */
+    public static String getName (int townIndex)
+    {
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS,
+                                     "m." + PURSE_TYPES[townIndex]);
+    }
+
+    /**
+     * Returns a description of the specified purse as a qualified translatable
+     * string.
+     */
+    public static String getDescrip (int townIndex)
+    {
+        int pct = Math.round(PURSE_BONUS[townIndex] * 100) - 100;
+        String msg = MessageBundle.tcompose("m.purse_tip", String.valueOf(pct));
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+    }
+
+    /**
+     * Returns a qualified translatable string to display in a tooltip when the
+     * player is hovering over the specified purse's icon.
+     */
+    public static String getTooltip (int townIndex)
+    {
+        String msg = MessageBundle.compose(
+            "m.goods_icon", "m." + PURSE_TYPES[townIndex],
+            getDescrip(townIndex));
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+    }
+
     /** A default constructor used for serialization. */
     public Purse ()
     {
@@ -56,6 +99,31 @@ public class Purse extends Item
     public int getTownIndex ()
     {
         return _townIndex;
+    }
+
+    /**
+     * Returns the path to the icon to use for this purse.
+     */
+    public String getIconPath ()
+    {
+        return getIconPath(_townIndex);
+    }
+
+    /**
+     * Returns a qualified translatable string describing this purse.
+     */
+    public String getName ()
+    {
+        return getName(_townIndex);
+    }
+
+    /**
+     * Returns a qualified translatable string to display in a tooltip when the
+     * player is hovering over this purse's icon.
+     */
+    public String getTooltip ()
+    {
+        return getTooltip(_townIndex);
     }
 
     /**

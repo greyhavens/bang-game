@@ -115,11 +115,10 @@ public class GameOverView extends BDecoratedWindow
             rrow.add(new Spacer(1, 1));
 
             Purse purse = user.getPurse();
-            String type = Purse.PURSE_TYPES[purse.getTownIndex()];
             if (purse.getTownIndex() == 0) { // no purse
                 txt = msgs.get("m.endgame_nopurse");
             } else {
-                txt = ctx.xlate(BangCodes.GOODS_MSGS, "m." + type);
+                txt = ctx.xlate(BangCodes.GOODS_MSGS, purse.getName());
             }
             rrow.add(new BLabel(txt, "endgame_smallheader"));
 
@@ -147,7 +146,7 @@ public class GameOverView extends BDecoratedWindow
                 label.setIcon(new BlankIcon(64, 64));
             } else {
                 BufferedImage pimg = ctx.getImageCache().getBufferedImage(
-                    "goods/purses/" + type + ".png");
+                    purse.getIconPath());
                 BImage scaled = new BImage(
                     pimg.getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH));
                 label.setIcon(new ImageIcon(scaled));

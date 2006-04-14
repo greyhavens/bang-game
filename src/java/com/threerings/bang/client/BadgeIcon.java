@@ -5,6 +5,8 @@ package com.threerings.bang.client;
 
 import com.jmex.bui.icon.ImageIcon;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BasicContext;
@@ -22,5 +24,15 @@ public class BadgeIcon extends ItemIcon
         String path = "badges/" + id.substring(0,1) + "/" + id + ".png";
         setIcon(new ImageIcon(ctx.loadImage(path)));
         setText(ctx.xlate(BangCodes.BADGE_MSGS, badge.getType().key()));
+
+        String reward = badge.getReward(), msg;
+        if (reward == null) {
+            msg = MessageBundle.compose(
+                "m.badge_icon_nil", badge.getType().key());
+        } else {
+            msg = MessageBundle.compose(
+                "m.badge_icon", badge.getType().key(), reward);
+        }
+        setTooltipText(ctx.xlate(BangCodes.BADGE_MSGS, msg));
     }
 }

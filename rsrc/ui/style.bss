@@ -43,6 +43,16 @@ menuitem:hover {
   background: image "ui/popupmenu/highlight.png" framexy;
 }
 
+tooltip_window {
+  background: solid #FFFFFF;
+  border: 1 solid #000000;
+  padding: 5;
+}
+
+tooltip_label {
+  color: #000000;
+}
+
 component {
 }
 

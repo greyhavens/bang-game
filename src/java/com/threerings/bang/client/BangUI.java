@@ -88,6 +88,10 @@ public class BangUI
         _ctx = ctx;
         _umsgs = _ctx.getMessageManager().getBundle("units");
 
+        // configure our tooltip settings
+        _ctx.getRootNode().setTooltipPreferredWidth(300);
+        _ctx.getRootNode().setTooltipTimeout(1f);
+
         // load up our fonts
         _fonts.put("Tombstone", loadFont(ctx, "ui/fonts/tomb.ttf"));
 
