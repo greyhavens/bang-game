@@ -16,6 +16,16 @@ import com.threerings.bang.util.BasicContext;
  */
 public class CardItemIcon extends ItemIcon
 {
+    /**
+     * Returns a tooltip explaining this card.
+     */
+    public static String getTooltipText (BasicContext ctx, String type)
+    {
+        String msg = MessageBundle.compose(
+            "m.card_icon", "m." + type, "m." + type + "_tip");
+        return ctx.xlate(BangCodes.CARDS_MSGS, msg);
+    }
+
     @Override // documentation inherited
     protected void configureLabel (BasicContext ctx)
     {
@@ -24,9 +34,6 @@ public class CardItemIcon extends ItemIcon
         setIcon(new ImageIcon(ctx.loadImage(path)));
         String name = ctx.xlate(BangCodes.CARDS_MSGS, "m." + card.getType());
         setText(name + " x" + card.getQuantity());
-
-        String msg = MessageBundle.compose("m.card_icon", "m." + card.getType(),
-                                           "m." + card.getType() + "_tip");
-        setTooltipText(ctx.xlate(BangCodes.CARDS_MSGS, msg));
+        setTooltipText(getTooltipText(ctx, card.getType()));
     }
 }

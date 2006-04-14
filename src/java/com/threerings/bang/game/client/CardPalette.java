@@ -46,8 +46,6 @@ public class CardPalette extends IconPalette
                 CardItem card = (CardItem)item;
                 ItemIcon icon = card.createIcon();
                 icon.setItem(ctx, card);
-                icon.addListener(
-                    new HoverHelper(ctrl, "card_" + card.getType()));
                 addIcon(icon);
             }
         }

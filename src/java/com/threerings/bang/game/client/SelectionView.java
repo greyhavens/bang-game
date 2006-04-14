@@ -94,7 +94,7 @@ public class SelectionView extends BDecoratedWindow
 
         // create the big shot selection display
         _center.add(new BLabel(_msgs.get("m.select_bigshot"), "pick_subtitle"));
-        _units = new HelpyUnitPalette(_ctx, _enabler, 4, 1);
+        _units = new UnitPalette(_ctx, _enabler, 4, 1);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
         _units.setUser(_ctx.getUserObject());
@@ -130,7 +130,7 @@ public class SelectionView extends BDecoratedWindow
         // create the big shot selection display
         _center.add(new BLabel(_msgs.get("m.pv_assemble"), "pick_subtitle"));
         _units.shutdown();
-        _units = new HelpyUnitPalette(_ctx, _teamins, 4, 2);
+        _units = new UnitPalette(_ctx, _teamins, 4, 2);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
         _units.setSelectable(config.teamSize);
@@ -260,20 +260,6 @@ public class SelectionView extends BDecoratedWindow
 
         _ready.setEnabled(selected > 0);
     }
-
-    protected class HelpyUnitPalette extends UnitPalette
-    {
-        public HelpyUnitPalette (BangContext ctx, UnitPalette.Inspector ins,
-                                 int cols, int rows) {
-            super(ctx, ins, cols, rows);
-        }
-        protected UnitIcon createIcon (BangContext ctx, int itemId,
-                                       UnitConfig config, String name) {
-            UnitIcon icon = super.createIcon(ctx, itemId, config, name);
-            icon.addListener(new HoverHelper(_ctrl, "unit_" + config.type));
-            return icon;
-        }
-    };
 
     protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
         public void iconUpdated (SelectableIcon icon, boolean selected) {

@@ -96,15 +96,6 @@ public class BangController extends GameController
         }
     }
 
-    /**
-     * Called by the board view and other interface components when the mouse
-     * is hovered over an item that has contextual help.
-     */
-    public void setHoveredItem (String item)
-    {
-        _view.help.setHelpItem(item);
-    }
-
     // documentation inherited from interface BangReceiver
     public void orderInvalidated (int unitId, String reason)
     {
@@ -163,7 +154,6 @@ public class BangController extends GameController
         mapCommand(KeyInput.KEY_Q, "SwingCameraLeft");
         mapCommand(KeyInput.KEY_E, "SwingCameraRight");
         mapCommand(KeyInput.KEY_G, "ToggleGrid");
-        mapCommand(KeyInput.KEY_H, "ToggleHelp");
     }
 
     @Override // documentation inherited
@@ -276,13 +266,6 @@ public class BangController extends GameController
     public void handleToggleGrid (Object source)
     {
         _view.view.toggleGrid(true);
-    }
-
-    /** Toggles the help display in the game. */
-    public void handleToggleHelp (Object source)
-    {
-        _view.toggleHelpView(true);
-        postEvent(TutorialCodes.HELP_TOGGLED);
     }
 
     /**

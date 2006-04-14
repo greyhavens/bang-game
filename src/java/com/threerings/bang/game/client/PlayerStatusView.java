@@ -34,6 +34,8 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.client.CardItemIcon;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -74,20 +76,21 @@ public class PlayerStatusView extends BContainer
             _ctx.getUserObject().getVisibleName());
         _player = new BLabel(_bangobj.players[_pidx].toString(),
                              "player_status" + _pidx);
-        addListener(new HoverHelper(_ctrl, _pidx == selfidx ? "you" : "they"));
+        String hmsg = "m.help_" + (_pidx == selfidx ? "you" : "they");
+        _player.setTooltipText(ctx.xlate(GameCodes.GAME_MSGS, hmsg));
         add(_player, NAME_RECT);
 
         _points = new BLabel("");
-        _points.addListener(new HoverHelper(_ctrl, "points"));
+        _points.setTooltipText(ctx.xlate(GameCodes.GAME_MSGS, "m.help_points"));
         add(_points, CASH_LOC);
-        add(_ranklbl = new BLabel(createRankIcon(-2)), RANK_RECT);
-        _ranklbl.addListener(new HoverHelper(_ctrl, "rank") {
-            protected String computeHoveredItem () {
-                return (_bangobj.state == BangObject.SELECT_PHASE ||
-                        _bangobj.state == BangObject.BUYING_PHASE) ?
-                    "pre_round_rank" : super.computeHoveredItem();
+        add(_ranklbl = new BLabel(createRankIcon(-2)) {
+            public String getTooltipText () {
+                String hmsg = (_bangobj.state == BangObject.SELECT_PHASE ||
+                               _bangobj.state == BangObject.BUYING_PHASE) ?
+                    "pre_round_rank" : "rank";
+                return _ctx.xlate(GameCodes.GAME_MSGS, "m.help_" + hmsg);
             }
-        });
+        }, RANK_RECT);
 
         updateAvatar();
         updateStatus();
@@ -155,8 +158,6 @@ public class PlayerStatusView extends BContainer
                 return;
             }
             _cards[cidx] = createButton(card);
-            _cards[cidx].addListener(
-                new HoverHelper(_ctrl, "card_" + card.getType()));
             Rectangle rect = new Rectangle(CARD_RECT);
             rect.x += (rect.width * cidx);
             add(_cards[cidx], rect);
@@ -303,6 +304,7 @@ public class PlayerStatusView extends BContainer
             _ctx.loadImage("cards/" + card.getType() + "/icon.png"));
         BButton btn = new BButton(icon, "" + card.cardId);
         btn.setStyleClass("card_button");
+        btn.setTooltipText(CardItemIcon.getTooltipText(_ctx, card.getType()));
         btn.addListener(this);
         return btn;
     }

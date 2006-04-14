@@ -52,9 +52,6 @@ public class BangView extends BWindow
     /** Our unit status view. */
     public UnitStatusView ustatus;
 
-    /** A window that displays contextual help. */
-    public ContextHelpView help;
-
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
@@ -67,7 +64,6 @@ public class BangView extends BWindow
         add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
         chat = new OverlayChatView(ctx);
         _timer = new RoundTimerView(ctx);
-        help = new ContextHelpView(ctx);
     }
 
     /**
@@ -151,25 +147,6 @@ public class BangView extends BWindow
         }
     }
 
-    /**
-     * Toggles the display of the contextual help window.
-     */
-    public void toggleHelpView (boolean persist)
-    {
-        if (help.isAdded()) {
-            _ctx.getRootNode().removeWindow(help);
-        } else {
-            _ctx.getRootNode().addWindow(help);
-            help.setHelpItem(null);
-            help.pack(300, -1);
-            help.setLocation(
-                _ctx.getDisplay().getWidth() - help.getWidth() - 5, 75);
-        }
-        if (persist) {
-            BangPrefs.config.setValue("context_help", help.isAdded());
-        }
-    }
-
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
@@ -215,9 +192,6 @@ public class BangView extends BWindow
         if (_timer.isAdded()) {
             _ctx.getRootNode().removeWindow(_timer);
         }
-        if (help.isAdded()) {
-            _ctx.getRootNode().removeWindow(help);
-        }
 
         if (_oview != null) {
             _ctx.getRootNode().removeWindow(_oview);
@@ -240,12 +214,6 @@ public class BangView extends BWindow
         // finally if we were waiting to start things up, get going
         if (_pendingPhase != -1) {
             setPhase(_pendingPhase);
-        }
-
-        // start with help showing if requested and if we're not in a tutorial
-        if (!config.tutorial &&
-            BangPrefs.config.getValue("context_help", false)) {
-            toggleHelpView(false);
         }
     }
 

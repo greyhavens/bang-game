@@ -35,6 +35,7 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.AStarPathUtil;
 import com.threerings.media.util.MathUtil;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
 import com.threerings.util.StreamablePoint;
 
@@ -56,6 +57,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.Model;
 import com.threerings.bang.client.bui.WindowFader;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
@@ -582,9 +584,20 @@ public class BangBoardView extends BoardView
 
         // display contextual help on units and other special sprites
         if (hover instanceof PieceSprite) {
-            _ctrl.setHoveredItem(((PieceSprite)hover).getHelpIdent(_pidx));
+            String item = ((PieceSprite)hover).getHelpIdent(_pidx);
+            if (item.startsWith("unit_")) {
+                String type = item.substring(5);
+                String msg = MessageBundle.compose(
+                    "m.unit_icon", "m." + type, "m." + type + "_descrip");
+                _tiptext = _ctx.xlate(BangCodes.UNITS_MSGS, msg);
+            } else {
+                item = "m.help_" + item;
+                String msg = MessageBundle.compose(
+                    "m.help_tip", item + "_title", item);
+                _tiptext = _ctx.xlate(GameCodes.GAME_MSGS, msg);
+            }
         } else {
-            _ctrl.setHoveredItem(null);
+            _tiptext = null;
         }
     }
 
