@@ -198,10 +198,26 @@ public class UnitStatusView extends BWindow
         }
 
         @Override // documentation inherited
+        protected void wasAdded ()
+        {
+            super.wasAdded();
+
+            // reference our influence image if we have one
+            if (_influence != null) {
+                _influence.reference();
+            }
+        }
+
+        @Override // documentation inherited
         protected void wasRemoved ()
         {
             super.wasRemoved();
-            setInfluence(null);
+
+            // release our influence image (but don't clear it as we may be
+            // readded)
+            if (_influence != null) {
+                _influence.release();
+            }
         }
 
         @Override // documentation inherited
