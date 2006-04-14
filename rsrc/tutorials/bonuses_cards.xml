@@ -26,7 +26,7 @@
 
   <!-- have them turn on the help window, explain it -->
   <text message="show_help" step="3"/>
-  <wait event="help_toggled"/>
+  <wait event="text_clicked"/>
 
   <!-- add a ramblin' bonus, have them inspect and activate it -->
   <text message="ramblin_intro"/>
@@ -48,6 +48,7 @@
   <!-- explain cards and how to activate them -->
   <text message="card_detail"/>
   <wait event="card_selected"/>
+  <center_on what="piece" id="2000"/>
   <text message="activate_card"/>
   <wait event="card_played"/>
 
