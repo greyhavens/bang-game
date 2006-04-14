@@ -11,16 +11,7 @@
   <add_piece what="unit" id="1004" type="cow" location="14,17" owner="-1"/>
   <add_piece what="unit" id="1005" type="cow" location="15,15" owner="-1"/>
 
-  <add_piece what="bonus" type="bonus_point" location="14,16"/>
   <add_piece what="bonus" type="card" location="14,18"/>
-  <add_piece what="bonus" type="duplicate" location="15,18"/>
-  <add_piece what="bonus" type="hustle" location="16,18"/>
-  <add_piece what="bonus" type="iron_plate" location="17,18"/>
-  <add_piece what="bonus" type="lady_luck" location="18,18"/>
-  <add_piece what="bonus" type="nugget" location="14,19"/>
-  <add_piece what="bonus" type="power_up" location="15,19"/>
-  <add_piece what="bonus" type="ramblin" location="16,19"/>
-  <add_piece what="bonus" type="repair" location="17,19"/>
 
   <text message="start_test"/>
   <wait event="text_clicked"/>

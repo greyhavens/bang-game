@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="bonus_test" board="Hard Luck Rock" players="2">
+  <show_view name="player_status"/>
+  <show_view name="unit_status"/>
+
+  <add_piece what="unit" id="1000" type="gunslinger" location="23,14"
+     owner="0"/>
+  <add_piece what="unit" id="1001" type="steamgunman" location="23,15"
+     owner="0"/>
+  <add_piece what="unit" id="1002" type="artillery" location="23,16" owner="0"/>
+  <add_piece what="unit" id="1003" type="cavalry" location="23,17" owner="0"/>
+
+  <add_piece what="bonus" type="bonus_point" location="24,14"/>
+  <add_piece what="bonus" type="card" location="24,15"/>
+  <add_piece what="bonus" type="duplicate" location="24,16"/>
+  <add_piece what="bonus" type="hustle" location="24,17"/>
+
+  <add_piece what="bonus" type="iron_plate" location="25,14"/>
+  <add_piece what="bonus" type="lady_luck" location="25,15"/>
+  <add_piece what="bonus" type="nugget" location="25,16"/>
+  <add_piece what="bonus" type="power_up" location="25,17"/>
+
+  <add_piece what="bonus" type="ramblin" location="26,15"/>
+  <add_piece what="bonus" type="repair" location="26,16"/>
+
+  <add_piece what="unit" id="2001" type="gunslinger" location="27,14"
+     owner="1"/>
+  <add_piece what="unit" id="2002" type="steamgunman" location="27,15"
+     owner="1"/>
+  <add_piece what="unit" id="2003" type="artillery" location="27,16" owner="1"/>
+  <add_piece what="unit" id="2004" type="tactician" location="27,17" owner="1"/>
+
+
+  <add_piece what="unit" id="3001" type="cow" location="28,15" owner="-1"/>
+  <add_piece what="unit" id="3002" type="cow" location="28,16" owner="-1"/>
+
+  <text message="start_test"/>
+  <wait event="text_clicked"/>
+  
+  <text message="end_test"/>
+  <wait event="text_clicked"/>
+</tutorial>
