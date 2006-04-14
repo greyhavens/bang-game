@@ -59,7 +59,14 @@ public class BonusConfig
      */
     public static BonusConfig getConfig (String type)
     {
-        return _types.get(type);
+        BonusConfig config = _types.get(type);
+        if (config == null) {
+            log.warning("Requested unknown bonus config [type=" + type + "].");
+            Thread.dumpStack();
+            // return something to avoid le booch
+            config = _types.get("repair");
+        }
+        return config;
     }
 
     /**

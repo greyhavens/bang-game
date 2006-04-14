@@ -465,7 +465,7 @@ public class BangController extends GameController
 
         // start up the music for this scenario
         _ctx.getBangClient().queueMusic(
-            "sounds/music/scenario_" + _bangobj.scenarioId + ".ogg", 0.8f);
+            "sounds/music/scenario_" + _bangobj.scenarioId + ".ogg", 0.7f);
     }
 
     @Override // documentation inherited
