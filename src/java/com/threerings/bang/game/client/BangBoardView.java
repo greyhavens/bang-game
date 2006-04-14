@@ -583,22 +583,35 @@ public class BangBoardView extends BoardView
         }
 
         // display contextual help on units and other special sprites
+        _tiptext = null;
         if (hover instanceof PieceSprite) {
             String item = ((PieceSprite)hover).getHelpIdent(_pidx);
-            if (item.startsWith("unit_")) {
-                String type = item.substring(5);
-                String msg = MessageBundle.compose(
-                    "m.unit_icon", "m." + type, "m." + type + "_descrip");
-                _tiptext = _ctx.xlate(BangCodes.UNITS_MSGS, msg);
-            } else {
-                item = "m.help_" + item;
-                String msg = MessageBundle.compose(
-                    "m.help_tip", item + "_title", item);
-                _tiptext = _ctx.xlate(GameCodes.GAME_MSGS, msg);
+            if (item != null) {
+                if (item.startsWith("unit_")) {
+                    String type = item.substring(5);
+                    String msg = MessageBundle.compose(
+                        "m.unit_icon", "m." + type, "m." + type + "_descrip");
+                    _tiptext = _ctx.xlate(BangCodes.UNITS_MSGS, msg);
+                } else {
+                    item = "m.help_" + item;
+                    String msg = MessageBundle.compose(
+                        "m.help_tip", item + "_title", item);
+                    _tiptext = _ctx.xlate(GameCodes.GAME_MSGS, msg);
+                }
             }
-        } else {
-            _tiptext = null;
         }
+
+        // force an update to the tooltip window as we're one big window with
+        // lots of different tips
+        _ctx.getRootNode().tipTextChanged(this);
+    }
+
+    @Override // documentation inherited
+    protected BComponent createTooltipComponent (String tiptext)
+    {
+        // only show our tooltip window when we're in "insta-tip" mode
+        return (_ctx.getRootNode().getTooltipTimeout() == 0) ?
+            super.createTooltipComponent(tiptext) : null;
     }
 
     @Override // documentation inherited
