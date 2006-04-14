@@ -124,7 +124,8 @@ public class ViewerApp extends JmeCanvasApp
             // TODO: report to the client
             log.log(Level.WARNING, "Failed to initialize rsrcmgr.", ioe);
         }
-        
+
+        displayStatistics(true);
         RenderUtil.init(_bctx);
         
         if (!super.init()) {
