@@ -3,6 +3,7 @@
 
 package com.threerings.bang.lobby.data;
 
+import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.data.PlaceConfig;
 
 import com.threerings.bang.lobby.client.LobbyController;
@@ -13,9 +14,9 @@ import com.threerings.bang.lobby.client.LobbyController;
 public class LobbyConfig extends PlaceConfig
 {
     // documentation inherited
-    public Class getControllerClass ()
+    public PlaceController createController ()
     {
-        return LobbyController.class;
+        return new LobbyController();
     }
 
     // documentation inherited

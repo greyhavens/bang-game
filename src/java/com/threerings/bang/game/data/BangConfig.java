@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data;
 
+import com.threerings.crowd.client.PlaceController;
 import com.threerings.parlor.game.client.GameConfigurator;
 import com.threerings.parlor.game.data.GameConfig;
 
@@ -58,9 +59,9 @@ public class BangConfig extends GameConfig
     }
 
     @Override // documentation inherited
-    public Class getControllerClass ()
+    public PlaceController createController ()
     {
-        return BangController.class;
+        return new BangController();
     }
 
     @Override // documentation inherited

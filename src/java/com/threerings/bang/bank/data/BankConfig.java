@@ -3,6 +3,7 @@
 
 package com.threerings.bang.bank.data;
 
+import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.data.PlaceConfig;
 
 import com.threerings.bang.bank.client.BankController;
@@ -13,9 +14,9 @@ import com.threerings.bang.bank.client.BankController;
 public class BankConfig extends PlaceConfig
 {
     @Override // documentation inherited
-    public Class getControllerClass ()
+    public PlaceController createController ()
     {
-        return BankController.class;
+        return new BankController();
     }
 
     @Override // documentation inherited

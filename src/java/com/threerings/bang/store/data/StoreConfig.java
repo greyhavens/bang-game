@@ -3,6 +3,7 @@
 
 package com.threerings.bang.store.data;
 
+import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.data.PlaceConfig;
 
 import com.threerings.bang.store.client.StoreController;
@@ -13,9 +14,9 @@ import com.threerings.bang.store.client.StoreController;
 public class StoreConfig extends PlaceConfig
 {
     @Override // documentation inherited
-    public Class getControllerClass ()
+    public PlaceController createController ()
     {
-        return StoreController.class;
+        return new StoreController();
     }
 
     @Override // documentation inherited

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.avatar.data;
 
+import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.data.PlaceConfig;
 
 import com.threerings.bang.avatar.client.BarberController;
@@ -13,9 +14,9 @@ import com.threerings.bang.avatar.client.BarberController;
 public class BarberConfig extends PlaceConfig
 {
     @Override // documentation inherited
-    public Class getControllerClass ()
+    public PlaceController createController ()
     {
-        return BarberController.class;
+        return new BarberController();
     }
 
     @Override // documentation inherited

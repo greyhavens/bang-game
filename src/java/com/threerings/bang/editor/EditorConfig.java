@@ -3,6 +3,8 @@
 
 package com.threerings.bang.editor;
 
+import com.threerings.crowd.client.PlaceController;
+
 import com.threerings.bang.editor.EditorController;
 import com.threerings.bang.game.data.BangConfig;
 
@@ -18,9 +20,9 @@ public class EditorConfig extends BangConfig
     }
 
     @Override // documentation inherited
-    public Class getControllerClass ()
+    public PlaceController createController ()
     {
-        return EditorController.class;
+        return new EditorController();
     }
 
     @Override // documentation inherited

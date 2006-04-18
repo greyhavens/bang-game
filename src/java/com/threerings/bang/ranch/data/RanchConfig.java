@@ -3,6 +3,7 @@
 
 package com.threerings.bang.ranch.data;
 
+import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.data.PlaceConfig;
 
 import com.threerings.bang.ranch.client.RanchController;
@@ -13,9 +14,9 @@ import com.threerings.bang.ranch.client.RanchController;
 public class RanchConfig extends PlaceConfig
 {
     @Override // documentation inherited
-    public Class getControllerClass ()
+    public PlaceController createController ()
     {
-        return RanchController.class;
+        return new RanchController();
     }
 
     @Override // documentation inherited
