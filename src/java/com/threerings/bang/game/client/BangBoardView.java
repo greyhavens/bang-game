@@ -260,6 +260,23 @@ public class BangBoardView extends BoardView
     }
 
     /**
+     * Fades a marquee in and out with the specified fade in and out time.
+     */
+    public void fadeMarqueeInOut (String message, final float halftime)
+    {
+        createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, message));
+        _ctx.getInterface().detachChild(_marquee);
+        TimeFunction tf = new LinearTimeFunction(0f, 1f, halftime);
+        _ctx.getInterface().attachChild(
+            new FadeInOutEffect(_marquee, ColorRGBA.white, tf, true) {
+                protected void fadeComplete () {
+                    super.fadeComplete();
+                    clearMarquee(halftime);
+                }
+            });
+    }
+
+    /**
      * Returns true if the specified piece is OK to be selected, false if it is
      * currently animating or has a pending animation.
      */

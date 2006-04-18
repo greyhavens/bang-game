@@ -558,6 +558,9 @@ public class BangController extends GameController
         // let the game manager know that our units are in place and we're
         // fully ready to go
         playerReady();
+
+        // add and immediately fade out a "GO!" marquee
+        _view.view.fadeMarqueeInOut("m.round_start", 1f);
     }
 
     /**
@@ -608,6 +611,11 @@ public class BangController extends GameController
         public void attributeChanged (AttributeChangedEvent event) {
             if (event.getName().equals(BangObject.TICK)) {
                 updateRank();
+
+                // display a marquee when the round is 12 ticks from ending
+                if (_bangobj.lastTick - _bangobj.tick == ALMOST_OVER_TICKS) {
+                    _view.view.fadeMarqueeInOut("m.round_will_end", 1f);
+                }
             }
         }
         public void entryAdded (EntryAddedEvent event) {
@@ -682,4 +690,8 @@ public class BangController extends GameController
             return u1.pieceId - u2.pieceId;
         }
     };
+
+    /** The number of ticks before the end of the game on which we show a
+     * marquee warning the player that the round is almost over. */
+    protected static final int ALMOST_OVER_TICKS = 12;
 }
