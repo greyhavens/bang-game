@@ -25,6 +25,7 @@ import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
@@ -124,7 +125,11 @@ public class PickTutorialView extends BDecoratedWindow
         if (mode != Mode.COMPLETED) {
             add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         } else {
-            add(new BButton(_msgs.get("m.to_town"), this, "to_town"));
+            BContainer bbox = GroupLayout.makeHBox(GroupLayout.CENTER);
+            bbox.add(new BButton(_msgs.get("m.to_town"), this, "to_town"));
+            bbox.add(new BButton(_msgs.get("m.to_ranch"), this, "to_ranch"));
+            bbox.add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"));
+            add(bbox);
         }
     }
 
@@ -137,11 +142,20 @@ public class PickTutorialView extends BDecoratedWindow
             _ctx.getBangClient().clearPopup(this, true);
             _ctx.getBangClient().checkShowIntro();
 
-        } else if (action.equals("to_town")) {
+        } else if (action.startsWith("to_")) {
             BangPrefs.setDeclinedTutorials(_ctx.getUserObject());;
             _ctx.getBangClient().clearPopup(this, true);
-            _ctx.getLocationDirector().leavePlace();
-            _ctx.getBangClient().showTownView();
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+
+            if (action.equals("to_town")) {
+                _ctx.getLocationDirector().leavePlace();
+                _ctx.getBangClient().showTownView();
+            } else if (action.equals("to_ranch")) {
+                _ctx.getLocationDirector().moveTo(bbd.ranchOid);
+            } else if (action.equals("to_saloon")) {
+                _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+            }
 
         } else {
             PlayerService psvc = (PlayerService)
