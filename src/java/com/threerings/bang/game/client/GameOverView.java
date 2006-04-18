@@ -48,6 +48,7 @@ public class GameOverView extends BDecoratedWindow
                          BangObject bangobj)
     {
         this(ctx, ctrl, bangobj, ctx.getUserObject());
+        _bctx = ctx;
     }
 
     /**
@@ -81,6 +82,7 @@ public class GameOverView extends BDecoratedWindow
             int apidx = bangobj.awards[ii].pidx;
             if (pidx == apidx) {
                 award = bangobj.awards[ii];
+                _cueidx = award.rank;
             }
             who.add(new FinalistView(ctx, apidx, bangobj.players[apidx],
                                      bangobj.avatars[apidx],
@@ -196,12 +198,26 @@ public class GameOverView extends BDecoratedWindow
     {
         String action = event.getAction();
         if (action.equals("to_town") || action.equals("to_saloon")) {
-            ((BangContext)_ctx).getBangClient().clearPopup(this, true);
+            _bctx.getBangClient().clearPopup(this, true);
             _ctrl.statsDismissed(action.equals("to_town"));
         }
     }
 
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // cue up our end of game riff
+        if (_ctx instanceof BangContext) {
+            String mpath = "sounds/music/post_game" + _cueidx + ".ogg";
+            _bctx.getBangClient().queueMusic(mpath, 1.0f, false);
+        }
+    }
+
     protected BasicContext _ctx;
+    protected BangContext _bctx;
     protected BangController _ctrl;
     protected BContainer _results;
+    protected int _cueidx = 2;
 }

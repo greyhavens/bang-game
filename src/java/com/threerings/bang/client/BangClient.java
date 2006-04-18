@@ -429,7 +429,7 @@ public class BangClient extends BasicClient
      * @param musicPath the path to an OGG resource containing the music.
      * @param volume a value between 0 and 1 indicating the music volume.
      */
-    public void queueMusic (String musicPath, float volume)
+    public void queueMusic (String musicPath, float volume, boolean loop)
     {
         // for now disable music for non-insiders
         if (!_ctx.getUserObject().tokens.isInsider()) {
@@ -458,7 +458,7 @@ public class BangClient extends BasicClient
         try {
             _playingMusic = musicPath;
             _mstream = new MusicStream(mfile.toString(), false);
-            _mstream.loop(true);
+            _mstream.loop(loop);
             _mstream.setVolume(volume);
             _mstream.play();
         } catch (Throwable t) {
@@ -657,7 +657,7 @@ public class BangClient extends BasicClient
         if (!(view instanceof BangView)) {
             // if this is not the game view, play the town theme
             String townId = _ctx.getUserObject().townId;
-            queueMusic("sounds/music/" + townId + ".ogg", 1f);
+            queueMusic("sounds/music/" + townId + ".ogg", 1f, true);
 
             // also re-wire up our options view whenever the main view changes
             // as the BangView overrides the escape mapping during the game

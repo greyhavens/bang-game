@@ -464,8 +464,8 @@ public class BangController extends GameController
         _view.setPhase(BangView.PRE_SELECT_PHASE);
 
         // start up the music for this scenario
-        _ctx.getBangClient().queueMusic(
-            "sounds/music/scenario_" + _bangobj.scenarioId + ".ogg", 0.7f);
+        String mpath = "sounds/music/scenario_" + _bangobj.scenarioId + ".ogg";
+        _ctx.getBangClient().queueMusic(mpath, 0.7f, true);
     }
 
     @Override // documentation inherited
