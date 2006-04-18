@@ -229,7 +229,7 @@ public abstract class Scenario
 //                      rando + ").");
             return false;
         }
-        return placeBonus(bangobj, pieces, null);
+        return placeBonus(bangobj, pieces, null, _bonusSpots);
     }
 
     /**
@@ -287,10 +287,10 @@ public abstract class Scenario
      * located.
      */
     protected boolean placeBonus (BangObject bangobj, Piece[] pieces,
-                                  Bonus bonus)
+                                  Bonus bonus, PointSet spots)
     {
         // determine (roughly) who can get to bonus spots on this tick
-        int[] weights = new int[_bonusSpots.size()];
+        int[] weights = new int[spots.size()];
         ArrayIntSet[] reachers = new ArrayIntSet[weights.length];
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
@@ -299,7 +299,7 @@ public abstract class Scenario
                 continue;
             }
             for (int bb = 0; bb < reachers.length; bb++) {
-                int x = _bonusSpots.getX(bb), y = _bonusSpots.getY(bb);
+                int x = spots.getX(bb), y = spots.getY(bb);
                 if (p.getDistance(x, y) > p.getMoveDistance()) {
                     continue;
                 }
@@ -365,8 +365,7 @@ public abstract class Scenario
 
         // now select a spot based on our weightings
         int spidx = RandomUtil.getWeightedIndex(weights);
-        Point spot = new Point(_bonusSpots.getX(spidx),
-                               _bonusSpots.getY(spidx));
+        Point spot = new Point(spots.getX(spidx), spots.getY(spidx));
         log.info("Selecting from " + StringUtil.toString(weights) + ": " +
                  spidx + " -> " + spot.x + "/" + spot.y + ".");
 
@@ -383,8 +382,13 @@ public abstract class Scenario
             bonus = Bonus.selectBonus(bangobj, bspot, reachers[spidx]);
         }
 
+        // if we're placing this at one of the standard bonus spots, note that
+        // that spot is "occupied" until this bonus is colleted
+        if (spots == _bonusSpots) {
+            bonus.spot = (short)spidx;
+        }
+
         // configure our bonus and add it to the game
-        bonus.spot = (short)spidx;
         bonus.assignPieceId(bangobj);
         bonus.position(bspot.x, bspot.y);
         bangobj.addToPieces(bonus);

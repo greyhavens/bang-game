@@ -45,6 +45,7 @@ public class PieceChooser extends JPanel
         addPiece(root, "markers/start", new Marker(Marker.START));
         addPiece(root, "markers/bonus", new Marker(Marker.BONUS));
         addPiece(root, "markers/cattle", new Marker(Marker.CATTLE));
+        addPiece(root, "markers/lode", new Marker(Marker.LODE));
         
         for (int i = 0; i < TOWN_IDS.length; i++) {
             DefaultMutableTreeNode town = new DefaultMutableTreeNode(

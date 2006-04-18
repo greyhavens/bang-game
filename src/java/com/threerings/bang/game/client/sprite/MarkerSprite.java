@@ -31,5 +31,6 @@ public class MarkerSprite extends PieceSprite
         ColorRGBA.blue, // START
         ColorRGBA.green, // BONUS
         ColorRGBA.red, // CATTLE
+        new ColorRGBA(1, 1, 0, 1), // LODE
     };
 }

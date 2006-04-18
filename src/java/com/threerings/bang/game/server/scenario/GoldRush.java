@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -16,6 +17,7 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceSet;
@@ -46,6 +48,23 @@ public class GoldRush extends Scenario
     }
 
     @Override // documentation inherited
+    public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
+                               ArrayList<Piece> pieces)
+    {
+        super.filterMarkers(bangobj, starts, pieces);
+
+        // extract and remove all gold lodes
+        _lodes.clear();
+        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (Marker.isMarker(p, Marker.LODE)) {
+                _lodes.add(p.x, p.y);
+                iter.remove();
+            }
+        }
+    }
+
+    @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
                                 PieceSet purchases)
         throws InvocationException
@@ -55,14 +74,9 @@ public class GoldRush extends Scenario
         // locate all the claims, assign them to players; no starting nuggets
         assignClaims(bangobj, starts, 0);
 
-        // start with nuggets at every bonus spot
-        for (int ii = 0; ii < _bonusSpots.size(); ii++) {
-            Bonus nugget = ClaimJumping.dropNugget(
-                bangobj, _bonusSpots.getX(ii), _bonusSpots.getY(ii));
-            // we need to mark these nuggets as "occupying" the bonus spots
-            // they are being dropped in, lest the server stick another bonus
-            // in their place
-            nugget.spot = (short)ii;
+        // start with nuggets at every lode spot
+        for (int ii = 0; ii < _lodes.size(); ii++) {
+            ClaimJumping.dropNugget(bangobj, _lodes.getX(ii), _lodes.getY(ii));
         }
     }
 
@@ -82,7 +96,7 @@ public class GoldRush extends Scenario
         // game, try to spawn another one
         if (nuggets < bangobj.getActivePlayerCount()) {
             return placeBonus(bangobj, pieces, Bonus.createBonus(
-                                  BonusConfig.getConfig("nugget")));
+                                  BonusConfig.getConfig("nugget")), _lodes);
         } else {
             return super.addBonus(bangobj, pieces);
         }
@@ -126,4 +140,7 @@ public class GoldRush extends Scenario
     {
         return false;
     }
+
+    /** Used to track the locations of all lode spots. */
+    protected PointSet _lodes = new PointSet();
 }
