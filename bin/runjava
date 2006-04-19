@@ -66,7 +66,7 @@ $classpath .= ":" . $ENV{"CLASSPATH"} if (defined $ENV{"CLASSPATH"});
 my $havenarya = ($classpath =~ m:narya/dist/classes:);
 
 # add zip and jar files from our lib/ directory
-my @dirs = ( "/export/tools/lib/java", "$root/lib" );
+my @dirs = ( "$root/lib" );
 foreach $dir (@dirs) {
     next unless (defined $dir);
     if (opendir(DIR, $dir)) {

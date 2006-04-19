@@ -10,7 +10,6 @@ DESC="Bang game server"
 
 BANG_HOME=`dirname $0 | sed s:/bin$::`
 BANG_USER=www-data
-TOOLS_HOME=/export/tools
 
 LOGFILE=$BANG_HOME/log/stdout.log
 LOG_EMAIL=nightly-logs@threerings.net
@@ -47,7 +46,7 @@ fi
 CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
 
 # Add all necessary JAR files to the CLASSPATH
-for jar in $TOOLS_HOME/lib/java/*.jar $BANG_HOME/lib/*.jar $BANG_HOME/dist/bang-*.jar; do
+for jar in $BANG_HOME/lib/*.jar $BANG_HOME/dist/bang-*.jar; do
     if [ -e $jar ]; then
         CLASSPATH=$jar:$CLASSPATH
     fi
