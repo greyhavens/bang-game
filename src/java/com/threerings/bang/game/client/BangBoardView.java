@@ -721,7 +721,9 @@ public class BangBoardView extends BoardView
     {
         // sanity check
         if (_pendmap.get(pieceId) > 0) {
-            log.warning("Piece with pending move killed [id=" + pieceId + "].");
+            log.warning("Piece with pending actions killed [id=" + pieceId +
+                        ", pendcount=" + _pendmap.get(pieceId) + "].");
+            Thread.dumpStack();
             _pendmap.put(pieceId, 0);
         }
 
