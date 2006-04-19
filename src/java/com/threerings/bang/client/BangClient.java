@@ -431,11 +431,6 @@ public class BangClient extends BasicClient
      */
     public void queueMusic (String musicPath, float volume, boolean loop)
     {
-        // for now disable music for non-insiders
-        if (!_ctx.getUserObject().tokens.isInsider()) {
-            return;
-        }
-
         // if we're already playing this track, keep it running
         if (musicPath.equals(_playingMusic)) {
             return;
