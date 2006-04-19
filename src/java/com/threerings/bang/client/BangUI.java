@@ -97,7 +97,7 @@ public class BangUI
         _fonts.put("Tombstone", loadFont(ctx, "ui/fonts/tomb.ttf"));
 
         // we need to stretch Dom Casual out a bit
-        Font dom = loadFont(ctx, "ui/fonts/domcasual.pfb");
+        Font dom = loadFont(ctx, "ui/fonts/domcasual.ttf");
         dom = dom.deriveFont(
             Font.PLAIN, AffineTransform.getScaleInstance(1.2, 1));
         _fonts.put("Dom Casual", dom);
