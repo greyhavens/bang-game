@@ -4,8 +4,12 @@
 package com.threerings.bang.editor;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -61,7 +65,8 @@ public class TerrainBrush extends EditorTool
     public void mousePressed (MouseEvent e)
     {
         _panel.view.paintTerrain(_cursor.x, _cursor.y, _cursor.radius,
-            _tbopts.selector.getSelectedTerrain());
+            _tbopts.selector.getSelectedTerrain(),
+            _tbopts.mode.getSelectedIndex() == FILL);
     }
     
     @Override // documentation inherited
@@ -82,7 +87,8 @@ public class TerrainBrush extends EditorTool
     {
         mouseMoved(e);
         _panel.view.paintTerrain(_cursor.x, _cursor.y, _cursor.radius,
-            _tbopts.selector.getSelectedTerrain());
+            _tbopts.selector.getSelectedTerrain(),
+            _tbopts.mode.getSelectedIndex() == FILL);
     }
     
     @Override // documentation inherited
@@ -109,10 +115,12 @@ public class TerrainBrush extends EditorTool
     
     /** The options for this panel. */
     protected class TerrainBrushOptions extends JPanel
-        implements ChangeListener
+        implements ActionListener, ChangeListener
     {
         public TerrainSelector selector;
+        public JComboBox mode;
         public JSlider sizer;
+        public JButton clear;
         
         public TerrainBrushOptions ()
         {
@@ -120,6 +128,12 @@ public class TerrainBrush extends EditorTool
             setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
             
             add(selector = new TerrainSelector(_ctx));
+            
+            JPanel mpanel = new JPanel();
+            mpanel.add(new JLabel(_msgs.get("m.mode")));
+            mpanel.add(mode = new JComboBox(new Object[] {
+                _msgs.get("m.paint"), _msgs.get("m.fill") }));
+            add(mpanel);
             
             JPanel spanel = new JPanel();
             spanel.add(new JLabel(_msgs.get("m.brush_size")));
@@ -129,11 +143,22 @@ public class TerrainBrush extends EditorTool
             sizer.setPreferredSize(new Dimension(70,
                 sizer.getPreferredSize().height));
             add(spanel);
+            
+            clear = new JButton(_msgs.get("b.clear"));
+            clear.addActionListener(this);
+            add(clear);
         }
         
         public void stateChanged (ChangeEvent e)
         {
             _cursor.setRadius(sizer.getValue());
+        }
+        
+        public void actionPerformed (ActionEvent e)
+        {
+            if (e.getSource() == clear) {
+                _panel.view.clearTerrain(selector.getSelectedTerrain());
+            }
         }
     }
     
@@ -142,6 +167,12 @@ public class TerrainBrush extends EditorTool
     
     /** The casted options panel. */
     protected TerrainBrushOptions _tbopts;
+    
+    /** The paint terrain mode. */
+    protected static final int PAINT = 0;
+    
+    /** The fill terrain mode. */
+    protected static final int FILL = 1;
     
     /** The minimum cursor radius. */
     protected static final int MIN_CURSOR_RADIUS = 1;

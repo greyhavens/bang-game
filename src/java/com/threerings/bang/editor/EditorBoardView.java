@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 import java.nio.FloatBuffer;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.jme.math.FastMath;
@@ -41,7 +42,9 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -54,6 +57,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Displays the board when in editor mode.
  */
 public class EditorBoardView extends BoardView
+    implements PieceCodes
 {
     public EditorBoardView (BasicContext ctx, EditorPanel panel)
     {
@@ -198,8 +202,11 @@ public class EditorBoardView extends BoardView
     /**
      * Paints a the circle specified in node space coordinates with the given
      * terrain.
+     *
+     * @param fill if true, perform a flood fill instead of simply painting
      */
-    public void paintTerrain (float x, float y, float radius, Terrain terrain)
+    public void paintTerrain (
+        float x, float y, float radius, Terrain terrain, boolean fill)
     {
         byte code = (byte)terrain.code;
 
@@ -218,8 +225,11 @@ public class EditorBoardView extends BoardView
         if (_tedit == null) {
             _tedit = new TerrainEdit();
         }
-        _tedit.dirty(x1, y1, x2, y2);
-        
+        Rectangle dirty = new Rectangle();
+        if (!fill) {
+            dirty.setBounds(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
+        }
+
         // scan over the sub-tile coordinates, setting any that fall in the
         // circle
         Vector2f vec = new Vector2f();
@@ -227,13 +237,34 @@ public class EditorBoardView extends BoardView
             for (int tx = x1; tx <= x2; tx++) {
                 vec.set(x - tx*stscale, y - ty*stscale);
                 if (vec.lengthSquared() <= rr) {
-                    _board.setTerrainValue(tx, ty, code);
+                    if (fill) {
+                        floodFill(tx, ty, code, dirty);
+                    } else {
+                        _board.setTerrainValue(tx, ty, code);
+                    }
                 }
             }
         }
 
+        // dirty the edit and update the terrain splats
+        _tedit.dirty(dirty);
+        _tnode.refreshTerrain(dirty.x, dirty.y, dirty.x + dirty.width - 1,
+            dirty.y + dirty.height - 1);
+    }
+    
+    /**
+     * Clears the entire board to the specified terrain type.
+     */
+    public void clearTerrain (Terrain terrain)
+    {
+        // store the original terrain as an edit
+        new TerrainEdit().commit();
+        
+        // fill 'er up!
+        Arrays.fill(_board.getTerrain(), (byte)terrain.code);
+        
         // update the terrain splats
-        _tnode.refreshTerrain(x1, y1, x2, y2);
+        _tnode.refreshTerrain();
     }
     
     /**
@@ -694,8 +725,10 @@ public class EditorBoardView extends BoardView
         xoff = (width - _board.getWidth())/2;
         yoff = (height - _board.getHeight())/2;
         for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
+            // set location directly in order to retain fine positions
             Piece piece = (Piece)it.next();
-            piece.position(piece.x + xoff, piece.y + yoff);
+            piece.x += xoff;
+            piece.y += yoff;
         }
 
         // finally, refresh
@@ -714,10 +747,38 @@ public class EditorBoardView extends BoardView
     }
 
     /**
+     * Flood-fills the board terrain.
+     */
+    protected void floodFill (
+        int x, int y, byte code, Rectangle dirty)
+    {
+        byte ocode = _board.getTerrainValue(x, y);
+        if (ocode == code) {
+            return;
+        }
+        PointSet fringe = new PointSet();
+        fringe.add(x, y);
+        while (fringe.size() > 0) {
+            int fx = fringe.getX(0), fy = fringe.getY(0);
+            fringe.remove(fx, fy);
+            _board.setTerrainValue(fx, fy, code);
+            dirty.add(fx, fy);
+            for (int ii = 0; ii < DIRECTIONS.length; ii++) {
+                int ax = fx + DX[ii], ay = fy + DY[ii];
+                if (_board.getTerrainValue(ax, ay) == ocode) {
+                    fringe.add(ax, ay);
+                }
+            }
+        }
+        dirty.grow(1, 1);
+        dirty.setBounds(dirty.intersection(
+            new Rectangle(0, 0, _board.getHeightfieldWidth(),
+                _board.getHeightfieldHeight())));
+    }
+    
+    /**
      * Sets the heightfield to the contents of the given JME height map (whose
      * size must be equal to or greater than that of the heightfield).
-     *
-     * @param above whether or not to
      */
     protected void setHeightfield (AbstractHeightMap map)
     {
@@ -896,7 +957,14 @@ public class EditorBoardView extends BoardView
          */
         public void dirty (int x1, int y1, int x2, int y2)
         {
-            Rectangle drect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
+            dirty(new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1));
+        }
+        
+        /**
+         * Marks the specified region of the buffer as dirty.
+         */
+        public void dirty (Rectangle drect)
+        {
             if (_modified == null) {
                 _modified = drect;
             } else {
