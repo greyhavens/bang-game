@@ -3,8 +3,8 @@
 #
 # Proguard configuration file for Bang! development client
 
--injars /export/tools/lib/java/commons-io.jar(!META-INF/*)
--injars /export/tools/lib/java/commons-collections.jar(!META-INF/*)
+-injars ../lib/java/commons-io.jar(!META-INF/*)
+-injars ../lib/java/commons-collections.jar(!META-INF/*)
 -injars ../lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-base.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
