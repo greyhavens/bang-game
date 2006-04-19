@@ -1109,6 +1109,7 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < awards.length; ii++) {
             Award award = (awards[ii] = new Award());
             award.pidx = ii;
+            award.rank = -1;
             for (int rr = 0; rr < _ranks.length; rr++) {
                 if (_ranks[rr].pidx == ii) {
                     award.rank = rr;
@@ -1140,13 +1141,18 @@ public class BangManager extends GameManager
                 if (gameTime > 0) {
                     user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
                     user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
-                    if (_bangobj.winners[ii]) {
+                    // increment consecutive wins for 1st place only
+                    if (award.rank == 0) {
                         user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
                         user.stats.incrementStat(Stat.Type.CONSEC_WINS, 1);
-                        user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 0);
                     } else {
+                        user.stats.setStat(Stat.Type.CONSEC_WINS, 0);
+                    }
+                    // increment consecutive losses for 4th place only
+                    if (award.rank == 3) {
                         user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 1);
-                        user.stats.incrementStat(Stat.Type.CONSEC_WINS, 0);
+                    } else {
+                        user.stats.setStat(Stat.Type.CONSEC_LOSSES, 0);
                     }
                 }
 

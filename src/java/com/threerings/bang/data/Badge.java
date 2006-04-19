@@ -94,7 +94,8 @@ public class Badge extends Item
             }
         },
 
-        // consecutive event badges
+        // consecutive event badges (wins means first place, losses means
+        // fourth place only, not non-first place or even last place )
         CONSEC_WINS_1 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 5;
