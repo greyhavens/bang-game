@@ -80,7 +80,7 @@
   </target>
 
   <!-- prepares the application directories -->
-  <target name="prepare">
+  <target name="prepare" depends="lists">
     <mkdir dir="${deploy.dir}"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/classes/rsrc"/>
@@ -124,6 +124,11 @@
       <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
+  </target>
+
+  <!-- enumerates all of our units, props, etc. into master lists -->
+  <target name="lists">
+    <exec executable="bin/update_lists"/>
   </target>
 
   <!-- converts our models into JME format -->

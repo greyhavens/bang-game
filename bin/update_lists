@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# $Id$
+#
+# A script run as part of the build process to update our lists of props,
+# units, etc.
+
+BANG_HOME=`dirname $0`
+BANG_HOME=`cd $BANG_HOME/.. ; pwd`
+
+cd $BANG_HOME
+
+# Update our list of props
+find rsrc/props -name 'model.properties' | \
+  sed 's:rsrc/props/::g' | sed 's:/model.properties::' | sort > \
+  rsrc/props/props.txt
+
+# Update our list of units
+find rsrc/units -name 'unit.properties' | \
+  sed 's:rsrc/units/::g' | sed 's:/unit.properties::' | sort > \
+  rsrc/units/units.txt
+
+# Update our list of bonuses
+find rsrc/bonuses -name 'bonus.properties' | \
+  sed 's:rsrc/bonuses/::g' | sed 's:/bonus.properties::' | sort > \
+  rsrc/bonuses/bonuses.txt
