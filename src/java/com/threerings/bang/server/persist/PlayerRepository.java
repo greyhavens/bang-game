@@ -15,7 +15,6 @@ import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.FieldMask;
-import com.samskivert.jdbc.jora.Session;
 import com.samskivert.jdbc.jora.Table;
 
 import com.threerings.bang.data.Handle;
@@ -54,7 +53,7 @@ public class PlayerRepository extends JORARepository
         throws PersistenceException
     {
         return (Player)loadByExample(
-            _ptable, _byNameMask, new Player(accountName));
+            _ptable, new Player(accountName), _byNameMask);
     }
 
     /**
@@ -196,10 +195,10 @@ public class PlayerRepository extends JORARepository
     }
 
     @Override // documentation inherited
-    protected void createTables (Session session)
+    protected void createTables ()
     {
 	_ptable = new Table<Player>(
-            Player.class, "PLAYERS", session, "PLAYER_ID", true);
+            Player.class, "PLAYERS", "PLAYER_ID", true);
     }
 
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */

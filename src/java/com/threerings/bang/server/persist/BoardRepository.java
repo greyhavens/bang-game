@@ -18,7 +18,6 @@ import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.Cursor;
 import com.samskivert.jdbc.jora.FieldMask;
-import com.samskivert.jdbc.jora.Session;
 import com.samskivert.jdbc.jora.Table;
 
 import static com.threerings.bang.Log.*;
@@ -139,7 +138,7 @@ public class BoardRepository extends JORARepository
         FieldMask mask = _btable.getFieldMask();
         mask.setModified("name");
         mask.setModified("players");
-        BoardRecord orecord = (BoardRecord)loadByExample(_btable, mask, record);
+        BoardRecord orecord = (BoardRecord)loadByExample(_btable, record, mask);
         if (orecord != null) {
             record.boardId = orecord.boardId;
             update(_btable, record);
@@ -173,10 +172,10 @@ public class BoardRepository extends JORARepository
     }
 
     @Override // documentation inherited
-    protected void createTables (Session session)
+    protected void createTables ()
     {
 	_btable = new Table<BoardRecord>(
-            BoardRecord.class, "BOARDS", session, "BOARD_ID", true);
+            BoardRecord.class, "BOARDS", "BOARD_ID", true);
     }
 
     protected Table<BoardRecord> _btable;
