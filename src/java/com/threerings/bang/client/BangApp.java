@@ -43,8 +43,8 @@ import static com.threerings.bang.Log.log;
  */
 public class BangApp extends JmeApp
 {
-    /** Keep the last 500 formatted log records in memory. */
-    public static RecentList recentLog = new RecentList(500);
+    /** Keep the last 50 formatted log records in memory. */
+    public static RecentList recentLog = new RecentList(50);
 
     public static void configureLog (String file)
     {
