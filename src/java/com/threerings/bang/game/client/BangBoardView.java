@@ -384,19 +384,46 @@ public class BangBoardView extends BoardView
      */
     public void startRound ()
     {
-        // create a loading marquee to report unit loading progress
-        if (_toLoad > 0) {
-            updateLoadingMarquee();
-        }
+        // drop rendering to 1 FPS while we load the models
+        final long start = System.currentTimeMillis();
+        // final int oldFPS = _ctx.getApp().setTargetFPS(1);
+        _ctx.getApp().setEnabled(true, false);
 
-        addResolutionObserver(new ResolutionObserver() {
-            public void mediaResolved () {
-                if (_loading != null) {
-                    _ctx.getInterface().detachChild(_loading);
-                    _loading = null;
-                    _loaded = _toLoad = 0;
+        // when the round starts a bunch of piece creation notifications come
+        // in which are thrown onto the event queue, and we need to postpone
+        // actually starting the round until those have been processed
+        _ctx.getApp().postRunnable(new Runnable() {
+            public void run () {
+                // create a loading marquee to report unit loading progress
+                if (_toLoad > 0) {
+                    updateLoadingMarquee();
                 }
-                _ctrl.readyForRound();
+
+                // wait for the unit models to resolve, then start up
+                addResolutionObserver(new ResolutionObserver() {
+                    public void mediaResolved () {
+                        if (_loading != null) {
+                            _ctx.getInterface().detachChild(_loading);
+                            _loading = null;
+                            _loaded = _toLoad = 0;
+                        }
+
+                        // restore normal rendering
+                        long end = System.currentTimeMillis();
+                        _ctx.getApp().setEnabled(true, true);
+                        // _ctx.getApp().setTargetFPS(oldFPS);
+
+                        // report model loading time to admins
+                        if (_ctx.getUserObject().tokens.isAdmin()) {
+                            String msg = "Loaded units in " + (end-start) +
+                                " millis.";
+                            _ctx.getChatDirector().displayInfo(
+                                null, MessageBundle.taint(msg));
+                        }
+
+                        _ctrl.readyForRound();
+                    }
+                });
             }
         });
     }
