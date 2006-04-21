@@ -436,6 +436,9 @@ public class BangClient extends BasicClient
             return;
         }
 
+        // scale the volume down a fair bit as the music is at max gain
+        volume *= 0.6f;
+
         File mfile = _ctx.getResourceManager().getResourceFile(musicPath);
         if (!mfile.exists()) {
             log.warning("Requested to play non-existent music " +
