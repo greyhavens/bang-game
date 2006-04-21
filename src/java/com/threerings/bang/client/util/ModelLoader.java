@@ -24,7 +24,6 @@ public class ModelLoader extends Thread
     {
         super("ModelLoader");
         setDaemon(true);
-        setPriority(Thread.MIN_PRIORITY);
     }
 
     /**
