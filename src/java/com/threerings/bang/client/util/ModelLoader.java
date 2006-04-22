@@ -47,6 +47,7 @@ public class ModelLoader extends Thread
     public void run ()
     {
         while (true) {
+            PendingActionKey akey;
             synchronized (this) {
                 while (_queue.peek() == null) {
                     try {
@@ -54,8 +55,8 @@ public class ModelLoader extends Thread
                     } catch (InterruptedException ie) {
                     }
                 }
+                akey = _queue.poll();
             }
-            PendingActionKey akey = _queue.poll();
             try {
                 long start = PerfMonitor.getCurrentMicros();
                 int loaded = akey.resolveAction();
