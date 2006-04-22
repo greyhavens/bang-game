@@ -15,6 +15,7 @@ import java.util.Map;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -33,6 +34,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
 import com.threerings.media.util.AStarPathUtil;
 import com.threerings.media.util.MathUtil;
@@ -674,26 +676,65 @@ public class BangBoardView extends BoardView
         }
 
         // move all of our loaded models into position
+        long delay = 1L;
+        Camera camera = _ctx.getRenderer().getCamera();
         for (UnitSprite sprite : _readyUnits) {
             Piece unit = sprite.getPiece();
             Point corner = getStartCorner(unit.owner);
-            List path = AStarPathUtil.getPath(
+            final List path = AStarPathUtil.getPath(
                 _tpred, unit.getStepper(), unit, _board.getWidth() / 2,
                 corner.x, corner.y, unit.x, unit.y, false);
-            // TODO: strip off all but the last location that is not visible
-            // given the current camera position
+
+            // strip off all but the last location that is not visible given
+            // the current camera position
+            if (path != null) {
+                int startidx = path.size();
+                for (int ii = path.size()-1; ii >= 0; ii--) {
+                    java.awt.Point point = (java.awt.Point)path.get(ii);
+                    sprite.setLocation(_board, point.x, point.y);
+                    sprite.updateGeometricState(0, true);
+                    startidx = ii;
+                    int state = camera.getPlaneState();
+                    int rv = camera.contains(sprite.getWorldBound());
+                    camera.setPlaneState(state);
+                    if (rv == Camera.OUTSIDE_FRUSTUM) {
+                        break;
+                    }
+                }
+                // strip off everything up to the start index; but make sure
+                // the path is at least two long
+                startidx = Math.min(path.size()-2, startidx);
+                for (int ii = 0; ii < startidx; ii++) {
+                    path.remove(0);
+                }
+            }
+
+            // if we have no path left, just blip to our starting spot
             if (path == null || path.size() == 0) {
                 sprite.setLocation(_board, unit.x, unit.y);
                 sprite.snapToTerrain();
                 continue;
-            } else {
-                sprite.move(_board, path, Config.getMovementSpeed());
             }
+
+            // otherwise move there like a civilized unit
+            final UnitSprite fsprite = sprite;
+            new Interval(_ctx.getApp()) {
+                public void expired () {
+                    fsprite.move(_board, path, Config.getMovementSpeed());
+                }
+            }.schedule(delay);
+            delay += 150L;
         }
         _readyUnits.clear();
 
-        // tell the controller to report back to the server that we're ready
-        _ctrl.readyForRound();
+        // tell the controller to report back to the server that we're ready;
+        // but give the units another half a second to arrive
+        delay += 500L;
+        new Interval(_ctx.getApp()) {
+            public void expired () {
+                _ctrl.readyForRound();
+            }
+        }.schedule(delay);
     }
 
     /**
