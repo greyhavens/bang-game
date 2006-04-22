@@ -399,8 +399,7 @@ public class PieceSprite extends Sprite
 
     /** Converts tile coordinates plus elevation into (3D) world
      * coordinates. */
-    protected Vector3f toWorldCoords (int tx, int ty, int elev,
-        Vector3f target)
+    protected Vector3f toWorldCoords (int tx, int ty, int elev, Vector3f target)
     {
         target.x = tx * TILE_SIZE;
         target.y = ty * TILE_SIZE;
