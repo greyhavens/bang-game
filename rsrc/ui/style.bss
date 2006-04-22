@@ -743,12 +743,12 @@ player_status_cont {
 
 card_button {
   background: image "ui/pstatus/card_up.png" framexy;
-  padding: 1;
+  padding: 1 1 0 0;
 }
 
 card_button:down {
   background: image "ui/pstatus/card_down.png" framexy;
-  padding: 2 0 0 2;
+  padding: 2 0 0 1;
 }
 
 round_timer {
