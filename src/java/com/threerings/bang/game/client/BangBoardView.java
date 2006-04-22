@@ -6,6 +6,7 @@ package com.threerings.bang.game.client;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -380,7 +381,7 @@ public class BangBoardView extends BoardView
     /**
      * Called by the {@link BangView} when the actual round has started. When
      * we're done resolving sprites, we'll report back to the controller that
-     * we're ready.
+     * we're ready (in {@link #reallyStartRound}).
      */
     public void startRound ()
     {
@@ -402,26 +403,7 @@ public class BangBoardView extends BoardView
                 // wait for the unit models to resolve, then start up
                 addResolutionObserver(new ResolutionObserver() {
                     public void mediaResolved () {
-                        if (_loading != null) {
-                            _ctx.getInterface().detachChild(_loading);
-                            _loading = null;
-                            _loaded = _toLoad = 0;
-                        }
-
-                        // restore normal rendering
-                        long end = System.currentTimeMillis();
-                        _ctx.getApp().setEnabled(true, true);
-                        // _ctx.getApp().setTargetFPS(oldFPS);
-
-                        // report model loading time to admins
-                        if (_ctx.getUserObject().tokens.isAdmin()) {
-                            String msg = "Loaded units in " + (end-start) +
-                                " millis.";
-                            _ctx.getChatDirector().displayInfo(
-                                null, MessageBundle.taint(msg));
-                        }
-
-                        _ctrl.readyForRound();
+                        reallyStartRound(start);
                     }
                 });
             }
@@ -450,51 +432,14 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     public void clearResolvingSprite (PieceSprite resolved)
     {
-        // have unit sprites loaded before the first tick run to their
-        // positions
-        if (_bangobj.isInteractivePlay() || !(resolved instanceof UnitSprite) ||
-            ((UnitSprite)resolved).movingToStart) {
-            super.clearResolvingSprite(resolved);
-            return;
+        // note units that are resolved prior to the first tick so that we can
+        // run them to their starting position when we're ready
+        if (!_bangobj.isInteractivePlay() && (resolved instanceof UnitSprite) &&
+            !((UnitSprite)resolved).movingToStart) {
+            ((UnitSprite)resolved).movingToStart = true;
+            _readyUnits.add((UnitSprite)resolved);
         }
-
-        // move the unit after it's fully initialized
-        final UnitSprite sprite = (UnitSprite)resolved;
-        sprite.movingToStart = true;
-        _ctx.getClient().getRunQueue().postRunnable(new Runnable() {
-            public void run () {
-                moveSpriteToStart(sprite);
-            }
-        });
-    }
-
-    /**
-     * Moves a sprite to its initial position and marks it as resolved
-     * when it gets there.
-     */
-    protected void moveSpriteToStart (UnitSprite sprite)
-    {
-        Piece unit = sprite.getPiece();
-        Point corner = getStartCorner(unit.owner);
-        List path = AStarPathUtil.getPath(_tpred, unit.getStepper(),
-            unit, _board.getWidth() / 2, corner.x, corner.y, unit.x, unit.y,
-            false);
-        if (path == null) {
-            sprite.setLocation(_board, unit.x, unit.y);
-            sprite.snapToTerrain();
-            super.clearResolvingSprite(sprite);
-            return;
-        }
-        sprite.move(_board, path, Config.getMovementSpeed());
-        sprite.addObserver(new PathObserver() {
-            public void pathCancelled (Sprite sprite, Path path) {
-                pathCompleted(sprite, path);
-            }
-            public void pathCompleted (Sprite sprite, Path path) {
-                BangBoardView.super.clearResolvingSprite((PieceSprite)sprite);
-                sprite.removeObserver(this);
-            }
-        });
+        super.clearResolvingSprite(resolved);
     }
 
     @Override // documentation inherited
@@ -701,6 +646,54 @@ public class BangBoardView extends BoardView
             Point corner = getStartCorner(piece.owner);
             sprite.setLocation(_board, corner.x, corner.y);
         }
+    }
+
+    /**
+     * Called when all of our models (and sounds?) are fully resolved and we're
+     * ready to start the round.
+     */
+    protected void reallyStartRound (long start)
+    {
+        if (_loading != null) {
+            _ctx.getInterface().detachChild(_loading);
+            _loading = null;
+            _loaded = _toLoad = 0;
+        }
+
+        // restore normal rendering
+        long end = System.currentTimeMillis();
+        _ctx.getApp().setEnabled(true, true);
+        // _ctx.getApp().setTargetFPS(oldFPS);
+
+        // report model loading time to admins
+        if (_ctx.getUserObject().tokens.isAdmin()) {
+            String msg = "Loaded units in " + (end-start) +
+                " millis.";
+            _ctx.getChatDirector().displayInfo(
+                null, MessageBundle.taint(msg));
+        }
+
+        // move all of our loaded models into position
+        for (UnitSprite sprite : _readyUnits) {
+            Piece unit = sprite.getPiece();
+            Point corner = getStartCorner(unit.owner);
+            List path = AStarPathUtil.getPath(
+                _tpred, unit.getStepper(), unit, _board.getWidth() / 2,
+                corner.x, corner.y, unit.x, unit.y, false);
+            // TODO: strip off all but the last location that is not visible
+            // given the current camera position
+            if (path == null || path.size() == 0) {
+                sprite.setLocation(_board, unit.x, unit.y);
+                sprite.snapToTerrain();
+                continue;
+            } else {
+                sprite.move(_board, path, Config.getMovementSpeed());
+            }
+        }
+        _readyUnits.clear();
+
+        // tell the controller to report back to the server that we're ready
+        _ctrl.readyForRound();
     }
 
     /**
@@ -1341,6 +1334,8 @@ public class BangBoardView extends BoardView
 
     protected BWindow _pmarquees;
     protected SwingPath _tpath;
+
+    protected ArrayList<UnitSprite> _readyUnits = new ArrayList<UnitSprite>();
 
     /** A traversal predicate for units running to their initial positions. */
     protected AStarPathUtil.TraversalPred _tpred =

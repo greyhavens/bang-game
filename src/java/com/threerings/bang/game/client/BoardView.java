@@ -60,7 +60,6 @@ import com.jmex.bui.layout.BorderLayout;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.ObserverList;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
@@ -372,13 +371,15 @@ public class BoardView extends BComponent
 
         // if we're done resolving, notify any resolution observers
         if (_resolvingSprites == 0 && _resolutionObs.size() > 0) {
-            _resolutionObs.apply(
-                new ObserverList.ObserverOp<ResolutionObserver>() {
-                public boolean apply (ResolutionObserver observer) {
-                    observer.mediaResolved();
-                    return false; // clear the observer
-                }
-            });
+            // flatten the list to an array and clear it to avoid funny
+            // business if the resolution observer does something that triggers
+            // a sprite to resolve and clear itself
+            ResolutionObserver[] olist = _resolutionObs.toArray(
+                new ResolutionObserver[_resolutionObs.size()]);
+            _resolutionObs.clear();
+            for (int ii = 0; ii < olist.length; ii++) {
+                olist[ii].mediaResolved();
+            }
         }
     }
 
@@ -1523,8 +1524,8 @@ public class BoardView extends BComponent
 
     /** Used to keep track of observers that want to know when our sprites are
      * resolved and we're ready to roll. */
-    protected ObserverList<ResolutionObserver> _resolutionObs =
-        new ObserverList<ResolutionObserver>(ObserverList.SAFE_IN_ORDER_NOTIFY);
+    protected ArrayList<ResolutionObserver> _resolutionObs =
+        new ArrayList<ResolutionObserver>();
 
     /** Used to fade ourselves in at the start of the game. */
     protected FadeInOutEffect _fadein;
