@@ -242,6 +242,10 @@ public abstract class Scenario
             Unit unit = (Unit)piece;
             checkSpookedCattle(bangobj, unit);
             checkAdjustedClaim(bangobj, unit);
+
+        } else if (piece instanceof Train &&
+                   ((Train)piece).type == Train.ENGINE) {
+            checkSpookedCattle(bangobj, piece);
         }
     }
 
@@ -677,16 +681,16 @@ public abstract class Scenario
         return null;
     }
 
-    protected void checkSpookedCattle (BangObject bangobj, Unit unit)
+    protected void checkSpookedCattle (BangObject bangobj, Piece spooker)
     {
-        // check to see if this unit spooked any cattle
+        // check to see if this piece spooked any cattle
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Cow &&
-                unit.getDistance(pieces[ii]) == 1) {
-                Effect effect = ((Cow)pieces[ii]).spook(bangobj, unit);
+                spooker.getDistance(pieces[ii]) == 1) {
+                Effect effect = ((Cow)pieces[ii]).spook(bangobj, spooker);
                 if (effect != null) {
-                    _bangmgr.deployEffect(unit.owner, effect);
+                    _bangmgr.deployEffect(spooker.owner, effect);
                 }
             }
         }

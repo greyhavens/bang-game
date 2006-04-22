@@ -31,24 +31,28 @@ public class Cow extends Piece
      * Called when a unit moves next to this cow; causes the cow to spook
      * in the opposite direction.
      */
-    public SpookEffect spook (BangObject bangobj, Unit spooker)
+    public SpookEffect spook (BangObject bangobj, Piece spooker)
     {
         // if we were spooked by a big shot, become owned by that player
         int owner = -1;
-        if (spooker.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-            if (this.owner != -1) {
-                bangobj.grantPoints(this.owner, -ScenarioCodes.POINTS_PER_COW);
+        if (spooker instanceof Unit) {
+            Unit unit = (Unit)spooker;
+            if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+                if (this.owner != -1) {
+                    bangobj.grantPoints(
+                        this.owner, -ScenarioCodes.POINTS_PER_COW);
+                }
+                owner = spooker.owner;
+                bangobj.grantPoints(owner, ScenarioCodes.POINTS_PER_COW);
             }
-            owner = spooker.owner;
-            bangobj.grantPoints(owner, ScenarioCodes.POINTS_PER_COW);
         }
 
-        // otherwise spook in the opposite direction of our spooker
+        // run in the opposite direction of our spooker
         for (int dd = 0; dd < DIRECTIONS.length; dd++) {
             if (spooker.x + DX[dd] == x && spooker.y + DY[dd] == y) {
-                // spook in the direction that the spooker would have to move
-                // to occupy our location (ie. if we're east of the spooker,
-                // try spooking further east)
+                // run in the direction that the spooker would have to move to
+                // occupy our location (ie. if we're east of the spooker, try
+                // spooking further east)
                 return move(bangobj.board, dd, owner, spooker.pieceId);
             }
         }

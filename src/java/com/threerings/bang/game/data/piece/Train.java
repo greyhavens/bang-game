@@ -10,6 +10,7 @@ import com.threerings.util.RandomUtil;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TrainSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.piece.Bonus;
 
 /**
  * A train car or engine.
@@ -61,7 +62,8 @@ public class Train extends Piece
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
-        return !lapper.isFlyer() && !(lapper instanceof Track);
+        return !lapper.isFlyer() && !(lapper instanceof Track) &&
+            !(lapper instanceof Bonus);
     }
 
     @Override // documentation inherited
