@@ -552,6 +552,10 @@ public class BangController extends GameController
         // reenable the camera controls now that we're fully operational
         _ctx.getInputHandler().setEnabled(true);
 
+        // do a full GC before we sweep the camera up to tidy up after all the
+        // unit model loading
+        System.gc();
+
         // zoom the camera to the center level
         ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
 

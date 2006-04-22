@@ -148,6 +148,10 @@ public class BangBoardView extends BoardView
             return;
         }
 
+        // do a full GC before we start the board tour to tidy up after all the
+        // prop model loading
+        System.gc();
+
         // compute the desired starting location and orientation
         GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
         java.awt.Point start = _bangobj.startPositions[
