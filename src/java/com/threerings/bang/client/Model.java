@@ -327,10 +327,16 @@ public class Model
             _parts = parts;
 
             // update any extant bindings
-            ArrayList<Binding> obindings = _bindings;
-            _bindings = null;
-            for (Binding binding : obindings) {
-                binding.update();
+            if (_bindings != null) {
+                ArrayList<Binding> obindings = _bindings;
+                _bindings = null;
+                for (Binding binding : obindings) {
+                    binding.update();
+                }
+            } else {
+                log.warning("setParts() called on anim with no bindings? " +
+                            "[anim=" + this + "].");
+                Thread.dumpStack();
             }
         }
 
