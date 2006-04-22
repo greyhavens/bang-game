@@ -660,11 +660,7 @@ public class BangBoardView extends BoardView
      */
     protected void reallyStartRound (long start)
     {
-        if (_loading != null) {
-            _ctx.getInterface().detachChild(_loading);
-            _loading = null;
-            _loaded = _toLoad = 0;
-        }
+        clearLoadingMarquee();
 
         // restore normal rendering
         long end = System.currentTimeMillis();

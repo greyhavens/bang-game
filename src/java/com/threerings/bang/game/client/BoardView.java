@@ -311,11 +311,7 @@ public class BoardView extends BComponent
         // fade the board in when the sprites are all resolved
         addResolutionObserver(new ResolutionObserver() {
             public void mediaResolved () {
-                if (_loading != null) {
-                    _ctx.getInterface().detachChild(_loading);
-                    _loading = null;
-                    _loaded = _toLoad = 0;
-                }
+                clearLoadingMarquee();
 
                 // now that we're ready to fade in, go ahead and add our
                 // geometry into the scene graph
@@ -1147,21 +1143,39 @@ public class BoardView extends BComponent
      */
     protected void updateLoadingMarquee ()
     {
+        // avoid recreating our marquee if not necessary
+        int pct = _loaded * 100 / _toLoad;
+        if (pct == _curpct) {
+            return;
+        }
+        _curpct = pct;
+
         if (_loading != null) {
             _ctx.getInterface().detachChild(_loading);
         }
 
-        // Model.getLoader().getQueueSize()
-        int pct = _loaded * 100 / _toLoad;
         String pctstr = _ctx.xlate(
             GameCodes.GAME_MSGS, MessageBundle.tcompose(
                 "m.loading_pct", String.valueOf(pct)));
         _loading = RenderUtil.createTextQuad(_ctx, BangUI.LOADING_FONT, pctstr);
         _loading.setLocalTranslation(
-            new Vector3f(_ctx.getRenderer().getWidth()-100, 25, 0));
+            new Vector3f(_ctx.getRenderer().getWidth()/2, 100, 0));
         _loading.setRenderQueueMode(Renderer.QUEUE_ORTHO);
         _loading.setZOrder(-2);
         _ctx.getInterface().attachChild(_loading);
+    }
+
+    /**
+     * Clears and turns off the loading progress display.
+     */
+    protected void clearLoadingMarquee ()
+    {
+        if (_loading != null) {
+            _ctx.getInterface().detachChild(_loading);
+            _loading = null;
+        }
+        _loaded = _toLoad = 0;
+        _curpct = -1;
     }
 
     /**
@@ -1473,7 +1487,7 @@ public class BoardView extends BComponent
     protected BoardEventListener _blistener = new BoardEventListener();
 
     protected Quad _marquee, _loading;
-    protected int _toLoad, _loaded;
+    protected int _toLoad, _loaded, _curpct = -1;
 
     protected Node _node, _pnode, _hnode;
     protected LightState _lstate;
