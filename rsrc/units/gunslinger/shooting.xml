@@ -1,0 +1,145 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="Bip01" translation="0.0503304, 3.73378, 67.9055" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="0.424875, 5.13763, 63.1154" rotation="0.0, 0.0, -0.761971, 0.647611" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="0.844338, 6.69621, 62.6864" rotation="0.0, 0.0, -0.734116, 0.679024" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.27886, 8.30665, 63.0145" rotation="0.0, 0.0, -0.690805, 0.723041" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.69857, 9.86609, 63.2739" rotation="0.0, 0.0, -0.644061, 0.764975" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.07361, 11.2717, 62.9064" rotation="0.0, 0.0, -0.6089, 0.793247" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.37412, 12.4205, 62.392" rotation="0.0, 0.0, -0.596836, 0.802363" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.57024, 13.2098, 61.8118" rotation="0.0, 0.0, -0.595298, 0.803505" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.64746, 13.5915, 61.187" rotation="0.0, 0.0, -0.600321, 0.799759" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.68463, 13.8486, 60.5386" rotation="0.0, 0.0, -0.609639, 0.792679" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.69921, 14.0407, 59.8876" rotation="0.0, 0.0, -0.620986, 0.783822" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.69311, 14.1711, 59.255" rotation="0.0, 0.0, -0.632163, 0.774836" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.66823, 14.2435, 58.662" rotation="0.0, 0.0, -0.641064, 0.767488" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.62646, 14.2611, 58.1295" rotation="0.0, 0.0, -0.645621, 0.763658" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.56968, 14.2277, 57.6786" rotation="0.0, 0.0, -0.644011, 0.765016" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.49981, 14.1465, 57.3303" rotation="0.0, 0.0, -0.639118, 0.769109" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.41872, 14.0211, 57.0731" rotation="0.0, 0.0, -0.635179, 0.772365" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.32832, 13.855, 56.8823" rotation="0.0, 0.0, -0.636495, 0.771281" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.2305, 13.6517, 56.7506" rotation="0.0, 0.0, -0.646614, 0.762817" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.12716, 13.4146, 56.6704" rotation="0.0, 0.0, -0.662529, 0.749036" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.02019, 13.1471, 56.6343" rotation="0.0, 0.0, -0.678686, 0.734429" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.91148, 12.8529, 56.635" rotation="0.0, 0.0, -0.689899, 0.723906" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.80293, 12.5353, 56.6649" rotation="0.0, 0.0, -0.694177, 0.719805" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.69643, 12.1978, 56.7167" rotation="0.0, 0.0, -0.697221, 0.716856" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.59388, 11.8439, 56.7829" rotation="0.0, 0.0, -0.699554, 0.71458" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.49263, 11.4512, 56.8561" rotation="0.0, 0.0, -0.701286, 0.71288" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.37177, 10.8997, 56.9861" rotation="0.0, 0.0, -0.702524, 0.71166" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.23182, 10.1999, 57.5799" rotation="0.0, 0.0, -0.703373, 0.710821" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="1.07674, 9.38268, 58.7547" rotation="0.0, 0.0, -0.703937, 0.710263" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="0.910501, 8.47867, 60.157" rotation="0.0, 0.0, -0.704319, 0.709883" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="0.737048, 7.51867, 61.6508" rotation="0.0, 0.0, -0.704624, 0.709581" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="0.560345, 6.53343, 63.2043" rotation="0.0, 0.0, -0.704952, 0.709255" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="0.384352, 5.55371, 64.7858" rotation="0.0, 0.0, -0.705408, 0.708802" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="0.213027, 4.61024, 66.3635" rotation="0.0, 0.0, -0.706092, 0.708121" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="0.0503304, 3.73378, 67.9055" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>
