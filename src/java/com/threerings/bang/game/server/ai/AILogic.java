@@ -102,16 +102,17 @@ public abstract class AILogic
      * target.
      * @param y the y coordinate to which to move, this is ignored if {@link
      * Short#MAX_VALUE} is supplied for x.
-     * @param target the piece for the unit to shoot, or <code>null</code> for none
+     * @param target the piece for the unit to shoot, or <code>null</code> for
+     * none
      * @return true if the order was executed, false if there was some error in
      * executing the order
      */
     protected boolean executeOrder (Unit unit, int x, int y, Piece target)
     {
         try {
-            _bangmgr.executeOrder(unit, x, y, target, true);
+            int targetId = (target == null) ? -1 : target.pieceId;
+            _bangmgr.executeOrder(unit, x, y, targetId, true);
             return true;
-            
         } catch (InvocationException e) {
             return false;
         }

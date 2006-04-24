@@ -179,10 +179,9 @@ public class Tutorial extends Scenario
         } else if (action instanceof TutorialConfig.MoveUnit) {
             TutorialConfig.MoveUnit mua = (TutorialConfig.MoveUnit)action;
             Unit unit = (Unit)_bangobj.pieces.get(mua.id);
-            Unit target = (Unit)_bangobj.pieces.get(mua.target);
             try {
-                _bangmgr.executeOrder(
-                    unit, mua.location[0], mua.location[1], target, true);
+                _bangmgr.executeOrder(unit, mua.location[0], mua.location[1],
+                                      mua.target, true);
             } catch (InvocationException ie) {
                 log.warning("Unable to execute action " + mua + ":" +
                             ie.getMessage());
