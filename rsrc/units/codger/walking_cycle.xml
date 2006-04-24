@@ -1,0 +1,37 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="Bip01" translation="-4.74372, 2.46512, 50.8703" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="-1.72879, 2.46512, 41.7487" rotation="0.0, 0.0, -0.700787, 0.713371" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.28061, 2.46512, 51.4815" rotation="0.0, 0.0, -0.691315, 0.722553" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="4.99863, 2.46512, 59.7366" rotation="0.0, 0.0, -0.682621, 0.730773" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="4.71793, 2.46512, 50.7427" rotation="0.0, 0.0, -0.6788, 0.734323" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="2.54755, 2.46512, 41.7487" rotation="0.0, 0.0, -0.685325, 0.728237" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="-0.424029, 2.46512, 49.9825" rotation="0.0, 0.0, -0.698424, 0.715684" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01" translation="-3.19004, 2.46512, 59.7366" rotation="0.0, 0.0, -0.708677, 0.705533" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>
