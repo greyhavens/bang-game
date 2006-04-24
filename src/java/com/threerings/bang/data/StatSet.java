@@ -10,7 +10,7 @@ import com.threerings.presents.dobj.DSet;
 /**
  * A distributed set containing {@link Stat} objects.
  */
-public final class StatSet extends DSet
+public final class StatSet extends DSet<Stat>
 {
     /** Creates a stat set with the specified contents. */
     public StatSet (Iterator<Stat> contents)

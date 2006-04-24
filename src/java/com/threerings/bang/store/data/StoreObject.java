@@ -24,7 +24,7 @@ public class StoreObject extends PlaceObject
     public StoreMarshaller service;
 
     /** The goods available for sale in this store. */
-    public DSet goods;
+    public DSet<Good> goods;
 
     // AUTO-GENERATED: METHODS START
     /**

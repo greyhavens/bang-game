@@ -15,6 +15,7 @@ import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 
@@ -46,7 +47,7 @@ public class GameOverViewTest extends TestApp
     {
         PlayerObject user = new PlayerObject();
         user.handle = new Handle("Wild Annie");
-        user.inventory = new DSet(new Purse[] { new Purse(-1, 1) });
+        user.inventory = new DSet<Item>(new Purse[] { new Purse(-1, 1) });
         user.scrip = 125378;
 
         BangObject bangobj = new BangObject();

@@ -166,7 +166,7 @@ public class PlayerManager
             }
         }
 
-        player.pardners = new DSet(pardners.iterator());
+        player.pardners = new DSet<PardnerEntry>(pardners.iterator());
         if (player.getOnlinePardnerCount() > 0) {
             new PardnerEntryUpdater(player).updatePardnerEntries();
         }

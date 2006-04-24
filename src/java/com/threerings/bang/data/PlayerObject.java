@@ -73,7 +73,7 @@ public class PlayerObject extends BodyObject
     public BangTokenRing tokens;
 
     /** Contains all items held by this user. */
-    public DSet inventory;
+    public DSet<Item> inventory;
 
     /** Indicates which town this user currently occupies. */
     public String townId;
@@ -88,16 +88,16 @@ public class PlayerObject extends BodyObject
     public StatSet stats;
 
     /** Contains all ratings earned by this player. */
-    public DSet ratings;
+    public DSet<Rating> ratings;
 
     /** This player's current avatar look. */
     public String look;
 
     /** The avatar looks this player has available. */
-    public DSet looks;
+    public DSet<Look> looks;
 
     /** {@link PardnerEntry}s for each of the player's pardners. */
-    public DSet pardners;
+    public DSet<PardnerEntry> pardners;
     
     /**
      * Returns the player's rating for the specified scenario. This method will

@@ -14,9 +14,9 @@ import com.threerings.bang.game.data.piece.Piece;
  * to add and remove pieces directly so that we can have effects that add
  * and remove pieces from the board.
  */
-public class PieceDSet extends DSet
+public class PieceDSet extends DSet<Piece>
 {
-    public PieceDSet (Iterator pieces)
+    public PieceDSet (Iterator<Piece> pieces)
     {
         super(pieces);
     }

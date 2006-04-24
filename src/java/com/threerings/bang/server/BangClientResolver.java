@@ -11,6 +11,7 @@ import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
@@ -58,7 +59,7 @@ public class BangClientResolver extends CrowdClientResolver
 
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
-        buser.inventory = new DSet(items.iterator());
+        buser.inventory = new DSet<Item>(items.iterator());
 
         // load up this player's persistent stats
         ArrayList<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);
@@ -68,11 +69,11 @@ public class BangClientResolver extends CrowdClientResolver
         // load up this player's ratings
         ArrayList<Rating> ratings =
             BangServer.ratingrepo.loadRatings(buser.playerId);
-        buser.ratings = new DSet(ratings.iterator());
+        buser.ratings = new DSet<Rating>(ratings.iterator());
 
         // load up this player's avatar looks
         buser.look = player.look;
-        buser.looks = new DSet(
+        buser.looks = new DSet<Look>(
             BangServer.lookrepo.loadLooks(player.playerId).iterator());
         
         // load up this player's pardners

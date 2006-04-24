@@ -218,7 +218,7 @@ public class BangObject extends GameObject
     public PieceDSet pieces;
 
     /** Contains information on all available cards. */
-    public DSet cards = new DSet();
+    public DSet<Card> cards = new DSet<Card>();
 
     /** A field we use to broadcast applied effects. */
     public Effect effect;
