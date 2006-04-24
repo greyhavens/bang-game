@@ -1,0 +1,1055 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 7.96469, 69.8577" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649158, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52508, -0.00988859, -0.914814" rotation="-0.110751, 0.0475889, 0.0750724, 0.989865" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8868, -0.00961088, 0.00212761" rotation="-0.106395, 0.00705762, 0.142669, 0.98401" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.0098982, 0.00205342" rotation="-0.100355, -0.006938, 0.0867081, 0.991142" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8834, -0.00420831, 1.65154e-006" rotation="0.0, 1.9164e-007, -0.0697565, 0.997564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -3.49117e-007, -3.67344e-007" rotation="0.307405, -0.0340297, -0.0820199, 0.947427" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.01297, -2.3483, 4.22217" rotation="0.561743, 0.0390551, 0.824399, -0.0573186" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -3.09457e-006, 2.44136e-006" rotation="-0.340464, 0.340926, -0.27113, 0.833272" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -1.07013e-006, 8.55934e-007" rotation="0.0, 0.0, -0.471314, 0.881966" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -2.43708e-006, -1.0841e-006" rotation="0.990534, -0.126142, -0.0238913, -0.0485849" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -3.58106e-006, 3.75793e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642373, -8.065" rotation="-0.0108751, 0.0377256, -0.267047, 0.962883" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -1.41202e-007, 1.6954e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211512, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -1.70282e-006, -3.38951e-007" rotation="0.0, 0.0, -0.0087265, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.01297, -2.34827, -4.22219" rotation="-0.528539, 0.0634186, 0.837946, -0.120294" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -2.70832e-006, 7.37004e-006" rotation="-0.1218, -0.12537, -0.412993, 0.893803" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 1.23211e-006, 3.7233e-006" rotation="0.0, 0.0, -0.757575, 0.652748" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -2.53353e-006, -1.20001e-006" rotation="0.923614, -0.0704454, 0.257768, 0.274828" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68346" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -9.00056e-007, 7.46742e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642091, 8.06499" rotation="-0.000458693, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -1.3482e-006, -3.78666e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211193, -2.73267" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 2.09939e-006, 2.73388e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.55764e-005, 1.8189e-005, 11.3305" rotation="0.210516, 0.9403, 0.0279201, -0.265968" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 0.0, 1.29185e-006" rotation="0.0, 0.0, -0.594256, 0.804276" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -3.4404e-007, -1.32676e-006" rotation="-0.0890758, -0.238343, 0.190225, 0.948194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 1.47729e-006" rotation="0.0, 0.0, 0.829037, 0.559193" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.62498e-005, -1.23721e-005, -11.3305" rotation="0.330473, 0.931557, -0.111947, 0.102259" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 4.66342e-007, 2.35127e-006" rotation="0.0, 0.0, -0.467425, 0.884033" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 9.07295e-007, -4.23748e-007" rotation="0.00352614, 0.106617, 0.0640417, 0.992229" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -7.18123e-007" rotation="-0.147707, 0.073644, 0.732953, 0.659954" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 8.26354, 67.3094" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649158, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52681, -0.00964923, -0.916089" rotation="-0.0513481, 0.0400931, 0.164278, 0.98426" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8871, -0.00902895, 0.00373572" rotation="-0.184329, -0.0210438, 0.161286, 0.969312" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.886, -0.0100074, 0.000943175" rotation="-0.0456296, -0.0049281, 0.100124, 0.993916" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8841, -0.0041407, -0.00095364" rotation="0.112001, 0.048362, 0.0212466, 0.992303" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 2.32892e-006, 7.39841e-007" rotation="0.188708, -0.0971477, -0.0831603, 0.973671" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.77898, -0.805508, 4.18364" rotation="0.51902, 0.0755822, 0.847894, 0.0773368" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -7.98537e-007, 0.0" rotation="-0.103324, 0.101631, -0.343173, 0.928023" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -1.81102e-006, 8.84065e-007" rotation="0.0, 0.0, -0.472509, 0.881326" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -1.20425e-006, -2.41901e-007" rotation="0.992241, -0.111376, -0.0494749, -0.0245973" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95132, -7.68346" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 3.1888e-006, -3.72479e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642304, -8.06499" rotation="-0.00970954, 0.0380423, -0.237303, 0.970642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -9.27513e-007, 4.76658e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00210996, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 3.35802e-006, -5.94541e-007" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.00868, -2.69983, -4.00937" rotation="-0.599827, 0.178083, 0.774453, -0.0933564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 2.15063e-006, -3.92752e-006" rotation="0.0407498, -0.192005, -0.460259, 0.865815" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 2.76963e-007, 2.71155e-006" rotation="0.0, 0.0, -0.67112, 0.741349" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 1.51867e-006, 4.00072e-006" rotation="0.925573, -0.0851344, 0.228723, 0.2894" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -2.01452e-006, -1.80959e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642144, 8.065" rotation="-0.000458689, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -1.00073e-006, -2.1404e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00210912, -2.73266" rotation="-0.00905844, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, -2.56049e-007, -1.63896e-006" rotation="0.0, 0.0, 0.45399, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.80439e-005, 1.8189e-005, 11.3305" rotation="0.175866, 0.949497, 0.043508, -0.256192" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 6.06443e-007, 1.64539e-006" rotation="0.0, 0.0, -0.585135, 0.810936" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, 1.96672e-006, -2.20074e-006" rotation="-0.0963491, -0.226492, 0.282894, 0.927033" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 1.19659e-006" rotation="7.10778e-006, 0.0048497, 0.789278, 0.614017" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.37823e-005, -1.23721e-005, -11.3305" rotation="0.389893, 0.908938, -0.102165, 0.10667" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -3.15269e-006, 0.0" rotation="0.0, 0.0, -0.530126, 0.847919" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 0.0, 2.06443e-007" rotation="0.0093791, 0.103765, 0.0599965, 0.992746" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 6.90523e-007" rotation="-0.148966, 0.0766364, 0.741012, 0.650259" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 8.21735, 64.5503" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649158, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52796, -0.00920386, -0.917267" rotation="0.00568572, 0.0352698, 0.226559, 0.973342" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.887, -0.0084926, 0.0048761" rotation="-0.241219, -0.0436061, 0.167948, 0.954833" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8862, -0.0100146, -0.000148036" rotation="0.00749904, -0.00231755, 0.108651, 0.994049" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8847, -0.00374234, -0.00187139" rotation="0.217931, 0.0908067, 0.109022, 0.965595" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -4.75345e-006, 1.13422e-006" rotation="0.0575448, -0.125032, -0.079357, 0.987298" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-4.19535, 0.747428, 3.77968" rotation="0.468954, 0.109147, 0.852049, 0.205383" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -9.44929e-007, 1.11608e-006" rotation="0.0897136, -0.140338, -0.307882, 0.936731" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, 2.99381e-006, -4.99348e-007" rotation="0.0, 0.0, -0.479505, 0.877539" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 2.8543e-007, -1.57448e-006" rotation="0.993422, -0.0893885, -0.0687943, -0.0197588" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 3.10921e-006, 3.61007e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642321, -8.06499" rotation="-0.00853241, 0.0383235, -0.207274, 0.977495" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -5.05137e-007, 2.27772e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211179, 2.73266" rotation="0.00635163, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 0.0, 3.81528e-007" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.11577, -2.9737, -3.72332" rotation="-0.654511, 0.286909, 0.694901, -0.0800679" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -2.33392e-006, 3.22589e-007" rotation="0.181298, -0.243513, -0.445767, 0.842095" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -1.7821e-006, 3.14523e-006" rotation="0.0, 0.0, -0.580373, 0.814351" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -1.70337e-006, -8.11982e-006" rotation="0.926351, -0.0997133, 0.199388, 0.303604" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 1.4139e-006, 8.58577e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642025, 8.065" rotation="-0.000458693, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 1.9853e-006, -1.56589e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.0021113, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, -3.09746e-007, -4.25562e-006" rotation="0.0, 0.0, 0.453991, 0.891006" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.92003e-005, 1.8189e-005, 11.3305" rotation="0.143886, 0.95632, 0.0589705, -0.24753" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 1.05551e-006, -4.70249e-007" rotation="0.0, 0.0, -0.57314, 0.819457" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -2.23693e-006, -1.76108e-006" rotation="-0.104791, -0.212478, 0.360527, 0.90216" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -2.42569e-007" rotation="-0.000288996, 0.0049187, 0.749818, 0.661626" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.26259e-005, -1.23721e-005, -11.3305" rotation="0.428673, 0.89153, -0.0897167, 0.115605" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 1.66205e-006, 2.63063e-006" rotation="0.0, 0.0, -0.592298, 0.805719" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 6.28224e-007, -5.24914e-007" rotation="0.0086878, 0.112754, 0.0930327, 0.98922" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -5.96226e-007" rotation="-0.148762, 0.0764523, 0.739525, 0.652018" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 8.86125, 62.6343" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649158, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52652, -0.00972362, -0.918112" rotation="0.0481093, 0.0469462, 0.154073, 0.98577" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8861, -0.00919864, 0.00402291" rotation="-0.197091, -0.0378992, 0.113802, 0.97302" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8858, -0.0100256, -0.00109122" rotation="0.0531614, 0.00357597, 0.0923761, 0.994298" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8851, -0.00319542, -0.00255355" rotation="0.305332, 0.0890985, 0.177816, 0.931244" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 2.60017e-006, -2.63323e-006" rotation="-0.171633, -0.037542, -0.174511, 0.968854" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-4.0279, 2.02218, 3.48473" rotation="0.451036, 0.136572, 0.82709, 0.306327" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 3.29609e-006, 5.69451e-006" rotation="0.137128, -0.204884, -0.300567, 0.921346" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, 1.539e-006, 1.29552e-006" rotation="0.0, 0.0, -0.524423, 0.851458" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 3.36399e-006, -3.56676e-006" rotation="0.991512, -0.0302167, -0.0559512, -0.113402" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -5.16705e-006, -1.37326e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642135, -8.06499" rotation="-0.00733361, 0.0385708, -0.176701, 0.983481" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 1.02429e-006, -4.83926e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211289, 2.73266" rotation="0.0063516, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 0.0, -6.83352e-007" rotation="0.0, 0.0, -0.00872651, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.54353, -3.0475, -3.25107" rotation="0.668575, -0.37016, -0.639641, 0.0827564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -2.49499e-006, 2.15064e-006" rotation="0.18156, -0.307532, -0.252499, 0.89928" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -9.50314e-007, 2.60373e-006" rotation="0.0, 0.0, -0.513623, 0.858016" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 1.78176e-007, 4.10013e-007" rotation="0.925945, -0.11416, 0.16981, 0.317424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -5.4356e-007, 1.67338e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642138, 8.065" rotation="-0.000458689, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -7.61207e-007, -7.06459e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211085, -2.73266" rotation="-0.00905841, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 1.67664e-006, -4.41545e-007" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.42598e-005, 1.8189e-005, 11.3305" rotation="0.133886, 0.960113, 0.0639551, -0.236996" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 1.42639e-007, 0.0" rotation="0.0, 0.0, -0.568157, 0.822921" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -3.16194e-006, -1.52517e-006" rotation="-0.121207, -0.197944, 0.404562, 0.884566" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -1.32308e-006" rotation="0.0, -1.31276e-007, 0.721389, 0.69253" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.75664e-005, -1.23721e-005, -11.3305" rotation="0.386078, 0.909981, -0.0467682, 0.143842" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -1.01109e-006, 0.0" rotation="0.0, 0.0, -0.707991, 0.706221" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 5.42963e-007, -1.27098e-006" rotation="-0.00861445, 0.171553, 0.304962, 0.936746" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -1.37489e-006" rotation="-0.146201, 0.0741774, 0.721203, 0.673044" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 11.2303, 62.9711" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649158, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52292, -0.0101089, -0.918636" rotation="0.0821487, 0.0700888, -0.0202418, 0.993946" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8841, -0.0101079, 0.00174908" rotation="-0.0854693, -0.0122044, 0.00766919, 0.996237" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8851, -0.00999882, -0.0019886" rotation="0.0968391, 0.0122222, 0.057254, 0.993577" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8854, -0.00319991, -0.00242696" rotation="0.29311, 0.058983, 0.194962, 0.934129" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 7.32872e-007, -6.12266e-007" rotation="-0.349097, 0.00156238, -0.183116, 0.91902" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.7809, 2.06812, 3.7262" rotation="0.476991, 0.108232, 0.816148, 0.307681" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 2.18776e-006, 6.7731e-006" rotation="0.150851, -0.180991, -0.314505, 0.91955" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, 4.18188e-007, 8.55003e-007" rotation="0.0, 0.0, -0.608539, 0.793524" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 1.40293e-006, 3.56836e-006" rotation="0.961159, 0.0552112, -0.020867, -0.269609" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 5.66471e-006, 1.82752e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642422, -8.065" rotation="-0.00611564, 0.0387826, -0.145651, 0.988557" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -2.61693e-006, -4.56255e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00210927, 2.73266" rotation="0.0063516, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96353, 1.38547e-006, -5.71593e-006" rotation="0.0, 0.0, -0.0087265, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.81547, -2.75025, -3.20845" rotation="0.687805, -0.347702, -0.634169, 0.0621034" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 7.8288e-007, -1.54436e-006" rotation="0.083186, -0.38564, 0.103328, 0.913064" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -6.0364e-007, -2.04796e-006" rotation="0.0, 0.0, -0.470747, 0.882268" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -2.03214e-006, -3.78011e-006" rotation="0.924357, -0.128458, 0.140022, 0.330842" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 2.52336e-006, 3.88491e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642138, 8.065" rotation="-0.000458685, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 1.01175e-006, 4.58667e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211295, -2.73266" rotation="-0.00905842, -0.0291669, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 0.0, -3.68157e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.55315e-005, 1.8189e-005, 11.3305" rotation="0.135672, 0.966299, 0.0422234, -0.214653" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 2.48326e-007, -9.21767e-007" rotation="0.0, 0.0, -0.542957, 0.839761" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -3.88171e-006, -1.26271e-006" rotation="-0.162422, -0.182906, 0.400376, 0.883099" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -1.4903e-007" rotation="0.0, -1.4773e-007, 0.704148, 0.710054" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.62947e-005, -1.23721e-005, -11.3305" rotation="0.137116, 0.973783, -0.0129526, 0.181048" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 0.0, -1.21706e-006" rotation="0.0, 0.0, -0.706142, 0.70807" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -1.34982e-006, 1.52884e-006" rotation="-0.0668886, 0.244772, 0.445651, 0.858492" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 1.93216e-006" rotation="-0.152408, 0.0617345, 0.776531, 0.608244" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 20.0395, 67.4686" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649159, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.5192, -0.00916382, -0.918743" rotation="0.107466, 0.091448, -0.203969, 0.968754" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.882, -0.0100236, -0.000948505" rotation="0.0482758, 0.0177296, -0.0966996, 0.993984" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8843, -0.00987228, -0.00276149" rotation="0.135454, 0.0206795, 0.0207067, 0.990351" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8854, -0.00356939, -0.00179683" rotation="0.212767, 0.0392356, 0.187499, 0.958141" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -2.48742e-007, 4.22962e-007" rotation="-0.363339, -0.00863974, -0.0336473, 0.931009" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.76691, 1.31919, 4.06455" rotation="0.504989, 0.0367228, 0.825278, 0.250107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -1.39426e-006, 2.6806e-006" rotation="0.153274, -0.161793, -0.292658, 0.929882" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, 1.91961e-007, 5.21478e-006" rotation="0.0, 0.0, -0.673763, 0.738947" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -8.45072e-007, -2.68469e-006" rotation="0.891308, 0.143018, 0.0208424, -0.429745" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 3.39644e-006, 8.23515e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00641814, -8.06499" rotation="-0.00489281, 0.0389558, -0.114487, 0.992649" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52779, -6.17749e-006, 5.16837e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211248, 2.73266" rotation="0.0063516, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -4.45041e-006, -3.92475e-006" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.80576, -2.24799, -3.58927" rotation="0.706808, -0.263474, -0.656502, -0.00301087" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -1.48072e-006, 6.93132e-007" rotation="-0.0932975, -0.377698, 0.40678, 0.826541" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -1.97115e-006, 0.0" rotation="0.0, 0.0, -0.457283, 0.889321" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -5.01405e-007, -7.07785e-006" rotation="0.921586, -0.142593, 0.110055, 0.343853" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -4.61899e-006, -1.11715e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00641938, 8.06499" rotation="-0.000458684, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -3.1345e-006, -1.25281e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211244, -2.73266" rotation="-0.00905841, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 2.35048e-006, 3.77461e-007" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.5319e-005, 1.8189e-005, 11.3305" rotation="0.210096, 0.959896, -0.0206985, -0.184476" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -1.01615e-006, 2.68947e-006" rotation="0.0, 0.0, -0.50872, 0.860932" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0018, -1.17919e-006, 5.45576e-007" rotation="-0.234086, -0.162193, 0.268551, 0.920205" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 3.66534e-006" rotation="0.0, 0.0, 0.722812, 0.691045" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.65072e-005, -1.23721e-005, -11.3305" rotation="0.00261364, 0.983927, -0.0180587, 0.177638" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -6.89533e-007, 9.11266e-007" rotation="0.0, 0.0, -0.545686, 0.837989" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -2.81846e-006, 8.51202e-007" rotation="-0.0709754, 0.253799, 0.253823, 0.930657" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -5.54826e-007" rotation="-0.159964, 0.0404577, 0.855536, 0.490747" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 29.4252, 70.966" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649159, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.51728, -0.00798507, -0.918812" rotation="0.128103, 0.101873, -0.306892, 0.937565" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8809, -0.00931429, -0.00303679" rotation="0.157012, 0.0360966, -0.145754, 0.976115" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8839, -0.00970386, -0.00333826" rotation="0.16506, 0.0259865, 0.000126078, 0.985941" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8854, -0.00388524, -0.000999399" rotation="0.116465, 0.0202187, 0.172429, 0.977903" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -7.8996e-007, 1.89365e-006" rotation="-0.273305, -0.0510954, -0.00300475, 0.960565" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.76208, 0.351552, 4.26209" rotation="0.529202, -0.0419739, 0.828339, 0.178989" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -6.39222e-007, 6.65677e-007" rotation="0.08818, -0.184064, -0.27057, 0.940817" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -2.16626e-006, 4.57531e-007" rotation="0.0, 0.0, -0.670697, 0.741731" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 4.85849e-006, 1.30217e-006" rotation="-0.808262, -0.211911, -0.0531057, 0.546796" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 1.37571e-006, -5.7147e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642126, -8.065" rotation="-0.00368006, 0.039089, -0.0835891, 0.995727" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52779, 1.19779e-006, -3.73543e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211146, 2.73266" rotation="0.00635162, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 1.96801e-006, -1.75801e-006" rotation="0.0, 0.0, -0.00872647, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.76731, -1.63079, -3.9463" rotation="0.701197, -0.161866, -0.689453, -0.0823142" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 1.244e-006, 4.30391e-006" rotation="-0.217128, -0.419118, 0.515532, 0.715138" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -2.44165e-007, -4.62566e-006" rotation="0.0, 0.0, -0.465855, 0.884861" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -1.48386e-007, 1.07944e-006" rotation="0.917733, -0.15725, 0.0784323, 0.356213" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -5.13682e-007, -1.03436e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.0064201, 8.06499" rotation="-0.000458692, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -5.27496e-007, 4.09134e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211203, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, -6.15927e-007, -4.00924e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.5452e-005, 1.8189e-005, 11.3305" rotation="0.239341, 0.955186, -0.0290144, -0.171735" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -1.63176e-006, 1.03586e-006" rotation="0.0, 0.0, -0.390395, 0.920647" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -1.63372e-006, 9.19396e-007" rotation="-0.264313, -0.113088, 0.116019, 0.950731" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 1.22928e-006" rotation="0.0, -1.76361e-007, 0.724644, 0.689124" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.63742e-005, -1.23721e-005, -11.3305" rotation="0.0412766, 0.986926, -0.0256423, 0.153677" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -1.00383e-006, 1.08403e-006" rotation="0.0, 0.0, -0.502355, 0.864662" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 1.77383e-006, -9.60036e-007" rotation="-0.0321108, 0.232683, 0.198709, 0.951495" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -1.11018e-006" rotation="-0.158606, 0.0467331, 0.842504, 0.512687" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 32.4264, 71.2232" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.51752, -0.00801178, -0.91941" rotation="0.15618, 0.098311, -0.291294, 0.938664" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8817, -0.00888276, -0.00460061" rotation="0.236256, 0.0351217, -0.107267, 0.965113" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.884, -0.00950562, -0.00384155" rotation="0.190581, 0.0270258, 0.00514158, 0.981286" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8853, -0.00404111, -0.000237678" rotation="0.0274992, 0.00425003, 0.155644, 0.987421" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -4.16745e-007, 1.15669e-006" rotation="-0.185563, -0.1599, -0.135787, 0.959979" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.73745, -0.5588, 4.26072" rotation="0.545955, -0.106544, 0.822917, 0.11571" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -3.82318e-007, -2.51217e-006" rotation="-0.107552, -0.15496, -0.249613, 0.949797" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, 4.87602e-006, 1.9767e-006" rotation="0.0, 0.0, -0.538805, 0.84243" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -8.12348e-006, 4.50869e-006" rotation="-0.740754, -0.26476, -0.0769309, 0.612591" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 1.23928e-006, -1.20715e-005" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642106, -8.065" rotation="-0.00244626, 0.0391856, -0.0521649, 0.997866" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52779, 9.34159e-007, -1.12642e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00210973, 2.73266" rotation="0.00635162, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96353, 2.0012e-007, -2.19642e-007" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.73885, -1.02854, -4.17056" rotation="-0.677975, 0.0612204, 0.716142, 0.154085" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 0.0, 4.31222e-006" rotation="-0.167892, -0.488606, 0.464681, 0.71913" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -1.64815e-007, 5.69957e-007" rotation="0.0, 0.0, -0.484958, 0.874537" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -1.65078e-006, -5.68727e-007" rotation="0.912631, -0.17204, 0.04594, 0.367962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55131, 1.62091e-006, -2.47715e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642105, 8.065" rotation="-0.000458686, -0.0392591, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 3.37425e-007, -2.74542e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211141, -2.73266" rotation="-0.00905842, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, -1.0466e-006, -7.58281e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.62708e-005, 2.00964e-005, 11.3305" rotation="0.254319, 0.951426, -0.0338483, -0.170192" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -2.71711e-007, -5.95823e-007" rotation="0.0, 0.0, -0.365657, 0.930749" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -2.42473e-006, -1.17144e-006" rotation="-0.270986, -0.102026, 0.0737316, 0.954317" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -1.33193e-006" rotation="0.0, 0.0, 0.72589, 0.687811" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.55553e-005, -1.42794e-005, -11.3305" rotation="0.0341148, 0.988705, -0.040722, 0.140146" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 4.54372e-007, -2.73541e-006" rotation="0.0, 0.0, -0.473229, 0.88094" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0018, -2.90412e-006, 5.99731e-007" rotation="-0.0114373, 0.213024, 0.216563, 0.952675" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -2.67157e-007" rotation="-0.156262, 0.0604918, 0.819863, 0.547491" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 33.4864, 70.4217" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.51907, -0.00868317, -0.920249" rotation="0.184575, 0.0862955, -0.205935, 0.957119" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8835, -0.00840957, -0.00586133" rotation="0.300064, 0.0235798, -0.0147669, 0.953513" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8843, -0.00933679, -0.00423523" rotation="0.210693, 0.0253265, 0.0252951, 0.976897" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8852, -0.00406802, 0.000264737" rotation="-0.0301865, -0.00636372, 0.144548, 0.989017" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 2.99024e-007, -1.1301e-006" rotation="-0.197554, -0.286474, -0.292695, 0.890637" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.70306, -1.1372, 4.17416" rotation="0.555256, -0.144252, 0.815421, 0.0772687" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 5.34146e-007, -1.69527e-006" rotation="-0.326449, -0.014423, -0.169223, 0.929832" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, 1.74145e-006, 7.58036e-007" rotation="0.0, 0.0, -0.297689, 0.954663" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -7.02265e-006, 5.65418e-006" rotation="-0.685065, -0.308303, -0.0965828, 0.652921" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -9.54935e-006, -4.30878e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642198, -8.065" rotation="-0.00120579, 0.0392433, -0.020581, 0.999017" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52779, 0.0, 2.23341e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211225, 2.73266" rotation="0.00635162, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96353, 5.36672e-006, -3.22845e-006" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.73566, -0.617433, -4.25413" rotation="-0.646638, -0.0155792, 0.734744, 0.204372" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -3.11678e-007, 9.82975e-007" rotation="-0.0471728, -0.456496, 0.343279, 0.819479" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 1.68215e-006, -1.98364e-006" rotation="0.0, 0.0, -0.5068, 0.862063" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 1.14869e-006, -6.79493e-007" rotation="0.906221, -0.186049, 0.0145635, 0.379391" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -4.80978e-007, -1.60986e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642009, 8.065" rotation="-0.00045869, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -1.32352e-006, 1.14353e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211277, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 6.16398e-007, 4.93893e-007" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.8562e-005, 2.00964e-005, 11.3305" rotation="0.278518, 0.944269, -0.0380007, -0.171285" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 8.13708e-007, -1.35058e-006" rotation="0.0, 0.0, -0.392649, 0.919689" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0018, -1.8982e-006, 8.44472e-007" rotation="-0.2695, -0.105021, 0.0755463, 0.954271" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -7.72959e-007" rotation="0.0, -1.67639e-007, 0.726679, 0.686977" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.32642e-005, -1.42794e-005, -11.3305" rotation="0.0223861, 0.989656, -0.05492, 0.13063" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 1.57893e-006, 0.0" rotation="0.0, 0.0, -0.453616, 0.891197" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -4.63067e-006, -1.66375e-006" rotation="0.00149544, 0.198219, 0.255722, 0.94621" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -2.39266e-006" rotation="-0.15404, 0.0729309, 0.791206, 0.587321" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 34.8792, 68.7844" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52111, -0.00927063, -0.920703" rotation="0.193714, 0.0732839, -0.102089, 0.972976" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8854, -0.0078494, -0.00645268" rotation="0.333806, 0.0118929, 0.0785039, 0.939292" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8848, -0.00928546, -0.00427772" rotation="0.212555, 0.0219766, 0.0477689, 0.975733" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8852, -0.00405406, 0.000427464" rotation="-0.0493878, -0.0104114, 0.144874, 0.988162" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 6.07709e-007, -2.41235e-006" rotation="-0.300764, -0.326299, -0.384083, 0.809661" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.69383, -1.2968, 4.13548" rotation="0.557148, -0.162525, 0.811719, 0.0654479" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -2.09979e-007, -5.59246e-007" rotation="-0.424158, 0.164476, -0.0536215, 0.888911" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, 1.27148e-006, -4.30401e-006" rotation="0.0, 0.0, -0.0639864, 0.997951" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -6.3045e-006, 1.1433e-005" rotation="-0.640643, -0.332046, -0.101934, 0.684786" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55133, 4.13411e-006, -1.05069e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00641915, -8.065" rotation="-4.24065e-005, 0.0392618, 0.00903051, 0.999188" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 1.23815e-006, 3.59423e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211396, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96355, 4.81178e-006, 8.43649e-007" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.74674, -0.447078, -4.26586" rotation="-0.619126, -0.0577486, 0.747494, 0.233669" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 6.04502e-007, -4.29449e-006" rotation="0.0284181, -0.314498, 0.224542, 0.921881" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 4.40691e-007, -3.85175e-006" rotation="0.0, 0.0, -0.523922, 0.851766" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 2.56109e-006, 1.50023e-006" rotation="0.898693, -0.198416, -0.0137082, 0.390888" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 6.3748e-007, -2.89301e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642182, 8.065" rotation="-0.000458689, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -6.28116e-007, -5.52244e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211108, -2.73266" rotation="-0.00905842, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, -3.32086e-007, -1.61128e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.88985e-005, 2.00964e-005, 11.3305" rotation="0.3186, 0.930831, -0.0438464, -0.173566" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 1.1167e-006, -9.91866e-007" rotation="0.0, 0.0, -0.442389, 0.896823" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, 0.0, 8.0519e-007" rotation="-0.265046, -0.111303, 0.0854931, 0.953967" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -2.20231e-007" rotation="0.0, -1.73179e-007, 0.727137, 0.686492" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.29277e-005, -1.42794e-005, -11.3305" rotation="0.0134367, 0.989935, -0.0639867, 0.125518" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -1.68336e-006, 1.14012e-006" rotation="0.0, 0.0, -0.438258, 0.898849" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 2.19242e-006, 1.64318e-007" rotation="0.00644241, 0.19251, 0.303527, 0.93315" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 0.0" rotation="-0.150747, 0.0770448, 0.755939, 0.632373" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 37.6202, 66.3038" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52265, -0.00965592, -0.920361" rotation="0.169062, 0.0673056, -0.028159, 0.982901" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8863, -0.0076962, -0.00637743" rotation="0.330862, 0.0100542, 0.124181, 0.935419" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8851, -0.00948843, -0.00371821" rotation="0.18367, 0.0178741, 0.0611565, 0.980921" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8852, -0.00403835, 0.000396752" rotation="-0.0455193, -0.0095959, 0.152636, 0.987187" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -1.67893e-006, -2.85934e-006" rotation="-0.373566, -0.241373, -0.39874, 0.801994" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.71222, -1.20604, 4.14655" rotation="0.551101, -0.183766, 0.811714, 0.0603147" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 1.20552e-006, 2.4315e-006" rotation="-0.36311, 0.268224, 0.0446345, 0.891187" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -3.51469e-006, -1.40321e-006" rotation="0.0, 0.0, 0.00787403, 0.999969" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -7.53059e-006, 2.72369e-006" rotation="-0.606731, -0.320839, -0.0793734, 0.722938" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 5.52621e-006, -1.41708e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642313, -8.065" rotation="0.00096679, 0.0392499, 0.0347109, 0.998626" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -1.29459e-006, -3.69765e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211432, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 2.50429e-006, 1.45671e-006" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.75486, -0.422365, -4.26126" rotation="-0.598825, -0.0793065, 0.755954, 0.252294" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 5.07912e-007, -2.09495e-006" rotation="0.029468, -0.176219, 0.135661, 0.974512" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 3.2578e-007, -2.31654e-006" rotation="0.0, 0.0, -0.527918, 0.849296" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -3.2632e-006, -2.73805e-006" rotation="0.889789, -0.208909, -0.0382818, 0.40394" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 4.76141e-007, -2.35994e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642055, 8.065" rotation="-0.000458688, -0.0392591, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 0.0, -4.34346e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211145, -2.73266" rotation="-0.00905842, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 1.72797e-006, 1.89295e-007" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.94273e-005, 2.00964e-005, 11.3305" rotation="0.375735, 0.908235, -0.052819, -0.176475" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -1.06502e-006, -1.94472e-006" rotation="0.0, 0.0, -0.496917, 0.867798" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, 0.0, -1.80489e-006" rotation="-0.260553, -0.115429, 0.0835089, 0.95489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -6.04433e-007" rotation="0.0, 0.0, 0.72739, 0.686225" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.23989e-005, -1.42794e-005, -11.3305" rotation="0.00536161, 0.989687, -0.0665614, 0.126728" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -3.12753e-006, -1.1383e-006" rotation="0.0, 0.0, -0.421618, 0.906774" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -3.65219e-006, 7.74065e-007" rotation="0.00134618, 0.198349, 0.352721, 0.914464" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 1.0972e-006" rotation="-0.144983, 0.0683564, 0.71541, 0.680071" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 40.845, 61.7872" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52413, -0.00996872, -0.919315" rotation="0.111638, 0.06594, 0.0409905, 0.990711" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8866, -0.00804227, -0.005805" rotation="0.297225, 0.0158078, 0.140811, 0.944235" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8853, -0.00985267, -0.00250443" rotation="0.122415, 0.0121348, 0.0702077, 0.989918" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8853, -0.0040234, 0.000251386" rotation="-0.0290228, -0.00611843, 0.16106, 0.986499" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -2.15984e-006, 0.0" rotation="-0.363223, -0.121088, -0.377691, 0.843064" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.73526, -1.00286, 4.18005" rotation="0.535145, -0.224474, 0.813326, 0.041626" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -9.35644e-007, 3.04679e-006" rotation="-0.101917, 0.31221, 0.0342214, 0.94391" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -4.85546e-007, -3.6669e-007" rotation="0.0, 0.0, -0.164692, 0.986345" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 1.83274e-006, 1.09715e-005" rotation="-0.59671, -0.246268, -0.00646992, 0.763706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95132, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -4.27162e-006, -3.12072e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.0064184, -8.065" rotation="0.00177213, 0.0392218, 0.0551985, 0.997703" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -3.85793e-006, 1.02068e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00210849, 2.73266" rotation="0.00635162, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -5.68193e-007, 2.7956e-007" rotation="0.0, 0.0, -0.00872647, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.75825, -0.502653, -4.24946" rotation="-0.577277, -0.102577, 0.764538, 0.267789" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 1.10867e-006, -4.34271e-006" rotation="0.0455894, -0.041097, 0.0541421, 0.996645" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 0.0, 3.21205e-007" rotation="0.0, 0.0, -0.509845, 0.860266" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -1.44971e-006, -2.60321e-007" rotation="0.87594, -0.220171, -0.0655723, 0.424211" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 1.65165e-006, -1.84623e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642137, 8.065" rotation="-0.000458688, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -2.84401e-007, -2.82205e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211051, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 2.06926e-006, -4.14099e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.58135e-005, 2.00964e-005, 11.3305" rotation="0.459243, 0.866663, -0.0680056, -0.182662" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 2.82904e-006, -1.02431e-006" rotation="0.0, 0.0, -0.580905, 0.813971" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -1.62498e-006, 2.15054e-006" rotation="-0.251812, -0.125515, 0.0856673, 0.955771" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -3.71231e-006" rotation="0.0, 0.0, 0.727561, 0.686043" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.60127e-005, -1.42794e-005, -11.3305" rotation="0.0868588, 0.984796, -0.0519112, 0.1412" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -1.211e-006, -1.20624e-006" rotation="0.0, 0.0, -0.557666, 0.830065" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 5.37894e-007, 2.33352e-006" rotation="-0.0155745, 0.208178, 0.429307, 0.878701" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -1.3347e-006" rotation="-0.143591, 0.0676108, 0.706145, 0.690051" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 44.0076, 57.0095" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.5256, -0.00998779, -0.91788" rotation="0.0365229, 0.0660709, 0.108509, 0.991225" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8867, -0.0086143, -0.00487225" rotation="0.243974, 0.0246489, 0.143935, 0.958724" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8855, -0.0100975, -0.000907711" rotation="0.0439478, 0.0054174, 0.0771819, 0.996033" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8853, -0.00402472, 9.15445e-005" rotation="-0.0103537, -0.00218304, 0.163392, 0.986504" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 3.52783e-007, -6.04184e-007" rotation="-0.281026, -0.0424344, -0.330168, 0.900118" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.74627, -0.82568, 4.20903" rotation="0.518339, -0.260266, 0.814421, 0.017457" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 2.3615e-007, -1.69252e-006" rotation="0.0745639, 0.398331, -0.039936, 0.913333" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -9.38183e-007, -2.14091e-006" rotation="0.0, 0.0, -0.348889, 0.937164" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -3.93954e-006, -2.8566e-006" rotation="-0.59986, -0.152063, 0.0743411, 0.781996" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55133, -8.29026e-007, 2.26531e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642079, -8.065" rotation="0.0022265, 0.0391986, 0.066756, 0.996997" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 9.07364e-007, 1.27487e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211235, 2.73266" rotation="0.00635162, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -1.21443e-006, 1.64825e-006" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.75406, -0.64713, -4.23344" rotation="-0.555962, -0.123859, 0.775571, 0.27213" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -1.18377e-006, 0.0" rotation="0.0753387, 0.0679473, -0.0575631, 0.993174" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 4.05016e-007, -2.16379e-006" rotation="0.0, 0.0, -0.48836, 0.872642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 1.73815e-006, 4.03955e-007" rotation="0.863181, -0.227525, -0.0841958, 0.442789" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 7.51201e-007, 0.0" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.0064217, 8.065" rotation="-0.000458686, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 3.43142e-007, 0.0" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.0021106, -2.73266" rotation="-0.00905842, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, -2.81641e-007, 8.18757e-007" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.18015e-005, 2.00964e-005, 11.3305" rotation="0.536489, 0.818123, -0.0827413, -0.18976" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -2.46013e-006, 1.57126e-006" rotation="0.0, 0.0, -0.644498, 0.764606" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0018, -1.58175e-006, 1.68533e-006" rotation="-0.242571, -0.131831, 0.0711892, 0.958495" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 1.48537e-006" rotation="0.0, 0.0, 0.727775, 0.685816" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="2.00247e-005, -1.42794e-005, -11.3305" rotation="0.181029, 0.970121, -0.0307291, 0.158585" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -2.36398e-006, 4.58179e-007" rotation="0.0, 0.0, -0.6911, 0.722759" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 1.64437e-006, 2.5618e-006" rotation="-0.0317765, 0.21924, 0.480871, 0.848344" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 0.0" rotation="-0.144945, 0.0719948, 0.713422, 0.681789" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 46.5618, 54.3972" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52683, -0.00966735, -0.916421" rotation="-0.039317, 0.0661914, 0.164617, 0.983348" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8866, -0.00917654, -0.00372927" rotation="0.182022, 0.033303, 0.140219, 0.972675" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8856, -0.0101059, 0.000708292" rotation="-0.0344604, -0.00107389, 0.0821181, 0.996026" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8852, -0.00405133, -1.51019e-006" rotation="0.0, -4.25874e-007, 0.152994, 0.988227" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -1.19169e-006, -3.06104e-007" rotation="-0.148273, -0.0417007, -0.288627, 0.944971" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.73371, -0.815432, 4.22218" rotation="0.505311, -0.29293, 0.811446, -0.0201991" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -8.02615e-007, 1.85776e-006" rotation="-0.03431, 0.54559, -0.1321, 0.826864" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -3.6157e-006, -7.00452e-007" rotation="0.0, 0.0, -0.433246, 0.901276" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -3.31324e-006, 9.35738e-007" rotation="-0.601787, -0.0543091, 0.152379, 0.782102" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68346" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -6.60351e-007, 5.44538e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642408, -8.06499" rotation="0.00253492, 0.0391799, 0.0746002, 0.99644" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 8.67559e-007, 3.68501e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.0021107, 2.73267" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96353, 5.50047e-007, -3.15776e-006" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.73371, -0.815407, -4.22218" rotation="-0.538526, -0.13174, 0.791558, 0.257042" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -4.27766e-006, 9.34546e-007" rotation="0.0776124, 0.120945, -0.202691, 0.968641" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -8.98341e-007, -9.90363e-007" rotation="0.0, 0.0, -0.487734, 0.872992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 2.16576e-006, 1.54099e-007" rotation="0.861292, -0.225142, -0.0790459, 0.448596" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -1.32335e-006, 0.0" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642182, 8.065" rotation="-0.000458688, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 3.92426e-007, -1.97585e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211056, -2.73266" rotation="-0.00905842, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 1.03726e-006, -1.79875e-006" rotation="0.0, 0.0, 0.453991, 0.891006" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.28912e-005, 2.00964e-005, 11.3305" rotation="0.57829, 0.787645, -0.0893807, -0.192892" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -1.31846e-006, 1.09454e-006" rotation="0.0, 0.0, -0.661771, 0.749706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -9.68779e-007, 8.92667e-007" rotation="-0.238812, -0.128265, 0.0413128, 0.961671" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 1.55012e-006" rotation="0.0, 0.0, 0.728158, 0.68541" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.8935e-005, -1.42794e-005, -11.3305" rotation="0.24163, 0.955445, -0.0161938, 0.168755" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -6.20218e-006, 1.71303e-006" rotation="0.0, 0.0, -0.752288, 0.658834" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 1.10767e-006, -2.68538e-006" rotation="-0.0398347, 0.226277, 0.493371, 0.838926" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -1.48179e-006" rotation="-0.145798, 0.0739815, 0.718373, 0.676173" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 47.9616, 55.0296" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52759, -0.00922865, -0.915292" rotation="-0.0985842, 0.0651918, 0.200844, 0.972467" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8866, -0.00957217, -0.0025874" rotation="0.122982, 0.0385718, 0.136829, 0.982174" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00991962, 0.00195031" rotation="-0.0953212, -0.00611763, 0.085514, 0.991748" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.885, -0.00411266, -1.68775e-005" rotation="0.0019031, 0.000400817, 0.12905, 0.991636" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 1.2323e-006, 1.36861e-007" rotation="-0.00374532, -0.0767034, -0.272718, 0.959024" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.691, -0.978622, 4.2249" rotation="0.501834, -0.310155, 0.805073, -0.061836" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 2.8792e-006, 5.33255e-006" rotation="-0.251091, 0.604593, -0.232609, 0.719245" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -1.28768e-006, -1.7141e-006" rotation="0.0, 0.0, -0.4817, 0.876336" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 4.7295e-006, 2.4305e-006" rotation="-0.625255, 0.0378003, 0.213649, 0.749654" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 3.89127e-007, -2.78398e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642289, -8.065" rotation="0.00222241, 0.0391988, 0.0666518, 0.997003" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52779, 1.06028e-006, 2.33245e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211287, 2.73266" rotation="0.00635162, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 5.24437e-007, -2.45346e-007" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.68842, -1.01135, -4.2194" rotation="-0.52853, -0.116629, 0.811839, 0.219023" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -2.68162e-006, -8.90332e-007" rotation="0.045241, 0.12483, -0.343929, 0.929561" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 7.10435e-007, 7.61621e-007" rotation="0.0, 0.0, -0.518453, 0.855106" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 2.80041e-006, 2.09933e-006" rotation="0.873462, -0.21074, -0.0445556, 0.436655" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -5.08315e-007, 4.96901e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642141, 8.065" rotation="-0.000458691, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -3.90253e-007, 1.78112e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211052, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 5.06668e-007, -2.7066e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.34714e-005, 2.00964e-005, 11.3305" rotation="0.574789, 0.791248, -0.0857859, -0.190225" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -4.11399e-006, -1.06567e-006" rotation="0.0, 0.0, -0.636068, 0.771633" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -2.0915e-006, 6.22597e-007" rotation="-0.242449, -0.117657, 0.013991, 0.962902" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 1.30836e-006" rotation="0.0, 0.0, 0.728831, 0.684693" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.83547e-005, -1.42794e-005, -11.3305" rotation="0.262634, 0.950397, -0.0152587, 0.165939" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -4.6848e-006, 8.22335e-007" rotation="0.0, 0.0, -0.752499, 0.658593" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 9.87214e-007, -2.49227e-006" rotation="-0.0351766, 0.223045, 0.473402, 0.851413" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 1.16171e-006" rotation="-0.146029, 0.0732319, 0.720528, 0.673908" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 47.9285, 57.0154" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52779, -0.00901884, -0.914722" rotation="-0.127895, 0.0625663, 0.210065, 0.967265" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8867, -0.00974388, -0.00163198" rotation="0.0753248, 0.0379964, 0.138882, 0.986709" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00978555, 0.00255007" rotation="-0.124945, -0.00872289, 0.0878584, 0.988227" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8848, -0.00417921, -2.19525e-005" rotation="0.00249045, 0.000524709, 0.0968344, 0.995297" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 1.57591e-006, -3.12746e-007" rotation="0.0967565, -0.0909081, -0.256055, 0.957502" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.61958, -1.21063, 4.22634" rotation="0.517444, -0.274214, 0.807225, -0.0737955" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 2.10256e-006, 2.95841e-006" rotation="-0.362725, 0.563935, -0.282692, 0.685925" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -4.40164e-007, 6.37808e-007" rotation="0.0, 0.0, -0.49796, 0.8672" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 2.38885e-006, 2.70269e-006" rotation="-0.708513, 0.0834299, 0.215667, 0.666736" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -5.08923e-007, 8.34693e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642259, -8.065" rotation="0.000441296, 0.0392594, 0.0213398, 0.999001" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 3.25865e-006, -8.80401e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211175, 2.73266" rotation="0.00635161, 0.0298734, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -3.21523e-006, 8.51234e-007" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.61483, -1.25333, -4.21791" rotation="-0.522803, -0.0897552, 0.831238, 0.166329" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -2.62816e-006, -1.78989e-006" rotation="0.0304493, 0.0901192, -0.425889, 0.899761" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -2.57799e-006, -1.4956e-006" rotation="0.0, 0.0, -0.560688, 0.828027" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -1.66332e-006, -3.21954e-006" rotation="0.889448, -0.189894, 0.00422684, 0.415697" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 1.94082e-006, 4.74871e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642012, 8.065" rotation="-0.00045869, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 4.51831e-007, -3.66984e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211193, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 1.05337e-006, -1.64275e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.1466e-005, 2.00964e-005, 11.3305" rotation="0.55027, 0.810015, -0.0787743, -0.186741" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -2.97121e-006, -6.00883e-007" rotation="0.0, 0.0, -0.602199, 0.798346" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -1.58859e-006, -2.9066e-006" rotation="-0.246683, -0.109924, 0.00262004, 0.962838" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 3.68736e-006" rotation="0.0, 0.0, 0.729961, 0.683489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="2.03602e-005, -1.42794e-005, -11.3305" rotation="0.250145, 0.954936, -0.020748, 0.158413" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -2.00309e-006, -1.3021e-006" rotation="0.0, 0.0, -0.723194, 0.690646" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 9.74333e-007, 2.24531e-006" rotation="-0.0274609, 0.217431, 0.449403, 0.866029" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 1.41753e-006" rotation="-0.145881, 0.070779, 0.720838, 0.67387" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 46.623, 59.8655" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52744, -0.00912184, -0.914531" rotation="-0.135319, 0.0593416, 0.192644, 0.97008" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8868, -0.00983422, -0.000722561" rotation="0.0309094, 0.0329786, 0.140686, 0.989022" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00974762, 0.00267399" rotation="-0.131142, -0.00933921, 0.0885408, 0.987358" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8845, -0.00421504, -1.70674e-005" rotation="0.00217368, 0.000458037, 0.0589203, 0.99826" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -5.92228e-006, -5.49657e-007" rotation="0.167323, -0.0890971, -0.226512, 0.955383" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.51558, -1.48476, 4.22645" rotation="0.537402, -0.212486, 0.812675, -0.0748931" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -1.45745e-006, -2.07565e-006" rotation="-0.401024, 0.499398, -0.307293, 0.703813" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -1.41341e-006, -1.37662e-006" rotation="0.0, 0.0, -0.498986, 0.86661" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 3.17116e-006, 9.84377e-007" rotation="-0.806108, 0.108222, 0.188795, 0.550303" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, 1.56808e-006, 2.61849e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00641927, -8.065" rotation="-0.0019972, 0.039211, -0.0407301, 0.998399" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -2.02978e-006, 4.36599e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211203, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 5.36656e-007, 2.0933e-006" rotation="0.0, 0.0, -0.00872647, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.51002, -1.52183, -4.21783" rotation="-0.520841, -0.0554171, 0.845653, 0.10259" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -2.14616e-006, -5.11702e-007" rotation="0.0100631, 0.0304148, -0.458007, 0.888371" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -6.44779e-007, 1.82612e-007" rotation="0.0, 0.0, -0.609101, 0.793093" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 0.0, -2.4538e-006" rotation="0.905006, -0.164177, 0.0624081, 0.387447" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -9.05503e-007, 2.55779e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642041, 8.065" rotation="-0.000458692, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 0.0, -1.89728e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211178, -2.73266" rotation="-0.00905842, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 1.49077e-006, 0.0" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.39313e-005, 2.00964e-005, 11.3305" rotation="0.510483, 0.837258, -0.0693792, -0.183281" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -2.18694e-006, -2.13453e-007" rotation="0.0, 0.0, -0.563147, 0.826357" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0018, -2.90396e-006, 0.0" rotation="-0.250364, -0.105025, 0.00278737, 0.962434" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 1.76609e-006" rotation="0.0, 0.0, 0.731647, 0.681684" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.78949e-005, -1.42794e-005, -11.3305" rotation="0.206545, 0.96661, -0.0308064, 0.148512" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -2.28162e-006, -1.90222e-006" rotation="0.0, 0.0, -0.664441, 0.747341" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -1.2968e-006, 0.0" rotation="-0.0188169, 0.211289, 0.42395, 0.880494" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 1.21582e-006" rotation="-0.145276, 0.0670321, 0.718225, 0.677167" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 44.1574, 63.1562" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52677, -0.0093965, -0.914572" rotation="-0.129652, 0.0557967, 0.158429, 0.977229" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8868, -0.00984497, 0.000175019" rotation="-0.0122428, 0.0252844, 0.141677, 0.989514" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00978788, 0.00251888" rotation="-0.123445, -0.0087549, 0.0881286, 0.988392" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8841, -0.00424868, -1.12616e-005" rotation="0.00137223, 0.000289218, 0.0179424, 0.999838" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -3.36702e-006, -1.72253e-006" rotation="0.218791, -0.0768229, -0.186866, 0.954625" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.3797, -1.77442, 4.2253" rotation="0.553833, -0.136329, 0.818315, -0.0710199" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -2.10749e-006, 3.00893e-006" rotation="-0.395382, 0.437787, -0.309425, 0.745836" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -4.30994e-007, -7.01835e-007" rotation="0.0, 0.0, -0.491557, 0.870846" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -7.13911e-006, -1.82193e-007" rotation="0.894091, -0.119637, -0.143454, -0.407073" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -1.02534e-006, 8.09216e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642169, -8.06499" rotation="-0.00475955, 0.0389723, -0.11109, 0.993034" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -2.18403e-006, 3.26302e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211264, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 1.02493e-006, -2.7605e-006" rotation="0.0, 0.0, -0.00872648, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.37524, -1.79765, -4.21903" rotation="-0.521974, -0.0173446, 0.852182, 0.0320755" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 2.87054e-006, -4.6848e-006" rotation="-0.0225919, -0.0335537, -0.455596, 0.889267" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -2.76734e-006, 4.92183e-007" rotation="0.0, 0.0, -0.659262, 0.751913" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 1.68176e-006, -5.46049e-007" rotation="0.916948, -0.135252, 0.125354, 0.353835" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 0.0, -9.90562e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642195, 8.06499" rotation="-0.000458686, -0.0392592, 0.0217823, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, -2.97718e-007, 1.21059e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211126, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, -8.16443e-007, -1.60781e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.14244e-005, 2.00964e-005, 11.3305" rotation="0.458678, 0.868198, -0.0579824, -0.180237" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -3.71135e-006, 2.72669e-006" rotation="0.0, 0.0, -0.519934, 0.854206" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -8.72212e-007, 1.67529e-006" rotation="-0.252786, -0.102485, 0.0112211, 0.962014" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -9.08385e-007" rotation="-1.6919e-007, 0.0, 0.733599, 0.679583" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.28075e-005, -1.42794e-005, -11.3305" rotation="0.131899, 0.980669, -0.0445668, 0.137497" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -3.94952e-006, 1.53949e-006" rotation="0.0, 0.0, -0.567233, 0.823557" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -1.20282e-006, -8.59908e-007" rotation="-0.00954302, 0.205688, 0.393257, 0.896075" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 2.67843e-007" rotation="-0.14415, 0.0625843, 0.711803, 0.684573" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 40.6441, 66.4635" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52596, -0.00968642, -0.914715" rotation="-0.118865, 0.0520522, 0.117695, 0.984535" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8868, -0.00978409, 0.00106411" rotation="-0.0548737, 0.0165588, 0.142199, 0.988177" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.0098567, 0.00225849" rotation="-0.110521, -0.00771914, 0.0872938, 0.990003" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8838, -0.00424157, -2.99158e-006" rotation="0.000510891, 0.000107761, -0.0234159, 0.999726" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 1.02346e-006, 2.24778e-007" rotation="0.259604, -0.0584716, -0.14084, 0.953599" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.219, -2.05471, 4.2235" rotation="0.562555, -0.0542146, 0.822438, -0.0647127" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 2.86612e-006, 2.19964e-006" rotation="-0.368189, 0.388182, -0.294373, 0.791894" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -4.44362e-007, -2.8436e-007" rotation="0.0, 0.0, -0.480894, 0.876778" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -2.90175e-006, 1.1807e-006" rotation="0.957379, -0.122847, -0.0881263, -0.246107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55133, -5.60078e-007, 5.54265e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642329, -8.065" rotation="-0.00762095, 0.0385151, -0.184029, 0.982136" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 6.82351e-007, 2.13029e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211336, 2.73266" rotation="0.00635163, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 3.09894e-007, 1.05953e-006" rotation="0.0, 0.0, -0.0087265, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.21699, -2.06327, -4.22086" rotation="-0.524964, 0.0210156, 0.849926, -0.039965" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, 1.80984e-006, 3.44235e-006" rotation="-0.0655144, -0.086578, -0.43505, 0.893836" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -3.82568e-006, 1.58561e-006" rotation="0.0, 0.0, -0.70726, 0.706953" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -6.50872e-006, -6.23358e-006" rotation="0.923406, -0.105102, 0.18837, 0.317476" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55133, -6.78399e-007, 2.22354e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642103, 8.06499" rotation="-0.000458689, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 3.76149e-007, 2.37222e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211181, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, -1.51362e-006, -5.45363e-007" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.37341e-005, 2.00964e-005, 11.3305" rotation="0.39792, 0.898875, -0.0450637, -0.17791" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 0.0, 1.58667e-006" rotation="0.0, 0.0, -0.474306, 0.88036" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -7.64714e-007, 1.87641e-006" rotation="-0.253474, -0.102227, 0.0259995, 0.961574" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 3.19969e-006" rotation="0.0, -1.21993e-007, 0.735501, 0.677523" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.80921e-005, -1.42794e-005, -11.3305" rotation="0.0252452, 0.989854, -0.06168, 0.125489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 5.43997e-007, -1.80415e-006" rotation="0.0, 0.0, -0.415015, 0.909814" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -1.3398e-007, 0.0" rotation="0.00244996, 0.200613, 0.344847, 0.916967" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -5.91377e-007" rotation="-0.142896, 0.0592802, 0.703856, 0.693291" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 36.2023, 69.3638" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649157, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.5252, -0.00986571, -0.914814" rotation="-0.111177, 0.0483118, 0.0809878, 0.989316" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8869, -0.00965024, 0.00194987" rotation="-0.0977312, 0.00845716, 0.142581, 0.98491" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00989665, 0.00206825" rotation="-0.101063, -0.00698297, 0.0867265, 0.991068" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8834, -0.00421749, 8.54458e-007" rotation="1.70387e-005, 3.76619e-006, -0.0624606, 0.998047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 1.57061e-006, -2.10554e-007" rotation="0.298878, -0.0380325, -0.0918696, 0.949097" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.04709, -2.30384, 4.22222" rotation="0.562614, 0.0245364, 0.824291, -0.0583767" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -1.79519e-006, -1.07296e-006" rotation="-0.343186, 0.348584, -0.274366, 0.827911" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -1.10465e-006, 1.30213e-006" rotation="0.0, 0.0, -0.472307, 0.881434" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 6.02492e-006, -3.7016e-007" rotation="0.988276, -0.125071, -0.0336567, -0.0808345" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55133, 1.83603e-006, -1.39176e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00641972, -8.065" rotation="-0.0103604, 0.0378702, -0.253912, 0.96643" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52779, -3.07619e-006, 2.5776e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211277, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, 4.28003e-006, -1.10649e-006" rotation="0.0, 0.0, -0.00872649, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.04701, -2.3041, -4.22214" rotation="-0.528077, 0.0567829, 0.840416, -0.107753" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -4.21894e-006, 8.66714e-006" rotation="-0.112549, -0.120851, -0.415153, 0.894637" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -3.73155e-006, -3.5373e-006" rotation="0.0, 0.0, -0.74991, 0.66154" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -4.9504e-006, -4.71034e-006" rotation="0.924087, -0.0759501, 0.246952, 0.281619" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 8.24853e-007, -6.72772e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.0064198, 8.065" rotation="-0.000458697, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 1.31258e-006, 0.0" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211228, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 4.1165e-006, 4.53323e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.51951e-005, 2.00964e-005, 11.3305" rotation="0.331974, 0.926074, -0.0315536, -0.17659" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 0.0, 1.56959e-006" rotation="0.0, 0.0, -0.430575, 0.902555" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -2.07515e-007, -1.34136e-006" rotation="-0.252248, -0.104941, 0.0475187, 0.960781" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -1.07621e-006" rotation="0.0, -1.42162e-007, 0.73704, 0.675849" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.66311e-005, -1.42794e-005, -11.3305" rotation="-0.0487073, 0.989239, -0.0745588, 0.116082" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -2.32368e-006, -1.81412e-006" rotation="0.0, 0.0, -0.310799, 0.950476" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -1.6484e-006, 2.71781e-006" rotation="0.0157564, 0.190549, 0.282565, 0.94" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -9.57311e-007" rotation="-0.146182, 0.069312, 0.723634, 0.670955" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 31.0371, 71.868" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649159, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52508, -0.0098905, -0.914814" rotation="-0.110751, 0.0475889, 0.0750724, 0.989865" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8869, -0.00961026, 0.00212799" rotation="-0.106395, 0.00705762, 0.142669, 0.98401" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00989804, 0.00205403" rotation="-0.100355, -0.00693799, 0.0867081, 0.991142" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8834, -0.00420791, 8.34499e-007" rotation="0.0, 1.96554e-007, -0.0697565, 0.997564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 1.40624e-007, -1.21182e-006" rotation="0.307405, -0.0340297, -0.0820199, 0.947427" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.01297, -2.3483, 4.22217" rotation="0.561743, 0.0390551, 0.824399, -0.0573185" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 3.83423e-006, 3.9256e-006" rotation="-0.340464, 0.340926, -0.27113, 0.833272" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -7.61278e-007, -1.62661e-006" rotation="0.0, 0.0, -0.471314, 0.881966" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 4.02883e-006, -1.30734e-006" rotation="0.990534, -0.126142, -0.0238913, -0.0485849" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07436, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -8.02828e-007, 0.0" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642638, -8.065" rotation="-0.0108751, 0.0377256, -0.267047, 0.962883" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 1.89057e-006, -1.46404e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211205, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -2.68544e-006, -7.41045e-007" rotation="0.0, 0.0, -0.0087265, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.01297, -2.34827, -4.22219" rotation="-0.528539, 0.0634186, 0.837946, -0.120294" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -2.18474e-006, 5.76299e-006" rotation="-0.1218, -0.12537, -0.412993, 0.893803" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 9.31563e-007, 1.00302e-006" rotation="0.0, 0.0, -0.757575, 0.652748" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -1.47938e-006, 0.0" rotation="0.923614, -0.0704454, 0.257768, 0.274828" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 0.0, -1.50952e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642144, 8.06499" rotation="-0.000458695, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 1.08523e-006, 1.7691e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.0021111, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 2.30546e-006, 3.41024e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.72988e-005, 1.8189e-005, 11.3305" rotation="0.254504, 0.950934, -0.0171591, -0.175094" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 0.0, 1.30141e-007" rotation="0.0, 0.0, -0.37546, 0.926839" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -4.34541e-007, 0.0" rotation="-0.251639, -0.107316, 0.0708973, 0.959236" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 3.39258e-007" rotation="0.0, 0.0, 0.736362, 0.676588" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.45274e-005, -1.23721e-005, -11.3305" rotation="0.0554953, 0.987657, -0.0708981, 0.128167" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 7.48072e-007, 1.3458e-006" rotation="0.0, 0.0, -0.429758, 0.902944" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -2.32045e-006, -1.69408e-007" rotation="0.00834944, 0.188522, 0.30797, 0.932494" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 1.31947e-006" rotation="-0.147707, 0.073644, 0.732953, 0.659954" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 25.3895, 73.9132" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649159, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52508, -0.0098905, -0.914814" rotation="-0.110751, 0.0475889, 0.0750724, 0.989865" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8869, -0.00960898, 0.00212775" rotation="-0.106395, 0.00705762, 0.142669, 0.98401" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00989518, 0.00205334" rotation="-0.100355, -0.00693799, 0.0867081, 0.991142" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8834, -0.00421247, -2.20756e-007" rotation="0.0, 1.96554e-007, -0.0697565, 0.997564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 1.60779e-006, 4.88281e-007" rotation="0.307405, -0.0340297, -0.0820199, 0.947427" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.01297, -2.3483, 4.22218" rotation="0.561743, 0.0390551, 0.824399, -0.0573185" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 2.52432e-006, -1.46113e-006" rotation="-0.340464, 0.340926, -0.27113, 0.833272" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -8.44908e-007, -8.26168e-007" rotation="0.0, 0.0, -0.471314, 0.881966" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -1.93675e-006, 0.0" rotation="0.990534, -0.126142, -0.0238913, -0.0485849" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -3.82312e-006, 4.55788e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642726, -8.06499" rotation="-0.0108751, 0.0377256, -0.267047, 0.962883" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 1.00595e-006, -7.44348e-007" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211073, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -3.8779e-006, 8.8525e-007" rotation="0.0, 0.0, -0.0087265, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.01297, -2.34827, -4.22219" rotation="-0.528539, 0.0634186, 0.837946, -0.120294" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -3.51649e-006, 3.32367e-006" rotation="-0.1218, -0.12537, -0.412993, 0.893803" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -2.17313e-006, 0.0" rotation="0.0, 0.0, -0.757575, 0.652748" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, 0.0, -1.14398e-006" rotation="0.923614, -0.0704454, 0.257768, 0.274828" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -7.43027e-007, -7.28134e-007" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642166, 8.06499" rotation="-0.000458695, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 1.87216e-007, -2.44321e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211094, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 4.96e-006, 5.27834e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.94294e-005, 1.8189e-005, 11.3305" rotation="0.164327, 0.971024, -0.00136848, -0.173514" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 6.22002e-007, -8.49379e-007" rotation="0.0, 0.0, -0.299331, 0.954149" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -4.83943e-007, -2.03293e-006" rotation="-0.251907, -0.108012, 0.0859266, 0.957858" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -1.70344e-006" rotation="0.0, -1.4922e-007, 0.734911, 0.678164" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.23968e-005, -1.23721e-005, -11.3305" rotation="0.276217, 0.947643, -0.0602363, 0.148485" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, -3.16036e-007, -1.92688e-006" rotation="0.0, 0.0, -0.644365, 0.764718" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, -2.62381e-006, 1.94159e-006" rotation="-0.00980331, 0.181089, 0.369879, 0.911208" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 1.41237e-006" rotation="-0.147707, 0.073644, 0.732953, 0.659954" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 19.5009, 74.1182" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649159, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52508, -0.0098905, -0.914814" rotation="-0.110751, 0.0475889, 0.0750724, 0.989865" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8869, -0.00960957, 0.00212787" rotation="-0.106395, 0.00705762, 0.142669, 0.98401" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00990109, 0.00205298" rotation="-0.100355, -0.00693799, 0.0867081, 0.991142" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8834, -0.00421174, 1.89718e-006" rotation="0.0, 1.96554e-007, -0.0697565, 0.997564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, -1.86814e-006, -8.94585e-007" rotation="0.307405, -0.0340297, -0.0820199, 0.947427" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.01297, -2.3483, 4.22217" rotation="0.561743, 0.0390551, 0.824399, -0.0573185" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, 2.75879e-006, 1.71857e-006" rotation="-0.340464, 0.340926, -0.27113, 0.833272" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -5.01649e-007, 5.80529e-007" rotation="0.0, 0.0, -0.471314, 0.881966" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -2.05506e-006, 1.57712e-006" rotation="0.990534, -0.126142, -0.0238913, -0.0485849" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55133, -3.82212e-006, 4.50792e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642516, -8.065" rotation="-0.0108751, 0.0377256, -0.267047, 0.962883" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 3.50753e-006, -1.14115e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211326, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -4.27465e-006, 1.28716e-006" rotation="0.0, 0.0, -0.0087265, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.01297, -2.34828, -4.22219" rotation="-0.528539, 0.0634186, 0.837946, -0.120294" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -2.51966e-006, 2.21886e-006" rotation="-0.1218, -0.12537, -0.412993, 0.893803" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -5.8147e-007, -2.9081e-006" rotation="0.0, 0.0, -0.757575, 0.652748" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -3.36069e-006, -4.85585e-006" rotation="0.923614, -0.0704454, 0.257768, 0.274828" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07435, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, 0.0, 1.31735e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642143, 8.065" rotation="-0.000458695, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 2.22728e-007, -3.99316e-006" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211108, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 5.34923e-006, 6.14535e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.86543e-005, 1.8189e-005, 11.3305" rotation="0.119008, 0.976654, 0.00745157, -0.178684" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -7.57967e-007, 1.31494e-006" rotation="0.0, 0.0, -0.308594, 0.951194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, -1.45849e-006, -5.67864e-007" rotation="-0.241611, -0.128969, 0.128877, 0.953091" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 2.21759e-006" rotation="-6.65029e-006, 8.01718e-005, 0.741484, 0.67097" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.31719e-005, -1.23721e-005, -11.3305" rotation="0.380024, 0.91104, -0.063912, 0.146643" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 9.22191e-007, 1.89997e-006" rotation="0.0, 0.0, -0.69967, 0.714467" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 2.20237e-006, 1.4019e-006" rotation="-0.0111691, 0.161807, 0.345133, 0.924433" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, 2.96304e-007" rotation="-0.147707, 0.073644, 0.732953, 0.659954" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 13.6122, 72.1828" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649158, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52508, -0.00988859, -0.914814" rotation="-0.110751, 0.0475889, 0.0750724, 0.989865" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8869, -0.0096119, 0.00212755" rotation="-0.106395, 0.00705762, 0.142669, 0.98401" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00989561, 0.00205382" rotation="-0.100355, -0.00693799, 0.0867081, 0.991142" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8834, -0.00420812, 1.20847e-006" rotation="0.0, 1.96554e-007, -0.0697565, 0.997564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 7.54141e-007, -9.29631e-007" rotation="0.307405, -0.0340297, -0.0820199, 0.947427" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.01297, -2.3483, 4.22217" rotation="0.561743, 0.0390551, 0.824399, -0.0573185" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -1.30801e-006, 2.58341e-006" rotation="-0.340464, 0.340926, -0.27113, 0.833272" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -7.32298e-007, -5.88791e-007" rotation="0.0, 0.0, -0.471314, 0.881966" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, 6.08294e-007, 1.22937e-007" rotation="0.990534, -0.126142, -0.0238913, -0.0485849" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -3.48011e-006, 4.95344e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642442, -8.06499" rotation="-0.0108751, 0.0377256, -0.267047, 0.962883" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, 2.27548e-006, -2.65865e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.002114, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -4.60683e-006, 3.52024e-007" rotation="0.0, 0.0, -0.0087265, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.01297, -2.34827, -4.22219" rotation="-0.528539, 0.0634186, 0.837946, -0.120294" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -3.45609e-006, 8.63496e-007" rotation="-0.1218, -0.12537, -0.412993, 0.893803" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, 2.31022e-006, 3.29227e-006" rotation="0.0, 0.0, -0.757575, 0.652748" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -1.71636e-006, 8.54209e-007" rotation="0.923614, -0.0704454, 0.257768, 0.274828" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68347" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -5.90119e-007, -1.93261e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642144, 8.065" rotation="-0.000458695, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 6.31482e-007, 6.58522e-007" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211123, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 3.73863e-006, 6.31091e-006" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.38478e-005, 1.8189e-005, 11.3305" rotation="0.149351, 0.967153, 0.0114023, -0.205377" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, -4.92152e-007, 8.97812e-007" rotation="0.0, 0.0, -0.447184, 0.894442" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0018, 0.0, 8.46332e-007" rotation="-0.1951, -0.184191, 0.190388, 0.944331" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, -2.89813e-006" rotation="-1.23723e-007, 0.0, 0.767933, 0.64053" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.79784e-005, -1.23721e-005, -11.3305" rotation="0.364706, 0.91849, -0.0864175, 0.126087" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 1.74792e-006, -6.6909e-007" rotation="0.0, 0.0, -0.602793, 0.797898" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 1.81952e-006, -1.00594e-006" rotation="-0.0013334, 0.135028, 0.216523, 0.966894" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -2.53297e-006" rotation="-0.147707, 0.073644, 0.732953, 0.659954" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="head" translation="14.8021, 1.74421, -8.90509" rotation="0.0610485, 0.0, 0.0, 0.998135" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01" translation="3.66291, 7.96469, 69.8577" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-0.649158, 0.0, 0.0" rotation="0.523413, 0.523413, 0.475435, -0.475436" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="9.52508, -0.00988859, -0.914814" rotation="-0.110751, 0.0475889, 0.0750724, 0.989865" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="12.8868, -0.00961141, 0.00212758" rotation="-0.106395, 0.00705762, 0.142669, 0.98401" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="12.8857, -0.00989824, 0.00205327" rotation="-0.100355, -0.00693799, 0.0867081, 0.991142" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="12.8834, -0.00420835, 1.88653e-006" rotation="0.0, 1.96554e-007, -0.0697565, 0.997564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="5.34116, 0.0, -2.39115e-007" rotation="0.307405, -0.0340297, -0.0820199, 0.947427" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="-3.01297, -2.3483, 4.22217" rotation="0.561743, 0.0390551, 0.824399, -0.0573185" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="15.6732, -2.03513e-006, 3.10387e-006" rotation="-0.340464, 0.340926, -0.27113, 0.833272" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="27.8665, -2.3291e-007, -1.25298e-006" rotation="0.0, 0.0, -0.471314, 0.881966" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="25.1964, -1.83433e-006, 6.2168e-007" rotation="0.990534, -0.126142, -0.0238913, -0.0485849" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger0" translation="8.07435, 1.95133, -7.68347" rotation="0.28482, 0.555098, 0.261037, 0.736616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger01" translation="8.55132, -3.64613e-006, 4.5765e-006" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger1" translation="15.0192, -0.00642431, -8.065" rotation="-0.0108751, 0.0377256, -0.267047, 0.962883" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger11" translation="7.52778, -1.00276e-006, 0.0" rotation="0.0, 0.0, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger2" translation="15.1181, 0.00211454, 2.73266" rotation="0.00635161, 0.0298733, 0.220583, 0.97489" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Finger21" translation="7.96354, -1.91075e-006, 1.81437e-006" rotation="0.0, 0.0, -0.0087265, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Clavicle" translation="-3.01297, -2.34827, -4.22219" rotation="-0.528539, 0.0634186, 0.837946, -0.120294" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="15.6732, -3.53221e-006, 6.75213e-006" rotation="-0.1218, -0.12537, -0.412993, 0.893803" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="27.8665, -1.48941e-006, 6.61917e-007" rotation="0.0, 0.0, -0.757575, 0.652748" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="25.1964, -1.64806e-006, -2.22739e-006" rotation="0.923614, -0.0704454, 0.257768, 0.274828" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger0" translation="8.07436, 1.95133, 7.68346" rotation="-0.130883, -0.659505, 0.144147, 0.726047" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger01" translation="8.55132, -5.05867e-007, -1.39487e-006" rotation="0.0, 0.0, 0.329691, 0.944089" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger1" translation="15.0192, -0.00642138, 8.06499" rotation="-0.000458695, -0.0392592, 0.0217824, 0.998992" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger11" translation="7.52778, 4.40891e-007, -5.94261e-007" rotation="0.0, 0.0, 0.577145, 0.816642" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger2" translation="15.1181, 0.00211116, -2.73266" rotation="-0.00905843, -0.0291668, 0.308861, 0.950617" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Finger21" translation="7.96354, 3.6231e-006, 2.66393e-007" rotation="0.0, 0.0, 0.453991, 0.891007" scale="1.0, 1.0, 1.0"/>
+    <transform name="shotgun" translation="-34.5886, 10.7991, 12.9244" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431"/>
+    <transform name="Bip01 L Thigh" translation="-1.55764e-005, 1.8189e-005, 11.3305" rotation="0.210516, 0.9403, 0.0279202, -0.265968" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="29.705, 9.84347e-007, -1.68589e-006" rotation="0.0, 0.0, -0.594256, 0.804276" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="27.0019, 2.85142e-007, 9.95646e-007" rotation="-0.0890757, -0.238343, 0.190225, 0.948194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="20.0951, 26.2557, 2.55686e-007" rotation="0.0, 0.0, 0.829037, 0.559193" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="1.62498e-005, -1.23721e-005, -11.3305" rotation="0.330473, 0.931557, -0.111947, 0.102259" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="29.705, 4.66342e-007, 2.35127e-006" rotation="0.0, 0.0, -0.467425, 0.884033" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="27.0019, 9.07295e-007, -4.23748e-007" rotation="0.00352614, 0.106617, 0.0640417, 0.992229" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="20.0951, 26.2557, -7.18123e-007" rotation="-0.147707, 0.073644, 0.732953, 0.659954" scale="1.0, 1.0, 1.0"/>
+    <transform name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>
