@@ -984,6 +984,16 @@ public class BangBoardView extends BoardView
             return;
         }
 
+        // if we're hovering over the selection, cancel any advance order for
+        // that selection
+        if (_hover instanceof UnitSprite && _selection != null) {
+            UnitSprite uhover = (UnitSprite)_hover;
+            if (uhover.getPieceId() == _selection.pieceId &&
+                uhover.getAdvanceOrder() != UnitSprite.AdvanceOrder.NONE) {
+                _ctrl.cancelOrder(uhover.getPieceId());
+            }
+        }
+
         // clear any unit selection
         clearSelection();
 

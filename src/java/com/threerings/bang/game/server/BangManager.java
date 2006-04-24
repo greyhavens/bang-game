@@ -202,6 +202,28 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
+    public void cancelOrder (ClientObject caller, int pieceId)
+    {
+        PlayerObject user = (PlayerObject)caller;
+        int pidx = getPlayerIndex(user.getVisibleName());
+        Piece piece = (Piece)_bangobj.pieces.get(pieceId);
+        if (piece == null || piece.owner != pidx) {
+            // the unit probably died or was hijacked
+            return;
+        }
+
+        // look for any advance order for this unit and clear it
+        for (Iterator<AdvanceOrder> iter = _orders.iterator();
+             iter.hasNext(); ) {
+            AdvanceOrder order = iter.next();
+            if (order.unit.pieceId == pieceId) {
+                reportInvalidOrder(order, ORDER_CLEARED);
+                iter.remove();
+            }
+        }
+    }
+
+    // documentation inherited from interface BangProvider
     public void playCard (ClientObject caller, int cardId, short x, short y)
     {
         PlayerObject user = (PlayerObject)caller;

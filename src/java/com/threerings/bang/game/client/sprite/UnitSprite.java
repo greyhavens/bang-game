@@ -145,6 +145,14 @@ public class UnitSprite extends MobileSprite
     }
 
     /**
+     * Returns the advance order configured on this sprite.
+     */
+    public AdvanceOrder getAdvanceOrder ()
+    {
+        return _pendo;
+    }
+
+    /**
      * Indicates that we have requested to shoot this piece but it is not
      * yet confirmed by the server.
      */

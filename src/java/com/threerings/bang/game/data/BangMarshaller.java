@@ -53,8 +53,19 @@ public class BangMarshaller extends InvocationMarshaller
         }
     }
 
+    /** The method id used to dispatch {@link #cancelOrder} requests. */
+    public static final int CANCEL_ORDER = 1;
+
+    // documentation inherited from interface
+    public void cancelOrder (Client arg1, int arg2)
+    {
+        sendRequest(arg1, CANCEL_ORDER, new Object[] {
+            new Integer(arg2)
+        });
+    }
+
     /** The method id used to dispatch {@link #getBoard} requests. */
-    public static final int GET_BOARD = 1;
+    public static final int GET_BOARD = 2;
 
     // documentation inherited from interface
     public void getBoard (Client arg1, BangService.BoardListener arg2)
@@ -67,7 +78,7 @@ public class BangMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #order} requests. */
-    public static final int ORDER = 2;
+    public static final int ORDER = 3;
 
     // documentation inherited from interface
     public void order (Client arg1, int arg2, short arg3, short arg4, int arg5, InvocationService.ResultListener arg6)
@@ -80,7 +91,7 @@ public class BangMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playCard} requests. */
-    public static final int PLAY_CARD = 3;
+    public static final int PLAY_CARD = 4;
 
     // documentation inherited from interface
     public void playCard (Client arg1, int arg2, short arg3, short arg4)
@@ -91,7 +102,7 @@ public class BangMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #selectStarters} requests. */
-    public static final int SELECT_STARTERS = 4;
+    public static final int SELECT_STARTERS = 5;
 
     // documentation inherited from interface
     public void selectStarters (Client arg1, int arg2, int[] arg3)
@@ -102,7 +113,7 @@ public class BangMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #selectTeam} requests. */
-    public static final int SELECT_TEAM = 5;
+    public static final int SELECT_TEAM = 6;
 
     // documentation inherited from interface
     public void selectTeam (Client arg1, String[] arg2)

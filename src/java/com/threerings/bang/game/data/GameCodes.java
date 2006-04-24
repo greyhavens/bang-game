@@ -33,6 +33,9 @@ public interface GameCodes extends InvocationCodes
     /** An error response code for {@link BangService#move}. */
     public static final String TARGET_TOO_FAR = "m.target_too_far";
 
+    /** An feedback message for {@link BangService#cancelOrder}. */
+    public static final String ORDER_CLEARED = "m.order_cleared";
+
     /** The highest number of players we will allow in a game. */
     public static final int MAX_PLAYERS = 4;
 

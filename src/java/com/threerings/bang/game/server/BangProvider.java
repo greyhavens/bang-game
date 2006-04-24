@@ -18,6 +18,11 @@ import com.threerings.presents.server.InvocationProvider;
 public interface BangProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link BangService#cancelOrder} request.
+     */
+    public void cancelOrder (ClientObject caller, int arg1);
+
+    /**
      * Handles a {@link BangService#getBoard} request.
      */
     public void getBoard (ClientObject caller, BangService.BoardListener arg1)

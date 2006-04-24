@@ -40,6 +40,13 @@ public class BangDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case BangMarshaller.CANCEL_ORDER:
+            ((BangProvider)provider).cancelOrder(
+                source,
+                ((Integer)args[0]).intValue()
+            );
+            return;
+
         case BangMarshaller.GET_BOARD:
             ((BangProvider)provider).getBoard(
                 source,

@@ -99,15 +99,18 @@ public class BangController extends GameController
     // documentation inherited from interface BangReceiver
     public void orderInvalidated (int unitId, String reason)
     {
-        // TEMP: report the failure via chat feedback
-        Unit unit = (Unit)_bangobj.pieces.get(unitId);
-        if (unit != null) {
-            reason = MessageBundle.compose("m.order_invalidated_unit",
-                                           unit.getConfig().getName(), reason);
-        } else {
-            reason = MessageBundle.compose("m.order_invalidated", reason);
+        if (!reason.equals(GameCodes.ORDER_CLEARED)) {
+            // TEMP: report the failure via chat feedback
+            Unit unit = (Unit)_bangobj.pieces.get(unitId);
+            if (unit != null) {
+                reason = MessageBundle.compose(
+                    "m.order_invalidated_unit",
+                    unit.getConfig().getName(), reason);
+            } else {
+                reason = MessageBundle.compose("m.order_invalidated", reason);
+            }
+            _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, reason);
         }
-        _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, reason);
 
         // TODO: flash the unit in the unit status display
         _view.view.clearAdvanceOrder(unitId);
@@ -378,6 +381,14 @@ public class BangController extends GameController
 
         // clear out our last selected unit as we want to start afresh
         _lastSelection = -1;
+    }
+
+    /** Handles a request to cancel a unit's advance order. */
+    public void cancelOrder (int pieceId)
+    {
+        log.info("Requesting order cancellation [pid=" + pieceId + "].");
+        // if the order is canceled, we'll hear about it via orderInvalidated
+        _bangobj.service.cancelOrder(_ctx.getClient(), pieceId);
     }
 
     /** Handles a request to place a card. */

@@ -50,6 +50,11 @@ public interface BangService extends InvocationService
                       int targetId, ResultListener listener);
 
     /**
+     * Requests that the specified units advance order be canceled.
+     */
+    public void cancelOrder (Client client, int pieceId);
+
+    /**
      * Requests that the specified card be activated at the specified
      * location.
      */
