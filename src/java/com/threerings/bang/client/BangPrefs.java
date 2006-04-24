@@ -98,6 +98,40 @@ public class BangPrefs
     }
 
     /**
+     * Returns the volume of the music, a value from zero to one hundred.
+     */
+    public static int getMusicVolume ()
+    {
+        return config.getValue("music_volume", 60);
+    }
+
+    /**
+     * Updates the volume of the music, a value from zero to one hundred.
+     */
+    public static void updateMusicVolume (int volume)
+    {
+        config.setValue("music_volume", volume);
+    }
+
+    /**
+     * Returns the volume of the sound effects, a value from zero to one
+     * hundred.
+     */
+    public static int getEffectsVolume ()
+    {
+        return config.getValue("effects_volume", 80);
+    }
+
+    /**
+     * Updates the volume of the sound effects, a value from zero to one
+     * hundred.
+     */
+    public static void updateEffectsVolume (float volume)
+    {
+        config.setValue("effects_volume", volume);
+    }
+
+    /**
      * Used to prevent the tutorials from automatically showing up once a user
      * has dismissed them the first time or completed the first two.
      */

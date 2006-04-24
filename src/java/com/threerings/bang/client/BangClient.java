@@ -427,17 +427,20 @@ public class BangClient extends BasicClient
      * fade in the new.
      *
      * @param musicPath the path to an OGG resource containing the music.
-     * @param volume a value between 0 and 1 indicating the music volume.
      */
-    public void queueMusic (String musicPath, float volume, boolean loop)
+    public void queueMusic (String musicPath, boolean loop)
     {
         // if we're already playing this track, keep it running
         if (musicPath.equals(_playingMusic)) {
             return;
         }
 
-        // scale the volume down a fair bit as the music is at max gain
-        volume *= 0.6f;
+        // set the volume based on the user's volume preferences
+        float volume = BangPrefs.getMusicVolume() / 100f;
+        if (volume == 0f) {
+            // if we're at zero volume, don't play it at all
+            return;
+        }
 
         File mfile = _ctx.getResourceManager().getResourceFile(musicPath);
         if (!mfile.exists()) {
@@ -462,6 +465,18 @@ public class BangClient extends BasicClient
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to start music " +
                     "[path=" + mfile + "].", t);
+        }
+    }
+
+    /**
+     * Adjusts the volume of any currently playing music.
+     *
+     * @param volume a value between 0 and 100.
+     */
+    public void setMusicVolume (int volume)
+    {
+        if (_mstream != null) {
+            _mstream.setVolume(volume / 100f);
         }
     }
 
@@ -655,7 +670,7 @@ public class BangClient extends BasicClient
         if (!(view instanceof BangView)) {
             // if this is not the game view, play the town theme
             String townId = _ctx.getUserObject().townId;
-            queueMusic("sounds/music/" + townId + ".ogg", 1f, true);
+            queueMusic("sounds/music/" + townId + ".ogg", true);
 
             // also re-wire up our options view whenever the main view changes
             // as the BangView overrides the escape mapping during the game

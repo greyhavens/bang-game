@@ -14,9 +14,13 @@ import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BSlider;
 import com.jmex.bui.BWindow;
+import com.jmex.bui.BoundedRangeModel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.ChangeEvent;
+import com.jmex.bui.event.ChangeListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
@@ -61,6 +65,11 @@ public class OptionsView extends BDecoratedWindow
         _fullscreen.setSelected(Display.isFullscreen());
         _fullscreen.addListener(_modelist);
 
+        cont.add(new BLabel(_msgs.get("m.music_vol"), "right_label"));
+        cont.add(createSoundSlider(SoundType.MUSIC));
+        cont.add(new BLabel(_msgs.get("m.effects_vol"), "right_label"));
+        cont.add(createSoundSlider(SoundType.EFFECTS));
+
         add(cont);
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -90,6 +99,41 @@ public class OptionsView extends BDecoratedWindow
         Dimension d = super.computePreferredSize(whint, hhint);
         d.width = Math.max(d.width, 350);
         return d;
+    }
+
+    protected BContainer createSoundSlider (final SoundType type)
+    {
+        int value = 0;
+        switch (type) {
+        case MUSIC: value = BangPrefs.getMusicVolume(); break;
+        case EFFECTS: value = BangPrefs.getEffectsVolume(); break;
+        }
+
+        // create our slider and label display
+        BSlider slider = new BSlider(BSlider.HORIZONTAL, 0, 100, value);
+        final BLabel vallbl = new BLabel(slider.getModel().getValue() + "%");
+        vallbl.setPreferredSize(new Dimension(50, 10));
+        slider.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged (ChangeEvent event) {
+                BoundedRangeModel model = (BoundedRangeModel)event.getSource();
+                switch (type) {
+                case MUSIC:
+                    BangPrefs.updateMusicVolume(model.getValue());
+                    _ctx.getBangClient().setMusicVolume(model.getValue());
+                    break;
+                case EFFECTS:
+                    BangPrefs.updateEffectsVolume(model.getValue());
+                    break;
+                }
+                vallbl.setText(model.getValue() + "%");
+            }
+        });
+
+        // create a wrapper to hold them both
+        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
+        wrapper.add(slider);
+        wrapper.add(vallbl, GroupLayout.FIXED);
+        return wrapper;
     }
 
     protected void refreshDisplayModes ()
@@ -220,4 +264,6 @@ public class OptionsView extends BDecoratedWindow
 
     protected BComboBox _modes;
     protected BCheckBox _fullscreen;
+
+    protected static enum SoundType { MUSIC, EFFECTS };
 }

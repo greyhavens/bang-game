@@ -211,7 +211,7 @@ public class GameOverView extends BDecoratedWindow
         // cue up our end of game riff
         if (_ctx instanceof BangContext) {
             String mpath = "sounds/music/post_game" + _cueidx + ".ogg";
-            _bctx.getBangClient().queueMusic(mpath, 1.0f, false);
+            _bctx.getBangClient().queueMusic(mpath, false);
         }
     }
 
