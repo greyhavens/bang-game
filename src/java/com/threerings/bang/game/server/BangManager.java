@@ -167,7 +167,11 @@ public class BangManager extends GameManager
         int pidx = getPlayerIndex(user.getVisibleName());
 
         Piece piece = (Piece)_bangobj.pieces.get(pieceId);
-        if (piece == null || !(piece instanceof Unit) || piece.owner != pidx) {
+        if (piece == null || piece.owner != pidx) {
+            // the unit probably died or was hijacked
+            throw new InvocationException(MOVER_NO_LONGER_VALID);
+        }
+        if (!(piece instanceof Unit)) {
             log.warning("Rejecting illegal move request [who=" + user.who() +
                         ", piece=" + piece + "].");
             throw new InvocationException(INTERNAL_ERROR);
@@ -192,8 +196,7 @@ public class BangManager extends GameManager
 
         } else {
             // execute the order immediately
-            Piece target = (Piece)_bangobj.pieces.get(targetId);
-            executeOrder(unit, x, y, target, true);
+            executeOrder(unit, x, y, targetId, true);
             listener.requestProcessed(EXECUTED_ORDER);
         }
     }
@@ -267,42 +270,36 @@ public class BangManager extends GameManager
      * target.
      * @param y the y coordinate to which to move, this is ignored if {@link
      * Short#MAX_VALUE} is supplied for x.
-     * @param target the (optional) target to shoot after moving.
+     * @param targetId the (optional) target to shoot after moving.
      * @param recheckOrders whether or not to recheck other advance orders
      * after executing this order.
      */
     public void executeOrder (
-        Unit unit, int x, int y, Piece target, boolean recheckOrders)
+        Unit unit, int x, int y, int targetId, boolean recheckOrders)
         throws InvocationException
     {
         Piece munit = null, shooter = unit;
         try {
             _bangobj.startTransaction();
 
+            // make sure the target is still around before we do anything
+            Piece target = (Piece)_bangobj.pieces.get(targetId);
+            if (targetId > 0 && target == null) {
+                throw new InvocationException(TARGET_NO_LONGER_VALID);
+            }
+
             // if they specified a non-NOOP move, execute it
             if (x != unit.x || y != unit.y) {
                 munit = moveUnit(unit, x, y, target);
                 shooter = munit;
+            } else {
+                // check that our target is still valid and reachable
+                checkTarget(shooter, target);
             }
 
-            // if they specified a target, shoot at it
+            // if they specified a target, shoot at it (we've already checked
+            // in moveUnit() or above that our target is still valid)
             if (target != null) {
-                // make sure the target is valid
-                if (!shooter.validTarget(target, false)) {
-                    // target already dead or something
-                    log.info("Target no longer valid [shooter=" + munit.info() +
-                             ", target=" + target.info() + "].");
-                    throw new InvocationException(TARGET_NO_LONGER_VALID);
-                }
-
-                // make sure the target is still within range
-                if (!shooter.targetInRange(target.x, target.y)) {
-                    log.info("Target no longer in range " +
-                             "[shooter=" + munit.info() +
-                             ", target=" + target.info() + "].");
-                    throw new InvocationException(TARGET_TOO_FAR);
-                }
-
                 // effect the initial shot
 //                 log.info("Shooting " + target.info() +
 //                          " with " + shooter.info());
@@ -1011,8 +1008,8 @@ public class BangManager extends GameManager
             AdvanceOrder order = iter.next();
             if (order.unit.ticksUntilMovable(tick) <= 0) {
                 try {
-                    Piece target = (Piece)_bangobj.pieces.get(order.targetId);
-                    executeOrder(order.unit, order.x, order.y, target, false);
+                    executeOrder(order.unit, order.x, order.y,
+                                 order.targetId, false);
                     executed++;
                 } catch (InvocationException ie) {
                     reportInvalidOrder(order, ie.getMessage());
@@ -1328,6 +1325,10 @@ public class BangManager extends GameManager
             }
         }
 
+        // make sure we can still reach and shoot any potential target before
+        // we go ahead with our move
+        checkTarget(munit, target);
+
         // update our board shadow
         _bangobj.board.clearShadow(unit);
         _bangobj.board.shadowPiece(munit);
@@ -1360,6 +1361,35 @@ public class BangManager extends GameManager
         }
 
         return munit;
+    }
+
+    /**
+     * Checks that the specified unit can reach and shoot the specified
+     * target. Throws an invocation exception if that is no longer the case
+     * (ie. the target moved out of range or died). Target may be null in which
+     * case this method does nothing.
+     */
+    protected void checkTarget (Piece shooter, Piece target)
+        throws InvocationException
+    {
+        if (target == null) {
+            return;
+        }
+
+        // make sure the target is still valid
+        if (!shooter.validTarget(target, false)) {
+            // target already dead or something
+            log.info("Target no longer valid [shooter=" + shooter.info() +
+                     ", target=" + target.info() + "].");
+            throw new InvocationException(TARGET_NO_LONGER_VALID);
+        }
+
+        // make sure the target is still within range
+        if (!shooter.targetInRange(target.x, target.y)) {
+            log.info("Target no longer in range [shooter=" + shooter.info() +
+                     ", target=" + target.info() + "].");
+            throw new InvocationException(TARGET_TOO_FAR);
+        }
     }
 
     /**
