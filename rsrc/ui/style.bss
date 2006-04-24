@@ -325,6 +325,16 @@ scrollbar_vmore:disabled {
   background: image "ui/scrollbar/bottom_disabled.png" framexy;
 }
 
+hslider {
+  icon: image "ui/buttons/secondary_normal.png";
+  border: 1 solid #000000;
+}
+
+vslider {
+  icon: image "ui/buttons/secondary_normal.png";
+  border: 1 solid #000000;
+}
+
 //
 // Global styles
 
