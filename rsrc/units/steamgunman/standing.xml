@@ -1,0 +1,718 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0397285, -0.199729, 0.191002, 0.960233" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 3.91503e-006, -5.21654e-007" rotation="0.0, 0.0, 0.34202, 0.939693" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257366" rotation="0.00448007, 0.00267085, 0.0382682, 0.999254" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461251" rotation="0.0294039, 0.748378, -0.0260144, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803321, 0.369002" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184502" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543634, 0.369006" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8657, -46.0059, 69.4658" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.200911, 14.346, -2.03049" rotation="0.0538828, 0.00168138, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5177, 28.5427" rotation="-0.0305386, 0.0, 0.0, 0.999534" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -4.18725, 72.9456" rotation="-0.5, 0.5, 0.5, -0.5" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0659, -25.2438" rotation="0.0305386, 0.0, 0.0, 0.999534" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0391762, -0.199838, 0.188347, 0.960758" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -1.87e-006, 2.60549e-006" rotation="0.000778006, -0.000283171, 0.343809, 0.939039" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257376" rotation="0.00405425, 0.0030541, 0.0369334, 0.999305" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461254" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803291, 0.368998" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184501" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543631, 0.368997" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8654, -46.0055, 69.4665" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.32531, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.204786, 14.4129, -2.02324" rotation="0.0538828, 0.0016814, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5195, 28.6261" rotation="-0.0284632, 0.0, 0.0, 0.999595" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -4.08193, 72.9893" rotation="0.499227, -0.500772, -0.499227, 0.500772" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0665, -25.3005" rotation="0.0288783, 0.0, 0.0, 0.999583" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0382407, -0.200019, 0.183849, 0.961628" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -1.11888e-006, 2.03378e-006" rotation="0.00177689, -0.000646739, 0.346103, 0.938195" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257358" rotation="0.00350752, 0.00354617, 0.0352196, 0.999367" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461253" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803305, 0.369005" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184499" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543586, 0.368999" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8652, -46.0052, 69.4672" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.21059, 14.5131, -2.01237" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5223, 28.7455" rotation="-0.0257983, 0.0, 0.0, 0.999667" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -3.92769, 73.0524" rotation="0.498375, -0.50162, -0.498375, 0.50162" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0673, -25.3848" rotation="0.0267465, 0.0, 0.0, 0.999642" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0371179, -0.20023, 0.178451, 0.962645" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.91103e-006, 2.65117e-006" rotation="0.00295596, -0.00107588, 0.348808, 0.937189" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257378" rotation="0.00286213, 0.00412701, 0.0331963, 0.999436" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.46125" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803336, 0.369006" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184502" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59013, -0.0543627, 0.368999" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8649, -46.0048, 69.468" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.217998, 14.641, -1.9985" rotation="0.0538828, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5259, 28.8948" rotation="-0.0226525, 0.0, 0.0, 0.999743" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -3.73285, 73.1317" rotation="0.497463, -0.502524, -0.497463, 0.502524" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0682, -25.4919" rotation="0.0242299, 0.0, 0.0, 0.999706" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0360043, -0.200434, 0.173097, 0.963622" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 2.94732e-006, 2.01275e-006" rotation="0.00427451, -0.0015558, 0.351829, 0.936053" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257389" rotation="0.00214038, 0.00477654, 0.0309336, 0.999508" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15344, -0.46125" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803338, 0.368998" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543633, 0.369003" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8646, -46.0044, 69.4687" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.226683, 14.7909, -1.98223" rotation="0.0538828, 0.0016814, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5302, 29.0677" rotation="-0.0191342, 0.0, 0.0, 0.999817" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -3.50573, 73.2237" rotation="0.49651, -0.503466, -0.49651, 0.503466" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0693, -25.6172" rotation="0.0214153, 0.0, 0.0, 0.999771" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0350973, -0.200595, 0.168737, 0.964395" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.18092e-006, 1.74647e-006" rotation="0.00569183, -0.00207164, 0.355071, 0.93482" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257355" rotation="0.00136452, 0.00547471, 0.028501, 0.999578" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461254" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803329, 0.369009" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184499" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543604, 0.368998" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8644, -46.0041, 69.4694" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325311, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.23632, 14.9573, -1.96418" rotation="0.0538828, 0.00168138, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.535, 29.258" rotation="-0.0153519, 0.0, 0.0, 0.999882" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -3.25467, 73.3252" rotation="0.495536, -0.504424, -0.495536, 0.504424" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0704, -25.756" rotation="0.0183897, 0.0, 0.0, 0.999831" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0345948, -0.200682, 0.166321, 0.964815" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 5.80368e-007, 1.05639e-006" rotation="0.00716717, -0.00260864, 0.358441, 0.933521" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257355" rotation="0.000556828, 0.00620148, 0.0259684, 0.999643" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461253" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803319, 0.368999" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184499" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543605, 0.368998" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8641, -46.0037, 69.4702" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.246584, 15.1345, -1.94496" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5401, 29.4595" rotation="-0.0114143, 0.0, 0.0, 0.999935" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -2.988, 73.4328" rotation="0.49456, -0.505381, -0.49456, 0.505381" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0717, -25.9035" rotation="0.0152397, 0.0, 0.0, 0.999884" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0346948, -0.200665, 0.166802, 0.964732" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 2.3024e-006, 4.92808e-007" rotation="0.00865984, -0.00315193, 0.361845, 0.932193" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257364" rotation="-0.000260439, 0.0069368, 0.0234057, 0.999702" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461255" rotation="0.0294039, 0.748378, -0.0260144, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803301, 0.369004" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.1845" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543617, 0.368998" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8639, -46.0034, 69.4709" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.257147, 15.3168, -1.92518" rotation="0.0538828, 0.00168138, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5454, 29.666" rotation="-0.00742993, 0.0, 0.0, 0.999972" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -2.71403, 73.5431" rotation="0.493602, -0.506317, -0.493602, 0.506317" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0729, -26.0551" rotation="0.0120524, 0.0, 0.0, 0.999927" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0354654, -0.20053, 0.170507, 0.964084" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -9.41065e-007, 2.70765e-006" rotation="0.0101291, -0.00368671, 0.365191, 0.93087" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.025735" rotation="-0.00106495, 0.00766062, 0.0208827, 0.999752" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461254" rotation="0.0294039, 0.748378, -0.0260144, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803307, 0.369005" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184504" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.054359, 0.368998" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8636, -46.003, 69.4716" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.267686, 15.4988, -1.90545" rotation="0.0538828, 0.00168138, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5507, 29.8714" rotation="-0.00350752, 0.0, 0.0, 0.999994" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -2.44111, 73.6528" rotation="0.492682, -0.507213, -0.492682, 0.507213" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0742, -26.2062" rotation="0.00891459, 0.0, 0.0, 0.99996" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0367432, -0.2003, 0.17665, 0.962977" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -1.17628e-006, 1.02849e-006" rotation="0.0115344, -0.00419816, 0.368385, 0.929592" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257384" rotation="-0.00183445, 0.00835288, 0.0184694, 0.999793" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461255" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803313, 0.369008" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184501" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543615, 0.369002" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8634, -46.0026, 69.4724" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.277873, 15.6746, -1.88637" rotation="0.0538828, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5558, 30.0694" rotation="0.000244283, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -2.17756, 73.7585" rotation="0.491819, -0.50805, -0.491819, 0.50805" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0754, -26.3519" rotation="0.00591323, 0.0, 0.0, 0.999983" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0383776, -0.199993, 0.184508, 0.961502" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -5.27625e-006, 3.96167e-006" rotation="0.0128348, -0.00467151, 0.371338, 0.928397" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257368" rotation="-0.00254669, 0.00899355, 0.0162356, 0.999824" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15344, -0.46125" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803307, 0.369006" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.054361, 0.369" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8631, -46.0023, 69.4731" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.287382, 15.8388, -1.86856" rotation="0.0538828, 0.0016814, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5606, 30.2537" rotation="0.00371684, 0.0, 0.0, 0.999993" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.93171, 73.8568" rotation="0.491033, -0.508809, -0.491033, 0.508809" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0765, -26.4877" rotation="0.00313522, 0.0, 0.0, 0.999995" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0402185, -0.199631, 0.193358, 0.959762" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.80677e-006, -1.23757e-006" rotation="0.0139899, -0.00509192, 0.373956, 0.927327" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257393" rotation="-0.00317933, 0.00956264, 0.0142512, 0.999848" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461253" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803292, 0.368999" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543594, 0.369001" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8629, -46.0019, 69.4738" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.32531, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.29589, 15.9857, -1.85263" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.565, 30.4183" rotation="0.0068015, 0.0, 0.0, 0.999977" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.71188, 73.9446" rotation="0.490345, -0.509472, -0.490345, 0.509472" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0776, -26.6088" rotation="0.000667453, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0421165, -0.199239, 0.202483, 0.957878" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 4.33782e-006, 6.45238e-007" rotation="0.0149591, -0.00544464, 0.376151, 0.926422" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257386" rotation="-0.00371017, 0.0100401, 0.0125861, 0.999864" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461251" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803327, 0.369004" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184504" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543637, 0.369003" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8626, -46.0016, 69.4746" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.303067, 16.1096, -1.83919" rotation="0.0538828, 0.0016814, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5686, 30.5568" rotation="0.00938966, 0.0, 0.0, 0.999956" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.52641, 74.0182" rotation="0.489775, -0.51002, -0.489775, 0.51002" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0785, -26.7106" rotation="-0.00140314, 0.0, 0.0, 0.999999" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0439231, -0.198849, 0.211169, 0.956001" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 9.63883e-007, 3.17482e-007" rotation="0.0157015, -0.0057149, 0.377831, 0.925724" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257349" rotation="-0.0041169, 0.0104059, 0.0113102, 0.999873" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461256" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.080332, 0.368999" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.1845" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543611, 0.368997" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8624, -46.0012, 69.4753" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325311, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.308591, 16.205, -1.82885" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5715, 30.6632" rotation="0.0113728, 0.0, 0.0, 0.999935" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.38361, 74.0746" rotation="0.489343, -0.510434, -0.489343, 0.510434" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0792, -26.7883" rotation="-0.00298971, 0.0, 0.0, 0.999996" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0454913, -0.198496, 0.218708, 0.954304" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -2.32359e-006, 1.03295e-006" rotation="0.0161768, -0.00588788, 0.378905, 0.925275" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257379" rotation="-0.00437727, 0.0106401, 0.0104934, 0.999879" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461253" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.080331, 0.369007" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40758, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543626, 0.369003" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8621, -46.0008, 69.476" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.312134, 16.2661, -1.82221" rotation="0.0538828, 0.00168138, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5733, 30.7311" rotation="0.0126422, 0.0, 0.0, 0.99992" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.29183, 74.1101" rotation="0.489069, -0.510697, -0.489069, 0.510697" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0797, -26.8374" rotation="-0.00400535, 0.0, 0.0, 0.999992" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0466747, -0.198221, 0.224397, 0.952983" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.15544e-006, -1.06392e-006" rotation="0.0163443, -0.00594883, 0.379284, 0.925117" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257339" rotation="-0.00446902, 0.0107226, 0.0102056, 0.99988" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461253" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803336, 0.369008" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.1845" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.054364, 0.369005" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44626, -6.76479" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8619, -46.0005, 69.4768" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325312, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.313371, 16.2875, -1.81989" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.574, 30.7544" rotation="0.0130895, 0.0, 0.0, 0.999914" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.25939, 74.1216" rotation="0.488974, -0.510788, -0.488974, 0.510788" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.08, -26.853" rotation="-0.00436322, 0.0, 0.0, 0.999991" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0475829, -0.198005, 0.228764, 0.951944" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 5.0463e-006, 2.04848e-006" rotation="0.0161768, -0.00588788, 0.378905, 0.925275" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257373" rotation="-0.00437727, 0.0106401, 0.0104934, 0.999879" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461256" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803307, 0.369002" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184502" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543586, 0.368999" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8616, -46.0001, 69.4775" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325317, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.312084, 16.2652, -1.82231" rotation="0.0538828, 0.0016814, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5734, 30.7288" rotation="0.0126422, 0.0, 0.0, 0.99992" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.29183, 74.1067" rotation="0.489069, -0.510697, -0.489069, 0.510697" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.08, -26.8318" rotation="-0.00400536, 0.0, 0.0, 0.999992" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0484028, -0.197806, 0.232706, 0.950988" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 2.01799e-006, 0.0" rotation="0.0157015, -0.00571489, 0.377831, 0.925724" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257388" rotation="-0.00411689, 0.0104059, 0.0113102, 0.999873" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461257" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803338, 0.369008" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543626, 0.369" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8613, -45.9998, 69.4782" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.308486, 16.2031, -1.82904" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5718, 30.6583" rotation="0.0113728, 0.0, 0.0, 0.999935" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.38361, 74.0675" rotation="0.489343, -0.510434, -0.489343, 0.510434" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0798, -26.7767" rotation="-0.00298971, 0.0, 0.0, 0.999996" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80294" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0491055, -0.197632, 0.236084, 0.950155" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -4.89517e-006, 4.29828e-006" rotation="0.014959, -0.00544464, 0.376151, 0.926422" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257351" rotation="-0.00371016, 0.0100401, 0.0125861, 0.999864" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461255" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803314, 0.369005" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.1845" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543578, 0.369" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8611, -45.9994, 69.4789" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325312, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.302905, 16.1068, -1.83949" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5691, 30.5492" rotation="0.00938967, 0.0, 0.0, 0.999956" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.52641, 74.0074" rotation="0.489775, -0.51002, -0.489775, 0.51002" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0795, -26.6925" rotation="-0.00140316, 0.0, 0.0, 0.999999" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0496621, -0.197493, 0.23876, 0.949486" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 0.0, 2.82485e-006" rotation="0.0139899, -0.00509193, 0.373956, 0.927327" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257354" rotation="-0.00317933, 0.00956265, 0.0142512, 0.999848" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461254" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803318, 0.369003" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184499" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543586, 0.369003" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8608, -45.9991, 69.4797" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.295669, 15.9819, -1.85304" rotation="0.0538828, 0.00168138, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5656, 30.4077" rotation="0.0068015, 0.0, 0.0, 0.999977" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.71188, 73.9298" rotation="0.490345, -0.509472, -0.490345, 0.509472" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0789, -26.5841" rotation="0.00066745, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0500435, -0.197397, 0.240593, 0.949023" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 2.53295e-006, 2.74066e-006" rotation="0.0128348, -0.00467149, 0.371338, 0.928397" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257367" rotation="-0.00254667, 0.00899357, 0.0162356, 0.999824" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461257" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803331, 0.368998" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184501" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543607, 0.368999" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8606, -45.9987, 69.4804" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.287103, 15.834, -1.86908" rotation="0.0538827, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5615, 30.2402" rotation="0.00371683, 0.0, 0.0, 0.999993" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -1.93171, 73.8381" rotation="0.491033, -0.508809, -0.491033, 0.508809" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0783, -26.4562" rotation="0.00313521, 0.0, 0.0, 0.999995" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0502208, -0.197352, 0.241446, 0.948807" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.99427e-006, 9.39113e-007" rotation="0.0115344, -0.00419815, 0.368385, 0.929592" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257359" rotation="-0.00183445, 0.00835288, 0.0184694, 0.999793" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461256" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803322, 0.369005" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.054363, 0.369001" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8603, -45.9983, 69.4811" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.277534, 15.6688, -1.887" rotation="0.0538828, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5568, 30.0528" rotation="0.000244283, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -2.17756, 73.7358" rotation="0.491819, -0.50805, -0.491819, 0.50805" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0775, -26.3137" rotation="0.00591323, 0.0, 0.0, 0.999983" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0501648, -0.197366, 0.241177, 0.948875" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 8.60947e-007, 8.03517e-007" rotation="0.0101291, -0.00368671, 0.365191, 0.93087" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257361" rotation="-0.00106495, 0.00766061, 0.0208827, 0.999752" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461252" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803307, 0.368996" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184501" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543652, 0.369004" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8601, -45.998, 69.4819" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.267289, 15.4919, -1.90619" rotation="0.0538828, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5519, 29.852" rotation="-0.00350753, 0.0, 0.0, 0.999994" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -2.44111, 73.6262" rotation="0.492682, -0.507213, -0.492682, 0.507213" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0767, -26.1613" rotation="0.0089146, 0.0, 0.0, 0.99996" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0498465, -0.197447, 0.239646, 0.949263" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.31404e-006, 1.52327e-006" rotation="0.00865983, -0.00315193, 0.361845, 0.932193" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257372" rotation="-0.000260436, 0.00693681, 0.0234057, 0.999702" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461253" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803323, 0.369008" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184501" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59013, -0.0543627, 0.369004" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8598, -45.9976, 69.4826" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.256695, 15.309, -1.92603" rotation="0.0538827, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5468, 29.6438" rotation="-0.00742993, 0.0, 0.0, 0.999972" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -2.71404, 73.5127" rotation="0.493602, -0.506317, -0.493602, 0.506317" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0758, -26.0039" rotation="0.0120524, 0.0, 0.0, 0.999927" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0490238, -0.197653, 0.235691, 0.950253" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.78604e-006, 1.16386e-006" rotation="0.00716716, -0.00260864, 0.358441, 0.933521" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257369" rotation="0.00055683, 0.00620148, 0.0259684, 0.999643" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461254" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803324, 0.369007" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.1845" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543642, 0.369003" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8596, -45.9973, 69.4833" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.246077, 15.1257, -1.94591" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5416, 29.4347" rotation="-0.0114143, 0.0, 0.0, 0.999935" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -2.988, 73.3988" rotation="0.49456, -0.505381, -0.49456, 0.505381" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0749, -25.8462" rotation="0.0152397, 0.0, 0.0, 0.999884" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.047622, -0.197995, 0.228952, 0.951899" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 0.0, 3.17181e-006" rotation="0.00569182, -0.00207166, 0.355071, 0.93482" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257358" rotation="0.00136454, 0.00547472, 0.028501, 0.999578" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461254" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803332, 0.369008" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184501" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543612, 0.368999" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8593, -45.9969, 69.4841" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.235762, 14.9476, -1.96523" rotation="0.0538828, 0.00168138, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5366, 29.2309" rotation="-0.0153519, 0.0, 0.0, 0.999882" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -3.25467, 73.2878" rotation="0.495536, -0.504424, -0.495536, 0.504424" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.074, -25.693" rotation="0.0183897, 0.0, 0.0, 0.999831" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80294" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0458626, -0.19841, 0.220493, 0.953894" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.11481e-006, 2.46759e-006" rotation="0.00427451, -0.0015558, 0.351829, 0.936053" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257351" rotation="0.00214039, 0.00477654, 0.0309336, 0.999508" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461251" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803304, 0.368995" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184501" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543637, 0.369" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8591, -45.9965, 69.4848" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.226078, 14.7805, -1.98336" rotation="0.0538828, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.532, 29.0386" rotation="-0.0191342, 0.0, 0.0, 0.999817" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -3.50573, 73.1831" rotation="0.49651, -0.503466, -0.49651, 0.503466" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0731, -25.5493" rotation="0.0214153, 0.0, 0.0, 0.999771" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0439683, -0.198839, 0.211386, 0.955953" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 3.57771e-006, 1.91683e-006" rotation="0.00295596, -0.00107588, 0.348808, 0.937189" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.025738" rotation="0.00286214, 0.00412701, 0.0331964, 0.999436" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461249" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803306, 0.369002" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543602, 0.369" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8588, -45.9962, 69.4855" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.217351, 14.6298, -1.99971" rotation="0.0538828, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5278, 28.8641" rotation="-0.0226525, 0.0, 0.0, 0.999743" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -3.73285, 73.0882" rotation="0.497463, -0.502524, -0.497463, 0.502524" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0723, -25.4197" rotation="0.0242299, 0.0, 0.0, 0.999706" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.7988, 43.4188" rotation="0.0421634, -0.199229, 0.202709, 0.95783" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, 1.70113e-006, -8.83566e-007" rotation="0.00177689, -0.000646724, 0.346103, 0.938195" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257377" rotation="0.00350753, 0.00354618, 0.0352196, 0.999367" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461253" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803326, 0.369007" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184502" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543653, 0.369" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8585, -45.9958, 69.4863" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325312, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.209907, 14.5013, -2.01365" rotation="0.0538828, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5242, 28.7137" rotation="-0.0257983, 0.0, 0.0, 0.999667" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -3.92769, 73.0065" rotation="0.498375, -0.50162, -0.498375, 0.50162" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0715, -25.3091" rotation="0.0267465, 0.0, 0.0, 0.999642" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0406744, -0.199538, 0.19555, 0.959318" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -7.47526e-007, 0.0" rotation="0.000777994, -0.00028316, 0.343809, 0.939039" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257355" rotation="0.00405426, 0.00305409, 0.0369334, 0.999305" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15344, -0.461254" rotation="0.0294039, 0.748378, -0.0260144, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803319, 0.369001" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184502" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543581, 0.369001" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.8583, -45.9955, 69.487" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8017, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.204072, 14.4006, -2.02457" rotation="0.0538828, 0.00168139, 0.0288902, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5215, 28.5937" rotation="-0.0284632, 0.0, 0.0, 0.999595" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -4.08193, 72.9413" rotation="0.499227, -0.500772, -0.499227, 0.500772" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0709, -25.2223" rotation="0.0288783, 0.0, 0.0, 0.999583" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0397285, -0.199729, 0.191002, 0.960233" scale="1.14, 1.14, 1.14"/>
+    <transform name="bone forearm" translation="29.736, -2.43532e-006, 4.00348e-006" rotation="0.0, 0.0, 0.34202, 0.939693" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40791, -0.0257378" rotation="0.00448007, 0.00267084, 0.0382682, 0.999254" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461257" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803322, 0.368999" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59015, -0.0543606, 0.369002" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="arm" translation="-35.858, -45.9951, 69.4877" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="-0.200174, 14.3333, -2.03187" rotation="0.0538828, 0.00168138, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
+    <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
+    <transform name="right wheel" translation="33.4586, -44.5197, 28.5103" rotation="-0.0305386, 0.0, 0.0, 0.999534" scale="1.0, 1.0, 1.0"/>
+    <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="steering" translation="-69.1031, -34.7242, -1.00748" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="-1.10042, -4.18725, 72.8961" rotation="0.5, -0.5, -0.5, 0.5" scale="0.877193, 0.877193, 0.877193"/>
+    <transform name="left wheel" translation="33.4586, -45.0704, -25.164" rotation="0.0305386, 0.0, 0.0, 0.999534" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>
