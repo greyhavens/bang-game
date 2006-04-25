@@ -33,6 +33,12 @@ public class Player
     /** The current avatar look selected by this player. */
     public String look;
 
+    /** The avatar look selected by this player for their victory pose. */
+    public String victoryLook;
+
+    /** The avatar look selected by this player for their wanted poster. */
+    public String wantedLook;
+
     /** The time at which this player was created (when they first starting
      * playing  this particular game). */
     public Date created;

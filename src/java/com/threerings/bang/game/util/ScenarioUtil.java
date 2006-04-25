@@ -26,12 +26,20 @@ public class ScenarioUtil
      */
     public static String[] selectRandom (String townId, int count)
     {
-        String[] avail = _scenmap.get(townId);
+        String[] avail = getScenarios(townId);
         String[] choices = new String[count];
         for (int ii = 0; ii < choices.length; ii++) {
             choices[ii] = (String)RandomUtil.pickRandom(avail);
         }
         return choices;
+    }
+
+    /**
+     * Returns the scenarios that are valid in the specified town.
+     */
+    public static String[] getScenarios (String townId)
+    {
+        return _scenmap.get(townId);
     }
 
     /**

@@ -20,7 +20,7 @@ public class BangOccupantInfo extends OccupantInfo
     {
         super(user);
 
-        Look look = user.getLook();
+        Look look = user.getLook(Look.Pose.DEFAULT);
         if (look != null) {
             avatar = look.getAvatar(user);
         }

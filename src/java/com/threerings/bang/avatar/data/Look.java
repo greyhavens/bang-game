@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.data;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 
 import com.samskivert.util.ArrayIntSet;
 import com.threerings.io.SimpleStreamableObject;
@@ -23,8 +24,35 @@ import static com.threerings.bang.Log.log;
 public class Look extends SimpleStreamableObject
     implements DSet.Entry, Cloneable
 {
+    /** Used to assign different looks for use in different circumstances. */
+    public static enum Pose {
+        /** Shown in player status view, when match making, during game, etc. */
+        DEFAULT("LOOK"),
+
+        /** Shown on a player's wanted poster and on top rank lists. Note that
+         * a snapshot of this look is maintained in a special table so that it
+         * can be easily shown when the player is offline. */
+        WANTED_POSTER("WANTED_LOOK"),
+
+        /** Shown in the end of game view if player is in first place. */
+        VICTORY("VICTORY_LOOK");
+
+        public String getColumnName () {
+            return _columnName;
+        }
+
+        Pose (String columnName) {
+            _columnName = columnName;
+        }
+
+        protected String _columnName;
+    };
+
     /** The maximum length of a look's name. */
-    public static final int MAX_NAME_LENGTH = 48;
+    public static final int MAX_NAME_LENGTH = 24;
+
+    /** The number of different poses. */
+    public static int POSE_COUNT = EnumSet.allOf(Pose.class).size();
 
     /** The name of this look (provided by the player). */
     public String name;

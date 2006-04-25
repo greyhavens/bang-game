@@ -50,8 +50,8 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>ratings</code> field. */
     public static final String RATINGS = "ratings";
 
-    /** The field name of the <code>look</code> field. */
-    public static final String LOOK = "look";
+    /** The field name of the <code>poses</code> field. */
+    public static final String POSES = "poses";
 
     /** The field name of the <code>looks</code> field. */
     public static final String LOOKS = "looks";
@@ -90,8 +90,8 @@ public class PlayerObject extends BodyObject
     /** Contains all ratings earned by this player. */
     public DSet<Rating> ratings;
 
-    /** This player's current avatar look. */
-    public String look;
+    /** This player's configured avatar poses. See {@link Look.Pose}. */
+    public String[] poses;
 
     /** The avatar looks this player has available. */
     public DSet<Look> looks;
@@ -131,9 +131,11 @@ public class PlayerObject extends BodyObject
     /**
      * Returns the look currently in effect for this player.
      */
-    public Look getLook ()
+    public Look getLook (Look.Pose pose)
     {
-        return (Look)looks.get(look);
+        String pstr = poses[pose.ordinal()];
+        return (pstr != null && looks.containsKey(pstr)) ?
+            looks.get(pstr) : looks.get("");
     }
 
     /**
@@ -468,19 +470,36 @@ public class PlayerObject extends BodyObject
     }
 
     /**
-     * Requests that the <code>look</code> field be set to the
+     * Requests that the <code>poses</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setLook (String value)
+    public void setPoses (String[] value)
     {
-        String ovalue = this.look;
+        String[] ovalue = this.poses;
         requestAttributeChange(
-            LOOK, value, ovalue);
-        this.look = value;
+            POSES, value, ovalue);
+        this.poses = (value == null) ? null : (String[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>poses</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setPosesAt (String value, int index)
+    {
+        String ovalue = this.poses[index];
+        requestElementUpdate(
+            POSES, index, value, ovalue);
+        this.poses[index] = value;
     }
 
     /**

@@ -72,9 +72,14 @@ public class BangClientResolver extends CrowdClientResolver
         buser.ratings = new DSet<Rating>(ratings.iterator());
 
         // load up this player's avatar looks
-        buser.look = player.look;
         buser.looks = new DSet<Look>(
             BangServer.lookrepo.loadLooks(player.playerId).iterator());
+
+        // configure their chosen poses
+        buser.poses = new String[Look.POSE_COUNT];
+        buser.poses[Look.Pose.DEFAULT.ordinal()] = player.look;
+        buser.poses[Look.Pose.VICTORY.ordinal()] = player.victoryLook;
+        buser.poses[Look.Pose.WANTED_POSTER.ordinal()] = player.wantedLook;
         
         // load up this player's pardners
         BangServer.playmgr.loadPardners(buser);

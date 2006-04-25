@@ -140,7 +140,7 @@ public class PardnerChatView extends BDecoratedWindow
 
         // update the avatar icon
         PlayerObject player = _ctx.getUserObject();
-        Look look = (Look)player.looks.get(player.look);
+        Look look = player.getLook(Look.Pose.DEFAULT);
         int[] avatar = (look == null) ? null : look.getAvatar(player);
         if (!Arrays.equals(_mavatar, avatar)) {
             _micon = getAvatarIcon(avatar, player.isMale);

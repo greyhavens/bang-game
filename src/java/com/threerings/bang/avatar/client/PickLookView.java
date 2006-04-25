@@ -94,7 +94,7 @@ public class PickLookView extends BContainer
         _looks.setItems(looks);
 
         // select their current look (which will update the display)
-        Look current = user.getLook();
+        Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null) {
             _looks.selectItem(getName(current));
         }

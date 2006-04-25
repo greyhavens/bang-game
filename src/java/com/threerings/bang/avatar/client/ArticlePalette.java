@@ -43,7 +43,7 @@ public class ArticlePalette extends IconPalette
         // this slot
         PlayerObject player = _ctx.getUserObject();
         int articleId = -1;
-        Look look = player.getLook();
+        Look look = player.getLook(Look.Pose.DEFAULT);
         if (look != null) {
             articleId = look.articles[slidx];
         }

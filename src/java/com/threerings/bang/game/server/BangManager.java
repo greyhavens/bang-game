@@ -553,7 +553,7 @@ public class BangManager extends GameManager
                     prec.playerId = user.playerId;
                     prec.purse = user.getPurse();
                     prec.ratings = user.ratings;
-                    Look look = user.getLook();
+                    Look look = user.getLook(Look.Pose.DEFAULT);
                     if (look != null) {
                         avatars[ii] = look.getAvatar(user);
                     }

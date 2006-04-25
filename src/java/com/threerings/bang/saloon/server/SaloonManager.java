@@ -3,10 +3,16 @@
 
 package com.threerings.bang.saloon.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import com.samskivert.io.PersistenceException;
+import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.Interval;
+import com.samskivert.util.Invoker;
+
+import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
@@ -20,9 +26,15 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ServerConfig;
+
+import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.util.ScenarioUtil;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 
@@ -32,6 +44,7 @@ import com.threerings.bang.saloon.data.MatchObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonMarshaller;
 import com.threerings.bang.saloon.data.SaloonObject;
+import com.threerings.bang.saloon.data.TopRankedList;
 
 import static com.threerings.bang.Log.log;
 
@@ -137,6 +150,32 @@ public class SaloonManager extends PlaceManager
         _salobj.setService((SaloonMarshaller)
                            BangServer.invmgr.registerDispatcher(
                                new SaloonDispatcher(this), false));
+
+        // start up our top-ranked list refresher interval
+        _rankval = new Interval(BangServer.omgr) {
+            public void expired () {
+                refreshTopRanked();
+            }
+        };
+        _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
+    }
+
+    @Override // documentation inherited
+    protected void didShutdown ()
+    {
+        super.didShutdown();
+
+        // clear out our invocation service
+        if (_salobj != null) {
+            BangServer.invmgr.clearDispatcher(_salobj.service);
+            _salobj = null;
+        }
+
+        // stop our top-ranked list refresher
+        if (_rankval != null) {
+            _rankval.cancel();
+            _rankval = null;
+        }
     }
 
     @Override // documentation inherited
@@ -258,8 +297,66 @@ public class SaloonManager extends PlaceManager
         BangServer.statobj.setPendingMatches(_matches.size());
     }
 
+    protected void refreshTopRanked ()
+    {
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                ArrayList<String> scens = new ArrayList<String>();
+                CollectionUtil.addAll(
+                    scens, ScenarioUtil.getScenarios(ServerConfig.getTownId()));
+                scens.add(0, ScenarioCodes.OVERALL);
+
+                try {
+                    _lists = BangServer.ratingrepo.loadTopRanked(
+                        scens.toArray(new String[scens.size()]),
+                        TOP_RANKED_LIST_SIZE);
+                    return true;
+
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failed to load top-ranked " +
+                            "players.", pe);
+                    return false;
+                }
+            }
+
+            public void handleResult () {
+                // make sure we weren't shutdown while we were off invoking
+                if (_salobj == null) {
+                    return;
+                }
+
+                try {
+                    _salobj.startTransaction();
+                    for (TopRankedList list : _lists) {
+                        list.criterion = MessageBundle.qualify(
+                            GameCodes.GAME_MSGS,
+                            "m.scenario_" + list.criterion);
+                        if (_salobj.topRanked.containsKey(list.criterion)) {
+                            _salobj.updateTopRanked(list);
+                        } else {
+                            _salobj.addToTopRanked(list);
+                        }
+                    }
+                } finally {
+                    _salobj.commitTransaction();
+                }
+            }
+
+            protected ArrayList<TopRankedList> _lists;
+        });
+    }
+
     protected SaloonObject _salobj;
     protected HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
+    protected Interval _rankval;
 
+    /** The delay between reporting that we're going to start a match and the
+     * time that we actually start it. */
     protected static final long START_DELAY = 5000L;
+
+    /** The frequency with which we update the top-ranked player lists. */
+    protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;
+
+    /** The size of the top-ranked player lists. */
+    protected static final int TOP_RANKED_LIST_SIZE = 10;
 }

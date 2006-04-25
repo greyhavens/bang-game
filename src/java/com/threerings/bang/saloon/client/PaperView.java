@@ -4,8 +4,11 @@
 package com.threerings.bang.saloon.client;
 
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.swing.text.html.HTMLDocument;
@@ -21,7 +24,12 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.text.HTMLView;
 
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+
+import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.ResultListener;
+import com.samskivert.velocity.VelocityUtil;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
@@ -30,6 +38,7 @@ import com.threerings.bang.util.DeploymentConfig;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
+import com.threerings.bang.saloon.data.TopRankedList;
 
 import static com.threerings.bang.Log.log;
 
@@ -78,9 +87,7 @@ public class PaperView extends BContainer
         _back.setEnabled(false);
         bcont.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
-        if (!ctx.getUserObject().tokens.isAdmin()) { // TEMP: for testing
-            _forward.setEnabled(false);
-        }
+        _forward.setEnabled(true);
         add(bcont, GroupLayout.FIXED);
 
         // read in the main news page
@@ -90,6 +97,26 @@ public class PaperView extends BContainer
     public void init (SaloonObject salobj)
     {
         _salobj = salobj;
+    }
+
+    protected void displayPage (int pageNo)
+    {
+        if (_pageNo == pageNo) {
+            return;
+        }
+
+        switch (_pageNo = pageNo) {
+        case 0:
+            setContents(_news.getDocument());
+            break;
+
+        case 1:
+            setContents(createTopScoresHTML());
+            break;
+        }
+
+        _back.setEnabled(_pageNo > 0);
+        _forward.setEnabled(_pageNo < 1);
     }
 
     protected void setContents (String contents)
@@ -123,6 +150,32 @@ public class PaperView extends BContainer
         }
     }
 
+    protected String createTopScoresHTML ()
+    {
+        // sort our lists in the order we want them displayed in the template
+        ArrayList<TopRankedList> lists = new ArrayList<TopRankedList>();
+        CollectionUtil.addAll(lists, _salobj.topRanked.iterator());
+
+        try {
+            if (_vformatter == null) {
+                _vformatter = VelocityUtil.createEngine();
+            }
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("i18n", _ctx.getMessageManager().getBundle(
+                        SaloonCodes.SALOON_MSGS));
+            ctx.put("lists", lists);
+            StringWriter sw = new StringWriter();
+            _vformatter.mergeTemplate(
+                "rsrc/ui/saloon/top_scores.tmpl", "UTF-8", ctx, sw);
+            return sw.toString();
+
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to format top scores.", e);
+            return _ctx.xlate(SaloonCodes.SALOON_MSGS,
+                              SaloonCodes.INTERNAL_ERROR);
+        }
+    }
+
     protected ResultListener _newsup = new ResultListener() {
         public void requestCompleted (Object result) {
             updateNews((String)result);
@@ -147,10 +200,9 @@ public class PaperView extends BContainer
     protected ActionListener _listener = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             if (event.getAction().equals("forward")) {
-                refreshNews(true);
-//                 displayPage(_page+1, false);
+                displayPage(_pageNo+1);
             } else if (event.getAction().equals("back")) {
-//                 displayPage(_page-1, false);
+                displayPage(_pageNo-1);
             }
         }
     };
@@ -160,6 +212,8 @@ public class PaperView extends BContainer
     protected BButton _forward, _back;
     protected HTMLView _contents;
 
+    protected int _pageNo;
+    protected VelocityEngine _vformatter;
     protected DateFormat _dfmt = DateFormat.getDateInstance(DateFormat.SHORT);
 
     protected static CachedDocument _news;

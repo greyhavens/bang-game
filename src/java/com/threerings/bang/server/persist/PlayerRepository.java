@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.EnumSet;
 
 import com.samskivert.io.PersistenceException;
 
@@ -16,6 +17,8 @@ import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Table;
+
+import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.Handle;
 
@@ -173,25 +176,54 @@ public class PlayerRepository extends JORARepository
     /**
      * Note that a user's session has ended: increment their sessions, add in
      * the number of minutes spent online, set their last session time to now
-     * and remember their most recently selected avatar look.
+     * and update any changed poses.
      */
-    public void noteSessionEnded (int playerId, String look, int minutes)
+    public void noteSessionEnded (int playerId, String[] poses,
+                                  boolean[] changed, int minutes)
         throws PersistenceException
     {
-        checkedUpdate("update PLAYERS set SESSIONS = SESSIONS + 1, " +
-                      "SESSION_MINUTES = SESSION_MINUTES + " + minutes + ", " +
-                      "LOOK = " + JDBCUtil.escape(look) + ", " +
-                      "LAST_SESSION = NOW() where PLAYER_ID=" + playerId, 1);
+        StringBuffer update = new StringBuffer();
+        update.append("update PLAYERS set SESSIONS = SESSIONS + 1, ");
+        update.append("SESSION_MINUTES = SESSION_MINUTES + ");
+        update.append(minutes).append(", ");
+        for (Look.Pose pose : EnumSet.allOf(Look.Pose.class)) {
+            if (changed[pose.ordinal()]) {
+                update.append(pose.getColumnName()).append(" = ");
+                update.append(JDBCUtil.escape(poses[pose.ordinal()]));
+                update.append(", ");
+            }
+        }
+        update.append("LAST_SESSION = NOW() where PLAYER_ID=").append(playerId);
+        checkedUpdate(update.toString(), 1);
     }
 
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
     {
+        JDBCUtil.createTableIfMissing(conn, "LOOKS", new String[] {
+            "PLAYER_ID INTEGER NOT NULL AUTO_INCREMENT",
+            "ACCOUNT_NAME VARCHAR(64) NOT NULL",
+            "HANDLE VARCHAR(64) UNIQUE",
+            "SCRIP INTEGER NOT NULL",
+            "LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
+            "VICTORY_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
+            "WANTED_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
+            "CREATED DATETIME NOT NULL",
+            "SESSIONS INTEGER NOT NULL",
+            "SESSION_MINUTES INTEGER NOT NULL",
+            "LAST_SESSION DATETIME NOT NULL",
+            "FLAGS INTEGER NOT NULL",
+            "PRIMARY KEY (PLAYER_ID)",
+            "UNIQUE (ACCOUNT_NAME)",
+        }, "");
+
         JDBCUtil.addColumn(
-            conn, "PLAYERS", "HANDLE", "VARCHAR(64) UNIQUE", "ACCOUNT_NAME");
+            conn, "PLAYERS", "VICTORY_LOOK",
+            "VARCHAR(" + Look.MAX_NAME_LENGTH + ")", "LOOK");
         JDBCUtil.addColumn(
-            conn, "PLAYERS", "FLAGS", "INTEGER NOT NULL", "LAST_SESSION");
+            conn, "PLAYERS", "WANTED_LOOK",
+            "VARCHAR(" + Look.MAX_NAME_LENGTH + ")", "VICTORY_LOOK");
     }
 
     @Override // documentation inherited

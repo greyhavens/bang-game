@@ -115,7 +115,7 @@ public class NewLookView extends BContainer
 //         _colsels.put("mouth", new ColorSelector(_ctx, AvatarLogic.MAKEUP));
 
         // configure our color selections based on the current look
-        Look look = _ctx.getUserObject().getLook();
+        Look look = _ctx.getUserObject().getLook(Look.Pose.DEFAULT);
         if (look != null) {
             s.setSelectedColorId(AvatarLogic.decodeSkin(look.aspects[0]));
             h.setSelectedColorId(AvatarLogic.decodeHair(look.aspects[0]));
@@ -298,7 +298,7 @@ public class NewLookView extends BContainer
 
         // copy in any required articles from their active look
         PlayerObject user = _ctx.getUserObject();
-        Look current = user.getLook();
+        Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null && current.articles.length != 0) {
             for (int ii = 0; ii < AvatarLogic.SLOTS.length; ii++) {
                 if (AvatarLogic.SLOTS[ii].optional) {
@@ -374,7 +374,7 @@ public class NewLookView extends BContainer
                 _icons.add(_choice = new ChoiceIcon(prefix, null));
             }
 
-            Look look = _ctx.getUserObject().getLook();
+            Look look = _ctx.getUserObject().getLook(Look.Pose.DEFAULT);
             for (AspectCatalog.Aspect entry : aspects) {
                 ChoiceIcon choice = new ChoiceIcon(prefix, entry);
                 choice.components =

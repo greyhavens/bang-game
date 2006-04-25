@@ -73,13 +73,13 @@ public class BarberManager extends PlaceManager
         }
 
         // copy the articles from their "active" look
-        Look current = user.getLook();
+        Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null) {
             look.articles = current.articles;
         } else {
             log.warning("Player has no current look from which to copy " +
                         "articles [who=" + user.who() +
-                        ", look=" + user.look + "].");
+                        ", poses=" + StringUtil.toString(user.poses) + "].");
             look.articles = new int[0];
         }
 
@@ -149,7 +149,7 @@ public class BarberManager extends PlaceManager
 
         // sanity check
         if (user.handle != null && !user.handle.isBlank() &&
-            user.getLook() != null) {
+            user.getLook(Look.Pose.DEFAULT) != null) {
             log.warning("User tried to recreate avatar [who=" + user.who() +
                         ", handle=" + handle + "].");
             throw new InvocationException(INTERNAL_ERROR);
@@ -254,7 +254,6 @@ public class BarberManager extends PlaceManager
                 if (_error != null) {
                     cl.requestFailed(_error);
                 } else {
-                    user.setLook("");
                     user.addToLooks(look);
                     user.setHandle(handle);
                     user.addToInventory(article);
@@ -275,14 +274,14 @@ public class BarberManager extends PlaceManager
         PlayerObject user = (PlayerObject)caller;
 
         // sanity check
-        Look look = (Look)user.looks.get(name);
+        Look look = user.looks.get(name);
         if (look == null) {
             log.warning("Player requested to select unknown look " +
                         "[who=" + user.who() + ", look=" + name + "].");
             return;
         }
 
-        user.setLook(name);
+        user.setPosesAt(name, Look.Pose.DEFAULT.ordinal());
     }
 
     @Override // documentation inherited
@@ -345,7 +344,7 @@ public class BarberManager extends PlaceManager
 
         protected void actionCompleted () {
             _user.addToLooks(_look);
-            _user.setLook(_look.name);
+            _user.setPosesAt(_look.name, Look.Pose.DEFAULT.ordinal());
             _listener.requestProcessed();
         }
         protected void actionFailed () {

@@ -19,6 +19,8 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.dobj.ElementUpdateListener;
+import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -550,7 +552,8 @@ public class PlayerManager
 
     /** Listens to users with pardners, updating their pardner list entries. */
     protected class PardnerEntryUpdater extends SetAdapter
-        implements AttributeChangeListener, ObjectDeathListener
+        implements AttributeChangeListener, ObjectDeathListener,
+                   ElementUpdateListener
     {
         /** The up-to-date entry for the player. */
         public PardnerEntry entry;
@@ -568,12 +571,17 @@ public class PlayerManager
 
         public void attributeChanged (AttributeChangedEvent ace)
         {
-            String name = ace.getName();
-            if (name.equals(PlayerObject.LOCATION)) {
+            if (ace.getName().equals(PlayerObject.LOCATION)) {
                 updateStatus();
                 updatePardnerEntries();
+            }
+        }
 
-            } else if (name.equals(PlayerObject.LOOK)) {
+        public void elementUpdated (ElementUpdatedEvent eue)
+        {
+            // if they select a new default look, update their avatar
+            if (eue.getName().equals(PlayerObject.POSES) &&
+                eue.getIndex() == Look.Pose.DEFAULT.ordinal()) {
                 updateAvatar();
                 updatePardnerEntries();
             }
@@ -581,11 +589,11 @@ public class PlayerManager
 
         public void entryUpdated (EntryUpdatedEvent eue)
         {
-            // if the current look is updated, update the avatar
+            // if the current look is updated, update their avatar
             String name = eue.getName();
             if (name.equals(PlayerObject.LOOKS)) {
                 Look look = (Look)eue.getEntry();
-                if (look.name.equals(_player.look)) {
+                if (look.name.equals(_player.getLook(Look.Pose.DEFAULT))) {
                     updateAvatar();
                     updatePardnerEntries();
                 }
@@ -631,7 +639,7 @@ public class PlayerManager
 
         protected void updateAvatar ()
         {
-            Look look = (Look)_player.looks.get(_player.look);
+            Look look = _player.getLook(Look.Pose.DEFAULT);
             if (look != null) {
                 entry.avatar = look.getAvatar(_player);
             }

@@ -17,6 +17,9 @@ import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.SimpleRepository;
 
+import com.threerings.bang.saloon.data.TopRankedList;
+
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Rating;
 
 /**
@@ -120,5 +123,57 @@ public class RatingRepository extends SimpleRepository
                 return null;
             }
         });
+    }
+
+    /**
+     * Loads the top-ranked players in each of the supplied scenario types.
+     */
+    public ArrayList<TopRankedList> loadTopRanked (
+        final String[] scenarios, final int count)
+        throws PersistenceException
+    {
+        final ArrayList<TopRankedList> lists = new ArrayList<TopRankedList>();
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                String query = "select RATINGS.PLAYER_ID, HANDLE " +
+                    "from RATINGS, PLAYERS " +
+                    "where RATINGS.SCENARIO = ? " +
+                    "and RATINGS.PLAYER_ID = PLAYERS.PLAYER_ID " +
+                    "order by RATING desc limit " + count;
+                PreparedStatement stmt = conn.prepareStatement(query);
+
+                try {
+                    for (String scenario : scenarios) {
+                        // load the info from the database
+                        ArrayList<Handle> handles = new ArrayList<Handle>();
+                        ArrayList<Integer> ids = new ArrayList<Integer>();
+                        stmt.setString(1, scenario);
+                        ResultSet rs = stmt.executeQuery();
+                        while (rs.next()) {
+                            ids.add(rs.getInt(1));
+                            handles.add(new Handle(rs.getString(2)));
+                        }
+
+                        // convert it into a TopRankedList object
+                        TopRankedList list = new TopRankedList();
+                        list.criterion = scenario;
+                        list.playerIds = new int[ids.size()];
+                        list.players = new Handle[handles.size()];
+                        for (int ii = 0; ii < list.playerIds.length; ii++) {
+                            list.playerIds[ii] = ids.get(ii);
+                            list.players[ii] = handles.get(ii);
+                        }
+                        lists.add(list);
+                    }
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+        return lists;
     }
 }

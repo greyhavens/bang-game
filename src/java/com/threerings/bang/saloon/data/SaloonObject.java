@@ -3,6 +3,8 @@
 
 package com.threerings.bang.saloon.data;
 
+import com.threerings.presents.dobj.DSet;
+
 import com.threerings.crowd.data.PlaceObject;
 
 /**
@@ -13,10 +15,16 @@ public class SaloonObject extends PlaceObject
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
     public static final String SERVICE = "service";
+
+    /** The field name of the <code>topRanked</code> field. */
+    public static final String TOP_RANKED = "topRanked";
     // AUTO-GENERATED: FIELDS END
 
     /** The means by which the client makes requests to the server. */
     public SaloonMarshaller service;
+
+    /** Contains info on the top-ranked players by various criterion. */
+    public DSet<TopRankedList> topRanked = new DSet<TopRankedList>();
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -33,6 +41,52 @@ public class SaloonObject extends PlaceObject
         requestAttributeChange(
             SERVICE, value, ovalue);
         this.service = value;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>topRanked</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToTopRanked (DSet.Entry elem)
+    {
+        requestEntryAdd(TOP_RANKED, topRanked, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>topRanked</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromTopRanked (Comparable key)
+    {
+        requestEntryRemove(TOP_RANKED, topRanked, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>topRanked</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateTopRanked (DSet.Entry elem)
+    {
+        requestEntryUpdate(TOP_RANKED, topRanked, elem);
+    }
+
+    /**
+     * Requests that the <code>topRanked</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setTopRanked (DSet value)
+    {
+        requestAttributeChange(TOP_RANKED, value, this.topRanked);
+        this.topRanked = (value == null) ? null : (DSet)value.clone();
     }
     // AUTO-GENERATED: METHODS END
 }

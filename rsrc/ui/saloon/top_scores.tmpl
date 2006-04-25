@@ -1,0 +1,30 @@
+<table>
+<tr><td colspan="2" class="headline" align="center">
+  $i18n.xlate("m.top_scores")
+</td></tr>
+<tr>
+#set ($lidx = 0)
+#foreach ($list in $lists)
+  <td valign="top" width="230">
+
+  <table><tr><td align="center" colspan="2" class="cathead">
+    <b>$i18n.xlate($list.criterion)</b>
+  </td></tr>
+  <tr><td align="center">
+    <img src="resource:///units/sharpshooter/icon.png"><br>Top Player!
+    </td>
+    <td valign="top">
+    #foreach ($player in $list.players)
+      ${velocityCount}. $player<br>
+    #end
+    </td>
+  </tr>
+  </table>
+  </td>
+  #if (($lidx % 2) == 1)
+  </tr><tr><td colspan="3">&nbsp;</td></tr><tr>
+  #end
+  #set ($lidx = $lidx + 1)
+#end
+</tr>
+</table>

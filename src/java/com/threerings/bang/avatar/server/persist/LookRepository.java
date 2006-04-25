@@ -142,6 +142,66 @@ public class LookRepository extends SimpleRepository
         }
     }
 
+    /**
+     * Loads the specified player's "wanted poster" snapshot. Returns null if
+     * no snapshot could be located for that player.
+     */
+    public int[] loadSnapshot (int playerId)
+        throws PersistenceException
+    {
+        final String query = "select AVATAR from SNAPSHOTS " +
+            "where PLAYER_ID = " + playerId;
+        return execute(new Operation<int[]>() {
+            public int[] invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                int[] avatar = null;
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    if (rs.next()) {
+                        avatar = fromByteArray(rs.getBytes(1));
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return avatar;
+            }
+        });
+    }
+
+    /**
+     * Updates the specified player's wanted poster snapshot.
+     */
+    public void updateSnapshot (final int playerId, int[] snapshot)
+        throws PersistenceException
+    {
+        final byte[] snapdata = toByteArray(snapshot);
+        executeUpdate(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                String update = "update SNAPSHOTS set AVATAR = ? " +
+                    "where PLAYER_ID = " + playerId;
+                PreparedStatement stmt = conn.prepareStatement(update);
+                try {
+                    stmt.setBytes(1, snapdata);
+                    if (stmt.executeUpdate() == 0) {
+                        JDBCUtil.close(stmt);
+                        String insert = "insert into SNAPSHOTS " +
+                            "values(" + playerId + ", ?)";
+                        stmt = conn.prepareStatement(insert);
+                        stmt.setBytes(1, snapdata);
+                        JDBCUtil.warnedUpdate(stmt, 1);
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+    }
+
     /** Helper function for {@link #loadLooks}. */
     protected Look decodeLook (ResultSet rs)
         throws SQLException
@@ -168,5 +228,23 @@ public class LookRepository extends SimpleRepository
         int[] iarray = new int[ints.remaining()];
         ints.get(iarray);
         return iarray;
+    }
+
+    @Override // documentation inherited
+    protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
+        throws SQLException, PersistenceException
+    {
+        JDBCUtil.createTableIfMissing(conn, "LOOKS", new String[] {
+            "PLAYER_ID INTEGER NOT NULL",
+            "NAME VARCHAR(24) NOT NULL",
+            "ASPECTS BLOB NOT NULL",
+            "ARTICLES BLOB NOT NULL",
+            "KEY (PLAYER_ID)",
+        }, "");
+
+        JDBCUtil.createTableIfMissing(conn, "SNAPSHOTS", new String[] {
+            "PLAYER_ID INTEGER NOT NULL",
+            "AVATAR BLOB NOT NULL",
+        }, "");
     }
 }

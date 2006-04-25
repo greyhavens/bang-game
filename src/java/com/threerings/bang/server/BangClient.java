@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.samskivert.util.Invoker;
+import com.samskivert.util.ObjectUtil;
 
 import com.threerings.crowd.server.CrowdClient;
 import com.threerings.presents.net.BootstrapData;
@@ -59,6 +60,10 @@ public class BangClient extends CrowdClient
 
         // configure the player in the town for this server
         user.townId = ServerConfig.getTownId();
+
+        // make a note of their current avatar poses for later comparison and
+        // potential updating
+        _startPoses = (String[])user.poses.clone();
     }
 
     @Override // documentation inherited
@@ -137,13 +142,22 @@ public class BangClient extends CrowdClient
                 }
             }
 
-            // record our playtime to the database
+            // record our playtime to the database and potentially update our
+            // poses
+            boolean[] changed = new boolean[_startPoses.length];
+            for (int ii = 0; ii < changed.length; ii++) {
+                changed[ii] = !ObjectUtil.equals(
+                    _startPoses[ii], user.poses[ii]);
+            }
             BangServer.playrepo.noteSessionEnded(
-                user.playerId, user.look, (int)Math.round(_connectTime / 60f));
+                user.playerId, user.poses, changed,
+                (int)Math.round(_connectTime / 60f));
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to note ended session " +
                     "[user=" + user.who() + "].", e);
         }
     }
+
+    protected String[] _startPoses;
 }

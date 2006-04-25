@@ -28,6 +28,11 @@ p {
   font-size: 24;
 }
 
+.cathead { 
+  font-variant: "Dom Casual";
+  font-size: 18;
+}
+
 .caption { 
   font-family: "Helvetica";
   font-size: 10;
