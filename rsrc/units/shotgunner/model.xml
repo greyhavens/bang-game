@@ -5060,73 +5060,73 @@
 
   <node name="Bip01" translation="8.89943e-007, -0.649158, 74.317" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Pelvis" parent="Bip01" translation="-0.649158, 0.0, 0.0" rotation="-0.499999, -0.5, -0.5, 0.500001" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Pelvis" parent="Bip01" translation="0.0, 0.0, 74.317" rotation="0.707106, 9.74996e-007, 0.707107, -9.74997e-007" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Spine" parent="Bip01 Pelvis" translation="9.56821, -0.0102302, 1.32834e-005" rotation="-2.10338e-006, -7.17443e-007, 0.0352974, 0.999377" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Spine" parent="Bip01 Pelvis" translation="0.0, 0.0102302, 83.8852" rotation="0.706666, -0.0249595, 0.706666, -0.0249585" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Spine1" parent="Bip01 Spine" translation="12.8848, -0.0102285, 0.0" rotation="0.0, 0.0, 0.0392598, 0.999229" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Spine1" parent="Bip01 Spine" translation="1.21818e-006, -0.888597, 96.7386" rotation="0.705142, -0.0526838, 0.705141, -0.0526829" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Spine2" parent="Bip01 Spine1" translation="12.8855, -0.0101315, 0.0" rotation="0.0, -2.17614e-007, 0.078459, 0.996917" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Spine2" parent="Bip01 Spine1" translation="3.82939e-006, -2.79333, 109.483" rotation="0.698834, -0.107846, 0.698834, -0.107845" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Neck" parent="Bip01 Spine2" translation="12.8834, -0.00421136, 0.0" rotation="0.0, 1.93477e-007, -0.0697565, 0.997564" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Neck" parent="Bip01 Spine2" translation="9.14832e-006, -6.6732, 121.768" rotation="0.704655, -0.0588352, 0.704655, -0.0588342" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Head" parent="Bip01 Neck" translation="5.34116, 1.08631e-006, 0.0" rotation="0.0, -2.16513e-007, 0.0780615, 0.996949" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Head" parent="Bip01 Neck" translation="1.03626e-005, -7.55894, 127.035" rotation="0.697912, -0.113662, 0.697912, -0.113661" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 HeadNub" parent="Bip01 Head" translation="36.8257, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 HeadNub" parent="Bip01 Head" translation="2.63817e-005, -19.2439, 161.958" rotation="0.697912, -0.113662, 0.697912, -0.113661" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Clavicle" parent="Bip01 Neck" translation="-3.01297, -2.3483, 4.22218" rotation="0.561743, 0.039055, 0.824399, -0.0573186" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Clavicle" parent="Bip01 Neck" translation="4.22219, -3.85777, 119.186" rotation="0.149464, 0.184007, 0.0283221, 0.971082" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L UpperArm" parent="Bip01 L Clavicle" translation="15.6732, 4.57419e-007, 1.89315e-006" rotation="-0.152105, -0.166298, -0.0123025, 0.974196" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L UpperArm" parent="Bip01 L Clavicle" translation="18.8089, -2.13355, 113.718" rotation="0.000346951, 0.0153013, 0.0187774, 0.999707" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Forearm" parent="Bip01 L UpperArm" translation="27.8665, 0.0, 3.21465e-006" rotation="0.0, 0.0, -0.025636, 0.999671" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Forearm" parent="Bip01 L UpperArm" translation="46.6427, -1.08704, 112.865" rotation="-4.54269e-005, 0.0153051, -0.00685728, 0.999859" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Hand" parent="Bip01 L Forearm" translation="25.1964, 0.0, 6.71531e-006" rotation="-0.70628, -0.0277719, -0.0277498, 0.706843" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Hand" parent="Bip01 L Forearm" translation="71.8249, -1.43258, 112.094" rotation="-0.706828, -0.0121078, -0.021782, 0.706946" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger0" parent="Bip01 L Hand" translation="8.07436, 1.95132, -7.68347" rotation="0.187865, 0.645588, 0.206877, 0.710721" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger0" parent="Bip01 L Hand" translation="79.8777, -9.22611, 110.528" rotation="-0.35799, 0.589925, -0.323275, 0.647552" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger01" parent="Bip01 L Finger0" translation="8.55132, 4.50824e-006, -7.42925e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger01" parent="Bip01 L Finger0" translation="80.6897, -16.4182, 105.974" rotation="-0.35799, 0.589925, -0.323275, 0.647552" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger0Nub" parent="Bip01 L Finger01" translation="7.99514, -4.01368e-006, 1.88677e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger0Nub" parent="Bip01 L Finger01" translation="81.449, -23.1425, 101.716" rotation="-0.35799, 0.589925, -0.323275, 0.647552" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger1" parent="Bip01 L Hand" translation="15.0192, -0.00642395, -8.065" rotation="-0.000397852, 0.0392598, -1.56318e-005, 0.999229" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger1" parent="Bip01 L Hand" translation="86.7149, -9.7023, 112.816" rotation="-0.705709, 0.0156537, -0.049531, 0.706595" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger11" parent="Bip01 L Finger1" translation="7.52778, -2.3506e-006, -4.20875e-007" rotation="0.0, 0.0, 0.100188, 0.994968" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger11" parent="Bip01 L Finger1" translation="94.202, -10.3955, 113.176" rotation="-0.70059, 0.0862786, 0.0215106, 0.708002" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger1Nub" parent="Bip01 L Finger11" translation="8.58167, -1.0501e-006, 5.57937e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger1Nub" parent="Bip01 L Finger11" translation="102.648, -11.1716, 111.869" rotation="-0.70059, 0.0862786, 0.0215106, 0.708002" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger2" parent="Bip01 L Hand" translation="15.1181, 0.00210724, 2.73266" rotation="-0.000397973, 0.0305385, -1.21594e-005, 0.999534" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger2" parent="Bip01 L Hand" translation="86.9617, 1.09299, 112.818" rotation="-0.706114, 0.00948701, -0.0433707, 0.706705" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger21" parent="Bip01 L Finger2" translation="7.96354, 5.4514e-006, -1.23288e-007" rotation="0.0, 0.0, 0.100188, 0.994969" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger21" parent="Bip01 L Finger2" translation="94.8938, 0.498126, 113.199" rotation="-0.701611, 0.0801835, 0.0276509, 0.707494" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger2Nub" parent="Bip01 L Finger21" translation="9.07843, -1.379e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Finger2Nub" parent="Bip01 L Finger21" translation="103.842, -0.168137, 111.816" rotation="-0.701611, 0.0801835, 0.0276509, 0.707494" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="-3.01297, -2.34827, -4.22219" rotation="-0.561743, -0.0390573, 0.824399, -0.057317" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="-4.22218, -3.85778, 119.186" rotation="0.0283207, 0.971082, 0.149464, 0.184007" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="15.6732, -1.20707e-007, -2.42708e-006" rotation="0.152105, 0.166298, -0.0123026, 0.974196" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="-18.8089, -2.1336, 113.718" rotation="0.0187759, 0.999707, 0.000346973, 0.0153013" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="27.8665, 0.0, -3.24061e-006" rotation="0.0, 0.0, -0.025636, 0.999671" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="-46.6427, -1.08717, 112.865" rotation="-0.00685874, 0.999859, -4.54046e-005, 0.0153051" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="25.1964, 0.0, -6.73395e-006" rotation="0.70628, 0.0277719, -0.0277498, 0.706843" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="-71.8249, -1.43279, 112.094" rotation="-0.021783, 0.706946, -0.706828, -0.0121068" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger0" parent="Bip01 R Hand" translation="8.07436, 1.95133, 7.68347" rotation="-0.187865, -0.645588, 0.206877, 0.710721" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger0" parent="Bip01 R Hand" translation="-79.8777, -9.22634, 110.528" rotation="-0.323276, 0.647552, -0.357989, 0.589926" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger01" parent="Bip01 R Finger0" translation="8.55133, -1.44827e-006, -4.83497e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger01" parent="Bip01 R Finger0" translation="-80.6897, -16.4184, 105.974" rotation="-0.323276, 0.647552, -0.357989, 0.589926" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger0Nub" parent="Bip01 R Finger01" translation="7.99514, -3.11066e-006, 4.5154e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger0Nub" parent="Bip01 R Finger01" translation="-81.4489, -23.1427, 101.716" rotation="0.647552, 0.323276, 0.589926, 0.357989" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger1" parent="Bip01 R Hand" translation="15.0192, -0.00642275, 8.065" rotation="0.000397852, -0.0392598, -1.56315e-005, 0.999229" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger1" parent="Bip01 R Hand" translation="-86.7148, -9.70255, 112.816" rotation="-0.049532, 0.706595, -0.705709, 0.0156548" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger11" parent="Bip01 R Finger1" translation="7.52778, -2.08515e-006, 2.49478e-007" rotation="0.0, 0.0, 0.100188, 0.994968" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger11" parent="Bip01 R Finger1" translation="-94.202, -10.3958, 113.176" rotation="0.0215096, 0.708002, -0.70059, 0.0862796" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger1Nub" parent="Bip01 R Finger11" translation="8.58167, -1.9373e-006, 1.38484e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger1Nub" parent="Bip01 R Finger11" translation="-102.648, -11.1719, 111.869" rotation="0.708002, -0.0215096, 0.0862796, 0.70059" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger2" parent="Bip01 R Hand" translation="15.1181, 0.0021084, -2.73266" rotation="0.000397973, -0.0305385, -1.21584e-005, 0.999533" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger2" parent="Bip01 R Hand" translation="-86.9617, 1.09274, 112.818" rotation="-0.0433717, 0.706704, -0.706114, 0.00948804" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger21" parent="Bip01 R Finger2" translation="7.96354, 5.3024e-006, 0.0" rotation="0.0, 0.0, 0.100188, 0.994969" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger21" parent="Bip01 R Finger2" translation="-94.8938, 0.497852, 113.199" rotation="0.0276498, 0.707494, -0.701611, 0.0801845" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Finger2Nub" parent="Bip01 R Finger21" translation="9.07843, -1.18399e-006, 2.87761e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Finger2Nub" parent="Bip01 R Finger21" translation="-103.842, -0.168436, 111.816" rotation="0.707494, -0.0276498, 0.0801845, 0.701611" scale="1.0, 1.0, 1.0"/>
 
-  <triMesh name="shotgun" parent="Bip01 R Hand" translation="19.9091, 10.7624, 22.8627" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431" offsetTranslation="0.0, 1.07972e-005, -60.3822" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="shotgun.png" transparent="false">
+  <triMesh name="shotgun" parent="Bip01 R Hand" translation="-91.9123, -24.5675, 102.287" rotation="-0.672117, -0.156219, 0.723357, 0.0246658" scale="0.917431, 0.917431, 0.917431" offsetTranslation="0.0, 1.07972e-005, -60.3822" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="shotgun.png" transparent="false">
     <vertex location="2.28587e-007, -13.5, 20.7397" normal="-4.39258e-007, 0.0325961, -0.999469" tcoords="0.985028, 0.675896"/>
     <vertex location="2.95511, -3.28065, 20.4128" normal="-3.08924e-007, -0.06395, -1.99898" tcoords="0.976663, 0.865551"/>
     <vertex location="5.9736, -13.5, 20.7397" normal="-6.57695e-007, 0.0650564, -1.99477" tcoords="0.985028, 0.675896"/>
@@ -5615,7 +5615,7 @@
     <vertex location="-1.79409, -10.5711, 67.2342" normal="0.0, -0.000672021, -1.0" tcoords="0.817857, 0.318341"/>
   </triMesh>
 
-  <triMesh name="emitter_R_barrel" parent="shotgun" translation="-8.55676, 0.0816762, 96.0145" rotation="0.741485, -0.670042, 0.0075936, 0.0344493" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
+  <triMesh name="emitter_R_barrel" parent="shotgun" translation="-177.482, -43.5547, 114.043" rotation="0.478628, 0.519554, 0.591287, 0.389048" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
     <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
     <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
     <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
@@ -5627,7 +5627,7 @@
     <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
   </triMesh>
 
-  <triMesh name="emitter_L_barrel" parent="shotgun" translation="8.23801, 0.190254, 95.2879" rotation="0.709478, -0.704055, -0.0113794, 0.0286055" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
+  <triMesh name="emitter_L_barrel" parent="shotgun" translation="-178.28, -39.7353, 99.1215" rotation="0.509334, 0.483723, 0.604453, 0.375802" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
     <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
     <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
     <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
@@ -5639,25 +5639,25 @@
     <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
   </triMesh>
 
-  <node name="Bip01 L Thigh" parent="Bip01 Pelvis" translation="-1.57131e-005, 1.89616e-005, 11.3305" rotation="0.110393, 0.989667, -0.00101497, -0.0914952" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Thigh" parent="Bip01 Pelvis" translation="11.3305, 1.22845e-005, 74.317" rotation="0.764498, -0.0787765, -0.635103, 0.0773429" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Calf" parent="Bip01 L Thigh" translation="29.705, 1.01664e-006, 1.11811e-006" rotation="0.0, 0.0, -0.228853, 0.973461" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Calf" parent="Bip01 L Thigh" translation="16.7034, -6.49619, 45.8333" rotation="0.762237, 0.0982721, -0.635948, -0.0700551" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Foot" parent="Bip01 L Calf" translation="27.0019, 6.12028e-007, -7.04359e-007" rotation="-0.0231923, -0.0944067, 0.115017, 0.988595" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Foot" parent="Bip01 L Calf" translation="21.343, -0.0450181, 20.0272" rotation="0.706434, 0.0308441, -0.706434, 0.030844" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Toe0" parent="Bip01 L Foot" translation="20.0951, 26.2557, 1.34549e-007" rotation="0.0, 0.0, 0.793353, 0.608761" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Toe0" parent="Bip01 L Foot" translation="23.6314, -26.2008, -0.0679679" rotation="0.45452, -0.541675, -0.405579, 0.579228" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Toe0Nub" parent="Bip01 L Toe0" translation="21.2967, -3.30325e-007, 1.08654e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Toe0Nub" parent="Bip01 L Toe0" translation="25.4243, -46.6936, 5.44402" rotation="-0.541675, -0.45452, 0.579228, 0.405579" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Thigh" parent="Bip01 Pelvis" translation="1.57131e-005, -1.24646e-005, -11.3305" rotation="0.110393, 0.989667, 0.00101384, 0.0914968" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Thigh" parent="Bip01 Pelvis" translation="-11.3305, -1.87815e-005, 74.317" rotation="-0.635103, 0.077342, 0.764498, -0.0787776" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Calf" parent="Bip01 R Thigh" translation="29.705, 1.01142e-006, 0.0" rotation="0.0, 0.0, -0.228853, 0.973461" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Calf" parent="Bip01 R Thigh" translation="-16.7034, -6.49624, 45.8333" rotation="-0.635948, -0.070056, 0.762237, 0.098271" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Foot" parent="Bip01 R Calf" translation="27.0019, 2.79027e-007, 6.72415e-007" rotation="0.0231923, 0.0944067, 0.115017, 0.988595" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Foot" parent="Bip01 R Calf" translation="-21.343, -0.0450783, 20.0272" rotation="-0.706434, 0.0308431, 0.706434, 0.0308431" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Toe0" parent="Bip01 R Foot" translation="20.0951, 26.2557, -5.46945e-007" rotation="0.0, 0.0, 0.793353, 0.608761" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Toe0" parent="Bip01 R Foot" translation="-23.6313, -26.2009, -0.0679677" rotation="0.40558, -0.579228, -0.454519, 0.541676" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Toe0Nub" parent="Bip01 R Toe0" translation="21.2967, -9.81865e-007, -2.89417e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Toe0Nub" parent="Bip01 R Toe0" translation="-25.4242, -46.6937, 5.44402" rotation="0.40558, -0.579228, -0.454519, 0.541676" scale="1.0, 1.0, 1.0"/>
 
   <node name="Line01" translation="6.19427, -6.37632, 123.278" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
 
