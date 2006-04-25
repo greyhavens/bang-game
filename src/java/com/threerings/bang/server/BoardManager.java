@@ -114,17 +114,19 @@ public class BoardManager
      * Loads the board data for the specified board, notifying the given result
      * listener when finished.
      */
-    public void loadBoardData (final BoardRecord brec, ResultListener listener)
+    public void loadBoardData (
+        final BoardRecord brec, ResultListener<BoardRecord> listener)
     {
         // if there's already a list of listeners waiting for the data, put the
         // listener on it and return; otherwise, create and map the list and
         // post an invoker to load the data
-        ResultListenerList rll = _boardDataListeners.get(brec);
+        ResultListenerList<BoardRecord> rll = _boardDataListeners.get(brec);
         if (rll != null) {
             rll.add(listener);
             return;
         }
-        final ResultListenerList list = new ResultListenerList();
+        final ResultListenerList<BoardRecord> list =
+            new ResultListenerList<BoardRecord>();
         _boardDataListeners.put(brec, list);
         list.add(listener);
         BangServer.invoker.postUnit(new Invoker.Unit() {
@@ -167,6 +169,7 @@ public class BoardManager
     
     /** Maps board records to lists of {@link ResultListener}s waiting for the
      * invoker to load the record's board data from the database. */
-    protected HashMap<BoardRecord, ResultListenerList> _boardDataListeners =
-        new HashMap<BoardRecord, ResultListenerList>();
+    protected HashMap<BoardRecord, ResultListenerList<BoardRecord>>
+        _boardDataListeners =
+        new HashMap<BoardRecord, ResultListenerList<BoardRecord>>();
 }

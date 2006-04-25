@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.util.AuditLogger;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
@@ -297,10 +298,10 @@ public class BangServer extends CrowdServer
                 if (npop != townobj.population) {
                     townobj.setPopulation(npop);
                 }
-            }     
+            }
         }.schedule(30000L, true);
     }
-    
+
     /**
      * Returns the player object for the specified user if they are online
      * currently, null otherwise. This should only be called from the dobjmgr
@@ -309,6 +310,16 @@ public class BangServer extends CrowdServer
     public static PlayerObject lookupPlayer (Handle handle)
     {
         return _players.get(handle);
+    }
+
+    /**
+     * Returns the player object for the specified id if they are online
+     * currently, null otherwise. This should only be called from the dobjmgr
+     * thread.
+     */
+    public static PlayerObject lookupPlayer (int playerId)
+    {
+        return _playerIds.get(playerId);
     }
 
     /**
@@ -329,6 +340,7 @@ public class BangServer extends CrowdServer
     public static void registerPlayer (PlayerObject player)
     {
         _players.put(player.handle, player);
+        _playerIds.put(player.playerId, player);
 
         // update our players online count in the status object
         statobj.setPlayersOnline(clmgr.getClientCount());
@@ -341,6 +353,7 @@ public class BangServer extends CrowdServer
     public static void clearPlayer (PlayerObject player)
     {
         _players.remove(player.handle);
+        _playerIds.remove(player.playerId);
 
         // update our players online count in the status object
         statobj.setPlayersOnline(clmgr.getClientCount());
@@ -405,6 +418,8 @@ public class BangServer extends CrowdServer
 
     protected static HashMap<Handle,PlayerObject> _players =
         new HashMap<Handle,PlayerObject>();
+    protected static HashIntMap<PlayerObject> _playerIds =
+        new HashIntMap<PlayerObject>();
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server.log");

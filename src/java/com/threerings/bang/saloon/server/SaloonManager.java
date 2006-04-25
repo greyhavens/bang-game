@@ -11,6 +11,7 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.ResultListener;
 
 import com.threerings.util.MessageBundle;
 
@@ -324,25 +325,36 @@ public class SaloonManager extends PlaceManager
                 if (_salobj == null) {
                     return;
                 }
-
-                try {
-                    _salobj.startTransaction();
-                    for (TopRankedList list : _lists) {
-                        list.criterion = MessageBundle.qualify(
-                            GameCodes.GAME_MSGS,
-                            "m.scenario_" + list.criterion);
-                        if (_salobj.topRanked.containsKey(list.criterion)) {
-                            _salobj.updateTopRanked(list);
-                        } else {
-                            _salobj.addToTopRanked(list);
-                        }
-                    }
-                } finally {
-                    _salobj.commitTransaction();
+                for (TopRankedList list : _lists) {
+                    commitTopRanked(list);
                 }
             }
 
             protected ArrayList<TopRankedList> _lists;
+        });
+    }
+
+    protected void commitTopRanked (final TopRankedList list)
+    {
+        list.criterion = MessageBundle.qualify(
+            GameCodes.GAME_MSGS, "m.scenario_" + list.criterion);
+        int topRankId = (list.playerIds == null ||
+                         list.playerIds.length == 0) ? 0 : list.playerIds[0];
+        BangServer.barbermgr.getSnapshot(topRankId, new ResultListener<int[]>() {
+            public void requestCompleted (int[] snapshot) {
+                list.topDogSnapshot = snapshot;
+            }
+            public void requestFailed (Exception cause) {
+                // ah well, we'll have no avatar
+                commitList();
+            }
+            protected void commitList () {
+                if (_salobj.topRanked.containsKey(list.criterion)) {
+                    _salobj.updateTopRanked(list);
+                } else {
+                    _salobj.addToTopRanked(list);
+                }
+            }
         });
     }
 

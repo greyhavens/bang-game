@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.image.ColorPository;
@@ -50,6 +51,48 @@ import static com.threerings.bang.Log.log;
 public class BarberManager extends PlaceManager
     implements BarberCodes, BarberProvider, AvatarProvider
 {
+    /**
+     * Returns an avatar snapshot for the specified player. If they are online,
+     * it will be obtained from their loaded player object (and returned
+     * immediately), otherwise it will be loaded from the database (and require
+     * an asynchronous reply).
+     */
+    public void getSnapshot (int playerId, ResultListener<int[]> listener)
+    {
+        // if they're online it's easy peasy
+        PlayerObject user = BangServer.lookupPlayer(playerId);
+        if (user != null) {
+            listener.requestCompleted(
+                user.getLook(Look.Pose.WANTED_POSTER).getAvatar(user));
+            return;
+        }
+
+        // otherwise we have to go to the database (TODO: cache these?)
+        final int fpid = playerId;
+        final ResultListener<int[]> flist = listener;
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                try {
+                    _snap = BangServer.lookrepo.loadSnapshot(fpid);
+                } catch (PersistenceException pe) {
+                    _error = pe;
+                }
+                return true;
+            }
+
+            public void handleResult () {
+                if (_snap != null) {
+                    flist.requestCompleted(_snap);
+                } else {
+                    flist.requestFailed(_error);
+                }
+            }
+
+            protected int[] _snap;
+            protected Exception _error;
+        });
+    }
+
     // documentation inherited from interface BarberProvider
     public void purchaseLook (ClientObject caller, LookConfig config,
                               BarberService.ConfirmListener cl)

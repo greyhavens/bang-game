@@ -135,10 +135,15 @@ public class BangClient extends CrowdClient
             BangServer.statrepo.writeModified(user.playerId, stats);
 
             // write out any modified looks
+            boolean updatedWanted = false;
             for (Iterator iter = user.looks.iterator(); iter.hasNext(); ) {
                 Look look = (Look)iter.next();
                 if (look.modified) {
                     BangServer.lookrepo.updateLook(user.playerId, look);
+                    // if this their "wanted poster" look; generate snapshot
+                    if (user.getLook(Look.Pose.WANTED_POSTER) == look) {
+                        updatedWanted = true;
+                    }
                 }
             }
 
@@ -152,6 +157,13 @@ public class BangClient extends CrowdClient
             BangServer.playrepo.noteSessionEnded(
                 user.playerId, user.poses, changed,
                 (int)Math.round(_connectTime / 60f));
+
+            // if our wanted poster look changed, generate a new snapshot
+            if (updatedWanted || changed[Look.Pose.WANTED_POSTER.ordinal()]) {
+                Look look = user.getLook(Look.Pose.WANTED_POSTER);
+                BangServer.lookrepo.updateSnapshot(
+                    user.playerId, look.getAvatar(user));
+            }
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to note ended session " +
