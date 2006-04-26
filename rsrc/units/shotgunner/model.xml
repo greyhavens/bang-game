@@ -5058,9 +5058,9 @@
     </vertex>
   </skinMesh>
 
-  <node name="Bip01" translation="8.89943e-007, -0.649157, 74.317" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01" translation="8.89943e-007, -0.649158, 74.317" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Pelvis" parent="Bip01" translation="-0.649157, 0.0, 0.0" rotation="-0.499999, -0.5, -0.5, 0.500001" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Pelvis" parent="Bip01" translation="-0.649158, 0.0, 0.0" rotation="-0.499999, -0.5, -0.5, 0.500001" scale="1.0, 1.0, 1.0"/>
 
   <node name="Bip01 Spine" parent="Bip01 Pelvis" translation="9.56821, -0.0102302, 1.32834e-005" rotation="-2.10338e-006, -7.17443e-007, 0.0352974, 0.999377" scale="1.0, 1.0, 1.0"/>
 
@@ -5092,41 +5092,23 @@
 
   <node name="Bip01 L Finger11" parent="Bip01 L Finger1" translation="7.52778, -2.3506e-006, -4.20875e-007" rotation="0.0, 0.0, 0.100188, 0.994968" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger1Nub" parent="Bip01 L Finger11" translation="8.58167, -1.0501e-006, 5.57937e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <triMesh name="emitter_R_barrel" parent="shotgun" translation="-8.55676, 0.0816762, 96.0145" rotation="0.741485, -0.670042, 0.0075936, 0.0344493" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
+    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
+    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
+    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
+  </triMesh>
 
   <node name="Bip01 L Finger2" parent="Bip01 L Hand" translation="15.1181, 0.00210724, 2.73266" rotation="-0.000397973, 0.0305385, -1.21594e-005, 0.999534" scale="1.0, 1.0, 1.0"/>
 
   <node name="Bip01 L Finger21" parent="Bip01 L Finger2" translation="7.96354, 5.4514e-006, -1.23288e-007" rotation="0.0, 0.0, 0.100188, 0.994969" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Finger2Nub" parent="Bip01 L Finger21" translation="9.07843, -1.379e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="-3.01297, -2.34827, -4.22219" rotation="-0.561743, -0.0390573, 0.824399, -0.057317" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="15.6732, -1.20707e-007, -2.42708e-006" rotation="0.152105, 0.166298, -0.0123026, 0.974196" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="27.8665, 0.0, -3.24061e-006" rotation="0.0, 0.0, -0.025636, 0.999671" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="25.1964, 0.0, -6.73395e-006" rotation="0.70628, 0.0277719, -0.0277498, 0.706843" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger0" parent="Bip01 R Hand" translation="8.07436, 1.95133, 7.68347" rotation="-0.187865, -0.645588, 0.206877, 0.710721" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger01" parent="Bip01 R Finger0" translation="8.55133, -1.44827e-006, -4.83497e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger0Nub" parent="Bip01 R Finger01" translation="7.99514, -3.11066e-006, 4.5154e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger1" parent="Bip01 R Hand" translation="15.0192, -0.00642275, 8.065" rotation="0.000397852, -0.0392598, -1.56315e-005, 0.999229" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger11" parent="Bip01 R Finger1" translation="7.52778, -2.08515e-006, 2.49478e-007" rotation="0.0, 0.0, 0.100188, 0.994968" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger1Nub" parent="Bip01 R Finger11" translation="8.58167, -1.9373e-006, 1.38484e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger2" parent="Bip01 R Hand" translation="15.1181, 0.0021084, -2.73266" rotation="0.000397973, -0.0305385, -1.21584e-005, 0.999533" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger21" parent="Bip01 R Finger2" translation="7.96354, 5.3024e-006, 0.0" rotation="0.0, 0.0, 0.100188, 0.994969" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger2Nub" parent="Bip01 R Finger21" translation="9.07843, -1.18399e-006, 2.87761e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
-
-  <triMesh name="shotgun" parent="Bip01 R Hand" translation="19.9091, 10.7624, 22.8627" rotation="0.39228, 0.506374, 0.469877, 0.607386" scale="0.917431, 0.917431, 0.917431" offsetTranslation="0.0, 1.07972e-005, -60.3822" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="shotgun.png" transparent="false">
+  <triMesh name="shotgun" translation="-91.9123, -24.5675, 102.287" rotation="-0.672117, -0.156219, 0.723357, 0.0246658" scale="0.917431, 0.917431, 0.917431" offsetTranslation="0.0, 1.07972e-005, -60.3822" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="shotgun.png" transparent="false">
     <vertex location="2.28587e-007, -13.5, 20.7397" normal="-4.39258e-007, 0.0325961, -0.999469" tcoords="0.985028, 0.675896"/>
     <vertex location="2.95511, -3.28065, 20.4128" normal="-3.08924e-007, -0.06395, -1.99898" tcoords="0.976663, 0.865551"/>
     <vertex location="5.9736, -13.5, 20.7397" normal="-6.57695e-007, 0.0650564, -1.99477" tcoords="0.985028, 0.675896"/>
@@ -5615,33 +5597,53 @@
     <vertex location="-1.79409, -10.5711, 67.2342" normal="0.0, -0.000672021, -1.0" tcoords="0.817857, 0.318341"/>
   </triMesh>
 
-  <triMesh name="emitter_R_barrel" parent="shotgun" translation="-8.55676, 0.0816762, 96.0145" rotation="0.741485, -0.670042, 0.0075936, 0.0344493" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
-    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
-    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
-    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
-  </triMesh>
+  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="-3.01297, -2.34827, -4.22219" rotation="-0.561743, -0.0390573, 0.824399, -0.057317" scale="1.0, 1.0, 1.0"/>
 
-  <triMesh name="emitter_L_barrel" parent="shotgun" translation="8.23801, 0.190254, 95.2879" rotation="0.709478, -0.704055, -0.0113794, 0.0286055" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
-    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
-    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
-    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
-  </triMesh>
+  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="15.6732, -1.20707e-007, -2.42708e-006" rotation="0.152105, 0.166298, -0.0123026, 0.974196" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="27.8665, 0.0, -3.24061e-006" rotation="0.0, 0.0, -0.025636, 0.999671" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="25.1964, 0.0, -6.73395e-006" rotation="0.70628, 0.0277719, -0.0277498, 0.706843" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger0" parent="Bip01 R Hand" translation="8.07436, 1.95133, 7.68347" rotation="-0.187865, -0.645588, 0.206877, 0.710721" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger01" parent="Bip01 R Finger0" translation="8.55133, -1.44827e-006, -4.83497e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger0Nub" parent="Bip01 R Finger01" translation="7.99514, -3.11066e-006, 4.5154e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger1" parent="Bip01 R Hand" translation="15.0192, -0.00642275, 8.065" rotation="0.000397852, -0.0392598, -1.56315e-005, 0.999229" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger11" parent="Bip01 R Finger1" translation="7.52778, -2.08515e-006, 2.49478e-007" rotation="0.0, 0.0, 0.100188, 0.994968" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger1Nub" parent="Bip01 R Finger11" translation="8.58167, -1.9373e-006, 1.38484e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger2" parent="Bip01 R Hand" translation="15.1181, 0.0021084, -2.73266" rotation="0.000397973, -0.0305385, -1.21584e-005, 0.999533" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger21" parent="Bip01 R Finger2" translation="7.96354, 5.3024e-006, 0.0" rotation="0.0, 0.0, 0.100188, 0.994969" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger2Nub" parent="Bip01 R Finger21" translation="9.07843, -1.18399e-006, 2.87761e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
 
   <node name="Bip01 L Thigh" parent="Bip01 Pelvis" translation="-1.57131e-005, 1.89616e-005, 11.3305" rotation="0.110393, 0.989667, -0.00101497, -0.0914952" scale="1.0, 1.0, 1.0"/>
 
   <node name="Bip01 L Calf" parent="Bip01 L Thigh" translation="29.705, 1.01664e-006, 1.11811e-006" rotation="0.0, 0.0, -0.228853, 0.973461" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Foot" parent="Bip01 L Calf" translation="27.0019, 6.12028e-007, -7.04359e-007" rotation="-0.0231923, -0.0944067, 0.115017, 0.988595" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Toe0" parent="Bip01 L Foot" translation="20.0951, 26.2557, 1.34549e-007" rotation="0.0, 0.0, 0.793353, 0.608761" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Toe0Nub" parent="Bip01 L Toe0" translation="21.2967, -3.30325e-007, 1.08654e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Thigh" parent="Bip01 Pelvis" translation="1.57131e-005, -1.24646e-005, -11.3305" rotation="0.110393, 0.989667, 0.00101384, 0.0914968" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Calf" parent="Bip01 R Thigh" translation="29.705, 1.01142e-006, 0.0" rotation="0.0, 0.0, -0.228853, 0.973461" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Foot" parent="Bip01 R Calf" translation="27.0019, 2.79027e-007, 6.72415e-007" rotation="0.0231923, 0.0944067, 0.115017, 0.988595" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Toe0" parent="Bip01 R Foot" translation="20.0951, 26.2557, -5.46945e-007" rotation="0.0, 0.0, 0.793353, 0.608761" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Toe0Nub" parent="Bip01 R Toe0" translation="21.2967, -9.81865e-007, -2.89417e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Line01" translation="6.19427, -6.37632, 123.278" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
 
   <skinMesh name="body_scarf" translation="6.19427, -6.37632, 122.245" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="shotgunner.png" transparent="false">
     <vertex location="-5.99477, -12.314, -9.20246" normal="0.0134109, 0.292995, 0.95602" tcoords="0.459891, 0.702281">
@@ -6893,22 +6895,6 @@
       <boneWeight bone="Bip01 Head" weight="4.39773e-006"/>
     </vertex>
   </skinMesh>
-
-  <node name="Line01" translation="6.19427, -6.37632, 123.278" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Calf" parent="Bip01 R Thigh" translation="29.705, 1.01142e-006, 0.0" rotation="0.0, 0.0, -0.228853, 0.973461" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Thigh" parent="Bip01 Pelvis" translation="1.57131e-005, -1.24646e-005, -11.3305" rotation="0.110393, 0.989667, 0.00101384, 0.0914968" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Dummy01" translation="-55.2611, -4.6005e-006, 105.247" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Toe0" parent="Bip01 R Foot" translation="20.0951, 26.2557, -5.46945e-007" rotation="0.0, 0.0, 0.793353, 0.608761" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Toe0Nub" parent="Bip01 R Toe0" translation="21.2967, -9.81865e-007, -2.89417e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Toe0" parent="Bip01 L Foot" translation="20.0951, 26.2557, 1.34549e-007" rotation="0.0, 0.0, 0.793353, 0.608761" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Foot" parent="Bip01 L Calf" translation="27.0019, 6.12028e-007, -7.04359e-007" rotation="-0.0231923, -0.0944067, 0.115017, 0.988595" scale="1.0, 1.0, 1.0"/>
 
   <skinMesh name="body" translation="14.679, -0.213487, -1.54499e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="shotgunner.png" transparent="false">
     <vertex location="16.9464, 2.07291, 0.0201561" normal="-0.000208085, 0.00223501, -0.999997" tcoords="0.0307734, 0.606202">
@@ -13660,8 +13646,22 @@
     </vertex>
   </skinMesh>
 
-  <node name="Bip01 R Foot" parent="Bip01 R Calf" translation="27.0019, 2.79027e-007, 6.72415e-007" rotation="0.0231923, 0.0944067, 0.115017, 0.988595" scale="1.0, 1.0, 1.0"/>
+  <node name="Dummy01" translation="-55.2611, -4.6005e-006, 105.247" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Toe0Nub" parent="Bip01 L Toe0" translation="21.2967, -3.30325e-007, 1.08654e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+  <triMesh name="emitter_L_barrel" parent="shotgun" translation="8.238, 0.190258, 95.2879" rotation="0.709478, -0.704055, -0.0113794, 0.0286055" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
+    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
+    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499487, 0.000499487"/>
+    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.999501, 0.5"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.000499874, 0.999501"/>
+  </triMesh>
+
+  <node name="Bip01 L Finger1Nub" parent="Bip01 L Finger11" translation="8.58167, -1.0501e-006, 5.57937e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger2Nub" parent="Bip01 L Finger21" translation="9.07843, -1.379e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
 
 </model>
