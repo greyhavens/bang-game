@@ -5060,7 +5060,7 @@
 
   <node name="Bip01" translation="8.89943e-007, -0.649158, 74.317" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Footsteps" parent="Bip01" translation="0.0, 0.0, -73.8622" rotation="0.0, 0.0, 0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Footsteps" parent="Bip01" translation="0.0, 0.0, -89.1911" rotation="0.0, 0.0, 0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
 
   <node name="Bip01 Pelvis" parent="Bip01" translation="-0.649158, 0.0, 0.0" rotation="-0.499999, -0.5, -0.5, 0.500001" scale="1.0, 1.0, 1.0"/>
 
@@ -13640,7 +13640,7 @@
     <vertex location="-1.79409, -10.5711, 67.2342" normal="0.0, -0.000672021, -1.0" tcoords="0.817857, 0.318341"/>
   </triMesh>
 
-  <triMesh name="emitter_R_barrel" parent="shotgun" translation="-8.55677, 0.0816724, 96.0145" rotation="0.741485, -0.670042, 0.00759359, 0.0344493" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
+  <triMesh name="emitter_R_barrel" parent="shotgun" translation="-8.55677, 0.0816826, 96.0146" rotation="-0.0344494, -0.00759356, -0.670042, 0.741485" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
     <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
     <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
     <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
@@ -13652,7 +13652,7 @@
     <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
   </triMesh>
 
-  <triMesh name="emitter_L_barrel" parent="shotgun" translation="8.238, 0.190257, 95.2879" rotation="0.709478, -0.704055, -0.0113794, 0.0286055" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
+  <triMesh name="emitter_L_barrel" parent="shotgun" translation="8.238, 0.190259, 95.2881" rotation="-0.0286056, 0.0113794, -0.704055, 0.709478" scale="1.09, 1.09, 1.09" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
     <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
     <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
     <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
