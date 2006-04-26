@@ -340,11 +340,15 @@ public class SaloonManager extends PlaceManager
             GameCodes.GAME_MSGS, "m.scenario_" + list.criterion);
         int topRankId = (list.playerIds == null ||
                          list.playerIds.length == 0) ? 0 : list.playerIds[0];
-        BangServer.barbermgr.getSnapshot(topRankId, new ResultListener<int[]>() {
+        BangServer.barbermgr.getSnapshot(
+            topRankId, new ResultListener<int[]>() {
             public void requestCompleted (int[] snapshot) {
                 list.topDogSnapshot = snapshot;
+                commitList();
             }
             public void requestFailed (Exception cause) {
+                log.log(Level.WARNING, "Failed to obtain top-ranked player " +
+                        "snapshot [list=" + list + "].", cause);
                 // ah well, we'll have no avatar
                 commitList();
             }

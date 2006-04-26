@@ -27,6 +27,23 @@ public class TopRankedList extends SimpleStreamableObject
     /** A snapshot of the number one player. */
     public int[] topDogSnapshot;
 
+    /**
+     * Returns the top dog snapshot in a format embeddable in an in-game web
+     * page.
+     */
+    public String getTopDogSnapshotURL ()
+    {
+        StringBuffer buf = new StringBuffer("avatar:///");
+        int ll = (topDogSnapshot == null) ? 0 : topDogSnapshot.length;
+        for (int ii = 0; ii < ll; ii++) {
+            if (ii > 0) {
+                buf.append(",");
+            }
+            buf.append(topDogSnapshot[ii]);
+        }
+        return buf.toString();
+    }
+
     // documentation inherited from interface DSet.Key
     public Comparable getKey ()
     {

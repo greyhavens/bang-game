@@ -81,10 +81,10 @@ public class BarberManager extends PlaceManager
             }
 
             public void handleResult () {
-                if (_snap != null) {
-                    flist.requestCompleted(_snap);
-                } else {
+                if (_error != null) {
                     flist.requestFailed(_error);
+                } else {
+                    flist.requestCompleted(_snap);
                 }
             }
 

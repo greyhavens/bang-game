@@ -29,6 +29,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.ResultListener;
+import com.samskivert.velocity.DataTool;
 import com.samskivert.velocity.VelocityUtil;
 
 import com.threerings.bang.client.BangUI;
@@ -163,6 +164,7 @@ public class PaperView extends BContainer
             VelocityContext ctx = new VelocityContext();
             ctx.put("i18n", _ctx.getMessageManager().getBundle(
                         SaloonCodes.SALOON_MSGS));
+            ctx.put("data", new DataTool());
             ctx.put("lists", lists);
             StringWriter sw = new StringWriter();
             _vformatter.mergeTemplate(

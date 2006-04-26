@@ -11,11 +11,19 @@
     <b>$i18n.xlate($list.criterion)</b>
   </td></tr>
   <tr><td align="center">
-    <img src="resource:///units/sharpshooter/icon.png"><br>Top Player!
-    </td>
-    <td valign="top">
-    #foreach ($player in $list.players)
-      ${velocityCount}. $player<br>
+    #if ($data.length($list.players) > 0)
+      #if ($list.topDogSnapshot)
+      <img src="$list.topDogSnapshotURL"><br>
+      #else
+      <img src="resource:///ui/pardners/silhouette.png"><br>
+      #end
+      <b>1. $data.get($list.players, 0)</b></td>
+      <td valign="top">
+      #foreach ($player in $list.players)
+        #if ($velocityCount > 1)
+        ${velocityCount}. $player<br>
+        #end
+      #end
     #end
     </td>
   </tr>

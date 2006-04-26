@@ -45,6 +45,7 @@ import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
 import com.threerings.openal.SoundManager;
 
+import com.threerings.bang.avatar.client.AvatarProtocolHandler;
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
@@ -167,7 +168,7 @@ public class BasicClient
                 _client.getRunQueue().postRunnable(new Runnable() {
                     public void run () {
                         inobs.progress(percent);
-                        if (percent >= 0) {
+                        if (percent >= 100) {
                             postResourcesInit();
                         }
                     }
@@ -200,6 +201,9 @@ public class BasicClient
                     _rsrcmgr, _imgmgr, AvatarCodes.AVATAR_RSRC_SET));
             _alogic = new AvatarLogic(
                 _rsrcmgr, _charmgr.getComponentRepository());
+
+            // register our avatar:// protocol handler
+            AvatarProtocolHandler.registerHandler(_ctx);
 
         } catch (IOException ioe) {
             // TODO: report to the client
