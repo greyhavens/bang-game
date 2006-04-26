@@ -2,104 +2,6 @@
 
 <model>
 
-  <node name="Bip01" translation="0.0503302, 3.73378, 75.3444" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 Footsteps" parent="Bip01" translation="0.0, 0.0, -75.3441" rotation="0.0, 0.0, 0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 Pelvis" parent="Bip01" translation="-2.11112, 0.0, 0.0" rotation="-0.499999, -0.5, -0.5, 0.500001" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 Spine" parent="Bip01 Pelvis" translation="8.3717, -0.0150674, 1.1629e-005" rotation="-2.08048e-006, -6.93676e-007, 0.000398159, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Thigh" parent="Bip01 Spine" translation="-8.37169, 0.0216956, 15.0923" rotation="0.0529889, 0.998595, 1.4285e-006, 0.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Calf" parent="Bip01 L Thigh" translation="32.0976, 1.46373e-007, 3.09749e-007" rotation="0.0, 0.0, -0.105037, 0.994468" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Foot" parent="Bip01 L Calf" translation="32.0976, 0.0, 1.61444e-007" rotation="0.0, 0.0, 0.0525914, 0.998616" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Toe0" parent="Bip01 L Foot" translation="11.6315, 21.3392, -6.93261e-007" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Thigh" parent="Bip01 Spine" translation="-8.37169, 0.0217789, -15.0923" rotation="0.0529889, 0.998595, 1.4285e-006, 0.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Calf" parent="Bip01 R Thigh" translation="32.0976, 2.51279e-007, 0.0" rotation="0.0, 0.0, -0.105037, 0.994468" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Foot" parent="Bip01 R Calf" translation="32.0976, 0.0, 0.0" rotation="0.0, 0.0, 0.0525914, 0.998616" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Toe0" parent="Bip01 R Foot" translation="11.6315, 21.3392, -6.93208e-007" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 Spine1" parent="Bip01 Spine" translation="18.9225, -0.0157089, 0.0" rotation="0.0, 4.09964e-007, -0.147809, 0.989016" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 Neck" parent="Bip01 Spine1" translation="20.6368, -0.00814579, 0.0" rotation="0.0, -8.68591e-007, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 Head" parent="Bip01 Neck" translation="12.7213, 7.06719e-007, 0.0" rotation="0.0, 4.70796e-007, -0.169743, 0.985488" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 Ponytail1" parent="Bip01 Head" translation="24.1188, -18.4164, -4.00484e-005" rotation="0.0, -2.70531e-006, 0.975379, -0.220534" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 Ponytail11" parent="Bip01 Ponytail1" translation="9.45856, -0.0142647, 0.0" rotation="0.0, 4.71257e-007, -0.169908, 0.98546" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Clavicle" parent="Bip01 Neck" translation="7.11826e-007, 0.0101248, 2.5479" rotation="0.67169, -0.221788, 0.671211, 0.221628" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L UpperArm" parent="Bip01 L Clavicle" translation="11.3564, -6.71282e-007, -1.61723e-007" rotation="0.201762, 0.258302, 0.247329, 0.911811" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Forearm" parent="Bip01 L UpperArm" translation="26.207, -4.87143e-007, -9.75012e-007" rotation="0.0, 0.0, -0.0345433, 0.999403" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Hand" parent="Bip01 L Forearm" translation="26.207, -1.11333e-006, -1.36553e-007" rotation="-0.823901, 0.0, 0.0, 0.566734" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Finger0" parent="Bip01 L Hand" translation="8.64528, 1.82178, -5.976" rotation="0.238957, 0.60745, 0.277407, 0.704947" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Finger01" parent="Bip01 L Finger0" translation="5.73461, 2.97133e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Finger1" parent="Bip01 L Hand" translation="13.2728, -0.00309697, -3.89276" rotation="-0.000398165, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Finger11" parent="Bip01 L Finger1" translation="6.42947, 6.77663e-006, 5.9484e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Finger2" parent="Bip01 L Hand" translation="13.2728, 0.00444583, 5.58113" rotation="-0.000398165, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Finger21" parent="Bip01 L Finger2" translation="7.12599, -2.59278e-006, -1.10246e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="9.2712e-007, 0.0101396, -2.5479" rotation="0.671689, -0.221786, -0.671211, -0.221629" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="11.3564, -6.94304e-007, -2.90358e-006" rotation="-0.201762, -0.258302, 0.247329, 0.911811" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="26.207, 4.67068e-007, 2.1737e-006" rotation="0.0, 0.0, -0.0345433, 0.999403" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="26.207, 0.0, -2.04713e-006" rotation="0.823901, 0.0, 0.0, 0.566734" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger0" parent="Bip01 R Hand" translation="8.61382, 1.82177, 5.98071" rotation="-0.238957, -0.60745, 0.277407, 0.704947" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger01" parent="Bip01 R Finger0" translation="5.73462, -1.35395e-007, 1.97641e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger1" parent="Bip01 R Hand" translation="13.2728, -0.00312654, 3.92936" rotation="0.000398147, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger11" parent="Bip01 R Finger1" translation="6.42947, 2.20755e-006, -2.89306e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger2" parent="Bip01 R Hand" translation="13.2728, 0.00444629, -5.58113" rotation="0.000398147, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 R Finger21" parent="Bip01 R Finger2" translation="5.35788, -2.23155e-006, -5.59672e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-
-  <triMesh name="emitter_L_pistol" translation="45.2559, 8.93876, 31.9276" rotation="0.13525, 0.952283, 0.0804978, 0.261505" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
-    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
-    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
-    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
-  </triMesh>
-
-  <triMesh name="emitter_R_pistol" translation="-40.9452, -2.83271, 34.5163" rotation="0.445191, 0.865949, -0.197872, -0.113067" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
-    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
-    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
-    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
-    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
-    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
-  </triMesh>
-
   <skinMesh name="gunslinger" translation="14.679, 3.32103, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="gunslinger.png" transparent="false">
     <vertex location="15.572, -0.0734646, 0.0141586" normal="-0.00484468, -0.0218225, -3.99983" tcoords="0.222656, 0.669547">
       <boneWeight bone="Bip01 L Calf" weight="0.0990743"/>
@@ -16434,5 +16336,645 @@
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
   </skinMesh>
+
+  <node name="Bip01" translation="0.0503302, 3.73378, 75.3444" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Footsteps" parent="Bip01" translation="0.0, 0.0, -75.3441" rotation="0.0, 0.0, 0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Pelvis" parent="Bip01" translation="-2.11112, 0.0, 0.0" rotation="-0.499999, -0.5, -0.5, 0.500001" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Spine" parent="Bip01 Pelvis" translation="8.3717, -0.0150674, 1.1629e-005" rotation="-2.08048e-006, -6.93676e-007, 0.000398159, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Spine1" parent="Bip01 Spine" translation="18.9225, -0.0157089, 0.0" rotation="0.0, 4.09964e-007, -0.147809, 0.989016" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Neck" parent="Bip01 Spine1" translation="20.6368, -0.00814579, 0.0" rotation="0.0, -8.68591e-007, 0.313164, 0.949699" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Head" parent="Bip01 Neck" translation="12.7213, 7.06719e-007, 0.0" rotation="0.0, 4.70796e-007, -0.169743, 0.985488" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 HeadNub" parent="Bip01 Head" translation="33.7015, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Ponytail1" parent="Bip01 Head" translation="24.1188, -18.4164, -4.00484e-005" rotation="0.0, -2.70531e-006, 0.975379, -0.220534" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Ponytail11" parent="Bip01 Ponytail1" translation="9.45856, -0.0142647, 0.0" rotation="0.0, 4.71257e-007, -0.169908, 0.98546" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Ponytail1Nub" parent="Bip01 Ponytail11" translation="19.0219, -3.08271e-006, 0.0" rotation="0.707388, 0.706825, 9.80225e-007, -9.81006e-007" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Clavicle" parent="Bip01 Neck" translation="7.11826e-007, 0.0101248, 2.5479" rotation="0.67169, -0.221788, 0.671211, 0.221628" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L UpperArm" parent="Bip01 L Clavicle" translation="11.3564, -6.71282e-007, -1.61723e-007" rotation="0.201762, 0.258302, 0.247329, 0.911811" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Forearm" parent="Bip01 L UpperArm" translation="26.207, -4.87143e-007, -9.75012e-007" rotation="0.0, 0.0, -0.0345433, 0.999403" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Hand" parent="Bip01 L Forearm" translation="26.207, -1.11333e-006, -1.36553e-007" rotation="-0.823901, 0.0, 0.0, 0.566734" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger0" parent="Bip01 L Hand" translation="8.64528, 1.82178, -5.976" rotation="0.238957, 0.60745, 0.277407, 0.704947" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger01" parent="Bip01 L Finger0" translation="5.73461, 2.97133e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger0Nub" parent="Bip01 L Finger01" translation="5.73462, 3.39782e-006, -7.9046e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger1" parent="Bip01 L Hand" translation="13.2728, -0.00309697, -3.89276" rotation="-0.000398165, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger11" parent="Bip01 L Finger1" translation="6.42947, 6.77663e-006, 5.9484e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger1Nub" parent="Bip01 L Finger11" translation="6.42946, -2.23808e-006, -7.49759e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger2" parent="Bip01 L Hand" translation="13.2728, 0.00444583, 5.58113" rotation="-0.000398165, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger21" parent="Bip01 L Finger2" translation="7.12599, -2.59278e-006, -1.10246e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Finger2Nub" parent="Bip01 L Finger21" translation="7.01884, 6.14014e-007, 2.40153e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="9.2712e-007, 0.0101396, -2.5479" rotation="0.671689, -0.221786, -0.671211, -0.221629" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="11.3564, -6.94304e-007, -2.90358e-006" rotation="-0.201762, -0.258302, 0.247329, 0.911811" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="26.207, 4.67068e-007, 2.1737e-006" rotation="0.0, 0.0, -0.0345433, 0.999403" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="26.207, 0.0, -2.04713e-006" rotation="0.823901, 0.0, 0.0, 0.566734" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger0" parent="Bip01 R Hand" translation="8.61382, 1.82177, 5.98071" rotation="-0.238957, -0.60745, 0.277407, 0.704947" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger01" parent="Bip01 R Finger0" translation="5.73462, -1.35395e-007, 1.97641e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger0Nub" parent="Bip01 R Finger01" translation="5.73462, -1.1355e-006, -8.61042e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger1" parent="Bip01 R Hand" translation="13.2728, -0.00312654, 3.92936" rotation="0.000398147, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger11" parent="Bip01 R Finger1" translation="6.42947, 2.20755e-006, -2.89306e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger1Nub" parent="Bip01 R Finger11" translation="6.42947, 9.15828e-007, 1.43862e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger2" parent="Bip01 R Hand" translation="13.2728, 0.00444629, -5.58113" rotation="0.000398147, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger21" parent="Bip01 R Finger2" translation="5.35788, -2.23155e-006, -5.59672e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Finger2Nub" parent="Bip01 R Finger21" translation="5.35789, 0.0, 2.48057e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Thigh" parent="Bip01 Spine" translation="-8.37169, 0.0216956, 15.0923" rotation="0.0529889, 0.998595, 1.4285e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Calf" parent="Bip01 L Thigh" translation="32.0976, 1.46373e-007, 3.09749e-007" rotation="0.0, 0.0, -0.105037, 0.994468" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Foot" parent="Bip01 L Calf" translation="32.0976, 0.0, 1.61444e-007" rotation="0.0, 0.0, 0.0525914, 0.998616" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Toe0" parent="Bip01 L Foot" translation="11.6315, 21.3392, -6.93261e-007" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Toe0Nub" parent="Bip01 L Toe0" translation="22.161, 0.0, 0.0" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Thigh" parent="Bip01 Spine" translation="-8.37169, 0.0217789, -15.0923" rotation="0.0529889, 0.998595, 1.4285e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Calf" parent="Bip01 R Thigh" translation="32.0976, 2.51279e-007, 0.0" rotation="0.0, 0.0, -0.105037, 0.994468" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Foot" parent="Bip01 R Calf" translation="32.0976, 0.0, 0.0" rotation="0.0, 0.0, 0.0525914, 0.998616" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Toe0" parent="Bip01 R Foot" translation="11.6315, 21.3392, -6.93208e-007" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Toe0Nub" parent="Bip01 R Toe0" translation="22.161, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <triMesh name="pistol L" translation="23.8707, 16.4172, 77.2016" rotation="0.463587, 0.538172, 0.546325, -0.443832" scale="0.450617, 0.450616, 0.450616" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.46875, 0.3125"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.46875, 0.3125"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.96875, 0.03125"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.96875, 0.3125"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.96875, 0.3125"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 20.7061" normal="-0.0130866, 0.866767, 0.498541" tcoords="0.46875, 0.3125"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.96875, 0.3125"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.96875, 0.3125"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.96875, 0.15625"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.4375, 0.3125"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.96875, 0.3125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.4375, 0.3125"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.96875, 0.15625"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.96875, 0.3125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.4375, 0.3125"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.96875, 0.15625"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.46875, 0.3125"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.96875, 0.03125"/>
+    <vertex location="19.2944, -13.3838, 20.1881" normal="0.0312707, -0.869782, 0.492444" tcoords="0.96875, 0.3125"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.96875, 0.3125"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.96875, 0.3125"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.03125, 0.96875"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.125, 0.0"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.03125, 0.0"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.03125, 0.96875"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.125, 0.96875"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.125, 0.0"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.125, 0.96875"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.25, 0.0"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.125, 0.0"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.125, 0.96875"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.25, 0.96875"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.25, 0.0"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.25, 0.96875"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.34375, 0.0"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.25, 0.0"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.25, 0.96875"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.34375, 0.96875"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.34375, 0.0"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.34375, 0.96875"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.25, 0.0"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.34375, 0.0"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.34375, 0.96875"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.25, 0.96875"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.25, 0.0"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.25, 0.96875"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.125, 0.0"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.25, 0.0"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.25, 0.96875"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.125, 0.96875"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.125, 0.0"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.125, 0.96875"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.03125, 0.0"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.125, 0.0"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.125, 0.96875"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.03125, 0.96875"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.03125, 0.0"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.375, 0.15625"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="-39.1018, 8.0076, -26.2943" normal="-0.175472, -0.126184, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 20.7061" normal="-0.0130866, 0.866767, 0.498541" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, 12.9365, 20.7061" normal="-0.0130866, 0.866767, 0.498541" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.375, 0.15625"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.46875, 0.3125"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-39.1019, -7.72899, -26.2943" normal="-0.175472, 0.126185, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.375, 0.15625"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.78125, 0.5"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.78125, 0.375"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.78125, 0.375"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.375, 0.5"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.375, 0.375"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.375, 0.5"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.96875, 0.15625"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.96875, 0.03125"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 20.7061" normal="-0.0130866, 0.866767, 0.498541" tcoords="0.4375, 0.03125"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.96875, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.4375, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.4375, 0.03125"/>
+    <vertex location="19.2944, -13.3838, 20.1881" normal="0.0312707, -0.869782, 0.492444" tcoords="0.96875, 0.03125"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.96875, 0.15625"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.375, 0.5"/>
+    <vertex location="19.2944, -13.3838, 20.1881" normal="0.0312707, -0.869782, 0.492444" tcoords="0.375, 0.375"/>
+    <vertex location="19.2944, -13.3838, 20.1881" normal="0.0312707, -0.869782, 0.492444" tcoords="0.375, 0.375"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.78125, 0.5"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.78125, 0.375"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.78125, 0.5"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.96875, 0.96875"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.6875, 0.96875"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.96875, 0.96875"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.6875, 0.96875"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.96875, 0.96875"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.6875, 0.96875"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.6875, 0.96875"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.40625, 0.96875"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.6875, 0.96875"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.40625, 0.96875"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.6875, 0.96875"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.40625, 0.96875"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-39.1018, 8.0076, -26.2943" normal="-0.175472, -0.126184, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-39.1018, 8.0076, -26.2943" normal="-0.175472, -0.126184, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-39.1018, 8.0076, -26.2943" normal="-0.175472, -0.126184, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-39.1019, -7.72899, -26.2943" normal="-0.175472, 0.126185, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-39.1019, -7.72899, -26.2943" normal="-0.175472, 0.126185, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-39.1019, -7.72899, -26.2943" normal="-0.175472, 0.126185, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="79.6992, 0.170019, 28.6371" normal="0.0, -1.0, 0.00065875" tcoords="0.375, 0.0"/>
+    <vertex location="78.3615, 0.17589, 37.5503" normal="0.0, -1.0, 0.00065875" tcoords="0.53125, 0.0"/>
+    <vertex location="62.4002, 0.170019, 28.6371" normal="0.0, -1.0, 0.00065875" tcoords="0.375, 0.28125"/>
+    <vertex location="-16.859, 0.144388, 34.0567" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.46875, 0.34375"/>
+    <vertex location="-27.5046, 0.144388, 31.5727" normal="-6.51548e-005, -1.0, 0.000279355" tcoords="0.5625, 0.3125"/>
+    <vertex location="-10.1584, 0.139493, 18.0993" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.375, 0.03125"/>
+    <vertex location="-10.1584, 0.139493, 18.0993" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.375, 0.03125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.375, 0.21875"/>
+    <vertex location="-16.859, 0.144388, 34.0567" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.46875, 0.34375"/>
+    <vertex location="78.3615, 0.17589, 37.5503" normal="0.0, -1.0, 0.00065875" tcoords="0.53125, 0.0"/>
+    <vertex location="79.6992, 0.170019, 28.6371" normal="0.0, -1.0, 0.00065875" tcoords="0.375, 0.0"/>
+    <vertex location="62.4002, 0.170019, 28.6371" normal="0.0, -1.0, 0.00065875" tcoords="0.375, 0.28125"/>
+    <vertex location="-27.5046, 0.144388, 31.5727" normal="-6.51548e-005, -1.0, 0.000279355" tcoords="0.5625, 0.3125"/>
+    <vertex location="-16.859, 0.144388, 34.0567" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.46875, 0.34375"/>
+    <vertex location="-10.1584, 0.139493, 18.0993" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.375, 0.03125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.375, 0.21875"/>
+    <vertex location="-10.1584, 0.139493, 18.0993" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.375, 0.03125"/>
+    <vertex location="-16.859, 0.144388, 34.0567" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.46875, 0.34375"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.245942, 0.807265"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.2887, 0.810591"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.203281, 0.803101"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.245942, 0.807265"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.160395, 0.801512"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.203281, 0.803101"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.117547, 0.803344"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.160395, 0.801512"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.0747664, 0.806017"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.117547, 0.803344"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.2887, 0.810591"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.0747664, 0.806017"/>
+  </triMesh>
+
+  <triMesh name="emitter_L_pistol" parent="pistol L" translation="99.4551, 0.180718, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
+    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
+    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
+    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
+  </triMesh>
+
+  <triMesh name="gunslinger02" parent="pistol L" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918" offsetTranslation="40.4398, -4.44164, -68.2438" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="gunslinger.png" transparent="false">
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.00390625, 0.910156"/>
+    <vertex location="-45.742, 0.547202, 65.9335" normal="-0.877714, -0.463315, 0.122299" tcoords="0.222656, 0.851563"/>
+    <vertex location="-44.8806, 0.351036, 69.9856" normal="-0.538665, -0.830501, 0.141801" tcoords="0.00390625, 0.851563"/>
+    <vertex location="-45.742, 0.547202, 65.9335" normal="-0.877714, -0.463315, 0.122299" tcoords="0.222656, 0.851563"/>
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.00390625, 0.910156"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.222656, 0.996094"/>
+    <vertex location="-30.9024, 8.19387, 66.8022" normal="0.256872, 0.824109, -0.504837" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.222656, 0.996094"/>
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.00390625, 0.910156"/>
+    <vertex location="-44.8806, 0.351036, 69.9856" normal="-0.538665, -0.830501, 0.141801" tcoords="0.00390625, 0.851563"/>
+    <vertex location="-37.5923, -1.17735, 67.42" normal="-0.179509, -0.980938, 0.0744163" tcoords="0.222656, 0.808594"/>
+    <vertex location="-35.7809, -0.8581, 71.2802" normal="-0.151386, -0.976747, 0.151816" tcoords="0.00390625, 0.808594"/>
+    <vertex location="-37.5923, -1.17735, 67.42" normal="-0.179509, -0.980938, 0.0744163" tcoords="0.222656, 0.808594"/>
+    <vertex location="-44.8806, 0.351036, 69.9856" normal="-0.538665, -0.830501, 0.141801" tcoords="0.00390625, 0.851563"/>
+    <vertex location="-45.742, 0.547202, 65.9335" normal="-0.877714, -0.463315, 0.122299" tcoords="0.222656, 0.851563"/>
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.175781, 0.757813"/>
+    <vertex location="-44.8806, 0.351036, 69.9856" normal="-0.538665, -0.830501, 0.141801" tcoords="0.226563, 0.757813"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.175781, 0.800781"/>
+    <vertex location="-30.9024, 8.19387, 66.8022" normal="0.256872, 0.824109, -0.504837" tcoords="0.128906, 0.757813"/>
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.175781, 0.757813"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.175781, 0.800781"/>
+    <vertex location="-32.1467, 6.85623, 65.4206" normal="-0.203277, -0.605584, 0.76938" tcoords="0.128906, 0.757813"/>
+    <vertex location="-30.9024, 8.19387, 66.8022" normal="0.256872, 0.824109, -0.504837" tcoords="0.149556, 0.757813"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.175781, 0.800781"/>
+    <vertex location="-32.1467, 6.85623, 65.4206" normal="-0.203277, -0.605584, 0.76938" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.222656, 0.996094"/>
+    <vertex location="-30.9024, 8.19387, 66.8022" normal="0.256872, 0.824109, -0.504837" tcoords="0.00390625, 0.958237"/>
+  </triMesh>
+
+  <triMesh name="pistol R" translation="-23.5439, 16.4105, 77.1684" rotation="-0.539813, -0.460757, -0.449096, 0.542787" scale="0.450616, 0.450616, 0.450617" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.46875, 0.3125"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.46875, 0.3125"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.96875, 0.03125"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.96875, 0.3125"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.96875, 0.3125"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 20.7061" normal="-0.0130866, 0.866767, 0.498541" tcoords="0.46875, 0.3125"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.96875, 0.3125"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.96875, 0.3125"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.96875, 0.15625"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.4375, 0.3125"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.96875, 0.3125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.4375, 0.3125"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.96875, 0.15625"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.96875, 0.3125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.4375, 0.3125"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.96875, 0.15625"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.46875, 0.3125"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.96875, 0.03125"/>
+    <vertex location="19.2944, -13.3838, 20.1881" normal="0.0312707, -0.869782, 0.492444" tcoords="0.96875, 0.3125"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.96875, 0.3125"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.96875, 0.3125"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.03125, 0.96875"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.125, 0.0"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.03125, 0.0"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.03125, 0.96875"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.125, 0.96875"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.125, 0.0"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.125, 0.96875"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.25, 0.0"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.125, 0.0"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.125, 0.96875"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.25, 0.96875"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.25, 0.0"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.25, 0.96875"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.34375, 0.0"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.25, 0.0"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.25, 0.96875"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.34375, 0.96875"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.34375, 0.0"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.34375, 0.96875"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.25, 0.0"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.34375, 0.0"/>
+    <vertex location="19.2944, 0.139306, 28.1203" normal="-0.0115478, 1.91456e-005, 0.999933" tcoords="0.34375, 0.96875"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.25, 0.96875"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.25, 0.0"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.25, 0.96875"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.125, 0.0"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.25, 0.0"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.25, 0.96875"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.125, 0.96875"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.125, 0.0"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.125, 0.96875"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.03125, 0.0"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.125, 0.0"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.125, 0.96875"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.03125, 0.96875"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.03125, 0.0"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.375, 0.15625"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="-39.1018, 8.0076, -26.2943" normal="-0.175472, -0.126184, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 20.7061" normal="-0.0130866, 0.866767, 0.498541" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, 12.9365, 20.7061" normal="-0.0130866, 0.866767, 0.498541" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, 12.9365, 6.60386" normal="-0.0301312, 0.945669, -0.323732" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.375, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.375, 0.15625"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.46875, 0.3125"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.46875, 0.03125"/>
+    <vertex location="-39.1019, -7.72899, -26.2943" normal="-0.175472, 0.126185, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.46875, 0.3125"/>
+    <vertex location="-9.05375, -14.1097, 6.60386" normal="0.00810722, -0.7372, -0.675626" tcoords="0.46875, 0.03125"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.375, 0.15625"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.78125, 0.5"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.78125, 0.375"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.78125, 0.375"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.375, 0.5"/>
+    <vertex location="19.2944, 8.153, 14.2402" normal="-0.0329773, 0.943947, -0.328446" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, 13.6624, 6.0859" normal="-0.0206368, 0.748672, -0.662619" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.375, 0.375"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.375, 0.5"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="19.2944, 8.153, 23.4936" normal="-0.0147427, 0.65727, 0.753511" tcoords="0.96875, 0.15625"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.96875, 0.03125"/>
+    <vertex location="19.2944, 13.6624, 20.1881" normal="-0.0138997, 0.86842, 0.495635" tcoords="0.96875, 0.03125"/>
+    <vertex location="-9.05375, 12.9365, 20.7061" normal="-0.0130866, 0.866767, 0.498541" tcoords="0.4375, 0.03125"/>
+    <vertex location="-10.1584, 8.153, 23.4936" normal="-2.0, 2.2262e-006, -3.70232e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.96875, 0.15625"/>
+    <vertex location="-10.1584, -7.87439, 23.4936" normal="-2.0, -2.26668e-006, -3.76966e-006" tcoords="0.4375, 0.15625"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.4375, 0.03125"/>
+    <vertex location="-9.05375, -14.1097, 20.7061" normal="0.0234205, -0.855052, 0.518014" tcoords="0.4375, 0.03125"/>
+    <vertex location="19.2944, -13.3838, 20.1881" normal="0.0312707, -0.869782, 0.492444" tcoords="0.96875, 0.03125"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.96875, 0.15625"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2944, -7.87439, 23.4936" normal="-0.00694809, -0.71139, 0.702763" tcoords="0.375, 0.5"/>
+    <vertex location="19.2944, -13.3838, 20.1881" normal="0.0312707, -0.869782, 0.492444" tcoords="0.375, 0.375"/>
+    <vertex location="19.2944, -13.3838, 20.1881" normal="0.0312707, -0.869782, 0.492444" tcoords="0.375, 0.375"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.78125, 0.5"/>
+    <vertex location="19.2944, -7.87438, 14.2402" normal="-0.0349883, -0.754277, -0.655624" tcoords="0.53125, 0.5"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, -13.3838, 6.08589" normal="0.0178974, -0.940677, -0.338832" tcoords="0.53125, 0.375"/>
+    <vertex location="19.2944, 0.13931, -0.965204" normal="-0.00161686, -0.173898, -0.984762" tcoords="0.78125, 0.375"/>
+    <vertex location="19.2159, 0.141756, 9.67088" normal="-0.038027, 0.188572, -0.981323" tcoords="0.78125, 0.5"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.96875, 0.96875"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.6875, 0.96875"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.96875, 0.96875"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.6875, 0.96875"/>
+    <vertex location="-10.1584, 0.139306, 18.675" normal="-4.0, 0.0, -7.47198e-006" tcoords="0.96875, 0.96875"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.6875, 0.96875"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.6875, 0.96875"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.40625, 0.96875"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-10.1584, 8.153, 9.34849" normal="-1.0, 0.0, 0.0" tcoords="0.6875, 0.96875"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.40625, 0.96875"/>
+    <vertex location="-10.1584, -7.87439, 9.34848" normal="-1.0, 0.0, -1.34841e-007" tcoords="0.6875, 0.96875"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-10.1584, 0.139308, -0.96521" normal="-0.0287779, 0.503929, -2.62911" tcoords="0.40625, 0.96875"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-39.1018, 8.0076, -26.2943" normal="-0.175472, -0.126184, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-26.6317, 6.92232, 5.64431" normal="0.0530011, 0.986705, 0.153634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-39.1018, 8.0076, -26.2943" normal="-0.175472, -0.126184, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-39.1018, 8.0076, -26.2943" normal="-0.175472, -0.126184, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-30.6492, 0.139306, 13.5237" normal="-0.654733, 0.00570712, 0.755839" tcoords="0.96875, 0.65625"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-48.9553, 0.139307, -23.5065" normal="-0.175472, -0.126184, -0.976364" tcoords="0.96875, 0.96875"/>
+    <vertex location="-39.1019, -7.72899, -26.2943" normal="-0.175472, 0.126185, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="-26.6317, -6.6437, 5.64431" normal="-0.0947361, -0.995458, -0.00940634" tcoords="0.6875, 0.65625"/>
+    <vertex location="-39.1019, -7.72899, -26.2943" normal="-0.175472, 0.126185, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-39.1019, -7.72899, -26.2943" normal="-0.175472, 0.126185, -0.976364" tcoords="0.6875, 0.96875"/>
+    <vertex location="-28.4363, 0.139308, -27.1942" normal="-0.175472, -0.126184, -0.976364" tcoords="0.40625, 0.96875"/>
+    <vertex location="-23.3992, 0.139307, -9.49653" normal="0.792247, -0.0292112, -0.609501" tcoords="0.40625, 0.65625"/>
+    <vertex location="79.6992, 0.170019, 28.6371" normal="0.0, -1.0, 0.00065875" tcoords="0.375, 0.0"/>
+    <vertex location="78.3615, 0.17589, 37.5503" normal="0.0, -1.0, 0.00065875" tcoords="0.53125, 0.0"/>
+    <vertex location="62.4002, 0.170019, 28.6371" normal="0.0, -1.0, 0.00065875" tcoords="0.375, 0.28125"/>
+    <vertex location="-16.859, 0.144388, 34.0567" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.46875, 0.34375"/>
+    <vertex location="-27.5046, 0.144388, 31.5727" normal="-6.51548e-005, -1.0, 0.000279355" tcoords="0.5625, 0.3125"/>
+    <vertex location="-10.1584, 0.139493, 18.0993" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.375, 0.03125"/>
+    <vertex location="-10.1584, 0.139493, 18.0993" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.375, 0.03125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.375, 0.21875"/>
+    <vertex location="-16.859, 0.144388, 34.0567" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.46875, 0.34375"/>
+    <vertex location="78.3615, 0.17589, 37.5503" normal="0.0, -1.0, 0.00065875" tcoords="0.53125, 0.0"/>
+    <vertex location="79.6992, 0.170019, 28.6371" normal="0.0, -1.0, 0.00065875" tcoords="0.375, 0.0"/>
+    <vertex location="62.4002, 0.170019, 28.6371" normal="0.0, -1.0, 0.00065875" tcoords="0.375, 0.28125"/>
+    <vertex location="-27.5046, 0.144388, 31.5727" normal="-6.51548e-005, -1.0, 0.000279355" tcoords="0.5625, 0.3125"/>
+    <vertex location="-16.859, 0.144388, 34.0567" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.46875, 0.34375"/>
+    <vertex location="-10.1584, 0.139493, 18.0993" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.375, 0.03125"/>
+    <vertex location="-10.1584, 0.139492, 28.1203" normal="-2.0, 0.0, -7.26972e-006" tcoords="0.375, 0.21875"/>
+    <vertex location="-10.1584, 0.139493, 18.0993" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.375, 0.03125"/>
+    <vertex location="-16.859, 0.144388, 34.0567" normal="-0.000795934, -2.0, 0.000279211" tcoords="0.46875, 0.34375"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.245942, 0.807265"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.2887, 0.810591"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.203281, 0.803101"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, 9.78331, 12.864" normal="-0.094141, 1.99476, -1.73355" tcoords="0.245942, 0.807265"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.160395, 0.801512"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, 9.78331, 23.9681" normal="-0.0742924, 2.49917, 0.865847" tcoords="0.203281, 0.803101"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.117547, 0.803344"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, 0.166875, 29.5202" normal="-0.0604559, 0.499892, 2.59755" tcoords="0.160395, 0.801512"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.0747664, 0.806017"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, -9.44956, 23.9681" normal="-0.0657774, -1.99946, 1.73171" tcoords="0.117547, 0.803344"/>
+    <vertex location="79.6673, 0.166878, 7.31196" normal="-0.100421, -0.495201, -2.59922" tcoords="0.2887, 0.810591"/>
+    <vertex location="19.2825, 0.133808, 18.8776" normal="0.999993, 0.000266505, -0.00372577" tcoords="0.181966, 1.00038"/>
+    <vertex location="79.6673, -9.44956, 12.864" normal="-0.0849326, -2.49905, -0.865561" tcoords="0.0747664, 0.806017"/>
+  </triMesh>
+
+  <triMesh name="emitter_R_pistol" parent="pistol R" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="pistol.png" transparent="false">
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
+    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
+    <vertex location="-2.13057, -3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499487, 0.000499487"/>
+    <vertex location="0.0, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.3335, 0.5"/>
+    <vertex location="4.26113, 0.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.999501, 0.5"/>
+    <vertex location="-2.13057, 3.69025, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.000499874, 0.999501"/>
+  </triMesh>
+
+  <triMesh name="gunslinger03" parent="pistol R" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918" offsetTranslation="40.4398, -4.44164, -68.2438" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="gunslinger.png" transparent="false">
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.00390625, 0.910156"/>
+    <vertex location="-45.742, 0.547202, 65.9335" normal="-0.877714, -0.463315, 0.122299" tcoords="0.222656, 0.851563"/>
+    <vertex location="-44.8806, 0.351036, 69.9856" normal="-0.538665, -0.830501, 0.141801" tcoords="0.00390625, 0.851563"/>
+    <vertex location="-45.742, 0.547202, 65.9335" normal="-0.877714, -0.463315, 0.122299" tcoords="0.222656, 0.851563"/>
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.00390625, 0.910156"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.222656, 0.996094"/>
+    <vertex location="-30.9024, 8.19387, 66.8022" normal="0.256872, 0.824109, -0.504837" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.222656, 0.996094"/>
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.00390625, 0.910156"/>
+    <vertex location="-44.8806, 0.351036, 69.9856" normal="-0.538665, -0.830501, 0.141801" tcoords="0.00390625, 0.851563"/>
+    <vertex location="-37.5923, -1.17735, 67.42" normal="-0.179509, -0.980938, 0.0744163" tcoords="0.222656, 0.808594"/>
+    <vertex location="-35.7809, -0.8581, 71.2802" normal="-0.151386, -0.976747, 0.151816" tcoords="0.00390625, 0.808594"/>
+    <vertex location="-37.5923, -1.17735, 67.42" normal="-0.179509, -0.980938, 0.0744163" tcoords="0.222656, 0.808594"/>
+    <vertex location="-44.8806, 0.351036, 69.9856" normal="-0.538665, -0.830501, 0.141801" tcoords="0.00390625, 0.851563"/>
+    <vertex location="-45.742, 0.547202, 65.9335" normal="-0.877714, -0.463315, 0.122299" tcoords="0.222656, 0.851563"/>
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.175781, 0.757813"/>
+    <vertex location="-44.8806, 0.351036, 69.9856" normal="-0.538665, -0.830501, 0.141801" tcoords="0.226563, 0.757813"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.175781, 0.800781"/>
+    <vertex location="-30.9024, 8.19387, 66.8022" normal="0.256872, 0.824109, -0.504837" tcoords="0.128906, 0.757813"/>
+    <vertex location="-46.2407, 13.2991, 69.7487" normal="-0.906642, 0.416358, 0.0681712" tcoords="0.175781, 0.757813"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.175781, 0.800781"/>
+    <vertex location="-32.1467, 6.85623, 65.4206" normal="-0.203277, -0.605584, 0.76938" tcoords="0.128906, 0.757813"/>
+    <vertex location="-30.9024, 8.19387, 66.8022" normal="0.256872, 0.824109, -0.504837" tcoords="0.149556, 0.757813"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.175781, 0.800781"/>
+    <vertex location="-32.1467, 6.85623, 65.4206" normal="-0.203277, -0.605584, 0.76938" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-46.5688, 12.7273, 66.2313" normal="-0.286516, 0.831896, -0.475244" tcoords="0.222656, 0.996094"/>
+    <vertex location="-30.9024, 8.19387, 66.8022" normal="0.256872, 0.824109, -0.504837" tcoords="0.00390625, 0.958237"/>
+  </triMesh>
 
 </model>
