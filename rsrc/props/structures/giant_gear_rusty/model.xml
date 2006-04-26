@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="gear2" translation="0.119987, 3.40706, -0.174857" rotation="0.0, 0.0, 0.0, 1.0" scale="2.08, 2.08, 2.08" solid="true" texture="C:\projects\bang objects\giant gear\giant_gear_rusty.png" transparent="false">
+  <triMesh name="gear2" translation="0.133942, 3.88369, -1.45798" rotation="0.0, 0.0, 0.0, 1.0" scale="2.6832, 2.6832, 2.6832" solid="true" texture="C:\projects\bang objects\giant gear\giant_gear_rusty.png" transparent="false">
     <vertex location="7.5943, -2.05613, 9.70469" normal="0.0, 0.0, 1.0" tcoords="0.638805, 0.501769"/>
     <vertex location="21.7264, 0.0, 9.70469" normal="0.0, 0.0, 1.0" tcoords="0.867311, 0.600076"/>
     <vertex location="18.7577, 10.9609, 9.70469" normal="0.0, 0.0, 1.0" tcoords="0.767947, 0.771112"/>

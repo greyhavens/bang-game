@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="gray_nut" translation="-0.0915441, 11.3717, -36.6381" rotation="0.619094, 0.0, 0.0, 0.785317" scale="3.15061, 3.15061, 2.07277" solid="true" texture="C:\projects\bang objects\nut and bolt\nut_and_bolt.png" transparent="false">
+  <triMesh name="gray_nut" translation="-0.525292, 22.8149, -56.9207" rotation="0.619094, 0.0, 0.0, 0.785317" scale="4.97908, 4.97908, 3.27571" solid="true" texture="C:\projects\bang objects\nut and bolt\nut_and_bolt.png" transparent="false">
     <vertex location="0.101758, 12.9256, 1.59036" normal="0.0, 0.0, -1.0" tcoords="0.255735, 0.260541"/>
     <vertex location="1.2514, 14.9169, 1.59036" normal="0.0, 0.0, -1.0" tcoords="0.324454, 0.397979"/>
     <vertex location="2.40105, 12.9256, 1.59036" normal="0.0, 0.0, -1.0" tcoords="0.393173, 0.260541"/>

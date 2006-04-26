@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="well" translation="-2.93668, -8.34568, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 0.811724" solid="false" texture="C:\projects\bang objects\stone well\stone_well.png" transparent="false">
+  <triMesh name="well" translation="-2.93668, -8.34568, -1.42402" rotation="0.0, 0.0, 0.0, 1.0" scale="1.13462, 1.13462, 0.920995" solid="false" texture="C:\projects\bang objects\stone well\stone_well.png" transparent="false">
     <vertex location="41.1106, 0.0, 0.0" normal="0.991681, 0.107406, -0.0709396" tcoords="0.796402, 0.00719846"/>
     <vertex location="38.6927, 28.1119, 93.8882" normal="0.865418, 0.496003, -0.0709396" tcoords="0.886251, 0.293653"/>
     <vertex location="47.8269, 0.0, 93.8882" normal="0.991681, -0.107406, -0.0709396" tcoords="0.796402, 0.293653"/>
