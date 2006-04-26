@@ -5,6 +5,8 @@
 
 -injars ../lib/commons-io.jar(!META-INF/*)
 -injars ../lib/commons-collections.jar(!META-INF/*)
+-injars ../lib/velocity-1.5-dev.jar(
+  !META-INF/*,!**/servlet/**,!**/anakia/**,!**/texen/**,!**/VelocityFormatter*)
 -injars ../lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-base.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
@@ -14,6 +16,8 @@
 -injars ../lib/narya-jme.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-openal.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/samskivert.jar(!META-INF/*,!**/velocity/**,!**/xml/**)
+-injars ../lib/samskivert.jar(**/velocity/VelocityUtil*.class,
+                              **/velocity/DataTool*.class)
 -injars ../lib/jme.jar(!META-INF/*)
 -injars ../lib/jme-effects.jar(!META-INF/*)
 -injars ../lib/jme-model.jar(!META-INF/*)
@@ -35,7 +39,7 @@
 
 -outjars ../dist/bang-pcode.jar
 -printseeds ../dist/proguard.seeds
--applymapping proguard/@prev_version@.map
+@apply_mapping@
 -printmapping proguard/@version@.map
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
@@ -61,6 +65,9 @@
 -keep public class * extends java.lang.Enum {
     *;
 }
+
+-keep public class com.threerings.media.tile.SwissArmyTileSet
+-keep public class com.threerings.media.tile.TrimmedTileSet
 
 -keep public class * extends com.samskivert.swing.Controller {
     *;
@@ -92,4 +99,22 @@
 
 -keep public class com.threerings.bang.data.Stat {
     static <fields>;
+}
+
+#
+# A whole bunch of stuff so we can use Velocity in the Saloon
+
+-keep public class * extends org.apache.velocity.runtime.directive.Directive
+-keep public class org.apache.velocity.util.introspection.UberspectImpl
+-keep public class org.apache.velocity.runtime.resource.ResourceManagerImpl
+-keep public class org.apache.velocity.runtime.resource.ResourceCacheImpl
+-keep public class org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+-keep public class com.samskivert.velocity.DataTool {
+    !static !transient <methods>;
+}
+-keep public class com.threerings.util.MessageBundle {
+    *;
+}
+-keep public class com.threerings.bang.saloon.data.TopRankedList {
+    *;
 }

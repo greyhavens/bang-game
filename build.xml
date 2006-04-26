@@ -270,11 +270,11 @@
   </target>
 
   <!-- helper target for client and devclient -->
-  <target name="baseclient" depends="dist">
+  <target name="baseclient" depends="dist,mdist">
     <!-- generate the all-in-wonder jar file -->
     <taskdef resource="proguard/ant/task.properties"
              classpath="lib/proguard.jar"/>
-    <proguard configuration="etc/bang-${client}.pro"/>
+    <proguard configuration="etc/bang-client.pro"/>
 
     <!-- create our directories if necessary -->
     <mkdir dir="${client_dir}"/>
@@ -338,12 +338,20 @@
 
   <!-- builds the development client getdown distribution -->
   <target name="devclient">
+    <echo message="Generating Proguard config file for devclient..."/>
+    <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
+      <arg line="etc/bang-client.pro.in"/>
+      <arg line="version=0"/>
+      <arg line="apply_mapping='# no mapping'"/>
+    </exec>
+
     <antcall target="baseclient">
       <param name="client" value="devclient"/>
       <param name="client_dir" value="${web_dir}/devclient"/>
       <param name="appbase_line" value="appbase = ${root_url}/devclient"/>
       <param name="version_line" value=""/>
     </antcall>
+    <delete file="etc/bang-client.pro"/>
   </target>
 
   <!-- builds the production client getdown distribution -->
@@ -358,7 +366,7 @@
     <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
       <arg line="etc/bang-client.pro.in"/>
       <arg line="version=${version}"/>
-      <arg line="prev_version=${latest_version}"/>
+      <arg line="apply_mapping='-applymapping proguard/${latest_version}.map'"/>
     </exec>
 
     <antcall target="baseclient">
@@ -393,6 +401,7 @@
         <include name="rsrc/**/*.bss"/>
         <include name="rsrc/**/*.css"/>
         <include name="rsrc/**/*.dat"/>
+        <include name="rsrc/**/*.tmpl"/>
       </fileset>
     </jar>
   </target>
