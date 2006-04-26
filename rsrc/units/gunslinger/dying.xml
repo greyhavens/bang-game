@@ -5,7 +5,7 @@
   <frame>
     <transform name="gunslinger" translation="14.679, 3.32103, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01" translation="0.0503302, 3.73378, 67.9055" rotation="0.0, 0.0, -0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bip01 Footsteps" translation="0.0, 0.0, -65.3082" rotation="0.0, 0.0, 0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="0.0, 0.0, -67.9051" rotation="0.0, 0.0, 0.707106, 0.707107" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Pelvis" translation="-2.11112, 0.0, 0.0" rotation="0.541675, 0.541675, 0.45452, -0.45452" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Spine" translation="8.24543, -0.0141133, -1.44852" rotation="-0.177234, 0.0858346, 0.0158992, 0.98029" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Spine1" translation="18.9225, -0.0155356, 0.00242807" rotation="-0.0732857, 0.0110127, -0.147403, 0.986296" scale="1.0, 1.0, 1.0"/>
@@ -41,10 +41,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -1.21207e-006, -1.06771e-006" rotation="0.0, 0.0, -0.365491, 0.930815" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 9.57128e-007, -7.65242e-007" rotation="0.0179582, 0.0803926, 0.147565, 0.985616" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -5.723e-007" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="19.6666, 18.1893, 69.3373" rotation="0.292476, 0.671566, 0.556285, -0.392432" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolL" translation="19.6666, 18.1893, 69.3373" rotation="0.292476, 0.671566, 0.556285, -0.392432" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180719, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-20.3379, 18.3537, 70.0328" rotation="0.711296, 0.402065, 0.377796, -0.435513" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-20.3379, 18.3537, 70.0328" rotation="0.711296, 0.402065, 0.377796, -0.435513" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -88,10 +88,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 3.35121e-007, -1.24832e-007" rotation="0.0, 0.0, -0.428529, 0.903528" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 2.72732e-007, 9.17675e-007" rotation="-0.0564665, 0.0498067, 0.134481, 0.988051" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -9.05295e-007" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="20.2689, 18.7711, 70.879" rotation="0.302441, 0.666228, 0.556392, -0.393825" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="20.2689, 18.7711, 70.879" rotation="0.302441, 0.666228, 0.556392, -0.393825" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180718, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-18.4234, 23.6271, 65.7152" rotation="0.776418, 0.379987, 0.361666, -0.349259" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-18.4234, 23.6271, 65.7152" rotation="0.776418, 0.379987, 0.361666, -0.349259" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -135,10 +135,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -1.04475e-006, -1.19335e-006" rotation="0.0, 0.0, -0.472838, 0.881149" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -1.51737e-007, -2.8278e-007" rotation="-0.134836, 0.0100618, 0.109995, 0.984692" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 6.44038e-007" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="20.3873, 19.4986, 72.6781" rotation="0.311588, 0.659789, 0.558346, -0.394767" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="20.3873, 19.4986, 72.6781" rotation="0.311588, 0.659789, 0.558346, -0.394767" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180714, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-15.7394, 28.1142, 61.3322" rotation="0.832022, 0.34345, 0.349504, -0.260053" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-15.7394, 28.1142, 61.3322" rotation="0.832022, 0.34345, 0.349504, -0.260053" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -182,10 +182,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -1.82792e-006, 1.13043e-006" rotation="0.0, 0.0, -0.477096, 0.878851" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -2.75979e-007, 1.29347e-007" rotation="-0.176025, -0.0234825, 0.0678463, 0.981764" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.17952e-006" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="20.2902, 22.3332, 73.2941" rotation="0.324213, 0.658791, 0.550853, -0.396789" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="20.2902, 22.3332, 73.2941" rotation="0.324213, 0.658791, 0.550853, -0.396789" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180716, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-13.9669, 32.305, 58.48" rotation="0.858118, 0.325992, 0.34428, -0.197062" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-13.9669, 32.305, 58.48" rotation="0.858118, 0.325992, 0.34428, -0.197062" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449097, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -229,10 +229,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -4.42642e-007, -4.53633e-007" rotation="0.0, 0.0, -0.440831, 0.89759" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 9.59306e-007, 9.46848e-007" rotation="-0.1777, -0.0441053, 0.0078358, 0.983065" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.56209e-006" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="20.5079, 27.1946, 72.3855" rotation="0.349635, 0.67244, 0.528654, -0.382236" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="20.5079, 27.1946, 72.3855" rotation="0.349635, 0.67244, 0.528654, -0.382236" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180721, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-13.5376, 37.1354, 57.1376" rotation="0.859352, 0.33754, 0.346932, -0.164983" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-13.5376, 37.1354, 57.1376" rotation="0.859352, 0.33754, 0.346932, -0.164983" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -276,10 +276,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 3.14916e-006, 3.12492e-007" rotation="0.0, 0.0, -0.656133, 0.754645" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -3.92325e-007, 1.89189e-006" rotation="-0.189639, -0.0179031, 0.185651, 0.963976" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 5.28927e-007" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="20.9533, 32.5772, 70.892" rotation="0.387174, 0.690787, 0.49577, -0.356542" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="20.9533, 32.5772, 70.892" rotation="0.387174, 0.690787, 0.49577, -0.356542" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180725, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-14.5427, 42.4538, 56.2367" rotation="0.899137, 0.317089, 0.249617, -0.169406" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-14.5427, 42.4538, 56.2367" rotation="0.899137, 0.317089, 0.249617, -0.169406" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -323,10 +323,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -2.24482e-007, 5.4688e-007" rotation="0.0, 0.0, -0.749193, 0.662351" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -2.55973e-006, 1.13634e-006" rotation="-0.228432, 0.0250429, 0.324442, 0.917567" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.86903e-007" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="21.484, 38.0789, 69.2137" rotation="0.42583, 0.709123, 0.459594, -0.323399" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="21.484, 38.0789, 69.2137" rotation="0.42583, 0.709123, 0.459594, -0.323399" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.18072, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-14.7485, 49.1195, 57.3839" rotation="0.908161, 0.273876, 0.216751, -0.230769" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-14.7485, 49.1195, 57.3839" rotation="0.908161, 0.273876, 0.216751, -0.230769" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -370,10 +370,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -7.87149e-007, 2.44542e-007" rotation="0.0, 0.0, -0.677533, 0.735492" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -1.8768e-006, -3.54601e-006" rotation="-0.227293, 0.0495572, 0.323329, 0.917246" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.86125e-006" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="21.9194, 43.5188, 67.8175" rotation="0.453813, 0.723528, 0.430211, -0.292369" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="21.9194, 43.5188, 67.8175" rotation="0.453813, 0.723528, 0.430211, -0.292369" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180725, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-13.9455, 55.7752, 59.1379" rotation="0.877274, 0.2533, 0.285867, -0.290704" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-13.9455, 55.7752, 59.1379" rotation="0.877274, 0.2533, 0.285867, -0.290704" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -417,10 +417,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -4.89836e-006, 2.79294e-006" rotation="0.0, 0.0, -0.575467, 0.817825" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 1.78134e-006, -3.81479e-006" rotation="-0.205202, 0.0553833, 0.267167, 0.939918" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.33594e-006" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="22.0683, 48.9046, 67.1085" rotation="0.462159, 0.729729, 0.418968, -0.279947" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="22.0683, 48.9046, 67.1085" rotation="0.462159, 0.729729, 0.418968, -0.279947" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180721, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-13.6322, 61.5144, 60.0455" rotation="0.845315, 0.256442, 0.346328, -0.315813" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-13.6322, 61.5144, 60.0455" rotation="0.845315, 0.256442, 0.346328, -0.315813" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -464,10 +464,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -2.51948e-006, 1.80093e-006" rotation="0.0, 0.0, -0.560907, 0.827879" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -1.61344e-006, 5.16961e-007" rotation="-0.184458, 0.042153, 0.229127, 0.954829" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.59267e-006" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="21.8855, 54.7406, 67.2348" rotation="0.449108, 0.725849, 0.431198, -0.292428" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="21.8855, 54.7406, 67.2348" rotation="0.449108, 0.725849, 0.431198, -0.292428" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.18072, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-14.1223, 66.7864, 59.0943" rotation="0.846691, 0.283981, 0.339775, -0.294994" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-14.1223, 66.7864, 59.0943" rotation="0.846691, 0.283981, 0.339775, -0.294994" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33864, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -511,10 +511,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -6.01742e-006, 3.97613e-006" rotation="0.0, 0.0, -0.549799, 0.835297" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 1.22201e-006, -7.36323e-007" rotation="-0.160955, 0.0253259, 0.181946, 0.969715" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.49637e-006" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="21.5053, 61.0743, 67.9677" rotation="0.420404, 0.715678, 0.4595, -0.31611" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="21.5053, 61.0743, 67.9677" rotation="0.420404, 0.715678, 0.4595, -0.31611" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180727, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-14.7297, 72.2057, 57.8637" rotation="0.850495, 0.317319, 0.324832, -0.265428" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-14.7297, 72.2057, 57.8637" rotation="0.850495, 0.317319, 0.324832, -0.265428" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -558,10 +558,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -7.60338e-007, -7.94401e-007" rotation="0.0, 0.0, -0.532433, 0.846472" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 9.1609e-007, 2.60196e-006" rotation="-0.137126, 0.00830145, 0.125692, 0.982512" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.69892e-006" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="21.0083, 67.2388, 69.0458" rotation="0.381791, 0.701838, 0.495393, -0.340946" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="21.0083, 67.2388, 69.0458" rotation="0.381791, 0.701838, 0.495393, -0.340946" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4551, 0.180722, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-15.3218, 77.403, 56.6386" rotation="0.852599, 0.35066, 0.308596, -0.234269" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-15.3218, 77.403, 56.6386" rotation="0.852599, 0.35066, 0.308596, -0.234269" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -605,10 +605,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -3.43605e-007, 1.44585e-006" rotation="0.0, 0.0, -0.504815, 0.863227" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 3.80558e-007, 1.64131e-007" rotation="-0.11589, -0.00656988, 0.0648066, 0.991124" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 0.0" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="20.4853, 72.6789, 70.1523" rotation="0.34141, 0.686258, 0.530586, -0.361895" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="20.4853, 72.6789, 70.1523" rotation="0.34141, 0.686258, 0.530586, -0.361895" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180721, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-15.8068, 82.0826, 55.6166" rotation="0.851392, 0.379587, 0.296294, -0.20798" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-15.8068, 82.0826, 55.6166" rotation="0.851392, 0.379587, 0.296294, -0.20798" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -652,10 +652,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 1.04956e-006, 1.19017e-006" rotation="0.0, 0.0, -0.470294, 0.88251" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -2.73793e-007, -2.82655e-006" rotation="-0.0997962, -0.0178888, 0.00805006, 0.994815" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -7.3047e-007" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="20.0265, 76.9863, 71.0277" rotation="0.306784, 0.671421, 0.559064, -0.377525" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="20.0265, 76.9863, 71.0277" rotation="0.306784, 0.671421, 0.559064, -0.377525" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180728, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-16.1395, 85.952, 54.8705" rotation="0.847647, 0.401249, 0.290223, -0.19043" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-16.1395, 85.952, 54.8705" rotation="0.847647, 0.401249, 0.290223, -0.19043" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -699,10 +699,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 0.0, -1.84186e-006" rotation="0.0, 0.0, -0.440053, 0.897972" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 2.58405e-006, -1.22299e-006" rotation="-0.0904289, -0.0247883, -0.0325248, 0.995063" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.21229e-007" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="19.7021, 79.8282, 71.5283" rotation="0.283063, 0.660108, 0.577676, -0.387845" scale="0.450617, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="19.7021, 79.8282, 71.5283" rotation="0.283063, 0.660108, 0.577676, -0.387845" scale="0.450617, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180724, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-16.3101, 88.6515, 54.3651" rotation="0.843692, 0.413981, 0.289318, -0.181931" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-16.3101, 88.6515, 54.3651" rotation="0.843692, 0.413981, 0.289318, -0.181931" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -746,10 +746,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 2.64754e-006, -4.07182e-006" rotation="0.0, 0.0, -0.436501, 0.899704" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -1.76716e-006, 0.0" rotation="-0.0860886, -0.0266627, -0.0456237, 0.994885" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -5.83629e-007" rotation="-0.117138, 0.116489, 0.699687, 0.695088" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="19.4713, 80.6162, 71.7706" rotation="0.266971, 0.650912, 0.589568, -0.3968" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="19.4713, 80.6162, 71.7706" rotation="0.266971, 0.650912, 0.589568, -0.3968" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4551, 0.180712, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-16.4362, 89.4039, 53.9691" rotation="0.843356, 0.419064, 0.285233, -0.178267" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-16.4362, 89.4039, 53.9691" rotation="0.843356, 0.419064, 0.285233, -0.178267" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308058, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -793,10 +793,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 5.31945e-006, -8.48732e-007" rotation="0.0, 0.0, -0.462521, 0.886608" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -5.72979e-006, 6.84507e-007" rotation="-0.083648, -0.0242519, -0.0342462, 0.995611" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -2.32649e-006" rotation="-0.118106, 0.116088, 0.70467, 0.689938" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="19.2638, 79.5138, 71.9182" rotation="0.25279, 0.641405, 0.599134, -0.407106" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="19.2638, 79.5138, 71.9182" rotation="0.25279, 0.641405, 0.599134, -0.407106" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4551, 0.180723, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-16.6265, 88.2443, 53.6086" rotation="0.84701, 0.419986, 0.274031, -0.176329" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-16.6265, 88.2443, 53.6086" rotation="0.84701, 0.419986, 0.274031, -0.176329" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -840,10 +840,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 3.57821e-006, -1.45149e-006" rotation="0.0, 0.0, -0.489438, 0.872038" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 1.5216e-007, 6.25765e-007" rotation="-0.0848235, -0.0154085, 0.00662574, 0.996255" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.51911e-006" rotation="-0.116964, 0.116268, 0.699199, 0.695645" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="19.0855, 77.3228, 71.9626" rotation="0.240626, 0.632591, 0.606519, -0.417209" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="19.0855, 77.3228, 71.9626" rotation="0.240626, 0.632591, 0.606519, -0.417209" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180714, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-16.7749, 86.1798, 53.5458" rotation="0.8485, 0.415946, 0.269741, -0.185139" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-16.7749, 86.1798, 53.5458" rotation="0.8485, 0.415946, 0.269741, -0.185139" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -887,10 +887,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 2.3461e-006, 6.15124e-007" rotation="0.0, 0.0, -0.518566, 0.855037" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 4.42596e-007, 1.85295e-006" rotation="-0.0861026, -0.00574194, 0.0477702, 0.995124" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -3.66363e-006" rotation="-0.116193, 0.116154, 0.69581, 0.699182" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="18.9409, 74.8482, 71.8915" rotation="0.230744, 0.625537, 0.61183, -0.425588" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="18.9409, 74.8482, 71.8915" rotation="0.230744, 0.625537, 0.61183, -0.425588" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180719, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-16.9522, 83.7947, 53.5117" rotation="0.849957, 0.41166, 0.264608, -0.19517" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-16.9522, 83.7947, 53.5117" rotation="0.849957, 0.41166, 0.264608, -0.19517" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -934,10 +934,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 1.001e-006, 4.92826e-007" rotation="0.0, 0.0, -0.545088, 0.838379" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 2.87223e-006, -3.01658e-006" rotation="-0.0849675, 0.00161184, 0.0766061, 0.993433" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 2.2211e-006" rotation="-0.116342, 0.116198, 0.696437, 0.698526" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="18.8346, 72.8952, 71.692" rotation="0.223481, 0.621276, 0.615241, -0.430756" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="18.8346, 72.8952, 71.692" rotation="0.223481, 0.621276, 0.615241, -0.430756" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180718, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-17.181, 81.7959, 53.3815" rotation="0.851337, 0.410285, 0.257098, -0.201971" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolR" translation="-17.181, 81.7959, 53.3815" rotation="0.851337, 0.410285, 0.257098, -0.201971" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -981,10 +981,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 1.16634e-006, 1.80233e-006" rotation="0.0, 0.0, -0.558263, 0.829664" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -3.27658e-007, 3.75245e-006" rotation="-0.0809334, 0.00598257, 0.0900856, 0.992622" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 3.39928e-006" rotation="-0.116706, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="18.7823, 71.9689, 71.6173" rotation="0.219739, 0.620583, 0.616748, -0.431525" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="18.7823, 71.9689, 71.6173" rotation="0.219739, 0.620583, 0.616748, -0.431525" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180711, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-17.4037, 80.7412, 53.4697" rotation="0.850813, 0.412095, 0.25217, -0.206651" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-17.4037, 80.7412, 53.4697" rotation="0.850813, 0.412095, 0.25217, -0.206651" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1028,10 +1028,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 2.79122e-006, -2.44236e-006" rotation="0.0, 0.0, -0.556994, 0.830517" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 4.28461e-007, 1.91511e-007" rotation="-0.0752133, 0.0106439, 0.110017, 0.991023" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -9.29332e-007" rotation="-0.114953, 0.118435, 0.686929, 0.707735" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="18.8102, 71.7499, 71.6742" rotation="0.221448, 0.62567, 0.615223, -0.425439" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="18.8102, 71.7499, 71.6742" rotation="0.221448, 0.62567, 0.615223, -0.425439" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180725, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-17.5869, 80.3792, 53.9961" rotation="0.84688, 0.415141, 0.254008, -0.214318" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-17.5869, 80.3792, 53.9961" rotation="0.84688, 0.415141, 0.254008, -0.214318" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1075,10 +1075,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 2.53672e-006, -1.06373e-006" rotation="0.0, 0.0, -0.553994, 0.832521" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 3.53135e-006, -2.27802e-006" rotation="-0.0676623, 0.0154065, 0.135349, 0.988365" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 5.13913e-007" rotation="-0.11231, 0.120944, 0.671137, 0.722727" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="18.9193, 71.7504, 71.5708" rotation="0.228338, 0.636142, 0.610519, -0.412859" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="18.9193, 71.7504, 71.5708" rotation="0.228338, 0.636142, 0.610519, -0.412859" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4551, 0.180718, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-17.8014, 80.1328, 54.5845" rotation="0.842036, 0.419504, 0.25607, -0.222304" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-17.8014, 80.1328, 54.5845" rotation="0.842036, 0.419504, 0.25607, -0.222304" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33864, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1122,10 +1122,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 1.90665e-006, 9.12546e-007" rotation="0.0, 0.0, -0.556639, 0.830754" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 2.16492e-006, -3.25243e-006" rotation="-0.0603533, 0.0208458, 0.155033, 0.985844" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.71241e-006" rotation="-0.110932, 0.122209, 0.662901, 0.730289" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="19.0487, 71.3916, 71.2172" rotation="0.234944, 0.64645, 0.606609, -0.398659" scale="0.450617, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="19.0487, 71.3916, 71.2172" rotation="0.234944, 0.64645, 0.606609, -0.398659" scale="0.450617, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180717, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-18.0615, 79.4973, 54.9467" rotation="0.837915, 0.423467, 0.255591, -0.230751" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-18.0615, 79.4973, 54.9467" rotation="0.837915, 0.423467, 0.255591, -0.230751" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5594, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1169,10 +1169,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 3.39736e-006, 1.81914e-006" rotation="0.0, 0.0, -0.551665, 0.834066" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 1.6254e-006, 1.01495e-006" rotation="-0.051868, 0.0290372, 0.173736, 0.982997" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.82286e-006" rotation="-0.110054, 0.123, 0.657654, 0.735017" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="19.1119, 70.1031, 70.5699" rotation="0.234855, 0.650801, 0.608784, -0.388181" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="19.1119, 70.1031, 70.5699" rotation="0.234855, 0.650801, 0.608784, -0.388181" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4551, 0.18072, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-18.326, 78.1216, 55.0455" rotation="0.829773, 0.425314, 0.262107, -0.248765" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-18.326, 78.1216, 55.0455" rotation="0.829773, 0.425314, 0.262107, -0.248765" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33864, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1216,10 +1216,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -2.33224e-006, 1.8285e-006" rotation="0.0, 0.0, -0.570472, 0.821317" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -2.22022e-006, 1.97735e-006" rotation="-0.0452828, 0.0414952, 0.204791, 0.976877" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.31038e-006" rotation="-0.110494, 0.122605, 0.660282, 0.732658" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="19.0001, 67.2993, 69.6066" rotation="0.220832, 0.643167, 0.623056, -0.386484" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="19.0001, 67.2993, 69.6066" rotation="0.220832, 0.643167, 0.623056, -0.386484" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180724, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-18.705, 75.3043, 54.34" rotation="0.823922, 0.425721, 0.261023, -0.267921" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-18.705, 75.3043, 54.34" rotation="0.823922, 0.425721, 0.261023, -0.267921" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308058, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1263,10 +1263,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -4.49183e-006, 9.67127e-007" rotation="0.0, 0.0, -0.667684, 0.744445" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 0.0, 2.66642e-007" rotation="-0.0533704, 0.0631902, 0.246781, 0.965535" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 2.15327e-006" rotation="-0.116707, 0.116707, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="18.6148, 62.3209, 68.2107" rotation="0.186375, 0.617567, 0.653044, -0.396747" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="18.6148, 62.3209, 68.2107" rotation="0.186375, 0.617567, 0.653044, -0.396747" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180725, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-19.4414, 70.2089, 52.0862" rotation="0.833752, 0.4259, 0.220967, -0.273204" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-19.4414, 70.2089, 52.0862" rotation="0.833752, 0.4259, 0.220967, -0.273204" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1310,10 +1310,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -7.67424e-007, -1.66325e-007" rotation="0.0, 0.0, -0.782526, 0.622618" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 5.73616e-007, 0.0" rotation="-0.0997019, 0.111499, 0.309467, 0.939073" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -3.69179e-007" rotation="-0.126637, 0.0980022, 0.752806, 0.638468" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="17.9464, 52.7825, 66.1745" rotation="0.126009, 0.564782, 0.698111, -0.421644" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolL" translation="17.9464, 52.7825, 66.1745" rotation="0.126009, 0.564782, 0.698111, -0.421644" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_L_pistol" translation="99.4551, 0.180708, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-20.4822, 61.3953, 50.0648" rotation="0.836903, 0.409785, 0.171784, -0.319626" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-20.4822, 61.3953, 50.0648" rotation="0.836903, 0.409785, 0.171784, -0.319626" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308058, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1357,10 +1357,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -1.82847e-006, 6.85788e-007" rotation="0.0, 0.0, -0.841213, 0.540703" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 5.35611e-007, 2.00437e-006" rotation="-0.182797, 0.180694, 0.384047, 0.886816" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -9.71884e-007" rotation="-0.137709, 0.0705328, 0.806035, 0.571287" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="17.1853, 38.5807, 63.104" rotation="0.0468978, 0.486089, 0.742629, -0.458279" scale="0.450617, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="17.1853, 38.5807, 63.104" rotation="0.0468978, 0.486089, 0.742629, -0.458279" scale="0.450617, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180716, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-21.1911, 48.7586, 50.3825" rotation="0.79043, 0.366044, 0.16986, -0.460846" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolR" translation="-21.1911, 48.7586, 50.3825" rotation="0.79043, 0.366044, 0.16986, -0.460846" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1404,10 +1404,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -6.68263e-007, -5.94287e-007" rotation="0.0, 0.0, -0.82362, 0.567142" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 5.51954e-007, 1.00422e-006" rotation="-0.256965, 0.238775, 0.435219, 0.82918" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.04406e-006" rotation="-0.144858, 0.0353603, 0.848442, 0.50785" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="16.6421, 23.0729, 58.5628" rotation="-0.0252162, 0.408156, 0.768336, -0.492374" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="16.6421, 23.0729, 58.5628" rotation="-0.0252162, 0.408156, 0.768336, -0.492374" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180725, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-20.8616, 32.6729, 51.88" rotation="-0.669833, -0.288608, -0.236906, 0.641798" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolR" translation="-20.8616, 32.6729, 51.88" rotation="-0.669833, -0.288608, -0.236906, 0.641798" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1451,10 +1451,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -2.01698e-007, 3.17849e-006" rotation="0.0, 0.0, -0.71276, 0.701408" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -1.54538e-006, -1.57158e-006" rotation="-0.30567, 0.279169, 0.422725, 0.806185" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.31711e-006" rotation="-0.148798, -0.0238708, 0.867177, 0.474651" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="16.3086, 9.5122, 52.9727" rotation="0.0760091, -0.351494, -0.776104, 0.518013" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="16.3086, 9.5122, 52.9727" rotation="0.0760091, -0.351494, -0.776104, 0.518013" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180722, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-19.6409, 15.2862, 51.5527" rotation="-0.518881, -0.173746, -0.330006, 0.769202" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-19.6409, 15.2862, 51.5527" rotation="-0.518881, -0.173746, -0.330006, 0.769202" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1498,10 +1498,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -1.73856e-006, -2.35199e-006" rotation="0.0, 0.0, -0.588986, 0.808144" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -2.30864e-007, 1.32843e-007" rotation="-0.322717, 0.296021, 0.338744, 0.832753" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 9.38179e-007" rotation="-0.153783, -0.0595687, 0.896219, 0.411817" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="15.9689, 0.241699, 47.0689" rotation="0.110694, -0.315286, -0.777826, 0.532286" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="15.9689, 0.241699, 47.0689" rotation="0.110694, -0.315286, -0.777826, 0.532286" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180717, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-18.7824, 1.18994, 48.2391" rotation="-0.398757, -0.0799855, -0.384973, 0.828487" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-18.7824, 1.18994, 48.2391" rotation="-0.398757, -0.0799855, -0.384973, 0.828487" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1545,10 +1545,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -9.43135e-007, 1.12678e-006" rotation="0.0, 0.0, -0.532267, 0.846577" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 4.28639e-007, -3.89054e-006" rotation="-0.322605, 0.287763, 0.239035, 0.869472" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.42862e-006" rotation="-0.155578, -0.0637733, 0.935918, 0.309494" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="15.3079, -7.36389, 41.1907" rotation="0.228062, -0.199137, -0.757848, 0.577926" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="15.3079, -7.36389, 41.1907" rotation="0.228062, -0.199137, -0.757848, 0.577926" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180717, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-18.6674, -7.46147, 43.0909" rotation="-0.321814, -0.0381045, -0.403733, 0.85556" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-18.6674, -7.46147, 43.0909" rotation="-0.321814, -0.0381045, -0.403733, 0.85556" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1592,10 +1592,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 0.0, -2.1648e-006" rotation="0.0, 0.0, -0.512757, 0.858534" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -2.61257e-006, -2.94492e-006" rotation="-0.307402, 0.271594, 0.149808, 0.89961" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.26817e-006" rotation="-0.157625, -0.0489438, 0.967334, 0.192415" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="14.7897, -6.94822, 36.0612" rotation="0.17993, -0.264205, -0.77352, 0.547255" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="14.7897, -6.94822, 36.0612" rotation="0.17993, -0.264205, -0.77352, 0.547255" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180719, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-18.8757, -12.4728, 37.293" rotation="-0.267747, -0.022651, -0.414087, 0.869673" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-18.8757, -12.4728, 37.293" rotation="-0.267747, -0.022651, -0.414087, 0.869673" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1639,10 +1639,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 9.01856e-007, 9.22804e-007" rotation="0.0, 0.0, -0.514773, 0.857326" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -5.9794e-007, -2.89515e-006" rotation="-0.297978, 0.28999, 0.114493, 0.902223" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -8.26508e-007" rotation="-0.159082, -0.0396424, 0.962338, 0.216859" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="13.7393, -5.45842, 31.3873" rotation="0.155945, -0.334527, -0.780418, 0.504698" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="13.7393, -5.45842, 31.3873" rotation="0.155945, -0.334527, -0.780418, 0.504698" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4551, 0.180726, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-18.8775, -16.3191, 31.4279" rotation="-0.199433, 0.00286827, -0.406729, 0.89151" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-18.8775, -16.3191, 31.4279" rotation="-0.199433, 0.00286827, -0.406729, 0.89151" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1686,10 +1686,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -1.72655e-006, -4.3354e-006" rotation="0.0, 0.0, -0.532425, 0.846477" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -1.62538e-006, -2.16172e-007" rotation="-0.258582, 0.314915, 0.0694271, 0.910573" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.03491e-006" rotation="-0.16236, -0.0151745, 0.946026, 0.280078" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="12.3597, -3.94904, 27.1813" rotation="-0.149008, 0.406415, 0.784041, -0.444863" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="12.3597, -3.94904, 27.1813" rotation="-0.149008, 0.406415, 0.784041, -0.444863" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4551, 0.180716, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-19.1732, -18.5052, 25.8582" rotation="-0.15665, 0.00596727, -0.408376, 0.899252" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-19.1732, -18.5052, 25.8582" rotation="-0.15665, 0.00596727, -0.408376, 0.899252" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1733,10 +1733,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -5.65197e-007, -8.09043e-007" rotation="0.0, 0.0, -0.553385, 0.832925" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -2.38641e-006, 6.25631e-007" rotation="-0.202325, 0.340529, 0.0180711, 0.918029" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 5.00701e-006" rotation="-0.165317, 0.0151586, 0.919505, 0.356303" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="11.4567, -4.13075, 23.6331" rotation="-0.150914, 0.446341, 0.788209, -0.395892" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="11.4567, -4.13075, 23.6331" rotation="-0.150914, 0.446341, 0.788209, -0.395892" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.18072, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-19.6011, -20.1125, 21.352" rotation="-0.140895, -0.00329602, -0.420965, 0.896061" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-19.6011, -20.1125, 21.352" rotation="-0.140895, -0.00329602, -0.420965, 0.896061" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33866, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1780,10 +1780,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 1.25243e-006, 1.21829e-006" rotation="0.0, 0.0, -0.565876, 0.82449" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 1.2599e-006, -3.98066e-007" rotation="-0.145413, 0.358753, -0.0389078, 0.921215" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 2.52998e-007" rotation="-0.16681, 0.0396264, 0.89303, 0.416055" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="11.1592, -6.4794, 27.9454" rotation="-0.164751, 0.435111, 0.801014, -0.376712" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="11.1592, -6.4794, 27.9454" rotation="-0.164751, 0.435111, 0.801014, -0.376712" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180724, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-19.9912, -21.4273, 25.0748" rotation="-0.146144, -0.0153039, -0.440735, 0.885528" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-19.9912, -21.4273, 25.0748" rotation="-0.146144, -0.0153039, -0.440735, 0.885528" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449097, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1827,10 +1827,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 4.15509e-007, -5.51436e-007" rotation="0.0, 0.0, -0.55848, 0.829518" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, 2.0035e-007, 1.83379e-006" rotation="-0.107526, 0.359944, -0.105103, 0.920778" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.44847e-006" rotation="-0.167165, 0.0489278, 0.881761, 0.438359" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="11.0841, -9.16124, 33.7892" rotation="-0.182175, 0.409855, 0.810356, -0.377035" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="11.0841, -9.16124, 33.7892" rotation="-0.182175, 0.409855, 0.810356, -0.377035" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180721, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-20.1869, -22.4936, 30.7009" rotation="-0.154658, -0.0195575, -0.459485, 0.874398" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-20.1869, -22.4936, 30.7009" rotation="-0.154658, -0.0195575, -0.459485, 0.874398" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33864, 25.5563" rotation="0.293247, -0.640608, -0.308059, 0.639318" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1874,10 +1874,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, -1.86873e-007, 6.31951e-007" rotation="0.0, 0.0, -0.478079, 0.878317" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -9.8598e-007, -7.99859e-007" rotation="-0.135694, 0.294791, -0.227974, 0.917994" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.27828e-006" rotation="-0.169137, 0.0528279, 0.875743, 0.449083" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="11.2941, -10.371, 30.0533" rotation="-0.169932, 0.425023, 0.801052, -0.385739" scale="0.450616, 0.450616, 0.450616"/>
+    <transform name="pistolL" translation="11.2941, -10.371, 30.0533" rotation="-0.169932, 0.425023, 0.801052, -0.385739" scale="0.450616, 0.450616, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180718, 25.4364" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.2529, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-20.1073, -23.8559, 27.1854" rotation="-0.155772, -0.00869319, -0.474734, 0.866191" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-20.1073, -23.8559, 27.1854" rotation="-0.155772, -0.00869319, -0.474734, 0.866191" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308058, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78022, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
@@ -1921,10 +1921,10 @@
     <transform name="Bip01 R Calf" translation="32.0976, 9.66799e-007, 8.37994e-007" rotation="0.0, 0.0, -0.351118, 0.936331" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Foot" translation="32.0976, -1.11947e-006, 1.64917e-006" rotation="-0.213461, 0.204512, -0.380284, 0.876352" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 9.232e-007" rotation="-0.171079, 0.056719, 0.869576, 0.459732" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol L" translation="11.5167, -11.3031, 23.831" rotation="-0.15331, 0.445706, 0.786349, -0.39937" scale="0.450616, 0.450617, 0.450616"/>
+    <transform name="pistolL" translation="11.5167, -11.3031, 23.831" rotation="-0.15331, 0.445706, 0.786349, -0.39937" scale="0.450616, 0.450617, 0.450616"/>
     <transform name="emitter_L_pistol" translation="99.4552, 0.180721, 25.4365" rotation="0.346121, -0.601018, -0.364752, 0.621235" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger02" translation="20.5962, -1.25289, 18.8922" rotation="0.443832, 0.546325, -0.538172, -0.463587" scale="2.21918, 2.21918, 2.21918"/>
-    <transform name="pistol R" translation="-19.942, -25.5205, 21.2439" rotation="-0.151457, 0.00758969, -0.4887, 0.859171" scale="0.450616, 0.450616, 0.450617"/>
+    <transform name="pistolR" translation="-19.942, -25.5205, 21.2439" rotation="-0.151457, 0.00758969, -0.4887, 0.859171" scale="0.450616, 0.450616, 0.450617"/>
     <transform name="emitter_R_pistol" translation="99.2751, 2.33865, 25.5563" rotation="0.293247, -0.640608, -0.308058, 0.639317" scale="2.21918, 2.21918, 2.21918"/>
     <transform name="gunslinger03" translation="20.5595, 1.78021, 18.9653" rotation="0.539813, 0.460757, 0.449096, 0.542787" scale="2.21918, 2.21918, 2.21918"/>
   </frame>
