@@ -7,11 +7,13 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.text.DateFormat;
+import javax.swing.text.html.HTMLDocument;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.logging.Level;
-import javax.swing.text.html.HTMLDocument;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -31,6 +33,8 @@ import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.velocity.DataTool;
 import com.samskivert.velocity.VelocityUtil;
+
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
@@ -54,6 +58,7 @@ public class PaperView extends BContainer
         ((GroupLayout)getLayoutManager()).setGap(0);
         setStyleClass("news_view");
         _ctx = ctx;
+        _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
         String townId = ctx.getUserObject().townId;
 
         BLabel lbl;
@@ -66,12 +71,17 @@ public class PaperView extends BContainer
         tlay.setHorizontalAlignment(TableLayout.STRETCH);
         BContainer masthead = new BContainer(tlay);
         masthead.setStyleClass("news_masthead");
-        // TODO: add proper masthead buttons, etc.
-        masthead.add(new BLabel("No. 23", "news_mastlabel"));
-        masthead.add(new BLabel("News", "news_mastlabel"));
-        masthead.add(new BLabel("Top Scores", "news_mastlabel"));
-        masthead.add(new BLabel("Events", "news_mastlabel"));
-        masthead.add(new BLabel("Highlights", "news_mastlabel"));
+
+        Calendar cal = Calendar.getInstance();
+        int week = cal.get(Calendar.WEEK_OF_YEAR);
+        String number = _msgs.get("m.news_number", String.valueOf(week));
+        masthead.add(new BLabel(number, "news_mastlabel"));
+
+        masthead.add(createMastheadButton("news"));
+        masthead.add(createMastheadButton("top_scores"));
+        masthead.add(createMastheadButton("events"));
+        masthead.add(createMastheadButton("highlights"));
+
         masthead.add(new BLabel(_dfmt.format(new Date()), "news_mastlabel"));
         row.add(masthead);
         add(row, GroupLayout.FIXED);
@@ -98,6 +108,13 @@ public class PaperView extends BContainer
     public void init (SaloonObject salobj)
     {
         _salobj = salobj;
+    }
+
+    protected BButton createMastheadButton (String id)
+    {
+        BButton button = new BButton(_msgs.get("m.news_" + id), _listener, id);
+        button.setStyleClass("news_mastlabel");
+        return button;
     }
 
     protected void displayPage (int pageNo)
@@ -173,8 +190,7 @@ public class PaperView extends BContainer
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to format top scores.", e);
-            return _ctx.xlate(SaloonCodes.SALOON_MSGS,
-                              SaloonCodes.INTERNAL_ERROR);
+            return _msgs.get(SaloonCodes.INTERNAL_ERROR);
         }
     }
 
@@ -190,7 +206,7 @@ public class PaperView extends BContainer
             _ctx.getApp().postRunnable(new Runnable() {
                 public void run () {
                     if (text.startsWith("m.")) {
-                        setContents(_ctx.xlate(SaloonCodes.SALOON_MSGS, text));
+                        setContents(_msgs.xlate(text));
                     } else {
                         setContents(text);
                     }
@@ -201,15 +217,21 @@ public class PaperView extends BContainer
 
     protected ActionListener _listener = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
-            if (event.getAction().equals("forward")) {
+            String action = event.getAction();
+            if (action.equals("forward")) {
                 displayPage(_pageNo+1);
-            } else if (event.getAction().equals("back")) {
+            } else if (action.equals("back")) {
                 displayPage(_pageNo-1);
+            } else if (action.equals("news")) {
+                displayPage(0);
+            } else if (action.equals("top_scores")) {
+                displayPage(1);
             }
         }
     };
 
     protected BangContext _ctx;
+    protected MessageBundle _msgs;
     protected SaloonObject _salobj;
     protected BButton _forward, _back;
     protected HTMLView _contents;
