@@ -1,0 +1,145 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="locomotive" translation="0.129194, 41.8225, 90.0769" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="engine_wb" translation="-64.5334, 45.932, -38.3482" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wb01" translation="-64.5334, 45.9319, 22.5418" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf01" translation="-76.5413, 46.8433, 132.593" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lw1" translation="-76.5413, -46.6185, 132.593" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwf2" translation="-76.5413, -46.6185, 90.9486" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb1" translation="-64.5334, -46.2368, 22.5418" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb2" translation="-64.5334, -46.2368, -38.3483" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf" translation="-76.5413, 46.8433, 90.9486" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar" translation="-84.1377, 66.3287, -14.8476" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar02" translation="-51.9185, 66.3287, 84.7541" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarb" translation="-80.4157, -63.4634, -7.56405" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarf" translation="-48.1965, -62.3935, 88.0216" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarm" translation="-64.0138, -61.4266, 42.2039" rotation="-0.290422, 0.644713, 0.644713, 0.290422" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar01" translation="-79.5023, 66.3287, 24.4869" rotation="-0.644713, -0.290422, -0.290422, 0.644713" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="emitter_stack" translation="112.388, 2.19567, 128.722" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+  </frame>
+
+  <frame>
+    <transform name="locomotive" translation="0.129194, 41.8225, 90.0769" rotation="-0.498498, 0.501498, -0.501498, -0.498498" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="engine_wb" translation="-64.5334, 45.932, -38.3482" rotation="0.183013, 0.683013, 0.683013, -0.183013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wb01" translation="-64.5334, 45.9319, 22.5418" rotation="0.183013, 0.683013, 0.683013, -0.183013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf01" translation="-76.5413, 46.8433, 132.593" rotation="0.0, 0.707107, 0.707107, 0.0" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lw1" translation="-76.5413, -46.6185, 132.593" rotation="0.69352, -0.13795, 0.13795, 0.69352" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwf2" translation="-76.5413, -46.6185, 90.9486" rotation="0.69352, -0.13795, 0.13795, 0.69352" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb1" translation="-64.5334, -46.2368, 22.5418" rotation="0.683013, 0.183013, -0.183013, 0.683013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb2" translation="-64.5334, -46.2368, -38.3483" rotation="0.683013, 0.183013, -0.183013, 0.683013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf" translation="-76.5413, 46.8433, 90.9486" rotation="0.0, 0.707107, 0.707107, 0.0" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar" translation="-77.2049, 66.3287, -28.2251" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar02" translation="-51.9185, 66.3287, 72.1081" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarb" translation="-73.9673, -63.4634, -22.8347" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarf" translation="-48.1965, -62.3935, 78.5183" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarm" translation="-58.8571, -61.4266, 33.6508" rotation="-0.37012, 0.602504, 0.602504, 0.37012" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar01" translation="-74.0351, 66.3287, 8.37039" rotation="-0.615434, -0.348196, -0.348196, 0.615434" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="emitter_stack" translation="112.388, 2.19567, 128.722" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+  </frame>
+
+  <frame>
+    <transform name="locomotive" translation="0.129194, 41.8225, 90.0769" rotation="-0.497814, 0.502177, -0.502177, -0.497814" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="engine_wb" translation="-64.5334, 45.932, -38.3482" rotation="-0.183013, 0.683013, 0.683013, 0.183013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wb01" translation="-64.5334, 45.9319, 22.5418" rotation="-0.183013, 0.683013, 0.683013, 0.183013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf01" translation="-76.5413, 46.8433, 132.593" rotation="-0.5, 0.5, 0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lw1" translation="-76.5413, -46.6185, 132.593" rotation="0.5, -0.5, 0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwf2" translation="-76.5413, -46.6185, 90.9486" rotation="0.5, -0.5, 0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb1" translation="-64.5335, -46.2368, 22.5418" rotation="0.683013, -0.183013, 0.183013, 0.683013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb2" translation="-64.5334, -46.2368, -38.3483" rotation="0.683013, -0.183013, 0.183013, 0.683013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf" translation="-76.5413, 46.8433, 90.9486" rotation="-0.5, 0.5, 0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar" translation="-61.0632, 66.3287, -29.2169" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar02" translation="-51.9185, 66.3287, 74.9282" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarb" translation="-58.6372, -63.4634, -19.4634" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarf" translation="-48.1965, -62.3935, 78.2817" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarm" translation="-54.3884, -61.4266, 33.4949" rotation="-0.437766, 0.555303, 0.555303, 0.437766" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar01" translation="-58.0012, 66.3287, 7.36532" rotation="-0.547578, -0.44739, -0.44739, 0.547578" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="emitter_stack" translation="112.388, 2.19567, 128.722" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+  </frame>
+
+  <frame>
+    <transform name="locomotive" translation="0.129194, 41.8225, 90.0769" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="engine_wb" translation="-64.5334, 45.932, -38.3482" rotation="-0.5, 0.5, 0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wb01" translation="-64.5334, 45.9319, 22.5418" rotation="-0.5, 0.5, 0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf01" translation="-76.5413, 46.8433, 132.593" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lw1" translation="-76.5413, -46.6185, 132.593" rotation="0.13795, 0.69352, -0.69352, 0.13795" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwf2" translation="-76.5413, -46.6185, 90.9486" rotation="0.13795, 0.69352, -0.69352, 0.13795" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb1" translation="-64.5334, -46.2368, 22.5418" rotation="-0.5, 0.5, -0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb2" translation="-64.5334, -46.2368, -38.3483" rotation="-0.5, 0.5, -0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf" translation="-76.5413, 46.8433, 90.9486" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar" translation="-53.7438, 66.3287, -16.5756" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar02" translation="-51.9185, 66.3287, 89.2926" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarb" translation="-51.6637, -63.4634, -9.23766" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarf" translation="-48.1965, -62.3935, 93.527" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarm" translation="-50.6078, -61.4266, 41.736" rotation="-0.468543, 0.529592, 0.529592, 0.468543" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar01" translation="-50.8145, 66.3287, 20.0751" rotation="-0.515036, -0.484498, -0.484498, 0.515036" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="emitter_stack" translation="112.388, 2.19567, 128.722" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+  </frame>
+
+  <frame>
+    <transform name="locomotive" translation="0.129194, 41.8225, 90.0769" rotation="0.502177, -0.497814, 0.497814, 0.502177" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="engine_wb" translation="-64.5334, 45.932, -38.3482" rotation="-0.683013, 0.183013, 0.183013, 0.683013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wb01" translation="-64.5334, 45.9319, 22.5418" rotation="-0.683013, 0.183013, 0.183013, 0.683013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf01" translation="-76.5413, 46.8433, 132.593" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lw1" translation="-76.5413, -46.6185, 132.593" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwf2" translation="-76.5413, -46.6185, 90.9486" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb1" translation="-64.5334, -46.2368, 22.5418" rotation="-0.183013, 0.683013, -0.683013, -0.183013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb2" translation="-64.5334, -46.2368, -38.3483" rotation="-0.183013, 0.683013, -0.683013, -0.183013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf" translation="-76.5413, 46.8433, 90.9486" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar" translation="-59.8684, 66.3287, -3.58213" rotation="-0.5, -0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar02" translation="-51.9185, 66.3287, 96.5231" rotation="-0.5, -0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarb" translation="-57.9327, -63.4634, 5.50422" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarf" translation="-48.1965, -62.3935, 105.609" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarm" translation="-53.0844, -61.4266, 58.3742" rotation="-0.444997, 0.549525, 0.549525, 0.444997" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar01" translation="-56.3459, 66.3287, 30.8074" rotation="-0.547416, -0.447589, -0.447589, 0.547416" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="emitter_stack" translation="112.388, 2.19567, 128.722" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+  </frame>
+
+  <frame>
+    <transform name="locomotive" translation="0.129194, 41.8225, 90.0769" rotation="0.501498, -0.498498, 0.498498, 0.501498" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="engine_wb" translation="-64.5334, 45.932, -38.3482" rotation="-0.683013, -0.183013, -0.183013, 0.683013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wb01" translation="-64.5335, 45.9319, 22.5418" rotation="-0.683013, -0.183013, -0.183013, 0.683013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf01" translation="-76.5413, 46.8433, 132.593" rotation="0.0, 0.707107, 0.707107, 1.26551e-007" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lw1" translation="-76.5413, -46.6185, 132.593" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwf2" translation="-76.5413, -46.6185, 90.9486" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb1" translation="-64.5334, -46.2368, 22.5418" rotation="0.183013, 0.683013, -0.683013, 0.183013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb2" translation="-64.5334, -46.2368, -38.3483" rotation="0.183013, 0.683013, -0.683013, 0.183013" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf" translation="-76.5413, 46.8433, 90.9486" rotation="0.0, 0.707107, 0.707107, 1.26551e-007" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar" translation="-76.9776, 66.3287, -1.43788" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar02" translation="-51.9185, 66.3287, 95.9042" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarb" translation="-72.9866, -63.4634, 5.24925" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarf" translation="-48.1965, -62.3935, 95.8827" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarm" translation="-60.3309, -61.4266, 52.8924" rotation="-0.353553, 0.612372, 0.612372, 0.353554" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar01" translation="-72.4273, 66.3287, 34.4141" rotation="-0.624338, -0.331967, -0.331967, 0.624338" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="emitter_stack" translation="112.388, 2.19567, 128.722" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+  </frame>
+
+  <frame>
+    <transform name="locomotive" translation="0.129194, 41.8225, 90.0769" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="engine_wb" translation="-64.5334, 45.932, -38.3482" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wb01" translation="-64.5334, 45.9319, 22.5418" rotation="0.5, 0.5, 0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf01" translation="-76.5413, 46.8433, 132.593" rotation="-0.5, 0.5, 0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lw1" translation="-76.5413, -46.6185, 132.593" rotation="-0.5, 0.5, -0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwf2" translation="-76.5413, -46.6185, 90.9486" rotation="-0.5, 0.5, -0.5, -0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb1" translation="-64.5334, -46.2368, 22.5418" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lwb2" translation="-64.5334, -46.2368, -38.3483" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wf" translation="-76.5413, 46.8433, 90.9486" rotation="-0.5, 0.5, 0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar" translation="-84.1377, 66.3287, -14.8476" rotation="-0.5, -0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar02" translation="-51.9185, 66.3287, 84.7541" rotation="-0.5, -0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarb" translation="-80.31, -63.4634, -7.8649" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarf" translation="-48.1965, -62.3935, 88.0216" rotation="0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_Lbarm" translation="-64.0138, -61.4266, 42.2039" rotation="-0.290422, 0.644713, 0.644713, 0.290422" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_wbar01" translation="-79.5023, 66.3287, 24.4869" rotation="-0.644713, -0.290422, -0.290422, 0.644713" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="emitter_stack" translation="112.388, 2.19567, 128.722" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+  </frame>
+
+</animation>
