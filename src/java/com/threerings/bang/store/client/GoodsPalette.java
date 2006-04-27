@@ -30,6 +30,7 @@ public class GoodsPalette extends IconPalette
     {
         super(inspector, 6, 3, GoodsIcon.ICON_SIZE, 1);
         _ctx = ctx;
+        setAllowsEmptySelection(false);
     }
 
     public void init (StoreObject stobj)

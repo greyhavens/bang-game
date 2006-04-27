@@ -68,7 +68,7 @@ public class PardnerView extends IconPalette
         _psvc = (PlayerService)ctx.getClient().requireService(
             PlayerService.class);
 
-        // insert our controls between the palette and the buttons
+        // add a status view below the pardner grid
         GroupLayout layout = GroupLayout.makeVert(GroupLayout.NONE,
             GroupLayout.BOTTOM, GroupLayout.STRETCH);
         layout.setGap(0);
@@ -76,6 +76,8 @@ public class PardnerView extends IconPalette
         ccont.add(_status = new StatusLabel(_ctx));
         _status.setStyleClass("pardner_status");
         ccont.add(new Spacer(1, 2));
+
+        // then add chat and remove buttons
         BContainer bcont = new BContainer(GroupLayout.makeHoriz(
             GroupLayout.CENTER));
         bcont.add(_chat = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_chat"),
@@ -83,7 +85,9 @@ public class PardnerView extends IconPalette
         bcont.add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_remove"), this, "remove"));
         ccont.add(bcont);
-        ccont.add(new Spacer(1, 15));
+        ccont.add(new Spacer(1, 13));
+
+        // then controls for adding a new pardner
         layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
         layout.setGap(10);
         bcont = new BContainer(layout);
@@ -93,7 +97,7 @@ public class PardnerView extends IconPalette
         bcont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_submit"), this, "submit"));
         ccont.add(bcont);
-        ccont.add(new Spacer(1, 15));
+        ccont.add(new Spacer(1, 12));
         add(ccont, BorderLayout.CENTER);
 
         // disable submit until a name is entered
