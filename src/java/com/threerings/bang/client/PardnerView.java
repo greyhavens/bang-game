@@ -107,7 +107,7 @@ public class PardnerView extends IconPalette
         if (src == _chat) {
             PardnerIcon icon = (PardnerIcon)getSelectedIcon();
             _ctx.getBangClient().getPardnerChatView().display(
-                icon.entry.handle);
+                icon.entry.handle, true);
 
         } else if (src == _remove) {
             final PardnerIcon icon = (PardnerIcon)getSelectedIcon();

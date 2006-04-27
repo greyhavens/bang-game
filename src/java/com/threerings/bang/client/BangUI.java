@@ -209,7 +209,9 @@ public class BangUI
                 "sounds/feedback/" + ident.toString().toLowerCase() + ".wav");
             _sounds.put(ident, sound);
         }
-        sound.play(true);
+        if (sound != null) {
+            sound.play(true);
+        }
     }
 
     /**

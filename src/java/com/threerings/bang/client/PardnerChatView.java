@@ -121,7 +121,7 @@ public class PardnerChatView extends BDecoratedWindow
      * @return true if we managed to display the view, false if we can't
      * at the moment
      */
-    public boolean display (Name handle)
+    public boolean display (Name handle, boolean grabFocus)
     {
         if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
             return false;
@@ -130,6 +130,9 @@ public class PardnerChatView extends BDecoratedWindow
         _ctx.getBangClient().displayPopup(this, false);
         pack(-1, -1);
         center();
+        if (grabFocus) {
+            _text.requestFocus();
+        }
         return true;
     }
 
@@ -166,23 +169,32 @@ public class PardnerChatView extends BDecoratedWindow
     // documentation inherited from interface ChatDisplay
     public void displayMessage (ChatMessage msg)
     {
-        // we only display player-to-player chat
-        if (!ChatCodes.USER_CHAT_TYPE.equals(msg.localtype) ||
-            !(msg instanceof UserMessage)) {
-            return;
+        // we handle player-to-player chat
+        if (msg instanceof UserMessage &&
+            ChatCodes.USER_CHAT_TYPE.equals(msg.localtype)) {
+            UserMessage umsg = (UserMessage)msg;
+            if (!isAdded() && !display(umsg.speaker, false)) {
+                return;
+            }
+            PardnerTab tab = _pardners.get(umsg.speaker);
+            if (tab == null) {
+                tab = addPardnerTab(umsg.speaker); 
+            }
+            if (tab != _tabs.getSelectedTab()) {
+                _tabs.getTabButton(tab).setIcon(_alert);
+            }
+            tab.appendReceived(umsg);
+
+// TODO: right now this shows up in the main UI which is weird but we need to
+// differentiate between feedback as a result of our tell and general chat
+// feedback messages to do the right thing...
+//         } else if (msg instanceof SystemMessage &&
+//                    ((SystemMessage)msg).attentionLevel ==
+//                    SystemMessage.FEEDBACK) {
+//             // we also have to handle feedback messages because that's how tell
+//             // failures are reported
+//             ((PardnerTab)_tabs.getSelectedTab()).appendSystem(msg, "feedback");
         }
-        UserMessage umsg = (UserMessage)msg;
-        if (!isAdded() && !display(umsg.speaker)) {
-            return;
-        }
-        PardnerTab tab = _pardners.get(umsg.speaker);
-        if (tab == null) {
-            tab = addPardnerTab(umsg.speaker); 
-        }
-        if (tab != _tabs.getSelectedTab()) {
-            _tabs.getTabButton(tab).setIcon(_alert);
-        }
-        tab.appendReceived(umsg);
     }
     
     // documentation inherited from interface ActionListener
