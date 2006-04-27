@@ -127,10 +127,6 @@ public class BasicClient
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
 
-        // initialize our user interface bits
-        _keymgr.init(_ctx);
-        BangUI.init(_ctx);
-
         // intialize our performance monitor
         PerfMonitor.init(_ctx);
 
@@ -148,6 +144,10 @@ public class BasicClient
             }
         });
         _soundmgr = SoundManager.createSoundManager(rqueue);
+
+        // initialize our user interface bits
+        _keymgr.init(_ctx);
+        BangUI.init(_ctx);
 
         // these manage "online" state
         _locdir = new LocationDirector(_ctx);

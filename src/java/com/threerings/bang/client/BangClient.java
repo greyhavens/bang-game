@@ -357,6 +357,7 @@ public class BangClient extends BasicClient
         _popups.add(popup);
 
         if (animate) {
+            BangUI.play(BangUI.FeedbackSound.WINDOW_OPEN);
             popup.pack(twidth, -1);
             _ctx.getInterface().attachChild(
                 new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f));
@@ -400,6 +401,7 @@ public class BangClient extends BasicClient
             return;
         }
         if (animate) {
+            BangUI.play(BangUI.FeedbackSound.WINDOW_DISMISS);
             _ctx.getInterface().attachChild(
                 new WindowSlider(popup, WindowSlider.TO_RIGHT, 0.25f) {
                     protected void slideComplete () {
@@ -698,6 +700,9 @@ public class BangClient extends BasicClient
             _mstream.close();
             _mstream = null;
         }
+
+        // clean up the UI bits
+        BangUI.shutdown();
     }
 
     /** The context implementation. This provides access to all of the

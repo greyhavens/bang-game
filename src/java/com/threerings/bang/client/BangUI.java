@@ -35,6 +35,8 @@ import com.jmex.bui.text.BTextFactory;
 
 import com.threerings.openal.Clip;
 import com.threerings.openal.ClipProvider;
+import com.threerings.openal.Sound;
+import com.threerings.openal.SoundGroup;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
@@ -51,6 +53,21 @@ import static com.threerings.bang.Log.log;
  */
 public class BangUI
 {
+    /** Enumerates all possible UI feedback sounds. */
+    public static enum FeedbackSound {
+        BUTTON_PRESS,
+        CHAT_RECEIVE,
+        CHAT_SEND,
+        CLICK,
+        INVALID_ACTION,
+        ITEM_PURCHASE,
+        ITEM_SELECTED,
+        KEY_TYPED,
+        TAB_SELECTED,
+        WINDOW_DISMISS,
+        WINDOW_OPEN,
+    };
+
     /** A font used to render counters in the game. */
     public static Font COUNTER_FONT;
 
@@ -167,6 +184,32 @@ public class BangUI
                 return clip;
             }
         };
+
+        // create the sound group for our UI sounds
+        _sgroup = _ctx.getSoundManager().createGroup(
+            BangUI.clipprov, UI_SOURCE_COUNT);
+    }
+
+    /**
+     * Cleans up prior to the game exiting.
+     */
+    public static void shutdown ()
+    {
+        _sgroup.dispose();
+    }
+
+    /**
+     * Plays the specified feedback sound.
+     */
+    public static void play (FeedbackSound ident)
+    {
+        Sound sound = _sounds.get(ident);
+        if (sound == null) {
+            sound = _sgroup.getSound(
+                "sounds/feedback/" + ident.toString().toLowerCase() + ".wav");
+            _sounds.put(ident, sound);
+        }
+        sound.play(true);
     }
 
     /**
@@ -332,4 +375,11 @@ public class BangUI
     protected static BasicContext _ctx;
     protected static MessageBundle _umsgs;
     protected static HashMap<String,Font> _fonts = new HashMap<String,Font>();
+
+    protected static SoundGroup _sgroup;
+    protected static HashMap<FeedbackSound,Sound> _sounds =
+        new HashMap<FeedbackSound,Sound>();
+
+    /** The number of simultaneous UI sounds allowed. */
+    protected static final int UI_SOURCE_COUNT = 2;
 }

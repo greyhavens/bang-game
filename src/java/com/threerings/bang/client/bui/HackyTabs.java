@@ -10,6 +10,7 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -45,7 +46,15 @@ public class HackyTabs extends BComponent
 
     public void selectTab (int index)
     {
+        selectTab(index, isAdded());
+    }
+
+    public void selectTab (int index, boolean audioFeedback)
+    {
         if (_selidx != index) {
+            if (audioFeedback) {
+                BangUI.play(BangUI.FeedbackSound.TAB_SELECTED);
+            }
             tabSelected(_selidx = index);
         }
     }
@@ -61,7 +70,7 @@ public class HackyTabs extends BComponent
 
         // select the default tab if one is not alrady selected
         if (_selidx == -1) {
-            selectTab(_deftab);
+            selectTab(_deftab, false);
         }
 
         // reference our tab images

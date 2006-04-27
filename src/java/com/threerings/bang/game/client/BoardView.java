@@ -880,6 +880,12 @@ public class BoardView extends BComponent
         _snode.cleanup();
         _tnode.cleanup();
         _wnode.cleanup();
+
+        // clean up our sound handler
+        if (_sounds != null) {
+            _sounds.dispose();
+            _sounds = null;
+        }
     }
 
     /**

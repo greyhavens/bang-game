@@ -73,8 +73,8 @@ public class StatusView extends BWindow
                         status.setSelectedTab(tabidx);
                     }
                 } else {
-                    ctx.getBangClient().displayPopup(status, true);
                     status.setSelectedTab(tabidx);
+                    ctx.getBangClient().displayPopup(status, true);
                 }
             }
         };
@@ -111,7 +111,7 @@ public class StatusView extends BWindow
         btn.setEnabled(false); // TODO
         add(btn, new Point(40, 147));
 
-        add(new PickLookView(ctx), new Point(10, 231));
+        add(new PickLookView(ctx, false), new Point(10, 231));
         add(new WalletLabel(ctx, true), new Rectangle(77, 63, 150, 40));
         add(_tabinfo = new BLabel("", "status_tabinfo"),
             new Rectangle(290, 55, 453, 40));
