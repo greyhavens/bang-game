@@ -16,6 +16,7 @@ import com.jmex.bui.util.Rectangle;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
@@ -114,6 +115,7 @@ public class BarberView extends ShopView
                 add(_active = _wearclothes, CONTENT_RECT);
                 _status.setText(_msgs.get("m.change_tip"));
             }
+            BangUI.play(BangUI.FeedbackSound.TAB_SELECTED);
         }
     };
 

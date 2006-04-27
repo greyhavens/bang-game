@@ -23,6 +23,7 @@ import com.jmex.bui.util.Rectangle;
 import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -151,6 +152,7 @@ public class GoodsInspector extends BContainer
             public void requestProcessed () {
                 _descrip.setText(_ctx.xlate("store", "m.purchased"));
                 _parent.goodPurchased();
+                BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
             }
             public void requestFailed (String cause) {
                 _descrip.setText(_ctx.xlate("store", cause));

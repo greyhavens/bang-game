@@ -223,6 +223,7 @@ public class NewLookView extends BContainer
                 _status.setText(_msgs.get("m.look_bought"));
                 _name.setText("");
                 _buy.setEnabled(true);
+                BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
             }
             public void requestFailed (String reason) {
                 _status.setText(_msgs.xlate(reason));

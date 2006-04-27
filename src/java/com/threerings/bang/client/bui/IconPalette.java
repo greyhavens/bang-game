@@ -20,6 +20,8 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.bang.client.BangUI;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -331,12 +333,17 @@ public class IconPalette extends BContainer
         if (_selections.size() == 0) {
             displayPage(0, false);
             _icons.get(0).setSelected(true);
+
+        } else {
+            int selidx = _icons.indexOf(_selections.get(0));
+            selidx = (selidx + delta + _icons.size()) % _icons.size();
+            displayPage(selidx / (_rows*_cols), false);
+            _icons.get(selidx).setSelected(true);
         }
 
-        int selidx = _icons.indexOf(_selections.get(0));
-        selidx = (selidx + delta + _icons.size()) % _icons.size();
-        displayPage(selidx / (_rows*_cols), false);
-        _icons.get(selidx).setSelected(true);
+        // play a sound as this caused an icon to become selected as a result
+        // of user input
+        BangUI.play(BangUI.FeedbackSound.ITEM_SELECTED);
     }
 
     protected void displayPage (int page, boolean force)
