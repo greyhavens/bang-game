@@ -37,7 +37,7 @@ public class WearClothingView extends BContainer
         super(new AbsoluteLayout());
 
         add(_pick = new PickLookView(ctx, true), new Point(707, 135));
-        add(_articles = new ArticlePalette(ctx, this),
+        add(_articles = new ArticlePalette(ctx, this, _pick),
             new Rectangle(139, 5, ItemIcon.ICON_SIZE.width*4,
                           ItemIcon.ICON_SIZE.height*3+27));
 

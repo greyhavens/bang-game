@@ -20,10 +20,12 @@ import com.threerings.bang.avatar.util.AvatarLogic;
  */
 public class ArticlePalette extends IconPalette
 {
-    public ArticlePalette (BangContext ctx, Inspector inspector)
+    public ArticlePalette (BangContext ctx, Inspector inspector,
+                           PickLookView view)
     {
         super(inspector, 4, 3, ItemIcon.ICON_SIZE, 1);
         _ctx = ctx;
+        _view = view;
     }
 
     /**
@@ -39,11 +41,11 @@ public class ArticlePalette extends IconPalette
         int slidx = AvatarLogic.getSlotIndex(slot);
         setAllowsEmptySelection(AvatarLogic.SLOTS[slidx].optional);
 
-        // look up the active look and find out what the player is wearing in
+        // look up the selected look and find out what the player is wearing in
         // this slot
         PlayerObject player = _ctx.getUserObject();
         int articleId = -1;
-        Look look = player.getLook(Look.Pose.DEFAULT);
+        Look look = _view.getSelection();
         if (look != null) {
             articleId = look.articles[slidx];
         }
@@ -69,4 +71,5 @@ public class ArticlePalette extends IconPalette
     }
 
     protected BangContext _ctx;
+    protected PickLookView _view;
 }
