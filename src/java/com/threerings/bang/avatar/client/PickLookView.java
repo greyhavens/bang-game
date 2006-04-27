@@ -31,7 +31,7 @@ import com.threerings.bang.avatar.data.Look;
 public class PickLookView extends BContainer
     implements ActionListener
 {
-    public PickLookView (BangContext ctx)
+    public PickLookView (BangContext ctx, boolean barberMode)
     {
         super(new AbsoluteLayout());
 
@@ -39,6 +39,31 @@ public class PickLookView extends BContainer
         add(_avatar = new AvatarView(ctx), new Point(0, 36));
         _looks = new BComboBox();
         _looks.addListener(this);
+
+        // we'll need this later
+        _deflook = _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.default_look");
+
+        // rebuild our available looks
+        PlayerObject user = _ctx.getUserObject();
+        String[] looks = new String[user.looks.size()];
+        int idx = 0;
+        for (Iterator iter = user.looks.iterator(); iter.hasNext(); ) {
+            Look look = (Look)iter.next();
+            looks[idx++] = getName(look);
+        }
+        _looks.setItems(looks);
+
+        // if we have more than one look or are being used in the barber, add
+        // the looks combo, otherwise add a blurb for the barber
+        if (looks.length > 1 || barberMode) {
+            BImage icon = _ctx.loadImage("ui/barber/caption_look.png");
+            add(new BLabel(new ImageIcon(icon)), new Point(20, 0));
+            add(_looks, new Rectangle(79, 0, 164, 29));
+        } else {
+            String msg =
+                _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.get_looks_at_barber");
+            add(new BLabel(msg, "look_upsell"), new Rectangle(0, 0, 258, 29));
+        }
     }
 
     /**
@@ -75,40 +100,11 @@ public class PickLookView extends BContainer
     {
         super.wasAdded();
 
-        // remove either the looks combo or the blurb
-        if (getComponentCount() > 1) {
-            remove(getComponent(1));
-        }
-
-        // we'll need this later
-        _deflook = _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.default_look");
-
-        // rebuild our available looks
-        PlayerObject user = _ctx.getUserObject();
-        String[] looks = new String[user.looks.size()];
-        int idx = 0;
-        for (Iterator iter = user.looks.iterator(); iter.hasNext(); ) {
-            Look look = (Look)iter.next();
-            looks[idx++] = getName(look);
-        }
-        _looks.setItems(looks);
-
         // select their current look (which will update the display)
+        PlayerObject user = _ctx.getUserObject();
         Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null) {
             _looks.selectItem(getName(current));
-        }
-
-        // if we have more than one look, add the looks combo, otherwise add a
-        // blurb for the barber
-        if (looks.length > 1 || _barbobj != null) {
-            BImage icon = _ctx.loadImage("ui/barber/caption_look.png");
-            add(new BLabel(new ImageIcon(icon)), new Point(20, 0));
-            add(_looks, new Rectangle(79, 0, 164, 29));
-        } else {
-            String msg =
-                _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.get_looks_at_barber");
-            add(new BLabel(msg, "look_upsell"), new Rectangle(0, 0, 258, 29));
         }
     }
 
