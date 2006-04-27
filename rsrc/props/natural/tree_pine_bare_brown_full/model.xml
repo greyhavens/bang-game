@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="branch_91" translation="-18.769, -9.4732, 189.383" rotation="-0.0670756, -0.0407025, 0.852277, 0.517174" scale="0.563264, 0.563264, 1.26499" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_91" translation="-27.2868, -13.6241, 294.526" rotation="-0.0652452, -0.0395917, 0.852419, 0.51726" scale="0.820112, 0.821442, 1.97895" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -29,7 +29,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_92" translation="29.1211, 5.62689, 148.103" rotation="0.0, 0.0, -0.619094, 0.785317" scale="0.855998, 0.855998, 1.65964" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_92" translation="42.4412, 8.3616, 229.843" rotation="0.0, 0.0, -0.619094, 0.785317" scale="1.24633, 1.24633, 2.60055" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -56,7 +56,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_93" translation="15.2535, -8.66846, 189.415" rotation="0.0, 0.0, -0.806444, 0.59131" scale="0.5416, 0.5416, 1.21634" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_93" translation="22.2499, -12.4524, 294.576" rotation="0.0, 0.0, -0.806444, 0.59131" scale="0.788569, 0.788569, 1.90592" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -83,7 +83,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_94" translation="-6.83521, -36.8832, 95.0798" rotation="0.0, 0.0, 0.999914, 0.0130894" scale="1.02377, 1.02377, 1.94524" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_94" translation="-9.91119, -53.5331, 146.759" rotation="0.0, 0.0, 0.999914, 0.0130894" scale="1.49061, 1.49061, 3.04805" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -110,7 +110,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_96" translation="-22.1756, 37.2497, 100.277" rotation="0.0, 0.0, 0.207912, 0.978148" scale="1.02377, 1.02377, 1.94524" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_96" translation="-32.2468, 54.4044, 154.902" rotation="0.0, 0.0, 0.207912, 0.978148" scale="1.49061, 1.49061, 3.04805" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -137,7 +137,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_97" translation="-34.3071, 16.1796, 47.8298" rotation="-0.0407025, -0.0670756, 0.517174, 0.852276" scale="0.947939, 0.947939, 1.80114" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_97" translation="-49.9103, 23.7264, 72.7213" rotation="-0.0398021, -0.0655918, 0.517244, 0.852392" scale="1.3802, 1.3824, 2.81778" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -164,7 +164,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_98" translation="32.9041, -28.7404, 44.4071" rotation="0.0, 0.0, 0.896873, -0.442289" scale="1.14663, 1.14663, 2.26641" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_98" translation="47.9492, -41.6772, 67.3581" rotation="0.0, 0.0, 0.896873, -0.442289" scale="1.66949, 1.66949, 3.55131" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -191,7 +191,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_99" translation="28.7121, -11.1072, 100.277" rotation="0.0, 0.0, -0.785317, 0.619094" scale="1.02377, 1.02377, 1.94523" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_99" translation="41.8456, -16.0032, 154.902" rotation="0.0, 0.0, -0.785317, 0.619094" scale="1.49061, 1.49061, 3.04805" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -218,7 +218,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_100" translation="-40.368, -32.6311, 38.352" rotation="0.0, 0.0, 0.92388, 0.382683" scale="1.14663, 1.14663, 2.26641" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_100" translation="-58.7349, -47.342, 57.8702" rotation="0.0, 0.0, 0.92388, 0.382683" scale="1.66949, 1.66949, 3.55131" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -245,7 +245,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_102" translation="-2.70631, 32.4785, 150.544" rotation="0.0, 0.0, -0.0305385, 0.999534" scale="0.855998, 0.855998, 1.65964" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_102" translation="-3.89951, 47.4576, 233.668" rotation="0.0, 0.0, -0.0305385, 0.999534" scale="1.24633, 1.24633, 2.60055" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -272,7 +272,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_104" translation="-33.8688, -17.5555, 148.103" rotation="0.0, 0.0, 0.870356, 0.492424" scale="0.855998, 0.855998, 1.65964" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_104" translation="-49.2721, -25.392, 229.843" rotation="0.0, 0.0, 0.870356, 0.492424" scale="1.24633, 1.24633, 2.60055" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -299,7 +299,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_105" translation="13.357, -28.5949, 140.508" rotation="0.0, 0.0, 0.95882, -0.284016" scale="0.855998, 0.855998, 1.65964" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_105" translation="19.4887, -41.4653, 217.941" rotation="0.0, 0.0, 0.95882, -0.284015" scale="1.24633, 1.24633, 2.60055" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -326,7 +326,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_106" translation="9.10732, 15.5917, 195.885" rotation="0.0, 0.0, -0.317305, 0.948324" scale="0.563264, 0.563264, 1.26499" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_106" translation="13.3011, 22.8702, 304.714" rotation="0.0, 0.0, -0.317305, 0.948324" scale="0.820112, 0.820112, 1.98216" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -353,7 +353,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_108" translation="-3.32209, 47.6104, 43.8932" rotation="0.0, 0.0, 0.0, 1.0" scale="1.15809, 1.15809, 2.28907" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_108" translation="-4.79609, 69.4896, 66.5529" rotation="0.0, 0.0, 0.0, 1.0" scale="1.68618, 1.68618, 3.58683" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
@@ -380,7 +380,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="trunk_5" translation="-4.3506, -0.820148, -0.434938" rotation="0.0, 0.0, 0.908501, -0.417884" scale="1.46, 1.46, 1.46" solid="false" texture="C:\projects\bang objects\leafy tree\scratched_bark.png" transparent="false">
+  <triMesh name="trunk_5" translation="-6.2936, -1.02532, -2.90632" rotation="0.0, 0.0, 0.908501, -0.417884" scale="2.12576, 2.12576, 2.28772" solid="false" texture="C:\projects\bang objects\leafy tree\scratched_bark.png" transparent="false">
     <vertex location="7.49757, 0.0, 0.0" normal="0.981488, 0.188887, 0.0316802" tcoords="0.75, 0.00199807"/>
     <vertex location="2.21559, 3.83752, 95.0" normal="0.59561, 0.802337, 0.0387915" tcoords="0.906416, 2.0"/>
     <vertex location="4.43119, 0.0, 95.0" normal="0.992649, -0.114645, 0.0387915" tcoords="0.75, 2.0"/>
@@ -437,7 +437,7 @@
     <vertex location="2.38419e-007, 0.0, 184.908" normal="6.98865e-007, -5.82388e-007, 1.0" tcoords="0.75, 3.998"/>
   </triMesh>
 
-  <triMesh name="branch_109" translation="41.6455, 15.2776, 34.0344" rotation="0.0, 0.0, -0.577145, 0.816642" scale="1.14663, 1.14663, 2.26641" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
+  <triMesh name="branch_109" translation="60.6768, 22.4132, 51.1049" rotation="0.0, 0.0, -0.577145, 0.816642" scale="1.66949, 1.66949, 3.55131" solid="false" texture="C:\projects\bang objects\leafy tree\branch_bare.png" transparent="true">
     <vertex location="-23.6, -9.72095, -1.77602" normal="-0.476001, 0.101022, 0.873623" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -40.0, 9.06595" normal="-0.456419, 0.299948, 0.837683" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="0.00421584, 0.172202, 0.985053" tcoords="0.5, 0.37861"/>

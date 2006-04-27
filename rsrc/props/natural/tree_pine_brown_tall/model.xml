@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="branch_125" translation="20.9619, -13.6075, 262.102" rotation="0.107884, -0.200782, 0.857703, -0.460861" scale="1.43205, 1.33481, 2.78603" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_125" translation="36.8207, -27.5725, 490.753" rotation="0.107884, -0.200782, 0.857703, -0.460861" scale="2.47464, 2.30661, 4.81439" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -29,64 +29,64 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="trunk_8" translation="0.0382636, 0.0444336, 33.3672" rotation="0.0, 0.0, 0.908501, -0.417884" scale="2.17175, 2.17175, 2.17175" solid="false" texture="C:\projects\bang objects\pine tree\pine_bark_brown.png" transparent="false">
-    <vertex location="9.82032, -1.60447e-006, -16.3088" normal="0.980873, 0.188769, 0.0474899" tcoords="1.32055, -0.986387"/>
-    <vertex location="2.21559, 3.83752, 95.0" normal="0.595343, 0.802014, 0.0483853" tcoords="1.59267, 1.81681"/>
-    <vertex location="4.43119, 0.0, 95.0" normal="0.992236, -0.114575, 0.0483853" tcoords="1.32055, 1.81681"/>
-    <vertex location="9.82032, -1.60447e-006, -16.3088" normal="0.980873, 0.188769, 0.0474899" tcoords="1.32055, -0.986387"/>
-    <vertex location="4.91016, 8.50464, -16.3088" normal="0.326958, 0.943845, 0.0474899" tcoords="1.59267, -0.986387"/>
-    <vertex location="2.21559, 3.83752, 95.0" normal="0.595343, 0.802014, 0.0483853" tcoords="1.59267, 1.81681"/>
-    <vertex location="4.91016, 8.50464, -16.3088" normal="0.326958, 0.943845, 0.0474899" tcoords="-0.147047, -0.986387"/>
-    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.396893, 0.916589, 0.0483853" tcoords="0.178571, 1.81681"/>
-    <vertex location="2.21559, 3.83752, 95.0" normal="0.595343, 0.802014, 0.0483853" tcoords="-0.147047, 1.81681"/>
-    <vertex location="4.91016, 8.50464, -16.3088" normal="0.326958, 0.943845, 0.0474899" tcoords="-0.147047, -0.986387"/>
-    <vertex location="-4.91016, 8.50464, -16.3088" normal="-0.653915, 0.755076, 0.0474899" tcoords="0.178571, -0.986387"/>
-    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.396893, 0.916589, 0.0483853" tcoords="0.178571, 1.81681"/>
-    <vertex location="-4.91016, 8.50464, -16.3088" normal="-0.653915, 0.755076, 0.0474899" tcoords="0.178571, -0.986387"/>
-    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992236, 0.114575, 0.0483853" tcoords="0.450692, 1.81681"/>
-    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.396893, 0.916589, 0.0483853" tcoords="0.178571, 1.81681"/>
-    <vertex location="-4.91016, 8.50464, -16.3088" normal="-0.653915, 0.755076, 0.0474899" tcoords="0.178571, -0.986387"/>
-    <vertex location="-9.82032, 6.56851e-007, -16.3088" normal="-0.980873, -0.188769, 0.0474899" tcoords="0.450692, -0.986387"/>
-    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992236, 0.114575, 0.0483853" tcoords="0.450692, 1.81681"/>
-    <vertex location="-9.82032, 6.56851e-007, -16.3088" normal="-0.980873, -0.188769, 0.0474899" tcoords="0.450692, -0.986387"/>
-    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595342, -0.802014, 0.0483853" tcoords="0.722813, 1.81681"/>
-    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992236, 0.114575, 0.0483853" tcoords="0.450692, 1.81681"/>
-    <vertex location="-9.82032, 6.56851e-007, -16.3088" normal="-0.980873, -0.188769, 0.0474899" tcoords="0.450692, -0.986387"/>
-    <vertex location="-4.91016, -8.50464, -16.3088" normal="-0.326957, -0.943845, 0.0474899" tcoords="0.722813, -0.986387"/>
-    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595342, -0.802014, 0.0483853" tcoords="0.722813, 1.81681"/>
-    <vertex location="-4.91016, -8.50464, -16.3088" normal="-0.326957, -0.943845, 0.0474899" tcoords="0.722813, -0.986387"/>
-    <vertex location="2.21559, -3.83752, 95.0" normal="0.396893, -0.916589, 0.0483853" tcoords="1.04843, 1.81681"/>
-    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595342, -0.802014, 0.0483853" tcoords="0.722813, 1.81681"/>
-    <vertex location="-4.91016, -8.50464, -16.3088" normal="-0.326957, -0.943845, 0.0474899" tcoords="0.722813, -0.986387"/>
-    <vertex location="4.91016, -8.50464, -16.3088" normal="0.653915, -0.755076, 0.0474899" tcoords="1.04843, -0.986387"/>
-    <vertex location="2.21559, -3.83752, 95.0" normal="0.396893, -0.916589, 0.0483853" tcoords="1.04843, 1.81681"/>
-    <vertex location="4.91016, -8.50464, -16.3088" normal="0.653915, -0.755076, 0.0474899" tcoords="1.04843, -0.986387"/>
-    <vertex location="4.43119, 0.0, 95.0" normal="0.992236, -0.114575, 0.0483853" tcoords="1.32055, 1.81681"/>
-    <vertex location="2.21559, -3.83752, 95.0" normal="0.396893, -0.916589, 0.0483853" tcoords="1.04843, 1.81681"/>
-    <vertex location="4.91016, -8.50464, -16.3088" normal="0.653915, -0.755076, 0.0474899" tcoords="1.04843, -0.986387"/>
-    <vertex location="9.82032, -1.60447e-006, -16.3088" normal="0.980873, 0.188769, 0.0474899" tcoords="1.32055, -0.986387"/>
-    <vertex location="4.43119, 0.0, 95.0" normal="0.992236, -0.114575, 0.0483853" tcoords="1.32055, 1.81681"/>
-    <vertex location="4.43119, 0.0, 95.0" normal="0.992236, -0.114575, 0.0483853" tcoords="1.32055, 1.81681"/>
-    <vertex location="2.21559, 3.83752, 95.0" normal="0.595343, 0.802014, 0.0483853" tcoords="1.59267, 1.81681"/>
+  <triMesh name="trunk_8" translation="0.663711, -3.98122, 95.489" rotation="0.0, 0.0, 0.908501, -0.417884" scale="3.75289, 3.75289, 3.75289" solid="false" texture="C:\projects\bang objects\pine tree\pine_bark_brown.png" transparent="false">
+    <vertex location="9.82032, 0.0, -25.9427" normal="0.981042, 0.188802, 0.0437146" tcoords="1.32055, -0.986387"/>
+    <vertex location="2.21559, 3.83752, 95.0" normal="0.595412, 0.802097, 0.046094" tcoords="1.59267, 1.81681"/>
+    <vertex location="4.43119, 0.0, 95.0" normal="0.992343, -0.114593, 0.046094" tcoords="1.32055, 1.81681"/>
+    <vertex location="9.82032, 0.0, -25.9427" normal="0.981042, 0.188802, 0.0437146" tcoords="1.32055, -0.986387"/>
+    <vertex location="4.91016, 8.50464, -25.9427" normal="0.327014, 0.944008, 0.0437146" tcoords="1.59267, -0.986387"/>
+    <vertex location="2.21559, 3.83752, 95.0" normal="0.595412, 0.802097, 0.046094" tcoords="1.59267, 1.81681"/>
+    <vertex location="4.91016, 8.50464, -25.9427" normal="0.327014, 0.944008, 0.0437146" tcoords="-0.147047, -0.986387"/>
+    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.39693, 0.916691, 0.046094" tcoords="0.178571, 1.81681"/>
+    <vertex location="2.21559, 3.83752, 95.0" normal="0.595412, 0.802097, 0.046094" tcoords="-0.147047, 1.81681"/>
+    <vertex location="4.91016, 8.50464, -25.9427" normal="0.327014, 0.944008, 0.0437146" tcoords="-0.147047, -0.986387"/>
+    <vertex location="-4.91016, 8.50464, -25.9427" normal="-0.654028, 0.755206, 0.0437146" tcoords="0.178571, -0.986387"/>
+    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.39693, 0.916691, 0.046094" tcoords="0.178571, 1.81681"/>
+    <vertex location="-4.91016, 8.50464, -25.9427" normal="-0.654028, 0.755206, 0.0437146" tcoords="0.178571, -0.986387"/>
+    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992343, 0.114593, 0.046094" tcoords="0.450692, 1.81681"/>
+    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.39693, 0.916691, 0.046094" tcoords="0.178571, 1.81681"/>
+    <vertex location="-4.91016, 8.50464, -25.9427" normal="-0.654028, 0.755206, 0.0437146" tcoords="0.178571, -0.986387"/>
+    <vertex location="-9.82031, -1.07796e-006, -25.9427" normal="-0.981042, -0.188802, 0.0437146" tcoords="0.450692, -0.986387"/>
+    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992343, 0.114593, 0.046094" tcoords="0.450692, 1.81681"/>
+    <vertex location="-9.82031, -1.07796e-006, -25.9427" normal="-0.981042, -0.188802, 0.0437146" tcoords="0.450692, -0.986387"/>
+    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595412, -0.802097, 0.046094" tcoords="0.722813, 1.81681"/>
+    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992343, 0.114593, 0.046094" tcoords="0.450692, 1.81681"/>
+    <vertex location="-9.82031, -1.07796e-006, -25.9427" normal="-0.981042, -0.188802, 0.0437146" tcoords="0.450692, -0.986387"/>
+    <vertex location="-4.91016, -8.50464, -25.9427" normal="-0.327014, -0.944008, 0.0437146" tcoords="0.722813, -0.986387"/>
+    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595412, -0.802097, 0.046094" tcoords="0.722813, 1.81681"/>
+    <vertex location="-4.91016, -8.50464, -25.9427" normal="-0.327014, -0.944008, 0.0437146" tcoords="0.722813, -0.986387"/>
+    <vertex location="2.21559, -3.83752, 95.0" normal="0.396931, -0.916691, 0.046094" tcoords="1.04843, 1.81681"/>
+    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595412, -0.802097, 0.046094" tcoords="0.722813, 1.81681"/>
+    <vertex location="-4.91016, -8.50464, -25.9427" normal="-0.327014, -0.944008, 0.0437146" tcoords="0.722813, -0.986387"/>
+    <vertex location="4.91016, -8.50464, -25.9427" normal="0.654028, -0.755206, 0.0437146" tcoords="1.04843, -0.986387"/>
+    <vertex location="2.21559, -3.83752, 95.0" normal="0.396931, -0.916691, 0.046094" tcoords="1.04843, 1.81681"/>
+    <vertex location="4.91016, -8.50464, -25.9427" normal="0.654028, -0.755206, 0.0437146" tcoords="1.04843, -0.986387"/>
+    <vertex location="4.43119, 0.0, 95.0" normal="0.992343, -0.114593, 0.046094" tcoords="1.32055, 1.81681"/>
+    <vertex location="2.21559, -3.83752, 95.0" normal="0.396931, -0.916691, 0.046094" tcoords="1.04843, 1.81681"/>
+    <vertex location="4.91016, -8.50464, -25.9427" normal="0.654028, -0.755206, 0.0437146" tcoords="1.04843, -0.986387"/>
+    <vertex location="9.82032, 0.0, -25.9427" normal="0.981042, 0.188802, 0.0437146" tcoords="1.32055, -0.986387"/>
+    <vertex location="4.43119, 0.0, 95.0" normal="0.992343, -0.114593, 0.046094" tcoords="1.32055, 1.81681"/>
+    <vertex location="4.43119, 0.0, 95.0" normal="0.992343, -0.114593, 0.046094" tcoords="1.32055, 1.81681"/>
+    <vertex location="2.21559, 3.83752, 95.0" normal="0.595412, 0.802097, 0.046094" tcoords="1.59267, 1.81681"/>
     <vertex location="2.38419e-007, 0.0, 184.908" normal="6.98865e-007, -5.82388e-007, 1.0" tcoords="1.59267, 4.62001"/>
-    <vertex location="2.21559, 3.83752, 95.0" normal="0.595343, 0.802014, 0.0483853" tcoords="-0.147047, 1.81681"/>
-    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.396893, 0.916589, 0.0483853" tcoords="0.178571, 1.81681"/>
+    <vertex location="2.21559, 3.83752, 95.0" normal="0.595412, 0.802097, 0.046094" tcoords="-0.147047, 1.81681"/>
+    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.39693, 0.916691, 0.046094" tcoords="0.178571, 1.81681"/>
     <vertex location="2.38419e-007, 0.0, 184.908" normal="6.98865e-007, -5.82388e-007, 1.0" tcoords="0.178571, 4.62001"/>
-    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.396893, 0.916589, 0.0483853" tcoords="0.178571, 1.81681"/>
-    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992236, 0.114575, 0.0483853" tcoords="0.450692, 1.81681"/>
+    <vertex location="-2.21559, 3.83752, 95.0" normal="-0.39693, 0.916691, 0.046094" tcoords="0.178571, 1.81681"/>
+    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992343, 0.114593, 0.046094" tcoords="0.450692, 1.81681"/>
     <vertex location="2.38419e-007, 0.0, 184.908" normal="6.98865e-007, -5.82388e-007, 1.0" tcoords="0.450692, 4.62001"/>
-    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992236, 0.114575, 0.0483853" tcoords="0.450692, 1.81681"/>
-    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595342, -0.802014, 0.0483853" tcoords="0.722813, 1.81681"/>
+    <vertex location="-4.43119, -6.36361e-007, 95.0" normal="-0.992343, 0.114593, 0.046094" tcoords="0.450692, 1.81681"/>
+    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595412, -0.802097, 0.046094" tcoords="0.722813, 1.81681"/>
     <vertex location="2.38419e-007, 0.0, 184.908" normal="6.98865e-007, -5.82388e-007, 1.0" tcoords="0.722813, 4.62001"/>
-    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595342, -0.802014, 0.0483853" tcoords="0.722813, 1.81681"/>
-    <vertex location="2.21559, -3.83752, 95.0" normal="0.396893, -0.916589, 0.0483853" tcoords="1.04843, 1.81681"/>
+    <vertex location="-2.21559, -3.83752, 95.0" normal="-0.595412, -0.802097, 0.046094" tcoords="0.722813, 1.81681"/>
+    <vertex location="2.21559, -3.83752, 95.0" normal="0.396931, -0.916691, 0.046094" tcoords="1.04843, 1.81681"/>
     <vertex location="2.38419e-007, 0.0, 184.908" normal="6.98865e-007, -5.82388e-007, 1.0" tcoords="1.04843, 4.62001"/>
-    <vertex location="2.21559, -3.83752, 95.0" normal="0.396893, -0.916589, 0.0483853" tcoords="1.04843, 1.81681"/>
-    <vertex location="4.43119, 0.0, 95.0" normal="0.992236, -0.114575, 0.0483853" tcoords="1.32055, 1.81681"/>
+    <vertex location="2.21559, -3.83752, 95.0" normal="0.396931, -0.916691, 0.046094" tcoords="1.04843, 1.81681"/>
+    <vertex location="4.43119, 0.0, 95.0" normal="0.992343, -0.114593, 0.046094" tcoords="1.32055, 1.81681"/>
     <vertex location="2.38419e-007, 0.0, 184.908" normal="6.98865e-007, -5.82388e-007, 1.0" tcoords="1.32055, 4.62001"/>
   </triMesh>
 
-  <triMesh name="branch_126" translation="-34.2928, -16.4373, 106.866" rotation="-0.116539, -0.195885, 0.836785, 0.497835" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_126" translation="-58.662, -32.4626, 222.498" rotation="-0.116539, -0.195885, 0.836785, 0.497835" scale="3.15369, 2.93954, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -113,7 +113,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_127" translation="9.59927, -6.4981, 344.483" rotation="0.107884, -0.200782, 0.857703, -0.460861" scale="0.675602, 0.629727, 1.31438" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_127" translation="17.1856, -15.2871, 633.111" rotation="0.107884, -0.200782, 0.857703, -0.460861" scale="1.16747, 1.0882, 2.27131" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -140,7 +140,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_128" translation="-10.6344, -4.98775, 347.451" rotation="-0.108759, -0.200309, 0.855684, 0.464599" scale="0.675602, 0.629727, 1.31438" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_128" translation="-17.7791, -12.6771, 638.241" rotation="-0.108759, -0.200309, 0.855684, 0.464599" scale="1.16747, 1.0882, 2.27131" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -167,7 +167,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_129" translation="-21.9265, -10.406, 262.102" rotation="-0.108759, -0.200309, 0.855684, 0.464599" scale="1.43205, 1.33481, 2.78603" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_129" translation="-37.2925, -22.0402, 490.753" rotation="-0.108759, -0.200309, 0.855684, 0.464599" scale="2.47464, 2.30661, 4.81439" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -194,7 +194,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_130" translation="-0.999905, 11.1299, 336.936" rotation="-0.227755, -0.0089485, 0.0382264, 0.972927" scale="0.675602, 0.629727, 1.31438" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_130" translation="-1.13029, 15.1749, 620.071" rotation="-0.227755, -0.00894851, 0.0382264, 0.972927" scale="1.16747, 1.0882, 2.27131" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -221,7 +221,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_131" translation="1.2785, 35.1076, 108.037" rotation="-0.227931, 0.0, 0.0, 0.973677" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_131" translation="2.8069, 56.6096, 224.522" rotation="-0.227931, 0.0, 0.0, 0.973677" scale="3.15369, 2.93954, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -248,7 +248,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_132" translation="-1.50478, 23.7579, 263.021" rotation="-0.227755, -0.0089485, 0.0382264, 0.972927" scale="1.43205, 1.33481, 2.78603" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_132" translation="-2.00275, 36.9967, 492.342" rotation="-0.227755, -0.0089485, 0.0382264, 0.972927" scale="2.47464, 2.30661, 4.81439" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -275,7 +275,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_133" translation="-24.1881, 25.4693, 178.882" rotation="-0.210198, -0.0881432, 0.376532, 0.897926" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_133" translation="-41.2005, 39.9544, 346.945" rotation="-0.210198, -0.0881432, 0.376532, 0.897926" scale="3.15369, 2.93954, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -302,7 +302,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_134" translation="30.464, -25.3804, 106.866" rotation="0.0999182, -0.204863, 0.875135, -0.426832" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_134" translation="53.2409, -47.9165, 222.498" rotation="0.0999182, -0.204863, 0.875135, -0.426832" scale="3.15369, 2.93955, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -329,7 +329,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_135" translation="35.5046, 6.52259, 180.053" rotation="-0.183224, 0.135578, -0.579166, 0.782697" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_135" translation="61.9512, 7.21336, 348.969" rotation="-0.183224, 0.135578, -0.579166, 0.782697" scale="3.15369, 2.93954, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -356,7 +356,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_136" translation="-13.8073, -39.0727, 178.882" rotation="-0.0415371, -0.224114, 0.957373, 0.177439" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_136" translation="-23.262, -71.5776, 346.945" rotation="-0.0415371, -0.224114, 0.957373, 0.177439" scale="3.15369, 2.93954, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -383,7 +383,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_137" translation="-32.4439, 15.5627, 81.1139" rotation="-0.191159, -0.12414, 0.530303, 0.816595" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_137" translation="-55.4671, 22.8349, 177.998" rotation="-0.191159, -0.12414, 0.530303, 0.816595" scale="3.15369, 2.93954, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -410,7 +410,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_138" translation="-0.117474, -41.2565, 81.1139" rotation="-0.000994543, -0.227928, 0.973668, 0.00424847" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_138" translation="0.39459, -75.3513, 177.998" rotation="-0.000994544, -0.227928, 0.973668, 0.00424847" scale="3.15369, 2.93954, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
@@ -437,7 +437,7 @@
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
   </triMesh>
 
-  <triMesh name="branch_139" translation="30.1038, 18.7205, 82.2855" rotation="-0.204425, 0.100811, -0.430646, 0.873265" scale="1.825, 1.70108, 3.55052" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
+  <triMesh name="branch_139" translation="52.6183, 28.2918, 180.022" rotation="-0.204425, 0.100811, -0.430646, 0.873265" scale="3.15369, 2.93954, 6.13546" solid="false" texture="C:\projects\bang objects\pine tree\pine_branch_brown.png" transparent="true">
     <vertex location="-23.6, -13.9557, 3.06782" normal="-0.351459, 0.252344, 0.901554" tcoords="0.000499696, 0.37861"/>
     <vertex location="-23.6, -44.2348, 13.9098" normal="-0.3554, 0.3151, 0.880001" tcoords="0.000499517, 0.000499606"/>
     <vertex location="0.0, -9.72095, 11.0827" normal="-0.00115816, 0.286561, 0.958061" tcoords="0.5, 0.37861"/>
