@@ -17,6 +17,14 @@ import com.jme.system.DisplaySystem;
 import com.jme.system.PropertiesIO;
 import com.jme.util.LoggingSystem;
 
+import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
+import com.jmex.bui.BRootNode;
+import com.jmex.bui.PolledRootNode;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.BEvent;
+import com.jmex.bui.event.TextEvent;
+
 import com.samskivert.servlet.user.Password;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
@@ -31,6 +39,7 @@ import com.threerings.jme.camera.CameraHandler;
 
 import com.threerings.util.Name;
 
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.game.client.GameCameraHandler;
 import com.threerings.bang.game.client.GameInputHandler;
 import com.threerings.bang.util.DeploymentConfig;
@@ -183,6 +192,22 @@ public class BangApp extends JmeApp
     protected InputHandler createInputHandler (CameraHandler camhand)
     {
         return new GameInputHandler(camhand);
+    }
+
+    @Override // documentation inherited
+    protected BRootNode createRootNode ()
+    {
+        return new PolledRootNode(_timer, _input) {
+            protected void dispatchEvent (BComponent target, BEvent event) {
+                super.dispatchEvent(target, event);
+                if (event instanceof ActionEvent && target instanceof BButton &&
+                    !(target instanceof SelectableIcon)) {
+                    BangUI.play(BangUI.FeedbackSound.BUTTON_PRESS);
+                } else if (event instanceof TextEvent) {
+                    BangUI.play(BangUI.FeedbackSound.KEY_TYPED);
+                }
+            }
+        };
     }
 
     @Override // documentation inherited
