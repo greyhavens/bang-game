@@ -38,7 +38,8 @@ public class CachedDocument
      * listener will be called back when the reresh is complete), false if no
      * refresh was needed.
      */
-    public boolean refreshDocument (boolean force, final ResultListener rl)
+    public boolean refreshDocument (
+        boolean force, final ResultListener<String> rl)
     {
         // reload the news if necessary
         long now = System.currentTimeMillis();

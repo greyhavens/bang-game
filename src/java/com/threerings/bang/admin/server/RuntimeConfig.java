@@ -36,12 +36,13 @@ public class RuntimeConfig
         Field[] fields = RuntimeConfig.class.getDeclaredFields();
         for (int ii = 0; ii < fields.length; ii++) {
             final Field field = fields[ii];
-            final Class oclass = field.getType();
+            final Class<?> oclass = field.getType();
             if (!DObject.class.isAssignableFrom(oclass)) {
                 continue;
             }
 
-            omgr.createObject(oclass, new Subscriber() {
+            omgr.createObject(
+                (Class<DObject>)oclass, new Subscriber<DObject>() {
                 public void objectAvailable (DObject object) {
                     // set the tight-ass access controller
                     object.setAccessController(ADMIN_CONTROLLER);

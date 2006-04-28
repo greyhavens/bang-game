@@ -12,6 +12,7 @@ import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
 
@@ -42,6 +43,8 @@ import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.MatchObject;
+import com.threerings.bang.saloon.data.ParlorInfo;
+import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonMarshaller;
 import com.threerings.bang.saloon.data.SaloonObject;
@@ -91,10 +94,11 @@ public class SaloonManager extends PlaceManager
 
         // otherwise we need to create a new match
         final Match match = new Match(user, criterion);
-        BangServer.omgr.createObject(MatchObject.class, new Subscriber() {
-            public void objectAvailable (DObject object) {
-                match.setObject((MatchObject)object);
-                match.matchobj.setSpeakService(
+        BangServer.omgr.createObject(MatchObject.class,
+                                     new Subscriber<MatchObject>() {
+            public void objectAvailable (MatchObject object) {
+                match.setObject(object);
+                object.setSpeakService(
                     (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
                         new SpeakDispatcher(new SpeakProvider(object, null)),
                         false));
@@ -126,6 +130,74 @@ public class SaloonManager extends PlaceManager
                 match.matchobj.setStarting(false);
             }
         }
+    }
+
+    // documentation inherited from interface SaloonProvider
+    public void createParlor (
+        ClientObject caller, boolean pardnersOnly, final String password,
+        final SaloonService.ResultListener rl)
+        throws InvocationException
+    {
+        PlayerObject user = (PlayerObject)caller;
+
+        // make sure this player doesn't already have a parlor created
+        if (_parlors.containsKey(user.handle)) {
+            throw new InvocationException(ALREADY_HAVE_PARLOR);
+        }
+
+        // create the new parlor info and the parlor object
+        final ParlorInfo info = new ParlorInfo();
+        info.creator = user.handle;
+        info.pardnersOnly = pardnersOnly;
+        info.passwordProtected = !StringUtil.isBlank(password);
+
+        BangServer.omgr.createObject(ParlorObject.class,
+                                     new Subscriber<ParlorObject>() {
+            public void objectAvailable (ParlorObject object) {
+                object.setInfo(info);
+                object.setPassword(password);
+                _parlors.put(info.creator, object);
+                rl.requestProcessed(object.getOid());
+            }
+
+            public void requestFailed (int oid, ObjectAccessException cause) {
+                log.log(Level.WARNING, "Failed to create parlor object " +
+                        "[info=" + info + "].", cause);
+                rl.requestFailed(INTERNAL_ERROR);
+            }
+        });
+    }
+
+    // documentation inherited from interface SaloonProvider
+    public void joinParlor (ClientObject caller, Handle creator,
+                            String password, SaloonService.ResultListener rl)
+        throws InvocationException
+    {
+        PlayerObject user = (PlayerObject)caller;
+
+        // locate the parlor in question
+        ParlorObject pobj = _parlors.get(creator);
+        if (pobj == null) {
+            throw new InvocationException(NO_SUCH_PARLOR);
+        }
+
+        // make sure they meet the entry requirements
+        if (!StringUtil.isBlank(pobj.password) &&
+            !pobj.password.equalsIgnoreCase(password)) {
+            throw new InvocationException(INCORRECT_PASSWORD);
+        }
+        if (pobj.info.pardnersOnly) {
+            PlayerObject cruser = BangServer.lookupPlayer(pobj.info.creator);
+            if (cruser == null) {
+                throw new InvocationException(CREATOR_NOT_ONLINE);
+            }
+            if (!cruser.pardners.containsKey(user.handle)) {
+                throw new InvocationException(NOT_PARDNER);
+            }
+        }
+
+        // they've run the gauntlet, let 'em in
+        rl.requestProcessed(pobj.getOid());
     }
 
     @Override // documentation inherited
@@ -365,6 +437,9 @@ public class SaloonManager extends PlaceManager
     protected SaloonObject _salobj;
     protected HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
     protected Interval _rankval;
+
+    protected HashMap<Handle,ParlorObject> _parlors =
+        new HashMap<Handle,ParlorObject>();
 
     /** The delay between reporting that we're going to start a match and the
      * time that we actually start it. */

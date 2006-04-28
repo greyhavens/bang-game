@@ -3,6 +3,7 @@
 
 package com.threerings.bang.saloon.server;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.SaloonMarshaller;
@@ -39,10 +40,24 @@ public class SaloonDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case SaloonMarshaller.CREATE_PARLOR:
+            ((SaloonProvider)provider).createParlor(
+                source,
+                ((Boolean)args[0]).booleanValue(), (String)args[1], (InvocationService.ResultListener)args[2]
+            );
+            return;
+
         case SaloonMarshaller.FIND_MATCH:
             ((SaloonProvider)provider).findMatch(
                 source,
                 (Criterion)args[0], (InvocationService.ResultListener)args[1]
+            );
+            return;
+
+        case SaloonMarshaller.JOIN_PARLOR:
+            ((SaloonProvider)provider).joinParlor(
+                source,
+                (Handle)args[0], (String)args[1], (InvocationService.ResultListener)args[2]
             );
             return;
 

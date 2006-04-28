@@ -194,9 +194,9 @@ public class PaperView extends BContainer
         }
     }
 
-    protected ResultListener _newsup = new ResultListener() {
-        public void requestCompleted (Object result) {
-            updateNews((String)result);
+    protected ResultListener<String> _newsup = new ResultListener<String>() {
+        public void requestCompleted (String result) {
+            updateNews(result);
         }
         public void requestFailed (Exception cause) {
             log.log(Level.WARNING, "Failed to load the news.", cause);

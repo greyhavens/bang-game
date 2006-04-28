@@ -259,9 +259,9 @@ public class BangServer extends CrowdServer
         plreg.createPlace(new BarberConfig(), crobs);
 
         // create our server status object
-        omgr.createObject(StatusObject.class, new Subscriber() {
-            public void objectAvailable (DObject object) {
-                statobj = (StatusObject)object;
+        omgr.createObject(StatusObject.class, new Subscriber<StatusObject>() {
+            public void objectAvailable (StatusObject object) {
+                statobj = object;
                 statobj.serverStartTime = System.currentTimeMillis();
                 // start up our connection manager stat monitor
                 _conmgrStatsUpdater.schedule(5000L, true);
@@ -272,9 +272,9 @@ public class BangServer extends CrowdServer
         });
 
         // create the town object and an interval to keep it up-to-date
-        omgr.createObject(TownObject.class, new Subscriber() {
-            public void objectAvailable (DObject object) {
-                townobj = (TownObject)object;
+        omgr.createObject(TownObject.class, new Subscriber<TownObject>() {
+            public void objectAvailable (TownObject object) {
+                townobj = object;
                 createTownObjectUpdateInterval();
             }
             public void requestFailed (int oid, ObjectAccessException cause) {

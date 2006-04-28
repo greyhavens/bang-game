@@ -625,13 +625,13 @@ public class BangManager extends GameManager
             continueStartingRound(brec);
             return;
         }
-        BangServer.boardmgr.loadBoardData(brec, new ResultListener() {
-            public void requestCompleted (Object obj) {
-                continueStartingRound(brec);
+        BangServer.boardmgr.loadBoardData(
+            brec, new ResultListener<BoardRecord>() {
+            public void requestCompleted (BoardRecord record) {
+                continueStartingRound(record);
             }
             public void requestFailed (Exception cause) {
-                log.warning("Failed to load board! [brec=" + brec +
-                    ", cause=" + cause + "].");
+                log.log(Level.WARNING, "Failed to load board " + brec, cause);
             }
         });
     }
