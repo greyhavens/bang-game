@@ -30,13 +30,15 @@
   <!-- skin recolorations -->
   <class classId="2" name="skin" source="#C550D7" range="0.08, 0.4, 1">
     <color colorId="1" name="darkest" offsets="-0.75, -0.2, -0.45"/>
-    <color colorId="2" name="dark" offsets="-0.75, 0.16, -0.26"/>
-    <color colorId="2" name="native" offsets="-0.76, 0.2, -0.2"/>
-    <color colorId="3" name="medium" offsets="-0.75, -0.05, -0.01"/>
-    <color colorId="4" name="tan" offsets="-0.73, -0.08, -0.03"/>
-    <color colorId="5" name="white" offsets="-0.74, -0.25, -0.02"/>
-    <color colorId="6" name="pale" offsets="-0.72, -0.3, 0"/>
-    <color colorId="7" name="pasty" offsets="-0.72, -0.4, 0"/>
+    <color colorId="2" name="warm_dark" offsets="-0.774, 0.043, -0.345"/>
+    <color colorId="3" name="dark" offsets="-0.75, 0.16, -0.3"/>
+    <color colorId="4" name="native" offsets="-0.76, 0.2, -0.2"/>
+    <color colorId="5" name="mixed" offsets="-0.753, 0, -0.175"/>
+    <color colorId="6" name="medium" offsets="-0.75, 0.05, -0.1"/>
+    <color colorId="7" name="mild" offsets="-0.75, -0.05, -0.01"/>
+    <color colorId="8" name="tan" offsets="-0.73, -0.08, -0.03"/>
+    <color colorId="9" name="white" offsets="-0.74, -0.25, -0.02"/>
+    <color colorId="10" name="pasty" offsets="-0.72, -0.4, 0"/>
   </class>
 
   <!-- iris recolorations (this is a tertiary color because it's combined -->
