@@ -163,12 +163,14 @@ public class ColorConstraints
 
         _preds.put("skin", preds = new HashMap<String,Predicate>());
         preds.put("darkest", new Starter());
+        preds.put("warm_dark", new Starter());
         preds.put("dark", new Starter());
         preds.put("native", new Starter());
+        preds.put("mixed", new Starter());
         preds.put("medium", new Starter());
+        preds.put("mild", new Starter());
         preds.put("tan", new Starter());
         preds.put("white", new Starter());
-        preds.put("pale", new Starter());
         preds.put("pasty", new Starter());
 
         _preds.put("iris_t", preds = new HashMap<String,Predicate>());
