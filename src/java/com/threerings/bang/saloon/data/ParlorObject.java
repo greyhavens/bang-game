@@ -4,20 +4,18 @@
 package com.threerings.bang.saloon.data;
 
 import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.DSet;
 
-import com.threerings.crowd.chat.data.SpeakMarshaller;
+import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.Handle;
 
 /**
  * Contains information shared among all occupants of a back parlor room.
  */
-public class ParlorObject extends DObject
+public class ParlorObject extends PlaceObject
 {
     // AUTO-GENERATED: FIELDS START
-    /** The field name of the <code>speakService</code> field. */
-    public static final String SPEAK_SERVICE = "speakService";
-
     /** The field name of the <code>info</code> field. */
     public static final String INFO = "info";
 
@@ -42,9 +40,6 @@ public class ParlorObject extends DObject
     /** The field name of the <code>scenarios</code> field. */
     public static final String SCENARIOS = "scenarios";
     // AUTO-GENERATED: FIELDS END
-
-    /** Used to chat in the parlor. */
-    public SpeakMarshaller speakService;
 
     /** The configuration of this parlor. */
     public ParlorInfo info;
@@ -71,22 +66,6 @@ public class ParlorObject extends DObject
     public String[] scenarios;
 
     // AUTO-GENERATED: METHODS START
-    /**
-     * Requests that the <code>speakService</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setSpeakService (SpeakMarshaller value)
-    {
-        SpeakMarshaller ovalue = this.speakService;
-        requestAttributeChange(
-            SPEAK_SERVICE, value, ovalue);
-        this.speakService = value;
-    }
-
     /**
      * Requests that the <code>info</code> field be set to the
      * specified value. The local value will be updated immediately and an

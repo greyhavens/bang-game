@@ -26,7 +26,9 @@ import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
+import com.threerings.crowd.server.PlaceRegistry;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
@@ -43,6 +45,7 @@ import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.MatchObject;
+import com.threerings.bang.saloon.data.ParlorConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
@@ -145,27 +148,29 @@ public class SaloonManager extends PlaceManager
             throw new InvocationException(ALREADY_HAVE_PARLOR);
         }
 
-        // create the new parlor info and the parlor object
+        // create the new parlor
         final ParlorInfo info = new ParlorInfo();
         info.creator = user.handle;
         info.pardnersOnly = pardnersOnly;
         info.passwordProtected = !StringUtil.isBlank(password);
 
-        BangServer.omgr.createObject(ParlorObject.class,
-                                     new Subscriber<ParlorObject>() {
-            public void objectAvailable (ParlorObject object) {
-                object.setInfo(info);
-                object.setPassword(password);
-                _parlors.put(info.creator, object);
-                rl.requestProcessed(object.getOid());
-            }
+        try {
+            BangServer.plreg.createPlace(new ParlorConfig(),
+                                         new PlaceRegistry.CreationObserver() {
+                public void placeCreated (PlaceObject place,
+                                          PlaceManager plmgr) {
+                    ParlorManager parmgr = (ParlorManager)plmgr;
+                    ParlorObject parobj = (ParlorObject)plmgr.getPlaceObject();
+                    parmgr.init(SaloonManager.this, info, password);
+                    _parlors.put(info.creator, parmgr);
+                    rl.requestProcessed(parobj.getOid());
+                }
+            });
 
-            public void requestFailed (int oid, ObjectAccessException cause) {
-                log.log(Level.WARNING, "Failed to create parlor object " +
-                        "[info=" + info + "].", cause);
-                rl.requestFailed(INTERNAL_ERROR);
-            }
-        });
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to create parlor " + info + ".", e);
+            rl.requestFailed(INTERNAL_ERROR);
+        }
     }
 
     // documentation inherited from interface SaloonProvider
@@ -176,28 +181,16 @@ public class SaloonManager extends PlaceManager
         PlayerObject user = (PlayerObject)caller;
 
         // locate the parlor in question
-        ParlorObject pobj = _parlors.get(creator);
-        if (pobj == null) {
+        ParlorManager parmgr = _parlors.get(creator);
+        if (parmgr == null) {
             throw new InvocationException(NO_SUCH_PARLOR);
         }
 
         // make sure they meet the entry requirements
-        if (!StringUtil.isBlank(pobj.password) &&
-            !pobj.password.equalsIgnoreCase(password)) {
-            throw new InvocationException(INCORRECT_PASSWORD);
-        }
-        if (pobj.info.pardnersOnly) {
-            PlayerObject cruser = BangServer.lookupPlayer(pobj.info.creator);
-            if (cruser == null) {
-                throw new InvocationException(CREATOR_NOT_ONLINE);
-            }
-            if (!cruser.pardners.containsKey(user.handle)) {
-                throw new InvocationException(NOT_PARDNER);
-            }
-        }
+        parmgr.ratifyEntry(user, password);
 
         // they've run the gauntlet, let 'em in
-        rl.requestProcessed(pobj.getOid());
+        rl.requestProcessed(parmgr.getPlaceObject().getOid());
     }
 
     @Override // documentation inherited
@@ -370,6 +363,14 @@ public class SaloonManager extends PlaceManager
         BangServer.statobj.setPendingMatches(_matches.size());
     }
 
+    protected void parlorDidShutdown (ParlorManager parmgr)
+    {
+        ParlorObject parobj = (ParlorObject)parmgr.getPlaceObject();
+        Handle creator = parobj.info.creator;
+        _parlors.remove(creator);
+        _salobj.removeFromParlors(creator);
+    }
+
     protected void refreshTopRanked ()
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
@@ -438,8 +439,8 @@ public class SaloonManager extends PlaceManager
     protected HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
     protected Interval _rankval;
 
-    protected HashMap<Handle,ParlorObject> _parlors =
-        new HashMap<Handle,ParlorObject>();
+    protected HashMap<Handle,ParlorManager> _parlors =
+        new HashMap<Handle,ParlorManager>();
 
     /** The delay between reporting that we're going to start a match and the
      * time that we actually start it. */
