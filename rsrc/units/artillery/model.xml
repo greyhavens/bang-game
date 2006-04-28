@@ -2873,7 +2873,7 @@
     <vertex location="21.1774, -22.372, 37.4796" normal="0.0333383, 1.90136, 1.72094" tcoords="0.619042, 0.14377"/>
   </triMesh>
 
-  <triMesh name="gun" translation="-5.57822e-006, 42.0674, 119.197" rotation="0.216439, 0.0, 0.0, 0.976296" scale="1.0, 1.0, 1.0" offsetTranslation="-1.37042e-007, -20.8138, -36.2224" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="gun.png" transparent="false">
+  <triMesh name="gun" parent="artillery" translation="0.452805, 41.6982, 62.5516" rotation="0.216439, 0.0, 0.0, 0.976296" scale="1.0, 1.0, 1.0" offsetTranslation="-1.37042e-007, -20.8138, -36.2224" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="gun.png" transparent="false">
     <vertex location="0.251812, 22.3769, 51.4678" normal="0.0, 0.0, 1.0" tcoords="0.48471, 0.0308301"/>
     <vertex location="18.0969, 22.3769, 58.6726" normal="-0.737708, 2.38419e-007, 1.82717" tcoords="0.517243, 0.0308301"/>
     <vertex location="12.4403, 34.5654, 58.6726" normal="-0.54004, -0.54004, 1.82717" tcoords="0.50693, 0.0530508"/>
