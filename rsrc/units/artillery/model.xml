@@ -2441,7 +2441,7 @@
     <vertex location="-23.6278, 4.58957, -16.7491" normal="-2.92552, 0.369924, 0.0" tcoords="0.882246, 0.497286"/>
   </triMesh>
 
-  <triMesh name="head" translation="1.05385, -22.1135, 79.7727" rotation="-2.93801e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.952381" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="head.png" transparent="false">
+  <triMesh name="head" parent="artillery" translation="1.50666, -22.4827, 23.1275" rotation="-2.93812e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.952381" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="head.png" transparent="false">
     <vertex location="22.8345, 0.746075, 3.7441" normal="2.72991, 0.185467, 0.591996" tcoords="0.509016, 0.969497"/>
     <vertex location="15.2961, 9.74009, 22.5738" normal="0.783275, 0.604229, 0.146243" tcoords="0.597165, 0.787256"/>
     <vertex location="18.9189, -0.547883, 22.5765" normal="1.86978, 0.0126974, 0.27157" tcoords="0.502666, 0.777645"/>
