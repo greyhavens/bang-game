@@ -163,6 +163,7 @@ public class SaloonManager extends PlaceManager
                     ParlorObject parobj = (ParlorObject)plmgr.getPlaceObject();
                     parmgr.init(SaloonManager.this, info, password);
                     _parlors.put(info.creator, parmgr);
+                    _salobj.addToParlors(info);
                     rl.requestProcessed(parobj.getOid());
                 }
             });

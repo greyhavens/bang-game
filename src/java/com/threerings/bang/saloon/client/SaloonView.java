@@ -41,7 +41,7 @@ public class SaloonView extends ShopView
         add(new TownButton(ctx), new Point(870, 25));
         add(_paper = new PaperView(ctx), new Rectangle(48, 68, 516, 576));
 
-        add(_soon = new BLabel(_msgs.get("m.coming_soon")), SOON_LOC);
+        add(_parlist = new ParlorList(ctx), PARLIST_RECT);
 
         add(_crview = new CriterionView(ctx, _ctrl), CRIT_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
@@ -67,7 +67,7 @@ public class SaloonView extends ShopView
         // remove our criterion view
         if (_crview.isAdded()) {
             remove(_crview);
-            remove(_soon);
+            remove(_parlist);
         }
 
         // this should never happen, but just to be ultra-robust
@@ -95,7 +95,7 @@ public class SaloonView extends ShopView
         // redisplay the criterion view
         if (!_crview.isAdded()) {
             add(_crview, CRIT_RECT);
-            add(_soon, SOON_LOC);
+            add(_parlist, PARLIST_RECT);
         }
 
         setStatus(status);
@@ -117,11 +117,13 @@ public class SaloonView extends ShopView
     public void willEnterPlace (PlaceObject plobj)
     {
         _paper.init((SaloonObject)plobj);
+        _parlist.willEnterPlace((SaloonObject)plobj);
     }
 
     @Override // documentation inherited
     public void didLeavePlace (PlaceObject plobj)
     {
+        _parlist.didLeavePlace();
     }
 
     protected SaloonController _ctrl;
@@ -129,11 +131,12 @@ public class SaloonView extends ShopView
     protected StatusLabel _status;
     protected CriterionView _crview;
     protected MatchView _mview;
-    protected BLabel _soon;
+    protected ParlorList _parlist;
 
     protected static final Rectangle CRIT_RECT =
         new Rectangle(594, 328, 395, 233);
     protected static final Rectangle MATCH_RECT =
         new Rectangle(594, 80, 395, 491);
-    protected static final Point SOON_LOC = new Point(730, 183);
+    protected static final Rectangle PARLIST_RECT =
+        new Rectangle(610, 85, 365, 170);
 }

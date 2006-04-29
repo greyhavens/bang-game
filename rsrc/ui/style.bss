@@ -36,7 +36,7 @@ popupmenu {
 menuitem {
   padding: 5 5 5 5;
   color: #524129;
-  font: "Dialog" bold 16;
+  font: "Dom Casual" plain 20;
 }
 
 menuitem:hover {
@@ -211,7 +211,7 @@ tab:selected {
 }
 
 combobox {
-  font: "Helvetica" plain 15;
+  font: "Dom Casual" plain 16;
   color: #FFFFFF;
   background: image "ui/combobox/normal.png" framexy;
   padding: 5 22 5 10;
@@ -240,6 +240,7 @@ textarea {
 }
 
 checkbox {
+  font: "Dom Casual" plain 20;
   icon: image "ui/checkbox/unchecked.png";
 }
 
@@ -979,6 +980,11 @@ news_contents {
 
 news_buttons {
   padding: 0 35 5 0;
+}
+
+parlor_label {
+  font: "Dom Casual" plain 20;
+  color: #524129;
 }
 
 match_label {

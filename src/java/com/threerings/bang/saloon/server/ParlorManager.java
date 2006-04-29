@@ -16,6 +16,8 @@ import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Manages a back parlor room.
  */
@@ -30,6 +32,7 @@ public class ParlorManager extends PlaceManager
         _salmgr = salmgr;
         _parobj.setInfo(info);
         _password = password;
+        log.info("Parlor created " + info + ".");
     }
 
     /**
@@ -40,6 +43,12 @@ public class ParlorManager extends PlaceManager
     public void ratifyEntry (PlayerObject user, String password)
         throws InvocationException
     {
+        // if this player is the creator, or an admin, let 'em in regardless
+        if (user.handle.equals(_parobj.info.creator) ||
+            user.tokens.isAdmin()) {
+            return;
+        }
+
         // make sure the password matches if we have a password
         if (!StringUtil.isBlank(_password) &&
             !_password.equalsIgnoreCase(password)) {
@@ -60,9 +69,21 @@ public class ParlorManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected void didInit ()
+    protected Class getPlaceObjectClass ()
     {
-        super.didInit();
+        return ParlorObject.class;
+    }
+
+//     @Override // documentation inherited
+//     protected long idleUnloadPeriod ()
+//     {
+//         return 5 * 1000L;
+//     }
+
+    @Override // documentation inherited
+    protected void didStartup ()
+    {
+        super.didStartup();
         _parobj = (ParlorObject)_plobj;
     }
 
@@ -73,6 +94,8 @@ public class ParlorManager extends PlaceManager
 
         // let the saloon manager know that we're audi
         _salmgr.parlorDidShutdown(this);
+
+        log.info("Parlor shutdown " + _parobj.info + ".");
     }
 
     protected ParlorObject _parobj;

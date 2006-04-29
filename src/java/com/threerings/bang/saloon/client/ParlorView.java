@@ -5,6 +5,8 @@ package com.threerings.bang.saloon.client;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
@@ -27,6 +29,7 @@ import com.threerings.bang.saloon.data.SaloonCodes;
  * players to play games and inspect the various top-N lists.
  */
 public class ParlorView extends ShopView
+    implements ActionListener
 {
     public ParlorView (BangContext ctx, ParlorController ctrl)
     {
@@ -38,7 +41,8 @@ public class ParlorView extends ShopView
             new Rectangle(266, 656, 491, 33));
         add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
         add(createHelpButton(), new Point(800, 25));
-        add(new TownButton(ctx), new Point(870, 25));
+        add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"),
+            new Point(870, 25));
 
 //         add(_crview = new CriterionView(ctx, _ctrl), CRIT_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
@@ -101,6 +105,14 @@ public class ParlorView extends ShopView
         _status.setStatus(msg, false);
     }
 
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        if ("to_saloon".equals(event.getAction())) {
+            _ctx.getLocationDirector().moveBack();
+        }
+    }
+
     @Override // documentation inherited
     public void willEnterPlace (PlaceObject plobj)
     {
@@ -115,7 +127,6 @@ public class ParlorView extends ShopView
     protected StatusLabel _status;
 //     protected CriterionView _crview;
 //     protected MatchView _mview;
-    protected BLabel _soon;
 
 //     protected static final Rectangle CRIT_RECT =
 //         new Rectangle(594, 328, 395, 233);
