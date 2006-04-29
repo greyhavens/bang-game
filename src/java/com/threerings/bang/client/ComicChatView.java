@@ -100,13 +100,23 @@ public abstract class ComicChatView extends BScrollPane
         }
 
         // create a new chat entry if necessary
-        if (_last == null || newav || !_last.speaker.equals(sprec)) {
-            _content.add(_last = new ChatEntry(sprec, isLeftSide(speaker)));
+        ChatEntry entry = _last;
+        if (entry == null || newav || !entry.speaker.equals(sprec)) {
+            _content.add(entry = new ChatEntry(sprec, isLeftSide(speaker)));
         }
 
         // and append our message to that chat entry
-        _last.addMessage(message);
+        entry.addMessage(message);
         _scrollToEnd = true;
+
+        // we only allow two messages to use the same avatar, then we add
+        // another avatar to avoid the amazing zillion chat bubbles with no
+        // head
+        if (_last == null) {
+            _last = entry;
+        } else {
+            _last = null;
+        }
     }
 
     /**
@@ -117,6 +127,15 @@ public abstract class ComicChatView extends BScrollPane
         String style = SystemChatView.getAttentionLevel(msg) + "_chat_label";
         _content.add(new BLabel(SystemChatView.format(_ctx, msg), style));
         _scrollToEnd = true;
+        _last = null;
+    }
+
+    /**
+     * Clears out all displayed messages.
+     */
+    public void clear ()
+    {
+        _content.removeAll();
         _last = null;
     }
 

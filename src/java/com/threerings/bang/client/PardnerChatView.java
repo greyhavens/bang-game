@@ -162,10 +162,13 @@ public class PardnerChatView extends BDecoratedWindow
             String msg = _text.getText().trim();
             _text.setText("");
             if (msg.startsWith("/")) {
-                String error = _ctx.getChatDirector().requestChat(null, msg,
-                    true);
+                String error = _ctx.getChatDirector().requestChat(
+                    null, msg, true);
                 if (!ChatCodes.SUCCESS.equals(error)) {
-                    _ctx.getChatDirector().displayFeedback(CHAT_MSGS, error);
+                    SystemMessage sysmsg = new SystemMessage(
+                        _ctx.xlate(CHAT_MSGS, error), null,
+                        SystemMessage.FEEDBACK);
+                    ((PardnerTab)_tabs.getSelectedTab()).appendSystem(sysmsg);
                 }
 
             } else {

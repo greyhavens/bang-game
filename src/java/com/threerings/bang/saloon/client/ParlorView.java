@@ -3,7 +3,10 @@
 
 package com.threerings.bang.saloon.client;
 
+import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BButton;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -15,6 +18,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.client.PlaceChatView;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
@@ -44,10 +48,16 @@ public class ParlorView extends ShopView
         add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"),
             new Point(870, 25));
 
+        // add our chat view
+        add(_chat = new PlaceChatView(_ctx), new Rectangle(570, 75, 425, 535));
+
 //         add(_crview = new CriterionView(ctx, _ctrl), CRIT_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
         _status.setText(_msgs.get("m.intro_tip"));
+
+        // load up our extra background
+        _bgoverlay = ctx.loadImage("ui/saloon/parlor_bg.png");
     }
 
 //     /**
@@ -116,15 +126,42 @@ public class ParlorView extends ShopView
     @Override // documentation inherited
     public void willEnterPlace (PlaceObject plobj)
     {
+        _chat.willEnterPlace(plobj);
     }
 
     @Override // documentation inherited
     public void didLeavePlace (PlaceObject plobj)
     {
+        _chat.didLeavePlace(plobj);
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _bgoverlay.reference();
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _bgoverlay.release();
+    }
+
+    @Override // documentation inherited
+    protected void renderBackground (Renderer renderer)
+    {
+        super.renderBackground(renderer);
+        _bgoverlay.render(renderer, 39, 65, _alpha);
     }
 
     protected ParlorController _ctrl;
+    protected PlaceChatView _chat;
     protected StatusLabel _status;
+
+    protected BImage _bgoverlay;
+
 //     protected CriterionView _crview;
 //     protected MatchView _mview;
 

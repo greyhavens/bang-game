@@ -636,14 +636,20 @@ pardner_status {
   vertical-align: top;
 }
 
-// Pardner chat styles
-
 pardner_chat_view {
   background: image "ui/window/grip_background.png" framexy;
   padding: 30 15 15 15;
 }
 
-pardner_chat_viewport {
+//
+// General chat styles
+
+place_chat_viewport {
+  background: image "ui/window/border_ornate.png" framexy;
+  padding: 10 20 15 15;
+}
+
+comic_chat_viewport {
   padding: 10 20 15 15;
 }
 
