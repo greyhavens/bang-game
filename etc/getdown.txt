@@ -52,6 +52,7 @@ uresource = rsrc/extras/bundle.jar
 uresource = rsrc/props/bundle.jar
 uresource = rsrc/sounds/effects/bundle.jar
 uresource = rsrc/sounds/music/bundle.jar
+uresource = rsrc/sounds/feedback/bundle.jar
 uresource = rsrc/units/bundle.jar
 
 # Parameters passed to the JVM

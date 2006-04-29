@@ -120,6 +120,10 @@
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
+    <jar file="rsrc/sounds/feedback/bundle.jar" basedir="rsrc/sounds/feedback">
+      <include name="**/*.wav"/>
+      <exclude name="**/source/**"/>
+    </jar>
     <jar file="rsrc/sounds/music/bundle.jar" basedir="rsrc/sounds/music">
       <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
