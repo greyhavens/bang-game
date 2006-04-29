@@ -1129,10 +1129,13 @@ public class BangManager extends GameManager
             Award award = (awards[ii] = new Award());
             award.pidx = ii;
             award.rank = -1;
-            for (int rr = 0; rr < _ranks.length; rr++) {
-                if (_ranks[rr].pidx == ii) {
-                    award.rank = rr;
-                    break;
+
+            if (_ranks != null) {
+                for (int rr = 0; rr < _ranks.length; rr++) {
+                    if (_ranks[rr].pidx == ii) {
+                        award.rank = rr;
+                        break;
+                    }
                 }
             }
 
