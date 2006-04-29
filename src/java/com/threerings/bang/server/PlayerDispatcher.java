@@ -4,6 +4,7 @@
 package com.threerings.bang.server;
 
 import com.threerings.bang.client.PlayerService;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerMarshaller;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -42,7 +43,7 @@ public class PlayerDispatcher extends InvocationDispatcher
         case PlayerMarshaller.INVITE_PARDNER:
             ((PlayerProvider)provider).invitePardner(
                 source,
-                (Name)args[0], (InvocationService.ConfirmListener)args[1]
+                (Handle)args[0], (InvocationService.ConfirmListener)args[1]
             );
             return;
 
@@ -70,14 +71,14 @@ public class PlayerDispatcher extends InvocationDispatcher
         case PlayerMarshaller.REMOVE_PARDNER:
             ((PlayerProvider)provider).removePardner(
                 source,
-                (Name)args[0], (InvocationService.ConfirmListener)args[1]
+                (Handle)args[0], (InvocationService.ConfirmListener)args[1]
             );
             return;
 
         case PlayerMarshaller.RESPOND_TO_PARDNER_INVITE:
             ((PlayerProvider)provider).respondToPardnerInvite(
                 source,
-                (Name)args[0], ((Boolean)args[1]).booleanValue(), (InvocationService.ConfirmListener)args[2]
+                (Handle)args[0], ((Boolean)args[1]).booleanValue(), (InvocationService.ConfirmListener)args[2]
             );
             return;
 

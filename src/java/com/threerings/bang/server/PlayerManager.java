@@ -191,7 +191,7 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void invitePardner (ClientObject caller, final Name handle,
+    public void invitePardner (ClientObject caller, final Handle handle,
         final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
@@ -247,7 +247,7 @@ public class PlayerManager
 
     // documentation inherited from interface PlayerProvider
     public void respondToPardnerInvite (ClientObject caller,
-        final Name inviter, final boolean resp,
+        final Handle inviter, final boolean resp,
         final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
@@ -297,7 +297,7 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void removePardner (ClientObject caller, final Name pardner,
+    public void removePardner (ClientObject caller, final Handle pardner,
         final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
@@ -417,7 +417,7 @@ public class PlayerManager
      * for the pardner, one will be created, mapped, and used to keep the
      * {@link PardnerEntry} up-to-date.
      */
-    protected PardnerEntry getPardnerEntry (Name handle, Date lastSession)
+    protected PardnerEntry getPardnerEntry (Handle handle, Date lastSession)
     {
         PardnerEntryUpdater updater = _updaters.get(handle);
         if (updater != null) {
@@ -440,7 +440,7 @@ public class PlayerManager
      * @return null if the invitation was sent successfully, otherwise a
      * translatable error message indicating what went wrong
      */
-    protected String sendPardnerInvite (PlayerObject invitee, Name inviter,
+    protected String sendPardnerInvite (PlayerObject invitee, Handle inviter,
         Date lastSession, boolean fromdb)
     {
         InviteKey key = new InviteKey(invitee.playerId, inviter);
@@ -459,9 +459,9 @@ public class PlayerManager
         public int playerId;
 
         /** The name of the inviter. */
-        public Name inviter;
+        public Handle inviter;
 
-        public InviteKey (int playerId, Name inviter)
+        public InviteKey (int playerId, Handle inviter)
         {
             this.playerId = playerId;
             this.inviter = inviter;
@@ -672,8 +672,8 @@ public class PlayerManager
 
     /** Maps the names of users to updaters responsible for keeping their
      * {@link PardnerEntry}s up-to-date. */
-    protected HashMap<Name, PardnerEntryUpdater> _updaters =
-        new HashMap<Name, PardnerEntryUpdater>();
+    protected HashMap<Handle,PardnerEntryUpdater> _updaters =
+        new HashMap<Handle,PardnerEntryUpdater>();
 
     /** The currently standing pardner invitations. */
     protected HashMap<InviteKey, Invite> _invites =

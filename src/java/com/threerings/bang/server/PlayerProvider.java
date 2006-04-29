@@ -4,6 +4,7 @@
 package com.threerings.bang.server;
 
 import com.threerings.bang.client.PlayerService;
+import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -19,7 +20,7 @@ public interface PlayerProvider extends InvocationProvider
     /**
      * Handles a {@link PlayerService#invitePardner} request.
      */
-    public void invitePardner (ClientObject caller, Name arg1, InvocationService.ConfirmListener arg2)
+    public void invitePardner (ClientObject caller, Handle arg1, InvocationService.ConfirmListener arg2)
         throws InvocationException;
 
     /**
@@ -43,12 +44,12 @@ public interface PlayerProvider extends InvocationProvider
     /**
      * Handles a {@link PlayerService#removePardner} request.
      */
-    public void removePardner (ClientObject caller, Name arg1, InvocationService.ConfirmListener arg2)
+    public void removePardner (ClientObject caller, Handle arg1, InvocationService.ConfirmListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link PlayerService#respondToPardnerInvite} request.
      */
-    public void respondToPardnerInvite (ClientObject caller, Name arg1, boolean arg2, InvocationService.ConfirmListener arg3)
+    public void respondToPardnerInvite (ClientObject caller, Handle arg1, boolean arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 }

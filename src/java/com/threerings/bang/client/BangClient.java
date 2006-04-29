@@ -521,11 +521,11 @@ public class BangClient extends BasicClient
         // create the mute director here because the mute list is specific to
         // the account
         final String mkey = client.getCredentials().getUsername() + ".muted";
-        _mutedir = new MuteDirector(_ctx, createHandles(
-            _config.getValue(mkey, new String[0])));
+        _mutedir = new MuteDirector(
+            _ctx, createHandles(_config.getValue(mkey, new String[0])));
         _mutedir.setChatDirector(_chatdir);
         _mutedir.addMuteObserver(new MuteDirector.MuteObserver() {
-            public void muteChanged (Name playerName, boolean nowMuted) {
+            public void muteChanged (Name player, boolean nowMuted) {
                 _config.setValue(mkey, StringUtil.join(_mutedir.getMuted()));
             }
         });
@@ -588,7 +588,7 @@ public class BangClient extends BasicClient
     }
 
     // documentation inherited from interface PlayerReceiver
-    public void receivedPardnerInvite (final Name handle)
+    public void receivedPardnerInvite (final Handle handle)
     {
         if (canDisplayPopup(MainView.Type.PARDNER_INVITE)) {
             displayPardnerInvite(handle);
@@ -599,9 +599,9 @@ public class BangClient extends BasicClient
         }
     }
 
-    protected Name[] createHandles (String[] strings)
+    protected Handle[] createHandles (String[] strings)
     {
-        Name[] handles = new Name[strings.length];
+        Handle[] handles = new Handle[strings.length];
         for (int ii = 0; ii < strings.length; ii++) {
             handles[ii] = new Handle(strings[ii]);
         }
@@ -621,7 +621,7 @@ public class BangClient extends BasicClient
         ParticleFactory.warmup(_ctx);
     }
     
-    protected void displayPardnerInvite (final Name handle)
+    protected void displayPardnerInvite (final Handle handle)
     {
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
@@ -795,7 +795,7 @@ public class BangClient extends BasicClient
     protected SystemChatView _scview;
     protected StatusView _status;
 
-    protected ArrayList<Name> _invites = new ArrayList<Name>();
+    protected ArrayList<Handle> _invites = new ArrayList<Handle>();
 
     protected String _playingMusic;
     protected MusicStream _mstream;

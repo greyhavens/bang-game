@@ -4,8 +4,8 @@
 package com.threerings.bang.client;
 
 import com.threerings.bang.client.PlayerReceiver;
+import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.InvocationDecoder;
-import com.threerings.util.Name;
 
 /**
  * Dispatches calls to a {@link PlayerReceiver} instance.
@@ -40,7 +40,7 @@ public class PlayerDecoder extends InvocationDecoder
         switch (methodId) {
         case RECEIVED_PARDNER_INVITE:
             ((PlayerReceiver)receiver).receivedPardnerInvite(
-                (Name)args[0]
+                (Handle)args[0]
             );
             return;
 

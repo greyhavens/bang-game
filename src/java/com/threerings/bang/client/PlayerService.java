@@ -3,10 +3,12 @@
 
 package com.threerings.bang.client;
 
+import com.threerings.util.Name;
+
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
-import com.threerings.util.Name;
+import com.threerings.bang.data.Handle;
 
 /**
  * A general purpose bootstrap invocation service.
@@ -22,20 +24,20 @@ public interface PlayerService extends InvocationService
     /**
      * Invite the specified user to be our pardner.
      */
-    public void invitePardner (Client client, Name handle,
-        ConfirmListener listener);
+    public void invitePardner (
+        Client client, Handle handle, ConfirmListener listener);
 
     /**
      * Respond to another cowpoke's invitation to be pardners.
      */
-    public void respondToPardnerInvite (Client client, Name inviter,
-        boolean resp, ConfirmListener listener);
+    public void respondToPardnerInvite (
+        Client client, Handle inviter, boolean resp, ConfirmListener listener);
 
     /**
      * Remove one of our pardners from our pardner list.
      */
-    public void removePardner (Client client, Name pardner,
-        ConfirmListener listener);
+    public void removePardner (
+        Client client, Handle pardner, ConfirmListener listener);
 
     /**
      * Requests to play the specified tutorial. On success the game will start

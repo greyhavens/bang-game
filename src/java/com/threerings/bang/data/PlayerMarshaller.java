@@ -4,6 +4,7 @@
 package com.threerings.bang.data;
 
 import com.threerings.bang.client.PlayerService;
+import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -24,7 +25,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int INVITE_PARDNER = 1;
 
     // documentation inherited from interface
-    public void invitePardner (Client arg1, Name arg2, InvocationService.ConfirmListener arg3)
+    public void invitePardner (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
     {
         InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
         listener3.listener = arg3;
@@ -76,7 +77,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int REMOVE_PARDNER = 5;
 
     // documentation inherited from interface
-    public void removePardner (Client arg1, Name arg2, InvocationService.ConfirmListener arg3)
+    public void removePardner (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
     {
         InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
         listener3.listener = arg3;
@@ -89,7 +90,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int RESPOND_TO_PARDNER_INVITE = 6;
 
     // documentation inherited from interface
-    public void respondToPardnerInvite (Client arg1, Name arg2, boolean arg3, InvocationService.ConfirmListener arg4)
+    public void respondToPardnerInvite (Client arg1, Handle arg2, boolean arg3, InvocationService.ConfirmListener arg4)
     {
         InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
         listener4.listener = arg4;

@@ -38,7 +38,6 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -200,7 +199,7 @@ public class PardnerView extends IconPalette
     /**
      * Attempts to invite the named player as a pardner.
      */
-    protected void invitePardner (final Name handle)
+    protected void invitePardner (final Handle handle)
     {
         _submit.setEnabled(false);
         _name.setEnabled(false);
@@ -224,7 +223,7 @@ public class PardnerView extends IconPalette
      * Requests that the named pardner be removed after having verified that
      * that's what the user really wants.
      */
-    protected void removePardner (final Name handle)
+    protected void removePardner (final Handle handle)
     {
         _psvc.removePardner(_ctx.getClient(), handle,
             new PlayerService.ConfirmListener() {

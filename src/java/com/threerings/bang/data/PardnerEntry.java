@@ -8,7 +8,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import com.threerings.presents.dobj.DSet;
-import com.threerings.util.Name;
+
+import com.threerings.bang.data.Handle;
 
 /**
  * An entry in the list of pardners.
@@ -29,7 +30,7 @@ public class PardnerEntry
     public static final byte IN_GAME = 3;
     
     /** The pardner's handle. */
-    public Name handle;
+    public Handle handle;
     
     /** The pardner's avatar. */
     public int[] avatar;
@@ -47,15 +48,15 @@ public class PardnerEntry
     /**
      * Constructor for online pardners.
      */
-    public PardnerEntry (Name handle)
+    public PardnerEntry (Handle handle)
     {
-        this.handle = (handle == null) ? Name.BLANK : handle;
+        this.handle = handle;
     }
     
     /**
      * Constructor for offline pardners.
      */
-    public PardnerEntry (Name handle, Date lastSession)
+    public PardnerEntry (Handle handle, Date lastSession)
     {
         this(handle);
         setLastSession(lastSession);
