@@ -24,6 +24,7 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
@@ -89,13 +90,23 @@ public class ParlorList extends BContainer
                 new CreateParlorDialog(_ctx, _salobj), true);
 
         } else if ("enter".equals(event.getAction())) {
-            ParlorInfo info = (ParlorInfo)
+            final ParlorInfo info = (ParlorInfo)
                 ((BButton)event.getSource()).getProperty("info");
             if (!_ctx.getUserObject().tokens.isAdmin() &&
                 !_ctx.getUserObject().handle.equals(info.creator) &&
                 info.passwordProtected) {
-                // TODO: ask for password, then join
-                joinParlor(info.creator, null);
+                // ask for a password, then join
+                OptionDialog.ResponseReceiver rr =
+                    new OptionDialog.ResponseReceiver() {
+                    public void resultPosted (int button, Object result) {
+                        if (button == 0) {
+                            joinParlor(info.creator, ((String)result).trim());
+                        }
+                    }
+                };
+                OptionDialog.showStringDialog(
+                    _ctx, SaloonCodes.SALOON_MSGS, "m.enter_pass",
+                    new String[] { "m.enter", "m.cancel" }, 100, "", rr);
             } else {
                 joinParlor(info.creator, null);
             }

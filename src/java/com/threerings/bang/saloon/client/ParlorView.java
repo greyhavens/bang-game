@@ -48,10 +48,11 @@ public class ParlorView extends ShopView
         add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"),
             new Point(870, 25));
 
-        // add our chat view
+        add(_gconfig = new ParlorGameConfigView(_ctx), GAME_RECT);
+        add(_config = new ParlorConfigView(_ctx),
+            new Rectangle(103, 124, 410, 132));
         add(_chat = new PlaceChatView(_ctx), new Rectangle(570, 75, 425, 535));
 
-//         add(_crview = new CriterionView(ctx, _ctrl), CRIT_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
         _status.setText(_msgs.get("m.intro_tip"));
@@ -126,12 +127,16 @@ public class ParlorView extends ShopView
     @Override // documentation inherited
     public void willEnterPlace (PlaceObject plobj)
     {
+        _gconfig.willEnterPlace((ParlorObject)plobj);
+        _config.willEnterPlace((ParlorObject)plobj);
         _chat.willEnterPlace(plobj);
     }
 
     @Override // documentation inherited
     public void didLeavePlace (PlaceObject plobj)
     {
+        _gconfig.didLeavePlace();
+        _config.didLeavePlace();
         _chat.didLeavePlace(plobj);
     }
 
@@ -157,17 +162,13 @@ public class ParlorView extends ShopView
     }
 
     protected ParlorController _ctrl;
+    protected ParlorGameConfigView _gconfig;
+    protected ParlorConfigView _config;
     protected PlaceChatView _chat;
     protected StatusLabel _status;
 
     protected BImage _bgoverlay;
 
-//     protected CriterionView _crview;
-//     protected MatchView _mview;
-
-//     protected static final Rectangle CRIT_RECT =
-//         new Rectangle(594, 328, 395, 233);
-//     protected static final Rectangle MATCH_RECT =
-//         new Rectangle(594, 80, 395, 491);
-//     protected static final Point SOON_LOC = new Point(730, 183);
+    protected static final Rectangle GAME_RECT =
+        new Rectangle(102, 315, 410, 232);
 }

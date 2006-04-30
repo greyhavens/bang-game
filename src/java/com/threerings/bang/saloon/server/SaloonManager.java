@@ -364,6 +364,11 @@ public class SaloonManager extends PlaceManager
         BangServer.statobj.setPendingMatches(_matches.size());
     }
 
+    protected void parlorUpdated (ParlorInfo info)
+    {
+        _salobj.updateParlors(info);
+    }
+
     protected void parlorDidShutdown (ParlorManager parmgr)
     {
         ParlorObject parobj = (ParlorObject)parmgr.getPlaceObject();

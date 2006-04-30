@@ -64,6 +64,8 @@ container {
 }
 
 label {
+  font: "Dom Casual" plain 20;
+  color: #4C2602;
 //  border: 1 solid #FFFFFF;
 }
 
@@ -242,6 +244,7 @@ textarea {
 checkbox {
   font: "Dom Casual" plain 20;
   icon: image "ui/checkbox/unchecked.png";
+  color: #4C2602;
 }
 
 checkbox:selected {
@@ -250,6 +253,10 @@ checkbox:selected {
 
 checkbox:disabled {
   icon: image "ui/checkbox/unchecked_disabled.png";
+}
+
+checkbox:disselected {
+  icon: image "ui/checkbox/checked_disabled.png";
 }
 
 scrollbar_hthumb {
@@ -703,6 +710,7 @@ attention_chat_label {
 feedback_chat_label {
   parent: "system_chat_label";
   background: solid #D7B377;
+  text-align: left;
 }
 
 info_chat_label {
@@ -996,6 +1004,17 @@ parlor_label {
 match_label {
   font: "Dom Casual" plain 20;
   color: #897301;
+  text-align: right;
+}
+
+match_header {
+  parent: match_label;
+  text-align: center;
+}
+
+match_scenarios {
+  background: image "ui/textfield.png" framexy;
+  padding: 10;
 }
 
 starting_label {

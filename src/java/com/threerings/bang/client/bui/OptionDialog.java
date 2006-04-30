@@ -7,6 +7,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
@@ -24,10 +25,10 @@ public class OptionDialog extends BDecoratedWindow
 {
     /** The index of the OK button. */
     public static final int OK_BUTTON = 0;
-    
-    /** The index of the Cancel button. */   
+
+    /** The index of the Cancel button. */
     public static final int CANCEL_BUTTON = 1;
-    
+
     /** The callback mechanism for receiving dialog results. */
     public interface ResponseReceiver
     {
@@ -53,10 +54,10 @@ public class OptionDialog extends BDecoratedWindow
     {
         showConfirmDialog(ctx, bundle, text, "m.ok", "m.cancel", receiver);
     }
-    
+
     /**
-     * Shows a confirmation dialog with the given text and two buttons with
-     * the provided labels.
+     * Shows a confirmation dialog with the given text and two buttons with the
+     * provided labels.
      *
      * @param bundle the bundle to to use in translating the text
      * @param text the text to display in the center of the dialog
@@ -70,7 +71,7 @@ public class OptionDialog extends BDecoratedWindow
         showConfirmDialog(ctx, bundle, text, new String[] { ok, cancel },
             receiver);
     }
-    
+
     /**
      * Shows a confirmation dialog with the given text and buttons with the
      * provided labels.
@@ -89,7 +90,30 @@ public class OptionDialog extends BDecoratedWindow
         dialog.pack(400, -1);
         dialog.center();
     }
-    
+
+    /**
+     * Shows a dialog that displays the given text and buttons with the
+     * provided labels and requests a string input.
+     *
+     * @param bundle the bundle to to use in translating the text
+     * @param text the text to display in the center of the dialog
+     * @param buttons the labels for the buttons in the dialog
+     * @param width the width of the text input box
+     * @param defaultValue the default value to provide for the string
+     * @param receiver a receiver to notify with the result
+     */
+    public static void showStringDialog (
+        BangContext ctx, String bundle, String text, String[] buttons,
+        int width, String defaultValue, ResponseReceiver receiver)
+    {
+        OptionDialog dialog =
+            new OptionDialog(ctx, bundle, text, buttons, receiver);
+        dialog.setRequiresString(width, defaultValue);
+        ctx.getBangClient().displayPopup(dialog, false);
+        dialog.pack(400, -1);
+        dialog.center();
+    }
+
     protected OptionDialog (BangContext ctx, String bundle, String text,
         String[] buttons, ResponseReceiver receiver)
     {
@@ -99,7 +123,7 @@ public class OptionDialog extends BDecoratedWindow
         _receiver = receiver;
 
         add(new BLabel(_ctx.xlate(bundle, text)));
-        
+
         BContainer bpanel = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.CENTER));
         _buttons = new BButton[buttons.length];
@@ -111,15 +135,30 @@ public class OptionDialog extends BDecoratedWindow
         add(bpanel, GroupLayout.FIXED);
     }
 
+    protected void setRequiresString (int width, String defaultValue)
+    {
+        add(1, _input = new BTextField(defaultValue));
+        _input.addListener(this);
+        _input.setPreferredWidth(width);
+        _input.requestFocus();
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
         _ctx.getBangClient().clearPopup(this, false);
-        _receiver.resultPosted(ListUtil.indexOf(_buttons, event.getSource()),
-            null);
+        String value = (_input == null) ? null : _input.getText();
+        int button;
+        if (event.getSource() == _input) {
+            button = 0;
+        } else {
+            button = ListUtil.indexOf(_buttons, event.getSource());
+        }
+        _receiver.resultPosted(button, value);
     }
 
     protected BangContext _ctx;
     protected ResponseReceiver _receiver;
+    protected BTextField _input;
     protected BButton[] _buttons;
 }

@@ -24,9 +24,18 @@ public class ParlorInfo extends SimpleStreamableObject
     /** Whether or not this parlor is password protected. */
     public boolean passwordProtected;
 
-    // documentation inherited
+    // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
         return creator;
+    }
+
+    @Override // documentation inherited
+    public boolean equals (Object other)
+    {
+        ParlorInfo oinfo = (ParlorInfo)other;
+        return creator.equals(oinfo.creator) &&
+            pardnersOnly == oinfo.pardnersOnly &&
+            passwordProtected == oinfo.passwordProtected;
     }
 }
