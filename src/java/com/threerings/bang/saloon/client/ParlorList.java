@@ -172,12 +172,11 @@ public class ParlorList extends BContainer
             MessageBundle msgs = _ctx.getMessageManager().getBundle(
                 SaloonCodes.SALOON_MSGS);
             String lbl = msgs.get("m.parlor_name", info.creator);
-            _list.add(_name = new BLabel(lbl, "parlor_label"));
-            _list.add(_pards = new BLabel(""));
-            _list.add(_lock = new BLabel(""));
+            _name = new BLabel(lbl, "parlor_label");
+            _pards = new BLabel("");
+            _lock = new BLabel("");
             _enter = new BButton(msgs.get("m.enter"), ParlorList.this, "enter");
             _enter.setStyleClass("alt_button");
-            _list.add(_enter);
             update(info);
         }
 
@@ -189,13 +188,33 @@ public class ParlorList extends BContainer
                           new ImageIcon(_ctx.loadImage(LOCKED_PATH)) :
                           new BlankIcon(16, 16));
             _enter.setProperty("info", info);
+
+            // if this game is pardners only, don't show it if the creator is
+            // not our pardner
+            if (info.pardnersOnly &&
+                !_ctx.getUserObject().pardners.containsKey(info.creator)) {
+                clear();
+            } else {
+                add();
+            }
+        }
+
+        public void add () {
+            if (!_name.isAdded()) {
+                _list.add(_name);
+                _list.add(_pards);
+                _list.add(_lock);
+                _list.add(_enter);
+            }
         }
 
         public void clear () {
-            _list.remove(_name);
-            _list.remove(_pards);
-            _list.remove(_lock);
-            _list.remove(_enter);
+            if (_name.isAdded()) {
+                _list.remove(_name);
+                _list.remove(_pards);
+                _list.remove(_lock);
+                _list.remove(_enter);
+            }
         }
 
         protected BLabel _name, _pards, _lock;
