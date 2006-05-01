@@ -1,0 +1,95 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="caboose_wheelmount4" translation="-44.9889, 47.266, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount2" translation="44.8428, 47.2661, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount3" translation="-44.9889, -44.5928, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount" translation="44.8428, -44.5928, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw08" translation="38.0427, 30.6136, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf09" translation="38.0427, 64.4818, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf14" translation="-37.9672, 30.6136, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf10" translation="38.0427, -27.8411, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine03" translation="0.18571, 0.241474, 35.6725" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="engine_attachy07" translation="16.692, 0.0694788, 105.768" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose" translation="13.5487, -0.274187, -0.805332" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_Lw09" translation="38.0427, -61.7093, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf15" translation="-37.9672, -61.7093, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf16" translation="-37.9672, -27.8411, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf17" translation="-37.9672, 64.4818, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="caboose_wheelmount4" translation="-44.9889, 47.266, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount2" translation="44.8428, 47.2661, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount3" translation="-44.9889, -44.5928, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount" translation="44.8428, -44.5928, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw08" translation="38.0427, 30.6136, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf09" translation="38.0427, 64.4818, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf14" translation="-37.9672, 30.6136, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf10" translation="38.0427, -27.8411, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine03" translation="0.18571, 0.241474, 35.6725" rotation="-0.497813, 0.502177, -0.502177, -0.497814" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="engine_attachy07" translation="16.692, 0.0694788, 105.768" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose" translation="13.5487, -0.274187, -0.805332" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_Lw09" translation="38.0427, -61.7093, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf15" translation="-37.9672, -61.7093, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf16" translation="-37.9672, -27.8411, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf17" translation="-37.9672, 64.4818, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="caboose_wheelmount4" translation="-44.9889, 47.266, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount2" translation="44.8428, 47.2661, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount3" translation="-44.9889, -44.5928, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount" translation="44.8428, -44.5928, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw08" translation="38.0427, 30.6136, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf09" translation="38.0427, 64.4818, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf14" translation="-37.9672, 30.6136, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf10" translation="38.0427, -27.8411, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine03" translation="0.18571, 0.241474, 35.6725" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="engine_attachy07" translation="16.692, 0.0694789, 105.768" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose" translation="13.5487, -0.274187, -0.805332" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_Lw09" translation="38.0427, -61.7093, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf15" translation="-37.9672, -61.7093, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf16" translation="-37.9672, -27.8411, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf17" translation="-37.9672, 64.4818, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="caboose_wheelmount4" translation="-44.9889, 47.266, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount2" translation="44.8428, 47.2661, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount3" translation="-44.9889, -44.5928, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount" translation="44.8428, -44.5928, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw08" translation="38.0427, 30.6136, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf09" translation="38.0427, 64.4818, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf14" translation="-37.9672, 30.6136, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf10" translation="38.0427, -27.8411, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine03" translation="0.18571, 0.241474, 35.6725" rotation="0.502177, -0.497814, 0.497814, 0.502177" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="engine_attachy07" translation="16.692, 0.0694788, 105.768" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose" translation="13.5487, -0.274187, -0.805332" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_Lw09" translation="38.0427, -61.7093, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf15" translation="-37.9672, -61.7093, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf16" translation="-37.9672, -27.8411, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf17" translation="-37.9672, 64.4818, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="caboose_wheelmount4" translation="-44.9889, 47.266, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount2" translation="44.8428, 47.2661, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount3" translation="-44.9889, -44.5928, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose_wheelmount" translation="44.8428, -44.5928, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw08" translation="38.0427, 30.6136, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf09" translation="38.0427, 64.4818, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf14" translation="-37.9672, 30.6136, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf10" translation="38.0427, -27.8411, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine03" translation="0.18571, 0.241474, 35.6725" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="engine_attachy07" translation="16.692, 0.0694789, 105.768" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="caboose" translation="13.5487, -0.274187, -0.805332" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_Lw09" translation="38.0427, -61.7093, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf15" translation="-37.9672, -61.7093, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf16" translation="-37.9672, -27.8411, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf17" translation="-37.9672, 64.4818, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>

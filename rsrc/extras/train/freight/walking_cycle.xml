@@ -1,0 +1,100 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="engine_wf06" translation="-37.9672, -27.8493, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf07" translation="-37.9672, -61.7174, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw04" translation="38.0427, -61.7174, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf05" translation="38.0427, -27.8493, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf08" translation="-37.9672, 30.6055, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw05" translation="38.0427, 30.6055, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf06" translation="38.0427, 64.4736, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf09" translation="-37.9672, 64.4736, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box27" translation="44.8428, -44.6009, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine" translation="-0.147996, 0.0787866, 31.2781" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="car_freight" translation="18.952, -0.684512, -0.995338" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy02" translation="22.0953, -0.340847, 105.578" rotation="1.0, 0.0, 2.01482e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_ attachy03" translation="22.0954, -0.340796, -108.586" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box28" translation="-44.9889, -44.6009, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box29" translation="44.8428, 47.2579, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box30" translation="-44.9889, 47.2579, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="engine_wf06" translation="-37.9672, -27.8493, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf07" translation="-37.9672, -61.7174, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw04" translation="38.0427, -61.7174, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf05" translation="38.0427, -27.8493, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf08" translation="-37.9672, 30.6055, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw05" translation="38.0427, 30.6055, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf06" translation="38.0427, 64.4736, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf09" translation="-37.9672, 64.4736, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box27" translation="44.8428, -44.6009, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine" translation="-0.147996, 0.0787866, 31.2781" rotation="-0.497813, 0.502177, -0.502177, -0.497814" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="car_freight" translation="18.952, -0.684512, -0.995338" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy02" translation="22.0953, -0.340847, 105.578" rotation="1.0, 0.0, 2.01429e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_ attachy03" translation="22.0954, -0.340796, -108.586" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box28" translation="-44.9889, -44.6009, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box29" translation="44.8428, 47.2579, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box30" translation="-44.9889, 47.2579, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="engine_wf06" translation="-37.9672, -27.8493, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf07" translation="-37.9672, -61.7174, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw04" translation="38.0427, -61.7174, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf05" translation="38.0427, -27.8493, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf08" translation="-37.9672, 30.6055, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw05" translation="38.0427, 30.6055, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf06" translation="38.0427, 64.4736, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf09" translation="-37.9672, 64.4736, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box27" translation="44.8428, -44.6009, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine" translation="-0.147996, 0.0787866, 31.2781" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="car_freight" translation="18.952, -0.684512, -0.995338" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy02" translation="22.0953, -0.340847, 105.578" rotation="1.0, 0.0, 2.014e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_ attachy03" translation="22.0954, -0.340796, -108.586" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box28" translation="-44.9889, -44.6009, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box29" translation="44.8428, 47.2579, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box30" translation="-44.9889, 47.2579, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="engine_wf06" translation="-37.9672, -27.8493, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf07" translation="-37.9672, -61.7174, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw04" translation="38.0427, -61.7174, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf05" translation="38.0427, -27.8493, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf08" translation="-37.9672, 30.6055, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw05" translation="38.0427, 30.6055, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf06" translation="38.0427, 64.4736, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf09" translation="-37.9672, 64.4736, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box27" translation="44.8428, -44.6009, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine" translation="-0.147996, 0.0787866, 31.2781" rotation="0.502177, -0.497814, 0.497814, 0.502177" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="car_freight" translation="18.952, -0.684512, -0.995338" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy02" translation="22.0953, -0.340847, 105.578" rotation="1.0, 0.0, 2.01455e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_ attachy03" translation="22.0954, -0.340796, -108.586" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box28" translation="-44.9889, -44.6009, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box29" translation="44.8428, 47.2579, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box30" translation="-44.9889, 47.2579, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="engine_wf06" translation="-37.9672, -27.8493, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf07" translation="-37.9672, -61.7174, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw04" translation="38.0427, -61.7174, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf05" translation="38.0427, -27.8493, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf08" translation="-37.9672, 30.6055, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw05" translation="38.0427, 30.6055, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf06" translation="38.0427, 64.4736, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf09" translation="-37.9672, 64.4736, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box27" translation="44.8428, -44.6009, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine" translation="-0.147996, 0.0787866, 31.2781" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="car_freight" translation="18.952, -0.684512, -0.995338" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy02" translation="22.0953, -0.340847, 105.578" rotation="1.0, 0.0, 2.01439e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_ attachy03" translation="22.0954, -0.340796, -108.586" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box28" translation="-44.9889, -44.6009, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box29" translation="44.8428, 47.2579, 40.9938" rotation="0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box30" translation="-44.9889, 47.2579, 40.9938" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>

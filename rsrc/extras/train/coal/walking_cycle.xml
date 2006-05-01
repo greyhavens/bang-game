@@ -1,0 +1,90 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="engine_wf" translation="-37.9672, -28.9979, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+    <transform name="engine_wf01" translation="-37.9672, -62.866, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw1" translation="38.0427, -62.866, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf2" translation="38.0427, -28.9979, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf04" translation="-37.9672, 29.4568, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw03" translation="38.0427, 29.4568, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf04" translation="38.0427, 63.3249, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf05" translation="-37.9672, 63.3249, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_bottom" translation="0.129186, -0.0603523, 35.0297" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="car_coal" translation="14.3391, -0.3437, 1.35514" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy01" translation="17.4825, 1.72984e-005, -108.978" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="coalheap" translation="71.749, 1.73618, -1.38458" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_attachy" translation="17.4824, -3.31905e-005, 104.438" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="engine_wf" translation="-37.9672, -28.9979, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+    <transform name="engine_wf01" translation="-37.9672, -62.866, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw1" translation="38.0427, -62.866, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf2" translation="38.0427, -28.9979, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf04" translation="-37.9672, 29.4568, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw03" translation="38.0427, 29.4568, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf04" translation="38.0427, 63.3249, 27.828" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf05" translation="-37.9672, 63.3249, 27.828" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_bottom" translation="0.129186, -0.0603523, 35.0297" rotation="0.502177, -0.497814, 0.497814, 0.502177" scale="0.813273, 0.813272, 0.813272"/>
+    <transform name="car_coal" translation="14.3391, -0.3437, 1.35514" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy01" translation="17.4825, 1.73003e-005, -108.978" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="coalheap" translation="71.749, 1.73618, -1.38458" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_attachy" translation="17.4824, -3.3189e-005, 104.438" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="engine_wf" translation="-37.9672, -28.9979, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+    <transform name="engine_wf01" translation="-37.9672, -62.866, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw1" translation="38.0427, -62.866, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf2" translation="38.0427, -28.9979, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf04" translation="-37.9672, 29.4568, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw03" translation="38.0427, 29.4568, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf04" translation="38.0427, 63.3249, 27.828" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf05" translation="-37.9672, 63.3249, 27.828" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_bottom" translation="0.129186, -0.0603523, 35.0297" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="car_coal" translation="14.3391, -0.3437, 1.35514" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy01" translation="17.4825, 1.72891e-005, -108.978" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="coalheap" translation="71.749, 1.73618, -1.38458" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_attachy" translation="17.4824, -3.31909e-005, 104.438" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="engine_wf" translation="-37.9672, -28.9979, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+    <transform name="engine_wf01" translation="-37.9672, -62.866, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw1" translation="38.0427, -62.866, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf2" translation="38.0427, -28.9979, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf04" translation="-37.9672, 29.4568, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw03" translation="38.0427, 29.4568, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf04" translation="38.0427, 63.3249, 27.828" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf05" translation="-37.9672, 63.3249, 27.828" rotation="-0.707107, 0.0, 0.707107, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_bottom" translation="0.129186, -0.0603523, 35.0297" rotation="-0.497813, 0.502177, -0.502177, -0.497814" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="car_coal" translation="14.3391, -0.3437, 1.35514" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy01" translation="17.4825, 1.72463e-005, -108.978" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="coalheap" translation="71.749, 1.73618, -1.38458" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_attachy" translation="17.4824, -3.32396e-005, 104.438" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="engine_wf" translation="-37.9672, -28.9979, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="Cylinder01" translation="-1.49455, -60.7084, 119.682" rotation="0.0, 0.0, 1.0, 0.0" scale="0.799488, 0.799488, 0.799488"/>
+    <transform name="engine_wf01" translation="-37.9672, -62.866, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw1" translation="38.0427, -62.866, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf2" translation="38.0427, -28.9979, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf04" translation="-37.9672, 29.4568, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lw03" translation="38.0427, 29.4568, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_Lwf04" translation="38.0427, 63.3249, 27.828" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_wf05" translation="-37.9672, 63.3249, 27.828" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="engine_bottom" translation="0.129186, -0.0603523, 35.0297" rotation="0.5, -0.5, 0.5, 0.5" scale="0.813272, 0.813272, 0.813272"/>
+    <transform name="car_coal" translation="14.3391, -0.3437, 1.35514" rotation="0.5, 0.5, 0.5, 0.5" scale="1.16, 1.16, 1.16"/>
+    <transform name="engine_attachy01" translation="17.4825, 1.73017e-005, -108.978" rotation="-1.41628e-007, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="coalheap" translation="71.749, 1.73618, -1.38458" rotation="-0.5, 0.5, -0.5, 0.5" scale="1.2296, 1.2296, 1.2296"/>
+    <transform name="engine_attachy" translation="17.4824, -3.31816e-005, 104.438" rotation="1.0, 0.0, 1.78375e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>
