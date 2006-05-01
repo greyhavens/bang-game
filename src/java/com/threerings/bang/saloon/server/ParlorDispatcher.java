@@ -39,6 +39,18 @@ public class ParlorDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case ParlorMarshaller.JOIN_MATCH:
+            ((ParlorProvider)provider).joinMatch(
+                source                
+            );
+            return;
+
+        case ParlorMarshaller.LEAVE_MATCH:
+            ((ParlorProvider)provider).leaveMatch(
+                source                
+            );
+            return;
+
         case ParlorMarshaller.START_MATCH_MAKING:
             ((ParlorProvider)provider).startMatchMaking(
                 source,

@@ -105,6 +105,12 @@ public class ParlorManager extends PlaceManager
     // documentation inherited from interface ParlorProvider
     public void updateGameConfig (ClientObject caller, ParlorGameConfig game)
     {
+        // if we're already matchmaking, reject any config updates
+        if (_parobj.playerOids != null) {
+            return;
+        }
+
+        // otherwise just make sure they have the necessary privileges
         PlayerObject user = (PlayerObject)caller;
         if (user.handle.equals(_parobj.info.creator) ||
             !_parobj.onlyCreatorStart) {
@@ -115,6 +121,77 @@ public class ParlorManager extends PlaceManager
     // documentation inherited from interface ParlorProvider
     public void startMatchMaking (ClientObject caller, ParlorGameConfig game)
     {
+        // if we've already started, then just turn this into a join
+        if (_parobj.playerOids != null) {
+            joinMatch(caller);
+
+        } else {
+            // update the game config with the desired config
+            _parobj.setGame(game);
+
+            // create a playerOids array and stick the starter in slot zero
+            int[] playerOids = new int[game.players];
+            playerOids[0] = caller.getOid();
+            _parobj.setPlayerOids(playerOids);
+        }
+    }
+
+    // documentation inherited from interface ParlorProvider
+    public void joinMatch (ClientObject caller)
+    {
+        // make sure the match wasn't cancelled
+        if (_parobj.playerOids == null) {
+            return;
+        }
+
+        // look for a spot, and make sure they're not already joined
+        PlayerObject user = (PlayerObject)caller;
+        int idx = -1;
+        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+            if (_parobj.playerOids[ii] == 0) {
+                idx = ii;
+            }
+            if (_parobj.playerOids[ii] == user.getOid()) {
+                // abort!
+                return;
+            }
+        }
+
+        if (idx != -1) {
+            _parobj.playerOids[idx] = user.getOid();
+            _parobj.setPlayerOids(_parobj.playerOids);
+        }
+
+        // TODO: start a "start the game" timer if we're ready to go
+    }
+
+    // documentation inherited from interface ParlorProvider
+    public void leaveMatch (ClientObject caller)
+    {
+        // make sure the match wasn't already cancelled
+        if (_parobj.playerOids == null) {
+            return;
+        }
+
+        // clear this player out of the list
+        PlayerObject user = (PlayerObject)caller;
+        int remain = 0;
+        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+            if (_parobj.playerOids[ii] == user.getOid()) {
+                _parobj.playerOids[ii] = 0;
+            } else if (_parobj.playerOids[ii] > 0) {
+                remain++;
+            }
+        }
+
+        // either remove this player or cancel the match, depending
+        if (remain == 0) {
+            _parobj.setPlayerOids(null);
+        } else {
+            _parobj.setPlayerOids(_parobj.playerOids);
+        }
+
+        // TODO: cancel any game start timer
     }
 
     @Override // documentation inherited

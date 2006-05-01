@@ -61,54 +61,44 @@ public class ParlorView extends ShopView
         _bgoverlay = ctx.loadImage("ui/saloon/parlor_bg.png");
     }
 
-//     /**
-//      * Called by the controller to instruct us to display the pending match
-//      * view when we have requested to play a game.
-//      */
-//     public void displayMatchView (int matchOid)
-//     {
-//         // remove our criterion view
-//         if (_crview.isAdded()) {
-//             remove(_crview);
-//             remove(_soon);
-//         }
+    /**
+     * Called by the controller to instruct us to display the pending match
+     * view when we have requested to play a game.
+     */
+    public void displayMatchView ()
+    {
+        // remove our configuration view
+        if (_gconfig.isAdded()) {
+            remove(_gconfig);
+        }
 
-//         // this should never happen, but just to be ultra-robust
-//         if (_mview != null) {
-//             remove(_mview);
-//             _mview = null;
-//         }
+        // this should never happen, but just to be ultra-robust
+        if (_mview != null) {
+            remove(_mview);
+            _mview = null;
+        }
 
-//         // display a match view for this pending match
-//         add(_mview = new MatchView(_ctx, _ctrl, matchOid), MATCH_RECT);
-//     }
+        // display a match view for this pending match
+        add(_mview = new ParlorMatchView(_ctx, _parobj), GAME_RECT);
+    }
 
-//     /**
-//      * Called by the match view if the player cancels their pending match.
-//      * Redisplays the criterion view.
-//      */
-//     public void clearMatchView (String status)
-//     {
-//         // out with the old match view
-//         if (_mview != null) {
-//             remove(_mview);
-//             _mview = null;
-//         }
+    /**
+     * Called by the match view if the player cancels their pending match.
+     * Redisplays the criterion view.
+     */
+    public void clearMatchView ()
+    {
+        // out with the old match view
+        if (_mview != null) {
+            remove(_mview);
+            _mview = null;
+        }
 
-//         // redisplay the criterion view
-//         if (!_crview.isAdded()) {
-//             add(_crview, CRIT_RECT);
-//             add(_soon, SOON_LOC);
-//         }
-
-//         setStatus(status);
-//     }
-
-//     public void findMatchFailed (String reason)
-//     {
-//         _crview.reenable();
-//         _status.setStatus(_msgs.xlate(reason), true);
-//     }
+        // redisplay the criterion view
+        if (!_gconfig.isAdded()) {
+            add(_gconfig, GAME_RECT);
+        }
+    }
 
     public void setStatus (String status)
     {
@@ -127,8 +117,9 @@ public class ParlorView extends ShopView
     @Override // documentation inherited
     public void willEnterPlace (PlaceObject plobj)
     {
-        _gconfig.willEnterPlace((ParlorObject)plobj);
-        _config.willEnterPlace((ParlorObject)plobj);
+        _parobj = (ParlorObject)plobj;
+        _gconfig.willEnterPlace(_parobj);
+        _config.willEnterPlace(_parobj);
         _chat.willEnterPlace(plobj);
     }
 
@@ -138,6 +129,7 @@ public class ParlorView extends ShopView
         _gconfig.didLeavePlace();
         _config.didLeavePlace();
         _chat.didLeavePlace(plobj);
+        _parobj = null;
     }
 
     @Override // documentation inherited
@@ -161,13 +153,15 @@ public class ParlorView extends ShopView
         _bgoverlay.render(renderer, 39, 65, _alpha);
     }
 
+    protected ParlorObject _parobj;
     protected ParlorController _ctrl;
+    protected BImage _bgoverlay;
+    protected StatusLabel _status;
+    protected PlaceChatView _chat;
+
     protected ParlorGameConfigView _gconfig;
     protected ParlorConfigView _config;
-    protected PlaceChatView _chat;
-    protected StatusLabel _status;
-
-    protected BImage _bgoverlay;
+    protected ParlorMatchView _mview;
 
     protected static final Rectangle GAME_RECT =
         new Rectangle(102, 315, 410, 232);

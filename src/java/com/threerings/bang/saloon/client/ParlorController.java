@@ -3,6 +3,9 @@
 
 package com.threerings.bang.saloon.client;
 
+import com.threerings.presents.dobj.AttributeChangeListener;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+
 import com.threerings.crowd.client.PlaceController;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceConfig;
@@ -17,6 +20,7 @@ import com.threerings.bang.saloon.data.ParlorObject;
  * Handles the client side of a Back Parlor.
  */
 public class ParlorController extends PlaceController
+    implements AttributeChangeListener
 {
     @Override // documentation inherited
     public void init (CrowdContext ctx, PlaceConfig config)
@@ -30,6 +34,29 @@ public class ParlorController extends PlaceController
     {
         super.willEnterPlace(plobj);
         _parobj = (ParlorObject)plobj;
+        _parobj.addListener(this);
+    }
+
+    @Override // documentation inherited
+    public void didLeavePlace (PlaceObject plobj)
+    {
+        super.didLeavePlace(plobj);
+        if (_parobj != null) {
+            _parobj.removeListener(this);
+            _parobj = null;
+        }
+    }
+
+    // documentation inherited from interface AttributeChangeListener
+    public void attributeChanged (AttributeChangedEvent event)
+    {
+        if (event.getName().equals(ParlorObject.PLAYER_OIDS)) {
+            if (_parobj.playerOids == null) {
+                _view.clearMatchView();
+            } else {
+                _view.displayMatchView();
+            }
+        }
     }
 
     @Override // documentation inherited

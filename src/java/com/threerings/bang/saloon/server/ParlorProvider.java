@@ -17,6 +17,16 @@ import com.threerings.presents.server.InvocationProvider;
 public interface ParlorProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link ParlorService#joinMatch} request.
+     */
+    public void joinMatch (ClientObject caller);
+
+    /**
+     * Handles a {@link ParlorService#leaveMatch} request.
+     */
+    public void leaveMatch (ClientObject caller);
+
+    /**
      * Handles a {@link ParlorService#startMatchMaking} request.
      */
     public void startMatchMaking (ClientObject caller, ParlorGameConfig arg1);

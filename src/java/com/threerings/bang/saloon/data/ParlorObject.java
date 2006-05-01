@@ -27,6 +27,9 @@ public class ParlorObject extends PlaceObject
 
     /** The field name of the <code>game</code> field. */
     public static final String GAME = "game";
+
+    /** The field name of the <code>playerOids</code> field. */
+    public static final String PLAYER_OIDS = "playerOids";
     // AUTO-GENERATED: FIELDS END
 
     /** Provides access to parlor services. */
@@ -40,6 +43,9 @@ public class ParlorObject extends PlaceObject
 
     /** Information on a game being configured. */
     public ParlorGameConfig game;
+
+    /** Used when match-making a game. */
+    public int[] playerOids;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -104,6 +110,39 @@ public class ParlorObject extends PlaceObject
         requestAttributeChange(
             GAME, value, ovalue);
         this.game = value;
+    }
+
+    /**
+     * Requests that the <code>playerOids</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setPlayerOids (int[] value)
+    {
+        int[] ovalue = this.playerOids;
+        requestAttributeChange(
+            PLAYER_OIDS, value, ovalue);
+        this.playerOids = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>playerOids</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setPlayerOidsAt (int value, int index)
+    {
+        int ovalue = this.playerOids[index];
+        requestElementUpdate(
+            PLAYER_OIDS, index, new Integer(value), new Integer(ovalue));
+        this.playerOids[index] = value;
     }
     // AUTO-GENERATED: METHODS END
 }
