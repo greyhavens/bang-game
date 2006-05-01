@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="body" translation="-0.377342, 89.933, 85.7977" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.934579, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
+  <triMesh name="body" translation="-0.377369, -3.56157, 66.0768" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.934579, 1.0, 1.0" offsetTranslation="-8.03358e-007, 19.7332, -93.4946" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
     <vertex location="-3.31799e-007, 0.881338, -4.64913" normal="-0.000897959, 0.0, -1.0" tcoords="0.211891, 0.893588"/>
     <vertex location="26.4247, 13.6068, -1.28465" normal="0.205292, 0.0988635, -1.9863" tcoords="0.278358, 0.925937"/>
     <vertex location="29.3292, 0.881342, -1.28465" normal="0.227857, 0.0, -1.9863" tcoords="0.285664, 0.893588"/>
@@ -2291,7 +2291,7 @@
     <vertex location="1.07387, 39.4822, 5.90651" normal="-1.99471, 0.145008, 0.00868677" tcoords="0.0546875, 0.964844"/>
   </triMesh>
 
-  <triMesh name="prop" parent="body" translation="0.0390048, 19.72, -93.4946" rotation="1.26563e-007, 0.0, 0.00057195, 1.0" scale="0.953267, 1.04902, 1.0" solid="true" texture="dirigible.png" transparent="true">
+  <triMesh name="prop" parent="body" translation="0.394833, 20.4786, -93.4946" rotation="1.26563e-007, 0.0, 0.000572103, 1.0" scale="0.953267, 1.04902, 1.0" offsetTranslation="-0.394834, -0.745437, 1.67715e-007" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
     <vertex location="5.20204, 0.889747, -1.16969" normal="0.989262, -0.14615, -4.51963e-007" tcoords="0.984375, 0.433594"/>
     <vertex location="3.79978, -2.27414, -5.51751" normal="0.689106, -0.722403, -0.0571576" tcoords="0.96875, 0.449219"/>
     <vertex location="5.20204, 0.889748, -5.51751" normal="0.998222, 0.000439521, -0.0596111" tcoords="0.984375, 0.449219"/>
@@ -2597,7 +2597,7 @@
     <vertex location="-23.3596, -35.1167, -6.35831" normal="0.431243, -0.271332, -1.93393" tcoords="0.980469, 0.65625"/>
   </triMesh>
 
-  <triMesh name="up fin" parent="body" translation="-8.19e-007, 19.7332, -93.4946" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
+  <triMesh name="up fin" parent="body" translation="-8.19e-007, 19.7332, -93.4946" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
     <vertex location="0.361606, 50.3363, -17.9934" normal="0.0, -0.997295, -0.0734988" tcoords="0.00390625, 0.890625"/>
     <vertex location="0.361608, 50.4803, -10.8011" normal="-1.90901e-007, -0.73972, -0.672915" tcoords="0.00390625, 0.851563"/>
     <vertex location="-0.394254, 43.7361, -17.6893" normal="0.998632, 0.0401301, -0.0335175" tcoords="0.0273438, 0.890625"/>
@@ -2744,7 +2744,7 @@
     <vertex location="1.11748, 19.5104, -17.1017" normal="-0.997688, 0.0521425, -0.0435965" tcoords="0.117188, 0.890625"/>
   </triMesh>
 
-  <triMesh name="down fin" parent="body" translation="-8.19e-007, 19.7332, -93.4946" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
+  <triMesh name="down fin" parent="body" translation="-8.19e-007, 19.7332, -93.4946" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
     <vertex location="0.333844, -51.0712, -17.9934" normal="0.0, 0.997308, -0.0733309" tcoords="0.136719, 0.890625"/>
     <vertex location="0.333846, -51.2152, -10.8011" normal="-1.89866e-007, 0.739718, -0.672917" tcoords="0.136719, 0.820313"/>
     <vertex location="1.09388, -44.4709, -17.6893" normal="-0.998623, -0.0402598, -0.0336325" tcoords="0.113281, 0.890625"/>
@@ -2891,7 +2891,7 @@
     <vertex location="-0.426209, -20.2453, -17.1017" normal="0.99767, -0.0523943, -0.0437081" tcoords="0.0234375, 0.890625"/>
   </triMesh>
 
-  <triMesh name="port cannon" parent="body" translation="2.39605e-005, 111.304, -22.6892" rotation="0.5, 0.0, -1.7321e-007, 0.866025" scale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
+  <triMesh name="port cannon" parent="body" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.7321e-007, 0.866025" scale="1.0, 1.0, 1.0" offsetTranslation="-73.5762, 15.9142, -110.748" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
     <vertex location="73.8836, -15.7051, 78.6169" normal="0.0, 0.0, -1.0" tcoords="0.328125, 0.996094"/>
     <vertex location="76.9537, -11.4513, 79.5441" normal="0.252085, 0.490358, -0.834267" tcoords="0.304688, 0.988281"/>
     <vertex location="79.0427, -13.9502, 79.5441" normal="0.481016, 0.242654, -0.842462" tcoords="0.320313, 0.988281"/>
@@ -3434,13 +3434,13 @@
     <vertex location="80.17, -13.5667, 165.691" normal="-1.75885, -0.675847, 0.185954" tcoords="0.320313, 0.585938"/>
   </triMesh>
 
-  <triMesh name="em_left" parent="port cannon" translation="0.516398, 1.6978, 24.8484" rotation="-0.0174531, 0.00363828, -3.1745e-005, 0.999841" scale="1.07, 1.0, 1.0" solid="true">
+  <triMesh name="em_left" parent="port cannon" translation="0.516398, 1.6978, 24.8484" rotation="-0.0174531, 0.00363828, -3.1745e-005, 0.999841" scale="1.07, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
     <vertex location="6.04365, -5.43928, 0.0" normal="0.0, 0.0, 1.0"/>
     <vertex location="0.51371, 5.43928, 0.0" normal="0.0, 0.0, 1.0"/>
     <vertex location="-6.04365, -5.43928, 0.0" normal="0.0, 0.0, 1.0"/>
   </triMesh>
 
-  <triMesh name="starboard cannon" parent="body" translation="-147.284, 111.304, -22.6892" rotation="0.5, 0.0, -1.76901e-007, 0.866025" scale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
+  <triMesh name="starboard cannon" parent="body" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.76901e-007, 0.866025" scale="1.0, 1.0, 1.0" offsetTranslation="-73.5762, 15.9142, -110.748" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="dirigible.png" transparent="true">
     <vertex location="73.8836, -15.7051, 78.6169" normal="0.0, 0.0, -1.0" tcoords="0.328125, 0.996094"/>
     <vertex location="76.9537, -11.4513, 79.5441" normal="0.252085, 0.490358, -0.834267" tcoords="0.304688, 0.988281"/>
     <vertex location="79.0427, -13.9502, 79.5441" normal="0.481016, 0.242654, -0.842462" tcoords="0.320313, 0.988281"/>
@@ -3983,13 +3983,13 @@
     <vertex location="80.17, -13.5667, 165.691" normal="-1.75885, -0.675847, 0.185954" tcoords="0.320313, 0.585938"/>
   </triMesh>
 
-  <triMesh name="em_right" parent="starboard cannon" translation="0.451767, 0.177534, 24.9088" rotation="0.0130895, 1.41223e-007, 0.0, 0.999914" scale="1.07, 1.0, 1.0" solid="true">
+  <triMesh name="em_right" parent="starboard cannon" translation="0.451767, 0.177534, 24.9088" rotation="0.0130895, 1.41223e-007, 0.0, 0.999914" scale="1.07, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
     <vertex location="6.04365, -5.43928, 0.0" normal="0.0, 0.0, 1.0"/>
     <vertex location="0.51371, 5.43928, 0.0" normal="0.0, 0.0, 1.0"/>
     <vertex location="-6.04365, -5.43928, 0.0" normal="0.0, 0.0, 1.0"/>
   </triMesh>
 
-  <triMesh name="em_smoke" parent="body" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0" solid="true">
+  <triMesh name="em_smoke" parent="body" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
     <vertex location="10.6107, -10.9768, 0.0" normal="0.0, 0.0, 1.0"/>
     <vertex location="-0.253952, 7.06229, 0.0" normal="0.0, 0.0, 1.0"/>
     <vertex location="-10.6236, -10.9768, 0.0" normal="0.0, 0.0, 1.0"/>
