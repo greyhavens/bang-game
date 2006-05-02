@@ -26,6 +26,7 @@ import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
@@ -37,7 +38,6 @@ import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 
 import com.threerings.bang.client.Config;
-import com.threerings.bang.client.Model;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
@@ -59,6 +59,10 @@ public class MobileSprite extends PieceSprite
     }
 
     /** A fake action that is queued up to indicate that this sprite
+     * should switch to its dead model when all other actions are complete. */
+    public static final String DEAD = "__dead__";
+    
+    /** A fake action that is queued up to indicate that this sprite
      * should be removed when all other actions are completed. */
     public static final String REMOVED = "__removed__";
     
@@ -77,7 +81,7 @@ public class MobileSprite extends PieceSprite
      */
     public boolean hasAction (String action)
     {
-        return _model.hasAnimation(action);
+        return _model != null && _model.hasAnimation(action);
     }
 
     /**
@@ -85,7 +89,7 @@ public class MobileSprite extends PieceSprite
      */
     public Model.Animation getAction (String action)
     {
-        return _model.getAnimation(action);
+        return (_model == null) ? null : _model.getAnimation(action);
     }
 
     /**
@@ -245,8 +249,14 @@ public class MobileSprite extends PieceSprite
                 if (_actions.size() > 0) {
                     startNextAction();
                 } else {
-                    setAction(getRestPose());
+                    startNextIdle();
                 }
+            }
+            
+        } else if (_nextIdle > 0) {
+            _nextIdle -= time;
+            if (_nextIdle <= 0) {
+                startNextIdle();
             }
         }
 
@@ -277,15 +287,20 @@ public class MobileSprite extends PieceSprite
         createDustManager(ctx);
         
         // load our model
-        _model = ctx.loadModel(_type, _name);
-        _model.resolveActions();
-        _wtypes = StringUtil.parseStringArray(
-            _model.getProperties().getProperty("wreckage", ""));
-
-        // start in our rest post
-        setAction(getRestPose());
+        loadModel(ctx, _type, _name, _zations);
     }
 
+    @Override // documentation inherited
+    protected void modelLoaded (BasicContext ctx, Model model)
+    {
+        super.modelLoaded(ctx, model);
+        _wtypes = StringUtil.parseStringArray(
+            _model.getProperties().getProperty("wreckage", ""));
+        _ianims = StringUtil.parseStringArray(
+            _model.getProperties().getProperty("idle", ""));
+        startNextIdle();
+    }
+    
     /**
      * Creates the dust particle manager, if this unit kicks up dust.
      */
@@ -389,16 +404,15 @@ public class MobileSprite extends PieceSprite
     }
 
     /**
-     * Configures the current set of meshes being used by this sprite.
+     * Activates one of the model animations.
+     *
+     * @return the duration of the animation (for looping animations,
+     * the duration of one cycle), or -1 if the action was not found
      */
-    protected Model.Animation setAction (String action)
+    protected float setAction (String action)
     {
-        // remove the old meshes
-        if (_binding != null) {
-            _binding.detach();
-        }
-        // add the new meshes
-        return bindAnimation(_ctx, _model, action, _texrando, _zations);
+        return (_model == null || _dead) ?
+            -1f : _model.startAnimation(action);
     }
 
     /**
@@ -407,7 +421,11 @@ public class MobileSprite extends PieceSprite
     protected void startNextAction ()
     {
         _action = _actions.remove(0);
-        if (_action.equals(REMOVED)) {
+        if (_action.equals(DEAD)) {
+            loadModel(_ctx, _type, _name + "/dead", _zations);
+            _dead = true;
+            
+        } else if (_action.equals(REMOVED)) {
             // have the unit sink into the ground and fade away
             _nextAction = REMOVAL_DURATION;
 
@@ -429,27 +447,40 @@ public class MobileSprite extends PieceSprite
                     color.a -= time / REMOVAL_DURATION;
                 }
             });
-
+            
         } else {
-            Model.Animation anim = setAction(_action);
             // cope when we have units disabled for debugging purposes
-            if (anim == null) {
+            if ((_nextAction = setAction(_action)) < 0f) {
                 _nextAction = 0.5f;
-            } else {
-                _nextAction = anim.getDuration() / Config.animationSpeed;
             }
         }
     }
 
     /**
-     * Returns the default pose for this model when it is simply resting
-     * on the board.
+     * Starts the next idle animation (if any) and schedules the one after
+     * that.
      */
-    protected String getRestPose ()
+    protected void startNextIdle ()
     {
-        return _piece.isAlive() ? "standing" : "dead";
+        // if there's one idle animation, assume that it loops; if there
+        // are many, cycle randomly between them
+        if (_ianims == null || _ianims.length == 0) {
+            if (_model != null) {
+                _model.stopAnimation();
+            }
+            _idle = null;
+            _nextIdle = Float.MAX_VALUE;
+            
+        } else if (_ianims.length == 1) {
+            setAction(_idle = _ianims[0]);
+            _nextIdle = Float.MAX_VALUE;
+            
+        } else if (_ianims.length > 1) {
+            _idle = (String)RandomUtil.pickRandom(_ianims, _idle);
+            _nextIdle = setAction(_idle);
+        }
     }
-
+    
     /**
      * Creates a path that will be used to move this piece from the
      * specified old position to the new one.
@@ -533,7 +564,10 @@ public class MobileSprite extends PieceSprite
     protected void updateHighlight ()
     {
         super.updateHighlight();
-
+        if (_highlight == null) {
+            return;
+        }
+        
         if (_highlight.x != localTranslation.x ||
             _highlight.y != localTranslation.y) {
             _highlight.setPosition(localTranslation.x, localTranslation.y);
@@ -545,19 +579,6 @@ public class MobileSprite extends PieceSprite
             _view.getDustColor(localTranslation, start);
             _dustmgr.getEndColor().set(start.r, start.g, start.b, 0f);
         }
-    }
-
-    /** Computes the world space location of the named emitter. */
-    protected Vector3f getEmitterTranslation (String name)
-    {
-        if (_binding == null) {
-            return Vector3f.ZERO;
-        }
-        Geometry geom = _binding.getMarker(name);
-        if (geom == null) {
-            return Vector3f.ZERO;
-        }
-        return geom.getWorldBound().getCenter();
     }
 
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */
@@ -584,23 +605,23 @@ public class MobileSprite extends PieceSprite
 
     protected String _type, _name;
     protected String[] _wtypes;
+    protected String[] _ianims;
     protected TerrainNode.Highlight _highlight;
     protected ParticleManager _dustmgr;
     protected Sound _moveSound;
 
-    protected String _action;
-    protected float _nextAction;
+    protected String _action, _idle;
+    protected float _nextAction, _nextIdle;
     protected ArrayList<String> _actions = new ArrayList<String>();
 
     protected PieceSprite _tsprite;
 
-    /** Ensures that we use the same random texture for every animation
-     * displayed for this particular instance. */
-    protected int _texrando = RandomUtil.getInt(Integer.MAX_VALUE);
-
     /** The colorizations to use for this sprite's textures. */
     protected Colorization[] _zations;
     
+    /** Whether or not we have switched to the dead model. */
+    protected boolean _dead;
+        
     protected static TextureState _dusttex;
 
     /** The number of dust particles. */

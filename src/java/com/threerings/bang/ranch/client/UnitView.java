@@ -15,7 +15,9 @@ import com.jmex.bui.BGeomView;
 import com.jmex.bui.BImage;
 import com.jmex.bui.util.Dimension;
 
-import com.threerings.bang.client.Model;
+import com.threerings.jme.model.Model;
+
+import com.threerings.bang.client.util.ModelAttacher;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
@@ -44,13 +46,15 @@ public class UnitView extends BGeomView
      */
     public void setUnit (UnitConfig config)
     {
-        if (_binding != null) {
-            _binding.detach();
-        }
-
-        Model model = _ctx.loadModel("units", config.type);
-        Model.Animation anim = model.getAnimation("standing");
-        _binding = anim.bind((Node)_geom, 0, null, null);
+        ((Node)_geom).detachAllChildren();
+        _ctx.loadModel("units", config.type, new ModelAttacher((Node)_geom) {
+            public void requestCompleted (Model model) {
+                super.requestCompleted(model);
+                if (model.hasAnimation("standing")) {
+                    model.startAnimation("standing");
+                }
+            }
+        });
     }
 
     @Override // documentation inherited
@@ -71,11 +75,7 @@ public class UnitView extends BGeomView
     protected void wasRemoved ()
     {
         super.wasRemoved();
-
         _frame.release();
-        if (_binding != null) {
-            _binding.detach();
-        }
     }
 
     @Override // documentation inherited
@@ -116,6 +116,5 @@ public class UnitView extends BGeomView
 
     protected BangContext _ctx;
     protected Node _unode;
-    protected Model.Binding _binding;
     protected BImage _frame;
 }

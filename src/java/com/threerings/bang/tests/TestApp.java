@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import com.samskivert.util.Config;
+import com.samskivert.util.ResultListener;
 
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
@@ -30,6 +31,7 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
+import com.threerings.jme.model.Model;
 import com.threerings.openal.SoundManager;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
@@ -38,7 +40,6 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.GlobalKeyManager;
-import com.threerings.bang.client.Model;
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.TextureCache;
@@ -205,6 +206,10 @@ public abstract class TestApp extends JmeApp
             return _tcache;
         }
 
+        public ModelCache getModelCache () {
+            return _mcache;
+        }
+        
         public CharacterManager getCharacterManager () {
             return _charmgr;
         }
@@ -218,8 +223,9 @@ public abstract class TestApp extends JmeApp
             return (mb == null) ? message : mb.xlate(message);
         }
 
-        public Model loadModel (String type, String name) {
-            return _mcache.getModel(type, name);
+        public void loadModel (
+            String type, String name, ResultListener<Model> rl) {
+            _mcache.getModel(type, name, rl);
         }
 
         public BImage loadImage (String rsrcPath) {

@@ -48,6 +48,7 @@ import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
+import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
 
@@ -87,47 +88,11 @@ public class RenderUtil
     public static LightState noLights;
     
     /**
-     * Initializes our commonly used render states.
+     * Initializes our commonly used render states and terrain textures.
      */
     public static void init (BasicContext ctx)
     {
-        addAlpha = ctx.getRenderer().createAlphaState();
-        addAlpha.setBlendEnabled(true);
-        addAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        addAlpha.setDstFunction(AlphaState.DB_ONE);
-        addAlpha.setEnabled(true);
-
-        blendAlpha = ctx.getRenderer().createAlphaState();
-        blendAlpha.setBlendEnabled(true);
-        blendAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        blendAlpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-        blendAlpha.setEnabled(true);
-
-        opaqueAlpha = ctx.getRenderer().createAlphaState();
-        opaqueAlpha.setBlendEnabled(false);
-        
-        alwaysZBuf = ctx.getRenderer().createZBufferState();
-        alwaysZBuf.setWritable(false);
-        alwaysZBuf.setEnabled(true);
-        alwaysZBuf.setFunction(ZBufferState.CF_ALWAYS);
-
-        lequalZBuf = ctx.getRenderer().createZBufferState();
-        lequalZBuf.setEnabled(true);
-        lequalZBuf.setFunction(ZBufferState.CF_LEQUAL);
-
-        overlayZBuf = ctx.getRenderer().createZBufferState();
-        overlayZBuf.setEnabled(true);
-        overlayZBuf.setWritable(false);
-        overlayZBuf.setFunction(ZBufferState.CF_LEQUAL);
-
-        backCull = ctx.getRenderer().createCullState();
-        backCull.setCullMode(CullState.CS_BACK);
-
-        frontCull = ctx.getRenderer().createCullState();
-        frontCull.setCullMode(CullState.CS_FRONT);
-        
-        noLights = ctx.getRenderer().createLightState();
-        noLights.setEnabled(false);
+        initStates();
         
         ClassLoader loader = ctx.getClass().getClassLoader();
         for (Terrain terrain : Terrain.RENDERABLE) {
@@ -158,6 +123,52 @@ public class RenderUtil
         }
     }
 
+    /**
+     * Initializes just the shared render states.
+     */
+    public static void initStates ()
+    {
+        Renderer renderer = DisplaySystem.getDisplaySystem().getRenderer();
+        
+        addAlpha = renderer.createAlphaState();
+        addAlpha.setBlendEnabled(true);
+        addAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+        addAlpha.setDstFunction(AlphaState.DB_ONE);
+        addAlpha.setEnabled(true);
+
+        blendAlpha = renderer.createAlphaState();
+        blendAlpha.setBlendEnabled(true);
+        blendAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+        blendAlpha.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        blendAlpha.setEnabled(true);
+
+        opaqueAlpha = renderer.createAlphaState();
+        opaqueAlpha.setBlendEnabled(false);
+        
+        alwaysZBuf = renderer.createZBufferState();
+        alwaysZBuf.setWritable(false);
+        alwaysZBuf.setEnabled(true);
+        alwaysZBuf.setFunction(ZBufferState.CF_ALWAYS);
+
+        lequalZBuf = renderer.createZBufferState();
+        lequalZBuf.setEnabled(true);
+        lequalZBuf.setFunction(ZBufferState.CF_LEQUAL);
+
+        overlayZBuf = renderer.createZBufferState();
+        overlayZBuf.setEnabled(true);
+        overlayZBuf.setWritable(false);
+        overlayZBuf.setFunction(ZBufferState.CF_LEQUAL);
+
+        backCull = renderer.createCullState();
+        backCull.setCullMode(CullState.CS_BACK);
+
+        frontCull = renderer.createCullState();
+        frontCull.setCullMode(CullState.CS_FRONT);
+        
+        noLights = renderer.createLightState();
+        noLights.setEnabled(false);
+    }
+    
     /** Rounds the supplied value up to a power of two. */
     public static int nextPOT (int value)
     {
@@ -329,6 +340,7 @@ public class RenderUtil
         texture.setCorrection(Texture.CM_PERSPECTIVE);
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+        texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
         texture.setImage(image);
         return texture;
     }

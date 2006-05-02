@@ -135,37 +135,34 @@
     <exec executable="bin/update_lists"/>
   </target>
 
-  <!-- converts our models into JME format -->
+  <!-- compiles our models -->
   <target name="models">
-    <taskdef name="convert" classpathref="classpath"
-             classname="com.threerings.jme.tools.ConvertModelTask"/>
-    <convert>
-      <fileset dir="rsrc" includes="**/*.MD3"/>
-      <fileset dir="rsrc" includes="**/*.obj"/>
-      <fileset dir="rsrc" includes="**/*.3DS"/>
-      <fileset dir="rsrc" includes="**/*.ASE"/>
-    </convert>
+    <taskdef name="compile" classpathref="classpath"
+             classname="com.threerings.jme.tools.CompileModelTask"/>
+    <compile>
+      <fileset dir="rsrc" includes="**/model.properties"/>
+    </compile>
     <jar file="rsrc/units/bundle.jar" basedir="rsrc/units">
       <include name="**/*.png"/>
-      <include name="**/*.jme"/>
+      <include name="**/model.dat"/>
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/props/bundle.jar" basedir="rsrc/props">
       <include name="**/*.png"/>
-      <include name="**/*.jme"/>
+      <include name="**/model.dat"/>
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/bonuses/bundle.jar" basedir="rsrc/bonuses">
       <include name="**/*.png"/>
-      <include name="**/*.jme"/>
+      <include name="**/model.dat"/>
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/extras/bundle.jar" basedir="rsrc/extras">
       <include name="**/*.png"/>
-      <include name="**/*.jme"/>
+      <include name="**/model.dat"/>
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
@@ -406,6 +403,8 @@
         <include name="rsrc/**/*.css"/>
         <include name="rsrc/**/*.dat"/>
         <include name="rsrc/**/*.tmpl"/>
+        <exclude name="rsrc/**/model.properties"/>
+        <exclude name="rsrc/**/model.dat"/>
       </fileset>
     </jar>
   </target>

@@ -3,42 +3,28 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.util.Properties;
-
-import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
-import com.jme.scene.Controller;
-import com.jme.scene.Geometry;
 import com.jme.scene.state.TextureState;
 import com.jme.renderer.ColorRGBA;
 
 import com.jmex.effects.ParticleManager;
 
-import com.threerings.bang.client.Model;
-import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
+import com.threerings.jme.model.Model;
+import com.threerings.jme.model.TextureProvider;
 
-import com.threerings.bang.game.client.BoardView;
-
-import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
+
+import com.threerings.bang.util.RenderUtil;
 
 /**
  * A plume of smoke represented by a particle system.
  */
 public class SmokePlumeEmission extends SpriteEmission
 {
-    public SmokePlumeEmission (String name, Properties props)
-    {
-        super(name);
-    }
-    
     @Override // documentation inherited
-    public void init (BasicContext ctx, BoardView view, PieceSprite sprite)
+    public void init (Model model)
     {
-        super.init(ctx, view, sprite);
-        
         _smokemgr = new ParticleManager(64);
         _smokemgr.setParticlesMinimumLifeTime(2000f);
         _smokemgr.setInitialVelocity(0.01f);
@@ -48,53 +34,50 @@ public class SmokePlumeEmission extends SpriteEmission
         _smokemgr.setRandomMod(0f);
         _smokemgr.setPrecision(FastMath.FLT_EPSILON);
         _smokemgr.setControlFlow(true);
-        _smokemgr.setReleaseRate(0);
+        _smokemgr.setReleaseRate(256);
         _smokemgr.setReleaseVariance(0f);
         _smokemgr.setParticleSpinSpeed(0.01f);
         _smokemgr.setStartSize(TILE_SIZE / 8);
         _smokemgr.setEndSize(TILE_SIZE / 2);
         _smokemgr.setStartColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0.75f));
         _smokemgr.setEndColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0f));
-        if (_smoketex == null) {
-            _smoketex = RenderUtil.createTextureState(
-                ctx, "textures/effects/dust.png");
+        if (RenderUtil.blendAlpha == null) {
+            RenderUtil.initStates();
         }
-        _smokemgr.getParticles().setRenderState(_smoketex);
         _smokemgr.getParticles().setRenderState(RenderUtil.blendAlpha);
         _smokemgr.getParticles().setRenderState(RenderUtil.overlayZBuf);
         _smokemgr.getParticles().updateRenderState();
         _smokemgr.getParticles().addController(_smokemgr);
-        _smokemgr.getParticles().addController(new Controller() {
-            public void update (float time) {
-                if (!isRunning()) {
-                    return;
-                }
-                // position the emitter
-                getEmitterLocation(true, _smokemgr.getParticlesOrigin());
-            }
-        });
-        _view.getPieceNode().attachChild(_smokemgr.getParticles());
+        _smokemgr.forceRespawn();
+        
+        model.getEmissionNode().attachChild(_smokemgr.getParticles());
+        
+        super.init(model);
     }
     
     @Override // documentation inherited
-    public void cleanup ()
+    public void setActive (boolean active)
     {
-        super.cleanup();
-        _view.getPieceNode().detachChild(_smokemgr.getParticles());
+        super.setActive(active);
+        _smokemgr.setReleaseRate(active ? 256 : 0);
     }
     
     @Override // documentation inherited
-    public void start (Model.Animation anim, Model.Binding binding)
+    public void resolveTextures (TextureProvider tprov)
     {
-        super.start(anim, binding);
-        _smokemgr.setReleaseRate(256);
+        if (_smoketex == null) {
+            _smoketex = tprov.getTexture("/textures/effects/dust.png");
+        }
+        _smokemgr.getParticles().setRenderState(_smoketex);
     }
     
-    @Override // documentation inherited
-    public void stop ()
+    // documentation inherited
+    public void update (float time)
     {
-        super.stop();
-        _smokemgr.setReleaseRate(0);
+        if (!isActive()) {
+            return;
+        }
+        getEmitterLocation(_smokemgr.getParticlesOrigin());
     }
     
     /** The smoke plume particle system. */
@@ -102,4 +85,6 @@ public class SmokePlumeEmission extends SpriteEmission
     
     /** The smoke texture. */
     protected static TextureState _smoketex;
+    
+    private static final long serialVersionUID = 1;
 }

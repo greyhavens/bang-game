@@ -3,6 +3,10 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 
@@ -10,49 +14,58 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import com.jme.math.FastMath;
-import com.jme.math.Line;
 import com.jme.math.Vector3f;
+import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
-import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 import com.jmex.effects.ParticleManager;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.jme.model.Model;
+import com.threerings.jme.model.TextureProvider;
 import com.threerings.jme.sprite.PathUtil;
 
-import com.threerings.bang.client.Model;
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
-
-import com.threerings.bang.game.client.BoardView;
-
-import static com.threerings.bang.Log.*;
 
 /**
  * A gunshot effect with muzzle flash and bullet trail.
  */
 public class GunshotEmission extends SpriteEmission
 {
-    public GunshotEmission (String name, Properties props)
+    @Override // documentation inherited
+    public void configure (Properties props, Spatial target)
     {
-        super(name);
-        _shotFrames = StringUtil.parseIntArray(
-            props.getProperty("shot_frames", ""));
+        super.configure(props, target);
+        if (_animations == null) {
+            return;
+        }
+        _animShotFrames = new HashMap<String, int[]>();
+        for (String anim : _animations) {
+            _animShotFrames.put(anim, StringUtil.parseIntArray(
+                props.getProperty(anim + ".shot_frames", "")));
+        }
     }
     
     @Override // documentation inherited
-    public void init (BasicContext ctx, BoardView view, PieceSprite sprite)
+    public void init (Model model)
     {
-        super.init(ctx, view, sprite);
+        super.init(model);
+        _model = model;
+        
         if (_fmesh == null) {
             createFlareMesh();
+        }
+        if (RenderUtil.blendAlpha == null) {
+            RenderUtil.initStates();
         }
         _flare = new Flare();
         _trail = new Trail();
@@ -71,49 +84,86 @@ public class GunshotEmission extends SpriteEmission
         _smokemgr.setEndColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0f));
         _smokemgr.setRepeatType(Controller.RT_CLAMP);
         _smokemgr.setActive(false);
-        
         TriMesh particles = _smokemgr.getParticles();
         particles.addController(_smokemgr);
-
-        if (_smoketex == null) {
-            _smoketex = RenderUtil.createTextureState(_ctx,
-                "textures/effects/dust.png");
-        }
-        particles.setRenderState(_smoketex);
+        
         particles.setRenderState(RenderUtil.blendAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
         particles.updateRenderState();
         
-        _view.getPieceNode().attachChild(particles);
+        model.getEmissionNode().attachChild(particles);
     }
     
     @Override // documentation inherited
-    public void cleanup ()
+    public void resolveTextures (TextureProvider tprov)
     {
-        super.cleanup();
-        _view.getPieceNode().detachChild(_smokemgr.getParticles());
+        if (_smoketex == null) {
+            _smoketex = tprov.getTexture("/textures/effects/dust.png");
+            _ftex = tprov.getTexture("/textures/effects/flash.png");
+        }
+        _smokemgr.getParticles().setRenderState(_smoketex);
+        _flare.setRenderState(_ftex);
     }
     
     @Override // documentation inherited
-    public void start (Model.Animation anim, Model.Binding binding)
+    public Controller putClone (Controller store, CloneCreator properties)
     {
-        super.start(anim, binding);
+        GunshotEmission gstore;
+        if (store == null) {
+            gstore = new GunshotEmission();
+        } else {
+            gstore = (GunshotEmission)store;
+        }
+        super.putClone(gstore, properties);
+        gstore._animShotFrames = _animShotFrames;
+        return gstore;
+    }
+    
+    // documentation inherited from interface Externalizable
+    public void writeExternal (ObjectOutput out)
+        throws IOException
+    {
+        super.writeExternal(out);
+        out.writeObject(_animShotFrames);
+    }
+    
+    // documentation inherited from interface Externalizable
+    public void readExternal (ObjectInput in)
+        throws IOException, ClassNotFoundException
+    {
+        super.readExternal(in);
+        _animShotFrames = (HashMap<String, int[]>)in.readObject();
+    }
+    
+    // documentation inherited
+    public void update (float time)
+    {
+        if (_shotFrames == null || _idx >= _shotFrames.length) {
+            return;
+        }
+        int frame = (int)((_elapsed += time) / _frameDuration);
+        if (frame >= _shotFrames[_idx]) {
+            fireShot();
+            _idx++;
+        }
+    }
+    
+    @Override // documentation inherited
+    protected void animationStarted (String name)
+    {
+        super.animationStarted(name);
         
-        // get the animation's shot frame numbers
-        _shotFrames = _animShotFrames.get(anim);
+        // get the frames at which shots go off, if any
+        _shotFrames = (_animShotFrames == null) ?
+            null : _animShotFrames.get(name);
         if (_shotFrames == null) {
-            _animShotFrames.put(anim, _shotFrames = StringUtil.parseIntArray(
-                anim.getEmitter(_name).props.getProperty("shot_frames", "")));
+            return;
         }
         
-        _shotctrl.add();
-    }
-    
-    @Override // documentation inherited
-    public void stop ()
-    {
-        super.stop();
-        _sprite.removeController(_shotctrl);
+        // set initial animation state
+        _frameDuration = 1f / _model.getAnimation(name).frameRate;
+        _idx = 0;
+        _elapsed = 0f;
     }
     
     /**
@@ -150,11 +200,13 @@ public class GunshotEmission extends SpriteEmission
      */
     protected void fireShot ()
     {
-        getEmitterLocation(true, _eloc);
-        getEmitterDirection(true, _edir);
+        getEmitterLocation(_eloc);
+        getEmitterDirection(_edir);
         
-        // fire off a flash of light
-        _view.createLightFlash(_eloc, LIGHT_FLASH_COLOR, 0.125f);
+        // fire off a flash of light if we're in the real view
+        if (_view != null) {
+            _view.createLightFlash(_eloc, LIGHT_FLASH_COLOR, 0.125f);
+        }
         
         // and a muzzle flare
         _flare.activate(_eloc, _edir);
@@ -165,34 +217,6 @@ public class GunshotEmission extends SpriteEmission
         // and a burst of smoke
         _smokemgr.setParticlesOrigin(_eloc);
         _smokemgr.forceRespawn();
-    }
-    
-    /** Fires shots at the configured frames. */
-    protected class ShotController extends Controller
-    {
-        public void add ()
-        {
-            _idx = 0;
-            _elapsed = 0f;
-            _frameDuration = _anim.getDuration() / _anim.frames;
-            _sprite.addController(this);
-        }
-        
-        public void update (float time)
-        {
-            if (_idx >= _shotFrames.length) {
-                _sprite.removeController(this);
-                return;
-            }
-            int frame = (int)((_elapsed += time) / _frameDuration);
-            if (frame >= _shotFrames[_idx]) {
-                fireShot();
-                _idx++;
-            }
-        }
-        
-        protected int _idx;
-        protected float _frameDuration, _elapsed;
     }
     
     /** Handles the appearance and fading of the muzzle flare. */
@@ -206,11 +230,6 @@ public class GunshotEmission extends SpriteEmission
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             setRenderState(RenderUtil.overlayZBuf);
             setRenderState(RenderUtil.addAlpha);
-            if (_ftex == null) {
-                _ftex = RenderUtil.createTextureState(_ctx,
-                    "textures/effects/flash.png");
-            }
-            setRenderState(_ftex);
             setLocalScale(1.5f);
             setDefaultColor(new ColorRGBA());
             updateRenderState();
@@ -223,7 +242,8 @@ public class GunshotEmission extends SpriteEmission
             PathUtil.computeAxisRotation(Vector3f.UNIT_Z, edir,
                 getLocalRotation());
             
-            _view.getPieceNode().attachChild(this);
+            _model.getEmissionNode().attachChild(this);
+            updateRenderState();
             _elapsed = 0f;
         }
         
@@ -231,7 +251,7 @@ public class GunshotEmission extends SpriteEmission
         {
             super.updateWorldData(time);
             if ((_elapsed += time) >= FLARE_DURATION) {
-                _view.getPieceNode().detachChild(this);
+                _model.getEmissionNode().detachChild(this);
             }
             getDefaultColor().interpolate(ColorRGBA.white,
                 ColorRGBA.black, _elapsed / FLARE_DURATION);
@@ -273,20 +293,24 @@ public class GunshotEmission extends SpriteEmission
             // set the transation based on the location of the source
             getLocalTranslation().set(eloc);
             
-            // set the scale based on the distance to the target
-            PieceSprite target = ((MobileSprite)_sprite).getTargetSprite();
-            _tdist = (target == null) ? 1f :
-                target.getLocalTranslation().distance(eloc);
+            // set the scale based on the distance to the target (if it exists)
+            _tdist = 10f;
+            if (_sprite instanceof MobileSprite) {
+                PieceSprite target = ((MobileSprite)_sprite).getTargetSprite();
+                if (target != null) {
+                    _tdist = target.getWorldTranslation().distance(eloc);
+                }
+            }
             getLocalScale().set(0f, 0.175f, 1f);
             
             // set the orientation based on the eye vector and direction
-            _ctx.getRenderer().getCamera().getLocation().subtract(eloc,
-                _eye);
+            Renderer renderer = DisplaySystem.getDisplaySystem().getRenderer();
+            renderer.getCamera().getLocation().subtract(eloc, _eye);
             _eye.cross(_edir, _yvec).normalizeLocal();
             _edir.cross(_yvec, _zvec);
             getLocalRotation().fromAxes(_edir, _yvec, _zvec);
             
-            _view.getPieceNode().attachChild(this);
+            _model.getEmissionNode().attachChild(this);
             _elapsed = 0f;
         }
         
@@ -296,7 +320,7 @@ public class GunshotEmission extends SpriteEmission
             float lscale, a0, a1;
             if ((_elapsed += time) >=
                 TRAIL_EXTEND_DURATION + TRAIL_FADE_DURATION) {
-                _view.getPieceNode().detachChild(this);
+                _model.getEmissionNode().detachChild(this);
                 return;
                 
             } else if (_elapsed >= TRAIL_EXTEND_DURATION) {
@@ -327,8 +351,7 @@ public class GunshotEmission extends SpriteEmission
     }
     
     /** For each animation, the frames at which the shots go off. */
-    protected HashMap<Model.Animation, int[]> _animShotFrames =
-        new HashMap<Model.Animation, int[]>();
+    protected HashMap<String, int[]> _animShotFrames;
     
     /** The frames at which the shots go off for the current animation. */
     protected int[] _shotFrames;
@@ -336,11 +359,17 @@ public class GunshotEmission extends SpriteEmission
     /** The duration of a single frame in seconds. */
     protected float _frameDuration;
     
-    /** The controller that activates the shots at the appropriate frames. */
-    protected ShotController _shotctrl = new ShotController();
+    /** The index of the current frame. */
+    protected int _idx;
+    
+    /** The time elapsed since the start of the animation. */
+    protected float _elapsed;
     
     /** Result vectors to reuse. */
     protected Vector3f _eloc = new Vector3f(), _edir = new Vector3f();
+    
+    /** The model to which this emission is bound. */
+    protected Model _model;
     
     /** The muzzle flare handler. */
     protected Flare _flare;
@@ -380,4 +409,6 @@ public class GunshotEmission extends SpriteEmission
     /** The ending color of the bullet trail. */
     protected static final ColorRGBA TRAIL_END_COLOR =
         new ColorRGBA(0.75f, 0.75f, 0.75f, 0f);
+        
+    private static final long serialVersionUID = 1;
 }

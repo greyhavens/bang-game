@@ -13,9 +13,10 @@ import com.jme.scene.Node;
 import com.jme.scene.state.MaterialState;
 import com.jmex.effects.ParticleManager;
 
+import com.threerings.jme.model.Model;
 import com.threerings.util.RandomUtil;
 
-import com.threerings.bang.client.Model;
+import com.threerings.bang.client.util.ModelAttacher;
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -55,10 +56,12 @@ public class WreckViz extends ParticleEffectViz
         
         // and the wreckage
         String[] wtypes = ((MobileSprite)target).getWreckageTypes();
-        for (int i = 0; i < _wreckage.length; i++) {
-            _wreckage[i].bind((String)RandomUtil.pickRandom(wtypes));
-            target.attachChild(_wreckage[i]);
-            _wreckage[i].updateRenderState();
+        if (wtypes != null && wtypes.length > 0) {
+            for (int i = 0; i < _wreckage.length; i++) {
+                _wreckage[i].bind((String)RandomUtil.pickRandom(wtypes));
+                target.attachChild(_wreckage[i]);
+                _wreckage[i].updateRenderState();
+            }
         }
         
         // display the wrapped effect viz
@@ -127,9 +130,8 @@ public class WreckViz extends ParticleEffectViz
 
         public void bind (String type)
         {
-            _binding = _ctx.loadModel("units",
-                "wreckage/" + type).getAnimation("normal").bind(this,
-                    RandomUtil.getInt(Integer.MAX_VALUE), null, null);
+            _ctx.loadModel("units", "wreckage/" + type,
+                new ModelAttacher(this));
         }
         
         public void updateWorldVectors ()
@@ -182,7 +184,6 @@ public class WreckViz extends ParticleEffectViz
             
             // remove streamer if its lifespan has elapsed
             if ((_age += time) > WRECKAGE_LIFESPAN) {
-                _binding.detach();
                 getParent().detachChild(this);
             }
         }
@@ -197,9 +198,6 @@ public class WreckViz extends ParticleEffectViz
         
         /** The piece's material state, used to control alpha. */
         protected MaterialState _mstate;
-        
-        /** The piece's animation binding. */
-        protected Model.Binding _binding;
         
         /** Set when the piece has its initial world vectors. */
         protected boolean _wvinit;

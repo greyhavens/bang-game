@@ -9,7 +9,8 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Box;
 
-import com.threerings.bang.client.Model;
+import com.threerings.jme.model.Model;
+
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -53,12 +54,21 @@ public class TrackSprite extends PieceSprite
     protected void createGeometry (BasicContext ctx)
     {
         _ctx = ctx;
-
-        Track track = (Track)_piece;
-        _model = ctx.loadModel("extras/tracks", MODEL_NAMES[track.type]);
-        bindAnimation(ctx, _model, "normal", 0, null);
+        loadModel(ctx, "extras/tracks", MODEL_NAMES[((Track)_piece).type]);
     }
 
+    @Override // documentation inherited
+    protected void modelLoaded (BasicContext ctx, Model model)
+    {
+        // in the game, we can lock the bounds and transforms of tracks
+        // because we know they won't move
+        super.modelLoaded(ctx, model);
+        if (!_editorMode) {
+            updateWorldVectors();
+            model.lockInstance();
+        }
+    }
+    
     protected BasicContext _ctx;
 
     /* The models for each type of track. */

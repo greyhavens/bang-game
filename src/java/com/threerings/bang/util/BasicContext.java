@@ -8,9 +8,12 @@ import java.awt.image.BufferedImage;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BStyleSheet;
 
+import com.samskivert.util.ResultListener;
+
 import com.threerings.cast.CharacterManager;
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.JmeContext;
+import com.threerings.jme.model.Model;
 import com.threerings.media.image.ImageManager;
 import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
@@ -19,8 +22,8 @@ import com.threerings.util.MessageManager;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.GlobalKeyManager;
-import com.threerings.bang.client.Model;
 import com.threerings.bang.client.util.ImageCache;
+import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.TextureCache;
 
 import static com.threerings.bang.Log.log;
@@ -58,6 +61,9 @@ public interface BasicContext extends JmeContext
     /** Returns a reference to our texture cache. */
     public TextureCache getTextureCache ();
 
+    /** Returns a reference to our model cache. */
+    public ModelCache getModelCache ();
+    
     /** Returns a reference to our character manager. */
     public CharacterManager getCharacterManager ();
 
@@ -67,8 +73,8 @@ public interface BasicContext extends JmeContext
     /** Translates the specified message using the specified message bundle. */
     public String xlate (String bundle, String message);
 
-    /** Loads a 3D model from the cache. */
-    public Model loadModel (String type, String name);
+    /** Loads a 3D model asynchronously from the cache. */
+    public void loadModel (String type, String name, ResultListener<Model> rl);
 
     /** Loads an image from the cache. */
     public BImage loadImage (String rsrcPath);

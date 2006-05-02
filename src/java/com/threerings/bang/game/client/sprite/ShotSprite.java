@@ -4,9 +4,11 @@
 package com.threerings.bang.game.client.sprite;
 
 import com.jme.scene.Node;
+
+import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Sprite;
 
-import com.threerings.bang.client.Model;
+import com.threerings.bang.client.util.ModelAttacher;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -20,14 +22,7 @@ public class ShotSprite extends Sprite
     {
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
-        _model = ctx.loadModel("units", "artillery/shell");
-        Node[] meshes = _model.getAnimation("normal").getMeshes(0, null);
-        for (int ii = 0; ii < meshes.length; ii++) {
-            attachChild(meshes[ii]);
-            meshes[ii].updateRenderState();
-        }
+        ctx.loadModel("units", "artillery/shell", new ModelAttacher(this));
         setLocalScale(0.5f);
     }
-
-    protected Model _model;
 }

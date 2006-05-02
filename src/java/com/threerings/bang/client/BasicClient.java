@@ -21,6 +21,7 @@ import com.jmex.bui.BRootNode;
 import com.jmex.bui.BStyleSheet;
 
 import com.samskivert.util.RunQueue;
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.util.CompiledConfig;
@@ -43,6 +44,7 @@ import com.threerings.parlor.util.ParlorContext;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
+import com.threerings.jme.model.Model;
 import com.threerings.openal.SoundManager;
 
 import com.threerings.bang.avatar.client.AvatarProtocolHandler;
@@ -281,6 +283,10 @@ public class BasicClient
             return _tcache;
         }
 
+        public ModelCache getModelCache () {
+            return _mcache;
+        }
+        
         public DisplaySystem getDisplay () {
             return _app.getContext().getDisplay();
         }
@@ -326,8 +332,9 @@ public class BasicClient
             return (mb == null) ? message : mb.xlate(message);
         }
 
-        public Model loadModel (String type, String name) {
-            return _mcache.getModel(type, name);
+        public void loadModel (
+            String type, String name, ResultListener<Model> rl) {
+            _mcache.getModel(type, name, rl);
         }
 
         public BImage loadImage (String rsrcPath) {

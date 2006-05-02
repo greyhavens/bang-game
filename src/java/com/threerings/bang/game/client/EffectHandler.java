@@ -157,9 +157,9 @@ public class EffectHandler extends BoardView.BoardAction
                 queueAction(msprite,  "dying");
             } else {
                 // units with no dying animation will react while the explosion
-                // is going off and then switch to their dead pose
+                // is going off and then switch to their dead model
                 queueAction(msprite, "reacting");
-                queueAction(msprite, "dead");
+                queueAction(msprite, MobileSprite.DEAD);
             }
         }
 

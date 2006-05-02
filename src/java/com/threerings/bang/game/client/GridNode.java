@@ -6,6 +6,7 @@ package com.threerings.bang.game.client;
 import java.awt.Rectangle;
 import java.nio.FloatBuffer;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Line;
@@ -40,6 +41,9 @@ public class GridNode extends Line
         setVertexBuffer(BufferUtils.createFloatBuffer(vertices * 3));
         generateIndices();
         updateVertices();
+        
+        setModelBound(new BoundingBox());
+        updateModelBound();
     }
 
     /**

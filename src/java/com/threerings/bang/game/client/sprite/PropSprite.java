@@ -12,7 +12,8 @@ import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
-import com.threerings.bang.client.Model;
+import com.threerings.jme.model.Model;
+
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.data.PropConfig;
@@ -97,10 +98,21 @@ public class PropSprite extends PieceSprite
 
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
-        _model = ctx.loadModel("props", _config.type);
-        bindAnimation(ctx, _model, "normal", 0, null);
+        loadModel(ctx, "props", _config.type);
     }
 
+    @Override // documentation inherited
+    protected void modelLoaded (BasicContext ctx, Model model)
+    {
+        // in the game, we can lock the bounds and transforms of props
+        // because we know they won't move
+        super.modelLoaded(ctx, model);
+        if (!_editorMode) {
+            updateWorldVectors();
+            model.lockInstance();
+        }
+    }
+    
     @Override // documentation inherited
     protected int computeElevation (BangBoard board, int tx, int ty)
     {
@@ -116,7 +128,6 @@ public class PropSprite extends PieceSprite
     }
 
     protected PropConfig _config;
-    protected Model.Binding _binding;
 
 //     protected static final ColorRGBA FOOT_COLOR =
 //         new ColorRGBA(1, 1, 1, 0.5f);

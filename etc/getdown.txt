@@ -68,4 +68,4 @@ class = com.threerings.bang.client.BangApp
 editor.class = com.threerings.bang.editor.EditorApp
 
 # Special configuration used when we run in viewer mode
-viewer.class = com.threerings.bang.viewer.ViewerApp
+viewer.class = com.threerings.jme.tools.ModelViewer

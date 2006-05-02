@@ -49,8 +49,7 @@ public class BonusSprite extends PieceSprite
         super.createGeometry(ctx);
 
         // load up the model for this bonus
-        _model = ctx.loadModel("bonuses", _type);
-        bindAnimation(ctx, _model, "normal", 0, null);
+        loadModel(ctx, "bonuses", _type);
     }
 
     @Override // documentation inherited

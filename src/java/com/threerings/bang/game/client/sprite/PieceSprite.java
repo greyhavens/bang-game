@@ -3,18 +3,25 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Properties;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 
+import com.samskivert.util.PropertiesUtil;
+import com.samskivert.util.ResultListener;
+import com.samskivert.util.StringUtil;
+
+import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.LineSegmentPath;
 import com.threerings.jme.sprite.Path;
@@ -24,7 +31,7 @@ import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.client.Config;
-import com.threerings.bang.client.Model;
+import com.threerings.bang.client.util.ModelAttacher;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -105,15 +112,15 @@ public class PieceSprite extends Sprite
             setRenderState(_mstate);
         }
 
+        // position ourselves properly to start
+        setLocation(board, _piece.x, _piece.y);
+        setOrientation(piece.orientation);
+        
         // create our sprite geometry
         createGeometry(ctx);
 
         // create any sounds associated with this sprite
         createSounds(sounds);
-
-        // position ourselves properly to start
-        setLocation(board, _piece.x, _piece.y);
-        setOrientation(piece.orientation);
     }
 
     /**
@@ -416,64 +423,59 @@ public class PieceSprite extends Sprite
     }
 
     /**
-     * Binds the given animation and updates the set of emissions.
-     *
-     * @param random the number used to select a texture
-     * @param zations the colorizations to use for the texture, or
-     * <code>null</code> for none
+     * Loads the identified model and attaches it to this sprite.
      */
-    protected Model.Animation bindAnimation (
-        final BasicContext ctx, Model model, String action, int random,
+    protected void loadModel (BasicContext ctx, String type, String name)
+    {
+        loadModel(ctx, type, name, null);
+    }
+    
+    /**
+     * Loads the identified model and attaches it to this sprite.
+     *
+     * @param zations the colorizations to apply to the model's textures
+     */
+    protected void loadModel (
+        final BasicContext ctx, String type, String name,
         Colorization[] zations)
     {
-        // stop all running emissions
-        for (SpriteEmission emission : _emissions.values()) {
-            if (emission.isRunning()) {
-                emission.stop();
-            }
-        }
-
-        // if we're not displaying units, don't bind any poses
+        // if we're not displaying units, don't load any models
         if (!Config.displayUnits) {
-            return null;
+            return;
         }
-
-        Model.Animation anim = model.getAnimation(action);
-        // bind the new animation
-        _binding = anim.bind(
-            this, random, zations, new Model.Binding.Observer() {
-            public void wasBound (
-                Model.Animation anim, Model.Binding binding) {
-                // start emissions used in the animation, creating any uncreated
-                for (int ii = 0; ii < anim.emitters.length; ii++) {
-                    String name = anim.emitters[ii].name;
-                    SpriteEmission emission = _emissions.get(name);
-                    if (emission == null) {
-                        _emissions.put(name, emission = SpriteEmission.create(
-                                           name, anim.emitters[ii].props));
-                        emission.init(ctx, _view, PieceSprite.this);
-                    }
-                    emission.start(anim, binding);
-                }
-            }
-            public void wasSkipped (Model.Animation anim) {
-                // nothing needed
-            }
-        });
-
-        // wait for this animation (and any other pending animations) to
-        // complete their resolution before we let the view know that we're
-        // done resolving
         _view.addResolvingSprite(this);
-        model.addResolutionObserver(new Model.ResolutionObserver() {
-            public void modelResolved (Model model) {
+        ctx.getModelCache().getModel(type, name, zations,
+            new ModelAttacher(this) {
+            public void requestCompleted (Model model) {
+                super.requestCompleted(model);
+                _view.clearResolvingSprite(PieceSprite.this);
+                modelLoaded(ctx, model);
+            }
+            public void requestFailed (Exception cause) {
                 _view.clearResolvingSprite(PieceSprite.this);
             }
         });
-
-        return anim;
     }
-
+    
+    /**
+     * Called when our model has been loaded.
+     */
+    protected void modelLoaded (BasicContext ctx, Model model)
+    {
+        // if we already have a model, remove it
+        if (_model != null) {
+            detachChild(_model);
+        }
+        _model = model;
+        
+        // give any sprite emissions references to the view and sprite
+        for (Object ctrl : model.getControllers()) {
+            if (ctrl instanceof SpriteEmission) {
+                ((SpriteEmission)ctrl).setSpriteRefs(_view, this);
+            }
+        }
+    }
+    
     /**
      * Updates the position of our highlights if we have them.
      */
@@ -481,34 +483,9 @@ public class PieceSprite extends Sprite
     {
         if (_shadow != null) {
             _shadow.setPosition(localTranslation.x, localTranslation.y);
-            /*
-            _loc.set(localTranslation.x, localTranslation.y,
-                     localTranslation.z);
-            _view.getShadowLocation(_loc, _result);
-            if (_shadow.x != _result.x || _shadow.y != _result.y) {
-                _shadow.setPosition(_result.x, _result.y);
-            }
-            */
         }
     }
-
-    @Override // documentation inherited
-    protected void setParent (Node parent)
-    {
-        super.setParent(parent);
-
-        // clear our model binding and emissions when we're removed
-        if (parent == null) {
-            if (_binding != null) {
-                _binding.detach();
-                _binding = null;
-            }
-            for (SpriteEmission emission : _emissions.values()) {
-                emission.cleanup();
-            }
-        }
-    }
-
+    
     protected BoardView _view;
 
     protected Piece _piece;
@@ -520,16 +497,12 @@ public class PieceSprite extends Sprite
     /** Most pieces have an underlying model, so we provide a reference. */
     protected Model _model;
 
-    /** Sprites must bind animations from their model with this reference so
-     * that we can properly clear the binding when the sprite is removed. */
-    protected Model.Binding _binding;
-
     /** The material state used to manipulate shadow values. */
     protected MaterialState _mstate;
 
-    /** The emissions activated by animations. */
-    protected HashMap<String, SpriteEmission> _emissions =
-        new HashMap<String, SpriteEmission>();
+    /** The emissions associated with the model. */
+    protected ArrayList<SpriteEmission> _emissions =
+        new ArrayList<SpriteEmission>();
 
     /** A place to hang all highlight geometry. */
     protected Node _hnode;

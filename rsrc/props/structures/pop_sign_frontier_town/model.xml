@@ -1076,7 +1076,7 @@
     <vertex location="-187.717, -0.0143204, 95.2964" normal="-0.93518, 0.0, 0.354172" tcoords="0.999501, 0.5"/>
   </triMesh>
 
-  <triMesh name="sign_boards" translation="-21.4664, 7.15817, 87.3019" rotation="0.707107, 0.0, 0.0, 0.707107" scale="2.56875, 2.10553, 2.10553" solid="true" texture="C:\projects\bang objects\frontier_pop_sign\sign.png" transparent="true">
+  <triMesh name="sign_boards" translation="-21.4664, 7.15817, 87.3019" rotation="0.707107, 0.0, 0.0, 0.707107" scale="2.56875, 2.10553, 2.10553" solid="true" texture="C:\projects\bang objects\frontier_pop_sign\sign.png" transparent="false">
     <vertex location="-25.6652, 6.54392, -0.268793" normal="0.0, 0.0, -2.0" tcoords="0.0356456, 0.484463"/>
     <vertex location="-25.6652, 14.4732, -0.268793" normal="0.0, 0.0, -1.0" tcoords="0.0356456, 0.666571"/>
     <vertex location="19.5258, 14.4732, -0.268793" normal="0.0, 0.0, -2.0" tcoords="0.990899, 0.666571"/>

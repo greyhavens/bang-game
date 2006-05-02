@@ -6,11 +6,11 @@ package com.threerings.bang.game.client.sprite;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 
+import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.LineSegmentPath;
 import com.threerings.jme.sprite.PathUtil;
 
 import com.threerings.bang.client.Config;
-import com.threerings.bang.client.Model;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -53,7 +53,6 @@ public class MoveUnitPath extends LineSegmentPath
         } else {
             sprite.setAction("walking");
         }
-        sprite.setAnimationActive(true);
     }
 
     @Override // documentation inherited
@@ -98,7 +97,7 @@ public class MoveUnitPath extends LineSegmentPath
         // restore the sprite to standing
         MobileSprite sprite = (MobileSprite)_sprite;
         sprite.pathUpdate();
-        sprite.setAction(sprite.getRestPose());
+        sprite.startNextIdle();
     }
 
     @Override // documentation inherited

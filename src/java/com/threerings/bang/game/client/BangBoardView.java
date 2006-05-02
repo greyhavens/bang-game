@@ -46,6 +46,7 @@ import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.SwingPath;
 import com.threerings.jme.effect.FadeInOutEffect;
+import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
@@ -58,8 +59,8 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.Config;
-import com.threerings.bang.client.Model;
 import com.threerings.bang.client.bui.WindowFader;
+import com.threerings.bang.client.util.ModelAttacher;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -457,8 +458,7 @@ public class BangBoardView extends BoardView
         _cursor = new Node("cursor");
         _cursor.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         // _cursor.setLocalScale(0.75f);
-        Model model = _ctx.loadModel("bonuses", "bonus_point");
-        _cursbind = model.getAnimation("normal").bind(_cursor, 0, null, null);
+        _ctx.loadModel("bonuses", "bonus_point", new ModelAttacher(_cursor));
         _cursor.addController(new Spinner(_cursor, FastMath.PI));
         _cursor.addController(new Bouncer(_cursor, TILE_SIZE, TILE_SIZE/4));
         _cursor.setRenderState(RenderUtil.lequalZBuf);
@@ -469,9 +469,6 @@ public class BangBoardView extends BoardView
     protected void wasRemoved ()
     {
         super.wasRemoved();
-
-        // clear out our cursor
-        _cursbind.detach();
 
         // stop the board tour if it's still going
         if (_tpath != null) {
@@ -1371,7 +1368,6 @@ public class BangBoardView extends BoardView
     protected BangConfig _bconfig;
 
     protected Node _cursor;
-    protected Model.Binding _cursbind;
     protected Piece _selection;
 
     protected PointSet _moveSet = new PointSet();

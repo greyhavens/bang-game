@@ -79,7 +79,6 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Config;
-import com.threerings.bang.client.Model;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -182,6 +181,7 @@ public class BoardView extends BComponent
         _node.setRenderState(RenderUtil.lequalZBuf);
         _node.setRenderState(RenderUtil.opaqueAlpha);
         _node.setTextureCombineMode(TextureState.REPLACE);
+        _node.setCullMode(Spatial.CULL_DYNAMIC);
         _node.updateRenderState();
 
         // create the sky
