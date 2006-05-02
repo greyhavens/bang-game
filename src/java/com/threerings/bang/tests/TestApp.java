@@ -66,6 +66,7 @@ public abstract class TestApp extends JmeApp
                 }
             }
         });
+        _soundmgr = SoundManager.createSoundManager(this);
 
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _icache = new ImageCache(_ctx);
@@ -78,7 +79,7 @@ public abstract class TestApp extends JmeApp
                 // we need to get back onto a safe thread
                 postRunnable(new Runnable() {
                     public void run () {
-                        if (percent >= 0) {
+                        if (percent >= 100) {
                             postResourcesInit();
                         }
                     }
@@ -193,7 +194,7 @@ public abstract class TestApp extends JmeApp
         }
 
         public SoundManager getSoundManager () {
-            return null;
+            return _soundmgr;
         }
 
         public ImageCache getImageCache () {
@@ -237,6 +238,7 @@ public abstract class TestApp extends JmeApp
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
     protected GlobalKeyManager _keymgr = new GlobalKeyManager();
+    protected SoundManager _soundmgr;
 
     /** The prefix prepended to localization bundle names before looking
      * them up in the classpath. */
