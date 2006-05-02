@@ -13,7 +13,6 @@
     <transform name="bone index far" translation="8.59015, -0.0543603, 0.369006" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb far" translation="3.15026, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
     <transform name="head" translation="-0.200911, 14.346, -2.03049" rotation="0.0538828, 0.00168139, 0.0288903, 0.998128" scale="1.0, 1.0, 1.0"/>
     <transform name="steering" translation="-69.2018, -35.7228, -1.00748" rotation="0.0, 0.0, -0.0118733, 0.99993" scale="1.0, 1.0, 1.0"/>
     <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.866025, 0.5" scale="1.0, 1.0, 1.0"/>
@@ -30,6 +29,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-44.5265, -40.246, 127.404" rotation="-0.528206, -0.418623, 0.675553, -0.298969" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -43,7 +43,6 @@
     <transform name="bone index far" translation="8.59015, -0.0543581, 0.369003" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
     <transform name="head" translation="-0.200911, 14.346, -2.03049" rotation="0.0538915, 0.00137279, 0.0346059, 0.997946" scale="1.0, 1.0, 1.0"/>
     <transform name="steering" translation="-69.1985, -35.5125, -1.00748" rotation="0.0, 0.0, -0.0417209, 0.999129" scale="1.0, 1.0, 1.0"/>
     <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.5, 0.866025" scale="1.0, 1.0, 1.0"/>
@@ -60,6 +59,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-43.1578, -39.9752, 126.937" rotation="-0.517117, -0.419844, 0.68633, -0.292015" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -73,7 +73,6 @@
     <transform name="bone index far" translation="8.59014, -0.0543588, 0.369002" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
     <transform name="head" translation="-0.200911, 14.346, -2.03049" rotation="0.0539051, 0.000642732, 0.048119, 0.997386" scale="1.0, 1.0, 1.0"/>
     <transform name="steering" translation="-69.1898, -35.0371, -1.00748" rotation="0.0, 0.0, -0.0844722, 0.996426" scale="1.0, 1.0, 1.0"/>
     <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
@@ -90,6 +89,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-42.5944, -38.6681, 126.549" rotation="-0.508126, -0.414398, 0.69244, -0.301014" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -103,7 +103,6 @@
     <transform name="bone index far" translation="8.59015, -0.054362, 0.369003" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
     <transform name="head" translation="-0.200911, 14.346, -2.03049" rotation="0.0539089, -9.72033e-005, 0.0618044, 0.996631" scale="1.0, 1.0, 1.0"/>
     <transform name="steering" translation="-69.1781, -34.5299, -1.00748" rotation="0.0, 0.0, -0.123397, 0.992357" scale="1.0, 1.0, 1.0"/>
     <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, -0.5, 0.866025" scale="1.0, 1.0, 1.0"/>
@@ -120,6 +119,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-42.5414, -37.2162, 126.252" rotation="-0.502199, -0.407167, 0.695082, -0.314441" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -133,7 +133,6 @@
     <transform name="bone index far" translation="8.59014, -0.0543618, 0.368999" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
     <transform name="head" translation="-0.200911, 14.346, -2.03049" rotation="0.0539072, -0.000435342, 0.0680543, 0.996224" scale="1.0, 1.0, 1.0"/>
     <transform name="steering" translation="-69.1655, -34.2241, -1.00748" rotation="0.0, 0.0, -0.141989, 0.989868" scale="1.0, 1.0, 1.0"/>
     <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.866025, -0.5" scale="1.0, 1.0, 1.0"/>
@@ -150,6 +149,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-42.6211, -36.5711, 126.098" rotation="-0.500198, -0.403756, 0.69547, -0.321098" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -163,7 +163,6 @@
     <transform name="bone index far" translation="8.59014, -0.0543593, 0.368998" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
     <transform name="head" translation="-0.200911, 14.346, -2.03049" rotation="0.053908, -0.000317733, 0.0658807, 0.99637" scale="1.0, 1.0, 1.0"/>
     <transform name="steering" translation="-69.1486, -34.2275, -1.00748" rotation="0.0, 0.0, -0.128057, 0.991767" scale="1.0, 1.0, 1.0"/>
     <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
@@ -180,6 +179,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-42.5414, -37.369, 126.147" rotation="-0.502642, -0.408148, 0.694506, -0.313731" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -193,7 +193,6 @@
     <transform name="bone index far" translation="8.59015, -0.0543614, 0.369008" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
     <transform name="head" translation="-0.200911, 14.346, -2.03049" rotation="0.053909, 5.47075e-005, 0.0589957, 0.996802" scale="1.0, 1.0, 1.0"/>
     <transform name="steering" translation="-69.1278, -34.4006, -1.00748" rotation="0.0, 0.0, -0.0929537, 0.99567" scale="1.0, 1.0, 1.0"/>
     <transform name="back wheel" translation="-3.9666, -24.8374, -0.7708" rotation="0.0, 0.0, 0.866025, 0.5" scale="1.0, 1.0, 1.0"/>
@@ -210,6 +209,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-42.5944, -38.9099, 126.367" rotation="-0.508805, -0.415961, 0.691502, -0.299866" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -223,7 +223,6 @@
     <transform name="bone index far" translation="8.59014, -0.0543593, 0.368998" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42892, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb far" translation="3.15025, 9.44626, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="20.0694, 6.43793, -4.80295" rotation="-0.181512, 0.692535, -0.676689, 0.171874" scale="1.0, 1.0, 1.0"/>
     <transform name="head" translation="-0.200912, 14.346, -2.03049" rotation="0.0539043, 0.000711357, 0.0468496, 0.997446" scale="1.0, 1.0, 1.0"/>
     <transform name="steering" translation="-69.1101, -34.6054, -1.00748" rotation="0.0, 0.0, -0.0557939, 0.998442" scale="1.0, 1.0, 1.0"/>
     <transform name="back wheel" translation="-3.96661, -24.8374, -0.7708" rotation="0.0, 0.0, 0.5, 0.866025" scale="1.0, 1.0, 1.0"/>
@@ -240,6 +239,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-43.1578, -40.185, 126.758" rotation="-0.517693, -0.4212, 0.685499, -0.290992" scale="1.0, 1.0, 1.0"/>
   </frame>
 
 </animation>
