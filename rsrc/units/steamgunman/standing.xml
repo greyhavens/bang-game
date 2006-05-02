@@ -12,14 +12,14 @@
     <transform name="em_cannon" translation="105.444, -16.3296, -1.29497" rotation="0.0, 0.707107, 0.0, 0.707107" scale="1.14, 1.14, 1.14"/>
     <transform name="em_smoke" translation="-21.1836, 122.956, -51.1829" rotation="0.517431, -0.495332, -0.504059, -0.482531" scale="1.14, 1.14, 1.14"/>
     <transform name="bone upper arm" translation="-10.471, -2.79879, 43.4188" rotation="0.0397285, -0.199729, 0.191002, 0.960233" scale="1.14, 1.14, 1.14"/>
-    <transform name="bone forearm" translation="29.736, -7.17867e-007, -4.79964e-007" rotation="0.0, 0.0, 0.34202, 0.939693" scale="1.0, 1.0, 1.0"/>
-    <transform name="bone palm" translation="29.003, 1.40791, -0.0257372" rotation="0.00448007, 0.00267084, 0.0382682, 0.999254" scale="1.0, 1.0, 1.0"/>
-    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461251" rotation="0.0294039, 0.748378, -0.0260143, 0.662109" scale="1.0, 1.0, 1.0"/>
-    <transform name="bone fingers far" translation="7.75436, 0.0803324, 0.369008" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
-    <transform name="bone index near" translation="15.6146, 7.40757, -0.184502" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
-    <transform name="bone index far" translation="8.59014, -0.0543627, 0.369002" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone forearm" translation="29.736, 1.73331e-006, -4.79964e-007" rotation="0.0, 0.0, 0.34202, 0.939693" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone palm" translation="29.003, 1.40792, -0.0257385" rotation="0.00448008, 0.00267084, 0.0382682, 0.999254" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers near" translation="15.6953, -3.15343, -0.461252" rotation="0.0294039, 0.748378, -0.0260144, 0.662109" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone fingers far" translation="7.75436, 0.0803325, 0.369002" rotation="0.0, 0.672367, 0.0, 0.740218" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index near" translation="15.6146, 7.40757, -0.184503" rotation="-0.0578409, 0.208568, 0.260904, 0.940789" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone index far" translation="8.59014, -0.0543606, 0.369002" rotation="0.0, 0.854912, 0.0, 0.518773" scale="1.0, 1.0, 1.0"/>
     <transform name="bone thumb near" translation="3.42893, 12.6541, -6.51465" rotation="-0.745261, -0.307785, 0.299249, 0.5102" scale="1.0, 1.0, 1.0"/>
-    <transform name="bone thumb far" translation="3.15025, 9.44627, -6.76478" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone thumb far" translation="3.15026, 9.44626, -6.76477" rotation="-0.607782, 0.0212375, 0.0525646, 0.792077" scale="1.0, 1.0, 1.0"/>
     <transform name="arm" translation="-35.8657, -46.0059, 69.4658" rotation="-0.686567, -0.15112, 0.488478, 0.516892" scale="1.14, 1.14, 1.14"/>
     <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
@@ -30,8 +30,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -33.6571, 128.039" rotation="0.584658, 0.346335, -0.571269, 0.460302" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -33.5962, 127.86" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -62,8 +62,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -33.5663, 128.007" rotation="0.584933, 0.346676, -0.571063, 0.459953" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -33.5051, 127.828" rotation="0.000596439, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -94,8 +94,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -33.5913, 127.869" rotation="0.585934, 0.34792, -0.570306, 0.458677" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -33.5293, 127.69" rotation="0.0027759, 0.0, 0.0, 0.999996" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -126,8 +126,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -33.6377, 127.691" rotation="0.587239, 0.349544, -0.569312, 0.457005" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -33.5747, 127.513" rotation="0.00562609, 0.0, 0.0, 0.999984" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -158,8 +158,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -33.6121, 127.543" rotation="0.588429, 0.351028, -0.568398, 0.455472" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -33.5482, 127.365" rotation="0.00823501, 0.0, 0.0, 0.999966" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -190,8 +190,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -33.4226, 127.492" rotation="0.589091, 0.351855, -0.567886, 0.454615" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -33.3582, 127.314" rotation="0.00969066, 0.0, 0.0, 0.999953" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -222,8 +222,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -32.9777, 127.61" rotation="0.588814, 0.351508, -0.568101, 0.454974" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -32.9136, 127.431" rotation="0.00908078, 0.0, 0.0, 0.999959" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -254,8 +254,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -32.1842, 127.96" rotation="0.587178, 0.349468, -0.569358, 0.457083" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -32.1213, 127.781" rotation="0.00549347, 0.0, 0.0, 0.999985" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -286,8 +286,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -31.0175, 128.551" rotation="0.58404, 0.345569, -0.571734, 0.461086" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -30.9571, 128.372" rotation="-0.00134153, 0.0, 0.0, 0.999999" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -318,8 +318,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -29.5822, 129.3" rotation="0.579773, 0.340293, -0.574889, 0.46644" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -29.525, 129.119" rotation="-0.0105426, 0.0, 0.0, 0.999944" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -350,8 +350,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -27.9769, 130.13" rotation="-0.574724, -0.334092, 0.578515, -0.472647" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -27.9236, 129.948" rotation="-0.021294, 0.0, 0.0, 0.999773" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -382,8 +382,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -26.3043, 130.971" rotation="-0.569256, -0.327423, 0.582315, -0.479219" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -26.2552, 130.788" rotation="-0.0327792, 0.0, 0.0, 0.999463" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -414,8 +414,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -24.6721, 131.764" rotation="-0.56375, -0.320757, 0.586013, -0.485684" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -24.6272, 131.58" rotation="-0.044182, 0.0, 0.0, 0.999023" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -446,8 +446,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -23.1925, 132.457" rotation="-0.558611, -0.314576, 0.589355, -0.491587" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.32531, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -23.1515, 132.273" rotation="-0.0546874, 0.0, 0.0, 0.998504" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -478,8 +478,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -21.9817, 133.01" rotation="-0.554258, -0.309371, 0.592103, -0.496489" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -21.944, 132.824" rotation="-0.0634825, 0.0, 0.0, 0.997983" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -510,8 +510,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -21.1579, 133.384" rotation="-0.551125, -0.305642, 0.594037, -0.499964" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -21.1225, 133.198" rotation="-0.0697564, 0.0, 0.0, 0.997564" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -542,8 +542,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -20.6722, 133.62" rotation="0.548989, 0.303107, -0.595334, 0.502309" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -20.6384, 133.434" rotation="-0.0740078, 0.0, 0.0, 0.997258" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -574,8 +574,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -20.3963, 133.783" rotation="0.547366, 0.301185, -0.596309, 0.504077" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -20.3637, 133.596" rotation="-0.0772243, 0.0, 0.0, 0.997014" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -606,8 +606,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -20.3294, 133.871" rotation="0.5463, 0.299925, -0.596944, 0.505232" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -20.2976, 133.684" rotation="-0.0793301, 0.0, 0.0, 0.996848" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -638,8 +638,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -20.4707, 133.884" rotation="0.545834, 0.299374, -0.59722, 0.505736" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -20.4392, 133.697" rotation="-0.0802493, 0.0, 0.0, 0.996775" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -670,8 +670,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -20.8187, 133.82" rotation="0.546008, 0.29958, -0.597117, 0.505548" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -20.787, 133.633" rotation="-0.0799057, 0.0, 0.0, 0.996802" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -702,8 +702,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -21.3717, 133.675" rotation="0.546861, 0.300588, -0.59661, 0.504625" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -21.3395, 133.488" rotation="-0.0782225, 0.0, 0.0, 0.996936" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -734,8 +734,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -22.1275, 133.443" rotation="0.548427, 0.302441, -0.595673, 0.502923" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -22.094, 133.257" rotation="-0.0751228, 0.0, 0.0, 0.997174" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -766,8 +766,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -23.0827, 133.119" rotation="0.550738, 0.305182, -0.594273, 0.500391" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -23.0476, 132.933" rotation="-0.0705289, 0.0, 0.0, 0.99751" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -798,8 +798,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -24.3663, 132.626" rotation="-0.554353, -0.309484, 0.592044, -0.496383" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325311, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -24.3285, 132.441" rotation="-0.0632913, 0.0, 0.0, 0.997995" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -830,8 +830,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -25.9965, 131.933" rotation="-0.559387, -0.315507, 0.588857, -0.490703" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325314, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -25.9549, 131.749" rotation="-0.0531088, 0.0, 0.0, 0.998589" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -862,8 +862,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -27.8049, 131.099" rotation="-0.565208, -0.322518, 0.585046, -0.483987" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325312, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -27.7589, 130.915" rotation="-0.0411779, 0.0, 0.0, 0.999152" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -894,8 +894,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -29.6279, 130.193" rotation="-0.571208, -0.329798, 0.580973, -0.476891" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325316, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -29.5773, 130.011" rotation="-0.0286984, 0.0, 0.0, 0.999588" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -926,8 +926,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -31.3088, 129.305" rotation="-0.576808, -0.336647, 0.577032, -0.470102" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325313, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -31.2539, 129.123" rotation="-0.0168731, 0.0, 0.0, 0.999858" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -958,8 +958,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -32.6992, 128.533" rotation="0.581465, 0.342382, -0.573648, 0.464329" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8017, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7122, -32.6407, 128.353" rotation="-0.00690597, 0.0, 0.0, 0.999976" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
   <frame>
@@ -990,8 +990,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0576514, -0.61787, -0.218868, 0.753" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0244912, 0.977522, 0.120078, -0.17156" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="-20.1172, -12.9119, 72.923" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="pistol R" translation="-58.981, -33.6571, 127.989" rotation="0.584658, 0.346335, -0.571269, 0.460302" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_pistol" translation="51.8018, -0.325315, 22.6767" rotation="-0.466498, -0.408214, 0.511425, 0.595135" scale="1.0, 1.0, 1.0"/>
+    <transform name="pistol R" translation="-58.7123, -33.5962, 127.81" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_pistol" translation="-56.3243, -6.32306, 177.471" rotation="0.0771453, -0.0142981, -0.181674, 0.980224" scale="1.0, 1.0, 1.0"/>
   </frame>
 
 </animation>
