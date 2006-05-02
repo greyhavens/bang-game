@@ -23,6 +23,11 @@ decoratedwindow {
   padding: 15;
 }
 
+steelwindow {
+  background: image "ui/window/border_steel.png" framexy;
+  padding: 12 50 18 50;
+}
+
 popupwindow {
   background: image "ui/window/background.png" framexy;
   padding: 15;

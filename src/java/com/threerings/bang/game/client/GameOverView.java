@@ -8,7 +8,6 @@ import java.text.NumberFormat;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
@@ -24,6 +23,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BadgeIcon;
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
@@ -38,7 +38,7 @@ import com.threerings.bang.game.data.GameCodes;
 /**
  * Displays the results at the end of the game.
  */
-public class GameOverView extends BDecoratedWindow
+public class GameOverView extends SteelWindow
     implements ActionListener
 {
     /**
@@ -57,10 +57,8 @@ public class GameOverView extends BDecoratedWindow
     public GameOverView (BasicContext ctx, BangController ctrl,
                          BangObject bangobj, PlayerObject user)
     {
-        super(ctx.getStyleSheet(), null);
-        setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
+        super(ctx, ctx.xlate(GameCodes.GAME_MSGS, "m.endgame_title"));
         setLayer(1);
-        ((GroupLayout)getLayoutManager()).setGap(20);
 
         _ctx = ctx;
         _ctrl = ctrl;
@@ -70,9 +68,8 @@ public class GameOverView extends BDecoratedWindow
         int pidx = bangobj.getPlayerIndex(user.getVisibleName());
         Award award = null;
 
-        add(new BLabel(msgs.get("m.endgame_title"), "window_title"));
-        add(_results = GroupLayout.makeVBox(GroupLayout.TOP));
-        _results.add(new Spacer(1, -70)); // kids, don't try this at home
+        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
+        _contents.add(new Spacer(1, -50)); // kids, don't try this at home
 
         // display the players' avatars in rank order
         GroupLayout gl = GroupLayout.makeHoriz(GroupLayout.CENTER);
@@ -88,7 +85,7 @@ public class GameOverView extends BDecoratedWindow
                                      bangobj.avatars[apidx],
                                      bangobj.awards[ii].rank));
         }
-        _results.add(who);
+        _contents.add(who);
 
         // display our earnings and awarded badge (if any)
         if (award != null) {
@@ -96,7 +93,7 @@ public class GameOverView extends BDecoratedWindow
             ((GroupLayout)row.getLayoutManager()).setGap(25);
             ((GroupLayout)row.getLayoutManager()).setOffAxisPolicy(
                 GroupLayout.STRETCH);
-            _results.add(row);
+            _contents.add(row);
 
             BContainer econt = new BContainer(new BorderLayout(0, 15));
             econt.setStyleClass("endgame_border");
@@ -187,10 +184,8 @@ public class GameOverView extends BDecoratedWindow
         }
 
         // add some buttons at the bottom
-        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        buttons.add(new BButton(msgs.get("m.to_saloon"), this, "to_saloon"));
-        buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
-        add(buttons);
+        _buttons.add(new BButton(msgs.get("m.to_saloon"), this, "to_saloon"));
+        _buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
     }
 
     // documentation inherited from interface ActionListener
@@ -218,6 +213,5 @@ public class GameOverView extends BDecoratedWindow
     protected BasicContext _ctx;
     protected BangContext _bctx;
     protected BangController _ctrl;
-    protected BContainer _results;
     protected int _cueidx = 2;
 }
