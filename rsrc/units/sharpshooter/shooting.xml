@@ -5,7 +5,7 @@
   <frame>
     <transform name="sharpshooter" translation="14.679, 3.32103, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01" translation="0.101739, -11.7628, 70.6708" rotation="0.0, 0.0, -0.698424, 0.715684" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bip01 Footsteps" translation="0.0, 0.0, -71.1259" rotation="0.0, 0.0, 0.698424, 0.715684" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="0.0, 0.0, -71.9433" rotation="0.0, 0.0, 0.698424, 0.715684" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Pelvis" translation="-2.10647, 0.0, 0.0" rotation="0.541675, 0.541675, 0.45452, -0.45452" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Spine" translation="8.24544, -0.0141124, -1.44852" rotation="-0.177234, 0.0858346, 0.0158992, 0.98029" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Spine1" translation="18.9225, -0.0155365, 0.00242767" rotation="-0.0732857, 0.0110127, -0.147403, 0.986296" scale="1.0, 1.0, 1.0"/>
@@ -51,8 +51,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 5.67207e-007, 2.44043e-007" rotation="0.0269715, 0.0628604, 0.192219, 0.978965" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -9.78513e-007" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 1.01942e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="35.1244, -32.8643, 125.949" rotation="0.256945, 0.307287, 0.35744, 0.843677" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871261, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="35.1423, -34.0629, 120.812" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -104,8 +104,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -2.46334e-006, -2.85599e-007" rotation="0.00649986, 0.0309946, 0.381386, 0.923873" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 2.5576e-007" rotation="-0.0938246, 0.0938247, 0.700854, 0.700854" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="38.955, -39.3339, 123.566" rotation="0.349484, 0.23959, 0.159549, 0.891629" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181092, 4.29811, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="35.3188, -38.7591, 116.981" rotation="0.0545208, 0.00152371, -0.209589, 0.976267" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -157,8 +157,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -2.5904e-006, -1.86124e-006" rotation="0.0100161, -0.00520221, 0.445253, 0.895334" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -4.7256e-007" rotation="-0.0708432, 0.0708433, 0.703549, 0.703549" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 2.64272e-007, 1.37697e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="32.1349, -44.1394, 119.649" rotation="0.42371, 0.141895, -0.0434504, 0.893559" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181082, 4.29812, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 0.999999, 1.0"/>
+    <transform name="rifle" translation="26.566, -38.3899, 111.994" rotation="0.109526, -0.0262248, -0.413519, 0.903503" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -210,8 +210,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -7.27704e-007, 0.0" rotation="0.116539, 0.0139494, 0.42345, 0.898284" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.92001e-006" rotation="-0.0676904, 0.0676906, 0.703859, 0.703859" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 2.16059e-007, 1.74769e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="22.3635, -43.7824, 115.025" rotation="0.498853, 0.0703032, -0.158778, 0.849113" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181082, 4.29811, 76.1392" rotation="-0.00871261, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="17.706, -32.0212, 107.488" rotation="0.177694, -0.0357529, -0.53542, 0.824907" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -263,8 +263,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 1.00025e-006, -4.39605e-007" rotation="0.227353, 0.00735867, 0.236751, 0.944566" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.61115e-006" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -1.00774e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="-3.00967, -45.8972, 114.917" rotation="0.646445, 0.0149359, -0.220718, 0.730184" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181082, 4.29811, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="-3.07598, -28.8799, 111.089" rotation="0.298755, 0.0214863, -0.64013, 0.707473" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -316,8 +316,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 6.09644e-007, 0.0" rotation="0.243744, 0.00119395, 0.171693, 0.95452" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -2.60372e-006" rotation="-0.0451036, 0.0451038, 0.705667, 0.705667" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 8.83411e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="10.9331, -50.5508, 120.587" rotation="0.68344, 0.0445269, -0.136776, 0.715695" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="10.756, -32.7636, 116.386" rotation="0.309988, 0.0639242, -0.605981, 0.7298" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -369,8 +369,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 1.52959e-006, -6.22647e-007" rotation="0.246364, 0.0187976, 0.238807, 0.939107" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -2.01501e-006" rotation="-0.0476545, 0.0476548, 0.705499, 0.705499" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -3.28291e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="12.4294, -51.3083, 120.18" rotation="0.711248, 0.0404568, -0.0631672, 0.698927" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.29811, 76.1392" rotation="-0.00871261, 0.0160587, 0.0732732, 0.997145" scale="0.999999, 1.0, 1.0"/>
+    <transform name="rifle" translation="12.2426, -35.5236, 115.976" rotation="0.36747, 0.0749898, -0.544807, 0.750018" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -422,8 +422,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -1.17087e-006, -2.29139e-006" rotation="0.240032, 0.0288332, 0.297918, 0.923471" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 3.541e-007" rotation="-0.04, 0.0400002, 0.705974, 0.705975" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 3.12074e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="15.1071, -51.7592, 119.636" rotation="0.716764, 0.049588, -0.0444039, 0.694132" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.29811, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="14.5477, -39.3718, 115.568" rotation="0.405777, 0.0898099, -0.494166, 0.763597" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -475,8 +475,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 9.55093e-007, -2.52881e-006" rotation="0.231145, 0.0278631, 0.318483, 0.918893" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.37099e-006" rotation="-0.0297869, 0.0297871, 0.706479, 0.706479" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -7.89523e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="17.3227, -52.7631, 119.635" rotation="0.722666, 0.0597005, -0.0261422, 0.688118" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.29811, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="16.505, -43.1849, 115.707" rotation="0.422142, 0.10135, -0.470683, 0.768103" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -528,8 +528,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 7.55261e-007, -2.06896e-006" rotation="0.223406, 0.0261684, 0.322486, 0.919461" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 0.0" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 6.67291e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="17.2929, -53.2597, 119.538" rotation="0.727681, 0.0614398, -0.0150743, 0.682992" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="16.492, -45.948, 115.688" rotation="0.428667, 0.105461, -0.469711, 0.764523" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -581,8 +581,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -4.67275e-006, -5.05215e-007" rotation="0.221768, 0.0270047, 0.316896, 0.921774" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.01576e-006" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 1.02999e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="16.116, -54.1135, 117.918" rotation="0.732427, 0.0591469, -0.0062006, 0.678243" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181084, 4.29811, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="0.999999, 1.0, 1.0"/>
+    <transform name="rifle" translation="15.3973, -48.5672, 114.125" rotation="0.429676, 0.106531, -0.478995, 0.758019" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -634,8 +634,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 6.74395e-007, 1.24944e-006" rotation="0.225363, 0.0260182, 0.322392, 0.91902" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -2.48282e-007" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 1.13981e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="14.3421, -50.6449, 117.974" rotation="0.725212, 0.0511334, 0.00382221, 0.686614" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="13.7569, -46.541, 114.075" rotation="0.417881, 0.0952114, -0.49017, 0.758976" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -687,8 +687,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -3.10595e-006, -1.92823e-006" rotation="0.231867, 0.0209583, 0.35183, 0.90665" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 0.0" rotation="-0.0246779, 0.024678, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -1.84749e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="13.0477, -16.2222, 119.188" rotation="0.692666, 0.0733189, -0.0272812, 0.717003" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="12.2226, -13.4288, 115.106" rotation="0.35575, 0.103785, -0.521774, 0.76839" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -740,8 +740,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 6.89037e-007, -1.69859e-006" rotation="0.240565, 0.0122974, 0.382734, 0.891904" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 2.9404e-006" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -1.73185e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="12.5998, -5.38941, 122.159" rotation="0.672228, 0.0598465, -0.0445348, 0.736576" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="11.8633, -3.38444, 118.05" rotation="0.327052, 0.0908205, -0.54373, 0.767559" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -793,8 +793,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -1.00951e-006, -1.98453e-006" rotation="0.247927, 0.00171374, 0.402975, 0.880988" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -8.59804e-007" rotation="-0.0246779, 0.024678, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -2.08271e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="9.69545, -1.83399, 124.786" rotation="0.648234, 0.0326081, -0.0636557, 0.758075" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="9.12413, -0.325291, 120.64" rotation="0.300799, 0.0666209, -0.568411, 0.762883" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -846,8 +846,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -4.24668e-006, -2.17682e-006" rotation="0.249715, -0.00733322, 0.410114, 0.877152" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.94659e-006" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -2.72425e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="6.23569, -1.94227, 127.38" rotation="0.630651, -0.000231599, -0.0836601, 0.771544" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.29811, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="5.87853, -0.586667, 123.193" rotation="0.284744, 0.0447923, -0.592807, 0.751994" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -899,8 +899,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -2.5454e-006, -2.89886e-006" rotation="0.242269, -0.00981236, 0.409936, 0.879296" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 2.10862e-006" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -1.86903e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="2.85896, -5.81741, 129.253" rotation="0.624796, -0.0324574, -0.106273, 0.77284" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="2.76752, -4.27417, 125.017" rotation="0.281229, 0.0340174, -0.616832, 0.734351" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -952,8 +952,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -3.73064e-006, -4.63668e-007" rotation="0.228479, -0.00441279, 0.405718, 0.88497" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.80745e-006" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -2.42692e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="0.0860113, -11.8196, 130.14" rotation="0.627328, -0.0597551, -0.131173, 0.765299" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181086, 4.2981, 76.1392" rotation="-0.00871261, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="0.318599, -9.8377, 125.852" rotation="0.285045, 0.0347478, -0.639398, 0.713241" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1005,8 +1005,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -1.46537e-006, -3.57262e-006" rotation="0.214661, 0.00583065, 0.397913, 0.891937" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -3.92862e-006" rotation="-0.0246779, 0.0246781, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -8.19345e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="-1.48572, -18.3516, 129.707" rotation="0.635402, -0.0765972, -0.155802, 0.752411" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181086, 4.29811, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="-0.904244, -15.7522, 125.389" rotation="0.291289, 0.04793, -0.657538, 0.693179" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1058,8 +1058,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -1.02522e-006, -1.83614e-006" rotation="0.220506, 0.0213854, 0.386356, 0.895348" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -5.63937e-007" rotation="-0.0246779, 0.024678, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -1.03181e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="-1.5114, -24.7049, 127.901" rotation="0.646834, -0.0764922, -0.171904, 0.739056" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181084, 4.2981, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="-0.64866, -21.3564, 123.589" rotation="0.296012, 0.0735784, -0.664279, 0.682419" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1111,8 +1111,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -2.40177e-006, 1.54223e-006" rotation="0.220122, 0.0388854, 0.371657, 0.901058" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 5.77677e-007" rotation="-0.0313383, 0.0273268, 0.703631, 0.709348" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 9.92571e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="-0.712466, -30.4474, 125.052" rotation="0.663731, -0.0649173, -0.18393, 0.722092" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181084, 4.2981, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="0.355681, -26.218, 120.843" rotation="0.30251, 0.10978, -0.663962, 0.674975" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1164,8 +1164,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -4.63667e-007, -1.83868e-006" rotation="0.219573, 0.0571707, 0.350297, 0.908741" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.89222e-006" rotation="-0.0446522, 0.0326186, 0.697397, 0.714549" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 7.35419e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="-0.313957, -36.3093, 121.411" rotation="0.685117, -0.0516936, -0.200247, 0.698458" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181086, 4.2981, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="0.969261, -31.1355, 117.462" rotation="0.312909, 0.150987, -0.664703, 0.661408" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1217,8 +1217,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 5.54825e-007, 2.40733e-007" rotation="0.21904, 0.0717185, 0.318509, 0.919473" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.48777e-006" rotation="-0.0546299, 0.0365817, 0.692597, 0.718322" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 5.05284e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="-0.644409, -42.5772, 117.053" rotation="0.709058, -0.039813, -0.220485, 0.668609" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.29811, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="0.904311, -36.4862, 113.54" rotation="0.326987, 0.193381, -0.667198, 0.640726" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1270,8 +1270,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 1.09654e-006, -7.56268e-007" rotation="0.222325, 0.0740007, 0.253896, 0.93842" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 5.85664e-007" rotation="-0.0513048, 0.0352613, 0.694209, 0.717076" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -2.50277e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="1.34029, -49.425, 113.896" rotation="0.722278, -0.0106797, -0.217399, 0.656459" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 0.999999, 1.0"/>
+    <transform name="rifle" translation="2.74067, -42.5406, 110.718" rotation="0.324714, 0.231271, -0.652249, 0.644706" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1323,8 +1323,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 2.64852e-006, -3.62847e-006" rotation="0.226497, 0.0712304, 0.209264, 0.948596" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.62162e-006" rotation="-0.0246779, 0.024678, 0.706676, 0.706676" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, -3.06102e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="7.93222, -56.4352, 113.217" rotation="0.716262, 0.0414865, -0.173931, 0.674534" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181084, 4.29811, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="8.4075, -48.9857, 110.023" rotation="0.296094, 0.256349, -0.609189, 0.689567" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1376,8 +1376,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -1.7632e-007, -1.87126e-006" rotation="0.126479, 0.0935681, 0.189262, 0.969241" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -5.37013e-007" rotation="-0.0437768, 0.0437769, 0.70575, 0.70575" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 6.29049e-007, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="17.5527, -61.2563, 114.288" rotation="0.695754, 0.102698, -0.105328, 0.703054" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181084, 4.29811, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="16.6124, -53.673, 110.853" rotation="0.25353, 0.268038, -0.548124, 0.750625" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1429,8 +1429,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -5.35092e-006, 1.08101e-006" rotation="-0.0156351, 0.0458469, 0.202772, 0.978027" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 7.05724e-007" rotation="-0.0628436, 0.0628437, 0.704309, 0.704309" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, -2.69929e-007, 1.54146e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="28.4142, -62.7925, 116.455" rotation="0.659764, 0.166564, -0.0237905, 0.732395" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181086, 4.29811, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 0.999999, 1.0"/>
+    <transform name="rifle" translation="25.8703, -55.7127, 112.625" rotation="0.202599, 0.266016, -0.472657, 0.815343" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1482,8 +1482,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -2.81654e-006, -1.49674e-006" rotation="-0.0366767, 0.0173413, 0.220109, 0.974631" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 2.47212e-006" rotation="-0.0689581, 0.0689581, 0.703736, 0.703736" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, -6.25318e-007, -5.35009e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="38.7874, -60.3688, 119.446" rotation="0.606782, 0.226855, 0.0637371, 0.759138" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181081, 4.29811, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="34.837, -54.5249, 115.133" rotation="0.14744, 0.248954, -0.383935, 0.876856" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1535,8 +1535,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -4.50353e-007, -6.102e-007" rotation="-0.0269003, 0.0131792, 0.260623, 0.964976" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 0.0" rotation="-0.0750674, 0.0750674, 0.703111, 0.703111" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 2.14754e-007, 9.21405e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="46.8583, -54.273, 122.753" rotation="0.539453, 0.277653, 0.155159, 0.779631" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181081, 4.29811, 76.1392" rotation="-0.00871263, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="42.124, -50.2652, 117.996" rotation="0.0930636, 0.217461, -0.28438, 0.929074" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1588,8 +1588,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -8.4263e-007, -5.90694e-007" rotation="-0.0166367, 0.0233133, 0.375711, 0.926294" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 1.94013e-007" rotation="-0.0866251, 0.0866251, 0.701781, 0.701781" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 2.57259e-007, -6.81334e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="51.2912, -45.768, 125.717" rotation="0.462888, 0.314672, 0.247857, 0.790749" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181088, 4.2981, 76.1392" rotation="-0.00871264, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="46.7058, -43.8177, 120.718" rotation="0.0446359, 0.174255, -0.177744, 0.967497" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1641,8 +1641,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 2.42462e-007, -7.271e-007" rotation="-0.000490844, 0.0408753, 0.448124, 0.893036" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 3.0265e-007" rotation="-0.0981592, 0.0981591, 0.700261, 0.70026" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, -1.57591e-007, 1.20489e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="51.6955, -36.7305, 127.695" rotation="0.383975, 0.3361, 0.338823, 0.790442" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.2981, 76.1392" rotation="-0.00871261, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 1.0"/>
+    <transform name="rifle" translation="48.2482, -36.5299, 122.812" rotation="0.00666388, 0.123851, -0.0688813, 0.989885" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1694,8 +1694,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 1.9082e-006, 7.22105e-007" rotation="0.0137199, 0.0518988, 0.337143, 0.939922" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 2.39755e-007" rotation="-0.107442, 0.107442, 0.698896, 0.698896" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 2.46757e-007, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="48.7535, -29.058, 128.202" rotation="0.310252, 0.342898, 0.424872, 0.778234" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.29811, 76.1392" rotation="-0.0087126, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 0.999999"/>
+    <transform name="rifle" translation="47.1993, -29.7985, 123.896" rotation="-0.0176778, 0.0718245, 0.0367029, 0.996585" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1747,8 +1747,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -4.30759e-007, 1.32356e-007" rotation="0.0269715, 0.0628604, 0.192219, 0.978965" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 5.12361e-007" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 3.27434e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="41.9635, -31.9554, 125.874" rotation="0.283485, 0.318921, 0.436885, 0.791869" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181084, 4.29811, 76.1392" rotation="-0.00871262, 0.0160587, 0.0732732, 0.997145" scale="1.0, 0.999999, 1.0"/>
+    <transform name="rifle" translation="42.4847, -32.6005, 122.627" rotation="-0.0192137, 0.032243, 0.0491904, 0.998084" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1800,8 +1800,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, 1.86053e-007, -1.77882e-006" rotation="0.0250255, 0.0672981, 0.233588, 0.969681" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, -1.09681e-006" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 8.4401e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="36.3267, -34.2879, 119.621" rotation="0.292649, 0.284804, 0.455411, 0.791103" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181085, 4.29811, 76.1392" rotation="-0.00871264, 0.0160587, 0.0732732, 0.997145" scale="0.999999, 1.0, 1.0"/>
+    <transform name="rifle" translation="39.1655, -34.3499, 117.847" rotation="0.017352, 0.00105039, 0.0582442, 0.998151" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
   <frame>
@@ -1853,8 +1853,8 @@
     <transform name="Bip01 R Foot" translation="32.0976, -4.36763e-007, 0.0" rotation="0.0269715, 0.0628604, 0.192219, 0.978965" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0" translation="11.6315, 21.3392, 6.72695e-007" rotation="-0.116707, 0.116706, 0.697409, 0.697409" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 R Toe0Nub" translation="22.161, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="rifle" translation="36.7431, -32.5902, 124.26" rotation="0.281784, 0.303233, 0.413853, 0.810786" scale="1.0, 1.0, 1.0"/>
-    <transform name="em_rifle" translation="0.181088, 4.29811, 76.1392" rotation="-0.00871259, 0.0160587, 0.0732732, 0.997145" scale="1.0, 1.0, 1.0"/>
+    <transform name="rifle" translation="36.3384, -33.3535, 120.471" rotation="-0.0142503, 0.00595325, 0.00136537, 0.99988" scale="1.0, 1.0, 1.0"/>
+    <transform name="em_rifle" translation="86.7753, -46.3792, 180.403" rotation="0.265637, 0.298016, 0.425042, 0.812381" scale="1.0, 1.0, 0.999999"/>
   </frame>
 
 </animation>
