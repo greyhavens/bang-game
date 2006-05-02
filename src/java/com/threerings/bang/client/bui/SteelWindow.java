@@ -7,8 +7,8 @@ import com.jme.renderer.Renderer;
 
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.util.BasicContext;
@@ -23,45 +23,50 @@ public class SteelWindow extends BDecoratedWindow
     {
         super(ctx.getStyleSheet(), null);
         setStyleClass("steelwindow");
-        ((GroupLayout)getLayoutManager()).setGap(14);
+        ((GroupLayout)getLayoutManager()).setGap(20);
 
-        add(new BLabel(title, "window_title"), GroupLayout.FIXED);
+        add(_header = new BLabel(title, "window_title"), GroupLayout.FIXED);
         add(_contents = new BContainer());
         add(_buttons = GroupLayout.makeHBox(GroupLayout.CENTER),
             GroupLayout.FIXED);
 
         // load up our custom header image
-        _header = ctx.loadImage("ui/window/header_steel.png");
+        _headimg = new ImageBackground(
+            ImageBackground.FRAME_XY,
+            ctx.loadImage("ui/window/header_steel.png"));
     }
 
     @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();
-        _header.reference();
+        _headimg.wasAdded();
     }
 
     @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        _header.release();
+        _headimg.wasRemoved();
     }
 
     @Override // documentation inherited
     protected void renderBackground (Renderer renderer)
     {
         // we don't call super because we need to jimmy things up a bit
-        int hheight = _header.getHeight();
+        int hwidth = _header.getWidth() + 2*HEADER_EDGE;
+        int hheight = _headimg.getMinimumHeight();
         getBackground().render(renderer, 0, 0,
                                _width, _height-hheight+OVERLAP, _alpha);
-        _header.render(renderer, (_width - _header.getWidth())/2,
-                       _height - hheight, _alpha);
+        _headimg.render(renderer, (_width - hwidth)/2, _height - hheight,
+                        hwidth, hheight, _alpha);
     }
 
-    protected BImage _header;
+    protected BLabel _header;
     protected BContainer _contents;
     protected BContainer _buttons;
+    protected ImageBackground _headimg;
 
     protected static final int OVERLAP = 23;
+    protected static final int HEADER_EDGE = 90;
 }

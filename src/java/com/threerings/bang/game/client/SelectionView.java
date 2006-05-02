@@ -10,7 +10,6 @@ import java.util.Iterator;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -25,6 +24,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
@@ -43,13 +43,13 @@ import static com.threerings.bang.Log.log;
  * Displays an interface for selecting a big shot and a starting hand of
  * cards from a player's inventory.
  */
-public class SelectionView extends BDecoratedWindow
+public class SelectionView extends SteelWindow
     implements ActionListener
 {
     public SelectionView (BangContext ctx, BangController ctrl,
                           BangConfig config, BangObject bangobj, int pidx)
     {
-        super(ctx.getStyleSheet(), null);
+        super(ctx, "");
 
         _ctx = ctx;
         _ctrl = ctrl;
@@ -58,32 +58,31 @@ public class SelectionView extends BDecoratedWindow
         _pidx = pidx;
         _tconfigs = new UnitConfig[config.teamSize];
 
-        // set up our main structural bits
-        setLayoutManager(new BorderLayout(25, 15));
-
         BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(
             "m.round_header",
             MessageBundle.taint(String.valueOf((bangobj.roundId + 1))),
             "m.scenario_" + bangobj.scenarioId,
             MessageBundle.taint(bangobj.boardName));
-        header.add(new BLabel(_msgs.xlate(msg), "window_title"));
-        add(header, BorderLayout.NORTH);
+        _header.setText(_msgs.xlate(msg));
+
+        // set up our main structural bits
+        _contents.setLayoutManager(new BorderLayout(25, 15));
 
         _side = GroupLayout.makeVBox(GroupLayout.TOP);
         _side.add(_uname = new BLabel("", "pick_unit_name"));
         _side.add(_uview = new UnitView(ctx, true));
-        add(_side, BorderLayout.WEST);
+        _contents.add(_side, BorderLayout.WEST);
 
         _center = GroupLayout.makeVBox(GroupLayout.TOP);
         ((GroupLayout)_center.getLayoutManager()).setOffAxisJustification(
             GroupLayout.LEFT);
-        add(_center, BorderLayout.CENTER);
+        _contents.add(_center, BorderLayout.CENTER);
 
-        BContainer footer = GroupLayout.makeHBox(GroupLayout.CENTER);
-        footer.add(_ready = new BButton(
-                       _msgs.get("m.ready"), this, "pick_bigshot"));
-        add(footer, BorderLayout.SOUTH);
+        // we need to create _ready here because code below is going to trigger
+        // a call to updateBigShot()
+        _buttons.add(_ready = new BButton(
+                         _msgs.get("m.ready"), this, "pick_bigshot"));
 
         // add the mini-cards display to the side
         BContainer cards = GroupLayout.makeHBox(GroupLayout.CENTER);

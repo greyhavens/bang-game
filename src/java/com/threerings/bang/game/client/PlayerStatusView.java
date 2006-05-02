@@ -80,7 +80,7 @@ public class PlayerStatusView extends BContainer
         _player.setTooltipText(ctx.xlate(GameCodes.GAME_MSGS, hmsg));
         add(_player, NAME_RECT);
 
-        _points = new BLabel("");
+        _points = new BLabel("", "player_status_score");
         _points.setTooltipText(ctx.xlate(GameCodes.GAME_MSGS, "m.help_points"));
         add(_points, CASH_LOC);
         add(_ranklbl = new BLabel(createRankIcon(-2)) {
