@@ -81,7 +81,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.64674e-006" rotation="0.028251, 0.214588, -0.211309, 0.953154" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 3.45278e-006" rotation="-0.131072, 0.176468, 0.12107, 0.967999" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9546, -23.6156, 141.055" rotation="0.23667, 0.507382, 0.355858, 0.748275" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -164,7 +163,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.64674e-006" rotation="0.028251, 0.214588, -0.211309, 0.953154" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 3.45278e-006" rotation="-0.131072, 0.176468, 0.12107, 0.967999" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-30.3603, 7.14926, 148.45" rotation="0.329898, 0.516666, -0.00493039, 0.790063" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -247,7 +245,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.64674e-006" rotation="0.028251, 0.214588, -0.211309, 0.953154" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 3.45278e-006" rotation="-0.131072, 0.176468, 0.12107, 0.967999" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-29.7044, 34.2807, 149.509" rotation="0.335662, 0.515954, -0.284273, 0.735059" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -330,7 +327,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.57409e-006" rotation="0.00400866, 0.1506, -0.2818, 0.947572" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 2.68362e-006" rotation="-0.117917, 0.198251, 0.259321, 0.937841" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-30.8188, 51.958, 143.778" rotation="0.306917, 0.481265, -0.356006, 0.739896" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -413,7 +409,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.51028e-006" rotation="-0.0202748, 0.0851483, -0.34956, 0.932816" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.27991e-006" rotation="-0.10235, 0.215935, 0.392214, 0.888293" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-34.3368, 62.6286, 138.545" rotation="0.310952, 0.44688, -0.373303, 0.751167" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -496,7 +491,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.51355e-006" rotation="-0.0398979, 0.032142, -0.390514, 0.91917" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 2.08469e-006" rotation="-0.104067, 0.219446, 0.425229, 0.871891" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-37.092, 68.0808, 135.686" rotation="0.313863, 0.431852, -0.387255, 0.751683" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -579,7 +573,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.51073e-006" rotation="-0.0547959, -0.00745361, -0.3997, 0.914976" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.04882e-006" rotation="-0.134986, 0.203981, 0.309203, 0.919002" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-38.4055, 71.6584, 135.35" rotation="0.295045, 0.426982, -0.41953, 0.744734" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -662,7 +655,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.56977e-006" rotation="-0.0673797, -0.0404045, -0.392365, 0.916448" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 2.34887e-006" rotation="-0.176392, 0.170162, 0.100039, 0.964325" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-39.6164, 72.235, 136.947" rotation="0.262406, 0.418595, -0.455379, 0.740643" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -745,7 +737,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.45945e-006" rotation="-0.0768502, -0.0641545, -0.377246, 0.920686" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 4.34417e-007" rotation="-0.207437, 0.128324, -0.113328, 0.963151" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-40.8297, 71.827, 140.466" rotation="0.215789, 0.401905, -0.495409, 0.739241" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -828,7 +819,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.52894e-006" rotation="-0.0824479, -0.0762365, -0.363196, 0.924921" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 8.00985e-007" rotation="-0.220778, 0.101212, -0.234696, 0.941239" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-42.1359, 71.115, 144.282" rotation="0.165224, 0.37948, -0.534438, 0.736934" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -911,7 +901,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.4925e-006" rotation="-0.0856108, -0.0806221, -0.351684, 0.928703" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 3.59084e-006" rotation="-0.225173, 0.091016, -0.277471, 0.929529" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-43.5816, 69.6942, 148.107" rotation="0.118144, 0.354014, -0.569201, 0.732616" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -994,7 +983,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.33947e-006" rotation="-0.0882858, -0.0830649, -0.338485, 0.933131" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, -1.76615e-007" rotation="-0.22839, 0.0826112, -0.311718, 0.918611" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-45.0821, 67.3632, 151.678" rotation="0.081194, 0.329212, -0.597442, 0.726698" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1077,7 +1065,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.60174e-006" rotation="-0.0905079, -0.0838294, -0.324031, 0.937968" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 1.23989e-006" rotation="-0.230601, 0.0762234, -0.33716, 0.90958" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-46.4615, 64.7525, 154.278" rotation="0.0597983, 0.309709, -0.618426, 0.719759" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1160,7 +1147,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.43685e-006" rotation="-0.092314, -0.0831836, -0.308761, 0.942988" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.54257e-006" rotation="-0.231939, 0.07205, -0.353518, 0.903348" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-47.5676, 66.2167, 154.912" rotation="0.0521742, 0.295193, -0.635031, 0.711951" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1243,7 +1229,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.6634e-006" rotation="-0.0937435, -0.0813988, -0.293116, 0.947982" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.04824e-006" rotation="-0.232487, 0.0702624, -0.360462, 0.9006" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-49.8162, 63.529, 155.766" rotation="0.0780552, 0.278359, -0.642919, 0.709281" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1326,7 +1311,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.34305e-006" rotation="-0.0948388, -0.0787501, -0.277549, 0.95277" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 3.01962e-006" rotation="-0.23226, 0.0710083, -0.357569, 0.901753" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-52.6939, 59.9444, 154.913" rotation="0.134097, 0.252433, -0.636726, 0.716154" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1409,7 +1393,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.43795e-006" rotation="-0.0956457, -0.0755165, -0.262522, 0.9572" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 2.7806e-006" rotation="-0.231192, 0.07441, -0.344294, 0.906904" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-55.5045, 55.7033, 152.403" rotation="0.201048, 0.224513, -0.612731, 0.730572" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1492,7 +1475,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.73997e-006" rotation="-0.0962134, -0.0719801, -0.248501, 0.96115" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 5.3539e-007" rotation="-0.229123, 0.0805578, -0.319951, 0.915776" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-57.4282, 50.8306, 149.394" rotation="0.261007, 0.205051, -0.568934, 0.752425" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1575,7 +1557,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.79068e-006" rotation="-0.0965941, -0.0684258, -0.235962, 0.964526" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.3807e-006" rotation="-0.225781, 0.0894981, -0.283722, 0.92764" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-57.886, 44.6022, 147.196" rotation="0.297641, 0.207882, -0.510501, 0.779477" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1658,7 +1639,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.38129e-006" rotation="-0.0968426, -0.0651405, -0.225382, 0.967255" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 9.0164e-007" rotation="-0.220778, 0.101213, -0.234696, 0.941239" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-57.2896, 36.5459, 145.684" rotation="0.316404, 0.229861, -0.434575, 0.811294" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1741,7 +1721,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.56184e-006" rotation="-0.0970152, -0.0624121, -0.217241, 0.969278" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 1.88163e-006" rotation="-0.203554, 0.132486, -0.0941678, 0.965477" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-55.6685, 28.3123, 144.906" rotation="0.331449, 0.256261, -0.347292, 0.838964" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1824,7 +1803,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.45869e-006" rotation="-0.0971685, -0.0605291, -0.212017, 0.970538" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 1.3817e-006" rotation="-0.163535, 0.179564, 0.152509, 0.957995" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-53.1626, 21.5901, 145.27" rotation="0.331868, 0.281941, -0.25409, 0.863604" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1907,7 +1885,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.44232e-006" rotation="-0.0973578, -0.0597788, -0.210183, 0.970964" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 1.96135e-006" rotation="-0.111609, 0.215709, 0.394763, 0.886101" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-49.9588, 12.887, 143.831" rotation="0.342172, 0.312728, -0.14965, 0.873341" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -1990,7 +1967,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.47613e-006" rotation="-0.0972667, -0.0601038, -0.214004, 0.970118" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 2.48784e-006" rotation="-0.0745336, 0.231153, 0.535396, 0.808928" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-46.2504, 0.143566, 138.184" rotation="0.378166, 0.341759, -0.0295289, 0.859837" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2073,7 +2049,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.48557e-006" rotation="-0.0964142, -0.0614799, -0.227862, 0.966956" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 1.55546e-006" rotation="-0.0579881, 0.239214, 0.594094, 0.765811" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-42.2208, -13.1333, 131.553" rotation="0.410078, 0.357882, 0.0929449, 0.833737" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2156,7 +2131,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.60866e-006" rotation="-0.094568, -0.0642179, -0.25531, 0.960078" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 2.06415e-006" rotation="-0.0474473, 0.248787, 0.633291, 0.731298" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-38.1206, -22.5125, 129.216" rotation="0.36507, 0.375512, 0.184193, 0.831738" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2239,7 +2213,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.51995e-006" rotation="-0.0914087, -0.068565, -0.299628, 0.947189" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 1.39392e-006" rotation="-0.0433773, 0.256714, 0.651201, 0.712849" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-33.7857, -26.8259, 128.093" rotation="0.302859, 0.39913, 0.247809, 0.829194" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2322,7 +2295,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.0864828, -0.074651, -0.363525, 0.924553" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 3.74372e-006" rotation="-0.0461308, 0.259576, 0.645463, 0.716847" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-29.6611, -25.6105, 133.322" rotation="0.260342, 0.425099, 0.286877, 0.818056" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2405,7 +2377,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.0709752, -0.103176, -0.558387, 0.820074" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.95001e-006" rotation="-0.0558974, 0.25315, 0.611748, 0.747365" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-25.9513, -25.5421, 135.869" rotation="0.250036, 0.447497, 0.319625, 0.796912" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2488,7 +2459,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.0504393, -0.102508, -0.695878, 0.709014" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.64893e-006" rotation="-0.0725136, 0.231794, 0.542435, 0.804225" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-22.7137, -24.6257, 138.914" rotation="0.244787, 0.474636, 0.340883, 0.773692" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2571,7 +2541,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.0406479, -0.0513645, -0.669505, 0.739914" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 1.82321e-006" rotation="-0.172816, -0.0395937, -0.207565, 0.962021" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9546, -23.6377, 141.505" rotation="0.23667, 0.507382, 0.355858, 0.748275" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2654,7 +2623,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.0325415, 0.0122847, -0.603461, 0.796633" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 1.51439e-006" rotation="-0.184411, -0.0281975, -0.252197, 0.949523" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9546, -23.6377, 141.505" rotation="0.23667, 0.507382, 0.355858, 0.748275" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2737,7 +2705,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.0251724, 0.0821811, -0.50698, 0.857662" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.34382e-006" rotation="-0.191412, 0.0255334, -0.198013, 0.960989" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9546, -23.6377, 141.505" rotation="0.23667, 0.507382, 0.355858, 0.748275" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2820,7 +2787,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.0176549, 0.151949, -0.395033, 0.905842" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.38125e-006" rotation="-0.192095, 0.0950492, -0.0919158, 0.972428" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9546, -23.6377, 141.505" rotation="0.23667, 0.507382, 0.355858, 0.748275" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2903,7 +2869,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.00927868, 0.216122, -0.288559, 0.932705" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 1.24132e-006" rotation="-0.187355, 0.154548, 0.01506, 0.969941" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9546, -23.6377, 141.505" rotation="0.23667, 0.507382, 0.355858, 0.748275" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -2986,7 +2951,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.49139e-006" rotation="-0.00927868, 0.216122, -0.288559, 0.932705" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 1.24132e-006" rotation="-0.147419, 0.193014, 0.234661, 0.941248" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9546, -23.6377, 141.505" rotation="0.23667, 0.507382, 0.355858, 0.748275" scale="1.0, 1.0, 1.0"/>
   </frame>
 

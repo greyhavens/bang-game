@@ -81,10 +81,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.533e-006" rotation="0.028251, 0.214588, -0.211309, 0.953154" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.48548e-006" rotation="-0.131072, 0.176468, 0.121071, 0.967999" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane_moving" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers1" translation="105.0, -445.0, -3.89031e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers2" translation="105.0, -495.0, -4.32743e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9546, -23.6156, 141.055" rotation="0.23667, 0.507382, 0.355859, 0.748275" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -167,10 +163,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.50657e-006" rotation="0.0152402, 0.155736, -0.212644, 0.964519" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.39582e-006" rotation="-0.100826, 0.107227, -0.144244, 0.978535" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane_moving" translation="0.0, 25.0, 2.18557e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers1" translation="105.0, -445.0, -3.89031e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers2" translation="105.0, -495.0, -4.32743e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.9296, -24.957, 144.546" rotation="0.234952, 0.514174, 0.36257, 0.740922" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -253,10 +245,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13109, 1.58887e-006" rotation="0.00120314, 0.0918779, -0.213186, 0.972681" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08741, 2.6559e-006" rotation="-0.0619901, 0.040626, -0.297593, 0.951811" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane_moving" translation="0.0, 50.0, 4.37114e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers1" translation="105.0, -445.0, -3.89031e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers2" translation="105.0, -495.0, -4.32743e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.8813, -25.9587, 145.283" rotation="0.242664, 0.513721, 0.373434, 0.733315" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -339,10 +327,6 @@
     <transform name="H tail 04" translation="11.9222, 3.13108, 1.46162e-006" rotation="-0.0109043, 0.0364973, -0.21291, 0.976329" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 2.22975e-006" rotation="-0.0113456, 0.0012502, -0.115234, 0.993273" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane_moving" translation="0.0, 75.0, 6.55671e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers1" translation="105.0, -445.0, -3.89031e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers2" translation="105.0, -495.0, -4.32743e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.8557, -26.1878, 145.672" rotation="0.255052, 0.507164, 0.382455, 0.729014" scale="1.0, 1.0, 1.0"/>
   </frame>
 
@@ -425,10 +409,6 @@
     <transform name="H tail 04" translation="11.9222, 3.1311, 1.69723e-006" rotation="-0.0181543, 0.00320102, -0.212415, 0.977006" scale="1.0, 1.0, 1.0"/>
     <transform name="H tail 05" translation="34.2948, 2.08742, 2.29132e-006" rotation="0.0273851, -0.0190092, 0.138971, 0.989735" scale="1.0, 1.0, 1.0"/>
     <transform name="rider" translation="-52.5238, -0.393564, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane_moving" translation="0.0, 100.0, 8.74228e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers1" translation="105.0, -445.0, -3.89031e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="markers2" translation="105.0, -495.0, -4.32743e-005" rotation="1.0, 0.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="plane origin" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="rifle" translation="-19.7914, -25.7518, 146.537" rotation="0.253072, 0.507606, 0.381665, 0.72981" scale="1.0, 1.0, 1.0"/>
   </frame>
 
