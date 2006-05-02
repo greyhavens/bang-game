@@ -3,233 +3,233 @@
 <animation frameRate="20">
 
   <frame>
+    <transform name="body" translation="-0.377369, -3.56157, 66.0646" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="1.26563e-007, 0.0, 0.00057195, 1.0" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-8.41804e-007, 19.7332, -103.73" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-8.5293e-007, 19.7332, -104.455" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.7321e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.78596e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="-0.377369, -3.56157, 66.0646" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="-0.177812, -1.33197, 69.5084" rotation="0.677472, -0.0400805, 0.0513956, 0.732656" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="1.24086e-007, 0.0, 0.0672933, 0.997733" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-1.29337e-006, 19.7332, -103.73" rotation="0.0, -0.469981, 0.0, 0.882676" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-7.84082e-007, 19.7332, -104.455" rotation="0.0, -0.469981, 0.0, 0.882676" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.499524, -0.0377755, -0.0218099, 0.865201" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.499524, 0.0377755, 0.0218095, 0.865201" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="-0.177812, -1.33197, 69.5084" rotation="0.677472, -0.0400805, 0.0513956, 0.732656" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="0.293608, 3.93507, 77.6438" rotation="0.639806, -0.0844225, 0.107796, 0.756241" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="1.20775e-007, 0.0, 0.143302, 0.989679" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-1.82984e-006, 19.7332, -103.73" rotation="0.0, -0.737277, 0.0, 0.67559" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-6.27066e-007, 19.7332, -104.455" rotation="0.0, -0.737277, 0.0, 0.67559" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.498097, 0.0754791, 0.0435777, 0.86273" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.499524, -0.0377755, -0.0218099, 0.865201" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.5375, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="0.293608, 3.93507, 77.6438" rotation="0.639806, -0.0844225, 0.107796, 0.756241" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="0.846008, 10.1069, 87.1768" rotation="0.606654, -0.119314, 0.153007, 0.770925" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394832, 20.4786, -93.4946" rotation="0.0, 0.0, 0.222251, 0.97499" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-2.07218e-006, 19.7332, -103.73" rotation="0.0, -0.792901, 0.0, 0.609351" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-4.15088e-006, 19.7332, -104.455" rotation="0.0, -0.792901, 0.0, 0.609351" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.654e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.75601e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.5375, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="0.846008, 10.1069, 87.1768" rotation="0.606654, -0.119314, 0.153007, 0.770925" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.28851, 15.0508, 94.8131" rotation="0.594331, -0.13176, 0.171713, 0.774548" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394835, 20.4786, -93.4946" rotation="0.0, 0.0, 0.297919, 0.954591" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-5.59091e-007, 19.7332, -103.73" rotation="0.0, -0.812938, 0.0, 0.58235" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-1.39922e-006, 19.7332, -104.455" rotation="0.0, -0.812938, 0.0, 0.58235" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.69092e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.75886e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537503, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.28851, 15.0508, 94.8131" rotation="0.594331, -0.13176, 0.171713, 0.774548" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.57229, 18.2214, 99.7105" rotation="0.601072, -0.125804, 0.169129, 0.770896" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394835, 20.4786, -93.4946" rotation="0.0, 0.0, 0.364556, 0.931181" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-1.05971e-006, 19.7332, -103.73" rotation="0.0, -0.806076, 0.0, 0.591813" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="1.73529e-006, 19.7332, -104.455" rotation="0.0, -0.806076, 0.0, 0.591813" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43593, 18.9028" rotation="0.5, 0.0, -1.70738e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.86474e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537501, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.57229, 18.2214, 99.7105" rotation="0.601072, -0.125804, 0.169129, 0.770896" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.77981, 20.54, 103.292" rotation="0.613124, -0.114634, 0.161072, 0.764849" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394834, 20.4786, -93.4946" rotation="0.0, 0.0, 0.417096, 0.908863" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-3.6878e-007, 19.7332, -103.73" rotation="0.0, -0.775856, 0.0, 0.630911" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="6.74187e-007, 19.7332, -104.455" rotation="0.0, -0.775856, 0.0, 0.630911" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.67291e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.78367e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537501, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.77981, 20.54, 103.292" rotation="0.613124, -0.114634, 0.161072, 0.764849" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.91706, 22.0735, 105.66" rotation="0.629064, -0.0992704, 0.148468, 0.756559" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394831, 20.4786, -93.4946" rotation="0.0, 0.0, 0.451082, 0.892482" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-2.9206e-006, 19.7332, -103.73" rotation="0.0, -0.723253, 0.0, 0.690583" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-9.62257e-007, 19.7332, -104.455" rotation="0.0, -0.723253, 0.0, 0.690583" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.66255e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.70553e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537496, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.91706, 22.0735, 105.66" rotation="0.629064, -0.0992704, 0.148468, 0.756559" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.99005, 22.8889, 106.92" rotation="0.647459, -0.0807474, 0.132257, 0.74618" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394835, 20.4786, -93.4946" rotation="0.0, 0.0, 0.462256, 0.886747" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-1.2617e-006, 19.7332, -103.73" rotation="0.0, -0.597568, 0.0, 0.801818" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-1.12509e-006, 19.7332, -104.455" rotation="0.0, -0.597568, 0.0, 0.801818" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.76217e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.86479e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537503, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.99005, 22.8889, 106.92" rotation="0.647459, -0.0807474, 0.132257, 0.74618" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="2.00476, 23.0532, 107.174" rotation="0.666942, -0.0601245, 0.113418, 0.733969" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="0.0, 0.0, 0.424693, 0.905337" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-2.4202e-007, 19.7332, -103.73" rotation="0.0, -0.375692, 0.0, 0.926745" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-2.95666e-007, 19.7332, -104.455" rotation="0.0, -0.375692, 0.0, 0.926745" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.68995e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.8216e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537498, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="2.00476, 23.0532, 107.174" rotation="0.666942, -0.0601245, 0.113418, 0.733969" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.9672, 22.6336, 106.526" rotation="0.686273, -0.0384916, 0.0929791, 0.720349" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="0.0, 0.0, 0.322878, 0.946441" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-1.46157e-006, 19.7332, -103.73" rotation="0.0, -0.138925, 0.0, 0.990303" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-1.0292e-006, 19.7332, -104.455" rotation="0.0, -0.138925, 0.0, 0.990303" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43593, 18.9028" rotation="0.5, 0.0, -1.6852e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43593, 18.9028" rotation="0.5, 0.0, -1.8419e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.9672, 22.6336, 106.526" rotation="0.686273, -0.0384916, 0.0929791, 0.720349" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.88336, 21.6969, 105.079" rotation="0.704391, -0.0169621, 0.0720068, 0.705946" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="0.0, 0.0, 0.168121, 0.985766" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-2.23711e-007, 19.7332, -103.73" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-1.32245e-007, 19.7332, -104.455" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.65527e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.75361e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537498, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.88336, 21.6969, 105.079" rotation="0.704391, -0.0169621, 0.0720068, 0.705946" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.75925, 20.3102, 102.937" rotation="0.720434, 0.00334108, 0.0516005, 0.691593" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="1.24769e-007, 0.0, -0.02296, 0.999736" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-2.99854e-007, 19.7332, -103.73" rotation="0.0, 0.0445308, 0.0, 0.999008" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-3.73925e-007, 19.7332, -104.455" rotation="0.0, 0.0445308, 0.0, 0.999008" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43593, 18.9028" rotation="0.5, 0.0, -1.69881e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.82447e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.5375, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.75925, 20.3102, 102.937" rotation="0.720434, 0.00334108, 0.0516005, 0.691593" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.60086, 18.5406, 100.204" rotation="0.733737, 0.0212998, 0.0328742, 0.678304" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="1.33339e-007, 0.0, -0.245012, 0.96952" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-7.17494e-007, 19.7332, -103.73" rotation="0.0, 0.0721011, 0.0, 0.997397" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-8.4686e-007, 19.7332, -104.455" rotation="0.0, 0.0721011, 0.0, 0.997397" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.69057e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.80093e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.5375, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.60086, 18.5406, 100.204" rotation="0.733737, 0.0212998, 0.0328742, 0.678304" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.41419, 16.455, 96.9826" rotation="0.743801, 0.0358124, 0.0169437, 0.667225" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="1.3161e-007, 0.0, -0.490401, 0.871497" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-7.21509e-007, 19.7332, -103.73" rotation="0.0, 0.0854232, 0.0, 0.996345" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-9.55274e-007, 19.7332, -104.455" rotation="0.0, 0.0854232, 0.0, 0.996345" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.65848e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43593, 18.9028" rotation="0.5, 0.0, -1.85103e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.41419, 16.455, 96.9826" rotation="0.743801, 0.0358124, 0.0169437, 0.667225" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="1.20524, 14.1205, 93.3768" rotation="0.75023, 0.0457962, 0.00491825, 0.659571" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394832, 20.4786, -93.4946" rotation="1.22472e-007, 0.0, -0.7248, 0.688959" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-1.64782e-006, 19.7332, -103.73" rotation="0.0, 0.0871983, 0.0, 0.996191" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-1.2324e-006, 19.7332, -104.455" rotation="0.0, 0.0871983, 0.0, 0.996191" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.69309e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.82181e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.5375, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="1.20524, 14.1205, 93.3768" rotation="0.75023, 0.0457962, 0.00491825, 0.659571" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="0.98001, 11.604, 89.49" rotation="0.751947, 0.0494715, -0.00240389, 0.65736" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="0.0, 0.0, 0.906468, -0.422274" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-6.36403e-007, 19.7332, -103.73" rotation="0.0, 0.080096, 0.0, 0.996787" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-8.70933e-007, 19.7332, -104.455" rotation="0.0, 0.080096, 0.0, 0.996787" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.70286e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43593, 18.9028" rotation="0.5, 0.0, -1.83375e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="0.98001, 11.604, 89.49" rotation="0.751947, 0.0494715, -0.00240389, 0.65736" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="0.744497, 8.97272, 85.4258" rotation="0.749045, 0.0469109, -0.00568651, 0.660831" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="0.0, 0.0, 0.999097, -0.0424961" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-1.33478e-006, 19.7332, -103.73" rotation="0.0, 0.0667686, 0.0, 0.997769" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-8.46007e-007, 19.7332, -104.455" rotation="0.0, 0.0667686, 0.0, 0.997769" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.67964e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.83915e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="0.744497, 8.97272, 85.4258" rotation="0.749045, 0.0469109, -0.00568651, 0.660831" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="0.504699, 6.29352, 81.2877" rotation="0.742727, 0.0398118, -0.00602561, 0.668383" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394832, 20.4786, -93.4946" rotation="0.0, 0.0, 0.920555, 0.390613" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-9.45037e-007, 19.7332, -103.73" rotation="0.0, 0.0498703, 0.0, 0.998756" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-7.70842e-007, 19.7332, -104.455" rotation="0.0, 0.0498703, 0.0, 0.998756" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.69923e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.83662e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.5375, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="0.504699, 6.29352, 81.2877" rotation="0.742727, 0.0398118, -0.00602561, 0.668383" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="0.266615, 3.63348, 77.1791" rotation="0.734121, 0.0298683, -0.00452178, 0.678346" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394832, 20.4786, -93.4946" rotation="0.0, 0.0, 0.700596, 0.713558" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-1.01356e-006, 19.7332, -103.73" rotation="0.0, 0.0320673, 0.0, 0.999486" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-1.18548e-006, 19.7332, -104.455" rotation="0.0, 0.0320673, 0.0, 0.999486" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43593, 18.9028" rotation="0.5, 0.0, -1.69966e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43593, 18.9028" rotation="0.5, 0.0, -1.82126e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="0.266615, 3.63348, 77.1791" rotation="0.734121, 0.0298683, -0.00452178, 0.678346" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="0.0362428, 1.0596, 73.2037" rotation="0.724417, 0.0187802, -0.00227874, 0.689102" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="0.0, -1.26441e-007, 0.999216, 0.0396028" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-9.35911e-007, 19.7332, -103.73" rotation="0.0, 0.0160357, 0.0, 0.999871" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-1.01418e-006, 19.7332, -104.455" rotation="0.0, 0.0160357, 0.0, 0.999871" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.68315e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.79557e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.5375, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="0.0362428, 1.0596, 73.2037" rotation="0.724417, 0.0187802, -0.00227874, 0.689102" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="-0.180418, -1.36109, 69.4649" rotation="0.714929, 0.00825428, -0.000402539, 0.699148" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="1.24625e-007, 0.0, -0.720774, 0.69317" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-8.56151e-007, 19.7332, -103.73" rotation="0.0, 0.0044545, 0.0, 0.99999" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-9.06663e-007, 19.7332, -104.455" rotation="0.0, 0.0044545, 0.0, 0.99999" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.68492e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.76985e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="-0.180418, -1.36109, 69.4649" rotation="0.714929, 0.00825428, -0.000402539, 0.699148" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
   <frame>
+    <transform name="body" translation="-0.377369, -3.56157, 66.0662" rotation="0.707107, -1.23381e-007, 0.0, 0.707107" scale="0.934579, 1.0, 1.0"/>
     <transform name="prop" translation="0.394833, 20.4786, -93.4946" rotation="1.2518e-007, 0.0, 0.000571943, 1.0" scale="0.953267, 1.04902, 1.0"/>
     <transform name="up fin" translation="-8.36338e-007, 19.7332, -103.73" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="down fin" translation="-8.41258e-007, 19.7332, -104.455" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="port cannon" translation="73.5762, 7.43594, 18.9028" rotation="0.5, 0.0, -1.6798e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="starboard cannon" translation="-73.7077, 7.43594, 18.9028" rotation="0.5, 0.0, -1.8648e-007, 0.866025" scale="1.0, 1.0, 1.0"/>
     <transform name="em_smoke" translation="0.537499, 75.5247, 57.9011" rotation="-0.707107, 0.0, 0.0, 0.707107" scale="1.07, 1.0, 1.0"/>
-    <transform name="body" translation="-0.377369, -3.56157, 66.0662" rotation="0.707107, -1.23381e-007, 0.0, 0.707107" scale="0.934579, 1.0, 1.0"/>
   </frame>
 
 </animation>
