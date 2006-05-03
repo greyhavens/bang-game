@@ -153,7 +153,7 @@
   </article>
 
   <article name="male_sombrero" townId="frontier_town"
-           slot="hat" scrip="1000" coins="0" colors="clothes_p,clothes_s">
+           slot="hat" scrip="1000" coins="1" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="sombrero"/>
   </article>
 
@@ -334,7 +334,7 @@
   </article>
 
   <article name="female_sombrero_thin" townId="frontier_town"
-           slot="hat" scrip="1000" coins="1">
+           slot="hat" scrip="1250" coins="1">
     <component cclass="female/hat" name="sombrero"/>
     <component cclass="female/hat_back" name="sombrero"/>
     <component cclass="female/hat_band" name="border_band_sombrero"/>
