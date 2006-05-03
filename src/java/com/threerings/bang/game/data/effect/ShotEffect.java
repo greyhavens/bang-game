@@ -151,8 +151,11 @@ public class ShotEffect extends Effect
      */
     public void preapply (BangObject bangobj, Observer obs)
     {
-        // update the shooter's last acted if necessary
+        // rotate the shooter to face the target
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
+        reportEffect(obs, shooter, ROTATED);
+        
+        // update the shooter's last acted if necessary
         if (shooter != null && shooterLastActed != -1 &&
             shooter.lastActed != shooterLastActed) {
             shooter.lastActed = shooterLastActed;
@@ -184,9 +187,6 @@ public class ShotEffect extends Effect
             shooter.lastActed = shooterLastActed;
             reportEffect(obs, shooter, SHOT_NOMOVE);
         }
-
-        // rotate the shooter to face the target
-        reportEffect(obs, shooter, ROTATED);
 
         // if we have a new last acted to assign to the target, do that
         if (targetLastActed != -1) {

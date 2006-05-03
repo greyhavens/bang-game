@@ -40,7 +40,8 @@ public class StampedeHandler extends EffectHandler
         float angle = RandomUtil.getFloat(FastMath.TWO_PI);
         for (int ii = 0; ii < NUM_BISON; ii++) {
             final int penderId = notePender();
-            BisonSprite sprite = new BisonSprite(angle, BISON_DISTANCE) {
+            BisonSprite sprite = new BisonSprite(
+                angle, BISON_DISTANCE, _stampede.path) {
                 public void pathCompleted () {
                     super.pathCompleted();
                     _view.removeSprite(this);
@@ -51,8 +52,6 @@ public class StampedeHandler extends EffectHandler
             sprite.init(_ctx, _view, _bangobj.board, _sounds,
                 new DummyPiece(), _bangobj.tick);
             _view.addSprite(sprite);
-            sprite.move(_bangobj.board, _stampede.path,
-                StampedeEffect.BISON_SPEED);
         }
         
         // activate each collision on its listed tick
