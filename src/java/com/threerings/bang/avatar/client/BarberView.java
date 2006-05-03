@@ -80,6 +80,12 @@ public class BarberView extends ShopView
     }
 
     @Override // documentation inherited
+    protected Point getShopkeepNameLocation ()
+    {
+        return new Point(23, 548);
+    }
+
+    @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();

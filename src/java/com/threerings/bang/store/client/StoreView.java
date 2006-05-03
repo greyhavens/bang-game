@@ -52,6 +52,12 @@ public class StoreView extends ShopView
         _inspector.init((StoreObject)plobj);
     }
 
+    @Override // documentation inherited
+    protected Point getShopkeepNameLocation ()
+    {
+        return new Point(24, 516);
+    }
+
     /**
      * Called by the palette when a good has been purchased.
      */

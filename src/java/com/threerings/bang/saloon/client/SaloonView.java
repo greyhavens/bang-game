@@ -126,6 +126,12 @@ public class SaloonView extends ShopView
         _parlist.didLeavePlace();
     }
 
+    @Override // documentation inherited
+    protected Point getShopkeepNameLocation ()
+    {
+        return new Point(22, 554);
+    }
+
     protected SaloonController _ctrl;
     protected PaperView _paper;
     protected StatusLabel _status;

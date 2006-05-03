@@ -16,6 +16,7 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.threerings.util.MessageBundle;
@@ -95,6 +96,12 @@ public abstract class ShopView extends BWindow
         _shopkbg = _ctx.loadImage(tpath + "/shopkeep_bg.png");
         _shop = _ctx.loadImage(tpath + "/shop.png");
 
+        // if there's a custom name label for the shopkeep, use that
+        _nameloc = getShopkeepNameLocation();
+        if (_nameloc != null) {
+            _shopname = _ctx.loadImage(tpath + "/shopkeep_name.png");
+        }
+
         // add our town label
         String townId = _ctx.getUserObject().townId;
         add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
@@ -111,6 +118,9 @@ public abstract class ShopView extends BWindow
         _shopkeep.reference();
         _shop.reference();
         _background.reference();
+        if (_shopname != null) {
+            _shopname.reference();
+        }
 
         // if this is the first time the player has entered this shop, show
         // them the intro popup
@@ -127,6 +137,9 @@ public abstract class ShopView extends BWindow
         _shopkeep.release();
         _shop.release();
         _background.release();
+        if (_shopname != null) {
+            _shopname.release();
+        }
 
         // clear out our intro if it's still showing
         if (_intro != null && _intro.isAdded()) {
@@ -139,14 +152,16 @@ public abstract class ShopView extends BWindow
     {
         super.renderBackground(renderer);
 
-        _shopkbg.render(renderer, 12, _height-_shopkbg.getHeight()-12,
-            _alpha);
-        _shopkeep.render(renderer, 12, _height-_shopkeep.getHeight()-12,
-            _alpha);
-        _shop.render(renderer,
-                     _width-_shop.getWidth()-12, _height-_shop.getHeight()-12,
-                     _alpha);
+        _shopkbg.render(renderer, 12, _height-_shopkbg.getHeight()-12, _alpha);
+        _shopkeep.render(
+            renderer, 12, _height-_shopkeep.getHeight()-12, _alpha);
+        _shop.render(renderer, _width-_shop.getWidth()-12,
+                     _height-_shop.getHeight()-12, _alpha);
         _background.render(renderer, 0, 0, _alpha);
+
+        if (_shopname != null) {
+            _shopname.render(renderer, _nameloc.x, _nameloc.y, _alpha);
+        }
     }
 
     /**
@@ -156,6 +171,15 @@ public abstract class ShopView extends BWindow
     protected BButton createHelpButton ()
     {
         return new BButton(_msgs.get("m.help"), _ctrl, "help");
+    }
+
+    /**
+     * Returns the location at which to render the shopkeep name or null if we
+     * don't need a shopkeep name.
+     */
+    protected Point getShopkeepNameLocation ()
+    {
+        return null;
     }
 
     protected ActionListener _ctrl = new ActionListener() {
@@ -171,5 +195,6 @@ public abstract class ShopView extends BWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BWindow _intro;
-    protected BImage _background, _shopkeep, _shopkbg, _shop;
+    protected BImage _background, _shopkeep, _shopkbg, _shop, _shopname;
+    protected Point _nameloc;
 }
