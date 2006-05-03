@@ -18,11 +18,17 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class ShotSprite extends Sprite
 {
-    public ShotSprite (BangContext ctx)
+    /**
+     * Creates the shot sprite.
+     *
+     * @param type the model type
+     * @param name the model name
+     */
+    public ShotSprite (BangContext ctx, String type, String name)
     {
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
-        ctx.loadModel("units", "artillery/shell", new ModelAttacher(this));
+        ctx.loadModel(type, name, new ModelAttacher(this));
         setLocalScale(0.5f);
     }
 }
