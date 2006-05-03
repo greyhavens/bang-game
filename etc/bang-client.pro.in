@@ -4,7 +4,10 @@
 # Proguard configuration file for Bang! production client
 
 -injars ../lib/commons-io.jar(!META-INF/*)
+-injars ../lib/commons-beanutils.jar(!META-INF/*)
 -injars ../lib/commons-collections.jar(!META-INF/*)
+-injars ../lib/commons-digester.jar(!META-INF/*)
+-injars ../lib/commons-logging.jar(!META-INF/*)
 -injars ../lib/velocity-1.5-dev.jar(
   !META-INF/*,!**/servlet/**,!**/anakia/**,!**/texen/**,!**/VelocityFormatter*)
 -injars ../lib/getdown.jar(!META-INF/*,!**/tools/**)
