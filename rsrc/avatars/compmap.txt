@@ -1,4 +1,4 @@
-257
+266
 female/clothing_back := bodice := 174
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
@@ -191,16 +191,23 @@ male/hair_middle := braids := 127
 male/hair_middle := fro := 128
 male/hair_middle := long_messy := 129
 male/hat := cowboy := 11
+male/hat := sombrero := 258
 male/hat := stetson := 232
+male/hat := ten_gallon := 259
 male/hat := widebrim := 44
 male/hat_back := cowboy := 12
 male/hat_back := feather_double := 45
 male/hat_back := feather_single := 46
+male/hat_back := sombrero := 260
 male/hat_back := stetson := 233
+male/hat_back := ten_gallon := 261
+male/hat_band := border_band_sombrero := 262
+male/hat_band := border_sombrero := 263
 male/hat_band := buckle_widebrim := 47
 male/hat_band := diamond := 13
 male/hat_band := diamond_cowboy := 133
 male/hat_band := disks_widebrim := 48
+male/hat_band := fancy_sombrero := 264
 male/hat_band := king_cowboy := 49
 male/hat_band := king_stetson := 234
 male/hat_band := plain_cowboy := 50
@@ -209,6 +216,8 @@ male/hat_band := ringlets_cowboy := 51
 male/hat_band := ringlets_stetson := 236
 male/hat_band := ringlets_widbrim := 52
 male/hat_band := ringlets_widebrim := 134
+male/hat_band := simple_sombrero := 265
+male/hat_band := thick_ten_gallon := 266
 male/hat_band := thick_widebrim := 53
 male/hat_band := thin_widebrim := 54
 male/head := chin := 237
