@@ -5,7 +5,9 @@ package com.threerings.bang.game.client.sprite;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
+import com.jme.scene.Controller;
 import com.jme.scene.state.TextureState;
+import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
 
 import com.jmex.effects.ParticleManager;
@@ -34,7 +36,7 @@ public class SmokePlumeEmission extends SpriteEmission
         _smokemgr.setRandomMod(0f);
         _smokemgr.setPrecision(FastMath.FLT_EPSILON);
         _smokemgr.setControlFlow(true);
-        _smokemgr.setReleaseRate(256);
+        _smokemgr.setReleaseRate(0);
         _smokemgr.setReleaseVariance(0f);
         _smokemgr.setParticleSpinSpeed(0.01f);
         _smokemgr.setStartSize(TILE_SIZE / 8);
@@ -69,6 +71,19 @@ public class SmokePlumeEmission extends SpriteEmission
             _smoketex = tprov.getTexture("/textures/effects/dust.png");
         }
         _smokemgr.getParticles().setRenderState(_smoketex);
+    }
+    
+    @Override // documentation inherited
+    public Controller putClone (Controller store, CloneCreator properties)
+    {
+        SmokePlumeEmission spstore;
+        if (store == null) {
+            spstore = new SmokePlumeEmission();
+        } else {
+            spstore = (SmokePlumeEmission)store;
+        }
+        super.putClone(spstore, properties);
+        return spstore;
     }
     
     // documentation inherited
