@@ -141,6 +141,47 @@
     <component cclass="male/hat_band" name="thin_widebrim"/>
   </article>
 
+  <article name="male_ten_gallon" townId="frontier_town"
+           slot="hat" scrip="750" coins="0">
+    <component cclass="male/hat" name="ten_gallon"/>
+  </article>
+
+  <article name="male_ten_gallon_thick" townId="frontier_town"
+           slot="hat" scrip="750" coins="1" colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="ten_gallon"/>
+    <component cclass="male/hat_band" name="thick_ten_gallon"/>
+  </article>
+
+  <article name="male_sombrero" townId="frontier_town"
+           slot="hat" scrip="1000" coins="0" colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="sombrero"/>
+  </article>
+
+  <article name="male_sombrero_simple" townId="frontier_town"
+           slot="hat" scrip="1000" coins="1" colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="sombrero"/>
+    <component cclass="male/hat_band" name="simple_sombrero"/>
+  </article>
+
+  <article name="male_sombrero_border" townId="frontier_town"
+           slot="hat" scrip="1250" coins="1" colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="sombrero"/>
+    <component cclass="male/hat_band" name="border_sombrero"/>
+  </article>
+
+  <article name="male_sombrero_border_band" townId="frontier_town"
+           slot="hat" scrip="1500" coins="1">
+    <component cclass="male/hat" name="sombrero"/>
+    <component cclass="male/hat_band" name="border_band_sombrero"/>
+  </article>
+
+  <article name="male_sombrero_fancy" townId="frontier_town"
+           slot="hat" scrip="2000" coins="2">
+    <component cclass="male/hat" name="sombrero"/>
+    <component cclass="male/hat_band" name="fancy_sombrero"/>
+  </article>
+
+
   <!-- male jewelry -->
 
   <!-- male face paint -->
