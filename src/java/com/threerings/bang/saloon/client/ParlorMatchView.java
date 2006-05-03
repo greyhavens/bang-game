@@ -5,6 +5,7 @@ package com.threerings.bang.saloon.client;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -32,8 +33,35 @@ public class ParlorMatchView extends BContainer
         _parobj = parobj;
         _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
-        // TODO: add avatar and info views
-        add(new BContainer(), BorderLayout.CENTER);
+        // this will contain the players and game info
+        BContainer main = new BContainer(GroupLayout.makeHStretch());
+        main.add(_left = GroupLayout.makeVBox(GroupLayout.CENTER));
+        ((GroupLayout)_left.getLayoutManager()).setGap(0);
+        main.add(_info = GroupLayout.makeVBox(GroupLayout.CENTER),
+                 GroupLayout.FIXED);
+        main.add(_right = GroupLayout.makeVBox(GroupLayout.CENTER));
+        ((GroupLayout)_right.getLayoutManager()).setGap(0);
+        main.setPreferredSize(new Dimension(395, 203));
+        add(main, BorderLayout.CENTER);
+
+        // create our player slots
+        _slots = new PlayerSlot[_parobj.game.players];
+        for (int ii = 0; ii < _slots.length; ii++) {
+            if (ii % 2 == 0) {
+                _left.add(_slots[ii] = new PlayerSlot(_ctx));
+            } else {
+                _right.add(_slots[ii] = new PlayerSlot(_ctx));
+            }
+        }
+        updateDisplay();
+
+        // this will contain our current criterion
+        _info.add(_rounds = new BLabel("", "match_label"));
+        _info.add(_players = new BLabel("", "match_label"));
+        _info.add(_ranked = new BLabel("", "match_label"));
+        _info.add(_range = new BLabel("", "match_label"));
+        _info.add(_opponents = new BLabel("", "match_label"));
+        _info.add(_starting = new BLabel("", "starting_label"));
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         String action = isJoined() ? "leave" : "join";
@@ -64,8 +92,21 @@ public class ParlorMatchView extends BContainer
         return false;
     }
 
+    protected void updateDisplay ()
+    {
+        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+            _slots[ii].setPlayerOid(_parobj.playerOids[ii]);
+        }
+    }
+
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected ParlorObject _parobj;
     protected BButton _action;
+
+    protected BContainer _left, _right, _info;
+    protected PlayerSlot[] _slots;
+
+    protected BLabel _players, _rounds, _ranked, _range, _opponents;
+    protected BLabel _starting;
 }
