@@ -26,6 +26,7 @@ import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.data.piece.Unit;
@@ -579,9 +580,20 @@ public class BangBoard extends SimpleStreamableObject
      */
     public void shadowPieces (Iterator iter)
     {
+        shadowPieces(iter, 0, 0, _width, _height);
+    }
+
+    /**
+     * Adds the supplied set of pieces to our board "shadow" data. This is
+     * done at the start of the game; all subsequent changes are
+     * incremental.  Only the specified region will be affected.
+     */
+    public void shadowPieces (
+        Iterator iter, int x, int y, int width, int height)
+    {
         // start out with _tstate configured according to the board
-        for (int yy = 0; yy < _height; yy++) {
-            for (int xx = 0; xx < _width; xx++) {
+        for (int yy = y, ymax = y + height; yy < ymax; yy++) {
+            for (int xx = x, xmax = x + width; xx < xmax; xx++) {
                 byte tvalue;
                 if (isUnderDeepWater(xx, yy)) {
                     tvalue = O_IMPASS;
@@ -595,12 +607,16 @@ public class BangBoard extends SimpleStreamableObject
                 _btstate[pos] = tvalue;
             }
         }
-
+        
+        Rectangle rect = new Rectangle(x, y, width, height);
         while (iter.hasNext()) {
-            shadowPiece((Piece)iter.next());
+            Piece piece = (Piece)iter.next();
+            if (piece.intersects(rect)) {
+                shadowPiece(piece);
+            }
         }
     }
-
+    
     /**
      * Clears the shadow for the specified piece, restoring that board tile to
      * its default state.
@@ -621,7 +637,10 @@ public class BangBoard extends SimpleStreamableObject
      */
     public void shadowPiece (Piece piece)
     {
-        if (piece instanceof BigPiece) {
+        if (piece instanceof Prop && ((Prop)piece).isPassable()) {
+            return;
+            
+        } else if (piece instanceof BigPiece) {
             Rectangle pbounds = ((BigPiece)piece).getBounds();
             for (int yy = pbounds.y, ly = yy + pbounds.height;
                  yy < ly; yy++) {

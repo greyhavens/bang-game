@@ -32,6 +32,11 @@ import com.jmex.terrain.util.FaultFractalHeightMap;
 import com.jmex.terrain.util.MidPointHeightMap;
 import com.jmex.terrain.util.ParticleDepositionHeightMap;
 
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.EntryRemovedEvent;
+import com.threerings.presents.dobj.EntryUpdatedEvent;
+import com.threerings.presents.dobj.SetListener;
+
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.util.RandomUtil;
@@ -40,7 +45,10 @@ import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Terrain;
+import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.PieceDSet;
@@ -69,6 +77,43 @@ public class EditorBoardView extends BoardView
         PieceSprite.setEditorMode(true);
     }
 
+    @Override // documentation inherited
+    public void prepareForRound (BangObject bangobj, BangConfig cfg, int pidx)
+    {
+        super.prepareForRound(bangobj, cfg, pidx);
+        
+        // add a listener to update highlights for pieces
+        _bangobj.addListener(new SetListener() {
+            public void entryAdded (EntryAddedEvent e) {
+                if (e.getName().equals(BangObject.PIECES)) {
+                    updateHighlights((Piece)e.getEntry());
+                }
+            }
+            public void entryRemoved (EntryRemovedEvent e) {
+                if (e.getName().equals(BangObject.PIECES)) {
+                    updateHighlights((Piece)e.getOldEntry());
+                }
+            }
+            public void entryUpdated (EntryUpdatedEvent e) {
+                if (e.getName().equals(BangObject.PIECES)) {
+                    updateHighlights((Piece)e.getOldEntry());
+                    updateHighlights((Piece)e.getEntry());
+                }
+            }
+            protected void updateHighlights (Piece piece) {
+                if (piece instanceof BigPiece) {
+                    Rectangle bounds = ((BigPiece)piece).getBounds();
+                    EditorBoardView.this.updateHighlights(bounds.x, bounds.y,
+                        bounds.x + bounds.width - 1,
+                        bounds.y + bounds.height - 1);
+                } else {
+                    EditorBoardView.this.updateHighlights(piece.x, piece.y,
+                        1, 1);
+                }
+            }
+        });
+    }
+    
     @Override // documentation inherited
     public void refreshBoard ()
     {
@@ -864,13 +909,11 @@ public class EditorBoardView extends BoardView
             _highlights = new TerrainNode.Highlight[_board.getWidth()][
                 _board.getHeight()];
         }
+        _board.shadowPieces(_bangobj.pieces.iterator(), x1, y1, 1 + x2 - x1,
+            1 + y2 - y1);
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
-                boolean impassable =
-                    _board.isUnderDeepWater(x, y) ||
-                    _board.exceedsMaxHeightDelta(x, y) ||
-                    !_board.getPlayableArea().contains(x, y);
-                if (_showHighlights && impassable) {
+                if (_showHighlights && !_board.isOccupiable(x, y)) {
                     if (_highlights[x][y] == null) {
                         _highlights[x][y] = _tnode.createHighlight(x, y,
                             false);

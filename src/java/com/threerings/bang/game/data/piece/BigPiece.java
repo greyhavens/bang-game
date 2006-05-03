@@ -75,6 +75,15 @@ public abstract class BigPiece extends Piece
     }
 
     @Override // documentation inherited
+    public Object clone ()
+    {
+        // make a deep copy of the bounds object
+        BigPiece piece = (BigPiece)super.clone();
+        piece._bounds = (Rectangle)_bounds.clone();
+        return piece;
+    }
+    
+    @Override // documentation inherited
     protected int computeOrientation (int nx, int ny)
     {
         // our orientation never changes

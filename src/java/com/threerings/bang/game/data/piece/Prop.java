@@ -110,9 +110,18 @@ public class Prop extends BigPiece
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
-        return !lapper.isFlyer();
+        return !_config.passable && !lapper.isFlyer();
     }
 
+    /**
+     * Determines whether this prop is passable: that is, whether units can
+     * occupy its location.
+     */
+    public boolean isPassable ()
+    {
+        return _config.passable;
+    }
+    
     /**
      * Rotates this piece in fine units, which divide the 90 degree rotations
      * up by 256.

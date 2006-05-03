@@ -28,6 +28,9 @@ public class PropConfig
     /** A custom class for this prop, if one was specified. */
     public String propClass;
 
+    /** Whether or not units can pass over/through the prop. */
+    public boolean passable;
+    
     /** Returns a string representation of this instance. */
     public String toString ()
     {
@@ -72,6 +75,8 @@ public class PropConfig
         config.width = BangUtil.getIntProperty(type, props, "width", 1);
         config.height = BangUtil.getIntProperty(type, props, "height", 1);
 
+        config.passable = Boolean.parseBoolean(props.getProperty("passable"));
+        
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");
         boolean andSoOn = false;
