@@ -13,7 +13,7 @@
 -injars ../lib/narya-media.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-parlor.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-cast.jar(!META-INF/*,!**/tools/**)
--injars ../lib/narya-jme.jar(!META-INF/*)
+-injars ../lib/narya-jme.jar(!META-INF/*,!**/tools/*Task.class)
 -injars ../lib/narya-openal.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/samskivert.jar(!META-INF/*,!**/velocity/**,!**/xml/**)
 -injars ../lib/samskivert.jar(**/velocity/VelocityUtil*.class,
