@@ -30,6 +30,9 @@ public class ParlorObject extends PlaceObject
 
     /** The field name of the <code>playerOids</code> field. */
     public static final String PLAYER_OIDS = "playerOids";
+
+    /** The field name of the <code>starting</code> field. */
+    public static final String STARTING = "starting";
     // AUTO-GENERATED: FIELDS END
 
     /** Provides access to parlor services. */
@@ -46,6 +49,9 @@ public class ParlorObject extends PlaceObject
 
     /** Used when match-making a game. */
     public int[] playerOids;
+
+    /** Indicates that the game is about to start. */
+    public boolean starting;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -143,6 +149,22 @@ public class ParlorObject extends PlaceObject
         requestElementUpdate(
             PLAYER_OIDS, index, new Integer(value), new Integer(ovalue));
         this.playerOids[index] = value;
+    }
+
+    /**
+     * Requests that the <code>starting</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setStarting (boolean value)
+    {
+        boolean ovalue = this.starting;
+        requestAttributeChange(
+            STARTING, new Boolean(value), new Boolean(ovalue));
+        this.starting = value;
     }
     // AUTO-GENERATED: METHODS END
 }

@@ -3,12 +3,8 @@
 
 package com.threerings.bang.saloon.client;
 
-import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
-
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
@@ -30,10 +26,6 @@ import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.util.SafeSubscriber;
 
-import com.threerings.bang.avatar.client.AvatarView;
-import com.threerings.bang.avatar.util.AvatarLogic;
-
-import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.MatchObject;

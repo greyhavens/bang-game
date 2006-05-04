@@ -3,17 +3,30 @@
 
 package com.threerings.bang.saloon.server;
 
+import java.util.HashSet;
+import java.util.logging.Level;
+
+import com.samskivert.util.IntListUtil;
+import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
+
+import com.threerings.media.util.MathUtil;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ServerConfig;
 
+import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.util.ScenarioUtil;
 
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
@@ -126,6 +139,20 @@ public class ParlorManager extends PlaceManager
             joinMatch(caller);
 
         } else {
+            // sanity check the configuration
+            game.players = MathUtil.bound(
+                2, game.players, GameCodes.MAX_PLAYERS);
+            game.rounds = MathUtil.bound(
+                1, game.rounds, GameCodes.MAX_ROUNDS);
+            game.teamSize = MathUtil.bound(
+                1, game.teamSize, GameCodes.MAX_TEAM_SIZE);
+            game.tinCans = MathUtil.bound(
+                0, game.tinCans, GameCodes.MAX_PLAYERS - game.players);
+            if (game.scenarios == null || game.scenarios.length == 0) {
+                game.scenarios = ScenarioUtil.getScenarios(
+                    ServerConfig.getTownId());
+            }
+
             // update the game config with the desired config
             _parobj.setGame(game);
 
@@ -133,6 +160,9 @@ public class ParlorManager extends PlaceManager
             int[] playerOids = new int[game.players];
             playerOids[0] = caller.getOid();
             _parobj.setPlayerOids(playerOids);
+
+            // start a "start the game" timer if we're ready to go
+            checkStart();
         }
     }
 
@@ -148,7 +178,7 @@ public class ParlorManager extends PlaceManager
         PlayerObject user = (PlayerObject)caller;
         int idx = -1;
         for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            if (_parobj.playerOids[ii] == 0) {
+            if (idx == -1 && _parobj.playerOids[ii] == 0) {
                 idx = ii;
             }
             if (_parobj.playerOids[ii] == user.getOid()) {
@@ -162,7 +192,8 @@ public class ParlorManager extends PlaceManager
             _parobj.setPlayerOids(_parobj.playerOids);
         }
 
-        // TODO: start a "start the game" timer if we're ready to go
+        // start a "start the game" timer if we're ready to go
+        checkStart();
     }
 
     // documentation inherited from interface ParlorProvider
@@ -191,7 +222,12 @@ public class ParlorManager extends PlaceManager
             _parobj.setPlayerOids(_parobj.playerOids);
         }
 
-        // TODO: cancel any game start timer
+        // cancel our game start timer
+        if (_starter != null) {
+            _parobj.setStarting(false);
+            _starter.cancel();
+            _starter = null;
+        }
     }
 
     @Override // documentation inherited
@@ -234,7 +270,79 @@ public class ParlorManager extends PlaceManager
         }
     }
 
+    protected void checkStart ()
+    {
+        if (readyToStart() && _starter == null) {
+            _parobj.setStarting(true);
+            _starter = new Interval(BangServer.omgr) {
+                public void expired () {
+                    if (_starter != this) {
+                        return;
+                    }
+                    _starter = null;
+                    if (readyToStart()) {
+                        log.info("Starting " + _parobj.game + ".");
+                        startMatch();
+                    }
+                }
+            };
+            _starter.schedule(SaloonManager.START_DELAY);
+        }
+    }
+
+    protected boolean readyToStart ()
+    {
+        return (IntListUtil.indexOf(_parobj.playerOids, 0) == -1);
+    }
+
+    protected void startMatch ()
+    {
+        BangConfig config = new BangConfig();
+
+        // we can use these values directly as we sanity checked them earlier
+        config.seats = _parobj.game.players + _parobj.game.tinCans;
+        config.players = new Handle[config.seats];
+        config.teamSize = _parobj.game.teamSize;
+        config.scenarios = new String[_parobj.game.rounds];
+
+        // select our scenarios
+        for (int ii = 0; ii < config.scenarios.length; ii++) {
+            config.scenarios[ii] =
+                RandomUtil.pickRandom(_parobj.game.scenarios);
+        }
+
+        // fill in the human players
+        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+            PlayerObject user = (PlayerObject)
+                BangServer.omgr.getObject(_parobj.playerOids[ii]);
+            if (user == null) {
+                log.warning("Zoiks! Missing player for parlor match " +
+                            "[game=" + _parobj.game +
+                            ", oid=" + _parobj.playerOids[ii] + "].");
+                return; // abandon ship
+            }
+            config.players[ii] = user.handle;
+        }
+
+        // add our ais (if any)
+        config.ais = new BangAI[config.seats];
+        HashSet<String> names = new HashSet<String>();
+        for (int ii = _parobj.playerOids.length; ii < config.ais.length; ii++) {
+            // TODO: sort out personality and skill
+            BangAI ai = BangAI.createAI(1, 50, names);
+            config.ais[ii] = ai;
+            config.players[ii] = ai.handle;
+        }
+
+        try {
+            BangServer.plreg.createPlace(config, null);
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Choked creating game " + config + ".", e);
+        }
+    }
+
     protected ParlorObject _parobj;
     protected SaloonManager _salmgr;
     protected String _password;
+    protected Interval _starter;
 }

@@ -190,8 +190,9 @@ public class ParlorList extends BContainer
             _enter.setProperty("info", info);
 
             // if this game is pardners only, don't show it if the creator is
-            // not our pardner
+            // not our pardner (and we're not the creator)
             if (info.pardnersOnly &&
+                !_ctx.getUserObject().handle.equals(info.creator) &&
                 !_ctx.getUserObject().pardners.containsKey(info.creator)) {
                 clear();
             } else {
