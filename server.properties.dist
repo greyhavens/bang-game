@@ -56,5 +56,5 @@ db.default.password = PASSWORD
 #
 # Bits for the OOO authenticator
 
-oooauth.login_url = /account/register.wm?from=%R
+oooauth.login_url = /register/register.wm?from=%R
 oooauth.access_denied_url = access_denied.wm
