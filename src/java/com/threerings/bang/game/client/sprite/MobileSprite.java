@@ -34,7 +34,6 @@ import com.threerings.jme.sprite.SpriteObserver;
 
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 
 import com.threerings.bang.client.Config;

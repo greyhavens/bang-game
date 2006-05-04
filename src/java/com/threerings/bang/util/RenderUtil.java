@@ -54,16 +54,18 @@ import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.HashIntMap;
+
 import com.threerings.jme.JmeCanvasApp;
 import com.threerings.media.image.Colorization;
 import com.threerings.util.RandomUtil;
 
-import com.threerings.bang.game.data.Terrain;
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
-
+  
 /**
  * Useful graphics related utility methods.
  */
@@ -93,34 +95,6 @@ public class RenderUtil
     public static void init (BasicContext ctx)
     {
         initStates();
-        
-        ClassLoader loader = ctx.getClass().getClassLoader();
-        for (Terrain terrain : Terrain.RENDERABLE) {
-            for (int ii = 1; ii <= MAX_TILE_VARIANT; ii++) {
-                String path = "tiles/ground/" +
-                    terrain.toString().toLowerCase() + ii + ".png";
-                if (!ctx.getResourceManager().getResourceFile(path).exists()) {
-                    continue;
-                }
-                Image teximg = ctx.getImageCache().getImage(path);
-                Texture texture = createTexture(teximg);
-                texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-                TextureState tstate = ctx.getRenderer().createTextureState();
-                tstate.setEnabled(true);
-                tstate.setTexture(texture);
-                ArrayList<TextureState> texs = _groundTexs.get(terrain);
-                if (texs == null) {
-                    _groundTexs.put(
-                        terrain, texs = new ArrayList<TextureState>());
-                }
-                texs.add(tstate);
-                ArrayList<Image> tiles = _groundTiles.get(terrain);
-                if (tiles == null) {
-                    _groundTiles.put(terrain, tiles = new ArrayList<Image>());
-                }
-                tiles.add(teximg);
-            }
-        }
     }
 
     /**
@@ -177,38 +151,17 @@ public class RenderUtil
     }
 
     /**
-     * Returns a randomly selected ground texture for the specified
-     * terrain type.
+     * Returns the average color of the terrain with the given code.
      */
-    public static TextureState getGroundTexture (Terrain terrain)
+    public static ColorRGBA getGroundColor (BasicContext ctx, int code)
     {
-        ArrayList<TextureState> texs = _groundTexs.get(terrain);
-        return (texs == null) ? null :
-            (TextureState)RandomUtil.pickRandom(texs);
-    }
-
-    /**
-     * Returns a randomly selected ground tile for the specified terrain
-     * type.
-     */
-    public static Image getGroundTile (Terrain terrain)
-    {
-        ArrayList<Image> tiles = _groundTiles.get(terrain);
-        return (tiles == null) ? null : (Image)RandomUtil.pickRandom(tiles);
-    }
-
-    /**
-     * Returns the average color of the given terrain type.
-     */
-    public static ColorRGBA getGroundColor (Terrain terrain)
-    {
-        ColorRGBA color = _groundColors.get(terrain);
+        ColorRGBA color = _groundColors.get(code);
         if (color != null) {
             return color;
         }
         // if we haven't computed it already, determine the overall color
         // average for the texture
-        Image img = getGroundTile(terrain);
+        Image img = getGroundTexture(ctx, code).getTexture().getImage();
         ByteBuffer imgdata = img.getData();
         int r = 0, g = 0, b = 0, bytes = imgdata.limit();
         float divisor = 255f * (bytes / 3);
@@ -220,8 +173,37 @@ public class RenderUtil
             b += btoi(imgdata.get(ii+2));
         }
         color = new ColorRGBA(r / divisor, g / divisor, b / divisor, 1f);
-        _groundColors.put(terrain, color);
+        _groundColors.put(code, color);
         return color;
+    }
+
+    /**
+     * Returns a randomly selected ground texture for the specified
+     * terrain type.
+     */
+    public static TextureState getGroundTexture (BasicContext ctx, int code)
+    {
+        ArrayList<TextureState> texs = _groundTexs.get(code);
+        if (texs != null) {
+            return RandomUtil.pickRandom(texs);
+        }
+        TerrainConfig terrain = TerrainConfig.getConfig(code);
+        if (terrain == null) {
+            return null;
+        }
+        _groundTexs.put(code, texs = new ArrayList<TextureState>());
+        String prefix = "terrain/" + terrain.type + "/texture";
+        for (int ii = 1; ; ii++) {
+            String path = prefix + ii + ".png";
+            if (!ctx.getResourceManager().getResourceFile(path).exists()) {
+                break;
+            }
+            TextureState tstate = createTextureState(ctx, path);
+            tstate.getTexture().setScale(
+                new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
+            texs.add(tstate);
+        }
+        return RandomUtil.pickRandom(texs);
     }
 
     /**
@@ -517,14 +499,12 @@ public class RenderUtil
         return (value < 0) ? 256 + value : value;
     }
 
-    protected static HashMap<Terrain,ArrayList<Image>> _groundTiles =
-        new HashMap<Terrain,ArrayList<Image>>();
+    protected static HashIntMap<ArrayList<TextureState>> _groundTexs =
+        new HashIntMap<ArrayList<TextureState>>();
 
-    protected static HashMap<Terrain,ArrayList<TextureState>> _groundTexs =
-        new HashMap<Terrain,ArrayList<TextureState>>();
-
-    protected static HashMap<Terrain,ColorRGBA> _groundColors =
-        new HashMap<Terrain,ColorRGBA>();
+    /** Maps terrain codes to average colors. */
+    protected static HashIntMap<ColorRGBA> _groundColors =
+        new HashIntMap<ColorRGBA>();
 
     /** Our most recently created shadow texture. */
     protected static TextureState _shadtex;

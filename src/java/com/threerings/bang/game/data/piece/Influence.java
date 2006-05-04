@@ -5,7 +5,7 @@ package com.threerings.bang.game.data.piece;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.bang.game.data.Terrain;
+import com.threerings.bang.data.TerrainConfig;
 
 /**
  * Represents a temporary influence on a unit. Influences can adjust a
@@ -68,7 +68,7 @@ public abstract class Influence extends SimpleStreamableObject
     /**
      * Adjusts a piece's traversal cost. The default is no adjustment.
      */
-    public int adjustTraversalCost (Terrain terrain, int traversalCost)
+    public int adjustTraversalCost (TerrainConfig terrain, int traversalCost)
     {
         return traversalCost;
     }

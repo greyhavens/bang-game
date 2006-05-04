@@ -41,13 +41,13 @@ import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
@@ -251,7 +251,7 @@ public class EditorBoardView extends BoardView
      * @param fill if true, perform a flood fill instead of simply painting
      */
     public void paintTerrain (
-        float x, float y, float radius, Terrain terrain, boolean fill)
+        float x, float y, float radius, TerrainConfig terrain, boolean fill)
     {
         byte code = (byte)terrain.code;
 
@@ -300,13 +300,13 @@ public class EditorBoardView extends BoardView
     /**
      * Clears the entire board to the specified terrain type.
      */
-    public void clearTerrain (Terrain terrain)
+    public void clearTerrain (TerrainConfig terrain)
     {
         // store the original terrain as an edit
         new TerrainEdit().commit();
         
         // fill 'er up!
-        Arrays.fill(_board.getTerrain(), (byte)terrain.code);
+        _board.fillTerrain((byte)terrain.code);
         
         // update the terrain splats
         _tnode.refreshTerrain();
@@ -716,7 +716,6 @@ public class EditorBoardView extends BoardView
     public void createNewBoard (int width, int height)
     {
         _bangobj.board = new BangBoard(width, height);
-        _bangobj.board.fillTerrain(Terrain.DIRT);
         _bangobj.setPieces(new PieceDSet());
         refreshBoard();
         _panel.info.clear();

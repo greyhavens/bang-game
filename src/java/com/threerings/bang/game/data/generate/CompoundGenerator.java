@@ -10,7 +10,6 @@ import com.samskivert.util.IntTuple;
 import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
@@ -27,9 +26,6 @@ public class CompoundGenerator extends EnvironmentGenerator
     {
         int width = board.getWidth() - BangBoard.BORDER_SIZE*2,
             height = board.getHeight() - BangBoard.BORDER_SIZE*2;
-
-        // first fill the board with dirt
-        board.fillTerrain(Terrain.DIRT);
 
         int density = 11 - 5; // config.density;
 

@@ -26,8 +26,6 @@ import com.samskivert.swing.Controller;
 import com.samskivert.swing.HGroupLayout;
 import com.samskivert.swing.util.SwingUtil;
 
-import com.threerings.bang.game.data.Terrain;
-
 /**
  * Displays a panel that allows the user to select and configure the active
  * tool.

@@ -36,7 +36,6 @@ import com.threerings.parlor.game.client.GameController;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
@@ -557,7 +556,6 @@ public class EditorController extends GameController
             loadBoard(new File(EditorApp.appArgs[0]), false);
         } else {
             _bangobj.board = new BangBoard(32, 32);
-            _bangobj.board.fillTerrain(Terrain.DIRT);
             _bangobj.setPieces(new PieceDSet());
         }
 

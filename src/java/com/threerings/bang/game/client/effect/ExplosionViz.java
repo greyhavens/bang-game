@@ -21,8 +21,8 @@ import com.jmex.effects.ParticleManager;
 
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -95,9 +95,9 @@ public class ExplosionViz extends ParticleEffectViz
      */
     protected void prepareDustRing (PieceSprite target)
     {
-        Terrain terrain = _view.getBoard().getPredominantTerrain(
-            _target.x, _target.y);
-        ColorRGBA color = RenderUtil.getGroundColor(terrain);
+        TerrainConfig terrain = TerrainConfig.getConfig(
+            _view.getBoard().getPredominantTerrain(_target.x, _target.y));
+        ColorRGBA color = RenderUtil.getGroundColor(_ctx, terrain.code);
         _dustring.getStartColor().set(color.r, color.g, color.b,
             terrain.dustiness);
         _dustring.getEndColor().set(color.r, color.g, color.b, 0f);

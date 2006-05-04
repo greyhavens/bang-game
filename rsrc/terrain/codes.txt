@@ -1,0 +1,13 @@
+brush = 0
+dark_dirt = 1
+dirt = 2
+road = 3
+rocky = 4
+rough_dirt = 5
+sand = 6
+water = 7
+bone = 8
+prairie_grass_green = 9
+prairie_grass_gold = 10
+autumn_leaves = 11
+green_leaves = 12

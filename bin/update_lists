@@ -24,3 +24,8 @@ find rsrc/units -name 'unit.properties' | \
 find rsrc/bonuses -name 'bonus.properties' | \
   sed 's:rsrc/bonuses/::g' | sed 's:/bonus.properties::' | sort > \
   rsrc/bonuses/bonuses.txt
+
+# Update our list of terrain codes
+find rsrc/terrain -name 'terrain.properties' | \
+  sed 's:rsrc/terrain/::g' | sed 's:/terrain.properties::' | \
+  ./bin/update_terrain_codes

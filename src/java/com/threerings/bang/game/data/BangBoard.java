@@ -22,6 +22,7 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.media.util.AStarPathUtil;
 
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Cow;
@@ -225,10 +226,10 @@ public class BangBoard extends SimpleStreamableObject
         _terrain[y*_hfwidth + x] = value;
     }
 
-    /** Fills the terrain array with the specified terrain. */
-    public void fillTerrain (Terrain terrain)
+    /** Fills the terrain array with the specified terrain code. */
+    public void fillTerrain (byte value)
     {
-        Arrays.fill(_terrain, (byte)terrain.code);
+        Arrays.fill(_terrain, value);
     }
 
     /** Returns a reference to the terrain array. */
@@ -980,11 +981,11 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
-     * Returns the most common terrain value under the specified tile.
+     * Returns the most common terrain code under the specified tile.
      */
-    public Terrain getPredominantTerrain (int x, int y)
+    public byte getPredominantTerrain (int x, int y)
     {
-        return Terrain.fromCode(_pterrain[y*_width + x]);
+        return _pterrain[y*_width + x];
     }
 
     /** 
@@ -1045,8 +1046,8 @@ public class BangBoard extends SimpleStreamableObject
         // see if we can move into this square with a higher remaining
         // point count than has already been accomplished
         int pos = yy*_width+xx;
-        byte premain = (byte)(remain -
-            piece.traversalCost(getPredominantTerrain(xx, yy)));
+        byte premain = (byte)(remain - piece.traversalCost(
+            TerrainConfig.getConfig(getPredominantTerrain(xx, yy))));
         byte current = _pgrid[pos];
         if (premain <= current) {
             return;

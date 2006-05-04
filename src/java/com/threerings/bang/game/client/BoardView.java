@@ -79,13 +79,13 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Config;
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BasicContext;
@@ -467,8 +467,9 @@ public class BoardView extends BComponent
         // light
         int tx = (int)(location.x / TILE_SIZE),
             ty = (int)(location.y / TILE_SIZE);
-        Terrain terrain = _board.getPredominantTerrain(tx, ty);
-        ColorRGBA gcolor = RenderUtil.getGroundColor(terrain);
+        TerrainConfig terrain = TerrainConfig.getConfig(
+            _board.getPredominantTerrain(tx, ty));
+        ColorRGBA gcolor = RenderUtil.getGroundColor(_ctx, terrain.code);
         result.set(result.r * gcolor.r, result.g * gcolor.g,
             result.b * gcolor.b, terrain.dustiness);
     }

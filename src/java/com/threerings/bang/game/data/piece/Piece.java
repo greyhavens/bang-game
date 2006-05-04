@@ -15,10 +15,10 @@ import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.util.PointSet;
@@ -230,10 +230,10 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Gets the cost of traversing this terrain in tenths of a movement
-     * point.
+     * Gets the cost of traversing this category of terrain in tenths of a
+     * movement point.
      */
-    public int traversalCost (Terrain terrain)
+    public int traversalCost (TerrainConfig terrain)
     {
         return terrain.traversalCost;
     }

@@ -9,12 +9,12 @@ import java.util.logging.Level;
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
@@ -265,7 +265,7 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public int traversalCost (Terrain terrain)
+    public int traversalCost (TerrainConfig terrain)
     {
         int cost;
         // flyers are unaffected by terrain adjustments
@@ -273,7 +273,7 @@ public class Unit extends Piece
             cost = BangBoard.BASE_TRAVERSAL;
         } else {
             cost = super.traversalCost(terrain) +
-                _config.movementAdjust[terrain.ordinal()];
+                _config.movementAdjust[terrain.category.ordinal()];
         }
         if (influence != null) {
             cost = influence.adjustTraversalCost(terrain, cost);

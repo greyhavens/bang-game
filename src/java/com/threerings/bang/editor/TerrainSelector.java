@@ -3,13 +3,15 @@
 
 package com.threerings.bang.editor;
 
+import java.util.Collection;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.samskivert.swing.HGroupLayout;
 
-import com.threerings.bang.game.data.Terrain;
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
 
 /**
@@ -25,16 +27,17 @@ public class TerrainSelector extends JPanel
         add(new JLabel(_ctx.xlate("editor", "m.terrain_select")),
             HGroupLayout.FIXED);
 
+        Collection<TerrainConfig> configs = TerrainConfig.getConfigs();
         TerrainSelection[] choices =
-            new TerrainSelection[Terrain.USABLE.size()];
+            new TerrainSelection[configs.size()];
         int ii = 0;
-        for (Terrain terrain : Terrain.USABLE) {
-            choices[ii++] = new TerrainSelection(terrain);
+        for (TerrainConfig config : configs) {
+            choices[ii++] = new TerrainSelection(config);
         }
         add(_selector = new JComboBox(choices));
     }
 
-    public Terrain getSelectedTerrain ()
+    public TerrainConfig getSelectedTerrain ()
     {
         return ((TerrainSelection)_selector.getSelectedItem()).terrain;
     }
@@ -48,17 +51,18 @@ public class TerrainSelector extends JPanel
 
     protected class TerrainSelection
     {
-        public Terrain terrain;
+        public TerrainConfig terrain;
 
-        public TerrainSelection (Terrain terrain)
+        public TerrainSelection (TerrainConfig terrain)
         {
             this.terrain = terrain;
         }
 
         public String toString ()
         {
-            String msg = "m.terrain_" + terrain.toString().toLowerCase();
-            return _ctx.xlate("editor", msg);
+            String msg = "m.terrain_" + terrain.type;
+            return _ctx.getMessageManager().getBundle("editor").exists(msg) ?
+                _ctx.xlate("editor", msg) : terrain.type;
         }
     }
 

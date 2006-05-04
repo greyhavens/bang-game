@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+#
+# $Id$
+#
+# A script run as part of the build process to update terrain codes.
+# Expects a list of terrain names on the standard input.
+
+# First, read the existing terrain codes into a map
+$file = 'rsrc/terrain/codes.txt';
+open(MAP, "<$file");
+@lines = <MAP>;
+foreach (@lines) {
+    ($name, $code) = (/([^=\s]+)\s*=\s*(\d+)/);
+    $codes{$name} = $code;
+    $max = ($code > $max) ? $code : $max;
+}
+
+# Then, read the terrain names on the standard input and append new codes
+# for any unmapped names
+open(MAP, ">>$file");
+@lines = <STDIN>;
+foreach (@lines) {
+    chomp();
+    if (!(exists $codes{$_})) {
+        print MAP $_ . " = " . ++$max . "\n";
+    }
+}

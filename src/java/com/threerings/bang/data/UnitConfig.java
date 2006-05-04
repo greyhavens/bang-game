@@ -11,7 +11,6 @@ import java.util.Properties;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.game.data.Terrain;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -42,8 +41,9 @@ public class UnitConfig
     /** The total number of makes. */
     public static final int MAKE_COUNT = EnumSet.allOf(Make.class).size();
 
-    /** The total number of terrain types. */
-    public static final int TERRAIN_COUNT = EnumSet.allOf(Terrain.class).size();
+    /** The total number of terrain categories. */
+    public static final int TERRAIN_CATEGORY_COUNT =
+        EnumSet.allOf(TerrainConfig.Category.class).size();
 
     /** The name of this unit type (ie. <code>gunslinger</code>, etc.). */
     public String type;
@@ -98,8 +98,8 @@ public class UnitConfig
     /** Our defense adjustments versus other modes and makes. */
     public int[] defenseAdjust = new int[MODE_COUNT + MAKE_COUNT];
 
-    /** The cost of movement over each type of terrain. */
-    public int[] movementAdjust = new int[TERRAIN_COUNT];
+    /** The cost of movement over each category of terrain. */
+    public int[] movementAdjust = new int[TERRAIN_CATEGORY_COUNT];
 
     /** A custom class for this unit, if one was specified. */
     public String unitClass;
@@ -277,9 +277,10 @@ public class UnitConfig
                 BangUtil.getIntProperty(type, props, "defense." + key, 0);
         }
 
-        for (Terrain terrain : EnumSet.allOf(Terrain.class)) {
-            String key = terrain.toString().toLowerCase();
-            config.movementAdjust[terrain.ordinal()] =
+        for (TerrainConfig.Category tcat :
+            EnumSet.allOf(TerrainConfig.Category.class)) {
+            String key = tcat.toString().toLowerCase();
+            config.movementAdjust[tcat.ordinal()] =
                 BangUtil.getIntProperty(type, props, "movement." + key, 0);
         }
 

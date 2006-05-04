@@ -51,12 +51,12 @@ import com.samskivert.util.Interator;
 import com.threerings.media.image.ColorUtil;
 
 import com.threerings.bang.client.Config;
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.Terrain;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -1020,16 +1020,16 @@ public class TerrainNode extends Node
     {
         int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
             fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
-        Terrain ff = Terrain.fromCode(_board.getTerrainValue(fx, fy)),
-            fc = Terrain.fromCode(_board.getTerrainValue(fx, cy)),
-            cf = Terrain.fromCode(_board.getTerrainValue(cx, fy)),
-            cc = Terrain.fromCode(_board.getTerrainValue(cx, cy));
+        int ff = _board.getTerrainValue(fx, fy),
+            fc = _board.getTerrainValue(fx, cy),
+            cf = _board.getTerrainValue(cx, fy),
+            cc = _board.getTerrainValue(cx, cy);
         float ax = x - fx, ay = y - fy;
 
-        _c1.interpolate(RenderUtil.getGroundColor(ff),
-            RenderUtil.getGroundColor(fc), ay);
-        _c2.interpolate(RenderUtil.getGroundColor(cf),
-            RenderUtil.getGroundColor(cc), ay);
+        _c1.interpolate(RenderUtil.getGroundColor(_ctx, ff),
+            RenderUtil.getGroundColor(_ctx, fc), ay);
+        _c2.interpolate(RenderUtil.getGroundColor(_ctx, cf),
+            RenderUtil.getGroundColor(_ctx, cc), ay);
         result.interpolate(_c1, _c2, ax);
     }
  
@@ -1454,8 +1454,8 @@ public class TerrainNode extends Node
         {
             TextureState tstate = groundTextures.get(code);
             if (tstate == null) {
-                groundTextures.put(code, tstate = RenderUtil.getGroundTexture(
-                    Terrain.fromCode(code)));
+                groundTextures.put(code,
+                    tstate = RenderUtil.getGroundTexture(_ctx, code));
             }
             return tstate;
         }
