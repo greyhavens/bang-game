@@ -303,6 +303,9 @@
       <fileset dir="dist" includes="bang-config.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
       <fileset dir="lib" includes="lwjgl_util.jar"/>
+      <fileset dir="lib" includes="commons-beanutils.jar"/>
+      <fileset dir="lib" includes="commons-digester.jar"/>
+      <fileset dir="lib" includes="commons-logging.jar"/>
     </copy>
     <copy file="projects/getdown/dist/getdown-pro.jar"
           tofile="${client_dir}/code/getdown-pro-new.jar"/>

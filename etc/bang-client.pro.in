@@ -4,10 +4,7 @@
 # Proguard configuration file for Bang! production client
 
 -injars ../lib/commons-io.jar(!META-INF/*)
--injars ../lib/commons-beanutils.jar(!META-INF/*)
 -injars ../lib/commons-collections.jar(!META-INF/*)
--injars ../lib/commons-digester.jar(!META-INF/*)
--injars ../lib/commons-logging.jar(!META-INF/*)
 -injars ../lib/velocity-1.5-dev.jar(
   !META-INF/*,!**/servlet/**,!**/anakia/**,!**/texen/**,!**/VelocityFormatter*)
 -injars ../lib/getdown.jar(!META-INF/*,!**/tools/**)
@@ -37,6 +34,9 @@
 
 -libraryjars <java.home>/lib/rt.jar
 -libraryjars ../lib/lwjgl.jar
+-libraryjars ../lib/commons-beanutils.jar
+-libraryjars ../lib/commons-digester.jar
+-libraryjars ../lib/commons-logging.jar
 
 # -dontoptimize
 # -dontobfuscate
@@ -77,6 +77,10 @@
     *;
 }
 
+-keep public class * extends com.threerings.jme.model.ModelController {
+    *;
+}
+
 -keep public class com.threerings.bang.client.Config {
     <fields>;
 }
@@ -109,12 +113,18 @@
     static <fields>;
 }
 
+-keep public class com.threerings.jme.tools.*Def** {
+    public *;
+}
+
+-keep public class com.threerings.jme.tools.xml.* {
+    public *;
+}
+
 #
 # A whole bunch of stuff so we can use Velocity in the Saloon
 
 -keep public class * extends org.apache.velocity.runtime.directive.Directive
--keep public class org.apache.commons.logging.Log
--keep public class org.apache.commons.logging.impl.LogFactoryImpl
 -keep public class org.apache.velocity.util.introspection.UberspectImpl
 -keep public class org.apache.velocity.runtime.resource.ResourceManagerImpl
 -keep public class org.apache.velocity.runtime.resource.ResourceCacheImpl
