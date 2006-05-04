@@ -106,6 +106,10 @@ if [ ! -z "$DEVCLIENT" ]; then
     ant models devclient
     cd $ROOT/projects/installers
     ant devclient
+
+    # make our Proguard mapping file accessible to Hemiptera
+    cp $ROOT/etc/proguard/devclient.map \
+        $ROOT/../threerings/etc/proguard/bang/0.map
 fi
 
 # remove the lockfile
