@@ -10,6 +10,7 @@ import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.util.BasicContext;
@@ -19,17 +20,15 @@ import com.threerings.bang.util.BasicContext;
  */
 public class ArticleIcon extends ItemIcon
 {
-    public ArticleIcon ()
-    {
-    }
-
     @Override // documentation inherited
     protected void configureLabel (BasicContext ctx)
     {
         Article article = (Article)_item;
         String ipath = "goods/articles/"+  article.getName() + ".png";
-        Colorization[] zations = ctx.getAvatarLogic().decodeColorizations(
-            article.getComponents()[0]);
+        AvatarLogic al = ctx.getAvatarLogic();
+        Colorization[] zations = al.decodeColorizations(
+            article.getComponents()[0], al.getColorizationClasses(
+                al.getArticleCatalog().getArticle(article.getName())));
         if (zations != null) {
             BImage image = new BImage(
                 ImageUtil.recolorImage(

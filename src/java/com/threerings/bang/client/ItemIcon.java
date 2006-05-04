@@ -15,10 +15,6 @@ import com.threerings.bang.util.BasicContext;
  */
 public class ItemIcon extends PaletteIcon
 {
-    public ItemIcon ()
-    {
-    }
-
     /** Returns the item associated with this icon. */
     public Item getItem ()
     {

@@ -259,7 +259,7 @@ public class AvatarLogic
         for (int ii = 0; ii < clength; ii++) {
             int pvalue = avatar[ii+1];
             componentIds[ii] = (pvalue & 0xFFFF);
-            zations[ii] = decodeColorizations(pvalue);
+            zations[ii] = decodeColorizations(pvalue, null);
         }
 
         return new CharacterDescriptor(componentIds, zations);
@@ -290,12 +290,17 @@ public class AvatarLogic
         }
         return false;
     }
-    
+
     /**
      * Decodes and returns the colorizations encoded into the supplied encoded
      * component.
+     *
+     * @param colors usually null, in which case the colorization classes
+     * appropriate to the specified component will be used, but if non-null,
+     * they are a list of colorization classes to use instead.
      */
-    public Colorization[] decodeColorizations (int fqComponentId)
+    public Colorization[] decodeColorizations (
+        int fqComponentId, String[] colors)
     {
         // look up the component in the repository
         int componentId = (fqComponentId & 0xFFFF);
@@ -308,13 +313,18 @@ public class AvatarLogic
             return null;
         }
 
+        // if we weren't provided with classes, use the values from the
+        // component class record
+        if (colors == null) {
+            colors = ccomp.componentClass.colors;
+        }
+
         // decode the colorization color id values
         _colors[0] = decodePrimary(fqComponentId);
         _colors[1] = decodeSecondary(fqComponentId);
         _colors[2] = decodeTertiary(fqComponentId);
 
         // look up the actual colorizations from those
-        String[] colors = ccomp.componentClass.colors;
         Colorization[] zations = new Colorization[colors.length];
         for (int cc = 0; cc < colors.length; cc++) {
             if (colors[cc].equals(SKIN)) {
