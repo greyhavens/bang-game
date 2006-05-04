@@ -140,8 +140,9 @@ public class ParlorManager extends PlaceManager
 
         } else {
             // sanity check the configuration
+            int minPlayers = (game.tinCans > 0) ? 1 : 2;
             game.players = MathUtil.bound(
-                2, game.players, GameCodes.MAX_PLAYERS);
+                minPlayers, game.players, GameCodes.MAX_PLAYERS);
             game.rounds = MathUtil.bound(
                 1, game.rounds, GameCodes.MAX_ROUNDS);
             game.teamSize = MathUtil.bound(
