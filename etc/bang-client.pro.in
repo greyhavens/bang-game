@@ -113,6 +113,7 @@
 # A whole bunch of stuff so we can use Velocity in the Saloon
 
 -keep public class * extends org.apache.velocity.runtime.directive.Directive
+-keep public class org.apache.commons.logging.impl.LogFactoryImpl
 -keep public class org.apache.velocity.util.introspection.UberspectImpl
 -keep public class org.apache.velocity.runtime.resource.ResourceManagerImpl
 -keep public class org.apache.velocity.runtime.resource.ResourceCacheImpl
