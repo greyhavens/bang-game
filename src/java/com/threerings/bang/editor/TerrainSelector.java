@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.samskivert.swing.HGroupLayout;
+import com.samskivert.util.QuickSort;
 
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
@@ -34,6 +35,7 @@ public class TerrainSelector extends JPanel
         for (TerrainConfig config : configs) {
             choices[ii++] = new TerrainSelection(config);
         }
+        QuickSort.sort(choices);
         add(_selector = new JComboBox(choices));
     }
 
@@ -50,6 +52,7 @@ public class TerrainSelector extends JPanel
     }
 
     protected class TerrainSelection
+        implements Comparable<TerrainSelection>
     {
         public TerrainConfig terrain;
 
@@ -63,6 +66,11 @@ public class TerrainSelector extends JPanel
             String msg = "m.terrain_" + terrain.type;
             return _ctx.getMessageManager().getBundle("editor").exists(msg) ?
                 _ctx.xlate("editor", msg) : terrain.type;
+        }
+        
+        public int compareTo (TerrainSelection other)
+        {
+            return terrain.type.compareTo(other.terrain.type);
         }
     }
 

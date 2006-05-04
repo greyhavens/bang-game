@@ -190,9 +190,17 @@ public class EditorClient extends BasicClient
         }
 
         public void displayStatus (String status) {
-            _status.setText(status);
+            displayStatus(status, false);
         }
 
+        public void displayStatus (String status, boolean paint) {
+            _status.setText(status);
+            if (paint) {
+                _status.paintImmediately(0, 0, _status.getWidth(),
+                    _status.getHeight());
+            }
+        }
+        
         public JFrame getFrame () {
             return _frame;
         }

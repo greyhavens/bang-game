@@ -370,6 +370,19 @@ public class TerrainNode extends Node
         protected boolean _overPieces;
     }
 
+    /**
+     * An interface for progress update callbacks.
+     */
+    public interface ProgressListener
+    {
+        /**
+         * An update on the activity's progress.
+         *
+         * @param complete the percentage completed: 0.0 for none, 1.0 for done
+         */
+        public void update (float complete);
+    }
+    
     public TerrainNode (BasicContext ctx, BoardView view, boolean editorMode)
     {
         super("terrain");
@@ -536,8 +549,10 @@ public class TerrainNode extends Node
     /**
      * Populates the board's shadow map by finding the height of the shadow
      * volume above each heightfield vertex.
+     *
+     * @param listener a listener to notify periodically with progress updates
      */
-    public void generateShadows ()
+    public void generateShadows (ProgressListener listener)
     {
         int hfwidth = _board.getHeightfieldWidth(),
             hfheight = _board.getHeightfieldHeight();
@@ -555,19 +570,24 @@ public class TerrainNode extends Node
         byte[] shadows = _board.getShadows();
         float azimuth = _board.getLightAzimuth(0),
             elevation = _board.getLightElevation(0),
-            hstep = _elevationScale, theight;
+            hstep = _elevationScale, theight,
+            total = hfwidth * hfheight;
         Vector3f origin = new Vector3f(),
             dir = new Vector3f(FastMath.cos(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(elevation));
         Ray ray = new Ray(origin, dir);
         TrianglePickResults results = new TrianglePickResults();
-        for (int x = 0; x < hfwidth; x++) {
-            for (int y = 0; y < hfheight; y++) {
-                getHeightfieldVertex(x, y, origin);
-                theight = origin.z;
+        for (int x = 0, complete = 0; x < hfwidth; x++) {
+            for (int y = 0; y < hfheight; y++, complete++) {
+                // notify the listener once in a while
+                if ((complete % 32) == 0) {
+                    listener.update(complete / total);
+                }
                 
                 // determine the shadow height from self-shadowing
+                getHeightfieldVertex(x, y, origin);
+                theight = origin.z;
                 int sheight = (int)((getSelfShadowHeight(ray) - theight) /
                     hstep);
                 

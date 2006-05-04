@@ -33,6 +33,7 @@ import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.parlor.game.client.GameController;
 
+import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
@@ -450,7 +451,14 @@ public class EditorController extends GameController
      * the {@link #GENERATE_SHADOWS} command. */
     public void handleGenerateShadows (Object source)
     {
-        _panel.view.getTerrainNode().generateShadows();
+        _panel.view.getTerrainNode().generateShadows(
+            new TerrainNode.ProgressListener() {
+            public void update (float complete) {
+                _ctx.displayStatus(_msgs.get("m.generating",
+                    Integer.toString((int)(complete*100))), true);
+            }
+        });
+        _ctx.displayStatus(_msgs.get("m.generated"));
         _panel.view.getTerrainNode().refreshShadows();
     }
     
