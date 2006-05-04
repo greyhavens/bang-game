@@ -73,6 +73,7 @@ public class BangBoard extends SimpleStreamableObject
         _heightfield = new byte[_hfwidth * _hfheight];
         _elevationUnitsPerTile = 64;
         _terrain = new byte[_hfwidth * _hfheight];
+        fillTerrain((byte)2); // dirt!
         _shadows = new byte[_hfwidth * _hfheight];
         fillShadows(0);
         _shadowIntensity = 1f;
