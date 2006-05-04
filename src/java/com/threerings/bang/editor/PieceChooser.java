@@ -131,7 +131,9 @@ public class PieceChooser extends JPanel
         
         public String toString ()
         {
-            return _ctx.xlate("editor", "m.piece_" + key);
+            String msg = "m.piece_" + key;
+            return _ctx.getMessageManager().getBundle("editor").exists(msg) ?
+                _ctx.xlate("editor", msg) : name;
         }
     }
     
