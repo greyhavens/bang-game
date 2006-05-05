@@ -3,8 +3,6 @@
 
 package com.threerings.bang.data;
 
-import java.util.Iterator;
-
 import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.DSet;
@@ -119,8 +117,7 @@ public class PlayerObject extends BodyObject
      */
     public Purse getPurse ()
     {
-        for (Iterator iter = inventory.iterator(); iter.hasNext(); ) {
-            Object item = iter.next();
+        for (Item item : inventory) {
             if (item instanceof Purse) {
                 return (Purse)item;
             }
@@ -144,8 +141,8 @@ public class PlayerObject extends BodyObject
      */
     public boolean hasBigShot ()
     {
-        for (Iterator iter = inventory.iterator(); iter.hasNext(); ) {
-            if (iter.next() instanceof BigShotItem) {
+        for (Item item : inventory) {
+            if (item instanceof BigShotItem) {
                 return true;
             }
         }
@@ -157,8 +154,7 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsBadge (Badge.Type type)
     {
-        for (Iterator iter = inventory.iterator(); iter.hasNext(); ) {
-            Object item = iter.next();
+        for (Item item : inventory) {
             if (item instanceof Badge && ((Badge)item).getType().equals(type)) {
                 return true;
             }
@@ -196,8 +192,8 @@ public class PlayerObject extends BodyObject
     public int getDudsCount ()
     {
         int count = 0;
-        for (Iterator iter = inventory.iterator(); iter.hasNext(); ) {
-            if (iter.next() instanceof Article) {
+        for (Item item : inventory) {
+            if (item instanceof Article) {
                 count++;
             }
         }
@@ -210,8 +206,8 @@ public class PlayerObject extends BodyObject
     public int getOnlinePardnerCount ()
     {
         int count = 0;
-        for (Iterator it = pardners.iterator(); it.hasNext(); ) {
-            if (((PardnerEntry)it.next()).isOnline()) {
+        for (PardnerEntry entry : pardners) {
+            if (entry.isOnline()) {
                 count++;
             }
         }

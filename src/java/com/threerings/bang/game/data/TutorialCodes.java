@@ -14,8 +14,7 @@ public interface TutorialCodes
         "controls",
         "bonuses_cards",
         "claim_jumping",
-//         "bigshots",
-//         "cattle_rustling",
+        "cattle_rustling",
 //         "gold_rush",
     };
 

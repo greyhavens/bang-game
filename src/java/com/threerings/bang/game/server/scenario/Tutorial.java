@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,7 +16,9 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.BonusConfig;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.BangServer;
@@ -159,6 +162,30 @@ public class Tutorial extends Scenario
                     piece = Unit.getUnit(add.type);
                 }
 
+            } else if (add.what.equals("bigshot")) {
+                PlayerObject user = (PlayerObject)_bangmgr.getPlayer(0);
+                if (user == null) {
+                    log.warning("No player in tutorial, can't place Big Shot " +
+                                "[game=" + _bangobj.which() + "].");
+                    return;
+                }
+
+                // locate a bigshot in the player's inventory
+                BigShotItem bsitem = null;
+                for (Item item : user.inventory) {
+                    if (item instanceof BigShotItem) {
+                        bsitem = (BigShotItem)item;
+                        break;
+                    }
+                }
+                if (bsitem == null) {
+                    log.warning("Player has no Big Shot in tutorial " +
+                                "[game=" + _bangobj.which() +
+                                ", user=" + user.who() + "].");
+                    return;
+                }
+                piece = Unit.getUnit(bsitem.getType());
+
             } else {
                 log.warning("Requested to add unknown piece type " + add + ".");
                 return;
@@ -179,9 +206,33 @@ public class Tutorial extends Scenario
         } else if (action instanceof TutorialConfig.MoveUnit) {
             TutorialConfig.MoveUnit mua = (TutorialConfig.MoveUnit)action;
             Unit unit = (Unit)_bangobj.pieces.get(mua.id);
+            int tx = mua.location[0], ty = mua.location[1];
+            int targetId = mua.target;
+
+            // if the target is not shootable, we want just to move next to it
+            Piece target = (Piece)_bangobj.pieces.get(targetId);
+            if (!unit.validTarget(target, false)) {
+                targetId = -1;
+                tx = target.x;
+                ty = target.y;
+                if (_bangobj.board.canOccupy(unit, tx-1, ty)) {
+                    tx -= 1;
+                } else if (_bangobj.board.canOccupy(unit, tx, ty-1)) {
+                    ty -= 1;
+                } else if (_bangobj.board.canOccupy(unit, tx+1, ty)) {
+                    tx += 1;
+                } else if (_bangobj.board.canOccupy(unit, tx, ty+1)) {
+                    ty += 1;
+                } else {
+                    log.warning("Unable to locate spot near target " +
+                                "[tut=" + _config.ident +
+                                ", unit=" + unit.info() +
+                                ", target=" + target.info() + "].");
+                }
+            }
+
             try {
-                _bangmgr.executeOrder(unit, mua.location[0], mua.location[1],
-                                      mua.target, true);
+                _bangmgr.executeOrder(unit, tx, ty, targetId, true);
             } catch (InvocationException ie) {
                 log.warning("Unable to execute action " + mua + ":" +
                             ie.getMessage());
