@@ -335,11 +335,12 @@ public class NewLookView extends BContainer
         }
 
         public void updateIcon (BangContext ctx, ColorSelector colsel) {
-            if (aspect == null) {
-                return;
-            }
             BImage image;
-            if (colsel == null) {
+            if (aspect == null) {
+                // this only happens for optional male aspects so we use a
+                // blank head
+                image = ctx.loadImage("aspects/male/head/normal.png");
+            } else if (colsel == null) {
                 image = ctx.loadImage(getIconPath());
             } else {
                 image = ctx.getImageCache().createColorizedBImage(
