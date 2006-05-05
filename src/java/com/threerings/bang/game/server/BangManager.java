@@ -1530,6 +1530,15 @@ public class BangManager extends GameManager
      */
     protected void computeRatings (String scenario, int[] scores)
     {
+        // filter AIs from the scores; the ratings computations below will
+        // ignore players whose score is set to zero
+        scores = (int[])scores.clone();
+        for (int ii = 0; ii < scores.length; ii++) {
+            if (isAI(ii)) {
+                scores[ii] = 0;
+            }
+        }
+
         // collect each player's rating for this scenario
         Rating[] ratings = new Rating[getPlayerSlots()];
         for (int pidx = 0; pidx < ratings.length; pidx++) {

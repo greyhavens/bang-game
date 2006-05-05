@@ -204,10 +204,11 @@ public class Match
         config.players = new Name[config.seats];
 
         // add our human players
-        int idx = 0;
+        int idx = 0, humans = 0;
         for (int ii = 0; ii < players.length; ii++) {
             if (players[ii] != null) {
                 config.players[idx++] = players[ii].handle;
+                humans++;
             }
         }
 
@@ -223,7 +224,8 @@ public class Match
 
         // configure our other bits
         config.teamSize = TEAM_SIZES[config.seats-2];
-        config.rated = _criterion.getDesiredRankedness();
+        // only games versus at least one other human are rated
+        config.rated = (humans > 1) ? _criterion.getDesiredRankedness() : false;
         config.scenarios = ScenarioUtil.selectRandom(
             ServerConfig.getTownId(), _criterion.getDesiredRounds());;
 

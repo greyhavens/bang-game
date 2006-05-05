@@ -306,6 +306,9 @@ public class ParlorManager extends PlaceManager
         config.teamSize = _parobj.game.teamSize;
         config.scenarios = new String[_parobj.game.rounds];
 
+        // back parlor games are never rated
+        config.rated = false;
+
         // select our scenarios
         for (int ii = 0; ii < config.scenarios.length; ii++) {
             config.scenarios[ii] =
