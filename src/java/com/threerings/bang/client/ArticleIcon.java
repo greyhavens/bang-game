@@ -31,7 +31,7 @@ public class ArticleIcon extends ItemIcon
         ArticleCatalog.Article aca =
             al.getArticleCatalog().getArticle(article.getName());
         if (aca == null) {
-            log.warning("Article no longer exists? " + this);
+            log.warning("Article no longer exists? " + _item);
             return;
         }
 
