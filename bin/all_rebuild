@@ -108,8 +108,7 @@ if [ ! -z "$DEVCLIENT" ]; then
     ant devclient
 
     # make our Proguard mapping file accessible to Hemiptera
-    cp $ROOT/etc/proguard/devclient.map \
-        $ROOT/../threerings/etc/proguard/bang/0.map
+    cp $ROOT/etc/proguard/0.map $ROOT/../threerings/etc/proguard/bang
 fi
 
 # remove the lockfile
