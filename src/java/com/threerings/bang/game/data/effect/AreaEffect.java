@@ -43,18 +43,18 @@ public abstract class AreaEffect extends Effect
         int r2 = radius * radius;
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (affectedPiece(p) && MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
+            if (isPieceAffected(p) &&
+                MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
                 affected.add(p.pieceId);
             }
         }
         pieces = affected.toIntArray();
     }
 
-    /** Indicates whether or not we should affect this piece, assuming it
-     * is in range. */
-    protected boolean affectedPiece (Piece piece)
+    @Override // documentation inherited
+    public boolean isApplicable ()
     {
-        return (piece instanceof Unit && piece.owner >= 0 && piece.isAlive());
+        return (pieces.length > 0);
     }
 
     @Override // documentation inherited
@@ -76,7 +76,16 @@ public abstract class AreaEffect extends Effect
             apply(bangobj, obs, ii, target, target.getDistance(x, y));
         }
     }
-    
+
+    /**
+     * Indicates whether or not we should affect this piece, assuming it is in
+     * range.
+     */
+    protected boolean isPieceAffected (Piece piece)
+    {
+        return (piece instanceof Unit && piece.owner >= 0 && piece.isAlive());
+    }
+
     /**
      * Called for every piece to be affected by {@link #apply}.
      */

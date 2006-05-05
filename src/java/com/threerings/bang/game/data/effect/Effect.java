@@ -197,6 +197,17 @@ public abstract class Effect extends SimpleStreamableObject
     public abstract void prepare (BangObject bangobj, IntIntMap dammap);
 
     /**
+     * A method only used by effects created by cards that returns true if this
+     * effect will serve its intended purpose or false if the card that caused
+     * the effect should be considered unplayed and the effect cancelled. The
+     * default implementation always assumes applicability.
+     */
+    public boolean isApplicable ()
+    {
+        return true;
+    }
+
+    /**
      * Applies this effect to the board and pieces. Any modifications to pieces
      * or the board should be made directly as this is executed on both the
      * client and server. <em>Note:</em> effects should always compute and

@@ -64,7 +64,7 @@ public class BangDispatcher extends InvocationDispatcher
         case BangMarshaller.PLAY_CARD:
             ((BangProvider)provider).playCard(
                 source,
-                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue()
+                ((Integer)args[0]).intValue(), ((Short)args[1]).shortValue(), ((Short)args[2]).shortValue(), (InvocationService.ConfirmListener)args[3]
             );
             return;
 

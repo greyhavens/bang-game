@@ -224,7 +224,9 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void playCard (ClientObject caller, int cardId, short x, short y)
+    public void playCard (ClientObject caller, int cardId, short x, short y,
+                          BangService.ConfirmListener listener)
+        throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
         Card card = (Card)_bangobj.cards.get(cardId);
@@ -232,17 +234,19 @@ public class BangManager extends GameManager
             card.owner != getPlayerIndex(user.getVisibleName())) {
             log.warning("Rejecting invalid card request [who=" + user.who() +
                         ", sid=" + cardId + ", card=" + card + "].");
-            return;
+            throw new InvocationException(INTERNAL_ERROR);
         }
 
         log.info("Playing card: " + card);
 
+        // create and deploy the card's effect
+        Effect effect = card.activate(x, y);
+        if (!deployEffect(card.owner, effect)) {
+            throw new InvocationException(CARD_UNPLAYABLE);
+        }
+
         // remove it from their list
         _bangobj.removeFromCards(cardId);
-
-        // activate it
-        Effect effect = card.activate(x, y);
-        deployEffect(card.owner, effect);
 
         // if this card was a starting card, note that it was consumed
         StartingCard scard = (StartingCard)_scards.get(cardId);
@@ -252,6 +256,9 @@ public class BangManager extends GameManager
 
         // note that this player played a card
         _bangobj.stats[card.owner].incrementStat(Stat.Type.CARDS_PLAYED, 1);
+
+        // let them know it worked
+        listener.requestProcessed();
     }
 
     // documentation inherited
@@ -376,10 +383,18 @@ public class BangManager extends GameManager
      * Prepares an effect and posts it to the game object, recording damage
      * done in the process.
      */
-    public void deployEffect (int effector, Effect effect)
+    public boolean deployEffect (int effector, Effect effect)
     {
-        // prepare the effect and record any associated damage
+        // prepare the effect
         effect.prepare(_bangobj, _damage);
+
+        // make sure the effect is still applicable
+        if (!effect.isApplicable()) {
+            _damage.clear();
+            return false;
+        }
+
+        // record our damage if appropriate
         if (effector != -1) {
             recordDamage(effector, _damage);
         }
@@ -389,6 +404,8 @@ public class BangManager extends GameManager
 
         // on the server we apply the effect immediately
         effect.apply(_bangobj, _effector);
+
+        return true;
     }
 
     /**

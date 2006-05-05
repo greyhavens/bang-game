@@ -50,4 +50,10 @@ public class AreaRepairEffect extends AreaEffect
         piece.damage = newDamage[pidx];
         reportEffect(obs, piece, RepairEffect.REPAIRED);
     }
+
+    @Override // documentation inherited
+    protected boolean isPieceAffected (Piece piece)
+    {
+        return super.isPieceAffected(piece) && (piece.damage > 0);
+    }
 }

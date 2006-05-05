@@ -94,10 +94,12 @@ public class BangMarshaller extends InvocationMarshaller
     public static final int PLAY_CARD = 4;
 
     // documentation inherited from interface
-    public void playCard (Client arg1, int arg2, short arg3, short arg4)
+    public void playCard (Client arg1, int arg2, short arg3, short arg4, InvocationService.ConfirmListener arg5)
     {
+        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
+        listener5.listener = arg5;
         sendRequest(arg1, PLAY_CARD, new Object[] {
-            new Integer(arg2), new Short(arg3), new Short(arg4)
+            new Integer(arg2), new Short(arg3), new Short(arg4), listener5
         });
     }
 

@@ -416,9 +416,17 @@ public class BangController extends GameController
             log.warning("Requested to activate expired card " +
                         "[id=" + cardId + "].");
         } else {
+            BangService.ConfirmListener cl = new BangService.ConfirmListener() {
+                public void requestProcessed () {
+                    postEvent(TutorialCodes.CARD_PLAYED);
+                }
+                public void requestFailed (String reason) {
+                    _ctx.getChatDirector().displayFeedback(
+                        GameCodes.GAME_MSGS, reason);
+                }
+            };
             _bangobj.service.playCard(
-                _ctx.getClient(), cardId, (short)tx, (short)ty);
-            postEvent(TutorialCodes.CARD_PLAYED);
+                _ctx.getClient(), cardId, (short)tx, (short)ty, cl);
         }
     }
 

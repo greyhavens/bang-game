@@ -33,6 +33,9 @@ public interface GameCodes extends InvocationCodes
     /** An error response code for {@link BangService#move}. */
     public static final String TARGET_TOO_FAR = "m.target_too_far";
 
+    /** An error response code for {@link BangService#playCard}. */
+    public static final String CARD_UNPLAYABLE = "m.card_unplayable";
+
     /** An feedback message for {@link BangService#cancelOrder}. */
     public static final String ORDER_CLEARED = "m.order_cleared";
 

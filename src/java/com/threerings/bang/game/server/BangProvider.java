@@ -37,7 +37,8 @@ public interface BangProvider extends InvocationProvider
     /**
      * Handles a {@link BangService#playCard} request.
      */
-    public void playCard (ClientObject caller, int arg1, short arg2, short arg3);
+    public void playCard (ClientObject caller, int arg1, short arg2, short arg3, InvocationService.ConfirmListener arg4)
+        throws InvocationException;
 
     /**
      * Handles a {@link BangService#selectStarters} request.

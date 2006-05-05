@@ -26,7 +26,7 @@ public class AreaClearEffect extends AreaEffect
     }
 
     @Override // documentation inherited
-    protected boolean affectedPiece (Piece piece)
+    protected boolean isPieceAffected (Piece piece)
     {
         return (piece.owner >= 0 && !piece.isAlive());
     }

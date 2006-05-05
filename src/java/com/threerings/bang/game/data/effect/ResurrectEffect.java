@@ -32,7 +32,7 @@ public class ResurrectEffect extends AreaEffect
     }
 
     @Override // documentation inherited
-    protected boolean affectedPiece (Piece piece)
+    protected boolean isPieceAffected (Piece piece)
     {
         // we only work on dead pieces
         return (piece instanceof Unit && piece.owner >= 0 && !piece.isAlive());
