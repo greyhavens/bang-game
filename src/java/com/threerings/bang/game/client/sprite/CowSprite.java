@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SharedMesh;
@@ -82,6 +83,7 @@ public class CowSprite extends MobileSprite
     {
         _owntex = RenderUtil.createTextureState(
             ctx, "textures/ustatus/selected.png");
+        _owntex.getTexture().setWrap(Texture.WM_CLAMP_S_CLAMP_T);
     }
 
     protected SharedMesh _owner;
