@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="claim_jumping" board="Claim Jumping" players="2" nuggets="2">
+<tutorial ident="gold_rush" board="Gold Rush" players="2" nuggets="0">
   <show_view name="player_status"/>
 
   <!-- start them off with a friendly welcome -->
@@ -13,15 +13,11 @@
   <wait event="text_clicked"/>
 
   <!-- add a nugget to the board and show them that -->
+  <add_piece what="unit" id="1001" type="gunslinger" location="18,16" 
+             owner="0"/>
   <add_piece what="bonus" id="1000" type="nugget" location="16,16"/>
   <center_on what="piece" id="1000"/>
   <text message="nugget_intro" step="1"/>
-  <wait event="text_clicked"/>
-
-  <!-- add a gunslinger and have them pick up the nugget -->
-  <add_piece what="unit" id="1001" type="gunslinger" location="18,16" 
-             owner="0"/>
-  <text message="pick_up_nugget" step="2"/>
   <wait event="bonus_activated"/>
 
   <!-- tell them to drop the nugget in their claim -->
@@ -30,14 +26,9 @@
   <text message="deposited_nugget" step="2"/>
   <wait event="text_clicked"/>
 
-  <!-- tell them about stealin' nuggets -->
-  <text message="stealin_nuggets" step="3"/>
-  <center_on what="claim" id="1"/>
-  <wait event="effect:bonuses/nugget/removed"/>
-
-  <!-- have them deposit their stolen nugget -->
-  <text message="stole_nugget" step="3"/>
-  <wait event="effect:bonuses/nugget/added"/>
+  <!-- tell them about nuggets appearing around the board -->
+  <text message="lodes" step="3"/>
+  <wait event="text_clicked"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done"/>

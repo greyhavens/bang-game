@@ -15,7 +15,7 @@ public interface TutorialCodes
         "bonuses_cards",
         "claim_jumping",
         "cattle_rustling",
-//         "gold_rush",
+        "gold_rush",
     };
 
     /** An event message sent to the server to let the tutorial scenario know

@@ -85,6 +85,9 @@ public class TutorialConfig
      * human, and all other players will be computer controlled. */
     public int players;
 
+    /** The number of starting nuggets to provide. */
+    public int nuggets;
+
     /** Returns an array containing the actions for this tutorial. */
     public Action getAction (int index)
     {
