@@ -352,15 +352,19 @@ public abstract class Scenario
             }
         }
 
-        // zero out weightings for any spots that already have a bonus
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Bonus) {
-                int spidx = ((Bonus)pieces[ii]).spot;
-                if (spidx >= 0) {
-                    weights[spidx] = 0;
+        // if we're placing this at oen of the standard bonus spots, zero out
+        // weightings for any spots that already have a bonus
+        if (spots == _bonusSpots) {
+            for (int ii = 0; ii < pieces.length; ii++) {
+                if (pieces[ii] instanceof Bonus) {
+                    int spidx = ((Bonus)pieces[ii]).spot;
+                    if (spidx >= 0) {
+                        weights[spidx] = 0;
+                    }
                 }
             }
         }
+
         // make sure there is at least one available spot
         if (IntListUtil.sum(weights) == 0) {
             log.info("Dropping bonus. No unused spots.");
