@@ -69,9 +69,9 @@ public class CriterionView extends BContainer
 
         table.add(new BLabel(msgs.get("m.opponents"), "match_label"));
         row = new BContainer(GroupLayout.makeHStretch());
-        for (int ii = 0; ii < _players.length; ii++) {
-            row.add(_aiopps[ii] = new BCheckBox("" + (ii+1)));
-            _aiopps[ii].setSelected(ii < 1);
+        for (int ii = 0; ii < _aiopps.length; ii++) {
+            row.add(_aiopps[ii] = new BCheckBox("" + ii));
+            _aiopps[ii].setSelected(ii < 2);
         }
         table.add(row);
 

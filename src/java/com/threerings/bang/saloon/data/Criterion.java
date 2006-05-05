@@ -118,7 +118,7 @@ public class Criterion extends SimpleStreamableObject
      */
     public int getAllowedAIs ()
     {
-        return highestBitIndex(allowAIs);
+        return Math.max(0, highestBitIndex(allowAIs)-1);
     }
 
     /**
@@ -155,8 +155,8 @@ public class Criterion extends SimpleStreamableObject
     public String getAIString ()
     {
         ArrayList<String> values = new ArrayList<String>();
-        for (int ii = 1; ii <= GameCodes.MAX_PLAYERS-1; ii++) {
-            if (isBitSet(allowAIs, ii-1)) {
+        for (int ii = 0; ii < GameCodes.MAX_PLAYERS-1; ii++) {
+            if (isBitSet(allowAIs, ii)) {
                 values.add(String.valueOf(ii));
             }
         }
