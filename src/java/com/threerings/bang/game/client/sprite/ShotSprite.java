@@ -7,6 +7,7 @@ import com.jme.scene.Node;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.util.ModelAttacher;
 import com.threerings.bang.util.BangContext;
@@ -23,12 +24,15 @@ public class ShotSprite extends Sprite
      *
      * @param type the model type
      * @param name the model name
+     * @param zations the colorizations to apply, or <code>null</code> for none
      */
-    public ShotSprite (BangContext ctx, String type, String name)
+    public ShotSprite (
+        BangContext ctx, String type, String name, Colorization[] zations)
     {
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
-        ctx.loadModel(type, name, new ModelAttacher(this));
+        ctx.getModelCache().getModel(type, name, zations,
+            new ModelAttacher(this));
         setLocalScale(0.5f);
     }
 }

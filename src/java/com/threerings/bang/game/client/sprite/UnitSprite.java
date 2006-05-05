@@ -95,6 +95,14 @@ public class UnitSprite extends MobileSprite
         return _status;
     }
 
+    /**
+     * Returns this unit's colorizations.
+     */
+    public Colorization[] getColorizations ()
+    {
+        return _zations;
+    }
+    
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {

@@ -56,7 +56,8 @@ public class BallisticShotHandler extends ShotHandler
         Vector3f end = new Vector3f(
             tx * TILE_SIZE + TILE_SIZE/2, ty * TILE_SIZE + TILE_SIZE/2,
             _bangobj.board.getElevation(tx, ty) * escale + TILE_SIZE/2);
-        _ssprite = new ShotSprite(_ctx, "units", "artillery/shell");
+        _ssprite = new ShotSprite(_ctx, "units", "artillery/shell",
+            _view.getUnitSprite(_shooter).getColorizations());
         Vector3f velvec = end.subtract(start);
         float edelta = velvec.z;
         velvec.z = 0f;
