@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
@@ -33,6 +34,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
 import com.threerings.jme.sprite.PathUtil;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.util.RenderUtil;
 
@@ -53,6 +55,9 @@ public class GunshotEmission extends SpriteEmission
             _animShotFrames.put(anim, StringUtil.parseIntArray(
                 props.getProperty(anim + ".shot_frames", "")));
         }
+        _size = Float.valueOf(props.getProperty("size", "1"));
+        _trails = new Trail[Integer.valueOf(props.getProperty("trails", "1"))];
+        _spread = Float.valueOf(props.getProperty("spread", "0"));
     }
     
     @Override // documentation inherited
@@ -68,20 +73,22 @@ public class GunshotEmission extends SpriteEmission
             RenderUtil.initStates();
         }
         _flare = new Flare();
-        _trail = new Trail();
+        for (int ii = 0; ii < _trails.length; ii++) {
+            _trails[ii] = new Trail();
+        }
         
         _smokemgr = new ParticleManager(16);
         _smokemgr.setParticlesMinimumLifeTime(500f);
-        _smokemgr.setInitialVelocity(0.01f);
+        _smokemgr.setInitialVelocity(0.005f);
         _smokemgr.setEmissionDirection(Vector3f.UNIT_Z);
         _smokemgr.setEmissionMaximumAngle(FastMath.PI / 16);
         _smokemgr.setRandomMod(0f);
         _smokemgr.setPrecision(FastMath.FLT_EPSILON);
         _smokemgr.setControlFlow(false);
-        _smokemgr.setStartSize(0.25f);
-        _smokemgr.setEndSize(2f);
-        _smokemgr.setStartColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0.75f));
-        _smokemgr.setEndColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0f));
+        _smokemgr.setStartSize(0.25f * _size);
+        _smokemgr.setEndSize(2f * _size);
+        _smokemgr.setStartColor(new ColorRGBA(0.2f, 0.2f, 0.2f, 0.75f));
+        _smokemgr.setEndColor(new ColorRGBA(0.35f, 0.35f, 0.35f, 0f));
         _smokemgr.setRepeatType(Controller.RT_CLAMP);
         _smokemgr.setActive(false);
         TriMesh particles = _smokemgr.getParticles();
@@ -116,6 +123,9 @@ public class GunshotEmission extends SpriteEmission
         }
         super.putClone(gstore, properties);
         gstore._animShotFrames = _animShotFrames;
+        gstore._size = _size;
+        gstore._trails = new Trail[_trails.length];
+        gstore._spread = _spread;
         return gstore;
     }
     
@@ -125,6 +135,9 @@ public class GunshotEmission extends SpriteEmission
     {
         super.writeExternal(out);
         out.writeObject(_animShotFrames);
+        out.writeFloat(_size);
+        out.writeInt(_trails.length);
+        out.writeFloat(_spread);
     }
     
     // documentation inherited from interface Externalizable
@@ -133,6 +146,9 @@ public class GunshotEmission extends SpriteEmission
     {
         super.readExternal(in);
         _animShotFrames = (HashMap<String, int[]>)in.readObject();
+        _size = in.readFloat();
+        _trails = new Trail[in.readInt()];
+        _spread = in.readFloat();
     }
     
     // documentation inherited
@@ -211,12 +227,30 @@ public class GunshotEmission extends SpriteEmission
         // and a muzzle flare
         _flare.activate(_eloc, _edir);
         
-        // and a bullet trail
-        _trail.activate(_eloc, _edir);
+        // and one or more bullet trails
+        for (int ii = 0; ii < _trails.length; ii++) {
+            _trails[ii].activate(_eloc, _edir);
+        }
         
         // and a burst of smoke
         _smokemgr.setParticlesOrigin(_eloc);
         _smokemgr.forceRespawn();
+    }
+    
+    /**
+     * Finds a random direction at most <code>spread</code> radians away from
+     * the given direction.
+     */
+    protected void getRandomDirection (
+        Vector3f dir, float spread, Vector3f result)
+    {
+        result.set(Vector3f.UNIT_X);
+        _rot.fromAngleNormalAxis(RandomUtil.getFloat(spread),
+            Vector3f.UNIT_Y).multLocal(result);
+        _rot.fromAngleNormalAxis(RandomUtil.getFloat(FastMath.TWO_PI),
+            Vector3f.UNIT_X).multLocal(result);
+        PathUtil.computeAxisRotation(Vector3f.UNIT_Z, dir, _rot).multLocal(
+            result);
     }
     
     /** Handles the appearance and fading of the muzzle flare. */
@@ -230,8 +264,7 @@ public class GunshotEmission extends SpriteEmission
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             setRenderState(RenderUtil.overlayZBuf);
             setRenderState(RenderUtil.addAlpha);
-            setLocalScale(1.5f);
-            setDefaultColor(new ColorRGBA());
+            setLocalScale(1.5f * _size);
             updateRenderState();
         }
         
@@ -267,19 +300,19 @@ public class GunshotEmission extends SpriteEmission
         {
             super("trail");
             
-            FloatBuffer vbuf = BufferUtils.createVector3Buffer(4);
+            // use shared vertex and index buffers, but a unique color buffer
+            if (_tvbuf == null) {
+                _tvbuf = BufferUtils.createVector3Buffer(4);
+                _tvbuf.put(0f).put(0.5f).put(0f);
+                _tvbuf.put(0f).put(-0.5f).put(0f);
+                _tvbuf.put(1f).put(-0.5f).put(0f);
+                _tvbuf.put(1f).put(0.5f).put(0f);
+                _tibuf = BufferUtils.createIntBuffer(6);
+                _tibuf.put(0).put(1).put(2);
+                _tibuf.put(0).put(2).put(3);
+            }
             _cbuf = BufferUtils.createFloatBuffer(4 * 4);
-            IntBuffer ibuf = BufferUtils.createIntBuffer(6);
-        
-            vbuf.put(0f).put(0.5f).put(0f);
-            vbuf.put(0f).put(-0.5f).put(0f);
-            vbuf.put(1f).put(-0.5f).put(0f);
-            vbuf.put(1f).put(0.5f).put(0f);
-
-            ibuf.put(0).put(1).put(2);
-            ibuf.put(0).put(2).put(3);
-
-            reconstruct(vbuf, null, _cbuf, null, ibuf);
+            reconstruct(_tvbuf, null, _cbuf, null, _tibuf);
             
             setLightCombineMode(LightState.OFF);
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -301,14 +334,21 @@ public class GunshotEmission extends SpriteEmission
                     _tdist = target.getWorldTranslation().distance(eloc);
                 }
             }
-            getLocalScale().set(0f, 0.175f, 1f);
+            getLocalScale().set(0f, 0.175f * _size, 1f);
+            
+            // choose a direction within the spread range
+            if (_spread > 0) {
+                getRandomDirection(edir, _spread, _sdir);
+            } else {
+                _sdir.set(edir);
+            }
             
             // set the orientation based on the eye vector and direction
             Renderer renderer = DisplaySystem.getDisplaySystem().getRenderer();
             renderer.getCamera().getLocation().subtract(eloc, _eye);
-            _eye.cross(_edir, _yvec).normalizeLocal();
-            _edir.cross(_yvec, _zvec);
-            getLocalRotation().fromAxes(_edir, _yvec, _zvec);
+            _eye.cross(_sdir, _yvec).normalizeLocal();
+            _sdir.cross(_yvec, _zvec);
+            getLocalRotation().fromAxes(_sdir, _yvec, _zvec);
             
             _model.getEmissionNode().attachChild(this);
             _elapsed = 0f;
@@ -353,6 +393,12 @@ public class GunshotEmission extends SpriteEmission
     /** For each animation, the frames at which the shots go off. */
     protected HashMap<String, int[]> _animShotFrames;
     
+    /** The size of the shots. */
+    protected float _size;
+    
+    /** The trails' maximum angular distance from the firing direction. */
+    protected float _spread;
+    
     /** The frames at which the shots go off for the current animation. */
     protected int[] _shotFrames;
     
@@ -365,8 +411,10 @@ public class GunshotEmission extends SpriteEmission
     /** The time elapsed since the start of the animation. */
     protected float _elapsed;
     
-    /** Result vectors to reuse. */
-    protected Vector3f _eloc = new Vector3f(), _edir = new Vector3f();
+    /** Result variables to reuse. */
+    protected Vector3f _eloc = new Vector3f(), _edir = new Vector3f(),
+        _sdir = new Vector3f(), _axis = new Vector3f();
+    protected Quaternion _rot = new Quaternion();
     
     /** The model to which this emission is bound. */
     protected Model _model;
@@ -375,7 +423,7 @@ public class GunshotEmission extends SpriteEmission
     protected Flare _flare;
     
     /** The bullet trail handler. */
-    protected Trail _trail;
+    protected Trail[] _trails;
     
     /** The gunsmoke particle manager. */
     protected ParticleManager _smokemgr;
@@ -388,6 +436,12 @@ public class GunshotEmission extends SpriteEmission
     
     /** The smoke texture. */
     protected static TextureState _smoketex;
+    
+    /** The shared vertex buffer for the bullet trails. */
+    protected static FloatBuffer _tvbuf;
+    
+    /** The shared index buffer for the bullet trails. */
+    protected static IntBuffer _tibuf;
     
     /** The color of the flash of light generated by the shot. */
     protected static final ColorRGBA LIGHT_FLASH_COLOR =
