@@ -10,10 +10,13 @@ import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.util.BasicContext;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Displays an avatar article in the inventory display.
@@ -24,11 +27,17 @@ public class ArticleIcon extends ItemIcon
     protected void configureLabel (BasicContext ctx)
     {
         Article article = (Article)_item;
-        String ipath = "goods/articles/"+  article.getName() + ".png";
         AvatarLogic al = ctx.getAvatarLogic();
+        ArticleCatalog.Article aca =
+            al.getArticleCatalog().getArticle(article.getName());
+        if (aca == null) {
+            log.warning("Article no longer exists? " + this);
+            return;
+        }
+
+        String ipath = "goods/articles/"+  article.getName() + ".png";
         Colorization[] zations = al.decodeColorizations(
-            article.getComponents()[0], al.getColorizationClasses(
-                al.getArticleCatalog().getArticle(article.getName())));
+            article.getComponents()[0], al.getColorizationClasses(aca));
         if (zations != null) {
             BImage image = new BImage(
                 ImageUtil.recolorImage(
