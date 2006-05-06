@@ -26,6 +26,9 @@ if [ -s $BANGLOG ]; then
     # mail out some reports
     cat $ARCHLOG | /export/tools/bin/sum_invokers | \
         $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
+    # change directory to $BANG_HOME so that filter_interesting can maintain a
+    # local DBM file of interesting warning messages
+    cd $BANG_HOME
     cat $ARCHLOG | /export/tools/bin/filter_interesting | \
         $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
 fi
