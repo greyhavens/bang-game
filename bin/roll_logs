@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# $Id$
+#
+# A script to truncate and mail out the Bang! server logs. Likely this will be
+# run on a nightly basis.
+
+BANG_HOME=`dirname $0`
+BANG_HOME=`cd $BANG_HOME/..; pwd`
+
+# read in the server configuration
+if [ -f $BANG_HOME/server.conf ]; then
+    . $BANG_HOME/server.conf
+fi
+
+NOW=`date "+%F-%H:%M"`
+BANGLOG=$BANG_HOME/log/stdout.log
+ARCHLOG=$BANGLOG.$NOW
+HOSTNAME=`hostname`
+
+# make sure we have a log of non-zero size
+if [ -s $BANGLOG ]; then
+    # roll over the server log file (the hard way)
+    cp $BANGLOG $ARCHLOG
+    cp /dev/null $BANGLOG
+    # mail out some reports
+    cat $ARCHLOG | /export/tools/bin/sum_invokers | \
+        $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
+    cat $ARCHLOG | /export/tools/bin/filter_interesting | \
+        $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
+fi
+
+# prune old logs
+find $BANG_HOME/log -name 'stdout.log*' -a -mtime +7 | xargs rm -f
