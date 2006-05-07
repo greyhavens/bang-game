@@ -25,23 +25,22 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.TextEvent;
 
-import com.samskivert.servlet.user.Password;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.RecentList;
 import com.samskivert.util.RepeatRecordFilter;
 
 import com.threerings.presents.client.Client;
-import com.threerings.presents.net.UsernamePasswordCreds;
+import com.threerings.util.Name;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
 
-import com.threerings.util.Name;
-
-import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.game.client.GameCameraHandler;
 import com.threerings.bang.game.client.GameInputHandler;
+
+import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.DeploymentConfig;
 import com.threerings.bang.util.RenderUtil;
 
@@ -159,9 +158,7 @@ public class BangApp extends JmeApp
         // configure the client with credentials if they were supplied
         if (username != null && password != null) {
             client.setCredentials(
-                new UsernamePasswordCreds(
-                    new Name(username),
-                    Password.makeFromClear(password).getEncrypted()));
+                _client.createCredentials(new Name(username), password));
         }
 
         // now start up the main event loop

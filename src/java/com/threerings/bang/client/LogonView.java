@@ -24,7 +24,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
-import com.samskivert.servlet.user.Password;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
@@ -35,7 +34,6 @@ import com.threerings.util.Name;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.LogonException;
-import com.threerings.presents.net.UsernamePasswordCreds;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.bui.EnablingValidator;
@@ -133,9 +131,8 @@ public class LogonView extends BWindow
             String password = _password.getText();
             _status.setStatus(_msgs.get("m.logging_on"), false);
             _ctx.getClient().setCredentials(
-                new UsernamePasswordCreds(
-                    new Name(username),
-                    Password.makeFromClear(password).getEncrypted()));
+                _ctx.getBangClient().createCredentials(
+                    new Name(username), password));
             _ctx.getClient().logon();
 
         } else if ("options".equals(event.getAction())) {

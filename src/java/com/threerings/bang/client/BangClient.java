@@ -22,11 +22,13 @@ import com.jmex.bui.BWindow;
 
 import com.jmex.sound.openAL.objects.MusicStream;
 
+import com.samskivert.servlet.user.Password;
 import com.samskivert.util.Config;
 import com.samskivert.util.Interval;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
+import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -55,8 +57,10 @@ import com.threerings.bang.client.util.BoardCache;
 import com.threerings.bang.client.util.PerfMonitor;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangAuthCodes;
+import com.threerings.bang.data.BangAuthResponseData;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
@@ -512,9 +516,35 @@ public class BangClient extends BasicClient
         }
     }
 
+    /**
+     * Creates and initializes credentials that can be used to authenticate
+     * with the server.
+     *
+     * @param username the username to use when logging in.
+     * @param password the cleartext of the password to use when logging in.
+     */
+    public BangCredentials createCredentials (Name username, String password)
+    {
+        BangCredentials creds = new BangCredentials(
+            username, Password.makeFromClear(password));
+        creds.ident = IdentUtil.getMachineIdentifier();
+        // if we got a real ident from the client, mark it as such
+        if (creds.ident != null && !creds.ident.matches("S[A-Za-z0-9/+]{32}")) {
+            creds.ident = "C" + creds.ident;
+        }
+        return creds;
+    }
+
     // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
+        // if we were provided with a machine identifier, write it out
+        BangAuthResponseData bard = (BangAuthResponseData)
+            client.getAuthResponseData();
+        if (bard != null && bard.ident != null) {
+            IdentUtil.setMachineIdentifier(bard.ident);
+        }
+
         // get a reference to the player service
         _psvc = (PlayerService)_client.requireService(PlayerService.class);
 

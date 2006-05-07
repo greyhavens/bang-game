@@ -15,6 +15,7 @@ import com.threerings.presents.net.BootstrapData;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
@@ -33,37 +34,6 @@ public class BangClient extends CrowdClient
 
         // this session is over, make a note of it
         recordEndedSession();
-    }
-
-    @Override // documentation inherited
-    protected void sessionWillStart ()
-    {
-        super.sessionWillStart();
-        PlayerObject user = (PlayerObject)_clobj;
-
-        // register the player with their handle if they have one
-        if (user.handle != null) {
-            BangServer.registerPlayer(user);
-        }
-
-        // if we have auth data in the form of a token ring, use it
-        if (_authdata instanceof BangTokenRing) {
-            // we can set things directly here rather than use the setter
-            // methods because the user object is not yet out in the wild
-            user.tokens = (BangTokenRing)_authdata;
-        } else {
-            log.warning("Missing or bogus authdata [who=" + _username +
-                        ", adata=" + _authdata + "].");
-            // give them zero privileges
-            user.tokens = new BangTokenRing();
-        }
-
-        // configure the player in the town for this server
-        user.townId = ServerConfig.getTownId();
-
-        // make a note of their current avatar poses for later comparison and
-        // potential updating
-        _startPoses = (String[])user.poses.clone();
     }
 
     @Override // documentation inherited
@@ -91,6 +61,53 @@ public class BangClient extends CrowdClient
     }
 
     @Override // documentation inherited
+    protected void sessionWillStart ()
+    {
+        super.sessionWillStart();
+        PlayerObject user = (PlayerObject)_clobj;
+
+        // generate an audit log entry
+        BangCredentials creds = (BangCredentials)_creds;
+        BangServer.generalLog("session_start " + user.username +
+                              " ip:" + getInetAddress() + " id:" + creds.ident);
+
+        // register the player with their handle if they have one
+        if (user.handle != null) {
+            BangServer.registerPlayer(user);
+        }
+
+        // if we have auth data in the form of a token ring, use it
+        if (_authdata instanceof BangTokenRing) {
+            // we can set things directly here rather than use the setter
+            // methods because the user object is not yet out in the wild
+            user.tokens = (BangTokenRing)_authdata;
+        } else {
+            log.warning("Missing or bogus authdata [who=" + _username +
+                        ", adata=" + _authdata + "].");
+            // give them zero privileges
+            user.tokens = new BangTokenRing();
+        }
+
+        // configure the player in the town for this server
+        user.townId = ServerConfig.getTownId();
+
+        // make a note of their current avatar poses for later comparison and
+        // potential updating
+        _startPoses = (String[])user.poses.clone();
+    }
+
+    @Override // documentation inherited
+    protected void sessionWillResume ()
+    {
+        super.sessionWillResume();
+
+        // generate an audit log entry
+        BangServer.generalLog(
+            "session_resume " + ((PlayerObject)_clobj).username +
+            " ip:" + getInetAddress());
+    }
+
+    @Override // documentation inherited
     protected void sessionDidEnd ()
     {
         super.sessionDidEnd();
@@ -103,6 +120,10 @@ public class BangClient extends CrowdClient
 
         // this session is over, make a note of it
         recordEndedSession();
+
+        // generate an audit log recording this session
+        BangServer.generalLog(
+            "session_end " + user.username + " ctime:" + _connectTime);
     }
 
     /**

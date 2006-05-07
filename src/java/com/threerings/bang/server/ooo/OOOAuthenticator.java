@@ -7,6 +7,9 @@ import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.StringUtil;
+
+import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -16,13 +19,14 @@ import com.threerings.user.OOOUserRepository;
 
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.net.AuthResponse;
-import com.threerings.presents.net.AuthResponseData;
-import com.threerings.presents.net.UsernamePasswordCreds;
 
 import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.net.AuthingConnection;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
+
+import com.threerings.bang.data.BangAuthResponseData;
+import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
@@ -71,7 +75,7 @@ public class OOOAuthenticator extends Authenticator
     protected void processAuthentication (AuthingConnection conn)
     {
         AuthRequest req = conn.getAuthRequest();
-        AuthResponseData rdata = new AuthResponseData();
+        BangAuthResponseData rdata = new BangAuthResponseData();
         AuthResponse rsp = new AuthResponse(rdata);
 
         try {
@@ -80,17 +84,6 @@ public class OOOAuthenticator extends Authenticator
                 rdata.code = SERVER_ERROR;
                 return;
             }
-
-            // make sure they've sent valid credentials
-            if (!(req.getCredentials() instanceof UsernamePasswordCreds)) {
-                rdata.code = SERVER_ERROR;
-                log.warning("Invalid credentials: " + req);
-                // note that the finally block will be executed and
-                // communicate our auth response back to the conmgr
-                return;
-            }
-            UsernamePasswordCreds creds = (UsernamePasswordCreds)
-                req.getCredentials();
 
             // make sure they've got the correct version
             long cvers = 0L;
@@ -104,16 +97,63 @@ public class OOOAuthenticator extends Authenticator
                 if (cvers > svers) {
                     rdata.code = NEWER_VERSION;
                 } else {
-                    rdata.code =
-                        MessageBundle.tcompose(VERSION_MISMATCH, "" + svers);
+                    rdata.code = MessageBundle.tcompose(
+                        VERSION_MISMATCH, "" + svers);
                 }
-                log.info("Refusing wrong version [creds=" + creds +
+                log.info("Refusing wrong version " +
+                         "[creds=" + req.getCredentials() +
                          ", cvers=" + cvers + ", svers=" + svers + "].");
                 return;
             }
 
-            // load up their user account record
+            // make sure they've sent valid credentials
+            if (!(req.getCredentials() instanceof BangCredentials)) {
+                log.warning("Invalid creds " + req.getCredentials() + ".");
+                rdata.code = SERVER_ERROR;
+                return;
+            }
+
+            // check their provided machine identifier
+            BangCredentials creds = (BangCredentials)req.getCredentials();
             String username = creds.getUsername().toString();
+            if (StringUtil.isBlank(creds.ident)) {
+                log.warning("Received blank ident " +
+                            req.getCredentials() + ".");
+                BangServer.generalLog(
+                    "refusing_spoofed_ident " + username +
+                    " ip:" + conn.getInetAddress());
+                rdata.code = SERVER_ERROR;
+                return;
+            }
+
+            // if they supplied a known non-unique machine identifier, create
+            // one for them
+            if (IdentUtil.isBogusIdent(creds.ident.substring(1))) {
+                String sident = StringUtil.md5hex(
+                    "" + Math.random() + System.currentTimeMillis());
+                creds.ident = "S" + IdentUtil.encodeIdent(sident);
+                BangServer.generalLog("creating_ident " + username +
+                                      " ip:" + conn.getInetAddress() +
+                                      " id:" + creds.ident);
+                rdata.ident = creds.ident;
+            }
+
+            // convert the encrypted ident to the original MD5 hash
+            try {
+                String prefix = creds.ident.substring(0, 1);
+                creds.ident = prefix +
+                    IdentUtil.decodeIdent(creds.ident.substring(1));
+            } catch (Exception e) {
+                log.warning("Received spoofed ident from username " +
+                            username + " [err=" + e.getMessage() + "].");
+                BangServer.generalLog("refusing_spoofed_ident " + username +
+                                      " ip:" + conn.getInetAddress() +
+                                      " id:" + creds.ident);
+                rdata.code = SERVER_ERROR;
+                return;
+            }
+
+            // load up their user account record
             OOOUser user = (OOOUser)_authrep.loadUser(username);
             if (user == null) {
                 rdata.code = NO_SUCH_USER;
@@ -159,7 +199,7 @@ public class OOOAuthenticator extends Authenticator
             creds.setUsername(new Name(user.username));
 
             log.info("User logged on [user=" + user.username + "].");
-            rdata.code = AuthResponseData.SUCCESS;
+            rdata.code = BangAuthResponseData.SUCCESS;
 
         } catch (PersistenceException pe) {
             log.log(Level.WARNING, "Error authenticating user " +
