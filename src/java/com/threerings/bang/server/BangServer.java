@@ -211,6 +211,8 @@ public class BangServer extends CrowdServer
         // close our audit logs
         _glog.close();
         _ilog.close();
+        _stlog.close();
+        BangCoinManager.coinlog.close();
     }
 
     @Override // documentation inherited
@@ -390,6 +392,12 @@ public class BangServer extends CrowdServer
         return ServerConfig.serverPorts;
     }
 
+    @Override // documentation inherited
+    protected void logReport (String report)
+    {
+        _stlog.log(report);
+    }
+
     public static void main (String[] args)
     {
         // set up the proper logging services
@@ -424,4 +432,5 @@ public class BangServer extends CrowdServer
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server.log");
     protected static AuditLogger _ilog = createAuditLog("item.log");
+    protected static AuditLogger _stlog = createAuditLog("state.log");
 }
