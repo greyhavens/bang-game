@@ -248,14 +248,14 @@ public class MobileSprite extends PieceSprite
                 if (_actions.size() > 0) {
                     startNextAction();
                 } else {
-                    startNextIdle();
+                    startNextIdle(true);
                 }
             }
             
         } else if (_nextIdle > 0) {
             _nextIdle -= time;
             if (_nextIdle <= 0) {
-                startNextIdle();
+                startNextIdle(false);
             }
         }
 
@@ -297,7 +297,7 @@ public class MobileSprite extends PieceSprite
             _model.getProperties().getProperty("wreckage", ""));
         _ianims = StringUtil.parseStringArray(
             _model.getProperties().getProperty("idle", ""));
-        startNextIdle();
+        startNextIdle(true);
     }
     
     /**
@@ -458,11 +458,15 @@ public class MobileSprite extends PieceSprite
     /**
      * Starts the next idle animation (if any) and schedules the one after
      * that.
+     *
+     * @param offset if true, start at a random offset into the animation to
+     * make sure idle animations aren't synchronized between units
      */
-    protected void startNextIdle ()
+    protected void startNextIdle (boolean offset)
     {
         // if there's one idle animation, assume that it loops; if there
         // are many, cycle randomly between them
+        float duration = -1f;
         if (_ianims == null || _ianims.length == 0) {
             if (_model != null) {
                 _model.stopAnimation();
@@ -471,12 +475,17 @@ public class MobileSprite extends PieceSprite
             _nextIdle = Float.MAX_VALUE;
             
         } else if (_ianims.length == 1) {
-            setAction(_idle = _ianims[0]);
+            duration = setAction(_idle = _ianims[0]);
             _nextIdle = Float.MAX_VALUE;
             
         } else if (_ianims.length > 1) {
             _idle = (String)RandomUtil.pickRandom(_ianims, _idle);
-            _nextIdle = setAction(_idle);
+            duration = _nextIdle = setAction(_idle);
+        }
+        if (duration > 0f && offset) {
+            float time = RandomUtil.getFloat(duration);
+            _nextIdle -= time;
+            _model.fastForwardAnimation(time);
         }
     }
     

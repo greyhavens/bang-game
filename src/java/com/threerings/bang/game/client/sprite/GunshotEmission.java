@@ -73,6 +73,9 @@ public class GunshotEmission extends SpriteEmission
             RenderUtil.initStates();
         }
         _flare = new Flare();
+        if (_ftex != null) {
+            _flare.setRenderState(_ftex);
+        }
         for (int ii = 0; ii < _trails.length; ii++) {
             _trails[ii] = new Trail();
         }
@@ -93,12 +96,14 @@ public class GunshotEmission extends SpriteEmission
         _smokemgr.setActive(false);
         TriMesh particles = _smokemgr.getParticles();
         particles.addController(_smokemgr);
-        
+        if (_smoketex != null) {
+            particles.setRenderState(_smoketex);
+        }
         particles.setRenderState(RenderUtil.blendAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        particles.updateRenderState();
         
         model.getEmissionNode().attachChild(particles);
+        particles.updateRenderState();
     }
     
     @Override // documentation inherited

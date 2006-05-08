@@ -97,7 +97,7 @@ public class MoveUnitPath extends LineSegmentPath
         // restore the sprite to standing
         MobileSprite sprite = (MobileSprite)_sprite;
         sprite.pathUpdate();
-        sprite.startNextIdle();
+        sprite.startNextIdle(true);
     }
 
     @Override // documentation inherited

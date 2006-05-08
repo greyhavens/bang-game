@@ -9,6 +9,7 @@ import java.io.ObjectOutput;
 
 import java.util.Properties;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
@@ -72,13 +73,16 @@ public class SmokePlumeEmission extends SpriteEmission
         if (RenderUtil.blendAlpha == null) {
             RenderUtil.initStates();
         }
+        if (_smoketex != null) {
+            _smokemgr.getParticles().setRenderState(_smoketex);
+        }
         _smokemgr.getParticles().setRenderState(RenderUtil.blendAlpha);
         _smokemgr.getParticles().setRenderState(RenderUtil.overlayZBuf);
-        _smokemgr.getParticles().updateRenderState();
         _smokemgr.getParticles().addController(_smokemgr);
         _smokemgr.forceRespawn();
         
         model.getEmissionNode().attachChild(_smokemgr.getParticles());
+        _smokemgr.getParticles().updateRenderState();
         
         super.init(model);
     }
