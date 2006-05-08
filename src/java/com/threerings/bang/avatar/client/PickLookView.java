@@ -25,6 +25,8 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Allows a player to select one of their active looks for use.
  */
@@ -47,8 +49,7 @@ public class PickLookView extends BContainer
         PlayerObject user = _ctx.getUserObject();
         String[] looks = new String[user.looks.size()];
         int idx = 0;
-        for (Iterator iter = user.looks.iterator(); iter.hasNext(); ) {
-            Look look = (Look)iter.next();
+        for (Look look : user.looks) {
             looks[idx++] = getName(look);
         }
         _looks.setItems(looks);
@@ -89,9 +90,8 @@ public class PickLookView extends BContainer
      */
     public void refreshDisplay ()
     {
-        PlayerObject user = _ctx.getUserObject();
         if (_selection != null) {
-            _avatar.setAvatar(_selection.getAvatar(user));
+            _avatar.setAvatar(_selection.getAvatar(_ctx.getUserObject()));
         }
     }
 
@@ -104,7 +104,13 @@ public class PickLookView extends BContainer
         PlayerObject user = _ctx.getUserObject();
         Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null) {
-            _looks.selectItem(getName(current));
+            if (_looks.isAdded()) {
+                _looks.selectItem(getName(current));
+            } else {
+                selectLook(current);
+            }
+        } else {
+            log.warning("Missing default look? " + user);
         }
     }
 
@@ -125,17 +131,29 @@ public class PickLookView extends BContainer
         if (name.equals(_deflook)) {
             name = "";
         }
-        PlayerObject user = _ctx.getUserObject();
+        selectLook(_ctx.getUserObject().looks.get(name));
+    }
+
+    protected String getName (Look look)
+    {
+        return !StringUtil.isBlank(look.name) ? look.name : _deflook;
+    }
+
+    protected void selectLook (Look look)
+    {
         // we don't clone our selection because whatever modifications we make
         // we'll eventually flush to the server, and when we switch back from
         // configuring our active look, we want the NewLookView to be able to
         // immediately grab the new articles which would not otherwise be
         // possible since we'd have just sent off a request to the server to
         // update them
-        _selection = (Look)user.looks.get(name);
+        _selection = look;
+
         // but we keep track of what the selection looked like before we
         // started messing with it so that we can tell if we changed it
         _orig = (Look)_selection.clone();
+
+        // update the interface
         refreshDisplay();
 
         // if we don't have a barber object, we need to tell the server that we
@@ -143,13 +161,8 @@ public class PickLookView extends BContainer
         if (_barbobj == null) {
             AvatarService asvc = (AvatarService)
                 _ctx.getClient().requireService(AvatarService.class);
-            asvc.selectLook(_ctx.getClient(), name);
+            asvc.selectLook(_ctx.getClient(), look.name);
         }
-    }
-
-    protected String getName (Look look)
-    {
-        return !StringUtil.isBlank(look.name) ? look.name : _deflook;
     }
 
     protected void flushModifiedLook ()
