@@ -362,9 +362,9 @@ public class BangUI
                             size -= 2;
                         }
                     } catch (Throwable t) {
-                        log.warning("StyleConstants choked looking up size " +
-                                    "[font=" + variant + ", attrs=" + attrs +
-                                    ", t=" + t + "].");
+                        log.log(Level.WARNING, "StyleConstants choked " +
+                                "looking up size [font=" + variant +
+                                ", attrs=" + attrs + "].", t);
                         size = 9;
                     }
                     return base.deriveFont(style, size);
