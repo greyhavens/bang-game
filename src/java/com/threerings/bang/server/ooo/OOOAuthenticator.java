@@ -19,6 +19,7 @@ import com.threerings.user.OOOUserRepository;
 
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.net.AuthResponse;
+import com.threerings.presents.net.AuthResponseData;
 
 import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.net.AuthingConnection;
@@ -97,7 +98,10 @@ public class OOOAuthenticator extends Authenticator
                 if (cvers > svers) {
                     rdata.code = NEWER_VERSION;
                 } else {
-                    rdata.code = MessageBundle.tcompose(
+                    // TEMP: force the use of the old auth response data to
+                    // avoid freaking out older clients
+                    rsp = new AuthResponse(new AuthResponseData());
+                    rsp.getData().code = MessageBundle.tcompose(
                         VERSION_MISMATCH, "" + svers);
                 }
                 log.info("Refusing wrong version " +
