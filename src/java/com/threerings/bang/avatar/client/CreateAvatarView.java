@@ -93,10 +93,6 @@ public class CreateAvatarView extends BDecoratedWindow
         row.add(col);
         inner.add(row);
         inner.add(_look = new FirstLookView(ctx, _status));
-
-        // start with a random gender which will trigger name list and avatar
-        // display configuration
-        _gender.selectItem(RandomUtil.getInt(2));
     }
 
     // documentation inherited from interface ActionListener
@@ -109,6 +105,15 @@ public class CreateAvatarView extends BDecoratedWindow
         } else if (cmd.equals("done")) {
             createAvatar();
         }
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        // start with a random gender which will trigger name list and avatar
+        // display configuration
+        _gender.selectItem(RandomUtil.getInt(2));
     }
 
     protected void pickRandomHandle ()
