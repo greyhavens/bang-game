@@ -643,14 +643,16 @@ public class BangBoard extends SimpleStreamableObject
             return;
             
         } else if (piece instanceof BigPiece) {
+            byte ptype = (piece instanceof Prop && ((Prop)piece).isTall()) ?
+                O_TALL_PROP : O_PROP;
             Rectangle pbounds = ((BigPiece)piece).getBounds();
             for (int yy = pbounds.y, ly = yy + pbounds.height;
                  yy < ly; yy++) {
                 for (int xx = pbounds.x, lx = xx + pbounds.width;
                      xx < lx; xx++) {
                     if (_playarea.contains(xx, yy)) {
-                        _tstate[_width*yy+xx] = O_PROP;
-                        _btstate[_width*yy+xx] = O_PROP;
+                        _tstate[_width*yy+xx] = ptype;
+                        _btstate[_width*yy+xx] = ptype;
                         _estate[_width*yy+xx] = 2;
                     }
                 }
@@ -827,7 +829,8 @@ public class BangBoard extends SimpleStreamableObject
         // props, but will otherwise not do funny things
         int idx = y*_width+x;
         byte tstate = _tstate[idx];
-        if (piece.isFlyer() || piece instanceof Train) {
+        if ((piece.isFlyer() && tstate != O_TALL_PROP) ||
+            piece instanceof Train) {
             return true;
         } else {
             return (tstate == O_FLAT) ||
@@ -857,7 +860,8 @@ public class BangBoard extends SimpleStreamableObject
         if (!_playarea.contains(x, y)) {
             return false;
         }
-        return (_tstate[y*_width+x] == O_PROP);
+        byte tstate = _tstate[y*_width+x];
+        return (tstate == O_PROP || tstate == O_TALL_PROP);
     }
 
     /**
@@ -1177,4 +1181,8 @@ public class BangBoard extends SimpleStreamableObject
 
     /** Indicates that this tile is occupied by a prop. */
     protected static final byte O_PROP = -5;
+    
+    /** Indicates that this tile is occupied by a tall prop (can't be passed,
+     * even by air units). */
+    protected static final byte O_TALL_PROP = -6;
 }

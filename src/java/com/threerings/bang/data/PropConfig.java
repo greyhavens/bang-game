@@ -25,6 +25,9 @@ public class PropConfig
     /** The height of this prop in tiles. */
     public int height;
 
+    /** If true, even air units cannot pass over the prop. */
+    public boolean tall;
+    
     /** A custom class for this prop, if one was specified. */
     public String propClass;
 
@@ -75,6 +78,7 @@ public class PropConfig
         config.width = BangUtil.getIntProperty(type, props, "width", 1);
         config.height = BangUtil.getIntProperty(type, props, "height", 1);
 
+        config.tall = Boolean.parseBoolean(props.getProperty("tall"));
         config.passable = Boolean.parseBoolean(props.getProperty("passable"));
         
         // map this config into the proper towns

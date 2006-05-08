@@ -114,6 +114,15 @@ public class Prop extends BigPiece
     }
 
     /**
+     * Determines whether this prop is tall: whether it blocks even flying
+     * pieces.
+     */
+    public boolean isTall ()
+    {
+        return _config.tall;
+    }
+    
+    /**
      * Determines whether this prop is passable: that is, whether units can
      * occupy its location.
      */
