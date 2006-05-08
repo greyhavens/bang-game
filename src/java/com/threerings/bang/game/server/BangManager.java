@@ -1170,56 +1170,10 @@ public class BangManager extends GameManager
             }
             prec.user = user;
 
-            StatSet stats = _bangobj.stats[ii];
-            try {
-                // send all the stat updates out in one dobj event
-                user.startTransaction();
-
-                // if the game wasn't at least one minute long, certain
-                // stats don't count
-                if (gameTime > 0) {
-                    user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
-                    user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
-                    // increment consecutive wins for 1st place only
-                    if (award.rank == 0) {
-                        user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
-                        user.stats.incrementStat(Stat.Type.CONSEC_WINS, 1);
-                    } else {
-                        user.stats.setStat(Stat.Type.CONSEC_WINS, 0);
-                    }
-                    // increment consecutive losses for 4th place only
-                    if (award.rank == 3) {
-                        user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 1);
-                    } else {
-                        user.stats.setStat(Stat.Type.CONSEC_LOSSES, 0);
-                    }
-                }
-
-                // these stats count regardless of the game duration
-                for (int ss = 0; ss < ACCUM_STATS.length; ss++) {
-                    Stat.Type type = ACCUM_STATS[ss];
-                    // we don't subtract accumulating stats if the player
-                    // "accumulated" negative points in the game
-                    int value = stats.getIntStat(type);
-                    if (value > 0) {
-                        user.stats.incrementStat(type, value);
-                    }
-                }
-                user.stats.maxStat(Stat.Type.HIGHEST_POINTS,
-                                   stats.getIntStat(Stat.Type.POINTS_EARNED));
-                user.stats.maxStat(Stat.Type.MOST_KILLS,
-                                   stats.getIntStat(Stat.Type.UNITS_KILLED));
-                user.stats.incrementStat(
-                    Stat.Type.CASH_EARNED, award.cashEarned);
-
-                // allow the scenario to record statistics as well
-                _scenario.recordStats(_bangobj, gameTime, ii, user);
-
-                // determine whether this player qualifies for a new badge
-                award.badge = Badge.checkQualifies(user);
-
-            } finally {
-                user.commitTransaction();
+            // if this was a rated (matched) game, persist various stats and
+            // potentially award a badge
+            if (_bconfig.rated) {
+                recordStats(user, ii, award, gameTime);
             }
         }
 
@@ -1578,6 +1532,66 @@ public class BangManager extends GameManager
             ratings[pidx].rating = nratings[pidx];
             ratings[pidx].experience++;
             _precords[pidx].nratings.put(ratings[pidx].scenario, ratings[pidx]);
+        }
+    }
+
+    /**
+     * Records game stats to the player's persistent stats and potentially
+     * awards them a badge. This is only called for rated (matched) games.
+     */
+    protected void recordStats (
+        PlayerObject user, int pidx, Award award, int gameTime)
+    {
+        StatSet stats = _bangobj.stats[pidx];
+        try {
+            // send all the stat updates out in one dobj event
+            user.startTransaction();
+
+            // if the game wasn't at least one minute long, certain
+            // stats don't count
+            if (gameTime > 0) {
+                user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
+                user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
+                // increment consecutive wins for 1st place only
+                if (award.rank == 0) {
+                    user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
+                    user.stats.incrementStat(Stat.Type.CONSEC_WINS, 1);
+                } else {
+                    user.stats.setStat(Stat.Type.CONSEC_WINS, 0);
+                }
+                // increment consecutive losses for 4th place only
+                if (award.rank == 3) {
+                    user.stats.incrementStat(Stat.Type.CONSEC_LOSSES, 1);
+                } else {
+                    user.stats.setStat(Stat.Type.CONSEC_LOSSES, 0);
+                }
+            }
+
+            // these stats count regardless of the game duration
+            for (int ss = 0; ss < ACCUM_STATS.length; ss++) {
+                Stat.Type type = ACCUM_STATS[ss];
+                // we don't subtract accumulating stats if the player
+                // "accumulated" negative points in the game
+                int value = stats.getIntStat(type);
+                if (value > 0) {
+                    user.stats.incrementStat(type, value);
+                }
+            }
+            user.stats.maxStat(Stat.Type.HIGHEST_POINTS,
+                               stats.getIntStat(Stat.Type.POINTS_EARNED));
+            user.stats.maxStat(Stat.Type.MOST_KILLS,
+                               stats.getIntStat(Stat.Type.UNITS_KILLED));
+            user.stats.incrementStat(
+                Stat.Type.CASH_EARNED, award.cashEarned);
+
+            // allow the scenario to record statistics as well
+            _scenario.recordStats(_bangobj, gameTime, pidx, user);
+
+            // determine whether this player qualifies for a new badge
+            award.badge = Badge.checkQualifies(user);
+
+        } finally {
+            user.commitTransaction();
         }
     }
 
