@@ -97,11 +97,11 @@ public class ServerConfig
     }
 
     static {
-        String propsPath = System.getProperty("install_config");
+        String propsPath = System.getProperty("bang.home");
         if (propsPath != null) {
-            init(propsPath);
+            init(propsPath + File.separator + "server.properties");
         } else {
-            log.warning("Missing 'install_config' system property.");
+            log.warning("Missing 'bang.home' system property.");
         }
     }
 }

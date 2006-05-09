@@ -35,7 +35,7 @@ fi
 CLASS=com.threerings.bang.server.BangServer
 JAVA_ARGS="-server -mx$SERVER_MEMORY \
     -XX:+UseMembar \
-    -Dinstall_config=$BANG_HOME/server.properties \
+    -Dbang.home=$BANG_HOME \
     -Dresource_dir=$BANG_HOME/rsrc \
     -Drsrc_cache_dir=/tmp -Dlog_level=$LOGLEVEL"
 

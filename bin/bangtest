@@ -8,7 +8,7 @@ BANG_HOME=`dirname $0`
 BANG_HOME=`cd $BANG_HOME/.. ; pwd`
 ARGS=""
 JARGS="-Dresource_dir=$BANG_HOME/rsrc -Dno_unpack_resources=true"
-JARGS="$JARGS -Dinstall_config=$BANG_HOME/server.properties"
+JARGS="$JARGS -Dbang.home=$BANG_HOME"
 
 # parse our arguments
 while [ ! -z "$1" ]; do
