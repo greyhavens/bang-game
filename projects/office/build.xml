@@ -1,0 +1,64 @@
+<!-- project build configuration -->
+<project name="Sheriff's Office web application" default="all" basedir=".">
+
+  <!-- load up our configuration information -->
+  <property file="build.properties"/>
+  <property name="base.dir" value="../.."/>
+  <property file="${base.dir}/server.properties"/>
+
+  <!-- the web application name and derived parameters -->
+  <property name="app.name"       value="office"/>
+  <property name="deploy.dir"     value="${base.dir}/pages/${app.name}"/>
+  <property name="dist.war"       value="${base.dir}/webapps/${app.name}.war"/>
+
+  <!-- declare our classpath -->
+  <path id="classpath">
+    <pathelement location="${deploy.dir}/WEB-INF/classes"/>
+    <fileset dir="${base.dir}/lib" includes="**/*.jar"/>
+    <fileset dir="${base.dir}/dist" includes="**/*.jar"/>
+  </path>
+
+  <!-- prepares the application directories -->
+  <target name="prepare">
+    <mkdir dir="${deploy.dir}"/>
+    <copy todir="${deploy.dir}">
+      <fileset dir="src/xhtml"/>
+    </copy>
+    <mkdir dir="${deploy.dir}/WEB-INF"/>
+    <copy file="etc/web.xml" tofile="${deploy.dir}/WEB-INF/web.xml"/>
+    <copy todir="${deploy.dir}/WEB-INF/classes">
+      <fileset dir="etc" includes="**/*.properties"/>
+    </copy>
+    <mkdir dir="${deploy.dir}/WEB-INF/classes"/>
+    <mkdir dir="${deploy.dir}/WEB-INF/lib"/>
+    <!-- copy the library jar files -->
+    <copy todir="${deploy.dir}/WEB-INF/lib">
+      <fileset dir="${base.dir}/lib" includesfile="lib/WEBAPP_LIBS"/>
+      <fileset dir="${base.dir}/dist" includesfile="lib/WEBAPP_LIBS"/>
+    </copy>
+  </target>
+
+  <!-- build the java class files -->
+  <target name="compile" depends="prepare">
+    <javac srcdir="src" destdir="${deploy.dir}/WEB-INF/classes"
+           debug="on" optimize="${build.optimize}">
+      <classpath refid="classpath"/>
+    </javac>
+    <copy todir="${deploy.dir}/WEB-INF/classes">
+      <fileset dir="src" includes="**/*.properties"/>
+    </copy>
+  </target>
+
+  <!-- cleans out the build directory -->
+  <target name="clean">
+    <delete dir="${deploy.dir}"/>
+  </target>
+
+  <!-- the default target is to rebuild everything -->
+  <target name="all" depends="prepare,compile"/>
+
+  <!-- builds our distribution files (war and jar) -->
+  <target name="dist" depends="all">
+    <jar destfile="${dist.war}" basedir="${deploy.dir}"/>
+  </target>
+</project>
