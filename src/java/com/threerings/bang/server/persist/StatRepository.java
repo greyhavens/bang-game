@@ -43,7 +43,9 @@ public class StatRepository extends SimpleRepository
     {
         /**
          * Called on every stat matching the criterion supplied to {@link
-         * #processStats}.
+         * #processStats}. <em>Note:</em> do not retain a reference to the
+         * supplied {@link Stat} instance as its contents will be overwritten
+         * prior to each call to process.
          */
         public void process (int playerId, Stat stat);
     }
