@@ -531,10 +531,6 @@ public class UnitSprite extends MobileSprite
         new Vector2f(2, 2),
     };
 
-    /** Defines the amount by which the damage arc image is inset from a
-     * full quarter circle (on each side): 8 degrees. */
-    protected static final float ARC_INSETS = 7;
-
     /** The height above ground at which flyers fly (in tile lengths). */
     protected static final int FLYER_GROUND_HEIGHT = 1;
 
