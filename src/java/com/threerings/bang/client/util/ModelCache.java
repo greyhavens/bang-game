@@ -181,18 +181,6 @@ public class ModelCache
         return npath;
     }
     
-    /** The application context. */
-    protected BasicContext _ctx;
-    
-    /** Maps model keys to prototypes for models that have been loaded, to
-     * {@link ResultListenerList}s for models being loaded, or to
-     * {@link Exception}s for models that failed to load. */
-    protected HashMap<String, Object> _prototypes =
-        new HashMap<String, Object>();
-    
-    /** The model loader thread. */
-    protected ModelLoader _loader = new ModelLoader();
-    
     /** Loads models in a separate thread. */    
     protected class ModelLoader extends Thread
     {
@@ -298,6 +286,18 @@ public class ModelCache
         protected HashMap<String, TextureState> _tstates =
             new HashMap<String, TextureState>();
     }
+    
+    /** The application context. */
+    protected BasicContext _ctx;
+    
+    /** Maps model keys to prototypes for models that have been loaded, to
+     * {@link ResultListenerList}s for models being loaded, or to
+     * {@link Exception}s for models that failed to load. */
+    protected HashMap<String, Object> _prototypes =
+        new HashMap<String, Object>();
+    
+    /** The model loader thread. */
+    protected ModelLoader _loader = new ModelLoader();
     
     /** Used to normalize relative paths. */
     protected static final String PATH_DOTDOT = "[^/.]+/\\.\\./";

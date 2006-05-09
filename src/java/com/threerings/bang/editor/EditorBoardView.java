@@ -51,6 +51,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BasicContext;
@@ -908,11 +909,15 @@ public class EditorBoardView extends BoardView
             _highlights = new TerrainNode.Highlight[_board.getWidth()][
                 _board.getHeight()];
         }
+        if (_dunit == null) {
+            _dunit = Unit.getUnit("gunslinger");
+            _dunit.x = _dunit.y = -1;
+        }
         _board.shadowPieces(_bangobj.pieces.iterator(), x1, y1, 1 + x2 - x1,
             1 + y2 - y1);
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
-                if (_showHighlights && !_board.isOccupiable(x, y)) {
+                if (_showHighlights && !_board.canOccupy(_dunit, x, y)) {
                     if (_highlights[x][y] == null) {
                         _highlights[x][y] = _tnode.createHighlight(x, y,
                             false);
@@ -1146,6 +1151,9 @@ public class EditorBoardView extends BoardView
     /** Highlights indicating which tiles are occupiable. */
     protected TerrainNode.Highlight[][] _highlights;
 
+    /** A dummy unit used to check tile occupiability. */
+    protected Unit _dunit;
+    
     /** Whether or not to show the highlights. */
     protected boolean _showHighlights;
 
