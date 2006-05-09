@@ -46,7 +46,7 @@ JAVADIR=
 while [ -z "$JAVADIR" ]; do
     echo
     echo "Which Java Virtual Machine would you like to use?"
-    echo "Note: the JVM must be version 1.4.1 or newer."
+    echo "Note: the JVM must be version 1.5.0 or newer."
     echo -n "[$DEFJAVADIR] "
     read
     if [ -z "$REPLY" ]; then
