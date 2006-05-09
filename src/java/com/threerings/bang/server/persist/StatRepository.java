@@ -24,6 +24,7 @@ import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.SimpleRepository;
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.Stat;
 import com.threerings.io.ObjectInputStream;
@@ -37,6 +38,16 @@ import static com.threerings.bang.Log.log;
 public class StatRepository extends SimpleRepository
     implements Stat.AuxDataSource
 {
+    /** Used by {@link #processStats}. */
+    public interface Processor
+    {
+        /**
+         * Called on every stat matching the criterion supplied to {@link
+         * #processStats}.
+         */
+        public void process (int playerId, Stat stat);
+    }
+
     /**
      * The database identifier used when establishing a database
      * connection. This value being <code>statdb</code>.
@@ -179,24 +190,68 @@ public class StatRepository extends SimpleRepository
     }
 
     /**
+     * Invokes the supplied processor on every stat in the database of the
+     * specified type.
+     *
+     * <p><em>Note:</em> the stats database will inevitable be extremely large
+     * (one row for every paying player and one for non-payers less than six
+     * months old; millions of rows if the game is at all successful). Don't
+     * call this method willy nilly and the summarized results should be cached
+     * for at least 12 hours. (Stats don't change that frequently in the
+     * aggregate.)
+     */
+    public void processStats (final Processor processor, Stat.Type type)
+        throws PersistenceException
+    {
+        final Stat stat = type.newStat();
+        final String query = "select PLAYER_ID, STAT_DATA " +
+            "from STATS where STAT_CODE = " + type.code();
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        if (decodeStat(stat, (byte[])rs.getObject(2)) != null) {
+                            processor.process(rs.getInt(1), stat);
+                        }
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+    }
+
+    /**
      * Instantiates the appropriate stat class and decodes the stat from
      * the data.
      */
     protected Stat decodeStat (int statCode, byte[] data)
     {
+        Stat.Type type = Stat.getType(statCode);
+        if (type == null) {
+            log.warning("Unable to decode stat, unknown type " +
+                        "[code=" + statCode + "].");
+            return null;
+        }
+        return decodeStat(type.newStat(), data);
+    }
+
+    /**
+     * Instantiates the appropriate stat class and decodes the stat from
+     * the data.
+     */
+    protected Stat decodeStat (Stat stat, byte[] data)
+    {
         String errmsg = null;
         Exception error = null;
 
         try {
-            Stat.Type type = Stat.getType(statCode);
-            if (type == null) {
-                log.warning("Unable to decode stat, unknown type " +
-                            "[code=" + statCode + "].");
-                return null;
-            }
-
             // decode its contents from the serialized data
-            Stat stat = type.newStat();
             ByteArrayInputStream bin = new ByteArrayInputStream(data);
             stat.unpersistFrom(new ObjectInputStream(bin), this);
             return stat;
@@ -210,7 +265,8 @@ public class StatRepository extends SimpleRepository
             errmsg = "Unable to decode stat";
         }
 
-        log.log(Level.WARNING, errmsg + " [code=" + statCode + "]", error);
+        log.log(Level.WARNING,
+                errmsg + " [type=" + stat.getType() + "]", error);
         return null;
     }
 
