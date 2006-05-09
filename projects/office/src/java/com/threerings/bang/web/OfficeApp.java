@@ -3,6 +3,8 @@
 
 package com.threerings.bang.web;
 
+import java.io.File;
+import java.util.Properties;
 import java.util.logging.Level;
 
 import javax.servlet.ServletConfig;
@@ -16,6 +18,7 @@ import com.samskivert.servlet.JDBCTableSiteIdentifier;
 import com.samskivert.servlet.SiteIdentifier;
 import com.samskivert.servlet.util.RequestUtils;
 import com.samskivert.util.ServiceUnavailableException;
+import com.samskivert.util.StringUtil;
 import com.samskivert.velocity.Application;
 import com.samskivert.velocity.Logic;
 
@@ -79,6 +82,26 @@ public class OfficeApp extends Application
 	} catch (Throwable t) {
 	    log.log(Level.WARNING, "Error initializing Sheriff's Office.", t);
 	}
+    }
+
+    @Override // documentation inherited
+    protected void configureVelocity (ServletConfig config, Properties props)
+    {
+        String scontext = config.getServletContext().getServletContextName();
+        if (StringUtil.isBlank(scontext)) {
+            log.warning("Unable to determine servlet context name, " +
+                        "cannot activate file loader.");
+            return;
+        }
+
+        File source = new File(ServerConfig.serverRoot, "projects" +
+                               File.separator + scontext +
+                               File.separator + "src" +
+                               File.separator + "xhtml");
+        if (source.exists()) {
+            props.setProperty("file.resource.loader.path", source.getPath());
+            log.info("Velocity loading directly from " + source + ".");
+        }
     }
 
     @Override // document inherited

@@ -1,4 +1,16 @@
-Stats!:
+<form action="player_stats.xhtml" method="POST">
+Types: <select name="type">
+#foreach ($type in $types)
+$form.option("type", "$type.code()", "$type", "1")
+#end
+</select>
+$form.submit("Go")
+</form>
+
+<ul>
+</ul>
+
+<p> Stats!:
 <ul>
 #foreach ($stat in $stats)
 <li>$stat</li>
