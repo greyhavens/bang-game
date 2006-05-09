@@ -10,6 +10,7 @@ DESC="Bang game server"
 
 BANG_HOME=`dirname $0 | sed s:/bin$::`
 BANG_USER=www-data
+TOOLS_HOME=/export/tools
 
 LOGFILE=$BANG_HOME/log/stdout.log
 LOG_EMAIL=nightly-logs@threerings.net
@@ -21,6 +22,13 @@ if [ -f $BANG_HOME/server.conf ]; then
     . $BANG_HOME/server.conf
 else
     echo "Can't load $BANG_HOME/server.conf; can't run server."
+    exit 255
+fi
+
+# Make sure we're running as the correct user
+WHOAMI=`whoami`
+if [ "$WHOAMI" != "$BANG_USER" ]; then
+    echo "This script must be run as $BANG_USER."
     exit 255
 fi
 
@@ -61,14 +69,16 @@ export CLASSPATH
 LD_LIBRARY_PATH=$BANG_HOME/lib/`uname -m`-`uname -s`
 export LD_LIBRARY_PATH
 
-# Start up the server
+# Create the logfile
 touch $LOGFILE
-WHOAMI=`whoami`
-if [ "$WHOAMI" != "$BANG_USER" ]; then
-    echo "This script must be run as $BANG_USER."
-    exit 255
-fi
 
+# Reload the board database from the source files
+cd $BANG_HOME
+export ANT_OPTS="-XX:+UseMembar"
+echo "Rebuilding board database:" >>$LOGFILE
+$TOOLS_HOME/bin/ant boards >>$LOGFILE 2>&1
+
+# Start up the server
 echo "Running Bang server:" >>$LOGFILE
 echo " Deployment root: $BANG_HOME" >>$LOGFILE
 echo "         Java VM: $JAVA_VM" >>$LOGFILE
