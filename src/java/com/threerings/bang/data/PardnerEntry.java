@@ -50,7 +50,7 @@ public class PardnerEntry
      */
     public PardnerEntry (Handle handle)
     {
-        this.handle = handle;
+        this.handle = (handle == null) ? new Handle("") : handle;
     }
     
     /**
