@@ -26,6 +26,7 @@ import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Cow;
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
@@ -658,7 +659,8 @@ public class BangBoard extends SimpleStreamableObject
                 }
             }
 
-        } else if (!_playarea.contains(piece.x, piece.y)) {
+        } else if (!_playarea.contains(piece.x, piece.y) ||
+            piece instanceof Marker) {
             return;
 
         } else if (piece instanceof Track) {
