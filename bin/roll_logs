@@ -16,6 +16,7 @@ fi
 NOW=`date "+%F-%H:%M"`
 BANGLOG=$BANG_HOME/log/stdout.log
 ARCHLOG=$BANGLOG.$NOW
+FILTLOG=/tmp/bangfiltered.log
 HOSTNAME=`hostname`
 
 # make sure we have a log of non-zero size
@@ -24,13 +25,19 @@ if [ -s $BANGLOG ]; then
     cp $BANGLOG $ARCHLOG
     cp /dev/null $BANGLOG
     # mail out some reports
-    cat $ARCHLOG | /export/tools/bin/sum_invokers | \
-        $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
+    cat $ARCHLOG | /export/tools/bin/sum_invokers > $FILTLOG
+    if [ ! -s $FILTLOG ]; then
+        cat $FILTLOG | \
+            $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
+    fi
     # change directory to $BANG_HOME so that filter_interesting can maintain a
     # local DBM file of interesting warning messages
     cd $BANG_HOME
-    cat $ARCHLOG | /export/tools/bin/filter_interesting | \
-        $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
+    cat $ARCHLOG | /export/tools/bin/filter_interesting > $FILTLOG
+    if [ ! -s $FILTLOG ]; then
+        cat $FILTLOG | $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
+    fi
+    rm -f $FILTLOG
 fi
 
 # prune old logs
