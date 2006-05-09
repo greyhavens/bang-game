@@ -180,13 +180,12 @@ public class Unit extends Piece
         int oldDamage = this.damage;
         if (_config.returnFire > 0 && newDamage < 100 &&
             targetInRange(shooter.x, shooter.y)) {
-            // temporarily account for the shooter's damage when
-            // calculating our shot; it will be applied properly later
-            this.damage = newDamage;
+            // return fire shots are always executed at 75% health
+            this.damage = 75;
             shot = shoot(bangobj, shooter);
             shot.type = ShotEffect.RETURN_FIRE;
             this.damage = oldDamage;
-            // scale the damage down appropriately
+            // scale the damage if so specified in the unit config
             shot.newDamage = (_config.returnFire * shot.newDamage) / 100;
         }
         return shot;
