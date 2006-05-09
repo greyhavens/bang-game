@@ -17,6 +17,9 @@ BANG_USER=bang
 LOG_EMAIL=bang-logs@DOMAIN
 LOGLEVEL=info
 
+# The user as which we run Jetty
+JETTY_USER=bang
+
 # These is passed to the various JVMs
 SERVER_MEMORY=384M
 TOOL_MEMORY=384M

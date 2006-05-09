@@ -52,6 +52,7 @@ db.default.password = PASSWORD
 # db.userdb.username = USERNAME
 # db.userdb.password = PASSWORD
 # db.userdb.url = jdbc:mysql://USERDBHOST:3306/USERDB
+# db.sitedb.url = jdbc:mysql://USERDBHOST:3306/USERDB
 
 #
 # Bits for the OOO authenticator
