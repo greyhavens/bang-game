@@ -423,6 +423,7 @@ public class MobileSprite extends PieceSprite
         if (_action.equals(DEAD)) {
             loadModel(_ctx, _type, _name + "/dead", _zations);
             _dead = true;
+            _action = null;
             
         } else if (_action.equals(REMOVED)) {
             // have the unit sink into the ground and fade away
