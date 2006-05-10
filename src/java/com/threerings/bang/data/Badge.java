@@ -49,16 +49,16 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 500;
             }
         },
-        GAMES_PLAYED_4 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 2000;
-            }
-        },
-        GAMES_PLAYED_5 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
-            }
-        },
+//         GAMES_PLAYED_4 {
+//             public boolean qualifies (PlayerObject user) {
+//                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 2000;
+//             }
+//         },
+//         GAMES_PLAYED_5 {
+//             public boolean qualifies (PlayerObject user) {
+//                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
+//             }
+//         },
 
         // units killed badges
         UNITS_KILLED_1 {
