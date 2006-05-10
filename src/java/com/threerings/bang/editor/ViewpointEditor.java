@@ -128,6 +128,9 @@ public class ViewpointEditor extends EditorTool
     // documentation inherited from interface KeyListener
     public void keyPressed (KeyEvent e)
     {
+        if (_vpsprite == null) {
+            return;
+        }
         Piece piece = _vpsprite.getPiece();
         _ctrl.maybeStartPieceEdit(piece);
         Viewpoint vp = (Viewpoint)piece.clone();
@@ -189,6 +192,7 @@ public class ViewpointEditor extends EditorTool
             _vpsprite.unbindCamera();
             _vpsprite = null;
         }
+        _panel.recenter.setEnabled(vp == null);
         if (vp == null) {
             _panel.tools.cameraDolly.resume();
             return;

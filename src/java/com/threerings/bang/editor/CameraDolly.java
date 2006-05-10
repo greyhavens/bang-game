@@ -9,11 +9,14 @@ import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
-import com.jme.scene.Controller;
 
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.KeyListener;
 import com.jmex.bui.event.MouseEvent;
+
+import com.threerings.jme.camera.CameraHandler;
+
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Allows the user to move the camera around the board.
@@ -27,12 +30,10 @@ public class CameraDolly extends EditorTool
     public CameraDolly (EditorContext ctx, EditorPanel panel)
     {
         super(ctx, panel);
-
-        ctx.getRootNode().addController(_updater = new Controller() {
-            public void update (float time) {
-                updateCamera(time);
-            }
-        });
+        
+        CameraHandler camhand = _ctx.getCameraHandler();
+        camhand.setZoomLimits(MIN_DISTANCE, MAX_DISTANCE);
+        camhand.setTiltLimits(MIN_ELEVATION, MAX_ELEVATION);
     }
 
     /**
@@ -40,9 +41,12 @@ public class CameraDolly extends EditorTool
      */
     public void recenter ()
     {
-        _target = new Vector3f(
-            _panel.view.getTerrainNode().getWorldBound().getCenter());
-        _target.z = 0.0f;
+        CameraHandler camhand = _ctx.getCameraHandler();
+        float width = _panel.view.getBoard().getWidth() * TILE_SIZE,
+            height = _panel.view.getBoard().getHeight() * TILE_SIZE;
+        Vector3f offset = camhand.getCamera().getLocation().subtract(
+            camhand.getGroundPoint());
+        camhand.setLocation(offset.addLocal(width / 2, height / 2, 0f));
     }
 
     /**
@@ -50,12 +54,14 @@ public class CameraDolly extends EditorTool
      */
     public void suspend ()
     {
-        if (_savedpos != null) {
+        if (_camloc != null) {
             return;
         }
-        _savedpos = getCameraPosition();
-        _panel.view.removeListener(this);
-        _ctx.getRootNode().removeController(_updater);
+        Camera camera = _ctx.getCameraHandler().getCamera();
+        _camloc = new Vector3f(camera.getLocation());
+        _camleft = new Vector3f(camera.getLeft());
+        _camup = new Vector3f(camera.getUp());
+        _camdir = new Vector3f(camera.getDirection());
     }
 
     /**
@@ -63,12 +69,12 @@ public class CameraDolly extends EditorTool
      */
     public void resume ()
     {
-        if (_savedpos == null) {
+        if (_camloc == null) {
             return;
         }
-        setCameraPosition(_savedpos);
-        _savedpos = null;
-        _ctx.getRootNode().addController(_updater);
+        _ctx.getCameraHandler().getCamera().setFrame(
+            _camloc, _camleft, _camup, _camdir);
+        _camloc = null;
     }
 
     // documentation inherited
@@ -89,19 +95,22 @@ public class CameraDolly extends EditorTool
     public void mouseDragged (MouseEvent e)
     {
         int dx = _lastX - e.getX(), dy =  _lastY - e.getY();
-        Position pos = getCameraPosition();
         switch(_lastButton) {
             case MouseEvent.BUTTON1: // left rotates
-                pos.azimuth += dx*ANGULAR_SCALE;
-                pos.addToElevation(dy * ANGULAR_SCALE);
+                _ctx.getCameraHandler().orbitCamera(dx * ANGULAR_SCALE);
+                _ctx.getCameraHandler().tiltCamera(dy * ANGULAR_SCALE);
                 break;
 
-            case MouseEvent.BUTTON2: // right "zooms"
-                pos.addToDistance(dy * LINEAR_SCALE);
+            case MouseEvent.BUTTON2: // right pans
+                _ctx.getCameraHandler().panCamera(dx * LINEAR_SCALE,
+                    dy * LINEAR_SCALE);
+                break;
+            
+            case MouseEvent.BUTTON3: // middle "zooms"
+                _ctx.getCameraHandler().zoomCamera(dy * LINEAR_SCALE);
                 break;
         }
-        setCameraPosition(pos);
-
+        
         _lastX = e.getX();
         _lastY = e.getY();
     }
@@ -109,37 +118,32 @@ public class CameraDolly extends EditorTool
     @Override // documentation inherited
     public void mouseWheeled (MouseEvent e)
     {
-        Position pos = getCameraPosition();
-        pos.addToDistance(e.getDelta() * 10 * LINEAR_SCALE);
-        setCameraPosition(pos);
+        _ctx.getCameraHandler().zoomCamera(e.getDelta() * 10 * LINEAR_SCALE);
     }
 
     // documentation inherited from interface KeyListener
     public void keyPressed (KeyEvent e)
     {
         int code = e.getKeyCode();
+        CameraHandler camhand = _ctx.getCameraHandler();
         switch (code) {
-            case KeyInput.KEY_Q: _dvel = +LINEAR_SPEED; _dcode = code; break;
-            case KeyInput.KEY_W: _evel = +ANGULAR_SPEED; _ecode = code; break;
-            case KeyInput.KEY_E: _dvel = -LINEAR_SPEED; _dcode = code; break;
-            case KeyInput.KEY_A: _avel = -ANGULAR_SPEED; _acode = code; break;
-            case KeyInput.KEY_S: _evel = -ANGULAR_SPEED; _ecode = code; break;
-            case KeyInput.KEY_D: _avel = +ANGULAR_SPEED; _acode = code; break;
+            case KeyInput.KEY_Q: camhand.zoomCamera(+5f); break;
+            case KeyInput.KEY_W: camhand.panCamera(0f, +5f); break;
+            case KeyInput.KEY_E: camhand.zoomCamera(-5f); break;
+            case KeyInput.KEY_A: camhand.panCamera(-5f, 0f); break;
+            case KeyInput.KEY_S: camhand.panCamera(0f, -5f); break;
+            case KeyInput.KEY_D: camhand.panCamera(+5f, 0f); break;
+            case KeyInput.KEY_UP: camhand.tiltCamera(FastMath.PI * 0.01f); break;
+            case KeyInput.KEY_DOWN: camhand.tiltCamera(-FastMath.PI * 0.01f); break;
+            case KeyInput.KEY_LEFT: camhand.orbitCamera(-FastMath.PI * 0.01f); break;
+            case KeyInput.KEY_RIGHT: camhand.orbitCamera(+FastMath.PI * 0.01f); break;
         }
     }
 
     // documentation inherited from interface KeyListener
     public void keyReleased (KeyEvent e)
     {
-        int code = e.getKeyCode();
-        switch (code) {
-             case KeyInput.KEY_Q: _dvel = (_dcode == code) ? 0f : _dvel; break;
-             case KeyInput.KEY_W: _evel = (_ecode == code) ? 0f : _evel; break;
-             case KeyInput.KEY_E: _dvel = (_dcode == code) ? 0f : _dvel; break;
-             case KeyInput.KEY_A: _avel = (_acode == code) ? 0f : _avel; break;
-             case KeyInput.KEY_S: _evel = (_ecode == code) ? 0f : _evel; break;
-             case KeyInput.KEY_D: _avel = (_acode == code) ? 0f : _avel; break;
-        }
+        // no-op
     }
 
     // documentation inherited
@@ -148,109 +152,17 @@ public class CameraDolly extends EditorTool
         return new JPanel();
     }
 
-    /**
-     * Updates the position of the camera since the elapsed time.
-     */
-    protected void updateCamera (float time)
-    {
-        Position pos = getCameraPosition();
-        pos.azimuth += _avel * time;
-        pos.addToElevation(_evel * time);
-        pos.addToDistance(_dvel * time);
-        setCameraPosition(pos);
-    }
-
-    /**
-     * Gets the azimuth, elevation, and distance from the camera.
-     */
-    protected Position getCameraPosition ()
-    {
-        // find out what we're looking at if it's not already set
-        if (_target == null) {
-            recenter();
-        }
-
-        // use the vector from target to camera to determine position
-        Vector3f vec = _ctx.getCameraHandler().getCamera().
-            getLocation().subtract(_target);
-        float distance = vec.length();
-        vec.normalizeLocal();
-        return new Position(FastMath.atan2(vec.y, vec.x), FastMath.asin(vec.z),
-            distance);
-    }
-
-    /**
-     * Sets the camera's position based on the current parameters.
-     */
-    protected void setCameraPosition (Position pos)
-    {
-        // determine the vector from target to camera
-        float cosel = FastMath.cos(pos.elevation);
-        Vector3f vec = new Vector3f(FastMath.cos(pos.azimuth)*cosel,
-            FastMath.sin(pos.azimuth)*cosel, FastMath.sin(pos.elevation));
-        Vector3f loc = vec.mult(pos.distance).addLocal(_target),
-            dir = vec.negate(),
-            left = Vector3f.UNIT_Z.cross(dir).normalize(),
-            up = dir.cross(left);
-
-        _ctx.getCameraHandler().getCamera().setFrame(loc, left, up, dir);
-    }
-
-    /** Represents a camera position in spherical coordinates about the
-     * target. */
-    protected static class Position
-    {
-        public float azimuth, elevation, distance;
-
-        public Position (float azimuth, float elevation, float distance)
-        {
-            this.azimuth = azimuth;
-            this.elevation = elevation;
-            this.distance = distance;
-        }
-
-        public void addToDistance (float delta)
-        {
-            distance = Math.min(Math.max(distance + delta, MIN_DISTANCE),
-                MAX_DISTANCE);
-        }
-
-        public void addToElevation (float delta)
-        {
-            elevation = Math.min(Math.max(elevation + delta, MIN_ELEVATION),
-                MAX_ELEVATION);
-        }
-    }
-
     /** The last mouse coordinates and button pressed. */
     protected int _lastX, _lastY, _lastButton;
 
-    /** The point at which the camera is looking. */
-    protected Vector3f _target;
-
-    /** Camera azimuth, elevation, and distance velocities. */
-    protected float _avel, _evel, _dvel;
-
-    /** The last keys pressed for azimuth, elevation, and distance. */
-    protected int _acode, _ecode, _dcode;
-
-    /** The camera update controller. */
-    protected Controller _updater;
-
-    /** When suspended, the saved position to restore on resumption. */
-    protected Position _savedpos;
-
+    /** Camera position saved on suspension. */
+    protected Vector3f _camloc, _camleft, _camup, _camdir;
+    
     /** The angular scale (radians per pixel). */
     protected static final float ANGULAR_SCALE = FastMath.PI / 1000;
 
-    /** The angular speed (radians per second). */
-    protected static final float ANGULAR_SPEED = FastMath.PI / 2;
-
     /** The linear scale (world units per pixel). */
-    protected static final float LINEAR_SCALE = 1.0f;
-
-    /** The linear speed (world units per second). */
-    protected static final float LINEAR_SPEED = 300f;
+    protected static final float LINEAR_SCALE = 0.25f;
 
     /** The minimum distance from the target. */
     protected static final float MIN_DISTANCE = 50.0f;

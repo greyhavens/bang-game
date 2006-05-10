@@ -57,6 +57,10 @@ public class EditorPanel extends JPanel
      * controller. */
     public JMenuItem undo, redo; 
     
+    /** The recenter camera menu item, which is enabled and disabled by the
+     * viewpoint editor. */
+    public JMenuItem recenter;
+    
     /** Creates the main panel and its sub-interfaces. */
     public EditorPanel (EditorContext ctx, EditorController ctrl)
     {
@@ -173,7 +177,10 @@ public class EditorPanel extends JPanel
         createCheckBoxMenuItem(view, msgs.get("m.menu_highlight"),
             KeyEvent.VK_H, KeyEvent.VK_H, EditorController.TOGGLE_HIGHLIGHTS,
             false);
-                    
+        view.addSeparator();
+        recenter = createMenuItem(view, msgs.get("m.menu_recenter_camera"),
+            KeyEvent.VK_R, KeyEvent.VK_R, EditorController.RECENTER_CAMERA);
+            
         // add our side panel to the main display
         add(sidePanel, HGroupLayout.FIXED);
     }
