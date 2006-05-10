@@ -854,13 +854,10 @@ public class BangManager extends GameManager
         if (user != null) {
             for (int ii = 0; ii < units.length; ii++) {
                 UnitConfig config = units[ii].getConfig();
-                Badge.Type btype = (config.badgeCode == 0) ?
-                    null : Badge.getType(config.badgeCode);
-                if (config.scripCost < 0 ||
-                    (btype != null && !user.holdsBadge(btype))) {
+                if (config.scripCost < 0 || !config.hasAccess(user)) {
                     log.warning("Player requested to purchase illegal unit " +
-                                "[who=" + user.who() + ", unit=" + config.type +
-                                ", badge=" + btype + "].");
+                                "[who=" + user.who() +
+                                ", unit=" + config.type + "].");
                     return;
                 }
             }

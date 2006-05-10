@@ -100,7 +100,7 @@ public class UnitPalette extends IconPalette
     {
         UnitConfig config = UnitConfig.getConfig(unit.getType());
         addIcon(createIcon(_ctx, unit.getItemId(), config,
-                           unit.getName().toString(), false));
+                           unit.getGivenName().toString(), false));
     }
 
     protected void removeUnit (int itemId)

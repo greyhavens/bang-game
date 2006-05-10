@@ -43,13 +43,7 @@ public class InventoryPalette extends IconPalette
             if (!_itemp.includeItem(item)) {
                 continue;
             }
-
-            ItemIcon icon = item.createIcon();
-            if (icon == null) {
-                continue;
-            }
-            icon.setItem(_ctx, item);
-            addIcon(icon);
+            addIcon(new ItemIcon(_ctx, item));
             added++;
         }
     }

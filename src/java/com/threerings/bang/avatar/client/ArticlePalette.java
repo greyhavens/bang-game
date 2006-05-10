@@ -56,11 +56,7 @@ public class ArticlePalette extends IconPalette
                 !((Article)item).getSlot().equals(slot)) {
                 continue;
             }
-            ItemIcon icon = item.createIcon();
-            if (icon == null) {
-                continue;
-            }
-            icon.setItem(_ctx, item);
+            ItemIcon icon = new ItemIcon(_ctx, item);
             addIcon(icon);
 
             // if this is the currently worn article, select it

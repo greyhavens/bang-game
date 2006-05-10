@@ -65,7 +65,7 @@ public class RanchManager extends PlaceManager
         // create and deliver the unit to the player; all the heavy lifting is
         // handled by the financiial action
         BigShotItem unit = new BigShotItem(user.playerId, config.type);
-        unit.setName(name);
+        unit.setGivenName(name);
         new RecruitBigShotAction(user, config, unit, listener).start();
     }
 

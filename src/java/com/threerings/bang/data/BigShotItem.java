@@ -3,9 +3,8 @@
 
 package com.threerings.bang.data;
 
+import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
-
-import com.threerings.bang.client.ItemIcon;
 
 /**
  * Represents a Big Shot unit owned by a player.
@@ -28,13 +27,13 @@ public class BigShotItem extends Item
     }
 
     /** Configures the name of this Big Shot unit. */
-    public void setName (Name name)
+    public void setGivenName (Name name)
     {
         _name = name.toString();
     }
 
-    /** Returns the name of this Big Shot unit. */
-    public Name getName ()
+    /** Returns the name given to this Big Shot unit by the player. */
+    public Name getGivenName ()
     {
         return new Name(_name);
     }
@@ -47,9 +46,23 @@ public class BigShotItem extends Item
     }
 
     @Override // documentation inherited
-    public ItemIcon createIcon ()
+    public String getName ()
     {
-        return null;
+        return MessageBundle.taint(_name);
+    }
+
+    @Override // documentation inherited
+    public String getTooltip ()
+    {
+        String msg = MessageBundle.compose(
+            "m.unit_icon", "m." + _type, "m." + _type + "_descrip");
+        return MessageBundle.qualify(BangCodes.UNITS_MSGS, msg);
+    }
+
+    @Override // documentation inherited
+    public String getIconPath ()
+    {
+        return "units/" + _type + "/icon.png";
     }
 
     protected String _type;

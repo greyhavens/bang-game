@@ -43,10 +43,7 @@ public class CardPalette extends IconPalette
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Object item = iter.next();
             if (item instanceof CardItem) {
-                CardItem card = (CardItem)item;
-                ItemIcon icon = card.createIcon();
-                icon.setItem(ctx, card);
-                addIcon(icon);
+                addIcon(new ItemIcon(ctx, (CardItem)item));
             }
         }
 

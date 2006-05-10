@@ -21,8 +21,8 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BadgeIcon;
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -171,8 +171,7 @@ public class GameOverView extends SteelWindow
                 bcont.setStyleClass("endgame_border");
                 txt = msgs.get("m.endgame_badge");
                 bcont.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
-                bcont.add(new BadgeIcon().setItem(ctx, award.badge),
-                          BorderLayout.CENTER);
+                bcont.add(new ItemIcon(ctx, award.badge), BorderLayout.CENTER);
                 String reward = award.badge.getReward();
                 if (reward != null) {
                     txt = _ctx.xlate(BangCodes.BADGE_MSGS, reward);

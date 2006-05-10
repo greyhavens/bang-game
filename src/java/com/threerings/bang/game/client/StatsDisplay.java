@@ -18,8 +18,8 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BadgeIcon;
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
@@ -102,8 +102,7 @@ public class StatsDisplay extends BDecoratedWindow
                 awards.add(
                     new BLabel(msgs.get("m.stats_badges"), "stats_info"));
                 hbox = GroupLayout.makeHBox(GroupLayout.LEFT);
-                hbox.add(new BadgeIcon().setItem(
-                             _ctx, bangobj.awards[pidx].badge));
+                hbox.add(new ItemIcon(_ctx, bangobj.awards[pidx].badge));
                 awards.add(hbox);
             }
 

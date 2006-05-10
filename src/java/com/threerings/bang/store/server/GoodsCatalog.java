@@ -21,7 +21,10 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
+import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.data.UnitPass;
 import com.threerings.bang.game.data.card.Card;
+import com.threerings.bang.server.ServerConfig;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -31,6 +34,7 @@ import com.threerings.bang.store.data.CardPackGood;
 import com.threerings.bang.store.data.CardTripletGood;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.PurseGood;
+import com.threerings.bang.store.data.UnitPassGood;
 
 import static com.threerings.bang.Log.log;
 
@@ -88,6 +92,18 @@ public class GoodsCatalog
             ArticleGood good = new ArticleGood(
                 article.name, article.scrip, article.coins);
             registerGood(article.townId, good, pf);
+        }
+
+        // register our unit passes
+        pf = new UnitPassProviderFactory();
+        UnitConfig[] units = UnitConfig.getTownUnits(ServerConfig.getTownId());
+        for (int ii = 0; ii < units.length; ii++) {
+            UnitConfig uc = units[ii];
+            if (uc.badgeCode != 0 && uc.scripCost > 0) {
+                UnitPassGood good =
+                    new UnitPassGood(uc.type, uc.scripCost, uc.coinCost);
+                registerGood(ServerConfig.getTownId(), good, pf);
+            }
         }
     }
 
@@ -204,6 +220,20 @@ public class GoodsCatalog
                             InvocationCodes.INTERNAL_ERROR);
                     }
                     return item;
+                }
+            };
+        }
+    }
+
+    /** Used for {@link UnitPassGood}s. */
+    protected class UnitPassProviderFactory extends ProviderFactory {
+        public Provider createProvider (
+            PlayerObject user, Good good, Object[] args)
+            throws InvocationException {
+            return new ItemProvider(user, good, args) {
+                protected Item createItem () throws InvocationException {
+                    String type = ((UnitPassGood)_good).getUnitType();
+                    return new UnitPass(_user.playerId, type);
                 }
             };
         }

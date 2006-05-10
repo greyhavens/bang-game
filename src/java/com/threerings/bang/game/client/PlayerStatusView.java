@@ -34,8 +34,8 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
-import com.threerings.bang.client.CardItemIcon;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -304,7 +304,8 @@ public class PlayerStatusView extends BContainer
             _ctx.loadImage("cards/" + card.getType() + "/icon.png"));
         BButton btn = new BButton(icon, "" + card.cardId);
         btn.setStyleClass("card_button");
-        btn.setTooltipText(CardItemIcon.getTooltipText(_ctx, card.getType()));
+        btn.setTooltipText(_ctx.xlate(BangCodes.CARDS_MSGS,
+                                      CardItem.getTooltipText(card.getType())));
         btn.addListener(this);
         return btn;
     }

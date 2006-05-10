@@ -25,6 +25,7 @@ import com.threerings.bang.ranch.client.UnitPalette;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
@@ -242,7 +243,8 @@ public class StatusView extends BWindow
     protected static final InventoryPalette.Predicate INV_PRED =
         new InventoryPalette.Predicate() {
         public boolean includeItem (Item item) {
-            return !(item instanceof Badge) && !(item instanceof Article);
+            return !(item instanceof Badge) && !(item instanceof Article) &&
+                !(item instanceof BigShotItem);
         }
     };
 

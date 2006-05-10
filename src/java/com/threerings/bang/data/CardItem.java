@@ -3,8 +3,8 @@
 
 package com.threerings.bang.data;
 
-import com.threerings.bang.client.CardItemIcon;
-import com.threerings.bang.client.ItemIcon;
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.card.Card;
 
 /**
@@ -13,6 +13,16 @@ import com.threerings.bang.game.data.card.Card;
  */
 public class CardItem extends Item
 {
+    /**
+     * Returns a tooltip explaining the specified type of card.
+     */
+    public static String getTooltipText (String type)
+    {
+        String msg = MessageBundle.compose(
+            "m.card_icon", "m." + type, "m." + type + "_tip");
+        return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
+    }
+
     /** A blank constructor used during unserialization. */
     public CardItem ()
     {
@@ -80,9 +90,23 @@ public class CardItem extends Item
     }
 
     @Override // documentation inherited
-    public ItemIcon createIcon ()
+    public String getName ()
     {
-        return new CardItemIcon();
+        String msg = MessageBundle.compose(
+            "m.card_item", "m." + _type, MessageBundle.taint(" x" + _quantity));
+        return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
+    }
+
+    @Override // documentation inherited
+    public String getTooltip ()
+    {
+        return getTooltipText(_type);
+    }
+
+    @Override // documentation inherited
+    public String getIconPath ()
+    {
+        return "cards/" + _type + "/card.png";
     }
 
     protected String _type;

@@ -162,6 +162,20 @@ public class PlayerObject extends BodyObject
         return false;
     }
 
+    /**
+     * Returns true if this player holds a pass for the specified type of unit.
+     */
+    public boolean holdsPass (String unit)
+    {
+        for (Item item : inventory) {
+            if (item instanceof UnitPass &&
+                ((UnitPass)item).getUnitType().equals(unit)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override // documentation inherited
     public BangTokenRing getTokens ()
     {

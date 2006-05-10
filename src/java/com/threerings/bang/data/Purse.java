@@ -5,8 +5,6 @@ package com.threerings.bang.data;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.ItemIcon;
-import com.threerings.bang.client.PurseIcon;
 import com.threerings.bang.data.BangCodes;
 
 /**
@@ -101,29 +99,22 @@ public class Purse extends Item
         return _townIndex;
     }
 
-    /**
-     * Returns the path to the icon to use for this purse.
-     */
-    public String getIconPath ()
-    {
-        return getIconPath(_townIndex);
-    }
-
-    /**
-     * Returns a qualified translatable string describing this purse.
-     */
+    @Override // documentation inherited
     public String getName ()
     {
         return getName(_townIndex);
     }
 
-    /**
-     * Returns a qualified translatable string to display in a tooltip when the
-     * player is hovering over this purse's icon.
-     */
+    @Override // documentation inherited
     public String getTooltip ()
     {
         return getTooltip(_townIndex);
+    }
+
+    @Override // documentation inherited
+    public String getIconPath ()
+    {
+        return getIconPath(_townIndex);
     }
 
     /**
@@ -132,12 +123,6 @@ public class Purse extends Item
     public float getPurseBonus ()
     {
         return PURSE_BONUS[_townIndex];
-    }
-
-    @Override // documentation inherited
-    public ItemIcon createIcon ()
-    {
-        return new PurseIcon();
     }
 
     protected int _townIndex;

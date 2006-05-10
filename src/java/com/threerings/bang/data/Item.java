@@ -5,11 +5,13 @@ package com.threerings.bang.data;
 
 import java.io.IOException;
 
+import com.jmex.bui.icon.ImageIcon;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.bang.client.ItemIcon;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * The base class for all items in Bang! Howdy.
@@ -60,16 +62,28 @@ public abstract class Item
     }
 
     /**
-     * Creates an icon for use in displaying this item. The icon <em>must</em>
-     * be configured with the item and a reference to the client context via a
-     * subsequent call to {@link ItemIcon#setItem}. If this method returns
-     * null, it will be assumed that items of this type should not appear in
-     * the standard inventory displays (Big Shot items, for example, are
-     * handled specially, as perhaps will avatar items).
+     * Returns a qualified translatable string describing this item.
      */
-    public ItemIcon createIcon ()
+    public abstract String getName ();
+
+    /**
+     * Returns a qualified translatable string to display in a tooltip when the
+     * player is hovering over this item's icon.
+     */
+    public abstract String getTooltip ();
+
+    /**
+     * Returns the path to the icon to use for this item.
+     */
+    public abstract String getIconPath ();
+
+    /**
+     * If an item needs to colorize its icon image or otherwise do something
+     * special, it can override this method.
+     */
+    public ImageIcon createIcon (BasicContext ctx, String iconPath)
     {
-        return new ItemIcon();
+        return new ImageIcon(ctx.loadImage(iconPath));
     }
 
     /**

@@ -109,7 +109,7 @@ public class PlayerManager
 
         // create the BigShot item and stuff it on into their inventory
         final BigShotItem bsitem = new BigShotItem(user.playerId, config.type);
-        bsitem.setName(name);
+        bsitem.setGivenName(name);
 
         // stick the new item in the database and in their inventory
         BangServer.invoker.postUnit(new PersistingUnit(listener) {

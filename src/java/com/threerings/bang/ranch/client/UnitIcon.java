@@ -9,7 +9,6 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
-import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
@@ -41,8 +40,7 @@ public class UnitIcon extends PaletteIcon
         // if we were supplied with a player object; disable ourselves if they
         // do not have access to this unit (and tack on the units' badge
         // requirement tip to our tooltip
-        if (player != null && _config.badgeCode != 0 &&
-            !player.holdsBadge(Badge.getType(_config.badgeCode))) {
+        if (player != null && !_config.hasAccess(player)) {
             setEnabled(false);
             setAlpha(0.5f);
             setTooltipText(getTooltipText() + "\n\n" + 

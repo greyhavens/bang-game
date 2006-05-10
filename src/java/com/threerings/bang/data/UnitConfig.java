@@ -86,10 +86,10 @@ public class UnitConfig
     /** The type of unit this unit duplicates into. */
     public String dupeType;
 
-    /** The cost of this unit in scrip. */
+    /** The cost of this unit in scrip (or a pass for this unit). */
     public int scripCost;
 
-    /** The cost of this unit in coins. */
+    /** The cost of this unit in coins (or a pass for this unit). */
     public int coinCost;
 
     /** Our damage adjustments versus other modes and makes. */
@@ -112,48 +112,6 @@ public class UnitConfig
     public static String getName (String type)
     {
         return MessageBundle.qualify(BangCodes.UNITS_MSGS, "m." + type);
-    }
-
-    /**
-     * Computes and returns the damage adjustment to be used when a unit
-     * of this type attacks a unit of the specified type.
-     */
-    public int getDamageAdjust (UnitConfig target)
-    {
-        return damageAdjust[target.mode.ordinal()] +
-            damageAdjust[MODE_COUNT + target.make.ordinal()];
-    }
-
-    /**
-     * Computes and returns the defense adjustment to be used when a unit
-     * of this type is attacked by a unit of the specified type.
-     */
-    public int getDefenseAdjust (UnitConfig attacker)
-    {
-        return defenseAdjust[attacker.mode.ordinal()] +
-            defenseAdjust[MODE_COUNT + attacker.make.ordinal()];
-    }
-
-    /** Returns a translatable name for this unit. */
-    public String getName ()
-    {
-        return getName(type);
-    }
-
-    /**
-     * Returns either "N" or "N - M" to indicate this unit's fire distance.
-     */
-    public String getDisplayFireDistance ()
-    {
-        return (minFireDistance == maxFireDistance) ?
-            String.valueOf(minFireDistance) :
-            minFireDistance + " - " + maxFireDistance;
-    }
-
-    /** Returns a string representation of this instance. */
-    public String toString ()
-    {
-        return StringUtil.fieldsToString(this);
     }
 
     /**
@@ -208,6 +166,64 @@ public class UnitConfig
         for (UnitConfig config : _types.values()) {
             System.err.println("" + config);
         }
+    }
+
+    /**
+     * Computes and returns the damage adjustment to be used when a unit
+     * of this type attacks a unit of the specified type.
+     */
+    public int getDamageAdjust (UnitConfig target)
+    {
+        return damageAdjust[target.mode.ordinal()] +
+            damageAdjust[MODE_COUNT + target.make.ordinal()];
+    }
+
+    /**
+     * Computes and returns the defense adjustment to be used when a unit
+     * of this type is attacked by a unit of the specified type.
+     */
+    public int getDefenseAdjust (UnitConfig attacker)
+    {
+        return defenseAdjust[attacker.mode.ordinal()] +
+            defenseAdjust[MODE_COUNT + attacker.make.ordinal()];
+    }
+
+    /** Returns a translatable name for this unit. */
+    public String getName ()
+    {
+        return getName(type);
+    }
+
+    /**
+     * Returns either "N" or "N - M" to indicate this unit's fire distance.
+     */
+    public String getDisplayFireDistance ()
+    {
+        return (minFireDistance == maxFireDistance) ?
+            String.valueOf(minFireDistance) :
+            minFireDistance + " - " + maxFireDistance;
+    }
+
+    /**
+     * Returns true if this player has access to this unit for use in game.
+     */
+    public boolean hasAccess (PlayerObject user)
+    {
+        if (badgeCode != 0) {
+            if (user.holdsBadge(Badge.getType(badgeCode))) {
+                return true;
+            } else if (user.holdsPass(type)) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /** Returns a string representation of this instance. */
+    public String toString ()
+    {
+        return StringUtil.fieldsToString(this);
     }
 
     protected static void registerUnit (String type)

@@ -3,10 +3,23 @@
 
 package com.threerings.bang.data;
 
-import com.samskivert.util.StringUtil;
+import com.jmex.bui.BImage;
+import com.jmex.bui.icon.ImageIcon;
 
-import com.threerings.bang.client.ArticleIcon;
-import com.threerings.bang.client.ItemIcon;
+import com.samskivert.util.StringUtil;
+import com.threerings.util.MessageBundle;
+
+import com.threerings.media.image.Colorization;
+import com.threerings.media.image.ImageUtil;
+
+import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.util.ArticleCatalog;
+import com.threerings.bang.avatar.util.AvatarLogic;
+
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.util.BasicContext;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Represents an article of clothing or an accessory.
@@ -38,15 +51,6 @@ public class Article extends Item
     }
 
     /**
-     * Returns the name code for this article. This can be used to create a
-     * translation string to obtain a human readable name.
-     */
-    public String getName ()
-    {
-        return _name;
-    }
-
-    /**
      * Returns the component ids (and associated colorizations) for the various
      * avatar components that should be "applied" when wearing this article.
      */
@@ -56,9 +60,43 @@ public class Article extends Item
     }
 
     @Override // documentation inherited
-    public ItemIcon createIcon ()
+    public String getName ()
     {
-        return new ArticleIcon();
+        return MessageBundle.qualify(AvatarCodes.ARTICLE_MSGS, "m." + _name);
+    }
+
+    @Override // documentation inherited
+    public String getTooltip ()
+    {
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.article_tip");
+    }
+
+    @Override // documentation inherited
+    public String getIconPath ()
+    {
+        return "goods/articles/" + _name + ".png";
+    }
+
+    @Override // documentation inherited
+    public ImageIcon createIcon (BasicContext ctx, String iconPath)
+    {
+        AvatarLogic al = ctx.getAvatarLogic();
+        ArticleCatalog.Article aca = al.getArticleCatalog().getArticle(_name);
+        if (aca == null) {
+            log.warning("Article no longer exists? " + this);
+            return super.createIcon(ctx, iconPath);
+        }
+
+        Colorization[] zations = al.decodeColorizations(
+            getComponents()[0], al.getColorizationClasses(aca));
+        if (zations == null) {
+            return super.createIcon(ctx, iconPath);
+        }
+
+        BImage image = new BImage(
+            ImageUtil.recolorImage(
+                ctx.getImageCache().getBufferedImage(iconPath), zations));
+        return new ImageIcon(image);
     }
 
     @Override // documentation inherited

@@ -61,7 +61,6 @@ import com.threerings.bang.data.BangAuthResponseData;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
-import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;

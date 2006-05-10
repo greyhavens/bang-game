@@ -14,8 +14,6 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 
-import com.threerings.bang.client.BadgeIcon;
-import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -486,9 +484,29 @@ public class Badge extends Item
     }
 
     @Override // documentation inherited
-    public ItemIcon createIcon ()
+    public String getName ()
     {
-        return new BadgeIcon();
+        return MessageBundle.qualify(BangCodes.BADGE_MSGS, getType().key());
+    }
+
+    @Override // documentation inherited
+    public String getTooltip ()
+    {
+        String reward = getReward(), msg;
+        if (reward == null) {
+            msg = MessageBundle.compose("m.badge_icon_nil", getType().key());
+        } else {
+            msg = MessageBundle.compose(
+                "m.badge_icon", getType().key(), reward);
+        }
+        return MessageBundle.qualify(BangCodes.BADGE_MSGS, msg);
+    }
+
+    @Override // documentation inherited
+    public String getIconPath ()
+    {
+        String id = Integer.toHexString(getType().code());
+        return "badges/" + id.substring(0,1) + "/" + id + ".png";
     }
 
     @Override // documentation inherited
