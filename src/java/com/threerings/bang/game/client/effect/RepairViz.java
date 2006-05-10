@@ -110,11 +110,11 @@ public class RepairViz extends ParticleEffectViz
 
             // if the target is on screen, determine its location and size in
             // screen space
+            BoundingVolume bounds = _target.getWorldBound();
             if (_target.getLastFrustumIntersection() ==
-                    Camera.OUTSIDE_FRUSTUM) {
+                Camera.OUTSIDE_FRUSTUM || bounds == null) {
                 return;
             }
-            BoundingVolume bounds = _target.getWorldBound();
             bounds.getCenter(_tmp);
             DisplaySystem display = _ctx.getDisplay();
             display.getScreenCoordinates(_tmp, _loc);
