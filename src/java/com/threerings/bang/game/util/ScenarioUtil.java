@@ -62,8 +62,8 @@ public class ScenarioUtil
     static {
         _scenmap.put(BangCodes.FRONTIER_TOWN,
                      ScenarioCodes.FRONTIER_TOWN_SCENARIOS);
-        _scenmap.put(BangCodes.INDIAN_VILLAGE,
-                     ScenarioCodes.INDIAN_VILLAGE_SCENARIOS);
+        _scenmap.put(BangCodes.INDIAN_POST,
+                     ScenarioCodes.INDIAN_POST_SCENARIOS);
         _scenmap.put(BangCodes.BOOM_TOWN,
                      ScenarioCodes.BOOM_TOWN_SCENARIOS);
         _scenmap.put(BangCodes.GHOST_TOWN,

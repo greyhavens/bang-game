@@ -61,7 +61,7 @@ public class GoodsCatalog
         // register our purses
         ProviderFactory pf = new PurseProviderFactory();
         registerGood(BangCodes.FRONTIER_TOWN, new PurseGood(1, 1000, 1), pf);
-        registerGood(BangCodes.INDIAN_VILLAGE, new PurseGood(2, 2500, 2), pf);
+        registerGood(BangCodes.INDIAN_POST, new PurseGood(2, 2500, 2), pf);
         registerGood(BangCodes.BOOM_TOWN, new PurseGood(3, 5000, 4), pf);
         registerGood(BangCodes.GHOST_TOWN, new PurseGood(4, 7500, 5), pf);
         registerGood(BangCodes.CITY_OF_GOLD, new PurseGood(5, 15000, 8), pf);
