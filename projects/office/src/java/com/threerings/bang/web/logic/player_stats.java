@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 
 import com.samskivert.servlet.util.ParameterUtil;
+import com.samskivert.util.Tuple;
 import com.samskivert.velocity.InvocationContext;
 
 import com.threerings.user.OOOUser;
@@ -33,10 +34,12 @@ public class player_stats extends AdminLogic
             ParameterUtil.getIntParameter(
                 ctx.getRequest(), "type", 0, "error.invalid_type"));
         if (type != null) {
-            final ArrayList<String> stats = new ArrayList<String>();
+            final ArrayList<Tuple<Integer,String>> stats =
+                new ArrayList<Tuple<Integer,String>>();
             StatRepository.Processor proc = new StatRepository.Processor() {
                 public void process (int playerId, Stat stat) {
-                    stats.add(stat.valueToString());
+                    stats.add(new Tuple<Integer,String>(
+                                  playerId, stat.valueToString()));
                 }
             };
             app.getStatRepository().processStats(proc, type);
