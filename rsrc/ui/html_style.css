@@ -37,3 +37,8 @@ p {
   font-family: "Helvetica";
   font-size: 10;
 }
+
+.help { 
+  font-family: sansserif;
+  font-size: 14;
+}

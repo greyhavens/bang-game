@@ -3,6 +3,10 @@
 
 package com.threerings.bang.client;
 
+import java.io.StringReader;
+import java.util.logging.Level;
+import javax.swing.text.html.HTMLDocument;
+
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 
@@ -14,8 +18,9 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.text.HTMLView;
+import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
@@ -26,6 +31,8 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Handles some shared stuff for our shop views (General Store, Bank, Barber,
@@ -40,21 +47,42 @@ public abstract class ShopView extends BWindow
     public void showHelp ()
     {
         if (_intro == null) {
-            _intro = new BWindow(_ctx.getStyleSheet(), new BorderLayout(5, 15));
+            _intro = new BWindow(_ctx.getStyleSheet(),
+                                 GroupLayout.makeVStretch()) {
+                protected Dimension computePreferredSize (int wh, int hh) {
+                    Dimension d = super.computePreferredSize(wh, hh);
+                    d.width = Math.min(d.width, 450);
+                    return d;
+                }
+            };
+            ((GroupLayout)_intro.getLayoutManager()).setOffAxisPolicy(
+                GroupLayout.CONSTRAIN);
+            ((GroupLayout)_intro.getLayoutManager()).setGap(15);
             _intro.setModal(true);
             _intro.setStyleClass("decoratedwindow");
-            _intro.add(new BLabel(_msgs.get("m.intro_title"), "dialog_title"),
-                       BorderLayout.NORTH);
-            _intro.add(new BLabel(_msgs.get("m.intro_text"), "intro_body"),
-                       BorderLayout.CENTER);
+            _intro.add(new BLabel(_msgs.get("m.intro_title"), "window_title"),
+                       GroupLayout.FIXED);
+
+            // set up our HTML
+            HTMLView html = new HTMLView();
+            html.setStyleClass("intro_body");
+            HTMLDocument doc = new HTMLDocument(BangUI.css);
+            String text = _msgs.get("m.intro_text");
+            try {
+                html.getEditorKit().read(new StringReader(text), doc, 0);
+                html.setContents(doc);
+            } catch (Throwable t) {
+                log.log(Level.WARNING, "Failed to parse shop help " +
+                        "[contents=" + text + "].", t);
+            }
+            _intro.add(html);
+
             BContainer btns = GroupLayout.makeHBox(GroupLayout.CENTER);
             btns.add(new BButton(_msgs.get("m.dismiss"), _ctrl, "dismiss"));
-            _intro.add(btns, BorderLayout.SOUTH);
+            _intro.add(btns, GroupLayout.FIXED);
         }
         if (!_intro.isAdded()) {
-            _ctx.getRootNode().addWindow(_intro);
-            _intro.pack(600, -1);
-            _intro.center();
+            _ctx.getBangClient().displayPopup(_intro, true, 450);
         }
     }
 
@@ -143,7 +171,7 @@ public abstract class ShopView extends BWindow
 
         // clear out our intro if it's still showing
         if (_intro != null && _intro.isAdded()) {
-            _intro.dismiss();
+            _ctx.getBangClient().clearPopup(_intro, true);
         }
     }
 
@@ -185,7 +213,7 @@ public abstract class ShopView extends BWindow
     protected ActionListener _ctrl = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             if ("dismiss".equals(event.getAction())) {
-                _intro.dismiss();
+                _ctx.getBangClient().clearPopup(_intro, true);
             } else if ("help".equals(event.getAction())) {
                 showHelp();
             }

@@ -20,7 +20,7 @@ window {
 
 decoratedwindow {
   background: image "ui/window/background.png" framexy;
-  padding: 15;
+  padding: 25;
 }
 
 steelwindow {
@@ -49,9 +49,8 @@ menuitem:hover {
 }
 
 tooltip_window {
-  background: solid #FFFFFF;
-  border: 1 solid #000000;
-  padding: 5;
+  background: image "ui/popupmenu/background.png" framexy;
+  padding: 10;
 }
 
 tooltip_label {
