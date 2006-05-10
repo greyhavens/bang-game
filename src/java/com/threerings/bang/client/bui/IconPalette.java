@@ -338,7 +338,15 @@ public class IconPalette extends BContainer
             int selidx = _icons.indexOf(_selections.get(0));
             selidx = (selidx + delta + _icons.size()) % _icons.size();
             displayPage(selidx / (_rows*_cols), false);
-            _icons.get(selidx).setSelected(true);
+            // skip over disabled icons
+            int adjust = (delta > 0) ? 1 : -1;
+            for (int ii = 0; !_icons.get(selidx).isEnabled() &&
+                     ii < _icons.size()-1; ii++) {
+                selidx = (selidx + adjust + _icons.size()) % _icons.size();
+            }
+            if (_icons.get(selidx).isEnabled()) {
+                _icons.get(selidx).setSelected(true);
+            }
         }
 
         // play a sound as this caused an icon to become selected as a result

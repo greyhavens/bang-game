@@ -33,7 +33,9 @@ import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.ranch.client.UnitPalette;
 import com.threerings.bang.ranch.client.UnitView;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
@@ -139,6 +141,7 @@ public class SelectionView extends SteelWindow
         // determine which units are available for selection
         ArrayList<UnitConfig> units = new ArrayList<UnitConfig>();
         CollectionUtil.addAll(units, UnitConfig.getTownUnits(_bangobj.townId));
+        PlayerObject user = _ctx.getUserObject();
         for (Iterator<UnitConfig> iter = units.iterator(); iter.hasNext(); ) {
             // filter out bigshots and special units
             UnitConfig uc = iter.next();
@@ -156,7 +159,7 @@ public class SelectionView extends SteelWindow
                 }
             }
         });
-        _units.setUnits(units.toArray(new UnitConfig[units.size()]));
+        _units.setUnits(units.toArray(new UnitConfig[units.size()]), true);
 
         _ready.setAction("pick_team");
         _ready.setEnabled(false);

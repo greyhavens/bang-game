@@ -94,6 +94,18 @@ public class Badge extends Item
             }
         },
 
+        // highest points badges
+        HIGHEST_POINTS_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.HIGHEST_POINTS) >= 500;
+            }
+        },
+        HIGHEST_POINTS_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.HIGHEST_POINTS) >= 1000;
+            }
+        },
+
         // consecutive event badges (wins means first place, losses means
         // fourth place only, not non-first place or even last place )
         CONSEC_WINS_1 {
@@ -384,7 +396,11 @@ public class Badge extends Item
 
     public static void main (String[] args) {
         for (Type type : EnumSet.allOf(Type.class)) {
-            System.err.println(type.key() + " = " + type);
+            if (args.length != 0) {
+                System.err.println(type + " = " + type.code());
+            } else {
+                System.err.println(type.key() + " = " + type);
+            }
         }
     }
 
@@ -517,7 +533,7 @@ public class Badge extends Item
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_orange");
         registerReward(Type.DISTANCE_MOVED_1, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_purple");
-        registerReward(Type.CONSEC_WINS_1, MessageBundle.compose(key, msg));
+        registerReward(Type.CONSEC_WINS_2, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_violet");
         registerReward(Type.GAMES_PLAYED_2, MessageBundle.compose(key, msg));
 
@@ -534,7 +550,7 @@ public class Badge extends Item
 
         key = "m.duds_color_enabled";
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_black");
-        registerReward(Type.CONSEC_WINS_2, MessageBundle.compose(key, msg));
+        registerReward(Type.CONSEC_WINS_3, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_leather");
         registerReward(Type.CARDS_PLAYED_1, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_orange");
@@ -543,6 +559,12 @@ public class Badge extends Item
         registerReward(Type.LOOKS_BOUGHT_1, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_violet");
         registerReward(Type.DUDS_BOUGHT_2, MessageBundle.compose(key, msg));
+
+        key = "m.unit_enabled";
+        msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.sharpshooter");
+        registerReward(Type.CONSEC_WINS_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.shotgunner");
+        registerReward(Type.HIGHEST_POINTS_1, MessageBundle.compose(key, msg));
     }
 
     /** The unique code for the type of this badge. */

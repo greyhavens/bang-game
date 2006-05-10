@@ -146,12 +146,6 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public int getCost ()
-    {
-        return _config.scripCost;
-    }
-
-    @Override // documentation inherited
     public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
     {
         if (target instanceof Unit) {

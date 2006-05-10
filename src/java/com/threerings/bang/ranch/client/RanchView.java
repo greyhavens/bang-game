@@ -3,6 +3,8 @@
 
 package com.threerings.bang.ranch.client;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EnumSet;
 
 import com.jmex.bui.BContainer;
@@ -59,8 +61,8 @@ public class RanchView extends ShopView
 
         // create our various tabs: recruitable big shots...
         _bigshots = new UnitPalette(ctx, _inspector, 4, 3);
-        _bigshots.setUnits(UnitConfig.getTownUnits(
-                               townId, UnitConfig.Rank.BIGSHOT));
+        _bigshots.setUnits(
+            UnitConfig.getTownUnits(townId, UnitConfig.Rank.BIGSHOT), false);
 
         // ...recruited big shots...
         _recruits = new UnitPalette(ctx, _inspector, 4, 3);
@@ -70,7 +72,13 @@ public class RanchView extends ShopView
         _units = new UnitPalette(ctx, _inspector, 4, 3);
         EnumSet<UnitConfig.Rank> ranks = EnumSet.of(
             UnitConfig.Rank.NORMAL, UnitConfig.Rank.SPECIAL);
-        _units.setUnits(UnitConfig.getTownUnits(townId, ranks));
+        UnitConfig[] units = UnitConfig.getTownUnits(townId, ranks);
+        Arrays.sort(units, new Comparator<UnitConfig>() {
+            public int compare (UnitConfig uc1, UnitConfig uc2) {
+                return Math.abs(uc1.badgeCode) - Math.abs(uc2.badgeCode);
+            };
+        });
+        _units.setUnits(units, true);
 
         // create our tabs
         add(_tabs = new HackyTabs(ctx, false, "ui/ranch/tab_", TABS, 136, 17) {

@@ -101,6 +101,10 @@ public class UnitConfig
     /** The cost of movement over each category of terrain. */
     public int[] movementAdjust = new int[TERRAIN_CATEGORY_COUNT];
 
+    /** The code for the badge required to use this unit in a game or zero if
+     * there is no badge requirement. */
+    public int badgeCode;
+
     /** A custom class for this unit, if one was specified. */
     public String unitClass;
 
@@ -216,6 +220,7 @@ public class UnitConfig
         UnitConfig config = new UnitConfig();
         config.type = type;
         config.unitClass = props.getProperty("class");
+        config.badgeCode = BangUtil.getIntProperty(type, props, "badge", 0);
 
         String modestr =
             BangUtil.requireProperty(type, props, "mode").toUpperCase();

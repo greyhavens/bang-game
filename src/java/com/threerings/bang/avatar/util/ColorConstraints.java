@@ -158,7 +158,7 @@ public class ColorConstraints
         preds.put("green", new HoldsBadge(Badge.Type.SHOTS_FIRED_1));
         preds.put("navyBlue", new HoldsBadge(Badge.Type.GAMES_PLAYED_3));
         preds.put("orange", new HoldsBadge(Badge.Type.UNITS_KILLED_3));
-        preds.put("purple", new HoldsBadge(Badge.Type.CONSEC_WINS_1));
+        preds.put("purple", new HoldsBadge(Badge.Type.CONSEC_WINS_2));
         preds.put("violet", new HoldsBadge(Badge.Type.GAMES_PLAYED_2));
 
         _preds.put("skin", preds = new HashMap<String,Predicate>());
@@ -237,7 +237,7 @@ public class ColorConstraints
         preds.put("purple", new Normal());
 
         // note: additional badge rewards must be noted in Badge.java
-        preds.put("black", new HoldsBadge(Badge.Type.CONSEC_WINS_2));
+        preds.put("black", new HoldsBadge(Badge.Type.CONSEC_WINS_3));
         preds.put("leather", new HoldsBadge(Badge.Type.CARDS_PLAYED_1));
         preds.put("orange", new HoldsBadge(Badge.Type.CARDS_PLAYED_2));
         preds.put("pink", new HoldsBadge(Badge.Type.LOOKS_BOUGHT_1));

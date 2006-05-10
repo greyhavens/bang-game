@@ -62,7 +62,7 @@ public class FirstBigShotView extends BDecoratedWindow
         _bigshots = new UnitPalette(ctx, this, units.length, 1);
         _bigshots.setShowNavigation(false);
         _bigshots.setPaintBorder(true);
-        _bigshots.setUnits(units);
+        _bigshots.setUnits(units, false);
         add(_bigshots);
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);

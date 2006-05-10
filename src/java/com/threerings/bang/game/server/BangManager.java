@@ -48,6 +48,7 @@ import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
@@ -155,7 +156,7 @@ public class BangManager extends GameManager
                         "[who=" + user.who() + "].");
             return;
         }
-        selectTeam(pidx, units);
+        selectTeam(pidx, units, user);
     }
 
     // documentation inherited from interface BangProvider
@@ -622,8 +623,8 @@ public class BangManager extends GameManager
             // make purchases for our AIs
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 if (isAI(ii)) {
-                    selectTeam(ii,
-                        _aiLogic[ii].getUnitTypes(_bconfig.teamSize));
+                    selectTeam(ii, _aiLogic[ii].getUnitTypes(_bconfig.teamSize),
+                               null);
                 }
             }
             break;
@@ -819,10 +820,10 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Configures the specified player's purchases for this round and
-     * starts the game if they are the last to configure.
+     * Configures the specified player's purchases for this round and starts
+     * the game if they are the last to configure.
      */
-    protected void selectTeam (int pidx, String[] types)
+    protected void selectTeam (int pidx, String[] types, PlayerObject user)
     {
         // make sure they haven't already purchased units
         for (Piece piece : _purchases.values()) {
@@ -846,19 +847,27 @@ public class BangManager extends GameManager
         Unit[] units = new Unit[types.length];
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = Unit.getUnit(types[ii]);
-            if (units[ii].getCost() < 0) {
-                log.warning("Player requested to purchase illegal unit " +
-                            "[who=" + _bangobj.players[pidx] +
-                            ", unit=" + types[ii] + "].");
-                return;
-            }
         }
 
-        // TODO: make sure they didn't request units to which they don't have
-        // access
+        // if this is a human player, make sure they didn't request units to
+        // which they don't have access
+        if (user != null) {
+            for (int ii = 0; ii < units.length; ii++) {
+                UnitConfig config = units[ii].getConfig();
+                Badge.Type btype = (config.badgeCode == 0) ?
+                    null : Badge.getType(config.badgeCode);
+                if (config.scripCost < 0 ||
+                    (btype != null && !user.holdsBadge(btype))) {
+                    log.warning("Player requested to purchase illegal unit " +
+                                "[who=" + user.who() + ", unit=" + config.type +
+                                ", badge=" + btype + "].");
+                    return;
+                }
+            }
 
-        // TODO: make sure they didn't request more than their allowed number
-        // of each unit (currently one)
+            // TODO: make sure they didn't request more than their allowed
+            // number of each unit (currently one)
+        }
 
         // initialize and prepare the units
         for (int ii = 0; ii < units.length; ii++) {

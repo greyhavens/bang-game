@@ -9,7 +9,9 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BasicContext;
 
@@ -22,11 +24,11 @@ public class UnitIcon extends PaletteIcon
     public UnitIcon (BasicContext ctx, int itemId, UnitConfig config)
     {
         this(ctx, itemId, config,
-             ctx.xlate(BangCodes.UNITS_MSGS, config.getName()));
+             ctx.xlate(BangCodes.UNITS_MSGS, config.getName()), null);
     }
 
-    public UnitIcon (
-        BasicContext ctx, int itemId, UnitConfig config, String name)
+    public UnitIcon (BasicContext ctx, int itemId, UnitConfig config,
+                     String name, PlayerObject player)
     {
         _itemId = itemId;
         _config = config;
@@ -35,6 +37,18 @@ public class UnitIcon extends PaletteIcon
         String msg = MessageBundle.compose(
             "m.unit_icon", config.getName(), config.getName() + "_descrip");
         setTooltipText(ctx.xlate(BangCodes.UNITS_MSGS, msg));
+
+        // if we were supplied with a player object; disable ourselves if they
+        // do not have access to this unit (and tack on the units' badge
+        // requirement tip to our tooltip
+        if (player != null && _config.badgeCode != 0 &&
+            !player.holdsBadge(Badge.getType(_config.badgeCode))) {
+            setEnabled(false);
+            setAlpha(0.5f);
+            setTooltipText(getTooltipText() + "\n\n" + 
+                           ctx.xlate(BangCodes.UNITS_MSGS,
+                                     config.getName() + "_badge"));
+        }
     }
 
     public int getItemId ()
