@@ -408,6 +408,7 @@ public class TownView extends BWindow
             _ctx.getCameraHandler().addCameraObserver(
                 new CameraPath.Observer() {
                 public boolean pathCompleted (CameraPath path) {
+                    BangUI.playShopEntry(_bctx.getUserObject().townId, cmd);
                     fireCommand(cmd);
                     return false; // removes our observer
                 }

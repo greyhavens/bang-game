@@ -215,6 +215,19 @@ public class BangUI
     }
 
     /**
+     * Plays the entry sound for the specified shop.
+     */
+    public static void playShopEntry (String townId, String shoppe)
+    {
+        // TODO: redo this using the new streaming support
+        Sound sound = _sgroup.getSound(
+            "menu/" + townId + "/" + shoppe + ".wav");
+        if (sound != null) {
+            sound.play(true);
+        }
+    }
+
+    /**
      * Reloads our interface stylesheet. This is used when testing.
      */
     public static void reloadStylesheet ()
