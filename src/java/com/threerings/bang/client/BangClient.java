@@ -428,12 +428,11 @@ public class BangClient extends BasicClient
     /**
      * Queues up the music track with the specified path.
      *
-     * TODO: fade between the two tracks? or quickly fade out the old track and
-     * fade in the new.
-     *
      * @param musicPath the path to an OGG resource containing the music.
+     * @param crossfade if non-zero, the interval over which to fade out the
+     * music previously playing and fade in the new music
      */
-    public void queueMusic (String musicPath, boolean loop)
+    public void queueMusic (String musicPath, boolean loop, float crossfade)
     {
         // if we're already playing this track, keep it running
         if (musicPath.equals(_playingMusic)) {
@@ -455,8 +454,13 @@ public class BangClient extends BasicClient
         }
 
         // stop any currently playing stream
-        if (_mstream != null) {
-            _mstream.dispose();
+        boolean wasPlaying = (_mstream != null);
+        if (wasPlaying) {
+            if (crossfade > 0f) {
+                _mstream.fadeOut(crossfade, true);
+            } else {
+                _mstream.dispose();
+            }
             _mstream = null;
         }
 
@@ -464,7 +468,11 @@ public class BangClient extends BasicClient
             _playingMusic = musicPath;
             _mstream = new OggFileStream(_soundmgr, mfile, loop);
             _mstream.setGain(volume);
-            _mstream.play();
+            if (wasPlaying && crossfade > 0f) {
+                _mstream.fadeIn(crossfade);
+            } else {
+                _mstream.play();
+            }
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to start music " +
                     "[path=" + mfile + "].", t);
@@ -699,7 +707,7 @@ public class BangClient extends BasicClient
         if (!(view instanceof BangView)) {
             // if this is not the game view, play the town theme
             String townId = _ctx.getUserObject().townId;
-            queueMusic("sounds/music/" + townId + ".ogg", true);
+            queueMusic("sounds/music/" + townId + ".ogg", true, 3f);
 
             // also re-wire up our options view whenever the main view changes
             // as the BangView overrides the escape mapping during the game
