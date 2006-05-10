@@ -44,7 +44,19 @@ public class Prop extends BigPiece
      */
     public static Prop getProp (String type)
     {
+        // TEMP: LEGACY
+        if (type.startsWith("buildings/") &&
+            !type.startsWith("buildings/frontier") &&
+            !type.startsWith("buildings/indian")) {
+            type = type.substring(0, 10) + "frontier_town/" +
+                type.substring(10);
+        }
+        // END TEMP
         PropConfig config = PropConfig.getConfig(type);
+        if (config == null) {
+            log.warning("Requested non-existent prop [type=" + type + "].");
+            return null;
+        }
         Prop prop = null;
         try {
             if (config.propClass != null) {
