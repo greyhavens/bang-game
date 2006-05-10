@@ -33,9 +33,8 @@ public class UnitPass extends Item
     @Override // documentation inherited
     public String getName ()
     {
-        String msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m." + _unit);
-        msg = MessageBundle.compose("m.unit_pass", msg);
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+        return MessageBundle.qualify(
+            BangCodes.UNITS_MSGS, "m." + _unit + "_pass");
     }
 
     @Override // documentation inherited

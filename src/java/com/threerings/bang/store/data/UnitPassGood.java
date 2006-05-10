@@ -53,10 +53,8 @@ public class UnitPassGood extends Good
     @Override // documentation inherited
     public String getName ()
     {
-        String msg = MessageBundle.qualify(
-            BangCodes.UNITS_MSGS, "m." + getUnitType());
-        msg = MessageBundle.compose("m.unit_pass", msg);
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+        return MessageBundle.qualify(
+            BangCodes.UNITS_MSGS, "m." + getUnitType() + "_pass");
     }
 
     @Override // documentation inherited
