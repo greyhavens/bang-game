@@ -20,8 +20,6 @@ import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
 
-import com.jmex.sound.openAL.objects.MusicStream;
-
 import com.samskivert.servlet.user.Password;
 import com.samskivert.util.Config;
 import com.samskivert.util.Interval;
@@ -38,6 +36,8 @@ import com.threerings.hemiptera.util.SendReportUtil;
 
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.effect.WindowSlider;
+
+import com.threerings.openal.OggFileStream;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.SessionObserver;
@@ -456,16 +456,14 @@ public class BangClient extends BasicClient
 
         // stop any currently playing stream
         if (_mstream != null) {
-            _mstream.stop();
-            _mstream.close();
+            _mstream.dispose();
             _mstream = null;
         }
 
         try {
             _playingMusic = musicPath;
-            _mstream = new MusicStream(mfile.toString(), false);
-            _mstream.loop(loop);
-            _mstream.setVolume(volume);
+            _mstream = new OggFileStream(_soundmgr, mfile, loop);
+            _mstream.setGain(volume);
             _mstream.play();
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to start music " +
@@ -481,7 +479,7 @@ public class BangClient extends BasicClient
     public void setMusicVolume (int volume)
     {
         if (_mstream != null) {
-            _mstream.setVolume(volume / 100f);
+            _mstream.setGain(volume / 100f);
         }
     }
 
@@ -725,8 +723,7 @@ public class BangClient extends BasicClient
     {
         // stop any currently playing stream
         if (_mstream != null) {
-            _mstream.stop();
-            _mstream.close();
+            _mstream.dispose();
             _mstream = null;
         }
 
@@ -827,5 +824,5 @@ public class BangClient extends BasicClient
     protected ArrayList<Handle> _invites = new ArrayList<Handle>();
 
     protected String _playingMusic;
-    protected MusicStream _mstream;
+    protected OggFileStream _mstream;
 }

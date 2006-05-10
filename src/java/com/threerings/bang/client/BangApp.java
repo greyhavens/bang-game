@@ -220,6 +220,14 @@ public class BangApp extends JmeApp
         JOptionPane.showMessageDialog(null, "Initialization failed: " + t);
     }
 
+    @Override // documentation inherited
+    protected void update (long frameTick)
+    {
+        super.update(frameTick);
+        _client._soundmgr.updateStreams(_frameTime);
+    }
+    
+    @Override // documentation inherited
     protected void cleanup ()
     {
         super.cleanup();
