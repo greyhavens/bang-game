@@ -26,11 +26,11 @@ import com.threerings.bang.server.persist.BoardRepository;
 public class LoadBoardTask extends Task
 {
     /**
-     * Configures our <code>server.properties</code> file.
+     * Configures our <code>bang.home</code> directory.
      */
-    public void setProps (File props)
+    public void setHome (File home)
     {
-        _props = props;
+        _home = home;
     }
 
     /**
@@ -44,10 +44,10 @@ public class LoadBoardTask extends Task
     @Override // documentation inherited
     public void execute () throws BuildException
     {
-        if (_props == null) {
-            throw new BuildException("Missing 'props' task property.");
+        if (_home == null) {
+            throw new BuildException("Missing 'home' task property.");
         }
-        System.setProperty("install_config", _props.getPath());
+        System.setProperty("bang.home", _home.getPath());
 
         if (_brepo == null) {
             try {
@@ -108,7 +108,7 @@ public class LoadBoardTask extends Task
     }
 
     /** Contains our configuration. */
-    protected File _props;
+    protected File _home;
 
     /** Provides access to the board database. */
     protected BoardRepository _brepo;

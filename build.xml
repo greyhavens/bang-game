@@ -173,7 +173,7 @@
     <taskdef name="loadboard"
       classname="com.threerings.bang.tools.LoadBoardTask"
       classpathref="classpath"/>
-    <loadboard props="server.properties">
+    <loadboard home=".">
       <fileset dir="rsrc/boards" includes="**/*.board"/>
     </loadboard>
   </target>

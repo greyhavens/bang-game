@@ -40,9 +40,9 @@ public class ServerConfig
 
     /**
      * Configures the install config with the path to our installation
-     * properties file. This is called automatically with the contents of
-     * the <code>install_config</code> system property if said system
-     * property is set.
+     * properties file. This is called automatically with the
+     * <code>server.properties</code> file in the <code>bang.home</code>
+     * directory if that system property is set.
      */
     public static void init (String propPath)
     {
