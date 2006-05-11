@@ -230,8 +230,7 @@ public class BangUI
     {
         // TODO: redo this using the new streaming support
         Sound sound = _sgroup.getSound(
-            "sounds/music/frontier_town_intro.ogg");
-//            "menu/" + townId + "/" + shoppe + ".wav");
+            "menu/" + townId + "/" + shoppe + ".wav");
         if (sound != null) {
             sound.play(true);
         }
