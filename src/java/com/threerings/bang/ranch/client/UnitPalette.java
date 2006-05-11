@@ -35,11 +35,13 @@ public class UnitPalette extends IconPalette
     /**
      * Configures the palette to display the specified units.
      */
-    public void setUnits (UnitConfig[] units, boolean requireBadge)
+    public void setUnits (UnitConfig[] units, boolean disableUnavail)
     {
         for (int ii = 0; ii < units.length; ii++) {
             String name = _ctx.xlate(BangCodes.UNITS_MSGS, units[ii].getName());
-            addIcon(createIcon(_ctx, -1, units[ii], name, requireBadge));
+            UnitIcon icon = createIcon(_ctx, -1, units[ii], name);
+            icon.displayAvail(_ctx, disableUnavail);
+            addIcon(icon);
         }
     }
 
@@ -100,7 +102,7 @@ public class UnitPalette extends IconPalette
     {
         UnitConfig config = UnitConfig.getConfig(unit.getType());
         addIcon(createIcon(_ctx, unit.getItemId(), config,
-                           unit.getGivenName().toString(), false));
+                           unit.getGivenName().toString()));
     }
 
     protected void removeUnit (int itemId)
@@ -115,11 +117,9 @@ public class UnitPalette extends IconPalette
     }
 
     protected UnitIcon createIcon (
-        BangContext ctx, int itemId, UnitConfig config, String name,
-        boolean requireBadge)
+        BangContext ctx, int itemId, UnitConfig config, String name)
     {
-        return new UnitIcon(ctx, itemId, config, name,
-                            requireBadge ? _ctx.getUserObject() : null);
+        return new UnitIcon(ctx, itemId, config, name);
     }
 
     protected SetListener _invlistener = new SetListener() {

@@ -78,7 +78,7 @@ public class RanchView extends ShopView
                 return Math.abs(uc1.badgeCode) - Math.abs(uc2.badgeCode);
             };
         });
-        _units.setUnits(units, true);
+        _units.setUnits(units, false);
 
         // create our tabs
         add(_tabs = new HackyTabs(ctx, false, "ui/ranch/tab_", TABS, 136, 17) {

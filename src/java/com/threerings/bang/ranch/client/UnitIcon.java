@@ -12,8 +12,8 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
 /**
@@ -25,11 +25,11 @@ public class UnitIcon extends PaletteIcon
     public UnitIcon (BasicContext ctx, int itemId, UnitConfig config)
     {
         this(ctx, itemId, config,
-             ctx.xlate(BangCodes.UNITS_MSGS, config.getName()), null);
+             ctx.xlate(BangCodes.UNITS_MSGS, config.getName()));
     }
 
     public UnitIcon (BasicContext ctx, int itemId, UnitConfig config,
-                     String name, PlayerObject player)
+                     String name)
     {
         _itemId = itemId;
         _config = config;
@@ -38,16 +38,20 @@ public class UnitIcon extends PaletteIcon
         String msg = MessageBundle.compose(
             "m.unit_icon", config.getName(), config.getName() + "_descrip");
         setTooltipText(ctx.xlate(BangCodes.UNITS_MSGS, msg));
+    }
 
-        // if a player was supplied, determine whether we should display a
-        // locked or unlocked icon over our unit image
-        if (player != null && _config.badgeCode != 0) {
+    public void displayAvail (BangContext ctx, boolean disableUnavail)
+    {
+        // determine whether we should display a locked or unlocked icon over
+        // our unit image
+        if (_config.badgeCode != 0) {
             String type = "unlocked";
-            if (!_config.hasAccess(player)) {
+            if (!_config.hasAccess(ctx.getUserObject())) {
                 type = "locked";
                 setTooltipText(getTooltipText() + "\n\n" + 
                                ctx.xlate(BangCodes.UNITS_MSGS,
-                                         config.getName() + "_badge"));
+                                         _config.getName() + "_badge"));
+                setEnabled(!disableUnavail);
             }
             _lock = ctx.loadImage("ui/ranch/unit_" + type + ".png");
         }
