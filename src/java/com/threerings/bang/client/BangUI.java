@@ -12,13 +12,17 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.html.CSS;
 import javax.swing.text.html.StyleSheet;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import org.lwjgl.openal.AL10;
 import org.lwjgl.util.WaveData;
 
 import com.jme.image.Image;
@@ -32,6 +36,8 @@ import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.text.AWTTextFactory;
 import com.jmex.bui.text.BTextFactory;
+
+import com.jmex.sound.openAL.objects.util.OggInputStream;
 
 import com.threerings.openal.Clip;
 import com.threerings.openal.ClipProvider;
@@ -152,7 +158,6 @@ public class BangUI
         // create our sound clip provider
         clipprov = new ClipProvider() {
             public Clip loadClip (String path) throws IOException {
-                Clip clip = new Clip();
                 if (path.startsWith("rsrc/")) {
                     path = path.substring(5);
                 }
@@ -161,10 +166,14 @@ public class BangUI
                     throw new IOException(
                         "Missing sound resource '" + path + "'.");
                 }
-
+                if (path.endsWith(".ogg")) {
+                    return loadOggClip(file);
+                }
+                
                 // TODO: preconvert all of our sounds to a standard format and
                 // then mmap() the sound files and stuff them directly into the
                 // clip; WaveData does all sorts of expensive conversion
+                Clip clip = new Clip();
                 WaveData wfile = null;
                 Exception cause = null;
                 try {
@@ -221,7 +230,8 @@ public class BangUI
     {
         // TODO: redo this using the new streaming support
         Sound sound = _sgroup.getSound(
-            "menu/" + townId + "/" + shoppe + ".wav");
+            "sounds/music/frontier_town_intro.ogg");
+//            "menu/" + townId + "/" + shoppe + ".wav");
         if (sound != null) {
             sound.play(true);
         }
@@ -347,6 +357,27 @@ public class BangUI
         return font;
     }
 
+    protected static Clip loadOggClip (File file)
+        throws IOException
+    {
+        OggInputStream istream = new OggInputStream(new FileInputStream(file));
+        Clip clip = new Clip();
+        clip.format = (istream.getFormat() == OggInputStream.FORMAT_MONO16) ?
+            AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16;
+        clip.frequency = istream.getRate();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = istream.read(buffer, 0, buffer.length)) > 0) {
+            out.write(buffer, 0, read);
+        }
+        byte[] bytes = out.toByteArray();
+        clip.data = ByteBuffer.allocateDirect(bytes.length);
+        clip.data.put(bytes);
+        clip.data.rewind();
+        return clip;
+    }
+    
     /** We use this to provide custom fonts in our HTML views. */
     protected static class BangStyleSheet extends StyleSheet
     {
