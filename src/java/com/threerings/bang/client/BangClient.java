@@ -428,14 +428,14 @@ public class BangClient extends BasicClient
     /**
      * Queues up the music track with the specified path.
      *
-     * @param musicPath the path to an OGG resource containing the music.
+     * @param key the track key (e.g., "frontier_town")
      * @param crossfade if non-zero, the interval over which to fade out the
      * music previously playing and fade in the new music
      */
-    public void queueMusic (String musicPath, boolean loop, float crossfade)
+    public void queueMusic (String key, boolean loop, float crossfade)
     {
         // if we're already playing this track, keep it running
-        if (musicPath.equals(_playingMusic)) {
+        if (key.equals(_playingMusic)) {
             return;
         }
 
@@ -446,13 +446,15 @@ public class BangClient extends BasicClient
             return;
         }
 
-        File mfile = _ctx.getResourceManager().getResourceFile(musicPath);
+        String prefix = "sounds/music/" + key;
+        File mfile = _rsrcmgr.getResourceFile(prefix + ".ogg"),
+            ifile = _rsrcmgr.getResourceFile(prefix + "_intro.ogg");
         if (!mfile.exists()) {
             log.warning("Requested to play non-existent music " +
-                        "[path=" + musicPath + "].");
+                        "[key=" + key + "].");
             return;
         }
-
+        
         // stop any currently playing stream
         boolean wasPlaying = (_mstream != null);
         if (wasPlaying) {
@@ -465,8 +467,13 @@ public class BangClient extends BasicClient
         }
 
         try {
-            _playingMusic = musicPath;
-            _mstream = new OggFileStream(_soundmgr, mfile, loop);
+            _playingMusic = key;
+            if (ifile.exists()) {
+                _mstream = new OggFileStream(_soundmgr, ifile, false);
+                _mstream.queueFile(mfile, loop);
+            } else {
+                _mstream = new OggFileStream(_soundmgr, mfile, loop);
+            }
             _mstream.setGain(volume);
             if (wasPlaying && crossfade > 0f) {
                 _mstream.fadeIn(crossfade);
@@ -707,7 +714,7 @@ public class BangClient extends BasicClient
         if (!(view instanceof BangView)) {
             // if this is not the game view, play the town theme
             String townId = _ctx.getUserObject().townId;
-            queueMusic("sounds/music/" + townId + ".ogg", true, 3f);
+            queueMusic(townId, true, 3f);
 
             // also re-wire up our options view whenever the main view changes
             // as the BangView overrides the escape mapping during the game
