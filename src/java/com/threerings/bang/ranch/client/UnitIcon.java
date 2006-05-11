@@ -3,6 +3,8 @@
 
 package com.threerings.bang.ranch.client;
 
+import com.jme.renderer.Renderer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
@@ -37,15 +39,17 @@ public class UnitIcon extends PaletteIcon
             "m.unit_icon", config.getName(), config.getName() + "_descrip");
         setTooltipText(ctx.xlate(BangCodes.UNITS_MSGS, msg));
 
-        // if we were supplied with a player object; disable ourselves if they
-        // do not have access to this unit (and tack on the units' badge
-        // requirement tip to our tooltip
-        if (player != null && !_config.hasAccess(player)) {
-            setEnabled(false);
-            setAlpha(0.5f);
-            setTooltipText(getTooltipText() + "\n\n" + 
-                           ctx.xlate(BangCodes.UNITS_MSGS,
-                                     config.getName() + "_badge"));
+        // if a player was supplied, determine whether we should display a
+        // locked or unlocked icon over our unit image
+        if (player != null && _config.badgeCode != 0) {
+            String type = "unlocked";
+            if (!_config.hasAccess(player)) {
+                type = "locked";
+                setTooltipText(getTooltipText() + "\n\n" + 
+                               ctx.xlate(BangCodes.UNITS_MSGS,
+                                         config.getName() + "_badge"));
+            }
+            _lock = ctx.loadImage("ui/ranch/unit_" + type + ".png");
         }
     }
 
@@ -59,6 +63,37 @@ public class UnitIcon extends PaletteIcon
         return _config;
     }
 
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        if (_lock != null) {
+            _lock.reference();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        if (_lock != null) {
+            _lock.release();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void renderComponent (Renderer renderer)
+    {
+        super.renderComponent(renderer);
+
+        if (_lock != null) {
+            _lock.render(renderer, getWidth()-_lock.getWidth(), 0, _alpha);
+        }
+    }
+
     protected int _itemId;
     protected UnitConfig _config;
+    protected BImage _lock;
 }
