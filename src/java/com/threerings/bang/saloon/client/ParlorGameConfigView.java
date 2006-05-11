@@ -24,6 +24,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.GameCodes;
@@ -54,7 +55,8 @@ public class ParlorGameConfigView extends BContainer
         // create our various combo boxen
         BContainer combos = new BContainer(new TableLayout(2, 5, 5));
         for (int ii = 0; ii < _boxes.length; ii++) {
-            combos.add(new BLabel(_msgs.get(BOX_LABELS[ii]), "match_label"));
+            combos.add(
+                BangUI.createLabel(_msgs, BOX_LABELS[ii], "match_label"));
             combos.add(_boxes[ii] = new BComboBox(makeBoxItems(ii)));
             _boxes[ii].selectItem(BOX_CFGS[3*ii+2]);
             _boxes[ii].addListener(this);
@@ -63,7 +65,7 @@ public class ParlorGameConfigView extends BContainer
 
         // create our scenario toggles
         BContainer scenbox = new BContainer(new BorderLayout());
-        scenbox.add(new BLabel(_msgs.get("m.scenarios"), "match_header"),
+        scenbox.add(BangUI.createLabel(_msgs, "m.scenarios", "match_header"),
                     BorderLayout.NORTH);
         BContainer checkboxen = new BContainer(
             GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,

@@ -16,6 +16,7 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
 
@@ -43,7 +44,7 @@ public class CriterionView extends BContainer
         BContainer table = new BContainer(tlay);
         add(table, BorderLayout.CENTER);
 
-        table.add(new BLabel(msgs.get("m.rounds"), "match_label"));
+        table.add(BangUI.createLabel(msgs, "m.rounds", "match_label"));
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         for (int ii = 0; ii < _rounds.length; ii++) {
             row.add(_rounds[ii] = new BCheckBox("" + (ii+1)));
@@ -51,7 +52,7 @@ public class CriterionView extends BContainer
         }
         table.add(row);
 
-        table.add(new BLabel(msgs.get("m.players"), "match_label"));
+        table.add(BangUI.createLabel(msgs, "m.players", "match_label"));
         row = new BContainer(GroupLayout.makeHStretch());
         for (int ii = 0; ii < _players.length; ii++) {
             row.add(_players[ii] = new BCheckBox("" + (ii+2)));
@@ -59,15 +60,15 @@ public class CriterionView extends BContainer
         }
         table.add(row);
 
-        table.add(new BLabel(msgs.get("m.rankedness"), "match_label"));
+        table.add(BangUI.createLabel(msgs, "m.rankedness", "match_label"));
         table.add(_ranked = new BComboBox(xlate(msgs, RANKED)));
         _ranked.selectItem(0);
 
-        table.add(new BLabel(msgs.get("m.range"), "match_label"));
+        table.add(BangUI.createLabel(msgs, "m.range", "match_label"));
         table.add(_range = new BComboBox(xlate(msgs, RANGE)));
         _range.selectItem(0);
 
-        table.add(new BLabel(msgs.get("m.opponents"), "match_label"));
+        table.add(BangUI.createLabel(msgs, "m.opponents", "match_label"));
         row = new BContainer(GroupLayout.makeHStretch());
         for (int ii = 0; ii < _aiopps.length; ii++) {
             row.add(_aiopps[ii] = new BCheckBox("" + ii));

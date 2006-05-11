@@ -41,11 +41,13 @@ public class ParlorConfigView extends BContainer
 
         BContainer row = GroupLayout.makeHBox(GroupLayout.LEFT);
         row.add(_pards = new BCheckBox(_msgs.get("m.pards_only")));
+        _pards.setTooltipText(_msgs.get("m.pards_only_tip"));
         _pards.addListener(_parconf);
         add(row);
 
         row = GroupLayout.makeHBox(GroupLayout.LEFT);
         row.add(_usePass = new BCheckBox(_msgs.get("m.req_password")));
+        _usePass.setTooltipText(_msgs.get("m.use_password_tip"));
         _usePass.addListener(_parconf);
         row.add(_changePass = new BButton(
                     _msgs.get("m.change"), new ChangePasswordHelper(), ""));
@@ -53,6 +55,7 @@ public class ParlorConfigView extends BContainer
 
         row = GroupLayout.makeHBox(GroupLayout.LEFT);
         row.add(_creator = new BCheckBox(_msgs.get("m.creator_only")));
+        _creator.setTooltipText(_msgs.get("m.creator_only_tip"));
         _creator.addListener(_parconf);
         add(row);
     }

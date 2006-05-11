@@ -342,6 +342,21 @@ public class BangUI
         return button;
     }
 
+    /**
+     * Creates a label with the specified label and style class, looking up the
+     * label and <code>label_tip</code> in the supplied message bundle.
+     */
+    public static BLabel createLabel (
+        MessageBundle msgs, String text, String style)
+    {
+        BLabel label = new BLabel(msgs.get(text), style);
+        String tipkey = text + "_tip";
+        if (msgs.exists(tipkey)) {
+            label.setTooltipText(msgs.get(tipkey));
+        }
+        return label;
+    }
+
     protected static Font loadFont (BasicContext ctx, String path)
     {
         Font font = null;
