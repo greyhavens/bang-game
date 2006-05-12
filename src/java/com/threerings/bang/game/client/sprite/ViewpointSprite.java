@@ -125,6 +125,7 @@ public class ViewpointSprite extends PieceSprite
         Quaternion lrot = getLocalRotation(),
             vrot = new Quaternion();
         vrot.fromAxes(lrot.mult(LEFT), lrot.mult(UP), lrot.mult(FORWARD));
+        vrot.normalize();
         return vrot;
     }
     
