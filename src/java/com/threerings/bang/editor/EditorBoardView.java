@@ -102,11 +102,15 @@ public class EditorBoardView extends BoardView
             }
             protected void updateHighlights (Piece piece) {
                 if (piece instanceof BigPiece) {
-                    Rectangle bounds = ((BigPiece)piece).getBounds();
-                    EditorBoardView.this.updateHighlights(bounds.x, bounds.y,
-                        bounds.x + bounds.width - 1,
-                        bounds.y + bounds.height - 1);
-                } else {
+                    Rectangle isect = _board.getPlayableArea().intersection(
+                        ((BigPiece)piece).getBounds());
+                    if (!isect.isEmpty()) {
+                        EditorBoardView.this.updateHighlights(isect.x, isect.y,
+                            isect.x + isect.width - 1,
+                            isect.y + isect.height - 1);
+                    }
+                } else if (_board.getPlayableArea().contains(
+                        piece.x, piece.y)) {
                     EditorBoardView.this.updateHighlights(piece.x, piece.y,
                         1, 1);
                 }

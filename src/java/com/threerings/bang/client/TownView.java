@@ -49,6 +49,7 @@ import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.TownObject;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
@@ -238,6 +239,19 @@ public class TownView extends BWindow
             }
         }
 
+        @Override // documentation inherited
+        public boolean isHoverable (Sprite sprite)
+        {
+            if (!super.isHoverable(sprite)) {
+                return false;
+            }
+            if (sprite instanceof PropSprite) {
+                Prop prop = (Prop)((PropSprite)sprite).getPiece();
+                return _commands.containsKey(prop.getType());
+            }
+            return false;
+        }
+ 
         // documentation inherited from interface Subscriber
         public void objectAvailable (DObject object)
         {

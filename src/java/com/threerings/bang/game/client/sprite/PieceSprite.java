@@ -112,6 +112,11 @@ public class PieceSprite extends Sprite
             setRenderState(_mstate);
         }
 
+        // don't create collision trees when not necessary
+        if (!view.isHoverable(this)) {
+            setIsCollidable(false);
+        }
+        
         // position ourselves properly to start
         setLocation(board, _piece.x, _piece.y);
         setOrientation(piece.orientation);

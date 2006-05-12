@@ -5,6 +5,9 @@ package com.threerings.bang.editor;
 
 import java.awt.Color;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +18,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.samskivert.swing.VGroupLayout;
+import com.samskivert.util.QuickSort;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PropConfig;
@@ -47,15 +51,15 @@ public class PieceChooser extends JPanel
         addPiece(root, "markers/cattle", new Marker(Marker.CATTLE));
         addPiece(root, "markers/lode", new Marker(Marker.LODE));
         
-        for (int i = 0; i < TOWN_IDS.length; i++) {
-            DefaultMutableTreeNode town = new DefaultMutableTreeNode(
-                _ctx.xlate("bang", "m." + TOWN_IDS[i]));
-            root.add(town);
-            PropConfig[] props = PropConfig.getTownProps(TOWN_IDS[i]);
-            for (int j = 0; j < props.length; j++) {
-                String type = props[j].type;
-                addPiece(town, type, Prop.getProp(type));
+        ArrayList<PropConfig> configs =
+            new ArrayList<PropConfig>(PropConfig.getConfigs());
+        QuickSort.sort(configs, new Comparator<PropConfig>() {
+            public int compare (PropConfig prop1, PropConfig prop2) {
+                return prop1.type.compareTo(prop2.type);
             }
+        });
+        for (PropConfig config : configs) {
+            addPiece(root, config.type, Prop.getProp(config.type));
         }
 
         _tree = new JTree(root);

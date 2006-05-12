@@ -747,6 +747,14 @@ public class BoardView extends BComponent
             updateHighlightHover();
         }
     }
+    
+    /**
+     * Determines whether the given sprite can be hovered over.
+     */
+    public boolean isHoverable (Sprite sprite)
+    {
+        return (sprite != null);
+    }
 
     /**
      * Given a mouse event, returns the point at which a ray cast from the
@@ -1206,12 +1214,6 @@ public class BoardView extends BComponent
         if (hit != _hover) {
             hoverSpriteChanged(hit);
         }
-    }
-
-    /** Helper function for {@link #updateHoverSprite}. */
-    protected boolean isHoverable (Sprite sprite)
-    {
-        return (sprite != null);
     }
 
     /**

@@ -450,6 +450,18 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
+    public boolean isHoverable (Sprite sprite)
+    {
+        if (!super.isHoverable(sprite)) {
+            return false;
+        }
+        if (sprite instanceof PieceSprite) {
+            return ((PieceSprite)sprite).isHoverable();
+        }
+        return false;
+    }
+
+    @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();
@@ -544,18 +556,6 @@ public class BangBoardView extends BoardView
             // we will clear the marquee when the board tour is finished
             _fadein = null;
         }
-    }
-
-    @Override // documentation inherited
-    protected boolean isHoverable (Sprite sprite)
-    {
-        if (!super.isHoverable(sprite)) {
-            return false;
-        }
-        if (sprite instanceof PieceSprite) {
-            return ((PieceSprite)sprite).isHoverable();
-        }
-        return false;
     }
 
     @Override // documentation inherited

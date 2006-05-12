@@ -3,6 +3,7 @@
 
 package com.threerings.bang.data;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -51,6 +52,14 @@ public class PropConfig
         return _types.get(type);
     }
 
+    /**
+     * Returns a collection containing all registered prop configurations.
+     */
+    public static Collection<PropConfig> getConfigs ()
+    {
+        return _types.values();
+    }
+    
     /**
      * Returns an array of configurations for all prop types
      * accessible in the specified town.
