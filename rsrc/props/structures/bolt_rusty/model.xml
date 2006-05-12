@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="rusty_nut" translation="-0.525292, 20.9247, -57.6931" rotation="0.612217, 0.0, 0.0, 0.79069" scale="4.97908, 4.97908, 3.27571" solid="true" texture="C:\projects\bang objects\nut and bolt\nut_and_bolt_rusty.png" transparent="false">
+  <triMesh name="rusty_bolt" translation="-0.525292, 36.2736, 3.01683" rotation="0.612217, 0.0, 0.0, 0.79069" scale="4.97908, 4.97908, 3.27571" offsetTranslation="0.0, -12.5942, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="nut_and_bolt_rusty.png" transparent="false">
     <vertex location="0.101758, 12.9256, 1.59036" normal="0.0, 0.0, -1.0" tcoords="0.255735, 0.260541"/>
     <vertex location="1.2514, 14.9169, 1.59036" normal="0.0, 0.0, -1.0" tcoords="0.324454, 0.397979"/>
     <vertex location="2.40105, 12.9256, 1.59036" normal="0.0, 0.0, -1.0" tcoords="0.393173, 0.260541"/>
