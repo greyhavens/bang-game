@@ -202,7 +202,7 @@ public class OOOAuthenticator extends Authenticator
             // later be stuffed into their user object
             creds.setUsername(new Name(user.username));
 
-            log.info("User logged on [user=" + user.username + "].");
+            // log.info("User logged on [user=" + user.username + "].");
             rdata.code = BangAuthResponseData.SUCCESS;
 
         } catch (PersistenceException pe) {
