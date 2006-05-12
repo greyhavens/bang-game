@@ -619,31 +619,6 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Computes the maximum height of any props occupying the given
-     * tile coordinates, or <code>-Float.MAX_VALUE</code> if there
-     * are no props there.
-     */
-    public float getPropHeight (int tx, int ty)
-    {
-        float mheight = -Float.MAX_VALUE;
-        for (Iterator<PieceSprite> it = _pieces.values().iterator();
-                it.hasNext(); ) {
-            PieceSprite ps = it.next();
-            if (!(ps instanceof PropSprite) ||
-                !ps.getPiece().intersects(tx, ty)) {
-                continue;
-            }
-            Object bound = ps.getWorldBound();
-            if (!(bound instanceof BoundingBox)) {
-                continue;
-            }
-            BoundingBox bbox = (BoundingBox)bound;
-            mheight = Math.max(mheight, bbox.getCenter().z + bbox.zExtent);
-        }
-        return mheight;
-    }
-
-    /**
      * Requests that the specified action be executed. If there are other
      * actions executing and queued for execution, this action will be executed
      * after they complete.
@@ -811,43 +786,6 @@ public class BoardView extends BComponent
         result.z += 0.1f;
 
         return result;
-    }
-
-    /**
-     * Retrieves the pick intersection closest to the origin and places it in
-     * the given destination vector.
-     *
-     * @return true if a triangle intersection was found and placed in the
-     * result vector, false otherwise
-     */
-    protected boolean getPickIntersection (Vector3f result)
-    {
-        float nearest = Float.MAX_VALUE;
-        Vector3f[] verts = new Vector3f[3];
-        Vector3f loc = new Vector3f();
-        for (int i = 0, size = _pick.getNumber(); i < size; i++) {
-            PickData pdata = _pick.getPickData(i);
-            if (notReallyAHit(pdata)) {
-                continue;
-            }
-            Object mesh = pdata.getTargetMesh();
-            for (Object oidx : pdata.getTargetTris()) {
-                int idx = ((Integer)oidx).intValue();
-                if (mesh instanceof SharedMesh) {
-                    ((SharedMesh)mesh).getTarget().getTriangle(idx, verts);
-                } else {
-                    ((TriMesh)mesh).getTriangle(idx, verts);
-                }
-                pdata.getRay().intersectWhere(verts[0], verts[1], verts[2],
-                    loc);
-                float d2 = pdata.getRay().getOrigin().distanceSquared(loc);
-                if (d2 < nearest) {
-                    nearest = d2;
-                    result.set(loc);
-                }
-            }
-        }
-        return nearest < Float.MAX_VALUE;
     }
 
     @Override // documentation inherited
@@ -1282,7 +1220,30 @@ public class BoardView extends BComponent
      */
     protected void updateHighlightHover ()
     {
-        if (_htiles.contains(_mouse.x, _mouse.y)) {
+        // first try picking against the highlights; if that doesn't work,
+        // use whatever tile the mouse is over
+        Vector3f camloc = _ctx.getCameraHandler().getCamera().getLocation();
+        _pick.clear();
+        _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
+        _high.setLocation(-1, -1);
+        float dist = Float.MAX_VALUE;
+        for (int ii = 0; ii < _pick.getNumber(); ii++) {
+            PickData pdata = _pick.getPickData(ii);
+            if (notReallyAHit(pdata)) {
+                continue;
+            }
+            TerrainNode.Highlight highlight =
+                (TerrainNode.Highlight)pdata.getTargetMesh();
+            float hdist = FastMath.sqr(camloc.x - highlight.x) +
+                FastMath.sqr(camloc.y - highlight.y);
+            if (hdist < dist) {
+                _high.setLocation(highlight.getTileX(), highlight.getTileY());
+                dist = hdist;
+            }
+        }
+        if (_high.x != -1 && _high.y != -1) {
+            return;
+        } else if (_htiles.contains(_mouse.x, _mouse.y)) {
             _high.setLocation(_mouse);
             
         } else if (_high.x != -1 || _high.y != -1) {
@@ -1321,12 +1282,9 @@ public class BoardView extends BComponent
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int tx = set.getX(ii), ty = set.getY(ii);
             TerrainNode.Highlight highlight =
-                _tnode.createHighlight(tx, ty, false);
+                _tnode.createHighlight(tx, ty, true);
             highlight.setDefaultColor(highlightColor);
             highlight.setRenderState(_movstate);
-            if (_bangobj.board.isUnderProp(tx, ty)) {
-                highlight.setRenderState(RenderUtil.alwaysZBuf);
-            }
             highlight.updateRenderState();
             _hnode.attachChild(highlight);
             _htiles.add(tx, ty);

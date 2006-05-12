@@ -125,13 +125,16 @@ public class Prop extends BigPiece
         return !_config.passable && !lapper.isFlyer();
     }
 
-    /**
-     * Determines whether this prop is tall: whether it blocks even flying
-     * pieces.
-     */
+    @Override // documentation inherited
     public boolean isTall ()
     {
         return _config.tall;
+    }
+    
+    @Override // documentation inherited
+    public float getElevation ()
+    {
+        return _config.elevation;
     }
     
     /**

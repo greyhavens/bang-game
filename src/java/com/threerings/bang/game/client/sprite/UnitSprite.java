@@ -270,6 +270,13 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
+    public void setLocation (int tx, int ty, int elevation)
+    {
+        super.setLocation(tx, ty, elevation);
+        updateTileHighlight(tx, ty);
+    }
+    
+    @Override // documentation inherited
     public void move (Path path)
     {
         super.move(path);
@@ -280,6 +287,7 @@ public class UnitSprite extends MobileSprite
     public void cancelMove ()
     {
         super.cancelMove();
+        updateTileHighlight(_piece.x, _piece.y);
         updateUnitStatus();
     }
 
@@ -287,6 +295,7 @@ public class UnitSprite extends MobileSprite
     public void pathCompleted ()
     {
         super.pathCompleted();
+        updateTileHighlight(_piece.x, _piece.y);
         updateUnitStatus();
     }
 
@@ -361,7 +370,9 @@ public class UnitSprite extends MobileSprite
             ctx, createPendingTexture(0));
 
         // this composite of icons combines to display our status
-        attachHighlight(_status = new UnitStatus(ctx, _highlight));
+        _tlight = _view.getTerrainNode().createHighlight(
+            _piece.x, _piece.y, true);
+        attachHighlight(_status = new UnitStatus(ctx, _tlight));
         _status.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
 
         // we'll use this to keep a few things rotated toward the camera
@@ -399,6 +410,20 @@ public class UnitSprite extends MobileSprite
         configureOwnerColors();
     }
 
+    /**
+     * Updates the position of the highlight geometry that covers or floats
+     * over the nearest tile.
+     */
+    protected void updateTileHighlight (int tx, int ty)
+    {
+        if (_tlight == null) {
+            return;
+        }
+        if (_tlight.getTileX() != tx || _tlight.getTileY() != ty) {
+            _tlight.setPosition(tx, ty);
+        }
+    }
+    
     /**
      * Updates the visibility and location of the status display.
      */
@@ -451,8 +476,8 @@ public class UnitSprite extends MobileSprite
         int groundel = Math.max(board.getWaterLevel(),
             super.computeElevation(board, tx, ty)) +
                 FLYER_GROUND_HEIGHT * board.getElevationUnitsPerTile(),
-            propel = (int)((_view.getPropHeight(tx, ty) / TILE_SIZE +
-                FLYER_PROP_HEIGHT) * board.getElevationUnitsPerTile());
+            propel = board.getElevation(tx, ty) +
+                (int)(FLYER_PROP_HEIGHT * board.getElevationUnitsPerTile());
         return Math.max(groundel, propel);
     }
 
@@ -496,7 +521,7 @@ public class UnitSprite extends MobileSprite
     };
 
     protected Quad _tgtquad, _ptquad;
-    protected TerrainNode.Highlight _pendnode;
+    protected TerrainNode.Highlight _tlight, _pendnode;
     protected TextureState _pendtst;
     protected Texture[] _pendtexs;
 

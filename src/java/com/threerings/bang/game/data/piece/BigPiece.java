@@ -30,6 +30,19 @@ public abstract class BigPiece extends Piece
         return _bounds;
     }
 
+    /** Returns the elevation of this piece in tiles. */
+    public float getElevation ()
+    {
+        return 2f;
+    }
+    
+    /** Checks whether this piece is "tall," meaning that even air units cannot
+     * pass over it. */
+    public boolean isTall ()
+    {
+        return false;
+    }
+    
     @Override // documentation inherited
     public boolean intersects (Rectangle bounds)
     {

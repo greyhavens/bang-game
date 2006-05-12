@@ -52,7 +52,7 @@ public class CowSprite extends MobileSprite
         super.createGeometry(ctx);
 
         // this is used to indicate who owns us
-        _owner = new SharedMesh("owner", _highlight);
+        _owner = new SharedMesh("owner", _shadow);
         _owner.setRenderState(_owntex);
         _owner.updateRenderState();
         attachHighlight(_owner);

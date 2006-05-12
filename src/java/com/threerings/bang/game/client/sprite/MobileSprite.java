@@ -13,6 +13,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
+import com.jme.scene.Spatial;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jmex.effects.ParticleManager;
@@ -215,7 +216,7 @@ public class MobileSprite extends PieceSprite
             _dustmgr.setReleaseRate(0);
         }
     }
-
+    
     @Override // documentation inherited
     public void setOrientation (int orientation)
     {
@@ -277,10 +278,6 @@ public class MobileSprite extends PieceSprite
     {
         super.createGeometry(ctx);
         _ctx = ctx;
-
-        // the geometry of the highlight is shared between the elements
-        _highlight = _view.getTerrainNode().createHighlight(
-            localTranslation.x, localTranslation.y, TILE_SIZE, TILE_SIZE);
 
         // create the dust particle system
         createDustManager(ctx);
@@ -573,15 +570,7 @@ public class MobileSprite extends PieceSprite
     protected void updateHighlight ()
     {
         super.updateHighlight();
-        if (_highlight == null) {
-            return;
-        }
         
-        if (_highlight.x != localTranslation.x ||
-            _highlight.y != localTranslation.y) {
-            _highlight.setPosition(localTranslation.x, localTranslation.y);
-        }
-
         if (_dustmgr != null && isMoving()) {
             _dustmgr.getParticlesOrigin().set(localTranslation);
             ColorRGBA start = _dustmgr.getStartColor();
@@ -615,7 +604,7 @@ public class MobileSprite extends PieceSprite
     protected String _type, _name;
     protected String[] _wtypes;
     protected String[] _ianims;
-    protected TerrainNode.Highlight _highlight;
+    
     protected ParticleManager _dustmgr;
     protected Sound _moveSound;
 

@@ -644,9 +644,11 @@ public class BangBoard extends SimpleStreamableObject
             return;
             
         } else if (piece instanceof BigPiece) {
-            byte ptype = (piece instanceof Prop && ((Prop)piece).isTall()) ?
-                O_TALL_PROP : O_PROP;
-            Rectangle pbounds = ((BigPiece)piece).getBounds();
+            BigPiece bpiece = (BigPiece)piece;
+            byte ptype = bpiece.isTall() ? O_TALL_PROP : O_PROP,
+                elevation = (byte)(bpiece.getElevation() *
+                    _elevationUnitsPerTile);
+            Rectangle pbounds = bpiece.getBounds();
             for (int yy = pbounds.y, ly = yy + pbounds.height;
                  yy < ly; yy++) {
                 for (int xx = pbounds.x, lx = xx + pbounds.width;
@@ -654,7 +656,7 @@ public class BangBoard extends SimpleStreamableObject
                     if (_playarea.contains(xx, yy)) {
                         _tstate[_width*yy+xx] = ptype;
                         _btstate[_width*yy+xx] = ptype;
-                        _estate[_width*yy+xx] = 2;
+                        _estate[_width*yy+xx] = elevation;
                     }
                 }
             }
@@ -665,10 +667,10 @@ public class BangBoard extends SimpleStreamableObject
 
         } else if (piece instanceof Track) {
             int idx = _width*piece.y+piece.x;
+            _estate[idx] = (byte)(_elevationUnitsPerTile/8);
             if (((Track)piece).preventsGroundOverlap()) {
                 _tstate[idx] = _btstate[idx] = O_PROP;
                 _btstate[idx] = _btstate[idx] = O_PROP;
-                _estate[idx] = 2;
             }
 
         } else if (piece instanceof Bonus) {
@@ -687,11 +689,13 @@ public class BangBoard extends SimpleStreamableObject
 
     /**
      * Returns the combined elevation (heightfield elevation plus piece
-     * elevation) at the specified tile coordinates.
+     * elevation, or the water height if underwater) at the specified tile
+     * coordinates.
      */
     public int getElevation (int x, int y)
     {
-        return getHeightfieldElevation(x, y) + getPieceElevation(x, y);
+        return Math.max(_waterLevel + _elevationUnitsPerTile/8,
+            getHeightfieldElevation(x, y) + getPieceElevation(x, y));
     }
 
     /**
@@ -715,7 +719,8 @@ public class BangBoard extends SimpleStreamableObject
         if (x < 0 || y < 0 || x >= _width || y >= _height) {
             return 0;
         } else {
-            return _estate[y*_width+x] * (int)_elevationUnitsPerTile;
+            int estate = _estate[y*_width+x];
+            return (estate >= 0) ? estate : (256 + estate);
         }
     }
 

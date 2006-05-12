@@ -288,6 +288,9 @@ public class TerrainNode extends Node
             this.x = x;
             this.y = y;
             updateVertices();
+            if (isCollidable()) {
+                updateCollisionTree();
+            }
         }
 
         /**
@@ -307,10 +310,11 @@ public class TerrainNode extends Node
             boolean constantElevation = false;
             float elevation = 0f;
             int tx = getTileX(), ty = getTileY();
+            int belev = _board.getElevation(tx, ty);
             if (_onTile && _overPieces &&
-                _board.getPieceElevation(tx, ty) > 0) {
+                belev > _board.getHeightfieldElevation(tx, ty)) {
                 constantElevation = true;
-                elevation = _board.getElevation(tx, ty) * _elevationScale;
+                elevation = belev * _elevationScale;
             }
 
             float x0 = x - _width/2, y0 = y - _height/2;
