@@ -59,7 +59,7 @@ public class GoodsInspector extends BContainer
         _descrip.setStyleClass("goods_descrip");
 
         BContainer ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        ccont.add(new BLabel(_ctx.xlate("store", "m.price")));
+        ccont.add(new BLabel(_ctx.xlate("store", "m.price"), "table_data"));
         ccont.add(_cost = new MoneyLabel(ctx));
         _cost.setMoney(0, 0, false);
         add(ccont, new Rectangle(200, 15, 200, 25));

@@ -51,7 +51,7 @@ public abstract class ShopView extends BWindow
                                  GroupLayout.makeVStretch()) {
                 protected Dimension computePreferredSize (int wh, int hh) {
                     Dimension d = super.computePreferredSize(wh, hh);
-                    d.width = Math.min(d.width, 450);
+                    d.width = Math.min(d.width, 500);
                     return d;
                 }
             };
@@ -82,7 +82,7 @@ public abstract class ShopView extends BWindow
             _intro.add(btns, GroupLayout.FIXED);
         }
         if (!_intro.isAdded()) {
-            _ctx.getBangClient().displayPopup(_intro, true, 450);
+            _ctx.getBangClient().displayPopup(_intro, true, 500);
         }
     }
 

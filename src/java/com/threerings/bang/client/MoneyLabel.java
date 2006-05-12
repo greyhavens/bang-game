@@ -7,6 +7,7 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -21,9 +22,11 @@ public class MoneyLabel extends BContainer
         add(_scrip = new BLabel(BangUI.scripIcon), BorderLayout.WEST);
         _scrip.setIconTextGap(5);
         _scrip.setStyleClass("money_label");
+        _scrip.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.scrip_tip"));
         add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
         _coins.setIconTextGap(5);
         _coins.setStyleClass("money_label");
+        _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.coin_tip"));
     }
 
     /**
