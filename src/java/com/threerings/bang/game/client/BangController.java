@@ -35,6 +35,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.parlor.game.client.GameController;
 
 import com.threerings.bang.client.GlobalKeyManager;
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -591,10 +592,13 @@ public class BangController extends GameController
      */
     protected void statsDismissed (boolean toTown)
     {
-        // head back to the saloon or to town
-        if (toTown || !_ctx.getLocationDirector().moveBack()) {
+        if (toTown) {
             _ctx.getLocationDirector().leavePlace();
             _ctx.getBangClient().showTownView();
+        } else {
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
         }
     }
 
