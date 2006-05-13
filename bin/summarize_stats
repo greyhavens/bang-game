@@ -1,0 +1,37 @@
+#!/usr/bin/perl -w
+#
+# $Id$
+#
+# Grinds the Bang daily server log and outputs a summary of various usage
+# statistics. This will eventually be replaced with a more sophisticated tool
+# that stores this information in a database (perhaps factored out of the
+# Yohoho stats processing code).
+
+my %usertime;
+my %usersess;
+my $tottime = 0;
+my $totsess = 0;
+
+while (<>) {
+    if (/session_end (\S+) ctime:(\d+)/) {
+        $usertime{$1} += $2;
+        $usersess{$1}++;
+        $tottime += $2;
+        $totsess++;
+    }
+}
+
+my $ucount = keys %usersess;
+my $totmins = $tottime/60;
+print "Username  Sessions  Total mins  Avg. sess\n";
+printf("ALL %-7d %6d     %7.0f       %4.0f\n",
+       $ucount, $totsess, $totmins, $totmins/$totsess);
+
+my @topusers = sort { $usertime{$b} - $usertime{$a} } keys %usertime;
+my $idx = 0;
+foreach $user (@topusers) {
+    my $mins = $usertime{$user} / 60;
+    my $avgsess = $mins / $usersess{$user};
+    printf("%-12s  %4d        %4.0f       %4.0f\n",
+           $user, $usersess{$user}, $mins, $avgsess);
+}

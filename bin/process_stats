@@ -110,18 +110,17 @@ if ($dry_run) {
 # process the general server statistics
 my $date = $datedir;
 $date =~ s:/:-:g;
-# TODO
 
-# # run the server state summarizer
-# $cmd = "$root/bin/state_grind $histlogdir/state.log";
-# if ($dry_run) {
-#     print("$cmd\n");
-#     print("mv *.png *.dat $statsdir\n");
-# } else {
-#     system_warn("nice -n 20 $cmd");
-#     # move the generated graphs into the right directory
-#     system_warn("mv *.png *.dat $statsdir");
-# }
+# run our simple stat summarizer
+$cmd = "$root/bin/summarize_stats $histlogdir/server.log > /tmp/bangstats.tmp";
+if ($dry_run) {
+    print("$cmd\n");
+    # print("mv *.png *.dat $statsdir\n");
+} else {
+    system_warn("nice -n 20 $cmd");
+    # move the generated graphs into the right directory
+    # system_warn("mv *.png *.dat $statsdir");
+}
 
 # finally send the stats email
 if (!$dry_run) {
