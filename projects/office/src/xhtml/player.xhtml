@@ -1,0 +1,92 @@
+#if ($target)
+#set ($title = $i18n.xlate("player.title_plus", $target.username))
+#else
+#set ($title = $i18n.xlate("player.title"))
+#end
+#import("/header.incl")
+
+<form action="player.xhtml" method="GET">
+$i18n.xlate("player.who")
+$form.text("who", "size='15'")
+$form.submit("submit", $i18n.xlate("player.find"))
+</form>
+
+#if ($target)
+<p>
+<table cellpadding="10">
+<tr><th>$i18n.xlate("player.account_header")</th>
+<th colspan="2">$i18n.xlate("player.player_header")</th></tr>
+<tr><td style="border: 1px solid" valign="top">
+
+<table>
+<tr><td class="heading">$i18n.xlate("player.username")</td>
+    <td><b>$target.username</b></td></tr>
+<tr><td class="heading">$i18n.xlate("player.account_creation")</td>
+    <td>$target.created</td></tr>
+<tr><td class="heading">$i18n.xlate("player.email")</td>
+    <td>$target.email</td></tr>
+<tr><td class="heading">$i18n.xlate("player.affiliate")</td>
+    <td>$affiliate</td></tr>
+</table>
+
+</td><td style="border: 1px solid" valign="top">
+
+#if ($player)
+<table>
+<tr><td class="heading">$i18n.xlate("player.handle")</td>
+    <td><b>$player.handle</b></td></tr>
+
+<tr><td class="heading">$i18n.xlate("player.player_creation")</td>
+    <td>$player.created</td></tr>
+
+<tr><td class="heading">$i18n.xlate("player.last_session")</td>
+    <td>$player.lastSession</td></tr>
+
+<tr><td class="heading">$i18n.xlate("player.sessions")</td>
+    <td>$player.sessions</td></tr>
+
+#set ($sesshours = $player.sessionMinutes/60)
+<tr><td class="heading">$i18n.xlate("player.session_time")</td>
+    <td>$sesshours</td></tr>
+
+#set ($sessavg = $player.sessionMinutes/$player.sessions)
+<tr><td class="heading">$i18n.xlate("player.session_avg")</td>
+    <td>$sessavg $i18n.xlate("player.mins")</td></tr>
+</table>
+
+</td><td style="border: 1px solid" valign="top">
+
+<table>
+<tr><td class="heading">$i18n.xlate("player.scrip")</td>
+    <td>$player.scrip</td></tr>
+<tr><td class="heading">$i18n.xlate("player.gender")</td>
+    <td>$i18n.xlate("player.gender.$player.isSet(1)") </td></tr>
+<tr><td class="heading">$i18n.xlate("player.look")</td>
+    <td>$player.look</td></tr>
+<tr><td class="heading">$i18n.xlate("player.victory_look")</td>
+    <td>#if ($player.victoryLook)$player.victoryLook#else(none)#end</td></tr>
+<tr><td class="heading">$i18n.xlate("player.wanted_look")</td>
+    <td>#if ($player.wantedLook)$player.wantedLook#else(none)#end</td></tr>
+</table>
+
+#else
+$i18n.xlate("player.no_player_record")
+#end
+</td></tr>
+</table>
+</p>
+
+#if ($stats)
+<table cellpadding="10">
+<tr><th>$i18n.xlate("player.stats_header")</th>
+<tr><td style="border: 1px solid" valign="top">
+#foreach ($stat in $stats)
+$stat<br/>
+#end
+</td></tr>
+</table>
+#end
+
+#end
+
+#import("/footer.incl")

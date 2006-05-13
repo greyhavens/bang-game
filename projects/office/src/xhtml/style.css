@@ -1,0 +1,29 @@
+/**
+ * $Id$
+ * 
+ * Style sheet for the Sheriff's Office webapp.
+ */
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.banner {
+  font-size: x-large;
+}
+
+.small {
+  font-size: small;
+}
+
+.heading {
+  font-size: small;
+  text-decoration: underline;
+  text-align: right;
+  padding-right: 5px;
+  padding-bottom: 5px;
+}

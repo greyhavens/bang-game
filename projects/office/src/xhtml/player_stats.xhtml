@@ -1,3 +1,6 @@
+#set ($title = $i18n.xlate("player_stats.title"))
+#import("/header.incl")
+
 <form action="player_stats.xhtml" method="POST">
 Types: <select name="type">
 #foreach ($type in $types)
@@ -16,3 +19,5 @@ $form.submit("Go")
 <li>$stat</li>
 #end
 </ul>
+
+#import("/footer.incl")

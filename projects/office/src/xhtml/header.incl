@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>$i18n.xlate("site.title", $title)</title>
+<link rel="stylesheet" href="$context_path/style.css" type="text/css" />
+</head>
+
+<body>
+<table width="100%" style="margin-bottom: 15px">
+<tr style="border: 1px solid"><td style="padding: 10px" class="banner">
+  $i18n.xlate("site.title", $title)
+</td>
+<td style="padding: 10px" align="right" valign="bottom">
+$i18n.xlate("site.login", $username)<br>
+<a href="player.xhtml">$i18n.xlate("site.player")</a> |
+<a href="player_stats.xhtml">$i18n.xlate("site.stats")</a>
+</td></tr>
+</table>

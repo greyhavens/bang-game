@@ -30,8 +30,10 @@ public abstract class AdminLogic
         throws Exception
     {
         OfficeApp oapp = (OfficeApp)app;
-        invoke(oapp, ctx, (OOOUser)oapp.getUserManager().requireUser(
-                   ctx.getRequest(), ADMIN_TOKENS));
+        OOOUser user = (OOOUser)oapp.getUserManager().requireUser(
+            ctx.getRequest(), ADMIN_TOKENS);
+        ctx.put("username", user.username);
+        invoke(oapp, ctx, user);
     }
 
     protected static final byte[] ADMIN_TOKENS = {
