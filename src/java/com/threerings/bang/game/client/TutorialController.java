@@ -199,7 +199,7 @@ public class TutorialController
         }
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
-        _tutwin.pack(500, -1);
+        _tutwin.pack(600, -1);
         _tutwin.setLocation((width-_tutwin.getWidth())/2,
                             height-_tutwin.getHeight() - 10);
     }

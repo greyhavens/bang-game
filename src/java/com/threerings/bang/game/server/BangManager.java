@@ -567,13 +567,13 @@ public class BangManager extends GameManager
                     prec.ratings = new DSet();
                     avatars[ii] = ((BangAI)_AIs[ii]).avatar;
                 } else {
-                    PlayerObject user = (PlayerObject)getPlayer(ii);
-                    prec.playerId = user.playerId;
-                    prec.purse = user.getPurse();
-                    prec.ratings = user.ratings;
-                    Look look = user.getLook(Look.Pose.DEFAULT);
+                    prec.user = (PlayerObject)getPlayer(ii);
+                    prec.playerId = prec.user.playerId;
+                    prec.purse = prec.user.getPurse();
+                    prec.ratings = prec.user.ratings;
+                    Look look = prec.user.getLook(Look.Pose.DEFAULT);
                     if (look != null) {
-                        avatars[ii] = look.getAvatar(user);
+                        avatars[ii] = look.getAvatar(prec.user);
                     }
                 }
             }
@@ -1164,28 +1164,48 @@ public class BangManager extends GameManager
 
             // compute this player's "take home" cash (if they're not an AI)
             PlayerRecord prec = _precords[ii];
-            if (prec.playerId > 0) {
+            if (prec.playerId > 0 && _scenario.shouldPayEarnings(prec.user)) {
                 award.cashEarned = computeEarnings(ii);
             }
 
             // if this player left the game early, don't update their stats or
             // award them a new badge
-            PlayerObject user = (PlayerObject)getPlayer(ii);
-            if (user == null || !_bangobj.isActivePlayer(ii)) {
+            if (!_bangobj.isActivePlayer(ii)) {
                 continue;
             }
-            prec.user = user;
 
             // if this was a rated (matched) game, persist various stats and
             // potentially award a badge
             if (_bconfig.rated) {
-                recordStats(user, ii, award, gameTime);
+                recordStats(prec.user, ii, award, gameTime);
             }
         }
 
         // broadcast the per-round earnings which will be displayed on one
         // stats panel
         _bangobj.setPerRoundEarnings(_bangobj.perRoundEarnings);
+
+        // record this game to the server stats log (before we sort the awards)
+        try {
+            StringBuffer buf = new StringBuffer("game_ended");
+            buf.append(" s:").append(StringUtil.join(_bconfig.scenarios));
+            buf.append(" ts:").append(_bconfig.teamSize).append(" ");
+            for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                if (ii > 0) {
+                    buf.append(",");
+                }
+                if (isAI(ii)) {
+                    buf.append("tin_can");
+                } else {
+                    buf.append(_precords[ii].user.username);
+                }
+                buf.append(":").append(_precords[ii].finishedRound);
+                buf.append(":").append(awards[ii]);
+            }
+            BangServer.generalLog(buf.toString());
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Failed to log game data.", t);
+        }
 
         // sort by rank and then stuff the award data into the game object
         Arrays.sort(awards);
@@ -1481,14 +1501,21 @@ public class BangManager extends GameManager
             }
 
             // total up the players they defeated in each round
-            int defeated = 0;
+            int defeated = 0, aisDefeated = 0;
             for (int ii = _ranks.length-1; ii >= 0; ii--) {
                 if (_ranks[ii].pidx == pidx) {
                     break;
                 }
                 // require that the defeated opponent finished the round
                 if (_precords[_ranks[ii].pidx].finishedRound > rr) {
-                    defeated++;
+                    if (isAI(_ranks[ii].pidx)) {
+                        // only the first AI counts toward earnings
+                        if (++aisDefeated <= 1) {
+                            defeated++;
+                        }
+                    } else {
+                        defeated++;
+                    }
                 }
             }
             earnings += BASE_EARNINGS[defeated];

@@ -274,6 +274,15 @@ public abstract class Scenario
     }
 
     /**
+     * Returns true if this scenario type should pay out earnings to the
+     * specified player. False if not.
+     */
+    public boolean shouldPayEarnings (PlayerObject user)
+    {
+        return true;
+    }
+
+    /**
      * Gives the scenario an opportunity to record statistics for the supplied
      * player at the end of the game.
      */

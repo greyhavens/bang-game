@@ -139,6 +139,9 @@ public class PaperView extends BContainer
 
     protected void setContents (String contents)
     {
+        if (contents == null) {
+            contents = _msgs.get(SaloonCodes.INTERNAL_ERROR);
+        }
         HTMLDocument doc = new HTMLDocument(BangUI.css);
         doc.setBase(DeploymentConfig.getDocBaseURL());
         try {

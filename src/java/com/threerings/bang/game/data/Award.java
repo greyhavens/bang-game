@@ -35,4 +35,13 @@ public class Award extends SimpleStreamableObject
     {
         return rank - other.rank;
     }
+
+    /**
+     * Returns a compact representation of this award.
+     */
+    public String toString ()
+    {
+        return rank + ":" + cashEarned + ":" +
+            (badge == null ? "none" : badge.getType());
+    }
 }

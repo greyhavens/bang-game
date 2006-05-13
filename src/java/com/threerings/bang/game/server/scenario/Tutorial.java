@@ -124,6 +124,13 @@ public class Tutorial extends Scenario
         return false;
     }
 
+    @Override // documentation inherited
+    public boolean shouldPayEarnings (PlayerObject user)
+    {
+        return !user.stats.containsValue(
+            Stat.Type.TUTORIALS_COMPLETED, _config.ident);
+    }
+
     // documentation inherited from PlaceManager.MessageHandler
     public void handleEvent (MessageEvent event, PlaceManager pmgr)
     {
