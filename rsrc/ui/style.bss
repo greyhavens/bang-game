@@ -119,6 +119,28 @@ big_button:down {
   padding: 2 26 0 24;
 }
 
+huge_button {
+  color: #FFFFFF;
+  background: image "ui/buttons/huge_normal.png" framexy;
+  font: "Old Town" plain 24;
+  text-align: center;
+  text-effect: shadow;
+  effect-color: #000000;
+  vertical-align: center;
+  padding: 0 25;
+}
+huge_button:disabled {
+  background: image "ui/buttons/huge_disabled.png" framexy;
+  color: #FFFFFF4C;
+}
+huge_button:hover {
+  background: image "ui/buttons/huge_hover.png" framexy;
+}
+huge_button:down {
+  background: image "ui/buttons/huge_down.png" framexy;
+  padding: 2 26 0 24;
+}
+
 alt_button {
   color: #FFFFFF;
   background: image "ui/buttons/secondary_normal.png" framexy;

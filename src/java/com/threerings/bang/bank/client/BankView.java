@@ -44,14 +44,14 @@ public class BankView extends ShopView
         add(_status, new Rectangle(265, 10, 500, 40));
 
         add(_qsell = new QuickTransact(ctx, _status, false),
-            new Rectangle(225, 555, 320, 30));
+            new Rectangle(225, 463, 320, 30));
         add(_qbuy = new QuickTransact(ctx, _status, true),
-            new Rectangle(620, 555, 320, 30));
+            new Rectangle(620, 463, 320, 30));
 
         add(_fsell = new FullTransact(ctx, _status, false),
-            new Rectangle(225, 85, 330, 410));
+            new Rectangle(225, 85, 330, 315));
         add(_fbuy = new FullTransact(ctx, _status, true),
-            new Rectangle(630, 85, 330, 410));
+            new Rectangle(630, 85, 330, 315));
 
         add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
         add(createHelpButton(), new Point(790, 20));

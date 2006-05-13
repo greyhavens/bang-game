@@ -53,7 +53,7 @@ public class FullTransact extends BContainer
 
         String msg = buying ? "m.buy" : "m.sell";
         add(new BLabel(_msgs.get(msg + "_offers"), "bank_title"),
-            new Point(0, 385));
+            new Point(0, 294));
 
         // add slots for the top four offers
         BContainer offers = new BContainer(new TableLayout(4, 5, 15));
@@ -62,10 +62,10 @@ public class FullTransact extends BContainer
             _offers[ii] = new OfferLabel(offers);
         }
         _offers[0].setNoOffers();
-        add(offers, new Rectangle(12, 245, 310, 135));
+        add(offers, new Rectangle(12, 210, 310, 75));
 
         add(new BLabel(_msgs.get(msg + "_post_offer"), "bank_post_title"),
-            new Point(0, 212));
+            new Point(0, 159));
 
         BContainer moffer = GroupLayout.makeHBox(GroupLayout.LEFT);
         moffer.add(new BLabel(BangUI.coinIcon));
@@ -81,12 +81,12 @@ public class FullTransact extends BContainer
         moffer.add(new Spacer(15, 1));
         moffer.add(_post = new BButton(_msgs.get("m.post"), this, "post"));
         _post.setEnabled(false);
-        add(moffer, new Point(0, 178));
+        add(moffer, new Point(0, 125));
 
         add(new BLabel(_msgs.get("m.your_offers"), "bank_title"),
-            new Point(0, 139));
+            new Point(0, 86));
         _myoffers = new BContainer(new TableLayout(5, 3, 15));
-        add(new BScrollPane(_myoffers), new Rectangle(12, 3, 310, 132));
+        add(new BScrollPane(_myoffers), new Rectangle(12, 0, 310, 82));
     }
 
     public void init (BankObject bankobj)

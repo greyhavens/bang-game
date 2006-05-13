@@ -53,7 +53,7 @@ public interface BangCodes extends InvocationCodes
     public static final String CARDS_MSGS = "cards";
 
     /** The number of offers of each type we publish in the coin exchange. */
-    public static final int COINEX_OFFERS_SHOWN = 5;
+    public static final int COINEX_OFFERS_SHOWN = 3;
 
     /** The maximum number of pardners you can have. */
     public static final int MAX_PARDNERS = 75;
