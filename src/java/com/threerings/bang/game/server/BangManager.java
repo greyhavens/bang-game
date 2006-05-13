@@ -2076,5 +2076,5 @@ public class BangManager extends GameManager
     };
 
     /** Defines the base earnings (per-round) for each rank. */
-    protected static final int[] BASE_EARNINGS = { 70, 85, 95, 105 };
+    protected static final int[] BASE_EARNINGS = { 50, 70, 85, 105 };
 }
