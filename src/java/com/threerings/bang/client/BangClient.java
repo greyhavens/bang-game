@@ -150,7 +150,8 @@ public class BangClient extends BasicClient
         // fill in a bug report
         PlayerObject user = ctx.getUserObject();
         Report report = new Report();
-        report.submitter = user.username.toString();
+        report.submitter = (user == null) ?
+            "<unknown>" : user.username.toString();
         if (descrip.length() > 255) {
             report.summary = StringUtil.truncate(descrip, 255);
             report.setAttribute("Description", descrip);
@@ -158,7 +159,9 @@ public class BangClient extends BasicClient
             report.summary = descrip;
         }
         report.version = String.valueOf(DeploymentConfig.getVersion());
-        report.setAttribute("Handle", "" + user.handle);
+        if (user != null) {
+            report.setAttribute("Handle", "" + user.handle);
+        }
         report.setAttribute("Driver", Display.getAdapter());
         report.setAttribute("GL Display Mode", "" + Display.getDisplayMode());
         report.setAttribute("GL Version", GL11.glGetString(GL11.GL_VERSION));
@@ -177,7 +180,8 @@ public class BangClient extends BasicClient
         }
 
         log.info("Submitting bug report '" + descrip + "'.");
-        String[] files = { BangClient.localDataDir("bang.log") };
+        String[] files = { BangClient.localDataDir("old-bang.log"),
+                           BangClient.localDataDir("bang.log")};
         ResultListener rl = new ResultListener() {
             public void requestCompleted (Object result) {
                 ctx.getChatDirector().displayFeedback(

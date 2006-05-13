@@ -3,6 +3,7 @@
 
 package com.threerings.bang.client;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -54,24 +55,37 @@ public class BangApp extends JmeApp
     /** Keep the last 50 formatted log records in memory. */
     public static RecentList recentLog = new RecentList(50);
 
-    public static void configureLog (String file)
+    /**
+     * Redirects the output of the application to the specified log file and
+     * configures our various logging systems.
+     */
+    public static void configureLog (String logfile)
     {
-        // we do this all in a strange order to avoid logging anything
-        // unti we set up our log formatter but we can't do that until
-        // after we've redirected system out and err
-        String dlog = null;
+        // potentially redirect stdout and stderr to a log file
+        File nlog = null;
         if (System.getProperty("no_log_redir") == null) {
-            dlog = BangClient.localDataDir(file);
+            // first delete any previous previous log file
+            File olog = new File(BangClient.localDataDir("old-" + logfile));
+            if (olog.exists()) {
+                olog.delete();
+            }
+
+            // next rename the previous log file
+            nlog = new File(BangClient.localDataDir(logfile));
+            if (nlog.exists()) {
+                nlog.renameTo(olog);
+            }
+
+            // and now redirect our output
             try {
                 PrintStream logOut = new PrintStream(
-                    new FileOutputStream(dlog), true);
+                    new FileOutputStream(nlog), true);
                 System.setOut(logOut);
                 System.setErr(logOut);
 
             } catch (IOException ioe) {
-                log.warning("Failed to open debug log [path=" + dlog +
+                log.warning("Failed to open debug log [path=" + nlog +
                             ", error=" + ioe + "].");
-                dlog = null;
             }
         }
 
@@ -89,6 +103,11 @@ public class BangApp extends JmeApp
         };
         OneLineLogFormatter.configureDefaultHandler(formatter);
         RepeatRecordFilter.configureDefaultHandler(100);
+
+        // if we've redirected our log output, note where to
+        if (nlog != null) {
+            log.info("Logging to '" + nlog + "'.");
+        }
     }
 
     public static void main (String[] args)
