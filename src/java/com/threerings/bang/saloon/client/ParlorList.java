@@ -201,7 +201,7 @@ public class ParlorList extends BContainer
         }
 
         public void add () {
-            if (!_name.isAdded()) {
+            if (_name.getParent() == null) {
                 _list.add(_name);
                 _list.add(_pards);
                 _list.add(_lock);
@@ -210,7 +210,7 @@ public class ParlorList extends BContainer
         }
 
         public void clear () {
-            if (_name.isAdded()) {
+            if (_name.getParent() != null) {
                 _list.remove(_name);
                 _list.remove(_pards);
                 _list.remove(_lock);
