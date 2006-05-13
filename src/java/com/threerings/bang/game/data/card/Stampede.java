@@ -40,7 +40,7 @@ public class Stampede extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 500;
+        return 300;
     }
 
     @Override // documentation inherited

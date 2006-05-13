@@ -62,7 +62,7 @@ public class Missile extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 250;
+        return 150;
     }
 
     @Override // documentation inherited
