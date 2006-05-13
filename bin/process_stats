@@ -124,7 +124,9 @@ if ($dry_run) {
 
 # finally send the stats email
 if (!$dry_run) {
+    my $host = `hostname`;
+    chomp($host);
     send_mail($admin_email, $admin_email,
-              $ENV{"HOST"} . ": Bang nightly stats", "/tmp/bangstats.tmp");
+              "$host: Bang nightly stats", "/tmp/bangstats.tmp");
     unlink("/tmp/bangstats.tmp");
 }
