@@ -164,9 +164,13 @@ public class GameInputHandler extends GodViewHandler
 
         // we only allow free form panning, nothing else
         keyboard.set("forward", KeyInput.KEY_W);
+        keyboard.set("arrow_forward", KeyInput.KEY_UP);
         keyboard.set("backward", KeyInput.KEY_S);
+        keyboard.set("arrow_backward", KeyInput.KEY_DOWN);
         keyboard.set("left", KeyInput.KEY_A);
+        keyboard.set("arrow_left", KeyInput.KEY_LEFT);
         keyboard.set("right", KeyInput.KEY_D);
+        keyboard.set("arrow_right", KeyInput.KEY_RIGHT);
     }
 
     /** Updates the board view's hover state on completion of camera paths. */
