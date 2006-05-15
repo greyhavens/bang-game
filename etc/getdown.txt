@@ -59,7 +59,7 @@ uresource = rsrc/sounds/feedback/bundle.jar
 uresource = rsrc/units/bundle.jar
 
 # Parameters passed to the JVM
-jvmarg = -Xmx128M
+jvmarg = -Xmx256M
 jvmarg = -Djava.library.path=%APPDIR%/native
 jvmarg = -Dappdir=%APPDIR%
 jvmarg = -Dresource_dir=%APPDIR%/rsrc
