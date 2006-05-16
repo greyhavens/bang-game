@@ -49,14 +49,16 @@ public class StatusView extends BWindow
     {
         GlobalKeyManager.Command showStatus = new GlobalKeyManager.Command() {
             public void invoke (int keyCode, int modifiers) {
-                // make sure we can display the status view right now
-                if (!ctx.getBangClient().canDisplayPopup(
-                        MainView.Type.STATUS)) {
+                // determine whether we can pop up the status view right now
+                boolean canShow = ctx.getBangClient().canDisplayPopup(
+                    MainView.Type.STATUS);
+
+                // get the status view from the client; if it is not already
+                // showing we will only create it if we're allowed
+                StatusView status = ctx.getBangClient().getStatusView(canShow);
+                if (status == null) {
                     return;
                 }
-
-                // get the status view from the client
-                StatusView status = ctx.getBangClient().getStatusView();
 
                 // determine which tab we want to show
                 int tabidx = 0;
@@ -68,12 +70,15 @@ public class StatusView extends BWindow
                 }
 
                 if (status.isAdded()) {
-                    if (tabidx == status.getSelectedTab()) {
-                        ctx.getBangClient().clearPopup(status, true);
-                    } else {
-                        status.setSelectedTab(tabidx);
+                    // ignore key strokes if we're not the top window
+                    if (ctx.getRootNode().isOnTop(status)) {
+                        if (tabidx == status.getSelectedTab()) {
+                            ctx.getBangClient().clearPopup(status, true);
+                        } else {
+                            status.setSelectedTab(tabidx);
+                        }
                     }
-                } else {
+                } else if (canShow) {
                     status.setSelectedTab(tabidx);
                     ctx.getBangClient().displayPopup(status, true);
                 }

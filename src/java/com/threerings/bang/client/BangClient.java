@@ -269,13 +269,13 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Returns the player status view; creating the view if necessary. We purge
-     * the view from memory every time the main view is switched, but preserve
-     * it while in one place.
+     * Returns the player status view; creating the view if necessary (as long
+     * as <code>create</code> is true). We purge the view from memory every
+     * time the main view is switched, but preserve it while in one place.
      */
-    public StatusView getStatusView ()
+    public StatusView getStatusView (boolean create)
     {
-        if (_status == null) {
+        if (_status == null && create) {
             _status = new StatusView(_ctx);
         }
         return _status;
@@ -346,8 +346,9 @@ public class BangClient extends BasicClient
             return false;
         }
 
-        // don't allow FKEY popups if we have other popups showing
-        if (type == MainView.Type.FKEY && _popups.size() > 0) {
+        // don't allow FKEY or STATUS popups if we have other popups showing
+        if ((type == MainView.Type.FKEY || type == MainView.Type.STATUS) &&
+            _popups.size() > 0) {
             return false;
         }
 
