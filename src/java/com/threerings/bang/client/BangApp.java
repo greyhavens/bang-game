@@ -10,8 +10,6 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import javax.swing.JOptionPane;
-
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.system.DisplaySystem;
@@ -31,8 +29,10 @@ import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.RecentList;
 import com.samskivert.util.RepeatRecordFilter;
 
-import com.threerings.presents.client.Client;
+import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
+
+import com.threerings.presents.client.Client;
 
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.camera.CameraHandler;
@@ -135,8 +135,6 @@ public class BangApp extends JmeApp
         BangApp app = new BangApp();
         if (app.init()) {
             app.run(server, port, username, password);
-        } else {
-            System.exit(-1);
         }
     }
 
@@ -157,7 +155,7 @@ public class BangApp extends JmeApp
 
         // initialize our client instance
         _client = new BangClient();
-        _client.init(this);
+        _client.init(this, false);
 
         // speed up key input
         _input.setActionSpeed(150f);
@@ -235,8 +233,16 @@ public class BangApp extends JmeApp
     @Override // documentation inherited
     protected void reportInitFailure (Throwable t)
     {
-        t.printStackTrace(System.err);
-        JOptionPane.showMessageDialog(null, "Initialization failed: " + t);
+        log.log(Level.WARNING, "JME initalization failed.", t);
+
+        // if we don't have a client yet, create a bare bones client that we
+        // can use to get our context
+        MessageManager msgmgr = (_client == null) ?
+            new MessageManager(BangClient.MESSAGE_MANAGER_PREFIX) :
+            _client.getContext().getMessageManager();        
+        InitFailedDialog ifd = new InitFailedDialog(msgmgr, t);
+        ifd.pack();
+        ifd.setVisible(true);
     }
 
     @Override // documentation inherited

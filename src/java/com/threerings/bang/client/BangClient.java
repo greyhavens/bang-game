@@ -206,10 +206,15 @@ public class BangClient extends BasicClient
      * Initializes a new client and provides it with a frame in which to
      * display everything.
      */
-    public void init (BangApp app)
+    public void init (BangApp app, boolean failureMode)
     {
         _ctx = new BangContextImpl();
         initClient(_ctx, app, app);
+
+        // if we're recovering from a failure, stop here
+        if (failureMode) {
+            return;
+        }
 
         // upgrade getdown if appropriate
         File newgd = new File(localDataDir("code/getdown-pro-new.jar"));
