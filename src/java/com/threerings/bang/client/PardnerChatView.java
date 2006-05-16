@@ -243,11 +243,10 @@ public class PardnerChatView extends BDecoratedWindow
          */
         public void close ()
         {
-            if (_tabs.getTabCount() == 1) {
+            _tabs.removeTab(this);
+            _pardners.remove(_pardner.handle);
+            if (_tabs.getTabCount() == 0) {
                 _ctx.getBangClient().clearPopup(PardnerChatView.this, false);
-            } else {
-                _tabs.removeTab(this);
-                _pardners.remove(_pardner.handle);
             }
         }
 
@@ -257,7 +256,10 @@ public class PardnerChatView extends BDecoratedWindow
             super.wasAdded();
 
             // clear the alert icon, if present
-            _tabs.getTabButton(this).setIcon(null);
+            BButton btn = _tabs.getTabButton(this);
+            if (btn != null) {
+                btn.setIcon(null);
+            }
         }
 
         @Override // documentation inherited
