@@ -343,14 +343,7 @@ public class BangManager extends GameManager
                 // the initial shot updates the shooter's last acted
                 effect.shooterLastActed = _bangobj.tick;
 
-                // before we apply the shot effect, we need to see if any
-                // pre-shot effect needs to be applied
-                Effect preshot = shooter.willShoot(_bangobj, target, effect);
-                if (preshot != null) {
-                    deployEffect(shooter.owner, preshot);
-                }
-
-                // now we can apply the shot effect
+                // apply the shot effect
                 deployEffect(shooter.owner, effect);
                 _bangobj.stats[shooter.owner].incrementStat(
                     Stat.Type.SHOTS_FIRED, 1);
@@ -392,6 +385,17 @@ public class BangManager extends GameManager
      */
     public boolean deployEffect (int effector, Effect effect)
     {
+        // allow units to specify pre-shot effects
+        if (effect instanceof ShotEffect) {
+            ShotEffect seffect = (ShotEffect)effect;
+            Piece shooter = _bangobj.pieces.get(seffect.shooterId),
+                target = _bangobj.pieces.get(seffect.targetId);
+            Effect preshot = shooter.willShoot(_bangobj, target, seffect);
+            if (preshot != null) {
+                deployEffect(shooter.owner, preshot);
+            }
+        }
+        
         // prepare the effect
         effect.prepare(_bangobj, _damage);
 

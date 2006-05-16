@@ -194,6 +194,7 @@ public abstract class Scenario
             // reset the units vital statistics
             unit.damage = 0;
             unit.influence = null;
+            unit.benuggeted = false;
             unit.setRespawnTick((short)0);
 
             // if the unit is still in play for some reason, remove it first
