@@ -315,12 +315,16 @@ public abstract class ComicChatView extends BScrollPane
 
         public void addMessage (String msg)
         {
-            BLabel label = new BLabel(msg, _left ?
-                "sent_chat_bubble" : "received_chat_bubble");
+            BLabel label = new BLabel(
+                msg, _left ? "sent_chat_bubble" : "received_chat_bubble") {
+                protected void wasAdded() {
+                    super.wasAdded();
+                    setBackground(
+                        DEFAULT, _mcont.getComponentCount() == 1 ?
+                        (_left ? _sfbg : _rfbg) : (_left ? _srbg : _rrbg));
+                }
+            };
             _mcont.add(label);
-            label.setBackground(BComponent.DEFAULT,
-                _mcont.getComponentCount() == 1 ?
-                    (_left ? _sfbg : _rfbg) : (_left ? _srbg : _rrbg));
         }
 
         protected BContainer _mcont;
