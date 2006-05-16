@@ -49,6 +49,7 @@ public class PardnerChatView extends BDecoratedWindow
         _ctx = ctx;
         setStyleClass("pardner_chat_view");
         setModal(true);
+        setLayer(1);
 
         ((GroupLayout)getLayoutManager()).setOffAxisPolicy(GroupLayout.STRETCH);
 
