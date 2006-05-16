@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import com.samskivert.util.Config;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
 import com.jme.input.InputHandler;
@@ -74,6 +75,10 @@ public abstract class TestApp extends JmeApp
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
         _keymgr.init(_ctx);
+
+        // create and start invoker
+        _invoker = new Invoker("invoker", this);
+        _invoker.start();
 
         ResourceManager.InitObserver obs = new ResourceManager.InitObserver() {
             public void progress (final int percent, long remaining) {
@@ -186,6 +191,10 @@ public abstract class TestApp extends JmeApp
             return TestApp.this;
         }
 
+        public Invoker getInvoker () {
+            return _invoker;
+        }
+
         public GlobalKeyManager getKeyManager () {
             return _keymgr;
         }
@@ -235,6 +244,7 @@ public abstract class TestApp extends JmeApp
 
     protected BasicContext _ctx;
     protected Config _config = new Config("bang");
+    protected Invoker _invoker;
     protected ResourceManager _rsrcmgr;
     protected ImageManager _imgmgr;
     protected MessageManager _msgmgr;
