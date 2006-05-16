@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BStyleSheet;
 
+import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.cast.CharacterManager;
@@ -46,6 +47,10 @@ public interface BasicContext extends JmeContext
     /** Returns a reference to our top-level application. */
     public JmeApp getApp ();
 
+    /** Returns a reference to the invoker object used to run tasks in the
+     * background. */
+    public Invoker getInvoker ();
+    
     /** Provides a mechanism for registering global key bindings. */
     public GlobalKeyManager getKeyManager ();
 

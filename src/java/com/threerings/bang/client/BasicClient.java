@@ -20,6 +20,7 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.BRootNode;
 import com.jmex.bui.BStyleSheet;
 
+import com.samskivert.util.Invoker;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
@@ -101,6 +102,10 @@ public class BasicClient
         _app = app;
         _ctx = ctx;
 
+        // create and start invoker
+        _invoker = new Invoker("invoker", rqueue);
+        _invoker.start();
+        
         // create the directors/managers/etc. provided by the context
         createContextServices(rqueue);
 
@@ -263,6 +268,10 @@ public class BasicClient
             return _app;
         }
 
+        public Invoker getInvoker () {
+            return _invoker;
+        }
+        
         public GlobalKeyManager getKeyManager () {
             return _keymgr;
         }
@@ -345,7 +354,8 @@ public class BasicClient
     protected JmeApp _app;
     protected BasicContextImpl _ctx;
     protected GlobalKeyManager _keymgr = new GlobalKeyManager();
-
+    protected Invoker _invoker;
+    
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;
     protected ImageManager _imgmgr;

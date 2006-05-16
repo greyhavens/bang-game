@@ -47,6 +47,7 @@ import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interator;
+import com.samskivert.util.Invoker;
 
 import com.threerings.media.image.ColorUtil;
 
@@ -416,7 +417,8 @@ public class TerrainNode extends Node
         // clean up any existing geometry
         detachAllChildren();
 
-        // create, store, and attach the splat blocks
+        // create, store, and attach the splat blocks immediately in the
+        // editor, or through the invoker in the game
         int swidth = (int)Math.ceil((_board.getHeightfieldWidth() - 1.0) /
                 SPLAT_SIZE),
             sheight = (int)Math.ceil((_board.getHeightfieldHeight() - 1.0) /
@@ -424,13 +426,14 @@ public class TerrainNode extends Node
         _blocks = new SplatBlock[swidth][sheight];
         for (int x = 0; x < swidth; x++) {
             for (int y = 0; y < sheight; y++) {
-                _blocks[x][y] = createSplatBlock(x, y);
-                attachChild(_blocks[x][y].node);
+                if (_editorMode) {
+                    _blocks[x][y] = new SplatBlock(x, y);
+                    _blocks[x][y].finishCreation();
+                } else {
+                    _ctx.getInvoker().postUnit(new BlockCreator(x, y));
+                }
             }
         }
-        
-        updateRenderState();
-        updateGeometricState(0, true);
         
         // compute the bounding box planes used for ray casting
         computeBoundingBoxPlanes();
@@ -879,121 +882,6 @@ public class TerrainNode extends Node
     }
     
     /**
-     * Creates and returns a splat block for the specified splat coordinates.
-     */
-    protected SplatBlock createSplatBlock (int sx, int sy)
-    {
-        // create the block and containing node
-        SplatBlock block = new SplatBlock();
-        block.node = new Node("block_" + sx + "_" + sy);
-
-        // determine which edges this splat contains, if any
-        boolean le = (sx == 0), re = (sx == _blocks.length - 1),
-            be = (sy == 0), te = (sy == _blocks[0].length - 1);
-
-        // compute the dimensions in terms of vertices and create buffers for
-        // the vertices and normals
-        int vx = sx * SPLAT_SIZE, vy = sy * SPLAT_SIZE,
-            bwidth = Math.min(SPLAT_SIZE + 1,
-                _board.getHeightfieldWidth() - vx),
-            bheight = Math.min(SPLAT_SIZE + 1,
-                _board.getHeightfieldHeight() - vy),
-            vwidth = bwidth + (le ? 2 : 0) + (re ? 2 : 0),
-            vheight = bheight + (be ? 2 : 0) + (te ? 2 : 0),
-            vbufsize = vwidth * vheight * 3;
-        block.vbuf = BufferUtils.createFloatBuffer(vbufsize);
-        block.nbuf = BufferUtils.createFloatBuffer(vbufsize);
-        block.cbuf = BufferUtils.createFloatBuffer(vwidth * vheight * 4);
-
-        // refresh sets the vertices and normals from the heightfield
-        block.bounds = new Rectangle(vx, vy, bwidth, bheight);
-        block.ebounds = new Rectangle(vx - (le ? 2 : 0), vy - (be ? 2 : 0),
-            vwidth, vheight);
-        block.refreshGeometry(block.ebounds);
-        
-        // set the colors based on shadow values
-        block.refreshColors();
-        
-        // set the texture coordinates
-        FloatBuffer tbuf0 = BufferUtils.createFloatBuffer(vwidth*vheight*2),
-            tbuf1 = BufferUtils.createFloatBuffer(vwidth*vheight*2);
-        float step0 = 1.0f / BangBoard.HEIGHTFIELD_SUBDIVISIONS,
-            step1 = 1.0f / (SPLAT_SIZE+1);
-        for (int y = (be ? -2 : 0), ymax = y + vheight; y < ymax; y++) {
-            for (int x = (le ? -2 : 0), xmax = x + vwidth; x < xmax; x++) {
-                float xoff = 0f;
-                if (le && x == -2) {
-                    xoff = -EDGE_SIZE / TILE_SIZE;
-
-                } else if (re && x == xmax - 1) {
-                    xoff = EDGE_SIZE / TILE_SIZE;
-                }
-                tbuf0.put(x * step0 + xoff);
-
-                float yoff = 0f;
-                if (be && y == -2) {
-                    yoff = -EDGE_SIZE / TILE_SIZE;
-
-                } else if (te && y == ymax - 1) {
-                    yoff = EDGE_SIZE / TILE_SIZE;
-                }
-                tbuf0.put(y * step0 + yoff);
-                
-                tbuf1.put(0.5f*step1 + x * step1);
-                tbuf1.put(0.5f*step1 + y * step1);
-            }
-        }
-
-        // compute the dimensions in terms of squares and set the triangle
-        // indices
-        int swidth = vwidth - 1, sheight = vheight - 1;
-        IntBuffer ibuf = BufferUtils.createIntBuffer(swidth * sheight * 2 * 3);
-        for (int y = 0; y < sheight; y++) {
-            for (int x = 0; x < swidth; x++) {
-                int ll = y*vwidth + x, lr = ll + 1,
-                    ul = ll + vwidth, ur = ul + 1;
-
-                // two triangles for each square: one including the upper left
-                // vertex, one the lower right, ccw winding order
-                ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
-                ibuf.put(ll); ibuf.put(lr); ibuf.put(ur);
-            }
-        }
-
-        // create a trimesh with the computed values; if the heightfield is
-        // static, use a VBO to store the vertices and compile to display list
-        block.mesh = new TriMesh("terrain", block.vbuf, block.nbuf, block.cbuf,
-            tbuf0, ibuf);
-        block.mesh.setTextureBuffer(tbuf1, 1);
-        block.mesh.setModelBound(new BoundingBox());
-        block.mesh.updateModelBound();
-        if (!_editorMode) {
-            // in order to ensure that texture coords are sent when compiling
-            // the shared geometry to a display list, we must include a dummy
-            // texture state
-            TextureState tstate = _ctx.getRenderer().createTextureState();
-            tstate.setTexture(null, 0);
-            tstate.setTexture(null, 1);
-            block.mesh.setRenderState(tstate);
-
-            if (Config.useVBOs && _ctx.getRenderer().supportsVBO()) {
-                VBOInfo vboinfo = new VBOInfo(true);
-                vboinfo.setVBOIndexEnabled(true);
-                block.mesh.setVBOInfo(vboinfo);
-                
-            } else if (Config.useDisplayLists) {
-                block.mesh.lockMeshes();
-            }
-            block.mesh.lockBounds();
-        }
-        
-        // create the splat meshes
-        block.refreshSplats(block.bounds);
-        
-        return block;
-    }
-
-    /**
      * Computes the normal at the specified heightfield location in sub-tile
      * coordinates.
      *
@@ -1037,26 +925,6 @@ public class TerrainNode extends Node
         return alpha / total;
     }
     
-    /**
-     * Computes the base color value at the given sub-tile coordinates.
-     */
-    protected void getTerrainColor (float x, float y, ColorRGBA result)
-    {
-        int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
-            fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
-        int ff = _board.getTerrainValue(fx, fy),
-            fc = _board.getTerrainValue(fx, cy),
-            cf = _board.getTerrainValue(cx, fy),
-            cc = _board.getTerrainValue(cx, cy);
-        float ax = x - fx, ay = y - fy;
-
-        _c1.interpolate(RenderUtil.getGroundColor(_ctx, ff),
-            RenderUtil.getGroundColor(_ctx, fc), ay);
-        _c2.interpolate(RenderUtil.getGroundColor(_ctx, cf),
-            RenderUtil.getGroundColor(_ctx, cc), ay);
-        result.interpolate(_c1, _c2, ax);
-    }
- 
     /**
      * Returns the smoothed shadow value for the specified sub-tile coordinate.
      * 0.0 is completely unshadowed, 1.0 is completely shadowed.
@@ -1287,6 +1155,34 @@ public class TerrainNode extends Node
         return FastMath.sqrt(dx*dx + dy*dy);
     }
     
+    /** Creates and adds a single terrain block on the invoker thread. */
+    protected class BlockCreator extends Invoker.Unit
+    {
+        public BlockCreator (int x, int y)
+        {
+            _x = x;
+            _y = y;
+            _view.addResolving(this);
+        }
+        
+        // documentation inherited
+        public boolean invoke ()
+        {
+            _blocks[_x][_y] = new SplatBlock(_x, _y);
+            return true;
+        }
+        
+        @Override // documentation inherited
+        public void handleResult ()
+        {
+            _blocks[_x][_y].finishCreation();
+            _view.clearResolving(this);
+        }
+        
+        /** The coordinates of the block to create. */
+        protected int _x, _y;
+    }
+    
     /** Contains all the state associated with a splat block (a collection of
      * splats covering a single block of terrain). */
     protected class SplatBlock
@@ -1308,9 +1204,6 @@ public class TerrainNode extends Node
         public HashIntMap<TextureState> groundTextures =
             new HashIntMap<TextureState>();
 
-        /** The base texture buffer. */
-        public ByteBuffer baseBuffer;
-
         /** Maps terrain codes to alpha texture buffers. */
         public HashIntMap<ByteBuffer> alphaBuffers =
             new HashIntMap<ByteBuffer>();
@@ -1322,6 +1215,142 @@ public class TerrainNode extends Node
         /** The texture states containing created textures. */
         public ArrayList<TextureState> tstates =
             new ArrayList<TextureState>();
+        
+        public SplatBlock (int sx, int sy)
+        {
+            // create the containing node
+            node = new Node("block_" + sx + "_" + sy);
+
+            // determine which edges this splat contains, if any
+            boolean le = (sx == 0), re = (sx == _blocks.length - 1),
+                be = (sy == 0), te = (sy == _blocks[0].length - 1);
+
+            // compute the dimensions in terms of vertices and create buffers
+            // for the vertices and normals
+            int vx = sx * SPLAT_SIZE, vy = sy * SPLAT_SIZE,
+                bwidth = Math.min(SPLAT_SIZE + 1,
+                    _board.getHeightfieldWidth() - vx),
+                bheight = Math.min(SPLAT_SIZE + 1,
+                    _board.getHeightfieldHeight() - vy),
+                vwidth = bwidth + (le ? 2 : 0) + (re ? 2 : 0),
+                vheight = bheight + (be ? 2 : 0) + (te ? 2 : 0),
+                vbufsize = vwidth * vheight * 3;
+            vbuf = BufferUtils.createFloatBuffer(vbufsize);
+            nbuf = BufferUtils.createFloatBuffer(vbufsize);
+            cbuf = BufferUtils.createFloatBuffer(vwidth * vheight * 4);
+
+            // refresh sets the vertices and normals from the heightfield
+            bounds = new Rectangle(vx, vy, bwidth, bheight);
+            ebounds = new Rectangle(vx - (le ? 2 : 0), vy - (be ? 2 : 0),
+                vwidth, vheight);
+            refreshGeometry(ebounds);
+            
+            // set the colors based on shadow values
+            refreshColors();
+            
+            // set the texture coordinates
+            FloatBuffer
+                tbuf0 = BufferUtils.createFloatBuffer(vwidth*vheight*2),
+                tbuf1 = BufferUtils.createFloatBuffer(vwidth*vheight*2);
+            float step0 = 1.0f / BangBoard.HEIGHTFIELD_SUBDIVISIONS,
+                step1 = 1.0f / (SPLAT_SIZE+1);
+            for (int y = (be ? -2 : 0), ymax = y + vheight; y < ymax; y++) {
+                for (int x = (le ? -2 : 0), xmax = x + vwidth; x < xmax; x++) {
+                    float xoff = 0f;
+                    if (le && x == -2) {
+                        xoff = -EDGE_SIZE / TILE_SIZE;
+
+                    } else if (re && x == xmax - 1) {
+                        xoff = EDGE_SIZE / TILE_SIZE;
+                    }
+                    tbuf0.put(x * step0 + xoff);
+
+                    float yoff = 0f;
+                    if (be && y == -2) {
+                        yoff = -EDGE_SIZE / TILE_SIZE;
+
+                    } else if (te && y == ymax - 1) {
+                        yoff = EDGE_SIZE / TILE_SIZE;
+                    }
+                    tbuf0.put(y * step0 + yoff);
+                    
+                    tbuf1.put(0.5f*step1 + x * step1);
+                    tbuf1.put(0.5f*step1 + y * step1);
+                }
+            }
+
+            // compute the dimensions in terms of squares and set the triangle
+            // indices
+            int swidth = vwidth - 1, sheight = vheight - 1;
+            IntBuffer ibuf = BufferUtils.createIntBuffer(
+                swidth * sheight * 2 * 3);
+            for (int y = 0; y < sheight; y++) {
+                for (int x = 0; x < swidth; x++) {
+                    int ll = y*vwidth + x, lr = ll + 1,
+                        ul = ll + vwidth, ur = ul + 1;
+
+                    // two triangles for each square: one including the upper
+                    // left vertex, one the lower right, ccw winding order
+                    ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
+                    ibuf.put(ll); ibuf.put(lr); ibuf.put(ur);
+                }
+            }
+
+            // create a trimesh with the computed values; if the heightfield is
+            // static, use a VBO to store the vertices and compile to display
+            // list
+            mesh = new TriMesh("terrain", vbuf, nbuf, cbuf,
+                tbuf0, ibuf);
+            mesh.setTextureBuffer(tbuf1, 1);
+            mesh.setModelBound(new BoundingBox());
+            mesh.updateModelBound();
+
+            // if we are using VBOs, we can set them here; display lists must
+            // be compiled on the main thread
+            if (!_editorMode) {
+                if (Config.useVBOs && _ctx.getRenderer().supportsVBO()) {
+                    VBOInfo vboinfo = new VBOInfo(true);
+                    vboinfo.setVBOIndexEnabled(true);
+                    mesh.setVBOInfo(vboinfo);
+                }
+                mesh.lockBounds();
+            }
+            
+            // create the splat meshes
+            refreshSplats(bounds);
+        }
+        
+        /**
+         * Performs the steps necessary to finish creation of the block on the
+         * main thread, which can make OpenGL calls.
+         */
+        public void finishCreation ()
+        {
+            // compile display lists if not using VBOs
+            if (!_editorMode && Config.useDisplayLists && !(Config.useVBOs &&
+                    _ctx.getRenderer().supportsVBO())) {
+                // in order to ensure that texture coords are sent when
+                // compiling the shared geometry to a display list, we must
+                // include a dummy texture state
+                TextureState tstate = _ctx.getRenderer().createTextureState();
+                tstate.setTexture(null, 0);
+                tstate.setTexture(null, 1);
+                mesh.setRenderState(tstate);
+                mesh.lockMeshes();
+            }
+            
+            // load and customize textures
+            for (TextureState tstate : tstates) {
+                tstate.load();
+                Texture ground = tstate.getTexture(0).createSimpleClone();
+                ground.setApply(Texture.AM_MODULATE);
+                tstate.setTexture(ground, 0);
+            }
+            
+            // attach self and update render state
+            attachChild(node);
+            node.updateRenderState();
+        }
         
         /**
          * Refreshes the geometry covered by the specified rectangle (in
@@ -1427,15 +1456,8 @@ public class TerrainNode extends Node
                     _ctx.getDisplay().getRenderer().createTextureState();
                 Texture ground =
                     getGroundTexture(code = layers[ii]-1).getTexture();
-                // before creating a clone, make sure the texture is bound
-                if (ground.getTextureId() == 0) {
-                    RenderUtil.createTextureState(_ctx, ground).load(0);
-                }
-                ground = ground.createSimpleClone();
-                ground.setApply(Texture.AM_MODULATE);
                 tstate.setTexture(ground, 0);
                 tstate.setTexture(createAlphaTexture(code, rect), 1);
-                tstate.load(1);
                 tstates.add(tstate);
                 splat.setRenderState(tstate);
 
@@ -1481,56 +1503,6 @@ public class TerrainNode extends Node
                 groundTextures.put(code,
                     tstate = RenderUtil.getGroundTexture(_ctx, code));
             }
-            return tstate;
-        }
-
-        /**
-         * Creates and returns the base texture, using preexisting buffers when
-         * possible.
-         */
-        protected TextureState createBaseTexture (Rectangle rect)
-        {
-            // create the buffer if it doesn't already exist
-            if (baseBuffer == null) {
-                baseBuffer = ByteBuffer.allocateDirect(TEXTURE_SIZE *
-                    TEXTURE_SIZE * 3);
-                rect = bounds;
-            }
-
-            // update the affected region of the buffer
-            float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE;
-            int x1 = (int)((rect.x - bounds.x) / step),
-                y1 = (int)((rect.y - bounds.y) / step),
-                x2 = (int)FastMath.ceil((rect.x + rect.width - 1 - bounds.x) /
-                    step),
-                y2 = (int)FastMath.ceil((rect.y + rect.height - 1 - bounds.y) /
-                    step);
-            ColorRGBA color = new ColorRGBA();
-            for (int y = y1; y <= y2; y++) {
-                for (int x = x1; x <= x2; x++) {
-                    int idx = (y*TEXTURE_SIZE + x)*3;
-
-                    getTerrainColor(bounds.x + x * step, bounds.y + y * step,
-                        color);
-                    baseBuffer.put((byte)(color.r * 255));
-                    baseBuffer.put((byte)(color.g * 255));
-                    baseBuffer.put((byte)(color.b * 255));
-                }
-            }
-
-            Texture texture = new Texture();
-            baseBuffer.rewind();
-            texture.setImage(new Image(Image.RGB888, TEXTURE_SIZE,
-                TEXTURE_SIZE, baseBuffer));
-
-            // set the filter parameters
-            texture.setFilter(Texture.FM_LINEAR);
-            texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-
-            TextureState tstate =
-                _ctx.getDisplay().getRenderer().createTextureState();
-            tstate.setTexture(texture);
-            tstates.add(tstate);
             return tstate;
         }
 
@@ -1629,7 +1601,7 @@ public class TerrainNode extends Node
     
     /** The array of splat blocks containing the terrain geometry/textures. */
     protected SplatBlock[][] _blocks;
-
+    
     /** Reusable objects for efficiency. */
     protected ColorRGBA _c1 = new ColorRGBA(), _c2 = new ColorRGBA();
     

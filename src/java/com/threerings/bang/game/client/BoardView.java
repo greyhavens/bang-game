@@ -344,20 +344,20 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Informs the board that this sprite is currently resolving.
+     * Informs the board that a board element is currently resolving.
      */
-    public void addResolvingSprite (PieceSprite resolver)
+    public void addResolving (Object resolver)
     {
-        _resolvingSprites++;
+        _resolving++;
         _toLoad++;
     }
 
     /**
-     * Informs the board that this sprite is finished resolving.
+     * Informs the board that a board element is finished resolving.
      */
-    public void clearResolvingSprite (PieceSprite resolved)
+    public void clearResolving (Object resolved)
     {
-        _resolvingSprites--;
+        _resolving--;
         _loaded++;
 
         // update our loading marquee
@@ -366,7 +366,7 @@ public class BoardView extends BComponent
         }
 
         // if we're done resolving, notify any resolution observers
-        if (_resolvingSprites == 0 && _resolutionObs.size() > 0) {
+        if (_resolving == 0 && _resolutionObs.size() > 0) {
             // flatten the list to an array and clear it to avoid funny
             // business if the resolution observer does something that triggers
             // a sprite to resolve and clear itself
@@ -861,7 +861,7 @@ public class BoardView extends BComponent
      */
     protected void addResolutionObserver (ResolutionObserver obs)
     {
-        if (_resolvingSprites == 0) {
+        if (_resolving == 0) {
             obs.mediaResolved();
         } else {
             _resolutionObs.add(obs);
@@ -1500,8 +1500,8 @@ public class BoardView extends BComponent
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();
 
-    /** Used to track sprites that are loading their animations. */
-    protected int _resolvingSprites;
+    /** Used to track board elements in the process of resolution. */
+    protected int _resolving;
 
     /** Used to keep track of observers that want to know when our sprites are
      * resolved and we're ready to roll. */

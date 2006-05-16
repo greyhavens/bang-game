@@ -448,16 +448,16 @@ public class PieceSprite extends Sprite
         if (!Config.displayUnits) {
             return;
         }
-        _view.addResolvingSprite(this);
+        _view.addResolving(this);
         ctx.getModelCache().getModel(type, name, zations,
             new ModelAttacher(this) {
             public void requestCompleted (Model model) {
                 super.requestCompleted(model);
-                _view.clearResolvingSprite(PieceSprite.this);
+                _view.clearResolving(PieceSprite.this);
                 modelLoaded(ctx, model);
             }
             public void requestFailed (Exception cause) {
-                _view.clearResolvingSprite(PieceSprite.this);
+                _view.clearResolving(PieceSprite.this);
             }
         });
     }

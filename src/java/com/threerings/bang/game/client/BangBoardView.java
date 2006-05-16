@@ -139,8 +139,8 @@ public class BangBoardView extends BoardView
      */
     public void doPreSelectBoardTour ()
     {
-        // make sure all sprites are resolved
-        if (_resolvingSprites > 0) {
+        // make sure all elements are resolved
+        if (_resolving > 0) {
             addResolutionObserver(new ResolutionObserver() {
                 public void mediaResolved () {
                     doPreSelectBoardTour();
@@ -437,7 +437,7 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    public void clearResolvingSprite (PieceSprite resolved)
+    public void clearResolving (Object resolved)
     {
         // note units that are resolved prior to the first tick so that we can
         // run them to their starting position when we're ready
@@ -446,7 +446,7 @@ public class BangBoardView extends BoardView
             ((UnitSprite)resolved).movingToStart = true;
             _readyUnits.add((UnitSprite)resolved);
         }
-        super.clearResolvingSprite(resolved);
+        super.clearResolving(resolved);
     }
 
     @Override // documentation inherited

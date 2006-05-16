@@ -13,7 +13,7 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.TextureState;
 
-import com.samskivert.util.Queue;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
 
@@ -34,6 +34,10 @@ public class ModelCache
     public ModelCache (BasicContext ctx)
     {
         _ctx = ctx;
+        
+        // create a texture state here in order to make sure that the
+        // texture state initialization isn't called from the loader
+        _ctx.getRenderer().createTextureState();
     }
 
     /**
@@ -76,16 +80,10 @@ public class ModelCache
                 rll.add(new InstanceCreator(key, zations, rl));
             }
             _prototypes.put(key, rll);
-            _loader.queueModel(key);
-            if (!_loader.isAlive()) {
-                // create a texture state here in order to make sure that the
-                // texture state initialization isn't called from the loader
-                _ctx.getRenderer().createTextureState();
-                _loader.start();
-            }
+            _ctx.getInvoker().postUnit(new ModelLoader(key));
         }
     }
-    
+
     /**
      * Creates and returns an instance of the specified model.
      *
@@ -104,71 +102,6 @@ public class ModelCache
     }
     
     /**
-     * Loads the specified model.  This method is called from the model loader
-     * thread.
-     *
-     * @return the model's file size
-     */
-    protected int loadModel (String key)
-    {
-        File file = _ctx.getResourceManager().getResourceFile(
-            key + "/model.dat");
-        int fsize = (int)file.length();
-        try {
-            Model model = Model.readFromFile(file, fsize >= MIN_MAP_SIZE &&
-                ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN);
-            loadModelCompleted(key, model);
-            return fsize;
-            
-        } catch (Exception cause) {
-            loadModelFailed(key, cause);
-            return 0;
-        }
-    }
-
-    /**
-     * Called on the model loader thread when a model has been successfully
-     * loaded.
-     */
-    protected void loadModelCompleted (final String key, final Model model)
-    {
-        // resolve the model's textures
-        model.resolveTextures(new ModelTextureProvider(key, null));
-        
-        // lock the model and report the result on the main thread
-        _ctx.getApp().postRunnable(new Runnable() {
-            public void run () {
-                model.lockStaticMeshes(_ctx.getRenderer(), Config.useVBOs,
-                    Config.useDisplayLists);
-                ResultListener<Model> rl =
-                    (ResultListener<Model>)_prototypes.get(key);
-                _prototypes.put(key, model);
-                rl.requestCompleted(model);
-            }
-        });
-    }
-    
-    /**
-     * Called on the model loader thread when a model has failed to load.
-     */
-    protected void loadModelFailed (final String key, final Exception cause)
-    {
-        // log the error
-        log.warning("Failed to load model [key=" + key + ", cause=" + cause +
-            "].");
-        
-        // report the result on the main thread
-        _ctx.getApp().postRunnable(new Runnable() {
-            public void run () {
-                ResultListener<Model> rl =
-                    (ResultListener<Model>)_prototypes.get(key);
-                _prototypes.put(key, cause);
-                rl.requestFailed(cause);
-            }
-        });
-    }
-    
-    /**
      * Normalizes the provided relative path.
      */
     protected String cleanPath (String path)
@@ -181,37 +114,60 @@ public class ModelCache
         return npath;
     }
     
-    /** Loads models in a separate thread. */    
-    protected class ModelLoader extends Thread
+    /** Loads a model on the invoker thread. */
+    protected class ModelLoader extends Invoker.Unit
     {
-        public ModelLoader ()
+        public ModelLoader (String key)
         {
-            super("ModelLoader");
-            setDaemon(true);
-            setPriority(Thread.MIN_PRIORITY);
+            _key = key;
         }
         
-        /** Queues a model up for loading. */
-        public void queueModel (String key)
+        // documentation inherited
+        public boolean invoke ()
         {
-            _queue.append(key);
+            File file = _ctx.getResourceManager().getResourceFile(
+                _key + "/model.dat");
+            long start = PerfMonitor.getCurrentMicros();
+            int size = (int)file.length();
+            try {
+                _model = Model.readFromFile(file, size >= MIN_MAP_SIZE &&
+                    ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN);
+                _model.resolveTextures(new ModelTextureProvider(_key, null));
+                PerfMonitor.recordModelLoad(start, size);
+                
+            } catch (Exception cause) {
+                log.warning("Failed to load model [key=" + _key + ", cause=" +
+                    cause + "].");
+                _cause = cause;
+            }
+            return true;
         }
         
         @Override // documentation inherited
-        public void run ()
+        public void handleResult ()
         {
-            while (true) {
-                String key = (String)_queue.get();
-                if (key == null) {
-                    continue;
-                }
-                long start = PerfMonitor.getCurrentMicros();
-                PerfMonitor.recordModelLoad(start, loadModel(key));
+            ResultListener<Model> rl =
+                (ResultListener<Model>)_prototypes.get(_key);
+            if (_model != null) {
+                _model.lockStaticMeshes(_ctx.getRenderer(), Config.useVBOs,
+                    Config.useDisplayLists);
+                _prototypes.put(_key, _model);
+                rl.requestCompleted(_model);
+                
+            } else {
+                _prototypes.put(_key, _cause);
+                rl.requestFailed(_cause);
             }
         }
         
-        /** The queue of keys representing models to load. */
-        protected Queue _queue = new Queue();
+        /** The name of the model to load. */
+        protected String _key;
+        
+        /** In case of success, the loaded model. */
+        protected Model _model;
+        
+        /** In case of failure, the cause of same. */
+        protected Exception _cause;
     }
     
     /** Listens for the loading of a prototype in order to generate an
@@ -295,9 +251,6 @@ public class ModelCache
      * {@link Exception}s for models that failed to load. */
     protected HashMap<String, Object> _prototypes =
         new HashMap<String, Object>();
-    
-    /** The model loader thread. */
-    protected ModelLoader _loader = new ModelLoader();
     
     /** Used to normalize relative paths. */
     protected static final String PATH_DOTDOT = "[^/.]+/\\.\\./";
