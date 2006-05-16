@@ -62,10 +62,10 @@ public class PointSet extends ArrayIntSet
         for (int xx = minx; xx <= maxx; xx++) {
             addIf(bounds, xx, miny);
         }
-        for (int yy = miny; yy <= maxy; yy++) {
+        for (int yy = miny+1; yy < maxy; yy++) {
             addIf(bounds, minx, yy);
         }
-        for (int yy = miny; yy <= maxy; yy++) {
+        for (int yy = miny+1; yy < maxy; yy++) {
             addIf(bounds, maxx, yy);
         }
         for (int xx = minx; xx <= maxx; xx++) {
