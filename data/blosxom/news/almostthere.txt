@@ -37,9 +37,9 @@ for her attack the target will be pushed backward one square.<br/>
 <tr><td>Movement: <span class="highlight">2</span></td>
     <td>Attack: <span class="highlight">4</span></td></tr>
 <tr><td colspan="2">He attacks by calling down a storm to strike his target
-with wind and lightning. In addition to doing damage to the unit at the center
+with wind and lightning. In addition to damaging the unit at the center
 of his attack, he does additional damage to any units immediately adjacent
-to his target. He does extra damage versus air units.</td></tr>
+to his target. He also has an attack bonus versus air units.</td></tr>
 </table>
 </div>
 
