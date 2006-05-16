@@ -51,12 +51,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int PLAY_COMPUTER = 3;
 
     // documentation inherited from interface
-    public void playComputer (Client arg1, int arg2, String arg3, String arg4, InvocationService.InvocationListener arg5)
+    public void playComputer (Client arg1, int arg2, String arg3, String arg4, boolean arg5, InvocationService.InvocationListener arg6)
     {
-        ListenerMarshaller listener5 = new ListenerMarshaller();
-        listener5.listener = arg5;
+        ListenerMarshaller listener6 = new ListenerMarshaller();
+        listener6.listener = arg6;
         sendRequest(arg1, PLAY_COMPUTER, new Object[] {
-            new Integer(arg2), arg3, arg4, listener5
+            new Integer(arg2), arg3, arg4, new Boolean(arg5), listener6
         });
     }
 

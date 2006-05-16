@@ -99,14 +99,19 @@ public class BangView extends BWindow
             break;
 
         case BangObject.SELECT_PHASE:
-            setOverlay(new SelectionView(_ctx, _ctrl, config, _bangobj, pidx));
-            // because we may be setting it after updating but before
-            // rendering, we need make sure it's valid
-            _oview.validate();
+            if (pidx != -1) {
+                setOverlay(new SelectionView(
+                    _ctx, _ctrl, config, _bangobj, pidx));
+                // because we may be setting it after updating but before
+                // rendering, we need make sure it's valid
+                _oview.validate();
+            }
             break;
 
         case BangObject.BUYING_PHASE:
-            ((SelectionView)_oview).setPickTeamMode(config);
+            if (pidx != -1) {
+                ((SelectionView)_oview).setPickTeamMode(config);
+            }
             break;
 
         case BangObject.IN_PLAY:

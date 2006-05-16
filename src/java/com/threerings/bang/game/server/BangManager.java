@@ -278,7 +278,13 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     public void playerReady (ClientObject caller)
     {
-        super.playerReady(caller);
+        // if all players are AIs, the human observer determines when to
+        // proceed
+        if (_bconfig.allPlayersAIs()) {
+            playersAllHere(); 
+        } else {
+            super.playerReady(caller);
+        }
 
         // if we're in play, we need to note that this player is ready to go
         if (_bangobj.state == BangObject.IN_PLAY) {
@@ -582,8 +588,9 @@ public class BangManager extends GameManager
             startRound();
             break;
 
+        case BangObject.SELECT_PHASE:
         case BangObject.PRE_TUTORIAL:
-            // let the tutorial know that the player is ready
+            // start the test/tutorial
             _scenario.startNextPhase(_bangobj);
             break;
 
@@ -888,6 +895,11 @@ public class BangManager extends GameManager
      */
     protected void checkStartNextPhase ()
     {
+        // if all players are AIs, wait for playerReady signal before starting
+        if (_bconfig.allPlayersAIs() &&
+            _bangobj.state == BangObject.SELECT_PHASE) {
+            return;
+        }
         if (_bangobj.state == BangObject.SELECT_PHASE ||
             _bangobj.state == BangObject.BUYING_PHASE) {
             for (int ii = 0; ii < _bangobj.playerStatus.length; ii++) {
@@ -1768,7 +1780,11 @@ public class BangManager extends GameManager
         if (_bconfig.tutorial) {
             // hard code ticks at four seconds for tutorials
             return 4000L;
-
+        
+        } else if (_bconfig.allPlayersAIs()) {
+            // fast ticks for auto-play test games
+            return 2000L;
+            
         } else {
             // start out with a base tick of two seconds and scale it down as
             // the game progresses; cap it at ten minutes

@@ -183,6 +183,18 @@ public class BangController extends GameController
         if (_bangobj.state != BangObject.PRE_GAME) {
             stateDidChange(_bangobj.state);
         }
+        
+        // if we're just observing an auto-play game, let the manager know
+        // we're ready
+        if (_config.allPlayersAIs()) {
+            _ctx.getClient().getRunQueue().postRunnable(new Runnable() {
+                public void run () {
+                    // finally let the game manager know that we're ready
+                    // to roll
+                    playerReady();
+                }
+            });
+        }
     }
 
     @Override // documentation inherited
@@ -531,13 +543,15 @@ public class BangController extends GameController
      */
     protected void preSelectBoardTourComplete ()
     {
-        if (_config.tutorial) {
-            // we re-use the playerReady mechanism to communicate that we're
-            // ready for our tutorial
-            playerReady();
-        } else {
+        if (!_config.tutorial) {
             // display the player status displays
             _view.showPlayerStatus();
+        }
+        if (_config.tutorial || _config.allPlayersAIs()) {
+            // we re-use the playerReady mechanism to communicate that we're
+            // ready for our tutorial/test game
+            playerReady();
+        } else {
             // display the selection dialog
             _view.setPhase(BangObject.SELECT_PHASE);
         }
@@ -578,7 +592,7 @@ public class BangController extends GameController
 
         // zoom the camera to the center level
         ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
-
+        
         // let the game manager know that our units are in place and we're
         // fully ready to go
         playerReady();

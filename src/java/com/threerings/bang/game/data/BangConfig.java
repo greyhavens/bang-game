@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data;
 
+import com.samskivert.util.ListUtil;
+
 import com.threerings.crowd.client.PlaceController;
 import com.threerings.parlor.game.client.GameConfigurator;
 import com.threerings.parlor.game.data.GameConfig;
@@ -40,6 +42,12 @@ public class BangConfig extends GameConfig
         return scenarios.length;
     }
 
+    /** Determines whether all players are AIs. */
+    public boolean allPlayersAIs ()
+    {
+        return (ais != null && ListUtil.indexOfNull(ais) == -1);
+    }
+    
     /** Helper for {@link #toString}. */
     public String bdataToString ()
     {

@@ -31,7 +31,13 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.crowd.server.PlaceManager;
+import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.crowd.chat.server.SpeakProvider;
+
+import com.threerings.parlor.server.ParlorSender;
+import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -50,6 +56,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialConfig;
+import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.PlayerDecoder;
@@ -370,10 +377,10 @@ public class PlayerManager
     // documentation inherited from interface PlayerProvider
     public void playComputer (
         ClientObject caller, int players, String scenario, String board,
-        PlayerService.InvocationListener listener)
+        boolean autoplay, PlayerService.InvocationListener listener)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
+        final PlayerObject player = (PlayerObject)caller;
 
         // sanity check the parameters
         if (players < 2 || players > GameCodes.MAX_PLAYERS) {
@@ -390,9 +397,11 @@ public class PlayerManager
         config.rated = false;
         config.players = new Name[players];
         config.ais = new BangAI[players];
-        config.players[0] = player.getVisibleName();
+        if (!autoplay) {
+            config.players[0] = player.getVisibleName();
+        }
         config.teamSize = Match.TEAM_SIZES[players-2];
-        for (int ii = 1; ii < players; ii++) {
+        for (int ii = autoplay ? 0 : 1; ii < players; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names);
             config.players[ii] = ai.handle;
             config.ais[ii] = ai;
@@ -402,7 +411,13 @@ public class PlayerManager
 
         // create the game manager and it will handle the rest
         try {
-            BangServer.plreg.createPlace(config, null);
+            BangServer.plreg.createPlace(config, (!autoplay) ? null : 
+                new PlaceRegistry.CreationObserver() {
+                    public void placeCreated (
+                        PlaceObject place, PlaceManager pmgr) {
+                        ParlorSender.gameIsReady(player, place.getOid());
+                    }
+                });
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating game " +
                     "[for=" + player.who() + ", config=" + config + "].", ie);

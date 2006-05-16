@@ -156,7 +156,7 @@ public class BangBoardView extends BoardView
         // compute the desired starting location and orientation
         GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
         java.awt.Point start = _bangobj.startPositions[
-            _bangobj.getPlayerIndex(_ctx.getUserObject().handle)];
+            Math.max(0, _bangobj.getPlayerIndex(_ctx.getUserObject().handle))];
         Vector3f gpoint = camhand.getGroundPoint();
         float dx = (start.x + 0.5f) * TILE_SIZE - gpoint.x,
             dy = (start.y + 0.5f) * TILE_SIZE - gpoint.y;
