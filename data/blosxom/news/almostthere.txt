@@ -1,0 +1,49 @@
+Beta Just 'round the Bend
+
+Howdy y'all. We're just about ready to open the doors to the saloon and start
+up our public beta. If ya haven't seen the press release then mosey on over and
+<a href="http://www.threerings.net/news/20060425bangbeta.html">take a
+gander</a>. We'll be commencin' the beta at <b>High Noon on May 24th</b>.
+That's San Francisco time fer all you cowpokes scattered around the globe.</p>
+
+<p>In preparation fer beta we've been spendin' a lot of our time tidyin' up
+around the ranch, but that don't mean we're not makin' progress on <b>Indian
+Trading Post</b>, the next town in the lineup. We'll be addin' six new units in
+that town, three new gameplay modes, dozens of new boards and a whole heap of
+other fancy bits. Rest yer eyes on these two new units fer a spell:</p>
+
+<div align="center">
+<table width="500">
+<tr><td rowspan="4" style="padding-right: 10px">
+    <img src="/images/units/buffalo_rider.png"/></td>
+    <td colspan="2" class="posttitle"><b>Buffalo Rider</b></td></tr>
+<tr><td>Make: <span class="highlight">Human</span></td>
+    <td>Mode: <span class="highlight">Ground</span></td></tr>
+<tr><td>Movement: <span class="highlight">5</span></td>
+    <td>Attack: <span class="highlight">1</span></td></tr>
+<tr><td colspan="2">She attacks by ramming her target. The damage scales based
+on the distance she travels along the way. If she moves at least three squares
+for her attack the target will be pushed backward one square.<br/>
+&nbsp;<br/></td></tr>
+</table>
+</div>
+
+<div align="center">
+<table width="500" style="border-top: 1px solid">
+<tr><td colspan="2" class="posttitle"><b>Storm Caller</b></td>
+    <td rowspan="4"><img src="/images/units/storm_caller.png"/></td></tr>
+<tr><td>Make: <span class="highlight">Human</span></td>
+    <td>Mode: <span class="highlight">Range</span></td></tr>
+<tr><td>Movement: <span class="highlight">2</span></td>
+    <td>Attack: <span class="highlight">4</span></td></tr>
+<tr><td colspan="2">He attacks by calling down a storm to strike his target
+with wind and lightning. In addition to doing damage to the unit at the center
+of his attack, he does additional damage to any units immediately adjacent
+to his target. He does extra damage versus air units.</td></tr>
+</table>
+</div>
+
+<p>We'll talk about some of the new gameplay modes in our next round up. In the
+meanwhile, keep the dust off yer boots and we'll see ya real soon in beta.</p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
