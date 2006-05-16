@@ -60,16 +60,16 @@ public class PointSet extends ArrayIntSet
         int miny = sy - dist, maxy = sy + dist;
         int minx = sx - dist, maxx = sx + dist;
         for (int xx = minx; xx <= maxx; xx++) {
-            addIf(bounds, xx, sy - dist);
+            addIf(bounds, xx, miny);
         }
-        for (int yy = miny+1; yy < maxy; yy++) {
-            addIf(bounds, sx - dist, yy);
+        for (int yy = miny; yy <= maxy; yy++) {
+            addIf(bounds, minx, yy);
         }
-        for (int yy = miny+1; yy < maxy; yy++) {
-            addIf(bounds, sx + dist, yy);
+        for (int yy = miny; yy <= maxy; yy++) {
+            addIf(bounds, maxx, yy);
         }
         for (int xx = minx; xx <= maxx; xx++) {
-            addIf(bounds, xx, sy + dist);
+            addIf(bounds, xx, maxy);
         }
     }
 
