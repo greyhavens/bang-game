@@ -825,6 +825,12 @@ overlay_chat {
   effect-color: #000000;
 }
 
+tutorial_window {
+  background: solid #FFFFFF66;
+  border: 1 solid #4C2602;
+  padding: 25;
+}
+
 tutorial_title {
   font: "Old Town Wide" plain 20;
   color: #000000;
@@ -843,7 +849,7 @@ tutorial_text:disabled {
 
 tutorial_steps {
   font: "Helvetica" plain 12;
-  color: #7D4924;
+  color: #000000;
   text-align: right;
 }
 

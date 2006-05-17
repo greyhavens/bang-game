@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import com.jme.system.DisplaySystem;
 
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
@@ -53,7 +54,14 @@ public class TutorialController
         _gmsgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
         // create and add the window in which we'll display info text
-        _tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null);
+        _tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null) {
+            public BComponent getHitComponent (int mx, int my) {
+                return (_pending == null ||
+                        TutorialCodes.TEXT_CLICKED.equals(_pending.event)) ?
+                    super.getHitComponent(mx, my) : null;
+            }
+        };
+        _tutwin.setStyleClass("tutorial_window");
         _tutwin.setLayer(1);
         _tutwin.setLayoutManager(new BorderLayout(5, 15));
         _tutwin.add(_title = new BLabel("", "tutorial_title"),
@@ -200,8 +208,8 @@ public class TutorialController
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
         _tutwin.pack(600, -1);
-        _tutwin.setLocation((width-_tutwin.getWidth())/2,
-                            height-_tutwin.getHeight() - 10);
+        _tutwin.setLocation((width - _tutwin.getWidth())/2,
+                            height - _tutwin.getHeight() - 10);
     }
 
     protected void processedAction (TutorialConfig.Action action)
