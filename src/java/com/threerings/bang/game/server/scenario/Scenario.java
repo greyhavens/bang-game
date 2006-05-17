@@ -776,8 +776,9 @@ public abstract class Scenario
                     bangobj.updatePieces(claim);
                     // start the player with points for each nugget, but don't
                     // record them as "earned" (which grantPoints() would do)
-                    bangobj.setPointsAt(startingNuggets *
-                                        ScenarioCodes.POINTS_PER_NUGGET, midx);
+                    int points = bangobj.points[midx] + startingNuggets *
+                        ScenarioCodes.POINTS_PER_NUGGET;
+                    bangobj.setPointsAt(points, midx);
                     _claims.add(claim);
                     assigned.add(midx);
                 }
