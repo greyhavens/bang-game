@@ -819,6 +819,9 @@ public class BangBoardView extends BoardView
         if (_selection != null && _selection.pieceId == pieceId) {
             clearSelection();
         }
+
+        // report that a piece was killed
+        _ctrl.postEvent(TutorialCodes.UNIT_KILLED);
     }
 
     /** Handles a left mouse button click. */

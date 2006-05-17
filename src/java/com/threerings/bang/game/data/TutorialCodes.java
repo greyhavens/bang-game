@@ -58,6 +58,9 @@ public interface TutorialCodes
         "unit_ordered_move_attack";
 
     /** A game state action monitored by the tutorial system. */
+    public static final String UNIT_KILLED = "unit_killed";
+
+    /** A game state action monitored by the tutorial system. */
     public static final String BONUS_ACTIVATED = "bonus_activated";
 
     /** A game state action monitored by the tutorial system. */
