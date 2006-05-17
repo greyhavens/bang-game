@@ -1,4 +1,4 @@
-266
+283
 female/clothing_back := bodice := 174
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
@@ -129,8 +129,10 @@ female/nose := wrinkled := 210
 male/background := grad_circle := 1
 male/beard := colonel := 2
 male/beard := goatee := 21
+male/beard := grant := 267
 male/beard := grizzly := 3
 male/beard := sideburns := 211
+male/beard_back := grant := 268
 male/beard_back := grizzly := 4
 male/clothing_back := a_duster := 212
 male/clothing_back := a_fringe := 254
@@ -159,17 +161,25 @@ male/clothing_props := ironplate_poncho := 225
 male/clothing_props := pistol_jacket := 24
 male/clothing_props := rifle_duster := 226
 male/eyebrows := angry := 25
+male/eyebrows := angular := 269
+male/eyebrows := bushy := 270
 male/eyebrows := concerned := 26
 male/eyebrows := content := 27
 male/eyebrows := cool := 28
+male/eyebrows := evil := 271
+male/eyebrows := rock := 272
+male/eyebrows := surprised := 273
 male/eyebrows := thick := 6
 male/eyes := big := 29
 male/eyes := bigger := 30
 male/eyes := cool := 31
+male/eyes := far := 274
 male/eyes := glare := 32
 male/eyes := intent := 33
 male/eyes := plain := 227
 male/eyes := rugged := 228
+male/eyes := shifty := 275
+male/eyes := sly := 276
 male/eyes := squinty := 7
 male/eyes := weary := 229
 male/eyes := wide := 230
@@ -178,11 +188,13 @@ male/glasses := steamgoggles := 34
 male/hair_back := braids := 35
 male/hair_back := fro := 36
 male/hair_back := long_messy := 9
+male/hair_front := balding := 277
 male/hair_front := braids := 37
 male/hair_front := disheveled := 38
 male/hair_front := fro := 39
 male/hair_front := long_messy := 10
 male/hair_front := mohawk := 40
+male/hair_front := parted := 278
 male/hair_front := slickedback := 41
 male/hair_front := spikeback := 42
 male/hair_front := spikey := 43
@@ -251,12 +263,17 @@ male/mouth := annoyed := 16
 male/mouth := bulldog := 70
 male/mouth := chew := 243
 male/mouth := frown := 71
+male/mouth := happy := 279
+male/mouth := sad := 280
+male/mouth := shy := 281
 male/mouth := smile := 72
 male/mouth := smirk := 73
 male/mouth := stern := 74
+male/mouth := worried := 282
 male/mustache := gringo := 75
 male/mustache := handlebar := 17
 male/mustache := magnum := 244
+male/mustache := messy := 283
 male/mustache := piano := 76
 male/mustache := wyatt := 77
 male/nose := hook := 245
