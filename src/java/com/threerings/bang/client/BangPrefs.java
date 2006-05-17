@@ -119,14 +119,14 @@ public class BangPrefs
      */
     public static int getEffectsVolume ()
     {
-        return config.getValue("effects_volume", 80);
+        return config.getValue("effects_volume", 100);
     }
 
     /**
      * Updates the volume of the sound effects, a value from zero to one
      * hundred.
      */
-    public static void updateEffectsVolume (float volume)
+    public static void updateEffectsVolume (int volume)
     {
         config.setValue("effects_volume", volume);
     }

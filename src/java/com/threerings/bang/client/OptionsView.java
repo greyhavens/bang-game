@@ -123,6 +123,7 @@ public class OptionsView extends BDecoratedWindow
                     break;
                 case EFFECTS:
                     BangPrefs.updateEffectsVolume(model.getValue());
+                    _ctx.getSoundManager().setBaseGain(model.getValue()/100f);
                     break;
                 }
                 vallbl.setText(model.getValue() + "%");

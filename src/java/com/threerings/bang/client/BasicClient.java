@@ -151,6 +151,7 @@ public class BasicClient
             }
         });
         _soundmgr = SoundManager.createSoundManager(rqueue);
+        _soundmgr.setBaseGain(BangPrefs.getEffectsVolume()/100f);
 
         // initialize our user interface bits
         _keymgr.init(_ctx);
