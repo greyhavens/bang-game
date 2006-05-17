@@ -24,6 +24,8 @@
     <aspect name="spikeback" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="spikey" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="sweptback" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="parted" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="balding" townId="frontier_town" scrip="500" coins="0"/>
   </class>
 
   <class name="male/eyebrows">
@@ -32,6 +34,11 @@
     <aspect name="content" townId="frontier_town" scrip="0" coins="0"/>
     <aspect name="cool" townId="frontier_town" scrip="0" coins="0"/>
     <aspect name="thick" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="bushy" townId="frontier_town" scrip="250" coins="1"/>
+    <aspect name="angular" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="evil" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="rock" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="surprised" townId="frontier_town" scrip="500" coins="0"/>
   </class>
 
   <class name="male/eyes">
@@ -40,6 +47,9 @@
     <aspect name="wide" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="weary" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="squinty" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="far" townId="frontier_town" scrip="250" coins="1"/>
+    <aspect name="shifty" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="sly" townId="frontier_town" scrip="250" coins="1"/>
   </class>
 
   <class name="male/nose">
@@ -55,6 +65,7 @@
     <aspect name="handlebar" townId="frontier_town" scrip="750" coins="1"/>
     <aspect name="magnum" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="wyatt" townId="frontier_town" scrip="750" coins="1"/>
+    <aspect name="messy" townId="frontier_town" scrip="500" coins="1"/>
   </class>
 
   <class name="male/mouth">
@@ -65,6 +76,10 @@
     <aspect name="smile" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="smirk" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="stern" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="happy" townId="frontier_town" scrip="250" coins="1"/>
+    <aspect name="sad" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="shy" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="worried" townId="frontier_town" scrip="250" coins="0"/>
   </class>
 
   <class name="male/beard">
@@ -72,6 +87,7 @@
     <aspect name="goatee" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="grizzly" townId="frontier_town" scrip="750" coins="1"/>
     <aspect name="sideburns" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="grant" townId="frontier_town" scrip="500" coins="1"/>
   </class>
 
   <!-- female avatar aspects -->
