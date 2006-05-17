@@ -55,8 +55,8 @@ public class GoodsInspector extends BContainer
 
         add(_title = new BLabel("", "medium_title"),
             new Rectangle(200, 105, 280, 40));
-        add(_descrip = new BTextArea(""), new Rectangle(200, 45, 300, 60));
-        _descrip.setStyleClass("goods_descrip");
+        add(_descrip = new BLabel("", "goods_descrip"),
+            new Rectangle(200, 45, 300, 60));
 
         BContainer ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
         ccont.add(new BLabel(_ctx.xlate("store", "m.price"), "table_data"));
@@ -186,8 +186,7 @@ public class GoodsInspector extends BContainer
     protected StoreObject _stobj;
     protected Good _good;
 
-    protected BLabel _icon, _title;
-    protected BTextArea _descrip;
+    protected BLabel _icon, _title, _descrip;
     protected MoneyLabel _cost;
 
     protected BufferedImage _srcimg;
