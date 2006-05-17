@@ -694,7 +694,7 @@ public class BangBoard extends SimpleStreamableObject
      */
     public int getElevation (int x, int y)
     {
-        return Math.max(_waterLevel + _elevationUnitsPerTile/8,
+        return Math.max(_waterLevel,
             getHeightfieldElevation(x, y) + getPieceElevation(x, y));
     }
 
