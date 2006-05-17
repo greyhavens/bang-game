@@ -305,7 +305,8 @@ public abstract class ComicChatView extends BScrollPane
             add(_mcont = new BContainer(layout) {
                 protected Dimension computePreferredSize (
                     int whint, int hhint) {
-                    return super.computePreferredSize(285, hhint);
+                    return super.computePreferredSize(
+                        _width > 0 ? _width : -1, hhint);
                 }
             });
 
