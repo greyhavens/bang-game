@@ -217,6 +217,13 @@ public class PlayerManager
                 "e.too_many_pardners", String.valueOf(MAX_PARDNERS)));
         }
 
+        // if the proposed pardner has already issued an invite, accept it
+        InviteKey ikey = new InviteKey(inviter.playerId, handle);
+        if (_invites.containsKey(ikey)) {
+            respondToPardnerInvite(caller, handle, true, listener);
+            return;
+        }
+        
         // if the invitee is online, send the invite directly; if not, store
         // the invite in the db
         PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
