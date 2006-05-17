@@ -206,7 +206,30 @@ public class Tutorial extends Scenario
             }
             piece.init();
             piece.owner = add.owner;
-            piece.position(add.location[0], add.location[1]);
+            switch (add.location.length) {
+            case 1:
+                Piece near = _bangobj.pieces.get(add.location[0]);
+                if (near == null) {
+                    log.warning("Can't add piece near non-existent piece " +
+                                add + ".");
+                    return;
+                } else {
+                    Point spot = _bangobj.board.getOccupiableSpot(
+                        near.x, near.y, 2);
+                    if (spot == null) {
+                        log.warning("Can't find spot near piece " +
+                                    "[piece=" + near + ", add=" + add + "].");
+                        return;
+                    } else {
+                        piece.position(spot.x, spot.y);
+                    }
+                }
+                break;
+
+            case 2:
+                piece.position(add.location[0], add.location[1]);
+                break;
+            }
             _bangobj.addToPieces(piece);
             _bangobj.board.shadowPiece(piece);
 
@@ -217,7 +240,7 @@ public class Tutorial extends Scenario
             int targetId = mua.target;
 
             // if the target is not shootable, we want just to move next to it
-            Piece target = (Piece)_bangobj.pieces.get(targetId);
+            Piece target = _bangobj.pieces.get(targetId);
             if (!unit.validTarget(target, false)) {
                 targetId = -1;
                 tx = target.x;
