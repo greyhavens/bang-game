@@ -7,21 +7,21 @@
   <wait event="text_clicked"/>
 
   <!-- add two gunslingers -->
-  <add_piece what="unit" id="1000" type="gunslinger" location="16,16"
+  <add_piece what="unit" id="1000" type="gunslinger" location="18,16"
              owner="0"/>
-  <add_piece what="unit" id="2000" type="gunslinger" location="16,18" 
+  <add_piece what="unit" id="2000" type="gunslinger" location="18,18" 
              owner="1"/>
   <center_on what="piece" id="1000"/>
 
   <!-- have the player shoot one with the other -->
   <text message="shoot_gunslinger" step="2"/>
-  <wait event="unit_attacked"/>
+  <wait event="effect:bang" allowAttack="true"/>
   <text message="took_damage"/>
   <wait event="text_clicked"/>
 
   <!-- add a repair bonus and have them activate it -->
   <text message="repair_intro"/>
-  <add_piece what="bonus" id="3000" type="repair" location="16,14"/>
+  <add_piece what="bonus" id="3000" type="repair" location="16,16"/>
   <center_on what="piece" id="3000"/>
   <wait event="bonus_activated"/>
 
@@ -31,10 +31,12 @@
 
   <!-- add a ramblin' bonus, have them inspect and activate it -->
   <text message="ramblin_intro"/>
-  <add_piece what="bonus" id="3001" type="ramblin" location="14,14"/>
+  <add_piece what="bonus" id="3001" type="ramblin" location="16,14"/>
   <center_on what="piece" id="3001"/>
   <wait event="bonus_activated"/>
   <text message="ramblin_effect"/>
+  <wait event="unit_selected"/>
+  <text message="right_click_clear"/>
   <wait event="text_clicked"/>
 
   <!-- show the player status view, explain it -->
@@ -44,7 +46,7 @@
 
   <!-- add a card bonus, have them activate it -->
   <text message="card_intro"/>
-  <add_piece what="bonus" id="3002" type="card" location="14,16"/>
+  <add_piece what="bonus" id="3002" type="card" location="16,16"/>
   <center_on what="piece" id="3002"/>
   <wait event="bonus_activated"/>
 
@@ -53,10 +55,12 @@
   <wait event="card_selected"/>
   <center_on what="piece" id="2000"/>
   <text message="activate_card"/>
-  <wait event="card_played"/>
+  <wait event="effect:howdy"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done"/>
+  <wait event="text_clicked"/>
+  <text message="done2"/>
   <wait event="text_clicked"/>
 
 </tutorial>

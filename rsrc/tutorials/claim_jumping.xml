@@ -13,13 +13,13 @@
   <wait event="text_clicked"/>
 
   <!-- add a nugget to the board and show them that -->
-  <add_piece what="bonus" id="1000" type="nugget" location="16,16"/>
+  <add_piece what="bonus" id="1000" type="nugget" location="16,18"/>
   <center_on what="piece" id="1000"/>
   <text message="nugget_intro" step="1"/>
   <wait event="text_clicked"/>
 
   <!-- add a gunslinger and have them pick up the nugget -->
-  <add_piece what="unit" id="1001" type="gunslinger" location="18,16" 
+  <add_piece what="unit" id="1001" type="gunslinger" location="18,18" 
              owner="0"/>
   <text message="pick_up_nugget" step="2"/>
   <wait event="bonus_activated"/>
