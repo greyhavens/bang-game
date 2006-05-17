@@ -94,7 +94,8 @@ public abstract class ComicChatView extends BScrollPane
         // update the speaker's icon if it has changed
         boolean newav = false;
         if (sprec.setAvatar(getSpeakerAvatar(speaker))) {
-            boolean mirror = !_ctx.getAvatarLogic().isMale(sprec.avatar);
+            boolean mirror = isLeftSide(speaker) ^
+                !_ctx.getAvatarLogic().isMale(sprec.avatar);
             sprec.icon = getAvatarIcon(sprec.avatar, mirror);
             newav = true;
         }

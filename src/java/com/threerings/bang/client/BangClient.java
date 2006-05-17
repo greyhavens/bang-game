@@ -575,7 +575,7 @@ public class BangClient extends BasicClient
         // the account
         final String mkey = client.getCredentials().getUsername() + ".muted";
         _mutedir = new MuteDirector(
-            _ctx, createHandles(_config.getValue(mkey, new String[0])));
+            _ctx); // createHandles(_config.getValue(mkey, new String[0])));
         _mutedir.setChatDirector(_chatdir);
         _mutedir.addMuteObserver(new MuteDirector.MuteObserver() {
             public void muteChanged (Name player, boolean nowMuted) {
