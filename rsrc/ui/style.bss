@@ -756,6 +756,10 @@ info_chat_label {
 //
 // Pre-game styles
 
+player_marquee_cont {
+  padding: 10;
+}
+
 player_marquee_label {
   font: "Dom Casual" plain 24;
   color: #4a2805;

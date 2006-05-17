@@ -497,9 +497,9 @@ public class BangBoardView extends BoardView
             return;
         }
 
-        // we're creating the game-intro marquee, so slap the players involved
-        // in the game up on the screen as well
-        _pmarquees = new BWindow(_ctx.getStyleSheet(), new AbsoluteLayout()) {
+        // create marquees with the avatars of all the participants
+        _pmarquees = new BWindow(
+            _ctx.getStyleSheet(), GroupLayout.makeVStretch()) {
             public boolean isOverlay () {
                 return true;
             }
@@ -507,12 +507,28 @@ public class BangBoardView extends BoardView
                return null;
             }
         };
+
+        // set up two rows that will hold our marquee bits
+        BContainer[] conts = new BContainer[2];
+        GroupLayout layout = GroupLayout.makeHoriz(
+            GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.EQUALIZE);
+        _pmarquees.add(conts[0] = new BContainer(layout));
+        if (_bangobj.players.length > 2) {
+            layout.setOffAxisJustification(GroupLayout.TOP);
+            layout = GroupLayout.makeHoriz(
+                GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.EQUALIZE);
+            layout.setOffAxisJustification(GroupLayout.BOTTOM);
+            _pmarquees.add(conts[1] = new BContainer(layout));
+        } else {
+            layout.setOffAxisJustification(GroupLayout.CENTER);
+        }
+
+        // create and add the marquees and the whole window
         for (int ii = 0; ii < _bangobj.players.length; ii++) {
-            _pmarquees.add(createPlayerMarquee(ii),
-                           PLAYER_MARQUEE_LOCATIONS[ii]);
+            conts[ii/2].add(createPlayerMarquee(ii));
         }
         _pmarquees.setBounds(0, 0, _ctx.getDisplay().getWidth(),
-            _ctx.getDisplay().getHeight());
+                             _ctx.getDisplay().getHeight());
         _ctx.getRootNode().addWindow(_pmarquees);
     }
 
@@ -521,18 +537,29 @@ public class BangBoardView extends BoardView
      */
     protected BContainer createPlayerMarquee (int pidx)
     {
-        GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
-        layout.setGap(-1);
-        BContainer cont = new BContainer(layout);
+        // create the marquee
+        BContainer marquee = new BContainer(
+            GroupLayout.makeVert(GroupLayout.CENTER));
+        ((GroupLayout)marquee.getLayoutManager()).setGap(-1);
+        marquee.setStyleClass("player_marquee_cont");
         int awidth = AvatarLogic.WIDTH/2, aheight = AvatarLogic.HEIGHT/2;
         if (_bangobj.avatars[pidx] != null) {
             ImageIcon aicon = new ImageIcon(
                 AvatarView.getImage(
                     _ctx, _bangobj.avatars[pidx], awidth, aheight));
-            cont.add(new BLabel(aicon));
+            marquee.add(new BLabel(aicon));
         }
-        cont.add(new BLabel(_bangobj.players[pidx].toString(),
-                            "player_marquee_label"));
+        marquee.add(new BLabel(_bangobj.players[pidx].toString(),
+                               "player_marquee_label"));
+
+        // then stick it in a container that will justify everything in the
+        // appropriate corner
+        GroupLayout layout = GroupLayout.makeHoriz(
+            pidx % 2 == 0 ? GroupLayout.LEFT : GroupLayout.RIGHT);
+        layout.setOffAxisJustification(
+            pidx > 1 ? GroupLayout.BOTTOM : GroupLayout.TOP);
+        BContainer cont = new BContainer(layout);
+        cont.add(marquee);
         return cont;
     }
 
@@ -1408,11 +1435,6 @@ public class BangBoardView extends BoardView
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0.5f, 0.5f, 0.5f);
-
-    /** Positions for the four avatars. */
-    protected static final Point[] PLAYER_MARQUEE_LOCATIONS = {
-        new Point(10, 416), new Point(724, 416),
-        new Point(10, 10), new Point(724, 10) };
 
     /** The duration of the board tour in seconds. */
     protected static final float BOARD_TOUR_DURATION = 10f;
