@@ -20,7 +20,7 @@
 
   <node name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
 
-  <triMesh name="rock3" translation="-70.4172, 77.7017, 32.7783" rotation="0.864493, 0.402009, 0.301718, 0.00276293" scale="17.39, 17.39, 17.39" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
+  <triMesh name="rock3" translation="-24.3724, 0.10582, 27.7281" rotation="0.864493, 0.402009, 0.301718, 0.00276293" scale="17.39, 17.39, 17.39" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
     <vertex location="1.33783, -1.33814, 2.83042" normal="-0.321632, -0.00147381, 0.946863" tcoords="0.217143, 1.11033"/>
     <vertex location="2.12962, 0.59112, 3.27075" normal="-0.515854, 0.0162215, 0.856523" tcoords="0.533872, 1.21486"/>
     <vertex location="0.983059, 1.55522, 2.56195" normal="-0.331273, 0.0468198, 0.942373" tcoords="0.643441, 1.00907"/>
