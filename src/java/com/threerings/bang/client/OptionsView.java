@@ -138,6 +138,9 @@ public class OptionsView extends BDecoratedWindow
 
     protected void refreshDisplayModes ()
     {
+        int maxwidth = 0, maxheight = 0;
+        boolean have1024 = false, have1280 = false;
+
         try {
             ArrayList<DisplayMode> modes = new ArrayList<DisplayMode>();
             CollectionUtil.addAll(modes, Display.getAvailableDisplayModes());
@@ -148,14 +151,30 @@ public class OptionsView extends BDecoratedWindow
                 if (mode.getWidth() < 1024 || mode.getHeight() < 768) {
                     iter.remove();
                 }
+
+                // note our maximum available display sizes
+                maxwidth = Math.max(maxwidth, mode.getWidth());
+                maxheight = Math.max(maxheight, mode.getHeight());
+
+                // note whether we have our two basic sizes
+                if (mode.getWidth() == 1024 && mode.getHeight() == 768) {
+                    have1024 = true;
+                }
+                if (mode.getWidth() == 1280 && mode.getHeight() == 1024) {
+                    have1280 = true;
+                }
             }
 
-            // if there is only one display mode, and we're on Linux, it's
-            // probably because of Xinerama wackiness, so slip in a couple
-            // of sensible modes for use in non-fullscreen mode
-            if (RunAnywhere.isLinux() && modes.size() < 2) {
-                modes.add(new DisplayMode(1024, 768));
-                modes.add(new DisplayMode(1280, 1024));
+            // if we're on Linux and don't have 1024x768 or 1280x1024 but we
+            // have larger modes, it's probably because of Xinerama wackiness,
+            // so we add non-fullscreen versions for those
+            if (RunAnywhere.isLinux()) {
+                if (!have1024 && maxwidth >= 1024 && maxheight >= 768) {
+                    modes.add(new DisplayMode(1024, 768));
+                }
+                if (!have1280 && maxwidth >= 1280 && maxheight >= 1024) {
+                    modes.add(new DisplayMode(1280, 1024));
+                }
             }
 
             ModeItem current = null;
