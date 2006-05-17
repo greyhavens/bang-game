@@ -68,7 +68,7 @@ public class BoardCache
         if (!Arrays.equals(board.getDataHash(), hash)) {
             return null;
         }
-        log.info("Loaded board from cached file [bfile=" + bfile + "].");
+
         _boards.put(bkey, new WeakReference<BoardData>(board));
         return board;
     }

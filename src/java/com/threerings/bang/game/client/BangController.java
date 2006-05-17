@@ -124,6 +124,8 @@ public class BangController extends GameController
         _ctx = (BangContext)ctx;
         _config = (BangConfig)config;
 
+        log.info("Entered game " + config + ".");
+
         // if this is a tutorial game, create our tutorial controller
         if (_config.tutorial) {
             _tutcont = new TutorialController();

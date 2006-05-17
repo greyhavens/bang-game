@@ -240,10 +240,15 @@ public class BangView extends BWindow
         BoardData board = _ctx.getBoardCache().loadBoard(_bangobj.boardName,
             _bangobj.players.length, _bangobj.boardHash);
         if (board != null) {
+            log.info("Loaded board from cache [board=" + _bangobj.boardName +
+                     ", pcount=" + _bangobj.players.length + "].");
             continuePreparingForRound(config, pidx, board.getBoard(),
                 board.getPieces());
             return true;
         }
+
+        log.info("Downloading board [board=" + _bangobj.boardName +
+                 ", pcount=" + _bangobj.players.length + "].");
         _preparing = true;
         _bangobj.service.getBoard(
             _ctx.getClient(), new BangService.BoardListener() {
