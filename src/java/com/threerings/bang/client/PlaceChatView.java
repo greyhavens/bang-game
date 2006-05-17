@@ -22,6 +22,7 @@ import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
@@ -49,6 +50,9 @@ public class PlaceChatView extends ComicChatView
             _ctx.loadImage("ui/chat/bubble_icon.png"));
         tcont.add(_send = new BButton(icon, this, "send"), GroupLayout.FIXED);
         add(tcont, BorderLayout.SOUTH);
+        
+        // disable send until some text is entered
+        new EnablingValidator(_text, _send);
     }
 
     /**

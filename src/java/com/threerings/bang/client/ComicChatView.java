@@ -113,7 +113,7 @@ public abstract class ComicChatView extends BScrollPane
         // we only allow two messages to use the same avatar, then we add
         // another avatar to avoid the amazing zillion chat bubbles with no
         // head
-        if (_last == null) {
+        if (_last != entry) {
             _last = entry;
         } else {
             _last = null;
@@ -305,8 +305,9 @@ public abstract class ComicChatView extends BScrollPane
             add(_mcont = new BContainer(layout) {
                 protected Dimension computePreferredSize (
                     int whint, int hhint) {
+                    _mwidth = Math.max(_mwidth, _width);
                     return super.computePreferredSize(
-                        _width > 0 ? _width : -1, hhint);
+                        _mwidth > 0 ? _mwidth : -1, hhint);
                 }
             });
 
@@ -345,6 +346,9 @@ public abstract class ComicChatView extends BScrollPane
      * sequence and rest of bubbles in sequence. */
     protected ImageBackground _sfbg, _srbg, _rfbg, _rrbg;
 
+    /** The maximum width of the chat bubbles, computed on first layout. */
+    protected int _mwidth;
+    
     /** Used to flip texture coordinates. */
     protected Vector2f _tcoord = new Vector2f();
 }
