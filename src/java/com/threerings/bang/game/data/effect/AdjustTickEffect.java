@@ -50,13 +50,13 @@ public class AdjustTickEffect extends Effect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        newLastActed = (short)(bangobj.tick + _delta);
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
             if (p.x == x && p.y == y && p.isAlive() &&
                 // make sure we're actually changing something
-                p.lastActed != bangobj.tick + _delta) {
+                p.lastActed != newLastActed) {
                 pieceId = p.pieceId;
-                newLastActed = (short)(bangobj.tick + _delta);
                 break;
             }
         }
