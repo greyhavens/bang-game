@@ -123,13 +123,15 @@ public class MobileSprite extends PieceSprite
      */
     public void faceTarget ()
     {
-        // use the vector to the target on the XY plane to determine
-        // the heading, then adjust to the terrain slope
-        Vector3f dir = _tsprite.getLocalTranslation().subtract(
-            localTranslation).normalizeLocal();
-        localRotation.fromAngleNormalAxis(FastMath.atan2(dir.x, -dir.y),
-            Vector3f.UNIT_Z);
-        snapToTerrain();
+        if (_tsprite != null) {
+            // use the vector to the target on the XY plane to determine the
+            // heading, then adjust to the terrain slope
+            Vector3f dir = _tsprite.getLocalTranslation().subtract(
+                localTranslation).normalizeLocal();
+            localRotation.fromAngleNormalAxis(
+                FastMath.atan2(dir.x, -dir.y), Vector3f.UNIT_Z);
+            snapToTerrain();
+        }
     }
 
     /**
