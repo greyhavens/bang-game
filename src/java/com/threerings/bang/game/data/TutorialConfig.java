@@ -36,6 +36,7 @@ public class TutorialConfig
     public static class Wait extends Action
     {
         public String event;
+        public boolean allowAttack;
 
         private static final long serialVersionUID = 1;
     }

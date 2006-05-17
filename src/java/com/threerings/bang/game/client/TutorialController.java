@@ -56,15 +56,9 @@ public class TutorialController
         // create and add the window in which we'll display info text
         _view.tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null) {
             public BComponent getHitComponent (int mx, int my) {
-                return awaitingClick() ?
-                    super.getHitComponent(mx, my) : null;
-            }
-            public boolean isModal () {
-                return awaitingClick();
-            }
-            protected boolean awaitingClick () {
                 return (_pending == null ||
-                        TutorialCodes.TEXT_CLICKED.equals(_pending.event));
+                        TutorialCodes.TEXT_CLICKED.equals(_pending.event)) ?
+                    super.getHitComponent(mx, my) : null;
             }
         };
         _view.tutwin.setStyleClass("tutorial_window");
@@ -138,6 +132,9 @@ public class TutorialController
         } else if (action instanceof TutorialConfig.Wait) {
             // wait for the specified event
             _pending = (TutorialConfig.Wait)action;
+
+            // only allow attacking for actions that allow it
+            _view.view._attackEnabled = _pending.allowAttack;
 
             // let them know if we're waiting for them to click
             if (TutorialCodes.TEXT_CLICKED.matches(_pending.event)) {
@@ -226,14 +223,8 @@ public class TutorialController
 
     protected MouseAdapter _clicklist = new MouseAdapter() {
         public void mousePressed (MouseEvent event) {
-            // only acknowledge clicks inside the tutorial window even though
-            // it is modal and hears about clicks anywhere (and absorbs them)
-            BComponent hit = _view.tutwin.getHitComponent(
-                event.getX(), event.getY());
-            if (hit != null && hit.getParent() == _view.tutwin) {
-                _click.setText("");
-                handleEvent(TutorialCodes.TEXT_CLICKED);
-            }
+            _click.setText("");
+            handleEvent(TutorialCodes.TEXT_CLICKED);
         }
     };
 

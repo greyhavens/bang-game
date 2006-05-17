@@ -904,13 +904,15 @@ public class BangBoardView extends BoardView
         highlightTiles(moves, _selection.isFlyer(),
                        getHighlightColor(_selection));
 
-        // display our potential attacks
-        PointSet attacks = new PointSet();
-        _bangobj.board.computeAttacks(_selection.getMinFireDistance(),
-                                      _selection.getMaxFireDistance(),
-                                      tx, ty, attacks);
-        _attackSet.clear();
-        pruneAttackSet(attacks, moves, _attackSet);
+        if (_attackEnabled) {
+            // display our potential attacks
+            PointSet attacks = new PointSet();
+            _bangobj.board.computeAttacks(_selection.getMinFireDistance(),
+                                          _selection.getMaxFireDistance(),
+                                          tx, ty, attacks);
+            _attackSet.clear();
+            pruneAttackSet(attacks, moves, _attackSet);
+        }
 
         // if there are no valid attacks, assume they're just moving (but
         // do nothing if they're not even moving)
@@ -1074,9 +1076,11 @@ public class BangBoardView extends BoardView
         // highlight our potential moves and attackable pieces
         PointSet attacks = new PointSet();
         _bangobj.board.computeMoves(piece, _moveSet, attacks);
-        _attackSet.clear();
-        pruneAttackSet(_moveSet, _moveSet, _attackSet);
-        pruneAttackSet(attacks, _moveSet, _attackSet);
+        if (_attackEnabled) {
+            _attackSet.clear();
+            pruneAttackSet(_moveSet, _moveSet, _attackSet);
+            pruneAttackSet(attacks, _moveSet, _attackSet);
+        }
         highlightTiles(_moveSet, piece.isFlyer(), getHighlightColor(piece));
 
         // report that the user took an action (for tutorials)
@@ -1400,6 +1404,10 @@ public class BangBoardView extends BoardView
 
     protected Node _cursor;
     protected Piece _selection;
+
+    /** This is disabled by the tutorial controller when the player is not
+     * allowed to attack during a tutorial. */
+    protected boolean _attackEnabled = true;
 
     protected PointSet _moveSet = new PointSet();
     protected PointSet _attackSet = new PointSet();
