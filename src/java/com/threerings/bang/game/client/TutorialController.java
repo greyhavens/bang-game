@@ -54,27 +54,33 @@ public class TutorialController
         _gmsgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
         // create and add the window in which we'll display info text
-        _tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null) {
+        _view.tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null) {
             public BComponent getHitComponent (int mx, int my) {
-                return (_pending == null ||
-                        TutorialCodes.TEXT_CLICKED.equals(_pending.event)) ?
+                return awaitingClick() ?
                     super.getHitComponent(mx, my) : null;
             }
+            public boolean isModal () {
+                return awaitingClick();
+            }
+            protected boolean awaitingClick () {
+                return (_pending == null ||
+                        TutorialCodes.TEXT_CLICKED.equals(_pending.event));
+            }
         };
-        _tutwin.setStyleClass("tutorial_window");
-        _tutwin.setLayer(1);
-        _tutwin.setLayoutManager(new BorderLayout(5, 15));
-        _tutwin.add(_title = new BLabel("", "tutorial_title"),
-                    BorderLayout.NORTH);
-        _tutwin.add(_info = new BLabel("", "tutorial_text"),
-                    BorderLayout.CENTER);
+        _view.tutwin.setStyleClass("tutorial_window");
+        _view.tutwin.setLayer(1);
+        _view.tutwin.setLayoutManager(new BorderLayout(5, 15));
+        _view.tutwin.add(_title = new BLabel("", "tutorial_title"),
+                         BorderLayout.NORTH);
+        _view.tutwin.add(_info = new BLabel("", "tutorial_text"),
+                         BorderLayout.CENTER);
 
         BContainer south = new BContainer(new BorderLayout(15, 5));
-        _tutwin.add(south, BorderLayout.SOUTH);
+        _view.tutwin.add(south, BorderLayout.SOUTH);
         south.add(_click = new BLabel("", "tutorial_steps"), BorderLayout.WEST);
         south.add(_steps = new BLabel("", "tutorial_steps"), BorderLayout.EAST);
 
-        _tutwin.addListener(_clicklist);
+        _view.tutwin.addListener(_clicklist);
         _info.addListener(_clicklist);
     }
 
@@ -101,8 +107,8 @@ public class TutorialController
     /** Called from {@link BangController#gameDidEnd}. */
     public void gameDidEnd ()
     {
-        if (_tutwin.isAdded()) {
-            _ctx.getRootNode().removeWindow(_tutwin);
+        if (_view.tutwin.isAdded()) {
+            _ctx.getRootNode().removeWindow(_view.tutwin);
         }
 
         // display the pick tutorial view in "finished tutorial" mode
@@ -113,8 +119,8 @@ public class TutorialController
     /** Called from {@link BangController#didLeavePlace}. */
     public void didLeavePlace (BangObject bangobj)
     {
-        if (_tutwin.isAdded()) {
-            _ctx.getRootNode().removeWindow(_tutwin);
+        if (_view.tutwin.isAdded()) {
+            _ctx.getRootNode().removeWindow(_view.tutwin);
         }
         if (_bangobj != null) {
             _bangobj.removeListener(_acl);
@@ -202,14 +208,14 @@ public class TutorialController
         }
 
         // display our window the first time we need it
-        if (!_tutwin.isAdded()) {
-            _ctx.getRootNode().addWindow(_tutwin);
+        if (!_view.tutwin.isAdded()) {
+            _ctx.getRootNode().addWindow(_view.tutwin);
         }
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
-        _tutwin.pack(600, -1);
-        _tutwin.setLocation((width - _tutwin.getWidth())/2,
-                            height - _tutwin.getHeight() - 10);
+        _view.tutwin.pack(600, -1);
+        _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2,
+                                 height - _view.tutwin.getHeight() - 10);
     }
 
     protected void processedAction (TutorialConfig.Action action)
@@ -220,8 +226,14 @@ public class TutorialController
 
     protected MouseAdapter _clicklist = new MouseAdapter() {
         public void mousePressed (MouseEvent event) {
-            _click.setText("");
-            handleEvent(TutorialCodes.TEXT_CLICKED);
+            // only acknowledge clicks inside the tutorial window even though
+            // it is modal and hears about clicks anywhere (and absorbs them)
+            BComponent hit = _view.tutwin.getHitComponent(
+                event.getX(), event.getY());
+            if (hit != null && hit.getParent() == _view.tutwin) {
+                _click.setText("");
+                handleEvent(TutorialCodes.TEXT_CLICKED);
+            }
         }
     };
 
@@ -238,7 +250,6 @@ public class TutorialController
     protected BangObject _bangobj;
     protected MessageBundle _msgs, _gmsgs;
 
-    protected BDecoratedWindow _tutwin;
     protected BLabel _title, _info, _click, _steps;
 
     protected TutorialConfig _config;

@@ -43,6 +43,9 @@ public class BangView extends BWindow
     /** Displays our board. */
     public BangBoardView view;
 
+    /** The tutorial window (or null if we're not in a tutorial). */
+    public BWindow tutwin;
+
     /** Our chat display. */
     public OverlayChatView chat;
 

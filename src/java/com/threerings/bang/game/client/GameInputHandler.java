@@ -47,6 +47,9 @@ public class GameInputHandler extends GodViewHandler
     {
         // listen for mouse wheel events
         view.view.addListener(_swingListener);
+        if (view.tutwin != null) {
+            view.tutwin.addListener(_swingListener);
+        }
 
         // set up the starting zoom index
         _camidx = CAMERA_ZOOMS.length-1;
@@ -78,6 +81,9 @@ public class GameInputHandler extends GodViewHandler
     public void endRound (BangView view)
     {
         // stop listening for mouse wheel events
+        if (view.tutwin != null) {
+            view.tutwin.removeListener(_swingListener);
+        }
         view.view.removeListener(_swingListener);
 
         // stop updating hover state and clear out reference
