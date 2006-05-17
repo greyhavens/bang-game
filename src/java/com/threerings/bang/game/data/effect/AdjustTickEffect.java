@@ -52,12 +52,20 @@ public class AdjustTickEffect extends Effect
     {
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (p.x == x && p.y == y && p.isAlive()) {
+            if (p.x == x && p.y == y && p.isAlive() &&
+                // make sure we're actually changing something
+                p.lastActed != bangobj.tick + _delta) {
                 pieceId = p.pieceId;
                 newLastActed = (short)(bangobj.tick + _delta);
                 break;
             }
         }
+    }
+
+    @Override // documentation inherited
+    public boolean isApplicable ()
+    {
+        return (pieceId > 0);
     }
 
     @Override // documentation inherited
