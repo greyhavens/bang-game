@@ -191,7 +191,7 @@ public class ParlorGameConfigView extends BContainer
     protected BButton _create;
 
     protected static final String[] BOX_LABELS = {
-        "m.rounds", "m.players", "m.opponents", "m.units" };
+        "m.rounds", "m.par_players", "m.par_opponents", "m.units" };
 
     protected static final int[] BOX_CFGS = {
         1, GameCodes.MAX_ROUNDS, 0, // rounds
