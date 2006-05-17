@@ -343,6 +343,11 @@ public class ParlorManager extends PlaceManager
         } catch (Exception e) {
             log.log(Level.WARNING, "Choked creating game " + config + ".", e);
         }
+
+        // and clear out our parlor bits
+        _parobj.setStarting(false);
+        _parobj.setPlayerOids(null);
+        _parobj.setGame(null);
     }
 
     protected ParlorObject _parobj;
