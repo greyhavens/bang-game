@@ -458,8 +458,9 @@ public class RenderUtil
     {
         // if the video card supports rendering straight to texture, use
         // JME's texture renderer; otherwise, render to the back buffer
+        // (temporarily disabled)
         int caps = Pbuffer.getCapabilities();
-        if ((caps & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0) {
+        if (false && (caps & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0) {
             return ctx.getDisplay().createTextureRenderer(width, height, true,
                 false, false, false, TextureRenderer.RENDER_TEXTURE_2D, 0);
             
