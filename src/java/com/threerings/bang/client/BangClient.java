@@ -466,7 +466,7 @@ public class BangClient extends BasicClient
         }
         
         // stop any currently playing stream
-        boolean wasPlaying = (_mstream != null);
+        boolean wasPlaying = (_mstream != null && _mstream.isPlaying());
         if (wasPlaying) {
             if (crossfade > 0f) {
                 _mstream.fadeOut(crossfade, true);
