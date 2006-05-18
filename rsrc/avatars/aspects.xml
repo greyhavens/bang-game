@@ -124,6 +124,10 @@
     <aspect name="smirk" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="thick" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="trouble" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="concerned" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="evil" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="sad" townId="frontier_town" scrip="750" coins="0"/>
+    <aspect name="surprised" townId="frontier_town" scrip="500" coins="0"/>
   </class>
 
   <class name="female/eyes">
@@ -133,9 +137,10 @@
     <aspect name="cute" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="determined" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="intent" townId="frontier_town" scrip="250" coins="0"/>
-    <aspect name="shifty" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="shifty" townId="frontier_town" scrip="750" coins="0"/>
     <aspect name="sly" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="squinty" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="left" townId="frontier_town" scrip="500" coins="0"/>
   </class>
 
   <class name="female/nose">
@@ -156,5 +161,10 @@
     <aspect name="sly" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="smirk" townId="frontier_town" scrip="250" coins="1"/>
     <aspect name="tiny" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="angry" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="frown" townId="frontier_town" scrip="750" coins="0"/>
+    <aspect name="sad" townId="frontier_town" scrip="750" coins="0"/>
+    <aspect name="smug" townId="frontier_town" scrip="750" coins="0"/>
+    <aspect name="stern" townId="frontier_town" scrip="500" coins="0"/>
   </class>
 </aspects>
