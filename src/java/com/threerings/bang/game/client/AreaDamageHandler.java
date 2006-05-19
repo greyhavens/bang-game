@@ -29,9 +29,7 @@ public class AreaDamageHandler extends EffectHandler
     public boolean execute ()
     {
         // we first wait for the missile sounds to resolve
-        _explodeSound = _sounds.getSound(
-            "rsrc/units/artillery/shooting.wav");
-//            "rsrc/sounds/effects/missile.wav");
+        _explodeSound = _sounds.getSound("rsrc/sounds/effects/missile.wav");
         _whistleSound = _sounds.getSound(
             "rsrc/sounds/effects/bomb_whistle.wav");
         _whistleSound.play(new Sound.StartObserver() {
