@@ -28,7 +28,10 @@ public class AreaDamageHandler extends EffectHandler
     @Override // documentation inherited
     public boolean execute ()
     {
-        // we first wait for the missile sound to resolve
+        // we first wait for the missile sounds to resolve
+        _explodeSound = _sounds.getSound(
+            "rsrc/units/artillery/shooting.wav");
+//            "rsrc/sounds/effects/missile.wav");
         _whistleSound = _sounds.getSound(
             "rsrc/sounds/effects/bomb_whistle.wav");
         _whistleSound.play(new Sound.StartObserver() {
@@ -68,6 +71,7 @@ public class AreaDamageHandler extends EffectHandler
             ssprite.addObserver(new PathObserver() {
                 public void pathCompleted (Sprite sprite, Path path) {
                     _view.removeSprite(sprite);
+                    _explodeSound.play(true);
                     maybeComplete(penderId);
                 }
                 public void pathCancelled (Sprite sprite, Path path) {
@@ -91,6 +95,9 @@ public class AreaDamageHandler extends EffectHandler
 
     /** The bomb whistle. */
     protected Sound _whistleSound;
+
+    /** The explosion sound. */
+    protected Sound _explodeSound;
 
     /** Whether or not the effect has been applied. */
     protected boolean _applied;
