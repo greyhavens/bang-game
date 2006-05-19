@@ -119,6 +119,7 @@ public class UnitConfig
      */
     public static UnitConfig getConfig (String type)
     {
+        ensureUnitsRegistered();
         UnitConfig config = _types.get(type);
         if (config == null) {
             log.warning("Requested unknown unit config '" + type + "'!");
@@ -133,6 +134,7 @@ public class UnitConfig
      */
     public static UnitConfig[] getTownUnits (String townId)
     {
+        ensureUnitsRegistered();
         return _townMap.get(townId);
     }
 
@@ -332,6 +334,17 @@ public class UnitConfig
         _townMap.put(town, nconfigs);
     }
 
+    protected static void ensureUnitsRegistered ()
+    {
+        if (_types.size() == 0) {
+            // register our units
+            String[] units = BangUtil.resourceToStrings("rsrc/units/units.txt");
+            for (int ii = 0; ii < units.length; ii++) {
+                registerUnit(units[ii]);
+            }
+        }
+    }
+
     /** A mapping from unit type to its configuration. */
     protected static HashMap<String,UnitConfig> _types =
         new HashMap<String,UnitConfig>();
@@ -339,12 +352,4 @@ public class UnitConfig
     /** A mapping from town to all units accessible in that town. */
     protected static HashMap<String,UnitConfig[]> _townMap =
         new HashMap<String,UnitConfig[]>();
-
-    static {
-        // register our units
-        String[] units = BangUtil.resourceToStrings("rsrc/units/units.txt");
-        for (int ii = 0; ii < units.length; ii++) {
-            registerUnit(units[ii]);
-        }
-    }
 }
