@@ -216,6 +216,9 @@ public class BangClient extends BasicClient
             return;
         }
 
+        // set our proper window title
+        Display.setTitle(_ctx.xlate(BangCodes.BANG_MSGS, "m.app_title"));
+
         // upgrade getdown if appropriate
         File newgd = new File(localDataDir("code/getdown-pro-new.jar"));
         File curgd = new File(localDataDir("getdown-pro.jar"));
@@ -567,6 +570,10 @@ public class BangClient extends BasicClient
         if (bard != null && bard.ident != null) {
             IdentUtil.setMachineIdentifier(bard.ident);
         }
+
+        // update our title to contain our username
+        Display.setTitle(_msgmgr.getBundle(BangCodes.BANG_MSGS).get(
+                             "m.online_title", _ctx.getUserObject().username));
 
         // get a reference to the player service
         _psvc = (PlayerService)_client.requireService(PlayerService.class);

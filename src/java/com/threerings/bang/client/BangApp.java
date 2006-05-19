@@ -10,6 +10,8 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.lwjgl.opengl.Display;
+
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 import com.jme.system.DisplaySystem;
@@ -114,6 +116,12 @@ public class BangApp extends JmeApp
     {
         // configure our debug log
         configureLog("bang.log");
+
+        // this is a hack, but we can't set our translated title until we've
+        // create our client and message manager and whatnot; but I'll be
+        // damned if we're going to have it say "Game" for even half a second
+        Display.setTitle("Bang! Howdy");
+        // TODO: set our icons
 
         String server = DeploymentConfig.getServerHost();
         if (args.length > 0) {
