@@ -239,7 +239,7 @@ public class BangClient extends BasicClient
         // create the system chat view, which will display system chat messages
         // outside of games
         _scview = new SystemChatView(_ctx);
-        
+
         // register our global key bindings
         _functionPopup = new FKeyPopups(_ctx);
 
@@ -261,7 +261,7 @@ public class BangClient extends BasicClient
         };
         _ctx.getInterface().attachChild(fade);
     }
-    
+
     /**
      * Returns a reference to the context in effect for this client. This
      * reference is valid for the lifetime of the application.
@@ -467,7 +467,7 @@ public class BangClient extends BasicClient
                         "[key=" + key + "].");
             return;
         }
-        
+
         // stop any currently playing stream
         boolean wasPlaying = (_mstream != null && _mstream.isPlaying());
         if (wasPlaying) {
@@ -589,7 +589,7 @@ public class BangClient extends BasicClient
                 _config.setValue(mkey, StringUtil.join(_mutedir.getMuted()));
             }
         });
-        
+
         // register our status view key bindings
         StatusView.bindKeys(_ctx);
 
@@ -667,7 +667,7 @@ public class BangClient extends BasicClient
         }
         return handles;
     }
-    
+
     @Override // documentation inherited
     protected void createContextServices (RunQueue rqueue)
     {
@@ -676,11 +676,11 @@ public class BangClient extends BasicClient
         // create our custom directors
         _chatdir = new BangChatDirector(_ctx);
         _bcache = new BoardCache();
-        
+
         // warm up the particle factory
         ParticleFactory.warmup(_ctx);
     }
-    
+
     protected void displayPardnerInvite (final Handle handle)
     {
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
@@ -699,6 +699,13 @@ public class BangClient extends BasicClient
 
     protected void setMainView (final BWindow view)
     {
+        // if the new view is a game view, fade out the current music as we
+        // fade out the current view
+        if (view instanceof BangView && _mstream != null) {
+            _mstream.fadeOut(0.5f, true);
+            _mstream = null;
+        }
+
         // if we have an existing main view, fade that out
         if (_mview != null) {
             FadeInOutEffect fade =
@@ -787,11 +794,11 @@ public class BangClient extends BasicClient
         public MuteDirector getMuteDirector () {
             return _mutedir;
         }
-        
+
         public BoardCache getBoardCache () {
             return _bcache;
         }
-        
+
         public void setPlaceView (PlaceView view) {
             // clear any lingering popups
             clearPopups(false);
