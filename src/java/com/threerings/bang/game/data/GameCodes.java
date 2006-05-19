@@ -31,7 +31,7 @@ public interface GameCodes extends InvocationCodes
     public static final String TARGET_NO_LONGER_VALID = "m.target_invalid";
 
     /** An error response code for {@link BangService#move}. */
-    public static final String TARGET_TOO_FAR = "m.target_too_far";
+    public static final String TARGET_UNREACHABLE = "m.target_unreachable";
 
     /** An error response code for {@link BangService#playCard}. */
     public static final String CARD_UNPLAYABLE = "m.card_unplayable";

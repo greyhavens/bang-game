@@ -102,13 +102,7 @@ public class ViewpointSprite extends PieceSprite
             LEFT);
         getLocalRotation().multLocal(_rot);
     }
-
-    @Override // documentation inherited
-    protected int computeElevation (BangBoard board, int tx, int ty)
-    {
-        return ((Viewpoint)_piece).elevation;
-    }
-
+    
     /**
      * Returns the direction in which this sprite is "pointing".
      */

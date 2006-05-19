@@ -10,6 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.util.PieceUtil;
 
@@ -29,6 +30,12 @@ public class Viewpoint extends Piece
     
     /** The elevation of the viewpoint. */
     public short elevation;
+    
+    @Override // documentation inherited
+    public int computeElevation (BangBoard board, int tx, int ty)
+    {
+        return elevation;
+    }
     
     @Override // documentation inherited
     public void persistTo (ObjectOutputStream oout)

@@ -516,9 +516,10 @@ public class MobileSprite extends PieceSprite
 
         } else {
             Vector3f start = toWorldCoords(
-                _px, _py, computeElevation(board, _px, _py), new Vector3f());
-            Vector3f end = toWorldCoords(
-                _piece.x, _piece.y, computeElevation(board, _piece.x, _piece.y),
+                _px, _py, _piece.computeElevation(board, _px, _py),
+                new Vector3f());
+            Vector3f end = toWorldCoords(_piece.x, _piece.y,
+                _piece.computeElevation(board, _piece.x, _piece.y),
                 new Vector3f());
             float duration = (float)MathUtil.distance(
                 _px, _py, _piece.x, _piece.y) * .003f;
@@ -555,7 +556,8 @@ public class MobileSprite extends PieceSprite
         BangBoard board, Vector3f[] coords, int idx, int nx, int ny)
     {
         coords[idx] = new Vector3f();
-        toWorldCoords(nx, ny, computeElevation(board, nx, ny), coords[idx]);
+        toWorldCoords(nx, ny, _piece.computeElevation(board, nx, ny),
+            coords[idx]);
     }
 
     /**

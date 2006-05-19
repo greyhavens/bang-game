@@ -152,7 +152,7 @@ public class PieceSprite extends Sprite
      */
     public void setLocation (BangBoard board, int tx, int ty)
     {
-        setLocation(tx, ty, computeElevation(board, tx, ty));
+        setLocation(tx, ty, _piece.computeElevation(board, tx, ty));
     }
     
     /**
@@ -376,26 +376,6 @@ public class PieceSprite extends Sprite
         hnode.setRenderState(RenderUtil.backCull);
         hnode.updateRenderState();
         return hnode;
-    }
-
-    /**
-     * Computes the elevation for this piece at the specified location.
-     */
-    protected int computeElevation (BangBoard board, int tx, int ty)
-    {
-        int width = _piece.getWidth(), height = _piece.getHeight();
-        if (width == 1 && height == 1) {
-            return board.getHeightfieldElevation(tx, ty);
-        }
-
-        int elevation = Integer.MIN_VALUE;
-        for (int y = ty, ymax = ty + height; y < ymax; y++) {
-            for (int x = tx, xmax = tx + width; x < xmax; x++) {
-                elevation = Math.max(elevation,
-                    board.getHeightfieldElevation(x, y));
-            }
-        }
-        return elevation;
     }
 
     /**

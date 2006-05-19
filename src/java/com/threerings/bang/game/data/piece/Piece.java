@@ -172,6 +172,18 @@ public abstract class Piece extends SimpleStreamableObject
         return 1;
     }
 
+    /** Returns the vertical size of this piece in tiles. */
+    public float getDepth ()
+    {
+        return 1f;
+    }
+    
+    /** Returns the elevation of this piece in the board's elevation units. */
+    public int computeElevation (BangBoard board, int tx, int ty)
+    {
+        return board.getHeightfieldElevation(tx, ty);
+    }
+    
     /** Returns the number of tiles that this piece can "see". */
     public int getSightDistance ()
     {
@@ -307,14 +319,16 @@ public abstract class Piece extends SimpleStreamableObject
      * Selects the shortest move that puts us within range of firing on
      * the specified target.
      */
-    public Point computeShotLocation (Piece target, PointSet moveSet)
+    public Point computeShotLocation (
+        BangBoard board, Piece target, PointSet moveSet)
     {
         int minfdist = getMinFireDistance(), maxfdist = getMaxFireDistance();
         int moves = Integer.MAX_VALUE;
 
         // first check if we can fire without moving
         int tdist = target.getDistance(x, y);
-        if (tdist >= minfdist && tdist <= maxfdist) {
+        if (tdist >= minfdist && tdist <= maxfdist &&
+            checkLineOfSight(board, x, y, target)) {
             return new Point(x, y);
         }
 
@@ -324,7 +338,8 @@ public abstract class Piece extends SimpleStreamableObject
             int px = moveSet.getX(ii), py = moveSet.getY(ii);
             int dist = getDistance(px, py);
             tdist = target.getDistance(px, py);
-            if (dist < moves && tdist >= minfdist && tdist <= maxfdist) {
+            if (dist < moves && tdist >= minfdist && tdist <= maxfdist &&
+                checkLineOfSight(board, px, py, target)) {
                 moves = dist;
                 if (spot == null) {
                     spot = new Point();
@@ -518,6 +533,21 @@ public abstract class Piece extends SimpleStreamableObject
         return valid;
     }
 
+    /**
+     * Determines whether this piece has the necessary line of sight to
+     * fire upon the specified target from the given location.
+     */
+    public boolean checkLineOfSight (
+        BangBoard board, int tx, int ty, Piece target)
+    {
+        int units = board.getElevationUnitsPerTile(),
+            e1 = computeElevation(board, tx, ty) +
+                (int)(getDepth()*0.5f*units),
+            e2 = target.computeElevation(board, target.x, target.y) +
+                (int)(target.getDepth()*0.5f*units);
+        return board.checkLineOfSight(tx, ty, e1, target.x, target.y, e2);
+    }
+    
     /**
      * Computes the actual damage done if this piece were to fire on the
      * specified target, accounting for this piece's current damage level

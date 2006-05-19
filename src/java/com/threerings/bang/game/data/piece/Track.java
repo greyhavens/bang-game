@@ -48,6 +48,12 @@ public class Track extends Piece
     }
     
     @Override // documentation inherited
+    public float getDepth ()
+    {
+        return 0.125f;
+    }
+    
+    @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
         return preventsGroundOverlap() && !(lapper instanceof Train) &&

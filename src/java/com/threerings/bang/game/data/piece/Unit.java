@@ -146,6 +146,38 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public int computeElevation (BangBoard board, int tx, int ty)
+    {
+        if (isFlyer() && isAlive()) {
+            return computeFlightElevation(board, tx, ty);
+        } else {
+            return super.computeElevation(board, tx, ty);
+        }
+    }
+    
+    /**
+     * Computes the elevation of for a flying unit.
+     */
+    public int computeFlightElevation (BangBoard board, int tx, int ty)
+    {
+        int groundel = Math.max(board.getWaterLevel(),
+            super.computeElevation(board, tx, ty)) +
+                (int)(FLYER_GROUND_HEIGHT * board.getElevationUnitsPerTile()),
+            propel = board.getElevation(tx, ty) +
+                (int)(FLYER_PROP_HEIGHT * board.getElevationUnitsPerTile());
+        return Math.max(groundel, propel);
+    }
+    
+    @Override // documentation inherited
+    public boolean checkLineOfSight (
+        BangBoard board, int tx, int ty, Piece target)
+    {
+        // range units are not restricted to line of sight
+        return (_config.mode == UnitConfig.Mode.RANGE ||
+            super.checkLineOfSight(board, tx, ty, target));
+    }
+    
+    @Override // documentation inherited
     public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
     {
         if (target instanceof Unit) {
@@ -313,4 +345,10 @@ public class Unit extends Piece
 
     protected transient UnitConfig _config;
     protected transient short _respawnTick = -1;
+    
+    /** The height above ground at which flyers fly (in tile lengths). */
+    protected static final float FLYER_GROUND_HEIGHT = 1f;
+
+    /** The height above props at which flyers fly (in tile lengths). */
+    protected static final float FLYER_PROP_HEIGHT = 0.25f;
 }

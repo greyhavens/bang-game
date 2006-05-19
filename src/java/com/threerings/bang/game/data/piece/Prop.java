@@ -12,6 +12,7 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
@@ -126,15 +127,27 @@ public class Prop extends BigPiece
     }
 
     @Override // documentation inherited
+    public int computeElevation (BangBoard board, int tx, int ty)
+    {
+        return super.computeElevation(board, tx, ty) + felev;
+    }
+    
+    @Override // documentation inherited
+    public float getDepth ()
+    {
+        return _config.depth;
+    }
+    
+    @Override // documentation inherited
     public boolean isTall ()
     {
         return _config.tall;
     }
     
     @Override // documentation inherited
-    public float getElevation ()
+    public boolean isPenetrable ()
     {
-        return _config.elevation;
+        return _config.penetrable;
     }
     
     /**

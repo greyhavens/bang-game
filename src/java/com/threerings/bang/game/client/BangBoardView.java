@@ -989,7 +989,7 @@ public class BangBoardView extends BoardView
             Piece p = (Piece)iter.next();
             if (p instanceof Unit && range.contains(p.x, p.y) &&
                 _selection.validTarget(p, false) &&
-                _selection.computeShotLocation(p, moves) != null) {
+                _selection.computeShotLocation(_board, p, moves) != null) {
                 UnitSprite sprite = getUnitSprite(p);
                 if (sprite != null) {
                     sprite.setTargeted(_selection.lastActed >= p.lastActed ?

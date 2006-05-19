@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import com.threerings.io.ObjectInputStream;
 
+import com.threerings.bang.game.data.BangBoard;
+
 /**
  * A base class for pieces that are big rectangles rather than a chain of
  * 1x1 segments. These pieces are not intended for player control, nor to
@@ -30,17 +32,35 @@ public abstract class BigPiece extends Piece
         return _bounds;
     }
 
-    /** Returns the elevation of this piece in tiles. */
-    public float getElevation ()
-    {
-        return 2f;
-    }
-    
     /** Checks whether this piece is "tall," meaning that even air units cannot
      * pass over it. */
     public boolean isTall ()
     {
         return false;
+    }
+    
+    /** Checks whether this piece is "penetrable," meaning that units can shoot
+     * through it.
+     */
+    public boolean isPenetrable ()
+    {
+        return false;
+    }
+
+    @Override // documentation inherited
+    public int computeElevation (BangBoard board, int tx, int ty)
+    {
+        if (_bounds.width == 1 && _bounds.height == 1) {
+            return board.getHeightfieldElevation(tx, ty);
+        }
+        int elevation = Integer.MIN_VALUE;
+        for (int y = ty, ymax = ty + _bounds.height; y < ymax; y++) {
+            for (int x = tx, xmax = tx + _bounds.width; x < xmax; x++) {
+                elevation = Math.max(elevation,
+                    board.getHeightfieldElevation(x, y));
+            }
+        }
+        return elevation;   
     }
     
     @Override // documentation inherited

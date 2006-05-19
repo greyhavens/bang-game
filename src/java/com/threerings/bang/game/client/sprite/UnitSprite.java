@@ -439,16 +439,6 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    protected int computeElevation (BangBoard board, int tx, int ty)
-    {
-        if (_piece.isFlyer() && _piece.isAlive()) {
-            return computeFlightElevation(board, tx, ty);
-        } else {
-            return super.computeElevation(board, tx, ty);
-        }
-    }
-
-    @Override // documentation inherited
     protected void setCoord (
         BangBoard board, Vector3f[] coords, int idx, int nx, int ny)
     {
@@ -456,9 +446,9 @@ public class UnitSprite extends MobileSprite
         // last coordinate is on the ground
         int elev;
         if (_piece.isFlyer() && !_piece.isAlive() && idx != coords.length-1) {
-            elev = computeFlightElevation(board, nx, ny);
+            elev = ((Unit)_piece).computeFlightElevation(board, nx, ny);
         } else {
-            elev = computeElevation(board, nx, ny);
+            elev = _piece.computeElevation(board, nx, ny);
         }
         coords[idx] = new Vector3f();
         toWorldCoords(nx, ny, elev, coords[idx]);
@@ -468,17 +458,6 @@ public class UnitSprite extends MobileSprite
     protected String[] getPreloadSounds ()
     {
         return PRELOAD_SOUNDS;
-    }
-
-    /** Computes the elevation of a flying piece. */
-    protected int computeFlightElevation (BangBoard board, int tx, int ty)
-    {
-        int groundel = Math.max(board.getWaterLevel(),
-            super.computeElevation(board, tx, ty)) +
-                FLYER_GROUND_HEIGHT * board.getElevationUnitsPerTile(),
-            propel = board.getElevation(tx, ty) +
-                (int)(FLYER_PROP_HEIGHT * board.getElevationUnitsPerTile());
-        return Math.max(groundel, propel);
     }
 
     /** Sets up our colors according to our owning player. */

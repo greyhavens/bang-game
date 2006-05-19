@@ -283,15 +283,15 @@ public class TerrainNode extends Node
             ibuf.rewind();
             
             // if we're putting highlights over pieces and there's a piece
-            // here, use the same elevation over the entire highlight
-            boolean constantElevation = false;
-            float elevation = 0f;
+            // here, raise the highlight above it
+            float raise = 0;
             int tx = getTileX(), ty = getTileY();
             int belev = _board.getElevation(tx, ty);
-            if (_onTile && _overPieces &&
-                belev > _board.getHeightfieldElevation(tx, ty)) {
-                constantElevation = true;
-                elevation = belev * _elevationScale;
+            if (_onTile && _overPieces) {
+                int helev = _board.getHeightfieldElevation(tx, ty);
+                if (belev > helev) {
+                    raise = (belev - helev) * _elevationScale;
+                }
             }
 
             float x0 = x - _width/2, y0 = y - _height/2;
@@ -300,13 +300,8 @@ public class TerrainNode extends Node
             Vector3f vertex = new Vector3f();
             for (int sy = sy0, sy1 = sy0 + _vheight, idx = 0; sy < sy1; sy++) {
                 for (int sx = sx0, sx1 = sx0 + _vwidth; sx < sx1; sx++) {
-                    if (constantElevation) {
-                        vertex.set(sx * SUB_TILE_SIZE, sy * SUB_TILE_SIZE,
-                            elevation);
-
-                    } else {
-                        getHeightfieldVertex(sx, sy, vertex);
-                    }
+                    getHeightfieldVertex(sx, sy, vertex);
+                    vertex.z += raise;
                     BufferUtils.setInBuffer(vertex, vbuf, idx++);
                     
                     // update the index buffer according to the diagonalization

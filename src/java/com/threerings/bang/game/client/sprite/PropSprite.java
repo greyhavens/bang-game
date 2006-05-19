@@ -114,12 +114,6 @@ public class PropSprite extends PieceSprite
     }
     
     @Override // documentation inherited
-    protected int computeElevation (BangBoard board, int tx, int ty)
-    {
-        return super.computeElevation(board, tx, ty) + ((Prop)_piece).felev;
-    }
-    
-    @Override // documentation inherited
     protected void centerWorldCoords (Vector3f coords)
     {
         // the piece width and height account for rotation

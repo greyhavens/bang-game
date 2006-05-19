@@ -1303,12 +1303,13 @@ public class BangManager extends GameManager
                 throw new InvocationException(TARGET_NO_LONGER_VALID);
             }
 
-            Point spot = unit.computeShotLocation(target, _moves);
+            Point spot = unit.computeShotLocation(
+                _bangobj.board, target, _moves);
             if (spot == null) {
                 log.info("Unable to find place from which to shoot. " +
                          "[piece=" + unit.info() + ", target=" + target.info() +
                          ", moves=" + _moves + "].");
-                throw new InvocationException(TARGET_TOO_FAR);
+                throw new InvocationException(TARGET_UNREACHABLE);
             }
             x = spot.x;
             y = spot.y;
@@ -1435,11 +1436,13 @@ public class BangManager extends GameManager
             throw new InvocationException(TARGET_NO_LONGER_VALID);
         }
 
-        // make sure the target is still within range
-        if (!shooter.targetInRange(target.x, target.y)) {
-            log.info("Target no longer in range [shooter=" + shooter.info() +
+        // make sure the target is still reachable
+        if (!shooter.targetInRange(target.x, target.y) ||
+            !shooter.checkLineOfSight(
+                _bangobj.board, shooter.x, shooter.y, target)) {
+            log.info("Target no longer reachable [shooter=" + shooter.info() +
                      ", target=" + target.info() + "].");
-            throw new InvocationException(TARGET_TOO_FAR);
+            throw new InvocationException(TARGET_UNREACHABLE);
         }
     }
 
@@ -1993,8 +1996,8 @@ public class BangManager extends GameManager
                 if (target == null) { // sanity check
                     return TARGET_NO_LONGER_VALID;
                 }
-                return (unit.computeShotLocation(target, _moves) == null) ?
-                    TARGET_TOO_FAR : null;
+                return (unit.computeShotLocation(_bangobj.board, target,
+                    _moves) == null) ? TARGET_UNREACHABLE : null;
             }
 
             // if a specific location was specified, make sure we can
@@ -2012,8 +2015,9 @@ public class BangManager extends GameManager
             // target from our desired move location
             int tdist = target.getDistance(x, y);
             if (tdist < unit.getMinFireDistance() ||
-                tdist > unit.getMaxFireDistance()) {
-                return TARGET_TOO_FAR;
+                tdist > unit.getMaxFireDistance() ||
+                !unit.checkLineOfSight(_bangobj.board, x, y, target)) {
+                return TARGET_UNREACHABLE;
             }
 
             return null;

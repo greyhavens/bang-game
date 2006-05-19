@@ -645,9 +645,9 @@ public class BangBoard extends SimpleStreamableObject
             
         } else if (piece instanceof BigPiece) {
             BigPiece bpiece = (BigPiece)piece;
-            byte ptype = bpiece.isTall() ? O_TALL_PROP : O_PROP,
-                elevation = (byte)(bpiece.getElevation() *
-                    _elevationUnitsPerTile);
+            byte ptype = (byte)(O_PROP ^ (bpiece.isTall() ? TALL_FLAG : 0) ^
+                (bpiece.isPenetrable() ? PENETRABLE_FLAG : 0)),
+                elevation = (byte)(bpiece.getDepth() * _elevationUnitsPerTile);
             Rectangle pbounds = bpiece.getBounds();
             for (int yy = pbounds.y, ly = yy + pbounds.height;
                  yy < ly; yy++) {
@@ -667,7 +667,7 @@ public class BangBoard extends SimpleStreamableObject
 
         } else if (piece instanceof Track) {
             int idx = _width*piece.y+piece.x;
-            _estate[idx] = (byte)(_elevationUnitsPerTile/8);
+            _estate[idx] = (byte)(piece.getDepth() * _elevationUnitsPerTile);
             if (((Track)piece).preventsGroundOverlap()) {
                 _tstate[idx] = _btstate[idx] = O_PROP;
                 _btstate[idx] = _btstate[idx] = O_PROP;
@@ -676,12 +676,10 @@ public class BangBoard extends SimpleStreamableObject
         } else if (piece instanceof Bonus) {
             _tstate[_width*piece.y+piece.x] = O_BONUS;
 
-        } else if (piece instanceof Cow) {
+        } else if (piece instanceof Cow || piece instanceof Train ||
+            piece.owner < 0) {
             _tstate[_width*piece.y+piece.x] = O_OCCUPIED;
-
-        } else if (piece instanceof Train || piece.owner < 0) {
-            _tstate[_width*piece.y+piece.x] = O_PROP;
-
+            
         } else {
             _tstate[_width*piece.y+piece.x] = (byte)piece.owner;
         }
@@ -836,8 +834,8 @@ public class BangBoard extends SimpleStreamableObject
         // props, but will otherwise not do funny things
         int idx = y*_width+x;
         byte tstate = _tstate[idx];
-        if ((piece.isFlyer() && tstate != O_TALL_PROP) ||
-            piece instanceof Train) {
+        if ((piece.isFlyer() && (tstate > O_PROP ||
+            (tstate & TALL_FLAG) != 0)) || piece instanceof Train) {
             return true;
         } else {
             return (tstate == O_FLAT) ||
@@ -856,19 +854,6 @@ public class BangBoard extends SimpleStreamableObject
             return false;
         }
         return (_tstate[y*_width+x] == O_FLAT);
-    }
-
-    /**
-     * Returns true if the specified coordinate is under a prop, false
-     * otherwise.
-     */
-    public boolean isUnderProp (int x, int y)
-    {
-        if (!_playarea.contains(x, y)) {
-            return false;
-        }
-        byte tstate = _tstate[y*_width+x];
-        return (tstate == O_PROP || tstate == O_TALL_PROP);
     }
 
     /**
@@ -1000,6 +985,39 @@ public class BangBoard extends SimpleStreamableObject
         return _pterrain[y*_width + x];
     }
 
+    /**
+     * Determines whether a line of sight exists between the two specified
+     * tile coordinates (plus elevations).
+     */
+    public boolean checkLineOfSight (
+        int x1, int y1, int e1, int x2, int y2, int e2)
+    {
+        // adjacent/coincident tiles are always in line of sight
+        int mlen = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
+        if (mlen <= 1) {
+            return true;
+        }
+        
+        // iterate along the longer of horizontal and vertical lengths
+        float dx = (float)(x2 - x1) / mlen, dy = (float)(y2 - y1) / mlen,
+            de = (float)(e2 - e1) / mlen, xx = x1 + dx, yy = y1 + dy,
+            ee = e1 + de;
+        for (int ii = 1; ii < mlen; ii++, xx += dx, yy += dy, ee += de) {
+            int ix = (int)xx, iy = (int)yy,
+                hfelev = getHeightfieldElevation(ix, iy);
+            if (hfelev > ee) {
+                return false; // terrain is in the way
+            }
+            if (hfelev + getPieceElevation(ix, iy) > ee) {
+                byte btstate = _btstate[iy*_width + ix];
+                if (btstate <= O_PROP && (btstate & PENETRABLE_FLAG) != 0) {
+                    return false; // non-penetrable prop is in the way
+                }
+            }
+        }
+        return true;
+    }
+    
     /** 
      * Initializes the transient fields to their default states.
      */
@@ -1107,7 +1125,7 @@ public class BangBoard extends SimpleStreamableObject
             considerFiring(attacks, xx, yy-1, premain, true);
         }
     }
-
+    
     /** The width and height of our board. */
     protected int _width, _height;
 
@@ -1186,10 +1204,14 @@ public class BangBoard extends SimpleStreamableObject
     /** Indicates that this tile is impassable by non-air units. */
     protected static final byte O_IMPASS = -4;
 
-    /** Indicates that this tile is occupied by a prop. */
+    /** Indicates that this tile is occupied by a prop.  Anything less is also
+     * a prop, with the flags below indicating various attributes when
+     * cleared. */
     protected static final byte O_PROP = -5;
     
-    /** Indicates that this tile is occupied by a tall prop (can't be passed,
-     * even by air units). */
-    protected static final byte O_TALL_PROP = -6;
+    /** Flags the prop as tall (can't be passed, even by air units). */
+    protected static final byte TALL_FLAG = 1 << 3;
+    
+    /** Flags the prop as penetrable (doesn't affect line of sight). */
+    protected static final byte PENETRABLE_FLAG = 1 << 4;
 }
