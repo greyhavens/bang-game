@@ -120,7 +120,8 @@ public class TerrainNode extends Node
                         y + radius*FastMath.sin(angle)));
                     _v2.set(x + radius*FastMath.cos(angle+step),
                         y + radius*FastMath.sin(angle+step));
-                    while (getBoundaryIntersection(_v1, _v2, _between)) {
+                    while (getBoundaryIntersection(_v1, _v2, _between) &&
+                        !_v1.equals(_between)) { // sanity check
                         addVertex(_v1.set(_between));
                     }
                     angle += step;
@@ -220,39 +221,12 @@ public class TerrainNode extends Node
                 setTextureBuffer(BufferUtils.createFloatBuffer(
                     _vwidth * _vheight * 2));
             }
+            setIndexBuffer(BufferUtils.createIntBuffer(
+                (_vwidth - 1) * (_vheight - 1) * 6));
 
-            // update the vertices and possibly the texture coords
-            updateVertices();
-
-            // set the indices, which never change
-            IntBuffer ibuf;
-            if (_onTile && _hibuf != null) {
-                ibuf = _hibuf;
-                
-            } else {
-                int swidth = _vwidth - 1, sheight = _vheight - 1;
-                ibuf = BufferUtils.createIntBuffer(swidth * sheight * 2 * 3);
-                for (int iy = 0; iy < sheight; iy++) {
-                    for (int ix = 0; ix < swidth; ix++) {
-                        // upper left triangle
-                        ibuf.put(iy*_vwidth + ix);
-                        ibuf.put((iy+1)*_vwidth + (ix+1));
-                        ibuf.put((iy+1)*_vwidth + ix);
-
-                        // lower right triangle
-                        ibuf.put(iy*_vwidth + ix);
-                        ibuf.put(iy*_vwidth + (ix+1));
-                        ibuf.put((iy+1)*_vwidth + (ix+1));
-                    }
-                }
-                if (_onTile) {
-                    _hibuf = ibuf;
-                }
-            }
-            setIndexBuffer(ibuf);
-
+            // update the vertices, indices, and possibly the texture coords
             setModelBound(new BoundingBox());
-            updateModelBound();
+            updateVertices();
         }
 
         /**
@@ -305,7 +279,9 @@ public class TerrainNode extends Node
             }
 
             FloatBuffer vbuf = getVertexBuffer();
-
+            IntBuffer ibuf = getIndexBuffer();
+            ibuf.rewind();
+            
             // if we're putting highlights over pieces and there's a piece
             // here, use the same elevation over the entire highlight
             boolean constantElevation = false;
@@ -332,6 +308,21 @@ public class TerrainNode extends Node
                         getHeightfieldVertex(sx, sy, vertex);
                     }
                     BufferUtils.setInBuffer(vertex, vbuf, idx++);
+                    
+                    // update the index buffer according to the diagonalization
+                    // toggles set by the splat blocks
+                    if (sy == sy0 || sx == sx0) {
+                        continue;
+                    }
+                    int ur = (sy-sy0)*_vwidth + (sx-sx0),
+                        ul = ur - 1, lr = ur - _vwidth, ll = lr - 1;
+                    if (_diags[sy+1][sx+1]) {
+                        ibuf.put(ul); ibuf.put(ll); ibuf.put(lr);
+                        ibuf.put(ul); ibuf.put(lr); ibuf.put(ur);
+                    } else {
+                        ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
+                        ibuf.put(ll); ibuf.put(lr); ibuf.put(ur);
+                    }
                 }
             }
             updateModelBound();
@@ -413,7 +404,9 @@ public class TerrainNode extends Node
     {
         _board = board;
         _elevationScale = _board.getElevationScale(TILE_SIZE);
-
+        _diags = new boolean[_board.getHeightfieldHeight()+3][
+            _board.getHeightfieldWidth()+3];
+        
         // clean up any existing geometry
         detachAllChildren();
 
@@ -690,6 +683,7 @@ public class TerrainNode extends Node
                 float t = (h1 - r1) / (r2 + h1 - r1 - h2);
                 result.set(v1.x + t*(between.x - v1.x),
                     v1.y + t*(between.y - v1.y), h1 + t*(h2 - h1));
+                
                 return true;
             }
             v1.set(between);
@@ -712,20 +706,31 @@ public class TerrainNode extends Node
 
         // sample at the four closest points and find the fractional components
         int fx = (int)FastMath.floor(x), cx = (int)FastMath.ceil(x),
-            fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y);
+            fy = (int)FastMath.floor(y), cy = (int)FastMath.ceil(y),
+            dx = fx + 2, dy = fy + 2;
         float ff = getHeightfieldValue(fx, fy),
             fc = getHeightfieldValue(fx, cy),
             cf = getHeightfieldValue(cx, fy),
             cc = getHeightfieldValue(cx, cy),
             ax = x - fx, ay = y - fy;
 
-        if (ax < ay) {
-            return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
-                FastMath.LERP(ay, cc + ff - fc, cc));
-            
+        if (dx >= 0 && dy >= 0 && dy < _diags.length &&
+            dx < _diags[dy].length && _diags[dy][dx]) {
+            if ((1f - ax) < ay) {
+                return FastMath.LERP(ax, FastMath.LERP(ay, fc + cf - cc, fc),
+                    FastMath.LERP(ay, cf, cc));
+            } else {
+                return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
+                    FastMath.LERP(ay, cf, cf + fc - ff));
+            }
         } else {
-            return FastMath.LERP(ax, FastMath.LERP(ay, ff, cc + ff - cf),
-                FastMath.LERP(ay, cf, cc));
+            if (ax < ay) {
+                return FastMath.LERP(ax, FastMath.LERP(ay, ff, fc),
+                    FastMath.LERP(ay, cc + ff - fc, cc));
+            } else {
+                return FastMath.LERP(ax, FastMath.LERP(ay, ff, ff + cc - cf),
+                    FastMath.LERP(ay, cf, cc));
+            }
         }
     }
 
@@ -1028,9 +1033,10 @@ public class TerrainNode extends Node
     protected static boolean getBoundaryIntersection (Vector2f v1, Vector2f v2,
         Vector2f result)
     {
-        float t = Math.min(getHorizontalIntersection(v1, v2),
-            Math.min(getVerticalIntersection(v1, v2),
-                getDiagonalIntersection(v1, v2)));
+        float t = Math.min(Math.min(getBoundaryIntersection(v1.x, v2.x),
+            getBoundaryIntersection(v1.y, v2.y)),
+                Math.min(getBoundaryIntersection(v1.y - v1.x, v2.y - v2.x),
+            getBoundaryIntersection(v1.y + v1.x, v2.y + v2.x)));
         if (t == Float.MAX_VALUE) {
             result.set(v2);
             return false;
@@ -1040,18 +1046,17 @@ public class TerrainNode extends Node
     }
     
     /**
-     * If the two vertices lie on either side of a horizontal boundary, find
-     * the location of the boundary crossing nearest to the first point.
+     * If the two values lie on either side of a boundary, find the location
+     * of the boundary crossing nearest to the first point.
      *
      * @return <code>Float.MAX_VALUE</code> if there was no boundary between
      * the points, otherwise a number from 0 to 1 indicating the distance to
      * the boundary as a proportion of the distance between v1 and v2
      */
-    protected static float getHorizontalIntersection (Vector2f v1,
-        Vector2f v2)
+    protected static float getBoundaryIntersection (float v1, float v2)
     {
-        int b1 = getBoundaryIndex(v1.y, SUB_TILE_SIZE),
-            b2 = getBoundaryIndex(v2.y, SUB_TILE_SIZE);
+        int b1 = getBoundaryIndex(v1, SUB_TILE_SIZE),
+            b2 = getBoundaryIndex(v2, SUB_TILE_SIZE);
         if (b1 == b2) {
             return Float.MAX_VALUE;
         }
@@ -1060,58 +1065,7 @@ public class TerrainNode extends Node
             if (b % 2 != 0) {
                 continue;
             }
-            return ((b/2)*SUB_TILE_SIZE - v1.y) / (v2.y - v1.y);
-        }
-        return Float.MAX_VALUE;
-    }
-
-    /**
-     * If the two vertices lie on either side of a vertical boundary, find
-     * the location of the boundary crossing nearest to the first point.
-     *
-     * @return <code>Float.MAX_VALUE</code> if there was no boundary between
-     * the points, otherwise a number from 0 to 1 indicating the distance to
-     * the boundary as a proportion of the distance between v1 and v2
-     */
-    protected static float getVerticalIntersection (Vector2f v1, Vector2f v2)
-    {
-        int b1 = getBoundaryIndex(v1.x, SUB_TILE_SIZE),
-            b2 = getBoundaryIndex(v2.x, SUB_TILE_SIZE);
-        if (b1 == b2) {
-            return Float.MAX_VALUE;
-        }
-        int step = (b1 < b2) ? +1 : -1;
-        for (int b = b1 + step; b != b2; b += step) {
-            if (b % 2 != 0) {
-                continue;
-            }
-            return ((b/2)*SUB_TILE_SIZE - v1.x) / (v2.x - v1.x);
-        }
-        return Float.MAX_VALUE;
-    }
-
-    /**
-     * If the two vertices lie on either side of a diagonal boundary, find
-     * the location of the boundary crossing nearest to the first point.
-     *
-     * @return <code>Float.MAX_VALUE</code> if there was no boundary between
-     * the points, otherwise a number from 0 to 1 indicating the distance to
-     * the boundary as a proportion of the distance between v1 and v2
-     */
-    protected static float getDiagonalIntersection (Vector2f v1, Vector2f v2)
-    {
-        float d1 = v1.y - v1.x, d2 = v2.y - v2.x;
-        int b1 = getBoundaryIndex(d1, SUB_TILE_SIZE),
-            b2 = getBoundaryIndex(d2, SUB_TILE_SIZE);
-        if (b1 == b2) {
-            return Float.MAX_VALUE;
-        }
-        int step = (b1 < b2) ? +1 : -1;
-        for (int b = b1 + step; b != b2; b += step) {
-            if (b % 2 != 0) {
-                continue;
-            }
-            return ((b/2)*SUB_TILE_SIZE - d1) / (d2 - d1);
+            return ((b/2)*SUB_TILE_SIZE - v1) / (v2 - v1);
         }
         return Float.MAX_VALUE;
     }
@@ -1200,6 +1154,9 @@ public class TerrainNode extends Node
         /** The vertex, normal, and color buffers. */
         public FloatBuffer vbuf, nbuf, cbuf;
 
+        /** The index buffer. */
+        public IntBuffer ibuf;
+        
         /** Maps terrain codes to ground texture states. */
         public HashIntMap<TextureState> groundTextures =
             new HashIntMap<TextureState>();
@@ -1238,8 +1195,11 @@ public class TerrainNode extends Node
             vbuf = BufferUtils.createFloatBuffer(vbufsize);
             nbuf = BufferUtils.createFloatBuffer(vbufsize);
             cbuf = BufferUtils.createFloatBuffer(vwidth * vheight * 4);
+            ibuf = BufferUtils.createIntBuffer(
+                (vwidth - 1) * (vheight - 1) * 2 * 3);
 
-            // refresh sets the vertices and normals from the heightfield
+            // refresh sets the vertices, normals, and indices from the
+            // heightfield
             bounds = new Rectangle(vx, vy, bwidth, bheight);
             ebounds = new Rectangle(vx - (le ? 2 : 0), vy - (be ? 2 : 0),
                 vwidth, vheight);
@@ -1276,23 +1236,6 @@ public class TerrainNode extends Node
                     
                     tbuf1.put(0.5f*step1 + x * step1);
                     tbuf1.put(0.5f*step1 + y * step1);
-                }
-            }
-
-            // compute the dimensions in terms of squares and set the triangle
-            // indices
-            int swidth = vwidth - 1, sheight = vheight - 1;
-            IntBuffer ibuf = BufferUtils.createIntBuffer(
-                swidth * sheight * 2 * 3);
-            for (int y = 0; y < sheight; y++) {
-                for (int x = 0; x < swidth; x++) {
-                    int ll = y*vwidth + x, lr = ll + 1,
-                        ul = ll + vwidth, ur = ul + 1;
-
-                    // two triangles for each square: one including the upper
-                    // left vertex, one the lower right, ccw winding order
-                    ibuf.put(ll); ibuf.put(ur); ibuf.put(ul);
-                    ibuf.put(ll); ibuf.put(lr); ibuf.put(ur);
                 }
             }
 
@@ -1358,17 +1301,54 @@ public class TerrainNode extends Node
          */
         public void refreshGeometry (Rectangle rect)
         {
-            Vector3f vector = new Vector3f();
+            Vector3f v1 = new Vector3f(), v2 = new Vector3f();
 
+            vbuf.rewind();
+            ibuf.rewind();
             for (int y = rect.y, ymax = y + rect.height; y < ymax; y++) {
                 for (int x = rect.x, xmax = x + rect.width; x < xmax; x++) {
-                    int index = (y-ebounds.y)*ebounds.width + (x-ebounds.x);
-
-                    getHeightfieldVertex(x, y, vector);
-                    BufferUtils.setInBuffer(vector, vbuf, index);
-
-                    getHeightfieldNormal(x, y, vector);
-                    BufferUtils.setInBuffer(vector, nbuf, index);
+                    int ur = (y-ebounds.y)*ebounds.width + (x-ebounds.x),
+                        ul = ur - 1, lr = ur - ebounds.width, ll = lr - 1;
+                    
+                    getHeightfieldVertex(x, y, v1);
+                    BufferUtils.setInBuffer(v1, vbuf, ur);
+                        
+                    getHeightfieldNormal(x, y, v1);
+                    BufferUtils.setInBuffer(v1, nbuf, ur);
+                    
+                    // update the indices, dividing the quad to separate the
+                    // pair of vertices with the greater angle between their
+                    // normals
+                    if (y == rect.y || x == rect.x) {
+                        continue;
+                    }
+                    BufferUtils.populateFromBuffer(v2, nbuf, ll);
+                    float urll = v1.dot(v2);
+                    BufferUtils.populateFromBuffer(v1, nbuf, ul);
+                    BufferUtils.populateFromBuffer(v2, nbuf, lr);
+                    int iidx = ((y-ebounds.y-1)*(ebounds.width-1) +
+                        (x-ebounds.x-1)) * 6;
+                    if (urll < v1.dot(v2)) {
+                        _diags[y+1][x+1] = true;
+                        
+                        ibuf.put(iidx++, ul);
+                        ibuf.put(iidx++, ll);
+                        ibuf.put(iidx++, lr);
+                        
+                        ibuf.put(iidx++, ul);
+                        ibuf.put(iidx++, lr);
+                        ibuf.put(iidx, ur);
+                    } else {
+                        _diags[y+1][x+1] = false;
+                        
+                        ibuf.put(iidx++, ll);
+                        ibuf.put(iidx++, ur);
+                        ibuf.put(iidx++, ul);
+                        
+                        ibuf.put(iidx++, ll);
+                        ibuf.put(iidx++, lr);
+                        ibuf.put(iidx, ur);
+                    }
                 }
             }
         }
@@ -1595,10 +1575,6 @@ public class TerrainNode extends Node
     /** The elevation scale specified in the board. */
     protected float _elevationScale;
     
-    /** A shadow buffer indicating, for static heightfields, which heightfield
-     * points are in shadow (as determined by raycasting). */
-    protected boolean[][] _sbuf;
-    
     /** The array of splat blocks containing the terrain geometry/textures. */
     protected SplatBlock[][] _blocks;
     
@@ -1608,11 +1584,12 @@ public class TerrainNode extends Node
     /** The shared texture coordinate buffer for highlights on tiles. */
     protected static FloatBuffer _htbuf;
 
-    /** The shared index buffer for highlights on tiles. */
-    protected static IntBuffer _hibuf;
-    
     /** The planes of the node's bounding box. */
     protected Plane[] _bbplanes;
+    
+    /** For each sub-tile, whether the diagonal goes from upper left to lower
+     * right instead of lower left to upper right. */
+    protected boolean[][] _diags;
     
     /** A temporary result vector. */
     protected Vector3f _isect = new Vector3f();
