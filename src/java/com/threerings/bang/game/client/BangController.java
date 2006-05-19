@@ -185,7 +185,7 @@ public class BangController extends GameController
         if (_bangobj.state != BangObject.PRE_GAME) {
             stateDidChange(_bangobj.state);
         }
-        
+
         // if we're just observing an auto-play game, let the manager know
         // we're ready
         if (_config.allPlayersAIs()) {
@@ -490,7 +490,7 @@ public class BangController extends GameController
     }
 
     /**
-     * Called a the beginning of every round. In a normal game this is wehen 
+     * Called a the beginning of every round. In a normal game this is when
      */
     protected void roundDidStart ()
     {
@@ -594,7 +594,7 @@ public class BangController extends GameController
 
         // zoom the camera to the center level
         ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
-        
+
         // let the game manager know that our units are in place and we're
         // fully ready to go
         playerReady();
