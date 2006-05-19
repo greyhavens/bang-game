@@ -548,7 +548,6 @@ public class BangManager extends GameManager
             _bangobj.pdata[ii] = new BangObject.PlayerData();
             _bangobj.stats[ii] = new StatSet();
         }
-        _bangobj.setPlayerStatus(new int[slots]);
         resetPreparingStatus(false);
     }
 
@@ -1117,14 +1116,18 @@ public class BangManager extends GameManager
     }
 
     @Override // documentation inherited
+    protected void gameWasCancelled ()
+    {
+        super.gameWasCancelled();
+
+        // record this game to the server stats log
+        recordGame(null);
+    }
+
+    @Override // documentation inherited
     protected void gameDidEnd ()
     {
         super.gameDidEnd();
-
-        // if the game was cancelled, don't do any of this
-        if (_bangobj.state == BangObject.CANCELLED) {
-            return;
-        }
 
         // process any played cards
         ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
@@ -1208,26 +1211,7 @@ public class BangManager extends GameManager
         _bangobj.setPerRoundEarnings(_bangobj.perRoundEarnings);
 
         // record this game to the server stats log (before we sort the awards)
-        try {
-            StringBuffer buf = new StringBuffer("game_ended");
-            buf.append(" s:").append(StringUtil.join(_bconfig.scenarios));
-            buf.append(" ts:").append(_bconfig.teamSize).append(" ");
-            for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                if (ii > 0) {
-                    buf.append(",");
-                }
-                if (isAI(ii)) {
-                    buf.append("tin_can");
-                } else {
-                    buf.append(_precords[ii].user.username);
-                }
-                buf.append(":").append(_precords[ii].finishedRound);
-                buf.append(":").append(awards[ii]);
-            }
-            BangServer.generalLog(buf.toString());
-        } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to log game data.", t);
-        }
+        recordGame(awards);
 
         // sort by rank and then stuff the award data into the game object
         Arrays.sort(awards);
@@ -1242,8 +1226,18 @@ public class BangManager extends GameManager
     {
         super.playerGameDidEnd(pidx);
 
-        // we may have been waiting on this player
-        checkStartNextPhase();
+        // if we haven't just lost our last human player, check to see if we
+        // should start the next phase
+        if (getActiveHumanCount() > 0) {
+            checkStartNextPhase();
+        }
+        // otherwise just let the game be ended or cancelled
+    }
+
+    @Override // documentation inherited
+    protected boolean shouldEndGame ()
+    {
+        return _bangobj.isInPlay() && getActiveHumanCount() <= 1;
     }
 
     @Override // documentation inherited
@@ -1651,6 +1645,54 @@ public class BangManager extends GameManager
     }
 
     /**
+     * Records the relevant state of an ended or cancelled game.
+     */
+    protected void recordGame (Award[] awards)
+    {
+        try {
+            StringBuffer buf = new StringBuffer(
+                (awards == null) ? "game_cancelled" : "game_ended");
+            buf.append(" s:").append(StringUtil.join(_bconfig.scenarios));
+            buf.append(" ts:").append(_bconfig.teamSize).append(" ");
+            for (int ii = 0; ii < getPlayerSlots(); ii++) {
+                if (ii > 0) {
+                    buf.append(",");
+                }
+
+                // record the player in this position
+                if (isAI(ii)) {
+                    buf.append("tin_can");
+                    continue;
+                }
+                buf.append(_precords[ii].user.username);
+
+                // note players that left the game early
+                if (!_bangobj.isActivePlayer(ii)) {
+                    PlayerObject pobj = BangServer.lookupPlayer(
+                        _precords[ii].user.handle);
+                    if (pobj == null) {
+                        buf.append("*"); // no longer online
+                    } else if (pobj.status == OccupantInfo.DISCONNECTED) {
+                        buf.append("!"); // disconnected
+                    } else {
+                        buf.append("#"); // online and active
+                    }
+                }
+
+                // record their awards if we have any
+                if (awards != null) {
+                    buf.append(":").append(_precords[ii].finishedRound);
+                    buf.append(":").append(awards[ii]);
+                }
+            }
+            BangServer.generalLog(buf.toString());
+
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Failed to log game data.", t);
+        }
+    }
+
+    /**
      * Persists the supplied cash and badges and sticks them into the
      * distributed objects of the appropriate players. Also updates the
      * players' ratings if appropriate.
@@ -1814,8 +1856,22 @@ public class BangManager extends GameManager
     }
 
     /**
+     * Counts the number of active humans in the game.
+     */
+    protected int getActiveHumanCount ()
+    {
+        int humanCount = 0;
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            if (isActivePlayer(ii) && !isAI(ii)) {
+                humanCount++;
+            }
+        }
+        return humanCount;
+    }
+
+    /**
      * Resets all player status to preparing. We do this element by element
-     * rather than setting one array because there is the change that
+     * rather than setting one array because there is the chance that
      * unprocessed element sets in the queue will overwrite what we set.
      */
     protected void resetPreparingStatus (boolean aisAreReady)
