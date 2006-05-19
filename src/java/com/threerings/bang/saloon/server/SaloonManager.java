@@ -286,10 +286,11 @@ public class SaloonManager extends PlaceManager
         // check to see if this match is ready to go
         switch (match.checkReady()) {
         case COULD_START:
+            // the match may already be queued up for an eventual start, but we
+            // just added a player, so let's reset the timer (we may end up in
+            // the game faster if two players join in rapid succession)
             if (match.starter != null) {
-                log.warning("Requested to couldStart match that's already " +
-                            "queued for something " + match + ".");
-                return;
+                match.starter.cancel();
             }
             match.starter = new Interval(BangServer.omgr) {
                 public void expired () {
@@ -316,10 +317,10 @@ public class SaloonManager extends PlaceManager
      */
     protected void startMatch (final Match match)
     {
+        // cancel any "could_start" starter as we will replace it with a
+        // "starting" starter
         if (match.starter != null) {
-            log.warning("Requested to start match that's already queued " +
-                        "for starting " + match + ".");
-            return;
+            match.starter.cancel();
         }
         match.matchobj.setStarting(true);
         match.starter = new Interval(BangServer.omgr) {
