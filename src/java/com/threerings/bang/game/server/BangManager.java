@@ -1193,7 +1193,13 @@ public class BangManager extends GameManager
             // if this was a rated (matched) game, persist various stats and
             // potentially award a badge
             if (_bconfig.rated) {
-                recordStats(prec.user, ii, award, gameTime);
+                try {
+                    recordStats(prec.user, ii, award, gameTime);
+                } catch (Throwable t) {
+                    log.log(Level.WARNING, "Failed to record stats " +
+                            "[who=" + prec.user.who() + ", idx=" + ii +
+                            ", award=" + award + "].", t);
+                }
             }
         }
 
