@@ -490,7 +490,7 @@ public class BangController extends GameController
     }
 
     /**
-     * Called a the beginning of every round. In a normal game this is when
+     * Called a the beginning of every round.
      */
     protected void roundDidStart ()
     {
