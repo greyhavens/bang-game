@@ -62,7 +62,7 @@ public class FullTransact extends BContainer
             _offers[ii] = new OfferLabel(offers);
         }
         _offers[0].setNoOffers();
-        add(offers, new Rectangle(12, 210, 310, 75));
+        add(offers, new Rectangle(12, 215, 310, 75));
 
         add(new BLabel(_msgs.get(msg + "_post_offer"), "bank_post_title"),
             new Point(0, 159));

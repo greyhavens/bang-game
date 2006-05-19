@@ -43,10 +43,12 @@ public class BankView extends ShopView
         _status = new BLabel("", "shop_status");
         add(_status, new Rectangle(265, 10, 500, 40));
 
+        add(new BuyCoinsView(ctx), new Rectangle(225, 540, 725, 86));
+
         add(_qsell = new QuickTransact(ctx, _status, false),
             new Rectangle(225, 463, 320, 30));
         add(_qbuy = new QuickTransact(ctx, _status, true),
-            new Rectangle(620, 463, 320, 30));
+            new Rectangle(630, 463, 320, 30));
 
         add(_fsell = new FullTransact(ctx, _status, false),
             new Rectangle(225, 85, 330, 315));

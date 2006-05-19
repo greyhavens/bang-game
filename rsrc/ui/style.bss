@@ -122,7 +122,7 @@ big_button:down {
 huge_button {
   color: #FFFFFF;
   background: image "ui/buttons/huge_normal.png" framexy;
-  font: "Old Town" plain 24;
+  font: "Old Town Wide" plain 24;
   text-align: center;
   text-effect: shadow;
   effect-color: #000000;
@@ -130,7 +130,8 @@ huge_button {
   padding: 0 25;
 }
 huge_button:disabled {
-  background: image "ui/buttons/huge_disabled.png" framexy;
+//  background: image "ui/buttons/huge_disabled.png" framexy;
+  background: image "ui/buttons/huge_normal.png" framexy;
   color: #FFFFFF4C;
 }
 huge_button:hover {
@@ -399,14 +400,17 @@ medium_title {
 }
 
 left_label {
+  parent: "label";
   text-align: left;
 }
 
 center_label {
+  parent: "label";
   text-align: center;
 }
 
 right_label {
+  parent: "label";
   text-align: right;
 }
 
@@ -995,6 +999,17 @@ bank_title {
 bank_post_title {
   font: "Dom Casual" bold 17;
   color: #414D36;
+}
+
+offer_unavail {
+  parent: "status_label";
+  font: "Helvetica" plain 15;
+  color: #4C2602;
+}
+
+offer_right {
+  parent: "label";
+  color: #FFFFFF;
 }
 
 //
