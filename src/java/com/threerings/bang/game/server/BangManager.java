@@ -681,7 +681,7 @@ public class BangManager extends GameManager
             // we reuse the playerIsReady() mechanism to wait for the player to
             // be ready to start the tutorial; normally they'd select their
             // bigshot, but that doesn't happen in a tutorial
-            Arrays.fill(_playerOids, 0);
+            resetPlayerOids();
         } else {
             _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);
             _scenario = ScenarioFactory.createScenario(_bangobj.scenarioId);
@@ -766,6 +766,18 @@ public class BangManager extends GameManager
 
         // clear out the selected big shots array
         _bangobj.setBigShots(new Unit[getPlayerSlots()]);
+
+        // configure anyone who is not in the game room as resigned for this
+        // round; this is be preserved through calls to resetPreparingStatus
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            if (isAI(ii)) {
+                continue;
+            }
+            PlayerObject user = (PlayerObject)getPlayer(ii);
+            if (user == null || user.status == OccupantInfo.DISCONNECTED) {
+                _bangobj.setPlayerStatusAt(BangObject.PLAYER_LEFT_GAME, ii);
+            }
+        }
 
         // transition to the pre-game selection phase
         _scenario.startNextPhase(_bangobj);
@@ -998,7 +1010,7 @@ public class BangManager extends GameManager
         // we reuse the playerIsReady() mechanism to wait for the players to
         // all report that they're fully ready to go (they need to resolve
         // their unit models)
-        Arrays.fill(_playerOids, 0);
+        resetPlayerOids();
     }
 
     /**
@@ -1181,15 +1193,15 @@ public class BangManager extends GameManager
                 }
             }
 
-            // compute this player's "take home" cash (if they're not an AI)
+            // compute this player's "take home" cash
             PlayerRecord prec = _precords[ii];
             if (prec.playerId > 0 && _scenario.shouldPayEarnings(prec.user)) {
                 award.cashEarned = computeEarnings(ii);
             }
 
-            // if this player left the game early, don't update their stats or
-            // award them a new badge
-            if (!_bangobj.isActivePlayer(ii)) {
+            // if this is an AI or this player left the game early, don't
+            // update their stats or try to award them a new badge
+            if (isAI(ii) || !_bangobj.isActivePlayer(ii)) {
                 continue;
             }
 
@@ -1200,7 +1212,7 @@ public class BangManager extends GameManager
                     recordStats(prec.user, ii, award, gameTime);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Failed to record stats " +
-                            "[who=" + prec.user.who() + ", idx=" + ii +
+                            "[who=" + _bangobj.players[ii] + ", idx=" + ii +
                             ", award=" + award + "].", t);
                 }
             }
@@ -1237,7 +1249,8 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected boolean shouldEndGame ()
     {
-        return _bangobj.isInPlay() && getActiveHumanCount() <= 1;
+        return _bangobj.isInPlay() && (getActiveHumanCount() == 0 ||
+                                       _gameobj.getActivePlayerCount() == 1);
     }
 
     @Override // documentation inherited
@@ -1886,11 +1899,29 @@ public class BangManager extends GameManager
                 if (isAI(ii) && aisAreReady) {
                     status = BangObject.PLAYER_IN_PLAY;
                 }
+                // don't override the status of players that have left the game
+                if (_bangobj.playerStatus[ii] == BangObject.PLAYER_LEFT_GAME) {
+                    status = BangObject.PLAYER_LEFT_GAME;
+                }
                 _bangobj.setPlayerStatusAt(status, ii);
             }
         } finally {
             if (dotrans) {
                 _bangobj.commitTransaction();
+            }
+        }
+    }
+
+    /**
+     * Resets the player oid of all active players so that they can report in
+     * once again that they are ready and we can trigger on {@link
+     * #playersAllHere} for different phases of the game.
+     */
+    protected void resetPlayerOids ()
+    {
+        for (int ii = 0; ii < _playerOids.length; ii++) {
+            if (isActivePlayer(ii)) {
+                _playerOids[ii] = 0;
             }
         }
     }
