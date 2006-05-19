@@ -519,6 +519,14 @@ public class BangObject extends GameObject
         return (state == IN_PLAY && tick >= 0);
     }
 
+    /**
+     * Helper function for {@link #toString}.
+     */
+    public String piecesToString ()
+    {
+        return (pieces == null) ? "null" : String.valueOf(pieces.size());
+    }
+
     @Override // documentation inherited
     protected boolean isActivePlayerStatus (int playerStatus)
     {
