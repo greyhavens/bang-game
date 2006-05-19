@@ -26,6 +26,7 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 import com.jmex.bui.icon.ImageIcon;
@@ -370,11 +371,13 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     public void prepareForRound (BangObject bangobj, BangConfig cfg, int pidx)
     {
+        // we'll need this in createMarquee() which is called by super
+        _bconfig = cfg;
+
         super.prepareForRound(bangobj, cfg, pidx);
 
         _pidx = pidx;
         _bangobj.addListener(_ticker);
-        _bconfig = cfg;
 
         // preload our sounds for this scenario
         ScenarioUtil.preloadSounds(bangobj.scenarioId, _sounds);
@@ -499,7 +502,7 @@ public class BangBoardView extends BoardView
 
         // create marquees with the avatars of all the participants
         _pmarquees = new BWindow(
-            _ctx.getStyleSheet(), GroupLayout.makeVStretch()) {
+            _ctx.getStyleSheet(), GroupLayout.makeHStretch()) {
             public boolean isOverlay () {
                 return true;
             }
@@ -508,25 +511,34 @@ public class BangBoardView extends BoardView
             }
         };
 
-        // set up two rows that will hold our marquee bits
-        BContainer[] conts = new BContainer[2];
-        GroupLayout layout = GroupLayout.makeHoriz(
-            GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.EQUALIZE);
-        _pmarquees.add(conts[0] = new BContainer(layout));
-        if (_bangobj.players.length > 2) {
-            layout.setOffAxisJustification(GroupLayout.TOP);
-            layout = GroupLayout.makeHoriz(
-                GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.EQUALIZE);
-            layout.setOffAxisJustification(GroupLayout.BOTTOM);
-            _pmarquees.add(conts[1] = new BContainer(layout));
-        } else {
-            layout.setOffAxisJustification(GroupLayout.CENTER);
+        // set up two rows with two slots each that will hold our marquee bits
+        GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
+        layout.setGap(30);
+        BContainer info = new BContainer(layout);
+        BContainer[] cols = new BContainer[2];
+        _pmarquees.add(cols[0] = new BContainer(layout));
+        _pmarquees.add(info);
+        _pmarquees.add(cols[1] = new BContainer(layout));
+
+        // create avatar displays for each player in the game
+        for (int ii = 0; ii < _bangobj.players.length; ii++) {
+            cols[ii%2].add(createPlayerMarquee(ii));
+        }
+
+        // add some additional information in the center colum
+        String msg = MessageBundle.compose(
+            "m.marquee_header",
+            MessageBundle.taint(String.valueOf((_bangobj.roundId + 1))),
+            "m.scenario_" + _bangobj.scenarioId);
+        info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, msg),
+                            "marquee_subtitle"));
+        info.add(new Spacer(25, 100));
+        if (_bconfig.rated) {
+            info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, "m.ranked"),
+                                "marquee_subtitle"));
         }
 
         // create and add the marquees and the whole window
-        for (int ii = 0; ii < _bangobj.players.length; ii++) {
-            conts[ii/2].add(createPlayerMarquee(ii));
-        }
         _pmarquees.setBounds(0, 0, _ctx.getDisplay().getWidth(),
                              _ctx.getDisplay().getHeight());
         _ctx.getRootNode().addWindow(_pmarquees);
@@ -551,16 +563,7 @@ public class BangBoardView extends BoardView
         }
         marquee.add(new BLabel(_bangobj.players[pidx].toString(),
                                "player_marquee_label"));
-
-        // then stick it in a container that will justify everything in the
-        // appropriate corner
-        GroupLayout layout = GroupLayout.makeHoriz(
-            pidx % 2 == 0 ? GroupLayout.LEFT : GroupLayout.RIGHT);
-        layout.setOffAxisJustification(
-            pidx > 1 ? GroupLayout.BOTTOM : GroupLayout.TOP);
-        BContainer cont = new BContainer(layout);
-        cont.add(marquee);
-        return cont;
+        return marquee;
     }
 
     @Override // documentation inherited

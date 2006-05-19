@@ -800,6 +800,11 @@ card_icon {
 //
 // In-game styles
 
+marquee_subtitle {
+  font: "Dom Casual" bold 24;
+  color: #FFFFFF;
+}
+
 player_status_win {
   background: blank;
 }
