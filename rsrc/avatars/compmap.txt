@@ -1,4 +1,4 @@
-283
+293
 female/clothing_back := bodice := 174
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
@@ -17,14 +17,18 @@ female/clothing_front := flirt_peasant_dress := 184
 female/clothing_front := pistol_peasant_dress := 185
 female/clothing_props := rifle_squaw := 82
 female/eyebrows := arched := 186
+female/eyebrows := concerned := 284
 female/eyebrows := curious := 83
+female/eyebrows := evil := 285
 female/eyebrows := high := 84
 female/eyebrows := inquisitive := 85
 female/eyebrows := knit := 86
 female/eyebrows := normal := 87
+female/eyebrows := sad := 286
 female/eyebrows := sharp := 88
 female/eyebrows := small := 187
 female/eyebrows := smirk := 89
+female/eyebrows := surprised := 287
 female/eyebrows := thick := 90
 female/eyebrows := trouble := 188
 female/eyes := big := 91
@@ -34,6 +38,7 @@ female/eyes := curious := 138
 female/eyes := cute := 139
 female/eyes := determined := 190
 female/eyes := intent := 140
+female/eyes := left := 288
 female/eyes := shifty := 141
 female/eyes := sly := 92
 female/eyes := small := 93
@@ -108,16 +113,21 @@ female/makeup := rain := 166
 female/makeup := spirit := 167
 female/makeup := tear := 168
 female/makeup := wolf := 169
+female/mouth := angry := 289
 female/mouth := chuckling := 170
 female/mouth := content := 171
+female/mouth := frown := 290
 female/mouth := grin := 172
 female/mouth := jolie := 116
 female/mouth := lips := 208
 female/mouth := nervous := 117
 female/mouth := pouty := 118
+female/mouth := sad := 291
 female/mouth := serious := 119
 female/mouth := sly := 209
 female/mouth := smirk := 120
+female/mouth := smug := 292
+female/mouth := stern := 293
 female/mouth := tiny := 121
 female/nose := hook := 257
 female/nose := line := 122
