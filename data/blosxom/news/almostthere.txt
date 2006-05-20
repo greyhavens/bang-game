@@ -15,7 +15,7 @@ other fancy bits. Rest yer eyes on these two new units fer a spell:</p>
 <div align="center">
 <table width="500">
 <tr><td rowspan="4" style="padding-right: 10px">
-    <img src="/images/units/buffalo_rider.png"/></td>
+    <img src="/images/units/buffalo_rider.gif"/></td>
     <td colspan="2" class="posttitle"><b>Buffalo Rider</b></td></tr>
 <tr><td>Make: <span class="highlight">Human</span></td>
     <td>Mode: <span class="highlight">Ground</span></td></tr>
@@ -31,7 +31,7 @@ for her attack the target will be pushed backward one square.<br/>
 <div align="center">
 <table width="500" style="border-top: 1px solid">
 <tr><td colspan="2" class="posttitle"><b>Storm Caller</b></td>
-    <td rowspan="4"><img src="/images/units/storm_caller.png"/></td></tr>
+    <td rowspan="4"><img src="/images/units/storm_caller.gif"/></td></tr>
 <tr><td>Make: <span class="highlight">Human</span></td>
     <td>Mode: <span class="highlight">Range</span></td></tr>
 <tr><td>Movement: <span class="highlight">2</span></td>
