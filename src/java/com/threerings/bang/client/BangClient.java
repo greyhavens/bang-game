@@ -481,7 +481,8 @@ public class BangClient extends BasicClient
 
         try {
             _playingMusic = key;
-            if (ifile.exists()) {
+            if (!_playedIntro && ifile.exists()) {
+                _playedIntro = true;
                 _mstream = new OggFileStream(_soundmgr, ifile, false);
                 _mstream.queueFile(mfile, loop);
             } else {
@@ -865,4 +866,5 @@ public class BangClient extends BasicClient
 
     protected String _playingMusic;
     protected OggFileStream _mstream;
+    protected boolean _playedIntro;
 }
