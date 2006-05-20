@@ -399,6 +399,14 @@ public class PlayerManager
         HashSet<String> names = new HashSet<String>();
         names.add(player.getVisibleName().toString());
 
+        // make sure non-admins aren't creating autoplay games
+        if (autoplay && !player.tokens.isAdmin()) {
+            log.warning("Non-admin requested autoplay game " +
+                        "[who=" + player.who() + ", pl=" + players +
+                        ", scen=" + scenario + ", board=" + board + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
         // create a game configuration from that
         BangConfig config = new BangConfig();
         config.rated = false;
