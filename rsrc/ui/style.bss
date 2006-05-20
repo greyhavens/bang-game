@@ -130,8 +130,7 @@ huge_button {
   padding: 0 25;
 }
 huge_button:disabled {
-//  background: image "ui/buttons/huge_disabled.png" framexy;
-  background: image "ui/buttons/huge_normal.png" framexy;
+  background: image "ui/buttons/huge_disabled.png" framexy;
   color: #FFFFFF4C;
 }
 huge_button:hover {
