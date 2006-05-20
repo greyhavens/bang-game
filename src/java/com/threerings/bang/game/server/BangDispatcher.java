@@ -68,6 +68,13 @@ public class BangDispatcher extends InvocationDispatcher
             );
             return;
 
+        case BangMarshaller.REPORT_PERFORMANCE:
+            ((BangProvider)provider).reportPerformance(
+                source,
+                (String)args[0], (String)args[1], (int[])args[2]
+            );
+            return;
+
         case BangMarshaller.SELECT_STARTERS:
             ((BangProvider)provider).selectStarters(
                 source,

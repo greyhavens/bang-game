@@ -60,4 +60,18 @@ public interface BangService extends InvocationService
      */
     public void playCard (Client client, int cardId, short x, short y,
                           ConfirmListener listener);
+
+    /**
+     * Used to report on graphics performance by the client at the end of a
+     * round.
+     *
+     * @param board the name of the board the player was playing on.
+     * @param driver the client's graphics driver information.
+     * @param perfhisto a histogram of one second samples of frame rate, each
+     * bucket represents 10 fps (0-9, 10-19, 20-29, etc.) up to 60 fps for a
+     * total of seven buckets. The client samples FPS every second and
+     * increments the counter in the appropriate bucket.
+     */
+    public void reportPerformance (
+        Client client, String board, String driver, int[] perfhisto);
 }

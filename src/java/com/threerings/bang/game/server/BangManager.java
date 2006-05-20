@@ -262,6 +262,17 @@ public class BangManager extends GameManager
         listener.requestProcessed();
     }
 
+    // documentation inherited from interface BangProvider
+    public void reportPerformance (ClientObject caller, String board,
+                                   String driver, int[] perfhisto)
+    {
+        // log this!
+        PlayerObject user = (PlayerObject)caller;
+        BangServer.perfLog(
+            "client_perf u:" + user.username + " b:" + board + " d:" + driver +
+            " h:" + StringUtil.toString(perfhisto));
+    }
+
     // documentation inherited
     public void attributeChanged (AttributeChangedEvent event)
     {

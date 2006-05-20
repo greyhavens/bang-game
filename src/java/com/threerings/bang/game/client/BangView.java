@@ -5,6 +5,8 @@ package com.threerings.bang.game.client;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 
@@ -12,6 +14,9 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+
+import com.samskivert.util.Histogram;
+import com.samskivert.util.Interval;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
@@ -62,6 +67,7 @@ public class BangView extends BWindow
 
         _ctx = ctx;
         _ctrl = ctrl;
+        _perftrack = new PerformanceTracker();
 
         // create our various displays
         add(view = new BangBoardView(ctx, ctrl), BorderLayout.CENTER);
@@ -124,6 +130,7 @@ public class BangView extends BWindow
             }
             clearOverlay();
             view.startRound();
+            _perftrack.start();
             break;
         }
     }
@@ -145,6 +152,9 @@ public class BangView extends BWindow
             _ctx.getRootNode().removeWindow(ustatus);
             ustatus = null;
         }
+
+        // end our performance tracker and report our stats to the server
+        _perftrack.end();
     }
 
     // documentation inherited from interface PlaceView
@@ -226,6 +236,9 @@ public class BangView extends BWindow
         if (_prepared) {
             endRound();
         }
+
+        // end our performance tracker in case we haven't already
+        _perftrack.end();
     }
 
     /**
@@ -374,6 +387,48 @@ public class BangView extends BWindow
         }
     }
 
+    /** Used to track FPS throughout a round and report it to the server at the
+     * round's completion. */
+    protected class PerformanceTracker extends Interval
+    {
+        public PerformanceTracker () {
+            super(_ctx.getApp());
+        }
+
+        public void start () {
+            _boardName = _bangobj.boardName;
+            schedule(1000L, true);
+        }
+
+        public void end () {
+            cancel();
+
+            // if we've already reported, then stop here
+            if (_boardName == null) {
+                return;
+            }
+
+            // make sure we're not too late to the party
+            if (_bangobj != null) {
+                int[] histo = (int[])_perfhisto.getBuckets().clone();
+                String driver = GL11.glGetString(GL11.GL_VENDOR) + ", " +
+                    GL11.glGetString(GL11.GL_RENDERER) + ", " +
+                    GL11.glGetString(GL11.GL_VERSION);
+                _bangobj.service.reportPerformance(
+                    _ctx.getClient(), _boardName, driver, histo);
+            }
+            _perfhisto.clear();
+            _boardName = null;
+        }
+
+        public void expired () {
+            _perfhisto.addValue((int)_ctx.getApp().getRecentFrameRate());
+        }
+
+        protected String _boardName;
+        protected Histogram _perfhisto = new Histogram(0, 10, 7);
+    }
+
     /** Giver of life and context. */
     protected BangContext _ctx;
 
@@ -399,4 +454,8 @@ public class BangView extends BWindow
     /** If we were requested to start a particular phase before we were added
      * to the interface hierarchy, that will be noted here. */
     protected int _pendingPhase = -1;
+
+    /** Takes periodic samples of our frames per second and reports them to the
+     * server at the end of the round. */
+    protected PerformanceTracker _perftrack;
 }

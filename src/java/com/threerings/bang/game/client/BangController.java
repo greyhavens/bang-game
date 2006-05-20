@@ -476,10 +476,10 @@ public class BangController extends GameController
         } else if (state == BangObject.BUYING_PHASE) {
             _view.setPhase(state);
             return true;
+
         } else if (state == BangObject.POST_ROUND) {
             // let the view know that this round is over
             _view.endRound();
-
             // fade out the current board and prepare to fade in the next
             _view.view.doInterRoundMarqueeFade();
             return true;

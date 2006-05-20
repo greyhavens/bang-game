@@ -103,8 +103,19 @@ public class BangMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #reportPerformance} requests. */
+    public static final int REPORT_PERFORMANCE = 5;
+
+    // documentation inherited from interface
+    public void reportPerformance (Client arg1, String arg2, String arg3, int[] arg4)
+    {
+        sendRequest(arg1, REPORT_PERFORMANCE, new Object[] {
+            arg2, arg3, arg4
+        });
+    }
+
     /** The method id used to dispatch {@link #selectStarters} requests. */
-    public static final int SELECT_STARTERS = 5;
+    public static final int SELECT_STARTERS = 6;
 
     // documentation inherited from interface
     public void selectStarters (Client arg1, int arg2, int[] arg3)
@@ -115,7 +126,7 @@ public class BangMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #selectTeam} requests. */
-    public static final int SELECT_TEAM = 6;
+    public static final int SELECT_TEAM = 7;
 
     // documentation inherited from interface
     public void selectTeam (Client arg1, String[] arg2)

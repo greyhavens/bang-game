@@ -212,6 +212,7 @@ public class BangServer extends CrowdServer
         _glog.close();
         _ilog.close();
         _stlog.close();
+        _plog.close();
         BangCoinManager.coinlog.close();
     }
 
@@ -378,6 +379,14 @@ public class BangServer extends CrowdServer
     }
 
     /**
+     * Loads a message to the client performance log.
+     */
+    public static void perfLog (String message)
+    {
+        _plog.log(message);
+    }
+
+    /**
      * Creates an audit log with the specified name (which should includ the
      * <code>.log</code> suffix) in our server log directory.
      */
@@ -433,4 +442,5 @@ public class BangServer extends CrowdServer
     protected static AuditLogger _glog = createAuditLog("server.log");
     protected static AuditLogger _ilog = createAuditLog("item.log");
     protected static AuditLogger _stlog = createAuditLog("state.log");
+    protected static AuditLogger _plog = createAuditLog("perf.log");
 }
