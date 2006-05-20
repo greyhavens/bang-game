@@ -7,6 +7,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
+import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.OrientingBallisticPath;
 import com.threerings.jme.sprite.Path;
@@ -16,8 +17,10 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.SoundUtil;
 
@@ -90,9 +93,24 @@ public class BallisticShotHandler extends ShotHandler
         _ssprite.setLocalTranslation(start);
         _ssprite.addObserver(this);
         _view.addSprite(_ssprite);
+        
+        // for sprites deflecting the shot to another coordinate, run the
+        // blocking animation just before the end of the path
+        final MobileSprite dsprite = getDeflectorSprite();
+        final float btime = duration - (dsprite == null ?
+            0f : getActionDuration(dsprite, "blocking") * 0.5f);
         _ssprite.move(new OrientingBallisticPath(
                           _ssprite, new Vector3f(1, 0, 0), start, velvec,
-                          GRAVVEC, duration));
+                          GRAVVEC, duration) {
+            public void update (float time) {
+                super.update(time);
+                if (dsprite != null && !_blocking && _accum >= btime) {
+                    queueAction(dsprite, "blocking");
+                    _blocking = true;
+                }
+            }
+            boolean _blocking;
+        });
 
         if (_sidx == 0) {
             // play the launch sound if we have one
@@ -137,6 +155,35 @@ public class BallisticShotHandler extends ShotHandler
         maybeComplete(_penderId);
     }
 
+    /**
+     * Returns the sprite that is deflecting the shot at this stage, or
+     * <code>null</code> for none.
+     */
+    protected MobileSprite getDeflectorSprite ()
+    {
+        if (_shot.deflectorIds != null && _sidx < _shot.deflectorIds.length) {
+            int pieceId = _shot.deflectorIds[_sidx];
+            Piece piece = _bangobj.pieces.get(pieceId);
+            if (piece != null) {
+                return _view.getUnitSprite(piece);
+            } else {
+                log.warning("Missing shot deflector [pieceId=" + pieceId +
+                    "].");
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the duration of the sprite's action, or zero if the sprite has
+     * no such action.
+     */
+    protected float getActionDuration (MobileSprite sprite, String action)
+    {
+        Model.Animation anim = sprite.getAction(action);
+        return (anim == null) ? 0f : anim.getDuration();
+    }
+    
     protected int _penderId;
     protected ShotSprite _ssprite;
     protected Sound _launchSound;

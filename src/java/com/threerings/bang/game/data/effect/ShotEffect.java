@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.IntListUtil;
 
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.UnitConfig;
@@ -74,6 +75,10 @@ public class ShotEffect extends Effect
      * arriving at its target (not including the starting coordinate). */
     public short[] ycoords;
 
+    /** When non-null, the piece ids of the units deflecting the shot at
+     * each coordinate. */
+    public short[] deflectorIds;
+    
     /**
      * Constructor used when creating a new shot effect.
      *
@@ -101,6 +106,9 @@ public class ShotEffect extends Effect
      */
     public void setTarget (Piece target, int damage)
     {
+        if (targetId > 0) {
+            deflectorIds = append(deflectorIds, (short)targetId);
+        }
         targetId = target.pieceId;
         newDamage = Math.min(100, target.damage + damage);
         xcoords = append(xcoords, target.x);
@@ -115,6 +123,7 @@ public class ShotEffect extends Effect
      */
     public void deflectShot (short x, short y)
     {
+        deflectorIds = append(deflectorIds, (short)targetId);
         targetId = -1;
         newDamage = 0;
         xcoords = append(xcoords, x);
