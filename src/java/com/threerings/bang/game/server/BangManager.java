@@ -1144,7 +1144,7 @@ public class BangManager extends GameManager
         super.gameWasCancelled();
 
         // record this game to the server stats log
-        recordGame(null);
+        recordGame(null, 0);
     }
 
     @Override // documentation inherited
@@ -1170,8 +1170,8 @@ public class BangManager extends GameManager
             notePlayedCards(updates, removals);
         }
 
-        // note the duration of the game (in minutes)
-        int gameTime = (int)(System.currentTimeMillis() - _startStamp) / 60000;
+        // note the duration of the game (in minutes and seconds)
+        int gameSecs = (int)(System.currentTimeMillis() - _startStamp) / 1000;
 
         // update ratings if appropriate
         if (_bconfig.rated &&
@@ -1220,7 +1220,7 @@ public class BangManager extends GameManager
             // potentially award a badge
             if (_bconfig.rated) {
                 try {
-                    recordStats(prec.user, ii, award, gameTime);
+                    recordStats(prec.user, ii, award, gameSecs/60);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Failed to record stats " +
                             "[who=" + _bangobj.players[ii] + ", idx=" + ii +
@@ -1234,7 +1234,7 @@ public class BangManager extends GameManager
         _bangobj.setPerRoundEarnings(_bangobj.perRoundEarnings);
 
         // record this game to the server stats log (before we sort the awards)
-        recordGame(awards);
+        recordGame(awards, gameSecs);
 
         // sort by rank and then stuff the award data into the game object
         Arrays.sort(awards);
@@ -1616,7 +1616,7 @@ public class BangManager extends GameManager
      * awards them a badge. This is only called for rated (matched) games.
      */
     protected void recordStats (
-        PlayerObject user, int pidx, Award award, int gameTime)
+        PlayerObject user, int pidx, Award award, int gameMins)
     {
         StatSet stats = _bangobj.stats[pidx];
         try {
@@ -1625,9 +1625,9 @@ public class BangManager extends GameManager
 
             // if the game wasn't at least one minute long, certain
             // stats don't count
-            if (gameTime > 0) {
+            if (gameMins > 0) {
                 user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
-                user.stats.incrementStat(Stat.Type.GAME_TIME, gameTime);
+                user.stats.incrementStat(Stat.Type.GAME_TIME, gameMins);
                 // increment consecutive wins for 1st place only
                 if (award.rank == 0) {
                     user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
@@ -1661,7 +1661,7 @@ public class BangManager extends GameManager
                 Stat.Type.CASH_EARNED, award.cashEarned);
 
             // allow the scenario to record statistics as well
-            _scenario.recordStats(_bangobj, gameTime, pidx, user);
+            _scenario.recordStats(_bangobj, gameMins, pidx, user);
 
             // determine whether this player qualifies for a new badge
             award.badge = Badge.checkQualifies(user);
@@ -1674,12 +1674,13 @@ public class BangManager extends GameManager
     /**
      * Records the relevant state of an ended or cancelled game.
      */
-    protected void recordGame (Award[] awards)
+    protected void recordGame (Award[] awards, int gameSecs)
     {
         try {
             StringBuffer buf = new StringBuffer(
                 (awards == null) ? "game_cancelled" : "game_ended");
-            buf.append(" s:").append(StringUtil.join(_bconfig.scenarios));
+            buf.append(" t:").append(gameSecs);
+            buf.append(" s:").append(StringUtil.join(_bconfig.scenarios, ","));
             buf.append(" ts:").append(_bconfig.teamSize).append(" ");
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 if (ii > 0) {
