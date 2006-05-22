@@ -9,7 +9,8 @@
   <!-- the web application name and derived parameters -->
   <property name="app.name"       value="office"/>
   <property name="deploy.dir"     value="${base.dir}/pages/${app.name}"/>
-  <property name="dist.war"       value="${base.dir}/webapps/${app.name}.war"/>
+  <property name="webapp_dir"     value="${base.dir}/webapps"/>
+  <property name="dist.war"       value="${webapp_dir}/${app.name}.war"/>
 
   <!-- declare our classpath -->
   <path id="classpath">
