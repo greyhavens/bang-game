@@ -46,4 +46,4 @@ LD_LIBRARY_PATH=$BANG_HOME/lib/`uname -m`-`uname -s`
 export LD_LIBRARY_PATH
 
 # do the deed
-$JAVA_VM $JAVA_ARGS "$*"
+$JAVA_VM $JAVA_ARGS $*
