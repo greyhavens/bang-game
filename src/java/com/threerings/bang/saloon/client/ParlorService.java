@@ -26,7 +26,8 @@ public interface ParlorService extends InvocationService
 
     /** Requests to start the match-making process with the supplied game
      * configuration. */
-    public void startMatchMaking (Client client, ParlorGameConfig config);
+    public void startMatchMaking (Client client, ParlorGameConfig config,
+                                  InvocationListener listener);
 
     /** Requests that we join the currently pending match. */
     public void joinMatch (Client client);

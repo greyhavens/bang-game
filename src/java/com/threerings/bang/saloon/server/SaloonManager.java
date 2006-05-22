@@ -70,7 +70,7 @@ public class SaloonManager extends PlaceManager
 
         // if we're not allowing new games, fail immediately
         if (!RuntimeConfig.server.allowNewGames) {
-            throw new InvocationException("m.new_games_disabled");
+            throw new InvocationException(NEW_GAMES_DISABLED);
         }
 
         // sanity check the criterion, force at least 2 players, 1 round, and

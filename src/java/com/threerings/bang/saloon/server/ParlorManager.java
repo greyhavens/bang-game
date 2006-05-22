@@ -18,6 +18,7 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -28,6 +29,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.util.ScenarioUtil;
 
+import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorMarshaller;
@@ -132,8 +134,15 @@ public class ParlorManager extends PlaceManager
     }
 
     // documentation inherited from interface ParlorProvider
-    public void startMatchMaking (ClientObject caller, ParlorGameConfig game)
+    public void startMatchMaking (ClientObject caller, ParlorGameConfig game,
+                                  ParlorService.InvocationListener listener)
+        throws InvocationException
     {
+        // if we're not allowing new games, fail immediately
+        if (!RuntimeConfig.server.allowNewGames) {
+            throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
+        }
+
         // if we've already started, then just turn this into a join
         if (_parobj.playerOids != null) {
             joinMatch(caller);

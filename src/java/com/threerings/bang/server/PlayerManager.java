@@ -42,11 +42,13 @@ import com.threerings.parlor.game.server.GameManager;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.bank.data.BankObject;
 import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.ranch.data.RanchObject;
+import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.saloon.server.Match;
 import com.threerings.bang.store.data.StoreObject;
@@ -353,6 +355,11 @@ public class PlayerManager
     {
         PlayerObject player = (PlayerObject)caller;
 
+        // if we're not allowing new games, fail immediately
+        if (!RuntimeConfig.server.allowNewGames) {
+            throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
+        }
+
         // load up the tutorial configuration
         TutorialConfig tconfig =
             TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutid);
@@ -388,6 +395,11 @@ public class PlayerManager
         throws InvocationException
     {
         final PlayerObject player = (PlayerObject)caller;
+
+        // if we're not allowing new games, fail immediately
+        if (!RuntimeConfig.server.allowNewGames) {
+            throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
+        }
 
         // sanity check the parameters
         if (players < 2 || players > GameCodes.MAX_PLAYERS) {

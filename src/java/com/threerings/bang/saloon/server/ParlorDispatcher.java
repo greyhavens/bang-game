@@ -8,6 +8,7 @@ import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorMarshaller;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
@@ -54,7 +55,7 @@ public class ParlorDispatcher extends InvocationDispatcher
         case ParlorMarshaller.START_MATCH_MAKING:
             ((ParlorProvider)provider).startMatchMaking(
                 source,
-                (ParlorGameConfig)args[0]
+                (ParlorGameConfig)args[0], (InvocationService.InvocationListener)args[1]
             );
             return;
 

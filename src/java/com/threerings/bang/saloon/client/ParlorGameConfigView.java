@@ -25,6 +25,7 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.GameCodes;
@@ -122,7 +123,10 @@ public class ParlorGameConfigView extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         if (event.getSource() == _create) {
-            _parobj.service.startMatchMaking(_ctx.getClient(), makeConfig());
+            ReportingListener rl = new ReportingListener(
+                _ctx, SaloonCodes.SALOON_MSGS, "m.create_game_failed");
+            _parobj.service.startMatchMaking(
+                _ctx.getClient(), makeConfig(), rl);
         } else {
             _parobj.service.updateGameConfig(_ctx.getClient(), makeConfig());
         }

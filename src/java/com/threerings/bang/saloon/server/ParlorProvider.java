@@ -7,6 +7,7 @@ import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
@@ -29,7 +30,8 @@ public interface ParlorProvider extends InvocationProvider
     /**
      * Handles a {@link ParlorService#startMatchMaking} request.
      */
-    public void startMatchMaking (ClientObject caller, ParlorGameConfig arg1);
+    public void startMatchMaking (ClientObject caller, ParlorGameConfig arg1, InvocationService.InvocationListener arg2)
+        throws InvocationException;
 
     /**
      * Handles a {@link ParlorService#updateGameConfig} request.
