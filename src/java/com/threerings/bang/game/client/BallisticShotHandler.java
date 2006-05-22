@@ -47,6 +47,12 @@ public class BallisticShotHandler extends ShotHandler
                 _launchSound = sounds.getSound(lpath);
             }
         }
+
+        // if there will be a deflection, load the deflect shot sound
+        if (_shot.deflectorIds != null) {
+            _deflectSound = sounds.getSound(
+                "rsrc/sounds/effects/deflect_shot.wav");
+        }
     }
 
     @Override // documentation inherited
@@ -105,6 +111,7 @@ public class BallisticShotHandler extends ShotHandler
             public void update (float time) {
                 super.update(time);
                 if (dsprite != null && !_blocking && _accum >= btime) {
+                    _deflectSound.play(false);
                     queueAction(dsprite, "blocking");
                     _blocking = true;
                 }
@@ -186,7 +193,7 @@ public class BallisticShotHandler extends ShotHandler
     
     protected int _penderId;
     protected ShotSprite _ssprite;
-    protected Sound _launchSound;
+    protected Sound _launchSound, _deflectSound;
 
     protected static final float GRAVITY = 10*BallisticPath.G;
     protected static final Vector3f GRAVVEC = new Vector3f(0, 0, GRAVITY);
