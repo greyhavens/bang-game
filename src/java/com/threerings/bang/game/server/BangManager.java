@@ -1682,6 +1682,7 @@ public class BangManager extends GameManager
             buf.append(" t:").append(gameSecs);
             buf.append(" s:").append(StringUtil.join(_bconfig.scenarios, ","));
             buf.append(" ts:").append(_bconfig.teamSize).append(" ");
+            buf.append(" r:").append(_bconfig.rated);
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 if (ii > 0) {
                     buf.append(",");
