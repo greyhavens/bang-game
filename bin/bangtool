@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Command line launcher for the Bang! development client
+
+BANG_HOME=`dirname $0`
+BANG_HOME=`cd $BANG_HOME/.. ; pwd`
+
+TOOL_MEMORY=384M
+if [ -f $BANG_HOME/server.conf ]; then
+    . $BANG_HOME/server.conf
+else
+    echo "Can't load $BANG_HOME/server.conf; can't run tool."
+    exit 255
+fi
+
+umask 002
+
+JAVA_VM="$JAVA_HOME/bin/java"
+if [ ! -e $JAVA_VM ]; then
+    echo "$0: Cannot find JVM in $JAVA_HOME. Exiting."
+    exit 255
+fi
+
+# set up our java arguments
+JAVA_ARGS="-server -mx$TOOL_MEMORY \
+    -XX:+UseMembar \
+    -Dno_unpack_resources=true \
+    -Dbang.home=$BANG_HOME \
+    -Dresource_dir=$BANG_HOME/rsrc \
+    -Drsrc_cache_dir=/tmp"
+
+# add all necessary JAR files and $BANG_HOME to the CLASSPATH
+CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
+for jar in $BANG_HOME/lib/*.jar $BANG_HOME/dist/bang-*.jar; do
+    if [ -e $jar ]; then
+        CLASSPATH=$jar:$CLASSPATH
+    fi
+done
+CLASSPATH=$BANG_HOME:$CLASSPATH
+export CLASSPATH
+
+# set up the LD_LIBRARY_PATH to include our shared libraries
+LD_LIBRARY_PATH=$BANG_HOME/lib/`uname -m`-`uname -s`
+export LD_LIBRARY_PATH
+
+# do the deed
+$JAVA_VM $JAVA_ARGS "$*"
