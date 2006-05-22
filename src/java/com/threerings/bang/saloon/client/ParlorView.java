@@ -16,7 +16,13 @@ import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.EntryRemovedEvent;
+import com.threerings.presents.dobj.SetAdapter;
+import com.threerings.util.MessageBundle;
+import com.threerings.util.Name;
 
 import com.threerings.bang.client.PlaceChatView;
 import com.threerings.bang.client.ShopView;
@@ -48,7 +54,6 @@ public class ParlorView extends ShopView
         add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"),
             new Point(870, 25));
 
-        add(_gconfig = new ParlorGameConfigView(_ctx), GAME_RECT);
         add(_config = new ParlorConfigView(_ctx),
             new Rectangle(103, 124, 410, 132));
         add(_chat = new PlaceChatView(_ctx), new Rectangle(570, 75, 425, 535));
@@ -56,6 +61,9 @@ public class ParlorView extends ShopView
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
         _status.setText(_msgs.get("m.intro_tip"));
+
+        // create our config view, but we'll add it later
+        _gconfig = new ParlorGameConfigView(_ctx);
 
         // load up our extra background
         _bgoverlay = ctx.loadImage("ui/saloon/parlor_bg.png");
@@ -118,9 +126,34 @@ public class ParlorView extends ShopView
     public void willEnterPlace (PlaceObject plobj)
     {
         _parobj = (ParlorObject)plobj;
+        _parobj.addListener(_occlist);
+
         _gconfig.willEnterPlace(_parobj);
         _config.willEnterPlace(_parobj);
         _chat.willEnterPlace(plobj);
+
+        // show the match view if there's a game already in progress
+        if (_parobj.playerOids != null) {
+            displayMatchView();
+        } else {
+            clearMatchView();
+        }
+
+        // if there are people in the parlor, report who they are
+        StringBuffer occs = new StringBuffer();
+        for (OccupantInfo info : _parobj.occupantInfo) {
+            if (_ctx.getUserObject().handle.equals(info.username)) {
+                continue;
+            }
+            if (occs.length() > 0) {
+                occs.append(", ");
+            }
+            occs.append(info.username);
+        }
+        if (occs.length() > 0) {
+            String msg = MessageBundle.tcompose("m.parlor_occs", occs);
+            _ctx.getChatDirector().displayInfo(SaloonCodes.SALOON_MSGS, msg);
+        }
     }
 
     @Override // documentation inherited
@@ -129,7 +162,11 @@ public class ParlorView extends ShopView
         _gconfig.didLeavePlace();
         _config.didLeavePlace();
         _chat.didLeavePlace(plobj);
-        _parobj = null;
+
+        if (_parobj != null) {
+            _parobj.removeListener(_occlist);
+            _parobj = null;
+        }
     }
 
     @Override // documentation inherited
@@ -152,6 +189,26 @@ public class ParlorView extends ShopView
         super.renderBackground(renderer);
         _bgoverlay.render(renderer, 39, 65, _alpha);
     }
+
+    /** Listens for occupant additions and removals. */
+    protected SetAdapter _occlist = new SetAdapter() {
+        public void entryAdded (EntryAddedEvent event) {
+            if (event.getName().equals(ParlorObject.OCCUPANT_INFO)) {
+                OccupantInfo info = (OccupantInfo)event.getEntry();
+                reportOccupant("m.occ_entered", info.username);
+            }
+        }
+        public void entryRemoved (EntryRemovedEvent event) {
+            if (event.getName().equals(ParlorObject.OCCUPANT_INFO)) {
+                OccupantInfo info = (OccupantInfo)event.getOldEntry();
+                reportOccupant("m.occ_left", info.username);
+            }
+        }
+        protected void reportOccupant (String msg, Name who) {
+            _ctx.getChatDirector().displayInfo(
+                SaloonCodes.SALOON_MSGS, MessageBundle.tcompose(msg, who));
+        }
+    };
 
     protected ParlorObject _parobj;
     protected ParlorController _ctrl;
