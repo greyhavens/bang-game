@@ -97,7 +97,8 @@ public class PropConfig
         config.tall = Boolean.parseBoolean(props.getProperty("tall"));
         config.passable = Boolean.parseBoolean(props.getProperty("passable"));
         config.penetrable = Boolean.parseBoolean(
-            props.getProperty("penetrable"));
+            props.getProperty("penetrable",
+                (config.width == 1 && config.height == 1) ? "true" : "false"));
         
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");
