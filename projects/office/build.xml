@@ -29,6 +29,7 @@
     <copy file="etc/web.xml" tofile="${deploy.dir}/WEB-INF/web.xml"/>
     <copy todir="${deploy.dir}/WEB-INF/classes">
       <fileset dir="etc" includes="**/*.properties"/>
+      <fileset dir="${base.dir}" includes="server.properties"/>
     </copy>
     <mkdir dir="${deploy.dir}/WEB-INF/classes"/>
     <mkdir dir="${deploy.dir}/WEB-INF/lib"/>
