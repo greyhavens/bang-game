@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Rejects clients trying to log into a machine that is no longer running a
+# Presents server, causing them to update.
+
+if [ -z "$1" -o -z "$2" ]; then
+    echo "Usage: $0 port[,port,...] version"
+    exit 255
+fi
+
+ROOT=`dirname $0`/..
+CLASS=com.threerings.presents.server.Rejector
+$ROOT/bin/runjava $CLASS m.version_mismatch $* > $ROOT/log/rejector.log 2>&1 &
+
+echo "Output directed to $ROOT/log/rejector.log"
