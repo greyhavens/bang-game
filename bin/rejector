@@ -12,6 +12,6 @@ fi
 
 ROOT=`dirname $0`/..
 CLASS=com.threerings.presents.server.Rejector
-$ROOT/bin/runjava $CLASS m.version_mismatch $* > $ROOT/log/rejector.log 2>&1 &
+$ROOT/bin/bangtool $CLASS m.version_mismatch $* > $ROOT/log/rejector.log 2>&1 &
 
 echo "Output directed to $ROOT/log/rejector.log"
