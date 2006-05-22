@@ -39,30 +39,6 @@ public class ServerConfig
     public static Config config;
 
     /**
-     * Configures the install config with the path to our installation
-     * properties file. This is called automatically with the
-     * <code>server.properties</code> file in the <code>bang.home</code>
-     * directory if that system property is set.
-     */
-    public static void init (String propPath)
-    {
-        Properties props = new Properties();
-        try {
-            props.load(new FileInputStream(propPath));
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to load install properties " +
-                    "[path=" + propPath + "].", e);
-        }
-        config = new Config("server", props);
-
-        // fill in our standard properties
-        serverName = config.getValue("server_name", "bang");
-        serverRoot = new File(config.getValue("server_root", "/tmp"));
-        serverPorts = config.getValue(
-            "server_ports", new int[] { Client.DEFAULT_SERVER_PORT });
-    }
-
-    /**
      * Returns the JDBC configuration.
      */
     public static Properties getJDBCConfig ()
@@ -96,12 +72,36 @@ public class ServerConfig
         return config.getValue("town_id", BangCodes.FRONTIER_TOWN);
     }
 
-    static {
-        String propsPath = System.getProperty("bang.home");
-        if (propsPath != null) {
-            init(propsPath + File.separator + "server.properties");
-        } else {
-            log.warning("Missing 'bang.home' system property.");
+    /**
+     * Configures the install config with the path to our installation
+     * properties file. This method is called automatically.
+     */
+    protected static void init (String propPath)
+    {
+        Properties props = new Properties();
+        try {
+            if (propPath != null) {
+                propPath = propPath + File.separator + "server.properties";
+                props.load(new FileInputStream(propPath));
+            } else {
+                propPath = "server.properties";
+                props.load(ServerConfig.class.getClassLoader().
+                           getResourceAsStream(propPath));
+            }
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to load install properties " +
+                    "[path=" + propPath + "].", e);
         }
+        config = new Config("server", props);
+
+        // fill in our standard properties
+        serverName = config.getValue("server_name", "bang");
+        serverRoot = new File(config.getValue("server_root", "/tmp"));
+        serverPorts = config.getValue(
+            "server_ports", new int[] { Client.DEFAULT_SERVER_PORT });
+    }
+
+    static {
+        init(System.getProperty("bang.home"));
     }
 }
