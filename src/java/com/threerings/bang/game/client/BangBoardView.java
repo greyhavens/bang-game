@@ -967,7 +967,10 @@ public class BangBoardView extends BoardView
                 if (target != null && _selection.validTarget(target, false)) {
                     log.info("Randomly targeting " + target.info());
                     _action[3] = target.pieceId;
-                    getUnitSprite(target).setPendingShot(true);
+                    UnitSprite tsprite = getUnitSprite(target);
+                    if (tsprite != null) {
+                        tsprite.setPendingShot(true);
+                    }
                 }
             }
             executeAction();
