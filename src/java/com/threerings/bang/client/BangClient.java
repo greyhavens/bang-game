@@ -594,9 +594,6 @@ public class BangClient extends BasicClient
         // register our status view key bindings
         StatusView.bindKeys(_ctx);
 
-        // configure our performance reporting
-        PerfMonitor.setReportToChat(_ctx.getUserObject().tokens.isAdmin());
-
         // developers can jump right into a tutorial or game
         if (!StringUtil.isBlank(System.getProperty("test"))) {
             startTestGame(false);
