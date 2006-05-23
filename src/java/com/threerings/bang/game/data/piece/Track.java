@@ -50,7 +50,7 @@ public class Track extends Piece
     @Override // documentation inherited
     public float getDepth ()
     {
-        return 0.125f;
+        return 0.0928f;
     }
     
     @Override // documentation inherited

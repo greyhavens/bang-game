@@ -649,6 +649,9 @@ public class BangBoard extends SimpleStreamableObject
                 createPropType(bpiece.isTall(), bpiece.isPenetrable());
             int elevation = (int)Math.ceil(bpiece.getDepth() *
                 _elevationUnitsPerTile);
+            if (bpiece instanceof Prop) {
+                elevation += ((Prop)bpiece).felev;
+            }
             Rectangle pbounds = bpiece.getBounds();
             for (int yy = pbounds.y, ly = yy + pbounds.height;
                  yy < ly; yy++) {

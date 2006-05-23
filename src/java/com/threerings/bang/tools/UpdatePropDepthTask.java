@@ -102,6 +102,7 @@ public class UpdatePropDepthTask extends Task
         depth /= TILE_SIZE;
         
         // read in the prop.properties and see if the depth needs changing
+        // (if not, just touch the file)
         Properties props = new Properties();
         BufferedInputStream in;
         try {
@@ -113,6 +114,7 @@ public class UpdatePropDepthTask extends Task
             return;
         }
         if (Float.parseFloat(props.getProperty("depth", "2")) == depth) {
+            file.setLastModified(System.currentTimeMillis());
             return;
         }
         
