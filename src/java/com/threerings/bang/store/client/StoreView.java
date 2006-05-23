@@ -34,7 +34,7 @@ public class StoreView extends ShopView
         add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 40));
 
         _inspector = new GoodsInspector(_ctx, this);
-        add(_inspector, new Rectangle(268, 9, 500, 151));
+        add(_inspector, new Rectangle(272, 9, 500, 151));
 
         add(_goods = new GoodsPalette(_ctx, _inspector),
             new Rectangle(181, 140, 817, 495));
