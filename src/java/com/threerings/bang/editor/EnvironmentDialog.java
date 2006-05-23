@@ -48,6 +48,15 @@ public class EnvironmentDialog extends JDialog
         _speed.addChangeListener(this);
         center.add(spanel);
         
+        center.add(_fogColor = new ColorPanel(ctx, "m.fog_color"));
+        _fogColor.addChangeListener(this);
+        
+        dpanel = new JPanel();
+        dpanel.add(new JLabel(_ctx.xlate("editor", "m.fog_density")));
+        dpanel.add(_fogDensity = new JSlider(0, 100, 0));
+        _fogDensity.addChangeListener(this);
+        center.add(dpanel);
+        
         getContentPane().add(center, BorderLayout.CENTER);
         
         JPanel buttons = new JPanel();
@@ -71,6 +80,8 @@ public class EnvironmentDialog extends JDialog
     {
         _direction.setValue((int)Math.toDegrees(board.getWindDirection()));
         _speed.setValue((int)board.getWindSpeed());
+        _fogColor.setRGB(board.getFogColor());
+        _fogDensity.setValue((int)(board.getFogDensity() * 1000));
     }
     
     // documentation inherited from interface ChangeListener
@@ -85,6 +96,11 @@ public class EnvironmentDialog extends JDialog
             !_speed.getValueIsAdjusting()) {
             _panel.view.commitWindEdit();
         }
+        _panel.view.setFogParams(_fogColor.getRGB(),
+            _fogDensity.getValue() / 1000f, true);
+        if (!_fogDensity.getValueIsAdjusting()) {
+            _panel.view.commitFogEdit();
+        }
     }
     
     /** The application context. */
@@ -98,4 +114,10 @@ public class EnvironmentDialog extends JDialog
     
     /** The wind speed slider. */
     protected JSlider _speed;
+    
+    /** The fog color panel. */
+    public ColorPanel _fogColor;
+    
+    /** The fog density slider. */
+    protected JSlider _fogDensity;
 }

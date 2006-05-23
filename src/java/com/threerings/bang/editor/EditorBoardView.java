@@ -130,6 +130,9 @@ public class EditorBoardView extends BoardView
         _hnode.detachAllChildren();
         _highlights = null;
         updateHighlights();
+        
+        // clear out the undo stack
+        ((EditorController)_panel.getController()).clearEdits();
     }
 
     /**
@@ -715,6 +718,47 @@ public class EditorBoardView extends BoardView
     }
     
     /**
+     * Sets the board's fog parameters.
+     *
+     * @param edit true if the user is directly modifying the value
+     */
+    public void setFogParams (int color, float density, boolean edit)
+    {
+        if (edit && _fogEdit == null) {
+            _fogEdit = new SwapEdit() {
+                public void commit () {
+                    if (_color != _board.getFogColor() ||
+                        _density != _board.getFogDensity()) {
+                        super.commit();
+                    }
+                }
+                public void swapSaved () {
+                    int color = _board.getFogColor();
+                    float density = _board.getFogDensity();
+                    setFogParams(_color, _density, false);
+                    _color = color;
+                    _density = density;
+                }
+                protected int _color = _board.getFogColor();
+                protected float _density = _board.getFogDensity();
+            };
+        }
+        _board.setFogParams(color, density);
+        refreshFog();
+    }
+
+    /**
+     * Commits the fog edit, if any.
+     */
+    public void commitFogEdit ()
+    {
+        if (_fogEdit != null) {
+            _fogEdit.commit();
+            _fogEdit = null;
+        }
+    }
+    
+    /**
      * Creates a fresh new board.
      */
     public void createNewBoard (int width, int height)
@@ -724,7 +768,6 @@ public class EditorBoardView extends BoardView
         refreshBoard();
         _panel.info.clear();
         _panel.info.updatePlayers(0);
-        ((EditorController)_panel.getController()).clearEdits();
     }
 
     /**
@@ -737,9 +780,6 @@ public class EditorBoardView extends BoardView
             return;
         }
 
-        // no undo for now
-        ((EditorController)_panel.getController()).clearEdits();
-        
         // first transfer the board
         BangBoard nboard = new BangBoard(width, height);
         int hfwidth = nboard.getHeightfieldWidth(),
@@ -1157,7 +1197,7 @@ public class EditorBoardView extends BoardView
     protected HeightfieldEdit _hfedit;
     protected TerrainEdit _tedit;
     protected SwapEdit _elevationUnitsEdit, _shadowIntensityEdit, _skyEdit,
-        _waterEdit, _windEdit;
+        _waterEdit, _windEdit, _fogEdit;
     protected SwapEdit[] _lightEdits = new SwapEdit[BangBoard.NUM_LIGHTS];
     
     /** The color to use for highlights. */

@@ -45,6 +45,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
@@ -279,9 +280,10 @@ public class BoardView extends BComponent
             createMarquee(_bangobj.boardName);
         }
 
-        // refresh the lights
+        // refresh the lights and fog
         refreshLights();
-
+        refreshFog();
+        
         // create the board geometry
         _snode.createBoardSky(_board);
         _tnode.createBoardTerrain(_board);
@@ -938,6 +940,28 @@ public class BoardView extends BComponent
         _lights[idx].getAmbient().set(argb[0], argb[1], argb[2], 1f);
     }
 
+    /**
+     * Refreshes the fog state according to the board's fog parameters.
+     */
+    protected void refreshFog ()
+    {
+        float density = _board.getFogDensity();
+        if (density == 0f) {
+            _node.clearRenderState(RenderState.RS_FOG);
+            _node.updateRenderState();
+            return;
+        }
+        FogState fstate = (FogState)_node.getRenderState(RenderState.RS_FOG);
+        if (fstate == null) {
+            fstate = _ctx.getRenderer().createFogState();
+            fstate.setDensityFunction(FogState.DF_EXP);
+            _node.setRenderState(fstate);
+            _node.updateRenderState();
+        }
+        fstate.setColor(RenderUtil.createColorRGBA(_board.getFogColor()));
+        fstate.setDensity(density);
+    }
+    
     /**
      * Processes all ready actions in the action queue.
      */

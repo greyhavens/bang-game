@@ -95,6 +95,8 @@ public class BangBoard extends SimpleStreamableObject
 
         _windSpeed = 20f;
 
+        _fogColor = 0xFFFFFF;
+        
         initTransientFields();
     }
 
@@ -433,6 +435,34 @@ public class BangBoard extends SimpleStreamableObject
         _windSpeed = speed;
     }
 
+    /**
+     * Returns the RGB color of the fog.
+     */
+    public int getFogColor ()
+    {
+        return _fogColor;
+    }
+    
+    /**
+     * Returns the density of the fog.
+     */
+    public float getFogDensity ()
+    {
+        return _fogDensity;
+    }
+    
+    /**
+     * Sets the fog parameters.
+     *
+     * @param color the RGB fog color
+     * @param density the fog density
+     */
+    public void setFogParams (int color, float density)
+    {
+        _fogColor = color;
+        _fogDensity = density;
+    }
+    
     /**
      * Returns the bounds of the playable area on the board. <em>Do not
      * modify</em> the returned rectangle.
@@ -1204,6 +1234,12 @@ public class BangBoard extends SimpleStreamableObject
     /** The speed and direction of the wind. */
     protected float _windDirection, _windSpeed;
 
+    /** The color of the board fog. */
+    protected int _fogColor;
+    
+    /** The density of the board fog. */
+    protected float _fogDensity;
+    
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight;
 
