@@ -174,7 +174,7 @@ public abstract class Scenario
             }
 
             Unit unit = _respawns.remove(0);
-            log.info("Respawning " + unit + ".");
+//             log.info("Respawning " + unit + ".");
 
             // reassign the unit to its original owner
             unit.owner = unit.originalOwner;
@@ -384,8 +384,8 @@ public abstract class Scenario
         // now select a spot based on our weightings
         int spidx = RandomUtil.getWeightedIndex(weights);
         Point spot = new Point(spots.getX(spidx), spots.getY(spidx));
-        log.info("Selecting from " + StringUtil.toString(weights) + ": " +
-                 spidx + " -> " + spot.x + "/" + spot.y + ".");
+//         log.info("Selecting from " + StringUtil.toString(weights) + ": " +
+//                  spidx + " -> " + spot.x + "/" + spot.y + ".");
 
         // locate the nearest spot to that which can be occupied by our piece
         Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
@@ -411,7 +411,7 @@ public abstract class Scenario
         bonus.position(bspot.x, bspot.y);
         bangobj.addToPieces(bonus);
         bangobj.board.shadowPiece(bonus);
-        log.info("Placed bonus: " + bonus.info());
+//         log.info("Placed bonus: " + bonus.info());
         return true;
     }
 
@@ -826,7 +826,7 @@ public abstract class Scenario
         Unit unit = (Unit)piece;
         unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
         _respawns.add(unit);
-        log.info("Queued for respawn " + unit + ".");
+//         log.info("Queued for respawn " + unit + ".");
     }
 
     /**
