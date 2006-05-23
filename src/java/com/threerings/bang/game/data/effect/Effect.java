@@ -114,6 +114,7 @@ public abstract class Effect extends SimpleStreamableObject
             log.warning("Not damaging already dead target " +
                 "[target=" + target.info() + ", shooter=" + shooter +
                 ", nd=" + newDamage + ", effect=" + effect + "].");
+            Thread.dumpStack();
             return;
         }
 
