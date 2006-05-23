@@ -64,7 +64,7 @@ public class PaletteIcon extends SelectableIcon
 
         // we need to do some jiggery pokery to force the label in a bit from
         // the edges
-        _text.layout(new Insets(5, 10, 5, 0));
+        _text.layout(getTextInsets());
     }
 
     @Override // documentation inherited
@@ -72,6 +72,14 @@ public class PaletteIcon extends SelectableIcon
     {
         super.renderComponent(renderer);
         _text.render(renderer, _alpha);
+    }
+
+    /**
+     * Provides custom insets for our special label.
+     */
+    protected Insets getTextInsets ()
+    {
+        return new Insets(5, 10, 5, 0);
     }
 
     protected Label _text;

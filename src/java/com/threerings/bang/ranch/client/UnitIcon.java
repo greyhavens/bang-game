@@ -6,6 +6,7 @@ package com.threerings.bang.ranch.client;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Insets;
 
 import com.threerings.util.MessageBundle;
 
@@ -85,6 +86,12 @@ public class UnitIcon extends PaletteIcon
         if (_lock != null) {
             _lock.release();
         }
+    }
+
+    @Override // documentation inherited
+    protected Insets getTextInsets ()
+    {
+        return new Insets(5, 5, 5, 0);
     }
 
     @Override // documentation inherited
