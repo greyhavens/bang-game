@@ -1039,8 +1039,8 @@ public class BangManager extends GameManager
             Piece p = pieces[ii];
             if (!p.isAlive()) {
                 if (p.expireWreckage(tick)) {
-                    log.info("Expiring wreckage " + p.pieceId +
-                             " l:" + p.lastActed + " t:" + tick);
+//                     log.info("Expiring wreckage " + p.pieceId +
+//                              " l:" + p.lastActed + " t:" + tick);
                     _bangobj.removeFromPieces(p.getKey());
                     _bangobj.board.clearShadow(p);
                 }
@@ -1317,9 +1317,10 @@ public class BangManager extends GameManager
             Point spot = unit.computeShotLocation(
                 _bangobj.board, target, _moves);
             if (spot == null) {
-                log.info("Unable to find place from which to shoot. " +
-                         "[piece=" + unit.info() + ", target=" + target.info() +
-                         ", moves=" + _moves + "].");
+//                 log.info("Unable to find place from which to shoot. " +
+//                          "[piece=" + unit.info() +
+//                          ", target=" + target.info() +
+//                          ", moves=" + _moves + "].");
                 throw new InvocationException(TARGET_UNREACHABLE);
             }
             x = spot.x;
@@ -1418,8 +1419,8 @@ public class BangManager extends GameManager
         // make sure the target is still valid
         if (!shooter.validTarget(target, false)) {
             // target already dead or something
-            log.info("Target no longer valid [shooter=" + shooter.info() +
-                     ", target=" + target.info() + "].");
+//             log.info("Target no longer valid [shooter=" + shooter.info() +
+//                      ", target=" + target.info() + "].");
             throw new InvocationException(TARGET_NO_LONGER_VALID);
         }
 
@@ -1427,8 +1428,9 @@ public class BangManager extends GameManager
         if (!shooter.targetInRange(target.x, target.y) ||
             !shooter.checkLineOfSight(
                 _bangobj.board, shooter.x, shooter.y, target)) {
-            log.info("Target no longer reachable [shooter=" + shooter.info() +
-                     ", target=" + target.info() + "].");
+//             log.info("Target no longer reachable " +
+//                      "[shooter=" + shooter.info() +
+//                      ", target=" + target.info() + "].");
             throw new InvocationException(TARGET_UNREACHABLE);
         }
     }
@@ -1470,11 +1472,11 @@ public class BangManager extends GameManager
     {
         PlayerObject user = (PlayerObject)getPlayer(order.unit.owner);
         if (user != null) {
-            log.info("Advance order failed [order=" + order +
-                     ", who=" + user.who() + "].");
+//             log.info("Advance order failed [order=" + order +
+//                      ", who=" + user.who() + "].");
             BangSender.orderInvalidated(user, order.unit.pieceId, reason);
-        } else {
-            log.info("Advance order failed [order=" + order + "].");
+//         } else {
+//             log.info("Advance order failed [order=" + order + "].");
         }
     }
 
@@ -1787,8 +1789,8 @@ public class BangManager extends GameManager
     protected void notePlayedCards (final ArrayList<StartingCard> updates,
                                     final ArrayList<StartingCard> removals)
     {
-        log.info("Noting played cards [updates=" + updates.size() +
-                 ", removals=" + removals.size() + "].");
+//         log.info("Noting played cards [updates=" + updates.size() +
+//                  ", removals=" + removals.size() + "].");
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 for (StartingCard scard : updates) {
