@@ -176,25 +176,25 @@ public class ShotEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
-        if (targetId == -1) { // we were deflected into la la land, no problem
-            return;
-        }
-
+        // update the shooter's last acted if necessary
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
         if (shooter == null) {
             log.warning("Missing shooter " + this + ".");
+            return;
+        }
+        if (shooterLastActed != -1 && shooter.lastActed != shooterLastActed) {
+            shooter.lastActed = shooterLastActed;
+            reportEffect(obs, shooter, SHOT_NOMOVE);
+        }
+
+        // if we were deflected into la la land, we can stop here
+        if (targetId == -1) {
             return;
         }
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target == null) {
             log.warning("Missing shot target " + this + ".");
             return;
-        }
-
-        // update the shooter's last acted if necessary
-        if (shooterLastActed != -1 && shooter.lastActed != shooterLastActed) {
-            shooter.lastActed = shooterLastActed;
-            reportEffect(obs, shooter, SHOT_NOMOVE);
         }
 
         // if we have a new last acted to assign to the target, do that
