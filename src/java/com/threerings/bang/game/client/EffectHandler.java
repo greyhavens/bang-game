@@ -232,6 +232,7 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void pieceRemoved (Piece piece)
     {
+        log.info("Piece removed by effect " + piece + ".");
         _view.removePieceSprite(piece.pieceId, "deathByEffect");
     }
 

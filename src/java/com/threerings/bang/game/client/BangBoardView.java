@@ -1270,6 +1270,9 @@ public class BangBoardView extends BoardView
                 msprite.addObserver(_deadRemover);
                 msprite.queueAction(MobileSprite.REMOVED);
                 return sprite;
+            } else {
+                log.info("Removing dead unit sprite immediately " +
+                         msprite.getPiece() + ".");
             }
 
         } else if (sprite instanceof BonusSprite) {
@@ -1392,6 +1395,9 @@ public class BangBoardView extends BoardView
                 if (((MobileSprite)sprite).isMoving()) {
                     log.warning("Removing dead sprite, but it's still moving " +
                                 ((MobileSprite)sprite).getPiece() + ".");
+                } else {
+                    log.info("Removing dead unit sprite post-fade " +
+                             ((MobileSprite)sprite).getPiece() + ".");
                 }
                 removeSprite(sprite);
 

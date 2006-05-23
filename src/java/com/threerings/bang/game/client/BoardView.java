@@ -1046,6 +1046,7 @@ public class BoardView extends BComponent
      */
     protected void pieceRemoved (Piece piece, short tick)
     {
+        log.info("Piece removed from DSet " + piece + ".");
         // TODO: queue up a fade out action like we do when a piece dies?
         removePieceSprite(piece.pieceId, "pieceRemoved(" + piece.info() + ")");
     }
