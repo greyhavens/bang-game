@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="soil" translation="-0.728241, 58.5984, -2.79056" rotation="0.688355, 0.0, 0.0, 0.725374" scale="4.90322, 4.90322, 4.90322" solid="true" texture="C:\projects\bang objects\tombstones\grave_earth.png" transparent="false">
+  <triMesh name="soil" translation="-0.728241, 58.5984, -2.79056" rotation="0.688355, 0.0, 0.0, 0.725374" scale="4.90322, 4.90322, 4.90322" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="grave_earth.png" transparent="false">
     <vertex location="0.0, 0.608499, -4.59528" normal="0.0, 0.819947, -0.572439" tcoords="0.479371, 1.02795"/>
     <vertex location="6.96686, 3.82874, 2.13437" normal="1.14708, 2.20499, -1.13296" tcoords="0.171401, 0.81908"/>
     <vertex location="8.01027, 0.344974, -3.15383" normal="1.0238, 1.26181, -0.629254" tcoords="0.08498, 0.964453"/>
@@ -77,7 +77,7 @@
     <vertex location="-6.96686, 3.95658, 13.4475" normal="-0.550657, 0.833372, 0.0476185" tcoords="0.784489, 0.499585"/>
   </triMesh>
 
-  <triMesh name="cross_wood" translation="10.3552, 79.5523, 72.2777" rotation="-0.0958457, 0.0, 0.0, 0.995396" scale="3.33266, 3.33266, 3.33266" solid="true" texture="C:\projects\bang objects\tombstones\wooden_cross.png" transparent="false">
+  <triMesh name="cross_wood" translation="10.3552, 79.5523, 72.2777" rotation="-0.0958457, 0.0, 0.0, 0.995396" scale="3.33266, 3.33266, 3.33266" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wooden_cross.png" transparent="false">
     <vertex location="-12.8525, -1.02229, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.018499, 0.0122215"/>
     <vertex location="-12.8525, 0.33441, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.0172635, 0.0875952"/>
     <vertex location="8.38015, 0.33441, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.855943, 0.0872605"/>
@@ -86,8 +86,8 @@
     <vertex location="-12.8525, -1.02229, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.018499, 0.0122215"/>
     <vertex location="-13.5956, -1.06977, 6.8253" normal="0.0, 0.0, 2.0" tcoords="0.0184671, 0.0122265"/>
     <vertex location="9.12329, -1.06977, 6.8253" normal="0.0, 0.0, 1.0" tcoords="0.854633, 0.0119502"/>
-    <vertex location="9.12329, 0.381895, 6.8253" normal="0.0, 0.0, 2.0" tcoords="0.855185, 0.0873885"/>
-    <vertex location="9.12329, 0.381895, 6.8253" normal="0.0, 0.0, 2.0" tcoords="0.855185, 0.0873885"/>
+    <vertex location="9.12329, 0.381895, 6.8253" normal="0.994125, 0.0, 1.89176" tcoords="0.855185, 0.0873885"/>
+    <vertex location="9.12329, 0.381895, 6.8253" normal="0.994125, 0.0, 1.89176" tcoords="0.855185, 0.0873885"/>
     <vertex location="-13.5956, 0.381895, 6.8253" normal="0.0, 0.0, 1.0" tcoords="0.0174151, 0.0875855"/>
     <vertex location="-13.5956, -1.06977, 6.8253" normal="0.0, 0.0, 2.0" tcoords="0.0184671, 0.0122265"/>
     <vertex location="-12.8525, -1.02229, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.0442089, 0.395314"/>
@@ -98,15 +98,15 @@
     <vertex location="-12.8525, -1.02229, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.0442089, 0.395314"/>
     <vertex location="8.38015, -1.02229, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.971854, 0.702553"/>
     <vertex location="8.38015, 0.33441, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.898232, 0.704481"/>
-    <vertex location="9.12329, 0.381895, 6.8253" normal="0.0, 0.0, 2.0" tcoords="0.865552, 0.334914"/>
-    <vertex location="9.12329, 0.381895, 6.8253" normal="0.0, 0.0, 2.0" tcoords="0.865552, 0.334914"/>
+    <vertex location="9.12329, 0.381895, 6.8253" normal="0.994125, 0.0, 1.89176" tcoords="0.865552, 0.334914"/>
+    <vertex location="9.12329, 0.381895, 6.8253" normal="0.994125, 0.0, 1.89176" tcoords="0.865552, 0.334914"/>
     <vertex location="9.12329, -1.06977, 6.8253" normal="0.0, 0.0, 1.0" tcoords="0.985149, 0.331782"/>
     <vertex location="8.38015, -1.02229, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.971854, 0.702553"/>
     <vertex location="8.38015, 0.33441, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.813674, 0.103519"/>
     <vertex location="-12.8525, 0.33441, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.0563393, 0.106732"/>
     <vertex location="-13.5956, 0.381895, 6.8253" normal="0.0, 0.0, 1.0" tcoords="0.0245075, 0.371652"/>
     <vertex location="-13.5956, 0.381895, 6.8253" normal="0.0, 0.0, 1.0" tcoords="0.0245075, 0.371652"/>
-    <vertex location="9.12329, 0.381895, 6.8253" normal="0.0, 0.0, 2.0" tcoords="0.845505, 0.368439"/>
+    <vertex location="9.12329, 0.381895, 6.8253" normal="0.994125, 0.0, 1.89176" tcoords="0.845505, 0.368439"/>
     <vertex location="8.38015, 0.33441, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.813674, 0.103519"/>
     <vertex location="-12.8525, 0.33441, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.89823, 0.704481"/>
     <vertex location="-12.8525, -1.02229, 0.0" normal="0.0, 0.0, -2.0" tcoords="0.971852, 0.702553"/>
@@ -116,8 +116,8 @@
     <vertex location="-12.8525, 0.33441, 0.0" normal="0.0, 0.0, -1.0" tcoords="0.89823, 0.704481"/>
     <vertex location="-4.19838, -0.0176592, 15.3055" normal="0.0, 0.0, 2.0" tcoords="0.982108, 0.0186199"/>
     <vertex location="0.0348247, -0.0176592, 15.3055" normal="0.0, 0.0, 1.0" tcoords="0.984177, 0.287775"/>
-    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.0, 0.0, 2.0" tcoords="0.885205, 0.288638"/>
-    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.0, 0.0, 2.0" tcoords="0.885205, 0.288638"/>
+    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.999739, 0.0, 2.02286" tcoords="0.885205, 0.288638"/>
+    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.999739, 0.0, 2.02286" tcoords="0.885205, 0.288638"/>
     <vertex location="-4.19838, 1.81554, 15.3055" normal="0.0, 0.0, 1.0" tcoords="0.883136, 0.0194837"/>
     <vertex location="-4.19838, -0.0176592, 15.3055" normal="0.0, 0.0, 2.0" tcoords="0.982108, 0.0186199"/>
     <vertex location="-5.04502, -0.384299, -21.727" normal="0.0, -1.9999, 0.0198001" tcoords="0.974481, 0.823403"/>
@@ -128,15 +128,15 @@
     <vertex location="-5.04502, -0.384299, -21.727" normal="0.0, -1.9999, 0.0198001" tcoords="0.974481, 0.823403"/>
     <vertex location="0.881465, -0.384299, -21.727" normal="0.0, -0.999951, 0.00990003" tcoords="0.0193523, 0.829912"/>
     <vertex location="0.881465, 2.18218, -21.727" normal="0.999739, 0.0, 0.0228562" tcoords="0.0175847, 0.72865"/>
-    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.0, 0.0, 2.0" tcoords="0.972178, 0.729753"/>
-    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.0, 0.0, 2.0" tcoords="0.972178, 0.729753"/>
+    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.999739, 0.0, 2.02286" tcoords="0.972178, 0.729753"/>
+    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.999739, 0.0, 2.02286" tcoords="0.972178, 0.729753"/>
     <vertex location="0.0348247, -0.0176592, 15.3055" normal="0.0, 0.0, 1.0" tcoords="0.97346, 0.803182"/>
     <vertex location="0.881465, -0.384299, -21.727" normal="0.0, -0.999951, 0.00990003" tcoords="0.0193523, 0.829912"/>
     <vertex location="0.881465, 2.18218, -21.727" normal="0.999739, 0.0, 0.0228562" tcoords="0.977412, 0.991322"/>
     <vertex location="-5.04502, 2.18218, -21.727" normal="0.0, 0.999951, 0.00990002" tcoords="0.974482, 0.823403"/>
     <vertex location="-4.19838, 1.81554, 15.3055" normal="0.0, 0.0, 1.0" tcoords="0.0112732, 0.861371"/>
     <vertex location="-4.19838, 1.81554, 15.3055" normal="0.0, 0.0, 1.0" tcoords="0.0112732, 0.861371"/>
-    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.0, 0.0, 2.0" tcoords="0.0134659, 0.986992"/>
+    <vertex location="0.0348247, 1.81554, 15.3055" normal="0.999739, 0.0, 2.02286" tcoords="0.0134659, 0.986992"/>
     <vertex location="0.881465, 2.18218, -21.727" normal="0.999739, 0.0, 0.0228562" tcoords="0.977412, 0.991322"/>
     <vertex location="-5.04502, 2.18218, -21.727" normal="0.0, 0.999951, 0.00990002" tcoords="0.0175847, 0.72865"/>
     <vertex location="-5.04502, -0.384299, -21.727" normal="0.0, -1.9999, 0.0198001" tcoords="0.0193523, 0.829912"/>
