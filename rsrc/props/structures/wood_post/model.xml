@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="post" translation="-0.429144, -0.430717, 0.0" rotation="0.0, 0.0, 0.397568, 0.917573" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="wood_post.png" transparent="true">
+  <triMesh name="post" translation="-0.429144, -0.430717, 0.0" rotation="0.0, 0.0, 0.397568, 0.917573" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="wood_post.png" transparent="false">
     <vertex location="18.3301, 3.49465e-007, 0.0" normal="0.980086, 0.188618, 0.0620833" tcoords="1.5, 0.000499606"/>
     <vertex location="7.46508, 12.9299, 53.6735" normal="0.500013, 0.866016, -0.00170216" tcoords="1.81283, 0.5"/>
     <vertex location="14.9302, -3.25954e-007, 53.6735" normal="0.999999, -1.59411e-005, -0.00170216" tcoords="1.5, 0.5"/>
