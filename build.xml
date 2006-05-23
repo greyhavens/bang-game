@@ -142,6 +142,11 @@
     <compile>
       <fileset dir="rsrc" includes="**/model.properties"/>
     </compile>
+    <taskdef name="updatepropdepth" classpathref="classpath"
+             classname="com.threerings.bang.tools.UpdatePropDepthTask"/>
+    <updatepropdepth>
+      <fileset dir="rsrc" includes="**/prop.properties"/>
+    </updatepropdepth>
     <jar file="rsrc/units/bundle.jar" basedir="rsrc/units">
       <include name="**/*.png"/>
       <include name="**/model.dat"/>

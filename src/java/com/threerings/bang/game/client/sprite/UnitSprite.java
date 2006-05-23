@@ -421,6 +421,7 @@ public class UnitSprite extends MobileSprite
         }
         if (_tlight.getTileX() != tx || _tlight.getTileY() != ty) {
             _tlight.setPosition(tx, ty);
+            _status.updateTranslations(_tlight);
         }
     }
     

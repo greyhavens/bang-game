@@ -645,18 +645,21 @@ public class BangBoard extends SimpleStreamableObject
             
         } else if (piece instanceof BigPiece) {
             BigPiece bpiece = (BigPiece)piece;
-            byte ptype = (byte)(O_PROP ^ (bpiece.isTall() ? TALL_FLAG : 0) ^
-                (bpiece.isPenetrable() ? PENETRABLE_FLAG : 0)),
-                elevation = (byte)(bpiece.getDepth() * _elevationUnitsPerTile);
+            byte ptype =
+                createPropType(bpiece.isTall(), bpiece.isPenetrable());
+            int elevation = (int)Math.ceil(bpiece.getDepth() *
+                _elevationUnitsPerTile);
             Rectangle pbounds = bpiece.getBounds();
             for (int yy = pbounds.y, ly = yy + pbounds.height;
                  yy < ly; yy++) {
                 for (int xx = pbounds.x, lx = xx + pbounds.width;
                      xx < lx; xx++) {
                     if (_playarea.contains(xx, yy)) {
-                        _tstate[_width*yy+xx] = ptype;
-                        _btstate[_width*yy+xx] = ptype;
-                        _estate[_width*yy+xx] = elevation;
+                        int idx = _width*yy + xx;
+                        _tstate[idx] = _btstate[idx] =
+                            combinePropTypes(_btstate[idx], ptype);
+                        _estate[idx] = (byte)Math.max(
+                            unsignedToInt(_estate[idx]), elevation);
                     }
                 }
             }
@@ -667,10 +670,11 @@ public class BangBoard extends SimpleStreamableObject
 
         } else if (piece instanceof Track) {
             int idx = _width*piece.y+piece.x;
-            _estate[idx] = (byte)(piece.getDepth() * _elevationUnitsPerTile);
+            _estate[idx] = (byte)Math.max(unsignedToInt(_estate[idx]),
+                (int)Math.ceil(piece.getDepth() * _elevationUnitsPerTile));
             if (((Track)piece).preventsGroundOverlap()) {
-                _tstate[idx] = _btstate[idx] = O_PROP;
-                _btstate[idx] = _btstate[idx] = O_PROP;
+                _tstate[idx] = _btstate[idx] = combinePropTypes(_btstate[idx],
+                    createPropType(false, true));
             }
 
         } else if (piece instanceof Bonus) {
@@ -717,8 +721,7 @@ public class BangBoard extends SimpleStreamableObject
         if (x < 0 || y < 0 || x >= _width || y >= _height) {
             return 0;
         } else {
-            int estate = _estate[y*_width+x];
-            return (estate >= 0) ? estate : (256 + estate);
+            return unsignedToInt(_estate[y*_width+x]);
         }
     }
 
@@ -1124,6 +1127,35 @@ public class BangBoard extends SimpleStreamableObject
             considerFiring(attacks, xx, yy+1, premain, true);
             considerFiring(attacks, xx, yy-1, premain, true);
         }
+    }
+    
+    /**
+     * Combines an existing prop type with the type that occupies the same
+     * space.  If any prop is tall, the tile is tall.  If all props are
+     * penetrable, the tile is penetrable.
+     */
+    protected static byte combinePropTypes (byte t1, byte t2)
+    {
+        return (t1 > O_PROP) ? t2 : createPropType(
+            (t1 & TALL_FLAG) == 0 || (t2 & TALL_FLAG) == 0,
+            (t1 & PENETRABLE_FLAG) == 0 && (t2 & PENETRABLE_FLAG) == 0);
+    }
+    
+    /**
+     * Creates a prop type using the given flags.
+     */
+    protected static byte createPropType (boolean tall, boolean penetrable)
+    {
+        return (byte)(O_PROP ^ (tall ? TALL_FLAG : 0) ^
+            (penetrable ? PENETRABLE_FLAG : 0));
+    }
+    
+    /**
+     * Converts an unsigned byte value to an integer.
+     */
+    protected static int unsignedToInt (byte value)
+    {
+        return (value >= 0) ? value : (256 + value);
     }
     
     /** The width and height of our board. */

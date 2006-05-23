@@ -126,6 +126,17 @@ public class UnitStatus extends Node
     }
 
     /**
+     * Copies the highlight translation to the info translations.
+     */
+    public void updateTranslations (TerrainNode.Highlight highlight)
+    {
+        Vector3f trans = highlight.getLocalTranslation();
+        for (int ii = 0; ii < _info.length; ii++) {
+            _info[ii].getLocalTranslation().set(trans);
+        }
+    }
+    
+    /**
      * Returns a background that can be used to render this unit's status in
      * iconic form in the unit status user interface.
      */
