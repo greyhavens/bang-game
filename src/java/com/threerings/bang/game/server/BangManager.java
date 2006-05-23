@@ -1226,6 +1226,10 @@ public class BangManager extends GameManager
                             "[who=" + _bangobj.players[ii] + ", idx=" + ii +
                             ", award=" + award + "].", t);
                 }
+            } else {
+                // we only track one stat for unranked games, the number
+                prec.user.stats.incrementStat(
+                    Stat.Type.UNRANKED_GAMES_PLAYED, 1);
             }
         }
 

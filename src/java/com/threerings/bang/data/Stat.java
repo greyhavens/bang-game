@@ -30,11 +30,12 @@ public abstract class Stat
     public static enum Type
     {
         // general statistics
-        GAMES_PLAYED(new IntStat()),
-        GAMES_WON(new IntStat()),
-        GAME_TIME(new IntStat()),
-        CONSEC_WINS(new IntStat()),
-        CONSEC_LOSSES(new IntStat()),
+        GAMES_PLAYED(new IntStat()), // ranked games only
+        UNRANKED_GAMES_PLAYED(new IntStat()),
+        GAMES_WON(new IntStat()), // ranked games only
+        GAME_TIME(new IntStat()), // ranked games only
+        CONSEC_WINS(new IntStat()), // ranked games only
+        CONSEC_LOSSES(new IntStat()), // ranked games only
         LATE_NIGHTS(new IntStat(), true, true),
         TUTORIALS_COMPLETED(new ByteStringSetStat(), true, true),
 
