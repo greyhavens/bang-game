@@ -39,7 +39,7 @@ public class StampedeEffect extends Effect
     public static final float BISON_SPEED = 4f;
 
     /** The amount of damage taken by units hit by bison. */
-    public static final int COLLISION_DAMAGE = 20;
+    public static final int COLLISION_DAMAGE = 50;
 
     /** The identifier for the type of effect that we produce. */
     public static final String DAMAGED = "bang";
