@@ -4,11 +4,13 @@
 package com.threerings.bang.client;
 
 import java.io.IOException;
+import java.util.EnumSet;
 
 import java.net.ConnectException;
 import java.net.URL;
 
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.util.TextureManager;
 
 import com.jmex.bui.BButton;
@@ -20,6 +22,7 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
@@ -30,6 +33,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientAdapter;
@@ -39,6 +43,8 @@ import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -91,6 +97,14 @@ public class LogonView extends BWindow
             }
         };
 
+        // TODO: pick from the town they most recently logged into
+        UnitConfig[] units = UnitConfig.getTownUnits(
+            BangCodes.FRONTIER_TOWN,
+            EnumSet.of(UnitConfig.Rank.BIGSHOT, UnitConfig.Rank.NORMAL));
+        if (units.length > 0) {
+            _unitIcon = BangUI.getUnitIcon(RandomUtil.pickRandom(units));
+        }
+
         add(_status = new StatusLabel(ctx));
         _status.setStyleClass("logon_status");
         _status.setPreferredSize(new Dimension(360, 40));
@@ -102,19 +116,6 @@ public class LogonView extends BWindow
 
         // add our logon listener
         _ctx.getClient().addClientObserver(_listener);
-    }
-
-    @Override // documentation inherited
-    public void wasAdded ()
-    {
-        super.wasAdded();
-
-        // focus the appropriate textfield
-        if (StringUtil.isBlank(_username.getText())) {
-            _username.requestFocus();
-        } else {
-            _password.requestFocus();
-        }
     }
 
     // documentation inherited from interface ActionListener
@@ -169,6 +170,43 @@ public class LogonView extends BWindow
             if (_ctx.getClient().getCredentials() != null) {
                 _ctx.getClient().logon();
             }
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+
+        // focus the appropriate textfield
+        if (StringUtil.isBlank(_username.getText())) {
+            _username.requestFocus();
+        } else {
+            _password.requestFocus();
+        }
+
+        if (_unitIcon != null) {
+            _unitIcon.wasAdded();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        if (_unitIcon != null) {
+            _unitIcon.wasRemoved();
+        }
+    }
+
+    @Override // documentation inherited
+    protected void renderBackground (Renderer renderer)
+    {
+        super.renderBackground(renderer);
+
+        if (_unitIcon != null) {
+            _unitIcon.render(renderer, 50, 380, _alpha);
         }
     }
 
@@ -245,6 +283,7 @@ public class LogonView extends BWindow
     protected BTextField _username;
     protected BPasswordField _password;
     protected BButton _logon, _action;
+    protected BIcon _unitIcon;
 
     protected StatusLabel _status;
     protected boolean _initialized;
