@@ -375,8 +375,10 @@ public class BangClient extends BasicClient
         if (animate) {
             BangUI.play(BangUI.FeedbackSound.WINDOW_OPEN);
             popup.pack(twidth, -1);
+            int dy = (_mview instanceof BangView) ?
+                ((BangView)_mview).getCenterOffset() : 0;
             _ctx.getInterface().attachChild(
-                new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f));
+                new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f, 0, dy));
         }
     }
 
@@ -418,8 +420,10 @@ public class BangClient extends BasicClient
         }
         if (animate) {
             BangUI.play(BangUI.FeedbackSound.WINDOW_DISMISS);
+            int dy = (_mview instanceof BangView) ?
+                ((BangView)_mview).getCenterOffset() : 0;
             _ctx.getInterface().attachChild(
-                new WindowSlider(popup, WindowSlider.TO_RIGHT, 0.25f) {
+                new WindowSlider(popup, WindowSlider.TO_RIGHT, 0.25f, 0, dy) {
                     protected void slideComplete () {
                         super.slideComplete();
                         _ctx.getRootNode().removeWindow(popup);

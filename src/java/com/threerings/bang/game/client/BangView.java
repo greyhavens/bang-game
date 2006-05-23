@@ -157,6 +157,22 @@ public class BangView extends BWindow
         _perftrack.end();
     }
 
+    /**
+     * Returns the number of pixels in the y direction that a window should be
+     * moved up so that it appears centered above the player status views.
+     */
+    public int getCenterOffset ()
+    {
+        if (pstatus == null || pstatus[0] == null || !pstatus[0].isAdded()) {
+            return 0;
+        } else {
+            // offset by half the height of the player status views which we'd
+            // just get from the view themselves but they tend not to be laid
+            // out when we need this information
+            return (5+70)/2;
+        }
+    }
+
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
@@ -377,6 +393,7 @@ public class BangView extends BWindow
         _ctx.getRootNode().addWindow(_oview);
         _oview.pack();
         _oview.center();
+        _oview.setLocation(_oview.getX(), _oview.getY() + getCenterOffset());
     }
 
     protected void clearOverlay ()
