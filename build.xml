@@ -322,7 +322,7 @@
     <copy todir="${client_dir}/native">
       <fileset dir="lib/i686-Linux" includes="*.so"/>
       <fileset dir="lib/i686-Windows" includes="*.dll"/>
-      <fileset dir="lib/PowerPC-MacOS" includes="*"/>
+      <fileset dir="lib/Universal-MacOS" includes="*"/>
     </copy>
 
     <!-- copy the getdown.txt file into the right place -->
