@@ -144,8 +144,9 @@ public class GunshotEmission extends SpriteEmission
         out.writeInt(_trails.length);
         out.writeFloat(_spread);
     }
-    
+
     // documentation inherited from interface Externalizable
+    @SuppressWarnings("unchecked")
     public void readExternal (ObjectInput in)
         throws IOException, ClassNotFoundException
     {
