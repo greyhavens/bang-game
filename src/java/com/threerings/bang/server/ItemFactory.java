@@ -13,6 +13,7 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Purse;
+import com.threerings.bang.data.UnitPass;
 
 import static com.threerings.bang.Log.log;
 
@@ -93,6 +94,7 @@ public class ItemFactory
         registerItemClass(Badge.class);
         registerItemClass(Purse.class);
         registerItemClass(Article.class);
+        registerItemClass(UnitPass.class);
         // end of registeration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 
