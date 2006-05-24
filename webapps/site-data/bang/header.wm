@@ -12,25 +12,28 @@
 </head>
 
 <body background="/images/parchment.jpg">
-  <table width="756">
+  <map name="headmap">
+    <area shape="rect" coords="0,0,782,130" href="/" alt="Welcome">
+    <area shape="rect" coords="125,135,165,155" href="/faq.html" alt="FAQ">
+    <area shape="rect" coords="210,135,310,155"
+          href="/screenshots/" alt="Screenshots">
+    <area shape="rect" coords="360,135,420,155"
+          href="http://forums.banghowdy.com/townhall/" alt="Forums">
+    <area shape="rect" coords="470,135,550,155" href="/download.html"
+          alt="Download!">
+    <area shape="rect" coords="600,135,642,155" href="/news/" alt="Blog">
+  </map>
+  <div align="center">
+  <table>
     <tr>
-      <td colspan="3" valign="bottom">
-         <img src="/images/sketches_L.gif"/>
-         <a href="/"><img src="/images/bang_howdy.gif" border=0/></a>
-         <img src="/images/sketches_R.gif" /></td>
-    </tr>
-
-    <tr>
-      <td colspan="3" align="center" class="header">
-         <img src="/images/design_top.gif"/><br/>
-         <a href="/about.html">about</a> &nbsp;&nbsp;
-         <a href="/screenshots/">screenshots</a> &nbsp;&nbsp;
-         <a href="/faq.html">faq</a> &nbsp;&nbsp;
-         <a href="/register/register.wm">sign up</a>
+      <td>
+        <img src="/images/beta/header.jpg" usemap="headmap" border=0/>
       </td>
     </tr>
+  </table>
 
-<tr><td colspan="3" valign="top" height="100%" style="padding-left: 15px; padding-top: 15px">
+<table width="780">
+<tr><td valign="top" height="100%" style="padding-left: 15px; padding-top: 15px">
 
 #if ($error)
 <p>
