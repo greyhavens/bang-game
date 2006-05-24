@@ -4,9 +4,12 @@
 package com.threerings.bang.editor;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
@@ -211,6 +214,17 @@ public class EditorPanel extends JPanel
         _vwin.add(view, BorderLayout.CENTER);
         _ctx.getRootNode().addWindow(_vwin);
         DisplaySystem ds = DisplaySystem.getDisplaySystem();
+        
+        // resize the window with the canvas
+        ((EditorApp)_ctx.getApp()).getCanvas().addComponentListener(
+            new ComponentAdapter() {
+                public void componentResized (ComponentEvent e) {
+                    Component c = e.getComponent();
+                    _vwin.setBounds(0, 0, c.getWidth(), c.getHeight());
+                }
+            }
+        );
+        
         _vwin.setBounds(0, 0, ds.getWidth(), ds.getHeight());
     }
 
