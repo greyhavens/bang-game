@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Rebuilds the javadoc on a nightly basis
+
+umask 002
+export JAVA_HOME=/usr/local/java
+ROOT=`dirname $0 | sed s:/bin$::`
+ANT=/export/tools/bin/ant
+BANG_HOME=$ROOT/../bang
+for PROJECT in jme-bui narya; do
+    cd $BANG_HOME/projects/$PROJECT
+    $ANT savedoc
+    /export/tools/bin/mirror -rqz  $BANG_HOME/projects/$PROJECT/docs/api
+done
+cd $BANG_HOME
+$ANT savedoc
+/export/tools/bin/mirror -rqz  $BANG_HOME/docs/api
