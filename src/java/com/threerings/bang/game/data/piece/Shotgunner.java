@@ -29,7 +29,8 @@ public class Shotgunner extends Unit
                 (p.x != x && p.y != y) && (p.x == target.x || p.y == target.y)) {
                 ShotEffect shot = shoot(bangobj, p);
                 shot.type = ShotEffect.COLLATERAL_DAMAGE;
-                shot.newDamage /= 2; // our collateral damage is 50%
+                // our collateral damage is 50%
+                shot.newDamage = (p.damage + shot.newDamage) / 2;
                 shots.add(shot);
             }
         }
