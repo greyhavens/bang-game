@@ -65,6 +65,8 @@ public class Player
     {
         this.accountName = accountName;
         this.look = "";
+        this.victoryLook = "";
+        this.wantedLook = "";
     }
 
     /** Returns true if the specified flag is set. */

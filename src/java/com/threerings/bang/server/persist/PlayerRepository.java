@@ -201,7 +201,7 @@ public class PlayerRepository extends JORARepository
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
     {
-        JDBCUtil.createTableIfMissing(conn, "LOOKS", new String[] {
+        JDBCUtil.createTableIfMissing(conn, "PLAYERS", new String[] {
             "PLAYER_ID INTEGER NOT NULL AUTO_INCREMENT",
             "ACCOUNT_NAME VARCHAR(64) NOT NULL",
             "HANDLE VARCHAR(64) UNIQUE",
