@@ -262,7 +262,7 @@
              destdir="${javadoc.dir}"
              additionalparam="-breakiterator">
       <classpath refid="classpath"/>
-      <link href="http://java.sun.com/j2se/1.5/docs/api/"/>
+      <link href="http://build.earth.threerings.net/docs/java/java1.5/"/>
     </javadoc>
   </target>
 
