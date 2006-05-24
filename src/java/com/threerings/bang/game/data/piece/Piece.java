@@ -160,20 +160,20 @@ public abstract class Piece extends SimpleStreamableObject
         return coord(x, y);
     }
 
-    /** Returns the width of this piece. */
+    /** Returns the width of this piece in tiles. */
     public int getWidth ()
     {
         return 1;
     }
 
-    /** Returns the height of this piece. */
-    public int getHeight ()
+    /** Returns the length of this piece in tiles. */
+    public int getLength ()
     {
         return 1;
     }
 
-    /** Returns the vertical size of this piece in tiles. */
-    public float getDepth ()
+    /** Returns the height of this piece in tiles. */
+    public float getHeight ()
     {
         return 1f;
     }
@@ -542,9 +542,9 @@ public abstract class Piece extends SimpleStreamableObject
     {
         int units = board.getElevationUnitsPerTile(),
             e1 = computeElevation(board, tx, ty) +
-                (int)(getDepth()*0.5f*units),
+                (int)(getHeight()*0.5f*units),
             e2 = target.computeElevation(board, target.x, target.y) +
-                (int)(target.getDepth()*0.5f*units);
+                (int)(target.getHeight()*0.5f*units);
         return board.checkLineOfSight(tx, ty, e1, target.x, target.y, e2);
     }
     

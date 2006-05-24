@@ -118,7 +118,7 @@ public class PropSprite extends PieceSprite
     {
         // the piece width and height account for rotation
         coords.x += (TILE_SIZE*_piece.getWidth())/2;
-        coords.y += (TILE_SIZE*_piece.getHeight())/2;
+        coords.y += (TILE_SIZE*_piece.getLength())/2;
     }
 
     protected PropConfig _config;

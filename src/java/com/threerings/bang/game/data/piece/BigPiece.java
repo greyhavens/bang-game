@@ -92,7 +92,7 @@ public abstract class BigPiece extends Piece
     }
 
     @Override // documentation inherited
-    public int getHeight ()
+    public int getLength ()
     {
         return _bounds.height;
     }
@@ -125,10 +125,10 @@ public abstract class BigPiece extends Piece
 
     /** Require that our derived classes tell us how big they are (in the
      * north/south orientation). */
-    protected BigPiece (int width, int height)
+    protected BigPiece (int width, int length)
     {
         _width = width;
-        _height = height;
+        _length = length;
         recomputeBounds();
     }
 
@@ -136,12 +136,12 @@ public abstract class BigPiece extends Piece
     protected void recomputeBounds ()
     {
         if (orientation == NORTH || orientation == SOUTH) {
-            _bounds.setBounds(x, y, _width, _height);
+            _bounds.setBounds(x, y, _width, _length);
         } else {
-            _bounds.setBounds(x, y, _height, _width);
+            _bounds.setBounds(x, y, _length, _width);
         }
     }
 
-    protected int _width, _height;
+    protected int _width, _length;
     protected transient Rectangle _bounds = new Rectangle();
 }

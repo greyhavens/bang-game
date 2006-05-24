@@ -31,10 +31,10 @@ import com.threerings.jme.model.Model;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
- * An ant task for determining the "depth" (vertical size) of props and setting
- * an attribute in the prop configuration file read by both client and server.
+ * An ant task for determining the height of props and setting an attribute in
+ * the prop configuration file read by both client and server.
  */
-public class UpdatePropDepthTask extends Task
+public class UpdatePropHeightTask extends Task
 {    
     /**
      * Adds a nested &lt;fileset&gt; element.
@@ -60,17 +60,17 @@ public class UpdatePropDepthTask extends Task
             File fromDir = fs.getDir(getProject());
             String[] srcFiles = ds.getIncludedFiles();
             for (int ii = 0; ii < srcFiles.length; ii++) {
-                updatePropDepth(new File(fromDir, srcFiles[ii]));
+                updatePropHeight(new File(fromDir, srcFiles[ii]));
             }
         }
     }
     
     /**
-     * Updates the depth property of the specified prop if it is out of date.
+     * Updates the height property of the specified prop if it is out of date.
      *
      * @param file the prop.properties file
      */
-    protected void updatePropDepth (File file)
+    protected void updatePropHeight (File file)
     {
         // see if model.dat is newer than prop.properties
         File dir = file.getParentFile(), mfile = new File(dir, "model.dat");
@@ -90,18 +90,18 @@ public class UpdatePropDepthTask extends Task
         // find the model's vertical size in tiles
         model.updateGeometricState(0f, true);
         BoundingVolume bound = model.getWorldBound();
-        float depth = bound.getCenter().z;
+        float height = bound.getCenter().z;
         if (bound instanceof BoundingBox) {
-            depth += ((BoundingBox)bound).zExtent;
+            height += ((BoundingBox)bound).zExtent;
         } else if (bound instanceof BoundingSphere) {
-            depth += ((BoundingSphere)bound).radius;
+            height += ((BoundingSphere)bound).radius;
         } else {
             System.out.println("Unknown bounding type in " + mfile +
                 ": " + bound);
         }
-        depth /= TILE_SIZE;
+        height /= TILE_SIZE;
         
-        // read in the prop.properties and see if the depth needs changing
+        // read in the prop.properties and see if the height needs changing
         // (if not, just touch the file)
         Properties props = new Properties();
         BufferedInputStream in;
@@ -113,13 +113,13 @@ public class UpdatePropDepthTask extends Task
             System.out.println("Error reading " + file + ": " + e);
             return;
         }
-        if (Float.parseFloat(props.getProperty("depth", "2")) == depth) {
+        if (Float.parseFloat(props.getProperty("height", "2")) == height) {
             file.setLastModified(System.currentTimeMillis());
             return;
         }
         
-        // if so, copy out the properties with the revised depth
-        System.out.println("Updating prop depth for " + file + "...");
+        // if so, copy out the properties with the revised height
+        System.out.println("Updating prop height for " + file + "...");
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         try {
             in.reset();
@@ -127,13 +127,13 @@ public class UpdatePropDepthTask extends Task
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                boolean dline = line.startsWith("depth");
-                if (!dline) {
+                boolean hline = line.startsWith("height");
+                if (!hline) {
                     writer.println(line);
                 }
-                if (dline || (line.startsWith("height") &&
-                    !props.containsKey("depth"))) {
-                    writer.println("depth = " + depth);
+                if (hline || (line.startsWith("length") &&
+                    !props.containsKey("height"))) {
+                    writer.println("height = " + height);
                 }
             }
             writer.close();

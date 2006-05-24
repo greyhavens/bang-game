@@ -677,7 +677,7 @@ public class BangBoard extends SimpleStreamableObject
             BigPiece bpiece = (BigPiece)piece;
             byte ptype =
                 createPropType(bpiece.isTall(), bpiece.isPenetrable());
-            int elevation = (int)Math.ceil(bpiece.getDepth() *
+            int elevation = (int)Math.ceil(bpiece.getHeight() *
                 _elevationUnitsPerTile);
             if (bpiece instanceof Prop) {
                 elevation += ((Prop)bpiece).felev;
@@ -704,7 +704,7 @@ public class BangBoard extends SimpleStreamableObject
         } else if (piece instanceof Track) {
             int idx = _width*piece.y+piece.x;
             _estate[idx] = (byte)Math.max(unsignedToInt(_estate[idx]),
-                (int)Math.ceil(piece.getDepth() * _elevationUnitsPerTile));
+                (int)Math.ceil(piece.getHeight() * _elevationUnitsPerTile));
             if (((Track)piece).preventsGroundOverlap()) {
                 _tstate[idx] = _btstate[idx] = combinePropTypes(_btstate[idx],
                     createPropType(false, true));

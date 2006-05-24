@@ -133,9 +133,9 @@ public class Prop extends BigPiece
     }
     
     @Override // documentation inherited
-    public float getDepth ()
+    public float getHeight ()
     {
-        return _config.depth;
+        return _config.height;
     }
     
     @Override // documentation inherited
@@ -214,7 +214,7 @@ public class Prop extends BigPiece
         _config = config;
         _type = config.type;
         _width = _config.width;
-        _height = _config.height;
+        _length = _config.length;
         recomputeBounds();
     }
 

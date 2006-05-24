@@ -23,11 +23,11 @@ public class PropConfig
     /** The width of this prop in tiles. */
     public int width;
 
-    /** The height of this prop in tiles. */
-    public int height;
+    /** The length of this prop in tiles. */
+    public int length;
 
-    /** The vertical size of the prop in tiles. */
-    public float depth;
+    /** The height of this prop in tiles. */
+    public float height;
     
     /** If true, even air units cannot pass over the prop. */
     public boolean tall;
@@ -91,14 +91,14 @@ public class PropConfig
         config.propClass = props.getProperty("class");
 
         config.width = BangUtil.getIntProperty(type, props, "width", 1);
-        config.height = BangUtil.getIntProperty(type, props, "height", 1);
-        config.depth = BangUtil.getFloatProperty(type, props, "depth", 2f);
+        config.length = BangUtil.getIntProperty(type, props, "length", 1);
+        config.height = BangUtil.getFloatProperty(type, props, "height", 2f);
         
         config.tall = Boolean.parseBoolean(props.getProperty("tall"));
         config.passable = Boolean.parseBoolean(props.getProperty("passable"));
         config.penetrable = Boolean.parseBoolean(
             props.getProperty("penetrable",
-                (config.width == 1 && config.height == 1) ? "true" : "false"));
+                (config.width == 1 && config.length == 1) ? "true" : "false"));
         
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");
