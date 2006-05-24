@@ -174,7 +174,7 @@ public abstract class Scenario
             }
 
             Unit unit = _respawns.remove(0);
-//             log.info("Respawning " + unit + ".");
+            log.fine("Respawning " + unit + ".");
 
             // reassign the unit to its original owner
             unit.owner = unit.originalOwner;
@@ -226,8 +226,8 @@ public abstract class Scenario
         int bprob = (bangobj.gdata.livePlayers - bangobj.gdata.bonuses);
         int rando = RandomUtil.getInt(40);
         if (bprob == 0 || rando > bprob*10) {
-//             log.info("No bonus, probability " + bprob + " in 10 (" +
-//                      rando + ").");
+            log.fine("No bonus, probability " + bprob + " in 10 (" +
+                     rando + ").");
             return false;
         }
         return placeBonus(bangobj, pieces, null, _bonusSpots);
@@ -384,8 +384,8 @@ public abstract class Scenario
         // now select a spot based on our weightings
         int spidx = RandomUtil.getWeightedIndex(weights);
         Point spot = new Point(spots.getX(spidx), spots.getY(spidx));
-//         log.info("Selecting from " + StringUtil.toString(weights) + ": " +
-//                  spidx + " -> " + spot.x + "/" + spot.y + ".");
+        log.fine("Selecting from " + StringUtil.toString(weights) + ": " +
+                 spidx + " -> " + spot.x + "/" + spot.y + ".");
 
         // locate the nearest spot to that which can be occupied by our piece
         Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
@@ -411,7 +411,7 @@ public abstract class Scenario
         bonus.position(bspot.x, bspot.y);
         bangobj.addToPieces(bonus);
         bangobj.board.shadowPiece(bonus);
-//         log.info("Placed bonus: " + bonus.info());
+        log.fine("Placed bonus: " + bonus.info());
         return true;
     }
 
@@ -826,7 +826,7 @@ public abstract class Scenario
         Unit unit = (Unit)piece;
         unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
         _respawns.add(unit);
-//         log.info("Queued for respawn " + unit + ".");
+        log.fine("Queued for respawn " + unit + ".");
     }
 
     /**

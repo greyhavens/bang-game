@@ -142,7 +142,7 @@ public class Bonus extends Piece
             buf.append(config.type).append(" ").append(weights[ii]);
         }
 
-        log.info("Selecting bonus [turn=" + bangobj.tick +
+        log.fine("Selecting bonus [turn=" + bangobj.tick +
                  ", avgpow=" + avgpow + ", avgdam=" + avgdam +
                  ", avgpc=" + avgunits + ", reachers=" + reachers +
                  ", weights=(" + buf + ")].");

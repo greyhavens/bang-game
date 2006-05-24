@@ -348,8 +348,8 @@ public class BangManager extends GameManager
             // in moveUnit() or above that our target is still valid)
             if (target != null) {
                 // effect the initial shot
-//                 log.info("Shooting " + target.info() +
-//                          " with " + shooter.info());
+                log.fine("Shooting " + target.info() +
+                         " with " + shooter.info());
                 ShotEffect effect = shooter.shoot(_bangobj, target);
                 // the initial shot updates the shooter's last acted
                 effect.shooterLastActed = _bangobj.tick;
@@ -1039,8 +1039,8 @@ public class BangManager extends GameManager
             Piece p = pieces[ii];
             if (!p.isAlive()) {
                 if (p.expireWreckage(tick)) {
-//                     log.info("Expiring wreckage " + p.pieceId +
-//                              " l:" + p.lastActed + " t:" + tick);
+                    log.fine("Expiring wreckage " + p.pieceId +
+                             " l:" + p.lastActed + " t:" + tick);
                     _bangobj.removeFromPieces(p.getKey());
                     _bangobj.board.clearShadow(p);
                 }
@@ -1793,8 +1793,8 @@ public class BangManager extends GameManager
     protected void notePlayedCards (final ArrayList<StartingCard> updates,
                                     final ArrayList<StartingCard> removals)
     {
-//         log.info("Noting played cards [updates=" + updates.size() +
-//                  ", removals=" + removals.size() + "].");
+        log.fine("Noting played cards [updates=" + updates.size() +
+                 ", removals=" + removals.size() + "].");
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 for (StartingCard scard : updates) {
