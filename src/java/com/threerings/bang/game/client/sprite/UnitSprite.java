@@ -245,6 +245,8 @@ public class UnitSprite extends MobileSprite
         // display our nugget if appropriate
         if (unit.benuggeted && _nugget.getParent() == null) {
             attachChild(_nugget);
+            _nugget.updateRenderState();
+            
         } else if (!unit.benuggeted && _nugget.getParent() != null) {
             detachChild(_nugget);
         }

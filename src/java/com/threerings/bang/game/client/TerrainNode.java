@@ -1282,12 +1282,9 @@ public class TerrainNode extends Node
                 mesh.lockMeshes();
             }
             
-            // load and customize textures
+            // load the textures
             for (TextureState tstate : tstates) {
                 tstate.load();
-                Texture ground = tstate.getTexture(0).createSimpleClone();
-                ground.setApply(Texture.AM_MODULATE);
-                tstate.setTexture(ground, 0);
             }
             
             // attach self and update render state
