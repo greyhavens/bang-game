@@ -3,10 +3,17 @@
   <property name="base.dir" value="../.."/>
 
   <target name="blog">
+    <!-- blosxom is going to overwrite index.html so save it -->
+    <move file="${base.dir}/pages/index.html"
+          tofile="${base.dir}/pages/index-bak.html"/>
+    <!-- generate all our bits including an unneeded index.html -->
     <exec executable="${base.dir}/bin/blosxom">
       <arg line="-f=${base.dir}/etc/blosxom.conf"/>
       <arg line="-password=b@ngbl0sx0m"/>
     </exec>
+    <!-- and then restore the proper index.html -->
+    <move file="${base.dir}/pages/index-bak.html"
+          tofile="${base.dir}/pages/index.html"/>
   </target>
 
   <target name="clean">
@@ -14,7 +21,7 @@
     <delete dir="${base.dir}/pages/2006"/>
     <delete dir="${base.dir}/pages/news"/>
     <delete>
-       <fileset dir="${base.dir}/pages" includes="index.*"/>
+       <fileset dir="${base.dir}/pages" includes="index.rss"/>
     </delete>
   </target>
 </project>
