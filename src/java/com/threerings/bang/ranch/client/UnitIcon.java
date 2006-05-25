@@ -4,16 +4,25 @@
 package com.threerings.bang.ranch.client;
 
 import com.jme.renderer.Renderer;
-import com.jmex.bui.BImage;
+
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Insets;
+
+import com.jmex.bui.BComponent;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
+
+import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+
 import com.threerings.bang.client.bui.PaletteIcon;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
+
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
@@ -34,6 +43,7 @@ public class UnitIcon extends PaletteIcon
     {
         _itemId = itemId;
         _config = config;
+        _ctx = ctx;
         setText(name);
         setIcon(BangUI.getUnitIcon(config));
         String msg = MessageBundle.compose(
@@ -104,7 +114,19 @@ public class UnitIcon extends PaletteIcon
         }
     }
 
+    @Override // documentation inherited
+    protected BComponent createTooltipComponent (String tiptext)
+    {
+        BContainer tooltip = GroupLayout.makeVBox(GroupLayout.CENTER);
+        tooltip.add(super.createTooltipComponent(tiptext));
+        UnitBonus ubonus = new UnitBonus(_ctx);
+        ubonus.setUnitConfig(_config, false);
+        tooltip.add(ubonus);
+        return tooltip;
+    }
+
     protected int _itemId;
     protected UnitConfig _config;
     protected BImage _lock;
+    protected BasicContext _ctx;
 }
