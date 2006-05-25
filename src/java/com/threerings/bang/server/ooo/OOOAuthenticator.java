@@ -164,6 +164,18 @@ public class OOOAuthenticator extends Authenticator
                 return;
             }
 
+            // Minimally interact with the OOO ban/ident system.
+            int vc = _authrep.validateUser(user, creds.ident, true);
+            switch (vc) {
+                // various error conditions
+                case OOOUserRepository.ACCOUNT_BANNED:
+                   rdata.code = BANNED;
+                   return;
+                case OOOUserRepository.NEW_ACCOUNT_TAINTED:
+                   rdata.code = MACHINE_TAINTED;
+                   return;
+            }
+
             // check whether we're restricting non-insider login
             if (!RuntimeConfig.server.openToPublic &&
                 !user.holdsToken(OOOUser.INSIDER) &&
