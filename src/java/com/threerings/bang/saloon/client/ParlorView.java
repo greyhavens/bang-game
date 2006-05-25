@@ -152,7 +152,7 @@ public class ParlorView extends ShopView
         }
         if (occs.length() > 0) {
             String msg = MessageBundle.tcompose("m.parlor_occs", occs);
-            _ctx.getChatDirector().displayInfo(SaloonCodes.SALOON_MSGS, msg);
+            _chat.displayInfo(SaloonCodes.SALOON_MSGS, msg);
         }
     }
 
@@ -205,8 +205,8 @@ public class ParlorView extends ShopView
             }
         }
         protected void reportOccupant (String msg, Name who) {
-            _ctx.getChatDirector().displayInfo(
-                SaloonCodes.SALOON_MSGS, MessageBundle.tcompose(msg, who));
+            _chat.displayInfo(SaloonCodes.SALOON_MSGS,
+                MessageBundle.tcompose(msg, who));
         }
     };
 

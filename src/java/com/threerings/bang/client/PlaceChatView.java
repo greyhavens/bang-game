@@ -101,6 +101,17 @@ public class PlaceChatView extends ComicChatView
         }
     }
 
+    /**
+     * Displays an informational message specific to the place.
+     */
+    public void displayInfo (String bundle, String msg)
+    {
+        SystemMessage smsg = new SystemMessage(msg, bundle,
+            SystemMessage.INFO);
+        smsg.setClientInfo(_ctx.xlate(bundle, msg), ChatCodes.PLACE_CHAT_TYPE);
+        appendSystem(smsg);
+    }
+    
     // documentation inherited from interface ChatDisplay
     public void displayMessage (ChatMessage msg)
     {
@@ -114,9 +125,6 @@ public class PlaceChatView extends ComicChatView
             } else {
                 appendReceived(umsg);
             }
-
-        } else if (msg instanceof SystemMessage) {
-            appendSystem(msg);
         }
     }
 
