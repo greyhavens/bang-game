@@ -165,6 +165,9 @@ public class OOOAuthenticator extends Authenticator
             }
 
             // Minimally interact with the OOO ban/ident system.
+            // TODO: is there a method of determining whether it's an initial
+            // logon or a returning person for the purposes of taint
+            // preventing registration as opposed to taint preventing logon?
             int vc = _authrep.validateUser(user, creds.ident, true);
             switch (vc) {
                 // various error conditions
