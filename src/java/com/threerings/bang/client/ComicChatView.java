@@ -50,13 +50,14 @@ import com.threerings.bang.util.BangContext;
  */
 public abstract class ComicChatView extends BScrollPane
 {
-    public ComicChatView (BangContext ctx)
+    public ComicChatView (BangContext ctx, boolean showNames)
     {
         super(new BContainer(
                   GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
                                        GroupLayout.STRETCH)));
 
         _ctx = ctx;
+        _showNames = showNames;
         _content = (BContainer)getChild();
         _vport.setStyleClass("comic_chat_viewport");
         setPreferredSize(new Dimension(400, 400));
@@ -295,6 +296,7 @@ public abstract class ComicChatView extends BScrollPane
 
             GroupLayout layout = GroupLayout.makeHoriz(GroupLayout.STRETCH,
                 GroupLayout.CENTER, GroupLayout.NONE);
+            final int hgap = layout.getGap();
             layout.setOffAxisJustification(GroupLayout.TOP);
             setLayoutManager(layout);
 
@@ -305,14 +307,26 @@ public abstract class ComicChatView extends BScrollPane
             add(_mcont = new BContainer(layout) {
                 protected Dimension computePreferredSize (
                     int whint, int hhint) {
-                    _mwidth = Math.max(_mwidth, _width);
-                    return super.computePreferredSize(
-                        _mwidth > 0 ? _mwidth : -1, hhint);
+                    Dimension ldim = _slabel.getPreferredSize(-1, -1);
+                    return super.computePreferredSize(_content.getWidth() -
+                        _content.getInsets().getHorizontal() -
+                        ChatEntry.this.getInsets().getHorizontal() -
+                        getInsets().getHorizontal() - hgap - ldim.width,
+                        hhint);
                 }
             });
 
             if (speaker.icon != null) {
-                add(_left ? 0 : 1, new BLabel(speaker.icon), GroupLayout.FIXED);
+                if (_showNames) {
+                    _slabel = new BLabel(speaker.handle.toString(),
+                        "chat_speaker_label");
+                    _slabel.setIcon(speaker.icon);
+                    _slabel.setIconTextGap(0);
+                    _slabel.setOrientation(BLabel.VERTICAL);
+                } else {
+                    _slabel = new BLabel(speaker.icon);
+                }
+                add(_left ? 0 : 1, _slabel, GroupLayout.FIXED);
             }
         }
 
@@ -331,10 +345,12 @@ public abstract class ComicChatView extends BScrollPane
         }
 
         protected BContainer _mcont;
+        protected BLabel _slabel;
         protected boolean _left;
     }
 
     protected BangContext _ctx;
+    protected boolean _showNames;
     protected BContainer _content;
     protected ChatEntry _last;
     protected boolean _scrollToEnd;
@@ -345,9 +361,6 @@ public abstract class ComicChatView extends BScrollPane
     /** Chat bubble backgrounds for sent and received messages, first bubble in
      * sequence and rest of bubbles in sequence. */
     protected ImageBackground _sfbg, _srbg, _rfbg, _rrbg;
-
-    /** The maximum width of the chat bubbles, computed on first layout. */
-    protected int _mwidth;
     
     /** Used to flip texture coordinates. */
     protected Vector2f _tcoord = new Vector2f();

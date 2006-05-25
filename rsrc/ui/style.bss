@@ -698,6 +698,11 @@ comic_chat_viewport {
   padding: 10 20 15 15;
 }
 
+chat_speaker_label {
+  font: "Dom Casual" plain 14;
+  text-align: center;
+}
+
 sent_chat_bubble {
   font: "Dom Casual" plain 18;
   color: #003b27;

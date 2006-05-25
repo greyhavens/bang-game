@@ -209,7 +209,7 @@ public class PardnerChatView extends BDecoratedWindow
     {
         public PardnerTab (BangContext ctx, PardnerEntry pardner)
         {
-            super(ctx);
+            super(ctx, false);
             _pardner = pardner;
         }
 

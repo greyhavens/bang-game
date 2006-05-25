@@ -37,7 +37,7 @@ public class PlaceChatView extends ComicChatView
 {
     public PlaceChatView (BangContext ctx)
     {
-        super(ctx);
+        super(ctx, true);
         _vport.setStyleClass("place_chat_viewport");
 
         BContainer tcont = new BContainer(
