@@ -74,27 +74,22 @@ public class EditorPanel extends JPanel
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         MessageBundle msgs = ctx.getMessageManager().getBundle("editor");
-	    HGroupLayout gl = new HGroupLayout(HGroupLayout.STRETCH);
-        gl.setOffAxisPolicy(HGroupLayout.STRETCH);
+	    VGroupLayout gl = new VGroupLayout(VGroupLayout.STRETCH);
+	    gl.setOffAxisPolicy(VGroupLayout.EQUALIZE);
+	    gl.setJustification(VGroupLayout.TOP);
         setLayout(gl);
 
         // create the board view
         view = new EditorBoardView(ctx, this);
 
-        // create our side panel
-        VGroupLayout sgl = new VGroupLayout(VGroupLayout.STRETCH);
-        sgl.setOffAxisPolicy(VGroupLayout.STRETCH);
-        sgl.setJustification(VGroupLayout.TOP);
-        JPanel sidePanel = new JPanel(sgl);
-
         JLabel vlabel = new JLabel(msgs.get("m.editor_title"));
         vlabel.setFont(new Font("Helvetica", Font.BOLD, 24));
         vlabel.setForeground(Color.black);
-        sidePanel.add(vlabel, VGroupLayout.FIXED);
+        add(vlabel, VGroupLayout.FIXED);
 
         // add the various control panels
-        sidePanel.add(info = new BoardInfo(ctx), VGroupLayout.FIXED);
-        sidePanel.add(tools = new ToolPanel(ctx, this));
+        add(info = new BoardInfo(ctx), VGroupLayout.FIXED);
+        add(tools = new ToolPanel(ctx, this));
 
         // TODO: translate menu accelerators and short cuts
         JMenuBar menubar = _ctx.getFrame().getJMenuBar();
@@ -183,9 +178,6 @@ public class EditorPanel extends JPanel
         view.addSeparator();
         recenter = createMenuItem(view, msgs.get("m.menu_recenter_camera"),
             KeyEvent.VK_R, KeyEvent.VK_R, EditorController.RECENTER_CAMERA);
-            
-        // add our side panel to the main display
-        add(sidePanel, HGroupLayout.FIXED);
     }
 
     /** Called by the controller when the "editing" game starts. */
@@ -233,15 +225,7 @@ public class EditorPanel extends JPanel
     {
         _ctx.getRootNode().removeWindow(_vwin);
     }
-
-    @Override // documentation inherited
-    public Dimension getPreferredSize ()
-    {
-        Dimension d = super.getPreferredSize();
-        d.width = 200;
-        return d;
-    }
-
+    
     protected JMenuItem createMenuItem (
         JMenu menu, String label, int accelerator, int mnemonic,
         String command)

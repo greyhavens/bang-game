@@ -24,6 +24,7 @@ import com.jmex.bui.event.MouseWheelListener;
 import com.jmex.bui.event.MouseAdapter;
 import com.samskivert.swing.Controller;
 import com.samskivert.swing.HGroupLayout;
+import com.samskivert.swing.VGroupLayout;
 import com.samskivert.swing.util.SwingUtil;
 
 /**
@@ -37,7 +38,9 @@ public class ToolPanel extends JPanel
     
     public ToolPanel (EditorContext ctx, EditorPanel panel)
     {
-        super(new BorderLayout());
+        VGroupLayout gl = new VGroupLayout(VGroupLayout.STRETCH);
+        gl.setOffAxisPolicy(VGroupLayout.STRETCH);
+        setLayout(gl);
         
         // add the chooser panel on top
         JPanel cpanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
@@ -53,7 +56,7 @@ public class ToolPanel extends JPanel
         _tools.addItem(new TerrainBrush(ctx, panel));
         _tools.addItemListener(this);
         cpanel.add(_tools);
-        add(cpanel, BorderLayout.NORTH);
+        add(cpanel, VGroupLayout.FIXED);
         
         // add actions to select tools using ctrl-1+
         addSelectAction(panel, KeyEvent.VK_1, 0);
@@ -64,8 +67,9 @@ public class ToolPanel extends JPanel
         addSelectAction(panel, KeyEvent.VK_6, 5);
         
         // and the tool options below
-        add(_scroll = new JScrollPane(cameraDolly.getOptions()),
-            BorderLayout.CENTER);
+        add(_scroll = new JScrollPane(cameraDolly.getOptions(),
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
         _scroll.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createEmptyBorder(6, 0, 0, 0), _scroll.getBorder()));
         SwingUtil.refresh(this);
