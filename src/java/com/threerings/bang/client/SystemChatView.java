@@ -95,6 +95,7 @@ public class SystemChatView extends BWindow
     {
         String level = getAttentionLevel(msg);
         if (level == null ||
+            PlaceChatView.PLACE_CHAT_VIEW_TYPE.equals(msg.localtype) ||
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
             return;
         }

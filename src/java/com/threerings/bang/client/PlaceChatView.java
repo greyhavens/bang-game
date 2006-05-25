@@ -35,6 +35,11 @@ import com.threerings.bang.util.BangContext;
 public class PlaceChatView extends ComicChatView
     implements ChatDisplay, ActionListener
 {
+    /** A chat "localtype" for messages generated on the client that should
+     * be shown in the place chat view as opposed to the
+     * {@link SystemChatView}. */
+    public static final String PLACE_CHAT_VIEW_TYPE = "placeChatView";
+    
     public PlaceChatView (BangContext ctx)
     {
         super(ctx, true);
@@ -102,14 +107,11 @@ public class PlaceChatView extends ComicChatView
     }
 
     /**
-     * Displays an informational message specific to the place.
+     * Displays an informational message in the place chat view.
      */
     public void displayInfo (String bundle, String msg)
     {
-        SystemMessage smsg = new SystemMessage(msg, bundle,
-            SystemMessage.INFO);
-        smsg.setClientInfo(_ctx.xlate(bundle, msg), ChatCodes.PLACE_CHAT_TYPE);
-        appendSystem(smsg);
+        _ctx.getChatDirector().displayInfo(bundle, msg, PLACE_CHAT_VIEW_TYPE);
     }
     
     // documentation inherited from interface ChatDisplay
@@ -125,6 +127,10 @@ public class PlaceChatView extends ComicChatView
             } else {
                 appendReceived(umsg);
             }
+            
+        } else if (msg instanceof SystemMessage &&
+            PLACE_CHAT_VIEW_TYPE.equals(msg.localtype)) {
+            appendSystem(msg);
         }
     }
 
