@@ -89,9 +89,9 @@ public class PlayerSlot extends BLabel
         super.wasRemoved();
 
         // release our images
-        _silhouette.reference();
-        _playerScroll.reference();
-        _emptyScroll.reference();
+        _silhouette.release();
+        _playerScroll.release();
+        _emptyScroll.release();
 
         if (_avatar != null) {
             _avatar.release();
@@ -112,7 +112,7 @@ public class PlayerSlot extends BLabel
         BImage icon, scroll;
         int offy = 0;
         if (_playerOid > 0) {
-            icon = _avatar;
+            icon = (_avatar == null) ? _silhouette : _avatar;
             scroll = _playerScroll;
         } else {
             icon = _silhouette;
