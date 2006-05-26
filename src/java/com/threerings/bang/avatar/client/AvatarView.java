@@ -207,6 +207,7 @@ public class AvatarView extends BLabel
             if (type != null) {
                 _scroll = ctx.loadImage("ui/frames/" + type + "_scroll.png");
                 phei += _scroll.getHeight()/2;
+                pwid = Math.max(pwid, _scroll.getWidth());
             }
         }
 
