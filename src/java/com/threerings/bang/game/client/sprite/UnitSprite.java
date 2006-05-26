@@ -3,44 +3,58 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 
+import com.jme.util.geom.BufferUtils;
+
 import com.jme.image.Texture;
+
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
+
 import com.jme.scene.shape.Quad;
+
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.util.geom.BufferUtils;
 
 import com.samskivert.util.ObserverList;
 
-import com.threerings.media.image.Colorization;
-import com.threerings.jme.sprite.Path;
-import com.threerings.jme.sprite.SpriteObserver;
-
 import com.threerings.bang.client.util.ModelAttacher;
+
 import com.threerings.bang.data.UnitConfig;
+
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
+
 import com.threerings.bang.game.client.sprite.Spinner;
+
 import com.threerings.bang.game.data.BangBoard;
+
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
-import static com.threerings.bang.Log.log;
+import com.threerings.jme.sprite.Path;
+import com.threerings.jme.sprite.SpriteObserver;
+
+import com.threerings.media.image.Colorization;
+
 import static com.threerings.bang.client.BangMetrics.*;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Displays a particular unit.
@@ -121,6 +135,15 @@ public class UnitSprite extends MobileSprite
      */
     public void setTargeted (TargetMode mode)
     {
+        setTargeted(mode, null);
+    }
+
+    /**
+     * Indicates that this piece is a potential target.
+     */
+    public void setTargeted (TargetMode mode, Unit attacker)
+    {
+        boolean addModifiers = false;
         if (_pendingTick == -1) {
             _tgtquad.setDefaultColor(ColorRGBA.white);
             switch (mode) {
@@ -128,16 +151,28 @@ public class UnitSprite extends MobileSprite
                 _tgtquad.setCullMode(CULL_ALWAYS);
                 break;
             case SURE_SHOT:
-                _tgtquad.setRenderState(_crosstst[0]);
-                _tgtquad.setCullMode(CULL_DYNAMIC);
-                _tgtquad.updateRenderState();
+                displayTextureQuad(_tgtquad, _crosstst[0]);
+                addModifiers = true;
                 break;
             case MAYBE:
-                _tgtquad.setRenderState(_crosstst[1]);
-                _tgtquad.setCullMode(CULL_DYNAMIC);
-                _tgtquad.updateRenderState();
+                displayTextureQuad(_tgtquad, _crosstst[1]);
+                addModifiers = true;
                 break;
             }
+        }
+        if (!addModifiers) {
+            for (int ii = 0; ii < _modquad.length; ii++) {
+                _modquad[ii].setCullMode(CULL_ALWAYS);
+            }
+            return;
+        }
+        int diff = attacker.computeDamageDiff(_piece);
+        if (diff > 0) {
+            displayTextureQuad(_modquad[ModIcons.ARROW_UP.idx()],
+                    _modtst[ModIcons.ARROW_UP.ordinal()]);
+        } else if (diff < 0) {
+            displayTextureQuad(_modquad[ModIcons.ARROW_DOWN.idx()],
+                    _modtst[ModIcons.ARROW_DOWN.ordinal()]);
         }
     }
 
@@ -214,10 +249,8 @@ public class UnitSprite extends MobileSprite
         _attackers += delta;
 
         if (_attackers > 0) {
-            _ptquad.setRenderState(_crosstst[Math.min(_attackers, 3)+1]);
-            _ptquad.setDefaultColor(JPIECE_COLORS[pidx]);
-            _ptquad.updateRenderState();
-            _ptquad.setCullMode(CULL_DYNAMIC);
+            displayTextureQuad(_ptquad, _crosstst[Math.min(_attackers, 3)+1],
+                    JPIECE_COLORS[pidx]);
         } else {
             _ptquad.setCullMode(CULL_ALWAYS);
         }
@@ -333,9 +366,7 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
-        if (_crosstst == null) {
-            loadTextures(ctx);
-        }
+        loadTextures(ctx);
 
         // set our colorization
         _zations = new Colorization[] {
@@ -391,6 +422,20 @@ public class UnitSprite extends MobileSprite
         bbn.attachChild(_tgtquad);
         _tgtquad.setCullMode(CULL_ALWAYS);
 
+        // these icons are displayed when there are modifiers for a 
+        // potential target
+        _modquad = new Quad[MOD_COORDS.length];
+        for (int ii = 0; ii < _modquad.length; ii++) {
+            _modquad[ii] = RenderUtil.createIcon(
+                    _modtst[0], TILE_SIZE/4f, TILE_SIZE/4f);
+            _modquad[ii].setLocalTranslation(MOD_COORDS[ii]);
+            _modquad[ii].setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+            _modquad[ii].setRenderState(RenderUtil.alwaysZBuf);
+            _modquad[ii].updateRenderState();
+            bbn.attachChild(_modquad[ii]);
+            _modquad[ii].setCullMode(CULL_ALWAYS);
+        }
+
         // this icon is displayed when we have pending shots aimed at us
         _ptquad = RenderUtil.createIcon(_crosstst[2]);
         _ptquad.setLocalTranslation(new Vector3f(0, TILE_SIZE/2, 0));
@@ -425,6 +470,29 @@ public class UnitSprite extends MobileSprite
             _tlight.setPosition(tx, ty);
             _status.updateTranslations(_tlight);
         }
+    }
+
+    /**
+     * Helper function to update a quad with a texture state and display it.
+     */
+    protected void displayTextureQuad (Quad quad, TextureState tst)
+    {
+        displayTextureQuad(quad, tst, null);
+    }
+    
+    /**
+     * Helper function to update a quad with a texture state and color
+     * then display it.
+     */
+    protected void displayTextureQuad (
+            Quad quad, TextureState tst, ColorRGBA color)
+    {
+        quad.setRenderState(tst);
+        quad.setCullMode(CULL_DYNAMIC);
+        if (color != null) {
+            quad.setDefaultColor(color);
+        }
+        quad.updateRenderState();
     }
     
     /**
@@ -483,11 +551,24 @@ public class UnitSprite extends MobileSprite
 
     protected static void loadTextures (BasicContext ctx)
     {
-        _crosstst = new TextureState[CROSS_TEXS.length];
-        for (int ii = 0; ii < CROSS_TEXS.length; ii++) {
-            _crosstst[ii] = RenderUtil.createTextureState(
-                ctx, "textures/ustatus/crosshairs" + CROSS_TEXS[ii] + ".png");
-            _crosstst[ii].getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+        if (_crosstst == null) {
+            _crosstst = new TextureState[CROSS_TEXS.length];
+            for (int ii = 0; ii < CROSS_TEXS.length; ii++) {
+                _crosstst[ii] = RenderUtil.createTextureState(ctx,
+                    "textures/ustatus/crosshairs" + CROSS_TEXS[ii] + ".png");
+                _crosstst[ii].getTexture().setWrap(
+                        Texture.WM_BCLAMP_S_BCLAMP_T);
+            }
+        }
+
+        if (_modtst == null) {
+            int size = EnumSet.allOf(ModIcons.class).size();
+            _modtst = new TextureState[size];
+            for (ModIcons icon : ModIcons.values()) {
+                int idx = icon.ordinal();
+                _modtst[idx] = RenderUtil.createTextureState(ctx, icon.png());
+                _modtst[idx].getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+            }
         }
     }
 
@@ -503,6 +584,7 @@ public class UnitSprite extends MobileSprite
     };
 
     protected Quad _tgtquad, _ptquad;
+    protected Quad[] _modquad;
     protected TerrainNode.Highlight _tlight, _pendnode;
     protected TextureState _pendtst;
     protected Texture[] _pendtexs;
@@ -523,6 +605,7 @@ public class UnitSprite extends MobileSprite
     protected static TextureState[] _crosstst;
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();
+    protected static TextureState[] _modtst;
 
     protected static final Vector3f HALF_UNIT = new Vector3f(0.5f, 0.5f, 0f);
     protected static final Vector3f WHOLE_UNIT = new Vector3f(1f, 1f, 0f);
@@ -530,13 +613,44 @@ public class UnitSprite extends MobileSprite
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
 
+    protected static final float MOD_OFFSET = 3f * TILE_SIZE / 8f;
+
     protected static final String[] CROSS_TEXS = { "", "_q", "_1", "_2", "_n" };
+    protected static final String[] MOD_TEXS = { 
+        "arrow_up", "arrow_down", "can't" };
     protected static final Vector2f[] PTARG_COORDS = {
         new Vector2f(0, 2),
         new Vector2f(0, 0),
         new Vector2f(2, 0),
         new Vector2f(2, 2),
     };
+    protected static final Vector3f[] MOD_COORDS = {
+        new Vector3f(-MOD_OFFSET,  MOD_OFFSET, 0f),
+        new Vector3f(-MOD_OFFSET, -MOD_OFFSET, 0f),
+        new Vector3f( MOD_OFFSET,  MOD_OFFSET, 0f),
+        new Vector3f( MOD_OFFSET, -MOD_OFFSET, 0f),
+    };
+    
+    protected enum ModIcons {
+        ARROW_UP (2, "arrow_up"),
+        ARROW_DOWN (3, "arrow_down"),
+        CANT (2, "can't");
+
+        private final int idx;
+        private final String png;
+
+        ModIcons(int idx, String png) {
+            this.idx = idx;
+            this.png = png;
+        }
+
+        public int idx() {
+            return idx;
+        }
+        public String png() {
+            return "/textures/ustatus/icon_" + png + ".png";
+        }
+    }
 
     /** The height above ground at which flyers fly (in tile lengths). */
     protected static final int FLYER_GROUND_HEIGHT = 1;

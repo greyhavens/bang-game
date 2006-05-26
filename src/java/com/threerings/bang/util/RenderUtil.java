@@ -364,7 +364,17 @@ public class RenderUtil
      */
     public static Quad createIcon (TextureState tstate)
     {
-        Quad icon = createIcon(TILE_SIZE, TILE_SIZE);
+        return createIcon(tstate, TILE_SIZE, TILE_SIZE);
+    }
+
+    /**
+     * Creates a single "icon" image which is a textured quad of the
+     * specified size.
+     */
+    public static Quad createIcon (
+            TextureState tstate, float width, float height)
+    {
+        Quad icon = createIcon(width, height);
         icon.setLocalTranslation(new Vector3f(0, 0, 0.1f));
         icon.setRenderState(tstate);
         icon.updateRenderState();

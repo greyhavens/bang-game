@@ -136,6 +136,15 @@ public class Unit extends Piece
         out.writeUTF(_config.type);
     }
 
+    /**
+     * Returns the difference between the base damage and damage
+     * after modifiers.
+     */
+    public int computeDamageDiff (Piece target)
+    {
+        return computeDamage(target) - _config.damage;
+    }
+
     @Override // documentation inherited
     public void init ()
     {

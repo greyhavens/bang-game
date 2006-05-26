@@ -993,7 +993,8 @@ public class BangBoardView extends BoardView
                 if (sprite != null) {
                     sprite.setTargeted(_selection.lastActed >= p.lastActed ?
                                        UnitSprite.TargetMode.MAYBE :
-                                       UnitSprite.TargetMode.SURE_SHOT);
+                                       UnitSprite.TargetMode.SURE_SHOT,
+                                       (Unit)_selection);
                     dest.add(p.x, p.y);
                 } else {
                     log.warning("No sprite for unit! [unit=" + p + "].");
