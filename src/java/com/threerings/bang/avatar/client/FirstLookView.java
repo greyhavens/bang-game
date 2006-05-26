@@ -62,7 +62,7 @@ public class FirstLookView extends BContainer
             ctx.getUserObject(), false);
 
         // create our user interface
-        add(_avatar = new AvatarView(ctx), BorderLayout.WEST);
+        add(_avatar = new AvatarView(ctx, 2, true, false), BorderLayout.WEST);
         TableLayout tlay = new TableLayout(4, 5, 20);
         tlay.setEqualRows(true);
         _toggles = new BContainer(tlay);

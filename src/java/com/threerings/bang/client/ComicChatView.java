@@ -12,13 +12,9 @@ import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import java.nio.FloatBuffer;
-
-import com.jme.math.Vector2f;
-import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -27,11 +23,13 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.icon.BIcon;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.ResultListener;
 import com.threerings.util.Name;
 
 import com.threerings.crowd.chat.data.ChatMessage;
@@ -92,18 +90,14 @@ public abstract class ComicChatView extends BScrollPane
             _speakers.put(speaker, sprec);
         }
 
-        // update the speaker's icon if it has changed
-        boolean newav = false;
-        if (sprec.setAvatar(getSpeakerAvatar(speaker))) {
-            boolean mirror = isLeftSide(speaker) ^
-                !_ctx.getAvatarLogic().isMale(sprec.avatar);
-            sprec.icon = getAvatarIcon(sprec.avatar, mirror);
-            newav = true;
-        }
+        // update the speaker's icon in case it has changed
+        int[] avatar = getSpeakerAvatar(speaker);
+        sprec.setAvatar(_ctx, avatar, isLeftSide(speaker) ^
+                        !_ctx.getAvatarLogic().isMale(avatar));
 
         // create a new chat entry if necessary
         ChatEntry entry = _last;
-        if (entry == null || newav || !entry.speaker.equals(sprec)) {
+        if (entry == null || !entry.speaker.equals(sprec)) {
             _content.add(entry = new ChatEntry(sprec, isLeftSide(speaker)));
         }
 
@@ -169,49 +163,6 @@ public abstract class ComicChatView extends BScrollPane
     }
 
     /**
-     * Gets a scaled avatar icon for the specified avatar (which can be
-     * <code>null</code>, in which case <code>null</code> is returned).
-     *
-     * @param mirror if true, flip the image left-to-right
-     */
-    protected BIcon getAvatarIcon (int[] avatar, boolean mirror)
-    {
-        if (avatar == null) {
-            return null;
-        }
-
-        Image img = AvatarView.getImage(_ctx, avatar).getScaledInstance(
-            AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8,
-            BufferedImage.SCALE_SMOOTH);
-        BImage bimg;
-        if (mirror) {
-            bimg = new BImage(img) {
-                public void setTextureCoords (
-                    int sx, int sy, int swidth, int sheight) {
-                    // flip the texture coords left-to-right
-                    super.setTextureCoords(sx, sy, swidth, sheight);
-                    FloatBuffer tcoords = getTextureBuffer();
-                    swapInBuffer(tcoords, 0, 3);
-                    swapInBuffer(tcoords, 1, 2);
-                }
-            };
-        } else {
-            bimg = new BImage(img);
-        }
-        return new ImageIcon(bimg);
-    }
-
-    /**
-     * Swaps two texture coordinates in the specified buffer.
-     */
-    protected void swapInBuffer (FloatBuffer tbuf, int idx1, int idx2)
-    {
-        BufferUtils.populateFromBuffer(_tcoord, tbuf, idx1);
-        BufferUtils.copyInternalVector2(tbuf, idx2, idx1);
-        BufferUtils.setInBuffer(_tcoord, tbuf, idx2);
-    }
-
-    /**
      * Renders the chat bubble backgrounds.
      */
     protected void createBubbleBackgrounds ()
@@ -260,26 +211,69 @@ public abstract class ComicChatView extends BScrollPane
 
     /** Used to keep track of speaker's icons. */
     protected static class Speaker
+        implements ResultListener<BImage>
     {
         public Handle handle;
-        public int[] avatar;
-        public BIcon icon;
 
         public Speaker (Handle handle) {
             this.handle = handle;
+            // avatar = new AvatarView(ctx, 8, false);
         }
 
-        public boolean setAvatar (int[] avatar) {
-            if (this.avatar != null && Arrays.equals(this.avatar, avatar)) {
-                return false;
+        public void setAvatar (BangContext ctx, int[] avatar, boolean mirror)
+        {
+            if (_avatar == null && !Arrays.equals(avatar, _avatar)) {
+                _avatar = avatar;
+                AvatarView.getImage(ctx, avatar, AvatarLogic.WIDTH/8,
+                                    AvatarLogic.HEIGHT/8, mirror, this);
             }
-            this.avatar = avatar;
-            return true;
+        }
+
+        public BLabel createLabel (boolean showName)
+        {
+            BLabel label;
+            int awid = AvatarLogic.WIDTH/8, ahei = AvatarLogic.HEIGHT/8;
+            if (_avicon == null) {
+                label = new BLabel(new BlankIcon(awid, ahei));
+                if (_penders == null) {
+                    _penders = new ArrayList<BLabel>();
+                }
+                _penders.add(label);
+            } else {
+                label = new BLabel(_avicon);
+            }
+            label.setStyleClass("chat_speaker_label");
+            label.setOrientation(BLabel.VERTICAL);
+            label.setIconTextGap(0);
+            if (showName) {
+                label.setText(handle.toString());
+            }
+            return label;
         }
 
         public boolean equals (Object other) {
             return handle.equals(((Speaker)other).handle);
         }
+
+        public void requestCompleted (BImage image)
+        {
+            if (_penders != null) {
+                _avicon = new ImageIcon(image);
+                for (BLabel label : _penders) {
+                    label.setIcon(_avicon);
+                }
+                _penders = null;
+            }
+        }
+
+        public void requestFailed (Exception cause)
+        {
+            // not called
+        }
+
+        protected int[] _avatar;
+        protected BIcon _avicon;
+        protected ArrayList<BLabel> _penders;
     }
 
     /** A chat entry that displays an avatar icon along with one or more
@@ -316,18 +310,8 @@ public abstract class ComicChatView extends BScrollPane
                 }
             });
 
-            if (speaker.icon != null) {
-                if (_showNames) {
-                    _slabel = new BLabel(speaker.handle.toString(),
-                        "chat_speaker_label");
-                    _slabel.setIcon(speaker.icon);
-                    _slabel.setIconTextGap(0);
-                    _slabel.setOrientation(BLabel.VERTICAL);
-                } else {
-                    _slabel = new BLabel(speaker.icon);
-                }
-                add(_left ? 0 : 1, _slabel, GroupLayout.FIXED);
-            }
+            add(_left ? 0 : 1, _slabel = speaker.createLabel(_showNames),
+                GroupLayout.FIXED);
         }
 
         public void addMessage (String msg)
@@ -361,7 +345,5 @@ public abstract class ComicChatView extends BScrollPane
     /** Chat bubble backgrounds for sent and received messages, first bubble in
      * sequence and rest of bubbles in sequence. */
     protected ImageBackground _sfbg, _srbg, _rfbg, _rrbg;
-    
-    /** Used to flip texture coordinates. */
-    protected Vector2f _tcoord = new Vector2f();
+   
 }

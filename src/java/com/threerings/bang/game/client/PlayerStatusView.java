@@ -21,6 +21,8 @@ import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
+import com.samskivert.util.ResultListener;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.ElementUpdateListener;
@@ -249,14 +251,26 @@ public class PlayerStatusView extends BContainer
     {
         // load up this player's avatar image
         if (_bangobj.avatars != null && _bangobj.avatars[_pidx] != null) {
-            if (_avatar != null && isAdded()) {
-                _avatar.wasRemoved();
-            }
-            _avatar = new ImageIcon(
-                AvatarView.getFramableImage(_ctx, _bangobj.avatars[_pidx], 10));
-            if (isAdded()) {
-                _avatar.wasAdded();
-            }
+            AvatarView.getFramableImage(_ctx, _bangobj.avatars[_pidx], 10,
+                                        new ResultListener<BImage>() {
+                public void requestCompleted (BImage image) {
+                    setAvatar(new ImageIcon(image));
+                }
+                public void requestFailed (Exception cause) {
+                    // not called
+                }
+            });
+        }
+    }
+
+    protected void setAvatar (ImageIcon avatar)
+    {
+        if (_avatar != null && isAdded()) {
+            _avatar.wasRemoved();
+        }
+        _avatar = avatar;
+        if (isAdded()) {
+            _avatar.wasAdded();
         }
     }
 

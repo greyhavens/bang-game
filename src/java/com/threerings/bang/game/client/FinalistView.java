@@ -17,6 +17,7 @@ import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Rectangle;
 
+import com.samskivert.util.ResultListener;
 import com.threerings.util.Name;
 
 import com.threerings.bang.avatar.client.AvatarView;
@@ -59,12 +60,22 @@ public class FinalistView extends BContainer
         // create our avatar imagery
         boolean winner = (rank == 0);
         int scale =  winner ? 2 : 4;
+
+        // start with a blank avatar
+        setAvatar(new BlankIcon(AvatarLogic.FRAMED_WIDTH/scale,
+                                AvatarLogic.HEIGHT/scale));
+
+        // then if we have a real one, load it up in the background
         if (avatar != null) {
-            _avatar = new ImageIcon(
-                AvatarView.getFramableImage(ctx, avatar, scale));
-        } else {
-            _avatar = new BlankIcon(AvatarLogic.FRAMED_WIDTH/scale,
-                                    AvatarLogic.HEIGHT/scale);
+            AvatarView.getFramableImage(ctx, avatar, scale,
+                                        new ResultListener<BImage>() {
+                public void requestCompleted (BImage avatar) {
+                    setAvatar(new ImageIcon(avatar));
+                }
+                public void requestFailed (Exception cause) {
+                    // never called
+                }
+            });
         }
 
         // load up our frame and scroll banner
@@ -120,6 +131,17 @@ public class FinalistView extends BContainer
                       ay-(_frame.getHeight()-_avatar.getHeight())/2, _alpha);
         _banner.render(renderer, 0, 0, _alpha);
         _medal.render(renderer, 0, getHeight()-_medal.getHeight(), _alpha);
+    }
+
+    protected void setAvatar (BIcon avatar)
+    {
+        if (isAdded()) {
+            if (_avatar != null) {
+                _avatar.wasRemoved();
+            }
+            avatar.wasAdded();
+        }
+        _avatar = avatar;
     }
 
     protected BIcon _avatar, _frame, _banner, _medal;

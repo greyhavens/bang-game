@@ -29,7 +29,6 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
@@ -58,7 +57,6 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.avatar.client.AvatarView;
-import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.bui.WindowFader;
 import com.threerings.bang.client.util.ModelAttacher;
@@ -554,12 +552,10 @@ public class BangBoardView extends BoardView
             GroupLayout.makeVert(GroupLayout.CENTER));
         ((GroupLayout)marquee.getLayoutManager()).setGap(-1);
         marquee.setStyleClass("player_marquee_cont");
-        int awidth = AvatarLogic.WIDTH/2, aheight = AvatarLogic.HEIGHT/2;
         if (_bangobj.avatars[pidx] != null) {
-            ImageIcon aicon = new ImageIcon(
-                AvatarView.getImage(
-                    _ctx, _bangobj.avatars[pidx], awidth, aheight));
-            marquee.add(new BLabel(aicon));
+            AvatarView aview = new AvatarView(_ctx, 2, false, false);
+            aview.setAvatar(_bangobj.avatars[pidx]);
+            marquee.add(aview);
         }
         marquee.add(new BLabel(_bangobj.players[pidx].toString(),
                                "player_marquee_label"));

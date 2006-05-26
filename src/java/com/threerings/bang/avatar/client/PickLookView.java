@@ -38,7 +38,7 @@ public class PickLookView extends BContainer
         super(new AbsoluteLayout());
 
         _ctx = ctx;
-        add(_avatar = new AvatarView(ctx), new Point(0, 36));
+        add(_avatar = new AvatarView(ctx, 2, true, false), new Point(0, 36));
         _looks = new BComboBox();
         _looks.addListener(this);
 

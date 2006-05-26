@@ -32,6 +32,8 @@ import com.jmex.bui.text.BText;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Insets;
 
+import com.samskivert.util.ResultListener;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
@@ -336,14 +338,23 @@ public class PardnerView extends IconPalette
 
         protected void updateAvatar ()
         {
-            BImage image;
-            if (entry.avatar == null) {
-                image = _ctx.loadImage("ui/pardners/silhouette.png");
-            } else {
+            // start with the silhouette image
+            setIcon(new ImageIcon(
+                        _ctx.loadImage("ui/pardners/silhouette.png")));
+
+            // then load our avatar image asynchronously if we have one
+            if (entry.avatar != null) {
                 int w = AVATAR_SIZE.width, h = AVATAR_SIZE.height;
-                image = AvatarView.getImage(_ctx, entry.avatar, w, h);
+                AvatarView.getImage(_ctx, entry.avatar, w, h, false,
+                                    new ResultListener<BImage>() {
+                    public void requestCompleted (BImage image) {
+                        setIcon(new ImageIcon(image));
+                    }
+                    public void requestFailed (Exception cause) {
+                        // not called
+                    }
+                });
             }
-            setIcon(new ImageIcon(image));
         }
 
         protected void updateStatus ()

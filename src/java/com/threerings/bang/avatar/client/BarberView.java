@@ -45,7 +45,7 @@ public class BarberView extends ShopView
         _status.setText(_msgs.get("m.newlook_tip"));
 
         // we need to handle displaying the avatar specially
-        _avatar = new AvatarView(ctx);
+        _avatar = new AvatarView(ctx, 2, true, false);
 
         // put our new look and change clothes interfaces in tabs
         _newlook = new NewLookView(ctx, _status);
