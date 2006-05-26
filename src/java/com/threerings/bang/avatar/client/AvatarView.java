@@ -171,9 +171,9 @@ public class AvatarView extends BLabel
     {
         super("");
         if (framed) {
-            setStyleClass("avatar_view");
+            setStyleClass("avatar_view_framed_" + scale);
         } else {
-            setStyleClass("avatar_view_unframed");
+            setStyleClass("avatar_view_unframed_" + scale);
         }
         setOrientation(VERTICAL);
         _ctx = ctx;

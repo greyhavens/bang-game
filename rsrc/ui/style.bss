@@ -1025,13 +1025,42 @@ offer_right {
 // Barber styles
 
 avatar_view {
-  background: image "ui/frames/big_background.png" centerxy;
+  color: #442801;
   padding: 7 12 7 12;
+  text-align: center;
+  vertical-align: bottom;
 }
 
-avatar_view_unframed {
-  vertical-align: bottom;
-  padding: 7 12 7 12;
+avatar_framed_2 {
+  parent: "avatar_view";
+  background: image "ui/frames/big_background.png" centerxy;
+  font: "Dom Casual" plain 24;
+}
+
+avatar_framed_4 {
+  parent: "avatar_view";
+  font: "Dom Casual" plain 14;
+  background: image "ui/frames/medium_background.png" centerxy;
+}
+
+avatar_framed_8 {
+  font: "Dom Casual" plain 13;
+  padding: 0 0 5 0;
+}
+
+avatar_view_unframed_2 {
+  parent: "avatar_view";
+  font: "Dom Casual" plain 24;
+}
+
+avatar_view_unframed_4 {
+  parent: "avatar_view";
+  font: "Dom Casual" plain 14;
+}
+
+avatar_unframed_8 {
+  font: "Dom Casual" plain 13;
+  padding: 0 0 5 0;
 }
 
 colorsel_label {
