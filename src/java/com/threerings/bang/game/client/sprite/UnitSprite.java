@@ -6,9 +6,8 @@ package com.threerings.bang.game.client.sprite;
 import java.util.EnumSet;
 import java.util.HashMap;
 
-import com.jme.util.geom.BufferUtils;
-
 import com.jme.image.Texture;
+import com.jme.util.geom.BufferUtils;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -31,30 +30,24 @@ import com.jme.scene.state.TextureState;
 
 import com.samskivert.util.ObserverList;
 
-import com.threerings.bang.client.util.ModelAttacher;
-
-import com.threerings.bang.data.UnitConfig;
-
-import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
-
-import com.threerings.bang.game.client.TerrainNode;
-
-import com.threerings.bang.game.client.sprite.Spinner;
-
-import com.threerings.bang.game.data.BangBoard;
-
-import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Unit;
-
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.SpriteObserver;
 
 import com.threerings.media.image.Colorization;
 
-import static com.threerings.bang.client.BangMetrics.*;
+import com.threerings.bang.client.util.ModelAttacher;
+import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
+
+import com.threerings.bang.game.client.TerrainNode;
+import com.threerings.bang.game.client.sprite.Spinner;
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays a particular unit.
@@ -74,7 +67,7 @@ public class UnitSprite extends MobileSprite
     /** For sprites added before the first tick, this flag indicates whether
      * the sprite has started running towards its initial position. */
     public boolean movingToStart;
-    
+
     public UnitSprite (String type)
     {
         super("units", type);
@@ -116,7 +109,7 @@ public class UnitSprite extends MobileSprite
     {
         return _zations;
     }
-    
+
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
@@ -168,11 +161,11 @@ public class UnitSprite extends MobileSprite
         }
         int diff = attacker.computeDamageDiff(_piece);
         if (diff > 0) {
-            displayTextureQuad(_modquad[ModIcons.ARROW_UP.idx()],
-                    _modtst[ModIcons.ARROW_UP.ordinal()]);
+            displayTextureQuad(_modquad[ModIcon.ARROW_UP.idx()],
+                    _modtst[ModIcon.ARROW_UP.ordinal()]);
         } else if (diff < 0) {
-            displayTextureQuad(_modquad[ModIcons.ARROW_DOWN.idx()],
-                    _modtst[ModIcons.ARROW_DOWN.ordinal()]);
+            displayTextureQuad(_modquad[ModIcon.ARROW_DOWN.idx()],
+                    _modtst[ModIcon.ARROW_DOWN.ordinal()]);
         }
     }
 
@@ -279,7 +272,7 @@ public class UnitSprite extends MobileSprite
         if (unit.benuggeted && _nugget.getParent() == null) {
             attachChild(_nugget);
             _nugget.updateRenderState();
-            
+
         } else if (!unit.benuggeted && _nugget.getParent() != null) {
             detachChild(_nugget);
         }
@@ -310,7 +303,7 @@ public class UnitSprite extends MobileSprite
         super.setLocation(tx, ty, elevation);
         updateTileHighlight(tx, ty);
     }
-    
+
     @Override // documentation inherited
     public void move (Path path)
     {
@@ -372,7 +365,7 @@ public class UnitSprite extends MobileSprite
         _zations = new Colorization[] {
             ctx.getAvatarLogic().getColorPository().getColorization("unit",
                 PIECE_COLOR_IDS[_piece.owner] ) };
-        
+
         // load up our model
         super.createGeometry(ctx);
 
@@ -386,7 +379,7 @@ public class UnitSprite extends MobileSprite
         if (unit.getConfig().make == UnitConfig.Make.STEAM) {
             ctx.loadModel(_type, _name + "/dead", null);
         }
-        
+
         // make sure the pending move textures for our unit type are loaded
         String type = unit.getType();
         _pendtexs = _pendtexmap.get(type);
@@ -422,7 +415,7 @@ public class UnitSprite extends MobileSprite
         bbn.attachChild(_tgtquad);
         _tgtquad.setCullMode(CULL_ALWAYS);
 
-        // these icons are displayed when there are modifiers for a 
+        // these icons are displayed when there are modifiers for a
         // potential target
         _modquad = new Quad[MOD_COORDS.length];
         for (int ii = 0; ii < _modquad.length; ii++) {
@@ -479,7 +472,7 @@ public class UnitSprite extends MobileSprite
     {
         displayTextureQuad(quad, tst, null);
     }
-    
+
     /**
      * Helper function to update a quad with a texture state and color
      * then display it.
@@ -494,7 +487,7 @@ public class UnitSprite extends MobileSprite
         }
         quad.updateRenderState();
     }
-    
+
     /**
      * Updates the visibility and location of the status display.
      */
@@ -562,14 +555,37 @@ public class UnitSprite extends MobileSprite
         }
 
         if (_modtst == null) {
-            int size = EnumSet.allOf(ModIcons.class).size();
-            _modtst = new TextureState[size];
-            for (ModIcons icon : ModIcons.values()) {
+            EnumSet<ModIcon> icons = EnumSet.allOf(ModIcon.class);
+            _modtst = new TextureState[icons.size()];
+            for (ModIcon icon : icons) {
                 int idx = icon.ordinal();
                 _modtst[idx] = RenderUtil.createTextureState(ctx, icon.png());
                 _modtst[idx].getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
             }
         }
+    }
+
+    /** Used when displaying bonus or penalty modifiers. */
+    protected enum ModIcon {
+        ARROW_UP (2, "arrow_up"),
+        ARROW_DOWN (3, "arrow_down"),
+        CANNOT (2, "cannot");
+
+        ModIcon (int idx, String png) {
+            _idx = idx;
+            _png = png;
+        }
+
+        public int idx () {
+            return _idx;
+        }
+
+        public String png () {
+            return "/textures/ustatus/icon_" + _png + ".png";
+        }
+
+        protected final int _idx;
+        protected final String _png;
     }
 
     /** Used to dispatch {@link UpdateObserver#updated}. */
@@ -613,44 +629,22 @@ public class UnitSprite extends MobileSprite
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
 
-    protected static final float MOD_OFFSET = 3f * TILE_SIZE / 8f;
-
     protected static final String[] CROSS_TEXS = { "", "_q", "_1", "_2", "_n" };
-    protected static final String[] MOD_TEXS = { 
-        "arrow_up", "arrow_down", "can't" };
+
     protected static final Vector2f[] PTARG_COORDS = {
         new Vector2f(0, 2),
         new Vector2f(0, 0),
         new Vector2f(2, 0),
         new Vector2f(2, 2),
     };
+
+    protected static final float MOD_OFFSET = 3f * TILE_SIZE / 8f;
     protected static final Vector3f[] MOD_COORDS = {
         new Vector3f(-MOD_OFFSET,  MOD_OFFSET, 0f),
         new Vector3f(-MOD_OFFSET, -MOD_OFFSET, 0f),
         new Vector3f( MOD_OFFSET,  MOD_OFFSET, 0f),
         new Vector3f( MOD_OFFSET, -MOD_OFFSET, 0f),
     };
-    
-    protected enum ModIcons {
-        ARROW_UP (2, "arrow_up"),
-        ARROW_DOWN (3, "arrow_down"),
-        CANT (2, "can't");
-
-        private final int idx;
-        private final String png;
-
-        ModIcons(int idx, String png) {
-            this.idx = idx;
-            this.png = png;
-        }
-
-        public int idx() {
-            return idx;
-        }
-        public String png() {
-            return "/textures/ustatus/icon_" + png + ".png";
-        }
-    }
 
     /** The height above ground at which flyers fly (in tile lengths). */
     protected static final int FLYER_GROUND_HEIGHT = 1;
