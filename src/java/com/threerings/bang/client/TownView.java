@@ -34,6 +34,8 @@ import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.samskivert.util.Invoker;
+
 import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.sprite.Sprite;
@@ -445,7 +447,32 @@ public class TownView extends BWindow
             return true;
         }
 
-        protected void updatePopulationSign (int pop)
+        protected void updatePopulationSign (final int pop)
+        {
+            addResolving(this);
+            _ctx.getInvoker().postUnit(new Invoker.Unit() {
+                public boolean invoke () {
+                    _oldTextureId = updatePopulationSignTexture(pop);
+                    return true;
+                }
+                public void handleResult () {
+                    // delete the old texture using a dummy state now that
+                    // we're in the main thread
+                    if (_oldTextureId > 0) {
+                        TextureState tstate =
+                            _ctx.getRenderer().createTextureState();
+                        Texture tex = new Texture();
+                        tex.setTextureId(_oldTextureId);
+                        tstate.setTexture(tex);
+                        tstate.deleteAll();
+                    }
+                    clearResolving(TownBoardView.this);
+                }
+                protected int _oldTextureId;
+            });
+        }
+        
+        protected int updatePopulationSignTexture (int pop)
         {
             // get a reference to the buffered sign image
             String path = "props/structures/pop_sign_" +
@@ -454,7 +481,7 @@ public class TownView extends BWindow
             if (bimg == null) {
                 log.warning("Couldn't find population sign image [path=" +
                     path + "].");
-                return;
+                return 0;
             }
             
             // write population into image
@@ -477,17 +504,13 @@ public class TownView extends BWindow
             if (_poptex == null) {
                 _poptex = _ctx.getTextureCache().getTexture(path);
             }
-            int tid = _poptex.getTextureId();
-            if (tid != 0) {
-                // to delete the texture, we need an OpenGL texture state
-                TextureState tstate = _ctx.getRenderer().createTextureState();
-                tstate.setTexture(_poptex);
-                tstate.deleteAll();
-            }
+            int oldTextureId = _poptex.getTextureId();
+            _poptex.setTextureId(0);
             _poptex.setImage(TextureManager.loadImage(img, true));
             _poptex.setCorrection(Texture.CM_PERSPECTIVE);
             _poptex.setFilter(Texture.FM_LINEAR);
             _poptex.setMipmapState(Texture.MM_LINEAR_LINEAR);
+            return oldTextureId;
         }
         
         protected MaterialState _hstate;
