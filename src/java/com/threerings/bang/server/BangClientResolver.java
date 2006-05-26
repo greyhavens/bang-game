@@ -4,6 +4,7 @@
 package com.threerings.bang.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.threerings.util.RandomUtil;
 
@@ -25,6 +26,18 @@ import com.threerings.bang.server.persist.Player;
  */
 public class BangClientResolver extends CrowdClientResolver
 {
+    /**
+     * This is called earlier in the authentication process where we have to
+     * load an account's player record, so we stash it here to avoid loading it
+     * again when the time comes to resolve their data.
+     */
+    public static void stashPlayer (Player player)
+    {
+        synchronized (_pstash) {
+            _pstash.put(player.accountName.toLowerCase(), player);
+        }
+    }
+
     // documentation inherited
     public Class getClientObjectClass ()
     {
@@ -37,10 +50,20 @@ public class BangClientResolver extends CrowdClientResolver
     {
         super.resolveClientData(clobj);
         PlayerObject buser = (PlayerObject)clobj;
-
-        // load up our per-player bits
         String username = buser.username.toString();
-        Player player = BangServer.playrepo.loadPlayer(username);
+        Player player;
+
+        // check for a stashed player record
+        synchronized (_pstash) {
+            player = _pstash.remove(username.toLowerCase());
+        }
+
+        // if we have nothing in the stash, we need to load them from the db
+        if (player == null) {
+            player = BangServer.playrepo.loadPlayer(username);
+        }
+
+        // if they're not in the db, it's their first time, how nice
         if (player == null) {
             // it's their first time, how nice
             player = new Player(username);
@@ -84,4 +107,7 @@ public class BangClientResolver extends CrowdClientResolver
         // load up this player's pardners
         BangServer.playmgr.loadPardners(buser);
     }
+
+    protected static HashMap<String,Player> _pstash =
+        new HashMap<String,Player>();
 }

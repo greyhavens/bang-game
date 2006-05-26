@@ -29,8 +29,10 @@ import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.BangAuthResponseData;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
+import com.threerings.bang.server.BangClientResolver;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.persist.Player;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
@@ -164,11 +166,17 @@ public class OOOAuthenticator extends Authenticator
                 return;
             }
 
-            // Minimally interact with the OOO ban/ident system.
-            // TODO: is there a method of determining whether it's an initial
-            // logon or a returning person for the purposes of taint
-            // preventing registration as opposed to taint preventing logon?
-            int vc = _authrep.validateUser(user, creds.ident, true);
+            // we need to find out if this account has ever logged in so that
+            // we can decide how to handle tainted idents; so we load up the
+            // player record for this account; if this player makes it through
+            // the gauntlet, we'll stash this away in a place that the client
+            // resolver can get its hands on it so that we can avoid loading
+            // the record twice during authentication
+            Player prec = BangServer.playrepo.loadPlayer(username);
+
+            // check to see whether this account has been banned or if this is
+            // a first time user logging in from a tainted machine
+            int vc = _authrep.validateUser(user, creds.ident, prec == null);
             switch (vc) {
                 // various error conditions
                 case OOOUserRepository.ACCOUNT_BANNED:
@@ -219,6 +227,10 @@ public class OOOAuthenticator extends Authenticator
 
             // log.info("User logged on [user=" + user.username + "].");
             rdata.code = BangAuthResponseData.SUCCESS;
+
+            // pass their player record to the client resolver for retrieval
+            // later in the logging on process
+            BangClientResolver.stashPlayer(prec);
 
         } catch (PersistenceException pe) {
             log.log(Level.WARNING, "Error authenticating user " +
