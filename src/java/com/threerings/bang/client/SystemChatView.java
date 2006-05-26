@@ -77,6 +77,7 @@ public class SystemChatView extends BWindow
         
         setBounds(0, 0, ctx.getDisplay().getWidth(),
                 ctx.getDisplay().getHeight());
+        setLayer(2);
     }
     
     @Override // we never want the chat window to accept clicks
