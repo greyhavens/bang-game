@@ -736,7 +736,7 @@ system_chat_view {
 }
 
 system_chat_label {
-  font: "Dom Casual" plain 18;
+  font: "Dom Casual" plain 16;
   color: #000000;
   text-align: center;
   vertical-align: center;
@@ -747,7 +747,7 @@ system_chat_label {
 
 attention_chat_label {
   parent: "system_chat_label";
-  background: solid #2986E5;
+  background: solid #DDC872;
 }
 
 feedback_chat_label {
