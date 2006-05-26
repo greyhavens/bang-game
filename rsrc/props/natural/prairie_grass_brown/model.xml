@@ -1,0 +1,140 @@
+<?xml version="1.0" standalone="yes"?>
+
+<model>
+
+  <triMesh name="grass11" translation="1.23362, -0.307846, 0.0" rotation="0.540974, 0.0, 0.0, 0.841039" scale="1.34, 1.5812, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+  <triMesh name="grass12" translation="1.23362, 8.22636, -7.42796" rotation="0.376854, -0.0906129, -0.150137, 0.909521" scale="1.34, 1.5812, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+  <triMesh name="grass13" translation="1.23362, -0.307846, -7.42796" rotation="0.158539, -0.16511, -0.379259, 0.89653" scale="1.5276, 1.34, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+  <triMesh name="grass14" translation="7.47528, -6.7139, -7.42796" rotation="-0.143501, 0.360051, 0.829404, -0.402318" scale="1.34, 1.5812, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+  <triMesh name="grass15" translation="-2.55272, -6.7139, -7.42796" rotation="0.043336, 0.224762, 0.951032, -0.207709" scale="1.5276, 1.34, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+  <triMesh name="grass16" translation="-2.55272, -6.7139, 0.0" rotation="-0.312221, 0.441782, 0.686827, -0.485402" scale="1.34, 1.5812, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+  <triMesh name="grass17" translation="-10.5107, -8.75978, -7.42796" rotation="0.240063, 0.304301, 0.763119, 0.517126" scale="1.34, 1.5812, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+  <triMesh name="grass18" translation="-6.50636, -2.81165, -7.42796" rotation="0.216317, 0.0748508, 0.655397, 0.719763" scale="1.5276, 1.34, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+  <triMesh name="grass19" translation="-6.50636, -2.81165, 0.0" rotation="0.226484, 0.491282, 0.763784, 0.352109" scale="1.34, 1.5812, 1.34" offsetTranslation="0.0, 21.0412, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="prairie_grass_orange.png" transparent="true">
+    <vertex location="-19.9646, 21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499785, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="-19.9646, -21.8307, 0.0" normal="-0.350642, 0.0, 0.93651" tcoords="0.000499547, 0.000499785"/>
+    <vertex location="0.0, 21.8307, 7.475" normal="-0.123844, 0.0, 0.992302" tcoords="0.5, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="19.9646, -21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.000499547"/>
+    <vertex location="19.9646, 21.8307, 0.0" normal="0.350642, 0.0, 0.93651" tcoords="0.9995, 0.980177"/>
+    <vertex location="0.0, -21.8307, 7.475" normal="0.123844, 0.0, 0.992302" tcoords="0.5, 0.000499666"/>
+  </triMesh>
+
+</model>
