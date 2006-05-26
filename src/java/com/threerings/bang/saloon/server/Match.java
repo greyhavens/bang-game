@@ -78,6 +78,11 @@ public class Match
             return false;
         }
 
+        // make sure we can add the player without going over his maximum
+        if (getPlayerCount() >= criterion.getDesiredPlayers()) {
+            return false;
+        }
+        
         // now make sure the joining player satisfies our rating range
         // requirements: the joiner must fall within our desired range of
         // the average rating and the min and max rating must fall within
