@@ -5,8 +5,6 @@
 
 -injars ../lib/commons-io.jar(!META-INF/*)
 -injars ../lib/commons-collections.jar(!META-INF/*)
--injars ../lib/velocity-1.5-dev.jar(
-  !META-INF/*,!**/servlet/**,!**/anakia/**,!**/texen/**,!**/VelocityFormatter*)
 -injars ../lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-base.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
@@ -17,8 +15,6 @@
   !META-INF/*,!**/jme/tools/*Task.class,**/jme/tools/**,!**/tools/**)
 -injars ../lib/narya-openal.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/samskivert.jar(!META-INF/*,!**/velocity/**)
--injars ../lib/samskivert.jar(**/velocity/VelocityUtil*.class,
-                              **/velocity/DataTool*.class)
 -injars ../lib/jme.jar(!META-INF/*)
 -injars ../lib/jme-effects.jar(!META-INF/*)
 -injars ../lib/jme-model.jar(!META-INF/*)
@@ -119,22 +115,4 @@
 
 -keep public class com.threerings.jme.tools.xml.* {
     public *;
-}
-
-#
-# A whole bunch of stuff so we can use Velocity in the Saloon
-
--keep public class * extends org.apache.velocity.runtime.directive.Directive
--keep public class org.apache.velocity.util.introspection.UberspectImpl
--keep public class org.apache.velocity.runtime.resource.ResourceManagerImpl
--keep public class org.apache.velocity.runtime.resource.ResourceCacheImpl
--keep public class org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
--keep public class com.samskivert.velocity.DataTool {
-    !static !transient <methods>;
-}
--keep public class com.threerings.util.MessageBundle {
-    *;
-}
--keep public class com.threerings.bang.saloon.data.TopRankedList {
-    *;
 }
