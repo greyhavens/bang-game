@@ -46,9 +46,10 @@ public class ParlorList extends BContainer
         super(new BorderLayout(10, 10));
         _ctx = ctx;
 
-        _list = new BContainer(new TableLayout(4, 10, 5));
+        _list = new BContainer(new TableLayout(5, 10, 5));
+        _list.setStyleClass("parlor_list");
         ((TableLayout)_list.getLayoutManager()).setHorizontalAlignment(
-            TableLayout.CENTER);
+            TableLayout.STRETCH);
         add(new BScrollPane(_list), BorderLayout.CENTER);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -175,12 +176,14 @@ public class ParlorList extends BContainer
             _name = new BLabel(lbl, "parlor_label");
             _pards = new BLabel("");
             _lock = new BLabel("");
+            _occs = new BLabel("");
             _enter = new BButton(msgs.get("m.enter"), ParlorList.this, "enter");
             _enter.setStyleClass("alt_button");
             update(info);
         }
 
         public void update (ParlorInfo info) {
+            _occs.setText(String.valueOf(info.occupants));
             _pards.setIcon(info.pardnersOnly ?
                            new ImageIcon(_ctx.loadImage(PARDS_PATH)) :
                            new BlankIcon(16, 16));
@@ -205,6 +208,7 @@ public class ParlorList extends BContainer
                 _list.add(_name);
                 _list.add(_pards);
                 _list.add(_lock);
+                _list.add(_occs);
                 _list.add(_enter);
             }
         }
@@ -214,11 +218,12 @@ public class ParlorList extends BContainer
                 _list.remove(_name);
                 _list.remove(_pards);
                 _list.remove(_lock);
+                _list.remove(_occs);
                 _list.remove(_enter);
             }
         }
 
-        protected BLabel _name, _pards, _lock;
+        protected BLabel _name, _occs, _pards, _lock;
         protected BButton _enter;
     }
 

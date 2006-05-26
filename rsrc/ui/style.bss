@@ -1029,6 +1029,11 @@ avatar_view {
   padding: 7 12 7 12;
 }
 
+avatar_view_unframed {
+  vertical-align: bottom;
+  padding: 7 12 7 12;
+}
+
 colorsel_label {
   font: "Dom Casual" plain 20;
   text-align: right;
@@ -1067,6 +1072,10 @@ news_contents {
 
 news_buttons {
   padding: 0 35 5 0;
+}
+
+parlor_list {
+  padding: 0 5 0 0;
 }
 
 parlor_label {

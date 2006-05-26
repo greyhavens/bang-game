@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.Throttle;
 
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.RandomUtil;
@@ -97,6 +98,7 @@ public class ParlorManager extends PlaceManager
             _parobj.startTransaction();
             try {
                 info.creator = _parobj.info.creator;
+                info.occupants = _parobj.occupantInfo.size();
                 if (!_parobj.info.equals(info)) {
                     _parobj.setInfo(info);
                     _salmgr.parlorUpdated(info);
@@ -280,6 +282,32 @@ public class ParlorManager extends PlaceManager
         }
     }
 
+    @Override // documentation inherited
+    protected void bodyEntered (int bodyOid)
+    {
+        super.bodyEntered(bodyOid);
+
+        // update our occupant count in the saloon
+        publishOccupants();
+    }
+
+    @Override // documentation inherited
+    protected void bodyLeft (int bodyOid)
+    {
+        super.bodyLeft(bodyOid);
+
+        // update our occupant count in the saloon
+        publishOccupants();
+    }
+
+    protected void publishOccupants ()
+    {
+        if (!_throttle.throttleOp()) {
+            _parobj.info.occupants = _parobj.occupantInfo.size();
+            _salmgr.parlorUpdated(_parobj.info);
+        }
+    }
+
     protected void checkStart ()
     {
         if (readyToStart() && _starter == null) {
@@ -363,4 +391,5 @@ public class ParlorManager extends PlaceManager
     protected SaloonManager _salmgr;
     protected String _password;
     protected Interval _starter;
+    protected Throttle _throttle = new Throttle(1, 10);
 }

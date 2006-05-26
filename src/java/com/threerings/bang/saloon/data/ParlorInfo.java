@@ -24,6 +24,9 @@ public class ParlorInfo extends SimpleStreamableObject
     /** Whether or not this parlor is password protected. */
     public boolean passwordProtected;
 
+    /** The number of occupants in this parlor. */
+    public int occupants;
+
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
@@ -36,6 +39,7 @@ public class ParlorInfo extends SimpleStreamableObject
         ParlorInfo oinfo = (ParlorInfo)other;
         return creator.equals(oinfo.creator) &&
             pardnersOnly == oinfo.pardnersOnly &&
-            passwordProtected == oinfo.passwordProtected;
+            passwordProtected == oinfo.passwordProtected &&
+            occupants == oinfo.occupants;
     }
 }
