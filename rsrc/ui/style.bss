@@ -1048,12 +1048,12 @@ fa_inner_box {
 // Saloon styles
 
 news_view {
-  padding: 10 20 0 20;
+  padding: 10 10 0 10;
 }
 
 news_nameplate {
   text-align: right;
-  padding: 7 0 0 0;
+  padding: 7 10 0 0;
 }
 
 news_masthead {
@@ -1067,11 +1067,32 @@ news_mastlabel {
 }
 
 news_contents {
-  padding: 15 0 10 0;
+  padding: 0 10 10 5;
 }
 
 news_buttons {
   padding: 0 35 5 0;
+}
+
+top_score_view {
+  padding: 0 10;
+}
+
+top_score_header {
+  parent: "label";
+  font: "Old Town Wide" plain 24;
+  text-align: center;
+}
+
+top_score_category {
+  parent: "label";
+  font: "Dom Casual" bold 20;
+  text-align: center;
+}
+
+top_score_list {
+  parent: "label";
+  font: "Dom Casual" plain 16;
 }
 
 parlor_list {

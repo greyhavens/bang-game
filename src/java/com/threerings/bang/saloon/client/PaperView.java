@@ -22,6 +22,7 @@ import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.text.HTMLView;
@@ -84,11 +85,13 @@ public class PaperView extends BContainer
 
         masthead.add(new BLabel(_dfmt.format(new Date()), "news_mastlabel"));
         row.add(masthead);
+        row.add(new Spacer(5, 0));
         add(row, GroupLayout.FIXED);
+        add(new Spacer(0, 10), GroupLayout.FIXED);
 
-        add(_contents = new HTMLView());
-        _contents.setStyleClass("news_contents");
+        add(_contcont = new BContainer(new BorderLayout()));
 
+        add(new Spacer(0, 15), GroupLayout.FIXED);
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
         hlay.setGap(40);
         BContainer bcont = new BContainer(hlay);
@@ -129,7 +132,13 @@ public class PaperView extends BContainer
             break;
 
         case 1:
-            setContents(createTopScoresHTML());
+            if (_topscore == null) {
+                _topscore = new TopScoreView(_ctx, _salobj);
+            }
+            if (_topscore.getParent() == null) {
+                _contcont.removeAll();
+                _contcont.add(_topscore, BorderLayout.CENTER);
+            }
             break;
         }
 
@@ -139,6 +148,15 @@ public class PaperView extends BContainer
 
     protected void setContents (String contents)
     {
+        if (_contents == null) {
+            _contents = new HTMLView();
+            _contents.setStyleClass("news_contents");
+        }
+        if (_contents.getParent() == null) {
+            _contcont.removeAll();
+            _contcont.add(_contents, BorderLayout.CENTER);
+        }
+
         if (contents == null) {
             contents = _msgs.get(SaloonCodes.INTERNAL_ERROR);
         }
@@ -237,6 +255,8 @@ public class PaperView extends BContainer
     protected MessageBundle _msgs;
     protected SaloonObject _salobj;
     protected BButton _forward, _back;
+    protected BContainer _contcont;
+    protected TopScoreView _topscore;
     protected HTMLView _contents;
 
     protected int _pageNo;
