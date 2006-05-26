@@ -44,11 +44,17 @@ public class UnitView extends BGeomView
     /**
      * Configures the unit displayed by this view.
      */
-    public void setUnit (UnitConfig config)
+    public void setUnit (final UnitConfig config)
     {
+        _config = config;
+        
         ((Node)_geom).detachAllChildren();
         _ctx.loadModel("units", config.type, new ModelAttacher((Node)_geom) {
             public void requestCompleted (Model model) {
+                // make sure unit hasn't changed since we started loading
+                if (_config != config) {
+                    return;
+                }
                 super.requestCompleted(model);
                 if (model.hasAnimation("standing")) {
                     model.startAnimation("standing");
@@ -117,4 +123,5 @@ public class UnitView extends BGeomView
     protected BangContext _ctx;
     protected Node _unode;
     protected BImage _frame;
+    protected UnitConfig _config;
 }
