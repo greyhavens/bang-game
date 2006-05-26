@@ -3,8 +3,12 @@
 
 package com.threerings.bang.client;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import javax.imageio.ImageIO;
 
 import com.jme.input.KeyInput;
 
@@ -20,15 +24,22 @@ import com.jmex.bui.event.InputEvent;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
+
+import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.admin.client.RuntimeConfigView;
 import com.threerings.bang.admin.client.ServerStatusView;
 import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Handles popping up various windows when the user presses a function key or
@@ -49,6 +60,7 @@ public class FKeyPopups
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F4, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F5, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F6, this);
+        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F11, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_F12, this);
         _ctx.getKeyManager().registerCommand(KeyInput.KEY_T, this);
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
@@ -59,8 +71,7 @@ public class FKeyPopups
     {
         // special hackery to handle Ctrl-Shift-F2 which submits an
         // auto-bug-report and exits the client
-        if (keyCode == KeyInput.KEY_F2 && modifiers ==
-            (InputEvent.CTRL_DOWN_MASK|InputEvent.SHIFT_DOWN_MASK)) {
+        if (keyCode == KeyInput.KEY_F2 && modifiers == CTRL_SHIFT) {
             if (!_autoBugged) { // avoid repeat pressage
                 BangClient.submitBugReport(_ctx, "Autobug!", true);
             }
@@ -74,6 +85,18 @@ public class FKeyPopups
             String msg = MessageBundle.tcompose(
                 "m.screenshot_taken", fname + ".png");
             _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
+            return;
+        }
+
+        boolean isOnline = (_ctx.getUserObject() != null);
+        boolean isAdmin = isOnline && _ctx.getUserObject().tokens.isAdmin();
+
+        // yet more hackery to handle dumping a copy of your current avatar
+        // look to a file (only available to admins currently)
+        if (keyCode == KeyInput.KEY_F11) {
+            if (modifiers == CTRL_SHIFT && isAdmin) {
+                createCurrentLookSnapshot();
+            }
             return;
         }
 
@@ -110,9 +133,6 @@ public class FKeyPopups
             _popped.getLayer() == BangCodes.NEVER_CLEAR_LAYER) {
             return;
         }
-
-        boolean isOnline = (_ctx.getUserObject() != null);
-        boolean isAdmin = isOnline && _ctx.getUserObject().tokens.isAdmin();
 
         // otherwise pop up the dialog associated with they key they pressed
         // (clearing any other dialog before doing so)
@@ -234,6 +254,33 @@ public class FKeyPopups
         return window;
     }
 
+    protected void createCurrentLookSnapshot ()
+    {
+        PlayerObject user = _ctx.getUserObject();
+        Look look = user.getLook(Look.Pose.DEFAULT);
+        final File target = new File(System.getProperty("user.home") +
+                                     File.separator + "Desktop" +
+                                     File.separator + look.name + ".png");
+        AvatarView.getImage(_ctx, look.getAvatar(user),
+                            new ResultListener<BufferedImage>() {
+            public void requestCompleted (BufferedImage image) {
+                try {
+                    ImageIO.write(image, "PNG", target);
+                    _ctx.getChatDirector().displayFeedback(
+                        BangCodes.BANG_MSGS, "m.avatar_saved");
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Failed to write avatar image " +
+                            "[target=" + target + "].", e);
+                    _ctx.getChatDirector().displayFeedback(
+                        BangCodes.BANG_MSGS, "m.avatar_save_failed");
+                }
+            }
+            public void requestFailed (Exception cause) {
+                // not called
+            }
+        });
+    }
+
     protected BButton makeDismiss (final BDecoratedWindow popup)
     {
         return new BButton(_msgs.get("m.dismiss"), new ActionListener() {
@@ -252,4 +299,7 @@ public class FKeyPopups
 
     protected static SimpleDateFormat _sfmt =
         new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+
+    protected static final int CTRL_SHIFT =
+        InputEvent.CTRL_DOWN_MASK|InputEvent.SHIFT_DOWN_MASK;
 }
