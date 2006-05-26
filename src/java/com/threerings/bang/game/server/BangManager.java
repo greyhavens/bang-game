@@ -586,7 +586,7 @@ public class BangManager extends GameManager
                     prec.playerId = -1;
                     prec.ratings = new DSet();
                     avatars[ii] = ((BangAI)_AIs[ii]).avatar;
-                } else {
+                } else if (isActivePlayer(ii)) {
                     prec.user = (PlayerObject)getPlayer(ii);
                     prec.playerId = prec.user.playerId;
                     prec.purse = prec.user.getPurse();
