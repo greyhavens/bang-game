@@ -36,50 +36,33 @@ public class UnitInspector extends BContainer
 {
     public UnitInspector (BangContext ctx)
     {
-        GroupLayout glay = GroupLayout.makeVert(
-            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
-        glay.setGap(0);
-        setLayoutManager(glay);
+        setLayoutManager(GroupLayout.makeVStretch());
 
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("ranch");
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
 
-        add(_uname = new BLabel("", "ranch_unit_name"));
-        _uname.setPreferredSize(new Dimension(258, 30));
+        add(_uname = new BLabel("", "ranch_unit_name"), GroupLayout.FIXED);
+        add(_uview = new UnitView(_ctx, false), GroupLayout.FIXED);
 
-        add(_uview = new UnitView(_ctx, false));
-
-        add(new Spacer(10, 3));
-
-        BContainer stats = new BContainer(new TableLayout(4, 0, 5));
+        TableLayout tlay = new TableLayout(4, 0, 5);
+        tlay.setHorizontalAlignment(TableLayout.STRETCH);
+        BContainer stats = new BContainer(tlay);
         stats.add(new BLabel(_msgs.get("m.make"), "table_label"));
         stats.add(_umake = new BLabel("", "table_data"));
         stats.add(new BLabel(_msgs.get("m.move"), "table_label"));
         stats.add(_umove = new BLabel("", "table_data"));
 
-        stats.add(new Spacer(10, 1));
-        stats.add(new Spacer(100, 1));
-        stats.add(new Spacer(10, 1));
-        stats.add(new Spacer(10, 1));
-
         stats.add(new BLabel(_msgs.get("m.mode"), "table_label"));
         stats.add(_umode = new BLabel("", "table_data"));
         stats.add(new BLabel(_msgs.get("m.shoot"), "table_label"));
         stats.add(_ufire = new BLabel("", "table_data"));
-        add(stats);
+        add(stats, GroupLayout.FIXED);
 
-        add(new Spacer(10, 3));
+        add(_ubonus = new UnitBonus(_ctx), GroupLayout.FIXED);
+        _ubonus.setPreferredSize(new Dimension(258, 40));
 
-        add(_ubonus = new UnitBonus(_ctx));
-        _ubonus.setPreferredSize(new Dimension(258, 51));
-
-        add(new Spacer(10, 6));
-
-        add(_udescrip = new BLabel("", "ranch_unit_info"), GroupLayout.FIXED);
-        _udescrip.setPreferredSize(new Dimension(1, 53));
-
-        add(new Spacer(10, 3));
+        add(_udescrip = new BLabel("", "ranch_unit_info"));
 
         // we'll use this group when recruiting
         _recruit = new BContainer(new AbsoluteLayout());
@@ -143,7 +126,7 @@ public class UnitInspector extends BContainer
             }
         }
         if (showRecruit && !_recruit.isAdded()) {
-            add(_recruit);
+            add(_recruit, GroupLayout.FIXED);
         } else if (!showRecruit && _recruit.isAdded()) {
             remove(_recruit);
         }

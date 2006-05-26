@@ -57,7 +57,7 @@ public class RanchView extends ShopView
         _status.setStyleClass("shop_status");
 
         _inspector = new UnitInspector(_ctx);
-        add(_inspector, new Rectangle(178, 60, 258, 591));
+        add(_inspector, new Rectangle(178, 60, 258, 586));
 
         // create our various tabs: recruitable big shots...
         _bigshots = new UnitPalette(ctx, _inspector, 4, 3);
