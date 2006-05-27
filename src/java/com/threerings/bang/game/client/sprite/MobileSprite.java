@@ -141,7 +141,7 @@ public class MobileSprite extends PieceSprite
     {
         // log.info("Queueing action " + action + " on " + _piece.info() + ".");
         _actions.add(action);
-        if (_action == null) {
+        if (_action == null && !isMoving()) {
             startNextAction();
         }
     }
@@ -229,6 +229,12 @@ public class MobileSprite extends PieceSprite
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
+        // wait until we're done moving to do any actions or idle animations
+        if (isMoving()) {
+            super.updateWorldData(time);
+            return;
+        }
+        
         // expire any actions first before we update our children
         if (_nextAction > 0) {
             _nextAction -= time;
@@ -247,12 +253,8 @@ public class MobileSprite extends PieceSprite
                     return;
                 }
                 
-                // start the next action if we have one, otherwise rest
-                if (_actions.size() > 0) {
-                    startNextAction();
-                } else {
-                    startNextIdle(true);
-                }
+                // start the next action if we have one, otherwise idle
+                startNext();
             }
             
         } else if (_nextIdle > 0) {
@@ -261,7 +263,6 @@ public class MobileSprite extends PieceSprite
                 startNextIdle(false);
             }
         }
-
         super.updateWorldData(time);
     }
 
@@ -413,6 +414,18 @@ public class MobileSprite extends PieceSprite
             -1f : _model.startAnimation(action);
     }
 
+    /**
+     * Starts the next action or idle animation.
+     */
+    protected void startNext ()
+    {
+        if (_actions.size() > 0) {
+            startNextAction();
+        } else {
+            startNextIdle(true);
+        }
+    }
+    
     /**
      * Pulls the next action off of our queue and runs it.
      */

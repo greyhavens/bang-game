@@ -94,10 +94,10 @@ public class MoveUnitPath extends LineSegmentPath
     {
         super.wasRemoved();
 
-        // restore the sprite to standing
+        // start the sprite's pending action or make it idle
         MobileSprite sprite = (MobileSprite)_sprite;
         sprite.pathUpdate();
-        sprite.startNextIdle(true);
+        sprite.startNext();
     }
 
     @Override // documentation inherited
