@@ -58,16 +58,21 @@ public class StampedeEffect extends Effect
         /** The coordinates to which the unit was pushed. */
         public short x, y;
 
+        /** The unit's death effect, if it died. */
+        public Effect deathEffect;
+        
         public Collision ()
         {
         }
 
-        public Collision (int step, int targetId, int x, int y)
+        public Collision (
+            int step, int targetId, int x, int y, Effect deathEffect)
         {
             this.step = step;
             this.targetId = targetId;
             this.x = (short)x;
             this.y = (short)y;
+            this.deathEffect = deathEffect;
         }
     }
 
@@ -85,7 +90,7 @@ public class StampedeEffect extends Effect
 
     /** The list of collisions between bison and units. */
     public Collision[] collisions;
-
+    
     public StampedeEffect ()
     {
     }
@@ -123,7 +128,7 @@ public class StampedeEffect extends Effect
     {
         return (collisions.length > 0);
     }
-
+    
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
@@ -132,8 +137,10 @@ public class StampedeEffect extends Effect
         reportDelay(obs, (long)((path.size()-1) * 1000 / BISON_SPEED));
 
         // apply the collisions in order
-        for (int ii = 0; ii < collisions.length; ii++) {
-            Collision collision = collisions[ii];
+        for (Collision collision : collisions) {
+            if (collision.deathEffect != null) {
+                collision.deathEffect.apply(bangobj, obs);
+            }
             collide(bangobj, obs, causer, collision.targetId, COLLISION_DAMAGE,
                     collision.x, collision.y, DAMAGED);
         }
@@ -252,11 +259,21 @@ public class StampedeEffect extends Effect
                     }
                     Point nloc = (nlocs.size() > 0 ?
                         (Point)RandomUtil.pickRandom(nlocs) : loc);
-                    cols.add(new Collision(ii, unit.pieceId, nloc.x, nloc.y));
+                    int damage = Math.min(100, unit.damage + COLLISION_DAMAGE);
+                    dammap.increment(unit.owner, damage - unit.damage);
+                    Effect deffect = null;
+                    if (damage == 100 && unit.damage < 100) {
+                        deffect = unit.willDie(bangobj, -1);
+                        if (deffect != null) {
+                            deffect.prepare(bangobj, dammap);
+                        }
+                    }
+                    unit.damage = damage;
+                    cols.add(new Collision(ii, unit.pieceId, nloc.x, nloc.y,
+                        deffect));
                     bangobj.board.clearShadow(unit);
                     unit.position(nloc.x, nloc.y);
                     bangobj.board.shadowPiece(unit);
-                    dammap.increment(unit.owner, COLLISION_DAMAGE);
                 }
             }
         }

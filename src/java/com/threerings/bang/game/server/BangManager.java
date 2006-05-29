@@ -396,17 +396,6 @@ public class BangManager extends GameManager
      */
     public boolean deployEffect (int effector, Effect effect)
     {
-        // allow units to specify pre-shot effects
-        if (effect instanceof ShotEffect) {
-            ShotEffect seffect = (ShotEffect)effect;
-            Piece shooter = _bangobj.pieces.get(seffect.shooterId),
-                target = _bangobj.pieces.get(seffect.targetId);
-            Effect preshot = shooter.willShoot(_bangobj, target, seffect);
-            if (preshot != null) {
-                deployEffect(shooter.owner, preshot);
-            }
-        }
-        
         // prepare the effect
         effect.prepare(_bangobj, _damage);
 

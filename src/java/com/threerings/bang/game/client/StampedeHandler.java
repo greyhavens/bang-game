@@ -85,6 +85,9 @@ public class StampedeHandler extends EffectHandler
         public void expired ()
         {
             // this may queue up
+            if (_collision.deathEffect != null) {
+                _collision.deathEffect.apply(_bangobj, StampedeHandler.this);
+            }
             Effect.collide(_bangobj, StampedeHandler.this, _stampede.causer,
                            _collision.targetId, StampedeEffect.COLLISION_DAMAGE,
                            _collision.x, _collision.y, StampedeEffect.DAMAGED);

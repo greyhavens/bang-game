@@ -27,6 +27,10 @@ public class AreaDamageEffect extends AreaEffect
     /** The updated damage for the affected pieces. */
     public int[] newDamage;
 
+    /** Death effects corresponding to each piece (<code>null</code> for pieces
+     * that didn't die or didn't produce a death effect). */
+    public Effect[] deathEffects;
+    
     public AreaDamageEffect ()
     {
     }
@@ -45,11 +49,16 @@ public class AreaDamageEffect extends AreaEffect
 
         // determine the damage for each piece
         newDamage = new int[pieces.length];
+        deathEffects = new Effect[pieces.length];
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
             int damage = getDamage(target);
             newDamage[ii] = target.damage + damage;
             dammap.increment(target.owner, damage);
+            if (newDamage[ii] == 100) {
+                deathEffects[ii] = target.willDie(bangobj, -1);
+                deathEffects[ii].prepare(bangobj, dammap);
+            }
         }
     }
     
@@ -72,6 +81,9 @@ public class AreaDamageEffect extends AreaEffect
     protected void apply (
         BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {
+        if (deathEffects[pidx] != null) {
+            deathEffects[pidx].apply(bangobj, obs);
+        }
         damage(bangobj, obs, causer, piece, newDamage[pidx], MISSILED);
     }
 }

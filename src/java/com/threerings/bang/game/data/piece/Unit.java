@@ -190,12 +190,6 @@ public class Unit extends Piece
     @Override // documentation inherited
     public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
     {
-        if (target instanceof Unit) {
-            Unit unit = (Unit)target;
-            if (unit.benuggeted && shot.newDamage >= 100) {
-                return NuggetEffect.dropNugget(bangobj, unit, pieceId);
-            }
-        }
         return null;
     }
 
@@ -227,6 +221,13 @@ public class Unit extends Piece
         return shot;
     }
 
+    @Override // documentation inherited
+    public Effect willDie (BangObject bangobj, int shooterId)
+    {
+        return benuggeted ?
+            NuggetEffect.dropNugget(bangobj, this, shooterId) : null;
+    }
+    
     @Override // documentation inherited
     public Effect tick (short tick, BangBoard board, Piece[] pieces)
     {

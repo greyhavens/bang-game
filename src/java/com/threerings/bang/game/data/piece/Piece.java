@@ -405,11 +405,24 @@ public abstract class Piece extends SimpleStreamableObject
      * @param damage the amount of damage done by the initial shooter (the
      * piece may or may not account for this when returning fire).
      */
-    public ShotEffect returnFire (BangObject bagnobj, Piece shooter, int damage)
+    public ShotEffect returnFire (
+        BangObject bangobj, Piece shooter, int damage)
     {
         return null;
     }
 
+    /**
+     * Allows the piece to produce an effect to deploy immediately before it
+     * dies.
+     *
+     * @param shooterId the id of the piece shooting or otherwise damaging
+     * this piece, or <code>-1</code> for none
+     */
+    public Effect willDie (BangObject bangobj, int shooterId)
+    {
+        return null;  
+    }
+    
     /**
      * Returns true if this piece prevents other pieces from occupying the
      * same square, or false if it can colocate.

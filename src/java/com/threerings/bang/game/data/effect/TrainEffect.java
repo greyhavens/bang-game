@@ -27,6 +27,9 @@ public class TrainEffect extends Effect
     /** The x and y coordinates to which the target was pushed. */
     public short x, y;
     
+    /** The target's death effect, if it died. */
+    public Effect deathEffect;
+    
     /** Constructor used when unserializing. */
     public TrainEffect ()
     {
@@ -56,15 +59,23 @@ public class TrainEffect extends Effect
     {
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target != null) {
-            dammap.increment(target.owner, COLLISION_DAMAGE);
+            int damage = Math.min(100, target.damage + COLLISION_DAMAGE);
+            dammap.increment(target.owner, damage - target.damage);
+            if (damage == 100 && target.damage < 100) {
+                deathEffect = target.willDie(bangobj, -1);
+                deathEffect.prepare(bangobj, dammap);
+            }
         } else {
             log.warning("Train effect missing target [id=" + targetId + "].");
         }
     }
-
+    
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        if (deathEffect != null) {
+            deathEffect.apply(bangobj, obs);
+        }
         collide(bangobj, obs, -1, targetId, COLLISION_DAMAGE, x, y, DAMAGED);
     }
 }

@@ -79,6 +79,9 @@ public class ShotEffect extends Effect
      * each coordinate. */
     public short[] deflectorIds;
     
+    /** A secondary effect to apply before the shot. */
+    public Effect preShotEffect;
+    
     /**
      * Constructor used when creating a new shot effect.
      *
@@ -143,11 +146,25 @@ public class ShotEffect extends Effect
             return;
         }
 
-        Piece target = (Piece)bangobj.pieces.get(targetId);
+        Piece target = bangobj.pieces.get(targetId);
         if (target != null) {
             // award a 20 damage point (2 game point) bonus for a kill
             int bonus = (newDamage == 100) ? 20 : 0;
             dammap.increment(target.owner, newDamage - target.damage + bonus);
+            if (newDamage == 100) {
+                preShotEffect = target.willDie(bangobj, shooterId);
+            } else {
+                Piece shooter = bangobj.pieces.get(shooterId);
+                if (shooter != null) {
+                    preShotEffect = shooter.willShoot(bangobj, target, this);
+                } else {
+                    log.warning("Shot effect missing shooter [id=" +
+                        shooterId + "].");
+                }
+            }
+            if (preShotEffect != null) {
+                preShotEffect.prepare(bangobj, dammap);
+            }
         } else {
             log.warning("Shot effect missing target [id=" + targetId + "].");
         }
@@ -176,6 +193,11 @@ public class ShotEffect extends Effect
     @Override // documentation inherited
     public void apply (BangObject bangobj, Observer obs)
     {
+        // apply any secondary pre-shot effect
+        if (preShotEffect != null) {
+            preShotEffect.apply(bangobj, obs);
+        }
+        
         // update the shooter's last acted if necessary
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
         if (shooter == null) {
@@ -207,7 +229,7 @@ public class ShotEffect extends Effect
             EXPLODED : DAMAGED;
         damage(bangobj, obs, shooter.owner, target, newDamage, effect);
     }
-
+    
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {

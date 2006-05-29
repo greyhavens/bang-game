@@ -207,7 +207,7 @@ public abstract class Effect extends SimpleStreamableObject
     {
         return true;
     }
-
+    
     /**
      * Applies this effect to the board and pieces. Any modifications to pieces
      * or the board should be made directly as this is executed on both the
@@ -223,7 +223,7 @@ public abstract class Effect extends SimpleStreamableObject
      * removals (for display purposes on the client). This may be null.
      */
     public abstract void apply (BangObject bangobj, Observer observer);
-
+    
     /**
      * Creates an {@link EffectHandler} to manage the (potentially complicated)
      * visualization of this effect.
