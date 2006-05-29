@@ -117,7 +117,8 @@ public class Unit extends Piece
      */
     public boolean canActivateBonus (Bonus bonus)
     {
-        return bonus.getConfig().type.equals("nugget") ? !benuggeted : true;
+        return isAlive() &&
+            (bonus.getConfig().type.equals("nugget") ? !benuggeted : true);
     }
 
     /** Configures the instance after unserialization. */
