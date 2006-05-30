@@ -81,7 +81,7 @@ public class EnvironmentDialog extends JDialog
         _direction.setValue((int)Math.toDegrees(board.getWindDirection()));
         _speed.setValue((int)board.getWindSpeed());
         _fogColor.setRGB(board.getFogColor());
-        _fogDensity.setValue((int)(board.getFogDensity() * 1000));
+        _fogDensity.setValue((int)(board.getFogDensity() * 5000));
     }
     
     // documentation inherited from interface ChangeListener
@@ -97,7 +97,7 @@ public class EnvironmentDialog extends JDialog
             _panel.view.commitWindEdit();
         }
         _panel.view.setFogParams(_fogColor.getRGB(),
-            _fogDensity.getValue() / 1000f, true);
+            _fogDensity.getValue() / 5000f, true);
         if (!_fogDensity.getValueIsAdjusting()) {
             _panel.view.commitFogEdit();
         }
