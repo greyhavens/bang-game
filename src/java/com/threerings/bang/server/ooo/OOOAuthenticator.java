@@ -123,8 +123,8 @@ public class OOOAuthenticator extends Authenticator
             BangCredentials creds = (BangCredentials)req.getCredentials();
             String username = creds.getUsername().toString();
             if (StringUtil.isBlank(creds.ident)) {
-                log.warning("Received blank ident " +
-                            req.getCredentials() + ".");
+                log.warning("Received blank ident [creds=" +
+                            req.getCredentials() + "].");
                 BangServer.generalLog(
                     "refusing_spoofed_ident " + username +
                     " ip:" + conn.getInetAddress());
@@ -150,8 +150,8 @@ public class OOOAuthenticator extends Authenticator
                 creds.ident = prefix +
                     IdentUtil.decodeIdent(creds.ident.substring(1));
             } catch (Exception e) {
-                log.warning("Received spoofed ident from username " +
-                            username + " [err=" + e.getMessage() + "].");
+                log.warning("Received spoofed ident [who=" + username +
+                            ", err=" + e.getMessage() + "].");
                 BangServer.generalLog("refusing_spoofed_ident " + username +
                                       " ip:" + conn.getInetAddress() +
                                       " id:" + creds.ident);
