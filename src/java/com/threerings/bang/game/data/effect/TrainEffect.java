@@ -73,7 +73,9 @@ public class TrainEffect extends Effect
             dammap.increment(target.owner, damage - target.damage);
             if (damage == 100 && target.damage < 100) {
                 deathEffect = target.willDie(bangobj, -1);
-                deathEffect.prepare(bangobj, dammap);
+                if (deathEffect != null) {
+                    deathEffect.prepare(bangobj, dammap);
+                }
             }
         } else {
             log.warning("Train effect missing target [id=" + targetId + "].");

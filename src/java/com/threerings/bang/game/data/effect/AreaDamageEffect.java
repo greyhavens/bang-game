@@ -81,7 +81,9 @@ public class AreaDamageEffect extends AreaEffect
             dammap.increment(target.owner, damage);
             if (newDamage[ii] == 100) {
                 deathEffects[ii] = target.willDie(bangobj, -1);
-                deathEffects[ii].prepare(bangobj, dammap);
+                if (deathEffects[ii] != null) {
+                    deathEffects[ii].prepare(bangobj, dammap);
+                }
             }
         }
     }
