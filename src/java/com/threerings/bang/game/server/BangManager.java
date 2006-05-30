@@ -1664,11 +1664,11 @@ public class BangManager extends GameManager
                     buf.append("(tin_can)");
                     continue;
                 }
-                if (_precords[ii].user == null) {
+                if (_precords[ii] == null || _precords[ii].user == null) {
                     buf.append("(never_arrived)");
-                } else {
-                    buf.append(_precords[ii].user.username);
+                    continue;
                 }
+                buf.append(_precords[ii].user.username);
 
                 // note players that left the game early
                 if (!_bangobj.isActivePlayer(ii)) {
