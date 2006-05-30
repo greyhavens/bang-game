@@ -26,7 +26,7 @@ if [ -s $BANGLOG ]; then
     cp /dev/null $BANGLOG
     # mail out some reports
     cat $ARCHLOG | /export/tools/bin/sum_invokers > $FILTLOG
-    if [ ! -s $FILTLOG ]; then
+    if [ -s $FILTLOG ]; then
         cat $FILTLOG | \
             $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
     fi
@@ -34,7 +34,7 @@ if [ -s $BANGLOG ]; then
     # local DBM file of interesting warning messages
     cd $BANG_HOME
     cat $ARCHLOG | /export/tools/bin/filter_interesting > $FILTLOG
-    if [ ! -s $FILTLOG ]; then
+    if [ -s $FILTLOG ]; then
         cat $FILTLOG | $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
     fi
     rm -f $FILTLOG
