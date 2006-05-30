@@ -230,7 +230,9 @@ public class OOOAuthenticator extends Authenticator
 
             // pass their player record to the client resolver for retrieval
             // later in the logging on process
-            BangClientResolver.stashPlayer(prec);
+            if (prec != null) {
+                BangClientResolver.stashPlayer(prec);
+            }
 
         } catch (PersistenceException pe) {
             log.log(Level.WARNING, "Error authenticating user " +
