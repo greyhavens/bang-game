@@ -98,7 +98,7 @@ public class ServerConfig
         serverName = config.getValue("server_name", "bang");
         serverRoot = new File(config.getValue("server_root", "/tmp"));
         serverPorts = config.getValue(
-            "server_ports", new int[] { Client.DEFAULT_SERVER_PORT });
+            "server_ports", Client.DEFAULT_SERVER_PORTS);
     }
 
     static {

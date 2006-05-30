@@ -239,11 +239,9 @@ public class LogonView extends BWindow
                     switchToServerStatus();
                 }
 
-                msg = _msgs.xlate(msg);
-
             } else {
                 if (cause instanceof ConnectException) {
-                    msg = _msgs.xlate("m.failed_to_connect");
+                    msg = "m.failed_to_connect";
 
                 } else if (cause instanceof IOException) {
                     String cmsg = cause.getMessage();
@@ -264,7 +262,7 @@ public class LogonView extends BWindow
                 switchToServerStatus();
             }
 
-            _status.setStatus(msg, true);
+            _status.setStatus(_msgs.xlate(msg), true);
         }
     };
 

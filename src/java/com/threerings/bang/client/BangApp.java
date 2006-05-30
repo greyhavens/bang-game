@@ -30,6 +30,7 @@ import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.RecentList;
 import com.samskivert.util.RepeatRecordFilter;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
@@ -124,25 +125,12 @@ public class BangApp extends JmeApp
         // TODO: set our icons
 
         String server = DeploymentConfig.getServerHost();
-        if (args.length > 0) {
-            server = args[0];
-        }
-
-        int port = DeploymentConfig.getServerPort();
-        if (args.length > 1) {
-            try {
-                port = Integer.parseInt(args[1]);
-            } catch (NumberFormatException nfe) {
-                log.warning("Invalid port specification '" + args[1] + "'.");
-            }
-        }
-
-        String username = (args.length > 2) ? args[2] : null;
-        String password = (args.length > 3) ? args[3] : null;
-
+        int[] ports = DeploymentConfig.getServerPorts();
+        String username = (args.length > 0) ? args[0] : null;
+        String password = (args.length > 1) ? args[1] : null;
         BangApp app = new BangApp();
         if (app.init()) {
-            app.run(server, port, username, password);
+            app.run(server, ports, username, password);
         }
     }
 
@@ -170,14 +158,16 @@ public class BangApp extends JmeApp
         return true;
     }
 
-    public void run (String server, int port, String username, String password)
+    public void run (
+        String server, int[] ports, String username, String password)
     {
         Client client = _client.getContext().getClient();
 
         // configure our server, port and client version
-        log.info("Using [server=" + server + ", port=" + port +
+        log.info("Using [server=" + server +
+                 ", ports=" + StringUtil.toString(ports) +
                  ", version=" + DeploymentConfig.getVersion() + "].");
-        client.setServer(server, port);
+        client.setServer(server, ports);
         client.setVersion(String.valueOf(DeploymentConfig.getVersion()));
 
         // configure the client with credentials if they were supplied

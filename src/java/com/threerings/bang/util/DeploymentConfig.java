@@ -57,9 +57,9 @@ public class DeploymentConfig
      * Returns the port on which we should connect to the server.
      * @see #getServerHost
      */
-    public static int getServerPort ()
+    public static int[] getServerPorts ()
     {
-        return config.getValue("server_port", Client.DEFAULT_SERVER_PORT);
+        return config.getValue("server_ports", Client.DEFAULT_SERVER_PORTS);
     }
 
     /**
