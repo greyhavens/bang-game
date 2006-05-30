@@ -86,7 +86,7 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void pieceAdded (Piece piece)
     {
-        _view.queuePieceCreate(piece, _tick);
+        _view.createPieceSprite(piece, _tick);
     }
 
     // documentation inherited from interface Effect.Observer

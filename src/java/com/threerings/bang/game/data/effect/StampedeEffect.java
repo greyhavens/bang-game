@@ -110,9 +110,28 @@ public class StampedeEffect extends Effect
         for (int ii = 0; ii < pieceIds.length; ii++) {
             pieceIds[ii] = collisions[ii].targetId;
         }
+        for (Collision collision : collisions) {
+            if (collision.deathEffect != null) {
+                pieceIds = concatenate(pieceIds,
+                    collision.deathEffect.getAffectedPieces());
+            }
+        }
         return pieceIds;
     }
 
+    @Override // documentation inherited
+    public int[] getWaitPieces ()
+    {
+        int[] wpieces = NO_PIECES;
+        for (Collision collision : collisions) {
+            if (collision.deathEffect != null) {
+                wpieces = concatenate(wpieces,
+                    collision.deathEffect.getWaitPieces());
+            }
+        }
+        return wpieces;
+    }
+    
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {

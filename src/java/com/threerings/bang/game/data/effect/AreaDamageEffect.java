@@ -41,6 +41,30 @@ public class AreaDamageEffect extends AreaEffect
         this.causer = causer;
         this.baseDamage = damage;
     }
+    
+    @Override // documentation inherited
+    public int[] getAffectedPieces ()
+    {
+        int[] apieces = pieces;
+        for (Effect effect : deathEffects) {
+            if (effect != null) {
+                apieces = concatenate(apieces, effect.getAffectedPieces());
+            }
+        }
+        return apieces;
+    }
+    
+    @Override // documentation inherited
+    public int[] getWaitPieces ()
+    {
+        int[] wpieces = NO_PIECES;
+        for (Effect effect : deathEffects) {
+            if (effect != null) {
+                wpieces = concatenate(wpieces, effect.getWaitPieces());
+            }
+        }
+        return wpieces;
+    }
 
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)

@@ -95,7 +95,8 @@ public class NuggetEffect extends BonusEffect
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
-        return new int[] { pieceId, claimId };
+        return new int[] { pieceId, (drop == null) ? claimId : drop.pieceId,
+            bonusId };
     }
 
     @Override // documentation inherited

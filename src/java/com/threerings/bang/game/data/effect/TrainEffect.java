@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.effect;
 
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
@@ -51,9 +52,18 @@ public class TrainEffect extends Effect
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
-        return new int[] { targetId };
+        if (deathEffect == null) {
+            return new int[] { targetId };
+        }
+        return ArrayUtil.append(deathEffect.getAffectedPieces(), targetId);
     }
 
+    @Override // documentation inherited
+    public int[] getWaitPieces ()
+    {
+        return (deathEffect == null) ? NO_PIECES : deathEffect.getWaitPieces();
+    }
+    
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {

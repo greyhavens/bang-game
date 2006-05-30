@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.effect;
 
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
 
@@ -136,9 +137,25 @@ public class ShotEffect extends Effect
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
-        return new int[] { shooterId, targetId };
+        int[] pieces = new int[] { shooterId, targetId };
+        if (preShotEffect != null) {
+            pieces = concatenate(pieces, preShotEffect.getAffectedPieces());
+        }
+        if (deflectorIds != null) {
+            for (short deflectorId : deflectorIds) {
+                pieces = ArrayUtil.append(pieces, deflectorId);
+            }
+        }
+        return pieces;
     }
 
+    @Override // documentation inherited
+    public int[] getWaitPieces ()
+    {
+        return (preShotEffect == null) ?
+            NO_PIECES : preShotEffect.getWaitPieces();
+    }
+    
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
