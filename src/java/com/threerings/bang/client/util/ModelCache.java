@@ -71,8 +71,9 @@ public class ModelCache
             rl.requestFailed((Exception)value);
             
         } else if (value instanceof ResultListenerList && rl != null) {
-            ((ResultListenerList<Model>)value).add(
-                new InstanceCreator(key, zations, rl));
+            @SuppressWarnings("unchecked") ResultListenerList<Model> rll =
+                (ResultListenerList<Model>)value;
+            rll.add(new InstanceCreator(key, zations, rl));
             
         } else if (value == null) {
             ResultListenerList<Model> rll = new ResultListenerList<Model>();
@@ -146,7 +147,7 @@ public class ModelCache
         @Override // documentation inherited
         public void handleResult ()
         {
-            ResultListener<Model> rl =
+            @SuppressWarnings("unchecked") ResultListener<Model> rl =
                 (ResultListener<Model>)_prototypes.get(_key);
             if (_model != null) {
                 _model.lockStaticMeshes(_ctx.getRenderer(), Config.useVBOs,
