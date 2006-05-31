@@ -168,7 +168,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
 
     @Override // documentation inherited
     protected void reserveCurrency (
-        Object user, final int cost, final ResultListener listener)
+        Object user, final int cost, final ResultListener<Object> listener)
     {
         // make sure they have the necessary currency to begin with
         final PlayerObject player = (PlayerObject)user;

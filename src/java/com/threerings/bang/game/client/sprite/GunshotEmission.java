@@ -150,7 +150,9 @@ public class GunshotEmission extends SpriteEmission
         throws IOException, ClassNotFoundException
     {
         super.readExternal(in);
-        _animShotFrames = (HashMap<String, int[]>)in.readObject();
+        @SuppressWarnings("unchecked") HashMap<String,int[]> casted =
+            (HashMap<String,int[]>)in.readObject();
+        _animShotFrames = casted;
         _size = in.readFloat();
         _trails = new Trail[in.readInt()];
         _spread = in.readFloat();
