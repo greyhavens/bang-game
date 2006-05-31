@@ -13,8 +13,7 @@ my %firsttimers;
 
 my %usertime;
 my %usersess;
-my %usergames;
-my %userrgames;
+my %userrounds;
 my %userearn;
 
 my $tottime = 0;
@@ -23,23 +22,23 @@ my $newtime = 0;
 my $newsess = 0;
 
 my %byscen;
+my %bytut;
 my %byteamsize;
 
-my $totrounds = 0;
-my $newrounds = 0;
 my $totgametime = 0;
 my $ratgames = 0;
 my $unratgames = 0;
 
+my %games;
+my %rounds;
+my %time;
+
 my $totearn = 0;
 my $newearn = 0;
 
-my $leavers = 0;
-my $discons = 0;
-my $logoffs = 0;
-my $rleavers = 0;
-my $rdiscons = 0;
-my $rlogoffs = 0;
+my %leavers;
+my %discons;
+my %logoffs;
 
 # grind and process the raw data
 while (<>) {
@@ -57,61 +56,99 @@ while (<>) {
         }
 
     } elsif (/game_ended t:(\d+) s:(\S+) ts:(\d+) (.*)/) {
+        my $time = $1;
+        my $tsize = $3;
         my $info = $4;
         my @scens = split(/,/, $2);
-        foreach $scen (@scens) {
-            $byscen{$scen}++;
-        }
-        my $rounds = scalar @scens;
-        $totrounds += $rounds;
-        $totgametime += $1;
-        $byteamsize{$3} += $rounds;
-        my $rated = 0;
+        my $rcount = scalar @scens;
+
+        # TODO change when we unfuck the formatting
+        my $rtype;
         if ($info =~ s/ r:true//) {
-            $rated = 1;
-            $ratgames += $rounds;
+            $rtype = "rated";
         } elsif ($info =~ s/ r:false//) {
-            $unratgames += $rounds;
+            $rtype = "unrated";
         } else {
             warn "Bogus info? $info\n";
             next;
         }
-        my @pinfos = split(/,/, $info);
+
         my $humans = 0;
+        my @pinfos = split(/,/, $info);
         foreach $pinfo (@pinfos) {
             my @bits = split(/:/, $pinfo);
             my $username = $bits[0];
             $humans++ unless ($username =~ /\(tin_can\)/);
         }
+
+        my $tutorial = 0;
+        my $type;
+        if ($rcount == 1 && length($scens[0]) > 2) {
+            $tutorial = 1;
+            $type = "tutorial";
+        } elsif ($humans > 1) {
+            $type = "human";
+        } else {
+            $type = "tincan";
+        }
+
+        $games{$type}++;
+        $rounds{$type} += $rcount;
+        $time{$type} += $time;
+
+        if ($tutorial) {
+            foreach $scen (@scens) {
+                $bytut{$scen}++;
+            }
+        } else {
+            foreach $scen (@scens) {
+                $byscen{$scen}++;
+            }
+        }
+
+        # these are only recorded for non-tutorial games
+        if (!$tutorial) {
+            $games{$rtype}++;
+            $rounds{$rtype} += $rcount;
+            $byteamsize{$tsize} += $rcount;
+        }
+
         my $noobs = 0;
         foreach $pinfo (@pinfos) {
             my @bits = split(/:/, $pinfo);
             my $username = $bits[0];
             if ($username =~ s/\#$//) {
-                $leavers++;
-                $rleavers++ if ($humans > 1);
+                note_leaver(\%leavers, $humans, $tutorial);
             }
             if ($username =~ s/!$//) {
-                $discons++;
-                $rdiscons++ if ($humans > 1);
+                note_leaver(\%discons, $humans, $tutorial);
             }
             if ($username =~ s/\*$//) {
-                $logoffs++;
-                $rlogoffs++ if ($humans > 1);
+                note_leaver(\%logoffs, $humans, $tutorial);
             }
-            $usergames{$username} += $rounds;
-            $userrgames{$username} += $rounds if ($rated);
-            my $earnings = (@bits > 3) ? $bits[3] : 0;
-            $userearn{$username} += $earnings;
-            $totearn += $earnings;
-            if (defined $firsttimers{$username}) {
-                $newearn += $earnings;
-                $noobs++;
+            if ($tutorial) {
+                $userrounds{"tutorial"}{$username} += $rcount;
+            } else {
+                $userrounds{"total"}{$username} += $rcount;
+                $userrounds{"rated"}{$username} += $rcount
+                    if ($rtype eq "rated");
+                my $earnings = (@bits > 3) ? $bits[3] : 0;
+                $userearn{$username} += $earnings;
+                $totearn += $earnings;
+                if (defined $firsttimers{$username}) {
+                    $newearn += $earnings;
+                    $noobs++;
+                }
             }
         }
-        $newrounds += $rounds if ($noobs > 0);
+
+        if (!$tutorial) {
+            $newrounds += $rcount if ($noobs > 0);
+        }
     }
 }
+
+my $totrounds = $rounds{"human"} + $rounds{"tincan"};
 
 # summarize sessions, rounds played, earnings, etc.
 my $ucount = keys %usersess;
@@ -138,29 +175,34 @@ sum_users(sort { $userearn{$b} - $userearn{$a} } keys %userearn);
 
 # top ten by rounds played
 print "                    - by rounds played -\n";
-sum_users(sort { $usergames{$b} - $usergames{$a} } keys %usergames);
+sum_users(sort { $userrounds{"total"}{$b} - $userrounds{"total"}{$a} }
+          keys %{$userrounds{"total"}});
 
 # top ten by minutes online
 print "                   - by minutes online -\n";
 sum_users(sort { $usertime{$b} - $usertime{$a} } keys %usertime);
 
 # break down disconnect/logoff/leave stats
-print "            Total      vs. Humans\n";
-printf("Discons %5d (%1.1f%%) %5d (%1.1f%%)\n",
-       $discons, 100*$discons/$totrounds, $rdiscons, 100*$rdiscons/$totrounds);
-printf("Logoffs %5d (%1.1f%%) %5d (%1.1f%%)\n",
-       $logoffs, 100*$logoffs/$totrounds, $rlogoffs, 100*$rlogoffs/$totrounds);
-printf("Leavers %5d (%1.1f%%) %5d (%1.1f%%)\n",
-       $leavers, 100*$leavers/$totrounds, $rleavers, 100*$rleavers/$totrounds);
+print "         vs. Tincans   vs. Humans    Tutorial\n";
+sum_leavers("Discons", \%discons);
+sum_leavers("Logoffs", \%logoffs);
+sum_leavers("Leavers", \%leavers);
 print "\n";
 
 # break down games played by scenario
 printf("Scenario         Rounds\n");
 printf("%-15s  %6d\n", "(total)", $totrounds);
-printf("%-15s  %6d\n", "(unrated)", $unratgames);
-printf("%-15s  %6d\n", "(rated)", $ratgames);
+printf("%-15s  %6d\n", "(unrated)", $rounds{"unrated"});
+printf("%-15s  %6d\n", "(rated)", $rounds{"rated"});
 foreach $scen (sort { $byscen{$b} - $byscen{$a} } keys %byscen) {
     printf("%-15s  %6d\n", $scen, $byscen{$scen});
+}
+print "\n";
+
+# break down games played by scenario
+printf("Tutorial         Rounds\n");
+foreach $scen (sort { $bytut{$b} - $bytut{$a} } keys %bytut) {
+    printf("%-15s  %6d\n", $scen, $bytut{$scen});
 }
 print "\n";
 
@@ -178,8 +220,8 @@ sub sum_users {
         next if ($user =~ /\(tin_can\)/);
         my $mins = safe_get($user, \%usertime) / 60;
         my $avgsess = safe_div($mins, safe_get($user, \%usersess));
-        my $games = safe_get($user, \%usergames);
-        my $rgames = safe_get($user, \%userrgames);
+        my $games = safe_get($user, $userrounds{"total"});
+        my $rgames = safe_get($user, $userrounds{"rated"});
         my $earn = safe_get($user, \%userearn);
         printf("%-12s %4d  %4.0f  %4.0f   %2d/%2d %5d   %3.0f\n",
                $user, safe_get($user, \%usersess), $mins, $avgsess,
@@ -197,4 +239,31 @@ sub safe_get {
 sub safe_div {
     my ($num, $denom) = @_;
     return ($denom != 0) ? $num/$denom : 0;
+}
+
+sub note_leaver {
+    my ($hash, $humans, $tutorial) = @_;
+    if ($tutorial) {
+        $hash->{"tutorial"}++;
+    } elsif ($humans > 1) {
+        $hash->{"human"}++;
+    } else {
+        $hash->{"tincan"}++;
+    }
+}
+
+sub sum_leavers {
+    my ($what, $hash) = @_;
+    my $tinrounds = ($totrounds - $rounds{"human"});
+    my $cvalue = safe_get("tincan", $hash);
+    my $crounds = $rounds{"tincan"};
+    my $hvalue = safe_get("human", $hash);
+    my $hrounds = $rounds{"human"};
+    my $tvalue = safe_get("tutorial", $hash);
+    my $trounds = $rounds{"tutorial"};
+    printf("%s %4d (%4.1f%%) %4d (%4.1f%%) %4d (%4.1f%%)\n",
+           $what,
+           $cvalue, 100*$cvalue/$crounds,
+           $hvalue, 100*$hvalue/$hrounds,
+           $tvalue, 100*$tvalue/$trounds);
 }
