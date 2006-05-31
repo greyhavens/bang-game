@@ -56,6 +56,7 @@ public class AvatarDispatcher extends InvocationDispatcher
 
         default:
             super.dispatchRequest(source, methodId, args);
+            return;
         }
     }
 }

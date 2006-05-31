@@ -91,6 +91,7 @@ public class BangDispatcher extends InvocationDispatcher
 
         default:
             super.dispatchRequest(source, methodId, args);
+            return;
         }
     }
 }

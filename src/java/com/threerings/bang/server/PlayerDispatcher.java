@@ -84,6 +84,7 @@ public class PlayerDispatcher extends InvocationDispatcher
 
         default:
             super.dispatchRequest(source, methodId, args);
+            return;
         }
     }
 }

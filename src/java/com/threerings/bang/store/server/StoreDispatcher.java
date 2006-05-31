@@ -47,6 +47,7 @@ public class StoreDispatcher extends InvocationDispatcher
 
         default:
             super.dispatchRequest(source, methodId, args);
+            return;
         }
     }
 }

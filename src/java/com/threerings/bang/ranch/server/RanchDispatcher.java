@@ -48,6 +48,7 @@ public class RanchDispatcher extends InvocationDispatcher
 
         default:
             super.dispatchRequest(source, methodId, args);
+            return;
         }
     }
 }

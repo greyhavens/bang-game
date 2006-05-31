@@ -49,6 +49,7 @@ public class BangMarshaller extends InvocationMarshaller
 
             default:
                 super.dispatchResponse(methodId, args);
+                return;
             }
         }
     }
@@ -60,7 +61,7 @@ public class BangMarshaller extends InvocationMarshaller
     public void cancelOrder (Client arg1, int arg2)
     {
         sendRequest(arg1, CANCEL_ORDER, new Object[] {
-            new Integer(arg2)
+            Integer.valueOf(arg2)
         });
     }
 
@@ -86,7 +87,7 @@ public class BangMarshaller extends InvocationMarshaller
         InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
         listener6.listener = arg6;
         sendRequest(arg1, ORDER, new Object[] {
-            new Integer(arg2), new Short(arg3), new Short(arg4), new Integer(arg5), listener6
+            Integer.valueOf(arg2), Short.valueOf(arg3), Short.valueOf(arg4), Integer.valueOf(arg5), listener6
         });
     }
 
@@ -99,7 +100,7 @@ public class BangMarshaller extends InvocationMarshaller
         InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
         listener5.listener = arg5;
         sendRequest(arg1, PLAY_CARD, new Object[] {
-            new Integer(arg2), new Short(arg3), new Short(arg4), listener5
+            Integer.valueOf(arg2), Short.valueOf(arg3), Short.valueOf(arg4), listener5
         });
     }
 
@@ -121,7 +122,7 @@ public class BangMarshaller extends InvocationMarshaller
     public void selectStarters (Client arg1, int arg2, int[] arg3)
     {
         sendRequest(arg1, SELECT_STARTERS, new Object[] {
-            new Integer(arg2), arg3
+            Integer.valueOf(arg2), arg3
         });
     }
 

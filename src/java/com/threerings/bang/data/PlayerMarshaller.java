@@ -56,7 +56,7 @@ public class PlayerMarshaller extends InvocationMarshaller
         ListenerMarshaller listener6 = new ListenerMarshaller();
         listener6.listener = arg6;
         sendRequest(arg1, PLAY_COMPUTER, new Object[] {
-            new Integer(arg2), arg3, arg4, new Boolean(arg5), listener6
+            Integer.valueOf(arg2), arg3, arg4, Boolean.valueOf(arg5), listener6
         });
     }
 
@@ -95,7 +95,7 @@ public class PlayerMarshaller extends InvocationMarshaller
         InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
         listener4.listener = arg4;
         sendRequest(arg1, RESPOND_TO_PARDNER_INVITE, new Object[] {
-            arg2, new Boolean(arg3), listener4
+            arg2, Boolean.valueOf(arg3), listener4
         });
     }
 

@@ -48,6 +48,7 @@ public class BankMarshaller extends InvocationMarshaller
 
             default:
                 super.dispatchResponse(methodId, args);
+                return;
             }
         }
     }
@@ -61,7 +62,7 @@ public class BankMarshaller extends InvocationMarshaller
         InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
         listener3.listener = arg3;
         sendRequest(arg1, CANCEL_OFFER, new Object[] {
-            new Integer(arg2), listener3
+            Integer.valueOf(arg2), listener3
         });
     }
 
@@ -87,7 +88,7 @@ public class BankMarshaller extends InvocationMarshaller
         InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
         listener6.listener = arg6;
         sendRequest(arg1, POST_OFFER, new Object[] {
-            new Integer(arg2), new Integer(arg3), new Boolean(arg4), new Boolean(arg5), listener6
+            Integer.valueOf(arg2), Integer.valueOf(arg3), Boolean.valueOf(arg4), Boolean.valueOf(arg5), listener6
         });
     }
 

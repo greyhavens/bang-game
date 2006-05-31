@@ -30,7 +30,7 @@ public class SaloonMarshaller extends InvocationMarshaller
         InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
         listener4.listener = arg4;
         sendRequest(arg1, CREATE_PARLOR, new Object[] {
-            new Boolean(arg2), arg3, listener4
+            Boolean.valueOf(arg2), arg3, listener4
         });
     }
 
@@ -67,7 +67,7 @@ public class SaloonMarshaller extends InvocationMarshaller
     public void leaveMatch (Client arg1, int arg2)
     {
         sendRequest(arg1, LEAVE_MATCH, new Object[] {
-            new Integer(arg2)
+            Integer.valueOf(arg2)
         });
     }
 

@@ -30,7 +30,7 @@ public class AvatarMarshaller extends InvocationMarshaller
         InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
         listener6.listener = arg6;
         sendRequest(arg1, CREATE_AVATAR, new Object[] {
-            arg2, new Boolean(arg3), arg4, new Integer(arg5), listener6
+            arg2, Boolean.valueOf(arg3), arg4, Integer.valueOf(arg5), listener6
         });
     }
 
