@@ -3,8 +3,11 @@
 
 package com.threerings.bang.saloon.client;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import org.apache.commons.io.IOUtils;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
@@ -12,6 +15,7 @@ import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
+import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -19,11 +23,13 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.CollectionUtil;
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.util.BangContext;
@@ -84,7 +90,11 @@ public class ParlorGameConfigView extends BContainer
         BScrollPane pane = new BScrollPane(checkboxen);
         ((BorderLayout)pane.getLayoutManager()).setGaps(3, 5);
         scenbox.add(pane, BorderLayout.CENTER);
-        scenbox.add(new BLabel(" ", "match_header"), BorderLayout.SOUTH);
+        if (_ctx.getUserObject().tokens.isAdmin()) {
+            scenbox.add(_board = new BTextField(""), BorderLayout.SOUTH);
+        } else {
+            scenbox.add(new BLabel(" ", "match_header"), BorderLayout.SOUTH);
+        }
         main.add(scenbox);
 
         // create our "Create" button
@@ -123,10 +133,7 @@ public class ParlorGameConfigView extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         if (event.getSource() == _create) {
-            ReportingListener rl = new ReportingListener(
-                _ctx, SaloonCodes.SALOON_MSGS, "m.create_game_failed");
-            _parobj.service.startMatchMaking(
-                _ctx.getClient(), makeConfig(), rl);
+            startMatchMaking();
         } else {
             _parobj.service.updateGameConfig(_ctx.getClient(), makeConfig());
         }
@@ -176,6 +183,46 @@ public class ParlorGameConfigView extends BContainer
         return config;
     }
 
+    protected void startMatchMaking ()
+    {
+        // create the parlor game config
+        ParlorGameConfig config = makeConfig();
+
+        // if there's a custom board involved, load that
+        byte[] bdata = null;
+        String bfile = (_board == null) ? null : _board.getText();
+        if (!StringUtil.isBlank(bfile)) {
+            String error = null;
+            int pcount = config.players + config.tinCans;
+            File board = new File(
+                BangClient.localDataDir(
+                    "rsrc" + File.separator + "boards" + File.separator +
+                    String.valueOf(pcount)), bfile);
+            if (!board.exists()) {
+                error = "m.board_not_found";
+            }
+            try {
+                bdata = IOUtils.toByteArray(new FileInputStream(board));
+            } catch (Exception e) {
+                error = MessageBundle.taint(e.getMessage());
+            }
+            if (error != null) {
+                String msg = MessageBundle.compose(
+                    "m.board_load_failed",
+                    MessageBundle.taint(board.getPath()), error);
+                _ctx.getChatDirector().displayFeedback(
+                    SaloonCodes.SALOON_MSGS, msg);
+                return;
+            }
+        }
+
+        // finally start things up
+        ReportingListener rl = new ReportingListener(
+            _ctx, SaloonCodes.SALOON_MSGS, "m.create_game_failed");
+        _parobj.service.startMatchMaking(
+            _ctx.getClient(), config, bdata, rl);
+    }
+
     protected Object[] makeBoxItems (int index)
     {
         ArrayList<Integer> items = new ArrayList<Integer>();
@@ -193,6 +240,9 @@ public class ParlorGameConfigView extends BContainer
     protected String[] _scenIds;
     protected BCheckBox[] _scens;
     protected BButton _create;
+
+    // only usable by admins for now
+    protected BTextField _board;
 
     protected static final String[] BOX_LABELS = {
         "m.rounds", "m.par_players", "m.par_opponents", "m.units" };

@@ -136,14 +136,16 @@ public class ParlorManager extends PlaceManager
     }
 
     // documentation inherited from interface ParlorProvider
-    public void startMatchMaking (ClientObject caller, ParlorGameConfig game,
-                                  ParlorService.InvocationListener listener)
+    public void startMatchMaking (
+        ClientObject caller, ParlorGameConfig game, byte[] bdata,
+        ParlorService.InvocationListener listener)
         throws InvocationException
     {
         // if we're not allowing new games, fail immediately
         if (!RuntimeConfig.server.allowNewGames) {
             throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
         }
+        PlayerObject user = (PlayerObject)caller;
 
         // if we've already started, then just turn this into a join
         if (_parobj.playerOids != null) {
@@ -167,6 +169,11 @@ public class ParlorManager extends PlaceManager
 
             // update the game config with the desired config
             _parobj.setGame(game);
+
+            // if this player is an admin, allow the board data
+            if (user.tokens.isAdmin()) {
+                _bdata = bdata;
+            }
 
             // create a playerOids array and stick the starter in slot zero
             int[] playerOids = new int[game.players];
@@ -375,6 +382,9 @@ public class ParlorManager extends PlaceManager
             config.players[ii] = ai.handle;
         }
 
+        // if we're using a custom board, get that in there
+        config.bdata = _bdata;
+
         try {
             BangServer.plreg.createPlace(config, null);
         } catch (Exception e) {
@@ -385,10 +395,12 @@ public class ParlorManager extends PlaceManager
         _parobj.setStarting(false);
         _parobj.setPlayerOids(null);
         _parobj.setGame(null);
+        _bdata = null;
     }
 
     protected ParlorObject _parobj;
     protected SaloonManager _salmgr;
+    protected byte[] _bdata;
     protected String _password;
     protected Interval _starter;
     protected Throttle _throttle = new Throttle(1, 10);

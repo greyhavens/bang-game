@@ -30,7 +30,7 @@ public interface ParlorProvider extends InvocationProvider
     /**
      * Handles a {@link ParlorService#startMatchMaking} request.
      */
-    public void startMatchMaking (ClientObject caller, ParlorGameConfig arg1, InvocationService.InvocationListener arg2)
+    public void startMatchMaking (ClientObject caller, ParlorGameConfig arg1, byte[] arg2, InvocationService.InvocationListener arg3)
         throws InvocationException;
 
     /**

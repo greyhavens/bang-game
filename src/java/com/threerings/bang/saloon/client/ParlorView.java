@@ -190,6 +190,12 @@ public class ParlorView extends ShopView
         _bgoverlay.render(renderer, 39, 65, _alpha);
     }
 
+    @Override // documentation inherited
+    protected Point getShopkeepNameLocation ()
+    {
+        return new Point(22, 554);
+    }
+
     /** Listens for occupant additions and removals. */
     protected SetAdapter _occlist = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {

@@ -47,12 +47,12 @@ public class ParlorMarshaller extends InvocationMarshaller
     public static final int START_MATCH_MAKING = 3;
 
     // documentation inherited from interface
-    public void startMatchMaking (Client arg1, ParlorGameConfig arg2, InvocationService.InvocationListener arg3)
+    public void startMatchMaking (Client arg1, ParlorGameConfig arg2, byte[] arg3, InvocationService.InvocationListener arg4)
     {
-        ListenerMarshaller listener3 = new ListenerMarshaller();
-        listener3.listener = arg3;
+        ListenerMarshaller listener4 = new ListenerMarshaller();
+        listener4.listener = arg4;
         sendRequest(arg1, START_MATCH_MAKING, new Object[] {
-            arg2, listener3
+            arg2, arg3, listener4
         });
     }
 
@@ -74,7 +74,7 @@ public class ParlorMarshaller extends InvocationMarshaller
     public void updateParlorConfig (Client arg1, ParlorInfo arg2, boolean arg3)
     {
         sendRequest(arg1, UPDATE_PARLOR_CONFIG, new Object[] {
-            arg2, new Boolean(arg3)
+            arg2, Boolean.valueOf(arg3)
         });
     }
 

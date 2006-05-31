@@ -55,7 +55,7 @@ public class ParlorDispatcher extends InvocationDispatcher
         case ParlorMarshaller.START_MATCH_MAKING:
             ((ParlorProvider)provider).startMatchMaking(
                 source,
-                (ParlorGameConfig)args[0], (InvocationService.InvocationListener)args[1]
+                (ParlorGameConfig)args[0], (byte[])args[1], (InvocationService.InvocationListener)args[2]
             );
             return;
 
@@ -82,6 +82,7 @@ public class ParlorDispatcher extends InvocationDispatcher
 
         default:
             super.dispatchRequest(source, methodId, args);
+            return;
         }
     }
 }
