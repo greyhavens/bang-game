@@ -177,6 +177,17 @@ public class BackTextureRenderer
     }
     
     // documentation inherited from interface TextureRenderer
+    public void copyBufferToTexture (
+        Texture tex, int width, int height, int buffer)
+    {
+        GL11.glReadBuffer(GL11.GL_BACK);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureId());
+        GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, tex.getRTTSource(), 0,
+            0, width, height, 0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+    }
+    
+    // documentation inherited from interface TextureRenderer
     public void cleanup ()
     {
         // leave it to the caller to unbind textures
@@ -198,8 +209,8 @@ public class BackTextureRenderer
         parentRenderer.reinit(_width, _height);
 
         // Clear the states.
-        Spatial.clearCurrentStates();
-        Spatial.applyDefaultStates();
+        Renderer.clearCurrentStates();
+        Renderer.applyDefaultStates();
 
         // do rtt scene render
         parentRenderer.setBackgroundColor(_bgcolor);
@@ -223,8 +234,8 @@ public class BackTextureRenderer
         // Clear the states again since we will be moving back to the old
         // location and don't want the states bleeding over causing things
         // *not* to be set when they should be.
-        Spatial.clearCurrentStates();
-        Spatial.applyDefaultStates();
+        Renderer.clearCurrentStates();
+        Renderer.applyDefaultStates();
     }
     
     /**

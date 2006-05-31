@@ -224,7 +224,7 @@ public class RenderUtil
         tstate.setEnabled(true);
         quad.setRenderState(tstate);
 
-        quad.setTextureBuffer(BufferUtils.createFloatBuffer(tcoords));
+        quad.setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
         quad.setRenderState(blendAlpha);
         quad.updateRenderState();
 

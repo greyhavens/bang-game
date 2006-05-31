@@ -15,10 +15,9 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.TextureState;
-import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
-
-import com.jmex.effects.ParticleManager;
+import com.jmex.effects.particles.ParticleFactory;
+import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.StringUtil;
 
@@ -54,35 +53,34 @@ public class SmokePlumeEmission extends SpriteEmission
     @Override // documentation inherited
     public void init (Model model)
     {
-        _smokemgr = new ParticleManager(64);
-        _smokemgr.setParticlesMinimumLifeTime(_lifetime);
-        _smokemgr.setInitialVelocity(_velocity);
-        _smokemgr.setParticlesOrigin(new Vector3f());
-        _smokemgr.setEmissionDirection(Vector3f.UNIT_Z);
-        _smokemgr.setEmissionMaximumAngle(FastMath.PI / 64);
-        _smokemgr.setRandomMod(0f);
-        _smokemgr.setPrecision(FastMath.FLT_EPSILON);
-        _smokemgr.setControlFlow(true);
-        _smokemgr.setReleaseRate(0);
-        _smokemgr.setReleaseVariance(0f);
-        _smokemgr.setParticleSpinSpeed(0.01f);
-        _smokemgr.setStartSize(_startSize);
-        _smokemgr.setEndSize(_endSize);
-        _smokemgr.setStartColor(_startColor);
-        _smokemgr.setEndColor(_endColor);
+        _smoke = ParticleFactory.buildParticles("smoke", 64);
+        _smoke.setMinimumLifeTime(_lifetime);
+        _smoke.setInitialVelocity(_velocity);
+        _smoke.setOriginOffset(new Vector3f());
+        _smoke.setEmissionDirection(Vector3f.UNIT_Z);
+        _smoke.setMaximumAngle(FastMath.PI / 64);
+        _smoke.setRandomMod(0f);
+        _smoke.getParticleController().setPrecision(FastMath.FLT_EPSILON);
+        _smoke.getParticleController().setControlFlow(true);
+        _smoke.setReleaseRate(0);
+        _smoke.getParticleController().setReleaseVariance(0f);
+        _smoke.setParticleSpinSpeed(0.01f);
+        _smoke.setStartSize(_startSize);
+        _smoke.setEndSize(_endSize);
+        _smoke.setStartColor(_startColor);
+        _smoke.setEndColor(_endColor);
         if (RenderUtil.blendAlpha == null) {
             RenderUtil.initStates();
         }
         if (_smoketex != null) {
-            _smokemgr.getParticles().setRenderState(_smoketex);
+            _smoke.setRenderState(_smoketex);
         }
-        _smokemgr.getParticles().setRenderState(RenderUtil.blendAlpha);
-        _smokemgr.getParticles().setRenderState(RenderUtil.overlayZBuf);
-        _smokemgr.getParticles().addController(_smokemgr);
-        _smokemgr.forceRespawn();
+        _smoke.setRenderState(RenderUtil.blendAlpha);
+        _smoke.setRenderState(RenderUtil.overlayZBuf);
+        _smoke.forceRespawn();
         
-        model.getEmissionNode().attachChild(_smokemgr.getParticles());
-        _smokemgr.getParticles().updateRenderState();
+        model.getEmissionNode().attachChild(_smoke);
+        _smoke.updateRenderState();
         
         super.init(model);
     }
@@ -91,7 +89,7 @@ public class SmokePlumeEmission extends SpriteEmission
     public void setActive (boolean active)
     {
         super.setActive(active);
-        _smokemgr.setReleaseRate(active ? _releaseRate : 0);
+        _smoke.setReleaseRate(active ? _releaseRate : 0);
     }
     
     @Override // documentation inherited
@@ -100,11 +98,12 @@ public class SmokePlumeEmission extends SpriteEmission
         if (_smoketex == null) {
             _smoketex = tprov.getTexture("/textures/effects/dust.png");
         }
-        _smokemgr.getParticles().setRenderState(_smoketex);
+        _smoke.setRenderState(_smoketex);
     }
     
     @Override // documentation inherited
-    public Controller putClone (Controller store, CloneCreator properties)
+    public Controller putClone (
+        Controller store, Model.CloneCreator properties)
     {
         SmokePlumeEmission spstore;
         if (store == null) {
@@ -157,7 +156,7 @@ public class SmokePlumeEmission extends SpriteEmission
         if (!isActive()) {
             return;
         }
-        getEmitterLocation(_smokemgr.getParticlesOrigin());
+        getEmitterLocation(_smoke.getOriginOffset());
     }
     
     /**
@@ -191,7 +190,7 @@ public class SmokePlumeEmission extends SpriteEmission
     protected float _lifetime;
     
     /** The smoke plume particle system. */
-    protected ParticleManager _smokemgr;
+    protected ParticleMesh _smoke;
     
     /** The smoke texture. */
     protected static TextureState _smoketex;

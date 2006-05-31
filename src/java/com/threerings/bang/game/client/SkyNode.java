@@ -106,7 +106,7 @@ public class SkyNode extends Node
                     cbuf.put(color);
                 }
             }
-            _cgeom.setColorBuffer(cbuf);
+            _cgeom.setColorBuffer(0, cbuf);
             TextureState tstate = ctx.getRenderer().createTextureState();
             tstate.setTexture(null, 0);
             _cgeom.setRenderState(tstate);

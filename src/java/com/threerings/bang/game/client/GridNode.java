@@ -38,7 +38,7 @@ public class GridNode extends Line
             (parea.width * BangBoard.HEIGHTFIELD_SUBDIVISIONS) * 2 +
             (parea.width + 1) *
             (parea.height * BangBoard.HEIGHTFIELD_SUBDIVISIONS) * 2;
-        setVertexBuffer(BufferUtils.createFloatBuffer(vertices * 3));
+        setVertexBuffer(0, BufferUtils.createFloatBuffer(vertices * 3));
         generateIndices();
         updateVertices();
         
@@ -53,7 +53,7 @@ public class GridNode extends Line
     public void updateVertices ()
     {
         Vector3f vertex = new Vector3f();
-        FloatBuffer vbuf = getVertexBuffer();
+        FloatBuffer vbuf = getVertexBuffer(0);
         int idx = 0;
         int ppt = BangBoard.HEIGHTFIELD_SUBDIVISIONS;
 

@@ -81,7 +81,7 @@ public class AvatarView extends BLabel
                             int sx, int sy, int swidth, int sheight) {
                             // flip the texture coords left-to-right
                             super.setTextureCoords(sx, sy, swidth, sheight);
-                            FloatBuffer tcoords = getTextureBuffer();
+                            FloatBuffer tcoords = getTextureBuffer(0, 0);
                             swapInBuffer(tcoords, 0, 3);
                             swapInBuffer(tcoords, 1, 2);
                         }

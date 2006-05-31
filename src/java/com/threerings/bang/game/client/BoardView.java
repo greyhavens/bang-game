@@ -835,6 +835,9 @@ public class BoardView extends BComponent
             _sounds.dispose();
             _sounds = null;
         }
+        
+        // clear the render queue of any lingering references
+        _ctx.getRenderer().clearQueue();
     }
 
     /**
@@ -1215,7 +1218,7 @@ public class BoardView extends BComponent
             if (notReallyAHit(pdata)) {
                 continue;
             }
-            Sprite s = getSprite(pdata.getTargetMesh());
+            Sprite s = getSprite(pdata.getTargetMesh().getParentGeom());
             if (!isHoverable(s)) {
                 continue;
             }
@@ -1260,7 +1263,7 @@ public class BoardView extends BComponent
                 continue;
             }
             TerrainNode.Highlight highlight =
-                (TerrainNode.Highlight)pdata.getTargetMesh();
+                (TerrainNode.Highlight)pdata.getTargetMesh().getParentGeom();
             float hdist = FastMath.sqr(camloc.x - highlight.x) +
                 FastMath.sqr(camloc.y - highlight.y);
             if (hdist < dist) {
@@ -1343,7 +1346,7 @@ public class BoardView extends BComponent
     protected boolean notReallyAHit (PickData pdata)
     {
         ArrayList tris = pdata.getTargetTris();
-        Object mesh = pdata.getTargetMesh();
+        Object mesh = pdata.getTargetMesh().getParentGeom();
         return (tris == null || tris.size() == 0 || !(mesh instanceof TriMesh));
     }
 

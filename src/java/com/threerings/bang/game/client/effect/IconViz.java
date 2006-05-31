@@ -85,7 +85,7 @@ public class IconViz extends EffectViz
                     alpha = _elapsed / RISE_DURATION;
                     localTranslation.z = TILE_SIZE * (0.5f + alpha * 0.5f);
                 }
-                icon.getDefaultColor().a = alpha;
+                icon.getBatch(0).getDefaultColor().a = alpha;
             }
             protected float _elapsed;
         };

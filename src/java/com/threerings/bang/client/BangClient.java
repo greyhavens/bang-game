@@ -50,7 +50,7 @@ import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.ranch.client.FirstBigShotView;
 
 import com.threerings.bang.game.client.BangView;
-import com.threerings.bang.game.client.effect.ParticleFactory;
+import com.threerings.bang.game.client.effect.ParticlePool;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.util.BoardCache;
@@ -679,8 +679,8 @@ public class BangClient extends BasicClient
         _chatdir = new BangChatDirector(_ctx);
         _bcache = new BoardCache();
 
-        // warm up the particle factory
-        ParticleFactory.warmup(_ctx);
+        // warm up the particle pool
+        ParticlePool.warmup(_ctx);
     }
 
     protected void displayPardnerInvite (final Handle handle)

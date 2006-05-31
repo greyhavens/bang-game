@@ -11,7 +11,7 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.state.MaterialState;
-import com.jmex.effects.ParticleManager;
+import com.jmex.effects.particles.ParticleMesh;
 
 import com.threerings.jme.model.Model;
 import com.threerings.util.RandomUtil;
@@ -51,7 +51,7 @@ public class WreckViz extends ParticleEffectViz
     {
         // set up and add the steam cloud
         if (_steamcloud != null) {
-            displayParticleManager(target, _steamcloud, true);
+            displayParticles(target, _steamcloud, true);
         }
         
         // and the wreckage
@@ -78,7 +78,7 @@ public class WreckViz extends ParticleEffectViz
     {
         // create the steam cloud for wrecks without explosions
         if (!(_wrapviz instanceof ExplosionViz)) {
-            _steamcloud = ParticleFactory.getSteamCloud();
+            _steamcloud = ParticlePool.getSteamCloud();
         }
         
         // create a few pieces of wreckage to be thrown from the wreck
@@ -210,7 +210,7 @@ public class WreckViz extends ParticleEffectViz
     }
     
     protected EffectViz _wrapviz;
-    protected ParticleManager _steamcloud;
+    protected ParticleMesh _steamcloud;
     protected Wreckage[] _wreckage;
     
     /** The average number of pieces of wreckage to throw. */

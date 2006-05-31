@@ -56,7 +56,7 @@ public class ClaimSprite extends PropSprite
             Texture tex = RenderUtil.createTextTexture(
                 _ctx, BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
                 String.valueOf(claim.nuggets), tcoords, null);
-            _counter.setTextureBuffer(BufferUtils.createFloatBuffer(tcoords));
+            _counter.setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
             // resize our quad to accomodate the text
             _counter.resize(10 * tcoords[2].x, 10 * tcoords[2].y);
             _tstate.setTexture(tex);

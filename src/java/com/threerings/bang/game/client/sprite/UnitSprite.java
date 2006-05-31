@@ -435,7 +435,7 @@ public class UnitSprite extends MobileSprite
         _ptquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _ptquad.setRenderState(RenderUtil.alwaysZBuf);
         _ptquad.updateRenderState();
-        _ptquad.setTextureBuffer(BufferUtils.createFloatBuffer(PTARG_COORDS));
+        _ptquad.setTextureBuffer(0, BufferUtils.createFloatBuffer(PTARG_COORDS));
         bbn.attachChild(_ptquad);
         _ptquad.setCullMode(CULL_ALWAYS);
 

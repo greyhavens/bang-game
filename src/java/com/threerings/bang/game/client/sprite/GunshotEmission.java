@@ -16,7 +16,6 @@ import java.util.Properties;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.renderer.CloneCreator;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
@@ -27,7 +26,8 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
-import com.jmex.effects.ParticleManager;
+import com.jmex.effects.particles.ParticleFactory;
+import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.StringUtil;
 
@@ -36,6 +36,7 @@ import com.threerings.jme.model.TextureProvider;
 import com.threerings.jme.sprite.PathUtil;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.util.RenderUtil;
 
 /**
@@ -80,30 +81,28 @@ public class GunshotEmission extends SpriteEmission
             _trails[ii] = new Trail();
         }
         
-        _smokemgr = new ParticleManager(16);
-        _smokemgr.setParticlesMinimumLifeTime(500f);
-        _smokemgr.setInitialVelocity(0.005f);
-        _smokemgr.setEmissionDirection(Vector3f.UNIT_Z);
-        _smokemgr.setEmissionMaximumAngle(FastMath.PI / 16);
-        _smokemgr.setRandomMod(0f);
-        _smokemgr.setPrecision(FastMath.FLT_EPSILON);
-        _smokemgr.setControlFlow(false);
-        _smokemgr.setStartSize(0.25f * _size);
-        _smokemgr.setEndSize(2f * _size);
-        _smokemgr.setStartColor(new ColorRGBA(0.2f, 0.2f, 0.2f, 0.75f));
-        _smokemgr.setEndColor(new ColorRGBA(0.35f, 0.35f, 0.35f, 0f));
-        _smokemgr.setRepeatType(Controller.RT_CLAMP);
-        _smokemgr.setActive(false);
-        TriMesh particles = _smokemgr.getParticles();
-        particles.addController(_smokemgr);
+        _smoke = new ParticleMesh("smoke", 16);
+        _smoke.addController(
+            new ParticlePool.TransientParticleController(_smoke));
+        _smoke = ParticleFactory.buildParticles("smoke", 16);
+        _smoke.setMinimumLifeTime(500f);
+        _smoke.setInitialVelocity(0.005f);
+        _smoke.setEmissionDirection(Vector3f.UNIT_Z);
+        _smoke.setMaximumAngle(FastMath.PI / 16);
+        _smoke.setRandomMod(0f);
+        _smoke.getParticleController().setPrecision(FastMath.FLT_EPSILON);
+        _smoke.getParticleController().setControlFlow(false);
+        _smoke.setStartSize(0.25f * _size);
+        _smoke.setEndSize(2f * _size);
+        _smoke.setStartColor(new ColorRGBA(0.2f, 0.2f, 0.2f, 0.75f));
+        _smoke.setEndColor(new ColorRGBA(0.35f, 0.35f, 0.35f, 0f));
+        _smoke.getParticleController().setRepeatType(Controller.RT_CLAMP);
+        _smoke.getParticleController().setActive(false);
         if (_smoketex != null) {
-            particles.setRenderState(_smoketex);
+            _smoke.setRenderState(_smoketex);
         }
-        particles.setRenderState(RenderUtil.blendAlpha);
-        particles.setRenderState(RenderUtil.overlayZBuf);
-        
-        model.getEmissionNode().attachChild(particles);
-        particles.updateRenderState();
+        _smoke.setRenderState(RenderUtil.blendAlpha);
+        _smoke.setRenderState(RenderUtil.overlayZBuf);
     }
     
     @Override // documentation inherited
@@ -113,12 +112,13 @@ public class GunshotEmission extends SpriteEmission
             _smoketex = tprov.getTexture("/textures/effects/dust.png");
             _ftex = tprov.getTexture("/textures/effects/flash.png");
         }
-        _smokemgr.getParticles().setRenderState(_smoketex);
+        _smoke.setRenderState(_smoketex);
         _flare.setRenderState(_ftex);
     }
     
     @Override // documentation inherited
-    public Controller putClone (Controller store, CloneCreator properties)
+    public Controller putClone (
+        Controller store, Model.CloneCreator properties)
     {
         GunshotEmission gstore;
         if (store == null) {
@@ -144,9 +144,8 @@ public class GunshotEmission extends SpriteEmission
         out.writeInt(_trails.length);
         out.writeFloat(_spread);
     }
-
+    
     // documentation inherited from interface Externalizable
-    @SuppressWarnings("unchecked")
     public void readExternal (ObjectInput in)
         throws IOException, ClassNotFoundException
     {
@@ -239,8 +238,13 @@ public class GunshotEmission extends SpriteEmission
         }
         
         // and a burst of smoke
-        _smokemgr.setParticlesOrigin(_eloc);
-        _smokemgr.forceRespawn();
+        if (!_smoke.getParticleController().isActive()) {
+            _model.getEmissionNode().attachChild(_smoke);
+            _smoke.updateRenderState();
+            _smoke.getParticleController().setActive(true);
+        }
+        _smoke.setOriginOffset(_eloc);
+        _smoke.forceRespawn();
     }
     
     /**
@@ -292,7 +296,7 @@ public class GunshotEmission extends SpriteEmission
             if ((_elapsed += time) >= FLARE_DURATION) {
                 _model.getEmissionNode().detachChild(this);
             }
-            getDefaultColor().interpolate(ColorRGBA.white,
+            getBatch(0).getDefaultColor().interpolate(ColorRGBA.white,
                 ColorRGBA.black, _elapsed / FLARE_DURATION);
         }
         
@@ -431,8 +435,8 @@ public class GunshotEmission extends SpriteEmission
     /** The bullet trail handler. */
     protected Trail[] _trails;
     
-    /** The gunsmoke particle manager. */
-    protected ParticleManager _smokemgr;
+    /** The gunsmoke particle system. */
+    protected ParticleMesh _smoke;
     
     /** The shared flare mesh. */
     protected static TriMesh _fmesh;

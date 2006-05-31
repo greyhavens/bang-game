@@ -16,7 +16,8 @@ import com.jme.scene.Geometry;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
-import com.jmex.effects.ParticleManager;
+import com.jmex.effects.particles.ParticleFactory;
+import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.StringUtil;
@@ -198,8 +199,8 @@ public class MobileSprite extends PieceSprite
         }
 
         // turn on the dust
-        if (_dustmgr != null) {
-            _dustmgr.setReleaseRate(32);
+        if (_dust != null) {
+            _dust.setReleaseRate(32);
         }
     }
 
@@ -214,8 +215,8 @@ public class MobileSprite extends PieceSprite
         }
 
         // deactivate the dust
-        if (_dustmgr != null) {
-            _dustmgr.setReleaseRate(0);
+        if (_dust != null) {
+            _dust.setReleaseRate(0);
         }
     }
     
@@ -263,6 +264,7 @@ public class MobileSprite extends PieceSprite
                 startNextIdle(false);
             }
         }
+
         super.updateWorldData(time);
     }
 
@@ -311,32 +313,31 @@ public class MobileSprite extends PieceSprite
             return;
         }
 
-        _dustmgr = new ParticleManager(NUM_DUST_PARTICLES);
-        _dustmgr.setInitialVelocity(0.005f);
-        _dustmgr.setEmissionDirection(Vector3f.UNIT_Z);
-        _dustmgr.setEmissionMaximumAngle(FastMath.PI / 2);
-        _dustmgr.setParticlesMinimumLifeTime(500f);
-        _dustmgr.setRandomMod(0f);
-        _dustmgr.setPrecision(FastMath.FLT_EPSILON);
-        _dustmgr.setControlFlow(true);
-        _dustmgr.setReleaseRate(0);
-        _dustmgr.setReleaseVariance(0f);
-        _dustmgr.setParticleSpinSpeed(0.05f);
-        _dustmgr.setStartSize(TILE_SIZE / 5);
-        _dustmgr.setEndSize(TILE_SIZE / 3);
+        _dust = ParticleFactory.buildParticles("dust", NUM_DUST_PARTICLES);
+        _dust.setInitialVelocity(0.005f);
+        _dust.setEmissionDirection(Vector3f.UNIT_Z);
+        _dust.setMaximumAngle(FastMath.PI / 2);
+        _dust.setMinimumLifeTime(500f);
+        _dust.setRandomMod(0f);
+        _dust.getParticleController().setPrecision(FastMath.FLT_EPSILON);
+        _dust.getParticleController().setControlFlow(true);
+        _dust.setReleaseRate(0);
+        _dust.getParticleController().setReleaseVariance(0f);
+        _dust.setParticleSpinSpeed(0.05f);
+        _dust.setStartSize(TILE_SIZE / 5);
+        _dust.setEndSize(TILE_SIZE / 3);
         if (_dusttex == null) {
             _dusttex = RenderUtil.createTextureState(
                 ctx, "textures/effects/dust.png");
         }
-        _dustmgr.getParticles().setRenderState(_dusttex);
-        _dustmgr.getParticles().setRenderState(RenderUtil.blendAlpha);
-        _dustmgr.getParticles().setRenderState(RenderUtil.overlayZBuf);
-        _dustmgr.getParticles().updateRenderState();
-        _dustmgr.getParticles().addController(_dustmgr);
+        _dust.setRenderState(_dusttex);
+        _dust.setRenderState(RenderUtil.blendAlpha);
+        _dust.setRenderState(RenderUtil.overlayZBuf);
+        _dust.updateRenderState();
 
         // put them in the highlight node so that they are positioned relative
         // to the board
-        attachHighlight(_dustmgr.getParticles());
+        attachHighlight(_dust);
     }
 
     @Override // documentation inherited
@@ -413,7 +414,7 @@ public class MobileSprite extends PieceSprite
         return (_model == null || _dead) ?
             -1f : _model.startAnimation(action);
     }
-
+    
     /**
      * Starts the next action or idle animation.
      */
@@ -425,7 +426,7 @@ public class MobileSprite extends PieceSprite
             startNextIdle(true);
         }
     }
-    
+
     /**
      * Pulls the next action off of our queue and runs it.
      */
@@ -588,11 +589,11 @@ public class MobileSprite extends PieceSprite
     {
         super.updateHighlight();
         
-        if (_dustmgr != null && isMoving()) {
-            _dustmgr.getParticlesOrigin().set(localTranslation);
-            ColorRGBA start = _dustmgr.getStartColor();
+        if (_dust != null && isMoving()) {
+            _dust.getOriginOffset().set(localTranslation);
+            ColorRGBA start = _dust.getStartColor();
             _view.getDustColor(localTranslation, start);
-            _dustmgr.getEndColor().set(start.r, start.g, start.b, 0f);
+            _dust.getEndColor().set(start.r, start.g, start.b, 0f);
         }
     }
 
@@ -622,7 +623,7 @@ public class MobileSprite extends PieceSprite
     protected String[] _wtypes;
     protected String[] _ianims;
     
-    protected ParticleManager _dustmgr;
+    protected ParticleMesh _dust;
     protected Sound _moveSound;
 
     protected String _action, _idle;

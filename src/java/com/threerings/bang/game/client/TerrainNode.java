@@ -127,7 +127,7 @@ public class TerrainNode extends Node
                     angle += step;
                 }
             }
-            setVertexBuffer(BufferUtils.createFloatBuffer(
+            setVertexBuffer(0, BufferUtils.createFloatBuffer(
                 _verts.toArray(new Vector3f[_verts.size()])));
             generateIndices();
         }
@@ -198,7 +198,7 @@ public class TerrainNode extends Node
                 _vwidth = (int)FastMath.ceil(_width / SUB_TILE_SIZE) + 2;
                 _vheight = (int)FastMath.ceil(_height / SUB_TILE_SIZE) + 2;
             }
-            setVertexBuffer(BufferUtils.createFloatBuffer(
+            setVertexBuffer(0, BufferUtils.createFloatBuffer(
                 _vwidth * _vheight * 3));
 
             // set the texture coords, which change for highlights not aligned
@@ -215,13 +215,13 @@ public class TerrainNode extends Node
                         }
                     }
                 }
-                setTextureBuffer(_htbuf);
+                setTextureBuffer(0, _htbuf);
 
             } else {
-                setTextureBuffer(BufferUtils.createFloatBuffer(
+                setTextureBuffer(0, BufferUtils.createFloatBuffer(
                     _vwidth * _vheight * 2));
             }
-            setIndexBuffer(BufferUtils.createIntBuffer(
+            setIndexBuffer(0, BufferUtils.createIntBuffer(
                 (_vwidth - 1) * (_vheight - 1) * 6));
 
             // update the vertices, indices, and possibly the texture coords
@@ -278,8 +278,8 @@ public class TerrainNode extends Node
                 return;
             }
 
-            FloatBuffer vbuf = getVertexBuffer();
-            IntBuffer ibuf = getIndexBuffer();
+            FloatBuffer vbuf = getVertexBuffer(0);
+            IntBuffer ibuf = getIndexBuffer(0);
             ibuf.rewind();
             
             // if we're putting highlights over pieces and there's a piece
@@ -332,7 +332,7 @@ public class TerrainNode extends Node
             if (_onTile) {
                 return;
             }
-            FloatBuffer tbuf = getTextureBuffer();
+            FloatBuffer tbuf = getTextureBuffer(0, 0);
             Vector2f tcoord = new Vector2f();
             float sstep = SUB_TILE_SIZE / _width,
                 tstep = SUB_TILE_SIZE / _height,
@@ -444,7 +444,7 @@ public class TerrainNode extends Node
             for (int y = 0; y < _blocks[x].length; y++) {
                 _blocks[x][y].deleteCreatedTextures();
                 _blocks[x][y].mesh.unlockMeshes(_ctx.getRenderer());
-                VBOInfo vboinfo = _blocks[x][y].mesh.getVBOInfo();
+                VBOInfo vboinfo = _blocks[x][y].mesh.getVBOInfo(0);
                 if (vboinfo != null) {
                     RenderUtil.deleteVBOs(_ctx, vboinfo);
                 }
@@ -875,7 +875,7 @@ public class TerrainNode extends Node
             ArrayList tris = results.getPickData(i).getTargetTris();
             if (tris != null && tris.size() > 0) {
                 Object sprite = _view.getSprite(
-                    results.getPickData(i).getTargetMesh());
+                    results.getPickData(i).getTargetMesh().getParentGeom());
                 if (sprite == null || (sprite instanceof PieceSprite &&
                                        ((PieceSprite)sprite).getShadowType() ==
                                        PieceSprite.Shadow.STATIC)) {
@@ -1244,7 +1244,7 @@ public class TerrainNode extends Node
             // list
             mesh = new TriMesh("terrain", vbuf, nbuf, cbuf,
                 tbuf0, ibuf);
-            mesh.setTextureBuffer(tbuf1, 1);
+            mesh.setTextureBuffer(0, tbuf1, 1);
             mesh.setModelBound(new BoundingBox());
             mesh.updateModelBound();
 

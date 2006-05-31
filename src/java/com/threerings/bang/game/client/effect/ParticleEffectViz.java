@@ -5,7 +5,7 @@ package com.threerings.bang.game.client.effect;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
-import com.jmex.effects.ParticleManager;
+import com.jmex.effects.particles.ParticleMesh;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 
@@ -17,37 +17,38 @@ import static com.threerings.bang.client.BangMetrics.*;
 public abstract class ParticleEffectViz extends EffectViz
 {
     /**
-     * Displays a particle manager for this effect.
+     * Displays a particle system for this effect.
      *
-     * @param position whether or not to place the particle manager at the
+     * @param position whether or not to place the particle system at the
      * center of the target
      */
-    protected void displayParticleManager (PieceSprite target,
-        ParticleManager pmgr, boolean position)
+    protected void displayParticles (
+        PieceSprite target, ParticleMesh particles, boolean position)
     {
-        // we may be reusing this particle manager so remove it from its
+        // we may be reusing this particle system so remove it from its
         // previous parent
-        Node parent = pmgr.getParticles().getParent();
+        Node parent = particles.getParent();
         if (parent != null) {
-            parent.detachChild(pmgr.getParticles());
+            parent.detachChild(particles);
         }
         
-        // position and fire up the particle manager
+        // position and fire up the particle system
         if (position) {
             Vector3f spos = target.getLocalTranslation();
-            pmgr.getParticles().setLocalTranslation(
+            particles.setLocalTranslation(
                 new Vector3f(spos.x, spos.y, spos.z + TILE_SIZE/2));
         }
-        pmgr.forceRespawn();
-        _view.getPieceNode().attachChild(pmgr.getParticles());
-        pmgr.getParticles().setCullMode(Node.CULL_NEVER);
+        particles.forceRespawn();
+        _view.getPieceNode().attachChild(particles);
+        particles.updateRenderState();
+        particles.setCullMode(Node.CULL_NEVER);
     }
     
     /**
-     * Removes a particle manager from the view.
+     * Removes a particle system from the view.
      */
-    protected void removeParticleManager (ParticleManager pmgr)
+    protected void removeParticles (ParticleMesh particles)
     {
-        _view.getPieceNode().detachChild(pmgr.getParticles());
+        _view.getPieceNode().detachChild(particles);
     }
 }

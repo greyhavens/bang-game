@@ -16,8 +16,7 @@ import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
-import com.jmex.effects.Particle;
-import com.jmex.effects.ParticleManager;
+import com.jmex.effects.particles.ParticleMesh;
 
 import com.threerings.util.RandomUtil;
 
@@ -43,18 +42,18 @@ public class ExplosionViz extends ParticleEffectViz
         // set up and add the dust ring
         if (_dustring != null) {
             prepareDustRing(target);
-            displayParticleManager(target, _dustring, false);
+            displayParticles(target, _dustring, false);
         }
         
         // add the fireball
-        displayParticleManager(target, _fireball, true);
+        displayParticles(target, _fireball, true);
         
         // add the smoke puff
-        displayParticleManager(target, _smokepuff, true);
+        displayParticles(target, _smokepuff, true);
         
         // and the streamers
         for (int i = 0; i < _streamers.length; i++) {
-            displayParticleManager(target, _streamers[i].pmgr, true);
+            displayParticles(target, _streamers[i].particles, true);
         }
         
         // and the light
@@ -72,14 +71,14 @@ public class ExplosionViz extends ParticleEffectViz
     {
         // create the dust ring for explosions on the ground
         if (!_target.isFlyer()) {
-            _dustring = ParticleFactory.getDustRing();
+            _dustring = ParticlePool.getDustRing();
         }
         
         // create the fireball
-        _fireball = ParticleFactory.getFireball();
+        _fireball = ParticlePool.getFireball();
         
         // create the smoke puff
-        _smokepuff = ParticleFactory.getSmokePuff();
+        _smokepuff = ParticlePool.getSmokePuff();
         
         // create a few streamers from the explosion
         _streamers = new Streamer[NUM_STREAMERS_AVG +
@@ -102,10 +101,8 @@ public class ExplosionViz extends ParticleEffectViz
             terrain.dustiness);
         _dustring.getEndColor().set(color.r, color.g, color.b, 0f);
         
-        _dustring.getParticles().setLocalTranslation(
-            target.getLocalTranslation());
-        _dustring.getParticles().setLocalRotation(
-            target.getLocalRotation());
+        _dustring.setLocalTranslation(target.getLocalTranslation());
+        _dustring.setLocalRotation(target.getLocalRotation());
     }
     
     /**
@@ -114,13 +111,13 @@ public class ExplosionViz extends ParticleEffectViz
     protected class Streamer
     {
         /** The particle manager for the streamer. */
-        public ParticleManager pmgr;
+        public ParticleMesh particles;
         
         public Streamer ()
         {
-            pmgr = ParticleFactory.getStreamer();
-            pmgr.setActive(true);
-            pmgr.setParticlesOrigin(new Vector3f());
+            particles = ParticlePool.getStreamer();
+            particles.getParticleController().setActive(true);
+            particles.setOriginOffset(new Vector3f());
             
             // fire the streamer in a random direction
             float azimuth = RandomUtil.getFloat(FastMath.TWO_PI),
@@ -130,20 +127,20 @@ public class ExplosionViz extends ParticleEffectViz
                 FastMath.cos(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(azimuth) * FastMath.cos(elevation),
                 FastMath.sin(elevation));
-            _velocity.mult(TILE_SIZE / 2, pmgr.getParticlesOrigin());
+            _velocity.mult(TILE_SIZE / 2, particles.getOriginOffset());
             _velocity.multLocal(STREAMER_INIT_SPEED);
             
-            pmgr.getParticles().addController(new Controller() {
+            particles.addController(new Controller() {
                 public void update (float time) {
                     // update the position and velocity of the emitter
-                    Vector3f origin = pmgr.getParticlesOrigin();
+                    Vector3f origin = particles.getOriginOffset();
                     origin.scaleAdd(time, _velocity, origin);
                     _velocity.scaleAdd(time, STREAMER_ACCEL, _velocity);
                     
                     // remove streamer if its lifespan has elapsed
                     if ((_age += time) > STREAMER_LIFESPAN) {
-                        pmgr.getParticles().removeController(this);
-                        removeParticleManager(pmgr);
+                        particles.removeController(this);
+                        removeParticles(particles);
                     }
                 }
             });
@@ -157,7 +154,7 @@ public class ExplosionViz extends ParticleEffectViz
     }
     
     protected boolean _small;
-    protected ParticleManager _dustring, _fireball, _smokepuff;
+    protected ParticleMesh _dustring, _fireball, _smokepuff;
     protected Streamer[] _streamers;
     protected PointLight _light;
     

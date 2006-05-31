@@ -23,7 +23,7 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
-import com.jmex.effects.ParticleManager;
+import com.jmex.effects.particles.ParticleMesh;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.util.RenderUtil;
@@ -43,8 +43,8 @@ public class RepairViz extends ParticleEffectViz
         _glow.activate(target);
         
         // and the swirl effect
-        displayParticleManager(target, _swirls[0].pmgr, true);
-        displayParticleManager(target, _swirls[1].pmgr, true);
+        displayParticles(target, _swirls[0].particles, true);
+        displayParticles(target, _swirls[1].particles, true);
         
         // note that the effect was displayed
         effectDisplayed();
@@ -167,8 +167,8 @@ public class RepairViz extends ParticleEffectViz
                 _panes[ii].setLocalTranslation(_locs[ii].set(
                     _loc.x + dist * FastMath.cos(angle),
                     _loc.y + dist * FastMath.sin(angle), _loc.z));
-                _panes[ii].getDefaultColor().interpolate(ColorRGBA.black,
-                    ColorRGBA.white, a * 0.5f);
+                _panes[ii].getBatch(0).getDefaultColor().interpolate(
+                    ColorRGBA.black, ColorRGBA.white, a * 0.5f);
             }
         }
     
@@ -187,32 +187,32 @@ public class RepairViz extends ParticleEffectViz
     /** The swirl of sparkles effect. */
     protected class Swirl
     {
-        /** The particle manager for the swirl. */
-        public ParticleManager pmgr;
+        /** The particle system for the swirl. */
+        public ParticleMesh particles;
         
         public Swirl (final float a0)
         {
-            pmgr = ParticleFactory.getSparkles();
-            pmgr.setActive(true);
-            pmgr.setReleaseRate(512);
-            pmgr.setParticlesOrigin(new Vector3f());
+            particles = ParticlePool.getSparkles();
+            particles.getParticleController().setActive(true);
+            particles.setReleaseRate(512);
+            particles.setOriginOffset(new Vector3f());
             
-            pmgr.getParticles().addController(new Controller() {
+            particles.addController(new Controller() {
                 public void update (float time) {
                     // remove swirl if its lifespan has elapsed
                     if ((_elapsed += time) > GLOW_DURATION) {
-                        pmgr.getParticles().removeController(this);
-                        removeParticleManager(pmgr);
+                        particles.removeController(this);
+                        removeParticles(particles);
                         return;
                         
                     } else if (_elapsed > SWIRL_DURATION) {
-                        pmgr.setReleaseRate(0);
+                        particles.setReleaseRate(0);
                         return;
                     }
                     float t = _elapsed / SWIRL_DURATION,
                         radius = TILE_SIZE / 2,
                         angle = a0 + t * FastMath.TWO_PI * SWIRL_REVOLUTIONS;
-                    pmgr.getParticlesOrigin().set(
+                    particles.getOriginOffset().set(
                         radius * FastMath.cos(angle),
                         radius * FastMath.sin(angle),
                         TILE_SIZE * t - radius);
