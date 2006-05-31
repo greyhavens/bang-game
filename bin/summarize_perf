@@ -76,7 +76,7 @@ foreach $user (sort keys %byuser) {
     }
     $ufps[POSIX::floor($fps/$samples)]++;
 }
-open(DAT, ">/tmp/perf.out") or die "Can't open /tmp/perf.out: $!\n";
+open(DAT, ">perf.dat") or die "Can't open perf.dat: $!\n";
 for ($ii = 0; $ii < @ufps; $ii++) {
     my $fps = defined $ufps[$ii] ? $ufps[$ii] : 0;
     print DAT "$ii $fps\n";
@@ -88,9 +88,8 @@ print PIPE "set xlabel 'FPS'\n";
 print PIPE "set ylabel 'Users'\n";
 print PIPE "set terminal png\n";
 print PIPE "set output 'perf.png'\n";
-print PIPE "plot '/tmp/perf.out' title 'Average FPS' with histeps\n";
+print PIPE "plot 'perf.dat' title 'Average FPS' with histeps\n";
 close(PIPE);
-unlink("/tmp/perf.out");
 
 sub accum {
     my ($hash, $key, $vector) = @_;
