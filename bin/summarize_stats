@@ -14,6 +14,7 @@ my %firsttimers;
 my %usertime;
 my %usersess;
 my %usergames;
+my %userrgames;
 my %userearn;
 
 my $tottime = 0;
@@ -65,7 +66,9 @@ while (<>) {
         $totrounds += $rounds;
         $totgametime += $1;
         $byteamsize{$3} += $rounds;
+        my $rated = 0;
         if ($info =~ s/ r:true//) {
+            $rated = 1;
             $ratgames += $rounds;
         } elsif ($info =~ s/ r:false//) {
             $unratgames += $rounds;
@@ -78,7 +81,7 @@ while (<>) {
         foreach $pinfo (@pinfos) {
             my @bits = split(/:/, $pinfo);
             my $username = $bits[0];
-            $humans++ unless ($username =~ /tin_can/);
+            $humans++ unless ($username =~ /\(tin_can\)/);
         }
         my $noobs = 0;
         foreach $pinfo (@pinfos) {
@@ -97,6 +100,7 @@ while (<>) {
                 $rlogoffs++ if ($humans > 1);
             }
             $usergames{$username} += $rounds;
+            $userrgames{$username} += $rounds if ($rated);
             my $earnings = (@bits > 3) ? $bits[3] : 0;
             $userearn{$username} += $earnings;
             $totearn += $earnings;
@@ -168,16 +172,18 @@ foreach $size (sort { $byteamsize{$b} - $byteamsize{$a} } keys %byteamsize) {
 print "\n";
 
 sub sum_users {
-    print "Username     Sess  Mins /sess  Rounds  Earnings /game\n";
+    print "Username     Sess  Mins /sess  Rounds  Earn /game\n";
     my $idx = 0;
     foreach $user (@_) {
+        next if ($user =~ /\(tin_can\)/);
         my $mins = safe_get($user, \%usertime) / 60;
         my $avgsess = safe_div($mins, safe_get($user, \%usersess));
         my $games = safe_get($user, \%usergames);
+        my $rgames = safe_get($user, \%userrgames);
         my $earn = safe_get($user, \%userearn);
-        printf("%-12s %4d  %4.0f  %4.0f   %5d     %5d   %3.0f\n",
+        printf("%-12s %4d  %4.0f  %4.0f   %2d/%2d %5d   %3.0f\n",
                $user, safe_get($user, \%usersess), $mins, $avgsess,
-               $games, $earn, safe_div($earn, $games));
+               $games, $rgames, $earn, safe_div($earn, $games));
         last if (++$idx == $limit);
     }
     print "\n";
