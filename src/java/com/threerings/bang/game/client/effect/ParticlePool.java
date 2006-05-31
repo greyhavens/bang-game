@@ -143,6 +143,7 @@ public class ParticlePool
         ParticleMesh particles = new ParticleMesh("dustring", 64);
         particles.addController(new TransientParticleController(particles));
         particles.setMinimumLifeTime(500f);
+        particles.setMaximumLifeTime(1500f);
         particles.setInitialVelocity(0.02f);
         particles.setEmissionDirection(Vector3f.UNIT_Z);
         particles.setMinimumAngle(FastMath.HALF_PI);
@@ -168,6 +169,7 @@ public class ParticlePool
         ParticleMesh particles = new ParticleMesh("fireball", 16);
         particles.addController(new TransientParticleController(particles));
         particles.setMinimumLifeTime(250f);
+        particles.setMaximumLifeTime(750f);
         particles.setInitialVelocity(0.004f);
         particles.setMaximumAngle(FastMath.PI);
         particles.setRandomMod(0f);
@@ -193,6 +195,7 @@ public class ParticlePool
         ParticleMesh particles =
             ParticleFactory.buildParticles("streamer", 64);
         particles.setMinimumLifeTime(250f);
+        particles.setMaximumLifeTime(750f);
         particles.setInitialVelocity(0f);
         particles.setRandomMod(0f);
         particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
@@ -218,6 +221,7 @@ public class ParticlePool
         ParticleMesh particles = new ParticleMesh("smokepuff", 32);
         particles.addController(new TransientParticleController(particles));
         particles.setMinimumLifeTime(500f);
+        particles.setMaximumLifeTime(1500f);
         particles.getOriginOffset().z += (TILE_SIZE * 0.75f);
         particles.setInitialVelocity(0.01f);
         particles.setEmissionDirection(Vector3f.UNIT_Z);
@@ -244,6 +248,7 @@ public class ParticlePool
         ParticleMesh particles =
             ParticleFactory.buildParticles("sparkles", 64);
         particles.setMinimumLifeTime(250f);
+        particles.setMaximumLifeTime(750f);
         particles.setInitialVelocity(0f);
         particles.setRandomMod(0f);
         particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
@@ -269,6 +274,7 @@ public class ParticlePool
         ParticleMesh particles = new ParticleMesh("steamcloud", 32);
         particles.addController(new TransientParticleController(particles));
         particles.setMinimumLifeTime(500f);
+        particles.setMaximumLifeTime(1500f);
         particles.getOriginOffset().z += (TILE_SIZE * 0.75f);
         particles.setInitialVelocity(0.001f);
         particles.setEmissionDirection(Vector3f.UNIT_Z);

@@ -38,10 +38,10 @@ public abstract class ParticleEffectViz extends EffectViz
             particles.setLocalTranslation(
                 new Vector3f(spos.x, spos.y, spos.z + TILE_SIZE/2));
         }
-        particles.forceRespawn();
         _view.getPieceNode().attachChild(particles);
         particles.updateRenderState();
-        particles.setCullMode(Node.CULL_NEVER);
+        particles.updateGeometricState(0f, true);
+        particles.forceRespawn();
     }
     
     /**

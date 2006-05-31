@@ -318,6 +318,7 @@ public class MobileSprite extends PieceSprite
         _dust.setEmissionDirection(Vector3f.UNIT_Z);
         _dust.setMaximumAngle(FastMath.PI / 2);
         _dust.setMinimumLifeTime(500f);
+        _dust.setMaximumLifeTime(1500f);
         _dust.setRandomMod(0f);
         _dust.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         _dust.getParticleController().setControlFlow(true);

@@ -116,7 +116,6 @@ public class ExplosionViz extends ParticleEffectViz
         public Streamer ()
         {
             particles = ParticlePool.getStreamer();
-            particles.getParticleController().setActive(true);
             particles.setOriginOffset(new Vector3f());
             
             // fire the streamer in a random direction

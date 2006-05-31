@@ -173,7 +173,8 @@ public class BoardView extends BComponent
         }
         _node.setRenderState(_lstate);
         _node.setLightCombineMode(LightState.REPLACE);
-
+        _node.setNormalsMode(Spatial.NM_GL_NORMALIZE_IF_SCALED);
+        
         // default states
         MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.getDiffuse().set(ColorRGBA.white);

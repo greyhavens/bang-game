@@ -86,6 +86,7 @@ public class GunshotEmission extends SpriteEmission
             new ParticlePool.TransientParticleController(_smoke));
         _smoke = ParticleFactory.buildParticles("smoke", 16);
         _smoke.setMinimumLifeTime(500f);
+        _smoke.setMaximumLifeTime(1500f);
         _smoke.setInitialVelocity(0.005f);
         _smoke.setEmissionDirection(Vector3f.UNIT_Z);
         _smoke.setMaximumAngle(FastMath.PI / 16);
@@ -246,6 +247,7 @@ public class GunshotEmission extends SpriteEmission
             _smoke.getParticleController().setActive(true);
         }
         _smoke.setOriginOffset(_eloc);
+        _smoke.updateGeometricState(0f, true);
         _smoke.forceRespawn();
     }
     

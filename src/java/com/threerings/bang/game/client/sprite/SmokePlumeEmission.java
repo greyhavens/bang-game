@@ -55,6 +55,7 @@ public class SmokePlumeEmission extends SpriteEmission
     {
         _smoke = ParticleFactory.buildParticles("smoke", 64);
         _smoke.setMinimumLifeTime(_lifetime);
+        _smoke.setMaximumLifeTime(_lifetime * 1.5f);
         _smoke.setInitialVelocity(_velocity);
         _smoke.setOriginOffset(new Vector3f());
         _smoke.setEmissionDirection(Vector3f.UNIT_Z);
