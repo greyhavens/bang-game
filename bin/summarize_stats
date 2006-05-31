@@ -56,7 +56,7 @@ while (<>) {
         }
 
     } elsif (/game_ended t:(\d+) s:(\S+) ts:(\d+) (.*)/) {
-        my $time = $1;
+        my $gsecs = $1;
         my $tsize = $3;
         my $info = $4;
         my @scens = split(/,/, $2);
@@ -93,8 +93,7 @@ while (<>) {
         }
 
         $games{$type}++;
-        $rounds{$type} += $rcount;
-        $time{$type} += $time;
+        $time{$type} += $gsecs;
 
         if ($tutorial) {
             foreach $scen (@scens) {
@@ -113,7 +112,6 @@ while (<>) {
             $byteamsize{$tsize} += $rcount;
         }
 
-        my $noobs = 0;
         foreach $pinfo (@pinfos) {
             my @bits = split(/:/, $pinfo);
             my $username = $bits[0];
@@ -137,16 +135,21 @@ while (<>) {
                 $totearn += $earnings;
                 if (defined $firsttimers{$username}) {
                     $newearn += $earnings;
-                    $noobs++;
+                    $newrounds += $rcount;
                 }
             }
-        }
 
-        if (!$tutorial) {
-            $newrounds += $rcount if ($noobs > 0);
+            # we note the number of rounds played for each player in the game
+            $rounds{$type} += $rcount;
         }
     }
 }
+
+printf("Type        Games\n");
+printf("vs Humans   %5d\n", $games{"human"});
+printf("vs Tin Cans %5d\n", $games{"tincan"});
+printf("Tutorials   %5d\n", $games{"tutorial"});
+print "\n";
 
 my $totrounds = $rounds{"human"} + $rounds{"tincan"};
 
@@ -155,7 +158,7 @@ my $ucount = keys %usersess;
 my $ncount = keys %firsttimers;
 my $totmins = $tottime/60;
 my $newmins = $newtime/60;
-print "Username    Sess.  Minutes /sess  Rounds  Earnings /game\n";
+print "Username    Sess.  Minutes /sess  Rounds  Earnings /round\n";
 printf("all %6d %6d  %7.0f    %2.0f  %6d  %8d\n",
        $ucount, $totsess, $totmins, $totmins/$totsess, $totrounds, $totearn);
 printf("noobs %4d %6d  %7.0f    %2.0f  %6d  %8d\n",
@@ -166,20 +169,19 @@ printf("all  (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
 printf("noob (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
        $newsess/$ucount, $newmins/$ucount, $newrounds/$ucount,
        $newearn/$ucount, $newearn/$newrounds);
-
 print "\n";
 
 # top ten by earnings
-print "                      - by earnings -\n";
+print "                    - top by earnings -\n";
 sum_users(sort { $userearn{$b} - $userearn{$a} } keys %userearn);
 
 # top ten by rounds played
-print "                    - by rounds played -\n";
+print "                  - top by rounds played -\n";
 sum_users(sort { $userrounds{"total"}{$b} - $userrounds{"total"}{$a} }
           keys %{$userrounds{"total"}});
 
 # top ten by minutes online
-print "                   - by minutes online -\n";
+print "                 - top by minutes online -\n";
 sum_users(sort { $usertime{$b} - $usertime{$a} } keys %usertime);
 
 # break down disconnect/logoff/leave stats
@@ -214,7 +216,7 @@ foreach $size (sort { $byteamsize{$b} - $byteamsize{$a} } keys %byteamsize) {
 print "\n";
 
 sub sum_users {
-    print "Username     Sess  Mins /sess  Rounds  Earn /game\n";
+    print "Username     Sess  Mins /sess  Rounds  Earn /round\n";
     my $idx = 0;
     foreach $user (@_) {
         next if ($user =~ /\(tin_can\)/);
