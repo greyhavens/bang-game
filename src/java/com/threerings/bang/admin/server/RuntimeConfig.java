@@ -41,8 +41,9 @@ public class RuntimeConfig
                 continue;
             }
 
-            omgr.createObject(
-                (Class<DObject>)oclass, new Subscriber<DObject>() {
+            @SuppressWarnings("unchecked") Class<DObject> doclass =
+                (Class<DObject>)oclass;
+            omgr.createObject(doclass, new Subscriber<DObject>() {
                 public void objectAvailable (DObject object) {
                     // set the tight-ass access controller
                     object.setAccessController(ADMIN_CONTROLLER);
