@@ -14,7 +14,7 @@ web_dir = pages
 # The host and port to use when connecting to the server
 
 server_host = game.banghowdy.com
-# server_port = 47624
+# server_ports = 4007, 47624
 
 #
 # Various URLs that are needed by the client
