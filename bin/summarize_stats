@@ -115,6 +115,9 @@ while (<>) {
         foreach $pinfo (@pinfos) {
             my @bits = split(/:/, $pinfo);
             my $username = $bits[0];
+            next if ($username =~ /\(tin_can\)/);
+
+            # track stats on who leaves games early (or disconnects)
             if ($username =~ s/\#$//) {
                 note_leaver(\%leavers, $humans, $tutorial);
             }
@@ -124,10 +127,12 @@ while (<>) {
             if ($username =~ s/\*$//) {
                 note_leaver(\%logoffs, $humans, $tutorial);
             }
+
+            # track rounds played and earnings per player
             if ($tutorial) {
                 $userrounds{"tutorial"}{$username} += $rcount;
             } else {
-                $userrounds{"total"}{$username} += $rcount;
+                $userrounds{"versus"}{$username} += $rcount;
                 $userrounds{"rated"}{$username} += $rcount
                     if ($rtype eq "rated");
                 my $earnings = (@bits > 3) ? $bits[3] : 0;
@@ -139,7 +144,7 @@ while (<>) {
                 }
             }
 
-            # we note the number of rounds played for each player in the game
+            # track total rounds played for all (human) players in all games
             $rounds{$type} += $rcount;
         }
     }
@@ -177,8 +182,8 @@ sum_users(sort { $userearn{$b} - $userearn{$a} } keys %userearn);
 
 # top ten by rounds played
 print "                  - top by rounds played -\n";
-sum_users(sort { $userrounds{"total"}{$b} - $userrounds{"total"}{$a} }
-          keys %{$userrounds{"total"}});
+sum_users(sort { $userrounds{"versus"}{$b} - $userrounds{"versus"}{$a} }
+          keys %{$userrounds{"versus"}});
 
 # top ten by minutes online
 print "                 - top by minutes online -\n";
@@ -222,7 +227,7 @@ sub sum_users {
         next if ($user =~ /\(tin_can\)/);
         my $mins = safe_get($user, \%usertime) / 60;
         my $avgsess = safe_div($mins, safe_get($user, \%usersess));
-        my $games = safe_get($user, $userrounds{"total"});
+        my $games = safe_get($user, $userrounds{"versus"});
         my $rgames = safe_get($user, $userrounds{"rated"});
         my $earn = safe_get($user, \%userearn);
         printf("%-12s %4d  %4.0f  %4.0f   %2d/%2d %5d   %3.0f\n",
