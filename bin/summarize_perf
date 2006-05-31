@@ -1,0 +1,100 @@
+#!/usr/bin/perl -w
+#
+# $Id$
+#
+# Grinds the Bang performance log and reports on various statistics.
+
+use POSIX;
+
+my $PERFCOUNT = 7;
+
+my %byboard;
+my %byuser;
+
+# grind and process the raw data
+while (<>) {
+    chomp;
+    if (/client_perf u:(\S+) b:(.*) d:(.*) h:\((.*)\)/) {
+        my $user = $1;
+        my $board = $2;
+        my $driver = $3;
+        my @perf = split(/, /, $4);
+        # print "[user=$user, board=$board, driver=$driver, perf=" . join(":", @perf) . "]\n";
+        accum(\%byboard, $board, \@perf);
+        accum(\%byuser, $user, \@perf);
+    }
+}
+
+my $date = localtime();
+
+print <<EOF
+    <html>
+    <head><title>Performance stats</title></head>
+    <body>
+
+    <p><b>User FPS averages</b><br/>
+    <img src="perf.png"/>
+    </p>
+
+    <p><b>Board FPS averages</b><br/>
+    <table style="border-collapse: collapse" border="1" cellpadding="2">
+    <tr><th>Board</th>
+    <th>0-10</th><th>10-20</th><th>20-30</th><th>30-40</th>
+    <th>40-50</th><th>50-60</th><th>60+</th><th>Avg FPS</th></tr>
+EOF
+    ;
+
+foreach $board (sort keys %byboard) {
+    my $fps = 0;
+    my $samples = 1;
+    printf("<tr><td>%s</td>", $board);
+    for ($ii = 0; $ii < $PERFCOUNT; $ii++) {
+        my $bucket = $byboard{$board}[$ii];
+        printf("<td>%6d</td>", $bucket);
+        $fps += ($bucket * (10*$ii+5));
+        $samples += $bucket;
+    }
+    printf("</td><td>%4.2f</td></tr>\n", $fps/$samples);
+}
+
+print <<EOF
+    </table></p>
+    <p>Report generated on $date.</p>
+    </body>
+    </html>
+EOF
+    ;
+
+my @ufps;
+foreach $user (sort keys %byuser) {
+    my $fps = 0;
+    my $samples = 1;
+    for ($ii = 0; $ii < $PERFCOUNT; $ii++) {
+        my $bucket = $byuser{$user}[$ii];
+        $fps += ($bucket * (10*$ii+5));
+        $samples += $bucket;
+    }
+    $ufps[POSIX::floor($fps/$samples)]++;
+}
+open(DAT, ">/tmp/perf.out") or die "Can't open /tmp/perf.out: $!\n";
+for ($ii = 0; $ii < @ufps; $ii++) {
+    my $fps = defined $ufps[$ii] ? $ufps[$ii] : 0;
+    print DAT "$ii $fps\n";
+}
+close(DAT);
+open(PIPE, "|gnuplot -persist") or die "Can't open pipe to gnuplot: $!\n";
+print PIPE "set grid\n";
+print PIPE "set xlabel 'FPS'\n";
+print PIPE "set ylabel 'Users'\n";
+print PIPE "set terminal png\n";
+print PIPE "set output 'perf.png'\n";
+print PIPE "plot '/tmp/perf.out' title 'Average FPS' with histeps\n";
+close(PIPE);
+unlink("/tmp/perf.out");
+
+sub accum {
+    my ($hash, $key, $vector) = @_;
+    for ($ii = 0; $ii < $PERFCOUNT; $ii++) {
+        $hash->{$key}[$ii] += $vector->[$ii];
+    }
+}

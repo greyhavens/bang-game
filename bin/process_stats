@@ -115,11 +115,19 @@ $date =~ s:/:-:g;
 $cmd = "$root/bin/summarize_stats $histlogdir/server.log > /tmp/bangstats.tmp";
 if ($dry_run) {
     print("$cmd\n");
-    # print("mv *.png *.dat $statsdir\n");
+} else {
+    system_warn("nice -n 20 $cmd");
+}
+
+# run our performance stat summarizer
+$cmd = "$root/bin/summarize_perf $histlogdir/perf.log > $statsdir/perf.html";
+if ($dry_run) {
+    print("$cmd\n");
+    print("mv *.png *.dat $statsdir\n");
 } else {
     system_warn("nice -n 20 $cmd");
     # move the generated graphs into the right directory
-    # system_warn("mv *.png *.dat $statsdir");
+    system_warn("mv *.png *.dat $statsdir");
 }
 
 # finally send the stats email
