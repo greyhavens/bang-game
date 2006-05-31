@@ -172,6 +172,16 @@ public abstract class Stat
         return _modified;
     }
 
+    /**
+     * Forces this stat to consider itself modified. Generally this is not
+     * called but rather the derived class will update its modified state when
+     * it is actually modified.
+     */
+    public void setModified (boolean modified)
+    {
+        _modified = modified;
+    }
+
     /** Writes our custom streamable fields. */
     public void writeObject (ObjectOutputStream out)
         throws IOException

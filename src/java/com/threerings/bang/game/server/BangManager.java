@@ -659,16 +659,16 @@ public class BangManager extends GameManager
         // set the tick to -1 during the pre-round
         _bangobj.setTick((short)-1);
 
-        // set up our stats for this round
+        // set up our stats for this round; note that roundId is not yet
+        // incremented to the actual roundId
         StatSet[] stats = new StatSet[getPlayerSlots()];
         for (int ii = 0; ii < stats.length; ii++) {
             stats[ii] = new StatSet();
         }
-        _rounds[_bangobj.roundId-1].stats = stats;
+        _rounds[_bangobj.roundId].stats = stats;
         _bangobj.stats = stats;
 
-        // find out if the desired board has been loaded, loading it if not;
-        // note that roundId is not yet incremented to the actual roundId
+        // find out if the desired board has been loaded, loading it if not
         final BoardRecord brec = _rounds[_bangobj.roundId].board;
         if (brec.data != null) {
             continueStartingRound(brec);
@@ -1244,8 +1244,9 @@ public class BangManager extends GameManager
                             "[who=" + _bangobj.players[ii] + ", idx=" + ii +
                             ", award=" + award + "].", t);
                 }
-            } else {
-                // we only track one stat for unranked games, the number
+
+            } else if (prec.user.isActive()) {
+                // we only track one stat for unranked games, the number played
                 prec.user.stats.incrementStat(
                     Stat.Type.UNRANKED_GAMES_PLAYED, 1);
             }
@@ -1634,12 +1635,28 @@ public class BangManager extends GameManager
      * awards them a badge. This is only called for rated (matched) games.
      */
     protected void recordStats (
-        PlayerObject user, int pidx, Award award, int gameMins)
+        final PlayerObject user, int pidx, Award award, int gameMins)
     {
-        try {
-            // send all the stat updates out in one dobj event
-            user.startTransaction();
+        // if this player has logged off...
+        if (!user.isActive()) {
+            // ...we won't update any of their cumulative stats, but we need to
+            // wipe their consecutive wins stat
+            BangServer.invoker.postUnit(new Invoker.Unit() {
+                public boolean invoke () {
+                    Stat stat = Stat.Type.CONSEC_WINS.newStat();
+                    stat.setModified(true);
+                    BangServer.statrepo.writeModified(
+                        user.playerId, new Stat[] { stat });
+                    return false;
+                }
+            });
+            return;
+        }
 
+        // send all the stat updates out in one dobj event
+        user.startTransaction();
+
+        try {
             // if the game wasn't sufficiently long, certain stats don't count
             if (gameMins >= MIN_STATS_DURATION) {
                 user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
