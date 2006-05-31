@@ -390,6 +390,9 @@ public class TerrainNode extends Node
         setRenderState(RenderUtil.backCull);
         setRenderQueueMode(Renderer.QUEUE_SKIP);
         
+        // we normalize things ourself
+        setNormalsMode(NM_USE_PROVIDED);
+        
         MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.setColorMaterial(MaterialState.CM_DIFFUSE);
         mstate.getAmbient().set(ColorRGBA.white);

@@ -69,6 +69,9 @@ public class WaterNode extends Node
         setRenderState(lstate);
         setLightCombineMode(LightState.COMBINE_CLOSEST);
         
+        // we normalize things ourself
+        setNormalsMode(NM_USE_PROVIDED);
+        
         MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.getDiffuse().set(ColorRGBA.black);
         mstate.getAmbient().set(ColorRGBA.black);
