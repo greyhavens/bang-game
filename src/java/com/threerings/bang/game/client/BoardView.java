@@ -491,7 +491,6 @@ public class BoardView extends BComponent
         light.setQuadratic(0.01f);
         light.setEnabled(true);
         _lstate.attach(light);
-        _node.updateRenderState();
 
         _node.addController(new Controller() {
             public void update (float time) {
@@ -505,7 +504,6 @@ public class BoardView extends BComponent
                 } else {
                     _node.removeController(this);
                     _lstate.detach(light);
-                    _node.updateRenderState();
                 }
             }
             float _elapsed;
@@ -1316,7 +1314,6 @@ public class BoardView extends BComponent
                 _tnode.createHighlight(tx, ty, true);
             highlight.setDefaultColor(highlightColor);
             highlight.setRenderState(_movstate);
-            highlight.updateRenderState();
             _hnode.attachChild(highlight);
             _htiles.add(tx, ty);
         }
@@ -1338,7 +1335,6 @@ public class BoardView extends BComponent
     protected void clearHighlights ()
     {
         _hnode.detachAllChildren();
-        _hnode.updateRenderState();
         _hnode.updateGeometricState(0f, true);
         _htiles.clear();
     }

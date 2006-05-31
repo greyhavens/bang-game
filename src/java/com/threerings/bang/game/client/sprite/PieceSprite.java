@@ -268,7 +268,6 @@ public class PieceSprite extends Sprite
         }
         float diffuse = 1f - _view.getBoard().getShadowIntensity() * shadowed;
         _mstate.getDiffuse().set(diffuse, diffuse, diffuse, 1f);
-        updateRenderState();
     }
 
     /**

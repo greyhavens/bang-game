@@ -159,7 +159,6 @@ public class ParticlePool
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        particles.updateRenderState();
         
         return particles;
     }
@@ -185,7 +184,6 @@ public class ParticlePool
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        particles.updateRenderState();
         
         return particles;
     }
@@ -211,7 +209,6 @@ public class ParticlePool
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        particles.updateRenderState();
         
         return particles;
     }
@@ -238,7 +235,6 @@ public class ParticlePool
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        particles.updateRenderState();
         
         return particles;
     }
@@ -264,7 +260,6 @@ public class ParticlePool
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        particles.updateRenderState();
         
         return particles;
     }
@@ -291,7 +286,6 @@ public class ParticlePool
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
-        particles.updateRenderState();
         
         return particles;
     }
