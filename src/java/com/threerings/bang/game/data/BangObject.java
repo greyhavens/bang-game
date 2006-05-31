@@ -134,8 +134,8 @@ public class BangObject extends GameObject
     /** The field name of the <code>points</code> field. */
     public static final String POINTS = "points";
 
-    /** The field name of the <code>perRoundEarnings</code> field. */
-    public static final String PER_ROUND_EARNINGS = "perRoundEarnings";
+    /** The field name of the <code>perRoundPoints</code> field. */
+    public static final String PER_ROUND_POINTS = "perRoundPoints";
 
     /** The field name of the <code>awards</code> field. */
     public static final String AWARDS = "awards";
@@ -231,7 +231,7 @@ public class BangObject extends GameObject
 
     /** Points earned per player per round, this is only broadcast to the
      * client at the end of the game. */
-    public int[][] perRoundEarnings;
+    public int[][] perRoundPoints;
 
     /** Used to report cash and badges awarded at the end of the game. */
     public Award[] awards;
@@ -484,7 +484,7 @@ public class BangObject extends GameObject
     public void grantPoints (int pidx, int amount)
     {
         setPointsAt(points[pidx] + amount, pidx);
-        perRoundEarnings[roundId-1][pidx] += amount;
+        perRoundPoints[roundId-1][pidx] += amount;
         stats[pidx].incrementStat(Stat.Type.POINTS_EARNED, amount);
     }
 
@@ -970,36 +970,36 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Requests that the <code>perRoundEarnings</code> field be set to the
+     * Requests that the <code>perRoundPoints</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setPerRoundEarnings (int[][] value)
+    public void setPerRoundPoints (int[][] value)
     {
-        int[][] ovalue = this.perRoundEarnings;
+        int[][] ovalue = this.perRoundPoints;
         requestAttributeChange(
-            PER_ROUND_EARNINGS, value, ovalue);
-        this.perRoundEarnings = (value == null) ? null : (int[][])value.clone();
+            PER_ROUND_POINTS, value, ovalue);
+        this.perRoundPoints = (value == null) ? null : (int[][])value.clone();
     }
 
     /**
      * Requests that the <code>index</code>th element of
-     * <code>perRoundEarnings</code> field be set to the specified value.
+     * <code>perRoundPoints</code> field be set to the specified value.
      * The local value will be updated immediately and an event will be
      * propagated through the system to notify all listeners that the
      * attribute did change. Proxied copies of this object (on clients)
      * will apply the value change when they received the attribute
      * changed notification.
      */
-    public void setPerRoundEarningsAt (int[] value, int index)
+    public void setPerRoundPointsAt (int[] value, int index)
     {
-        int[] ovalue = this.perRoundEarnings[index];
+        int[] ovalue = this.perRoundPoints[index];
         requestElementUpdate(
-            PER_ROUND_EARNINGS, index, value, ovalue);
-        this.perRoundEarnings[index] = value;
+            PER_ROUND_POINTS, index, value, ovalue);
+        this.perRoundPoints[index] = value;
     }
 
     /**
