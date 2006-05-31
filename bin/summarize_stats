@@ -198,7 +198,7 @@ print "\n";
 
 # break down games played by scenario
 printf("Scenario         Rounds\n");
-printf("%-15s  %6d\n", "(total)", $totrounds);
+printf("%-15s  %6d\n", "(total)", $rounds{"unrated"} + $rounds{"rated"});
 printf("%-15s  %6d\n", "(unrated)", $rounds{"unrated"});
 printf("%-15s  %6d\n", "(rated)", $rounds{"rated"});
 foreach $scen (sort { $byscen{$b} - $byscen{$a} } keys %byscen) {
@@ -261,7 +261,6 @@ sub note_leaver {
 
 sub sum_leavers {
     my ($what, $hash) = @_;
-    my $tinrounds = ($totrounds - $rounds{"human"});
     my $cvalue = safe_get("tincan", $hash);
     my $crounds = $rounds{"tincan"};
     my $hvalue = safe_get("human", $hash);
