@@ -7,31 +7,188 @@
 # that stores this information in a database (perhaps factored out of the
 # Yohoho stats processing code).
 
+my $limit = 10;
+
+my %firsttimers;
+
 my %usertime;
 my %usersess;
+my %usergames;
+my %userearn;
+
 my $tottime = 0;
 my $totsess = 0;
+my $newtime = 0;
+my $newsess = 0;
 
+my %byscen;
+my %byteamsize;
+
+my $totrounds = 0;
+my $newrounds = 0;
+my $totgametime = 0;
+my $ratgames = 0;
+my $unratgames = 0;
+
+my $totearn = 0;
+my $newearn = 0;
+
+my $leavers = 0;
+my $discons = 0;
+my $logoffs = 0;
+my $rleavers = 0;
+my $rdiscons = 0;
+my $rlogoffs = 0;
+
+# grind and process the raw data
 while (<>) {
-    if (/session_end (\S+) ctime:(\d+)/) {
+    chomp;
+    if (/first_timer (\S+)/) {
+        $firsttimers{$1} = $1;
+    } elsif (/session_end (\S+) ctime:(\d+)/) {
         $usertime{$1} += $2;
         $usersess{$1}++;
         $tottime += $2;
         $totsess++;
+        if (defined $firsttimers{$1}) {
+            $newtime += $2;
+            $newsess++;
+        }
+
+    } elsif (/game_ended t:(\d+) s:(\S+) ts:(\d+) (.*)/) {
+        my $info = $4;
+        my @scens = split(/,/, $2);
+        foreach $scen (@scens) {
+            $byscen{$scen}++;
+        }
+        my $rounds = scalar @scens;
+        $totrounds += $rounds;
+        $totgametime += $1;
+        $byteamsize{$3} += $rounds;
+        if ($info =~ s/ r:true//) {
+            $ratgames += $rounds;
+        } elsif ($info =~ s/ r:false//) {
+            $unratgames += $rounds;
+        } else {
+            warn "Bogus info? $info\n";
+            next;
+        }
+        my @pinfos = split(/,/, $info);
+        my $humans = 0;
+        foreach $pinfo (@pinfos) {
+            my @bits = split(/:/, $pinfo);
+            my $username = $bits[0];
+            $humans++ unless ($username =~ /tin_can/);
+        }
+        my $noobs = 0;
+        foreach $pinfo (@pinfos) {
+            my @bits = split(/:/, $pinfo);
+            my $username = $bits[0];
+            if ($username =~ s/\#$//) {
+                $leavers++;
+                $rleavers++ if ($humans > 1);
+            }
+            if ($username =~ s/!$//) {
+                $discons++;
+                $rdiscons++ if ($humans > 1);
+            }
+            if ($username =~ s/\*$//) {
+                $logoffs++;
+                $rlogoffs++ if ($humans > 1);
+            }
+            $usergames{$username} += $rounds;
+            my $earnings = (@bits > 3) ? $bits[3] : 0;
+            $userearn{$username} += $earnings;
+            $totearn += $earnings;
+            if (defined $firsttimers{$username}) {
+                $newearn += $earnings;
+                $noobs++;
+            }
+        }
+        $newrounds += $rounds if ($noobs > 0);
     }
 }
 
+# summarize sessions, rounds played, earnings, etc.
 my $ucount = keys %usersess;
+my $ncount = keys %firsttimers;
 my $totmins = $tottime/60;
-print "Username  Sessions  Total mins  Avg. sess\n";
-printf("ALL %-7d %6d     %7.0f       %4.0f\n",
-       $ucount, $totsess, $totmins, $totmins/$totsess);
+my $newmins = $newtime/60;
+print "Username    Sess.  Minutes /sess  Rounds  Earnings /game\n";
+printf("all %6d %6d  %7.0f    %2.0f  %6d  %8d\n",
+       $ucount, $totsess, $totmins, $totmins/$totsess, $totrounds, $totearn);
+printf("noobs %4d %6d  %7.0f    %2.0f  %6d  %8d\n",
+       $ncount, $newsess, $newmins, $newmins/$newsess, $newrounds, $newearn);
+printf("all  (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
+       $totsess/$ucount, $totmins/$ucount, $totrounds/$ucount,
+       $totearn/$ucount, $totearn/$totrounds);
+printf("noob (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
+       $newsess/$ucount, $newmins/$ucount, $newrounds/$ucount,
+       $newearn/$ucount, $newearn/$newrounds);
 
-my @topusers = sort { $usertime{$b} - $usertime{$a} } keys %usertime;
-my $idx = 0;
-foreach $user (@topusers) {
-    my $mins = $usertime{$user} / 60;
-    my $avgsess = $mins / $usersess{$user};
-    printf("%-12s  %4d        %4.0f       %4.0f\n",
-           $user, $usersess{$user}, $mins, $avgsess);
+print "\n";
+
+# top ten by earnings
+print "                      - by earnings -\n";
+sum_users(sort { $userearn{$b} - $userearn{$a} } keys %userearn);
+
+# top ten by rounds played
+print "                    - by rounds played -\n";
+sum_users(sort { $usergames{$b} - $usergames{$a} } keys %usergames);
+
+# top ten by minutes online
+print "                   - by minutes online -\n";
+sum_users(sort { $usertime{$b} - $usertime{$a} } keys %usertime);
+
+# break down disconnect/logoff/leave stats
+print "            Total      vs. Humans\n";
+printf("Discons %5d (%1.1f%%) %5d (%1.1f%%)\n",
+       $discons, 100*$discons/$totrounds, $rdiscons, 100*$rdiscons/$totrounds);
+printf("Logoffs %5d (%1.1f%%) %5d (%1.1f%%)\n",
+       $logoffs, 100*$logoffs/$totrounds, $rlogoffs, 100*$rlogoffs/$totrounds);
+printf("Leavers %5d (%1.1f%%) %5d (%1.1f%%)\n",
+       $leavers, 100*$leavers/$totrounds, $rleavers, 100*$rleavers/$totrounds);
+print "\n";
+
+# break down games played by scenario
+printf("Scenario         Rounds\n");
+printf("%-15s  %6d\n", "(total)", $totrounds);
+printf("%-15s  %6d\n", "(unrated)", $unratgames);
+printf("%-15s  %6d\n", "(rated)", $ratgames);
+foreach $scen (sort { $byscen{$b} - $byscen{$a} } keys %byscen) {
+    printf("%-15s  %6d\n", $scen, $byscen{$scen});
+}
+print "\n";
+
+# break down games played by team size
+printf("Units            Rounds\n");
+foreach $size (sort { $byteamsize{$b} - $byteamsize{$a} } keys %byteamsize) {
+    printf("%-15d  %6d\n", $size, $byteamsize{$size});
+}
+print "\n";
+
+sub sum_users {
+    print "Username     Sess  Mins /sess  Rounds  Earnings /game\n";
+    my $idx = 0;
+    foreach $user (@_) {
+        my $mins = safe_get($user, \%usertime) / 60;
+        my $avgsess = safe_div($mins, safe_get($user, \%usersess));
+        my $games = safe_get($user, \%usergames);
+        my $earn = safe_get($user, \%userearn);
+        printf("%-12s %4d  %4.0f  %4.0f   %5d     %5d   %3.0f\n",
+               $user, safe_get($user, \%usersess), $mins, $avgsess,
+               $games, $earn, safe_div($earn, $games));
+        last if (++$idx == $limit);
+    }
+    print "\n";
+}
+
+sub safe_get {
+    my ($key, $hash) = @_;
+    return defined $hash->{$key} ? $hash->{$key} : 0;
+}
+
+sub safe_div {
+    my ($num, $denom) = @_;
+    return ($denom != 0) ? $num/$denom : 0;
 }
