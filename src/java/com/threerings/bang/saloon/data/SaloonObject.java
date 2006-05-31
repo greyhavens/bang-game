@@ -89,10 +89,10 @@ public class SaloonObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setParlors (DSet value)
+    public void setParlors (DSet<com.threerings.bang.saloon.data.ParlorInfo> value)
     {
         requestAttributeChange(PARLORS, value, this.parlors);
-        this.parlors = (value == null) ? null : (DSet)value.clone();
+        this.parlors = (value == null) ? null : value.typedClone();
     }
 
     /**
@@ -135,10 +135,10 @@ public class SaloonObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setTopRanked (DSet value)
+    public void setTopRanked (DSet<com.threerings.bang.saloon.data.TopRankedList> value)
     {
         requestAttributeChange(TOP_RANKED, value, this.topRanked);
-        this.topRanked = (value == null) ? null : (DSet)value.clone();
+        this.topRanked = (value == null) ? null : value.typedClone();
     }
     // AUTO-GENERATED: METHODS END
 }

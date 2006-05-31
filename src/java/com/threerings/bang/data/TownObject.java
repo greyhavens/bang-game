@@ -31,7 +31,7 @@ public class TownObject extends DObject
     {
         int ovalue = this.population;
         requestAttributeChange(
-            POPULATION, new Integer(value), new Integer(ovalue));
+            POPULATION, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.population = value;
     }
     // AUTO-GENERATED: METHODS END

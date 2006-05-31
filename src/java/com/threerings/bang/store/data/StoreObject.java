@@ -83,10 +83,10 @@ public class StoreObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setGoods (DSet value)
+    public void setGoods (DSet<com.threerings.bang.store.data.Good> value)
     {
         requestAttributeChange(GOODS, value, this.goods);
-        this.goods = (value == null) ? null : (DSet)value.clone();
+        this.goods = (value == null) ? null : value.typedClone();
     }
     // AUTO-GENERATED: METHODS END
 }

@@ -86,7 +86,7 @@ public class MatchObject extends DObject
     {
         int ovalue = this.playerOids[index];
         requestElementUpdate(
-            PLAYER_OIDS, index, new Integer(value), new Integer(ovalue));
+            PLAYER_OIDS, index, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.playerOids[index] = value;
     }
 
@@ -118,7 +118,7 @@ public class MatchObject extends DObject
     {
         boolean ovalue = this.starting;
         requestAttributeChange(
-            STARTING, new Boolean(value), new Boolean(ovalue));
+            STARTING, Boolean.valueOf(value), Boolean.valueOf(ovalue));
         this.starting = value;
     }
     // AUTO-GENERATED: METHODS END

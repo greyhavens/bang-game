@@ -41,7 +41,7 @@ public class ServerConfigObject extends ConfigObject
     {
         boolean ovalue = this.openToPublic;
         requestAttributeChange(
-            OPEN_TO_PUBLIC, new Boolean(value), new Boolean(ovalue));
+            OPEN_TO_PUBLIC, Boolean.valueOf(value), Boolean.valueOf(ovalue));
         this.openToPublic = value;
     }
 
@@ -57,7 +57,7 @@ public class ServerConfigObject extends ConfigObject
     {
         boolean ovalue = this.nonAdminsAllowed;
         requestAttributeChange(
-            NON_ADMINS_ALLOWED, new Boolean(value), new Boolean(ovalue));
+            NON_ADMINS_ALLOWED, Boolean.valueOf(value), Boolean.valueOf(ovalue));
         this.nonAdminsAllowed = value;
     }
 
@@ -73,7 +73,7 @@ public class ServerConfigObject extends ConfigObject
     {
         boolean ovalue = this.allowNewGames;
         requestAttributeChange(
-            ALLOW_NEW_GAMES, new Boolean(value), new Boolean(ovalue));
+            ALLOW_NEW_GAMES, Boolean.valueOf(value), Boolean.valueOf(ovalue));
         this.allowNewGames = value;
     }
     // AUTO-GENERATED: METHODS END

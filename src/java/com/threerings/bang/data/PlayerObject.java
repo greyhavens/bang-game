@@ -241,7 +241,7 @@ public class PlayerObject extends BodyObject
     {
         int ovalue = this.playerId;
         requestAttributeChange(
-            PLAYER_ID, new Integer(value), new Integer(ovalue));
+            PLAYER_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.playerId = value;
     }
 
@@ -273,7 +273,7 @@ public class PlayerObject extends BodyObject
     {
         boolean ovalue = this.isMale;
         requestAttributeChange(
-            IS_MALE, new Boolean(value), new Boolean(ovalue));
+            IS_MALE, Boolean.valueOf(value), Boolean.valueOf(ovalue));
         this.isMale = value;
     }
 
@@ -333,10 +333,10 @@ public class PlayerObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setInventory (DSet value)
+    public void setInventory (DSet<com.threerings.bang.data.Item> value)
     {
         requestAttributeChange(INVENTORY, value, this.inventory);
-        this.inventory = (value == null) ? null : (DSet)value.clone();
+        this.inventory = (value == null) ? null : value.typedClone();
     }
 
     /**
@@ -367,7 +367,7 @@ public class PlayerObject extends BodyObject
     {
         int ovalue = this.scrip;
         requestAttributeChange(
-            SCRIP, new Integer(value), new Integer(ovalue));
+            SCRIP, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.scrip = value;
     }
 
@@ -383,7 +383,7 @@ public class PlayerObject extends BodyObject
     {
         int ovalue = this.coins;
         requestAttributeChange(
-            COINS, new Integer(value), new Integer(ovalue));
+            COINS, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.coins = value;
     }
 
@@ -473,10 +473,10 @@ public class PlayerObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setRatings (DSet value)
+    public void setRatings (DSet<com.threerings.bang.data.Rating> value)
     {
         requestAttributeChange(RATINGS, value, this.ratings);
-        this.ratings = (value == null) ? null : (DSet)value.clone();
+        this.ratings = (value == null) ? null : value.typedClone();
     }
 
     /**
@@ -552,10 +552,10 @@ public class PlayerObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setLooks (DSet value)
+    public void setLooks (DSet<com.threerings.bang.avatar.data.Look> value)
     {
         requestAttributeChange(LOOKS, value, this.looks);
-        this.looks = (value == null) ? null : (DSet)value.clone();
+        this.looks = (value == null) ? null : value.typedClone();
     }
 
     /**
@@ -598,10 +598,10 @@ public class PlayerObject extends BodyObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setPardners (DSet value)
+    public void setPardners (DSet<com.threerings.bang.data.PardnerEntry> value)
     {
         requestAttributeChange(PARDNERS, value, this.pardners);
-        this.pardners = (value == null) ? null : (DSet)value.clone();
+        this.pardners = (value == null) ? null : value.typedClone();
     }
     // AUTO-GENERATED: METHODS END
 }

@@ -105,7 +105,7 @@ public class LobbyObject extends PlaceObject
     public void setTableSet (DSet value)
     {
         requestAttributeChange(TABLE_SET, value, this.tableSet);
-        this.tableSet = (value == null) ? null : (DSet)value.clone();
+        this.tableSet = (value == null) ? null : value.typedClone();
     }
 
     /**

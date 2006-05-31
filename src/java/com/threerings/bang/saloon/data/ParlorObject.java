@@ -98,7 +98,7 @@ public class ParlorObject extends PlaceObject
     {
         boolean ovalue = this.onlyCreatorStart;
         requestAttributeChange(
-            ONLY_CREATOR_START, new Boolean(value), new Boolean(ovalue));
+            ONLY_CREATOR_START, Boolean.valueOf(value), Boolean.valueOf(ovalue));
         this.onlyCreatorStart = value;
     }
 
@@ -147,7 +147,7 @@ public class ParlorObject extends PlaceObject
     {
         int ovalue = this.playerOids[index];
         requestElementUpdate(
-            PLAYER_OIDS, index, new Integer(value), new Integer(ovalue));
+            PLAYER_OIDS, index, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.playerOids[index] = value;
     }
 
@@ -163,7 +163,7 @@ public class ParlorObject extends PlaceObject
     {
         boolean ovalue = this.starting;
         requestAttributeChange(
-            STARTING, new Boolean(value), new Boolean(ovalue));
+            STARTING, Boolean.valueOf(value), Boolean.valueOf(ovalue));
         this.starting = value;
     }
     // AUTO-GENERATED: METHODS END

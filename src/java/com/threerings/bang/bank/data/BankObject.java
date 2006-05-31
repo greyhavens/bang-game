@@ -99,7 +99,7 @@ public class BankObject extends PlaceObject
     {
         int ovalue = this.lastTrade;
         requestAttributeChange(
-            LAST_TRADE, new Integer(value), new Integer(ovalue));
+            LAST_TRADE, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.lastTrade = value;
     }
 

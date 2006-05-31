@@ -694,7 +694,7 @@ public class BangObject extends GameObject
     {
         byte ovalue = this.boardHash[index];
         requestElementUpdate(
-            BOARD_HASH, index, new Byte(value), new Byte(ovalue));
+            BOARD_HASH, index, Byte.valueOf(value), Byte.valueOf(ovalue));
         this.boardHash[index] = value;
     }
 
@@ -776,7 +776,7 @@ public class BangObject extends GameObject
     {
         short ovalue = this.tick;
         requestAttributeChange(
-            TICK, new Short(value), new Short(ovalue));
+            TICK, Short.valueOf(value), Short.valueOf(ovalue));
         this.tick = value;
     }
 
@@ -792,7 +792,7 @@ public class BangObject extends GameObject
     {
         short ovalue = this.lastTick;
         requestAttributeChange(
-            LAST_TICK, new Short(value), new Short(ovalue));
+            LAST_TICK, Short.valueOf(value), Short.valueOf(ovalue));
         this.lastTick = value;
     }
 
@@ -808,7 +808,7 @@ public class BangObject extends GameObject
     {
         short ovalue = this.duration;
         requestAttributeChange(
-            DURATION, new Short(value), new Short(ovalue));
+            DURATION, Short.valueOf(value), Short.valueOf(ovalue));
         this.duration = value;
     }
 
@@ -898,10 +898,10 @@ public class BangObject extends GameObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setCards (DSet value)
+    public void setCards (DSet<com.threerings.bang.game.data.card.Card> value)
     {
         requestAttributeChange(CARDS, value, this.cards);
-        this.cards = (value == null) ? null : (DSet)value.clone();
+        this.cards = (value == null) ? null : value.typedClone();
     }
 
     /**
@@ -932,7 +932,7 @@ public class BangObject extends GameObject
     {
         int ovalue = this.actionId;
         requestAttributeChange(
-            ACTION_ID, new Integer(value), new Integer(ovalue));
+            ACTION_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.actionId = value;
     }
 
@@ -965,7 +965,7 @@ public class BangObject extends GameObject
     {
         int ovalue = this.points[index];
         requestElementUpdate(
-            POINTS, index, new Integer(value), new Integer(ovalue));
+            POINTS, index, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.points[index] = value;
     }
 

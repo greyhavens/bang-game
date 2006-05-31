@@ -76,7 +76,7 @@ public class StatusObject extends DObject
     {
         int ovalue = this.playersOnline;
         requestAttributeChange(
-            PLAYERS_ONLINE, new Integer(value), new Integer(ovalue));
+            PLAYERS_ONLINE, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.playersOnline = value;
     }
 
@@ -92,7 +92,7 @@ public class StatusObject extends DObject
     {
         long ovalue = this.serverStartTime;
         requestAttributeChange(
-            SERVER_START_TIME, new Long(value), new Long(ovalue));
+            SERVER_START_TIME, Long.valueOf(value), Long.valueOf(ovalue));
         this.serverStartTime = value;
     }
 
@@ -139,7 +139,7 @@ public class StatusObject extends DObject
     public void setGames (DSet value)
     {
         requestAttributeChange(GAMES, value, this.games);
-        this.games = (value == null) ? null : (DSet)value.clone();
+        this.games = (value == null) ? null : value.typedClone();
     }
 
     /**
@@ -154,7 +154,7 @@ public class StatusObject extends DObject
     {
         int ovalue = this.pendingMatches;
         requestAttributeChange(
-            PENDING_MATCHES, new Integer(value), new Integer(ovalue));
+            PENDING_MATCHES, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.pendingMatches = value;
     }
 
