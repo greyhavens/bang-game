@@ -8,6 +8,8 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * An effect that repairs a particular piece on the board.
  */
@@ -38,16 +40,19 @@ public class RepairEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
 
-        Piece piece = (Piece)bangobj.pieces.get(pieceId);
+        Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            return;
+            log.warning("Missing target for repair effect " +
+                        "[id=" + pieceId + "].");
+            return false;
         }
 
         piece.damage = 0;
         reportEffect(obs, piece, REPAIRED);
+        return true;
     }
 }

@@ -337,6 +337,9 @@ public class BangManager extends GameManager
                 throw new InvocationException(TARGET_NO_LONGER_VALID);
             }
 
+            // TEMP: for debugging weird shot effect problems
+            int dam1 = target.damage;
+
             // if they specified a non-NOOP move, execute it
             if (x != unit.x || y != unit.y) {
                 munit = moveUnit(unit, x, y, target);
@@ -345,6 +348,9 @@ public class BangManager extends GameManager
                 // check that our target is still valid and reachable
                 checkTarget(shooter, target);
             }
+
+            // TEMP: for debugging weird shot effect problems
+            int dam2 = target.damage;
 
             // if they specified a target, shoot at it (we've already checked
             // in moveUnit() or above that our target is still valid)
@@ -357,9 +363,16 @@ public class BangManager extends GameManager
                 effect.shooterLastActed = _bangobj.tick;
 
                 // apply the shot effect
-                deployEffect(shooter.owner, effect);
-                _bangobj.stats[shooter.owner].incrementStat(
-                    Stat.Type.SHOTS_FIRED, 1);
+                if (!deployEffect(shooter.owner, effect)) {
+                    log.warning("Failed to deploy shot effect " +
+                                "[shooter=" + shooter.info() +
+                                ", move=" + x + "/" + y +
+                                ", target=" + target.info() +
+                                ", dam1=" + dam1 + ", dam2=" + dam2+ "].");
+                } else {
+                    _bangobj.stats[shooter.owner].incrementStat(
+                        Stat.Type.SHOTS_FIRED, 1);
+                }
 
                 // effect any collateral damage
                 Effect[] ceffects = shooter.collateralDamage(
@@ -395,6 +408,9 @@ public class BangManager extends GameManager
     /**
      * Prepares an effect and posts it to the game object, recording damage
      * done in the process.
+     *
+     * @return true if the effect was deployed, false if the effect was either
+     * not applicable or failed to apply.
      */
     public boolean deployEffect (int effector, Effect effect)
     {
@@ -416,9 +432,7 @@ public class BangManager extends GameManager
         _bangobj.setEffect(effect);
 
         // on the server we apply the effect immediately
-        effect.apply(_bangobj, _effector);
-
-        return true;
+        return effect.apply(_bangobj, _effector);
     }
 
     /**

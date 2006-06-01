@@ -83,11 +83,12 @@ public class TrainEffect extends Effect
     }
     
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         if (deathEffect != null) {
             deathEffect.apply(bangobj, obs);
         }
-        collide(bangobj, obs, -1, targetId, COLLISION_DAMAGE, x, y, DAMAGED);
+        return collide(bangobj, obs, -1, targetId, COLLISION_DAMAGE,
+                       x, y, DAMAGED);
     }
 }

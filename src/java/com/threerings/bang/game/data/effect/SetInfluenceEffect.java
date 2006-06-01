@@ -10,6 +10,8 @@ import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * An effect that sets an influence on the unit that picks up a bonus.
  */
@@ -37,17 +39,20 @@ public abstract class SetInfluenceEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
 
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
-            return;
+            log.warning("Missing target for set influence effect " +
+                        "[id=" + pieceId + "].");
+            return false;
         }
 
         unit.setInfluence(createInfluence(unit), bangobj.tick);
         reportEffect(obs, unit, getEffectName());
+        return true;
     }
 
     /** Creates the influence that will be applied to the target unit. */

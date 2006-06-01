@@ -208,7 +208,7 @@ public class ShotEffect extends Effect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         // apply any secondary pre-shot effect
         if (preShotEffect != null) {
@@ -219,7 +219,7 @@ public class ShotEffect extends Effect
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
         if (shooter == null) {
             log.warning("Missing shooter " + this + ".");
-            return;
+            return false;
         }
         if (shooterLastActed != -1 && shooter.lastActed != shooterLastActed) {
             shooter.lastActed = shooterLastActed;
@@ -228,12 +228,12 @@ public class ShotEffect extends Effect
 
         // if we were deflected into la la land, we can stop here
         if (targetId == -1) {
-            return;
+            return true;
         }
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target == null) {
             log.warning("Missing shot target " + this + ".");
-            return;
+            return false;
         }
 
         // if we have a new last acted to assign to the target, do that
@@ -244,7 +244,7 @@ public class ShotEffect extends Effect
         // finally do the damage
         String effect = shooter.getConfig().mode == UnitConfig.Mode.RANGE ?
             EXPLODED : DAMAGED;
-        damage(bangobj, obs, shooter.owner, target, newDamage, effect);
+        return damage(bangobj, obs, shooter.owner, target, newDamage, effect);
     }
     
     @Override // documentation inherited

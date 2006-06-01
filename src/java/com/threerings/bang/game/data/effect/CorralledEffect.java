@@ -9,6 +9,8 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Applied to a cow that has been corralled.
  */
@@ -39,12 +41,13 @@ public class CorralledEffect extends Effect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         // for now just remove the cow in question
         Cow cow = (Cow)bangobj.pieces.get(pieceId);
         if (cow == null) {
-            return;
+            log.warning("Missing cow for corral effect [id=" + pieceId + "].");
+            return false;
         }
 
         // mark the cow as corralled
@@ -53,5 +56,7 @@ public class CorralledEffect extends Effect
         // TEMP: just remove the cow
         bangobj.removePieceDirect(cow);
         reportRemoval(obs, cow);
+
+        return true;
     }
 }

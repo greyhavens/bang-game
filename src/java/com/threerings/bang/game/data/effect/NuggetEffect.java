@@ -119,7 +119,7 @@ public class NuggetEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
 
@@ -158,5 +158,7 @@ public class NuggetEffect extends BonusEffect
                 reportEffect(obs, claim, NUGGET_REMOVED);
             }
         }
+
+        return true;
     }
 }

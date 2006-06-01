@@ -36,7 +36,7 @@ public class SpookEffect extends MoveEffect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         // update the cow's owner (if appropriate), then let them move
         Cow cow = (Cow)bangobj.pieces.get(pieceId);
@@ -49,6 +49,6 @@ public class SpookEffect extends MoveEffect
             // report an effect on the cow so that we can play a sound
             reportEffect(obs, cow, effect);
         }
-        super.apply(bangobj,obs);
+        return super.apply(bangobj,obs);
     }
 }

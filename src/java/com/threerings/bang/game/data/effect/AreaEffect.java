@@ -64,17 +64,20 @@ public abstract class AreaEffect extends Effect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
+        boolean success = true;
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
             if (target == null) {
                 log.warning("Missing piece for area effect [pid=" + pieces[ii] +
                             ", effect=" + this + "].");
+                success = false;
                 continue;
             }
             apply(bangobj, obs, ii, target, target.getDistance(x, y));
         }
+        return success;
     }
 
     /**

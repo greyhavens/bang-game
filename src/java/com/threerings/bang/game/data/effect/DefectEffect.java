@@ -82,7 +82,7 @@ public class DefectEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
 
@@ -101,5 +101,7 @@ public class DefectEffect extends BonusEffect
             // the balance of power has shifted, recompute our metrics
             bangobj.updateData();
         }
+
+        return true;
     }
 }

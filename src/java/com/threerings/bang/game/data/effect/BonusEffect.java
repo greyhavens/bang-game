@@ -17,18 +17,19 @@ public abstract class BonusEffect extends Effect
     public int bonusId = -1;
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         if (bonusId > 0) {
             // remove the bonus from the board
-            Piece bonus = (Piece)bangobj.pieces.get(bonusId);
+            Piece bonus = bangobj.pieces.get(bonusId);
             if (bonus == null) {
                 log.warning("Missing bonus for activated effect? " +
-                    "[id=" + bonusId + "].");
+                            "[id=" + bonusId + "].");
             } else {
                 bangobj.removePieceDirect(bonus);
                 reportRemoval(obs, bonus);
             }
         }
+        return true;
     }
 }

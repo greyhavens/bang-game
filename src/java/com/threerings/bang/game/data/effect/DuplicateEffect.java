@@ -64,26 +64,27 @@ public class DuplicateEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
 
-        Piece piece = (Piece)bangobj.pieces.get(pieceId);
+        Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            return;
+            log.warning("Missing target for dup effect [pid=" + pieceId + "].");
+            return false;
         }
 
-        // report wastage if we were unable to place the new piece
         if (duplicate == null) {
+            // report wastage if we were unable to place the new piece
             reportEffect(obs, piece, WASTED_DUP);
-            return;
+        } else {
+            // inform the observer of our duplication
+            reportEffect(obs, piece, DUPLICATED);
+            // and add the new piece, informing the observer again
+            bangobj.addPieceDirect(duplicate);
+            reportAddition(obs, duplicate);
         }
 
-        // inform the observer of our duplication
-        reportEffect(obs, piece, DUPLICATED);
-
-        // and add the new piece, informing the observer again
-        bangobj.addPieceDirect(duplicate);
-        reportAddition(obs, duplicate);
+        return true;
     }
 }

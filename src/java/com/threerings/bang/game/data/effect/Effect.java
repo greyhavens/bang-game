@@ -74,16 +74,19 @@ public abstract class Effect extends SimpleStreamableObject
      *
      * @param collider the index of the user causing the collision, or -1.
      * @param damage the amount of damage caused by the collision.
+     *
+     * @return true if all went well, false if we failed to collide or do
+     * damage.
      */
-    public static void collide (
+    public static boolean collide (
         BangObject bangobj, Observer obs, int collider, int targetId,
         int damage, int x, int y, String effect)
     {
         Piece target = (Piece)bangobj.pieces.get(targetId);
         if (target == null) {
-            log.warning("Missing collision target [targetId=" + targetId +
-                "].");
-            return;
+            log.warning("Missing collision target " +
+                        "[targetId=" + targetId + "].");
+            return false;
         }
 
         // move the target to its new coordinates
@@ -93,9 +96,11 @@ public abstract class Effect extends SimpleStreamableObject
 
         // damage the target if it's still alive
         if (target.isAlive()) {
-            damage(bangobj, obs, collider, target,
-                   Math.min(100, target.damage + damage), effect);
+            return damage(bangobj, obs, collider, target,
+                          Math.min(100, target.damage + damage), effect);
         }
+
+        return true;
     }
 
     /**
@@ -105,9 +110,12 @@ public abstract class Effect extends SimpleStreamableObject
      * @param shooter the index of the player doing the damage or -1 if the
      * damage was not originated by a player.
      * @param newDamage the new total damage to assign to the damaged piece.
+     *
+     * @return true if the damage was applied, false if the target was already
+     * dead and we were unable to apply the damage.
      */
-    public static void damage (BangObject bangobj, Observer obs, int shooter,
-                               Piece target, int newDamage, String effect)
+    public static boolean damage (BangObject bangobj, Observer obs, int shooter,
+                                  Piece target, int newDamage, String effect)
     {
         // sanity check
         if (!target.isAlive()) {
@@ -115,7 +123,7 @@ public abstract class Effect extends SimpleStreamableObject
                 "[target=" + target.info() + ", shooter=" + shooter +
                 ", nd=" + newDamage + ", effect=" + effect + "].");
             Thread.dumpStack();
-            return;
+            return false;
         }
 
         // effect the actual damage
@@ -127,7 +135,7 @@ public abstract class Effect extends SimpleStreamableObject
 
         // if the target is not dead, we can stop here
         if (target.isAlive()) {
-            return;
+            return true;
         }
 
         // report that the target was killed
@@ -154,6 +162,8 @@ public abstract class Effect extends SimpleStreamableObject
             bangobj.removePieceDirect(target);
             reportRemoval(obs, target);
         }
+
+        return true;
     }
 
     /**
@@ -221,8 +231,11 @@ public abstract class Effect extends SimpleStreamableObject
      *
      * @param observer an observer to inform of piece additions, updates and
      * removals (for display purposes on the client). This may be null.
+     *
+     * @return false if for some reason the effect could not be applied (this
+     * is only used for in the field debugging).
      */
-    public abstract void apply (BangObject bangobj, Observer observer);
+    public abstract boolean apply (BangObject bangobj, Observer observer);
     
     /**
      * Creates an {@link EffectHandler} to manage the (potentially complicated)

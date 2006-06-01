@@ -69,7 +69,7 @@ public class AdjustTickEffect extends Effect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer observer)
+    public boolean apply (BangObject bangobj, Observer observer)
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
         if (piece != null) {
@@ -78,6 +78,7 @@ public class AdjustTickEffect extends Effect
             piece.lastActed = newLastActed;
             reportEffect(observer, piece, effect);
         }
+        return true;
     }
 
     /** The delta from the board tick at activation time. */

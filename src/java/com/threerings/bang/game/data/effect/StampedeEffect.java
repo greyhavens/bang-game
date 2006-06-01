@@ -149,7 +149,7 @@ public class StampedeEffect extends Effect
     }
     
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         // delay the tick by the amount of time it takes for the bison to run
         // their course
@@ -163,6 +163,8 @@ public class StampedeEffect extends Effect
             collide(bangobj, obs, causer, collision.targetId, COLLISION_DAMAGE,
                     collision.x, collision.y, DAMAGED);
         }
+
+        return true;
     }
 
     @Override // documentation inherited

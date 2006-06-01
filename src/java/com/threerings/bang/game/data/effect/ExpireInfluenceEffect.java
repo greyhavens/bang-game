@@ -36,12 +36,13 @@ public class ExpireInfluenceEffect extends Effect
     }
 
     @Override // documentation inherited
-    public void apply (BangObject bangobj, Observer obs)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit != null) {
             unit.influence = null;
             reportEffect(obs, unit, UPDATED);
         }
+        return true;
     }
 }
