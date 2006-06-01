@@ -5,8 +5,11 @@ package com.threerings.bang.client;
 
 import java.awt.Font;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.CSS;
@@ -23,6 +26,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.lwjgl.openal.AL10;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.WaveData;
 
 import com.jme.image.Image;
@@ -43,8 +47,10 @@ import com.threerings.openal.Clip;
 import com.threerings.openal.ClipProvider;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
+
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.UnitConfig;
@@ -197,6 +203,26 @@ public class BangUI
         // create the sound group for our UI sounds
         _sgroup = _ctx.getSoundManager().createGroup(
             BangUI.clipprov, UI_SOURCE_COUNT);
+    }
+
+    /**
+     * Configures our application icons (shown in the corner of the window and
+     * in the task bar, etc.).
+     */
+    public static void configIcons ()
+    {
+        ByteBuffer[] icons = new ByteBuffer[ICON_SIZES.length];
+        for (int ii = 0; ii < ICON_SIZES.length; ii++) {
+            try {
+                String path = "rsrc/ui/icons/" + ICON_SIZES[ii] + "_icon.png";
+                BufferedImage bicon = ImageIO.read(
+                    BangUI.class.getClassLoader().getResource(path));
+                Image icon = ImageCache.createImage(bicon, false);
+                icons[ii] = icon.getData();
+            } catch (IOException e) {
+            }
+        }
+        Display.setIcon(icons);
     }
 
     /**
@@ -442,4 +468,7 @@ public class BangUI
 
     /** The number of simultaneous UI sounds allowed. */
     protected static final int UI_SOURCE_COUNT = 2;
+
+    /** Sizes of icons we need. */
+    protected static final int[] ICON_SIZES = {16, 32, 128};
 }
