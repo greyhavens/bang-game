@@ -39,6 +39,107 @@ import static com.threerings.bang.Log.log;
  */
 public class ImageCache
 {
+    /**
+     * Colorizes the supplied buffered image (which must be an 8-bit
+     * colormapped image), then converts the colorized image into a form that
+     * JME can display.
+     */
+    public static Image createImage (
+        BufferedImage bufimg, Colorization[] zations, boolean flip)
+    {
+        return createImage(ImageUtil.recolorImage(bufimg, zations), flip);
+    }
+
+    /**
+     * Creates a buffered image in a format compatible with LWJGL with the
+     * specified dimensions.
+     *
+     * @param transparent if true, the image will be four bytes per pixel
+     * (RGBA), if false it will be three (and have no alpha channel).
+     */
+    public static BufferedImage createCompatibleImage (
+        int width, int height, boolean transparent)
+    {
+        if (transparent) {
+            return new BufferedImage(
+                GL_ALPHA_MODEL, Raster.createInterleavedRaster(
+                    DataBuffer.TYPE_BYTE, width, height, 4, null),
+                false, null);
+        } else {
+            return new BufferedImage(
+                GL_OPAQUE_MODEL, Raster.createInterleavedRaster(
+                    DataBuffer.TYPE_BYTE, width, height, 3, null),
+                false, null);
+        }
+    }
+
+    /**
+     * Converts the supplied image (which must have been created with {@link
+     * #createCompatibleImage}) into a {@link ByteBuffer} that can be passed to
+     * {@link Image#setData}.
+     *
+     * @param target the results of a previous call to {@link #convertImage}
+     * that will be overwritten or null if a new buffer should be allocated. Of
+     * course a reused buffer must be used with the same image or one with the
+     * exact same configuration.
+     */
+    public static ByteBuffer convertImage (
+        BufferedImage image, ByteBuffer target)
+    {
+        DataBufferByte dbuf = (DataBufferByte)image.getRaster().getDataBuffer();
+        byte[] data = dbuf.getData();
+        if (target == null) {
+            target = ByteBuffer.allocateDirect(data.length);
+            target.order(ByteOrder.nativeOrder());
+        }
+        target.clear();
+        target.put(data);
+        target.flip();
+        return target;
+    }
+
+    /**
+     * Converts an image that was created with {@link #createCompatibleImage}
+     * into a JME {@link Image}. The data is assumed to have already been
+     * "flipped".
+     */
+    public static Image convertImage (BufferedImage bufimg)
+    {
+        Image image = new Image();
+        image.setType(bufimg.getColorModel().hasAlpha() ?
+                      Image.RGBA8888 : Image.RGB888);
+        image.setWidth(bufimg.getWidth());
+        image.setHeight(bufimg.getHeight());
+        image.setData(convertImage(bufimg, null));
+        return image;
+    }
+
+    /**
+     * Creates a JME-compatible image from the supplied buffered image.
+     */
+    public static Image createImage (BufferedImage bufimg, boolean flip)
+    {
+        // convert the the image to the format that OpenGL prefers
+        int width = bufimg.getWidth(), height = bufimg.getHeight();
+        BufferedImage dispimg = createCompatibleImage(
+            width, height, bufimg.getColorModel().hasAlpha());
+
+        // flip the image to convert into OpenGL's coordinate system
+        AffineTransform tx = null;
+        if (flip) {
+            tx = AffineTransform.getScaleInstance(1, -1);
+            tx.translate(0, -height);
+        }
+
+        // "convert" the image by rendering the old into the new
+        Graphics2D gfx = (Graphics2D)dispimg.getGraphics();
+        gfx.drawImage(bufimg, tx, null);
+        gfx.dispose();
+
+        // now extract the image data into a JME image
+        return convertImage(dispimg);
+    }
+
     public ImageCache (BasicContext ctx)
     {
         _ctx = ctx;
@@ -133,106 +234,6 @@ public class ImageCache
     {
         return new BImage(
             ImageUtil.recolorImage(getBufferedImage(path), zations), flip);
-    }
-
-    /**
-     * Colorizes the supplied buffered image (which must be an 8-bit
-     * colormapped image), then converts the colorized image into a form that
-     * JME can display.
-     */
-    public Image createImage (
-        BufferedImage bufimg, Colorization[] zations, boolean flip)
-    {
-        return createImage(ImageUtil.recolorImage(bufimg, zations), flip);
-    }
-
-    /**
-     * Creates a buffered image in a format compatible with LWJGL with the
-     * specified dimensions.
-     *
-     * @param transparent if true, the image will be four bytes per pixel
-     * (RGBA), if false it will be three (and have no alpha channel).
-     */
-    public BufferedImage createCompatibleImage (
-        int width, int height, boolean transparent)
-    {
-        if (transparent) {
-            return new BufferedImage(
-                GL_ALPHA_MODEL, Raster.createInterleavedRaster(
-                    DataBuffer.TYPE_BYTE, width, height, 4, null),
-                false, null);
-        } else {
-            return new BufferedImage(
-                GL_OPAQUE_MODEL, Raster.createInterleavedRaster(
-                    DataBuffer.TYPE_BYTE, width, height, 3, null),
-                false, null);
-        }
-    }
-
-    /**
-     * Converts the supplied image (which must have been created with {@link
-     * #createCompatibleImage}) into a {@link ByteBuffer} that can be passed to
-     * {@link Image#setData}.
-     *
-     * @param target the results of a previous call to {@link #convertImage}
-     * that will be overwritten or null if a new buffer should be allocated. Of
-     * course a reused buffer must be used with the same image or one with the
-     * exact same configuration.
-     */
-    public ByteBuffer convertImage (BufferedImage image, ByteBuffer target)
-    {
-        DataBufferByte dbuf = (DataBufferByte)image.getRaster().getDataBuffer();
-        byte[] data = dbuf.getData(); 
-        if (target == null) {
-            target = ByteBuffer.allocateDirect(data.length);
-            target.order(ByteOrder.nativeOrder());
-        }
-        target.clear();
-        target.put(data);
-        target.flip();
-        return target;
-    }
-
-    /**
-     * Converts an image that was created with {@link #createCompatibleImage}
-     * into a JME {@link Image}. The data is assumed to have already been
-     * "flipped".
-     */
-    public Image convertImage (BufferedImage bufimg)
-    {
-        Image image = new Image();
-        image.setType(bufimg.getColorModel().hasAlpha() ?
-                      Image.RGBA8888 : Image.RGB888);
-        image.setWidth(bufimg.getWidth());
-        image.setHeight(bufimg.getHeight());
-        image.setData(convertImage(bufimg, null));
-        return image;
-    }
-
-    /**
-     * Creates a JME-compatible image from the supplied buffered image.
-     */
-    public Image createImage (BufferedImage bufimg, boolean flip)
-    {
-        // convert the the image to the format that OpenGL prefers
-        int width = bufimg.getWidth(), height = bufimg.getHeight();
-        BufferedImage dispimg = createCompatibleImage(
-            width, height, bufimg.getColorModel().hasAlpha());
-
-        // flip the image to convert into OpenGL's coordinate system
-        AffineTransform tx = null;
-        if (flip) {
-            tx = AffineTransform.getScaleInstance(1, -1);
-            tx.translate(0, -height);
-        }
-
-        // "convert" the image by rendering the old into the new
-        Graphics2D gfx = (Graphics2D)dispimg.getGraphics();
-        gfx.drawImage(bufimg, tx, null);
-        gfx.dispose();
-
-        // now extract the image data into a JME image
-        return convertImage(dispimg);
     }
 
     /**
