@@ -40,10 +40,14 @@ my %leavers;
 my %discons;
 my %logoffs;
 
+my $datedir;
+
 # grind and process the raw data
 while (<>) {
     chomp;
-    if (/first_timer (\S+)/) {
+    if (/(\S+) (\S+) log_opened /) {
+        $datedir = $1;
+    } elsif (/first_timer (\S+)/) {
         $firsttimers{$1} = $1;
     } elsif (/session_end (\S+) ctime:(\d+)/) {
         $usertime{$1} += $2;
@@ -155,6 +159,8 @@ printf("vs Humans   %5d\n", $games{"human"});
 printf("vs Tin Cans %5d\n", $games{"tincan"});
 printf("Tutorials   %5d\n", $games{"tutorial"});
 print "\n";
+
+print "Perf stats: http://bang1.banghowdy.com/stats/$datedir/perf.html\n\n";
 
 my $totrounds = $rounds{"human"} + $rounds{"tincan"};
 
