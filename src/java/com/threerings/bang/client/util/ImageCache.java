@@ -214,10 +214,19 @@ public class ImageCache
      */
     public Image createImage (BufferedImage bufimg, boolean flip)
     {
+        return createImage (bufimg, flip, bufimg.getColorModel().hasAlpha());
+    }
+    
+    /**
+     * Creates a JME-compatible image from the supplied buffered image.
+     */
+    public Image createImage (
+            BufferedImage bufimg, boolean flip, boolean alpha)
+    {
         // convert the the image to the format that OpenGL prefers
         int width = bufimg.getWidth(), height = bufimg.getHeight();
         BufferedImage dispimg = createCompatibleImage(
-            width, height, bufimg.getColorModel().hasAlpha());
+            width, height, alpha);
 
         // flip the image to convert into OpenGL's coordinate system
         AffineTransform tx = null;

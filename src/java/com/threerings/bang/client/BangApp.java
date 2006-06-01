@@ -3,16 +3,19 @@
 
 package com.threerings.bang.client;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.lwjgl.opengl.Display;
 
 import com.jme.input.InputHandler;
+import com.jme.image.Image;
 import com.jme.renderer.Camera;
 import com.jme.system.DisplaySystem;
 import com.jme.system.PropertiesIO;
@@ -44,6 +47,7 @@ import com.threerings.bang.game.client.GameCameraHandler;
 import com.threerings.bang.game.client.GameInputHandler;
 
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.DeploymentConfig;
 import com.threerings.bang.util.RenderUtil;
@@ -155,6 +159,8 @@ public class BangApp extends JmeApp
 
         // speed up key input
         _input.setActionSpeed(150f);
+
+        loadIcon(ICON_PATH);
         return true;
     }
 
@@ -265,10 +271,32 @@ public class BangApp extends JmeApp
         }
     }
 
+    /**
+     * Load and set the application icon.
+     */
+    protected void loadIcon (String path)
+    {
+        ImageCache ic = _client.getContext().getImageCache();
+        ByteBuffer[] icons = new ByteBuffer[ICON_SIZES.length];
+        for (int ii = 0; ii < ICON_SIZES.length; ii++) {
+            BufferedImage bicon = ic.getBufferedImage(
+                    path + ICON_SIZES[ii] + "_icon.png");
+            Image icon = ic.createImage(bicon, false, true);
+            icons[ii] = icon.getData();
+        }
+        Display.setIcon(icons);
+    }
+
     /** The main thing! */
     protected BangClient _client;
 
     /** Used to configure the renderer appropriately when profiling. */
     protected boolean _profiling =
         "true".equalsIgnoreCase(System.getProperty("profiling"));
+
+    /** Path to our icon. */
+    protected static final String ICON_PATH = "ui/icons/";
+
+    /** Sizes of icons we need. */
+    protected static final int[] ICON_SIZES = {16, 32, 128};
 }
