@@ -281,7 +281,7 @@ public class BangApp extends JmeApp
         for (int ii = 0; ii < ICON_SIZES.length; ii++) {
             BufferedImage bicon = ic.getBufferedImage(
                     path + ICON_SIZES[ii] + "_icon.png");
-            Image icon = ic.createImage(bicon, false, true);
+            Image icon = ic.createImage(bicon, false);
             icons[ii] = icon.getData();
         }
         Display.setIcon(icons);
