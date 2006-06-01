@@ -170,7 +170,7 @@ public class ExplosionViz extends ParticleEffectViz
     protected static final Vector3f STREAMER_ACCEL = new Vector3f(0f, 0f, -100f);
     
     /** The amount of time in seconds to keep the streamers alive. */
-    protected static final float STREAMER_LIFESPAN = 5f;
+    protected static final float STREAMER_LIFESPAN = 2f;
     
     /** The color of the flash of light generate by the explosion. */
     protected static final ColorRGBA LIGHT_FLASH_COLOR =

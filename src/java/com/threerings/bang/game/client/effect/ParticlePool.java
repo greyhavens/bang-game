@@ -60,6 +60,7 @@ public class ParticlePool
         for (int x = 0, tSize = _dustRings.size(); x < tSize; x++) {
             ParticleMesh e = _dustRings.get(x);
             if (!e.isActive()) {
+                e.getParticleController().setActive(true);
                 return e;
             }
         }
@@ -74,6 +75,7 @@ public class ParticlePool
         for (int x = 0, tSize = _fireballs.size(); x < tSize; x++) {
             ParticleMesh e = _fireballs.get(x);
             if (!e.isActive()) {
+                e.getParticleController().setActive(true);
                 return e;
             }
         }
@@ -88,6 +90,7 @@ public class ParticlePool
         for (int x = 0, tSize = _streamers.size(); x < tSize; x++) {
             ParticleMesh e = _streamers.get(x);
             if (!e.isActive()) {
+                e.getParticleController().setActive(true);
                 return e;
             }
         }
@@ -102,6 +105,7 @@ public class ParticlePool
         for (int x = 0, tSize = _smokePuffs.size(); x < tSize; x++) {
             ParticleMesh e = _smokePuffs.get(x);
             if (!e.isActive()) {
+                e.getParticleController().setActive(true);
                 return e;
             }
         }
@@ -116,6 +120,7 @@ public class ParticlePool
         for (int x = 0, tSize = _sparkles.size(); x < tSize; x++) {
             ParticleMesh e = _sparkles.get(x);
             if (!e.isActive()) {
+                e.getParticleController().setActive(true);
                 return e;
             }
         }
@@ -130,6 +135,7 @@ public class ParticlePool
         for (int x = 0, tSize = _steamClouds.size(); x < tSize; x++) {
             ParticleMesh e = _steamClouds.get(x);
             if (!e.isActive()) {
+                e.getParticleController().setActive(true);
                 return e;
             }
         }

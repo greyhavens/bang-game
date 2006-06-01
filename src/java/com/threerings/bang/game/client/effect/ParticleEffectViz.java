@@ -50,5 +50,6 @@ public abstract class ParticleEffectViz extends EffectViz
     protected void removeParticles (ParticleMesh particles)
     {
         _view.getPieceNode().detachChild(particles);
+        particles.getParticleController().setActive(false);
     }
 }

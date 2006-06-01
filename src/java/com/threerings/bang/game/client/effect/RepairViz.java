@@ -193,7 +193,6 @@ public class RepairViz extends ParticleEffectViz
         public Swirl (final float a0)
         {
             particles = ParticlePool.getSparkles();
-            particles.getParticleController().setActive(true);
             particles.setReleaseRate(512);
             particles.setOriginOffset(new Vector3f());
             
