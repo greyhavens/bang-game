@@ -338,7 +338,7 @@ public class BangManager extends GameManager
             }
 
             // TEMP: for debugging weird shot effect problems
-            int dam1 = target.damage;
+            int dam1 = (target == null) ? 0 : target.damage;
 
             // if they specified a non-NOOP move, execute it
             if (x != unit.x || y != unit.y) {
@@ -350,7 +350,7 @@ public class BangManager extends GameManager
             }
 
             // TEMP: for debugging weird shot effect problems
-            int dam2 = target.damage;
+            int dam2 = (target == null) ? 0 : target.damage;
 
             // if they specified a target, shoot at it (we've already checked
             // in moveUnit() or above that our target is still valid)
