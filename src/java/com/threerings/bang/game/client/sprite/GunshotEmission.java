@@ -36,6 +36,7 @@ import com.threerings.jme.model.TextureProvider;
 import com.threerings.jme.sprite.PathUtil;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.util.RenderUtil;
 
@@ -81,6 +82,9 @@ public class GunshotEmission extends SpriteEmission
             _trails[ii] = new Trail();
         }
         
+        if (!BangPrefs.isHighDetail()) {
+            return;
+        }
         _smoke = new ParticleMesh("smoke", 16);
         _smoke.addController(
             new ParticlePool.TransientParticleController(_smoke));
@@ -113,7 +117,9 @@ public class GunshotEmission extends SpriteEmission
             _smoketex = tprov.getTexture("/textures/effects/dust.png");
             _ftex = tprov.getTexture("/textures/effects/flash.png");
         }
-        _smoke.setRenderState(_smoketex);
+        if (_smoke != null) {
+            _smoke.setRenderState(_smoketex);
+        }
         _flare.setRenderState(_ftex);
     }
     
@@ -228,7 +234,7 @@ public class GunshotEmission extends SpriteEmission
         getEmitterDirection(_edir);
         
         // fire off a flash of light if we're in the real view
-        if (_view != null) {
+        if (_view != null && BangPrefs.isMediumDetail()) {
             _view.createLightFlash(_eloc, LIGHT_FLASH_COLOR, 0.125f);
         }
         
@@ -241,14 +247,15 @@ public class GunshotEmission extends SpriteEmission
         }
         
         // and a burst of smoke
-        if (!_smoke.getParticleController().isActive()) {
-            _model.getEmissionNode().attachChild(_smoke);
-            _smoke.updateRenderState();
-            _smoke.getParticleController().setActive(true);
+        if (_smoke != null) {
+            if (!_smoke.isActive()) {
+                _model.getEmissionNode().attachChild(_smoke);
+                _smoke.updateRenderState();
+            }
+            _smoke.setOriginOffset(_eloc);
+            _smoke.updateGeometricState(0f, true);
+            _smoke.forceRespawn();
         }
-        _smoke.setOriginOffset(_eloc);
-        _smoke.updateGeometricState(0f, true);
-        _smoke.forceRespawn();
     }
     
     /**

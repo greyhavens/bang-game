@@ -24,6 +24,7 @@ import com.samskivert.util.StringUtil;
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.*;
@@ -53,6 +54,10 @@ public class SmokePlumeEmission extends SpriteEmission
     @Override // documentation inherited
     public void init (Model model)
     {
+        if (!BangPrefs.isHighDetail()) {
+            super.init(model);
+            return;
+        }
         _smoke = ParticleFactory.buildParticles("smoke", 64);
         _smoke.setMinimumLifeTime(_lifetime);
         _smoke.setMaximumLifeTime(_lifetime * 1.5f);
@@ -90,7 +95,9 @@ public class SmokePlumeEmission extends SpriteEmission
     public void setActive (boolean active)
     {
         super.setActive(active);
-        _smoke.setReleaseRate(active ? _releaseRate : 0);
+        if (_smoke != null) {
+            _smoke.setReleaseRate(active ? _releaseRate : 0);
+        }
     }
     
     @Override // documentation inherited
@@ -99,7 +106,9 @@ public class SmokePlumeEmission extends SpriteEmission
         if (_smoketex == null) {
             _smoketex = tprov.getTexture("/textures/effects/dust.png");
         }
-        _smoke.setRenderState(_smoketex);
+        if (_smoke != null) {
+            _smoke.setRenderState(_smoketex);
+        }
     }
     
     @Override // documentation inherited
@@ -154,7 +163,7 @@ public class SmokePlumeEmission extends SpriteEmission
     // documentation inherited
     public void update (float time)
     {
-        if (!isActive()) {
+        if (!isActive() || _smoke == null) {
             return;
         }
         getEmitterLocation(_smoke.getOriginOffset());

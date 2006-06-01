@@ -23,6 +23,11 @@ import static com.threerings.bang.Log.log;
  */
 public class BangPrefs
 {
+    /** Graphical detail levels. */
+    public enum DetailLevel {
+        LOW, MEDIUM, HIGH
+    };
+    
     /** Contains our client-side preferences. */
     public static Config config = new Config("bang");
 
@@ -97,6 +102,39 @@ public class BangPrefs
         config.setValue("display_fullscreen", fullscreen);
     }
 
+    /**
+     * Returns the desired level of graphical detail.
+     */
+    public static DetailLevel getDetailLevel ()
+    {
+        return Enum.valueOf(DetailLevel.class,
+            config.getValue("detail_level", "HIGH"));
+    }
+    
+    /**
+     * Determines whether the level of detail is at least medium.
+     */
+    public static boolean isMediumDetail ()
+    {
+        return getDetailLevel().compareTo(DetailLevel.MEDIUM) >= 0;
+    }
+    
+    /**
+     * Determines whether the level of detail is high.
+     */
+    public static boolean isHighDetail ()
+    {
+        return getDetailLevel() == DetailLevel.HIGH;
+    }
+    
+    /**
+     * Updates the desired level of graphical detail.
+     */
+    public static void updateDetailLevel (DetailLevel level)
+    {
+        config.setValue("detail_level", level.name());
+    }
+    
     /**
      * Returns the volume of the music, a value from zero to one hundred.
      */

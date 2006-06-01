@@ -20,6 +20,7 @@ import com.jmex.effects.particles.ParticleMesh;
 
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.util.RenderUtil;
@@ -52,15 +53,19 @@ public class ExplosionViz extends ParticleEffectViz
         displayParticles(target, _smokepuff, true);
         
         // and the streamers
-        for (int i = 0; i < _streamers.length; i++) {
-            displayParticles(target, _streamers[i].particles, true);
+        if (_streamers != null) {
+            for (int i = 0; i < _streamers.length; i++) {
+                displayParticles(target, _streamers[i].particles, true);
+            }
         }
         
         // and the light
-        Vector3f location = new Vector3f(target.getLocalTranslation());
-        location.z += TILE_SIZE/2;
-        _view.createLightFlash(location, LIGHT_FLASH_COLOR,
-            LIGHT_FLASH_DURATION);
+        if (BangPrefs.isMediumDetail()) {
+            Vector3f location = new Vector3f(target.getLocalTranslation());
+            location.z += TILE_SIZE/2;
+            _view.createLightFlash(location, LIGHT_FLASH_COLOR,
+                LIGHT_FLASH_DURATION);
+        }
         
         // note that the effect was displayed
         effectDisplayed();
@@ -70,7 +75,7 @@ public class ExplosionViz extends ParticleEffectViz
     protected void didInit ()
     {
         // create the dust ring for explosions on the ground
-        if (!_target.isFlyer()) {
+        if (!_target.isFlyer() && BangPrefs.isHighDetail()) {
             _dustring = ParticlePool.getDustRing();
         }
         
@@ -81,10 +86,12 @@ public class ExplosionViz extends ParticleEffectViz
         _smokepuff = ParticlePool.getSmokePuff();
         
         // create a few streamers from the explosion
-        _streamers = new Streamer[NUM_STREAMERS_AVG +
-            RandomUtil.getInt(+NUM_STREAMERS_DEV, -NUM_STREAMERS_DEV)];
-        for (int i = 0; i < _streamers.length; i++) {
-            _streamers[i] = new Streamer();
+        if (BangPrefs.isHighDetail()) {
+            _streamers = new Streamer[NUM_STREAMERS_AVG +
+                RandomUtil.getInt(+NUM_STREAMERS_DEV, -NUM_STREAMERS_DEV)];
+            for (int i = 0; i < _streamers.length; i++) {
+                _streamers[i] = new Streamer();
+            }
         }
     }
     

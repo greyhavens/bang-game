@@ -16,6 +16,7 @@ import com.jmex.effects.particles.ParticleMesh;
 import com.threerings.jme.model.Model;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ModelAttacher;
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.MobileSprite;
@@ -55,12 +56,14 @@ public class WreckViz extends ParticleEffectViz
         }
         
         // and the wreckage
-        String[] wtypes = ((MobileSprite)target).getWreckageTypes();
-        if (wtypes != null && wtypes.length > 0) {
-            for (int i = 0; i < _wreckage.length; i++) {
-                _wreckage[i].bind((String)RandomUtil.pickRandom(wtypes));
-                target.attachChild(_wreckage[i]);
-                _wreckage[i].updateRenderState();
+        if (_wreckage != null) {
+            String[] wtypes = ((MobileSprite)target).getWreckageTypes();
+            if (wtypes != null && wtypes.length > 0) {
+                for (int i = 0; i < _wreckage.length; i++) {
+                    _wreckage[i].bind((String)RandomUtil.pickRandom(wtypes));
+                    target.attachChild(_wreckage[i]);
+                    _wreckage[i].updateRenderState();
+                }
             }
         }
         
@@ -82,10 +85,12 @@ public class WreckViz extends ParticleEffectViz
         }
         
         // create a few pieces of wreckage to be thrown from the wreck
-        _wreckage = new Wreckage[NUM_WRECKAGE_AVG +
-            RandomUtil.getInt(+NUM_WRECKAGE_DEV, -NUM_WRECKAGE_DEV)];
-        for (int i = 0; i < _wreckage.length; i++) {
-            _wreckage[i] = new Wreckage();
+        if (BangPrefs.isHighDetail()) {
+            _wreckage = new Wreckage[NUM_WRECKAGE_AVG +
+                RandomUtil.getInt(+NUM_WRECKAGE_DEV, -NUM_WRECKAGE_DEV)];
+            for (int i = 0; i < _wreckage.length; i++) {
+                _wreckage[i] = new Wreckage();
+            }
         }
     }
     

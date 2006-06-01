@@ -490,6 +490,12 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
+    protected boolean shouldShowSky ()
+    {
+        return false;
+    }
+    
+    @Override // documentation inherited
     protected void createMarquee (String text)
     {
         super.createMarquee(text);

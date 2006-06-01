@@ -38,6 +38,7 @@ import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -308,8 +309,8 @@ public class MobileSprite extends PieceSprite
     protected void createDustManager (BasicContext ctx)
     {
         // flyers don't kick up dust for now; eventually, we may want to add
-        // prop wash effects
-        if (_piece.isFlyer()) {
+        // prop wash effects.  only show dust on high detail setting
+        if (_piece.isFlyer() || !BangPrefs.isHighDetail()) {
             return;
         }
 

@@ -25,6 +25,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jmex.effects.particles.ParticleMesh;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.util.RenderUtil;
 
@@ -40,7 +41,9 @@ public class RepairViz extends ParticleEffectViz
     public void display (PieceSprite target)
     {
         // start up the glow effect
-        _glow.activate(target);
+        if (_glow != null) {
+            _glow.activate(target);
+        }
         
         // and the swirl effect
         displayParticles(target, _swirls[0].particles, true);
@@ -53,7 +56,9 @@ public class RepairViz extends ParticleEffectViz
     @Override // documentation inherited
     protected void didInit ()
     {
-        _glow = new Glow();
+        if (BangPrefs.isHighDetail()) {
+            _glow = new Glow();
+        }
         _swirls = new Swirl[] { new Swirl(0f), new Swirl(FastMath.PI) };
     }
     

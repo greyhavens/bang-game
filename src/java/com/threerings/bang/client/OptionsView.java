@@ -65,6 +65,10 @@ public class OptionsView extends BDecoratedWindow
         _fullscreen.setSelected(Display.isFullscreen());
         _fullscreen.addListener(_modelist);
 
+        cont.add(new BLabel(_msgs.get("m.detail_lev"), "right_label"));
+        cont.add(createDetailSlider());
+        
+        
         cont.add(new BLabel(_msgs.get("m.music_vol"), "right_label"));
         cont.add(createSoundSlider(SoundType.MUSIC));
         cont.add(new BLabel(_msgs.get("m.effects_vol"), "right_label"));
@@ -137,6 +141,37 @@ public class OptionsView extends BDecoratedWindow
         return wrapper;
     }
 
+    protected BContainer createDetailSlider ()
+    {
+        // create our slider and label display
+        final BangPrefs.DetailLevel[] levels =
+            BangPrefs.DetailLevel.class.getEnumConstants();
+        BangPrefs.DetailLevel level = BangPrefs.getDetailLevel();
+        BSlider slider = new BSlider(BSlider.HORIZONTAL, 0, levels.length - 1,
+            level.ordinal());
+        final BLabel vallbl = new BLabel(getDetailText(level));
+        vallbl.setPreferredSize(new Dimension(65, 10));
+        slider.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged (ChangeEvent event) {
+                BangPrefs.DetailLevel level =
+                    levels[((BoundedRangeModel)event.getSource()).getValue()];
+                BangPrefs.updateDetailLevel(level);
+                vallbl.setText(getDetailText(level));
+            }
+        });
+        
+        // create a wrapper to hold them both
+        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
+        wrapper.add(slider);
+        wrapper.add(vallbl, GroupLayout.FIXED);
+        return wrapper;
+    }
+    
+    protected String getDetailText (BangPrefs.DetailLevel level)
+    {
+        return _msgs.get("m.detail_" + level.name().toLowerCase());
+    }
+    
     protected void refreshDisplayModes ()
     {
         int maxwidth = 0, maxheight = 0;

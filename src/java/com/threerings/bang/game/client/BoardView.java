@@ -187,9 +187,8 @@ public class BoardView extends BComponent
         _node.updateRenderState();
 
         // create the sky
-        _snode = new SkyNode(ctx);
-        if (Config.displaySky) {
-            _node.attachChild(_snode);
+        if (shouldShowSky() && Config.displaySky) {
+            _node.attachChild(_snode = new SkyNode(_ctx));
         }
 
         // we'll hang the board geometry off this node
@@ -286,7 +285,9 @@ public class BoardView extends BComponent
         refreshFog();
         
         // create the board geometry
-        _snode.createBoardSky(_board);
+        if (_snode != null) {
+            _snode.createBoardSky(_board);
+        }
         _tnode.createBoardTerrain(_board);
         _wnode.createBoardWater(_board);
 
@@ -825,7 +826,9 @@ public class BoardView extends BComponent
 
         // let the child nodes know that they need to clean up any textures
         // they've created
-        _snode.cleanup();
+        if (_snode != null) {
+            _snode.cleanup();
+        }
         _tnode.cleanup();
         _wnode.cleanup();
 
@@ -839,6 +842,15 @@ public class BoardView extends BComponent
         _ctx.getRenderer().clearQueue();
     }
 
+    /**
+     * Checks whether or not we should show the sky node (i.e., whether the
+     * player will ever see the sky).
+     */
+    protected boolean shouldShowSky ()
+    {
+        return true;
+    }
+    
     /**
      * Returns whether or not we should show the grid by default.
      */
