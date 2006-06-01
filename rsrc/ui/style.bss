@@ -328,7 +328,15 @@ scrollbar_vwell:disabled {
 }
 
 scrollbar_hless {
-  icon: image "textures/scroll_left.png";
+  icon: image "ui/scrollbar/left_normal.png" framexy;
+}
+
+scrollbar_hless:down {
+  icon: image "ui/scrollbar/left_down.png" framexy;
+}
+
+scrollbar_hless:disabled {
+  icon: image "ui/scrollbar/left_disabled.png" framexy;
 }
 
 scrollbar_vless {
@@ -344,7 +352,15 @@ scrollbar_vless:disabled {
 }
 
 scrollbar_hmore {
-  icon: image "textures/scroll_right.png";
+  icon: image "ui/scrollbar/right_normal.png" framexy;
+}
+
+scrollbar_hmore:down {
+  icon: image "ui/scrollbar/right_down.png" framexy;
+}
+
+scrollbar_hmore:disabled {
+  icon: image "ui/scrollbar/right_disabled.png" framexy;
 }
 
 scrollbar_vmore {
@@ -972,6 +988,18 @@ endgame_reward {
   color: #442801;
 }
 
+endgame_total {
+  font: "Dom Casual" plain 30;
+  text-align: left;
+  text-effect: shadow;
+  effect-color: #000000;
+}
+
+endgame_smalltotal {
+  parent: "endgame_total";
+  font: "Dom Casual" plain 24;
+}
+
 //
 // Shared Shop Styles
 
@@ -1058,7 +1086,8 @@ avatar_view_unframed_4 {
   font: "Dom Casual" plain 14;
 }
 
-avatar_unframed_8 {
+avatar_view_unframed_8 {
+  parent: "avatar_view";
   font: "Dom Casual" plain 13;
   padding: 0 0 5 0;
 }
