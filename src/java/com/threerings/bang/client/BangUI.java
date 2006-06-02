@@ -213,16 +213,26 @@ public class BangUI
     {
         ByteBuffer[] icons = new ByteBuffer[ICON_SIZES.length];
         for (int ii = 0; ii < ICON_SIZES.length; ii++) {
+            String path = "rsrc/ui/icons/" + ICON_SIZES[ii] + "_icon.png";
             try {
-                String path = "rsrc/ui/icons/" + ICON_SIZES[ii] + "_icon.png";
-                BufferedImage bicon = ImageIO.read(
-                    BangUI.class.getClassLoader().getResource(path));
+                // getdown has already unpacked our resources, so we can load
+                // these images straight from the filesystem (this method gets
+                // called before the resource manager and image cache are set
+                // up, otherwise we'd use them)
+                BufferedImage bicon = ImageIO.read(new File(path));
                 Image icon = ImageCache.createImage(bicon, false);
                 icons[ii] = icon.getData();
-            } catch (IOException e) {
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Failed to load icon " +
+                        "[path=" + path + "].", e);
+                return;
             }
         }
-        Display.setIcon(icons);
+        try {
+            Display.setIcon(icons);
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to set icons.", e);
+        }
     }
 
     /**
