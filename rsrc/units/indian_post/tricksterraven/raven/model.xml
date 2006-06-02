@@ -1,0 +1,2607 @@
+<?xml version="1.0" standalone="yes"?>
+
+<model>
+
+  <skinMesh name="raven" translation="-0.0667725, 2.10616, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="raven.png" transparent="true">
+    <vertex location="6.49943e-006, -61.2902, 71.8938" normal="0.0, -0.414256, -0.910161" tcoords="0.359375, 0.453125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 69.1921" normal="1.21751e-007, -0.267737, -0.963492" tcoords="0.4375, 0.414063">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="1.81719, -55.3544, 73.8284" normal="0.92238, -0.13605, -0.361531" tcoords="0.4375, 0.46875">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 69.1921" normal="1.21751e-007, -0.267737, -0.963492" tcoords="0.4375, 0.414063">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.08983e-006, -45.5206, 67.9923" normal="1.94434e-007, -0.121114, -0.992639" tcoords="0.5625, 0.40625">
+      <boneWeight bone="Bip01 Head" weight="0.957857"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0421427"/>
+    </vertex>
+    <vertex location="3.31597, -43.9452, 74.2512" normal="0.908261, -0.0820506, -0.41028" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911692"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0883082"/>
+    </vertex>
+    <vertex location="3.31597, -43.9452, 74.2512" normal="0.908261, -0.0820506, -0.41028" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911692"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0883082"/>
+    </vertex>
+    <vertex location="1.81719, -55.3544, 73.8284" normal="0.92238, -0.13605, -0.361531" tcoords="0.4375, 0.46875">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 69.1921" normal="1.21751e-007, -0.267737, -0.963492" tcoords="0.4375, 0.414063">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="1.81719, -55.3544, 73.8284" normal="0.899874, -0.256559, 0.352709" tcoords="0.4375, 0.46875">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 78.4646" normal="0.0, -0.588236, 0.808689" tcoords="0.4375, 0.53125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="6.49943e-006, -61.2902, 71.8938" normal="0.0, -0.742051, 0.670343" tcoords="0.359375, 0.453125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 78.4646" normal="0.0, -0.588236, 0.808689" tcoords="0.4375, 0.53125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="1.81719, -55.3544, 73.8284" normal="0.899874, -0.256559, 0.352709" tcoords="0.4375, 0.46875">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="3.31597, -43.9452, 74.2512" normal="0.922566, -0.134595, 0.361603" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911692"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0883082"/>
+    </vertex>
+    <vertex location="3.31597, -43.9452, 74.2512" normal="0.873987, -0.400557, 0.275137" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911692"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0883082"/>
+    </vertex>
+    <vertex location="4.77267e-006, -41.967, 80.5101" normal="0.0, -0.600064, 0.799952" tcoords="0.609375, 0.554688">
+      <boneWeight bone="Bip01 Head" weight="0.882383"/>
+      <boneWeight bone="Bip01 Neck" weight="0.117617"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 78.4646" normal="-2.42944e-007, -0.151042, 0.988527" tcoords="0.4375, 0.53125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="6.88972, -34.0621, 70.3417" normal="0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602422"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397578"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.694586, -0.718431, 0.0375045" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="5.08983e-006, -45.5206, 67.9923" normal="0.0, -0.711663, -0.702521" tcoords="0.5625, 0.40625">
+      <boneWeight bone="Bip01 Head" weight="0.957857"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0421427"/>
+    </vertex>
+    <vertex location="6.88972, -34.0621, 70.3417" normal="0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602422"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397578"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.716559, -0.690386, -0.0995497" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.694586, -0.718431, 0.0375045" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="6.88972, -35.3941, 78.9367" normal="0.698432, -0.436251, 0.567344" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.68461"/>
+      <boneWeight bone="Bip01 Neck" weight="0.31539"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.694586, -0.718431, 0.0375045" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.716559, -0.690386, -0.0995497" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="3.31597, -43.9452, 74.2512" normal="0.873987, -0.400557, 0.275137" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911692"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0883082"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.694586, -0.718431, 0.0375045" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="4.77267e-006, -41.967, 80.5101" normal="0.0, -0.600064, 0.799952" tcoords="0.609375, 0.554688">
+      <boneWeight bone="Bip01 Head" weight="0.882383"/>
+      <boneWeight bone="Bip01 Neck" weight="0.117617"/>
+    </vertex>
+    <vertex location="11.1441, -22.8898, 76.0019" normal="0.995754, 0.0171844, 0.0904389" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0933478"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.16513"/>
+      <boneWeight bone="Bip01 Neck" weight="0.633421"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0662955"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0418059"/>
+    </vertex>
+    <vertex location="3.65779e-006, -29.4497, 59.3956" normal="-5.88279e-006, -0.2274, -0.973801" tcoords="0.773438, 0.304688">
+      <boneWeight bone="Bip01 Head" weight="0.310367"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689633"/>
+    </vertex>
+    <vertex location="2.66468e-006, -18.3189, 57.0526" normal="-3.07737e-005, 0.334151, -0.94252" tcoords="0.921875, 0.273438">
+      <boneWeight bone="Bip01 Neck" weight="0.965125"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0345047"/>
+      <boneWeight bone="Bip01 Head" weight="0.000370617"/>
+    </vertex>
+    <vertex location="6.88972, -34.0621, 70.3417" normal="0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602422"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397578"/>
+    </vertex>
+    <vertex location="10.3132, -27.8064, 75.1283" normal="0.95926, -0.217073, -0.180832" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.3063"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00217262"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689838"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00168955"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.716559, -0.690386, -0.0995497" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="6.88972, -35.3941, 78.9367" normal="0.698432, -0.436251, 0.567344" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.68461"/>
+      <boneWeight bone="Bip01 Neck" weight="0.31539"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.716559, -0.690386, -0.0995497" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="10.3132, -27.8064, 75.1283" normal="0.95926, -0.217073, -0.180832" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.3063"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00217262"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689838"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00168955"/>
+    </vertex>
+    <vertex location="11.1441, -22.8898, 76.0019" normal="0.995754, 0.0171844, 0.0904389" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0933478"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.16513"/>
+      <boneWeight bone="Bip01 Neck" weight="0.633421"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0662955"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0418059"/>
+    </vertex>
+    <vertex location="3.00633e-006, -22.1523, 84.9089" normal="0.000140765, 0.02288, 0.999738" tcoords="0.867188, 0.609375">
+      <boneWeight bone="Bip01 Head" weight="0.104925"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00249016"/>
+      <boneWeight bone="Bip01 Neck" weight="0.768986"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00246621"/>
+      <boneWeight bone="Bip01 Spine" weight="0.121133"/>
+    </vertex>
+    <vertex location="4.20888e-006, -35.6453, 85.3252" normal="2.73946e-005, -0.23491, 0.972017" tcoords="0.695313, 0.609375">
+      <boneWeight bone="Bip01 Head" weight="0.69354"/>
+      <boneWeight bone="Bip01 Neck" weight="0.30646"/>
+    </vertex>
+    <vertex location="11.1441, -22.8898, 76.0019" normal="0.995754, 0.0171844, 0.0904389" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0933478"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.16513"/>
+      <boneWeight bone="Bip01 Neck" weight="0.633421"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0662955"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0418059"/>
+    </vertex>
+    <vertex location="2.66468e-006, -18.3189, 57.0526" normal="-3.07737e-005, 0.334151, -0.94252" tcoords="0.921875, 0.273438">
+      <boneWeight bone="Bip01 Neck" weight="0.965125"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0345047"/>
+      <boneWeight bone="Bip01 Head" weight="0.000370617"/>
+    </vertex>
+    <vertex location="2.0605e-006, -12.6978, 63.4391" normal="-0.000143658, 0.191984, -0.981398" tcoords="0.992188, 0.335938">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0874432"/>
+      <boneWeight bone="Bip01 Neck" weight="0.32114"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0871289"/>
+      <boneWeight bone="Bip01 Spine" weight="0.504288"/>
+    </vertex>
+    <vertex location="2.0605e-006, -12.6978, 63.4391" normal="-0.000143658, 0.191984, -0.981398" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0874432"/>
+      <boneWeight bone="Bip01 Neck" weight="0.32114"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0871289"/>
+      <boneWeight bone="Bip01 Spine" weight="0.504288"/>
+    </vertex>
+    <vertex location="10.8578, -17.8286, 75.6991" normal="0.977142, -0.111134, 0.181225" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00566335"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.347798"/>
+      <boneWeight bone="Bip01 Neck" weight="0.245868"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00368919"/>
+      <boneWeight bone="Bip01 Spine" weight="0.151848"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.245133"/>
+    </vertex>
+    <vertex location="11.1441, -22.8898, 76.0019" normal="0.995754, 0.0171844, 0.0904389" tcoords="0.992188, 0.203125">
+      <boneWeight bone="Bip01 Head" weight="0.0933478"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.16513"/>
+      <boneWeight bone="Bip01 Neck" weight="0.633421"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0662955"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0418059"/>
+    </vertex>
+    <vertex location="3.00633e-006, -22.1523, 84.9089" normal="0.000140765, 0.02288, 0.999738" tcoords="0.992188, 0.0078125">
+      <boneWeight bone="Bip01 Head" weight="0.104925"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00249016"/>
+      <boneWeight bone="Bip01 Neck" weight="0.768986"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00246621"/>
+      <boneWeight bone="Bip01 Spine" weight="0.121133"/>
+    </vertex>
+    <vertex location="11.1441, -22.8898, 76.0019" normal="0.995754, 0.0171844, 0.0904389" tcoords="0.992188, 0.203125">
+      <boneWeight bone="Bip01 Head" weight="0.0933478"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.16513"/>
+      <boneWeight bone="Bip01 Neck" weight="0.633421"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0662955"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0418059"/>
+    </vertex>
+    <vertex location="10.8578, -17.8286, 75.6991" normal="0.977142, -0.111134, 0.181225" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00566335"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.347798"/>
+      <boneWeight bone="Bip01 Neck" weight="0.245868"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00368919"/>
+      <boneWeight bone="Bip01 Spine" weight="0.151848"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.245133"/>
+    </vertex>
+    <vertex location="10.8578, -17.8286, 75.6991" normal="0.977142, -0.111134, 0.181225" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00566335"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.347798"/>
+      <boneWeight bone="Bip01 Neck" weight="0.245868"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00368919"/>
+      <boneWeight bone="Bip01 Spine" weight="0.151848"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.245133"/>
+    </vertex>
+    <vertex location="1.92326e-006, -11.205, 85.6736" normal="0.000137906, -0.0143299, 0.999897" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0626832"/>
+      <boneWeight bone="Bip01 Neck" weight="0.336875"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0624201"/>
+      <boneWeight bone="Bip01 Spine" weight="0.538022"/>
+    </vertex>
+    <vertex location="3.00633e-006, -22.1523, 84.9089" normal="0.000140765, 0.02288, 0.999738" tcoords="0.992188, 0.0078125">
+      <boneWeight bone="Bip01 Head" weight="0.104925"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00249016"/>
+      <boneWeight bone="Bip01 Neck" weight="0.768986"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00246621"/>
+      <boneWeight bone="Bip01 Spine" weight="0.121133"/>
+    </vertex>
+    <vertex location="10.8578, -17.8286, 75.6991" normal="0.977142, -0.111134, 0.181225" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00566335"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.347798"/>
+      <boneWeight bone="Bip01 Neck" weight="0.245868"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00368919"/>
+      <boneWeight bone="Bip01 Spine" weight="0.151848"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.245133"/>
+    </vertex>
+    <vertex location="2.0605e-006, -12.6978, 63.4391" normal="-0.000143658, 0.191984, -0.981398" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0874432"/>
+      <boneWeight bone="Bip01 Neck" weight="0.32114"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0871289"/>
+      <boneWeight bone="Bip01 Spine" weight="0.504288"/>
+    </vertex>
+    <vertex location="5.20843e-007, 4.28682, 61.0498" normal="-2.77313e-005, -0.0754326, -0.997151" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Spine" weight="0.697013"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456135"/>
+      <boneWeight bone="Bip01 Pelvis" weight="0.257374"/>
+    </vertex>
+    <vertex location="5.20843e-007, 4.28682, 61.0498" normal="-2.77313e-005, -0.0754326, -0.997151" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Spine" weight="0.697013"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456135"/>
+      <boneWeight bone="Bip01 Pelvis" weight="0.257374"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="10.8578, -17.8286, 75.6991" normal="0.977142, -0.111134, 0.181225" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00566335"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.347798"/>
+      <boneWeight bone="Bip01 Neck" weight="0.245868"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00368919"/>
+      <boneWeight bone="Bip01 Spine" weight="0.151848"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.245133"/>
+    </vertex>
+    <vertex location="1.92326e-006, -11.205, 85.6736" normal="0.000137906, -0.0143299, 0.999897" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0626832"/>
+      <boneWeight bone="Bip01 Neck" weight="0.336875"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0624201"/>
+      <boneWeight bone="Bip01 Spine" weight="0.538022"/>
+    </vertex>
+    <vertex location="10.8578, -17.8286, 75.6991" normal="0.977142, -0.111134, 0.181225" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00566335"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.347798"/>
+      <boneWeight bone="Bip01 Neck" weight="0.245868"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00368919"/>
+      <boneWeight bone="Bip01 Spine" weight="0.151848"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.245133"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="3.87429e-007, 5.77965, 83.3682" normal="-0.00149797, 0.229754, 0.973247" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.303375"/>
+      <boneWeight bone="Bip01 Spine" weight="0.684087"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0125381"/>
+    </vertex>
+    <vertex location="1.92326e-006, -11.205, 85.6736" normal="0.000137906, -0.0143299, 0.999897" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0626832"/>
+      <boneWeight bone="Bip01 Neck" weight="0.336875"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0624201"/>
+      <boneWeight bone="Bip01 Spine" weight="0.538022"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="5.20843e-007, 4.28682, 61.0498" normal="-2.77313e-005, -0.0754326, -0.997151" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Spine" weight="0.697013"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456135"/>
+      <boneWeight bone="Bip01 Pelvis" weight="0.257374"/>
+    </vertex>
+    <vertex location="-5.39503e-007, 16.0658, 62.325" normal="0.00195618, 0.168455, -0.985707" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.351233"/>
+      <boneWeight bone="Bip01 Spine" weight="0.342669"/>
+      <boneWeight bone="Bip01 Tail" weight="0.306099"/>
+    </vertex>
+    <vertex location="-5.39503e-007, 16.0658, 62.325" normal="0.00195618, 0.168455, -0.985707" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.351233"/>
+      <boneWeight bone="Bip01 Spine" weight="0.342669"/>
+      <boneWeight bone="Bip01 Tail" weight="0.306099"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="3.87429e-007, 5.77965, 83.3682" normal="-0.00149797, 0.229754, 0.973247" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.303375"/>
+      <boneWeight bone="Bip01 Spine" weight="0.684087"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0125381"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="-6.7257e-007, 17.5587, 78.4737" normal="-0.00320574, 0.351371, 0.936231" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.358251"/>
+      <boneWeight bone="Bip01 Spine" weight="0.358251"/>
+      <boneWeight bone="Bip01 Tail" weight="0.283499"/>
+    </vertex>
+    <vertex location="3.87429e-007, 5.77965, 83.3682" normal="-0.00149797, 0.229754, 0.973247" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.303375"/>
+      <boneWeight bone="Bip01 Spine" weight="0.684087"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0125381"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="-5.39503e-007, 16.0658, 62.325" normal="0.00195618, 0.168455, -0.985707" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.351233"/>
+      <boneWeight bone="Bip01 Spine" weight="0.342669"/>
+      <boneWeight bone="Bip01 Tail" weight="0.306099"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.296875, 0.0078125">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-6.7257e-007, 17.5587, 78.4737" normal="-0.00320574, 0.351371, 0.936231" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.358251"/>
+      <boneWeight bone="Bip01 Spine" weight="0.358251"/>
+      <boneWeight bone="Bip01 Tail" weight="0.283499"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.296875, 0.0078125">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.0078125, 0.78125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="10.8578, -17.8286, 75.6991" normal="0.977142, -0.111134, 0.181225" tcoords="0.0078125, 0.992188">
+      <boneWeight bone="Bip01 Head" weight="0.00566335"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.347798"/>
+      <boneWeight bone="Bip01 Neck" weight="0.245868"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00368919"/>
+      <boneWeight bone="Bip01 Spine" weight="0.151848"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.245133"/>
+    </vertex>
+    <vertex location="16.8373, -0.115909, 71.1608" normal="0.956889, -0.0750984, 0.280576" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00213134"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.583658"/>
+      <boneWeight bone="Bip01 Spine" weight="0.349917"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0642937"/>
+    </vertex>
+    <vertex location="14.8232, -15.3635, 64.7115" normal="0.979834, -0.137941, 0.14456" tcoords="0.132813, 0.992188">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.083083"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0434339"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.873483"/>
+    </vertex>
+    <vertex location="16.8373, -0.115909, 71.1608" normal="0.956889, -0.0750984, 0.280576" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00213134"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.583658"/>
+      <boneWeight bone="Bip01 Spine" weight="0.349917"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0642937"/>
+    </vertex>
+    <vertex location="10.8578, -17.8286, 75.6991" normal="0.977142, -0.111134, 0.181225" tcoords="0.0078125, 0.992188">
+      <boneWeight bone="Bip01 Head" weight="0.00566335"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.347798"/>
+      <boneWeight bone="Bip01 Neck" weight="0.245868"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00368919"/>
+      <boneWeight bone="Bip01 Spine" weight="0.151848"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.245133"/>
+    </vertex>
+    <vertex location="16.8373, -0.115909, 71.1608" normal="0.956889, -0.0750984, 0.280576" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00213134"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.583658"/>
+      <boneWeight bone="Bip01 Spine" weight="0.349917"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0642937"/>
+    </vertex>
+    <vertex location="14.8232, -15.3635, 64.7115" normal="0.979834, -0.137941, 0.14456" tcoords="0.132813, 0.992188">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.083083"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0434339"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.873483"/>
+    </vertex>
+    <vertex location="16.7094, -0.675031, 56.1466" normal="0.989752, -0.0789641, 0.118979" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.49621"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.50379"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="17.2213, -14.0286, 49.431" normal="0.978757, -0.0595255, 0.196194" tcoords="0.257813, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="0.348762"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.651238"/>
+    </vertex>
+    <vertex location="16.7094, -0.675031, 56.1466" normal="0.989752, -0.0789641, 0.118979" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.49621"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.50379"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="14.8232, -15.3635, 64.7115" normal="0.979834, -0.137941, 0.14456" tcoords="0.132813, 0.992188">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.083083"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0434339"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.873483"/>
+    </vertex>
+    <vertex location="16.7094, -0.675031, 56.1466" normal="0.989752, -0.0789641, 0.118979" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.49621"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.50379"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="17.2213, -14.0286, 49.431" normal="0.978757, -0.0595255, 0.196194" tcoords="0.257813, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="0.348762"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.651238"/>
+    </vertex>
+    <vertex location="19.4104, 3.07622, 45.1568" normal="0.972694, -0.0797164, 0.217973" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.832235"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.167765"/>
+    </vertex>
+    <vertex location="20.4564, -9.08252, 36.7619" normal="0.971874, -0.0692249, 0.225097" tcoords="0.40625, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="19.4104, 3.07622, 45.1568" normal="0.972694, -0.0797164, 0.217973" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.832235"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.167765"/>
+    </vertex>
+    <vertex location="17.2213, -14.0286, 49.431" normal="0.978757, -0.0595255, 0.196194" tcoords="0.257813, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="0.348762"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.651238"/>
+    </vertex>
+    <vertex location="19.4104, 3.07622, 45.1568" normal="0.972694, -0.0797164, 0.217973" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.832235"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.167765"/>
+    </vertex>
+    <vertex location="20.4564, -9.08252, 36.7619" normal="0.971874, -0.0692249, 0.225097" tcoords="0.40625, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.9558, 6.56221, 30.8371" normal="0.95287, -0.126728, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 L Forearm" weight="0.576019"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.423981"/>
+    </vertex>
+    <vertex location="24.5922, -5.56244, 20.3739" normal="0.94809, -0.1253, 0.292277" tcoords="0.59375, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="0.254367"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.745633"/>
+    </vertex>
+    <vertex location="22.9558, 6.56221, 30.8371" normal="0.95287, -0.126728, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 L Forearm" weight="0.576019"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.423981"/>
+    </vertex>
+    <vertex location="20.4564, -9.08252, 36.7619" normal="0.971874, -0.0692249, 0.225097" tcoords="0.40625, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.9558, 6.56221, 30.8371" normal="0.95287, -0.126728, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 L Forearm" weight="0.576019"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.423981"/>
+    </vertex>
+    <vertex location="24.5922, -5.56244, 20.3739" normal="0.94809, -0.1253, 0.292277" tcoords="0.59375, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="0.254367"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.745633"/>
+    </vertex>
+    <vertex location="28.196, 9.42432, 17.0763" normal="0.904848, -0.215246, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 L Forearm" weight="0.0334438"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.966556"/>
+    </vertex>
+    <vertex location="30.0517, -4.47472, 5.00701" normal="0.911509, -0.193463, 0.362938" tcoords="0.757813, 0.992188">
+      <boneWeight bone="Bip01 L Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="28.196, 9.42432, 17.0763" normal="0.904848, -0.215246, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 L Forearm" weight="0.0334438"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.966556"/>
+    </vertex>
+    <vertex location="24.5922, -5.56244, 20.3739" normal="0.94809, -0.1253, 0.292277" tcoords="0.59375, 0.992188">
+      <boneWeight bone="Bip01 L Forearm" weight="0.254367"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.745633"/>
+    </vertex>
+    <vertex location="28.196, 9.42432, 17.0763" normal="0.904848, -0.215246, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 L Forearm" weight="0.0334438"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.966556"/>
+    </vertex>
+    <vertex location="30.0517, -4.47472, 5.00701" normal="0.911509, -0.193463, 0.362938" tcoords="0.757813, 0.992188">
+      <boneWeight bone="Bip01 L Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="40.5822, 1.04398, -14.9218" normal="0.871982, -0.270103, 0.408278" tcoords="0.968184, 0.909798">
+      <boneWeight bone="Bip01 L Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="40.5822, 1.04398, -14.9218" normal="0.871982, -0.270103, 0.408278" tcoords="0.968184, 0.909798">
+      <boneWeight bone="Bip01 L Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="40.3676, 16.6424, -2.8422" normal="0.862217, -0.268299, 0.429648" tcoords="0.968184, 0.703125">
+      <boneWeight bone="Bip01 L Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="28.196, 9.42432, 17.0763" normal="0.904848, -0.215246, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 L Forearm" weight="0.0334438"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.966556"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.0078125, 0.640625">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.0078125, 0.78125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="15.3801, 11.2197, 72.9489" normal="0.842717, -0.0600311, 0.534999" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.139524"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456438"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.814832"/>
+    </vertex>
+    <vertex location="16.8373, -0.115909, 71.1608" normal="0.956889, -0.0750984, 0.280576" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00213134"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.583658"/>
+      <boneWeight bone="Bip01 Spine" weight="0.349917"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0642937"/>
+    </vertex>
+    <vertex location="15.3801, 11.2197, 72.9489" normal="0.842717, -0.0600311, 0.534999" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.139524"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456438"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.814832"/>
+    </vertex>
+    <vertex location="13.8089, -0.778977, 75.3325" normal="0.927595, 0.0208754, 0.373003" tcoords="0.0078125, 0.78125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.131671"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="6.47004e-005"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0214428"/>
+      <boneWeight bone="Bip01 Spine" weight="0.846822"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="15.3801, 11.2197, 72.9489" normal="0.842717, -0.0600311, 0.534999" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.139524"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456438"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.814832"/>
+    </vertex>
+    <vertex location="16.8373, -0.115909, 71.1608" normal="0.956889, -0.0750984, 0.280576" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00213134"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.583658"/>
+      <boneWeight bone="Bip01 Spine" weight="0.349917"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0642937"/>
+    </vertex>
+    <vertex location="17.3039, 12.9655, 62.152" normal="0.990478, -0.0814586, 0.110988" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0384267"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.480787"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.480787"/>
+    </vertex>
+    <vertex location="16.7094, -0.675031, 56.1466" normal="0.989752, -0.0789641, 0.118979" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.49621"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.50379"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="17.3039, 12.9655, 62.152" normal="0.990478, -0.0814586, 0.110988" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0384267"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.480787"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.480787"/>
+    </vertex>
+    <vertex location="16.8373, -0.115909, 71.1608" normal="0.956889, -0.0750984, 0.280576" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00213134"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.583658"/>
+      <boneWeight bone="Bip01 Spine" weight="0.349917"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0642937"/>
+    </vertex>
+    <vertex location="17.3039, 12.9655, 62.152" normal="0.990478, -0.0814586, 0.110988" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0384267"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.480787"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.480787"/>
+    </vertex>
+    <vertex location="16.7094, -0.675031, 56.1466" normal="0.989752, -0.0789641, 0.118979" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.49621"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.50379"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="19.1714, 15.6996, 51.4311" normal="0.977677, -0.0925474, 0.188636" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.72973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.27027"/>
+    </vertex>
+    <vertex location="19.4104, 3.07622, 45.1568" normal="0.972694, -0.0797164, 0.217973" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.832235"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.167765"/>
+    </vertex>
+    <vertex location="19.1714, 15.6996, 51.4311" normal="0.977677, -0.0925474, 0.188636" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.72973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.27027"/>
+    </vertex>
+    <vertex location="16.7094, -0.675031, 56.1466" normal="0.989752, -0.0789641, 0.118979" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.49621"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.50379"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="19.1714, 15.6996, 51.4311" normal="0.977677, -0.0925474, 0.188636" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.72973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.27027"/>
+    </vertex>
+    <vertex location="19.4104, 3.07622, 45.1568" normal="0.972694, -0.0797164, 0.217973" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.832235"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.167765"/>
+    </vertex>
+    <vertex location="22.1794, 17.797, 38.9717" normal="0.959503, -0.111135, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.719448"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.280552"/>
+    </vertex>
+    <vertex location="22.9558, 6.56221, 30.8371" normal="0.95287, -0.126728, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 L Forearm" weight="0.576019"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.423981"/>
+    </vertex>
+    <vertex location="22.1794, 17.797, 38.9717" normal="0.959503, -0.111135, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.719448"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.280552"/>
+    </vertex>
+    <vertex location="19.4104, 3.07622, 45.1568" normal="0.972694, -0.0797164, 0.217973" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 L Forearm" weight="0.832235"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.167765"/>
+    </vertex>
+    <vertex location="22.1794, 17.797, 38.9717" normal="0.959503, -0.111135, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.719448"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.280552"/>
+    </vertex>
+    <vertex location="22.9558, 6.56221, 30.8371" normal="0.95287, -0.126728, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 L Forearm" weight="0.576019"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.423981"/>
+    </vertex>
+    <vertex location="26.5735, 17.4773, 26.8489" normal="0.920076, -0.178556, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 L Hand" weight="0.650665"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.349335"/>
+    </vertex>
+    <vertex location="28.196, 9.42432, 17.0763" normal="0.904848, -0.215246, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 L Forearm" weight="0.0334438"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.966556"/>
+    </vertex>
+    <vertex location="26.5735, 17.4773, 26.8489" normal="0.920076, -0.178556, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 L Hand" weight="0.650665"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.349335"/>
+    </vertex>
+    <vertex location="22.9558, 6.56221, 30.8371" normal="0.95287, -0.126728, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 L Forearm" weight="0.576019"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.423981"/>
+    </vertex>
+    <vertex location="26.5735, 17.4773, 26.8489" normal="0.920076, -0.178556, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 L Hand" weight="0.650665"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.349335"/>
+    </vertex>
+    <vertex location="28.196, 9.42432, 17.0763" normal="0.904848, -0.215246, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 L Forearm" weight="0.0334438"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.966556"/>
+    </vertex>
+    <vertex location="32.4886, 27.6438, 18.0803" normal="0.892392, -0.212432, 0.398132" tcoords="0.747018, 0.644739">
+      <boneWeight bone="Bip01 L Forearm" weight="0.438376"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.561624"/>
+    </vertex>
+    <vertex location="40.3676, 16.6424, -2.8422" normal="0.862217, -0.268299, 0.429648" tcoords="0.968184, 0.703125">
+      <boneWeight bone="Bip01 L Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="32.4886, 27.6438, 18.0803" normal="0.892392, -0.212432, 0.398132" tcoords="0.747018, 0.644739">
+      <boneWeight bone="Bip01 L Forearm" weight="0.438376"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.561624"/>
+    </vertex>
+    <vertex location="28.196, 9.42432, 17.0763" normal="0.904848, -0.215246, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 L Forearm" weight="0.0334438"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.966556"/>
+    </vertex>
+    <vertex location="13.8613, 18.1301, 75.07" normal="0.032705, -0.0815582, 0.996132" tcoords="0.0078125, 0.53125">
+      <boneWeight bone="Bip01 Pelvis" weight="1.53794e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0540989"/>
+      <boneWeight bone="Bip01 Tail" weight="0.851297"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0945886"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.0078125, 0.640625">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="15.4948, 18.2293, 75.0245" normal="0.555939, -0.167875, 0.814095" tcoords="0.0625, 0.53125">
+      <boneWeight bone="Bip01 Spine" weight="0.0262001"/>
+      <boneWeight bone="Bip01 Tail" weight="0.166221"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.807578"/>
+    </vertex>
+    <vertex location="15.3801, 11.2197, 72.9489" normal="0.842717, -0.0600311, 0.534999" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.139524"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456438"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.814832"/>
+    </vertex>
+    <vertex location="15.4948, 18.2293, 75.0245" normal="0.555939, -0.167875, 0.814095" tcoords="0.0625, 0.53125">
+      <boneWeight bone="Bip01 Spine" weight="0.0262001"/>
+      <boneWeight bone="Bip01 Tail" weight="0.166221"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.807578"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.0078125, 0.640625">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="15.4948, 18.2293, 75.0245" normal="0.555939, -0.167875, 0.814095" tcoords="0.0625, 0.53125">
+      <boneWeight bone="Bip01 Spine" weight="0.0262001"/>
+      <boneWeight bone="Bip01 Tail" weight="0.166221"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.807578"/>
+    </vertex>
+    <vertex location="15.3801, 11.2197, 72.9489" normal="0.842717, -0.0600311, 0.534999" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.139524"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456438"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.814832"/>
+    </vertex>
+    <vertex location="18.3867, 20.647, 65.5428" normal="0.976872, -0.15131, 0.151086" tcoords="0.195313, 0.53125">
+      <boneWeight bone="Bip01 Tail" weight="0.1"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.496671"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.403329"/>
+    </vertex>
+    <vertex location="17.3039, 12.9655, 62.152" normal="0.990478, -0.0814586, 0.110988" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0384267"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.480787"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.480787"/>
+    </vertex>
+    <vertex location="18.3867, 20.647, 65.5428" normal="0.976872, -0.15131, 0.151086" tcoords="0.195313, 0.53125">
+      <boneWeight bone="Bip01 Tail" weight="0.1"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.496671"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.403329"/>
+    </vertex>
+    <vertex location="15.3801, 11.2197, 72.9489" normal="0.842717, -0.0600311, 0.534999" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.139524"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456438"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.814832"/>
+    </vertex>
+    <vertex location="18.3867, 20.647, 65.5428" normal="0.976872, -0.15131, 0.151086" tcoords="0.195313, 0.53125">
+      <boneWeight bone="Bip01 Tail" weight="0.1"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.496671"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.403329"/>
+    </vertex>
+    <vertex location="17.3039, 12.9655, 62.152" normal="0.990478, -0.0814586, 0.110988" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0384267"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.480787"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.480787"/>
+    </vertex>
+    <vertex location="19.3469, 23.6797, 54.3824" normal="0.981777, -0.107536, 0.156686" tcoords="0.34375, 0.539063">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.668973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.331027"/>
+    </vertex>
+    <vertex location="19.1714, 15.6996, 51.4311" normal="0.977677, -0.0925474, 0.188636" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.72973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.27027"/>
+    </vertex>
+    <vertex location="19.3469, 23.6797, 54.3824" normal="0.981777, -0.107536, 0.156686" tcoords="0.34375, 0.539063">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.668973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.331027"/>
+    </vertex>
+    <vertex location="17.3039, 12.9655, 62.152" normal="0.990478, -0.0814586, 0.110988" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0384267"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.480787"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.480787"/>
+    </vertex>
+    <vertex location="19.3469, 23.6797, 54.3824" normal="0.981777, -0.107536, 0.156686" tcoords="0.34375, 0.539063">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.668973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.331027"/>
+    </vertex>
+    <vertex location="19.1714, 15.6996, 51.4311" normal="0.977677, -0.0925474, 0.188636" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.72973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.27027"/>
+    </vertex>
+    <vertex location="22.1794, 17.797, 38.9717" normal="0.959503, -0.111135, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.719448"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.280552"/>
+    </vertex>
+    <vertex location="22.1794, 17.797, 38.9717" normal="0.959503, -0.111135, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.719448"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.280552"/>
+    </vertex>
+    <vertex location="23.1011, 32.769, 41.2008" normal="0.938793, -0.12541, 0.320843" tcoords="0.539063, 0.601563">
+      <boneWeight bone="Bip01 L Forearm" weight="0.658159"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.341841"/>
+    </vertex>
+    <vertex location="19.3469, 23.6797, 54.3824" normal="0.981777, -0.107536, 0.156686" tcoords="0.34375, 0.539063">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.668973"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.331027"/>
+    </vertex>
+    <vertex location="23.1011, 32.769, 41.2008" normal="0.938793, -0.12541, 0.320843" tcoords="0.539063, 0.601563">
+      <boneWeight bone="Bip01 L Forearm" weight="0.658159"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.341841"/>
+    </vertex>
+    <vertex location="22.1794, 17.797, 38.9717" normal="0.959503, -0.111135, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.719448"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.280552"/>
+    </vertex>
+    <vertex location="26.5735, 17.4773, 26.8489" normal="0.920076, -0.178556, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 L Hand" weight="0.650665"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.349335"/>
+    </vertex>
+    <vertex location="26.5735, 17.4773, 26.8489" normal="0.920076, -0.178556, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 L Hand" weight="0.650665"/>
+      <boneWeight bone="Bip01 L Forearm" weight="0.349335"/>
+    </vertex>
+    <vertex location="32.4886, 27.6438, 18.0803" normal="0.892392, -0.212432, 0.398132" tcoords="0.747018, 0.644739">
+      <boneWeight bone="Bip01 L Forearm" weight="0.438376"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.561624"/>
+    </vertex>
+    <vertex location="23.1011, 32.769, 41.2008" normal="0.938793, -0.12541, 0.320843" tcoords="0.539063, 0.601563">
+      <boneWeight bone="Bip01 L Forearm" weight="0.658159"/>
+      <boneWeight bone="Bip01 L Hand" weight="0.341841"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.126283, -0.0531401">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="10.7897, 30.5384, 72.1756" normal="-0.103576, 0.05621, 0.993032" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.00539704, 0.215316">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="10.7897, 30.5384, 72.1756" normal="-0.103576, 0.05621, 0.993032" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="12.2619, 10.9814, 74.5373" normal="0.523661, 0.148303, 0.838919" tcoords="0.126283, -0.0531401">
+      <boneWeight bone="Bip01 Pelvis" weight="0.0893865"/>
+      <boneWeight bone="Bip01 Spine" weight="0.220357"/>
+      <boneWeight bone="Bip01 Tail" weight="0.67366"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0165966"/>
+    </vertex>
+    <vertex location="21.199, 21.7574, 74.3275" normal="-0.124331, 0.0946634, 0.987715" tcoords="0.232375, 0.0407609">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-4.96301e-006, 65.4269, 72.1756" normal="-2.02356e-007, -0.0502723, 0.998736" tcoords="0.0078125, 0.515625">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.00539704, 0.215316">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="19.1455, 51.0653, 73.5412" normal="-0.121265, -0.0259906, 0.99228" tcoords="0.199728, 0.456258">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="10.7897, 30.5384, 72.1756" normal="-0.103576, 0.05621, 0.993032" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="19.1455, 51.0653, 73.5412" normal="-0.121265, -0.0259906, 0.99228" tcoords="0.199728, 0.456258">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.00539704, 0.215316">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="19.1455, 51.0653, 73.5412" normal="-0.121265, -0.0259906, 0.99228" tcoords="0.199728, 0.456258">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="10.7897, 30.5384, 72.1756" normal="-0.103576, 0.05621, 0.993032" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="27.4367, 32.7469, 74.3275" normal="-0.132296, 0.0319136, 0.990696" tcoords="0.299139, 0.203691">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="21.199, 21.7574, 74.3275" normal="-0.124331, 0.0946634, 0.987715" tcoords="0.232375, 0.0407609">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="27.4367, 32.7469, 74.3275" normal="-0.132296, 0.0319136, 0.990696" tcoords="0.299139, 0.203691">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="10.7897, 30.5384, 72.1756" normal="-0.103576, 0.05621, 0.993032" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.694586, -0.718431, 0.0375045" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="3.31597, -43.9452, 74.2512" normal="0.873987, -0.400557, 0.275137" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911692"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0883082"/>
+    </vertex>
+    <vertex location="5.08983e-006, -45.5206, 67.9923" normal="0.0, -0.711663, -0.702521" tcoords="0.5625, 0.40625">
+      <boneWeight bone="Bip01 Head" weight="0.957857"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0421427"/>
+    </vertex>
+    <vertex location="5.08983e-006, -45.5206, 67.9923" normal="0.0, -0.711663, -0.702521" tcoords="0.5625, 0.40625">
+      <boneWeight bone="Bip01 Head" weight="0.957857"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0421427"/>
+    </vertex>
+    <vertex location="3.65779e-006, -29.4497, 59.3956" normal="-5.88279e-006, -0.2274, -0.973801" tcoords="0.773438, 0.304688">
+      <boneWeight bone="Bip01 Head" weight="0.310367"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689633"/>
+    </vertex>
+    <vertex location="6.88972, -34.0621, 70.3417" normal="0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602422"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397578"/>
+    </vertex>
+    <vertex location="6.88972, -35.3941, 78.9367" normal="0.698432, -0.436251, 0.567344" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.68461"/>
+      <boneWeight bone="Bip01 Neck" weight="0.31539"/>
+    </vertex>
+    <vertex location="4.77267e-006, -41.967, 80.5101" normal="0.0, -0.600064, 0.799952" tcoords="0.609375, 0.554688">
+      <boneWeight bone="Bip01 Head" weight="0.882383"/>
+      <boneWeight bone="Bip01 Neck" weight="0.117617"/>
+    </vertex>
+    <vertex location="5.11317, -41.381, 73.866" normal="0.694586, -0.718431, 0.0375045" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849532"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150468"/>
+    </vertex>
+    <vertex location="4.77267e-006, -41.967, 80.5101" normal="0.0, -0.600064, 0.799952" tcoords="0.609375, 0.554688">
+      <boneWeight bone="Bip01 Head" weight="0.882383"/>
+      <boneWeight bone="Bip01 Neck" weight="0.117617"/>
+    </vertex>
+    <vertex location="6.88972, -35.3941, 78.9367" normal="0.698432, -0.436251, 0.567344" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.68461"/>
+      <boneWeight bone="Bip01 Neck" weight="0.31539"/>
+    </vertex>
+    <vertex location="4.20888e-006, -35.6453, 85.3252" normal="2.73946e-005, -0.23491, 0.972017" tcoords="0.695313, 0.609375">
+      <boneWeight bone="Bip01 Head" weight="0.69354"/>
+      <boneWeight bone="Bip01 Neck" weight="0.30646"/>
+    </vertex>
+    <vertex location="3.65779e-006, -29.4497, 59.3956" normal="-5.88279e-006, -0.2274, -0.973801" tcoords="0.773438, 0.304688">
+      <boneWeight bone="Bip01 Head" weight="0.310367"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689633"/>
+    </vertex>
+    <vertex location="11.1441, -22.8898, 76.0019" normal="0.995754, 0.0171844, 0.0904389" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0933478"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.16513"/>
+      <boneWeight bone="Bip01 Neck" weight="0.633421"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0662955"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0418059"/>
+    </vertex>
+    <vertex location="10.3132, -27.8064, 75.1283" normal="0.95926, -0.217073, -0.180832" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.3063"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00217262"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689838"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00168955"/>
+    </vertex>
+    <vertex location="10.3132, -27.8064, 75.1283" normal="0.95926, -0.217073, -0.180832" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.3063"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00217262"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689838"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00168955"/>
+    </vertex>
+    <vertex location="6.88972, -34.0621, 70.3417" normal="0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602422"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397578"/>
+    </vertex>
+    <vertex location="3.65779e-006, -29.4497, 59.3956" normal="-5.88279e-006, -0.2274, -0.973801" tcoords="0.773438, 0.304688">
+      <boneWeight bone="Bip01 Head" weight="0.310367"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689633"/>
+    </vertex>
+    <vertex location="11.1441, -22.8898, 76.0019" normal="0.995754, 0.0171844, 0.0904389" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0933478"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.16513"/>
+      <boneWeight bone="Bip01 Neck" weight="0.633421"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0662955"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0418059"/>
+    </vertex>
+    <vertex location="4.20888e-006, -35.6453, 85.3252" normal="2.73946e-005, -0.23491, 0.972017" tcoords="0.695313, 0.609375">
+      <boneWeight bone="Bip01 Head" weight="0.69354"/>
+      <boneWeight bone="Bip01 Neck" weight="0.30646"/>
+    </vertex>
+    <vertex location="6.88972, -35.3941, 78.9367" normal="0.698432, -0.436251, 0.567344" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.68461"/>
+      <boneWeight bone="Bip01 Neck" weight="0.31539"/>
+    </vertex>
+    <vertex location="6.88972, -35.3941, 78.9367" normal="0.698432, -0.436251, 0.567344" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.68461"/>
+      <boneWeight bone="Bip01 Neck" weight="0.31539"/>
+    </vertex>
+    <vertex location="10.3132, -27.8064, 75.1283" normal="0.95926, -0.217073, -0.180832" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.3063"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00217262"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689838"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00168955"/>
+    </vertex>
+    <vertex location="11.1441, -22.8898, 76.0019" normal="0.995754, 0.0171844, 0.0904389" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0933478"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.16513"/>
+      <boneWeight bone="Bip01 Neck" weight="0.633421"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0662955"/>
+      <boneWeight bone="Bip01 L UpperArm" weight="0.0418059"/>
+    </vertex>
+    <vertex location="6.49943e-006, -61.2902, 71.8938" normal="0.0, -0.414256, -0.910161" tcoords="0.359375, 0.453125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="-1.81718, -55.3544, 73.8284" normal="-0.92238, -0.13605, -0.361531" tcoords="0.4375, 0.46875">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 69.1921" normal="1.21751e-007, -0.267737, -0.963492" tcoords="0.4375, 0.414063">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 69.1921" normal="1.21751e-007, -0.267737, -0.963492" tcoords="0.4375, 0.414063">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="-3.31596, -43.9452, 74.2512" normal="-0.908261, -0.0820509, -0.41028" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911559"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0884412"/>
+    </vertex>
+    <vertex location="5.08983e-006, -45.5206, 67.9923" normal="1.94434e-007, -0.121114, -0.992639" tcoords="0.5625, 0.40625">
+      <boneWeight bone="Bip01 Head" weight="0.957857"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0421427"/>
+    </vertex>
+    <vertex location="-3.31596, -43.9452, 74.2512" normal="-0.908261, -0.0820509, -0.41028" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911559"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0884412"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 69.1921" normal="1.21751e-007, -0.267737, -0.963492" tcoords="0.4375, 0.414063">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="-1.81718, -55.3544, 73.8284" normal="-0.92238, -0.13605, -0.361531" tcoords="0.4375, 0.46875">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="-1.81718, -55.3544, 73.8284" normal="-0.899874, -0.256559, 0.352709" tcoords="0.4375, 0.46875">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="6.49943e-006, -61.2902, 71.8938" normal="0.0, -0.742051, 0.670343" tcoords="0.359375, 0.453125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 78.4646" normal="0.0, -0.588236, 0.808689" tcoords="0.4375, 0.53125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 78.4646" normal="0.0, -0.588236, 0.808689" tcoords="0.4375, 0.53125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="-3.31596, -43.9452, 74.2512" normal="-0.922566, -0.134595, 0.361603" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911559"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0884412"/>
+    </vertex>
+    <vertex location="-1.81718, -55.3544, 73.8284" normal="-0.899874, -0.256559, 0.352709" tcoords="0.4375, 0.46875">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="-3.31596, -43.9452, 74.2512" normal="-0.873987, -0.400557, 0.275137" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911559"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0884412"/>
+    </vertex>
+    <vertex location="5.96872e-006, -55.3544, 78.4646" normal="-2.42944e-007, -0.151042, 0.988527" tcoords="0.4375, 0.53125">
+      <boneWeight bone="Bip01 Head" weight="1.0"/>
+    </vertex>
+    <vertex location="4.77267e-006, -41.967, 80.5101" normal="0.0, -0.600064, 0.799952" tcoords="0.609375, 0.554688">
+      <boneWeight bone="Bip01 Head" weight="0.882383"/>
+      <boneWeight bone="Bip01 Neck" weight="0.117617"/>
+    </vertex>
+    <vertex location="-6.88971, -34.0621, 70.3417" normal="-0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602696"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397304"/>
+    </vertex>
+    <vertex location="5.08983e-006, -45.5206, 67.9923" normal="0.0, -0.711663, -0.702521" tcoords="0.5625, 0.40625">
+      <boneWeight bone="Bip01 Head" weight="0.957857"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0421427"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.694586, -0.718431, 0.0375042" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="-6.88971, -34.0621, 70.3417" normal="-0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602696"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397304"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.694586, -0.718431, 0.0375042" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.716559, -0.690386, -0.0995497" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="-6.88971, -35.3941, 78.9367" normal="-0.698444, -0.436319, 0.567276" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.684901"/>
+      <boneWeight bone="Bip01 Neck" weight="0.315099"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.716559, -0.690386, -0.0995497" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.694586, -0.718431, 0.0375042" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="-3.31596, -43.9452, 74.2512" normal="-0.873987, -0.400557, 0.275137" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911559"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0884412"/>
+    </vertex>
+    <vertex location="4.77267e-006, -41.967, 80.5101" normal="0.0, -0.600064, 0.799952" tcoords="0.609375, 0.554688">
+      <boneWeight bone="Bip01 Head" weight="0.882383"/>
+      <boneWeight bone="Bip01 Neck" weight="0.117617"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.694586, -0.718431, 0.0375042" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="-11.1443, -22.8903, 76.0045" normal="-0.995751, 0.0170586, 0.0904886" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0935631"/>
+      <boneWeight bone="Bip01 Neck" weight="0.63368"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.164349"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.0415002"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0669079"/>
+    </vertex>
+    <vertex location="2.66468e-006, -18.3189, 57.0526" normal="-3.07737e-005, 0.334151, -0.94252" tcoords="0.921875, 0.273438">
+      <boneWeight bone="Bip01 Neck" weight="0.965125"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0345047"/>
+      <boneWeight bone="Bip01 Head" weight="0.000370617"/>
+    </vertex>
+    <vertex location="3.65779e-006, -29.4497, 59.3956" normal="-5.88279e-006, -0.2274, -0.973801" tcoords="0.773438, 0.304688">
+      <boneWeight bone="Bip01 Head" weight="0.310367"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689633"/>
+    </vertex>
+    <vertex location="-6.88971, -34.0621, 70.3417" normal="-0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602696"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397304"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.716559, -0.690386, -0.0995497" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="-10.3132, -27.8064, 75.1283" normal="-0.959249, -0.217059, -0.180906" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.306465"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689637"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0021546"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00174272"/>
+    </vertex>
+    <vertex location="-6.88971, -35.3941, 78.9367" normal="-0.698444, -0.436319, 0.567276" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.684901"/>
+      <boneWeight bone="Bip01 Neck" weight="0.315099"/>
+    </vertex>
+    <vertex location="-10.3132, -27.8064, 75.1283" normal="-0.959249, -0.217059, -0.180906" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.306465"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689637"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0021546"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00174272"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.716559, -0.690386, -0.0995497" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="-11.1443, -22.8903, 76.0045" normal="-0.995751, 0.0170586, 0.0904886" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0935631"/>
+      <boneWeight bone="Bip01 Neck" weight="0.63368"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.164349"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.0415002"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0669079"/>
+    </vertex>
+    <vertex location="4.20888e-006, -35.6453, 85.3252" normal="2.73946e-005, -0.23491, 0.972017" tcoords="0.695313, 0.609375">
+      <boneWeight bone="Bip01 Head" weight="0.69354"/>
+      <boneWeight bone="Bip01 Neck" weight="0.30646"/>
+    </vertex>
+    <vertex location="3.00633e-006, -22.1523, 84.9089" normal="0.000140765, 0.02288, 0.999738" tcoords="0.867188, 0.609375">
+      <boneWeight bone="Bip01 Head" weight="0.104925"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00249016"/>
+      <boneWeight bone="Bip01 Neck" weight="0.768986"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00246621"/>
+      <boneWeight bone="Bip01 Spine" weight="0.121133"/>
+    </vertex>
+    <vertex location="-11.1443, -22.8903, 76.0045" normal="-0.995751, 0.0170586, 0.0904886" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0935631"/>
+      <boneWeight bone="Bip01 Neck" weight="0.63368"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.164349"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.0415002"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0669079"/>
+    </vertex>
+    <vertex location="2.0605e-006, -12.6978, 63.4391" normal="-0.000143658, 0.191984, -0.981398" tcoords="0.992188, 0.335938">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0874432"/>
+      <boneWeight bone="Bip01 Neck" weight="0.32114"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0871289"/>
+      <boneWeight bone="Bip01 Spine" weight="0.504288"/>
+    </vertex>
+    <vertex location="2.66468e-006, -18.3189, 57.0526" normal="-3.07737e-005, 0.334151, -0.94252" tcoords="0.921875, 0.273438">
+      <boneWeight bone="Bip01 Neck" weight="0.965125"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0345047"/>
+      <boneWeight bone="Bip01 Head" weight="0.000370617"/>
+    </vertex>
+    <vertex location="2.0605e-006, -12.6978, 63.4391" normal="-0.000143658, 0.191984, -0.981398" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0874432"/>
+      <boneWeight bone="Bip01 Neck" weight="0.32114"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0871289"/>
+      <boneWeight bone="Bip01 Spine" weight="0.504288"/>
+    </vertex>
+    <vertex location="-11.1443, -22.8903, 76.0045" normal="-0.995751, 0.0170586, 0.0904886" tcoords="0.992188, 0.203125">
+      <boneWeight bone="Bip01 Head" weight="0.0935631"/>
+      <boneWeight bone="Bip01 Neck" weight="0.63368"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.164349"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.0415002"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0669079"/>
+    </vertex>
+    <vertex location="-10.86, -17.8307, 75.708" normal="-0.976166, -0.111882, 0.185965" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00570664"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00380514"/>
+      <boneWeight bone="Bip01 Neck" weight="0.24651"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.34693"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.244116"/>
+      <boneWeight bone="Bip01 Spine" weight="0.152932"/>
+    </vertex>
+    <vertex location="3.00633e-006, -22.1523, 84.9089" normal="0.000140765, 0.02288, 0.999738" tcoords="0.992188, 0.0078125">
+      <boneWeight bone="Bip01 Head" weight="0.104925"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00249016"/>
+      <boneWeight bone="Bip01 Neck" weight="0.768986"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00246621"/>
+      <boneWeight bone="Bip01 Spine" weight="0.121133"/>
+    </vertex>
+    <vertex location="-10.86, -17.8307, 75.708" normal="-0.976166, -0.111882, 0.185965" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00570664"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00380514"/>
+      <boneWeight bone="Bip01 Neck" weight="0.24651"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.34693"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.244116"/>
+      <boneWeight bone="Bip01 Spine" weight="0.152932"/>
+    </vertex>
+    <vertex location="-11.1443, -22.8903, 76.0045" normal="-0.995751, 0.0170586, 0.0904886" tcoords="0.992188, 0.203125">
+      <boneWeight bone="Bip01 Head" weight="0.0935631"/>
+      <boneWeight bone="Bip01 Neck" weight="0.63368"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.164349"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.0415002"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0669079"/>
+    </vertex>
+    <vertex location="-10.86, -17.8307, 75.708" normal="-0.976166, -0.111882, 0.185965" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00570664"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00380514"/>
+      <boneWeight bone="Bip01 Neck" weight="0.24651"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.34693"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.244116"/>
+      <boneWeight bone="Bip01 Spine" weight="0.152932"/>
+    </vertex>
+    <vertex location="3.00633e-006, -22.1523, 84.9089" normal="0.000140765, 0.02288, 0.999738" tcoords="0.992188, 0.0078125">
+      <boneWeight bone="Bip01 Head" weight="0.104925"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00249016"/>
+      <boneWeight bone="Bip01 Neck" weight="0.768986"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00246621"/>
+      <boneWeight bone="Bip01 Spine" weight="0.121133"/>
+    </vertex>
+    <vertex location="1.92326e-006, -11.205, 85.6736" normal="0.000137906, -0.0143299, 0.999897" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0626832"/>
+      <boneWeight bone="Bip01 Neck" weight="0.336875"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0624201"/>
+      <boneWeight bone="Bip01 Spine" weight="0.538022"/>
+    </vertex>
+    <vertex location="-10.86, -17.8307, 75.708" normal="-0.976166, -0.111882, 0.185965" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00570664"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00380514"/>
+      <boneWeight bone="Bip01 Neck" weight="0.24651"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.34693"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.244116"/>
+      <boneWeight bone="Bip01 Spine" weight="0.152932"/>
+    </vertex>
+    <vertex location="5.20843e-007, 4.28682, 61.0498" normal="-2.77313e-005, -0.0754326, -0.997151" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Spine" weight="0.697013"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456135"/>
+      <boneWeight bone="Bip01 Pelvis" weight="0.257374"/>
+    </vertex>
+    <vertex location="2.0605e-006, -12.6978, 63.4391" normal="-0.000143658, 0.191984, -0.981398" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0874432"/>
+      <boneWeight bone="Bip01 Neck" weight="0.32114"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0871289"/>
+      <boneWeight bone="Bip01 Spine" weight="0.504288"/>
+    </vertex>
+    <vertex location="5.20843e-007, 4.28682, 61.0498" normal="-2.77313e-005, -0.0754326, -0.997151" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Spine" weight="0.697013"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456135"/>
+      <boneWeight bone="Bip01 Pelvis" weight="0.257374"/>
+    </vertex>
+    <vertex location="-10.86, -17.8307, 75.708" normal="-0.976166, -0.111882, 0.185965" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00570664"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00380514"/>
+      <boneWeight bone="Bip01 Neck" weight="0.24651"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.34693"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.244116"/>
+      <boneWeight bone="Bip01 Spine" weight="0.152932"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="1.92326e-006, -11.205, 85.6736" normal="0.000137906, -0.0143299, 0.999897" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0626832"/>
+      <boneWeight bone="Bip01 Neck" weight="0.336875"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0624201"/>
+      <boneWeight bone="Bip01 Spine" weight="0.538022"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-10.86, -17.8307, 75.708" normal="-0.976166, -0.111882, 0.185965" tcoords="0.875, 0.21875">
+      <boneWeight bone="Bip01 Head" weight="0.00570664"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00380514"/>
+      <boneWeight bone="Bip01 Neck" weight="0.24651"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.34693"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.244116"/>
+      <boneWeight bone="Bip01 Spine" weight="0.152932"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="1.92326e-006, -11.205, 85.6736" normal="0.000137906, -0.0143299, 0.999897" tcoords="0.859375, 0.0078125">
+      <boneWeight bone="Bip01 L Clavicle" weight="0.0626832"/>
+      <boneWeight bone="Bip01 Neck" weight="0.336875"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0624201"/>
+      <boneWeight bone="Bip01 Spine" weight="0.538022"/>
+    </vertex>
+    <vertex location="3.87429e-007, 5.77965, 83.3682" normal="-0.00149797, 0.229754, 0.973247" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.303375"/>
+      <boneWeight bone="Bip01 Spine" weight="0.684087"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0125381"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-5.39503e-007, 16.0658, 62.325" normal="0.00195618, 0.168455, -0.985707" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.351233"/>
+      <boneWeight bone="Bip01 Spine" weight="0.342669"/>
+      <boneWeight bone="Bip01 Tail" weight="0.306099"/>
+    </vertex>
+    <vertex location="5.20843e-007, 4.28682, 61.0498" normal="-2.77313e-005, -0.0754326, -0.997151" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Spine" weight="0.697013"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0456135"/>
+      <boneWeight bone="Bip01 Pelvis" weight="0.257374"/>
+    </vertex>
+    <vertex location="-5.39503e-007, 16.0658, 62.325" normal="0.00195618, 0.168455, -0.985707" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.351233"/>
+      <boneWeight bone="Bip01 Spine" weight="0.342669"/>
+      <boneWeight bone="Bip01 Tail" weight="0.306099"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="3.87429e-007, 5.77965, 83.3682" normal="-0.00149797, 0.229754, 0.973247" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.303375"/>
+      <boneWeight bone="Bip01 Spine" weight="0.684087"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0125381"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.6875, 0.289063">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="3.87429e-007, 5.77965, 83.3682" normal="-0.00149797, 0.229754, 0.973247" tcoords="0.671875, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.303375"/>
+      <boneWeight bone="Bip01 Spine" weight="0.684087"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0125381"/>
+    </vertex>
+    <vertex location="-6.7257e-007, 17.5587, 78.4737" normal="-0.00320574, 0.351371, 0.936231" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.358251"/>
+      <boneWeight bone="Bip01 Spine" weight="0.358251"/>
+      <boneWeight bone="Bip01 Tail" weight="0.283499"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.296875, 0.0078125">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-5.39503e-007, 16.0658, 62.325" normal="0.00195618, 0.168455, -0.985707" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.351233"/>
+      <boneWeight bone="Bip01 Spine" weight="0.342669"/>
+      <boneWeight bone="Bip01 Tail" weight="0.306099"/>
+    </vertex>
+    <vertex location="-6.7257e-007, 17.5587, 78.4737" normal="-0.00320574, 0.351371, 0.936231" tcoords="0.507813, 0.0078125">
+      <boneWeight bone="Bip01 Pelvis" weight="0.358251"/>
+      <boneWeight bone="Bip01 Spine" weight="0.358251"/>
+      <boneWeight bone="Bip01 Tail" weight="0.283499"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.296875, 0.0078125">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.554688, 0.257813">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.0078125, 0.78125">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-16.9479, -0.156708, 71.2456" normal="-0.953022, -0.0913645, 0.288794" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00245092"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.569591"/>
+      <boneWeight bone="Bip01 Spine" weight="0.381745"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0462136"/>
+    </vertex>
+    <vertex location="-10.86, -17.8307, 75.708" normal="-0.976166, -0.111882, 0.185965" tcoords="0.0078125, 0.992188">
+      <boneWeight bone="Bip01 Head" weight="0.00570664"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00380514"/>
+      <boneWeight bone="Bip01 Neck" weight="0.24651"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.34693"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.244116"/>
+      <boneWeight bone="Bip01 Spine" weight="0.152932"/>
+    </vertex>
+    <vertex location="-14.8536, -15.3779, 64.7528" normal="-0.979653, -0.14101, 0.142819" tcoords="0.132813, 0.992188">
+      <boneWeight bone="Bip01 Neck" weight="0.0439267"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0842934"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.87178"/>
+    </vertex>
+    <vertex location="-10.86, -17.8307, 75.708" normal="-0.976166, -0.111882, 0.185965" tcoords="0.0078125, 0.992188">
+      <boneWeight bone="Bip01 Head" weight="0.00570664"/>
+      <boneWeight bone="Bip01 L Clavicle" weight="0.00380514"/>
+      <boneWeight bone="Bip01 Neck" weight="0.24651"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.34693"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.244116"/>
+      <boneWeight bone="Bip01 Spine" weight="0.152932"/>
+    </vertex>
+    <vertex location="-16.9479, -0.156708, 71.2456" normal="-0.953022, -0.0913645, 0.288794" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00245092"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.569591"/>
+      <boneWeight bone="Bip01 Spine" weight="0.381745"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0462136"/>
+    </vertex>
+    <vertex location="-16.9479, -0.156708, 71.2456" normal="-0.953022, -0.0913645, 0.288794" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00245092"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.569591"/>
+      <boneWeight bone="Bip01 Spine" weight="0.381745"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0462136"/>
+    </vertex>
+    <vertex location="-16.7306, -0.684585, 56.1731" normal="-0.990255, -0.0878715, 0.108045" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.486563"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.513437"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-14.8536, -15.3779, 64.7528" normal="-0.979653, -0.14101, 0.142819" tcoords="0.132813, 0.992188">
+      <boneWeight bone="Bip01 Neck" weight="0.0439267"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0842934"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.87178"/>
+    </vertex>
+    <vertex location="-17.2424, -14.0382, 49.4574" normal="-0.97881, -0.0594098, 0.195963" tcoords="0.257813, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="0.348114"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.651886"/>
+    </vertex>
+    <vertex location="-14.8536, -15.3779, 64.7528" normal="-0.979653, -0.14101, 0.142819" tcoords="0.132813, 0.992188">
+      <boneWeight bone="Bip01 Neck" weight="0.0439267"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0842934"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.87178"/>
+    </vertex>
+    <vertex location="-16.7306, -0.684585, 56.1731" normal="-0.990255, -0.0878715, 0.108045" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.486563"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.513437"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-16.7306, -0.684585, 56.1731" normal="-0.990255, -0.0878715, 0.108045" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.486563"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.513437"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-19.4316, 3.06669, 45.1833" normal="-0.972694, -0.0797194, 0.217972" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.8006"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.1994"/>
+    </vertex>
+    <vertex location="-17.2424, -14.0382, 49.4574" normal="-0.97881, -0.0594098, 0.195963" tcoords="0.257813, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="0.348114"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.651886"/>
+    </vertex>
+    <vertex location="-20.4775, -9.09202, 36.7883" normal="-0.971874, -0.0692279, 0.225097" tcoords="0.40625, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="-17.2424, -14.0382, 49.4574" normal="-0.97881, -0.0594098, 0.195963" tcoords="0.257813, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="0.348114"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.651886"/>
+    </vertex>
+    <vertex location="-19.4316, 3.06669, 45.1833" normal="-0.972694, -0.0797194, 0.217972" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.8006"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.1994"/>
+    </vertex>
+    <vertex location="-19.4316, 3.06669, 45.1833" normal="-0.972694, -0.0797194, 0.217972" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.8006"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.1994"/>
+    </vertex>
+    <vertex location="-22.977, 6.55271, 30.8636" normal="-0.95287, -0.126731, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 R Forearm" weight="0.756784"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.243216"/>
+    </vertex>
+    <vertex location="-20.4775, -9.09202, 36.7883" normal="-0.971874, -0.0692279, 0.225097" tcoords="0.40625, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="-24.6134, -5.57191, 20.4003" normal="-0.948089, -0.125303, 0.292277" tcoords="0.59375, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="0.231598"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.768402"/>
+    </vertex>
+    <vertex location="-20.4775, -9.09202, 36.7883" normal="-0.971874, -0.0692279, 0.225097" tcoords="0.40625, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="-22.977, 6.55271, 30.8636" normal="-0.95287, -0.126731, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 R Forearm" weight="0.756784"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.243216"/>
+    </vertex>
+    <vertex location="-22.977, 6.55271, 30.8636" normal="-0.95287, -0.126731, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 R Forearm" weight="0.756784"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.243216"/>
+    </vertex>
+    <vertex location="-28.2172, 9.41485, 17.1028" normal="-0.904847, -0.215249, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 R Forearm" weight="0.0337765"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.966224"/>
+    </vertex>
+    <vertex location="-24.6134, -5.57191, 20.4003" normal="-0.948089, -0.125303, 0.292277" tcoords="0.59375, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="0.231598"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.768402"/>
+    </vertex>
+    <vertex location="-30.0729, -4.48417, 5.03347" normal="-0.911508, -0.193467, 0.362937" tcoords="0.757813, 0.992188">
+      <boneWeight bone="Bip01 R Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="-24.6134, -5.57191, 20.4003" normal="-0.948089, -0.125303, 0.292277" tcoords="0.59375, 0.992188">
+      <boneWeight bone="Bip01 R Forearm" weight="0.231598"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.768402"/>
+    </vertex>
+    <vertex location="-28.2172, 9.41485, 17.1028" normal="-0.904847, -0.215249, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 R Forearm" weight="0.0337765"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.966224"/>
+    </vertex>
+    <vertex location="-28.2172, 9.41485, 17.1028" normal="-0.904847, -0.215249, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 R Forearm" weight="0.0337765"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.966224"/>
+    </vertex>
+    <vertex location="-40.6034, 1.03456, -14.8953" normal="-0.871982, -0.270107, 0.408277" tcoords="0.968184, 0.909798">
+      <boneWeight bone="Bip01 R Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="-30.0729, -4.48417, 5.03347" normal="-0.911508, -0.193467, 0.362937" tcoords="0.757813, 0.992188">
+      <boneWeight bone="Bip01 R Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="-40.6034, 1.03456, -14.8953" normal="-0.871982, -0.270107, 0.408277" tcoords="0.968184, 0.909798">
+      <boneWeight bone="Bip01 R Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="-28.2172, 9.41485, 17.1028" normal="-0.904847, -0.215249, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 R Forearm" weight="0.0337765"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.966224"/>
+    </vertex>
+    <vertex location="-40.3889, 16.6329, -2.81568" normal="-0.862216, -0.268303, 0.429648" tcoords="0.968184, 0.703125">
+      <boneWeight bone="Bip01 R Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.0078125, 0.640625">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="-15.7831, 11.1082, 73.0443" normal="-0.819229, 0.00838763, 0.573406" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.116239"/>
+      <boneWeight bone="Bip01 Tail" weight="0.123005"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.760755"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.0078125, 0.78125">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-16.9479, -0.156708, 71.2456" normal="-0.953022, -0.0913645, 0.288794" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00245092"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.569591"/>
+      <boneWeight bone="Bip01 Spine" weight="0.381745"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0462136"/>
+    </vertex>
+    <vertex location="-13.8089, -0.778979, 75.3325" normal="-0.920978, 0.0175737, 0.389217" tcoords="0.0078125, 0.78125">
+      <boneWeight bone="Bip01 Neck" weight="0.0214865"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.13067"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="6.64935e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.847777"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-15.7831, 11.1082, 73.0443" normal="-0.819229, 0.00838763, 0.573406" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.116239"/>
+      <boneWeight bone="Bip01 Tail" weight="0.123005"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.760755"/>
+    </vertex>
+    <vertex location="-15.7831, 11.1082, 73.0443" normal="-0.819229, 0.00838763, 0.573406" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.116239"/>
+      <boneWeight bone="Bip01 Tail" weight="0.123005"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.760755"/>
+    </vertex>
+    <vertex location="-17.817, 12.7751, 62.5515" normal="-0.991169, -0.0298042, 0.129209" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0698419"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.542592"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.387566"/>
+    </vertex>
+    <vertex location="-16.9479, -0.156708, 71.2456" normal="-0.953022, -0.0913645, 0.288794" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00245092"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.569591"/>
+      <boneWeight bone="Bip01 Spine" weight="0.381745"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0462136"/>
+    </vertex>
+    <vertex location="-16.7306, -0.684585, 56.1731" normal="-0.990255, -0.0878715, 0.108045" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.486563"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.513437"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-16.9479, -0.156708, 71.2456" normal="-0.953022, -0.0913645, 0.288794" tcoords="0.109375, 0.8125">
+      <boneWeight bone="Bip01 R Clavicle" weight="0.00245092"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.569591"/>
+      <boneWeight bone="Bip01 Spine" weight="0.381745"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0462136"/>
+    </vertex>
+    <vertex location="-17.817, 12.7751, 62.5515" normal="-0.991169, -0.0298042, 0.129209" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0698419"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.542592"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.387566"/>
+    </vertex>
+    <vertex location="-17.817, 12.7751, 62.5515" normal="-0.991169, -0.0298042, 0.129209" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0698419"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.542592"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.387566"/>
+    </vertex>
+    <vertex location="-19.1926, 15.6901, 51.4576" normal="-0.98124, -0.0926208, 0.169087" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.311758"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.688242"/>
+    </vertex>
+    <vertex location="-16.7306, -0.684585, 56.1731" normal="-0.990255, -0.0878715, 0.108045" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.486563"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.513437"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-19.4316, 3.06669, 45.1833" normal="-0.972694, -0.0797194, 0.217972" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.8006"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.1994"/>
+    </vertex>
+    <vertex location="-16.7306, -0.684585, 56.1731" normal="-0.990255, -0.0878715, 0.108045" tcoords="0.242188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.486563"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.513437"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+    </vertex>
+    <vertex location="-19.1926, 15.6901, 51.4576" normal="-0.98124, -0.0926208, 0.169087" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.311758"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.688242"/>
+    </vertex>
+    <vertex location="-19.1926, 15.6901, 51.4576" normal="-0.98124, -0.0926208, 0.169087" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.311758"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.688242"/>
+    </vertex>
+    <vertex location="-22.2006, 17.7874, 38.9982" normal="-0.959503, -0.111138, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.740319"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.259681"/>
+    </vertex>
+    <vertex location="-19.4316, 3.06669, 45.1833" normal="-0.972694, -0.0797194, 0.217972" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.8006"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.1994"/>
+    </vertex>
+    <vertex location="-22.977, 6.55271, 30.8636" normal="-0.95287, -0.126731, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 R Forearm" weight="0.756784"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.243216"/>
+    </vertex>
+    <vertex location="-19.4316, 3.06669, 45.1833" normal="-0.972694, -0.0797194, 0.217972" tcoords="0.367188, 0.835938">
+      <boneWeight bone="Bip01 R Forearm" weight="0.8006"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.1994"/>
+    </vertex>
+    <vertex location="-22.2006, 17.7874, 38.9982" normal="-0.959503, -0.111138, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.740319"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.259681"/>
+    </vertex>
+    <vertex location="-22.2006, 17.7874, 38.9982" normal="-0.959503, -0.111138, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.740319"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.259681"/>
+    </vertex>
+    <vertex location="-26.5947, 17.4678, 26.8754" normal="-0.920076, -0.17856, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 R Hand" weight="0.584918"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.415082"/>
+    </vertex>
+    <vertex location="-22.977, 6.55271, 30.8636" normal="-0.95287, -0.126731, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 R Forearm" weight="0.756784"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.243216"/>
+    </vertex>
+    <vertex location="-28.2172, 9.41485, 17.1028" normal="-0.904847, -0.215249, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 R Forearm" weight="0.0337765"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.966224"/>
+    </vertex>
+    <vertex location="-22.977, 6.55271, 30.8636" normal="-0.95287, -0.126731, 0.275641" tcoords="0.53125, 0.859375">
+      <boneWeight bone="Bip01 R Forearm" weight="0.756784"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.243216"/>
+    </vertex>
+    <vertex location="-26.5947, 17.4678, 26.8754" normal="-0.920076, -0.17856, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 R Hand" weight="0.584918"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.415082"/>
+    </vertex>
+    <vertex location="-26.5947, 17.4678, 26.8754" normal="-0.920076, -0.17856, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 R Hand" weight="0.584918"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.415082"/>
+    </vertex>
+    <vertex location="-32.5099, 27.6344, 18.1068" normal="-0.892391, -0.212435, 0.398132" tcoords="0.747018, 0.644739">
+      <boneWeight bone="Bip01 R Forearm" weight="0.363906"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.636094"/>
+    </vertex>
+    <vertex location="-28.2172, 9.41485, 17.1028" normal="-0.904847, -0.215249, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 R Forearm" weight="0.0337765"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.966224"/>
+    </vertex>
+    <vertex location="-40.3889, 16.6329, -2.81568" normal="-0.862216, -0.268303, 0.429648" tcoords="0.968184, 0.703125">
+      <boneWeight bone="Bip01 R Hand" weight="1.0"/>
+    </vertex>
+    <vertex location="-28.2172, 9.41485, 17.1028" normal="-0.904847, -0.215249, 0.367314" tcoords="0.723732, 0.866621">
+      <boneWeight bone="Bip01 R Forearm" weight="0.0337765"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.966224"/>
+    </vertex>
+    <vertex location="-32.5099, 27.6344, 18.1068" normal="-0.892391, -0.212435, 0.398132" tcoords="0.747018, 0.644739">
+      <boneWeight bone="Bip01 R Forearm" weight="0.363906"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.636094"/>
+    </vertex>
+    <vertex location="-13.8634, 18.1292, 75.0723" normal="0.131148, -0.0607875, 0.989497" tcoords="0.0078125, 0.53125">
+      <boneWeight bone="Bip01 Pelvis" weight="1.99842e-005"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0544402"/>
+      <boneWeight bone="Bip01 Tail" weight="0.850986"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.094554"/>
+    </vertex>
+    <vertex location="-14.6093, 18.4088, 75.1883" normal="-0.479994, -0.078333, 0.873767" tcoords="0.0625, 0.53125">
+      <boneWeight bone="Bip01 Spine" weight="0.0326761"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0318056"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.935518"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.0078125, 0.640625">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="-15.7831, 11.1082, 73.0443" normal="-0.819229, 0.00838763, 0.573406" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.116239"/>
+      <boneWeight bone="Bip01 Tail" weight="0.123005"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.760755"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.0078125, 0.640625">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="-14.6093, 18.4088, 75.1883" normal="-0.479994, -0.078333, 0.873767" tcoords="0.0625, 0.53125">
+      <boneWeight bone="Bip01 Spine" weight="0.0326761"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0318056"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.935518"/>
+    </vertex>
+    <vertex location="-14.6093, 18.4088, 75.1883" normal="-0.479994, -0.078333, 0.873767" tcoords="0.0625, 0.53125">
+      <boneWeight bone="Bip01 Spine" weight="0.0326761"/>
+      <boneWeight bone="Bip01 Tail" weight="0.0318056"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.935518"/>
+    </vertex>
+    <vertex location="-17.3014, 21.0107, 64.922" normal="-0.975298, 0.0289433, 0.21899" tcoords="0.195313, 0.53125">
+      <boneWeight bone="Bip01 Tail" weight="0.0289953"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.647576"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.323429"/>
+    </vertex>
+    <vertex location="-15.7831, 11.1082, 73.0443" normal="-0.819229, 0.00838763, 0.573406" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.116239"/>
+      <boneWeight bone="Bip01 Tail" weight="0.123005"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.760755"/>
+    </vertex>
+    <vertex location="-17.817, 12.7751, 62.5515" normal="-0.991169, -0.0298042, 0.129209" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0698419"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.542592"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.387566"/>
+    </vertex>
+    <vertex location="-15.7831, 11.1082, 73.0443" normal="-0.819229, 0.00838763, 0.573406" tcoords="0.0859375, 0.640625">
+      <boneWeight bone="Bip01 Spine" weight="0.116239"/>
+      <boneWeight bone="Bip01 Tail" weight="0.123005"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.760755"/>
+    </vertex>
+    <vertex location="-17.3014, 21.0107, 64.922" normal="-0.975298, 0.0289433, 0.21899" tcoords="0.195313, 0.53125">
+      <boneWeight bone="Bip01 Tail" weight="0.0289953"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.647576"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.323429"/>
+    </vertex>
+    <vertex location="-17.3014, 21.0107, 64.922" normal="-0.975298, 0.0289433, 0.21899" tcoords="0.195313, 0.53125">
+      <boneWeight bone="Bip01 Tail" weight="0.0289953"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.647576"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.323429"/>
+    </vertex>
+    <vertex location="-19.3682, 23.6702, 54.4089" normal="-0.981054, -0.0624428, 0.183396" tcoords="0.34375, 0.539063">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.393968"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.606032"/>
+    </vertex>
+    <vertex location="-17.817, 12.7751, 62.5515" normal="-0.991169, -0.0298042, 0.129209" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0698419"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.542592"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.387566"/>
+    </vertex>
+    <vertex location="-19.1926, 15.6901, 51.4576" normal="-0.98124, -0.0926208, 0.169087" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.311758"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.688242"/>
+    </vertex>
+    <vertex location="-17.817, 12.7751, 62.5515" normal="-0.991169, -0.0298042, 0.129209" tcoords="0.21875, 0.671875">
+      <boneWeight bone="Bip01 Tail" weight="0.0698419"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.542592"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.387566"/>
+    </vertex>
+    <vertex location="-19.3682, 23.6702, 54.4089" normal="-0.981054, -0.0624428, 0.183396" tcoords="0.34375, 0.539063">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.393968"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.606032"/>
+    </vertex>
+    <vertex location="-19.3682, 23.6702, 54.4089" normal="-0.981054, -0.0624428, 0.183396" tcoords="0.34375, 0.539063">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.393968"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.606032"/>
+    </vertex>
+    <vertex location="-22.2006, 17.7874, 38.9982" normal="-0.959503, -0.111138, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.740319"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.259681"/>
+    </vertex>
+    <vertex location="-19.1926, 15.6901, 51.4576" normal="-0.98124, -0.0926208, 0.169087" tcoords="0.351563, 0.6875">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.311758"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.688242"/>
+    </vertex>
+    <vertex location="-22.2006, 17.7874, 38.9982" normal="-0.959503, -0.111138, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.740319"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.259681"/>
+    </vertex>
+    <vertex location="-19.3682, 23.6702, 54.4089" normal="-0.981054, -0.0624428, 0.183396" tcoords="0.34375, 0.539063">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.393968"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.606032"/>
+    </vertex>
+    <vertex location="-23.1223, 32.7595, 41.2273" normal="-0.938793, -0.125413, 0.320843" tcoords="0.539063, 0.601563">
+      <boneWeight bone="Bip01 R Forearm" weight="0.673501"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.326499"/>
+    </vertex>
+    <vertex location="-23.1223, 32.7595, 41.2273" normal="-0.938793, -0.125413, 0.320843" tcoords="0.539063, 0.601563">
+      <boneWeight bone="Bip01 R Forearm" weight="0.673501"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.326499"/>
+    </vertex>
+    <vertex location="-26.5947, 17.4678, 26.8754" normal="-0.920076, -0.17856, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 R Hand" weight="0.584918"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.415082"/>
+    </vertex>
+    <vertex location="-22.2006, 17.7874, 38.9982" normal="-0.959503, -0.111138, 0.258848" tcoords="0.484375, 0.710938">
+      <boneWeight bone="Bip01 Tail" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.740319"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.259681"/>
+    </vertex>
+    <vertex location="-26.5947, 17.4678, 26.8754" normal="-0.920076, -0.17856, 0.348679" tcoords="0.60511, 0.750566">
+      <boneWeight bone="Bip01 R Hand" weight="0.584918"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.415082"/>
+    </vertex>
+    <vertex location="-23.1223, 32.7595, 41.2273" normal="-0.938793, -0.125413, 0.320843" tcoords="0.539063, 0.601563">
+      <boneWeight bone="Bip01 R Forearm" weight="0.673501"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.326499"/>
+    </vertex>
+    <vertex location="-32.5099, 27.6344, 18.1068" normal="-0.892391, -0.212435, 0.398132" tcoords="0.747018, 0.644739">
+      <boneWeight bone="Bip01 R Forearm" weight="0.363906"/>
+      <boneWeight bone="Bip01 R Hand" weight="0.636094"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.126283, -0.0531401">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.00539704, 0.215316">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.7897, 30.5384, 72.1756" normal="0.105671, 0.0537639, 0.992947" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.7897, 30.5384, 72.1756" normal="0.105671, 0.0537639, 0.992947" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-21.199, 21.7574, 74.3275" normal="0.126899, 0.091609, 0.987676" tcoords="0.232375, 0.0407609">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-12.2678, 11.0, 74.4228" normal="-0.48174, 0.159005, 0.861768" tcoords="0.126283, -0.0531401">
+      <boneWeight bone="Bip01 Pelvis" weight="0.111984"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0590694"/>
+      <boneWeight bone="Bip01 Tail" weight="0.828947"/>
+    </vertex>
+    <vertex location="-4.96301e-006, 65.4269, 72.1756" normal="-2.02356e-007, -0.0502723, 0.998736" tcoords="0.0078125, 0.515625">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-19.1455, 51.0653, 73.5412" normal="0.121265, -0.0259904, 0.99228" tcoords="0.199728, 0.456258">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.00539704, 0.215316">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.7897, 30.5384, 72.1756" normal="0.105671, 0.0537639, 0.992947" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-2.69567e-006, 40.0672, 70.8991" normal="0.000394985, 0.175775, 0.98443" tcoords="0.00539704, 0.215316">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-19.1455, 51.0653, 73.5412" normal="0.121265, -0.0259904, 0.99228" tcoords="0.199728, 0.456258">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-19.1455, 51.0653, 73.5412" normal="0.121265, -0.0259904, 0.99228" tcoords="0.199728, 0.456258">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-27.4367, 32.7469, 74.3275" normal="0.132296, 0.0319138, 0.990696" tcoords="0.299139, 0.203691">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.7897, 30.5384, 72.1756" normal="0.105671, 0.0537639, 0.992947" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-21.199, 21.7574, 74.3275" normal="0.126899, 0.091609, 0.987676" tcoords="0.232375, 0.0407609">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.7897, 30.5384, 72.1756" normal="0.105671, 0.0537639, 0.992947" tcoords="0.110507, 0.15708">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-27.4367, 32.7469, 74.3275" normal="0.132296, 0.0319138, 0.990696" tcoords="0.299139, 0.203691">
+      <boneWeight bone="Bip01 Tail" weight="1.0"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.694586, -0.718431, 0.0375042" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="5.08983e-006, -45.5206, 67.9923" normal="0.0, -0.711663, -0.702521" tcoords="0.5625, 0.40625">
+      <boneWeight bone="Bip01 Head" weight="0.957857"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0421427"/>
+    </vertex>
+    <vertex location="-3.31596, -43.9452, 74.2512" normal="-0.873987, -0.400557, 0.275137" tcoords="0.585938, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.911559"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0884412"/>
+    </vertex>
+    <vertex location="5.08983e-006, -45.5206, 67.9923" normal="0.0, -0.711663, -0.702521" tcoords="0.5625, 0.40625">
+      <boneWeight bone="Bip01 Head" weight="0.957857"/>
+      <boneWeight bone="Bip01 Neck" weight="0.0421427"/>
+    </vertex>
+    <vertex location="-6.88971, -34.0621, 70.3417" normal="-0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602696"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397304"/>
+    </vertex>
+    <vertex location="3.65779e-006, -29.4497, 59.3956" normal="-5.88279e-006, -0.2274, -0.973801" tcoords="0.773438, 0.304688">
+      <boneWeight bone="Bip01 Head" weight="0.310367"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689633"/>
+    </vertex>
+    <vertex location="-6.88971, -35.3941, 78.9367" normal="-0.698444, -0.436319, 0.567276" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.684901"/>
+      <boneWeight bone="Bip01 Neck" weight="0.315099"/>
+    </vertex>
+    <vertex location="-5.11316, -41.381, 73.866" normal="-0.694586, -0.718431, 0.0375042" tcoords="0.617188, 0.476563">
+      <boneWeight bone="Bip01 Head" weight="0.849233"/>
+      <boneWeight bone="Bip01 Neck" weight="0.150767"/>
+    </vertex>
+    <vertex location="4.77267e-006, -41.967, 80.5101" normal="0.0, -0.600064, 0.799952" tcoords="0.609375, 0.554688">
+      <boneWeight bone="Bip01 Head" weight="0.882383"/>
+      <boneWeight bone="Bip01 Neck" weight="0.117617"/>
+    </vertex>
+    <vertex location="4.77267e-006, -41.967, 80.5101" normal="0.0, -0.600064, 0.799952" tcoords="0.609375, 0.554688">
+      <boneWeight bone="Bip01 Head" weight="0.882383"/>
+      <boneWeight bone="Bip01 Neck" weight="0.117617"/>
+    </vertex>
+    <vertex location="4.20888e-006, -35.6453, 85.3252" normal="2.73946e-005, -0.23491, 0.972017" tcoords="0.695313, 0.609375">
+      <boneWeight bone="Bip01 Head" weight="0.69354"/>
+      <boneWeight bone="Bip01 Neck" weight="0.30646"/>
+    </vertex>
+    <vertex location="-6.88971, -35.3941, 78.9367" normal="-0.698444, -0.436319, 0.567276" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.684901"/>
+      <boneWeight bone="Bip01 Neck" weight="0.315099"/>
+    </vertex>
+    <vertex location="3.65779e-006, -29.4497, 59.3956" normal="-5.88279e-006, -0.2274, -0.973801" tcoords="0.773438, 0.304688">
+      <boneWeight bone="Bip01 Head" weight="0.310367"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689633"/>
+    </vertex>
+    <vertex location="-10.3132, -27.8064, 75.1283" normal="-0.959249, -0.217059, -0.180906" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.306465"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689637"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0021546"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00174272"/>
+    </vertex>
+    <vertex location="-11.1443, -22.8903, 76.0045" normal="-0.995751, 0.0170586, 0.0904886" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0935631"/>
+      <boneWeight bone="Bip01 Neck" weight="0.63368"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.164349"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.0415002"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0669079"/>
+    </vertex>
+    <vertex location="-10.3132, -27.8064, 75.1283" normal="-0.959249, -0.217059, -0.180906" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.306465"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689637"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0021546"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00174272"/>
+    </vertex>
+    <vertex location="3.65779e-006, -29.4497, 59.3956" normal="-5.88279e-006, -0.2274, -0.973801" tcoords="0.773438, 0.304688">
+      <boneWeight bone="Bip01 Head" weight="0.310367"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689633"/>
+    </vertex>
+    <vertex location="-6.88971, -34.0621, 70.3417" normal="-0.729679, -0.337403, -0.594751" tcoords="0.710938, 0.429688">
+      <boneWeight bone="Bip01 Head" weight="0.602696"/>
+      <boneWeight bone="Bip01 Neck" weight="0.397304"/>
+    </vertex>
+    <vertex location="-11.1443, -22.8903, 76.0045" normal="-0.995751, 0.0170586, 0.0904886" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0935631"/>
+      <boneWeight bone="Bip01 Neck" weight="0.63368"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.164349"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.0415002"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0669079"/>
+    </vertex>
+    <vertex location="-6.88971, -35.3941, 78.9367" normal="-0.698444, -0.436319, 0.567276" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.684901"/>
+      <boneWeight bone="Bip01 Neck" weight="0.315099"/>
+    </vertex>
+    <vertex location="4.20888e-006, -35.6453, 85.3252" normal="2.73946e-005, -0.23491, 0.972017" tcoords="0.695313, 0.609375">
+      <boneWeight bone="Bip01 Head" weight="0.69354"/>
+      <boneWeight bone="Bip01 Neck" weight="0.30646"/>
+    </vertex>
+    <vertex location="-6.88971, -35.3941, 78.9367" normal="-0.698444, -0.436319, 0.567276" tcoords="0.695313, 0.515625">
+      <boneWeight bone="Bip01 Head" weight="0.684901"/>
+      <boneWeight bone="Bip01 Neck" weight="0.315099"/>
+    </vertex>
+    <vertex location="-11.1443, -22.8903, 76.0045" normal="-0.995751, 0.0170586, 0.0904886" tcoords="0.859375, 0.5">
+      <boneWeight bone="Bip01 Head" weight="0.0935631"/>
+      <boneWeight bone="Bip01 Neck" weight="0.63368"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.164349"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="0.0415002"/>
+      <boneWeight bone="Bip01 Spine" weight="0.0669079"/>
+    </vertex>
+    <vertex location="-10.3132, -27.8064, 75.1283" normal="-0.959249, -0.217059, -0.180906" tcoords="0.796875, 0.484375">
+      <boneWeight bone="Bip01 Head" weight="0.306465"/>
+      <boneWeight bone="Bip01 Neck" weight="0.689637"/>
+      <boneWeight bone="Bip01 R Clavicle" weight="0.0021546"/>
+      <boneWeight bone="Bip01 Spine" weight="0.00174272"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="feet" translation="-0.0667725, 2.10616, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="feet.png" transparent="false">
+    <vertex location="6.75345, 15.693, 62.9302" normal="-0.325465, -0.257049, -0.909944" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.510447"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.489553"/>
+    </vertex>
+    <vertex location="11.2411, 13.7966, 65.8122" normal="0.990753, -0.135261, -0.0106543" tcoords="0.84375, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="8.67458, 4.21427, 71.8407" normal="0.527722, -0.60716, -0.594026" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="8.67458, 4.21427, 71.8407" normal="0.527722, -0.60716, -0.594026" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="2.42664, 11.7922, 66.9576" normal="-0.798621, 0.496764, -0.339749" tcoords="0.65625, 0.40625">
+      <boneWeight bone="Bip01 L Calf" weight="0.00117372"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.983267"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.0155598"/>
+    </vertex>
+    <vertex location="6.75345, 15.693, 62.9302" normal="-0.325465, -0.257049, -0.909944" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.510447"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.489553"/>
+    </vertex>
+    <vertex location="11.2411, 13.7966, 65.8122" normal="0.990753, -0.135261, -0.0106543" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="10.2346, 18.6621, 64.5085" normal="-0.210128, 0.938543, 0.273831" tcoords="0.84375, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.479978"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.520022"/>
+    </vertex>
+    <vertex location="6.84505, 13.8991, 76.2126" normal="0.650138, 0.578868, 0.492171" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="6.84505, 13.8991, 76.2126" normal="0.650138, 0.578868, 0.492171" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="8.67458, 4.21427, 71.8407" normal="0.527722, -0.60716, -0.594026" tcoords="0.65625, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="11.2411, 13.7966, 65.8122" normal="0.990753, -0.135261, -0.0106543" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="10.2346, 18.6621, 64.5085" normal="-0.210128, 0.938543, 0.273831" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.479978"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.520022"/>
+    </vertex>
+    <vertex location="6.75345, 15.693, 62.9302" normal="-0.325465, -0.257049, -0.909944" tcoords="0.84375, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.510447"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.489553"/>
+    </vertex>
+    <vertex location="2.42664, 11.7922, 66.9576" normal="-0.798621, 0.496764, -0.339749" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 L Calf" weight="0.00117372"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.983267"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.0155598"/>
+    </vertex>
+    <vertex location="2.42664, 11.7922, 66.9576" normal="-0.798621, 0.496764, -0.339749" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 L Calf" weight="0.00117372"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.983267"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.0155598"/>
+    </vertex>
+    <vertex location="6.84505, 13.8991, 76.2126" normal="0.650138, 0.578868, 0.492171" tcoords="0.65625, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="10.2346, 18.6621, 64.5085" normal="-0.210128, 0.938543, 0.273831" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.479978"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.520022"/>
+    </vertex>
+    <vertex location="10.2346, 18.6621, 64.5085" normal="0.757938, 0.49008, -0.430524" tcoords="0.03125, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.479978"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.520022"/>
+    </vertex>
+    <vertex location="11.2411, 13.7966, 65.8122" normal="0.225605, -0.286459, 0.931152" tcoords="0.0625, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="14.4151, -2.8017, 57.1149" normal="0.859453, -0.495074, 0.127448" tcoords="0.0625, 0.28125">
+      <boneWeight bone="Bip01 L Calf" weight="0.000964737"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.999035"/>
+    </vertex>
+    <vertex location="14.4151, -2.8017, 57.1149" normal="0.859453, -0.495074, 0.127448" tcoords="0.0625, 0.28125">
+      <boneWeight bone="Bip01 L Calf" weight="0.000964737"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.999035"/>
+    </vertex>
+    <vertex location="10.9424, 8.04115, 54.9248" normal="0.00376481, 0.787991, -0.615675" tcoords="0.03125, 0.4375">
+      <boneWeight bone="Bip01 L Calf" weight="0.569486"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.430514"/>
+    </vertex>
+    <vertex location="10.2346, 18.6621, 64.5085" normal="0.757938, 0.49008, -0.430524" tcoords="0.03125, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.479978"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.520022"/>
+    </vertex>
+    <vertex location="11.2411, 13.7966, 65.8122" normal="0.225605, -0.286459, 0.931152" tcoords="0.0625, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="6.75345, 15.693, 62.9302" normal="-0.892235, 0.330423, -0.307795" tcoords="0.125, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.510447"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.489553"/>
+    </vertex>
+    <vertex location="6.71426, -2.97216, 57.1149" normal="-0.814227, -0.403576, 0.417327" tcoords="0.125, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.0217598"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.97824"/>
+    </vertex>
+    <vertex location="6.71426, -2.97216, 57.1149" normal="-0.814227, -0.403576, 0.417327" tcoords="0.125, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.0217598"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.97824"/>
+    </vertex>
+    <vertex location="14.4151, -2.8017, 57.1149" normal="0.859453, -0.495074, 0.127448" tcoords="0.0625, 0.28125">
+      <boneWeight bone="Bip01 L Calf" weight="0.000964737"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.999035"/>
+    </vertex>
+    <vertex location="11.2411, 13.7966, 65.8122" normal="0.225605, -0.286459, 0.931152" tcoords="0.0625, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="6.75345, 15.693, 62.9302" normal="-0.892235, 0.330423, -0.307795" tcoords="0.125, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.510447"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.489553"/>
+    </vertex>
+    <vertex location="10.2346, 18.6621, 64.5085" normal="0.757938, 0.49008, -0.430524" tcoords="0.03125, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.479978"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.520022"/>
+    </vertex>
+    <vertex location="10.9424, 8.04115, 54.9248" normal="0.00376481, 0.787991, -0.615675" tcoords="0.03125, 0.4375">
+      <boneWeight bone="Bip01 L Calf" weight="0.569486"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.430514"/>
+    </vertex>
+    <vertex location="10.9424, 8.04115, 54.9248" normal="0.00376481, 0.787991, -0.615675" tcoords="0.03125, 0.4375">
+      <boneWeight bone="Bip01 L Calf" weight="0.569486"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.430514"/>
+    </vertex>
+    <vertex location="6.71426, -2.97216, 57.1149" normal="-0.814227, -0.403576, 0.417327" tcoords="0.125, 0.21875">
+      <boneWeight bone="Bip01 L Calf" weight="0.0217598"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.97824"/>
+    </vertex>
+    <vertex location="6.75345, 15.693, 62.9302" normal="-0.892235, 0.330423, -0.307795" tcoords="0.125, 0.875">
+      <boneWeight bone="Bip01 L Calf" weight="0.510447"/>
+      <boneWeight bone="Bip01 L Thigh" weight="0.489553"/>
+    </vertex>
+    <vertex location="10.9424, 8.04115, 54.9248" normal="0.00376481, 0.787991, -0.615675" tcoords="1.0, 0.625">
+      <boneWeight bone="Bip01 L Calf" weight="0.569486"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.430514"/>
+    </vertex>
+    <vertex location="14.4151, -2.8017, 57.1149" normal="0.859453, -0.495074, 0.127448" tcoords="0.59375, 0.84375">
+      <boneWeight bone="Bip01 L Calf" weight="0.000964737"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.999035"/>
+    </vertex>
+    <vertex location="15.179, -1.31428, 47.212" normal="0.75877, -0.0186672, -0.651092" tcoords="0.59375, 0.4375">
+      <boneWeight bone="Bip01 L Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="14.4151, -2.8017, 57.1149" normal="0.859453, -0.495074, 0.127448" tcoords="0.59375, 0.84375">
+      <boneWeight bone="Bip01 L Calf" weight="0.000964737"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.999035"/>
+    </vertex>
+    <vertex location="6.71426, -2.97216, 57.1149" normal="-0.814227, -0.403576, 0.417327" tcoords="0.1875, 0.84375">
+      <boneWeight bone="Bip01 L Calf" weight="0.0217598"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.97824"/>
+    </vertex>
+    <vertex location="4.50888, -1.03412, 47.212" normal="-0.566695, -0.612506, -0.551084" tcoords="0.1875, 0.4375">
+      <boneWeight bone="Bip01 L Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="4.50888, -1.03412, 47.212" normal="-0.566695, -0.612506, -0.551084" tcoords="0.1875, 0.4375">
+      <boneWeight bone="Bip01 L Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="15.179, -1.31428, 47.212" normal="0.75877, -0.0186672, -0.651092" tcoords="0.59375, 0.4375">
+      <boneWeight bone="Bip01 L Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="14.4151, -2.8017, 57.1149" normal="0.859453, -0.495074, 0.127448" tcoords="0.59375, 0.84375">
+      <boneWeight bone="Bip01 L Calf" weight="0.000964737"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.999035"/>
+    </vertex>
+    <vertex location="10.9424, 8.04115, 54.9248" normal="0.00376481, 0.787991, -0.615675" tcoords="1.0, 0.625">
+      <boneWeight bone="Bip01 L Calf" weight="0.569486"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.430514"/>
+    </vertex>
+    <vertex location="4.50888, -1.03412, 47.212" normal="-0.566695, -0.612506, -0.551084" tcoords="0.59375, 0.4375">
+      <boneWeight bone="Bip01 L Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="6.71426, -2.97216, 57.1149" normal="-0.814227, -0.403576, 0.417327" tcoords="0.59375, 0.84375">
+      <boneWeight bone="Bip01 L Calf" weight="0.0217598"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.97824"/>
+    </vertex>
+    <vertex location="4.50888, -1.03412, 47.212" normal="-0.566695, -0.612506, -0.551084" tcoords="0.59375, 0.4375">
+      <boneWeight bone="Bip01 L Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="10.9424, 8.04115, 54.9248" normal="0.00376481, 0.787991, -0.615675" tcoords="0.375, 0.0625">
+      <boneWeight bone="Bip01 L Calf" weight="0.569486"/>
+      <boneWeight bone="Bip01 L Foot" weight="0.430514"/>
+    </vertex>
+    <vertex location="15.179, -1.31428, 47.212" normal="0.75877, -0.0186672, -0.651092" tcoords="0.1875, 0.4375">
+      <boneWeight bone="Bip01 L Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="-6.75345, 15.693, 62.9302" normal="0.325463, -0.25705, -0.909945" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.509191"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.490809"/>
+    </vertex>
+    <vertex location="-8.67458, 4.21426, 71.8407" normal="-0.527723, -0.607159, -0.594025" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 R Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="-11.2411, 13.7966, 65.8122" normal="-0.990753, -0.135261, -0.0106542" tcoords="0.84375, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="-8.67458, 4.21426, 71.8407" normal="-0.527723, -0.607159, -0.594025" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 R Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="-6.75345, 15.693, 62.9302" normal="0.325463, -0.25705, -0.909945" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.509191"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.490809"/>
+    </vertex>
+    <vertex location="-2.42664, 11.7922, 66.9576" normal="0.798621, 0.496764, -0.33975" tcoords="0.65625, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="0.0166408"/>
+      <boneWeight bone="Bip01 R Calf" weight="0.000984314"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.982375"/>
+    </vertex>
+    <vertex location="-11.2411, 13.7966, 65.8122" normal="-0.990753, -0.135261, -0.0106542" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="-6.84505, 13.8991, 76.2126" normal="-0.650138, 0.578868, 0.492171" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 R Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.2347, 18.6621, 64.5085" normal="0.210129, 0.938543, 0.273832" tcoords="0.84375, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.480545"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.519455"/>
+    </vertex>
+    <vertex location="-6.84505, 13.8991, 76.2126" normal="-0.650138, 0.578868, 0.492171" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 R Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="-11.2411, 13.7966, 65.8122" normal="-0.990753, -0.135261, -0.0106542" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="-8.67458, 4.21426, 71.8407" normal="-0.527723, -0.607159, -0.594025" tcoords="0.65625, 0.40625">
+      <boneWeight bone="Bip01 R Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.2347, 18.6621, 64.5085" normal="0.210129, 0.938543, 0.273832" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.480545"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.519455"/>
+    </vertex>
+    <vertex location="-2.42664, 11.7922, 66.9576" normal="0.798621, 0.496764, -0.33975" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="0.0166408"/>
+      <boneWeight bone="Bip01 R Calf" weight="0.000984314"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.982375"/>
+    </vertex>
+    <vertex location="-6.75345, 15.693, 62.9302" normal="0.325463, -0.25705, -0.909945" tcoords="0.84375, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.509191"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.490809"/>
+    </vertex>
+    <vertex location="-2.42664, 11.7922, 66.9576" normal="0.798621, 0.496764, -0.33975" tcoords="0.84375, 0.40625">
+      <boneWeight bone="Bip01 L Thigh" weight="0.0166408"/>
+      <boneWeight bone="Bip01 R Calf" weight="0.000984314"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.982375"/>
+    </vertex>
+    <vertex location="-10.2347, 18.6621, 64.5085" normal="0.210129, 0.938543, 0.273832" tcoords="0.65625, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.480545"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.519455"/>
+    </vertex>
+    <vertex location="-6.84505, 13.8991, 76.2126" normal="-0.650138, 0.578868, 0.492171" tcoords="0.65625, 0.40625">
+      <boneWeight bone="Bip01 R Thigh" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.2347, 18.6621, 64.5085" normal="-0.757938, 0.49008, -0.430524" tcoords="0.03125, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.480545"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.519455"/>
+    </vertex>
+    <vertex location="-14.4151, -2.8017, 57.1149" normal="-0.859453, -0.495074, 0.127448" tcoords="0.0625, 0.28125">
+      <boneWeight bone="Bip01 R Calf" weight="0.00107788"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.998922"/>
+    </vertex>
+    <vertex location="-11.2411, 13.7966, 65.8122" normal="-0.225604, -0.286459, 0.931152" tcoords="0.0625, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="-14.4151, -2.8017, 57.1149" normal="-0.859453, -0.495074, 0.127448" tcoords="0.0625, 0.28125">
+      <boneWeight bone="Bip01 R Calf" weight="0.00107788"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.998922"/>
+    </vertex>
+    <vertex location="-10.2347, 18.6621, 64.5085" normal="-0.757938, 0.49008, -0.430524" tcoords="0.03125, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.480545"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.519455"/>
+    </vertex>
+    <vertex location="-10.9424, 8.04115, 54.9248" normal="-0.00376521, 0.787991, -0.615675" tcoords="0.03125, 0.4375">
+      <boneWeight bone="Bip01 R Calf" weight="0.57049"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.42951"/>
+    </vertex>
+    <vertex location="-11.2411, 13.7966, 65.8122" normal="-0.225604, -0.286459, 0.931152" tcoords="0.0625, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="-6.71426, -2.97216, 57.1149" normal="0.814227, -0.403575, 0.417326" tcoords="0.125, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.0214307"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.978569"/>
+    </vertex>
+    <vertex location="-6.75345, 15.693, 62.9302" normal="0.892234, 0.330424, -0.307796" tcoords="0.125, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.509191"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.490809"/>
+    </vertex>
+    <vertex location="-6.71426, -2.97216, 57.1149" normal="0.814227, -0.403575, 0.417326" tcoords="0.125, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.0214307"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.978569"/>
+    </vertex>
+    <vertex location="-11.2411, 13.7966, 65.8122" normal="-0.225604, -0.286459, 0.931152" tcoords="0.0625, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.5"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.5"/>
+    </vertex>
+    <vertex location="-14.4151, -2.8017, 57.1149" normal="-0.859453, -0.495074, 0.127448" tcoords="0.0625, 0.28125">
+      <boneWeight bone="Bip01 R Calf" weight="0.00107788"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.998922"/>
+    </vertex>
+    <vertex location="-6.75345, 15.693, 62.9302" normal="0.892234, 0.330424, -0.307796" tcoords="0.125, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.509191"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.490809"/>
+    </vertex>
+    <vertex location="-10.9424, 8.04115, 54.9248" normal="-0.00376521, 0.787991, -0.615675" tcoords="0.03125, 0.4375">
+      <boneWeight bone="Bip01 R Calf" weight="0.57049"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.42951"/>
+    </vertex>
+    <vertex location="-10.2347, 18.6621, 64.5085" normal="-0.757938, 0.49008, -0.430524" tcoords="0.03125, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.480545"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.519455"/>
+    </vertex>
+    <vertex location="-10.9424, 8.04115, 54.9248" normal="-0.00376521, 0.787991, -0.615675" tcoords="0.03125, 0.4375">
+      <boneWeight bone="Bip01 R Calf" weight="0.57049"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.42951"/>
+    </vertex>
+    <vertex location="-6.75345, 15.693, 62.9302" normal="0.892234, 0.330424, -0.307796" tcoords="0.125, 0.875">
+      <boneWeight bone="Bip01 R Calf" weight="0.509191"/>
+      <boneWeight bone="Bip01 R Thigh" weight="0.490809"/>
+    </vertex>
+    <vertex location="-6.71426, -2.97216, 57.1149" normal="0.814227, -0.403575, 0.417326" tcoords="0.125, 0.21875">
+      <boneWeight bone="Bip01 R Calf" weight="0.0214307"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.978569"/>
+    </vertex>
+    <vertex location="-10.9424, 8.04115, 54.9248" normal="-0.00376521, 0.787991, -0.615675" tcoords="1.0, 0.625">
+      <boneWeight bone="Bip01 R Calf" weight="0.57049"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.42951"/>
+    </vertex>
+    <vertex location="-15.179, -1.31428, 47.212" normal="-0.75877, -0.0186673, -0.651092" tcoords="0.59375, 0.4375">
+      <boneWeight bone="Bip01 R Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="-14.4151, -2.8017, 57.1149" normal="-0.859453, -0.495074, 0.127448" tcoords="0.59375, 0.84375">
+      <boneWeight bone="Bip01 R Calf" weight="0.00107788"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.998922"/>
+    </vertex>
+    <vertex location="-14.4151, -2.8017, 57.1149" normal="-0.859453, -0.495074, 0.127448" tcoords="0.59375, 0.84375">
+      <boneWeight bone="Bip01 R Calf" weight="0.00107788"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.998922"/>
+    </vertex>
+    <vertex location="-4.50888, -1.03412, 47.212" normal="0.566695, -0.612506, -0.551084" tcoords="0.1875, 0.4375">
+      <boneWeight bone="Bip01 R Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="-6.71426, -2.97216, 57.1149" normal="0.814227, -0.403575, 0.417326" tcoords="0.1875, 0.84375">
+      <boneWeight bone="Bip01 R Calf" weight="0.0214307"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.978569"/>
+    </vertex>
+    <vertex location="-4.50888, -1.03412, 47.212" normal="0.566695, -0.612506, -0.551084" tcoords="0.1875, 0.4375">
+      <boneWeight bone="Bip01 R Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="-14.4151, -2.8017, 57.1149" normal="-0.859453, -0.495074, 0.127448" tcoords="0.59375, 0.84375">
+      <boneWeight bone="Bip01 R Calf" weight="0.00107788"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.998922"/>
+    </vertex>
+    <vertex location="-15.179, -1.31428, 47.212" normal="-0.75877, -0.0186673, -0.651092" tcoords="0.59375, 0.4375">
+      <boneWeight bone="Bip01 R Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.9424, 8.04115, 54.9248" normal="-0.00376521, 0.787991, -0.615675" tcoords="1.0, 0.625">
+      <boneWeight bone="Bip01 R Calf" weight="0.57049"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.42951"/>
+    </vertex>
+    <vertex location="-6.71426, -2.97216, 57.1149" normal="0.814227, -0.403575, 0.417326" tcoords="0.59375, 0.84375">
+      <boneWeight bone="Bip01 R Calf" weight="0.0214307"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.978569"/>
+    </vertex>
+    <vertex location="-4.50888, -1.03412, 47.212" normal="0.566695, -0.612506, -0.551084" tcoords="0.59375, 0.4375">
+      <boneWeight bone="Bip01 R Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="-4.50888, -1.03412, 47.212" normal="0.566695, -0.612506, -0.551084" tcoords="0.59375, 0.4375">
+      <boneWeight bone="Bip01 R Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="-15.179, -1.31428, 47.212" normal="-0.75877, -0.0186673, -0.651092" tcoords="0.1875, 0.4375">
+      <boneWeight bone="Bip01 R Foot" weight="1.0"/>
+    </vertex>
+    <vertex location="-10.9424, 8.04115, 54.9248" normal="-0.00376521, 0.787991, -0.615675" tcoords="0.375, 0.0625">
+      <boneWeight bone="Bip01 R Calf" weight="0.57049"/>
+      <boneWeight bone="Bip01 R Foot" weight="0.42951"/>
+    </vertex>
+  </skinMesh>
+
+  <node name="Bip01" translation="-0.0814228, 12.1284, 73.9709" rotation="0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Footsteps" parent="Bip01" translation="27.4485, -3.27037e-006, -3.16334e-006" rotation="-0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Pelvis" parent="Bip01" translation="-1.45552e-006, 0.0, 0.0" rotation="-0.499999, -0.5, -0.5, 0.500001" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Spine" parent="Bip01 Pelvis" translation="7.76237, -0.0118949, 1.07873e-005" rotation="-2.08048e-006, -6.93676e-007, 0.000398159, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Thigh" parent="Bip01 Spine" translation="-7.76236, 0.0180608, 3.90393" rotation="0.41413, 0.872644, 0.110967, -0.233825" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Calf" parent="Bip01 L Thigh" translation="11.6921, 8.80523e-007, 1.16804e-006" rotation="0.0, 0.0, 0.728615, 0.684923" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Foot" parent="Bip01 L Calf" translation="16.2257, 7.63239e-007, -1.45836e-006" rotation="-0.237182, -0.103595, -0.440551, 0.859609" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Toe0" parent="Bip01 L Foot" translation="7.76236, 6.61306, -2.00668e-007" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Toe0Nub" parent="Bip01 L Toe0" translation="1.01248, -8.56305e-007, -3.13599e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Thigh" parent="Bip01 Spine" translation="-7.76236, 0.0180815, -3.90393" rotation="0.414131, 0.872645, -0.110965, 0.233824" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Calf" parent="Bip01 R Thigh" translation="11.6921, -2.39074e-007, 1.14324e-006" rotation="0.0, 0.0, 0.728615, 0.684923" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Foot" parent="Bip01 R Calf" translation="16.2257, -1.45122e-006, -1.69557e-006" rotation="0.237182, 0.103595, -0.440551, 0.859609" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Toe0" parent="Bip01 R Foot" translation="7.76236, 6.61306, -2.00625e-007" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Toe0Nub" parent="Bip01 R Toe0" translation="1.01248, 5.40242e-007, -3.13556e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Tail" parent="Bip01 Spine" translation="-17.1808, 1.78681, 1.10309e-005" rotation="0.0, -2.7736e-006, 1.0, 0.000566673" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 TailNub" parent="Bip01 Tail" translation="43.6943, -3.24268e-006, 0.0" rotation="0.707388, 0.706825, 9.80225e-007, -9.81006e-007" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Neck" parent="Bip01 Spine" translation="14.9359, -0.0146496, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 Head" parent="Bip01 Neck" translation="18.3944, 1.70106e-006, 0.0" rotation="0.0, 1.73692e-006, -0.626235, 0.779635" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 HeadNub" parent="Bip01 Head" translation="15.8622, -4.69124e-007, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Clavicle" parent="Bip01 Neck" translation="5.67628e-006, 0.014641, 2.36246" rotation="0.728615, -0.000291054, 0.684923, 0.000271699" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L UpperArm" parent="Bip01 L Clavicle" translation="8.77485, -2.60987e-006, 7.00451e-007" rotation="0.0909722, 0.0885117, -0.601926, 0.7884" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Forearm" parent="Bip01 L UpperArm" translation="23.2871, 2.67307e-006, 0.0" rotation="0.0, 0.0, 0.000356421, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 L Hand" parent="Bip01 L Forearm" translation="37.858, 4.69527e-007, -6.03396e-007" rotation="0.997859, 0.0654031, -2.60301e-005, -0.00039732" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="5.98292e-006, 0.0146536, -2.36246" rotation="0.728615, -0.000289154, -0.684923, -0.00027372" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="8.77485, 0.0, -4.06482e-007" rotation="-0.0909722, -0.0885117, -0.601926, 0.7884" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="23.2871, 7.18335e-007, -8.67886e-007" rotation="0.0, 0.0, 0.000356409, 1.0" scale="1.0, 1.0, 1.0"/>
+
+  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="37.858, 1.03847e-006, 1.09398e-006" rotation="0.997859, 0.0654031, 2.60351e-005, 0.000397318" scale="1.0, 1.0, 1.0"/>
+
+</model>
