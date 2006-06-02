@@ -32,6 +32,7 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
+import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
@@ -1199,8 +1200,10 @@ public class TerrainNode extends Node
             vbuf = BufferUtils.createFloatBuffer(vbufsize);
             nbuf = BufferUtils.createFloatBuffer(vbufsize);
             cbuf = BufferUtils.createFloatBuffer(vwidth * vheight * 4);
-            ibuf = BufferUtils.createIntBuffer(
-                (vwidth - 1) * (vheight - 1) * 2 * 3);
+            if (_editorMode) {
+                ibuf = BufferUtils.createIntBuffer(
+                    (vwidth - 1) * (vheight - 1) * 2 * 3);
+            }
 
             // refresh sets the vertices, normals, and indices from the
             // heightfield
@@ -1208,6 +1211,9 @@ public class TerrainNode extends Node
             ebounds = new Rectangle(vx - (le ? 2 : 0), vy - (be ? 2 : 0),
                 vwidth, vheight);
             refreshGeometry(ebounds);
+            if (!_editorMode) {
+                setIndices();
+            }
             
             // set the colors based on shadow values
             refreshColors();
@@ -1249,6 +1255,10 @@ public class TerrainNode extends Node
             mesh = new TriMesh("terrain", vbuf, nbuf, cbuf,
                 tbuf0, ibuf);
             mesh.setTextureBuffer(0, tbuf1, 1);
+            if (!_editorMode) {
+                ((TriangleBatch)mesh.getBatch(0)).setMode(
+                    TriangleBatch.TRIANGLE_STRIP);
+            }
             mesh.setModelBound(new BoundingBox());
             mesh.updateModelBound();
 
@@ -1303,9 +1313,6 @@ public class TerrainNode extends Node
         public void refreshGeometry (Rectangle rect)
         {
             Vector3f v1 = new Vector3f(), v2 = new Vector3f();
-
-            vbuf.rewind();
-            ibuf.rewind();
             for (int y = rect.y, ymax = y + rect.height; y < ymax; y++) {
                 for (int x = rect.x, xmax = x + rect.width; x < xmax; x++) {
                     int ur = (y-ebounds.y)*ebounds.width + (x-ebounds.x),
@@ -1327,33 +1334,93 @@ public class TerrainNode extends Node
                     float urll = v1.dot(v2);
                     BufferUtils.populateFromBuffer(v1, nbuf, ul);
                     BufferUtils.populateFromBuffer(v2, nbuf, lr);
-                    int iidx = ((y-ebounds.y-1)*(ebounds.width-1) +
-                        (x-ebounds.x-1)) * 6;
-                    if (urll < v1.dot(v2)) {
-                        _diags[y+1][x+1] = true;
-                        
-                        ibuf.put(iidx++, ul);
-                        ibuf.put(iidx++, ll);
-                        ibuf.put(iidx++, lr);
-                        
-                        ibuf.put(iidx++, ul);
-                        ibuf.put(iidx++, lr);
-                        ibuf.put(iidx, ur);
-                    } else {
-                        _diags[y+1][x+1] = false;
-                        
-                        ibuf.put(iidx++, ll);
-                        ibuf.put(iidx++, ur);
-                        ibuf.put(iidx++, ul);
-                        
-                        ibuf.put(iidx++, ll);
-                        ibuf.put(iidx++, lr);
-                        ibuf.put(iidx, ur);
+                    float ullr = v1.dot(v2);
+                    _diags[y+1][x+1] = urll < ullr;
+                    if (x >= 0) {
+                        // the difference must be greater than a certain
+                        // amount, otherwise we prefer the previous value
+                        // to avoid switching too often
+                        boolean prev = _diags[y+1][x];
+                        if (prev != _diags[y+1][x+1] &&
+                            ((prev && (urll - ullr > 0.001f)) ||
+                            (!prev && (ullr - urll > 0.001f)))) {
+                            _diags[y+1][x+1] = prev;
+                        }
+                    }
+                    if (_editorMode) {
+                        int iidx = ((y-ebounds.y-1)*(ebounds.width-1) +
+                            (x-ebounds.x-1)) * 6;
+                        if (_diags[y+1][x+1]) {
+                            ibuf.put(iidx++, ul);
+                            ibuf.put(iidx++, ll);
+                            ibuf.put(iidx++, lr);
+                            
+                            ibuf.put(iidx++, ul);
+                            ibuf.put(iidx++, lr);
+                            ibuf.put(iidx, ur);
+                        } else {
+                            ibuf.put(iidx++, ll);
+                            ibuf.put(iidx++, ur);
+                            ibuf.put(iidx++, ul);
+                            
+                            ibuf.put(iidx++, ll);
+                            ibuf.put(iidx++, lr);
+                            ibuf.put(iidx, ur);
+                        }
                     }
                 }
             }
         }
 
+        /**
+         * Sets the geometry for the entire block.  Because this method creates
+         * a single triangle strip, it can only be used when the terrain will
+         * not change after initialization.
+         */
+        protected void setIndices ()
+        {
+            // create a temporary buffer with the maximum possible space
+            IntBuffer tbuf = BufferUtils.createIntBuffer(ebounds.width * 3 *
+                (ebounds.height - 1));
+            
+            boolean even = true, diag = false, ndiag;
+            for (int y = ebounds.y, ymax = y + (ebounds.height - 1);
+                y < ymax; y++) {
+                int x1 = even ? ebounds.x : (ebounds.x + ebounds.width - 1),
+                    x2 = even ? (ebounds.x + ebounds.width) : (ebounds.x - 1),
+                    dx = even ? +1 : -1,
+                    iy = y - ebounds.y, ix, px;
+                for (int x = x1; x != x2; x += dx) {
+                    ix = x - ebounds.x;
+                    if (x != x2 - dx) {
+                        ndiag = _diags[y + 2][x + (even ? 2 : 1)];
+                        if (ndiag != diag) {
+                            px = (x == x1 ? ix : ix - dx);
+                            if (even ^ diag) {
+                                tbuf.put((iy+1)*ebounds.width + px);
+                            } else {
+                                tbuf.put(iy*ebounds.width + px);
+                            }
+                        }
+                        diag = ndiag;
+                    }
+                    if (even ^ diag) {
+                        tbuf.put((iy+1)*ebounds.width + ix);
+                        tbuf.put(iy*ebounds.width + ix);
+                    } else {
+                        tbuf.put(iy*ebounds.width + ix);
+                        tbuf.put((iy+1)*ebounds.width + ix);
+                    }
+                }
+                even = !even;
+            }
+            tbuf.flip();
+            
+            // create a new buffer to hold the used part of the temporary one
+            ibuf = BufferUtils.createIntBuffer(tbuf.limit());
+            ibuf.put(tbuf);
+        }
+        
         /**
          * Refreshes the entire color buffer in response to a change in the
          * shadow map.
