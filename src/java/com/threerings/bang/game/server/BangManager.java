@@ -1753,7 +1753,8 @@ public class BangManager extends GameManager
                     buf.append("(tin_can)");
                     continue;
                 }
-                if (_precords[ii] == null || _precords[ii].user == null) {
+                if (_precords == null || _precords[ii] == null ||
+                    _precords[ii].user == null) {
                     buf.append("(never_arrived)");
                     continue;
                 }
