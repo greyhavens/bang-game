@@ -261,6 +261,8 @@ public class WaterNode extends Node
         if (!BangPrefs.isHighDetail()) {
             if (_quad == null) {
                 _quad = new Quad("quad", TILE_SIZE, TILE_SIZE);
+                _quad.setModelBound(new BoundingBox());
+                _quad.updateModelBound();
             }
             _blocks[bx][by] = new SharedMesh("block", _quad);
             _blocks[bx][by].getLocalTranslation().set((bx + 0.5f) * TILE_SIZE,

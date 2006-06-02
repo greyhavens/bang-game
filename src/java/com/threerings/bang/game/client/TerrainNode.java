@@ -51,6 +51,7 @@ import com.samskivert.util.Invoker;
 
 import com.threerings.media.image.ColorUtil;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
@@ -1424,6 +1425,12 @@ public class TerrainNode extends Node
             base.setRenderState(RenderUtil.lequalZBuf);
             node.attachChild(base);
 
+            // for low detail, just stop there
+            if (!BangPrefs.isMediumDetail()) {
+                node.updateRenderState();
+                return;
+            }
+            
             // add the rest as splats (which only test the z buffer)
             initAlphaTotals(ccode, rect);
             for (int ii = 1; ii < layers.length; ii++) {
