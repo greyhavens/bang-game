@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -542,10 +543,7 @@ public class BangClient extends BasicClient
             }
             int rounds = Integer.getInteger("rounds", 1);
             String[] scenarios = new String[rounds];
-            String scenario = System.getProperty("scenario", "gr");
-            for (int ii = 0; ii < rounds; ii++) {
-                scenarios[ii] = scenario;
-            }
+            Arrays.fill(scenarios, System.getProperty("scenario", "gr"));
             psvc.playComputer(
                 _ctx.getClient(), pcount, scenarios,
                 System.getProperty("board"), Boolean.parseBoolean(
