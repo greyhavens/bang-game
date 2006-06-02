@@ -415,7 +415,7 @@ public class PlayerManager
         if (autoplay && !player.tokens.isAdmin()) {
             log.warning("Non-admin requested autoplay game " +
                         "[who=" + player.who() + ", pl=" + players +
-                        ", scen=" + scenarios[1] + ", board=" + board + "].");
+                        ", scen=" + scenarios[0] + ", board=" + board + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
 
