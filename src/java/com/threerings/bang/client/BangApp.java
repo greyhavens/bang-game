@@ -123,8 +123,8 @@ public class BangApp extends JmeApp
         // damned if we're going to have it say "Game" for even half a second
         Display.setTitle("Bang! Howdy");
 
-        // set up our application icons
-        BangUI.configIcons();
+//         // set up our application icons
+//         BangUI.configIcons();
 
         String server = DeploymentConfig.getServerHost();
         int[] ports = DeploymentConfig.getServerPorts();
