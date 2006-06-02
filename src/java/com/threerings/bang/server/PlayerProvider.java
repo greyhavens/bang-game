@@ -32,7 +32,7 @@ public interface PlayerProvider extends InvocationProvider
     /**
      * Handles a {@link PlayerService#playComputer} request.
      */
-    public void playComputer (ClientObject caller, int arg1, String arg2, String arg3, boolean arg4, InvocationService.InvocationListener arg5)
+    public void playComputer (ClientObject caller, int arg1, String[] arg2, String arg3, boolean arg4, InvocationService.InvocationListener arg5)
         throws InvocationException;
 
     /**

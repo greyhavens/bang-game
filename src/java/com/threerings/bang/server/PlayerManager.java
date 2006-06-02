@@ -390,7 +390,7 @@ public class PlayerManager
 
     // documentation inherited from interface PlayerProvider
     public void playComputer (
-        ClientObject caller, int players, String scenario, String board,
+        ClientObject caller, int players, String[] scenarios, String board,
         boolean autoplay, PlayerService.InvocationListener listener)
         throws InvocationException
     {
@@ -415,7 +415,7 @@ public class PlayerManager
         if (autoplay && !player.tokens.isAdmin()) {
             log.warning("Non-admin requested autoplay game " +
                         "[who=" + player.who() + ", pl=" + players +
-                        ", scen=" + scenario + ", board=" + board + "].");
+                        ", scen=" + scenarios[1] + ", board=" + board + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -433,7 +433,7 @@ public class PlayerManager
             config.players[ii] = ai.handle;
             config.ais[ii] = ai;
         }
-        config.scenarios = new String[] { scenario };
+        config.scenarios = scenarios;
         config.board = board;
 
         // create the game manager and it will handle the rest

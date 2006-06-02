@@ -540,8 +540,14 @@ public class BangClient extends BasicClient
             } catch (Throwable t) {
                 pcount = 4;
             }
+            int rounds = Integer.getInteger("rounds", 1);
+            String[] scenarios = new String[rounds];
+            String scenario = System.getProperty("scenario", "gr");
+            for (int ii = 0; ii < rounds; ii++) {
+                scenarios[ii] = scenario;
+            }
             psvc.playComputer(
-                _ctx.getClient(), pcount, System.getProperty("scenario", "gr"),
+                _ctx.getClient(), pcount, scenarios,
                 System.getProperty("board"), Boolean.parseBoolean(
                     System.getProperty("autoplay")), rl);
         }

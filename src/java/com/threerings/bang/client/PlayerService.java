@@ -51,6 +51,6 @@ public interface PlayerService extends InvocationService
      * Requests to play a single round match against the computer.
      */
     public void playComputer (
-        Client client, int players, String scenario, String board,
+        Client client, int players, String[] scenario, String board,
         boolean autoplay, InvocationListener listener);
 }

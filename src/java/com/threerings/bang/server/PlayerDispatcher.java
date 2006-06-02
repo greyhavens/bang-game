@@ -57,7 +57,7 @@ public class PlayerDispatcher extends InvocationDispatcher
         case PlayerMarshaller.PLAY_COMPUTER:
             ((PlayerProvider)provider).playComputer(
                 source,
-                ((Integer)args[0]).intValue(), (String)args[1], (String)args[2], ((Boolean)args[3]).booleanValue(), (InvocationService.InvocationListener)args[4]
+                ((Integer)args[0]).intValue(), (String[])args[1], (String)args[2], ((Boolean)args[3]).booleanValue(), (InvocationService.InvocationListener)args[4]
             );
             return;
 
