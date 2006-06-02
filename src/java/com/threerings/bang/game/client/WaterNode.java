@@ -32,6 +32,7 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.Skybox;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
+import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
@@ -313,26 +314,31 @@ public class WaterNode extends Node
             _disp = new WaveUtil.DeepWaterModel(GRAVITY);
         }
         IntBuffer ibuf = BufferUtils.createIntBuffer(
-            PATCH_SIZE * PATCH_SIZE * 2 * 3);
+            (PATCH_SIZE + 1) * 2 * PATCH_SIZE);
         int stride = WAVE_MAP_SIZE + 1;
+        boolean even = true;
         for (int x = px * PATCH_SIZE, xmax = x + PATCH_SIZE; x < xmax; x++) {
-            for (int y = py * PATCH_SIZE, ymax = y + PATCH_SIZE; y < ymax;
-                y++) {
-                // upper left triangle
-                ibuf.put((x+1)*stride + y);
-                ibuf.put((x+1)*stride + (y+1));
-                ibuf.put(x*stride + y);
-
-                // lower right triangle
-                ibuf.put((x+1)*stride + (y+1));
-                ibuf.put(x*stride + (y+1));
-                ibuf.put(x*stride + y);
+            if (even) {
+                for (int y = py * PATCH_SIZE, ymax = y + PATCH_SIZE;
+                    y <= ymax; y++) {
+                    ibuf.put(x*stride + y);
+                    ibuf.put((x+1)*stride + y);
+                }
+            } else {
+                for (int y = (py+1) * PATCH_SIZE, ymin = y - PATCH_SIZE;
+                    y >= ymin; y--) {
+                    ibuf.put((x+1)*stride + y);
+                    ibuf.put(x*stride + y);
+                }
             }
+            even = !even;
         }
         
         // create the trimesh
         _patches[px][py] = new TriMesh("patch", _vbuf, _nbuf, null, null,
             ibuf);
+        ((TriangleBatch)_patches[px][py].getBatch(0)).setMode(
+            TriangleBatch.TRIANGLE_STRIP);
         _patches[px][py].setModelBound(new BoundingBox(
             new Vector3f((px+0.5f) * TILE_SIZE, (py+0.5f) * TILE_SIZE, 0f),
             TILE_SIZE/2, TILE_SIZE/2, 5f));
