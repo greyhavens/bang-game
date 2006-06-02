@@ -54,7 +54,8 @@ public class TrackSprite extends PieceSprite
     protected void createGeometry (BasicContext ctx)
     {
         _ctx = ctx;
-        loadModel(ctx, "extras/tracks", MODEL_NAMES[((Track)_piece).type]);
+        loadModel(ctx, "extras/frontier_town/tracks",
+                  MODEL_NAMES[((Track)_piece).type]);
     }
 
     @Override // documentation inherited
