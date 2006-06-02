@@ -82,6 +82,7 @@ public class BangUtil
                 props.load(in);
             } else {
                 log.warning("Missing resource [path=" + path + "].");
+                Thread.dumpStack();
             }
 
         } catch (Exception e) {

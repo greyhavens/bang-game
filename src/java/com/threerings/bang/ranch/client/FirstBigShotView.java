@@ -103,7 +103,7 @@ public class FirstBigShotView extends BDecoratedWindow
     {
         if (selected) {
             _config = ((UnitIcon)icon).getUnit();
-            _status.setText(_umsgs.xlate(_config.getName() + "_descrip"));
+            _status.setText(_umsgs.xlate(_config.getTip()));
         } else {
             _status.setText(_msgs.get("m.firstbs_tip"));
             _config = null;

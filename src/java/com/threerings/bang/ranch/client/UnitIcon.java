@@ -47,7 +47,7 @@ public class UnitIcon extends PaletteIcon
         setText(name);
         setIcon(BangUI.getUnitIcon(config));
         String msg = MessageBundle.compose(
-            "m.unit_icon", config.getName(), config.getName() + "_descrip");
+            "m.unit_icon", config.getName(), config.getTip());
         setTooltipText(ctx.xlate(BangCodes.UNITS_MSGS, msg));
     }
 

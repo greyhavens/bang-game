@@ -3,8 +3,14 @@
 
 package com.threerings.bang.data;
 
+import java.io.IOException;
+
+import com.threerings.io.ObjectInputStream;
+
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
+
+import com.threerings.bang.data.UnitConfig;
 
 /**
  * Represents a Big Shot unit owned by a player.
@@ -54,15 +60,25 @@ public class BigShotItem extends Item
     @Override // documentation inherited
     public String getTooltip ()
     {
-        String msg = MessageBundle.compose(
-            "m.unit_icon", "m." + _type, "m." + _type + "_descrip");
-        return MessageBundle.qualify(BangCodes.UNITS_MSGS, msg);
+        return UnitConfig.getTip(_type);
     }
 
     @Override // documentation inherited
     public String getIconPath ()
     {
         return "units/" + _type + "/icon.png";
+    }
+
+    @Override // documentation inherited
+    public void unpersistFrom (ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        super.unpersistFrom(in);
+
+        // some hackery to deal with old item types
+        if (_type.indexOf("/") == -1) {
+            _type = "frontier_town/" + _type;
+        }
     }
 
     protected String _type;

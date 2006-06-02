@@ -45,7 +45,8 @@ public class UnitConfig
     public static final int TERRAIN_CATEGORY_COUNT =
         EnumSet.allOf(TerrainConfig.Category.class).size();
 
-    /** The name of this unit type (ie. <code>gunslinger</code>, etc.). */
+    /** The name of this unit type (ie. <code>frontier_town/gunslinger</code>,
+     * etc.). */
     public String type;
 
     /** The modality of this unit: {@link Mode#GROUND}, {@link Mode#AIR} or
@@ -111,7 +112,15 @@ public class UnitConfig
     /** Returns a translatable name for the specified unit type. */
     public static String getName (String type)
     {
-        return MessageBundle.qualify(BangCodes.UNITS_MSGS, "m." + type);
+        int slidx = type.lastIndexOf("/");
+        return MessageBundle.qualify(
+            BangCodes.UNITS_MSGS, "m." + type.substring(slidx+1));
+    }
+
+    /** Returns a translatable tooltip for the specified unit type. */
+    public static String getTip (String type)
+    {
+        return getName(type) + "_descrip";
     }
 
     /**
@@ -194,6 +203,12 @@ public class UnitConfig
     public String getName ()
     {
         return getName(type);
+    }
+
+    /** Returns a translatable tooltip for this unit. */
+    public String getTip ()
+    {
+        return getName(type) + "_descrip";
     }
 
     /**

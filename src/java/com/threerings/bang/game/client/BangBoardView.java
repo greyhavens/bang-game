@@ -618,7 +618,8 @@ public class BangBoardView extends BoardView
                 if (item.startsWith("unit_")) {
                     String type = item.substring(5);
                     String msg = MessageBundle.compose(
-                        "m.unit_icon", "m." + type, "m." + type + "_descrip");
+                        "m.unit_icon", UnitConfig.getName(type),
+                        UnitConfig.getTip(type));
                     _tiptext = _ctx.xlate(BangCodes.UNITS_MSGS, msg);
                 } else {
                     item = "m.help_" + item;
