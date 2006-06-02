@@ -135,6 +135,34 @@
     <exec executable="bin/update_lists"/>
   </target>
 
+  <!-- builds bundles for a specific town -->
+  <target name="town_bundles">
+    <jar file="rsrc/units/${town}/bundle.jar" basedir="rsrc/units/${town}">
+      <include name="**/*.png"/>
+      <include name="**/model.dat"/>
+      <include name="**/*.wav"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/props/${town}/bundle.jar" basedir="rsrc/props/${town}">
+      <include name="**/*.png"/>
+      <include name="**/model.dat"/>
+      <include name="**/*.wav"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/bonuses/${town}/bundle.jar" basedir="rsrc/bonuses/${town}">
+      <include name="**/*.png"/>
+      <include name="**/model.dat"/>
+      <include name="**/*.wav"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/extras/${town}/bundle.jar" basedir="rsrc/extras/${town}">
+      <include name="**/*.png"/>
+      <include name="**/model.dat"/>
+      <include name="**/*.wav"/>
+      <exclude name="**/source/**"/>
+    </jar>
+  </target>
+
   <!-- compiles our models -->
   <target name="models">
     <taskdef name="compile" classpathref="classpath"
@@ -147,30 +175,18 @@
     <updatepropheight>
       <fileset dir="rsrc" includes="**/prop.properties"/>
     </updatepropheight>
-    <jar file="rsrc/units/bundle.jar" basedir="rsrc/units">
+    <jar file="rsrc/units/wreckage/bundle.jar" basedir="rsrc/units/wreckage">
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/props/bundle.jar" basedir="rsrc/props">
-      <include name="**/*.png"/>
-      <include name="**/model.dat"/>
-      <include name="**/*.wav"/>
-      <exclude name="**/source/**"/>
-    </jar>
-    <jar file="rsrc/bonuses/bundle.jar" basedir="rsrc/bonuses">
-      <include name="**/*.png"/>
-      <include name="**/model.dat"/>
-      <include name="**/*.wav"/>
-      <exclude name="**/source/**"/>
-    </jar>
-    <jar file="rsrc/extras/bundle.jar" basedir="rsrc/extras">
-      <include name="**/*.png"/>
-      <include name="**/model.dat"/>
-      <include name="**/*.wav"/>
-      <exclude name="**/source/**"/>
-    </jar>
+    <antcall target="town_bundles">
+      <param name="town" value="frontier_town"/>
+    </antcall>
+    <antcall target="town_bundles">
+      <param name="town" value="indian_post"/>
+    </antcall>
   </target>
 
   <!-- loads our boards into the database -->
