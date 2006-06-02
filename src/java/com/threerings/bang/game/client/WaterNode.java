@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.light.Light;
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -31,6 +32,7 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.Skybox;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
@@ -38,6 +40,8 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
+
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -51,7 +55,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class WaterNode extends Node
 {
-    public WaterNode (BasicContext ctx, boolean editorMode)
+    public WaterNode (BasicContext ctx, Light light, boolean editorMode)
     {
         super("water");
         _ctx = ctx;
@@ -60,14 +64,14 @@ public class WaterNode extends Node
         setRenderState(RenderUtil.blendAlpha);
         setRenderState(RenderUtil.backCull);
         setRenderState(_smtstate = _ctx.getRenderer().createTextureState());
-        
-        // combine the board light state with one that enables specular
+
+        // use the board's main light in a new state that enables specular
         // properties
         LightState lstate = _ctx.getRenderer().createLightState();
+        lstate.attach(light);
         lstate.setLocalViewer(true);
         lstate.setSeparateSpecular(true);
         setRenderState(lstate);
-        setLightCombineMode(LightState.COMBINE_CLOSEST);
         
         // we normalize things ourself
         setNormalsMode(NM_USE_PROVIDED);
@@ -93,10 +97,14 @@ public class WaterNode extends Node
         
         // initialize the array of blocks and patches
         _blocks = new SharedMesh[_board.getWidth()][_board.getHeight()];
-        _patches = new TriMesh[WAVE_MAP_TILES][WAVE_MAP_TILES];
-        int vsize = (WAVE_MAP_SIZE + 1) * (WAVE_MAP_SIZE + 1);
-        _vbuf = BufferUtils.createVector3Buffer(vsize);
-        _nbuf = BufferUtils.createVector3Buffer(vsize);
+        if (BangPrefs.isHighDetail()) {
+            _patches = new TriMesh[WAVE_MAP_TILES][WAVE_MAP_TILES];
+            int vsize = (WAVE_MAP_SIZE + 1) * (WAVE_MAP_SIZE + 1);
+            _vbuf = BufferUtils.createVector3Buffer(vsize);
+            _nbuf = BufferUtils.createVector3Buffer(vsize);
+        } else {
+            _patches = null;
+        }
         _bcount = 0;
         refreshSurface();
         
@@ -104,7 +112,9 @@ public class WaterNode extends Node
         // blocks visible
         if (_editorMode || _bcount > 0) {
             refreshSphereMap();
-            refreshWaveAmplitudes();
+            if (_patches != null) {
+                refreshWaveAmplitudes();
+            }
         }
     }
     
@@ -125,6 +135,9 @@ public class WaterNode extends Node
      */
     public void refreshSphereMap ()
     {
+        if (_smtstate == null) {
+            return;
+        }
         _smtstate.deleteAll();
         
         ByteBuffer pbuf = ByteBuffer.allocateDirect(SPHERE_MAP_SIZE *
@@ -215,24 +228,12 @@ public class WaterNode extends Node
             for (int by = y1; by <= y2; by++) {
                 if (_board.isUnderWater(bx, by)) {
                     if (_blocks[bx][by] == null) {
-                        int px = bx % WAVE_MAP_TILES,
-                            py = by % WAVE_MAP_TILES;
-                        if (_patches[px][py] == null) {
-                            createWavePatch(px, py);
-                        }
-                        _blocks[bx][by] = new SharedMesh("block",
-                            _patches[px][py]);
-                         int wx = bx / WAVE_MAP_TILES,
-                            wy = by / WAVE_MAP_TILES;
-                        _blocks[bx][by].setLocalTranslation(
-                            new Vector3f(wx * WAVE_MAP_TILES * TILE_SIZE,
-                                wy * WAVE_MAP_TILES * TILE_SIZE, 0f));
+                        createWaveBlock(bx, by);
                     }
                     if (_blocks[bx][by].getParent() == null) {
                         attachChild(_blocks[bx][by]);
                         _bcount++;
                     }
-                    
                 } else if (_blocks[bx][by] != null &&
                     _blocks[bx][by].getParent() != null) {
                     detachChild(_blocks[bx][by]);
@@ -251,11 +252,37 @@ public class WaterNode extends Node
         updateGeometricState(0, true);
     }
     
+    /**
+     * Creates and returns the wave block at the given tile coordinates.
+     */
+    protected void createWaveBlock (int bx, int by)
+    {
+        // medium/low detail is just a tile-sized quad
+        if (!BangPrefs.isHighDetail()) {
+            if (_quad == null) {
+                _quad = new Quad("quad", TILE_SIZE, TILE_SIZE);
+            }
+            _blocks[bx][by] = new SharedMesh("block", _quad);
+            _blocks[bx][by].getLocalTranslation().set((bx + 0.5f) * TILE_SIZE,
+                (by + 0.5f) * TILE_SIZE, 0f);
+            return;
+        }
+        int px = bx % WAVE_MAP_TILES, py = by % WAVE_MAP_TILES;
+        if (_patches[px][py] == null) {
+            createWavePatch(px, py);
+        }
+        _blocks[bx][by] = new SharedMesh("block", _patches[px][py]);
+        int wx = bx / WAVE_MAP_TILES, wy = by / WAVE_MAP_TILES;
+        _blocks[bx][by].getLocalTranslation().set(
+            wx * WAVE_MAP_TILES * TILE_SIZE,
+            wy * WAVE_MAP_TILES * TILE_SIZE, 0f);
+    }
+    
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
         super.updateWorldData(time);
-        if (_blocks == null || _bcount == 0) {
+        if (_blocks == null || _patches == null || _bcount == 0) {
             return;
         }
         
@@ -348,6 +375,9 @@ public class WaterNode extends Node
     
     /** The dispersion model. */
     protected static WaveUtil.DispersionModel _disp;
+    
+    /** A tile-sized quad to share as a low resolution water surface. */
+    protected static Quad _quad;
     
     /** The size in samples of the wave map. */
     protected static final int WAVE_MAP_SIZE = 32;

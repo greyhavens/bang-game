@@ -198,7 +198,7 @@ public class BoardView extends BComponent
         if (Config.displayTerrain) {
             bnode.attachChild(_tnode);
         }
-        _wnode = new WaterNode(ctx, editorMode);
+        _wnode = new WaterNode(ctx, _lights[0], editorMode);
         if (Config.displayWater) {
             bnode.attachChild(_wnode);
         }
