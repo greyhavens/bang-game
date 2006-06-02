@@ -60,6 +60,7 @@ import com.threerings.jme.JmeCanvasApp;
 import com.threerings.media.image.Colorization;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
 
@@ -198,7 +199,8 @@ public class RenderUtil
             if (!ctx.getResourceManager().getResourceFile(path).exists()) {
                 break;
             }
-            TextureState tstate = createTextureState(ctx, path);
+            TextureState tstate = createTextureState(ctx, path,
+                BangPrefs.isMediumDetail() ? 1f : 0.5f);
             tstate.getTexture().setScale(
                 new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
             texs.add(tstate);
@@ -334,7 +336,18 @@ public class RenderUtil
     public static TextureState createTextureState (
         BasicContext ctx, String path)
     {
-        return createTextureState(ctx, ctx.getTextureCache().getTexture(path));
+        return createTextureState(ctx, path, 1f);
+    }
+    
+    /**
+     * Creates a texture state using the image with the supplied path and scale
+     * factor. The texture is loaded via the texture cache.
+     */
+    public static TextureState createTextureState (
+        BasicContext ctx, String path, float scale)
+    {
+        return createTextureState(ctx,
+            ctx.getTextureCache().getTexture(path, scale));
     }
 
     /**

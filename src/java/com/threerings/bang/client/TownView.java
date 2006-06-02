@@ -475,8 +475,9 @@ public class TownView extends BWindow
         protected int updatePopulationSignTexture (int pop)
         {
             // get a reference to the buffered sign image
-            String path = "props/structures/pop_sign_" +
-                _bctx.getUserObject().townId + "/sign.png";
+            String townId = _bctx.getUserObject().townId,
+                path = "props/" + townId + "/structures/pop_sign_" + townId +
+                "/sign.png";
             BufferedImage bimg = _ctx.getImageCache().getBufferedImage(path);
             if (bimg == null) {
                 log.warning("Couldn't find population sign image [path=" +

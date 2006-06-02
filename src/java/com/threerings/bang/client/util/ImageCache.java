@@ -40,6 +40,14 @@ import static com.threerings.bang.Log.log;
 public class ImageCache
 {
     /**
+     * Creates a JME-compatible image from the supplied buffered image.
+     */
+    public static Image createImage (BufferedImage bufimg, boolean flip)
+    {
+        return createImage(bufimg, 1f, flip);
+    }
+
+    /**
      * Colorizes the supplied buffered image (which must be an 8-bit
      * colormapped image), then converts the colorized image into a form that
      * JME can display.
@@ -47,7 +55,48 @@ public class ImageCache
     public static Image createImage (
         BufferedImage bufimg, Colorization[] zations, boolean flip)
     {
-        return createImage(ImageUtil.recolorImage(bufimg, zations), flip);
+        return createImage(bufimg, zations, 1f, flip);
+    }
+
+    /**
+     * Colorizes the supplied buffered image (which must be an 8-bit
+     * colormapped image), then converts the colorized image into a form that
+     * JME can display.
+     */
+    public static Image createImage (
+        BufferedImage bufimg, Colorization[] zations, float scale,
+        boolean flip)
+    {
+        return createImage(ImageUtil.recolorImage(bufimg, zations), scale,
+            flip);
+    }
+        
+    /**
+     * Creates a JME-compatible image from the supplied buffered image.
+     */
+    public static Image createImage (
+        BufferedImage bufimg, float scale, boolean flip)
+    {
+        // convert the the image to the format that OpenGL prefers
+        int width = (int)(bufimg.getWidth() * scale),
+            height = (int)(bufimg.getHeight() * scale);
+        BufferedImage dispimg = createCompatibleImage(
+            width, height, bufimg.getColorModel().hasAlpha());
+
+        // flip the image to convert into OpenGL's coordinate system
+        AffineTransform tx = null;
+        if (flip) {
+            tx = AffineTransform.getScaleInstance(scale, -scale);
+            tx.translate(0, -bufimg.getHeight());
+        }
+
+        // "convert" the image by rendering the old into the new
+        Graphics2D gfx = (Graphics2D)dispimg.getGraphics();
+        gfx.drawImage(bufimg, tx, null);
+        gfx.dispose();
+
+        // now extract the image data into a JME image
+        return convertImage(dispimg);
     }
 
     /**
@@ -72,7 +121,23 @@ public class ImageCache
                 false, null);
         }
     }
-
+    
+    /**
+     * Converts an image that was created with {@link #createCompatibleImage}
+     * into a JME {@link Image}. The data is assumed to have already been
+     * "flipped".
+     */
+    public static Image convertImage (BufferedImage bufimg)
+    {
+        Image image = new Image();
+        image.setType(bufimg.getColorModel().hasAlpha() ?
+                      Image.RGBA8888 : Image.RGB888);
+        image.setWidth(bufimg.getWidth());
+        image.setHeight(bufimg.getHeight());
+        image.setData(convertImage(bufimg, null));
+        return image;
+    }
+    
     /**
      * Converts the supplied image (which must have been created with {@link
      * #createCompatibleImage}) into a {@link ByteBuffer} that can be passed to
@@ -98,48 +163,6 @@ public class ImageCache
         return target;
     }
 
-    /**
-     * Converts an image that was created with {@link #createCompatibleImage}
-     * into a JME {@link Image}. The data is assumed to have already been
-     * "flipped".
-     */
-    public static Image convertImage (BufferedImage bufimg)
-    {
-        Image image = new Image();
-        image.setType(bufimg.getColorModel().hasAlpha() ?
-                      Image.RGBA8888 : Image.RGB888);
-        image.setWidth(bufimg.getWidth());
-        image.setHeight(bufimg.getHeight());
-        image.setData(convertImage(bufimg, null));
-        return image;
-    }
-
-    /**
-     * Creates a JME-compatible image from the supplied buffered image.
-     */
-    public static Image createImage (BufferedImage bufimg, boolean flip)
-    {
-        // convert the the image to the format that OpenGL prefers
-        int width = bufimg.getWidth(), height = bufimg.getHeight();
-        BufferedImage dispimg = createCompatibleImage(
-            width, height, bufimg.getColorModel().hasAlpha());
-
-        // flip the image to convert into OpenGL's coordinate system
-        AffineTransform tx = null;
-        if (flip) {
-            tx = AffineTransform.getScaleInstance(1, -1);
-            tx.translate(0, -height);
-        }
-
-        // "convert" the image by rendering the old into the new
-        Graphics2D gfx = (Graphics2D)dispimg.getGraphics();
-        gfx.drawImage(bufimg, tx, null);
-        gfx.dispose();
-
-        // now extract the image data into a JME image
-        return convertImage(dispimg);
-    }
-
     public ImageCache (BasicContext ctx)
     {
         _ctx = ctx;
@@ -150,9 +173,17 @@ public class ImageCache
      */
     public Image getImage (String rsrcPath)
     {
-        return getImage(rsrcPath, true);
+        return getImage(rsrcPath, 1f, true);
     }
 
+    /**
+     * See {@link #getImage(String,float,boolean)}.
+     */
+    public Image getImage (String rsrcPath, float scale)
+    {
+        return getImage(rsrcPath, scale, true);
+    }
+    
     /**
      * Loads up an image from the cache if possible or from the resource
      * manager otherwise, in which case it is prepared for use by JME and
@@ -166,6 +197,24 @@ public class ImageCache
      */
     public Image getImage (String rsrcPath, boolean flip)
     {
+        return getImage(rsrcPath, 1f, flip);
+    }
+    
+    /**
+     * Loads up an image from the cache if possible or from the resource
+     * manager otherwise, in which case it is prepared for use by JME and
+     * OpenGL. <em>Note:</em> these images are cached separately from the
+     * {@link BImage} and {@link BufferedImage} caches.
+     *
+     * @param flip whether or not to convert the image from normal computer
+     * coordinates into OpenGL coordinates when loading. <em>Note:</em> this
+     * information is not cached, an image must <em>always</em> be requested as
+     * flipped or not flipped.
+     * @param scale a scale factor to apply to the image.  As with the flip
+     * setting, the scale factor is not cached.
+     */
+     public Image getImage (String rsrcPath, float scale, boolean flip)
+     {
         // first check the cache
         WeakReference<Image> iref = _imgcache.get(rsrcPath);
         Image image;
@@ -186,7 +235,7 @@ public class ImageCache
         }
 
         // create and cache a new JME image with the appropriate data
-        image = createImage(bufimg, flip);
+        image = createImage(bufimg, scale, flip);
         _imgcache.put(rsrcPath, new WeakReference<Image>(image));
         return image;
     }

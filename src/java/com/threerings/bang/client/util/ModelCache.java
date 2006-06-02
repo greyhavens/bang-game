@@ -21,6 +21,7 @@ import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
 import com.threerings.media.image.Colorization;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.util.BasicContext;
 
@@ -226,9 +227,10 @@ public class ModelCache
             if (tstate == null) {
                 _tstates.put(path,
                     tstate = _ctx.getRenderer().createTextureState());
+                float scale = BangPrefs.isMediumDetail() ? 1f : 0.5f;
                 tstate.setTexture(_zations == null ?
-                    _ctx.getTextureCache().getTexture(path) :
-                    _ctx.getTextureCache().getTexture(path, _zations));
+                    _ctx.getTextureCache().getTexture(path, scale) :
+                    _ctx.getTextureCache().getTexture(path, _zations, scale));
             }
             return tstate;
         }

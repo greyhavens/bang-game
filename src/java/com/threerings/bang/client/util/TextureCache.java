@@ -38,18 +38,36 @@ public class TextureCache
     }
 
     /**
-     * Creates a texture from the image with the specified cache.
+     * Creates a texture from the image with the specified path.
      */
     public Texture getTexture (String path)
     {
-        return getTexture(path, (Colorization[])null);
+        return getTexture(path, (Colorization[])null, 1f);
     }
 
+    /**
+     * Creates a texture from the image with the specified path and scale.
+     */
+    public Texture getTexture (String path, float scale)
+    {
+        return getTexture(path, (Colorization[])null, scale);
+    }
+    
     /**
      * Creates a texture from the image with the specified path and
      * colorizations.
      */
     public Texture getTexture (String path, Colorization[] zations)
+    {
+        return getTexture(path, zations, 1f);
+    }
+    
+    /**
+     * Creates a texture from the image with the specified path,
+     * colorizations, and scale.
+     */
+    public Texture getTexture (String path, Colorization[] zations,
+        float scale)
     {
         TextureKey tkey = new TextureKey(path, zations, null);
         WeakReference<Texture> texref = _textures.get(tkey);
@@ -59,9 +77,10 @@ public class TextureCache
         }
 
         Image img = (zations == null) ?
-            _ctx.getImageCache().getImage(path) :
+            _ctx.getImageCache().getImage(path, scale) :
             _ctx.getImageCache().createImage(
-                _ctx.getImageCache().getBufferedImage(path), zations, true);
+                _ctx.getImageCache().getBufferedImage(path), zations,
+                scale, true);
         texture = RenderUtil.createTexture(img);
         _textures.put(tkey, new WeakReference<Texture>(texture));
         return texture;
@@ -171,8 +190,8 @@ public class TextureCache
         public Colorization[] zations;
         public Rectangle region;
 
-        public TextureKey (String path, Colorization[] zations,
-            Rectangle region) {
+        public TextureKey (
+            String path, Colorization[] zations, Rectangle region) {
             this.path = path;
             this.zations = zations;
             this.region = region;
