@@ -32,6 +32,10 @@ while [ ! -z "$1" ]; do
     if [ $1 = "--devclient" ]; then
         DEVCLIENT=true
     fi
+    if [ $1 = "--revdate" ]; then
+        REVDATE="-r {$2}"
+        shift
+    fi
     shift
 done
 
@@ -50,7 +54,7 @@ if [ ! -z "$UPDATE" ]; then
     # update the whole enchilada
     echo "Updating main tree..."
     cd $ROOT
-    svn update -q
+    svn update -q $REVDATE
     if [ $? != 0 ] ; then
         echo >&2 "*** svn update failed in" `pwd`
         rm -f $LOCKFILE
