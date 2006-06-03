@@ -50,10 +50,10 @@ resource = rsrc/config/resource/manager.properties
 
 # Media resources that will be unpacked
 uresource = rsrc/bundle.jar
-uresource = rsrc/frontier_town/bonuses/bundle.jar
-uresource = rsrc/frontier_town/extras/bundle.jar
-uresource = rsrc/frontier_town/props/bundle.jar
-uresource = rsrc/frontier_town/units/bundle.jar
+uresource = rsrc/bonuses/frontier_town/bundle.jar
+uresource = rsrc/extras/frontier_town/bundle.jar
+uresource = rsrc/props/frontier_town/bundle.jar
+uresource = rsrc/units/frontier_town/bundle.jar
 uresource = rsrc/sounds/effects/bundle.jar
 uresource = rsrc/sounds/feedback/bundle.jar
 uresource = rsrc/sounds/music/bundle.jar
