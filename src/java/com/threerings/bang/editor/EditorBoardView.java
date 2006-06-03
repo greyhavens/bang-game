@@ -834,6 +834,13 @@ public class EditorBoardView extends BoardView
         return (Piece)_bangobj.pieces.get(pid);
     }
 
+    @Override // documentation inherited
+    protected boolean shouldShowStarter (Piece piece)
+    {
+        // always show everything
+        return true;
+    }
+    
     /**
      * Flood-fills the board terrain.
      */

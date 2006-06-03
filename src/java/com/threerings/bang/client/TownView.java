@@ -315,6 +315,14 @@ public class TownView extends BWindow
         }
         
         @Override // documentation inherited
+        protected boolean shouldShowStarter (Piece piece)
+        {
+            return super.shouldShowStarter(piece) ||
+                (piece instanceof Prop &&
+                    _commands.containsKey(((Prop)piece).getType()));
+        }
+        
+        @Override // documentation inherited
         protected boolean shouldShowGrid ()
         {
             return false;

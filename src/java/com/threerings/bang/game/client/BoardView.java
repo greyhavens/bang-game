@@ -63,6 +63,7 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
+import com.threerings.util.RandomUtil;
 
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;
@@ -88,6 +89,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -300,10 +302,11 @@ public class BoardView extends BComponent
             toggleGrid(false);
         }
 
-        // create sprites for all of the pieces
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            // create sprites for all of the pieces on the board
-            createPieceSprite((Piece)iter.next(), _bangobj.tick);
+        // create sprites for all of the board pieces
+        for (Piece piece : _bangobj.pieces) {
+            if (shouldShowStarter(piece)) {
+                createPieceSprite(piece, _bangobj.tick);
+            }
         }
         _pnode.updateGeometricState(0, true);
 
@@ -859,6 +862,27 @@ public class BoardView extends BComponent
         return BangPrefs.config.getValue("show_grid", true);
     }
 
+    /**
+     * Called for each piece on the board at refresh time, giving boards a
+     * chance to omit optional pieces for improved performance.
+     */
+    protected boolean shouldShowStarter (Piece piece)
+    {
+        // for medium detail, omit half of the props that are outside of the
+        // board or passable; for low detail, omit all of them
+        if (!(piece instanceof Prop) ||
+            BangPrefs.isHighDetail()) {
+            return true;
+        }
+        Prop prop = (Prop)piece;
+        if (prop.intersects(_board.getPlayableArea()) &&
+            !prop.isPassable()) {
+            return true;
+        }
+        return BangPrefs.isMediumDetail() ?
+            (RandomUtil.getInt(100) < 50) : false;
+    }
+    
     /**
      * Updates the tile grid over the entire board.
      */
