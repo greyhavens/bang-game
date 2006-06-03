@@ -7,6 +7,7 @@ import java.awt.Point;
 
 import com.threerings.bang.data.UnitConfig;
 
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
@@ -59,7 +60,7 @@ public class ClaimJumpingLogic extends AILogic
                     unit.getDistance(claim) < unit.getDistance(cclaim))) {
                     cclaim = claim;
                 }
-            } else if (Bonus.isBonus(pieces[ii], "nugget")) {
+            } else if (Bonus.isBonus(pieces[ii], NuggetEffect.NUGGET_BONUS)) {
                 if (cnugget == null || unit.getDistance(pieces[ii]) <
                         unit.getDistance(cnugget)) {
                     cnugget = pieces[ii];

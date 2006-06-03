@@ -23,17 +23,24 @@ import static com.threerings.bang.Log.log;
  */
 public class NuggetEffect extends BonusEffect
 {
-    /** The identifier for the type of effect that we produce. */
-    public static final String PICKED_UP_NUGGET = "bonuses/nugget/pickedup";
+    /** The bonus identifier for the nugget bonus. */
+    public static final String NUGGET_BONUS = "frontier_town/nugget";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String DROPPED_NUGGET = "bonuses/nugget/dropped";
+    public static final String PICKED_UP_NUGGET =
+        "bonuses/frontier_town/nugget/pickedup";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String NUGGET_ADDED = "bonuses/nugget/added";
+    public static final String DROPPED_NUGGET =
+        "bonuses/frontier_town/nugget/dropped";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String NUGGET_REMOVED = "bonuses/nugget/removed";
+    public static final String NUGGET_ADDED =
+        "bonuses/frontier_town/nugget/added";
+
+    /** The identifier for the type of effect that we produce. */
+    public static final String NUGGET_REMOVED =
+        "bonuses/frontier_town/nugget/removed";
 
     /** The unit receiving or depositing the nugget. */
     public int pieceId;
@@ -74,7 +81,7 @@ public class NuggetEffect extends BonusEffect
         effect.init(unit);
         effect.dropping = true;
         effect.causerId = causerId;
-        effect.drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
+        effect.drop = Bonus.createBonus(BonusConfig.getConfig(NUGGET_BONUS));
         effect.drop.assignPieceId(bangobj);
         effect.drop.position(spot.x, spot.y);
         return effect;

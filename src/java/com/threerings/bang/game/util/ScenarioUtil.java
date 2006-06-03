@@ -12,6 +12,7 @@ import com.threerings.util.RandomUtil;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
@@ -50,9 +51,10 @@ public class ScenarioUtil
         if (scenarioId.equals(ScenarioCodes.CLAIM_JUMPING) ||
             scenarioId.equals(ScenarioCodes.GOLD_RUSH) ||
             scenarioId.equals(ScenarioCodes.TUTORIAL)) {
-            sounds.preloadClip("rsrc/bonuses/nugget/added.wav");
-            sounds.preloadClip("rsrc/bonuses/nugget/removed.wav");
-            sounds.preloadClip("rsrc/bonuses/nugget/pickedup.wav");
+            sounds.preloadClip("rsrc/" + NuggetEffect.NUGGET_ADDED + ".wav");
+            sounds.preloadClip("rsrc/" + NuggetEffect.NUGGET_REMOVED + ".wav");
+            sounds.preloadClip(
+                "rsrc/" + NuggetEffect.PICKED_UP_NUGGET + ".wav");
         }
     }
 

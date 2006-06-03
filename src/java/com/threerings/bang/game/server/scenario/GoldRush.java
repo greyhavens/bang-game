@@ -15,6 +15,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Marker;
@@ -86,7 +87,7 @@ public class GoldRush extends Scenario
         // count up the nuggets that are "in play"
         int nuggets = 0;
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (Bonus.isBonus(pieces[ii], "nugget") ||
+            if (Bonus.isBonus(pieces[ii], NuggetEffect.NUGGET_BONUS) ||
                 (pieces[ii] instanceof Unit && ((Unit)pieces[ii]).benuggeted)) {
                 nuggets++;
             }
@@ -96,7 +97,8 @@ public class GoldRush extends Scenario
         // game, try to spawn another one
         if (nuggets < bangobj.getActivePlayerCount()) {
             return placeBonus(bangobj, pieces, Bonus.createBonus(
-                                  BonusConfig.getConfig("nugget")), _lodes);
+                                  BonusConfig.getConfig(
+                                      NuggetEffect.NUGGET_BONUS)), _lodes);
         } else {
             return super.addBonus(bangobj, pieces);
         }

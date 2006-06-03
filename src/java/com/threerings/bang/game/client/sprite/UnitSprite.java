@@ -43,6 +43,7 @@ import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.Spinner;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
@@ -444,7 +445,8 @@ public class UnitSprite extends MobileSprite
         _nugget.addController(new Spinner(_nugget, FastMath.PI/2));
         _nugget.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         _nugget.setLocalScale(0.5f);
-        ctx.loadModel("bonuses", "nugget", new ModelAttacher(_nugget));
+        ctx.loadModel("bonuses", NuggetEffect.NUGGET_BONUS,
+                      new ModelAttacher(_nugget));
 
         // configure our colors
         configureOwnerColors();

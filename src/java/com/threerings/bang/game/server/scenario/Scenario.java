@@ -876,7 +876,7 @@ public abstract class Scenario
     /** A prototype nugget bonus used to ensure that pieces can be
      * benuggeted. */
     protected Bonus _nuggetBonus =
-        Bonus.createBonus(BonusConfig.getConfig("nugget"));
+        Bonus.createBonus(BonusConfig.getConfig(NuggetEffect.NUGGET_BONUS));
 
     /** Used when determining where to place a bonus. */
     protected PointSet _tpoints = new PointSet();

@@ -171,7 +171,8 @@ public class ClaimJumping extends Scenario
      */
     protected static Bonus dropNugget (BangObject bangobj, int x, int y)
     {
-        Bonus drop = Bonus.createBonus(BonusConfig.getConfig("nugget"));
+        Bonus drop = Bonus.createBonus(
+            BonusConfig.getConfig(NuggetEffect.NUGGET_BONUS));
         drop.assignPieceId(bangobj);
         drop.position(x, y);
         bangobj.board.shadowPiece(drop);
