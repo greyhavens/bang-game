@@ -49,14 +49,14 @@ resource = rsrc/avatars/metadata.jar
 resource = rsrc/config/resource/manager.properties
 
 # Media resources that will be unpacked
-uresource = rsrc/bonuses/bundle.jar
 uresource = rsrc/bundle.jar
-uresource = rsrc/extras/bundle.jar
-uresource = rsrc/props/bundle.jar
+uresource = rsrc/frontier_town/bonuses/bundle.jar
+uresource = rsrc/frontier_town/extras/bundle.jar
+uresource = rsrc/frontier_town/props/bundle.jar
+uresource = rsrc/frontier_town/units/bundle.jar
 uresource = rsrc/sounds/effects/bundle.jar
-uresource = rsrc/sounds/music/bundle.jar
 uresource = rsrc/sounds/feedback/bundle.jar
-uresource = rsrc/units/bundle.jar
+uresource = rsrc/sounds/music/bundle.jar
 
 # Parameters passed to the JVM
 jvmarg = -Xmx256M
