@@ -286,6 +286,7 @@ public class TownView extends BWindow
             _ctx.getInputHandler().setEnabled(false);
             
             // subscribe to town object
+            addResolving(this);
             _safesub.subscribe(_bctx.getDObjectManager());
         }
 
@@ -457,7 +458,6 @@ public class TownView extends BWindow
 
         protected void updatePopulationSign (final int pop)
         {
-            addResolving(this);
             _ctx.getInvoker().postUnit(new Invoker.Unit() {
                 public boolean invoke () {
                     _oldTextureId = updatePopulationSignTexture(pop);
