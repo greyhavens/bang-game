@@ -1342,8 +1342,8 @@ public class TerrainNode extends Node
                         // to avoid switching too often
                         boolean prev = _diags[y+1][x];
                         if (prev != _diags[y+1][x+1] &&
-                            ((prev && (urll - ullr > 0.001f)) ||
-                            (!prev && (ullr - urll > 0.001f)))) {
+                            ((prev && (urll - ullr < 0.001f)) ||
+                            (!prev && (ullr - urll < 0.001f)))) {
                             _diags[y+1][x+1] = prev;
                         }
                     }
