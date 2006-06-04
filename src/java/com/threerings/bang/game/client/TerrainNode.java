@@ -1383,7 +1383,7 @@ public class TerrainNode extends Node
             IntBuffer tbuf = BufferUtils.createIntBuffer(ebounds.width * 3 *
                 (ebounds.height - 1));
             
-            boolean even = true, diag = false, ndiag;
+            boolean even = true, ud = false, nud;
             for (int y = ebounds.y, ymax = y + (ebounds.height - 1);
                 y < ymax; y++) {
                 int x1 = even ? ebounds.x : (ebounds.x + ebounds.width - 1),
@@ -1393,18 +1393,17 @@ public class TerrainNode extends Node
                 for (int x = x1; x != x2; x += dx) {
                     ix = x - ebounds.x;
                     if (x != x2 - dx) {
-                        ndiag = _diags[y + 2][x + (even ? 2 : 1)];
-                        if (ndiag != diag) {
-                            px = (x == x1 ? ix : ix - dx);
-                            if (even ^ diag) {
-                                tbuf.put((iy+1)*ebounds.width + px);
+                        nud = even ^ _diags[y + 2][x + (even ? 2 : 1)];
+                        if ((nud != ud && x != x1) || (nud == ud && x == x1)) {
+                            if (nud) {
+                                tbuf.put(iy*ebounds.width + ix);
                             } else {
-                                tbuf.put(iy*ebounds.width + px);
+                                tbuf.put((iy+1)*ebounds.width + ix);
                             }
                         }
-                        diag = ndiag;
+                        ud = nud;
                     }
-                    if (even ^ diag) {
+                    if (ud) {
                         tbuf.put((iy+1)*ebounds.width + ix);
                         tbuf.put(iy*ebounds.width + ix);
                     } else {
@@ -1417,8 +1416,9 @@ public class TerrainNode extends Node
             tbuf.flip();
             
             // create a new buffer to hold the used part of the temporary one
-            ibuf = BufferUtils.createIntBuffer(tbuf.limit());
+            ibuf = BufferUtils.createIntBuffer(tbuf.limit()+2);
             ibuf.put(tbuf);
+            ibuf.flip();
         }
         
         /**
