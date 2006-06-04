@@ -1418,7 +1418,6 @@ public class TerrainNode extends Node
             // create a new buffer to hold the used part of the temporary one
             ibuf = BufferUtils.createIntBuffer(tbuf.limit()+2);
             ibuf.put(tbuf);
-            ibuf.flip();
         }
         
         /**
