@@ -130,7 +130,7 @@ while (<>) {
                 $userrounds{"versus"}{$username} += $rcount;
                 $userrounds{"rated"}{$username} += $rcount
                     if ($rtype eq "rated");
-                my $earnings = (@bits > 3) ? $bits[3] : 0;
+                my $earnings = (@bits > 2) ? $bits[2] : 0;
                 $userearn{$username} += $earnings;
                 $totearn += $earnings;
                 if (defined $firsttimers{$username}) {
