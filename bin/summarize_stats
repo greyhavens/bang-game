@@ -59,23 +59,14 @@ while (<>) {
             $newsess++;
         }
 
-    } elsif (/game_ended t:(\d+) s:(\S+) ts:(\d+) (.*)/) {
+    } elsif (/game_ended t:(\d+) s:(\S+) ts:(\d+) r:(\S+) (.*)/) {
         my $gsecs = $1;
         my $tsize = $3;
-        my $info = $4;
+        my $rated = $4;
+        my $info = $5;
         my @scens = split(/,/, $2);
         my $rcount = scalar @scens;
-
-        # TODO change when we unfuck the formatting
-        my $rtype;
-        if ($info =~ s/ r:true//) {
-            $rtype = "rated";
-        } elsif ($info =~ s/ r:false//) {
-            $rtype = "unrated";
-        } else {
-            warn "Bogus info? $info\n";
-            next;
-        }
+        my $rtype = ($rated eq "true") ? "rated" : "unrated";
 
         my $humans = 0;
         my @pinfos = split(/,/, $info);
