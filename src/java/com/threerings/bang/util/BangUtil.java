@@ -4,6 +4,8 @@
 package com.threerings.bang.util;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -15,6 +17,8 @@ import java.util.zip.CRC32;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.bang.data.BangCodes;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -23,9 +27,27 @@ import static com.threerings.bang.Log.log;
 public class BangUtil
 {
     /**
+     * Returns a file instance given the supplied path (starting with
+     * <code>rsrc/</code>) to an unpacked resource file. The path should
+     * contain / as a file separator and that will be converted to the OS's
+     * file separator prior to lookup.
+     */
+    public static File getResourceFile (String path)
+    {
+        path = path.replace("/", File.separator);
+        String appdir = System.getProperty("appdir");
+        if (!StringUtil.isBlank(appdir)) {
+            path = appdir + File.separator + path;
+        }
+        return new File(path);
+    }
+
+    /**
      * Loads up a resource file and parses its contents as an array of
      * strings. If the file cannot be loaded, an error will be logged and
      * a zero length array will be returned.
+     *
+     * <p><em>Note:</em> the resource file is located via the classpath.
      */
     public static String[] resourceToStrings (String path)
     {
@@ -56,10 +78,48 @@ public class BangUtil
      * Loads up a resource file and parses its contents into a {@link
      * Properties} instance. If the file cannot be loaded, an error will
      * be logged and an empty properties object will be returned.
+     *
+     * <p><em>Note:</em> the resource file is located via the classpath.
      */
     public static Properties resourceToProperties (String path)
     {
         return resourceToProperties(path, new ArrayList<String>());
+    }
+
+    /**
+     * Loads up per-town resource files and parses their contents as an array
+     * of strings.
+     *
+     * <p><em>Note:</em> the resource files are assumed to be unpacked into the
+     * application installation directory.
+     *
+     * @param path the path to the resource files, containing the string
+     * <code>TOWN</code> where the town id should be substituted.
+     */
+    public static String[] townResourceToStrings (String path)
+    {
+        ArrayList<String> lines = new ArrayList<String>();
+        for (String townId : BangCodes.TOWN_IDS) {
+            String tpath = path.replace("TOWN", townId);
+            File file = getResourceFile(tpath);
+            if (!file.exists()) {
+                continue;
+            }
+
+            try {
+                BufferedReader bin = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = bin.readLine()) != null) {
+                    lines.add(line);
+                }
+
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Failed to read resource file " +
+                        "[path=" + path + "].", e);
+            }
+        }
+
+        return lines.toArray(new String[lines.size()]);
     }
 
     /** Helper function for {@link #resourceToProperties}. */

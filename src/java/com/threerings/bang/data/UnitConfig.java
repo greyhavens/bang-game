@@ -353,15 +353,10 @@ public class UnitConfig
     {
         if (_types.size() == 0) {
             // register our units
-            for (String townId : BangCodes.TOWN_IDS) {
-                String path = "rsrc/units/" + townId + "/units.txt";
-                if (BangUtil.class.getClassLoader().getResource(path) == null) {
-                    continue;
-                }
-                String[] units = BangUtil.resourceToStrings(path);
-                for (int ii = 0; ii < units.length; ii++) {
-                    registerUnit(units[ii]);
-                }
+            String[] units = BangUtil.townResourceToStrings(
+                "rsrc/units/TOWN/units.txt");
+            for (int ii = 0; ii < units.length; ii++) {
+                registerUnit(units[ii]);
             }
         }
     }

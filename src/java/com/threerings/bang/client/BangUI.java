@@ -219,7 +219,8 @@ public class BangUI
                 // these images straight from the filesystem (this method gets
                 // called before the resource manager and image cache are set
                 // up, otherwise we'd use them)
-                BufferedImage bicon = ImageIO.read(new File(path));
+                BufferedImage bicon =
+                    ImageIO.read(BangUtil.getResourceFile(path));
                 Image icon = ImageCache.createImage(bicon, false);
                 icons[ii] = icon.getData();
             } catch (Exception e) {

@@ -198,15 +198,10 @@ public class BonusConfig
 
     static {
         // register our bonuses
-        for (String townId : BangCodes.TOWN_IDS) {
-            String path = "rsrc/bonuses/" + townId + "/bonuses.txt";
-            if (BangUtil.class.getClassLoader().getResource(path) == null) {
-                continue;
-            }
-            String[] bonuses = BangUtil.resourceToStrings(path);
-            for (int ii = 0; ii < bonuses.length; ii++) {
-                registerBonus(bonuses[ii]);
-            }
+        String[] bonuses = BangUtil.townResourceToStrings(
+            "rsrc/bonuses/TOWN/bonuses.txt");
+        for (int ii = 0; ii < bonuses.length; ii++) {
+            registerBonus(bonuses[ii]);
         }
     }
 }
