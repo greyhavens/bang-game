@@ -47,28 +47,46 @@ public class BangUtil
      * strings. If the file cannot be loaded, an error will be logged and
      * a zero length array will be returned.
      *
-     * <p><em>Note:</em> the resource file is located via the classpath.
+     * <p><em>Note:</em> the resource file is first located via the classpath
+     * and if that fails, we look for a resource file.
      */
     public static String[] resourceToStrings (String path)
     {
         ArrayList<String> lines = new ArrayList<String>();
+        BufferedReader bin = null;
         try {
             InputStream in =
                 BangUtil.class.getClassLoader().getResourceAsStream(path);
             if (in != null) {
-                BufferedReader bin =
-                    new BufferedReader(new InputStreamReader(in));
+                bin = new BufferedReader(new InputStreamReader(in));
+            }
+            if (bin == null) {
+                File file = getResourceFile(path);
+                if (file.exists()) {
+                    bin = new BufferedReader(new FileReader(file));
+                }
+            }
+            if (bin == null) {
+                log.warning("Missing resource [path=" + path + "].");
+            } else {
                 String line;
                 while ((line = bin.readLine()) != null) {
                     lines.add(line);
                 }
-            } else {
-                log.warning("Missing resource [path=" + path + "].");
             }
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to read resource file " +
                     "[path=" + path + "].", e);
+
+        } finally {
+            if (bin != null) {
+                try {
+                    bin.close();
+                } catch (Exception e) {
+                    // not much we can do here
+                }
+            }
         }
 
         return lines.toArray(new String[lines.size()]);
@@ -79,7 +97,8 @@ public class BangUtil
      * Properties} instance. If the file cannot be loaded, an error will
      * be logged and an empty properties object will be returned.
      *
-     * <p><em>Note:</em> the resource file is located via the classpath.
+     * <p><em>Note:</em> the resource file is first located via the classpath
+     * and if that fails, we look for a resource file.
      */
     public static Properties resourceToProperties (String path)
     {
@@ -112,6 +131,7 @@ public class BangUtil
                 while ((line = bin.readLine()) != null) {
                     lines.add(line);
                 }
+                bin.close();
 
             } catch (Exception e) {
                 log.log(Level.WARNING, "Failed to read resource file " +
@@ -140,6 +160,7 @@ public class BangUtil
                 BangUtil.class.getClassLoader().getResourceAsStream(path);
             if (in != null) {
                 props.load(in);
+                in.close();
             } else {
                 log.warning("Missing resource [path=" + path + "].");
                 Thread.dumpStack();
