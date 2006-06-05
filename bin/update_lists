@@ -7,10 +7,9 @@
 
 BANG_HOME=`dirname $0`
 BANG_HOME=`cd $BANG_HOME/.. ; pwd`
+TOWNS="frontier_town indian_post boom_town ghost_town city_of_gold"
 
 cd $BANG_HOME
-
-TOWNS="frontier_town indian_post boom_town ghost_town city_gold"
 
 # Update our list of props
 for TOWN in $TOWNS; do

@@ -137,10 +137,15 @@ public class PropConfig
 
     static {
         // register our props
-        String[] props = BangUtil.resourceToStrings(
-            "rsrc/props/props.txt");
-        for (int ii = 0; ii < props.length; ii++) {
-            registerProp(props[ii]);
+        for (String townId : BangCodes.TOWN_IDS) {
+            String path = "rsrc/props/" + townId + "/props.txt";
+            if (BangUtil.class.getClassLoader().getResource(path) == null) {
+                continue;
+            }
+            String[] props = BangUtil.resourceToStrings(path);
+            for (int ii = 0; ii < props.length; ii++) {
+                registerProp(props[ii]);
+            }
         }
     }
 }

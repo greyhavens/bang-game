@@ -138,18 +138,24 @@
   <!-- builds bundles for a specific town -->
   <target name="town_bundles">
     <jar file="rsrc/units/${town}/bundle.jar" basedir="rsrc/units/${town}">
+      <include name="units.txt"/>
+      <include name="**/unit.properties"/>
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/props/${town}/bundle.jar" basedir="rsrc/props/${town}">
+      <include name="props.txt"/>
+      <include name="**/prop.properties"/>
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
       <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/bonuses/${town}/bundle.jar" basedir="rsrc/bonuses/${town}">
+      <include name="bonuses.txt"/>
+      <include name="**/bonus.properties"/>
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
       <include name="**/*.wav"/>
@@ -429,8 +435,11 @@
         <include name="rsrc/**/*.css"/>
         <include name="rsrc/**/*.dat"/>
         <include name="rsrc/**/*.tmpl"/>
-        <exclude name="rsrc/**/model.properties"/>
-        <exclude name="rsrc/**/model.dat"/>
+        <exclude name="rsrc/avatars/*/**/*.dat"/>
+        <exclude name="rsrc/units/**"/>
+        <exclude name="rsrc/props/**"/>
+        <exclude name="rsrc/bonuses/**"/>
+        <exclude name="rsrc/extras/**"/>
       </fileset>
     </jar>
   </target>
