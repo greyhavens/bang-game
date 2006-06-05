@@ -165,10 +165,19 @@ public class BoardRepository extends JORARepository
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
     {
-        if (JDBCUtil.getColumnSize(conn, "BOARDS", "DATA") <= 65536) {
-            JDBCUtil.changeColumn(
-                conn, "BOARDS", "DATA", "DATA MEDIUMBLOB NOT NULL");
-        }
+        JDBCUtil.createTableIfMissing(conn, "BOARDS", new String[] {
+            "BOARD_ID INTEGER NOT NULL AUTO_INCREMENT",
+            "NAME VARCHAR(255) NOT NULL",
+            "CREATOR VARCHAR(255)",
+            "SCENARIOS VARCHAR(255)",
+            "PLAYERS INTEGER NOT NULL",
+            "PLAYS INTEGER NOT NULL",
+            "DATA MEDIUMBLOB NOT NULL",
+            "DATA_HASH BLOB NOT NULL",
+            "PRIMARY KEY (BOARD_ID)",
+            "UNIQUE(NAME,PLAYERS)",
+            "KEY(CREATOR)",
+        }, "");
     }
 
     @Override // documentation inherited
