@@ -5,6 +5,7 @@ package com.threerings.bang.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +16,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.zip.CRC32;
 
+import com.samskivert.io.StreamUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.BangCodes;
@@ -54,25 +56,16 @@ public class BangUtil
     {
         ArrayList<String> lines = new ArrayList<String>();
         BufferedReader bin = null;
+        InputStream in = getResourceAsStream(path);
         try {
-            InputStream in =
-                BangUtil.class.getClassLoader().getResourceAsStream(path);
             if (in != null) {
                 bin = new BufferedReader(new InputStreamReader(in));
-            }
-            if (bin == null) {
-                File file = getResourceFile(path);
-                if (file.exists()) {
-                    bin = new BufferedReader(new FileReader(file));
-                }
-            }
-            if (bin == null) {
-                log.warning("Missing resource [path=" + path + "].");
-            } else {
                 String line;
                 while ((line = bin.readLine()) != null) {
                     lines.add(line);
                 }
+            } else {
+                log.warning("Missing resource [path=" + path + "].");
             }
 
         } catch (Exception e) {
@@ -80,13 +73,7 @@ public class BangUtil
                     "[path=" + path + "].", e);
 
         } finally {
-            if (bin != null) {
-                try {
-                    bin.close();
-                } catch (Exception e) {
-                    // not much we can do here
-                }
-            }
+            StreamUtil.close(in);
         }
 
         return lines.toArray(new String[lines.size()]);
@@ -155,9 +142,8 @@ public class BangUtil
         }
         history.add(path);
 
+        InputStream in = getResourceAsStream(path);
         try {
-            InputStream in =
-                BangUtil.class.getClassLoader().getResourceAsStream(path);
             if (in != null) {
                 props.load(in);
                 in.close();
@@ -169,6 +155,9 @@ public class BangUtil
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to read resource file " +
                     "[path=" + path + "].", e);
+
+        } finally {
+            StreamUtil.close(in);
         }
 
         // if this properties file extends another file, load it up and
@@ -186,6 +175,30 @@ public class BangUtil
         }
 
         return props;
+    }
+
+    /**
+     * Locates a resource, either via the classpath or from a resource file and
+     * returns an input stream to its contents. Returns null if the resource
+     * could not be found.
+     */
+    protected static InputStream getResourceAsStream (String path)
+    {
+        try {
+            InputStream in =
+                BangUtil.class.getClassLoader().getResourceAsStream(path);
+            if (in != null) {
+                return in;
+            }
+            File file = getResourceFile(path);
+            if (file.exists()) {
+                return new FileInputStream(file);
+            }
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to look up resource " +
+                    "[path=" + path + "].", e);
+        }
+        return null;
     }
 
     /**
