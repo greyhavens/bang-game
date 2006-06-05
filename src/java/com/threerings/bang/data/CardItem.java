@@ -93,7 +93,7 @@ public class CardItem extends Item
     public String getName ()
     {
         String msg = MessageBundle.compose(
-            "m.card_item", "m." + _type, MessageBundle.taint(" x" + _quantity));
+            "m.card_item", "m." + _type, MessageBundle.taint("" + _quantity));
         return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
     }
 
