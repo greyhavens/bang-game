@@ -10,8 +10,6 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
-import com.threerings.bang.data.UnitConfig;
-
 /**
  * Represents a Big Shot unit owned by a player.
  */
@@ -77,7 +75,7 @@ public class BigShotItem extends Item
 
         // some hackery to deal with old item types
         if (_type.indexOf("/") == -1) {
-            _type = "frontier_town/" + _type;
+            _type = BangCodes.FRONTIER_TOWN + "/" + _type;
         }
     }
 

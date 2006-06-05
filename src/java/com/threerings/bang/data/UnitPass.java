@@ -3,9 +3,10 @@
 
 package com.threerings.bang.data;
 
-import com.threerings.util.MessageBundle;
+import java.io.IOException;
 
-import com.threerings.bang.data.UnitConfig;
+import com.threerings.io.ObjectInputStream;
+import com.threerings.util.MessageBundle;
 
 /**
  * Provides access to a particular type of unit in games.
@@ -50,6 +51,18 @@ public class UnitPass extends Item
     public String getIconPath ()
     {
         return "goods/passes/" + _unit + ".png";
+    }
+
+    @Override // documentation inherited
+    public void unpersistFrom (ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        super.unpersistFrom(in);
+
+        // some hackery to deal with old item types
+        if (_unit.indexOf("/") == -1) {
+            _unit = BangCodes.FRONTIER_TOWN + "/" + _unit;
+        }
     }
 
     protected String _unit;
