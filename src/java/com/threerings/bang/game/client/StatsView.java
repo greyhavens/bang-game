@@ -36,6 +36,8 @@ import com.samskivert.util.Interval;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.RandomUtil;
 
+import com.threerings.bang.client.BangUI;
+
 import com.threerings.bang.client.bui.SteelWindow;
 
 import com.threerings.bang.data.PlayerObject;
@@ -83,6 +85,10 @@ public class StatsView extends SteelWindow
         _bobj = bangobj;
 
         _msgs = ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
+
+        if (ctx instanceof BangContext) {
+            ((BangContext)ctx).getBangClient().fadeOutMusic(2f);
+        }
         
         if (bangobj.state == BangObject.GAME_OVER) {
             _closeBtn = new BButton(_msgs.get("m.results"), this, "results");
@@ -278,16 +284,16 @@ public class StatsView extends SteelWindow
             public void expired () {
                 boolean noshow = true;
                 for (int ii = 0; ii < _labels.length; ii++) {
-                    if (_showing < _labels[ii].length - 2) {
+                    if (_showing < _labels[ii].length - 1) {
                         _labels[ii][_showing].setAlpha(1f);
                         noshow = false;
                     }
                 }
                 if (noshow) {
+                    BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
                     for (int ii = 0; ii < _labels.length; ii++) {
                         int length = _labels[ii].length;
                         _labels[ii][length - 1].setAlpha(1f);
-                        _labels[ii][length - 2].setAlpha(1f);
                     }
                     Interval showPoints = new Interval(_ctx.getApp()) {
                         public void expired () {
@@ -296,6 +302,7 @@ public class StatsView extends SteelWindow
                     };
                     showPoints.schedule(OBJECTIVE_DISPLAY);
                 } else {
+                    BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
                     _showing++;
                     this.schedule(ANIM_DELAY);
                 }
@@ -394,9 +401,12 @@ public class StatsView extends SteelWindow
                     }
                     _showing++;
                     if (_showing < _labels[0].length) {
+                        BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
                         this.schedule(ANIM_DELAY);
                     } else {
+                        BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
                         _forward.setEnabled(true);
+                        _closeBtn.setEnabled(true);
                     }
                 }
             };

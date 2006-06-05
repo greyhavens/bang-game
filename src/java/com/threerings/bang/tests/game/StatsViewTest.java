@@ -107,6 +107,6 @@ public class StatsViewTest extends TestApp
         //bangobj.scenarioId = ScenarioCodes.CLAIM_JUMPING;
         
 
-        return new StatsView(_ctx, null, bangobj, false);
+        return new StatsView(_ctx, null, bangobj, true);
     }
 }
