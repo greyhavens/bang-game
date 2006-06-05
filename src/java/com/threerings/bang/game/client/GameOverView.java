@@ -62,6 +62,7 @@ public class GameOverView extends SteelWindow
 
         _ctx = ctx;
         _ctrl = ctrl;
+        _bobj = bangobj;
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(
             GameCodes.GAME_MSGS);
@@ -183,6 +184,7 @@ public class GameOverView extends SteelWindow
         }
 
         // add some buttons at the bottom
+        _buttons.add(new BButton(msgs.get("m.view_stats"), this, "stats"));
         _buttons.add(new BButton(msgs.get("m.to_saloon"), this, "to_saloon"));
         _buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
     }
@@ -193,7 +195,11 @@ public class GameOverView extends SteelWindow
         String action = event.getAction();
         if (action.equals("to_town") || action.equals("to_saloon")) {
             _bctx.getBangClient().clearPopup(this, true);
-            _ctrl.statsDismissed(action.equals("to_town"));
+            _ctrl.gameOverDismissed(action.equals("to_town"));
+        } else if (action.equals("stats")) {
+            _bctx.getBangClient().clearPopup(this, true);
+            _bctx.getBangClient().displayPopup(
+                    new StatsView(_bctx, _ctrl, _bobj, false), true);
         }
     }
 
@@ -211,5 +217,6 @@ public class GameOverView extends SteelWindow
     protected BasicContext _ctx;
     protected BangContext _bctx;
     protected BangController _ctrl;
+    protected BangObject _bobj;
     protected int _cueidx = 2;
 }

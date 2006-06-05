@@ -212,19 +212,6 @@ public class BangBoardView extends BoardView
      */
     public void doInterRoundMarqueeFade ()
     {
-        // we'll use this to fade out the board once the marquee is faded in
-        final FadeInOutEffect fadeout = new FadeInOutEffect(
-            ColorRGBA.black, 0f, 1f, 2f, true) {
-            protected void fadeComplete () {
-                super.fadeComplete();
-                // and prepare to fade the new board in
-                createPausedFadeIn();
-                _ctx.getInterface().attachChild(_fadein);
-                // let the controller start up the next phase
-                _ctrl.interRoundFadeComplete();
-            }
-        };
-
         // create a marquee, but detach it
         createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.round_over"));
         _ctx.getInterface().detachChild(_marquee);
@@ -237,12 +224,35 @@ public class BangBoardView extends BoardView
                     super.fadeComplete();
                     // once we've faded in fully, attach it normally...
                     _ctx.getInterface().attachChild(_marquee);
-                    // ...and fade it back out...
+                    // Fade out the marquee
                     clearMarquee(0f);
-                    // ...and fade the whole screen to black
-                    _ctx.getInterface().attachChild(fadeout);
+                    // let the controller know to show the stats page
+                    _ctrl.interRoundMarqueeFadeComplete();
                 }
             });
+    }
+
+    /**
+     * Fades out the the board and sets up the fade in for the new board.
+     * Calls the controller to let it know that everything's ready for
+     * the next round to start.
+     */
+    public void doInterRoundBoardFade ()
+    {
+        // ...and fade the whole screen to black
+        _ctx.getInterface().attachChild(
+            new FadeInOutEffect(
+                ColorRGBA.black, 0f, 1f, 2f, true) {
+                protected void fadeComplete () {
+                    super.fadeComplete();
+                    // and prepare to fade the new board in
+                    createPausedFadeIn();
+                    _ctx.getInterface().attachChild(_fadein);
+                    // let the controller start up the next phase
+                    _ctrl.interRoundFadeComplete();
+                }
+            });
+
     }
 
     /**

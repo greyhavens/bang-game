@@ -17,6 +17,7 @@ import com.jme.math.FastMath;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Multex;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -36,6 +37,7 @@ import com.threerings.parlor.game.client.GameController;
 
 import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.StatSet;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -148,8 +150,8 @@ public class BangController extends GameController
         _postGameMultex = new Multex(new Runnable() {
             public void run () {
                 _ctx.getBangClient().displayPopup(
-                    new GameOverView(_ctx, BangController.this, _bangobj),
-                    true);
+                    new StatsView(_ctx, BangController.this, _bangobj, true),
+                                  true);
             }
         }, 2);
 
@@ -445,6 +447,14 @@ public class BangController extends GameController
         }
     }
 
+    /**
+     * Retrieve stored StatSet from previous rounds.
+     */
+    public StatSet[] getStatSetArray (int round)
+    {
+        return _statMap.get(round);
+    }
+
     @Override // documentation inherited
     public void attributeChanged (AttributeChangedEvent event)
     {
@@ -480,6 +490,7 @@ public class BangController extends GameController
         } else if (state == BangObject.POST_ROUND) {
             // let the view know that this round is over
             _view.endRound();
+
             // fade out the current board and prepare to fade in the next
             _view.view.doInterRoundMarqueeFade();
             return true;
@@ -560,6 +571,16 @@ public class BangController extends GameController
     }
 
     /**
+     * Called by the board view after it has faded in the inter round
+     * marquee.
+     */
+    protected void interRoundMarqueeFadeComplete ()
+    {
+        _statMap.put(_bangobj.roundId, _bangobj.stats);
+        _ctx.getBangClient().displayPopup(
+            new StatsView(_ctx, BangController.this, _bangobj, true), true);
+    }
+    /**
      * Called by the board view after it has faded out the board at the end of
      * a round.
      */
@@ -606,7 +627,15 @@ public class BangController extends GameController
     /**
      * Called by the stats dialog when it has been dismissed.
      */
-    protected void statsDismissed (boolean toTown)
+    protected void statsDismissed ()
+    {
+        _view.view.doInterRoundBoardFade();
+    }
+
+    /**
+     * Called by the game over dialog when it has been dismissed.
+     */
+    protected void gameOverDismissed (boolean toTown)
     {
         if (toTown) {
             _ctx.getLocationDirector().leavePlace();
@@ -718,6 +747,9 @@ public class BangController extends GameController
 
     /** Keeps track of mapped keys. */
     protected ArrayIntSet _mapped = new ArrayIntSet();
+
+    /** Stores previous round stats data. */
+    protected HashIntMap<StatSet[]> _statMap = new HashIntMap<StatSet[]>();
 
     /** Used to by {@link #handleSelectNextUnit}. */
     protected static Comparator<Unit> UNIT_COMPARATOR = new Comparator<Unit>() {

@@ -933,74 +933,6 @@ player_status_score {
 }
 
 //
-// Post-game stats display
-
-endgame_border {
-  background: image "ui/window/border_ornate.png" framexy;
-  padding: 16 32;
-}
-
-endgame_player_big {
-  font: "Dom Casual" plain 24;
-  text-align: center;
-  color: #442801;
-}
-
-endgame_player_small {
-  font: "Dom Casual" plain 14;
-  text-align: center;
-  color: #442801;
-}
-
-endgame_title {
-  font: "Old Town Wide" plain 24;
-  text-align: center;
-  color: #4C2602;
-}
-
-endgame_header {
-  font: "Dom Casual" plain 18;
-  text-align: center;
-  color: #7D4924;
-}
-
-endgame_smallheader {
-  font: "Dom Casual" plain 15;
-  text-align: center;
-  color: #7D4924;
-}
-
-endgame_cash {
-  font: "Dom Casual" plain 30;
-  text-align: center;
-  text-effect: shadow;
-  effect-color: #000000;
-}
-
-endgame_smallcash {
-  parent: "endgame_cash";
-  font: "Dom Casual" plain 24;
-}
-
-endgame_reward {
-  font: "Helvetica" plain 12;
-  text-align: center;
-  color: #442801;
-}
-
-endgame_total {
-  font: "Dom Casual" plain 30;
-  text-align: left;
-  text-effect: shadow;
-  effect-color: #000000;
-}
-
-endgame_smalltotal {
-  parent: "endgame_total";
-  font: "Dom Casual" plain 24;
-}
-
-//
 // Shared Shop Styles
 
 shopkeep_name_label {
@@ -1246,3 +1178,102 @@ medium_unit_view {
   background: image "ui/frames/medium_background.png" centerxy;
   padding: 7 12 7 12;
 }
+
+//
+// Post-game stats display
+
+endgame_border {
+  background: image "ui/window/border_ornate.png" framexy;
+  padding: 16 32;
+}
+
+endgame_player_big {
+  font: "Dom Casual" plain 24;
+  text-align: center;
+  color: #442801;
+}
+
+endgame_player_small {
+  font: "Dom Casual" plain 14;
+  text-align: center;
+  color: #442801;
+}
+
+endgame_title {
+  font: "Old Town Wide" plain 24;
+  text-align: center;
+  color: #4C2602;
+}
+
+endgame_header {
+  font: "Dom Casual" plain 18;
+  text-align: center;
+  color: #7D4924;
+}
+
+endgame_smallheader {
+  font: "Dom Casual" plain 15;
+  text-align: center;
+  color: #7D4924;
+}
+
+endgame_cash {
+  font: "Dom Casual" plain 30;
+  text-align: center;
+  text-effect: shadow;
+  effect-color: #000000;
+}
+
+endgame_smallcash {
+  parent: "endgame_cash";
+  font: "Dom Casual" plain 24;
+}
+
+endgame_reward {
+  font: "Helvetica" plain 12;
+  text-align: center;
+  color: #442801;
+}
+
+endgame_total {
+  font: "Dom Casual" plain 30;
+  text-align: left;
+  text-effect: shadow;
+  effect-color: #000000;
+}
+
+endgame_smalltotal {
+  parent: "endgame_total";
+  font: "Dom Casual" plain 24;
+}
+
+endgame_stattotal {
+  parent: "endgame_smalltotal";
+  text-align: center;
+}
+
+endgame_stattotalhigh {
+  parent: "endgame_stattotal";
+  color: #FFFF66;
+}
+
+endgame_player0 {
+  parent: "avatar_view_unframed_8";
+  color: #0000CC;
+}
+
+endgame_player1 {
+  parent: "avatar_view_unframed_8";
+  color: #CC0000;
+}
+
+endgame_player2 {
+  parent: "avatar_view_unframed_8";
+  color: #00AA00;
+}
+
+endgame_player3 {
+  parent: "avatar_view_unframed_8";
+  color: #888800;
+}
+

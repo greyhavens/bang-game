@@ -58,6 +58,23 @@ public class ScenarioUtil
         }
     }
 
+    /**
+     * Returns true if this scenario involves cattle rustlin'.
+     */
+    public static boolean cattleRustling (String scenarioId)
+    {
+        return (ScenarioCodes.CATTLE_RUSTLING.equals(scenarioId));
+    }
+
+    /**
+     * Returns true if this scenario involves claiming nuggets.
+     */
+    public static boolean nuggetClaiming (String scenarioId)
+    {
+        return (ScenarioCodes.CLAIM_JUMPING.equals(scenarioId) ||
+                ScenarioCodes.GOLD_RUSH.equals(scenarioId));
+    }
+
     /** Maps town ids to a list of valid gameplay scenarios. */
     protected static HashMap<String,String[]> _scenmap =
         new HashMap<String,String[]>();
