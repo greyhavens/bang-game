@@ -566,7 +566,8 @@ public class EditorController extends GameController
             !StringUtil.isBlank(EditorApp.appArgs[0])) {
             loadBoard(new File(EditorApp.appArgs[0]), false);
         } else {
-            _bangobj.board = new BangBoard(32, 32);
+            _bangobj.board = new BangBoard(
+                BangBoard.DEFAULT_SIZE, BangBoard.DEFAULT_SIZE);
             _bangobj.setPieces(new PieceDSet());
         }
 

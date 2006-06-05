@@ -60,6 +60,9 @@ public class BangBoard extends SimpleStreamableObject
      * the edge of the playable region. */
     public static final int BORDER_SIZE = 12;
 
+    /** The default board size is 16x16 of playable area. */
+    public static final int DEFAULT_SIZE = 2*BORDER_SIZE + 16;
+
     /** The number of directional lights on the board. */
     public static final int NUM_LIGHTS = 2;
 
