@@ -10,20 +10,28 @@ BANG_HOME=`cd $BANG_HOME/.. ; pwd`
 
 cd $BANG_HOME
 
+TOWNS="frontier_town indian_post boom_town ghost_town city_gold"
+
 # Update our list of props
-find rsrc/props -name 'model.properties' | \
-  sed 's:rsrc/props/::g' | sed 's:/model.properties::' | sort > \
-  rsrc/props/props.txt
+for TOWN in $TOWNS; do
+    find rsrc/props/$TOWN -name 'model.properties' | \
+        sed 's:rsrc/props/::g' | sed 's:/model.properties::' | sort > \
+        rsrc/props/$TOWN/props.txt
+done
 
 # Update our list of units
-find rsrc/units -name 'unit.properties' | \
-  sed 's:rsrc/units/::g' | sed 's:/unit.properties::' | sort > \
-  rsrc/units/units.txt
+for TOWN in $TOWNS; do
+    find rsrc/units/$TOWN -name 'unit.properties' | \
+        sed 's:rsrc/units/::g' | sed 's:/unit.properties::' | sort > \
+        rsrc/units/$TOWN/units.txt
+done
 
 # Update our list of bonuses
-find rsrc/bonuses -name 'bonus.properties' | \
-  sed 's:rsrc/bonuses/::g' | sed 's:/bonus.properties::' | sort > \
-  rsrc/bonuses/bonuses.txt
+for TOWN in $TOWNS; do
+    find rsrc/bonuses/$TOWN -name 'bonus.properties' | \
+        sed 's:rsrc/bonuses/::g' | sed 's:/bonus.properties::' | sort > \
+        rsrc/bonuses/$TOWN/bonuses.txt
+done
 
 # Update our list of terrain codes
 find rsrc/terrain -name 'terrain.properties' | \
