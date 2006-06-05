@@ -32,7 +32,7 @@ server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
 
 #
 # Indicates which town is handled by this server. Valid values:
-# frontier_town, indian_village, boom_town, ghost_town, city_of_gold.
+# frontier_town, indian_post, boom_town, ghost_town, city_of_gold.
 
 town_id = frontier_town
 
