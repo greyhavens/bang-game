@@ -41,7 +41,7 @@ public class BonusPointEffect extends BonusEffect
             return;
         }
         // grant points to the activating player
-        bangobj.grantPoints(piece.owner, BONUS_POINTS);
+        bangobj.grantBonusPoints(piece.owner, BONUS_POINTS);
     }
 
     @Override // documentation inherited

@@ -44,6 +44,7 @@ public abstract class Stat
 
         // stats accumulated during a game
         DAMAGE_DEALT(new IntStat()),
+        BONUS_POINTS(new IntStat()),
 
         // stats accumulated during a game and persisted
         UNITS_KILLED(new IntStat()),

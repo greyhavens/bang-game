@@ -224,7 +224,7 @@ public class BangBoardView extends BoardView
                     super.fadeComplete();
                     // once we've faded in fully, attach it normally...
                     _ctx.getInterface().attachChild(_marquee);
-                    // Fade out the marquee
+                    // then clear it
                     clearMarquee(0f);
                     // let the controller know to show the stats page
                     _ctrl.interRoundMarqueeFadeComplete();

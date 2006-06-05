@@ -477,6 +477,17 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Grants the specified number of bonus points to the specified player.
+     * The total points will be also be updated by a call to 
+     * <code>grandPoints<code>.
+     */
+    public void grantBonusPoints (int pidx, int amount)
+    {
+        stats[pidx].incrementStat(Stat.Type.BONUS_POINTS, amount);
+        grantPoints(pidx, amount);
+    }
+    
+    /**
      * Grants the specified number of points to the specified player, updating
      * their {@link #points} and updating the appropriate earned points
      * statistic.
