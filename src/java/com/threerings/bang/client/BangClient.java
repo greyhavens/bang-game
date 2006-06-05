@@ -518,6 +518,18 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Causes any currently playing music to fade out over the period.
+     */
+    public void fadeOutMusic (float period)
+    {
+        if (_mstream != null && _mstream.isPlaying()) {
+            _mstream.fadeOut(period, true);
+            _mstream = null;
+            _playingMusic = null;
+        }
+    }
+
+    /**
      * Parses some system properties and starts a quick test game vs the
      * computer. Used by developers.
      */
