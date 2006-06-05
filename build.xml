@@ -95,6 +95,7 @@
        <exclude name="fences/**"/>
        <exclude name="boards/**"/>
        <exclude name="avatars/**"/>
+       <exclude name="goods/**"/>
        <exclude name="sounds/**"/>
        <exclude name="tutorials/**/*.xml"/>
        <exclude name="config/**/*.xml"/>
@@ -165,6 +166,10 @@
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
       <include name="**/*.wav"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/goods/${town}/bundle.jar" basedir="rsrc/goods/${town}">
+      <include name="**/*.png"/>
       <exclude name="**/source/**"/>
     </jar>
   </target>
@@ -426,6 +431,12 @@
 
   <!-- builds the avatar, media and sounds jar files -->
   <target name="mdist" depends="prepare,models,sounds,bits,avatars">
+    <jar file="rsrc/goods/bundle.jar" basedir="rsrc/goods">
+      <include name="cards/**/*.png"/>
+      <include name="passes/**/*.png"/>
+      <include name="purses/**/*.png"/>
+      <exclude name="**/source/**"/>
+    </jar>
     <jar file="rsrc/bundle.jar" basedir="${deploy.dir}/classes/rsrc"/>
     <jar destfile="${deploy.dir}/${app.name}-config.jar">
       <fileset dir=".">
