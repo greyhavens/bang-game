@@ -478,8 +478,7 @@ public class BangObject extends GameObject
 
     /**
      * Grants the specified number of bonus points to the specified player.
-     * The total points will be also be updated by a call to 
-     * <code>grandPoints<code>.
+     * Their total points will be updated by a call to {@link #grantPoints}.
      */
     public void grantBonusPoints (int pidx, int amount)
     {
