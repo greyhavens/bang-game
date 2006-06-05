@@ -93,8 +93,11 @@ public class PieceChooser extends JPanel
     protected void addPiece (DefaultMutableTreeNode root, String type,
         Piece piece)
     {
-        String prefix = (root.getUserObject() instanceof PieceCategory) ?
-            ((PieceCategory)root.getUserObject()).key + "_" : "";
+        String prefix = "";
+        if (root.getUserObject() instanceof PieceCategory &&
+            !((PieceCategory)root.getUserObject()).townCategory) {
+            prefix = ((PieceCategory)root.getUserObject()).key + "_";
+        }
         
         int idx = type.indexOf('/');
         if (idx == -1) {
@@ -126,11 +129,19 @@ public class PieceChooser extends JPanel
     protected class PieceCategory
     {
         public String name, key;
-        
+        public boolean townCategory;
+
         public PieceCategory (String name, String key)
         {
             this.name = name;
             this.key = key;
+
+            for (String townId : BangCodes.TOWN_IDS) {
+                if (townId.equals(key)) {
+                    townCategory = true;
+                    break;
+                }
+            }
         }
         
         public String toString ()
