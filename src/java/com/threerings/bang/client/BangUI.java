@@ -56,6 +56,7 @@ import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -265,9 +266,11 @@ public class BangUI
      */
     public static void playShopEntry (String townId, String shoppe)
     {
-        // TODO: redo this using the new streaming support
-        Sound sound = _sgroup.getSound(
-            "menu/" + townId + "/" + shoppe + ".wav");
+        String tpath = "menu/" + townId + "/" + shoppe + ".wav";
+        if (!SoundUtil.haveSound(tpath)) {
+            tpath = "menu/" + shoppe + ".wav";
+        }
+        Sound sound = _sgroup.getSound(tpath);
         if (sound != null) {
             sound.play(true);
         }
