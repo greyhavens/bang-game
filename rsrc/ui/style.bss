@@ -1059,19 +1059,19 @@ avatar_view {
   vertical-align: bottom;
 }
 
-avatar_framed_2 {
+avatar_view_framed_2 {
   parent: "avatar_view";
   background: image "ui/frames/big_background.png" centerxy;
   font: "Dom Casual" plain 24;
 }
 
-avatar_framed_4 {
+avatar_view_framed_4 {
   parent: "avatar_view";
   font: "Dom Casual" plain 14;
   background: image "ui/frames/medium_background.png" centerxy;
 }
 
-avatar_framed_8 {
+avatar_view_framed_8 {
   font: "Dom Casual" plain 13;
   padding: 0 0 5 0;
 }
