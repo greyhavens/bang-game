@@ -90,7 +90,8 @@ public class GoodsCatalog
         for (ArticleCatalog.Article article :
                  _alogic.getArticleCatalog().getArticles()) {
             ArticleGood good = new ArticleGood(
-                article.name, article.scrip, article.coins);
+                article.townId + "/" + article.name, article.scrip,
+                article.coins);
             registerGood(article.townId, good, pf);
         }
 

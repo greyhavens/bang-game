@@ -26,6 +26,32 @@ import static com.threerings.bang.Log.log;
  */
 public class Article extends Item
 {
+    /**
+     * Returns the path to the icon for an article of the specified type.
+     */
+    public static String getIconPath (String type)
+    {
+        int sidx = type.lastIndexOf("/");
+        String townId;
+        if (sidx == -1) {
+            // legacy articles
+            townId = BangCodes.FRONTIER_TOWN;
+        } else {
+            townId = type.substring(0, sidx);
+            type = type.substring(sidx+1);
+        }
+        return "goods/" + townId + "/articles/" + type + ".png";
+    }
+
+    /**
+     * Returns a translatable name for an article of the specified type.
+     */
+    public static String getName (String type)
+    {
+        type = type.substring(type.lastIndexOf("/")+1);
+        return MessageBundle.qualify(AvatarCodes.ARTICLE_MSGS, "m." + type);
+    }
+
     /** A blank constructor used during unserialization. */
     public Article ()
     {
@@ -62,7 +88,7 @@ public class Article extends Item
     @Override // documentation inherited
     public String getName ()
     {
-        return MessageBundle.qualify(AvatarCodes.ARTICLE_MSGS, "m." + _name);
+        return getName(_name);
     }
 
     @Override // documentation inherited
@@ -74,7 +100,7 @@ public class Article extends Item
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "goods/articles/" + _name + ".png";
+        return getIconPath(_name);
     }
 
     @Override // documentation inherited

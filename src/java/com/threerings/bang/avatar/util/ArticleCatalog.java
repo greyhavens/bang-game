@@ -104,6 +104,7 @@ public class ArticleCatalog
      */
     public Article getArticle (String article)
     {
+        article = article.substring(article.lastIndexOf("/")+1);
         return _articles.get(article);
     }
 

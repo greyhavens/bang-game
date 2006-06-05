@@ -7,6 +7,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BangCodes;
 
@@ -31,21 +32,21 @@ public class ArticleGood extends Good
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "goods/articles/" + _type + ".png";
+        return Article.getIconPath(_type);
     }
 
     @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
         // make sure the gender matches
-        boolean isMale = _type.startsWith("male");
+        boolean isMale = (_type.indexOf("female") == -1);
         return user.isMale == isMale;
     }
 
     @Override // documentation inherited
     public String getName ()
     {
-        return MessageBundle.qualify(AvatarCodes.ARTICLE_MSGS, "m." + _type);
+        return Article.getName(_type);
     }
 
     @Override // documentation inherited
