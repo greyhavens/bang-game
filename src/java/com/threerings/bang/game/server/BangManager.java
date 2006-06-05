@@ -1557,6 +1557,11 @@ public class BangManager extends GameManager
      */
     protected int computeEarnings (int pidx)
     {
+        // if we never set up our ranks, then no one gets nuthin
+        if (_ranks == null) {
+            return 0;
+        }
+
         int earnings = 0;
         for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
             // if the round was not played, skip it
