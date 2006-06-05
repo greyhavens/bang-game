@@ -28,7 +28,8 @@ public class BonusSprite extends PieceSprite
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
-        return "bonus_" + _type;
+        // strip off the town prefix when reporting our bonus type
+        return "bonus_" + _type.substring(_type.lastIndexOf("/")+1);
     }
 
     @Override // documentation inherited
