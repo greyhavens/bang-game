@@ -5,6 +5,8 @@ package com.threerings.bang.data;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.UnitConfig;
+
 /**
  * Provides access to a particular type of unit in games.
  */
@@ -33,14 +35,13 @@ public class UnitPass extends Item
     @Override // documentation inherited
     public String getName ()
     {
-        return MessageBundle.qualify(
-            BangCodes.UNITS_MSGS, "m." + _unit + "_pass");
+        return UnitConfig.getName(_unit) + "_pass";
     }
 
     @Override // documentation inherited
     public String getTooltip ()
     {
-        String msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m." + _unit);
+        String msg = UnitConfig.getName(_unit);
         msg = MessageBundle.compose("m.unit_pass_tip", msg);
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }

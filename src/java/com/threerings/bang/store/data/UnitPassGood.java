@@ -53,15 +53,13 @@ public class UnitPassGood extends Good
     @Override // documentation inherited
     public String getName ()
     {
-        return MessageBundle.qualify(
-            BangCodes.UNITS_MSGS, "m." + getUnitType() + "_pass");
+        return UnitConfig.getName(getUnitType()) + "_pass";
     }
 
     @Override // documentation inherited
     public String getTip ()
     {
-        String msg = MessageBundle.qualify(
-            BangCodes.UNITS_MSGS, "m." + getUnitType());
+        String msg = UnitConfig.getName(getUnitType());
         msg = MessageBundle.compose("m.unit_pass_tip", msg);
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
