@@ -1,4 +1,4 @@
-293
+294
 female/clothing_back := bodice := 174
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
@@ -219,6 +219,7 @@ male/hat := ten_gallon := 259
 male/hat := widebrim := 44
 male/hat_back := cowboy := 12
 male/hat_back := feather_double := 45
+male/hat_back := feather_one := 294
 male/hat_back := feather_single := 46
 male/hat_back := sombrero := 260
 male/hat_back := stetson := 233

@@ -34,5 +34,8 @@
     <antcall target="town_bundles">
       <param name="town" value="frontier_town"/>
     </antcall>
+    <antcall target="town_bundles">
+      <param name="town" value="indian_post"/>
+    </antcall>
   </target>
 </project>
