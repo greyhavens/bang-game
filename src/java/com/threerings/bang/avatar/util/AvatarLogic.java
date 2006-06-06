@@ -437,7 +437,8 @@ public class AvatarLogic
                         "[pid=" + playerId + ", article=" + article + "].");
             return null;
         }
-        return new Article(playerId, article.slot, article.name,
+        String type = article.townId + "/" + article.name;
+        return new Article(playerId, article.slot, type,
                            getComponentIds(article, zations));
     }
 
