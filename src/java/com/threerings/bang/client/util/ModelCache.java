@@ -153,6 +153,9 @@ public class ModelCache
             if (_model != null) {
                 _model.lockStaticMeshes(_ctx.getRenderer(), Config.useVBOs,
                     Config.useDisplayLists);
+                if (!BangPrefs.isMediumDetail()) {
+                    _model.setAnimationResolution(30f);
+                }
                 _prototypes.put(_key, _model);
                 rl.requestCompleted(_model);
                 
