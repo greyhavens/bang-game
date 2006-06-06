@@ -1163,6 +1163,12 @@ ranch_unit_cost {
   color: #FFFFFF;
 }
 
+ranch_practice_info {
+  font: "Helvetica" plain 14;
+  text-align: center;
+  color: #FFFFFF;
+}
+
 ranch_recruit {
   font: "Dom Casual" plain 19;
   color: #4C2804;

@@ -29,6 +29,10 @@ public class BangConfig extends GameConfig
      * a tutorial game will be created. */
     public boolean tutorial = false;
 
+    /** If true, the scenario will be interpreted as a practice sessions and
+     * a practice game will be created. */
+    public boolean practice = false;
+
     /** Specifies the exact name of the board to be used instead of choosing
      * randomly. This is used when testing. */
     public String board;

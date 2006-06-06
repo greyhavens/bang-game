@@ -462,8 +462,8 @@ public class BangController extends GameController
 
         // once the awards are set, we can display the end of game view
         if (event.getName().equals(BangObject.AWARDS) &&
-            // we handle things specially in the tutorial
-            !_config.tutorial) {
+            // we handle things specially in the tutorial and practice
+            !_config.tutorial && !_config.practice) {
             _postGameMultex.satisfied(Multex.CONDITION_TWO);
         }
     }
@@ -479,7 +479,8 @@ public class BangController extends GameController
     protected boolean stateDidChange (int state)
     {
         if (state == BangObject.SELECT_PHASE ||
-            state == BangObject.PRE_TUTORIAL) {
+            state == BangObject.PRE_TUTORIAL ||
+            state == BangObject.PRE_PRACTICE) {
             _startRoundMultex.satisfied(Multex.CONDITION_ONE);
             return true;
 
@@ -560,7 +561,7 @@ public class BangController extends GameController
             // display the player status displays
             _view.showPlayerStatus();
         }
-        if (_config.tutorial || _config.allPlayersAIs()) {
+        if (_config.tutorial || _config.practice || _config.allPlayersAIs()) {
             // we re-use the playerReady mechanism to communicate that we're
             // ready for our tutorial/test game
             playerReady();
@@ -597,6 +598,12 @@ public class BangController extends GameController
     {
         // potentially display the post-game stats
         _postGameMultex.satisfied(Multex.CONDITION_ONE);
+        
+        if (_config.practice) {
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            _ctx.getLocationDirector().moveTo(bbd.ranchOid);
+        }
     }
 
     /**

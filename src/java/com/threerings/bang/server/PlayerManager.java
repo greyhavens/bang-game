@@ -389,6 +389,43 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
+    public void playPractice (
+        ClientObject caller, String unit, PlayerService.InvocationListener il)
+        throws InvocationException
+    {
+        PlayerObject player = (PlayerObject)caller;
+
+        // if we're not allowing new games, fail immediately
+        if (!RuntimeConfig.server.allowNewGames) {
+            throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
+        }
+
+        // create our AI opponent
+        HashSet<String> names = new HashSet<String>();
+        names.add(player.getVisibleName().toString());
+        BangAI ai = BangAI.createAI(1, 50, names);
+
+        // create a game configuration
+        BangConfig config = new BangConfig();
+        config.rated = false;
+        config.players = new Name[] { player.getVisibleName(), ai.handle };
+        config.ais = new BangAI[] { null, ai };
+        config.scenarios = new String[] { unit };
+        config.board = "Practice";
+        config.practice = true;
+        config.teamSize = 4;
+        
+        // create the practice game manager and it will handle the rest
+        try {
+            BangServer.plreg.createPlace(config, null);
+        } catch (InstantiationException ie) {
+            log.log(Level.WARNING, "Error instatntiating practice " +
+                "[for=" + player.who() + ", config=" + config + "].", ie);
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+    }
+
+    // documentation inherited from interface PlayerProvider
     public void playComputer (
         ClientObject caller, int players, String[] scenarios, String board,
         boolean autoplay, PlayerService.InvocationListener listener)

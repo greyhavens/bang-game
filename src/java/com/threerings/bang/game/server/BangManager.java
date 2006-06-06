@@ -73,6 +73,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.server.ai.AILogic;
+import com.threerings.bang.game.server.scenario.Practice;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.game.server.scenario.Tutorial;
@@ -446,6 +447,11 @@ public class BangManager extends GameManager
             _bangobj.setState(BangObject.PRE_TUTORIAL);
             break;
 
+        case BangObject.PRE_PRACTICE:
+            resetPreparingStatus(true);
+            _bangobj.setState(BangObject.PRE_PRACTICE);
+            break;
+
         case BangObject.SELECT_PHASE:
             resetPreparingStatus(false);
             _bangobj.setState(BangObject.SELECT_PHASE);
@@ -619,6 +625,7 @@ public class BangManager extends GameManager
 
         case BangObject.SELECT_PHASE:
         case BangObject.PRE_TUTORIAL:
+        case BangObject.PRE_PRACTICE:
             // start the test/tutorial
             _scenario.startNextPhase(_bangobj);
             break;
@@ -717,6 +724,15 @@ public class BangManager extends GameManager
             // be ready to start the tutorial; normally they'd select their
             // bigshot, but that doesn't happen in a tutorial
             resetPlayerOids();
+
+        } else if (_bconfig.practice) {
+            _bangobj.setScenarioId(ScenarioCodes.PRACTICE);
+            _scenario = new Practice();
+            // we reuse the playerIsReady() mechanism to wait for the player to
+            // be ready to start the practice; normally they'd select their
+            // bigshot, but that doesn't happen in a practice session
+            resetPlayerOids();
+
         } else {
             _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);
             _scenario = ScenarioFactory.createScenario(_bangobj.scenarioId);
@@ -924,6 +940,18 @@ public class BangManager extends GameManager
         }
 
         // initialize and prepare the units
+        initAndPrepareUnits(units, pidx);
+
+        // note that this player is ready and potentially fire away
+        _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
+        checkStartNextPhase();
+    }
+
+    /**
+     * Utility method to initialize and prepare the units for a player.
+     */
+    public void initAndPrepareUnits (Unit[] units, int pidx)
+    {
         for (int ii = 0; ii < units.length; ii++) {
             units[ii].assignPieceId(_bangobj);
             units[ii].init();
@@ -931,10 +959,6 @@ public class BangManager extends GameManager
             units[ii].originalOwner = pidx;
             _purchases.add(units[ii]);
         }
-
-        // note that this player is ready and potentially fire away
-        _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
-        checkStartNextPhase();
     }
 
     /**

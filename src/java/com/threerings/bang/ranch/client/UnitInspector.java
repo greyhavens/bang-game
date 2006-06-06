@@ -18,6 +18,8 @@ import com.jmex.bui.util.Point;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.MoneyLabel;
+import com.threerings.bang.client.PlayerService;
+import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
@@ -74,6 +76,15 @@ public class UnitInspector extends BContainer
         BButton btn = new BButton(_msgs.get("m.recruit"), this, "recruit");
         btn.setStyleClass("big_button");
         _recruit.add(btn, new Point(105, 0));
+
+        // we'll use this group to start practice scenarios
+        _practice = new BContainer(new AbsoluteLayout());
+        _practice.add(new BLabel(
+                    _msgs.get("m.practice_desc"), "ranch_practice_info"),
+                new Point(65, 48));
+        btn = new BButton(_msgs.get("m.practice"), this, "practice");
+        btn.setStyleClass("big_button");
+        _practice.add(btn, new Point(82, 0));
     }
 
     /**
@@ -116,19 +127,29 @@ public class UnitInspector extends BContainer
         _uview.setUnit(config);
 
         // Big Shots have some additional user interface bits
-        boolean showRecruit = false, showCustomize = false;
+        boolean showRecruit = false, 
+                showCustomize = false, 
+                showPractice = false;
         if (config.rank == UnitConfig.Rank.BIGSHOT) {
             if (_itemId == -1) {
                 showRecruit = true;
                 _cost.setMoney(config.scripCost, config.coinCost, false);
             } else {
+                showPractice = true;
                 showCustomize = true;
             }
+        } else {
+            showPractice = true;
         }
         if (showRecruit && !_recruit.isAdded()) {
             add(_recruit, GroupLayout.FIXED);
         } else if (!showRecruit && _recruit.isAdded()) {
             remove(_recruit);
+        }
+        if (showPractice && !_practice.isAdded()) {
+            add(_practice, GroupLayout.FIXED);
+        } else if (!showPractice && _practice.isAdded()) {
+            remove(_practice);
         }
         // TODO: handle customize
     }
@@ -144,6 +165,15 @@ public class UnitInspector extends BContainer
                                       _config), true, 400);
             }
 
+        } else if ("practice".equals(event.getAction())) {
+            if (_config != null) {
+                PlayerService psvc = (PlayerService)
+                    _ctx.getClient().requireService(PlayerService.class);
+                ReportingListener rl = new ReportingListener(
+                    _ctx, "ranch", "m.start_prac_failed");
+                psvc.playPractice(_ctx.getClient(), _config.type, rl);
+            }
+
         } else if ("customize".equals(event.getAction())) {
             // setText("Not yet implemented. Sorry.");
         }
@@ -156,7 +186,7 @@ public class UnitInspector extends BContainer
     protected int _itemId = -1;
     protected UnitConfig _config;
 
-    protected BContainer _recruit, _customize;
+    protected BContainer _recruit, _customize, _practice;
     protected UnitBonus _ubonus;
     protected MoneyLabel _cost;
     protected UnitView _uview;

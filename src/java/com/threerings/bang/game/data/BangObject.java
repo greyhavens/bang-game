@@ -153,6 +153,9 @@ public class BangObject extends GameObject
     /** A {@link #state} constant indicating the post-round phase. */
     public static final int POST_ROUND = 7;
 
+    /** A {@link #state} constant used by the practice scenario. */
+    public static final int PRE_PRACTICE = 8;
+
     /** A {@link #playerStatus} constant used before the game starts. */
     public static final int PLAYER_PREPARING = 2;
 

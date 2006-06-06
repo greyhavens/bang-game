@@ -48,6 +48,12 @@ public interface PlayerService extends InvocationService
         Client client, String tutid, InvocationListener listener);
 
     /**
+     * Request to play a practice session with the specified unit.
+     */
+    public void playPractice (
+        Client client, String unit, InvocationListener listener);
+
+    /**
      * Requests to play a single round match against the computer.
      */
     public void playComputer (
