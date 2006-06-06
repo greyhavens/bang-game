@@ -25,7 +25,8 @@
 
   <!-- explain that cattle can be rebranded -->
   <text message="cattle_rebranding" step="2"/>
-  <add_piece what="unit" id="1003" type="cavalry" location="16,14" owner="1"/>
+  <add_piece what="unit" id="1003" type="frontier_town/cavalry"
+             location="16,14" owner="1"/>
   <center_on what="piece" id="1003"/>
   <wait event="text_clicked"/>
 

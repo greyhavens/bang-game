@@ -3,15 +3,20 @@
 <tutorial ident="test" board="Sunset Raid" players="2">
   <show_view name="player_status"/>
 
-  <add_piece what="unit" id="1000" type="gunslinger" location="16,16"
-     owner="0"/>
-  <add_piece what="unit" id="1001" type="artillery" location="17,17" owner="1"/>
-  <add_piece what="unit" id="1002" type="tactician" location="16,14" owner="0"/>
-  <add_piece what="unit" id="1003" type="dirigible" location="14,14" owner="1"/>
-  <add_piece what="unit" id="1004" type="cow" location="14,17" owner="-1"/>
-  <add_piece what="unit" id="1005" type="cow" location="15,15" owner="-1"/>
+  <add_piece what="unit" id="1000" type="frontier_town/gunslinger"
+     location="16,16" owner="0"/>
+  <add_piece what="unit" id="1001" type="frontier_town/artillery"
+     location="17,17" owner="1"/>
+  <add_piece what="unit" id="1002" type="frontier_town/tactician"
+     location="16,14" owner="0"/>
+  <add_piece what="unit" id="1003" type="frontier_town/dirigible"
+     location="14,14" owner="1"/>
+  <add_piece what="unit" id="1004" type="frontier_town/cow" location="14,17"
+     owner="-1"/>
+  <add_piece what="unit" id="1005" type="frontier_town/cow" location="15,15"
+     owner="-1"/>
 
-  <add_piece what="bonus" type="card" location="14,18"/>
+  <add_piece what="bonus" type="frontier_town/card" location="14,18"/>
 
   <text message="start_test"/>
   <wait event="text_clicked"/>
