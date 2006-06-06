@@ -29,6 +29,6 @@ public class PowerUpEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "bonuses/power_up/activate";
+        return "bonuses/frontier_town/power_up/activate";
     }
 }

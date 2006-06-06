@@ -21,7 +21,7 @@ import static com.threerings.bang.Log.log;
 public class PlagueEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String PLAGUED = "bonuses/plague/activate";
+    public static final String PLAGUED = "bonuses/ghost_town/plague/activate";
 
     public int owner;
     public int[] pieceIds;

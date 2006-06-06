@@ -28,6 +28,6 @@ public class RamblinEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "bonuses/ramblin/activate";
+        return "bonuses/frontier_town/ramblin/activate";
     }
 }

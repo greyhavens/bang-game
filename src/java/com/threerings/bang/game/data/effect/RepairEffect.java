@@ -16,7 +16,8 @@ import static com.threerings.bang.Log.log;
 public class RepairEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String REPAIRED = "bonuses/repair/activate";
+    public static final String REPAIRED =
+        "bonuses/frontier_town/repair/activate";
 
     /** The identifier of the piece to be repaired. */
     public int pieceId;
