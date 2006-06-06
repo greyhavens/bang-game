@@ -1,0 +1,42 @@
+Runnin' Around the Beta Corral
+
+Howdy again pardners. It's our first post-beta blog update. It's been mighty
+busy here at the Ranch but things are settlin' down a bit and I reckon we got
+some fun stuff to share with ya.</p>
+
+<p>Firstly, there's the release notes for our beta update today:
+<ul>
+<li>Added a new practice mode in <b>The Ranch</b>. This allows ya to practice
+with a particular unit and learn the ins and outs of its capabilities.</li>
+
+<li>Added a fancy post-game stats display that shows how everybody earned their
+points (nuggets collected, cattle rustled, etc.) and a whole bunch of other fun
+stats that we keep track of during the game.</li>
+
+<li>Made further progress on improvin' performance and improvin' our support
+for lower end graphics cards. If things are runnin' slow for ya, press the
+<b>Escape</b> key and try lowering that detail slider to medium or low. Soon
+we'll make the game figger out when to do this automatically, but for now you
+can give it a whirl yerself.</li>
+
+<li>Fixed the broken support for MacOS X. Sorry about that one pardners.
+Unfortunately you're going to have to reinstall to get things working
+again.</li>
+</ul>
+</p>
+
+<p>We got a new programmer workin' on the project, Mark. You can thank him fer
+the practice scenario and the fancy new post-game stats display. He's workin'
+on some other improvements to the basic gameplay now so I reckon we'll have
+more fun stuff for ya next week. Andrzej's still hard at work on our graphics
+engine, makin' it work better on low-end cards. We've also got two new artists
+helpin' out: Josh and Ian. They're workin' on Indian Trading Post unit models
+and animations. Meanwhile, I'm workin' on wiring up the purchase of gold coins.
+That's gonna be pretty important if we want to keep payin' the bills here at
+the Triple-O Ranch.</p>
+
+<p>Hope yer havin' fun in Frontier Town. We'll be back again next week with
+some more info on new Indian Trading Post units.</p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
+
