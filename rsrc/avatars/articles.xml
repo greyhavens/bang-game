@@ -2,7 +2,7 @@
 <!-- $Id$ -->
 
 <articles>
-  <!-- male clothing -->
+  <!-- male clothing: frontier town -->
   <article name="male_suit_cards" townId="frontier_town"
            slot="clothing" scrip="2750" coins="3">
     <component cclass="male/clothing_back" name="a_suit"/>
@@ -65,9 +65,9 @@
     <component cclass="male/clothing_back" name="shirt_collar"/>
   </article>
 
-  <!-- male familiars -->
+  <!-- male familiars: frontier town -->
 
-  <!-- male eye glasses -->
+  <!-- male eye glasses: frontier town -->
   <article name="male_round_glasses" townId="frontier_town"
            slot="glasses" scrip="1000" coins="2">
     <component cclass="male/glasses" name="round"/>
@@ -78,7 +78,7 @@
     <component cclass="male/glasses" name="steamgoggles"/>
   </article>
 
-  <!-- male hats -->
+  <!-- male hats: frontier town -->
   <article name="male_stetson_bare" townId="frontier_town"
            slot="hat" scrip="1500" coins="2" colors="clothes_p">
     <component cclass="male/hat" name="stetson"/>
@@ -188,13 +188,19 @@
     <component cclass="male/hat_back" name="sombrero"/>
   </article>
 
+  <!-- male hats: frontier town -->
+  <article name="male_feather_one" townId="indian_post"
+           slot="hat" scrip="2000" coins="2">
+    <component cclass="male/hat_back" name="feather_one"/>
+  </article>
 
-  <!-- male jewelry -->
 
-  <!-- male face paint -->
+  <!-- male jewelry: frontier town -->
+
+  <!-- male face paint: frontier town -->
 
 
-  <!-- female clothing -->
+  <!-- female clothing: frontier town -->
   <article name="female_gunslinger" townId="frontier_town"
            slot="clothing" scrip="1500" coins="1" starter="true">
     <component cclass="female/clothing_back" name="gunslinger"/>
@@ -250,11 +256,11 @@
     <component cclass="female/clothing_front" name="book_frontier_dress"/>
   </article>
 
-  <!-- female familiars -->
+  <!-- female familiars: frontier town -->
 
-  <!-- female eye glasses -->
+  <!-- female eye glasses: frontier town -->
 
-  <!-- female hats -->
+  <!-- female hats: frontier town -->
   <article name="female_longbrim" townId="frontier_town"
            slot="hat" scrip="750" coins="0" colors="clothes_p">
     <component cclass="female/hat" name="longbrim"/>
@@ -348,8 +354,8 @@
   </article>
 
 
-  <!-- female jewelry -->
+  <!-- female jewelry: frontier town -->
 
-  <!-- female face paint -->
+  <!-- female face paint: frontier town -->
 
 </articles>
