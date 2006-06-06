@@ -48,7 +48,7 @@ resource = rsrc/avatars/frontier_town/male/components.jar
 resource = rsrc/avatars/indian_post/female/components.jar
 resource = rsrc/avatars/indian_post/male/components.jar
 resource = rsrc/avatars/metadata.jar
-resource = rsrc/config/resource/frontier_town/manager.properties
+resource = rsrc/config/resource/manager.properties
 
 # Media resources that will be unpacked
 uresource = rsrc/bundle.jar
