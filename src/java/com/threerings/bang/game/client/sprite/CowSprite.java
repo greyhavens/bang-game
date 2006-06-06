@@ -24,7 +24,7 @@ public class CowSprite extends MobileSprite
 {
     public CowSprite ()
     {
-        super("extras", "cow");
+        super("extras", "frontier_town/cow");
     }
 
     @Override // documentation inherited
