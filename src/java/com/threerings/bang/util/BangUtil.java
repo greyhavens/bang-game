@@ -6,7 +6,6 @@ package com.threerings.bang.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -107,13 +106,14 @@ public class BangUtil
         ArrayList<String> lines = new ArrayList<String>();
         for (String townId : BangCodes.TOWN_IDS) {
             String tpath = path.replace("TOWN", townId);
-            File file = getResourceFile(tpath);
-            if (!file.exists()) {
+            InputStream in = getResourceAsStream(tpath);
+            if (in == null) {
                 continue;
             }
 
             try {
-                BufferedReader bin = new BufferedReader(new FileReader(file));
+                BufferedReader bin =
+                    new BufferedReader(new InputStreamReader(in));
                 String line;
                 while ((line = bin.readLine()) != null) {
                     lines.add(line);
