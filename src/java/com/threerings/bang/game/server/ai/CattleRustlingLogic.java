@@ -329,7 +329,7 @@ public class CattleRustlingLogic extends AILogic
         public int getWeight (Unit unit, Unit target) {
             UnitConfig.Rank rank = target.getConfig().rank;
             return (rank == UnitConfig.Rank.BIGSHOT ? 1000 : 0) +
-                unit.computeScaledDamage(target) * 100 + target.damage;
+                unit.computeScaledDamage(target, 1f) * 100 + target.damage;
         }
     };
 }

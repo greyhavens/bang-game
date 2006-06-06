@@ -213,11 +213,9 @@ public class Unit extends Piece
             targetInRange(shooter.x, shooter.y)) {
             // return fire shots are always executed at 75% health
             this.damage = 75;
-            shot = shoot(bangobj, shooter);
+            shot = shoot(bangobj, shooter, _config.returnFire/100f);
             shot.type = ShotEffect.RETURN_FIRE;
             this.damage = oldDamage;
-            // scale the damage if so specified in the unit config
-            shot.newDamage = (_config.returnFire * shot.newDamage) / 100;
         }
         return shot;
     }

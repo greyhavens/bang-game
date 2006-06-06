@@ -362,14 +362,16 @@ public abstract class Piece extends SimpleStreamableObject
 
     /**
      * Creates an effect that will "shoot" the specified target piece.
+     *
+     * @param scale a value that should be used to scale the damage done.
      */
-    public ShotEffect shoot (BangObject bangobj, Piece target)
+    public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
     {
         // create a basic shot effect
         ShotEffect shot = new ShotEffect(
-            this, target, computeScaledDamage(target));
+            this, target, computeScaledDamage(target, scale));
         // give the target a chance to deflect the shot
-        return target.deflect(bangobj, this, shot);
+        return target.deflect(bangobj, this, shot, scale);
     }
 
     /**
@@ -380,7 +382,7 @@ public abstract class Piece extends SimpleStreamableObject
      * shot effect that has been properly deflected.
      */
     public ShotEffect deflect (
-        BangObject bangobj, Piece shooter, ShotEffect effect)
+        BangObject bangobj, Piece shooter, ShotEffect effect, float scale)
     {
         // default is no deflection
         return effect;
@@ -563,10 +565,13 @@ public abstract class Piece extends SimpleStreamableObject
     
     /**
      * Computes the actual damage done if this piece were to fire on the
-     * specified target, accounting for this piece's current damage level
-     * and other limiting factors.
+     * specified target, accounting for this piece's current damage level and
+     * other limiting factors.
+     *
+     * @param scale a value that should be used to scale the damage after all
+     * other factors have been considered.
      */
-    public int computeScaledDamage (Piece target)
+    public int computeScaledDamage (Piece target, float scale)
     {
         // compute the damage we're doing to this piece
         int ddamage = computeDamage(target);
@@ -584,8 +589,8 @@ public abstract class Piece extends SimpleStreamableObject
             ddamage = ((Unit)target).influence.adjustDefend(this, ddamage);
         }
 
-        // finally, always do at least 1 point of damage
-        return Math.max(1, ddamage);
+        // finally, always do at least 1 point of damage (TODO: iron plate?)
+        return Math.max(1, Math.round(scale * ddamage));
     }
     
     /** Returns the frequency with which this piece can move. */

@@ -171,7 +171,7 @@ public class ClaimJumpingLogic extends AILogic
         public int getWeight (Unit unit, Unit target) {
             UnitConfig.Rank rank = target.getConfig().rank;
             return (target.benuggeted ? 1000 : 0) +
-                unit.computeScaledDamage(target) * 100 + target.damage;
+                unit.computeScaledDamage(target, 1f) * 100 + target.damage;
         }
     };
     

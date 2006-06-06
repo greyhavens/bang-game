@@ -22,16 +22,16 @@ public class Tactician extends Unit
     public short lastFired = -4;
 
     @Override // documentation inherited
-    public ShotEffect shoot (BangObject bangobj, Piece target)
+    public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
     {
         // note our last fired time
         lastFired = bangobj.tick;
-        return super.shoot(bangobj, target);
+        return super.shoot(bangobj, target, scale);
     }
 
     @Override // documentation inherited
-    public ShotEffect deflect (
-        BangObject bangobj, Piece shooter, ShotEffect effect)
+    public ShotEffect deflect (BangObject bangobj, Piece shooter,
+                               ShotEffect effect, float scale)
     {
         // if it has been less than one one full turn since we fired, our
         // umbrella is "in use" and we don't deflect anything
@@ -79,7 +79,8 @@ public class Tactician extends Unit
         if (ntarget == null) {
             effect.deflectShot(nx, ny);
         } else {
-            effect.setTarget(ntarget, shooter.computeScaledDamage(ntarget));
+            effect.setTarget(
+                ntarget, shooter.computeScaledDamage(ntarget, scale));
         }
 
         return effect;

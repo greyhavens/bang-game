@@ -359,7 +359,7 @@ public class BangManager extends GameManager
                 // effect the initial shot
                 log.fine("Shooting " + target.info() +
                          " with " + shooter.info());
-                ShotEffect effect = shooter.shoot(_bangobj, target);
+                ShotEffect effect = shooter.shoot(_bangobj, target, 1f);
                 // the initial shot updates the shooter's last acted
                 effect.shooterLastActed = _bangobj.tick;
 
