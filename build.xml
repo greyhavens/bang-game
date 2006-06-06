@@ -427,13 +427,18 @@
 
   <!-- builds the avatar, media and sounds jar files -->
   <target name="mdist" depends="prepare,models,sounds,bits,avatars">
+    <!-- put our non-town-specific goods resources in a bundle -->
     <jar file="rsrc/goods/bundle.jar" basedir="rsrc/goods">
       <include name="cards/**/*.png"/>
       <include name="passes/**/*.png"/>
       <include name="purses/**/*.png"/>
       <exclude name="**/source/**"/>
     </jar>
+
+    <!-- our top-level resources have all been copied into dist/ -->
     <jar file="rsrc/bundle.jar" basedir="${deploy.dir}/classes/rsrc"/>
+
+    <!-- collect up various configuration bits needed by the client -->
     <jar destfile="${deploy.dir}/bang-config.jar">
       <fileset dir=".">
         <include name="rsrc/**/*.txt"/>
@@ -447,6 +452,17 @@
         <exclude name="rsrc/props/**"/>
         <exclude name="rsrc/bonuses/**"/>
         <exclude name="rsrc/extras/**"/>
+      </fileset>
+    </jar>
+
+    <!-- the server can't access things in the bundle files, so we make one -->
+    <!-- big file with all of our bunt, prop, bonus and other properties -->
+    <jar destfile="${deploy.dir}/bang-server-config.jar">
+      <fileset dir=".">
+        <include name="rsrc/**/*.txt"/>
+        <include name="rsrc/**/*.properties"/>
+        <include name="rsrc/**/*.dat"/>
+        <exclude name="**/model.properties"/>
       </fileset>
     </jar>
   </target>
