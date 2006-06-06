@@ -1,11 +1,6 @@
 <!-- build configuration -->
 <project name="bang" default="compile" basedir=".">
 
-  <!-- define some basic project parameters -->
-  <property name="app.name"         value="bang"/>
-  <property name="doc.packages"     value="com.threerings.bang.*"/>
-  <property name="copy.holder"      value="Three Rings Design, Inc."/>
-
   <!-- read in our deployment properties -->
   <property file="deployment.properties"/>
   <property file="build.properties"/>
@@ -20,7 +15,7 @@
   <!-- declare our classpath -->
   <path id="classpath">
     <pathelement location="${deploy.dir}/classes"/>
-    <fileset dir="dist" includes="${app.name}-code.jar"/>
+    <fileset dir="dist" includes="bang-code.jar"/>
     <fileset dir="lib" includes="**/*.jar"/>
   </path>
 
@@ -281,11 +276,12 @@
 
   <!-- build the javadoc documentation -->
   <target name="javadoc" depends="prepare">
+    <property name="copy.holder" value="Three Rings Design, Inc."/>
     <javadoc sourcepath="${src.dir}"
-             packagenames="${doc.packages}"
-             windowtitle="${app.name} API"
-             doctitle="${app.name} API"
-             bottom="Copyright &#169; 2005 ${copy.holder}. All Rights Reserved."
+             packagenames="com.threerings.bang.*"
+             windowtitle="Bang! Howdy API"
+             doctitle="Bang! Howdy API"
+             bottom="Copyright &#169; 2006 ${copy.holder}. All Rights Reserved."
              destdir="${javadoc.dir}"
              additionalparam="-breakiterator">
       <classpath refid="classpath"/>
@@ -425,7 +421,7 @@
 
   <!-- builds the distribution jar files -->
   <target name="dist" depends="prepare,compile">
-    <jar file="${deploy.dir}/${app.name}-code.jar"
+    <jar file="${deploy.dir}/bang-code.jar"
          basedir="${deploy.dir}/classes" includes="com/**"/>
   </target>
 
@@ -438,7 +434,7 @@
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/bundle.jar" basedir="${deploy.dir}/classes/rsrc"/>
-    <jar destfile="${deploy.dir}/${app.name}-config.jar">
+    <jar destfile="${deploy.dir}/bang-config.jar">
       <fileset dir=".">
         <include name="rsrc/**/*.txt"/>
         <include name="rsrc/**/*.properties"/>
