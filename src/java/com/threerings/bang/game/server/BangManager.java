@@ -1119,9 +1119,6 @@ public class BangManager extends GameManager
             // let the scenario do any end of round business
             _scenario.roundDidEnd(_bangobj);
 
-            // broadcast our updated statistics
-            _bangobj.setStats(_bangobj.stats);
-
             // if this is the last round, end the game
             if (_bangobj.roundId == _bconfig.getRounds()) {
                 endGame();
@@ -1293,6 +1290,9 @@ public class BangManager extends GameManager
         // broadcast the per-round earnings which will be displayed on one
         // stats panel
         _bangobj.setPerRoundPoints(_bangobj.perRoundPoints);
+
+        // broadcast our updated statistics
+        _bangobj.setStats(_bangobj.stats);
 
         // record this game to the server stats log (before we sort the awards)
         recordGame(awards, gameSecs);
