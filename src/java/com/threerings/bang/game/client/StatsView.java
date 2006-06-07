@@ -359,9 +359,9 @@ public class StatsView extends SteelWindow
                 int points = _bobj.stats[ii].getIntStat(
                         Stat.Type.POINTS_EARNED);
                 int objPoints = objectives * _ppo;
-                int damagePoints = points - objPoints;
                 int starPoints = _bobj.stats[ii].getIntStat(
                         Stat.Type.BONUS_POINTS);
+                int damagePoints = points - objPoints - starPoints;
                 _ptscont.add(makeAvatarView(ii));
                 _ptscont.add(labels[0] = new BLabel(
                         String.valueOf(objPoints), "endgame_smalltotal"));
