@@ -10,6 +10,7 @@ import java.awt.Point;
 import javax.swing.JPanel;
 
 import com.jme.input.KeyInput;
+import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 
 import com.jmex.bui.event.KeyEvent;
@@ -180,17 +181,17 @@ public class PiecePlacer extends EditorTool
     @Override // documentation inherited
     public void keyPressed (KeyEvent e)
     {
-        int code = e.getKeyCode(), rot = 0, elev = 0;
-        byte pitch = 0, roll = 0;
+        int code = e.getKeyCode(), lr = -1, ud = 0;
+        byte ws = 0, ad = 0;
         switch (code) {
-             case KeyInput.KEY_LEFT: rot = Piece.CW; break;
-             case KeyInput.KEY_RIGHT: rot = Piece.CCW; break;
-             case KeyInput.KEY_UP: elev = +2; break;
-             case KeyInput.KEY_DOWN: elev = -2; break;
-             case KeyInput.KEY_W: pitch = +1; break;
-             case KeyInput.KEY_A: roll = -1; break;
-             case KeyInput.KEY_S: pitch = -1; break;
-             case KeyInput.KEY_D: roll = +1; break;
+             case KeyInput.KEY_LEFT: lr = -1; break;
+             case KeyInput.KEY_RIGHT: lr = +1; break;
+             case KeyInput.KEY_UP: ud = +1; break;
+             case KeyInput.KEY_DOWN: ud = -1; break;
+             case KeyInput.KEY_W: ws = +1; break;
+             case KeyInput.KEY_A: ad = -1; break;
+             case KeyInput.KEY_S: ws = -1; break;
+             case KeyInput.KEY_D: ad = +1; break;
              default: return;
         }
         Piece piece = _panel.view.getHoverPiece();
@@ -201,18 +202,32 @@ public class PiecePlacer extends EditorTool
         piece = (Piece)piece.clone();
         if ((e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0 &&
             piece instanceof Prop) {
-            if (elev != 0) {
-                ((Prop)piece).elevate(elev);
-            } else if (pitch != 0) {
-                ((Prop)piece).pitch += pitch;
-            } else if (roll != 0) {
-                ((Prop)piece).roll += roll;
+            if (ud != 0) {
+                ((Prop)piece).elevate(ud*2);
+            } else if (ws != 0) {
+                ((Prop)piece).pitch += ws;
+            } else if (ad != 0) {
+                ((Prop)piece).roll += ad;
             } else {
-                ((Prop)piece).rotateFine(rot == Piece.CW ? -8 : +8);
+                ((Prop)piece).rotateFine(lr*8);
             }
             
-        } else if (elev == 0) {
-            piece.rotate(rot);
+        } else if (lr != -1) {
+            piece.rotate(lr < 0 ? Piece.CW : Piece.CCW);
+        } else if (piece instanceof Prop) {
+            Prop p = (Prop)piece;
+            Vector3f left = _ctx.getCameraHandler().getCamera().getLeft(),
+                fwd = _ctx.getCameraHandler().getCamera().getDirection();
+            fwd = new Vector3f(fwd.x, fwd.y, 0f);
+            if (fwd.length() < FastMath.FLT_EPSILON) {
+                fwd = _ctx.getCameraHandler().getCamera().getUp();
+                fwd = new Vector3f(fwd.x, fwd.y, 0f);
+            }
+            fwd.normalizeLocal();
+            p.positionFine(
+                (int)(p.x*256 + p.fx + 128 + left.x*ad*-8 + fwd.x*ws*8),
+                (int)(p.y*256 + p.fy + 128 + left.y*ad*-8 + fwd.y*ws*8)
+            );
         }
         getBangObject().updatePieces(piece);
     }
