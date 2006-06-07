@@ -136,6 +136,24 @@ public class BangPrefs
     }
     
     /**
+     * Checks whether the application should recommend changes to the graphical
+     * detail level based on performance history.
+     */
+    public static boolean shouldSuggestDetail ()
+    {
+        return config.getValue("suggest_detail", true);
+    }
+    
+    /**
+     * Sets whether the application should recommend changes to the detail
+     * level.
+     */
+    public static void setSuggestDetail (boolean suggest)
+    {
+        config.setValue("suggest_detail", suggest);
+    }
+    
+    /**
      * Returns the volume of the music, a value from zero to one hundred.
      */
     public static int getMusicVolume ()

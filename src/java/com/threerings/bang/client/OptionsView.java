@@ -157,6 +157,10 @@ public class OptionsView extends BDecoratedWindow
                     levels[((BoundedRangeModel)event.getSource()).getValue()];
                 BangPrefs.updateDetailLevel(level);
                 vallbl.setText(getDetailText(level));
+                
+                // as soon as the user makes a detail choice on their own, we
+                // can stop making suggestions
+                BangPrefs.setSuggestDetail(false);
             }
         });
         

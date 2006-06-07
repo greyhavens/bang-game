@@ -434,6 +434,16 @@ public class BangView extends BWindow
                 _bangobj.service.reportPerformance(
                     _ctx.getClient(), _boardName, driver, histo);
             }
+            
+            // if more than half of the samples are below 30 fps, recommend
+            // lowering the detail level
+            int[] buckets = _perfhisto.getBuckets();
+            int below = buckets[0] + buckets[1] + buckets[2];
+            if (below > _perfhisto.size()/2 && BangPrefs.isMediumDetail() &&
+                BangPrefs.shouldSuggestDetail()) {
+                _ctx.getBangClient().suggestLowerDetail();
+            }
+            
             _perfhisto.clear();
             _boardName = null;
         }

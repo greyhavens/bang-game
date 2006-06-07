@@ -314,6 +314,11 @@ public class BangClient extends BasicClient
             return true;
         }
 
+        // if requested, recommend a lower detail level
+        if (_suggestLowerDetail && displayLowerDetailSuggestion()) {
+            return true;
+        }
+        
         // if there are any pending pardner invitations, show those
         if (_invites.size() > 0) {
             displayPardnerInvite(_invites.remove(0));
@@ -677,6 +682,19 @@ public class BangClient extends BasicClient
         }
     }
 
+    /**
+     * Pops up a dialog suggesting a lower level of graphical detail to the
+     * user, or saves the suggestion until it can be displayed.
+     */
+    public void suggestLowerDetail ()
+    {
+        if (canDisplayPopup(MainView.Type.DETAIL_SUGGESTION)) {
+            displayLowerDetailSuggestion();
+        } else {
+            _suggestLowerDetail = true;
+        }
+    }
+    
     protected Handle[] createHandles (String[] strings)
     {
         Handle[] handles = new Handle[strings.length];
@@ -701,7 +719,8 @@ public class BangClient extends BasicClient
 
     protected void displayPardnerInvite (final Handle handle)
     {
-        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
+        OptionDialog.ResponseReceiver rr =
+            new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 _psvc.respondToPardnerInvite(
                     _client, handle, button == 0,
@@ -715,6 +734,35 @@ public class BangClient extends BasicClient
             _ctx, BANG_MSGS, title, "m.pardner_accept", "m.pardner_reject", rr);
     }
 
+    protected boolean displayLowerDetailSuggestion ()
+    {
+        _suggestLowerDetail = false;
+        if (!BangPrefs.isMediumDetail()) {
+            return false; // already at lowest detail level
+        }
+        final BangPrefs.DetailLevel current = BangPrefs.getDetailLevel(),
+            lower = BangPrefs.isHighDetail() ?
+                BangPrefs.DetailLevel.MEDIUM : BangPrefs.DetailLevel.LOW;
+        OptionDialog.ResponseReceiver rr =
+            new OptionDialog.ResponseReceiver() {
+            public void resultPosted (int button, Object result) {
+                if (button == 0) { // switch
+                    BangPrefs.updateDetailLevel(lower);
+                } else if (button == 2) { // disable suggestions
+                    BangPrefs.setSuggestDetail(false);
+                }
+                checkShowIntro();
+            }
+        };
+        String text = MessageBundle.compose("m.detail_suggest",
+            "m.detail_" + current.toString().toLowerCase(),
+            "m.detail_" + lower.toString().toLowerCase());
+        OptionDialog.showConfirmDialog(_ctx, "options", text,
+            new String[] { "m.detail_yes", "m.detail_no", "m.detail_dontask" },
+            rr);
+        return true;
+    }
+    
     protected void setMainView (final BWindow view)
     {
         // if the new view is a game view, fade out the current music as we
@@ -880,7 +928,8 @@ public class BangClient extends BasicClient
     protected StatusView _status;
 
     protected ArrayList<Handle> _invites = new ArrayList<Handle>();
-
+    protected boolean _suggestLowerDetail;
+    
     protected String _playingMusic;
     protected OggFileStream _mstream;
     protected boolean _playedIntro;
