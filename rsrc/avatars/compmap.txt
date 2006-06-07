@@ -1,4 +1,4 @@
-294
+311
 female/clothing_back := bodice := 174
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
@@ -216,14 +216,21 @@ male/hat := cowboy := 11
 male/hat := sombrero := 258
 male/hat := stetson := 232
 male/hat := ten_gallon := 259
+male/hat := war_bonnet := 297
 male/hat := widebrim := 44
+male/hat := wolf_mask := 298
+male/hat band := thunderbird_war_bonnet := 295
+male/hat band := tree_war_bonnet := 296
 male/hat_back := cowboy := 12
 male/hat_back := feather_double := 45
 male/hat_back := feather_one := 294
 male/hat_back := feather_single := 46
+male/hat_back := feather_two := 299
 male/hat_back := sombrero := 260
 male/hat_back := stetson := 233
 male/hat_back := ten_gallon := 261
+male/hat_back := war_bonnet := 300
+male/hat_back := wolf_mask := 301
 male/hat_band := border_band_sombrero := 262
 male/hat_band := border_sombrero := 263
 male/hat_band := buckle_widebrim := 47
@@ -243,6 +250,8 @@ male/hat_band := simple_sombrero := 265
 male/hat_band := thick_ten_gallon := 266
 male/hat_band := thick_widebrim := 53
 male/hat_band := thin_widebrim := 54
+male/hat_band := thunderbird_war_bonnet := 310
+male/hat_band := tree_war_bonnet := 311
 male/head := chin := 237
 male/head := cleft := 55
 male/head := fat := 56
@@ -257,18 +266,26 @@ male/head := square := 242
 male/jewelery := earing_hoop := 15
 male/jewelry := earing_hoop := 19
 male/jewelry := earring_hoop := 135
+male/makeup := badger := 302
+male/makeup := bear := 303
+male/makeup := brave := 304
 male/makeup := bridge := 59
 male/makeup := butterfly := 60
 male/makeup := crow := 61
 male/makeup := crywarrior := 62
 male/makeup := dead := 63
+male/makeup := demon := 305
 male/makeup := eyebar := 64
 male/makeup := eyebar_cheek := 65
+male/makeup := hawk := 306
 male/makeup := jaguar := 20
+male/makeup := peaccock := 307
 male/makeup := peacock := 66
 male/makeup := pheonix := 67
 male/makeup := phoenix := 136
 male/makeup := rain := 68
+male/makeup := tear := 308
+male/makeup := wolf := 309
 male/mouth := angry := 69
 male/mouth := annoyed := 16
 male/mouth := bulldog := 70
