@@ -194,6 +194,37 @@
     <component cclass="male/hat_back" name="feather_one"/>
   </article>
 
+  <article name="male_feather_two" townId="indian_post"
+           slot="hat" scrip="2250" coins="2" colors="clothes_p,clothes_s">
+    <component cclass="male/hat_back" name="feather_two"/>
+  </article>
+
+  <article name="male_war_bonnet" townId="indian_post"
+           slot="hat" scrip="3000" coins="3" colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="war_bonnet"/>
+    <component cclass="male/hat_back" name="war_bonnet"/>
+  </article>
+
+  <article name="male_war_bonnet_tree" townId="indian_post"
+           slot="hat" scrip="3500" coins="3" colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="war_bonnet"/>
+    <component cclass="male/hat_back" name="war_bonnet"/>
+    <component cclass="male/hat_band" name="tree_war_bonnet"/>
+  </article>
+
+  <article name="male_war_bonnet_thunderbird" townId="indian_post"
+           slot="hat" scrip="4000" coins="3">
+    <component cclass="male/hat" name="war_bonnet"/>
+    <component cclass="male/hat_back" name="war_bonnet"/>
+    <component cclass="male/hat_band" name="thunderbird_war_bonnet"/>
+  </article>
+
+  <article name="male_wolf_mask" townId="indian_post"
+           slot="hat" scrip="3500" coins="3" colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="wolf_mask"/>
+    <component cclass="male/hat_back" name="wolf_mask"/>
+  </article>
+
 
   <!-- male jewelry: frontier town -->
 
