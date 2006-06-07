@@ -96,7 +96,7 @@ public class LightDialog extends JDialog
         implements ChangeListener
     {
         public int idx;
-        public JSlider azimuth, elevation;
+        public ValuePanel azimuth, elevation;
         public ColorPanel diffuseColor, ambientColor;
         
         public LightPanel (int idx)
@@ -108,17 +108,13 @@ public class LightDialog extends JDialog
                 _ctx.xlate("editor", MessageBundle.tcompose("m.light_name",
                     new Integer(idx)))));
             
-            JPanel apanel = new JPanel();
-            apanel.add(new JLabel(_ctx.xlate("editor", "m.light_azimuth")));
-            apanel.add(azimuth = new JSlider(-180, +180, 0));
+            add(azimuth = new ValuePanel(
+                _ctx.xlate("editor", "m.light_azimuth"), -180, +180, 0));
             azimuth.addChangeListener(this);
-            add(apanel);
-        
-            JPanel epanel = new JPanel();
-            epanel.add(new JLabel(_ctx.xlate("editor", "m.light_elevation")));
-            epanel.add(elevation = new JSlider(-90, 90, 45));
+            
+            add(elevation = new ValuePanel(
+                _ctx.xlate("editor", "m.light_elevation"), -90, 90, 45));
             elevation.addChangeListener(this);
-            add(epanel);
         
             add(diffuseColor = new ColorPanel(_ctx, "m.diffuse_color"));
             diffuseColor.addChangeListener(this);
