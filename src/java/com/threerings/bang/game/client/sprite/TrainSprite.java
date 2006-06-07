@@ -21,7 +21,7 @@ public class TrainSprite extends MobileSprite
 {
     public TrainSprite (byte type)
     {
-        super("extras/train", TYPE_NAMES[type]);
+        super("extras/frontier_town/train", TYPE_NAMES[type]);
     }
 
     @Override // documentation inherited
