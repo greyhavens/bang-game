@@ -358,7 +358,7 @@ public class IconPalette extends BContainer
     {
         if (_page != page || force) {
             _icont.removeAll();
-            int start = page * _rows;
+            int start = page * _rows * _cols;
             int limit = Math.min(_icons.size(), start + _rows * _cols);
             for (int ii = start; ii < limit; ii++) {
                 _icont.add(_icons.get(ii));
