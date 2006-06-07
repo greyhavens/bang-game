@@ -15,6 +15,7 @@ public interface RanchCodes extends InvocationCodes
 
     /** Big Shots given out to new players. */
     public static final String[] STARTER_BIGSHOTS = {
-        "cavalry", "codger", "tactician"
+        "frontier_town/cavalry", "frontier_town/codger",
+        "frontier_town/tactician"
     };
 }
