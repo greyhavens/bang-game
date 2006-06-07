@@ -219,7 +219,7 @@ public class RenderUtil
         Dimension size = new Dimension();
         TextureState tstate = ctx.getRenderer().createTextureState();
         Texture tex = createTextTexture(
-            ctx, font, ColorRGBA.white, text, tcoords, size);
+            ctx, font, ColorRGBA.white, null, text, tcoords, size);
         tstate.setTexture(tex);
 
         Quad quad = new Quad("text", size.width, size.height);
@@ -237,16 +237,20 @@ public class RenderUtil
      * Renders the specified text into an image (which will be sized
      * appropriately for the text) and creates a texture from it.
      *
+     * @param ocolor if not-null the text will be outlined in the supplied
+     * color.
      * @param tcoords should be a four element array which will be filled
      * in with the appropriate texture coordinates to only display the
      * text.
      */
     public static Texture createTextTexture (
-        BasicContext ctx, Font font, ColorRGBA color, String text,
-        Vector2f[] tcoords, Dimension size)
+        BasicContext ctx, Font font, ColorRGBA color, ColorRGBA ocolor,
+        String text, Vector2f[] tcoords, Dimension size)
     {
         Graphics2D gfx = _scratch.createGraphics();
         Color acolor = new Color(color.r, color.g, color.b, color.a);
+        Color oacolor = (ocolor == null) ? null :
+            new Color(ocolor.r, ocolor.g, ocolor.b, ocolor.a);
         TextLayout layout;
         try {
             gfx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -259,7 +263,8 @@ public class RenderUtil
 
         // determine the size of our rendered text
         // TODO: do the Mac hack to get the real bounds
-        Rectangle2D bounds = layout.getBounds();
+        Rectangle2D bounds = (oacolor == null) ? layout.getBounds() :
+            layout.getOutline(null).getBounds();
         int width = (int)(Math.max(bounds.getX(), 0) + bounds.getWidth());
         int height = (int)(layout.getLeading() + layout.getAscent() +
                            layout.getDescent());
@@ -278,11 +283,18 @@ public class RenderUtil
             tsize, tsize, true);
         gfx = image.createGraphics();
         try {
-            gfx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            gfx.setComposite(AlphaComposite.SrcOut);
+            gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                 RenderingHints.VALUE_ANTIALIAS_ON);
             gfx.setColor(acolor);
-            layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());
+            if (oacolor != null) {
+                gfx.translate(0, layout.getAscent());
+                gfx.fill(layout.getOutline(null));
+                gfx.setColor(oacolor);
+                gfx.draw(layout.getOutline(null));
+            } else {
+                gfx.setComposite(AlphaComposite.SrcOut);
+                layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());
+            }
         } finally {
             gfx.dispose();
         }

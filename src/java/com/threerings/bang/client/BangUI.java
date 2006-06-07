@@ -139,7 +139,7 @@ public class BangUI
             Font.PLAIN, AffineTransform.getScaleInstance(1.4, 1));
         _fonts.put("Old Town Wide", town);
 
-        COUNTER_FONT = _fonts.get("Tombstone").deriveFont(Font.BOLD, 48);
+        COUNTER_FONT = _fonts.get("Old Town").deriveFont(Font.BOLD, 48);
         MARQUEE_FONT = _fonts.get("Old Town").deriveFont(Font.PLAIN, 96);
         LOADING_FONT = _fonts.get("Dom Casual").deriveFont(Font.PLAIN, 24);
 

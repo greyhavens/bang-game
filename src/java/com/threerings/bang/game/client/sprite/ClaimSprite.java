@@ -6,6 +6,7 @@ package com.threerings.bang.game.client.sprite;
 import com.jme.image.Texture;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
@@ -55,8 +56,9 @@ public class ClaimSprite extends PropSprite
             Vector2f[] tcoords = new Vector2f[4];
             Texture tex = RenderUtil.createTextTexture(
                 _ctx, BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
-                String.valueOf(claim.nuggets), tcoords, null);
-            _counter.setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
+                ColorRGBA.black, String.valueOf(claim.nuggets), tcoords, null);
+            _counter.setTextureBuffer(
+                0, BufferUtils.createFloatBuffer(tcoords));
             // resize our quad to accomodate the text
             _counter.resize(10 * tcoords[2].x, 10 * tcoords[2].y);
             _tstate.setTexture(tex);
