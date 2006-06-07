@@ -318,9 +318,11 @@ public class TownView extends BWindow
         @Override // documentation inherited
         protected boolean shouldShowStarter (Piece piece)
         {
+            String type = (piece instanceof Prop) ?
+                ((Prop)piece).getType() : "";
             return super.shouldShowStarter(piece) ||
-                (piece instanceof Prop &&
-                    _commands.containsKey(((Prop)piece).getType()));
+                _commands.containsKey(type) ||
+                type.indexOf("pop_sign") != -1;
         }
         
         @Override // documentation inherited
