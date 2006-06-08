@@ -8,6 +8,8 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.CollisionHandler;
 
 import static com.threerings.bang.Log.log;
 
@@ -90,5 +92,11 @@ public class TrainEffect extends Effect
         }
         return collide(bangobj, obs, -1, targetId, COLLISION_DAMAGE,
                        x, y, DAMAGED);
+    }
+
+    @Override // documentation inherited
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        return new CollisionHandler(COLLISION_DAMAGE);
     }
 }

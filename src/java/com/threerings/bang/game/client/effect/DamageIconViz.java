@@ -44,8 +44,28 @@ public class DamageIconViz extends IconViz
      * Creates a damage icon visualitzation for the given effect,
      * and adds it to the piece sprite.
      */
+    public static void displayDamageIconViz (Piece target, int damage,
+            BangContext ctx, BangBoardView view)
+    {
+        displayDamageIconViz(target, damage, null, ctx, view);
+    }
+
+    /**
+     * Creates a damage icon visualitzation for the given effect,
+     * and adds it to the piece sprite.
+     */
     public static void displayDamageIconViz (Piece target, Effect effect,
             BangContext ctx, BangBoardView view)
+    {
+        displayDamageIconViz(target, 0, effect, ctx, view);
+    }
+    
+    /**
+     * Creates a damage icon visualitzation for the given effect,
+     * and adds it to the piece sprite.
+     */
+    public static void displayDamageIconViz (Piece target, int damage,
+            Effect effect, BangContext ctx, BangBoardView view)
     {
         if (target == null) {
             return;
@@ -58,14 +78,15 @@ public class DamageIconViz extends IconViz
         }
         DamageIconViz diviz = null; 
         String iname = (target.isAlive() ? "damaged" : "killed");
-        if (effect instanceof ShotEffect) {
+        if (effect == null) {
+            diviz = new DamageIconViz(iname, damage);
+
+        } else if (effect instanceof ShotEffect) {
             ShotEffect shot = (ShotEffect)effect;
             diviz = new DamageIconViz(iname, shot.baseDamage,
                     shot.attackIcon, shot.defendIcon);
-        } else if (effect instanceof AreaDamageEffect) {
-            diviz = new DamageIconViz(
-                    iname, ((AreaDamageEffect)effect).baseDamage);
         }
+
         if (diviz != null) {
             diviz.init(ctx, view, target, null);
             diviz.display(sprite);

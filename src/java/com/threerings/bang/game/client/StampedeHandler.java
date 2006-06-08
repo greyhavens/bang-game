@@ -28,8 +28,13 @@ import static com.threerings.bang.client.BangMetrics.*;
 /**
  * Displays a stampede.
  */
-public class StampedeHandler extends EffectHandler
+public class StampedeHandler extends CollisionHandler
 {
+    public StampedeHandler ()
+    {
+        super(StampedeEffect.COLLISION_DAMAGE);
+    }
+
     @Override // documentation inherited
     public boolean execute ()
     {

@@ -49,7 +49,7 @@ public class AreaDamageHandler extends EffectHandler
         super.pieceAffected(piece, effect);
         if (effect.equals(AreaDamageEffect.MISSILED)) {
             DamageIconViz.displayDamageIconViz(
-                    piece, _effect, _ctx, _view);
+                    piece, ((AreaDamageEffect)_effect).baseDamage, _ctx, _view);
         }
     }
 
