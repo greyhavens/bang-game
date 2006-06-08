@@ -3,9 +3,16 @@
 
 package com.threerings.bang.client.bui;
 
+import com.jme.renderer.Renderer;
+
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.icon.ImageIcon;
+
+import com.samskivert.util.Interval;
 
 import com.threerings.bang.util.BangContext;
+import com.jmex.bui.icon.BlankIcon;
 
 /**
  * Provides a convenient component for displaying feedback.
@@ -29,7 +36,22 @@ public class StatusLabel extends BLabel
     {
         setText(message);
         if (flash) {
-            // TODO: flash our icon
+            _flashCount = 0;
+            final ImageIcon alert = new ImageIcon(
+                    _ctx.getImageCache().getBImage("ui/icons/alert.png"));
+            final BlankIcon blank = new BlankIcon(
+                alert.getWidth(), alert.getHeight());
+            setIcon(alert);
+            Interval flashAlert = new Interval(_ctx.getApp()) {
+                public void expired () {
+                    _flashCount++;
+                    setIcon(_flashCount % 2 == 0 ? alert : blank);
+                    if (_flashCount < 5) {
+                        this.schedule(FLASH_DELAY);
+                    }
+                }
+            };
+            flashAlert.schedule(FLASH_DELAY);
         }
     }
 
@@ -45,4 +67,9 @@ public class StatusLabel extends BLabel
     }
 
     protected BangContext _ctx;
+
+    /** Number of flashes (x2 flash on & flash off) */
+    protected int _flashCount;
+
+    protected static final long FLASH_DELAY = 300L;
 }
