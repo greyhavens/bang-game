@@ -23,10 +23,14 @@ public class LadyLuckEffect extends SetInfluenceEffect
                 return "lady_luck";
             }
             public int adjustAttack (Piece target, int damage) {
-                // TODO: pull the whole luck thing out into something way more
-                // complicated so that we can report when you get a 2x hit
-                return (RandomUtil.getInt(100) >= 50) ? 2 * damage : damage;
+                _didAdjustAttack = RandomUtil.getInt(100) >= 50;
+                return _didAdjustAttack ? 2 * damage : damage;
             }
+            public boolean didAdjustAttack () {
+                return _didAdjustAttack;
+            }
+
+            protected boolean _didAdjustAttack = false;
         };
     }
 

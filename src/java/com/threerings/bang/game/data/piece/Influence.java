@@ -89,6 +89,24 @@ public abstract class Influence extends SimpleStreamableObject
         return damage;
     }
 
+    /**
+     * Returns true if the last call to adjustAttack caused a change
+     * in attack.  The default is false.
+     */
+    public boolean didAdjustAttack ()
+    {
+        return false;
+    }
+
+    /**
+     * Returns true if the last call to adjustDefend caused a change
+     * in defense.  The default is false.
+     */
+    public boolean didAdjustDefend ()
+    {
+        return false;
+    }
+
     @Override // documentation inherited
     public String toString ()
     {

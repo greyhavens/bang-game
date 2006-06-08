@@ -8,6 +8,7 @@ import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.effect.DamageIconViz;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
@@ -61,6 +62,16 @@ public abstract class ShotHandler extends EffectHandler
 
         // now determine whether or not anything remained pending
         return !isCompleted();
+    }
+
+    @Override // documentation inherited
+    public void pieceAffected (Piece piece, String effect)
+    {
+        super.pieceAffected(piece, effect);
+        if (effect.equals(ShotEffect.DAMAGED) || 
+                effect.equals(ShotEffect.EXPLODED)) {
+            DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
+        }
     }
 
     /**

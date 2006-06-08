@@ -368,8 +368,9 @@ public abstract class Piece extends SimpleStreamableObject
     public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
     {
         // create a basic shot effect
-        ShotEffect shot = new ShotEffect(
-            this, target, computeScaledDamage(target, scale));
+        int damage = computeScaledDamage(target, scale);
+        ShotEffect shot = new ShotEffect(this, target, damage,
+                attackInfluenceIcon(), defendInfluenceIcon(target));
         // give the target a chance to deflect the shot
         return target.deflect(bangobj, this, shot, scale);
     }
@@ -591,6 +592,32 @@ public abstract class Piece extends SimpleStreamableObject
 
         // finally, always do at least 1 point of damage (TODO: iron plate?)
         return Math.max(1, Math.round(scale * ddamage));
+    }
+
+    /**
+     * Returns the attack influence icon or null if no attack influence.  Used
+     * after a call to {@link computeScaledDamage}.
+     */
+    public String attackInfluenceIcon ()
+    {
+        Influence influence = ((Unit)this).influence;
+        if (influence != null && influence.didAdjustAttack()) {
+            return influence.getIcon();
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the defend influence icon or null if no attack influence.  Used
+     * after a call to {@link computeScaledDamage}.
+     */
+    public String defendInfluenceIcon (Piece target)
+    {
+        Influence influence = ((Unit)target).influence;
+        if (influence != null && influence.didAdjustDefend()) {
+            return influence.getIcon();
+        }
+        return null;
     }
     
     /** Returns the frequency with which this piece can move. */

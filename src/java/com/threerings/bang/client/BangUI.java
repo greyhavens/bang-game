@@ -90,6 +90,9 @@ public class BangUI
     /** A font used to render the loading status over the board. */
     public static Font LOADING_FONT;
 
+    /** A font used to render the damage indicator in the game. */
+    public static Font DAMAGE_FONT;
+
     /** The stylesheet used to configure our interface. */
     public static BStyleSheet stylesheet;
 
@@ -139,9 +142,10 @@ public class BangUI
             Font.PLAIN, AffineTransform.getScaleInstance(1.4, 1));
         _fonts.put("Old Town Wide", town);
 
-        COUNTER_FONT = _fonts.get("Old Town").deriveFont(Font.BOLD, 48);
+        COUNTER_FONT = _fonts.get("Old Town").deriveFont(Font.BOLD, 72);
         MARQUEE_FONT = _fonts.get("Old Town").deriveFont(Font.PLAIN, 96);
         LOADING_FONT = _fonts.get("Dom Casual").deriveFont(Font.PLAIN, 24);
+        DAMAGE_FONT = _fonts.get("Dom Casual").deriveFont(Font.PLAIN, 36);
 
         // load up our HTML stylesheet
         css = new BangStyleSheet();

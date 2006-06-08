@@ -12,6 +12,7 @@ import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 
 import com.threerings.bang.game.client.sprite.ShotSprite;
+import com.threerings.bang.game.client.effect.DamageIconViz;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -40,6 +41,16 @@ public class AreaDamageHandler extends EffectHandler
         }, false);
 
         return true;
+    }
+
+    @Override // documentation inherited
+    public void pieceAffected (Piece piece, String effect)
+    {
+        super.pieceAffected(piece, effect);
+        if (effect.equals(AreaDamageEffect.MISSILED)) {
+            DamageIconViz.displayDamageIconViz(
+                    piece, _effect, _ctx, _view);
+        }
     }
 
     protected void dropBombs ()

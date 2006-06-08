@@ -79,8 +79,10 @@ public class Tactician extends Unit
         if (ntarget == null) {
             effect.deflectShot(nx, ny);
         } else {
-            effect.setTarget(
-                ntarget, shooter.computeScaledDamage(ntarget, scale));
+            int damage = shooter.computeScaledDamage(ntarget, scale);
+            effect.setTarget(ntarget, damage,
+                    shooter.attackInfluenceIcon(),
+                    shooter.defendInfluenceIcon(ntarget));
         }
 
         return effect;

@@ -3,11 +3,14 @@
 
 package com.threerings.bang.game.client.effect;
 
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
@@ -20,6 +23,7 @@ import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
+import java.util.Iterator;
 
 /**
  * An effect visualization that floats an icon above the sprite, letting users
@@ -34,11 +38,7 @@ public class IconViz extends EffectViz
      */
     public static IconViz createIconViz (Piece piece, String effect)
     {
-        if (effect.equals(ShotEffect.DAMAGED) ||
-            effect.equals(AreaDamageEffect.MISSILED)) {
-            return new IconViz(piece.isAlive() ? "damaged" : "killed");
-        
-        } else if (effect.equals(RepairEffect.REPAIRED)) {
+        if (effect.equals(RepairEffect.REPAIRED)) {
             return new IconViz("repaired");
             
         } else {
@@ -54,16 +54,40 @@ public class IconViz extends EffectViz
     @Override // documentation inherited
     protected void didInit ()
     {
-        final Quad icon = RenderUtil.createIcon(ICON_SIZE, ICON_SIZE);
-        icon.setRenderState(RenderUtil.createTextureState(_ctx,
-            "textures/effects/" + _iname + ".png"));
+        final Quad icon = createIconQuad(
+                "textures/effects/" + _iname + ".png", ICON_SIZE);
+        icon.setDefaultColor(new ColorRGBA(JPIECE_COLORS[_target.owner]));
+        
+        createBillboard();
+        _billboard.attachChild(icon);
+    }
+    
+    @Override // documentation inherited
+    public void display (PieceSprite target)
+    {
+        target.attachChild(_billboard);
+    }
+
+    /**
+     * Create an icon quad.
+     */
+    protected Quad createIconQuad (String name, float size)
+    {
+        Quad icon = RenderUtil.createIcon(size, size);
+        icon.setRenderState(RenderUtil.createTextureState(_ctx, name));
         icon.setRenderState(RenderUtil.blendAlpha);
         icon.setRenderState(RenderUtil.alwaysZBuf);
         icon.updateRenderState();
         icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         icon.setLightCombineMode(LightState.OFF);
-        icon.setDefaultColor(new ColorRGBA(JPIECE_COLORS[_target.owner]));
-        
+        return icon;
+    }
+
+    /**
+     * Creates the named billboard.
+     */
+    protected void createBillboard ()
+    {
         _billboard = new BillboardNode("billboard") {
             public void updateWorldData (float time) {
                 super.updateWorldData(time);
@@ -79,25 +103,43 @@ public class IconViz extends EffectViz
                     
                 } else if (_elapsed >= RISE_DURATION) {
                     alpha = 1f;
-                    localTranslation.z = TILE_SIZE * 1; 
+                    localTranslation.z = TILE_SIZE * 1;
+                    billboardLinger(this, _elapsed);
                     
                 } else {
                     alpha = _elapsed / RISE_DURATION;
                     localTranslation.z = TILE_SIZE * (0.5f + alpha * 0.5f);
+                    billboardRise(this, _elapsed);
                 }
-                icon.getBatch(0).getDefaultColor().a = alpha;
+                Iterator iter = children.iterator();
+                while (iter.hasNext()) {
+                    Spatial child = (Spatial)iter.next();
+                    if (child instanceof Geometry) {
+                        ((Geometry)child).getBatch(0).getDefaultColor().a = 
+                            alpha;
+                    }
+                }
             }
             protected float _elapsed;
         };
-        _billboard.attachChild(icon);
     }
-    
-    @Override // documentation inherited
-    public void display (PieceSprite target)
+
+    /**
+     * Used to add special animation during the rise phase.
+     */
+    protected void billboardRise (BillboardNode bnode, float elapsed)
     {
-        target.attachChild(_billboard);
+        // nothing to do here
     }
-    
+
+    /**
+     * Used to add special animation during the linger phase.
+     */
+    protected void billboardLinger (BillboardNode bnode, float elapsed)
+    {
+        // nothing to do here
+    }
+
     /** The name of the icon to display. */
     protected String _iname;
     

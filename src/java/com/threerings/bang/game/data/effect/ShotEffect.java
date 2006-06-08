@@ -82,6 +82,15 @@ public class ShotEffect extends Effect
     
     /** A secondary effect to apply before the shot. */
     public Effect preShotEffect;
+
+    /** Ammount of damage being applied. */
+    public int baseDamage;
+
+    /** Attack influence icon name. */
+    public String attackIcon;
+
+    /** Defend influence icon name. */
+    public String defendIcon;
     
     /**
      * Constructor used when creating a new shot effect.
@@ -89,10 +98,11 @@ public class ShotEffect extends Effect
      * @param damage the amount by which to increase the target's damage.
      * This will be capped and converted to an absolute value.
      */
-    public ShotEffect (Piece shooter, Piece target, int damage)
+    public ShotEffect (Piece shooter, Piece target, int damage,
+                       String attackIcon, String defendIcon)
     {
         shooterId = shooter.pieceId;
-        setTarget(target, damage);
+        setTarget(target, damage, attackIcon, defendIcon);
     }
 
     /** Constructor used when unserializing. */
@@ -108,12 +118,16 @@ public class ShotEffect extends Effect
      * @param damage the amount by which to increase the target's damage.
      * This will be capped and converted to an absolute value.
      */
-    public void setTarget (Piece target, int damage)
+    public void setTarget (Piece target, int damage,
+                           String attackIcon, String defendIcon)
     {
         if (targetId > 0) {
             deflectorIds = append(deflectorIds, (short)targetId);
         }
         targetId = target.pieceId;
+        baseDamage = damage;
+        this.attackIcon = attackIcon;
+        this.defendIcon = defendIcon;
         newDamage = Math.min(100, target.damage + damage);
         xcoords = append(xcoords, target.x);
         ycoords = append(ycoords, target.y);
@@ -246,7 +260,7 @@ public class ShotEffect extends Effect
             EXPLODED : DAMAGED;
         return damage(bangobj, obs, shooter.owner, target, newDamage, effect);
     }
-    
+
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {

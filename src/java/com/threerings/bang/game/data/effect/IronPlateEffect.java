@@ -23,6 +23,9 @@ public class IronPlateEffect extends SetInfluenceEffect
             public int adjustDefend (Piece shooter, int damage) {
                 return 0;
             }
+            public boolean didAdjustDefend () {
+                return true;
+            }
             protected int duration () {
                 return 7;
             }
