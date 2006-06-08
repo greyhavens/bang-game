@@ -53,14 +53,19 @@ public class ClaimSprite extends PropSprite
         // recompute and display our nugget count
         Claim claim = (Claim)piece;
         if (_piece.owner >= 0 && _dnuggets != claim.nuggets) {
+            if (_tstate.getNumberOfSetTextures() > 0) {
+                _tstate.deleteAll();
+            }
             Vector2f[] tcoords = new Vector2f[4];
             Texture tex = RenderUtil.createTextTexture(
                 _ctx, BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
-                ColorRGBA.black, String.valueOf(claim.nuggets), tcoords, null);
+                DARKER_COLORS[_piece.owner], String.valueOf(claim.nuggets),
+                tcoords, null);
             _counter.setTextureBuffer(
                 0, BufferUtils.createFloatBuffer(tcoords));
             // resize our quad to accomodate the text
-            _counter.resize(10 * tcoords[2].x, 10 * tcoords[2].y);
+            float qrat = COUNTER_SIZE / tcoords[2].y;
+            _counter.resize(qrat * tcoords[2].x, qrat * tcoords[2].y);
             _tstate.setTexture(tex);
             _counter.updateRenderState();
             _dnuggets = claim.nuggets;
@@ -95,4 +100,6 @@ public class ClaimSprite extends PropSprite
     protected Quad _counter;
     protected TextureState _tstate;
     protected int _dnuggets = -1;
+
+    protected static final float COUNTER_SIZE = TILE_SIZE;
 }
