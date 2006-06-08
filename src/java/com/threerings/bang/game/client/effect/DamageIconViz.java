@@ -32,6 +32,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import static com.threerings.bang.client.BangMetrics.*;
 
 import static com.threerings.bang.Log.*;
+import com.threerings.util.RandomUtil;
 
 /**
  * An effect visualization that floats a damage indicator and possible
@@ -121,8 +122,8 @@ public class DamageIconViz extends IconViz
                 DARKER_COLORS[_target.owner], String.valueOf(_damage),
                 tcoords, null);
         _dmgTState.setTexture(tex);
-        float width = DAMAGE_SIZE * tcoords[2].x / tcoords[2].y;
-        _readout[0] = new Quad("damage", width, DAMAGE_SIZE);
+        float width = ICON_SIZE * tcoords[2].x / tcoords[2].y;
+        _readout[0] = new Quad("damage", width, ICON_SIZE);
         _readout[0].setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
         _readout[0].setRenderState(_dmgTState);
         _readout[0].setRenderState(RenderUtil.blendAlpha);
@@ -136,14 +137,14 @@ public class DamageIconViz extends IconViz
         float offset =  DAMAGE_SIZE * 0.58f + width / 2f;
         if (_attackIcon != null) {
             _readout[1] = createIconQuad(
-                    "influences/" + _attackIcon + ".png", DAMAGE_SIZE);
+                    "influences/icons/" + _attackIcon + ".png", DAMAGE_SIZE);
             _readout[1].setDefaultColor(new ColorRGBA());
             _readout[1].getLocalTranslation().x = offset; 
         }
 
         if (_defendIcon != null) {
             _readout[2] = createIconQuad(
-                    "influences/" + _defendIcon + ".png", DAMAGE_SIZE);
+                    "influences/icons/" + _defendIcon + ".png", DAMAGE_SIZE);
             _readout[2].setDefaultColor(new ColorRGBA());
             _readout[2].getLocalTranslation().x = -offset;
         }
@@ -233,7 +234,7 @@ public class DamageIconViz extends IconViz
     protected static final float FALL_DURATION = 0.20f;
 
     /** The size for the damage indicator. */
-    protected static final float DAMAGE_SIZE = TILE_SIZE * 0.4f;
+    protected static final float DAMAGE_SIZE = TILE_SIZE * 0.3f;
 
     /** The name of damage billboards. */
     protected static final String DAMAGE_NAME = "dmgBillboard";
