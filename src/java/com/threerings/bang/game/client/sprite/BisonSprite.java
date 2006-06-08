@@ -29,7 +29,7 @@ public class BisonSprite extends MobileSprite
 {
     public BisonSprite (float angle, float distance, List path)
     {
-        super("extras/frontier_town", "bison");
+        super("extras", "frontier_town/bison");
         _offset = new Vector3f(FastMath.cos(angle) * distance,
             FastMath.sin(angle) * distance, 0f);
         _pendingPath = path;
