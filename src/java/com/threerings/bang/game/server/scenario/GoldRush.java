@@ -25,7 +25,7 @@ import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
 import com.threerings.bang.game.server.ai.AILogic;
-import com.threerings.bang.game.server.ai.ClaimJumpingLogic;
+import com.threerings.bang.game.server.ai.GoldLogic;
 
 /**
  * A gameplay scenario wherein:
@@ -45,7 +45,7 @@ public class GoldRush extends Scenario
     @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
     {
-        return new ClaimJumpingLogic();
+        return new GoldLogic(false);
     }
 
     @Override // documentation inherited

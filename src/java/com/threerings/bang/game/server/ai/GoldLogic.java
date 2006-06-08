@@ -18,11 +18,22 @@ import com.threerings.bang.game.util.PointSet;
 import static com.threerings.bang.Log.*;
 
 /**
- * A simple AI for the claim jumping scenario.
+ * A simple AI for the gold-based scenarios: claim jumping and gold rush.
  */
-public class ClaimJumpingLogic extends AILogic
+public class GoldLogic extends AILogic
     implements PieceCodes
 {
+    /**
+     * Creates the AI logic for a gold-based scenario.
+     *
+     * @param stealing whether or not units can steal nuggets from claims
+     * (i.e., whether this is for the claim jumping scenario)
+     */
+    public GoldLogic (boolean stealing)
+    {
+        _stealing = stealing;
+    }
+    
     // documentation inherited
     public String getBigShotType ()
     {
@@ -56,7 +67,7 @@ public class ClaimJumpingLogic extends AILogic
                 Claim claim = (Claim)pieces[ii];
                 if (claim.owner == _pidx) {
                     oclaim = claim;
-                } else if (claim.nuggets > 0 && (cclaim == null ||
+                } else if (_stealing && claim.nuggets > 0 && (cclaim == null ||
                     unit.getDistance(claim) < unit.getDistance(cclaim))) {
                     cclaim = claim;
                 }
@@ -69,11 +80,12 @@ public class ClaimJumpingLogic extends AILogic
                 pieces[ii].owner != _pidx) {
                 Unit target = (Unit)pieces[ii];
                 if (target.benuggeted && (ctarget == null ||
-                    unit.getDistance(target) < unit.getDistance(ctarget))) {
+                    unit.getDistance(target) < unit.getDistance(ctarget)) &&
+                    unit.validTarget(target, false)) {
                     ctarget = target;
                 }
-                if (_claimloc != null && target.getDistance(_claimloc.x,
-                    _claimloc.y) <= DEFENSIVE_PERIMETER) {
+                if (_stealing && _claimloc != null && target.getDistance(
+                    _claimloc.x, _claimloc.y) <= DEFENSIVE_PERIMETER) {
                     breached = true;                
                 }
             }
@@ -152,6 +164,9 @@ public class ClaimJumpingLogic extends AILogic
         return false;
     }
     
+    /** Whether or not units can steal nuggets from claims. */
+    protected boolean _stealing;
+    
     /** The location of our own claim. */
     protected Point _claimloc;
     
@@ -177,5 +192,5 @@ public class ClaimJumpingLogic extends AILogic
     
     /** When enemy units get this close to our (non-empty) claim, we start
      * sending units to defend it. */
-    protected static final int DEFENSIVE_PERIMETER = 5;
+    protected static final int DEFENSIVE_PERIMETER = 3;
 }

@@ -26,7 +26,7 @@ import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.ai.AILogic;
-import com.threerings.bang.game.server.ai.ClaimJumpingLogic;
+import com.threerings.bang.game.server.ai.GoldLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -57,7 +57,7 @@ public class ClaimJumping extends Scenario
     @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
     {
-        return new ClaimJumpingLogic();
+        return new GoldLogic(true);
     }
     
     @Override // documentation inherited
