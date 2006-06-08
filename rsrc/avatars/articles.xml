@@ -458,8 +458,101 @@
   </article>
 
 
+  <!-- female hats: indian trading post -->
+  <article name="female_feather_one" townId="indian_post"
+           slot="hat" scrip="2000" coins="2" colors="clothes_p">
+    <component cclass="female/hat_back" name="feather_one"/>
+  </article>
+
+  <article name="female_feather_two" townId="indian_post"
+           slot="hat" scrip="2250" coins="2" colors="clothes_p,clothes_s">
+    <component cclass="female/hat_back" name="feather_two"/>
+  </article>
+
   <!-- female jewelry: frontier town -->
 
   <!-- female face paint: frontier town -->
+
+  <!-- male face paint: indian trading post -->
+  <article name="female_badger" townId="indian_post"
+           slot="makeup" scrip="2000" coins="3" colors="makeup_p">
+    <component cclass="female/makeup" name="badger"/>
+  </article>
+
+  <article name="female_bear" townId="indian_post"
+           slot="makeup" scrip="2500" coins="3">
+    <component cclass="female/makeup" name="bear"/>
+  </article>
+
+  <article name="female_brave" townId="indian_post"
+           slot="makeup" scrip="2000" coins="3" colors="makeup_p">
+    <component cclass="female/makeup" name="brave"/>
+  </article>
+
+  <article name="female_butterfly" townId="indian_post"
+           slot="makeup" scrip="2500" coins="3">
+    <component cclass="female/makeup" name="butterfly"/>
+  </article>
+
+  <article name="female_cougar" townId="indian_post"
+           slot="makeup" scrip="3000" coins="3" colors="makeup_p">
+    <component cclass="female/makeup" name="cougar"/>
+  </article>
+
+  <article name="female_dead" townId="indian_post"
+           slot="makeup" scrip="3000" coins="3">
+    <component cclass="female/makeup" name="dead"/>
+  </article>
+
+  <article name="female_dear" townId="indian_post"
+           slot="makeup" scrip="3000" coins="3">
+    <component cclass="female/makeup" name="dear"/>
+  </article>
+
+  <article name="female_demon" townId="indian_post"
+           slot="makeup" scrip="3000" coins="3">
+    <component cclass="female/makeup" name="demon"/>
+  </article>
+
+  <article name="female_hawk" townId="indian_post"
+           slot="makeup" scrip="2000" coins="3" colors="makeup_p">
+    <component cclass="female/makeup" name="hawk"/>
+  </article>
+
+  <article name="female_jaguar" townId="indian_post"
+           slot="makeup" scrip="3000" coins="3">
+    <component cclass="female/makeup" name="jaguar"/>
+  </article>
+
+  <article name="female_jaybird" townId="indian_post"
+           slot="makeup" scrip="2000" coins="3">
+    <component cclass="female/makeup" name="jaybird"/>
+  </article>
+
+  <article name="female_owl" townId="indian_post"
+           slot="makeup" scrip="2000" coins="3">
+    <component cclass="female/makeup" name="owl"/>
+  </article>
+
+  <article name="female_peacock" townId="indian_post"
+           slot="makeup" scrip="2500" coins="3">
+    <component cclass="female/makeup" name="peacock"/>
+  </article>
+
+  <article name="female_rain" townId="indian_post"
+           slot="makeup" scrip="2500" coins="3" colors="makeup_p">
+    <component cclass="female/makeup" name="rain"/>
+  </article>
+
+  <article name="female_tear" townId="indian_post"
+           slot="makeup" scrip="3000" coins="3">
+    <component cclass="female/makeup" name="tear"/>
+  </article>
+
+  <article name="female_wolf" townId="indian_post"
+           slot="makeup" scrip="2500" coins="3">
+    <component cclass="female/makeup" name="wolf"/>
+  </article>
+
 
 </articles>
