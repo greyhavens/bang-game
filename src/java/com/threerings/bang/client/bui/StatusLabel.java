@@ -46,12 +46,12 @@ public class StatusLabel extends BLabel
                 public void expired () {
                     _flashCount++;
                     setIcon(_flashCount % 2 == 0 ? alert : blank);
-                    if (_flashCount < 5) {
-                        this.schedule(FLASH_DELAY);
+                    if (_flashCount == 5) {
+                        cancel();
                     }
                 }
             };
-            flashAlert.schedule(FLASH_DELAY);
+            flashAlert.schedule(FLASH_DELAY, true);
         }
     }
 
