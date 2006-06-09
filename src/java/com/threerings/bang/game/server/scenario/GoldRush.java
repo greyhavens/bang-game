@@ -49,10 +49,10 @@ public class GoldRush extends Scenario
     }
 
     @Override // documentation inherited
-    public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
-                               ArrayList<Piece> pieces)
+    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
+                              ArrayList<Piece> pieces)
     {
-        super.filterMarkers(bangobj, starts, pieces);
+        super.filterPieces(bangobj, starts, pieces);
 
         // extract and remove all gold lodes
         _lodes.clear();

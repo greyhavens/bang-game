@@ -35,6 +35,9 @@ public class PropConfig
     /** A custom class for this prop, if one was specified. */
     public String propClass;
 
+    /** A scenario for this prop, if one was specified. */
+    public String scenario;
+
     /** Whether or not units can pass over/through the prop. */
     public boolean passable;
     
@@ -89,6 +92,7 @@ public class PropConfig
         PropConfig config = new PropConfig();
         config.type = type;
         config.propClass = props.getProperty("class");
+        config.scenario = props.getProperty("scenario");
 
         config.width = BangUtil.getIntProperty(type, props, "width", 1);
         config.length = BangUtil.getIntProperty(type, props, "length", 1);

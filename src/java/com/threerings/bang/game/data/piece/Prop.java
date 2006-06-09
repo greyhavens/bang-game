@@ -158,6 +158,15 @@ public class Prop extends BigPiece
     {
         return _config.passable;
     }
+
+    /**
+     * Returns true if this prop is valid for this scenario.
+     */
+    public boolean isValidScenario (String scenarioId)
+    {
+        return (_config.scenario == null || 
+                _config.scenario.equals(scenarioId));
+    }
     
     /**
      * Rotates this piece in fine units, which divide the 90 degree rotations

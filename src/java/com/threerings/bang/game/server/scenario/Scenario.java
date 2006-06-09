@@ -29,6 +29,7 @@ import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.data.piece.Unit;
@@ -57,21 +58,26 @@ public abstract class Scenario
     implements GameCodes, PieceCodes
 {
     /**
-     * Allows a scenario to filter out custom marker pieces prior to the start
-     * of the round. <em>Note:</em> this is called before {@link #init}.
+     * Allows a scenario to filter out custom marker pieces and scenario 
+     * specific props prior to the start of the round. 
+     * <em>Note:</em> this is called before {@link #init}.
      *
      * @param bangobj the game object.
      * @param starts a list of start markers for all the players.
      * @param pieces the remaining pieces on the board.
      */
-    public void filterMarkers (BangObject bangobj, ArrayList<Piece> starts,
-                               ArrayList<Piece> pieces)
+    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
+                              ArrayList<Piece> pieces)
     {
         // extract the bonus spawn markers from the pieces array
         _bonusSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (Marker.isMarker(p, Marker.BONUS)) {
+            if (p instanceof Prop && 
+                    !((Prop)p).isValidScenario(bangobj.scenarioId)) {
+                iter.remove();
+                
+            } else if (Marker.isMarker(p, Marker.BONUS)) {
                 _bonusSpots.add(p.x, p.y);
                 iter.remove();
             }

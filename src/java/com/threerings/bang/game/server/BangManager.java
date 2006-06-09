@@ -798,7 +798,7 @@ public class BangManager extends GameManager
         _bangobj.setStartPositions(_bangobj.startPositions);
 
         // give the scenario a shot at its own custom markers
-        _scenario.filterMarkers(_bangobj, _starts, pieces);
+        _scenario.filterPieces(_bangobj, _starts, pieces);
 
         // remove any remaining marker pieces and assign piece ids
         _bangobj.maxPieceId = 0;

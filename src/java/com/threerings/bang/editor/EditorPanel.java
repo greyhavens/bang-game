@@ -37,7 +37,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.server.scenario.ScenarioFactory;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -63,6 +65,9 @@ public class EditorPanel extends JPanel
     /** The recenter camera menu item, which is enabled and disabled by the
      * viewpoint editor. */
     public JMenuItem recenter;
+
+    /** The prop menu items. */
+    public JCheckBoxMenuItem[] propChecks;
     
     /** Creates the main panel and its sub-interfaces. */
     public EditorPanel (EditorContext ctx, EditorController ctrl)
@@ -74,6 +79,7 @@ public class EditorPanel extends JPanel
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         MessageBundle msgs = ctx.getMessageManager().getBundle("editor");
+        MessageBundle gmsgs = ctx.getMessageManager().getBundle("game");
 	    VGroupLayout gl = new VGroupLayout(VGroupLayout.STRETCH);
 	    gl.setOffAxisPolicy(VGroupLayout.EQUALIZE);
 	    gl.setJustification(VGroupLayout.TOP);
@@ -171,13 +177,27 @@ public class EditorPanel extends JPanel
             false);
         createCheckBoxMenuItem(view, msgs.get("m.menu_grid"),
             KeyEvent.VK_G, KeyEvent.VK_G, EditorController.TOGGLE_GRID,
-            false);
+            true);
         createCheckBoxMenuItem(view, msgs.get("m.menu_highlight"),
             KeyEvent.VK_H, KeyEvent.VK_H, EditorController.TOGGLE_HIGHLIGHTS,
             false);
+        
+        JMenu props = new JMenu(msgs.get("m.menu_props"));
+        props.setMnemonic(KeyEvent.VK_P);
+        view.add(props);
+
         view.addSeparator();
         recenter = createMenuItem(view, msgs.get("m.menu_recenter_camera"),
             KeyEvent.VK_R, KeyEvent.VK_R, EditorController.RECENTER_CAMERA);
+
+        String[] scids = ScenarioFactory.getScenarios(
+                BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1]);
+        propChecks = new JCheckBoxMenuItem[scids.length];
+        for (int ii = 0; ii < scids.length; ii++) {
+            String sname = gmsgs.get("m.scenario_" + scids[ii]);
+            propChecks[ii] = createCheckBoxMenuItem(
+                    props, sname, -1, -1, EditorController.TOGGLE_PROPS, true);
+        }
     }
 
     /** Called by the controller when the "editing" game starts. */
@@ -242,19 +262,25 @@ public class EditorPanel extends JPanel
         return item;
     }
 
-    protected void createCheckBoxMenuItem (JMenu menu, String label,
-        int accelerator, int mnemonic, String command, boolean selected)
+    protected JCheckBoxMenuItem createCheckBoxMenuItem (
+            JMenu menu, String label, int accelerator, int mnemonic,
+            String command, boolean selected)
     {
         JCheckBoxMenuItem item = new JCheckBoxMenuItem(label);
-        item.setAccelerator(KeyStroke.getKeyStroke(accelerator,
-            ActionEvent.CTRL_MASK));
-        item.setMnemonic(mnemonic);
+        if (accelerator != -1) {
+            item.setAccelerator(KeyStroke.getKeyStroke(accelerator,
+                ActionEvent.CTRL_MASK));
+        }
+        if (mnemonic != -1) {
+            item.setMnemonic(mnemonic);
+        }
         item.setActionCommand(command);
         item.addActionListener(_ctrl);
         item.setSelected(selected);
         menu.add(item);
+        return item;
     }
-    
+
     /** Giver of life and context. */
     protected EditorContext _ctx;
 

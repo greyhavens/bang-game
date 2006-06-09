@@ -33,6 +33,7 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Prop;
 
 import static com.threerings.bang.Log.log;
 
@@ -308,7 +309,8 @@ public class BangView extends BWindow
         ArrayList<Piece> plist = new ArrayList<Piece>();
         _bangobj.maxPieceId = 0;
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Marker) {
+            if (pieces[ii] instanceof Marker || (pieces[ii] instanceof Prop && 
+                 !((Prop)pieces[ii]).isValidScenario(_bangobj.scenarioId))) {
                 continue;
             }
             Piece p = (Piece)pieces[ii].clone();
