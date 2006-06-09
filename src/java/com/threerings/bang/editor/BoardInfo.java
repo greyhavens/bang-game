@@ -4,17 +4,22 @@
 package com.threerings.bang.editor;
 
 import java.awt.Dimension;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.samskivert.swing.VGroupLayout;
+import com.samskivert.swing.HGroupLayout;
 
 import com.threerings.util.MessageBundle;
 
@@ -28,9 +33,11 @@ import com.threerings.bang.util.BasicContext;
  * Displays and allows editing of board metadata.
  */
 public class BoardInfo extends JPanel
+    implements ItemListener
 {
-    public BoardInfo (BasicContext ctx)
+    public BoardInfo (BasicContext ctx, EditorPanel panel)
     {
+        _panel = panel;
         setLayout(new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH,
                                    5, VGroupLayout.TOP));
         _ctx = ctx;
@@ -50,10 +57,16 @@ public class BoardInfo extends JPanel
         String[] scids = ScenarioFactory.getScenarios(
             BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1]);
         JCheckBox box;
+
+        // prop visibility combo box
+        JComboBox props = new JComboBox();
+        props.addItem(new ScenarioLabel(null));
+
         for (int ii = 0; ii < scids.length; ii++) {
             String sname = gmsgs.get("m.scenario_" + scids[ii]);
             spanel.add(box = new JCheckBox(sname));
             _sboxes.put(scids[ii], box);
+            props.addItem(new ScenarioLabel(scids[ii]));
         }
 
         // add a selection for the tutorial scenario
@@ -68,6 +81,13 @@ public class BoardInfo extends JPanel
                 return d;
             }
         });
+
+        // create the prop visibility panel
+        JPanel ppanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
+        ppanel.add(new JLabel(_msgs.get("m.props")), HGroupLayout.FIXED);
+        ppanel.add(props);
+        props.addItemListener(this);
+        add(ppanel);
     }
 
     /**
@@ -127,13 +147,43 @@ public class BoardInfo extends JPanel
             it.next().setSelected(false);
         }
     }
+
+    // inherited from iterface ItemListener
+    public void itemStateChanged (ItemEvent ie)
+    {
+        ScenarioLabel sl = (ScenarioLabel)ie.getItem();
+        ((EditorController)_panel.getController()).toggleProps(sl.id);
+    }
     
+    protected class ScenarioLabel {
+        String id;
+
+        public ScenarioLabel (String scenarioId)
+        {
+            id = scenarioId;
+            if (id == null) {
+                _name = _msgs.get("m.all");
+            } else {
+                _name = _ctx.xlate("game", "m.scenario_" + id);
+            }
+        }
+
+        public String toString ()
+        {
+            return _name;
+        }
+
+        String _name;
+    }
+
     protected BasicContext _ctx;
     protected MessageBundle _msgs;
 
     protected JTextField _name;
     protected JLabel _pcount;
     protected int _players;
+
+    protected EditorPanel _panel;
 
     protected HashMap<String,JCheckBox> _sboxes =
         new HashMap<String,JCheckBox>();

@@ -94,7 +94,7 @@ public class EditorPanel extends JPanel
         add(vlabel, VGroupLayout.FIXED);
 
         // add the various control panels
-        add(info = new BoardInfo(ctx), VGroupLayout.FIXED);
+        add(info = new BoardInfo(ctx, this), VGroupLayout.FIXED);
         add(tools = new ToolPanel(ctx, this));
 
         // TODO: translate menu accelerators and short cuts
@@ -182,22 +182,9 @@ public class EditorPanel extends JPanel
             KeyEvent.VK_H, KeyEvent.VK_H, EditorController.TOGGLE_HIGHLIGHTS,
             false);
         
-        JMenu props = new JMenu(msgs.get("m.menu_props"));
-        props.setMnemonic(KeyEvent.VK_P);
-        view.add(props);
-
         view.addSeparator();
         recenter = createMenuItem(view, msgs.get("m.menu_recenter_camera"),
             KeyEvent.VK_R, KeyEvent.VK_R, EditorController.RECENTER_CAMERA);
-
-        String[] scids = ScenarioFactory.getScenarios(
-                BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1]);
-        propChecks = new JCheckBoxMenuItem[scids.length];
-        for (int ii = 0; ii < scids.length; ii++) {
-            String sname = gmsgs.get("m.scenario_" + scids[ii]);
-            propChecks[ii] = createCheckBoxMenuItem(
-                    props, sname, -1, -1, EditorController.TOGGLE_PROPS, true);
-        }
     }
 
     /** Called by the controller when the "editing" game starts. */
