@@ -19,6 +19,7 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Multex;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.StringUtil;
+import com.samskivert.swing.event.CommandEvent;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -71,12 +72,33 @@ public class BangController extends GameController
      * key is pressed (assuming no key-listening component has focus like the
      * chat box).
      */
-    public void mapCommand (int keyCode, final String command)
+    public void mapCommand (int keyCode, String command)
+    {
+        mapCommand(keyCode, new ActionEvent(BangController.this, 0, command));
+    }
+
+    /**
+     * Configures a controller command that will be fired when the specified
+     * key is pressed (assuming no key-listening component has focus like the
+     * chat box).
+     */
+    public void mapCommand (int keyCode, String command, Object argument)
+    {
+        mapCommand(keyCode, new CommandEvent(
+                    BangController.this, command, argument));
+    }
+
+    /**
+     * Configures a controller command that will be fired when the specified
+     * key is pressed (assuming no key-listening component has focus like the
+     * chat box).
+     */
+    public void mapCommand (int keyCode, final ActionEvent event)
     {
         _ctx.getKeyManager().registerCommand(
             keyCode, new GlobalKeyManager.Command() {
             public void invoke (int keyCode, int modifiers) {
-                handleAction(new ActionEvent(BangController.this, 0, command));
+                handleAction(event);
             }
         });
         _mapped.add(keyCode);
@@ -162,6 +184,9 @@ public class BangController extends GameController
         mapCommand(KeyInput.KEY_Q, "SwingCameraLeft");
         mapCommand(KeyInput.KEY_E, "SwingCameraRight");
         mapCommand(KeyInput.KEY_G, "ToggleGrid");
+        mapCommand(KeyInput.KEY_1, PLACE_CARD, new Integer(0));
+        mapCommand(KeyInput.KEY_2, PLACE_CARD, new Integer(1));
+        mapCommand(KeyInput.KEY_3, PLACE_CARD, new Integer(2));
     }
 
     @Override // documentation inherited
@@ -286,6 +311,15 @@ public class BangController extends GameController
     public void handleToggleGrid (Object source)
     {
         _view.view.toggleGrid(true);
+    }
+
+    /** Places the first card. */
+    public void handlePlaceCard (Object source, Object argument)
+    {
+        int value = ((Integer)argument).intValue();
+        if (_view.pstatus != null && _pidx < _view.pstatus.length) {
+            _view.pstatus[_pidx].playCardAtIndex(value);
+        }
     }
 
     /**

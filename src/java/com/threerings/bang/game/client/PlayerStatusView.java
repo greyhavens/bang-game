@@ -200,6 +200,16 @@ public class PlayerStatusView extends BContainer
         }
     }
 
+    /**
+     * Performs the card action for the card at this index.
+     */
+    public void playCardAtIndex (int idx)
+    {
+        if (idx < _cards.length && _cards[idx] != null) {
+            _ctrl.placeCard(Integer.parseInt(_cards[idx].getAction()));
+        }
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
