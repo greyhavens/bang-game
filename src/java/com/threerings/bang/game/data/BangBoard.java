@@ -182,6 +182,7 @@ public class BangBoard extends SimpleStreamableObject
     public void setHeightfieldValue (int x, int y, byte value)
     {
         _heightfield[y*_hfwidth + x] = value;
+        _heightfieldChanged = true;
     }
 
     /** Adds to or subtracts from the height at the specified sub-tile
@@ -191,6 +192,7 @@ public class BangBoard extends SimpleStreamableObject
         int idx = y*_hfwidth + x;
         _heightfield[idx] = (byte)Math.min(Math.max(-128,
             _heightfield[idx] + value), +127);
+        _heightfieldChanged = true;
     }
 
     /** Returns a reference to the heightfield array. */
@@ -749,6 +751,39 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
+     * Returns the max heightfield elevation (the elevation of the terrain in
+     * elevation units) at the specified tile coordinates.
+     */
+    public int getMaxHeightfieldElevation (int x, int y)
+    {
+        if (_maxHeight == null) {
+            _maxHeight = new int[_width * _height];
+        }
+        if (_heightfieldChanged) {
+            for (int idx = 0; idx < _maxHeight.length; idx++) {
+                _maxHeight[idx] = Integer.MIN_VALUE;
+            }
+            _heightfieldChanged = false;
+        }
+        int idx = y * _width + x;
+        if (_maxHeight[idx] > Integer.MIN_VALUE) {
+            return _maxHeight[idx];
+        }
+        int hx = Math.min((x + 1) * HEIGHTFIELD_SUBDIVISIONS, _hfwidth);
+        int hy = Math.min((y + 1) * HEIGHTFIELD_SUBDIVISIONS, _hfheight);
+        x = Math.max(x * HEIGHTFIELD_SUBDIVISIONS, 0);
+        y = Math.max(y * HEIGHTFIELD_SUBDIVISIONS, 0);
+        int height = _minEdgeHeight;
+        for (int dy = y; dy <= hy; dy++) {
+            for (int dx = x; dx <= hx; dx++) {
+                height = Math.max(height, _heightfield[dy * _hfwidth + dx]);
+            }
+        }
+        _maxHeight[idx] = height;
+        return height;
+    }
+
+    /**
      * Returns the piece elevation (the height of the piece in elevation units)
      * at the specified tile coordinates.
      */
@@ -893,6 +928,17 @@ public class BangBoard extends SimpleStreamableObject
             return false;
         }
         return (_tstate[y*_width+x] == O_FLAT);
+    }
+
+    /**
+     * Returns true if the specified coordiante is traversable.
+     */
+    public boolean isTraversable (int x, int y)
+    {
+        if (!_playarea.contains(x, y)) {
+            return false;
+        }
+        return (_btstate[y*_width+x] == O_FLAT);
     }
 
     /**
@@ -1261,6 +1307,12 @@ public class BangBoard extends SimpleStreamableObject
 
     /** A rectangle containing our playable area. */
     protected transient Rectangle _playarea;
+
+    /** The maximum height per tile. */
+    protected transient int[] _maxHeight;
+
+    /** If the heightfield has changed since generating max heights. */
+    protected transient boolean _heightfieldChanged = true;
 
     /** Indicates that this tile is occupied by a mobile non-unit. */
     protected static final byte O_OCCUPIED = 10;

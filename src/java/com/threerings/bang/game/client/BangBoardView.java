@@ -1358,7 +1358,7 @@ public class BangBoardView extends BoardView
 
             // denote our desired move location on the board
             if (mx != Short.MAX_VALUE) {
-                _highlight = _tnode.createHighlight(x, y, true);
+                _highlight = _tnode.createHighlight(x, y, true, true);
                 _unit.setPendingNode(_highlight);
                 _highlight.updateRenderState();
                 _pnode.attachChild(_highlight);

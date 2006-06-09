@@ -160,10 +160,25 @@ public class Unit extends Piece
     public int computeElevation (BangBoard board, int tx, int ty)
     {
         if (isFlyer() && isAlive()) {
-            return computeFlightElevation(board, tx, ty);
+            return computeAreaFlightElevation(board, tx, ty);
         } else {
             return super.computeElevation(board, tx, ty);
         }
+    }
+
+    /**
+     * Finds the maximum flying elevation over a grid.
+     */
+    public int computeAreaFlightElevation (BangBoard board, int tx, int ty)
+    {
+        int elevation = Integer.MIN_VALUE;
+        for (int ii = tx - 1; ii <= tx + 1; ii++) {
+            for (int jj = ty - 1; jj <= ty + 1; jj++) {
+                elevation = Math.max(elevation, computeFlightElevation(
+                            board, ii, jj));
+            }
+        }
+        return elevation;
     }
     
     /**

@@ -42,6 +42,10 @@ public class Config
     /** Whether or not move highlights float above pieces. */
     public static boolean floatHighlights = true;
 
+    /** Whether or not move highlights will flatten when over 
+     * non-traversable terrain. */
+    public static boolean flattenHighlights = true;
+
     /** Whether or not display lists are activated. */
     public static boolean useDisplayLists = true;
 

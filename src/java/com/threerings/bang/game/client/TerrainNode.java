@@ -164,19 +164,19 @@ public class TerrainNode extends Node
         /** The position of the center of the highlight. */
         public float x, y;
 
-        protected Highlight (int x, int y, boolean overPieces)
+        protected Highlight (int x, int y, boolean overPieces, boolean flatten)
         {
             this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, TILE_SIZE,
-                TILE_SIZE, true, overPieces);
+                TILE_SIZE, true, overPieces, flatten);
         }
 
         protected Highlight (float x, float y, float width, float height)
         {
-            this(x, y, width, height, false, false);
+            this(x, y, width, height, false, false, false);
         }
 
         protected Highlight (float x, float y, float width, float height,
-            boolean onTile, boolean overPieces)
+            boolean onTile, boolean overPieces, boolean flatten)
         {
             super("highlight");
             this.x = x;
@@ -185,6 +185,7 @@ public class TerrainNode extends Node
             _height = height;
             _onTile = onTile;
             _overPieces = overPieces;
+            _flatten = flatten;
 
             setLightCombineMode(LightState.OFF);
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -290,7 +291,14 @@ public class TerrainNode extends Node
             int tx = getTileX(), ty = getTileY();
             Vector3f offset = null;
             getLocalTranslation().set(0f, 0f, 0f);
-            if (_onTile && _overPieces) {
+            float height = 0f;
+            boolean flatten = _flatten && !_board.isTraversable(tx, ty);
+            if (flatten) {
+                int belev = _board.getElevation(tx, ty);
+                int maxelev = _board.getMaxHeightfieldElevation(tx, ty);
+                height = (float)(Math.max(belev, maxelev) * _elevationScale);
+
+            } else if (_onTile && _overPieces) {
                 int belev = _board.getElevation(tx, ty),
                     helev = _board.getHeightfieldElevation(tx, ty);
                 if (belev > helev) {
@@ -306,8 +314,12 @@ public class TerrainNode extends Node
             for (int sy = sy0, sy1 = sy0 + _vheight, idx = 0; sy < sy1; sy++) {
                 for (int sx = sx0, sx1 = sx0 + _vwidth; sx < sx1; sx++) {
                     getHeightfieldVertex(sx, sy, vertex);
-                    if (offset != null) {
-                        vertex.subtractLocal(offset);
+                    if (flatten) {
+                        vertex.z = height;
+                    } else {
+                        if (offset != null) {
+                            vertex.subtractLocal(offset);
+                        }
                     }
                     BufferUtils.setInBuffer(vertex, vbuf, idx++);
                     
@@ -331,7 +343,7 @@ public class TerrainNode extends Node
 
             // if the highlight is aligned with a tile, we're done; otherwise,
             // we must update the texture coords as well
-            if (_onTile) {
+            if (_onTile || flatten) {
                 return;
             }
             FloatBuffer tbuf = getTextureBuffer(0, 0);
@@ -366,6 +378,9 @@ public class TerrainNode extends Node
         
         /** If true, the highlight will be over pieces occupying the tile. */
         protected boolean _overPieces;
+
+        /** If true, the highlight will be flat. */
+        protected boolean _flatten;
     }
 
     /**
@@ -634,7 +649,25 @@ public class TerrainNode extends Node
      */
     public Highlight createHighlight (int x, int y, boolean overPieces)
     {
-        return new Highlight(x, y, overPieces && Config.floatHighlights);
+        return createHighlight(x, y, overPieces, false);
+    }
+
+    /**
+     * Creates and returns a tile-aligned highlight over this terrain at the
+     * specified tile coordinates.  The highlight must be added to the scene
+     * graph before it becomes visible.
+     *
+     * @param overPieces if true, place the highlight above any pieces
+     * occupying the tile
+     * @param flatten if true, the highlight will be flat aligned with
+     * the highest point of the tile
+     */
+    public Highlight createHighlight (
+            int x, int y, boolean overPieces, boolean flatten)
+    {
+        return new Highlight(
+                x, y, overPieces && Config.floatHighlights, 
+                flatten && Config.flattenHighlights);
     }
 
     /**

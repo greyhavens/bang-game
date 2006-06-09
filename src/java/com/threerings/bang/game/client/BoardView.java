@@ -1353,10 +1353,12 @@ public class BoardView extends BComponent
     {
         if (hover != _highlightHover) {
             if (_highlightHover != null) {
-                _highlightHover.setDefaultColor(MOVEMENT_HIGHLIGHT_COLOR);
+                _highlightHover.setDefaultColor(_oldHighlightColor);
             }
             _highlightHover = hover;
             if (_highlightHover != null) {
+                _oldHighlightColor = 
+                    _highlightHover.getBatch(0).getDefaultColor();
                 _highlightHover.setDefaultColor(HOVER_HIGHLIGHT_COLOR);
             }
         }
@@ -1375,7 +1377,7 @@ public class BoardView extends BComponent
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int tx = set.getX(ii), ty = set.getY(ii);
             TerrainNode.Highlight highlight =
-                _tnode.createHighlight(tx, ty, true);
+                _tnode.createHighlight(tx, ty, true, true);
             highlight.setDefaultColor(highlightColor);
             highlight.setRenderState(_movstate);
             _hnode.attachChild(highlight);
@@ -1388,7 +1390,7 @@ public class BoardView extends BComponent
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             TerrainNode.Highlight highlight = _tnode.createHighlight(
-                set.getX(ii), set.getY(ii), true);
+                set.getX(ii), set.getY(ii), true, true);
             highlight.setRenderState(_tgtstate);
             highlight.updateRenderState();
             _hnode.attachChild(highlight);
@@ -1582,6 +1584,9 @@ public class BoardView extends BComponent
 
     /** The highlight currently being hovered over. */
     protected TerrainNode.Highlight _highlightHover;
+
+    /** Stores the former highlight color. */
+    protected ColorRGBA _oldHighlightColor;
 
     /** The grid indicating where the tile boundaries lie. */
     protected GridNode _grid;

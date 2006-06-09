@@ -398,7 +398,7 @@ public class UnitSprite extends MobileSprite
 
         // this composite of icons combines to display our status
         _tlight = _view.getTerrainNode().createHighlight(
-            _piece.x, _piece.y, true);
+            _piece.x, _piece.y, true, true);
         attachHighlight(_status = new UnitStatus(ctx, _tlight));
         _status.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
 
@@ -512,7 +512,7 @@ public class UnitSprite extends MobileSprite
         // last coordinate is on the ground
         int elev;
         if (_piece.isFlyer() && !_piece.isAlive() && idx != coords.length-1) {
-            elev = ((Unit)_piece).computeFlightElevation(board, nx, ny);
+            elev = ((Unit)_piece).computeAreaFlightElevation(board, nx, ny);
         } else {
             elev = _piece.computeElevation(board, nx, ny);
         }
