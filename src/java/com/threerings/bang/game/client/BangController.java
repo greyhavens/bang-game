@@ -178,6 +178,7 @@ public class BangController extends GameController
         }, 2);
 
         mapCommand(KeyInput.KEY_SPACE, "StartChat");
+        mapCommand(KeyInput.KEY_RETURN, "StartChat");
         mapCommand(KeyInput.KEY_ESCAPE, "ShowOptions");
         mapCommand(KeyInput.KEY_TAB, "SelectNextUnit");
         mapCommand(KeyInput.KEY_C, "AdjustZoom");
