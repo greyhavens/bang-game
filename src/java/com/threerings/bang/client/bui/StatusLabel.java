@@ -36,7 +36,6 @@ public class StatusLabel extends BLabel
     {
         setText(message);
         if (flash) {
-            _flashCount = 0;
             final ImageIcon alert = new ImageIcon(
                     _ctx.getImageCache().getBImage("ui/icons/alert.png"));
             final BlankIcon blank = new BlankIcon(
@@ -45,12 +44,13 @@ public class StatusLabel extends BLabel
             Interval flashAlert = new Interval(_ctx.getApp()) {
                 public void expired () {
                     _flashCount++;
-                    if (_flashCount >= 5) {
-                        cancel();
-                        _flashCount = 5;
-                    }
                     setIcon(_flashCount % 2 == 0 ? alert : blank);
+                    if (_flashCount == 5) {
+                        cancel();
+                    }
                 }
+                
+                protected int _flashCount = 0;
             };
             flashAlert.schedule(FLASH_DELAY, true);
         }
@@ -68,9 +68,6 @@ public class StatusLabel extends BLabel
     }
 
     protected BangContext _ctx;
-
-    /** Number of flashes (x2 flash on & flash off) */
-    protected int _flashCount;
 
     protected static final long FLASH_DELAY = 300L;
 }
