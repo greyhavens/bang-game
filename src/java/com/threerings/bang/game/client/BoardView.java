@@ -1281,7 +1281,8 @@ public class BoardView extends BComponent
 
     /**
      * Determine which of the highlight tiles the mouse is hovering over
-     * and records that tile's coordinates in {@link #_high}.
+     * and records that tile's coordinates in {@link #_high}.  It also
+     * changes the color of the highlight.
      */
     protected void updateHighlightHover ()
     {
@@ -1292,6 +1293,7 @@ public class BoardView extends BComponent
         _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
         _high.setLocation(-1, -1);
         float dist = Float.MAX_VALUE;
+        TerrainNode.Highlight hover = null;
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
             PickData pdata = _pick.getPickData(ii);
             if (notReallyAHit(pdata)) {
@@ -1304,8 +1306,14 @@ public class BoardView extends BComponent
             if (hdist < dist) {
                 _high.setLocation(highlight.getTileX(), highlight.getTileY());
                 dist = hdist;
+                hover = highlight;
             }
         }
+        // if we're already hovering over a sprite, don't highlight a tile
+        if (_hover != null) {
+            hover = null;
+        }
+        hoverHighlightChanged(hover);
         if (_high.x != -1 && _high.y != -1) {
             return;
         } else if (_htiles.contains(_mouse.x, _mouse.y)) {
@@ -1331,7 +1339,27 @@ public class BoardView extends BComponent
      */
     protected void hoverSpriteChanged (Sprite hover)
     {
+        if (hover != null) {
+            hoverHighlightChanged(null);
+        }
         _hover = hover;
+    }
+
+    /**
+     * This is called when the mouse is moved to hover over a different
+     * highlight tile (or none at all).
+     */
+    protected void hoverHighlightChanged (TerrainNode.Highlight hover)
+    {
+        if (hover != _highlightHover) {
+            if (_highlightHover != null) {
+                _highlightHover.setDefaultColor(MOVEMENT_HIGHLIGHT_COLOR);
+            }
+            _highlightHover = hover;
+            if (_highlightHover != null) {
+                _highlightHover.setDefaultColor(HOVER_HIGHLIGHT_COLOR);
+            }
+        }
     }
 
     /** Creates geometry to highlight the supplied set of tiles. */
@@ -1547,10 +1575,13 @@ public class BoardView extends BComponent
 
     /** The set of currently highlighted tiles. */
     protected PointSet _htiles = new PointSet();
-    
+
     /** The tile coordinates of the highlight tile that the mouse is
      * hovering over or (-1, -1). */
     protected Point _high = new Point(-1, -1);
+
+    /** The highlight currently being hovered over. */
+    protected TerrainNode.Highlight _highlightHover;
 
     /** The grid indicating where the tile boundaries lie. */
     protected GridNode _grid;
@@ -1591,6 +1622,10 @@ public class BoardView extends BComponent
     /** The color of the movement highlights. */
     protected static final ColorRGBA MOVEMENT_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 1f, 0.5f, 0.5f);
+
+    /** The color of the movement highglights when the mouse is hovering. */
+    protected static final ColorRGBA HOVER_HIGHLIGHT_COLOR =
+        new ColorRGBA(1f, 0.5f, 1f, 0.5f);
 
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;
