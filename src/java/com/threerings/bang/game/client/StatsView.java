@@ -202,6 +202,25 @@ public class StatsView extends SteelWindow
     }
 
     /**
+     * Convenience function to get int stat values for a player.
+     */
+    protected int getIntStat (int pidx, Stat.Type type)
+    {
+        return getIntStat(pidx, _bobj.stats, type); 
+    }
+
+    /**
+     * Convenience function to get int stat values for a player.
+     */
+    protected int getIntStat (int pidx, StatSet[] stats, Stat.Type type)
+    {
+        if (stats == null || pidx >= stats.length || stats[pidx] == null) {
+            return 0;
+        }
+        return _bobj.stats[pidx].getIntStat(type);
+    }
+
+    /**
      * Show, and possibly animated, the total game objectives met by 
      * the players.
      */
@@ -228,8 +247,7 @@ public class StatsView extends SteelWindow
 
         // find the max objective count
         for (int ii = 0; ii < size; ii++) {
-            maxobjectives = Math.max(maxobjectives,
-                    _bobj.stats[ii].getIntStat(_statType));
+            maxobjectives = Math.max(maxobjectives, getIntStat(ii, _statType));
         }
 
         for (int ii = 0; ii < size; ii++) {
@@ -242,7 +260,7 @@ public class StatsView extends SteelWindow
             BContainer icont = new BContainer(new AbsoluteLayout());
             cont.add(icont, GroupLayout.FIXED);
             cont.setPreferredSize(new Dimension(385, 50));
-            int objectives = _bobj.stats[ii].getIntStat(_statType);
+            int objectives = getIntStat(ii, _statType);
             _labels[ii] = new BLabel[objectives + 2];
             Dimension apref = aview.getPreferredSize(-1, -1);
             int y = (apref.height - _objectiveIcon.getHeight()) / 2;
@@ -355,12 +373,10 @@ public class StatsView extends SteelWindow
             // add the data
             for (int ii = 0; ii < size; ii++) {
                 BLabel[] labels = new BLabel[7];
-                int objectives = _bobj.stats[ii].getIntStat(_statType);
-                int points = _bobj.stats[ii].getIntStat(
-                        Stat.Type.POINTS_EARNED);
+                int objectives = getIntStat(ii, _statType);
+                int points = getIntStat(ii, Stat.Type.POINTS_EARNED);
                 int objPoints = objectives * _ppo;
-                int starPoints = _bobj.stats[ii].getIntStat(
-                        Stat.Type.BONUS_POINTS);
+                int starPoints = getIntStat(ii, Stat.Type.BONUS_POINTS);
                 int damagePoints = points - objPoints - starPoints;
                 _ptscont.add(makeAvatarView(ii));
                 _ptscont.add(labels[0] = new BLabel(
@@ -509,7 +525,7 @@ public class StatsView extends SteelWindow
                     }
                     for (Stat.Type type : statTypes) {
                         statSet[jj].incrementStat(
-                                type, tmpset[jj].getIntStat(type));
+                                type, getIntStat(jj, tmpset, type));
                     }
                 }
             }
@@ -552,7 +568,7 @@ public class StatsView extends SteelWindow
             stats.add(header);
             int max = 0;
             for (int ii = 0; ii < size; ii++) {
-                max = Math.max(max, statSet[ii].getIntStat(type));
+                max = Math.max(max, getIntStat(ii, statSet, type));
             }
             map.put(type, new Integer(max));
         }
@@ -569,7 +585,7 @@ public class StatsView extends SteelWindow
                 };
                 cont.setPreferredSize(boxdim);
                 stats.add(cont);
-                int value = statSet[ii].getIntStat(type);
+                int value = getIntStat(ii, statSet, type);
                 String styleclass = "endgame_stattotal";
                 if (value == map.get(type).intValue()) {
                     styleclass += "high";

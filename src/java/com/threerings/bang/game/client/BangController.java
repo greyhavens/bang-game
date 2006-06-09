@@ -169,8 +169,9 @@ public class BangController extends GameController
         _startRoundMultex.satisfied(Multex.CONDITION_TWO);
 
         // we'll use this one at the end of the game
-        _postGameMultex = new Multex(new Runnable() {
+        _postRoundMultex = new Multex(new Runnable() {
             public void run () {
+                _statMap.put(_bangobj.roundId, _bangobj.stats);
                 _ctx.getBangClient().displayPopup(
                     new StatsView(_ctx, BangController.this, _bangobj, true),
                                   true);
@@ -496,10 +497,10 @@ public class BangController extends GameController
         super.attributeChanged(event);
 
         // once the awards are set, we can display the end of game view
-        if (event.getName().equals(BangObject.AWARDS) &&
+        if (event.getName().equals(BangObject.STATS) &&
             // we handle things specially in the tutorial and practice
             !_config.tutorial && !_config.practice) {
-            _postGameMultex.satisfied(Multex.CONDITION_TWO);
+            _postRoundMultex.satisfied(Multex.CONDITION_TWO);
         }
     }
 
@@ -612,9 +613,7 @@ public class BangController extends GameController
      */
     protected void interRoundMarqueeFadeComplete ()
     {
-        _statMap.put(_bangobj.roundId, _bangobj.stats);
-        _ctx.getBangClient().displayPopup(
-            new StatsView(_ctx, BangController.this, _bangobj, true), true);
+        _postRoundMultex.satisfied(Multex.CONDITION_ONE);
     }
     /**
      * Called by the board view after it has faded out the board at the end of
@@ -632,7 +631,7 @@ public class BangController extends GameController
     protected void postGameFadeComplete ()
     {
         // potentially display the post-game stats
-        _postGameMultex.satisfied(Multex.CONDITION_ONE);
+        _postRoundMultex.satisfied(Multex.CONDITION_ONE);
         
         if (_config.practice) {
             BangBootstrapData bbd = (BangBootstrapData)
@@ -770,9 +769,9 @@ public class BangController extends GameController
     /** Used to start the new round after two conditions have been met. */
     protected Multex _startRoundMultex;
 
-    /** Used to show the stats once we've faded in our Game Over marquee and
-     * the awards have arrived. */
-    protected Multex _postGameMultex;
+    /** Used to show the stats once we've faded in our Round/Game Over 
+     * marquee and the stats have arrived. */
+    protected Multex _postRoundMultex;
 
     /** The units we cycle through when we press tab. */
     protected ArrayList<Unit> _selections = new ArrayList<Unit>();

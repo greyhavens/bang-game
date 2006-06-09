@@ -671,6 +671,10 @@ public class BangManager extends GameManager
                 }
             }
             break;
+
+        case BangObject.POST_ROUND:
+            roundDidEnd();
+            break;
         }
     }
 
@@ -1180,6 +1184,15 @@ public class BangManager extends GameManager
 
         // clear out pending orders
         _orders.clear();
+    }
+
+    /**
+     * We use this to make sure the stats are final before broadcasting them.
+     */
+    protected void roundDidEnd ()
+    {
+        // broadcast our updated statistics
+        _bangobj.setStats(_bangobj.stats);
 
         // start the next round
         startRound();
@@ -1291,15 +1304,15 @@ public class BangManager extends GameManager
         // stats panel
         _bangobj.setPerRoundPoints(_bangobj.perRoundPoints);
 
-        // broadcast our updated statistics
-        _bangobj.setStats(_bangobj.stats);
-
         // record this game to the server stats log (before we sort the awards)
         recordGame(awards, gameSecs);
 
         // sort by rank and then stuff the award data into the game object
         Arrays.sort(awards);
         _bangobj.setAwards(awards);
+
+        // broadcast our updated statistics
+        _bangobj.setStats(_bangobj.stats);
 
         // and persist the awards as well
         postGamePersist(awards);
