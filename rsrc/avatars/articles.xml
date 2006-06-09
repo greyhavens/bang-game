@@ -473,7 +473,7 @@
 
   <!-- female face paint: frontier town -->
 
-  <!-- male face paint: indian trading post -->
+  <!-- female face paint: indian trading post -->
   <article name="female_badger" townId="indian_post"
            slot="makeup" scrip="2000" coins="3" colors="makeup_p">
     <component cclass="female/makeup" name="badger"/>
@@ -495,7 +495,7 @@
   </article>
 
   <article name="female_cougar" townId="indian_post"
-           slot="makeup" scrip="3000" coins="3" colors="makeup_p">
+           slot="makeup" scrip="3000" coins="3">
     <component cclass="female/makeup" name="cougar"/>
   </article>
 
@@ -545,7 +545,7 @@
   </article>
 
   <article name="female_tear" townId="indian_post"
-           slot="makeup" scrip="3000" coins="3">
+           slot="makeup" scrip="3000" coins="3" colors="makeup_p">
     <component cclass="female/makeup" name="tear"/>
   </article>
 
