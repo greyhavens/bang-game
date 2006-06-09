@@ -45,10 +45,11 @@ public class StatusLabel extends BLabel
             Interval flashAlert = new Interval(_ctx.getApp()) {
                 public void expired () {
                     _flashCount++;
-                    setIcon(_flashCount % 2 == 0 ? alert : blank);
-                    if (_flashCount == 5) {
+                    if (_flashCount >= 5) {
                         cancel();
+                        _flashCount = 5;
                     }
+                    setIcon(_flashCount % 2 == 0 ? alert : blank);
                 }
             };
             flashAlert.schedule(FLASH_DELAY, true);
