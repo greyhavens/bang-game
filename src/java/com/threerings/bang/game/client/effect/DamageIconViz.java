@@ -175,7 +175,7 @@ public class DamageIconViz extends IconViz
     }
 
     @Override // documentation inherited
-    protected void billboardRise (BillboardNode bnode, float elapsed)
+    protected void billboardRise (float elapsed)
     {
         float y;
         float rising = RISE_DURATION - FALL_DURATION;
@@ -189,9 +189,15 @@ public class DamageIconViz extends IconViz
     }
 
     @Override // documentation inherited
-    protected void billboardLinger (BillboardNode bnode, float elapsed)
+    protected void billboardLinger (float elapsed)
     {
         setReadoutY(ICON_SIZE);
+    }
+
+    @Override // documentation inherited
+    protected void billboardDetached ()
+    {
+        _dmgTState.deleteAll();
     }
 
     /**

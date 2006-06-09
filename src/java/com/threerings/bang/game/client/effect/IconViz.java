@@ -95,6 +95,7 @@ public class IconViz extends EffectViz
                 if ((_elapsed += time) >= RISE_DURATION + LINGER_DURATION +
                     FADE_DURATION) {
                     parent.detachChild(this);
+                    billboardDetached();
                     return;
                     
                 } else if (_elapsed >= RISE_DURATION + LINGER_DURATION) {
@@ -104,12 +105,12 @@ public class IconViz extends EffectViz
                 } else if (_elapsed >= RISE_DURATION) {
                     alpha = 1f;
                     localTranslation.z = TILE_SIZE * 1;
-                    billboardLinger(this, _elapsed);
+                    billboardLinger(_elapsed);
                     
                 } else {
                     alpha = _elapsed / RISE_DURATION;
                     localTranslation.z = TILE_SIZE * (0.5f + alpha * 0.5f);
-                    billboardRise(this, _elapsed);
+                    billboardRise(_elapsed);
                 }
                 Iterator iter = children.iterator();
                 while (iter.hasNext()) {
@@ -127,7 +128,7 @@ public class IconViz extends EffectViz
     /**
      * Used to add special animation during the rise phase.
      */
-    protected void billboardRise (BillboardNode bnode, float elapsed)
+    protected void billboardRise (float elapsed)
     {
         // nothing to do here
     }
@@ -135,7 +136,15 @@ public class IconViz extends EffectViz
     /**
      * Used to add special animation during the linger phase.
      */
-    protected void billboardLinger (BillboardNode bnode, float elapsed)
+    protected void billboardLinger (float elapsed)
+    {
+        // nothing to do here
+    }
+
+    /**
+     * Called when the billboard detaches itself.
+     */
+    protected void billboardDetached ()
     {
         // nothing to do here
     }
