@@ -1110,9 +1110,7 @@ public class BangBoardView extends BoardView
 
     protected boolean checkForSelectionInfluence (Piece piece)
     {
-        if (_selection == null ||
-            (!_attackSet.contains(piece.x, piece.y) &&
-                _selection.getDistance(piece) > _selection.getMoveDistance())) {
+        if (_selection == null) {
             return false;
         }
 
