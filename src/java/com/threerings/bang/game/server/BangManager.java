@@ -1115,7 +1115,7 @@ public class BangManager extends GameManager
         _rounds[ridx].lastTick = tick;
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (_bangobj.isActivePlayer(ii)) {
-                _precords[ii].finishedTick[ridx] = _bangobj.tick;
+                _precords[ii].finishedTick[ridx] = tick;
             }
         }
 
