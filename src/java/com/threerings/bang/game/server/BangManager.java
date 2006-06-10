@@ -1634,12 +1634,12 @@ public class BangManager extends GameManager
             log.fine("Noting earnings p:" + _bangobj.players[pidx] +
                      " r:" + rr + " (" + _precords[pidx].finishedTick[rr] +
                      " * " + BASE_EARNINGS[defeated] + " / " +
-                     _rounds[rr].duration + ").");
+                     _rounds[rr].lastTick + ").");
 
             // scale the player's earnings based on the percentage of the round
             // they completed
             earnings += (_precords[pidx].finishedTick[rr] *
-                         BASE_EARNINGS[defeated] / _rounds[rr].duration);
+                         BASE_EARNINGS[defeated] / _rounds[rr].lastTick);
         }
 
         // and scale earnings based on their purse
