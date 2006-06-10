@@ -1112,6 +1112,7 @@ public class BangManager extends GameManager
 
         // note that all active players completed this tick
         int ridx = _bangobj.roundId-1;
+        _rounds[ridx].lastTick = tick;
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (_bangobj.isActivePlayer(ii)) {
                 _precords[ii].finishedTick[ridx] = _bangobj.tick;
@@ -2215,6 +2216,9 @@ public class BangManager extends GameManager
     /** Contains information about each round played. */
     protected static class RoundRecord
     {
+        /** The last tick recorded for this round. */
+        public int lastTick;
+
         /** The duration of this round in ticks. */
         public int duration;
 
