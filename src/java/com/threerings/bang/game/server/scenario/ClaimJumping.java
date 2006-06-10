@@ -109,6 +109,12 @@ public class ClaimJumping extends Scenario
     {
         super.tick(bangobj, tick);
 
+        // if we're not at least half-way through the round, don't do our empty
+        // claim calculations
+        if (bangobj.tick < bangobj.duration/2) {
+            return;
+        }
+
         // check to see if there are empty claims
         boolean empty = false;
         for (Claim claim : _claims) {
