@@ -346,7 +346,7 @@ public class StatsView extends SteelWindow
             // add the titles
             if (_bobj.roundId > 1 || _bobj.state != BangObject.GAME_OVER) {
                 _ptscont.add(new BLabel(_msgs.xlate(MessageBundle.tcompose(
-                                    "m.round_header", _bobj.roundId)),
+                                    "m.stats_round_header", _bobj.roundId)),
                             "endgame_title"));
             } else {
                 _ptscont.add(new Spacer(0, height));
@@ -476,7 +476,7 @@ public class StatsView extends SteelWindow
                 roundheader = _msgs.get("m.overall");
             } else if (_bobj.roundId > 1) {
                 roundheader = _msgs.xlate(MessageBundle.tcompose(
-                                "m.round_header", round));
+                                "m.stats_round_header", round));
             }
         }
         if (roundheader != null) {
