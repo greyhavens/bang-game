@@ -318,9 +318,12 @@ public abstract class Piece extends SimpleStreamableObject
     /**
      * Selects the shortest move that puts us within range of firing on
      * the specified target.
+     *
+     * @param any if true we don't care about the best shot location, just that
+     * there is at least one valid shot location.
      */
     public Point computeShotLocation (
-        BangBoard board, Piece target, PointSet moveSet)
+        BangBoard board, Piece target, PointSet moveSet, boolean any)
     {
         int minfdist = getMinFireDistance(), maxfdist = getMaxFireDistance();
         int moves = Integer.MAX_VALUE;
@@ -345,6 +348,9 @@ public abstract class Piece extends SimpleStreamableObject
                     spot = new Point();
                 }
                 spot.setLocation(px, py);
+                if (any) {
+                    break;
+                }
             }
         }
 

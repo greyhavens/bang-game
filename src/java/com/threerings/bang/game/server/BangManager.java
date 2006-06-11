@@ -1396,7 +1396,7 @@ public class BangManager extends GameManager
             }
 
             Point spot = unit.computeShotLocation(
-                _bangobj.board, target, _moves);
+                _bangobj.board, target, _moves, false);
             if (spot == null) {
 //                 log.info("Unable to find place from which to shoot. " +
 //                          "[piece=" + unit.info() +
@@ -2116,8 +2116,9 @@ public class BangManager extends GameManager
                 if (target == null) { // sanity check
                     return TARGET_NO_LONGER_VALID;
                 }
-                return (unit.computeShotLocation(_bangobj.board, target,
-                    _moves) == null) ? TARGET_UNREACHABLE : null;
+                return (unit.computeShotLocation(
+                            _bangobj.board, target, _moves, true) == null) ?
+                    TARGET_UNREACHABLE : null;
             }
 
             // if a specific location was specified, make sure we can

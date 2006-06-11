@@ -923,12 +923,8 @@ public class BangBoardView extends BoardView
 
         if (_attackEnabled) {
             // display our potential attacks
-            PointSet attacks = new PointSet();
-            _bangobj.board.computeAttacks(_selection.getMinFireDistance(),
-                                          _selection.getMaxFireDistance(),
-                                          tx, ty, attacks);
             _attackSet.clear();
-            pruneAttackSet(attacks, moves, _attackSet);
+            pruneAttackSet(moves, _attackSet);
         }
 
         // if there are no valid attacks, assume they're just moving (but
@@ -954,8 +950,8 @@ public class BangBoardView extends BoardView
         }
 
         // maybe we're clicking on a piece that is in our attack set
-        if (_attackSet.contains(tx, ty) &&
-            piece != null && piece.owner != _pidx) {
+        if (_attackSet.contains(tx, ty) && piece != null &&
+            piece.owner != _pidx) {
             // if we have not yet selected move coordinates, we'll let the
             // server figure it out for us when it processes our move
             if (_action == null) {
@@ -995,28 +991,28 @@ public class BangBoardView extends BoardView
     }
 
     /**
-     * Scans all pieces that are in the specified range set and those to
-     * which we can compute a valid firing location adds to the supplied
-     * destination set, and marks their sprite as being targeted as well.
+     * Scans all pieces to which we can compute a valid firing location, adds
+     * their location to the supplied destination set, and marks their sprite
+     * as being targeted.
      */
-    protected void pruneAttackSet (
-        PointSet range, PointSet moves, PointSet dest)
+    protected void pruneAttackSet (PointSet moves, PointSet dest)
     {
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
-            if (p instanceof Unit && range.contains(p.x, p.y) &&
-                _selection.validTarget(p, false) &&
-                _selection.computeShotLocation(_board, p, moves) != null) {
-                UnitSprite sprite = getUnitSprite(p);
-                if (sprite != null) {
-                    sprite.setTargeted(_selection.lastActed >= p.lastActed ?
-                                       UnitSprite.TargetMode.MAYBE :
-                                       UnitSprite.TargetMode.SURE_SHOT,
-                                       (Unit)_selection);
-                    dest.add(p.x, p.y);
-                } else {
-                    log.warning("No sprite for unit! [unit=" + p + "].");
-                }
+        for (Piece p : _bangobj.pieces) {
+            if (!_selection.validTarget(p, false) ||
+                _selection.computeShotLocation(
+                    _board, p, moves, true) == null) {
+                continue;
+            }
+
+            UnitSprite sprite = getUnitSprite(p);
+            if (sprite != null) {
+                sprite.setTargeted(_selection.lastActed >= p.lastActed ?
+                                   UnitSprite.TargetMode.MAYBE :
+                                   UnitSprite.TargetMode.SURE_SHOT,
+                                   (Unit)_selection);
+                dest.add(p.x, p.y);
+            } else {
+                log.warning("No sprite for unit! [unit=" + p + "].");
             }
         }
     }
@@ -1055,7 +1051,7 @@ public class BangBoardView extends BoardView
 //                 clearSelection();
 //                 PointSet moveSet = new PointSet();
 //                 _attackSet.clear();
-//                 _bangobj.board.computeMoves(piece, moveSet, _attackSet);
+//                 _bangobj.board.computeMoves(piece, moveSet, null);
 //                 for (int ii = 0; ii < moveSet.size(); ii++) {
 //                     _attackSet.add(moveSet.get(ii));
 //                 }
@@ -1095,12 +1091,10 @@ public class BangBoardView extends BoardView
         }
 
         // highlight our potential moves and attackable pieces
-        PointSet attacks = new PointSet();
-        _bangobj.board.computeMoves(piece, _moveSet, attacks);
+        _bangobj.board.computeMoves(piece, _moveSet, null);
         if (_attackEnabled) {
             _attackSet.clear();
-            pruneAttackSet(_moveSet, _moveSet, _attackSet);
-            pruneAttackSet(attacks, _moveSet, _attackSet);
+            pruneAttackSet(_moveSet, _attackSet);
         }
         highlightTiles(_moveSet, piece.isFlyer(), getHighlightColor(piece));
 
