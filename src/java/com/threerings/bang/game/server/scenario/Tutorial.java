@@ -87,8 +87,8 @@ public class Tutorial extends Scenario
         _config = TutorialUtil.loadTutorial(
             BangServer.rsrcmgr, bconfig.scenarios[0]);
 
-        // assign claims in case this is a claim jumping tutorial
-        assignClaims(bangobj, starts, _config.nuggets);
+        // assign counters in case this is a claim jumping tutorial
+        assignCounters(bangobj, starts, _config.nuggets);
 
         // set up our game object listeners; we only ever have one round in a
         // scenario, so this is OK to do in roundWillStart()

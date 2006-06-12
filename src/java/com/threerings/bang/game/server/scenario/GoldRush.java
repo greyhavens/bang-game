@@ -17,7 +17,7 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.Claim;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -32,7 +32,7 @@ import com.threerings.bang.game.server.ai.GoldLogic;
  * <ul>
  * <li> Each player has a mine shaft, and those mine shafts start empty of gold.
  * <li> Players must travel to the "hills" where there are gold nuggets for the
- * taking and pick up nuggets and carry them back to their claim.
+ * taking and pick up nuggets and carry them back to their carge tank.
  * <li> If the unit carrying the nugget is killed, it drops the nugget in a
  * nearby square and the nugget can then be picked up by any piece that lands
  * on it.
@@ -40,7 +40,7 @@ import com.threerings.bang.game.server.ai.GoldLogic;
  * starting marker.
  * </ul>
  */
-public class GoldRush extends Scenario
+public class GoldRush extends GoldScenario
 {
     @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
@@ -72,8 +72,9 @@ public class GoldRush extends Scenario
     {
         super.roundWillStart(bangobj, starts, purchases);
 
-        // locate all the claims, assign them to players; no starting nuggets
-        assignClaims(bangobj, starts, 0);
+        // locate all the cargo tanks, assign them to players;
+        // no starting nuggets
+        assignCounters(bangobj, starts, 0);
 
         // start with nuggets at every lode spot
         for (int ii = 0; ii < _lodes.size(); ii++) {
@@ -110,10 +111,10 @@ public class GoldRush extends Scenario
         super.roundDidEnd(bangobj);
 
         // increment each players' nugget related stats
-        for (Claim claim : _claims) {
-            if (claim.nuggets > 0) {
-                bangobj.stats[claim.owner].incrementStat(
-                    Stat.Type.NUGGETS_CLAIMED, claim.nuggets);
+        for (Counter counter : _counters) {
+            if (counter.count > 0) {
+                bangobj.stats[counter.owner].incrementStat(
+                    Stat.Type.NUGGETS_CLAIMED, counter.count);
             }
         }
     }

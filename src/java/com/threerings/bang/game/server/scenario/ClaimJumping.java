@@ -22,7 +22,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.Claim;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.ai.AILogic;
@@ -49,7 +49,7 @@ import static com.threerings.bang.Log.log;
  * starting marker.
  * </ul>
  */
-public class ClaimJumping extends Scenario
+public class ClaimJumping extends GoldScenario
 {
     /** The number of nuggets in each claim. TODO: put in BangConfig. */
     public static final int NUGGET_COUNT = 2;
@@ -69,7 +69,7 @@ public class ClaimJumping extends Scenario
 
         // locate all the claims, assign them to players and fill them with
         // nuggets
-        assignClaims(bangobj, starts, NUGGET_COUNT);
+        assignCounters(bangobj, starts, NUGGET_COUNT);
 
         // sort the bonus spots by distance to nearest claim, put up to one
         // nugget per player in the spots that are maximally distant from the
@@ -117,8 +117,8 @@ public class ClaimJumping extends Scenario
 
         // check to see if there are empty claims
         boolean empty = false;
-        for (Claim claim : _claims) {
-            if (claim.nuggets == 0) {
+        for (Counter claim : _counters) {
+            if (claim.count == 0) {
                 empty = true;
                 break;
             }
@@ -145,10 +145,10 @@ public class ClaimJumping extends Scenario
         super.roundDidEnd(bangobj);
 
         // increment each players' nugget related stats
-        for (Claim claim : _claims) {
-            if (claim.nuggets > 0) {
+        for (Counter claim : _counters) {
+            if (claim.count > 0) {
                 bangobj.stats[claim.owner].incrementStat(
-                    Stat.Type.NUGGETS_CLAIMED, claim.nuggets);
+                    Stat.Type.NUGGETS_CLAIMED, claim.count);
             }
         }
     }

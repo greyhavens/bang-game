@@ -19,7 +19,9 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.piece.Cow;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -70,11 +72,37 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
+    public void tick (BangObject bangobj, short tick)
+    {
+        super.tick(bangobj, tick);
+
+        // Update the counters with new values
+        int size = _counters.size();
+        int[] newCounts = new int[size];
+        Piece[] pieces = bangobj.getPieceArray();
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
+                newCounts[pieces[ii].owner]++;
+            }
+        }
+        for (int ii = 0; ii < size; ii++) {
+            Counter counter = _counters.get(ii);
+            if (counter.count != newCounts[ii]) {
+                _bangmgr.deployEffect(-1, CountEffect.changeCount(
+                            counter.pieceId, newCounts[counter.owner]));
+            }
+        }
+    }
+
+    @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
                                 PieceSet purchases)
         throws InvocationException
     {
         super.roundWillStart(bangobj, markers, purchases);
+
+        // locate all the rustlin posts, assign them to players
+        assignCounters(bangobj, markers, 0);
 
         // now place the cattle near the cattle starting spots
         int placed = 0, players = bangobj.players.length, cps = (int)
@@ -139,6 +167,12 @@ public class CattleRustling extends Scenario
     {
         // cattle herding should be a bit shorter than the normal scenario
         return 4 * BASE_SCENARIO_TICKS / 5;
+    }
+
+    @Override // documentation inherited
+    protected int pointsPerCounter ()
+    {
+        return ScenarioCodes.POINTS_PER_COW;
     }
 
     /**

@@ -69,7 +69,6 @@ import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.Bouncer;
-import com.threerings.bang.game.client.sprite.ClaimSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;

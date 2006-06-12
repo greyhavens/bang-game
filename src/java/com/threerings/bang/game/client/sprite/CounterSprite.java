@@ -18,17 +18,17 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
-import com.threerings.bang.game.data.piece.Claim;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
- * Displays a claim along with the count of nuggets remaining within it.
+ * Displays a counter prop along with the count value.
  */
-public class ClaimSprite extends PropSprite
+public class CounterSprite extends PropSprite
 {
-    public ClaimSprite (String type)
+    public CounterSprite (String type)
     {
         super(type);
     }
@@ -36,7 +36,7 @@ public class ClaimSprite extends PropSprite
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
-        return (pidx == _piece.owner) ? "own_claim" : "other_claim";
+        return (pidx == _piece.owner ? "own_" : "other_") + _config.type;
     }
 
     @Override // documentation inherited
@@ -51,24 +51,24 @@ public class ClaimSprite extends PropSprite
         super.updated(piece, tick);
 
         // recompute and display our nugget count
-        Claim claim = (Claim)piece;
-        if (_piece.owner >= 0 && _dnuggets != claim.nuggets) {
+        Counter counter = (Counter)piece;
+        if (_piece.owner >= 0 && _dcount != counter.count) {
             if (_tstate.getNumberOfSetTextures() > 0) {
                 _tstate.deleteAll();
             }
             Vector2f[] tcoords = new Vector2f[4];
             Texture tex = RenderUtil.createTextTexture(
                 _ctx, BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner],
-                DARKER_COLORS[_piece.owner], String.valueOf(claim.nuggets),
+                DARKER_COLORS[_piece.owner], String.valueOf(counter.count),
                 tcoords, null);
             _counter.setTextureBuffer(
                 0, BufferUtils.createFloatBuffer(tcoords));
             // resize our quad to accomodate the text
-            float qrat = COUNTER_SIZE / tcoords[2].y;
+            float qrat = TILE_SIZE / tcoords[2].y;
             _counter.resize(qrat * tcoords[2].x, qrat * tcoords[2].y);
             _tstate.setTexture(tex);
             _counter.updateRenderState();
-            _dnuggets = claim.nuggets;
+            _dcount = counter.count;
             _counter.setCullMode(CULL_DYNAMIC);
         }
     }
@@ -90,8 +90,8 @@ public class ClaimSprite extends PropSprite
         _counter.setLightCombineMode(LightState.OFF);
         BillboardNode bbn = new BillboardNode("cbillboard");
         bbn.attachChild(_counter);
-        // TODO: account properly for the height of the claim model
-        bbn.setLocalTranslation(new Vector3f(0, 0, 3*TILE_SIZE/2));
+        bbn.setLocalTranslation(new Vector3f(
+                    0, 0, (_config.height + 0.5f) * TILE_SIZE));
         attachChild(bbn);
         _counter.setCullMode(CULL_ALWAYS);
     }
@@ -99,7 +99,5 @@ public class ClaimSprite extends PropSprite
     protected BasicContext _ctx;
     protected Quad _counter;
     protected TextureState _tstate;
-    protected int _dnuggets = -1;
-
-    protected static final float COUNTER_SIZE = TILE_SIZE;
+    protected int _dcount = -1;
 }

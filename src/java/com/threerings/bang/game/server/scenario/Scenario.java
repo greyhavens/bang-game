@@ -24,7 +24,7 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.Claim;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
@@ -248,7 +248,7 @@ public abstract class Scenario
         if (piece instanceof Unit) {
             Unit unit = (Unit)piece;
             checkSpookedCattle(bangobj, unit);
-            checkAdjustedClaim(bangobj, unit);
+            checkAdjustedCounter(bangobj, unit);
 
         } else if (piece instanceof Train &&
                    ((Train)piece).type == Train.ENGINE) {
@@ -716,75 +716,42 @@ public abstract class Scenario
         }
     }
 
-    protected void checkAdjustedClaim (BangObject bangobj, Unit unit)
+    protected void checkAdjustedCounter (BangObject bangobj, Unit unit)
     {
-        if (_claims == null || _claims.size() == 0) {
-            return;
-        }
-
-        // if this unit landed next to one of the claims, do some stuff
-        Claim claim = null;
-        for (Claim c : _claims) {
-            if (c.getDistance(unit) <= 1) {
-                claim = c;
-                break;
-            }
-        }
-        if (claim == null) {
-            return;
-        }
-
-        // deposit or withdraw a nugget as appropriate
-        NuggetEffect effect = null;
-        if (claim.owner == unit.owner && unit.benuggeted) {
-            effect = new NuggetEffect();
-            effect.init(unit);
-            effect.claimId = claim.pieceId;
-            effect.dropping = true;
-        } else if (allowClaimWithdrawal() && claim.owner != unit.owner &&
-                   claim.nuggets > 0 && unit.canActivateBonus(_nuggetBonus)) {
-            effect = new NuggetEffect();
-            effect.init(unit);
-            effect.claimId = claim.pieceId;
-            effect.dropping = false;
-        }
-        if (effect != null) {
-            _bangmgr.deployEffect(unit.owner, effect);
-        }
     }
 
     /**
-     * Assigns claims to the closest player and populates the claims with the
-     * starting number of nuggets.
+     * Assigns counters to the closest player and populates the counters with 
+     * the starting value.
      */
-    protected void assignClaims (
-        BangObject bangobj, ArrayList<Piece> starts, int startingNuggets)
+    protected void assignCounters (
+        BangObject bangobj, ArrayList<Piece> starts, int startingValue)
         throws InvocationException
     {
-        _claims = new ArrayList<Claim>();
+        _counters = new ArrayList<Counter>();
         ArrayIntSet assigned = new ArrayIntSet();
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Claim) {
-                Claim claim = (Claim)pieces[ii];
+            if (pieces[ii] instanceof Counter) {
+                Counter counter = (Counter)pieces[ii];
                 // determine which start marker to which it is nearest
-                int midx = getOwner(claim, starts);
+                int midx = getOwner(counter, starts);
                 if (midx == -1 || assigned.contains(midx)) {
                     throw new InvocationException(
-                        "m.no_start_marker_for_claim");
+                        "m.no_start_marker_for_counter");
                 }
 
                 // if we have a player in the game associated with this
-                // start marker, configure this claim for play
+                // start marker, configure this counter for play
                 if (midx < bangobj.players.length) {
-                    claim.owner = midx;
-                    claim.nuggets = startingNuggets;
-                    bangobj.updatePieces(claim);
+                    counter.owner = midx;
+                    counter.count = startingValue;
+                    bangobj.updatePieces(counter);
                     // start the player with points for each nugget
-                    int points = bangobj.points[midx] + startingNuggets *
-                        ScenarioCodes.POINTS_PER_NUGGET;
+                    int points = bangobj.points[midx] + startingValue *
+                        pointsPerCounter();
                     bangobj.grantPoints(midx, points);
-                    _claims.add(claim);
+                    _counters.add(counter);
                     assigned.add(midx);
                 }
             }
@@ -808,15 +775,6 @@ public abstract class Scenario
     protected boolean respawnPieces ()
     {
         return false;
-    }
-
-    /**
-     * If a scenario wishes to disable the withdrawal of nuggets from
-     * opponents' claims it may override this method.
-     */
-    protected boolean allowClaimWithdrawal ()
-    {
-        return true;
     }
 
     /**
@@ -857,6 +815,14 @@ public abstract class Scenario
         return idx;
     }
 
+    /**
+     * The amount of points each count on the counter is worth.
+     */
+    protected int pointsPerCounter ()
+    {
+        return 0;
+    }
+
     /** The Bang game manager. */
     protected BangManager _bangmgr;
 
@@ -875,8 +841,8 @@ public abstract class Scenario
     /** Used to track the locations of all bonus spawn points. */
     protected PointSet _bonusSpots = new PointSet();
 
-    /** A list of the active claims. */
-    protected ArrayList<Claim> _claims;
+    /** A list of the active counters. */
+    protected ArrayList<Counter> _counters;
 
     /** A prototype nugget bonus used to ensure that pieces can be
      * benuggeted. */

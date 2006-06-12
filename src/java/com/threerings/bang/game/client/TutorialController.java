@@ -28,7 +28,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
-import com.threerings.bang.game.data.piece.Claim;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.TutorialUtil;
 
@@ -156,7 +156,7 @@ public class TutorialController
                 for (Iterator iter = _bangobj.pieces.iterator();
                      iter.hasNext(); ) {
                     Piece cp = (Piece)iter.next();
-                    if (cp instanceof Claim && cp.owner == id) {
+                    if (cp instanceof Counter && cp.owner == id) {
                         p = cp;
                         break;
                     }

@@ -9,7 +9,7 @@ import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
-import com.threerings.bang.game.data.piece.Claim;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
@@ -58,16 +58,16 @@ public class GoldLogic extends AILogic
         // search for own claim, closest enemy claim with nuggets,
         // closest enemy with nugget, closest free nugget, and enemies
         // near our claim
-        Claim oclaim = null, cclaim = null;
+        Counter oclaim = null, cclaim = null;
         Unit ctarget = null;
         Piece cnugget = null;
         boolean breached = false;
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Claim) {
-                Claim claim = (Claim)pieces[ii];
+            if (pieces[ii] instanceof Counter) {
+                Counter claim = (Counter)pieces[ii];
                 if (claim.owner == _pidx) {
                     oclaim = claim;
-                } else if (_stealing && claim.nuggets > 0 && (cclaim == null ||
+                } else if (_stealing && claim.count > 0 && (cclaim == null ||
                     unit.getDistance(claim) < unit.getDistance(cclaim))) {
                     cclaim = claim;
                 }
@@ -95,7 +95,7 @@ public class GoldLogic extends AILogic
         }
         
         // if we have a nugget or our claim is in danger, haul ass back home
-        if ((unit.benuggeted || (breached && oclaim.nuggets > 0 &&
+        if ((unit.benuggeted || (breached && oclaim.count > 0 &&
             unit.getDistance(oclaim) > DEFENSIVE_PERIMETER)) &&
             moveUnit(pieces, unit, moves, oclaim)) {
             return;
