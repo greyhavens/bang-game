@@ -3,10 +3,9 @@
 
 package com.threerings.bang.game.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.jmex.bui.util.Dimension;
-import com.jmex.bui.util.Point;
+import java.util.Iterator;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
@@ -16,44 +15,35 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollBar;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.Spacer;
-
 import com.jmex.bui.background.ImageBackground;
-
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
-
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Point;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
 
-import com.threerings.util.MessageBundle;
-import com.threerings.util.RandomUtil;
-
+import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.BangUI;
-
 import com.threerings.bang.client.bui.SteelWindow;
-
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
-
-import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.BasicContext;
-
-import com.threerings.bang.avatar.client.AvatarView;
-
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.ScenarioCodes;
-
 import com.threerings.bang.game.util.ScenarioUtil;
+import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
+import com.threerings.util.MessageBundle;
+import com.threerings.util.RandomUtil;
 
 /**
  * Displays game stats.
@@ -217,7 +207,7 @@ public class StatsView extends SteelWindow
         if (stats == null || pidx >= stats.length || stats[pidx] == null) {
             return 0;
         }
-        return _bobj.stats[pidx].getIntStat(type);
+        return stats[pidx].getIntStat(type);
     }
 
     /**
@@ -374,7 +364,7 @@ public class StatsView extends SteelWindow
             for (int ii = 0; ii < size; ii++) {
                 BLabel[] labels = new BLabel[7];
                 int objectives = getIntStat(ii, _statType);
-                int points = getIntStat(ii, Stat.Type.POINTS_EARNED);
+                int points = getIntStat(ii, Stat.Type.POINTS_EARNED); 
                 int objPoints = objectives * _ppo;
                 int starPoints = getIntStat(ii, Stat.Type.BONUS_POINTS);
                 int damagePoints = points - objPoints - starPoints;
@@ -500,15 +490,6 @@ public class StatsView extends SteelWindow
 
         statcont.add(new Spacer(1, 1));
 
-        // which stats are we displaying
-        Stat.Type[] statTypes = {
-            Stat.Type.DAMAGE_DEALT, Stat.Type.UNITS_KILLED,
-            Stat.Type.BONUSES_COLLECTED, Stat.Type.CARDS_PLAYED,
-            Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
-            Stat.Type.UNITS_LOST, Stat.Type.CATTLE_RUSTLED,
-            Stat.Type.NUGGETS_CLAIMED
-        };
-
         // Get the statSet, or generate a cummulative statSet for an 
         // overall display
         StatSet[] statSet;
@@ -523,7 +504,7 @@ public class StatsView extends SteelWindow
                     if (statSet[jj] == null) {
                         statSet[jj] = new StatSet();
                     }
-                    for (Stat.Type type : statTypes) {
+                    for (Stat.Type type : BASE_STAT_TYPES) {
                         statSet[jj].incrementStat(
                                 type, getIntStat(jj, tmpset, type));
                     }
@@ -533,11 +514,26 @@ public class StatsView extends SteelWindow
             statSet = _ctrl.getStatSetArray(round);
         }
 
+        // which stats are we displaying
+        ArrayList<Stat.Type> statTypes = new ArrayList<Stat.Type>();
+        for (Stat.Type type : BASE_STAT_TYPES) {
+            boolean interesting = false;
+            for (int ii = 0; ii < size; ii++) {
+                if (getIntStat(ii, statSet, type) > 0) {
+                    interesting = true;
+                    break;
+                }
+            }
+            if (interesting) {
+                statTypes.add(type);
+            }
+        }
+
         // setup our scrollable stats grid
         BContainer stats = new BContainer(
-                new TableLayout(statTypes.length, 0, 0));
+                new TableLayout(statTypes.size(), 0, 0));
         Dimension statsize = new Dimension(
-                width * statTypes.length, height * size + HEADER_HEIGHT + 2);
+                width * statTypes.size(), height * size + HEADER_HEIGHT + 2);
         stats.setPreferredSize(statsize);
         BScrollPane scrollpane = new BScrollPane(stats, false, true, width) {
             protected Dimension computePreferredSize (int hhint, int vhint)
@@ -555,7 +551,9 @@ public class StatsView extends SteelWindow
         HashMap<Stat.Type, Integer> map = new HashMap<Stat.Type, Integer>();
 
         // Add the headers
-        for (Stat.Type type : statTypes) {
+        for (Iterator<Stat.Type> iter = statTypes.iterator(); 
+                iter.hasNext(); ) {
+            Stat.Type type = iter.next();
             BLabel header = new BLabel(_msgs.get("m.header_" + type.name()),
                     "endgame_smallheader") {
                 protected Dimension computePreferredSize (
@@ -575,7 +573,9 @@ public class StatsView extends SteelWindow
 
         // Add the stat details
         for (int ii = 0; ii < size; ii++) {
-            for (Stat.Type type : statTypes) {
+            for (Iterator<Stat.Type> iter = statTypes.iterator();
+                    iter.hasNext(); ) {
+                Stat.Type type = iter.next();
                 final boolean isDark = (ii % 2 == 0);
                 BContainer cont = new BContainer(new BorderLayout()) {
                     protected void wasAdded() {
@@ -650,4 +650,13 @@ public class StatsView extends SteelWindow
     protected static final int HEADER_HEIGHT = 40;
     protected static final int GRID_HEIGHT = 100;
     protected static final int NUM_VIEWABLE_COLS = 6;
+
+
+    protected static final Stat.Type[] BASE_STAT_TYPES = {
+            Stat.Type.DAMAGE_DEALT, Stat.Type.UNITS_KILLED,
+            Stat.Type.BONUSES_COLLECTED, Stat.Type.CARDS_PLAYED,
+            Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
+            Stat.Type.UNITS_LOST, Stat.Type.CATTLE_RUSTLED,
+            Stat.Type.NUGGETS_CLAIMED
+    };
 }
