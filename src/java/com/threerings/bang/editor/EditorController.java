@@ -35,10 +35,10 @@ import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.parlor.game.client.GameController;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.data.piece.Marker;
@@ -47,6 +47,7 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
+import com.threerings.bang.game.util.ScenarioUtil;
 import com.threerings.bang.server.persist.BoardRecord;
 
 import static com.threerings.bang.Log.log;
@@ -497,17 +498,20 @@ public class EditorController extends GameController
     {
         Piece[] pieces = _bangobj.getPieceArray();
         for (Piece p : pieces) {
-            if (!(p instanceof Prop)) {
-                continue;
-            }
-            Prop prop = (Prop)p;
-            boolean valid = (id == null || prop.isValidScenario(id));
+            boolean valid = false;
             PieceSprite sprite = _panel.view.getPieceSprite(p);
-            if (valid) {
+            if (id == null) {
+                valid = true;
+            } else if (p instanceof Prop) {
+                valid = ((Prop)p).isValidScenario(id);
+            } else if (p instanceof Marker) {
+                valid = ScenarioUtil.isValidMarker(((Marker)p), id);
+            }
+            if (valid && sprite != null) {
                 if (sprite.getParent() == null) {
                     _panel.view.addSprite(sprite);
                 }
-            } else {
+            } else if (sprite != null) {
                 if (sprite.getParent() != null) {
                     _panel.view.removeSprite(sprite);
                 }

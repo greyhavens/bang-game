@@ -13,9 +13,9 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.NuggetEffect;
-import com.threerings.bang.game.data.piece.Claim;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Marker;
 
 /**
  * Contains scenario-related utilities.
@@ -73,6 +73,21 @@ public class ScenarioUtil
     {
         return (ScenarioCodes.CLAIM_JUMPING.equals(scenarioId) ||
                 ScenarioCodes.GOLD_RUSH.equals(scenarioId));
+    }
+
+    /**
+     * Returns true if this maker is valid for the scenario.
+     */
+    public static boolean isValidMarker (Marker m, String scenarioId)
+    {
+        if (m.getType() == Marker.CATTLE && 
+                !ScenarioCodes.CATTLE_RUSTLING.equals(scenarioId)) {
+            return false;
+        } else if (m.getType() == Marker.LODE &&
+                !ScenarioCodes.GOLD_RUSH.equals(scenarioId)) {
+            return false;
+        }
+        return true;
     }
 
     /** Maps town ids to a list of valid gameplay scenarios. */
