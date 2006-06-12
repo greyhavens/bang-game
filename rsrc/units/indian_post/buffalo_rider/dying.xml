@@ -3,7 +3,7 @@
 <animation frameRate="30">
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -11,7 +11,7 @@
     <transform name="Omni08" translation="-18659.1, 6889.32, 1469.94" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni09" translation="2752.18, -15860.6, 10088.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Bip01" translation="-0.165565, 88.3778, 92.7069" rotation="0.499825, 0.500175, -0.500174, 0.499825" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bip01 Footsteps" translation="92.2271, 0.0645147, -2.61508e-007" rotation="0.499825, 0.500175, -0.500174, -0.499825" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="96.3222, 0.0673793, -1.35194e-007" rotation="0.499825, 0.500175, -0.500174, -0.499825" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Pelvis" translation="14.9214, -1.06976, -4.25559e-006" rotation="0.507973, 0.507973, 0.491898, -0.491898" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Spine" translation="23.8972, -1.44248, -0.768878" rotation="-0.00159528, 0.000388502, -0.21701, 0.976168" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 Spine1" translation="35.5313, -0.0275541, 1.93281e-005" rotation="-0.000820242, 0.00417099, 0.113554, 0.993523" scale="1.0, 1.0, 1.0"/>
@@ -53,7 +53,7 @@
     <transform name="Bip01 Tail3" translation="14.1796, -0.0115071, -2.61088e-005" rotation="0.001099, 0.000288055, 0.0387105, 0.99925" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip01 TailNub" translation="14.4946, 4.79993e-006, -1.32198e-007" rotation="0.707388, 0.706825, 9.83381e-007, -9.77509e-007" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip02" translation="0.696283, 25.7588, 166.345" rotation="0.0677731, 0.0677732, -0.703851, 0.703852" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bip02 Footsteps" translation="9.91175, -2.37748e-006, -50.9916" rotation="-0.0677731, -0.0677732, 0.703851, 0.703852" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip02 Footsteps" translation="33.2954, -7.94223e-006, -171.29" rotation="-0.0677731, -0.0677732, 0.703851, 0.703852" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip02 Pelvis" translation="-1.15582, 0.0, -1.17033e-005" rotation="-0.499999, -0.5, -0.5, 0.500001" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip02 Spine" translation="9.8561, -0.00697127, -0.000678935" rotation="0.0493713, -0.00109767, -0.0213906, 0.998551" scale="1.0, 1.0, 1.0"/>
     <transform name="Bip02 Spine1" translation="8.81458, -0.00860603, -0.000862431" rotation="0.0493402, 0.00211517, -0.104401, 0.993308" scale="1.0, 1.0, 1.0"/>
@@ -118,7 +118,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -233,7 +233,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -348,7 +348,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -463,7 +463,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -578,7 +578,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -693,7 +693,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -808,7 +808,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -923,7 +923,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1038,7 +1038,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1153,7 +1153,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1268,7 +1268,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1383,7 +1383,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1498,7 +1498,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1613,7 +1613,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1728,7 +1728,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1843,7 +1843,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -1958,7 +1958,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2073,7 +2073,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2188,7 +2188,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2303,7 +2303,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2418,7 +2418,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2533,7 +2533,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2648,7 +2648,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2763,7 +2763,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2878,7 +2878,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -2993,7 +2993,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -3108,7 +3108,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -3223,7 +3223,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -3338,7 +3338,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -3453,7 +3453,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -3568,7 +3568,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -3683,7 +3683,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -3798,7 +3798,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -3913,7 +3913,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4028,7 +4028,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4143,7 +4143,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4258,7 +4258,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4373,7 +4373,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4488,7 +4488,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4603,7 +4603,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4718,7 +4718,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4833,7 +4833,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -4948,7 +4948,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
@@ -5063,7 +5063,7 @@
   </frame>
 
   <frame>
-    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 9.28547e-007, 0.0, 1.0" scale="35.5709, 28.4567, 28.4567"/>
+    <transform name="bison" translation="-529.682, 341.794, -38.2763" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Omni03" translation="-1642.78, -3829.81, -4202.06" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni05" translation="-3561.19, 3757.06, -2462.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
     <transform name="Omni06" translation="4739.17, 2891.95, 11806.9" rotation="0.0, 0.0, 0.0, 1.0" scale="34.5, 34.5, 34.5"/>
