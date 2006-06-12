@@ -13,6 +13,7 @@ import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
@@ -165,6 +166,7 @@ public class Prop extends BigPiece
     public boolean isValidScenario (String scenarioId)
     {
         return (_config.scenario == null || 
+                ScenarioCodes.TUTORIAL.equals(scenarioId) ||
                 _config.scenario.equals(scenarioId));
     }
     
