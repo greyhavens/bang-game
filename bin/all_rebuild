@@ -115,9 +115,8 @@ if [ ! -z "$DEVCLIENT" ]; then
     cp $ROOT/etc/proguard/0.map $ROOT/../threerings/etc/proguard/bang
 
     # update our unit damage table
-    cd $ROOT
-    $ROOT/bin/bangtool com.threerings.bang.game.tools.PrintDamageTable > \
-        $ROOT/pages/units.html
+    $ROOT/bin/bangtool com.threerings.bang.game.tools.PrintDamageTable \
+        frontier_town > $ROOT/pages/units.html
 fi
 
 # remove the lockfile
