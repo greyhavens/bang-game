@@ -55,11 +55,11 @@ public class PrintDamageTable
                 String color = "";
                 if (damage >= 100) {
                     color = " bgcolor='#FF0000'";
-                } else if (damage > 50) {
+                } else if (damage >= 50) {
                     color = " bgcolor='#FFFF00'";
                 } else if (damage > 33) {
                     color = " bgcolor='#00FF00'";
-                } else if (damage > 24) {
+                } else if (damage >= 25) {
                     color = " bgcolor='#00FFFF'";
                 }
                 System.out.print("<td" + color + ">" + damage + "</td>");
